@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -295,7 +294,7 @@ export default function Domov() {
             className="text-center"
           >
             <p className="text-xl text-gray-300 mb-6">
-              <strong className="text-white">Nemusíte vybavovať nič sami.</strong> Postaráme sa o celý proces od A po Z.
+              <strong className="text-white">Vy nemusíte vybavovať nič.</strong> Postaráme sa o celý proces od A po Z.
             </p>
             <Link to={createPageUrl("Kontakt")}>
               <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white font-semibold px-8 shadow-xl">
