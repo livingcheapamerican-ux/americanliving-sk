@@ -7,13 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, Filter, Home, Maximize2, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Katalog() {
+  const [kategoriaFilter, setKategoriaFilter] = useState("vsetky");
   const [vyrobcaFilter, setVyrobcaFilter] = useState("vsetci");
   const [typFilter, setTypFilter] = useState("vsetky");
-  const [plocharozsah, setPlocharozsah] = useState([35, 200]);
+  const [plocharozsah, setPlocharozsah] = useState([18, 200]);
 
   const { data: domy = [], isLoading } = useQuery({
     queryKey: ['domy-katalog'],
@@ -21,13 +23,17 @@ export default function Katalog() {
   });
 
   const filtrovane = domy.filter((dom) => {
+    const kategoriaMatch = kategoriaFilter === "vsetky" || dom.kategoria === kategoriaFilter;
     const vyrobcaMatch = vyrobcaFilter === "vsetci" || dom.vyrobca === vyrobcaFilter;
     const typMatch = typFilter === "vsetky" || dom.typ_domu === typFilter;
     const plochaMatch = dom.zastavana_plocha >= plocharozsah[0] && dom.zastavana_plocha <= plocharozsah[1];
-    return vyrobcaMatch && typMatch && plochaMatch;
+    return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch;
   });
 
   const vyrobcovia = ["JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"];
+
+  const rodinneDomy = filtrovane.filter(d => d.kategoria === "rodinne_domy");
+  const mobilneDomy = filtrovane.filter(d => d.kategoria === "mobilne_domy");
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -51,6 +57,15 @@ export default function Katalog() {
       </section>
 
       <div className="container mx-auto px-4 py-12">
+        {/* Tabs pre kategórie */}
+        <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-8">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 h-12">
+            <TabsTrigger value="vsetky" className="text-base">Všetky ({domy.length})</TabsTrigger>
+            <TabsTrigger value="rodinne_domy" className="text-base">Rodinné domy ({rodinneDomy.length})</TabsTrigger>
+            <TabsTrigger value="mobilne_domy" className="text-base">Mobilné domy ({mobilneDomy.length})</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
           <motion.aside
@@ -106,7 +121,7 @@ export default function Katalog() {
                     Zastavaná plocha: {plocharozsah[0]} - {plocharozsah[1]} m²
                   </label>
                   <Slider
-                    min={35}
+                    min={18}
                     max={200}
                     step={5}
                     value={plocharozsah}
@@ -120,9 +135,10 @@ export default function Katalog() {
                   variant="outline"
                   className="w-full"
                   onClick={() => {
+                    setKategoriaFilter("vsetky");
                     setVyrobcaFilter("vsetci");
                     setTypFilter("vsetky");
-                    setPlocharozsah([35, 200]);
+                    setPlocharozsah([18, 200]);
                   }}
                 >
                   Resetovať filtre
@@ -229,9 +245,10 @@ export default function Katalog() {
                 </p>
                 <Button
                   onClick={() => {
+                    setKategoriaFilter("vsetky");
                     setVyrobcaFilter("vsetci");
                     setTypFilter("vsetky");
-                    setPlocharozsah([35, 200]);
+                    setPlocharozsah([18, 200]);
                   }}
                 >
                   Resetovať filtre
