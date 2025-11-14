@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -8,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, X, Phone, Mail, Settings } from "lucide-react";
+import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, X, Phone, Mail, Settings, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function DetailDomu() {
@@ -188,7 +187,16 @@ export default function DetailDomu() {
                 </span>
                 <span className="text-sm text-gray-500">s DPH</span>
               </div>
-              <p className="text-sm text-gray-500 mt-2">- cena základného modelu</p>
+              {isProstoHouse ? (
+                <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2">
+                  <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm text-amber-800">
+                    <strong>Základná cena je za samotnú konštrukciu bez montážnych prác.</strong> Cenu montáže si môžete vypočítať v konfigurátore.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500 mt-2">- cena základného modelu</p>
+              )}
             </div>
 
             {/* Parametre */}
