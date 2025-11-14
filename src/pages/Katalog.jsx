@@ -32,8 +32,9 @@ export default function Katalog() {
 
   const vyrobcovia = ["JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"];
 
-  const rodinneDomy = filtrovane.filter(d => d.kategoria === "rodinne_domy");
-  const mobilneDomy = filtrovane.filter(d => d.kategoria === "mobilne_domy");
+  // Počítaj z nefiltrovných domov
+  const rodinneDomy = domy.filter(d => d.kategoria === "rodinne_domy");
+  const mobilneDomy = domy.filter(d => d.kategoria === "mobilne_domy");
 
   return (
     <div className="min-h-screen bg-gray-50">
