@@ -56,12 +56,12 @@ export default function Layout({ children }) {
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            {/* Logo */}
+            {/* Logo - zväčšené o 200% */}
             <Link to={createPageUrl("Domov")} className="flex items-center gap-3 group">
               <img 
                 src={LOGO_URL} 
                 alt="American Living" 
-                className="h-16 w-auto transition-transform group-hover:scale-105"
+                className="h-32 w-auto transition-transform group-hover:scale-105"
               />
             </Link>
 
@@ -145,7 +145,7 @@ export default function Layout({ children }) {
       </header>
 
       {/* Main Content */}
-      <main className="pt-16">
+      <main className="pt-32">
         {children}
       </main>
 
@@ -157,7 +157,7 @@ export default function Layout({ children }) {
               <img 
                 src={LOGO_URL} 
                 alt="American Living" 
-                className="h-20 w-auto mb-4 brightness-0 invert"
+                className="h-24 w-auto mb-4 brightness-0 invert"
               />
               <p className="text-gray-400 text-sm leading-relaxed mb-4">
                 Distribútor a realizátor stavby modulárnych domov. 

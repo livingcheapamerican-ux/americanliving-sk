@@ -5,6 +5,7 @@ import Konfigurator from './pages/Konfigurator';
 import AkoToFunguje from './pages/AkoToFunguje';
 import ONas from './pages/ONas';
 import Kontakt from './pages/Kontakt';
+import SrovnaniDomu from './pages/SrovnaniDomu';
 import Layout from './Layout.jsx';
 
 
@@ -16,6 +17,7 @@ export const PAGES = {
     "AkoToFunguje": AkoToFunguje,
     "ONas": ONas,
     "Kontakt": Kontakt,
+    "SrovnaniDomu": SrovnaniDomu,
 }
 
 export const pagesConfig = {
