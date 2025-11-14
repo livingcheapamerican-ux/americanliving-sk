@@ -13,7 +13,7 @@ import { motion } from "framer-motion";
 export default function Katalog() {
   const [vyrobcaFilter, setVyrobcaFilter] = useState("vsetci");
   const [typFilter, setTypFilter] = useState("vsetky");
-  const [plochaozsah, setPlocharozsah] = useState([35, 200]);
+  const [plocharozsah, setPlocharozsah] = useState([35, 200]);
 
   const { data: domy = [], isLoading } = useQuery({
     queryKey: ['domy-katalog'],
