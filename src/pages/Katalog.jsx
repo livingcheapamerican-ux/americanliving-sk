@@ -76,9 +76,9 @@ export default function Katalog() {
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Katalóg domov
             </h1>
-            <p className="text-xl text-white">
-              Vyberte si zo širokej ponuky modulárnych a mobilných domov od overených výrobcov. 
-              Každý dom je pripravený na kolaudáciu.
+            <p className="bg-[#ffff99] text-slate-900 text-xl">Vyberte si zo širokej ponuky modulárnych a mobilných domov od overených výrobcov. Každý dom je pripravený na kolaudáciu.
+
+
             </p>
           </motion.div>
         </div>
