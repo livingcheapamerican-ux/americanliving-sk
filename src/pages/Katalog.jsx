@@ -73,10 +73,10 @@ export default function Katalog() {
             animate={{ opacity: 1, y: 0 }}
             className="max-w-3xl"
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
               Katalóg domov
             </h1>
-            <p className="text-xl text-white">
+            <p className="text-xl text-white font-medium">
               Vyberte si zo širokej ponuky modulárnych a mobilných domov od overených výrobcov. 
               Každý dom je pripravený na kolaudáciu.
             </p>
