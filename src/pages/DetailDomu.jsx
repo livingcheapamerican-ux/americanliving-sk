@@ -11,6 +11,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, X, Phone, Mail, Settings, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import PriceCalculator from "../components/PriceCalculator";
+import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse"; // New import
 import FloatingPrice from "../components/FloatingPrice";
 
 export default function DetailDomu() {
@@ -220,13 +221,23 @@ export default function DetailDomu() {
             )}
 
             {/* Price Calculator */}
-            <PriceCalculator 
-              dom={dom} 
-              onPriceChange={(price) => {
-                setCalculatedPrice(price);
-                setShowCalculator(price !== (dom.zakladna_cena || 0)); // Check if calculated price differs from base price
-              }}
-            />
+            {isTicabhouse ? (
+              <PriceCalculatorTicabhouse 
+                dom={dom} 
+                onPriceChange={(price) => {
+                  setCalculatedPrice(price);
+                  setShowCalculator(price !== (dom.zakladna_cena || 0));
+                }}
+              />
+            ) : (
+              <PriceCalculator 
+                dom={dom} 
+                onPriceChange={(price) => {
+                  setCalculatedPrice(price);
+                  setShowCalculator(price !== (dom.zakladna_cena || 0));
+                }}
+              />
+            )}
           </motion.div>
 
           {/* Pravý stĺpec - Informácie */}
