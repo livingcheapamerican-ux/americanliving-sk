@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -184,12 +185,13 @@ export default function Domov() {
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
               Cenovo dostupný rodinný dom
             </h1>
-            <p className="text-2xl mb-4 font-semibold text-yellow-400">
+            <p className="text-2xl mb-6 font-semibold text-yellow-400">
               Za cenu priamo od výrobcu! Bez navýšenia!
             </p>
-            <p className="text-xl mb-8 text-gray-200">
-              Moderný nízkoenergetický dom bez vysokých mesačných splátok. 
-              Vyrobených viac ako 700 domov od roku 2008.
+            <p className="text-xl mb-8 text-gray-200 leading-relaxed">
+              Už nemusíte hľadať ďalej – všetko, čo potrebujete, máte presne tu! 
+              Vyberte si najbližšiu kanceláriu a naši kolegovia sa postarajú o kompletné 
+              vybavenie všetkého, čo ste si na stránke pozreli.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link to={createPageUrl("Katalog")}>
