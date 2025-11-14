@@ -2,6 +2,9 @@ import Domov from './pages/Domov';
 import Katalog from './pages/Katalog';
 import DetailDomu from './pages/DetailDomu';
 import Konfigurator from './pages/Konfigurator';
+import AkoToFunguje from './pages/AkoToFunguje';
+import ONas from './pages/ONas';
+import Kontakt from './pages/Kontakt';
 import Layout from './Layout.jsx';
 
 
@@ -10,6 +13,9 @@ export const PAGES = {
     "Katalog": Katalog,
     "DetailDomu": DetailDomu,
     "Konfigurator": Konfigurator,
+    "AkoToFunguje": AkoToFunguje,
+    "ONas": ONas,
+    "Kontakt": Kontakt,
 }
 
 export const pagesConfig = {

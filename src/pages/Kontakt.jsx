@@ -1,0 +1,291 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
+import { motion } from "framer-motion";
+
+export default function Kontakt() {
+  const [formData, setFormData] = useState({
+    meno: "",
+    email: "",
+    telefon: "",
+    poznamka: ""
+  });
+  const [submitted, setSubmitted] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  const createDopytMutation = useMutation({
+    mutationFn: (data) => base44.entities.Dopyt.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dopyty'] });
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({ meno: "", email: "", telefon: "", poznamka: "" });
+      }, 5000);
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createDopytMutation.mutate({
+      ...formData,
+      typ_dopytu: "vseobecny"
+    });
+  };
+
+  const kontaktInfo = [
+    {
+      icon: Phone,
+      nazov: "Telefón",
+      hodnota: "+421 123 456 789",
+      link: "tel:+421123456789",
+      popis: "Po-Pia 8:00 - 17:00"
+    },
+    {
+      icon: Mail,
+      nazov: "Email",
+      hodnota: "info@americanliving.sk",
+      link: "mailto:info@americanliving.sk",
+      popis: "Odpovieme do 24 hodín"
+    },
+    {
+      icon: MapPin,
+      nazov: "Adresa",
+      hodnota: "[Vaša adresa, mesto, PSČ]",
+      popis: "Návšteva po dohode"
+    },
+    {
+      icon: Clock,
+      nazov: "Otváracie hodiny",
+      hodnota: "Po-Pia: 8:00 - 17:00",
+      popis: "Víkend: Po dohode"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#F9FAFB]">
+      {/* Header */}
+      <section className="bg-gradient-to-r from-navy to-navy/90 text-white py-20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-3xl"
+          >
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+              Kontaktujte nás
+            </h1>
+            <p className="text-xl text-gray-200">
+              Radi vám poradíme, zodpovieme otázky a pripravíme nezáväznú ponuku. 
+              Tešíme sa na vašu správu!
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+          {/* Kontaktný formulár */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <Card className="p-8 shadow-xl">
+              {!submitted ? (
+                <>
+                  <h2 className="text-2xl font-bold text-navy mb-6">
+                    Napíšte nám
+                  </h2>
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div>
+                      <Label htmlFor="meno">Meno a priezvisko *</Label>
+                      <Input
+                        id="meno"
+                        required
+                        value={formData.meno}
+                        onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
+                        placeholder="Ján Novák"
+                        className="mt-2"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="email">Email *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="jan.novak@email.sk"
+                        className="mt-2"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="telefon">Telefón *</Label>
+                      <Input
+                        id="telefon"
+                        required
+                        value={formData.telefon}
+                        onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
+                        placeholder="+421 900 123 456"
+                        className="mt-2"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="poznamka">Vaša správa *</Label>
+                      <Textarea
+                        id="poznamka"
+                        required
+                        value={formData.poznamka}
+                        onChange={(e) => setFormData({ ...formData, poznamka: e.target.value })}
+                        placeholder="Popíšte vašu požiadavku alebo otázku..."
+                        rows={6}
+                        className="mt-2"
+                      />
+                    </div>
+
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full bg-red hover:bg-red/90 text-white font-semibold"
+                      disabled={createDopytMutation.isPending}
+                    >
+                      {createDopytMutation.isPending ? (
+                        "Odosiela sa..."
+                      ) : (
+                        <>
+                          Odoslať správu
+                          <Send className="ml-2 w-5 h-5" />
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                </>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-center py-12"
+                >
+                  <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <CheckCircle className="w-10 h-10 text-green-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-navy mb-4">
+                    Ďakujeme za vašu správu!
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Vaša správa bola úspešne odoslaná. Ozveme sa vám čo najskôr, 
+                    zvyčajne do 24 hodín.
+                  </p>
+                </motion.div>
+              )}
+            </Card>
+          </motion.div>
+
+          {/* Kontaktné informácie */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="space-y-6"
+          >
+            <div>
+              <h2 className="text-2xl font-bold text-navy mb-6">
+                Kontaktné informácie
+              </h2>
+              <div className="space-y-4">
+                {kontaktInfo.map((info, index) => (
+                  <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 bg-navy/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <info.icon className="w-6 h-6 text-navy" />
+                      </div>
+                      <div className="flex-grow">
+                        <h3 className="font-semibold text-navy mb-1">{info.nazov}</h3>
+                        {info.link ? (
+                          <a
+                            href={info.link}
+                            className="text-lg text-red hover:text-red/80 transition-colors font-medium block mb-1"
+                          >
+                            {info.hodnota}
+                          </a>
+                        ) : (
+                          <p className="text-lg text-gray-800 font-medium mb-1">{info.hodnota}</p>
+                        )}
+                        {info.popis && (
+                          <p className="text-sm text-gray-500">{info.popis}</p>
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Firemné údaje */}
+            <Card className="p-6 bg-gradient-to-br from-navy/5 to-navy/10">
+              <h3 className="font-bold text-navy mb-4">Firemné údaje</h3>
+              <div className="space-y-2 text-sm text-gray-700">
+                <p><span className="font-semibold">Názov:</span> American Living SK s.r.o.</p>
+                <p><span className="font-semibold">IČO:</span> [Vaše IČO]</p>
+                <p><span className="font-semibold">DIČ:</span> [Vaše DIČ]</p>
+                <p><span className="font-semibold">IČ DPH:</span> [Vaše IČ DPH]</p>
+              </div>
+            </Card>
+
+            {/* Mapa - Placeholder */}
+            <Card className="p-0 overflow-hidden h-64">
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                <div className="text-center text-gray-500">
+                  <MapPin className="w-12 h-12 mx-auto mb-2" />
+                  <p className="text-sm">Google Mapa sa zobrazí tu</p>
+                  <p className="text-xs mt-1">
+                    (Nahraďte iframe s Google Maps)
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Ďalšie možnosti kontaktu */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-navy mb-6">
+              Chcete sa dozvedieť viac?
+            </h2>
+            <p className="text-lg text-gray-600 mb-8">
+              Navštívte našu prevádzku alebo si dohodnite online konzultáciu. 
+              Radi vám ukážeme naše realizácie a odpovieme na všetky otázky.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="tel:+421123456789">
+                <Button size="lg" className="bg-navy hover:bg-navy/90 w-full sm:w-auto">
+                  <Phone className="mr-2 w-5 h-5" />
+                  Zavolať teraz
+                </Button>
+              </a>
+              <a href="mailto:info@americanliving.sk">
+                <Button size="lg" variant="outline" className="border-2 border-navy text-navy hover:bg-navy hover:text-white w-full sm:w-auto">
+                  <Mail className="mr-2 w-5 h-5" />
+                  Napísať email
+                </Button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
