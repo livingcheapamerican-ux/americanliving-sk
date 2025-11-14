@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
@@ -13,18 +14,68 @@ import { motion } from "framer-motion";
 export default function DetailDomu() {
   const urlParams = new URLSearchParams(window.location.search);
   const domId = urlParams.get('id');
+  const domSlug = urlParams.get('slug');
   const [selectedImage, setSelectedImage] = useState(0);
   const [showPodorys, setShowPodorys] = useState(false);
 
   const { data: dom, isLoading } = useQuery({
-    queryKey: ['dom-detail', domId],
+    queryKey: ['dom-detail', domId, domSlug],
     queryFn: async () => {
-      if (!domId) return null;
-      const domy = await base44.entities.Dom.filter({ id: domId });
-      return domy[0] || null;
+      if (domSlug) {
+        const domy = await base44.entities.Dom.filter({ slug: domSlug });
+        return domy[0] || null;
+      }
+      if (domId) {
+        const domy = await base44.entities.Dom.filter({ id: domId });
+        return domy[0] || null;
+      }
+      return null;
     },
-    enabled: !!domId,
+    enabled: !!domId || !!domSlug,
   });
+
+  // SEO Meta tags
+  useEffect(() => {
+    if (dom) {
+      const metaTitle = dom.meta_title || `${dom.nazov} - ${dom.vyrobca} | ${dom.zastavana_plocha}m² | American Living`;
+      const metaDescription = dom.meta_description || `${dom.nazov} od ${dom.vyrobca} - ${dom.typ_domu === 'modularny' ? 'Modulárny dom' : 'Mobilný dom'} s plochou ${dom.zastavana_plocha}m²${dom.pocet_izieb ? `, ${dom.pocet_izieb} izby` : ''}. Cena od ${dom.zakladna_cena?.toLocaleString('sk-SK')}€. Energetická trieda A0.`;
+      
+      document.title = metaTitle;
+      
+      let metaDesc = document.querySelector('meta[name="description"]');
+      if (!metaDesc) {
+        metaDesc = document.createElement('meta');
+        metaDesc.name = 'description';
+        document.head.appendChild(metaDesc);
+      }
+      metaDesc.content = metaDescription;
+
+      // Open Graph tags
+      let ogTitle = document.querySelector('meta[property="og:title"]');
+      if (!ogTitle) {
+        ogTitle = document.createElement('meta');
+        ogTitle.setAttribute('property', 'og:title');
+        document.head.appendChild(ogTitle);
+      }
+      ogTitle.content = metaTitle;
+
+      let ogDesc = document.querySelector('meta[property="og:description"]');
+      if (!ogDesc) {
+        ogDesc = document.createElement('meta');
+        ogDesc.setAttribute('property', 'og:description');
+        document.head.appendChild(ogDesc);
+      }
+      ogDesc.content = metaDescription;
+
+      let ogImage = document.querySelector('meta[property="og:image"]');
+      if (!ogImage) {
+        ogImage = document.createElement('meta');
+        ogImage.setAttribute('property', 'og:image');
+        document.head.appendChild(ogImage);
+      }
+      ogImage.content = dom.hlavny_obrazok;
+    }
+  }, [dom]);
 
   if (isLoading) {
     return (

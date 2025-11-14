@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -170,11 +171,11 @@ Projektant: ${konfig.projektant}
               </h1>
             </div>
             {dom && (
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-4">
-                <p className="text-sm text-blue-200 mb-1">Konfigurujete model:</p>
-                <h2 className="text-2xl font-bold">{dom.nazov}</h2>
-                <p className="text-blue-200 mt-1">
-                  Základná cena: {dom.zakladna_cena?.toLocaleString('sk-SK')}€ s DPH
+              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 mb-4 border border-white/30">
+                <p className="text-sm text-white mb-1 font-semibold">Konfigurujete model:</p>
+                <h2 className="text-2xl font-bold text-white">{dom.nazov}</h2>
+                <p className="text-white mt-1 font-medium">
+                  Základná cena: {dom.zakladna_cena?.toLocaleString('sk-SK')}€ s DPH ({dom.zastavana_plocha}m²)
                 </p>
               </div>
             )}
