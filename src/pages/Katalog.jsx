@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -5,10 +6,11 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, Filter, Home, Maximize2, CheckCircle } from "lucide-react";
+import { ArrowRight, Filter, Home, Maximize2, CheckCircle, Search } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Katalog() {
@@ -16,6 +18,7 @@ export default function Katalog() {
   const [vyrobcaFilter, setVyrobcaFilter] = useState("vsetci");
   const [typFilter, setTypFilter] = useState("vsetky");
   const [plocharozsah, setPlocharozsah] = useState([18, 200]);
+  const [hladanie, setHladanie] = useState("");
 
   const { data: domy = [], isLoading } = useQuery({
     queryKey: ['domy-katalog'],
@@ -27,7 +30,8 @@ export default function Katalog() {
     const vyrobcaMatch = vyrobcaFilter === "vsetci" || dom.vyrobca === vyrobcaFilter;
     const typMatch = typFilter === "vsetky" || dom.typ_domu === typFilter;
     const plochaMatch = dom.zastavana_plocha >= plocharozsah[0] && dom.zastavana_plocha <= plocharozsah[1];
-    return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch;
+    const hladanieMatch = hladanie === "" || dom.nazov.toLowerCase().includes(hladanie.toLowerCase());
+    return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && hladanieMatch;
   });
 
   const vyrobcovia = ["JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"];
@@ -81,6 +85,22 @@ export default function Katalog() {
               </div>
 
               <div className="space-y-6">
+                {/* Vyhľadávanie */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Hľadať podľa názvu
+                  </label>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Input
+                      placeholder="Napr. Lyon, London..."
+                      value={hladanie}
+                      onChange={(e) => setHladanie(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
+
                 {/* Výrobca */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -140,6 +160,7 @@ export default function Katalog() {
                     setVyrobcaFilter("vsetci");
                     setTypFilter("vsetky");
                     setPlocharozsah([18, 200]);
+                    setHladanie("");
                   }}
                 >
                   Resetovať filtre
@@ -250,6 +271,7 @@ export default function Katalog() {
                     setVyrobcaFilter("vsetci");
                     setTypFilter("vsetky");
                     setPlocharozsah([18, 200]);
+                    setHladanie("");
                   }}
                 >
                   Resetovať filtre
