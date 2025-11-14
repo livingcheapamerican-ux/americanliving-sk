@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -43,8 +44,8 @@ export default function Kontakt() {
     {
       icon: Phone,
       nazov: "Telefón",
-      hodnota: "+421 948 393 553",
-      link: "tel:+421948393553",
+      hodnota: "+421 905 138 124", // Updated phone number
+      link: "tel:+421905138124", // Updated phone link
       popis: "Po-Pia 8:00 - 17:00"
     },
     {
@@ -295,10 +296,10 @@ export default function Kontakt() {
               Zavolajte nám priamo alebo napíšte email. Radi zodpovieme všetky vaše otázky.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="tel:+421948393553">
+              <a href="tel:+421905138124"> {/* Updated phone link */}
                 <Button size="lg" className="bg-primary hover:bg-primary/90 w-full sm:w-auto">
                   <Phone className="mr-2 w-5 h-5" />
-                  +421 948 393 553
+                  +421 905 138 124 {/* Updated phone number */}
                 </Button>
               </a>
               <a href="mailto:info@americanliving.sk">

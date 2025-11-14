@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -368,10 +369,10 @@ export default function Domov() {
               Kontaktujte nás ešte dnes a dohodnite si nezáväznú konzultáciu
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="tel:+421948393553">
+              <a href="tel:+421905138124">
                 <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white font-semibold px-8 w-full sm:w-auto">
                   <Phone className="mr-2 w-5 h-5" />
-                  +421 948 393 553
+                  +421 905 138 124
                 </Button>
               </a>
               <Link to={createPageUrl("Kontakt")}>

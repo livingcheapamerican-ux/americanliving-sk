@@ -86,8 +86,8 @@ export default function Layout({ children }) {
 
             {/* CTA Button */}
             <div className="hidden lg:flex items-center gap-3">
-              <a href="tel:+421948393553" className="text-primary font-semibold text-sm">
-                +421 948 393 553
+              <a href="tel:+421905138124" className="text-primary font-semibold text-sm">
+                +421 905 138 124
               </a>
               <Link to={createPageUrl("Kontakt")}>
                 <Button className="bg-secondary hover:bg-secondary/90 text-white font-semibold">
@@ -129,11 +129,11 @@ export default function Layout({ children }) {
               ))}
               <div className="pt-4 space-y-2">
                 <a
-                  href="tel:+421948393553"
+                  href="tel:+421905138124"
                   className="flex items-center justify-center gap-2 text-primary font-semibold py-3"
                 >
                   <Phone className="w-5 h-5" />
-                  +421 948 393 553
+                  +421 905 138 124
                 </a>
                 <Link to={createPageUrl("Kontakt")} onClick={() => setMobileMenuOpen(false)}>
                   <Button className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold">
@@ -158,7 +158,7 @@ export default function Layout({ children }) {
             <div>
               <h3 className="font-bold text-lg mb-4">American Living</h3>
               <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                Distribútor a realizátor stavby modulárných domov. 
+                Distribútor a realizátor stavby modulárnych domov. 
                 Vyrobených viac ako 700 domov od roku 2008.
               </p>
               <p className="text-gray-400 text-sm">
@@ -184,7 +184,7 @@ export default function Layout({ children }) {
               <ul className="space-y-2 text-sm text-gray-400">
                 <li className="flex items-center gap-2">
                   <Phone className="w-4 h-4" />
-                  <a href="tel:+421948393553" className="hover:text-white">+421 948 393 553</a>
+                  <a href="tel:+421905138124" className="hover:text-white">+421 905 138 124</a>
                 </li>
                 <li className="flex items-center gap-2">
                   <Mail className="w-4 h-4" />

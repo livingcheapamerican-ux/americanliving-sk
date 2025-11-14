@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -302,10 +303,10 @@ export default function DetailDomu() {
                   Popýtať si cenovú ponuku
                 </Button>
               </Link>
-              <a href="tel:+421948393553">
+              <a href="tel:+421905138124">
                 <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-lg py-6">
                   <Phone className="mr-2 w-5 h-5" />
-                  Zavolať: +421 948 393 553
+                  Zavolať: +421 905 138 124
                 </Button>
               </a>
             </div>
