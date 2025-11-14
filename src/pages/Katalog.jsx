@@ -27,7 +27,7 @@ export default function Katalog() {
 
   const { data: domy = [], isLoading } = useQuery({
     queryKey: ['domy-katalog'],
-    queryFn: () => base44.entities.Dom.list('poradie'),
+    queryFn: () => base44.entities.Dom.list('poradie')
   });
 
   const filtrovane = domy.filter((dom) => {
@@ -37,7 +37,7 @@ export default function Katalog() {
     const plochaMatch = dom.zastavana_plocha >= plocharozsah[0] && dom.zastavana_plocha <= plocharozsah[1];
     const hladanieMatch = hladanie === "" || dom.nazov.toLowerCase().includes(hladanie.toLowerCase());
     const cenaMatch = dom.zakladna_cena >= cenoveRozpatie[0] && dom.zakladna_cena <= cenoveRozpatie[1];
-    const izbyMatch = !dom.pocet_izieb || (dom.pocet_izieb >= pocetIziebRozpatie[0] && dom.pocet_izieb <= pocetIziebRozpatie[1]);
+    const izbyMatch = !dom.pocet_izieb || dom.pocet_izieb >= pocetIziebRozpatie[0] && dom.pocet_izieb <= pocetIziebRozpatie[1];
     return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && hladanieMatch && cenaMatch && izbyMatch;
   });
 
@@ -52,12 +52,12 @@ export default function Katalog() {
 
   const vyrobcovia = ["JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"];
 
-  const rodinneDomy = domy.filter(d => d.kategoria === "rodinne_domy");
-  const mobilneDomy = domy.filter(d => d.kategoria === "mobilne_domy");
+  const rodinneDomy = domy.filter((d) => d.kategoria === "rodinne_domy");
+  const mobilneDomy = domy.filter((d) => d.kategoria === "mobilne_domy");
 
   const toggleSrovnanie = (dom) => {
-    if (vybraneNaSrovnanie.find(d => d.id === dom.id)) {
-      setVybraneNaSrovnanie(vybraneNaSrovnanie.filter(d => d.id !== dom.id));
+    if (vybraneNaSrovnanie.find((d) => d.id === dom.id)) {
+      setVybraneNaSrovnanie(vybraneNaSrovnanie.filter((d) => d.id !== dom.id));
     } else if (vybraneNaSrovnanie.length < 3) {
       setVybraneNaSrovnanie([...vybraneNaSrovnanie, dom]);
     }
@@ -66,17 +66,17 @@ export default function Katalog() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="bg-gradient-to-r from-gray-100 to-gray-200 py-20">
+      <section className="bg-[#ffdbdb] py-20 from-gray-100 to-gray-200">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-3xl"
-          >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900">
+            className="max-w-3xl">
+
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Katalóg domov
             </h1>
-            <p className="text-xl text-gray-800 font-medium">
+            <p className="text-xl text-white">
               Vyberte si zo širokej ponuky modulárnych a mobilných domov od overených výrobcov. 
               Každý dom je pripravený na kolaudáciu.
             </p>
@@ -99,8 +99,8 @@ export default function Katalog() {
           <motion.aside
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="lg:w-80 flex-shrink-0"
-          >
+            className="lg:w-80 flex-shrink-0">
+
             <Card className="p-6 sticky top-24 shadow-lg">
               <div className="flex items-center gap-2 mb-6">
                 <Filter className="w-5 h-5 text-primary" />
@@ -119,8 +119,8 @@ export default function Katalog() {
                       placeholder="Napr. Lyon, London..."
                       value={hladanie}
                       onChange={(e) => setHladanie(e.target.value)}
-                      className="pl-10"
-                    />
+                      className="pl-10" />
+
                   </div>
                 </div>
 
@@ -155,9 +155,9 @@ export default function Katalog() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="vsetci">Všetci výrobcovia</SelectItem>
-                      {vyrobcovia.map(v => (
-                        <SelectItem key={v} value={v}>{v}</SelectItem>
-                      ))}
+                      {vyrobcovia.map((v) =>
+                      <SelectItem key={v} value={v}>{v}</SelectItem>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
@@ -190,8 +190,8 @@ export default function Katalog() {
                     step={5000}
                     value={cenoveRozpatie}
                     onValueChange={setCenoveRozpatie}
-                    className="mt-4"
-                  />
+                    className="mt-4" />
+
                 </div>
 
                 {/* Počet izieb */}
@@ -205,8 +205,8 @@ export default function Katalog() {
                     step={1}
                     value={pocetIziebRozpatie}
                     onValueChange={setPocetIziebRozpatie}
-                    className="mt-4"
-                  />
+                    className="mt-4" />
+
                 </div>
 
                 {/* Zastavaná plocha */}
@@ -220,8 +220,8 @@ export default function Katalog() {
                     step={5}
                     value={plocharozsah}
                     onValueChange={setPlocharozsah}
-                    className="mt-4"
-                  />
+                    className="mt-4" />
+
                 </div>
 
                 {/* Reset */}
@@ -237,8 +237,8 @@ export default function Katalog() {
                     setCenoveRozpatie([15000, 150000]);
                     setPocetIziebRozpatie([1, 6]);
                     setZoradenie("poradie");
-                  }}
-                >
+                  }}>
+
                   Resetovať filtre
                 </Button>
               </div>
@@ -255,8 +255,8 @@ export default function Katalog() {
           {/* Domy Grid */}
           <div className="flex-grow">
             {/* Srovnání panel */}
-            {vybraneNaSrovnanie.length > 0 && (
-              <Card className="p-4 mb-6 bg-blue-50 border-2 border-primary">
+            {vybraneNaSrovnanie.length > 0 &&
+            <Card className="p-4 mb-6 bg-blue-50 border-2 border-primary">
                 <div className="flex items-center justify-between flex-wrap gap-4">
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-5 h-5 text-primary" />
@@ -265,81 +265,81 @@ export default function Katalog() {
                     </span>
                   </div>
                   <div className="flex gap-2">
-                    {vybraneNaSrovnanie.length >= 2 && (
-                      <Link to={`${createPageUrl("SrovnaniDomu")}?ids=${vybraneNaSrovnanie.map(d => d.id).join(',')}`}>
+                    {vybraneNaSrovnanie.length >= 2 &&
+                  <Link to={`${createPageUrl("SrovnaniDomu")}?ids=${vybraneNaSrovnanie.map((d) => d.id).join(',')}`}>
                         <Button className="bg-secondary hover:bg-secondary/90">
                           Porovnať domy
                           <ArrowRight className="ml-2 w-4 h-4" />
                         </Button>
                       </Link>
-                    )}
+                  }
                     <Button variant="outline" onClick={() => setVybraneNaSrovnanie([])}>
                       Zrušiť výber
                     </Button>
                   </div>
                 </div>
                 <div className="flex gap-2 mt-3 flex-wrap">
-                  {vybraneNaSrovnanie.map(dom => (
-                    <div key={dom.id} className="bg-white px-3 py-1 rounded-full text-sm border border-primary flex items-center gap-2">
+                  {vybraneNaSrovnanie.map((dom) =>
+                <div key={dom.id} className="bg-white px-3 py-1 rounded-full text-sm border border-primary flex items-center gap-2">
                       {dom.nazov}
                       <button onClick={() => toggleSrovnanie(dom)} className="text-red-500 hover:text-red-700">×</button>
                     </div>
-                  ))}
+                )}
                 </div>
               </Card>
-            )}
+            }
 
-            {isLoading ? (
-              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <Card key={i} className="h-96 animate-pulse bg-gray-200" />
-                ))}
-              </div>
-            ) : zoradeneDomy.length > 0 ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="grid md:grid-cols-2 xl:grid-cols-3 gap-6"
-              >
+            {isLoading ?
+            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) =>
+              <Card key={i} className="h-96 animate-pulse bg-gray-200" />
+              )}
+              </div> :
+            zoradeneDomy.length > 0 ?
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+
                 {zoradeneDomy.map((dom, index) => {
-                  const jeVybrany = vybraneNaSrovnanie.find(d => d.id === dom.id);
-                  return (
-                    <motion.div
-                      key={dom.id}
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                    >
+                const jeVybrany = vybraneNaSrovnanie.find((d) => d.id === dom.id);
+                return (
+                  <motion.div
+                    key={dom.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}>
+
                       <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white ${jeVybrany ? 'ring-2 ring-primary' : ''}`}>
                         <div className="relative h-56 overflow-hidden">
                           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
                             <img
-                              src={dom.hlavny_obrazok}
-                              alt={dom.nazov}
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                            />
+                            src={dom.hlavny_obrazok}
+                            alt={dom.nazov}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+
                           </Link>
                           <div className="absolute top-4 left-4 space-y-2">
-                            {dom.celorocny && (
-                              <div className="bg-accent text-white px-3 py-1 rounded-full text-xs font-semibold">
+                            {dom.celorocny &&
+                          <div className="bg-accent text-white px-3 py-1 rounded-full text-xs font-semibold">
                                 ✔ CELOROČNÝ
                               </div>
-                            )}
-                            {dom.energeticky_certifikat && (
-                              <div className="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                          }
+                            {dom.energeticky_certifikat &&
+                          <div className="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
                                 ✔ CERTIFIKÁT A0
                               </div>
-                            )}
+                          }
                           </div>
                           <button
-                            onClick={() => toggleSrovnanie(dom)}
-                            disabled={!jeVybrany && vybraneNaSrovnanie.length >= 3}
-                            className={`absolute top-4 right-4 p-2 rounded-full transition-all ${
-                              jeVybrany 
-                                ? 'bg-primary text-white' 
-                                : 'bg-white/90 text-primary hover:bg-primary hover:text-white'
-                            } ${!jeVybrany && vybraneNaSrovnanie.length >= 3 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                          >
+                          onClick={() => toggleSrovnanie(dom)}
+                          disabled={!jeVybrany && vybraneNaSrovnanie.length >= 3}
+                          className={`absolute top-4 right-4 p-2 rounded-full transition-all ${
+                          jeVybrany ?
+                          'bg-primary text-white' :
+                          'bg-white/90 text-primary hover:bg-primary hover:text-white'} ${
+                          !jeVybrany && vybraneNaSrovnanie.length >= 3 ? 'opacity-50 cursor-not-allowed' : ''}`}>
+
                             <Plus className={`w-5 h-5 transition-transform ${jeVybrany ? 'rotate-45' : ''}`} />
                           </button>
                         </div>
@@ -353,12 +353,12 @@ export default function Katalog() {
                           </Link>
                           
                           <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
-                            {dom.pocet_izieb && (
-                              <div className="flex items-center gap-2 text-gray-600">
+                            {dom.pocet_izieb &&
+                          <div className="flex items-center gap-2 text-gray-600">
                                 <Home className="w-4 h-4" />
                                 <span><span className="font-semibold text-primary">{dom.pocet_izieb}</span> izieb</span>
                               </div>
-                            )}
+                          }
                             <div className="flex items-center gap-2 text-gray-600">
                               <Maximize2 className="w-4 h-4" />
                               <span><span className="font-semibold text-primary">{dom.zastavana_plocha}</span> m²</span>
@@ -381,12 +381,12 @@ export default function Katalog() {
                           </div>
                         </div>
                       </Card>
-                    </motion.div>
-                  );
-                })}
-              </motion.div>
-            ) : (
-              <Card className="p-12 text-center">
+                    </motion.div>);
+
+              })}
+              </motion.div> :
+
+            <Card className="p-12 text-center">
                 <Home className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-gray-700 mb-2">
                   Nenašli sa žiadne domy
@@ -395,24 +395,24 @@ export default function Katalog() {
                   Skúste zmeniť filtre alebo ich resetovať
                 </p>
                 <Button
-                  onClick={() => {
-                    setKategoriaFilter("vsetky");
-                    setVyrobcaFilter("vsetci");
-                    setTypFilter("vsetky");
-                    setPlocharozsah([18, 200]);
-                    setHladanie("");
-                    setCenoveRozpatie([15000, 150000]);
-                    setPocetIziebRozpatie([1, 6]);
-                    setZoradenie("poradie");
-                  }}
-                >
+                onClick={() => {
+                  setKategoriaFilter("vsetky");
+                  setVyrobcaFilter("vsetci");
+                  setTypFilter("vsetky");
+                  setPlocharozsah([18, 200]);
+                  setHladanie("");
+                  setCenoveRozpatie([15000, 150000]);
+                  setPocetIziebRozpatie([1, 6]);
+                  setZoradenie("poradie");
+                }}>
+
                   Resetovať filtre
                 </Button>
               </Card>
-            )}
+            }
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
