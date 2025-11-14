@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Home, Grid3x3, Phone, Info, Menu, X, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Chatbot from "./components/Chatbot";
 
 export default function Layout({ children }) {
   const location = useLocation();
@@ -56,7 +57,7 @@ export default function Layout({ children }) {
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            {/* Logo - zväčšené o 200% */}
+            {/* Logo */}
             <Link to={createPageUrl("Domov")} className="flex items-center gap-3 group">
               <img 
                 src={LOGO_URL} 
@@ -214,6 +215,9 @@ export default function Layout({ children }) {
           </div>
         </div>
       </footer>
+
+      {/* Chatbot */}
+      <Chatbot />
     </div>
   );
 }
