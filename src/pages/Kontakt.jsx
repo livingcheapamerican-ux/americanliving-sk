@@ -6,7 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Phone, Mail, Clock, Send, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Kontakt() {
@@ -14,6 +15,7 @@ export default function Kontakt() {
     meno: "",
     email: "",
     telefon: "",
+    typ_dopytu: "vseobecny",
     poznamka: ""
   });
   const [submitted, setSubmitted] = useState(false);
@@ -27,25 +29,22 @@ export default function Kontakt() {
       setSubmitted(true);
       setTimeout(() => {
         setSubmitted(false);
-        setFormData({ meno: "", email: "", telefon: "", poznamka: "" });
+        setFormData({ meno: "", email: "", telefon: "", typ_dopytu: "vseobecny", poznamka: "" });
       }, 5000);
     },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createDopytMutation.mutate({
-      ...formData,
-      typ_dopytu: "vseobecny"
-    });
+    createDopytMutation.mutate(formData);
   };
 
   const kontaktInfo = [
     {
       icon: Phone,
       nazov: "Telefón",
-      hodnota: "+421 123 456 789",
-      link: "tel:+421123456789",
+      hodnota: "+421 948 393 553",
+      link: "tel:+421948393553",
       popis: "Po-Pia 8:00 - 17:00"
     },
     {
@@ -56,12 +55,6 @@ export default function Kontakt() {
       popis: "Odpovieme do 24 hodín"
     },
     {
-      icon: MapPin,
-      nazov: "Adresa",
-      hodnota: "[Vaša adresa, mesto, PSČ]",
-      popis: "Návšteva po dohode"
-    },
-    {
       icon: Clock,
       nazov: "Otváracie hodiny",
       hodnota: "Po-Pia: 8:00 - 17:00",
@@ -70,9 +63,9 @@ export default function Kontakt() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="bg-gradient-to-r from-navy to-navy/90 text-white py-20">
+      <section className="bg-gradient-to-r from-primary to-blue-700 text-white py-20">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -82,9 +75,9 @@ export default function Kontakt() {
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Kontaktujte nás
             </h1>
-            <p className="text-xl text-gray-200">
+            <p className="text-xl text-blue-100">
               Radi vám poradíme, zodpovieme otázky a pripravíme nezáväznú ponuku. 
-              Tešíme sa na vašu správu!
+              Postaráme sa o všetko od výberu pozemku až po kolaudáciu.
             </p>
           </motion.div>
         </div>
@@ -100,7 +93,7 @@ export default function Kontakt() {
             <Card className="p-8 shadow-xl">
               {!submitted ? (
                 <>
-                  <h2 className="text-2xl font-bold text-navy mb-6">
+                  <h2 className="text-2xl font-bold text-primary mb-6">
                     Napíšte nám
                   </h2>
                   <form onSubmit={handleSubmit} className="space-y-6">
@@ -142,6 +135,24 @@ export default function Kontakt() {
                     </div>
 
                     <div>
+                      <Label htmlFor="typ">Typ dopytu</Label>
+                      <Select 
+                        value={formData.typ_dopytu} 
+                        onValueChange={(value) => setFormData({ ...formData, typ_dopytu: value })}
+                      >
+                        <SelectTrigger className="mt-2">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="vseobecny">Všeobecný dopyt</SelectItem>
+                          <SelectItem value="cenova_ponuka">Cenová ponuka</SelectItem>
+                          <SelectItem value="financovanie">Financovanie</SelectItem>
+                          <SelectItem value="pozemok">Hľadám pozemok</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
                       <Label htmlFor="poznamka">Vaša správa *</Label>
                       <Textarea
                         id="poznamka"
@@ -157,7 +168,7 @@ export default function Kontakt() {
                     <Button
                       type="submit"
                       size="lg"
-                      className="w-full bg-red hover:bg-red/90 text-white font-semibold"
+                      className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold"
                       disabled={createDopytMutation.isPending}
                     >
                       {createDopytMutation.isPending ? (
@@ -180,7 +191,7 @@ export default function Kontakt() {
                   <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <CheckCircle className="w-10 h-10 text-green-600" />
                   </div>
-                  <h3 className="text-2xl font-bold text-navy mb-4">
+                  <h3 className="text-2xl font-bold text-primary mb-4">
                     Ďakujeme za vašu správu!
                   </h3>
                   <p className="text-gray-600 leading-relaxed">
@@ -199,22 +210,22 @@ export default function Kontakt() {
             className="space-y-6"
           >
             <div>
-              <h2 className="text-2xl font-bold text-navy mb-6">
+              <h2 className="text-2xl font-bold text-primary mb-6">
                 Kontaktné informácie
               </h2>
               <div className="space-y-4">
                 {kontaktInfo.map((info, index) => (
                   <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-navy/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <info.icon className="w-6 h-6 text-navy" />
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <info.icon className="w-6 h-6 text-primary" />
                       </div>
                       <div className="flex-grow">
-                        <h3 className="font-semibold text-navy mb-1">{info.nazov}</h3>
+                        <h3 className="font-semibold text-primary mb-1">{info.nazov}</h3>
                         {info.link ? (
                           <a
                             href={info.link}
-                            className="text-lg text-red hover:text-red/80 transition-colors font-medium block mb-1"
+                            className="text-lg text-secondary hover:text-secondary/80 transition-colors font-medium block mb-1"
                           >
                             {info.hodnota}
                           </a>
@@ -231,28 +242,43 @@ export default function Kontakt() {
               </div>
             </div>
 
-            {/* Firemné údaje */}
-            <Card className="p-6 bg-gradient-to-br from-navy/5 to-navy/10">
-              <h3 className="font-bold text-navy mb-4">Firemné údaje</h3>
-              <div className="space-y-2 text-sm text-gray-700">
-                <p><span className="font-semibold">Názov:</span> American Living SK s.r.o.</p>
-                <p><span className="font-semibold">IČO:</span> [Vaše IČO]</p>
-                <p><span className="font-semibold">DIČ:</span> [Vaše DIČ]</p>
-                <p><span className="font-semibold">IČ DPH:</span> [Vaše IČ DPH]</p>
-              </div>
-            </Card>
-
-            {/* Mapa - Placeholder */}
-            <Card className="p-0 overflow-hidden h-64">
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <MapPin className="w-12 h-12 mx-auto mb-2" />
-                  <p className="text-sm">Google Mapa sa zobrazí tu</p>
-                  <p className="text-xs mt-1">
-                    (Nahraďte iframe s Google Maps)
-                  </p>
-                </div>
-              </div>
+            {/* Naše služby */}
+            <Card className="p-6 bg-gradient-to-br from-blue-50 to-white">
+              <h3 className="font-bold text-primary mb-4">Komplexné služby</h3>
+              <ul className="space-y-2 text-sm text-gray-700">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                  <span>Predaj vašej nehnuteľnosti</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                  <span>Výber a nákup pozemku</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                  <span>Vybavenie hypotéky</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                  <span>Projektová dokumentácia</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                  <span>Stavebné povolenie</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                  <span>Výstavba domu</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                  <span>Napojenie na inžinierske siete</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                  <span>Kolaudácia</span>
+                </li>
+              </ul>
             </Card>
           </motion.div>
         </div>
@@ -262,24 +288,23 @@ export default function Kontakt() {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-navy mb-6">
-              Chcete sa dozvedieť viac?
+            <h2 className="text-3xl font-bold text-primary mb-6">
+              Potrebujete rýchlu odpoveď?
             </h2>
             <p className="text-lg text-gray-600 mb-8">
-              Navštívte našu prevádzku alebo si dohodnite online konzultáciu. 
-              Radi vám ukážeme naše realizácie a odpovieme na všetky otázky.
+              Zavolajte nám priamo alebo napíšte email. Radi zodpovieme všetky vaše otázky.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="tel:+421123456789">
-                <Button size="lg" className="bg-navy hover:bg-navy/90 w-full sm:w-auto">
+              <a href="tel:+421948393553">
+                <Button size="lg" className="bg-primary hover:bg-primary/90 w-full sm:w-auto">
                   <Phone className="mr-2 w-5 h-5" />
-                  Zavolať teraz
+                  +421 948 393 553
                 </Button>
               </a>
               <a href="mailto:info@americanliving.sk">
-                <Button size="lg" variant="outline" className="border-2 border-navy text-navy hover:bg-navy hover:text-white w-full sm:w-auto">
+                <Button size="lg" variant="outline" className="border-2 border-primary text-primary hover:bg-primary hover:text-white w-full sm:w-auto">
                   <Mail className="mr-2 w-5 h-5" />
-                  Napísať email
+                  info@americanliving.sk
                 </Button>
               </a>
             </div>

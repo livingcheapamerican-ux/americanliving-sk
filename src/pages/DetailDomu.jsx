@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ArrowLeft, ArrowRight, Home, Maximize2, Bed, Zap, Clock, CheckCircle, X } from "lucide-react";
+import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, X, Phone, Mail } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function DetailDomu() {
@@ -28,9 +28,9 @@ export default function DetailDomu() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F9FAFB] flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-navy mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary mx-auto mb-4"></div>
           <p className="text-gray-600">Načítavam detail domu...</p>
         </div>
       </div>
@@ -39,13 +39,13 @@ export default function DetailDomu() {
 
   if (!dom) {
     return (
-      <div className="min-h-screen bg-[#F9FAFB] flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card className="p-12 text-center max-w-md">
           <Home className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-700 mb-2">Dom sa nenašiel</h2>
-          <p className="text-gray-500 mb-6">Požadovaný dom neexistuje alebo bol odstránený.</p>
+          <p className="text-gray-500 mb-6">Požadovaný dom neexistuje.</p>
           <Link to={createPageUrl("Katalog")}>
-            <Button className="bg-navy hover:bg-navy/90">
+            <Button className="bg-primary hover:bg-primary/90">
               <ArrowLeft className="mr-2 w-4 h-4" />
               Späť do katalógu
             </Button>
@@ -60,12 +60,12 @@ export default function DetailDomu() {
     : [dom.hlavny_obrazok];
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
+    <div className="min-h-screen bg-gray-50">
       {/* Back Button */}
       <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-4">
           <Link to={createPageUrl("Katalog")}>
-            <Button variant="ghost" className="text-navy hover:text-navy/80">
+            <Button variant="ghost" className="text-primary hover:text-primary/80">
               <ArrowLeft className="mr-2 w-4 h-4" />
               Späť do katalógu
             </Button>
@@ -88,38 +88,43 @@ export default function DetailDomu() {
                 alt={`${dom.nazov} - obrázok ${selectedImage + 1}`}
                 className="w-full h-full object-cover"
               />
-              {dom.popularny && (
-                <Badge className="absolute top-4 right-4 bg-red text-white px-4 py-2 text-sm">
-                  Populárny model
-                </Badge>
-              )}
+              <div className="absolute top-4 left-4 space-y-2">
+                {dom.celorocny && (
+                  <Badge className="bg-accent text-white px-4 py-2">✔ CELOROČNÝ</Badge>
+                )}
+                {dom.energeticky_certifikat && (
+                  <Badge className="bg-green-600 text-white px-4 py-2">✔ CERTIFIKÁT A0</Badge>
+                )}
+              </div>
             </div>
 
             {/* Miniatúry */}
-            <div className="grid grid-cols-4 gap-3">
-              {allImages.map((img, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImage(index)}
-                  className={`aspect-video rounded-lg overflow-hidden border-2 transition-all ${
-                    selectedImage === index
-                      ? 'border-navy shadow-lg scale-105'
-                      : 'border-gray-200 hover:border-navy/50'
-                  }`}
-                >
-                  <img
-                    src={img}
-                    alt={`Miniatúra ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </button>
-              ))}
-            </div>
+            {allImages.length > 1 && (
+              <div className="grid grid-cols-4 gap-3">
+                {allImages.map((img, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImage(index)}
+                    className={`aspect-video rounded-lg overflow-hidden border-2 transition-all ${
+                      selectedImage === index
+                        ? 'border-primary shadow-lg scale-105'
+                        : 'border-gray-200 hover:border-primary/50'
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt={`Miniatúra ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Pôdorys */}
             {dom.podorys_url && (
               <Card className="p-6">
-                <h3 className="text-lg font-bold text-navy mb-4">Pôdorys</h3>
+                <h3 className="text-lg font-bold text-primary mb-4">Pôdorys</h3>
                 <button
                   onClick={() => setShowPodorys(true)}
                   className="relative w-full aspect-[4/3] rounded-lg overflow-hidden group"
@@ -131,10 +136,25 @@ export default function DetailDomu() {
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 px-4 py-2 rounded-lg">
-                      <p className="text-sm font-semibold text-navy">Kliknite pre zväčšenie</p>
+                      <p className="text-sm font-semibold text-primary">Kliknite pre zväčšenie</p>
                     </div>
                   </div>
                 </button>
+              </Card>
+            )}
+
+            {/* YouTube Video */}
+            {dom.youtube_url && (
+              <Card className="p-6">
+                <h3 className="text-lg font-bold text-primary mb-4">Video prezentácia</h3>
+                <div className="aspect-video rounded-lg overflow-hidden">
+                  <iframe
+                    src={dom.youtube_url}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
               </Card>
             )}
           </motion.div>
@@ -148,95 +168,146 @@ export default function DetailDomu() {
             {/* Hlavička */}
             <div>
               <div className="flex items-center gap-3 mb-3">
-                <Badge className="bg-navy/10 text-navy border border-navy/20 px-3 py-1">
-                  {dom.typ === 'bungalov' ? 'Bungalov' : 'Poschodový dom'}
+                <Badge className="bg-primary/10 text-primary border border-primary/20 px-3 py-1">
+                  {dom.vyrobca}
+                </Badge>
+                <Badge className="bg-gray-100 text-gray-700 px-3 py-1">
+                  {dom.typ_domu === 'modularny' ? 'Modulárny dom' : 'Mobilný dom'}
                 </Badge>
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-navy mb-4">
+              <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
                 {dom.nazov}
               </h1>
               <div className="flex items-baseline gap-2">
                 <span className="text-sm text-gray-500">Cena od</span>
-                <span className="text-4xl font-bold text-navy">
-                  {dom.cena_od?.toLocaleString('sk-SK')} €
+                <span className="text-4xl font-bold text-primary">
+                  {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                 </span>
                 <span className="text-sm text-gray-500">s DPH</span>
               </div>
+              <p className="text-sm text-gray-500 mt-2">- cena základného modelu</p>
             </div>
 
             {/* Parametre */}
-            <Card className="p-6">
-              <h3 className="text-lg font-bold text-navy mb-4">Základné parametre</h3>
+            <Card className="p-6 bg-gradient-to-br from-blue-50 to-white">
+              <h3 className="text-lg font-bold text-primary mb-4">Základné parametre</h3>
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <Bed className="w-8 h-8 text-navy" />
+                {dom.pocet_izieb && (
+                  <div className="flex items-center gap-3">
+                    <Home className="w-6 h-6 text-primary" />
+                    <div>
+                      <p className="text-sm text-gray-500">Počet izieb</p>
+                      <p className="text-xl font-bold text-primary">{dom.pocet_izieb}</p>
+                    </div>
+                  </div>
+                )}
+                <div className="flex items-center gap-3">
+                  <Maximize2 className="w-6 h-6 text-primary" />
                   <div>
-                    <p className="text-sm text-gray-500">Počet izieb</p>
-                    <p className="text-xl font-bold text-navy">{dom.pocet_izieb}</p>
+                    <p className="text-sm text-gray-500">Zastavaná plocha</p>
+                    <p className="text-xl font-bold text-primary">{dom.zastavana_plocha} m²</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <Maximize2 className="w-8 h-8 text-navy" />
-                  <div>
-                    <p className="text-sm text-gray-500">Úžitková plocha</p>
-                    <p className="text-xl font-bold text-navy">{dom.uzitkova_plocha} m²</p>
+                {dom.uzitkova_plocha && (
+                  <div className="flex items-center gap-3">
+                    <Maximize2 className="w-6 h-6 text-accent" />
+                    <div>
+                      <p className="text-sm text-gray-500">Úžitková plocha</p>
+                      <p className="text-xl font-bold text-primary">{dom.uzitkova_plocha} m²</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <Zap className="w-8 h-8 text-green-600" />
-                  <div>
-                    <p className="text-sm text-gray-500">Energetická trieda</p>
-                    <p className="text-xl font-bold text-navy">A</p>
+                )}
+                {dom.energeticky_certifikat && (
+                  <div className="flex items-center gap-3">
+                    <Zap className="w-6 h-6 text-green-600" />
+                    <div>
+                      <p className="text-sm text-gray-500">Energetická trieda</p>
+                      <p className="text-xl font-bold text-primary">A0</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <Clock className="w-8 h-8 text-navy" />
-                  <div>
-                    <p className="text-sm text-gray-500">Výstavba</p>
-                    <p className="text-xl font-bold text-navy">4-6 mes.</p>
-                  </div>
-                </div>
+                )}
               </div>
             </Card>
+
+            {/* Rozmery */}
+            {dom.rozmery && (
+              <Card className="p-6">
+                <h3 className="text-lg font-bold text-primary mb-4">Vonkajšie rozmery</h3>
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Šírka</p>
+                    <p className="text-2xl font-bold text-primary">{dom.rozmery.sirka} m</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Dĺžka</p>
+                    <p className="text-2xl font-bold text-primary">{dom.rozmery.dlzka} m</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Výška</p>
+                    <p className="text-2xl font-bold text-primary">{dom.rozmery.vyska} m</p>
+                  </div>
+                </div>
+                {dom.vyska_stropu && (
+                  <p className="text-sm text-gray-600 mt-4 text-center">
+                    Výška stropu: <span className="font-semibold">{dom.vyska_stropu}</span>
+                  </p>
+                )}
+              </Card>
+            )}
 
             {/* Popis */}
             {dom.popis && (
               <Card className="p-6">
-                <h3 className="text-lg font-bold text-navy mb-4">Popis domu</h3>
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                <h3 className="text-lg font-bold text-primary mb-4">Popis modulového domu</h3>
+                <div className="text-gray-700 leading-relaxed whitespace-pre-line">
                   {dom.popis}
-                </p>
+                </div>
               </Card>
             )}
 
-            {/* Výhody */}
-            {dom.vyhody && dom.vyhody.length > 0 && (
+            {/* Špecifikácia */}
+            {dom.specifikacia && (
               <Card className="p-6">
-                <h3 className="text-lg font-bold text-navy mb-4">Výhody tohto modelu</h3>
-                <ul className="space-y-3">
-                  {dom.vyhody.map((vyhoda, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700">{vyhoda}</span>
-                    </li>
-                  ))}
-                </ul>
+                <h3 className="text-lg font-bold text-primary mb-4">Špecifikácia</h3>
+                <div className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+                  {dom.specifikacia}
+                </div>
               </Card>
             )}
+
+            {/* Čo obsahuje cena */}
+            <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
+              <h3 className="text-lg font-bold text-primary mb-4">✔ Konfigurácia zahŕňa:</h3>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-sm">
+                  <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                  <span>Rodinný dom s možnosťou kolaudácie</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                  <span>Možnosť energetického certifikátu A0</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm">
+                  <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                  <span>Rekreačná budova (chata/záhradný domček)</span>
+                </li>
+              </ul>
+            </Card>
 
             {/* CTA Buttons */}
             <div className="space-y-3 sticky top-24">
-              <Link to={createPageUrl("Konfigurator")}>
-                <Button size="lg" className="w-full bg-red hover:bg-red/90 text-white font-semibold text-lg py-6">
-                  Prispôsobiť tento dom v konfigurátore
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
               <Link to={createPageUrl("Kontakt")}>
-                <Button size="lg" variant="outline" className="w-full border-2 border-navy text-navy hover:bg-navy hover:text-white font-semibold text-lg py-6">
-                  Popýtať si viac informácií
+                <Button size="lg" className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold text-lg py-6">
+                  <Mail className="mr-2 w-5 h-5" />
+                  Popýtať si cenovú ponuku
                 </Button>
               </Link>
+              <a href="tel:+421948393553">
+                <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-lg py-6">
+                  <Phone className="mr-2 w-5 h-5" />
+                  Zavolať: +421 948 393 553
+                </Button>
+              </a>
             </div>
           </motion.div>
         </div>
@@ -247,7 +318,7 @@ export default function DetailDomu() {
         <DialogContent className="max-w-6xl">
           <button
             onClick={() => setShowPodorys(false)}
-            className="absolute top-4 right-4 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-colors"
+            className="absolute top-4 right-4 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-colors z-50"
           >
             <X className="w-6 h-6 text-white" />
           </button>
