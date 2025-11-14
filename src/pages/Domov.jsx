@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -8,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { 
   ArrowRight, CheckCircle, Home, Zap, Clock, Shield, Euro,
-  FileText, Hammer, Key, Phone, Building2, ChevronRight
+  FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -53,6 +52,49 @@ export default function Domov() {
       icon: Shield,
       title: "S kolaudáciou",
       description: "Všetko od projektu po kolaudáciu. Žiadne starosti s úradmi."
+    }
+  ];
+
+  const sluzby = [
+    { 
+      icon: Building2, 
+      nazov: "Predaj vašej nehnuteľnosti",
+      popis: "Realitná kancelária"
+    },
+    { 
+      icon: Home, 
+      nazov: "Výber a nákup pozemku",
+      popis: "Nájdeme ideálny pozemok"
+    },
+    { 
+      icon: TrendingUp, 
+      nazov: "Vybavenie hypotéky",
+      popis: "Finančné služby"
+    },
+    { 
+      icon: FileText, 
+      nazov: "Projektová dokumentácia",
+      popis: "Kompletný projekt"
+    },
+    { 
+      icon: Shield, 
+      nazov: "Stavebné povolenie",
+      popis: "Vybavíme za vás"
+    },
+    { 
+      icon: Hammer, 
+      nazov: "Výstavba domu",
+      popis: "Stavebná firma"
+    },
+    { 
+      icon: Zap, 
+      nazov: "Napojenie na inžinierske siete",
+      popis: "Kompletné pripojenie"
+    },
+    { 
+      icon: Key, 
+      nazov: "Kolaudácia",
+      popis: "Od A po Z"
     }
   ];
 
@@ -167,6 +209,77 @@ export default function Domov() {
               }`}
             />
           ))}
+        </div>
+      </section>
+
+      {/* Komplexné služby - NOVÁ SEKCIA */}
+      <section className="py-20 bg-gradient-to-br from-primary via-blue-700 to-primary text-white">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Všetko na jednom mieste
+            </h2>
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-4">
+              Nie sme len stavebná firma. Poskytujeme <strong>komplexné služby</strong> - 
+              od realitnej kancelárie cez finančné poradenstvo až po stavebnú realizáciu.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 text-lg font-semibold">
+              <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+                <Building className="w-5 h-5" />
+                <span>Stavebná firma</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+                <Building2 className="w-5 h-5" />
+                <span>Realitná kancelária</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
+                <Landmark className="w-5 h-5" />
+                <span>Finančné služby</span>
+              </div>
+            </div>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            {sluzby.map((sluzba, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <Card className="p-6 h-full bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all">
+                  <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mb-4">
+                    <sluzba.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">{sluzba.nazov}</h3>
+                  <p className="text-sm text-blue-100">{sluzba.popis}</p>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <p className="text-xl text-blue-100 mb-6">
+              <strong>Nemusíte vybavovať nič sami.</strong> Postaráme sa o celý proces od A po Z.
+            </p>
+            <Link to={createPageUrl("Kontakt")}>
+              <Button size="lg" className="bg-white text-primary hover:bg-gray-100 font-semibold px-8">
+                Začať projekt
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
