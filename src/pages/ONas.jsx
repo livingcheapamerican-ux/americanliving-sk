@@ -1,70 +1,67 @@
+
 import React from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Shield, Users, Award, TrendingUp, CheckCircle, Phone, Building2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Heart, Target, Award, Users, ArrowRight, Shield, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function ONas() {
   const hodnoty = [
     {
-      icon: Shield,
-      nadpis: "Transparentnosť",
-      popis: "Bez skrytých poplatkov. Žiadne zavádzajúce reklamy. Presné ceny dopredu."
-    },
-    {
       icon: Award,
-      nadpis: "Kvalita",
-      popis: "Pracujeme len s overenými výrobcami. Všetky domy spĺňajú legislatívne požiadavky SR."
+      nazov: "Kvalita a overení výrobcovia",
+      popis: "Spolupracujeme len s overenými výrobcami modulárnych domov"
     },
     {
-      icon: Users,
-      nadpis: "Profesionalita",
-      popis: "Skúsený tím s dlhoročnými skúsenosťami. Komplexná starostlivosť od A po Z."
+      icon: Shield,
+      nazov: "Transparentnosť",
+      popis: "Jasné ceny bez skrytých poplatkov. Žiadne prekvapenia."
     },
     {
-      icon: TrendingUp,
-      nadpis: "Inovácia",
-      popis: "Moderné technológie, energetická efektívnosť a udržateľné riešenia."
+      icon: Target,
+      nazov: "Komplexné služby",
+      popis: "Od výberu pozemku až po kolaudáciu. Postaráme sa o všetko."
+    },
+    {
+      icon: Heart,
+      nazov: "Spokojnosť klientov",
+      popis: "Vaša spokojnosť je našou prioritou. Viac ako 700 realizovaných domov."
     }
   ];
 
-  const stats = [
-    { cislo: "700+", popis: "Vyrobených domov" },
-    { cislo: "2008", popis: "Rok založenia" },
-    { cislo: "4", popis: "Overení výrobcovia" },
-    { cislo: "100%", popis: "Spokojných klientov" }
+  const statistiky = [
+    { cislo: "700+", popis: "Realizovaných domov", icon: "🏠" },
+    { cislo: "2008", popis: "Rok založenia", icon: "📅" },
+    { cislo: "4", popis: "Overení výrobcovia", icon: "🏭" },
+    { cislo: "100%", popis: "S kolaudáciou", icon: "✅" }
   ];
 
   const vyrobcovia = [
     {
       nazov: "JAK Modules",
-      popis: "Špecialisti na modulárne domy s moderným dizajnom a vysokou energetickou účinnosťou.",
-      specialita: "Modulárne rodinné domy"
+      popis: "Špecialista na modulárne domy s možnosťou rýchlej výstavby"
     },
     {
       nazov: "Ticab House",
-      popis: "Priekopníci v oblasti mobilných a modulárnych domov s dlhoročnou tradíciou.",
-      specialita: "Mobilné a modulárne domy"
+      popis: "Výrobca kvalitných modulárnych domov s moderným dizajnom"
     },
     {
       nazov: "Prosto House",
-      popis: "Poľský výrobca známy svojou flexibilitou a rýchlou realizáciou projektov.",
-      specialita: "Konfigurovateľné modulárne domy"
+      popis: "Jednoduché a funkčné riešenia pre moderné bývanie"
     },
     {
       nazov: "Domki z Gór",
-      popis: "Tradičné horské domy s modernou technológiou a ekologickým prístupom.",
-      specialita: "Drevené modulárne domy"
+      popis: "Poľský výrobca drevodomov s tradíciou kvality"
     }
   ];
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="bg-gradient-to-r from-primary to-blue-700 text-white py-20">
-        <div className="container mx-auto px-4">
+      <section className="relative bg-gradient-to-r from-primary to-blue-700 text-white py-20 overflow-hidden">
+        <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -73,109 +70,33 @@ export default function ONas() {
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               O nás
             </h1>
-            <p className="text-xl md:text-2xl text-white leading-relaxed">
-              Sme distribútor a realizátor modulárnych domov s viac ako 15-ročnou 
-              históriou. Od roku 2008 sme pomohli stovkám rodín nájsť ich vysnívaný domov.
+            <p className="text-xl text-white mb-6 font-semibold">
+              Distribútor a realizátor stavby modulárnych domov
+            </p>
+            <p className="text-lg text-gray-100">
+              Vyrobených viac ako 700 domov od roku 2008. Sme tu pre vás s poctivým prístupom, 
+              kde sa môžete spoľahnúť na transparentnosť a korektnosť.
             </p>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Naša misia */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Naša misia
-              </h2>
-              <p className="text-xl text-gray-700 leading-relaxed">
-                Našou misiou je sprístupniť kvalitné bývanie každému. Veríme, že každý si 
-                zaslúži svoj vlastný dom bez zbytočných komplikácií, prieťahov a nejasných cien. 
-                Preto ponúkame <span className="font-bold text-primary">transparentné služby</span>, 
-                <span className="font-bold text-primary"> overených výrobcov</span> a 
-                <span className="font-bold text-primary"> komplexnú starostlivosť</span> od začiatku až po kľúče.
-              </p>
-            </motion.div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card className="p-6 bg-blue-50 border-2 border-blue-200">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Transparentnosť</h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Žiadne skryté poplatky. Žiadne zavádzajúce reklamy. Všetky ceny sú jasné dopredu. 
-                  Presne viete, čo dostanete a za koľko.
-                </p>
-              </Card>
-              <Card className="p-6 bg-green-50 border-2 border-green-200">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Komplexnosť</h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Od predaja nehnuteľnosti cez výber pozemku, financovanie, projektovú dokumentáciu 
-                  až po kolaudáciu. Všetko na jednom mieste.
-                </p>
-              </Card>
-            </div>
-          </div>
         </div>
       </section>
 
       {/* Štatistiky */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((stat, index) => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
+            {statistiky.map((stat, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="text-center"
-              >
-                <p className="text-5xl md:text-6xl font-bold text-primary mb-2">{stat.cislo}</p>
-                <p className="text-gray-700 font-semibold">{stat.popis}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Naše hodnoty */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Naše hodnoty
-            </h2>
-            <p className="text-xl text-gray-700 max-w-2xl mx-auto">
-              Princípy, ktorými sa riadime pri každom projekte
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {hodnoty.map((hodnota, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
               >
-                <Card className="p-6 h-full hover:shadow-xl transition-shadow bg-white">
-                  <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
-                    <hodnota.icon className="w-7 h-7 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{hodnota.nadpis}</h3>
-                  <p className="text-gray-700 leading-relaxed">{hodnota.popis}</p>
+                <Card className="p-8 text-center hover:shadow-xl transition-shadow bg-gradient-to-br from-blue-50 to-white">
+                  <div className="text-5xl mb-4">{stat.icon}</div>
+                  <div className="text-4xl font-bold text-primary mb-2">{stat.cislo}</div>
+                  <p className="text-gray-600 font-medium">{stat.popis}</p>
                 </Card>
               </motion.div>
             ))}
@@ -183,43 +104,114 @@ export default function ONas() {
         </div>
       </section>
 
-      {/* Výrobcovia */}
+      {/* Prečo American Living */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Naši partneri
+            <h2 className="text-4xl font-bold text-primary mb-4">
+              Prečo si vybrať American Living?
             </h2>
-            <p className="text-xl text-gray-700 max-w-2xl mx-auto">
-              Spolupracujeme len s overenými výrobcami s dlhoročnou tradíciou
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              American Living je značka kvality a naše domy sú len od overených dodávateľov, ktorí majú svoju históriu a rokmi overené skúsenosti
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            {vyrobcovia.map((vyrobca, index) => (
+          <div className="max-w-5xl mx-auto space-y-8 mb-16">
+            {/* Poctivosť */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Card className="p-8">
+                <h3 className="text-2xl font-bold text-primary mb-4">
+                  Zabudnite na zavádzajúce reklamy
+                </h3>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  Zabudnite na zavádzajúce reklamy, ktoré sľubujú domy za nereálne ceny. 
+                  U nás máte vždy <strong>jasne stanovenú konečnú cenu – žiadne skryté poplatky ani prekvapenia</strong>. 
+                  Sme tu pre vás s poctivým prístupom, kde sa môžete spoľahnúť na transparentnosť a korektnosť.
+                </p>
+              </Card>
+            </motion.div>
+
+            {/* Zodpovednosť */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Card className="p-8 bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-300">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  Zodpovednosť za stavbu modulárneho domu
+                </h3>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  Mnohé spoločnosti predávajú modulárne domy bez upozornenia na legislatívne povinnosti, 
+                  čo môže viesť k problémom pri bývaní, pri kolaudácii a pripojení na inžinierske siete.
+                </p>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  Často sa stane, že pri najlacnejšej verzii domu zistíte až neskôr, že vám chýbajú dôležité komponenty, 
+                  ktoré sú potrebné pre získanie stavebného povolenia a energetického certifikátu A0.
+                </p>
+                <p className="text-gray-900 font-semibold">
+                  ⚠️ Ak nebudete mať modulárny dom správne skolaudovaný, môže byť považovaný za čiernu stavbu!
+                </p>
+              </Card>
+            </motion.div>
+
+            {/* Naše riešenie */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Card className="p-8 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300">
+                <h3 className="text-2xl font-bold text-green-900 mb-6">
+                  ✓ Naše domy spĺňajú všetky potrebné normy
+                </h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-700">Pripravené na kolaudáciu ako plnohodnotné rodinné domy</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-700">Všetky potrebné stavebné povolenia a dokumentácia</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-700">Možnosť energetického certifikátu A0</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-700">Pripojenie na všetky inžinierske siete</span>
+                  </li>
+                </ul>
+              </Card>
+            </motion.div>
+          </div>
+
+          {/* Naše hodnoty */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {hodnoty.map((hodnota, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.1 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
               >
-                <Card className="p-6 hover:shadow-xl transition-shadow h-full bg-white">
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Building2 className="w-6 h-6 text-accent" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-900 mb-1">{vyrobca.nazov}</h3>
-                      <p className="text-sm text-primary font-semibold">{vyrobca.specialita}</p>
-                    </div>
+                <Card className="p-6 h-full text-center hover:shadow-xl transition-all hover:-translate-y-2">
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <hodnota.icon className="w-8 h-8 text-primary" />
                   </div>
-                  <p className="text-gray-700 leading-relaxed">{vyrobca.popis}</p>
+                  <h3 className="text-lg font-bold text-primary mb-3">{hodnota.nazov}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">{hodnota.popis}</p>
                 </Card>
               </motion.div>
             ))}
@@ -227,76 +219,69 @@ export default function ONas() {
         </div>
       </section>
 
-      {/* Prečo si vybrať nás */}
+      {/* Naši výrobcovia */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Prečo si vybrať práve nás?
-              </h2>
-            </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold text-primary mb-4">
+              Naši výrobcovia
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Oficiálny distribútor overených výrobcov modulárnych domov
+            </p>
+          </motion.div>
 
-            <div className="space-y-4">
-              {[
-                "Komplexné služby od predaja nehnuteľnosti až po kolaudáciu",
-                "Viac ako 700 vyrobených domov od roku 2008",
-                "Transparentné ceny bez skrytých poplatkov",
-                "Overení výrobcovia s medzinárodnými certifikátmi",
-                "Energetická trieda A0 - minimálne náklady na vykurovanie",
-                "5-ročná záruka na všetky domy",
-                "Rýchla výstavba za 4-6 mesiacov",
-                "Profesionálny tím s dlhoročnými skúsenosťami"
-              ].map((bod, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  viewport={{ once: true }}
-                  className="flex items-start gap-3 bg-gray-50 p-4 rounded-lg"
-                >
-                  <CheckCircle className="w-6 h-6 text-accent flex-shrink-0 mt-0.5" />
-                  <p className="text-lg text-gray-800">{bod}</p>
-                </motion.div>
-              ))}
-            </div>
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {vyrobcovia.map((vyrobca, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="p-6 hover:shadow-xl transition-shadow">
+                  <h3 className="text-xl font-bold text-primary mb-2">{vyrobca.nazov}</h3>
+                  <p className="text-gray-600">{vyrobca.popis}</p>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-r from-primary to-blue-700 text-white">
+      <section className="py-20 bg-gradient-to-br from-primary to-blue-700 text-white">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center max-w-3xl mx-auto"
+            className="max-w-3xl mx-auto text-center"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Pripravení začať s nami?
+            <h2 className="text-4xl font-bold mb-6">
+              Pripravení na vlastný dom?
             </h2>
             <p className="text-xl mb-8 text-white">
-              Kontaktujte nás a spoločne nájdeme riešenie presne pre vás
+              Kontaktujte nás a spoločne nájdeme ideálne riešenie pre vás
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to={createPageUrl("Katalog")}>
+                <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white font-semibold px-8 w-full sm:w-auto">
+                  Zobraziť ponuku
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Link>
               <Link to={createPageUrl("Kontakt")}>
-                <Button size="lg" className="bg-white text-primary hover:bg-gray-100 font-semibold text-lg px-8 py-6">
+                <Button size="lg" variant="outline" className="bg-white/10 border-2 border-white text-white hover:bg-white hover:text-primary font-semibold px-8 w-full sm:w-auto">
                   Kontaktovať nás
                 </Button>
               </Link>
-              <a href="tel:+421905138124">
-                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-primary font-semibold text-lg px-8 py-6">
-                  <Phone className="mr-2 w-5 h-5" />
-                  +421 905 138 124
-                </Button>
-              </a>
             </div>
           </motion.div>
         </div>
