@@ -37,7 +37,7 @@ export default function Katalog() {
     const plochaMatch = dom.zastavana_plocha >= plocharozsah[0] && dom.zastavana_plocha <= plocharozsah[1];
     const hladanieMatch = hladanie === "" || dom.nazov.toLowerCase().includes(hladanie.toLowerCase());
     const cenaMatch = dom.zakladna_cena >= cenoveRozpatie[0] && dom.zakladna_cena <= cenoveRozpatie[1];
-    const izbyMatch = !dom.pocet_izieb || dom.pocet_izieb >= pocetIziebRozpatie[0] && dom.pocet_izieb <= pocetIziebRozpatie[1];
+    const izbyMatch = !dom.pocet_izieb || (dom.pocet_izieb >= pocetIziebRozpatie[0] && dom.pocet_izieb <= pocetIziebRozpatie[1]);
     return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && hladanieMatch && cenaMatch && izbyMatch;
   });
 
@@ -66,19 +66,19 @@ export default function Katalog() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="bg-[#ffdbdb] py-20 from-gray-100 to-gray-200">
+      <section className="bg-gradient-to-r from-gray-800 to-gray-900 py-20">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="max-w-3xl">
 
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
               Katalóg domov
             </h1>
-            <p className="bg-[#ffff99] text-slate-900 text-xl">Vyberte si zo širokej ponuky modulárnych a mobilných domov od overených výrobcov. Každý dom je pripravený na kolaudáciu.
-
-
+            <p className="text-xl text-white font-medium">
+              Vyberte si zo širokej ponuky modulárnych a mobilných domov od overených výrobcov.
+              Každý dom je pripravený na kolaudáciu.
             </p>
           </motion.div>
         </div>
