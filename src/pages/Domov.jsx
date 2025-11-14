@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -319,7 +320,7 @@ export default function Domov() {
               Prečo si vybrať American Living?
             </h2>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              American Living je značka kvality a naše domy sú len od overených dodávateľov
+              American Living je značka kvality a naše domy sú len od overených dodávateľov, ktorí majú svoju históriu a rokmi overené skúsenosti
             </p>
           </motion.div>
 

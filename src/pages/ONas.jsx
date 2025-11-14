@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -116,7 +117,7 @@ export default function ONas() {
               Prečo si vybrať American Living?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              American Living je značka kvality a naše domy sú len od overených dodávateľov
+              American Living je značka kvality a naše domy sú len od overených dodávateľov, ktorí majú svoju históriu a rokmi overené skúsenosti
             </p>
           </motion.div>
 
