@@ -130,7 +130,7 @@ export default function Katalog() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="vsetky">Všetky typy</SelectItem>
-                      <SelectItem value="modularny">Modulárny dom</SelectItem>
+                      <SelectItem value="modularny">Rodinný dom</SelectItem>
                       <SelectItem value="mobilny">Mobilný dom</SelectItem>
                     </SelectContent>
                   </Select>
