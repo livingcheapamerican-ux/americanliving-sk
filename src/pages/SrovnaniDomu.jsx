@@ -1,3 +1,4 @@
+
 import React from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -135,7 +136,7 @@ export default function SrovnaniDomu() {
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Porovnanie domov
             </h1>
-            <p className="text-xl text-blue-100">
+            <p className="text-xl text-white">
               Porovnajte {domy.length} vybraté domy podľa kľúčových parametrov
             </p>
           </motion.div>

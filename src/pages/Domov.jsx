@@ -477,7 +477,7 @@ export default function Domov() {
                 transition={{ delay: index * 0.05 }}
               >
                 <Card className="p-6 h-full hover:shadow-xl transition-all hover:-translate-y-1 bg-white border-2 border-gray-100">
-                  <div className="text-5xl font-bold text-blue-100 mb-4">{krok.cislo}</div>
+                  <div className="text-5xl font-bold text-primary/20 mb-4">{krok.cislo}</div>
                   <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center mb-4 shadow-lg">
                     <krok.icon className="w-6 h-6 text-white" />
                   </div>
