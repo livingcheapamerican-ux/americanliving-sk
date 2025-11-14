@@ -26,6 +26,8 @@ export default function Layout({ children }) {
 
   const isActive = (path) => location.pathname === path;
 
+  const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/5d6cd9430_AmericanLiving.png";
+
   return (
     <div className="min-h-screen bg-gray-50">
       <style>{`
@@ -56,15 +58,11 @@ export default function Layout({ children }) {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link to={createPageUrl("Domov")} className="flex items-center gap-3 group">
-              <div className="relative">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center transform transition-transform group-hover:scale-105">
-                  <Home className="w-6 h-6 text-white" />
-                </div>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-primary">American Living</h1>
-                <p className="text-xs text-gray-600">Modulárne domy</p>
-              </div>
+              <img 
+                src={LOGO_URL} 
+                alt="American Living" 
+                className="h-16 w-auto transition-transform group-hover:scale-105"
+              />
             </Link>
 
             {/* Desktop Navigation */}
@@ -156,7 +154,11 @@ export default function Layout({ children }) {
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-bold text-lg mb-4">American Living</h3>
+              <img 
+                src={LOGO_URL} 
+                alt="American Living" 
+                className="h-20 w-auto mb-4 brightness-0 invert"
+              />
               <p className="text-gray-400 text-sm leading-relaxed mb-4">
                 Distribútor a realizátor stavby modulárnych domov. 
                 Vyrobených viac ako 700 domov od roku 2008.
