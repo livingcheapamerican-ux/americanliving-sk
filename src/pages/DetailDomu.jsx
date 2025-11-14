@@ -118,6 +118,7 @@ export default function DetailDomu() {
     : [dom.hlavny_obrazok];
 
   const isProstoHouse = dom.vyrobca === "Prosto House";
+  const isTicabhouse = dom.vyrobca === "Ticab house" || dom.vyrobca === "JAK Modules" || dom.vyrobca === "Domki z Gór";
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -261,6 +262,16 @@ export default function DetailDomu() {
                     <strong>Základná cena je za samotnú konštrukciu bez montážnych prác.</strong> Cenu montáže si môžete vypočítať v konfigurátore.
                   </p>
                 </div>
+              ) : isTicabhouse ? (
+                <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <p className="text-sm text-blue-800 mb-2">
+                    <strong>Modulárna konštrukcia domu – flexibilné riešenie pre vaše bývanie.</strong>
+                  </p>
+                  <p className="text-sm text-blue-700">
+                    Základná cena zahŕňa kompletnú štandardnú výbavu pre <strong>rekreačnú stavbu</strong>. 
+                    Možnosť upgradu na <strong>Rodinný dom s certifikátom A0</strong> v konfigurátore.
+                  </p>
+                </div>
               ) : (
                 <p className="text-sm text-gray-500 mt-2">- cena základného modelu</p>
               )}
@@ -343,6 +354,54 @@ export default function DetailDomu() {
               </Card>
             )}
 
+            {/* Štandardná výbava pre Ticabhouse */}
+            {isTicabhouse && (
+              <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
+                <h3 className="text-lg font-bold text-primary mb-4">✔ Štandardná výbava (zahrnutá v cene)</h3>
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Konštrukcia a izolácia:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Rám zo suchého reziva ošetreného bio-roztokom</li>
+                      <li>Izolácia stien 150mm (bazaltová vlna)</li>
+                      <li>Izolácia podlahy a stropu 200mm stlačených na 150mm</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Okná a dvere:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Dvojkomorové kovoplastové okná, energeticky úsporné</li>
+                      <li>Kovoplastové vchodové dvere</li>
+                      <li>Interiérové dvere MDF</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Exteriér:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Fasáda z prírodného dreva alebo panelových systémov</li>
+                      <li>Strešná krytina (kovová škridla / falcované panely)</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Interiér:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Obloženie prírodným drevom alebo laminátovými panelmi</li>
+                      <li>Polo-komerčný laminát</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Technológie:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Elektrické rozvody, LED osvetlenie</li>
+                      <li>Bojler 80l</li>
+                      <li>Príprava na vykurovanie (zásuvky pod oknami)</li>
+                      <li>Vodoinštalácia, prípojky pre kuchyňu a práčku</li>
+                    </ul>
+                  </div>
+                </div>
+              </Card>
+            )}
+
             {/* Špecifikácia */}
             {dom.specifikacia && (
               <Card className="p-6">
@@ -355,7 +414,7 @@ export default function DetailDomu() {
 
             {/* Čo obsahuje cena */}
             <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
-              <h3 className="text-lg font-bold text-primary mb-4">✔ Konfigurácia zahŕňa:</h3>
+              <h3 className="text-lg font-bold text-primary mb-4">✔ Možnosti využitia:</h3>
               <ul className="space-y-2">
                 <li className="flex items-start gap-2 text-sm">
                   <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
@@ -379,6 +438,13 @@ export default function DetailDomu() {
                   <Button size="lg" className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold text-lg py-6">
                     <Settings className="mr-2 w-5 h-5" />
                     Spustiť konfigurátor Prosto House
+                  </Button>
+                </Link>
+              ) : isTicabhouse ? (
+                <Link to={`${createPageUrl("KonfiguratorTicabhouse")}?id=${dom.id}`}>
+                  <Button size="lg" className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold text-lg py-6">
+                    <Settings className="mr-2 w-5 h-5" />
+                    Spustiť konfigurátor {dom.vyrobca}
                   </Button>
                 </Link>
               ) : (

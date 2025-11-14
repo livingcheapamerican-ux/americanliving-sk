@@ -7,6 +7,7 @@ import ONas from './pages/ONas';
 import Kontakt from './pages/Kontakt';
 import SrovnaniDomu from './pages/SrovnaniDomu';
 import KonfiguratorProstoHouse from './pages/KonfiguratorProstoHouse';
+import KonfiguratorTicabhouse from './pages/KonfiguratorTicabhouse';
 import Layout from './Layout.jsx';
 
 
@@ -20,6 +21,7 @@ export const PAGES = {
     "Kontakt": Kontakt,
     "SrovnaniDomu": SrovnaniDomu,
     "KonfiguratorProstoHouse": KonfiguratorProstoHouse,
+    "KonfiguratorTicabhouse": KonfiguratorTicabhouse,
 }
 
 export const pagesConfig = {
