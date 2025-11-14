@@ -154,26 +154,28 @@ export default function Layout({ children }) {
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div>
-              <img 
-                src={LOGO_URL} 
-                alt="American Living" 
-                className="h-24 w-auto mb-4 brightness-0 invert"
-              />
-              <p className="text-gray-400 text-sm leading-relaxed mb-4">
+              <div className="bg-white p-3 rounded-lg inline-block mb-4">
+                <img 
+                  src={LOGO_URL} 
+                  alt="American Living" 
+                  className="h-20 w-auto"
+                />
+              </div>
+              <p className="text-gray-300 text-sm leading-relaxed mb-4">
                 Distribútor a realizátor stavby modulárnych domov. 
                 Vyrobených viac ako 700 domov od roku 2008.
               </p>
-              <p className="text-gray-400 text-sm">
+              <p className="text-gray-300 text-sm">
                 Oficiálny distribútor TicabHouse, JAK modules, Prosto House a Domki z Gór
               </p>
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Navigácia</h4>
+              <h4 className="font-semibold mb-4 text-white">Navigácia</h4>
               <ul className="space-y-2 text-sm">
                 {navItems.map((item) => (
                   <li key={item.path}>
-                    <Link to={item.path} className="text-gray-400 hover:text-white transition-colors">
+                    <Link to={item.path} className="text-gray-300 hover:text-white transition-colors">
                       {item.name}
                     </Link>
                   </li>
@@ -182,8 +184,8 @@ export default function Layout({ children }) {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Kontakt</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
+              <h4 className="font-semibold mb-4 text-white">Kontakt</h4>
+              <ul className="space-y-2 text-sm text-gray-300">
                 <li className="flex items-center gap-2">
                   <Phone className="w-4 h-4" />
                   <a href="tel:+421905138124" className="hover:text-white">+421 905 138 124</a>
@@ -196,8 +198,8 @@ export default function Layout({ children }) {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Výrobcovia</h4>
-              <ul className="space-y-2 text-sm text-gray-400">
+              <h4 className="font-semibold mb-4 text-white">Výrobcovia</h4>
+              <ul className="space-y-2 text-sm text-gray-300">
                 <li>• Ticab House</li>
                 <li>• JAK Modules</li>
                 <li>• Prosto House</li>
@@ -206,7 +208,7 @@ export default function Layout({ children }) {
             </div>
           </div>
           
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-300">
             <p>&copy; {new Date().getFullYear()} American Living. Všetky práva vyhradené.</p>
             <p className="mt-2">Vyrobených viac ako 700 domov od roku 2008</p>
           </div>
