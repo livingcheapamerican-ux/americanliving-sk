@@ -78,8 +78,8 @@ export default function PriceCalculator({ dom, onPriceChange }) {
           <Calculator className="w-6 h-6 text-primary" />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-primary">Kalkulačka ceny</h3>
-          <p className="text-sm text-gray-600">Vypočítajte si orientačnú cenu</p>
+          <h3 className="text-xl font-bold text-gray-900">Kalkulačka ceny</h3>
+          <p className="text-sm text-gray-700">Vypočítajte si orientačnú cenu</p>
         </div>
       </div>
 
@@ -87,7 +87,7 @@ export default function PriceCalculator({ dom, onPriceChange }) {
         {/* Základná cena */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex justify-between items-center">
-            <span className="font-semibold text-gray-700">Základná cena domu</span>
+            <span className="font-semibold text-gray-900">Základná cena domu</span>
             <span className="text-lg font-bold text-primary">
               {dom.zakladna_cena?.toLocaleString('sk-SK')} €
             </span>
@@ -103,7 +103,7 @@ export default function PriceCalculator({ dom, onPriceChange }) {
                 onCheckedChange={(checked) => setExtras({...extras, montaz: checked})}
                 id="montaz"
               />
-              <Label htmlFor="montaz" className="font-semibold cursor-pointer">
+              <Label htmlFor="montaz" className="font-semibold cursor-pointer text-gray-900">
                 Montáž domu
               </Label>
             </div>
@@ -111,26 +111,26 @@ export default function PriceCalculator({ dom, onPriceChange }) {
               +{cennik.montaz.toLocaleString('sk-SK')} €
             </span>
           </div>
-          <p className="text-xs text-gray-500 ml-8">Kompletná montáž na pozemku</p>
+          <p className="text-xs text-gray-700 ml-8">Kompletná montáž na pozemku</p>
         </div>
 
         {/* Fasáda */}
         <div className="border-b pb-4">
-          <Label className="font-semibold mb-3 block">Vonkajšia fasáda</Label>
+          <Label className="font-semibold mb-3 block text-gray-900">Vonkajšia fasáda</Label>
           <RadioGroup value={extras.fasada} onValueChange={(value) => setExtras({...extras, fasada: value})}>
             <div className="space-y-2">
               {Object.entries(cennik.fasada).map(([key, price]) => (
                 <div key={key} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <RadioGroupItem value={key} id={`fasada-${key}`} />
-                    <Label htmlFor={`fasada-${key}`} className="cursor-pointer capitalize">
+                    <Label htmlFor={`fasada-${key}`} className="cursor-pointer capitalize text-gray-900">
                       {key === 'standard' ? 'Štandardná' : 
                        key === 'smrekovec' ? 'Smrekovec' :
                        key === 'thermowood' ? 'Thermowood' :
                        'Kompozitné panely'}
                     </Label>
                   </div>
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-gray-800 font-medium">
                     {price > 0 ? `+${price.toLocaleString('sk-SK')} €` : 'Zahrnuté'}
                   </span>
                 </div>
@@ -141,21 +141,21 @@ export default function PriceCalculator({ dom, onPriceChange }) {
 
         {/* Základy */}
         <div className="border-b pb-4">
-          <Label className="font-semibold mb-3 block">Základy</Label>
+          <Label className="font-semibold mb-3 block text-gray-900">Základy</Label>
           <RadioGroup value={extras.zaklady} onValueChange={(value) => setExtras({...extras, zaklady: value})}>
             <div className="space-y-2">
               {Object.entries(cennik.zaklady).map(([key, price]) => (
                 <div key={key} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <RadioGroupItem value={key} id={`zaklady-${key}`} />
-                    <Label htmlFor={`zaklady-${key}`} className="cursor-pointer capitalize">
+                    <Label htmlFor={`zaklady-${key}`} className="cursor-pointer capitalize text-gray-900">
                       {key === 'bez' ? 'Bez základov' :
                        key === 'skrutky' ? 'Zemné skrutky' :
                        key === 'pasove' ? 'Pásové betónové' :
                        'Základová doska'}
                     </Label>
                   </div>
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-gray-800 font-medium">
                     {price > 0 ? `+${price.toLocaleString('sk-SK')} €` : 'Zahrnuté'}
                   </span>
                 </div>
@@ -166,7 +166,7 @@ export default function PriceCalculator({ dom, onPriceChange }) {
 
         {/* Inštalácie */}
         <div className="space-y-3">
-          <Label className="font-semibold">Inštalácie a technológie</Label>
+          <Label className="font-semibold text-gray-900">Inštalácie a technológie</Label>
           {[
             {key: 'izolacie', label: 'Dodatočná izolácia', price: cennik.izolacie},
             {key: 'elektroinst', label: 'Elektroinštalácia', price: cennik.elektroinst},
@@ -183,11 +183,11 @@ export default function PriceCalculator({ dom, onPriceChange }) {
                   onCheckedChange={(checked) => setExtras({...extras, [item.key]: checked})}
                   id={item.key}
                 />
-                <Label htmlFor={item.key} className="cursor-pointer text-sm">
+                <Label htmlFor={item.key} className="cursor-pointer text-sm text-gray-900">
                   {item.label}
                 </Label>
               </div>
-              <span className="text-sm text-primary font-semibold">
+              <span className="text-sm text-primary font-bold">
                 +{item.price.toLocaleString('sk-SK')} €
               </span>
             </div>
@@ -196,7 +196,7 @@ export default function PriceCalculator({ dom, onPriceChange }) {
 
         {/* Dokumentácia */}
         <div className="space-y-3 border-t pt-4">
-          <Label className="font-semibold">Dokumentácia a certifikáty</Label>
+          <Label className="font-semibold text-gray-900">Dokumentácia a certifikáty</Label>
           {[
             {key: 'projektova_dok', label: 'Projektová dokumentácia', price: cennik.projektova_dok},
             {key: 'energeticky_cert', label: 'Energetická certifikácia A0', price: cennik.energeticky_cert}
@@ -208,11 +208,11 @@ export default function PriceCalculator({ dom, onPriceChange }) {
                   onCheckedChange={(checked) => setExtras({...extras, [item.key]: checked})}
                   id={item.key}
                 />
-                <Label htmlFor={item.key} className="cursor-pointer text-sm">
+                <Label htmlFor={item.key} className="cursor-pointer text-sm text-gray-900">
                   {item.label}
                 </Label>
               </div>
-              <span className="text-sm text-primary font-semibold">
+              <span className="text-sm text-primary font-bold">
                 +{item.price.toLocaleString('sk-SK')} €
               </span>
             </div>
@@ -220,9 +220,9 @@ export default function PriceCalculator({ dom, onPriceChange }) {
         </div>
 
         {/* Info */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex gap-3">
-          <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-amber-800">
+        <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 flex gap-3">
+          <Info className="w-5 h-5 text-amber-700 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-amber-900 font-medium">
             Uvedené ceny sú orientačné. Finálna cena bude upresnená po obhliadke pozemku a konzultácii.
           </p>
         </div>
@@ -230,11 +230,11 @@ export default function PriceCalculator({ dom, onPriceChange }) {
         {/* Celková cena */}
         <div className="bg-gradient-to-r from-primary to-blue-700 text-white rounded-xl p-6">
           <div className="text-center">
-            <p className="text-sm mb-2 text-white/80">Orientačná celková cena</p>
+            <p className="text-sm mb-2 text-white">Orientačná celková cena</p>
             <p className="text-4xl font-bold mb-1">
               {vypocitatCenu().toLocaleString('sk-SK')} €
             </p>
-            <p className="text-xs text-white/70">s DPH</p>
+            <p className="text-xs text-white">s DPH</p>
           </div>
         </div>
       </div>
