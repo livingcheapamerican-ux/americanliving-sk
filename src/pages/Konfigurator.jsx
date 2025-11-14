@@ -171,11 +171,11 @@ Projektant: ${konfig.projektant}
               </h1>
             </div>
             {dom && (
-              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 mb-4 border border-white/30">
-                <p className="text-sm text-white mb-1 font-semibold">Konfigurujete model:</p>
-                <h2 className="text-2xl font-bold text-white">{dom.nazov}</h2>
-                <p className="text-white mt-1 font-medium">
-                  Základná cena: {dom.zakladna_cena?.toLocaleString('sk-SK')}€ s DPH ({dom.zastavana_plocha}m²)
+              <div className="bg-white rounded-lg p-5 mb-4 shadow-lg">
+                <p className="text-xs text-gray-600 mb-1 uppercase tracking-wide font-semibold">Konfigurujete model:</p>
+                <h2 className="text-2xl font-bold text-gray-900">{dom.nazov}</h2>
+                <p className="text-gray-700 mt-2 font-medium text-lg">
+                  Základná cena: <span className="text-primary font-bold">{dom.zakladna_cena?.toLocaleString('sk-SK')}€ s DPH</span> ({dom.zastavana_plocha}m²)
                 </p>
               </div>
             )}

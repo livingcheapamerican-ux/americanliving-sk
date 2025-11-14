@@ -235,11 +235,11 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
               </h1>
             </div>
             {dom && (
-              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/30">
-                <p className="text-sm text-white mb-1 font-semibold">Konfigurujete model:</p>
-                <h2 className="text-2xl font-bold text-white">{dom.nazov}</h2>
-                <p className="text-white mt-1 font-medium">
-                  Základná cena: {dom.zakladna_cena?.toLocaleString('sk-SK')}€ s DPH ({dom.zastavana_plocha}m²)
+              <div className="bg-white rounded-lg p-5 shadow-lg">
+                <p className="text-xs text-gray-600 mb-1 uppercase tracking-wide font-semibold">Konfigurujete model:</p>
+                <h2 className="text-2xl font-bold text-gray-900">{dom.nazov}</h2>
+                <p className="text-gray-700 mt-2 font-medium text-lg">
+                  Základná cena: <span className="text-primary font-bold">{dom.zakladna_cena?.toLocaleString('sk-SK')}€ s DPH</span> ({dom.zastavana_plocha}m²)
                 </p>
               </div>
             )}
@@ -280,7 +280,7 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
                         </Label>
                       </div>
                       <span className="text-primary font-bold">
-                        +{(cennik.montaz[dom.zastavana_plocha <= 48 ? 48 : dom.zastavana_plocha <= 72 ? 72 : dom.zastavana_plocha <= 103 ? 103 : dom.zastavana_plocha <= 108 ? 108 : 142] * 1.23).toLocaleString('sk-SK')} € s DPH
+                        +{(cennik.montaz[dom.zastavana_plocha <= 48 ? 48 : dom.zastavana_plocha <= 72 ? 72 : dom.zastavana_plocha <= 103 ? 103 : dom.zastavana_plocha <= 108 ? 108 : 142] * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH
                       </span>
                     </div>
                   </div>
@@ -301,14 +301,14 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
                             <RadioGroupItem value="kovove" id="dvere-kov" />
                             <Label htmlFor="dvere-kov" className="cursor-pointer">Kovové s 2 zámkami</Label>
                           </div>
-                          <span className="text-primary font-bold">+{(cennik.vstupne_dvere.kovove * 1.23).toFixed(2)} € s DPH</span>
+                          <span className="text-primary font-bold">+{(cennik.vstupne_dvere.kovove * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <RadioGroupItem value="plastkovo_kovove" id="dvere-plast" />
                             <Label htmlFor="dvere-plast" className="cursor-pointer">Plastovo-kovové</Label>
                           </div>
-                          <span className="text-primary font-bold">+{(cennik.vstupne_dvere.plastkovo_kovove * 1.23).toFixed(2)} € s DPH</span>
+                          <span className="text-primary font-bold">+{(cennik.vstupne_dvere.plastkovo_kovove * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
                         </div>
                       </div>
                     </RadioGroup>
@@ -330,21 +330,21 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
                             <RadioGroupItem value="skrutky" id="zakl-skr" />
                             <Label htmlFor="zakl-skr" className="cursor-pointer">Zemné skrutky</Label>
                           </div>
-                          <span className="text-primary font-bold">+{(cennik.zaklady.skrutky * 1.23).toLocaleString('sk-SK')} € s DPH</span>
+                          <span className="text-primary font-bold">+{(cennik.zaklady.skrutky * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <RadioGroupItem value="pasove" id="zakl-pas" />
                             <Label htmlFor="zakl-pas" className="cursor-pointer">Pásové základy</Label>
                           </div>
-                          <span className="text-primary font-bold">+{(cennik.zaklady.pasove * 1.23).toLocaleString('sk-SK')} € s DPH</span>
+                          <span className="text-primary font-bold">+{(cennik.zaklady.pasove * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <RadioGroupItem value="doska" id="zakl-doska" />
                             <Label htmlFor="zakl-doska" className="cursor-pointer">Základová doska</Label>
                           </div>
-                          <span className="text-primary font-bold">+{(cennik.zaklady.doska * 1.23).toLocaleString('sk-SK')} € s DPH</span>
+                          <span className="text-primary font-bold">+{(cennik.zaklady.doska * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
                         </div>
                       </div>
                     </RadioGroup>
@@ -366,21 +366,21 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
                             <RadioGroupItem value="smrekovec" id="fas-smr" />
                             <Label htmlFor="fas-smr" className="cursor-pointer">Smrekovec</Label>
                           </div>
-                          <span className="text-primary font-bold">+{(cennik.fasada.smrekovec * 1.23).toLocaleString('sk-SK')} € s DPH</span>
+                          <span className="text-primary font-bold">+{(cennik.fasada.smrekovec * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <RadioGroupItem value="termicky_upravene_drevo" id="fas-term" />
                             <Label htmlFor="fas-term" className="cursor-pointer">Termicky upravené drevo</Label>
                           </div>
-                          <span className="text-primary font-bold">+{(cennik.fasada.termicky_upravene_drevo * 1.23).toLocaleString('sk-SK')} € s DPH</span>
+                          <span className="text-primary font-bold">+{(cennik.fasada.termicky_upravene_drevo * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                             <RadioGroupItem value="kompozit" id="fas-komp" />
                             <Label htmlFor="fas-komp" className="cursor-pointer">Kompozitné panely</Label>
                           </div>
-                          <span className="text-primary font-bold">+{(cennik.fasada.kompozit * 1.23).toLocaleString('sk-SK')} € s DPH</span>
+                          <span className="text-primary font-bold">+{(cennik.fasada.kompozit * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
                         </div>
                       </div>
                     </RadioGroup>
@@ -410,7 +410,7 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
                           />
                           <Label className="text-base cursor-pointer">{item.label}</Label>
                         </div>
-                        <span className="text-primary font-bold">+{(item.cena * 1.23).toLocaleString('sk-SK')} € s DPH</span>
+                        <span className="text-primary font-bold">+{(item.cena * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
                       </div>
                     </div>
                   ))}
@@ -444,7 +444,7 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
                           />
                           <Label className="text-base cursor-pointer font-semibold">{item.label}</Label>
                         </div>
-                        <span className="text-primary font-bold">+{(item.cena * 1.23).toLocaleString('sk-SK')} € s DPH</span>
+                        <span className="text-primary font-bold">+{(item.cena * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
                       </div>
                     </div>
                   ))}
