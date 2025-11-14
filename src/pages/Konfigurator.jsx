@@ -82,6 +82,8 @@ Projektant: ${konfig.projektant}
   const vypocitatCenu = () => {
     let cena = dom?.zakladna_cena || 0;
     
+    const isTicabHouse = dom?.vyrobca === "Ticab house";
+    
     // Fasáda
     const fasadaCeny = {
       thermowood: 10477,
@@ -100,9 +102,15 @@ Projektant: ${konfig.projektant}
     };
     if (zakladyCeny[konfig.zaklady]) cena += zakladyCeny[konfig.zaklady];
 
-    // Služby
-    if (konfig.inziniering === "ano") cena += 3188;
-    if (konfig.projektant === "ano") cena += 4305;
+    // Služby - pre Ticab house odpočítať DPH
+    if (konfig.inziniering === "ano") {
+      const inzinieringCena = isTicabHouse ? 3188 / 1.23 : 3188;
+      cena += inzinieringCena;
+    }
+    if (konfig.projektant === "ano") {
+      const projektantCena = isTicabHouse ? 4305 / 1.23 : 4305;
+      cena += projektantCena;
+    }
 
     return cena;
   };

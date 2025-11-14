@@ -66,7 +66,7 @@ export default function KonfiguratorProstoHouse() {
     },
   });
 
-  // Cenník podľa HTML konfigurátorov
+  // Cenník podľa HTML konfigurátorov (VŠETKY HODNOTY SÚ BEZ DPH)
   const cennik = {
     montaz: {
       48: 4614,
@@ -105,49 +105,49 @@ export default function KonfiguratorProstoHouse() {
     zateplenie_extra: 3600,
     tepelne_cerpadlo: 8500,
     fotovoltaika: 12000,
-    projektova_dok: 1500,
-    energeticky_cert: 2200
+    projektova_dok: 1500 / 1.23, // Cena bez DPH (predpokladalo sa, že 1500 bolo s DPH)
+    energeticky_cert: 2200 / 1.23 // Cena bez DPH (predpokladalo sa, že 2200 bolo s DPH)
   };
 
   const vypocitatCenu = () => {
     if (!dom) return { bezDPH: 0, sDPH: 0 };
     
-    let celkovaCena = dom.zakladna_cena || 0;
+    let celkovaCena = dom.zakladna_cena || 0; // dom.zakladna_cena je uz s DPH
     const plocha = dom.zastavana_plocha || 72;
     
-    // Montáž - podľa plochy
+    // Montáž - podľa plochy (cennik.montaz hodnoty su bez DPH, pripocitame s DPH)
     if (konfig.montaz) {
-      if (plocha <= 48) celkovaCena += cennik.montaz[48];
-      else if (plocha <= 72) celkovaCena += cennik.montaz[72];
-      else if (plocha <= 103) celkovaCena += cennik.montaz[103];
-      else if (plocha <= 108) celkovaCena += cennik.montaz[108];
-      else celkovaCena += cennik.montaz[142];
+      if (plocha <= 48) celkovaCena += cennik.montaz[48] * 1.23;
+      else if (plocha <= 72) celkovaCena += cennik.montaz[72] * 1.23;
+      else if (plocha <= 103) celkovaCena += cennik.montaz[103] * 1.23;
+      else if (plocha <= 108) celkovaCena += cennik.montaz[108] * 1.23;
+      else celkovaCena += cennik.montaz[142] * 1.23;
     }
 
-    // Vstupné dvere
-    celkovaCena += cennik.vstupne_dvere[konfig.vstupne_dvere] || 0;
+    // Vstupné dvere (cennik.vstupne_dvere hodnoty su bez DPH, pripocitame s DPH)
+    celkovaCena += (cennik.vstupne_dvere[konfig.vstupne_dvere] || 0) * 1.23;
 
-    // Základy
-    celkovaCena += cennik.zaklady[konfig.zaklady] || 0;
+    // Základy (cennik.zaklady hodnoty su bez DPH, pripocitame s DPH)
+    celkovaCena += (cennik.zaklady[konfig.zaklady] || 0) * 1.23;
 
-    // Fasáda
-    celkovaCena += cennik.fasada[konfig.fasada] || 0;
+    // Fasáda (cennik.fasada hodnoty su bez DPH, pripocitame s DPH)
+    celkovaCena += (cennik.fasada[konfig.fasada] || 0) * 1.23;
 
-    // Okná
-    celkovaCena += cennik.okna[konfig.okna] || 0;
+    // Okná (cennik.okna hodnoty su bez DPH, pripocitame s DPH)
+    celkovaCena += (cennik.okna[konfig.okna] || 0) * 1.23;
 
-    // Ostatné položky
-    if (konfig.izolacie) celkovaCena += cennik.izolacie;
-    if (konfig.elektroinst) celkovaCena += cennik.elektroinst;
-    if (konfig.vodoinst) celkovaCena += cennik.vodoinst;
-    if (konfig.kanalizacia) celkovaCena += cennik.kanalizacia;
-    if (konfig.vytranie) celkovaCena += cennik.vytranie;
-    if (konfig.podkrovie) celkovaCena += cennik.podkrovie;
-    if (konfig.zateplenie_extra) celkovaCena += cennik.zateplenie_extra;
-    if (konfig.tepelne_cerpadlo) celkovaCena += cennik.tepelne_cerpadlo;
-    if (konfig.fotovoltaika) celkovaCena += cennik.fotovoltaika;
-    if (konfig.projektova_dok) celkovaCena += cennik.projektova_dok;
-    if (konfig.energeticky_cert) celkovaCena += cennik.energeticky_cert;
+    // Ostatné položky (cennik hodnoty su bez DPH, pripocitame s DPH)
+    if (konfig.izolacie) celkovaCena += cennik.izolacie * 1.23;
+    if (konfig.elektroinst) celkovaCena += cennik.elektroinst * 1.23;
+    if (konfig.vodoinst) celkovaCena += cennik.vodoinst * 1.23;
+    if (konfig.kanalizacia) celkovaCena += cennik.kanalizacia * 1.23;
+    if (konfig.vytranie) celkovaCena += cennik.vytranie * 1.23;
+    if (konfig.podkrovie) celkovaCena += cennik.podkrovie * 1.23;
+    if (konfig.zateplenie_extra) celkovaCena += cennik.zateplenie_extra * 1.23;
+    if (konfig.tepelne_cerpadlo) celkovaCena += cennik.tepelne_cerpadlo * 1.23;
+    if (konfig.fotovoltaika) celkovaCena += cennik.fotovoltaika * 1.23;
+    if (konfig.projektova_dok) celkovaCena += cennik.projektova_dok * 1.23;
+    if (konfig.energeticky_cert) celkovaCena += cennik.energeticky_cert * 1.23;
 
     const sDPH = celkovaCena;
     const bezDPH = celkovaCena / 1.23;
