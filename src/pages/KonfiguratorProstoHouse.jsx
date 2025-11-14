@@ -105,8 +105,8 @@ export default function KonfiguratorProstoHouse() {
     zateplenie_extra: 3600,
     tepelne_cerpadlo: 8500,
     fotovoltaika: 12000,
-    projektova_dok: 1500 / 1.23, // Cena bez DPH (predpokladalo sa, že 1500 bolo s DPH)
-    energeticky_cert: 2200 / 1.23 // Cena bez DPH (predpokladalo sa, že 2200 bolo s DPH)
+    projektova_dok: 2107,
+    energeticky_cert: 3500
   };
 
   const vypocitatCenu = () => {
@@ -146,8 +146,8 @@ export default function KonfiguratorProstoHouse() {
     if (konfig.zateplenie_extra) celkovaCena += cennik.zateplenie_extra * 1.23;
     if (konfig.tepelne_cerpadlo) celkovaCena += cennik.tepelne_cerpadlo * 1.23;
     if (konfig.fotovoltaika) celkovaCena += cennik.fotovoltaika * 1.23;
-    if (konfig.projektova_dok) celkovaCena += cennik.projektova_dok * 1.23;
-    if (konfig.energeticky_cert) celkovaCena += cennik.energeticky_cert * 1.23;
+    if (konfig.projektova_dok) celkovaCena += cennik.projektova_dok; // Now already with DPH
+    if (konfig.energeticky_cert) celkovaCena += cennik.energeticky_cert; // Now already with DPH
 
     const sDPH = celkovaCena;
     const bezDPH = celkovaCena / 1.23;
@@ -432,8 +432,8 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
                   {[
                     {key: 'tepelne_cerpadlo', label: 'Tepelné čerpadlo', cena: cennik.tepelne_cerpadlo, a0: true},
                     {key: 'fotovoltaika', label: 'Fotovoltaický systém', cena: cennik.fotovoltaika, a0: true},
-                    {key: 'projektova_dok', label: 'Projektová dokumentácia', cena: cennik.projektova_dok, a0: true},
-                    {key: 'energeticky_cert', label: 'Energetická certifikácia A0', cena: cennik.energeticky_cert, a0: true}
+                    {key: 'projektova_dok', label: 'Projektová dokumentácia', cena: cennik.projektova_dok, a0: true, isDPHIncluded: true},
+                    {key: 'energeticky_cert', label: 'Energetická certifikácia A0', cena: cennik.energeticky_cert, a0: true, isDPHIncluded: true}
                   ].map(item => (
                     <div key={item.key} className={`border rounded-lg p-4 ${item.a0 ? 'bg-green-50 border-green-300' : ''}`}>
                       <div className="flex items-center justify-between">
@@ -444,7 +444,9 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
                           />
                           <Label className="text-base cursor-pointer font-semibold">{item.label}</Label>
                         </div>
-                        <span className="text-primary font-bold">+{(item.cena * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
+                        <span className="text-primary font-bold">
+                          +{ (item.isDPHIncluded ? item.cena : item.cena * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH
+                        </span>
                       </div>
                     </div>
                   ))}
