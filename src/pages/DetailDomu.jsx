@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, X, Phone, Mail } from "lucide-react";
+import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, X, Phone, Mail, Settings } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function DetailDomu() {
@@ -56,7 +56,7 @@ export default function DetailDomu() {
     );
   }
 
-  const allImages = dom.galeria && dom.galeria.length > 0 
+  const allImages = dom.galeria && dom.galeria.length > 0
     ? [dom.hlavny_obrazok, ...dom.galeria]
     : [dom.hlavny_obrazok];
 
@@ -297,16 +297,22 @@ export default function DetailDomu() {
 
             {/* CTA Buttons */}
             <div className="space-y-3 sticky top-24">
-              <Link to={createPageUrl("Kontakt")}>
+              <Link to={`${createPageUrl("Konfigurator")}?id=${dom.id}`}>
                 <Button size="lg" className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold text-lg py-6">
+                  <Settings className="mr-2 w-5 h-5" />
+                  Spustiť konfigurátor
+                </Button>
+              </Link>
+              <Link to={createPageUrl("Kontakt")}>
+                <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-lg py-6">
                   <Mail className="mr-2 w-5 h-5" />
-                  Popýtať si cenovú ponuku
+                  Kontaktovať nás
                 </Button>
               </Link>
               <a href="tel:+421905138124">
-                <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-lg py-6">
+                <Button size="lg" variant="outline" className="w-full border-2 border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold text-lg py-6">
                   <Phone className="mr-2 w-5 h-5" />
-                  Zavolať: +421 905 138 124
+                  +421 905 138 124
                 </Button>
               </a>
             </div>
