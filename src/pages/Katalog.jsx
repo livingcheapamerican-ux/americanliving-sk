@@ -66,17 +66,17 @@ export default function Katalog() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="bg-gradient-to-r from-primary to-blue-700 text-white py-20">
+      <section className="bg-gradient-to-r from-gray-100 to-gray-200 py-20">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="max-w-3xl"
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900">
               Katalóg domov
             </h1>
-            <p className="text-xl text-white font-medium">
+            <p className="text-xl text-gray-800 font-medium">
               Vyberte si zo širokej ponuky modulárnych a mobilných domov od overených výrobcov. 
               Každý dom je pripravený na kolaudáciu.
             </p>
