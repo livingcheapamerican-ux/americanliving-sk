@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Home, Grid3x3, Settings, Phone, Info, HelpCircle, Menu, X } from "lucide-react";
+import { Home, Grid3x3, Phone, Info, Menu, X, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Layout({ children }) {
@@ -19,9 +19,7 @@ export default function Layout({ children }) {
 
   const navItems = [
     { name: "Domov", path: createPageUrl("Domov"), icon: Home },
-    { name: "Katalóg", path: createPageUrl("Katalog"), icon: Grid3x3 },
-    { name: "Konfigurátor", path: createPageUrl("Konfigurator"), icon: Settings },
-    { name: "Ako to funguje", path: createPageUrl("AkoToFunguje"), icon: HelpCircle },
+    { name: "Katalóg domov", path: createPageUrl("Katalog"), icon: Grid3x3 },
     { name: "O nás", path: createPageUrl("ONas"), icon: Info },
     { name: "Kontakt", path: createPageUrl("Kontakt"), icon: Phone },
   ];
@@ -29,39 +27,29 @@ export default function Layout({ children }) {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
+    <div className="min-h-screen bg-gray-50">
       <style>{`
         :root {
-          --navy: #003366;
-          --red: #B22222;
-          --warm-white: #FAFAF9;
-          --light-gray: #F3F4F6;
+          --primary: #1e40af;
+          --secondary: #dc2626;
+          --accent: #059669;
         }
         
-        .bg-navy { background-color: var(--navy); }
-        .text-navy { color: var(--navy); }
-        .bg-red { background-color: var(--red); }
-        .text-red { color: var(--red); }
-        .hover\\:bg-red:hover { background-color: var(--red); }
-        .border-navy { border-color: var(--navy); }
+        .bg-primary { background-color: var(--primary); }
+        .text-primary { color: var(--primary); }
+        .bg-secondary { background-color: var(--secondary); }
+        .text-secondary { color: var(--secondary); }
+        .bg-accent { background-color: var(--accent); }
+        .hover\\:bg-secondary:hover { background-color: var(--secondary); }
+        .border-primary { border-color: var(--primary); }
         
-        /* Smooth scrolling */
         html { scroll-behavior: smooth; }
-        
-        /* Wood texture overlay for subtle warmth */
-        .wood-accent::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4a574' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-          pointer-events: none;
-        }
       `}</style>
 
       {/* Header */}
       <header 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? 'bg-white shadow-lg py-3' : 'bg-white/95 backdrop-blur-md py-4'
+          scrolled ? 'bg-white shadow-lg py-2' : 'bg-white/95 backdrop-blur-md py-3'
         }`}
       >
         <div className="container mx-auto px-4">
@@ -69,14 +57,13 @@ export default function Layout({ children }) {
             {/* Logo */}
             <Link to={createPageUrl("Domov")} className="flex items-center gap-3 group">
               <div className="relative">
-                <div className="w-12 h-12 bg-navy rounded-lg flex items-center justify-center transform transition-transform group-hover:scale-105">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center transform transition-transform group-hover:scale-105">
                   <Home className="w-6 h-6 text-white" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-red rounded-full border-2 border-white"></div>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-navy">American Living</h1>
-                <p className="text-xs text-gray-600">Váš americký sen o bývaní</p>
+                <h1 className="text-xl font-bold text-primary">American Living</h1>
+                <p className="text-xs text-gray-600">Modulárne domy</p>
               </div>
             </Link>
 
@@ -88,7 +75,7 @@ export default function Layout({ children }) {
                   to={item.path}
                   className={`px-4 py-2 rounded-lg font-medium transition-all ${
                     isActive(item.path)
-                      ? 'bg-navy text-white'
+                      ? 'bg-primary text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
@@ -99,11 +86,11 @@ export default function Layout({ children }) {
 
             {/* CTA Button */}
             <div className="hidden lg:flex items-center gap-3">
-              <a href="tel:+421123456789" className="text-navy font-semibold">
-                +421 123 456 789
+              <a href="tel:+421948393553" className="text-primary font-semibold text-sm">
+                +421 948 393 553
               </a>
               <Link to={createPageUrl("Kontakt")}>
-                <Button className="bg-red hover:bg-red/90 text-white font-semibold px-6">
+                <Button className="bg-secondary hover:bg-secondary/90 text-white font-semibold">
                   Kontaktujte nás
                 </Button>
               </Link>
@@ -115,9 +102,9 @@ export default function Layout({ children }) {
               className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
             >
               {mobileMenuOpen ? (
-                <X className="w-6 h-6 text-navy" />
+                <X className="w-6 h-6 text-primary" />
               ) : (
-                <Menu className="w-6 h-6 text-navy" />
+                <Menu className="w-6 h-6 text-primary" />
               )}
             </button>
           </div>
@@ -132,7 +119,7 @@ export default function Layout({ children }) {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
                     isActive(item.path)
-                      ? 'bg-navy text-white'
+                      ? 'bg-primary text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
@@ -142,14 +129,14 @@ export default function Layout({ children }) {
               ))}
               <div className="pt-4 space-y-2">
                 <a
-                  href="tel:+421123456789"
-                  className="flex items-center justify-center gap-2 text-navy font-semibold py-3"
+                  href="tel:+421948393553"
+                  className="flex items-center justify-center gap-2 text-primary font-semibold py-3"
                 >
                   <Phone className="w-5 h-5" />
-                  +421 123 456 789
+                  +421 948 393 553
                 </a>
                 <Link to={createPageUrl("Kontakt")} onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-red hover:bg-red/90 text-white font-semibold">
+                  <Button className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold">
                     Kontaktujte nás
                   </Button>
                 </Link>
@@ -160,28 +147,31 @@ export default function Layout({ children }) {
       </header>
 
       {/* Main Content */}
-      <main className="pt-20">
+      <main className="pt-16">
         {children}
       </main>
 
       {/* Footer */}
-      <footer className="bg-navy text-white mt-20">
+      <footer className="bg-gray-900 text-white mt-20">
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-bold text-lg mb-4">American Living SK</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Špecialisti na moderné nízkoenergetické domy v americkom štýle. 
-                Váš sen o priestrannom a komfortnom bývaní.
+              <h3 className="font-bold text-lg mb-4">American Living</h3>
+              <p className="text-gray-400 text-sm leading-relaxed mb-4">
+                Distribútor a realizátor stavby modulárných domov. 
+                Vyrobených viac ako 700 domov od roku 2008.
+              </p>
+              <p className="text-gray-400 text-sm">
+                Oficiálny distribútor TicabHouse, JAK modules, Prosto House a Domki z Gór
               </p>
             </div>
             
             <div>
               <h4 className="font-semibold mb-4">Navigácia</h4>
               <ul className="space-y-2 text-sm">
-                {navItems.slice(0, 4).map((item) => (
+                {navItems.map((item) => (
                   <li key={item.path}>
-                    <Link to={item.path} className="text-gray-300 hover:text-white transition-colors">
+                    <Link to={item.path} className="text-gray-400 hover:text-white transition-colors">
                       {item.name}
                     </Link>
                   </li>
@@ -191,46 +181,35 @@ export default function Layout({ children }) {
             
             <div>
               <h4 className="font-semibold mb-4">Kontakt</h4>
-              <ul className="space-y-2 text-sm text-gray-300">
-                <li>Adresa: [Vaša adresa]</li>
-                <li>Tel: +421 123 456 789</li>
-                <li>Email: info@americanliving.sk</li>
-                <li>IČO: [IČO]</li>
-                <li>DIČ: [DIČ]</li>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li className="flex items-center gap-2">
+                  <Phone className="w-4 h-4" />
+                  <a href="tel:+421948393553" className="hover:text-white">+421 948 393 553</a>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Mail className="w-4 h-4" />
+                  <a href="mailto:info@americanliving.sk" className="hover:text-white">info@americanliving.sk</a>
+                </li>
               </ul>
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Sledujte nás</h4>
-              <div className="flex gap-3">
-                <a href="#" className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors">
-                  FB
-                </a>
-                <a href="#" className="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors">
-                  IG
-                </a>
-              </div>
+              <h4 className="font-semibold mb-4">Výrobcovia</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li>• Ticab House</li>
+                <li>• JAK Modules</li>
+                <li>• Prosto House</li>
+                <li>• Domki z Gór</li>
+              </ul>
             </div>
           </div>
           
-          <div className="border-t border-white/10 mt-8 pt-8 text-center text-sm text-gray-400">
-            <p>&copy; {new Date().getFullYear()} American Living SK. Všetky práva vyhradené.</p>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
+            <p>&copy; {new Date().getFullYear()} American Living. Všetky práva vyhradené.</p>
+            <p className="mt-2">Vyrobených viac ako 700 domov od roku 2008</p>
           </div>
         </div>
       </footer>
-
-      {/* Cookie Notice (GDPR) */}
-      <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-md bg-white shadow-2xl rounded-lg p-4 z-50 border-l-4 border-red hidden" id="cookie-notice">
-        <p className="text-sm text-gray-700 mb-3">
-          Používame cookies pre zlepšenie vášho zážitku. Používaním stránky súhlasíte s našimi podmienkami.
-        </p>
-        <button 
-          onClick={() => document.getElementById('cookie-notice').style.display = 'none'}
-          className="w-full bg-navy text-white py-2 rounded-lg hover:bg-navy/90 transition-colors text-sm font-semibold"
-        >
-          Rozumiem
-        </button>
-      </div>
     </div>
   );
 }

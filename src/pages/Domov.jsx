@@ -4,7 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Zap, Clock, Home, Settings, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { 
+  ArrowRight, CheckCircle, Home, Zap, Clock, Shield, Euro,
+  FileText, Hammer, Key, Phone, Building2, ChevronRight
+} from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Domov() {
@@ -12,17 +16,12 @@ export default function Domov() {
   
   const { data: domy = [] } = useQuery({
     queryKey: ['domy-popularne'],
-    queryFn: () => base44.entities.Dom.filter({ popularny: true }, '-poradie'),
-  });
-
-  const { data: referencie = [] } = useQuery({
-    queryKey: ['referencie-home'],
-    queryFn: () => base44.entities.Referencia.filter({ zobrazovat: true }, '-created_date', 3),
+    queryFn: () => base44.entities.Dom.filter({ popularny: true }, 'poradie', 6),
   });
 
   const heroImages = [
-    "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80",
     "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80",
+    "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80",
     "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80"
   ];
 
@@ -35,44 +34,82 @@ export default function Domov() {
 
   const vyhody = [
     {
+      icon: Euro,
+      title: "Cena priamo od výrobcu",
+      description: "Bez navýšenia! Cenovo dostupný rodinný dom za najlepšie ceny."
+    },
+    {
       icon: Clock,
       title: "Rýchla výstavba",
-      description: "Váš nový dom môže byť hotový za 4-6 mesiacov od začiatku výstavby.",
-      color: "bg-blue-500"
+      description: "Váš dom môže byť hotový za pár mesiacov. Modulárna konštrukcia šetrí čas."
     },
     {
       icon: Zap,
-      title: "Energetická efektivita",
-      description: "Nízke náklady na vykurovanie a chlladenie. Trieda energetickej účinnosti A.",
-      color: "bg-green-500"
+      title: "Nízkoenergetický A0",
+      description: "Možnosť energetického certifikátu A0. Nízke náklady na vykurovanie."
     },
     {
-      icon: Home,
-      title: "Americký dizajn",
-      description: "Priestranné interiéry, otvorené dispozície a charakteristický exteriér.",
-      color: "bg-purple-500"
-    },
-    {
-      icon: Settings,
-      title: "Individuálny prístup",
-      description: "Prispôsobíme každý dom presne podľa vašich predstáv a potrieb.",
-      color: "bg-orange-500"
+      icon: Shield,
+      title: "S kolaudáciou",
+      description: "Všetko od projektu po kolaudáciu. Žiadne starosti s úradmi."
     }
   ];
 
   const proces = [
-    { krok: "01", nazov: "Konzultácia", popis: "Spoločne prediskutujeme vaše predstavy a požiadavky" },
-    { krok: "02", nazov: "Návrh", popis: "Vytvoríme návrh vrátane vizualizácií a pôdorysov" },
-    { krok: "03", nazov: "Povolenia", popis: "Zabezpečíme všetky potrebné stavebné povolenia" },
-    { krok: "04", nazov: "Výstavba", popis: "Realizácia výstavby s pravidelnými reportmi" },
-    { krok: "05", nazov: "Odovzdanie", popis: "Odovzdanie domu na kľúč a následný servis" }
+    { 
+      cislo: "01", 
+      nazov: "Predaj nehnuteľnosti", 
+      popis: "Pomôžeme predať vašu súčasnú nehnuteľnosť",
+      icon: Building2
+    },
+    { 
+      cislo: "02", 
+      nazov: "Výber pozemku", 
+      popis: "Nájdeme vám vhodný pozemok z našej ponuky",
+      icon: Home
+    },
+    { 
+      cislo: "03", 
+      nazov: "Financovanie", 
+      popis: "Vyberieme najvhodnejší hypotekárny úver",
+      icon: Euro
+    },
+    { 
+      cislo: "04", 
+      nazov: "Projektová dokumentácia", 
+      popis: "Pripravíme kompletnú projektovú dokumentáciu",
+      icon: FileText
+    },
+    { 
+      cislo: "05", 
+      nazov: "Stavebné povolenie", 
+      popis: "Zabezpečíme stavebné povolenie a úradné potvrdenia",
+      icon: Shield
+    },
+    { 
+      cislo: "06", 
+      nazov: "Výstavba domu", 
+      popis: "Postavíme váš modulárny dom",
+      icon: Hammer
+    },
+    { 
+      cislo: "07", 
+      nazov: "Napojenie na siete", 
+      popis: "Napojíme ho na všetky inžinierske siete",
+      icon: Zap
+    },
+    { 
+      cislo: "08", 
+      nazov: "Kolaudácia", 
+      popis: "Zabezpečíme kolaudáciu a odovzdáme kľúče",
+      icon: Key
+    }
   ];
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section with Slider */}
+      {/* Hero Section */}
       <section className="relative h-[90vh] min-h-[600px] overflow-hidden">
-        {/* Background Images */}
         {heroImages.map((img, index) => (
           <motion.div
             key={index}
@@ -82,77 +119,43 @@ export default function Domov() {
             className="absolute inset-0"
             style={{ zIndex: index === currentSlide ? 1 : 0 }}
           >
-            <img
-              src={img}
-              alt={`American Living Dom ${index + 1}`}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
+            <img src={img} alt={`Modulárny dom ${index + 1}`} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent" />
           </motion.div>
         ))}
 
-        {/* Content */}
         <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
             className="max-w-2xl text-white"
           >
-            <motion.h1 
-              className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              Váš americký sen o bývaní
-            </motion.h1>
-            <motion.p 
-              className="text-xl md:text-2xl mb-8 text-gray-200"
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
-              Priestranne, kvalitne a nízkoenergeticky. Moderné domy v americkom štýle pre vaše pohodlie.
-            </motion.p>
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-            >
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+              Cenovo dostupný rodinný dom
+            </h1>
+            <p className="text-2xl mb-4 font-semibold text-yellow-400">
+              Za cenu priamo od výrobcu! Bez navýšenia!
+            </p>
+            <p className="text-xl mb-8 text-gray-200">
+              Moderný nízkoenergetický dom bez vysokých mesačných splátok. 
+              Vyrobených viac ako 700 domov od roku 2008.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link to={createPageUrl("Katalog")}>
-                <Button size="lg" className="bg-red hover:bg-red/90 text-white font-semibold text-lg px-8 py-6 w-full sm:w-auto">
-                  Prezrieť katalóg domov
+                <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white font-semibold text-lg px-8 py-6 w-full sm:w-auto">
+                  Zobraziť ponuku
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
-              <Link to={createPageUrl("Konfigurator")}>
-                <Button size="lg" variant="outline" className="bg-white/10 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-navy font-semibold text-lg px-8 py-6 w-full sm:w-auto">
-                  Konfigurovať vlastný dom
+              <Link to={createPageUrl("Kontakt")}>
+                <Button size="lg" variant="outline" className="bg-white/10 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-primary font-semibold text-lg px-8 py-6 w-full sm:w-auto">
+                  Nezáväzná konzultácia
                 </Button>
               </Link>
-            </motion.div>
+            </div>
           </motion.div>
         </div>
 
-        {/* Slider Controls */}
-        <div className="absolute bottom-8 right-8 z-20 flex gap-2">
-          <button
-            onClick={() => setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length)}
-            className="w-12 h-12 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
-          >
-            <ChevronLeft className="w-6 h-6 text-white" />
-          </button>
-          <button
-            onClick={() => setCurrentSlide((prev) => (prev + 1) % heroImages.length)}
-            className="w-12 h-12 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
-          >
-            <ChevronRight className="w-6 h-6 text-white" />
-          </button>
-        </div>
-
-        {/* Slide Indicators */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex gap-2">
           {heroImages.map((_, index) => (
             <button
@@ -167,48 +170,7 @@ export default function Domov() {
       </section>
 
       {/* Prečo American Living */}
-      <section className="py-20 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 wood-accent" />
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-navy mb-4">
-              Prečo American Living?
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Prinášame vám spojenie amerického štýlu, moderných technológií a slovenskej precíznosti
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {vyhody.map((vyhoda, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="group"
-              >
-                <div className="bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 h-full border border-gray-100 hover:-translate-y-2">
-                  <div className={`w-16 h-16 ${vyhoda.color} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                    <vyhoda.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-navy mb-3">{vyhoda.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{vyhoda.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Vybrané Modely */}
-      <section className="py-20 bg-[#F9FAFB]">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -216,15 +178,84 @@ export default function Domov() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-navy mb-4">
-              Naše najpopulárnejšie modely
+            <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+              Prečo si vybrať American Living?
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Každý dom môžete prispôsobiť podľa vašich potrieb v našom konfigurátore
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              American Living je značka kvality a naše domy sú len od overených dodávateľov
             </p>
           </motion.div>
 
-          {domy.length > 0 ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            {vyhody.map((vyhoda, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="p-8 text-center h-full hover:shadow-xl transition-all hover:-translate-y-2">
+                  <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-6">
+                    <vyhoda.icon className="w-8 h-8 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-bold text-primary mb-3">{vyhoda.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{vyhoda.description}</p>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Varovanie */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-5xl mx-auto"
+          >
+            <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 p-8">
+              <div className="flex gap-4">
+                <Shield className="w-12 h-12 text-yellow-600 flex-shrink-0" />
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    Pozor na zavádzajúce reklamy!
+                  </h3>
+                  <p className="text-gray-700 mb-3 leading-relaxed">
+                    Zabudnite na zavádzajúce reklamy, ktoré sľubujú domy za nereálne ceny. 
+                    U nás máte vždy jasne stanovenú konečnú cenu – <strong>žiadne skryté poplatky ani prekvapenia</strong>.
+                  </p>
+                  <p className="text-gray-700 mb-3 leading-relaxed">
+                    V mnohých prípadoch sú modulárne domy v inzerátoch za nízke ceny použiteľné len ako záhradné chaty, 
+                    ktoré nepotrebujú kolaudáciu, stavebné povolenie ani energetický certifikát A0.
+                  </p>
+                  <p className="text-gray-700 font-semibold">
+                    ✓ Naše domy spĺňajú všetky potrebné normy a sú pripravené na kolaudáciu ako plnohodnotné rodinné domy.
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Naša ponuka */}
+      {domy.length > 0 && (
+        <section className="py-20 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+                Naša ponuka
+              </h2>
+              <p className="text-xl text-gray-600">
+                Drevodom, ktorý nemusí vyzerať ako drevodom
+              </p>
+            </motion.div>
+
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {domy.map((dom, index) => (
                 <motion.div
@@ -235,177 +266,95 @@ export default function Domov() {
                   transition={{ delay: index * 0.1 }}
                 >
                   <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
-                    <div className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                    <Card className="group overflow-hidden hover:shadow-2xl transition-all hover:-translate-y-2">
                       <div className="relative h-64 overflow-hidden">
                         <img
                           src={dom.hlavny_obrazok}
                           alt={dom.nazov}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
-                        <div className="absolute top-4 right-4 bg-red text-white px-4 py-2 rounded-full font-semibold text-sm">
-                          Populárny
-                        </div>
+                        {dom.celorocny && (
+                          <div className="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-xs font-semibold">
+                            ✔ CELOROČNÝ
+                          </div>
+                        )}
                       </div>
                       <div className="p-6">
-                        <h3 className="text-2xl font-bold text-navy mb-3 group-hover:text-red transition-colors">
+                        <div className="text-sm text-gray-500 mb-2">{dom.vyrobca}</div>
+                        <h3 className="text-2xl font-bold text-primary mb-3 group-hover:text-secondary transition-colors">
                           {dom.nazov}
                         </h3>
-                        <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-600">
-                          <span className="flex items-center gap-1">
-                            <span className="font-semibold">{dom.pocet_izieb}</span> izieb
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <span className="font-semibold">{dom.uzitkova_plocha}</span> m²
-                          </span>
-                          <span className="capitalize">{dom.typ}</span>
-                        </div>
                         <div className="flex items-center justify-between pt-4 border-t">
                           <div>
-                            <p className="text-sm text-gray-500">Cena od</p>
-                            <p className="text-2xl font-bold text-navy">
-                              {dom.cena_od?.toLocaleString('sk-SK')} €
+                            <p className="text-sm text-gray-500">Od</p>
+                            <p className="text-2xl font-bold text-primary">
+                              {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                             </p>
                           </div>
-                          <Button className="bg-navy hover:bg-navy/90">
-                            Detail
-                            <ArrowRight className="ml-2 w-4 h-4" />
-                          </Button>
+                          <ChevronRight className="w-6 h-6 text-primary group-hover:text-secondary transition-colors" />
                         </div>
                       </div>
-                    </div>
+                    </Card>
                   </Link>
                 </motion.div>
               ))}
             </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-500 mb-6">Čoskoro pridáme naše najpopulárnejšie modely.</p>
+
+            <div className="text-center">
+              <Link to={createPageUrl("Katalog")}>
+                <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-semibold px-8">
+                  Zobraziť celý katalóg
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Link>
             </div>
-          )}
-
-          <div className="text-center">
-            <Link to={createPageUrl("Katalog")}>
-              <Button size="lg" className="bg-navy hover:bg-navy/90 text-white font-semibold px-8">
-                Zobraziť celý katalóg
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* Náš Proces */}
-      <section className="py-20 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-navy/5 to-transparent" />
-        <div className="container mx-auto px-4 relative z-10">
+      {/* Proces realizácie */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-navy mb-4">
-              Ako to funguje?
+            <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+              Proces realizácie
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Od prvého stretnutia až po odovzdanie kľúčov - transparentný proces v 5 krokoch
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Komplexné služby od A po Z - postaráme sa o všetko
             </p>
           </motion.div>
 
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {proces.map((krok, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="relative mb-12 last:mb-0"
+                transition={{ delay: index * 0.05 }}
               >
-                <div className="flex items-center gap-6">
-                  <div className="flex-shrink-0 w-20 h-20 bg-gradient-to-br from-navy to-navy/80 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg">
-                    {krok.krok}
+                <Card className="p-6 h-full hover:shadow-xl transition-all hover:-translate-y-1">
+                  <div className="text-5xl font-bold text-blue-100 mb-4">{krok.cislo}</div>
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                    <krok.icon className="w-6 h-6 text-primary" />
                   </div>
-                  <div className="flex-grow bg-white p-6 rounded-xl shadow-lg border-l-4 border-red">
-                    <h3 className="text-2xl font-bold text-navy mb-2">{krok.nazov}</h3>
-                    <p className="text-gray-600">{krok.popis}</p>
-                  </div>
-                </div>
-                {index < proces.length - 1 && (
-                  <div className="ml-10 w-0.5 h-12 bg-gradient-to-b from-navy/50 to-transparent" />
-                )}
+                  <h3 className="text-lg font-bold text-primary mb-2">{krok.nazov}</h3>
+                  <p className="text-sm text-gray-600">{krok.popis}</p>
+                </Card>
               </motion.div>
             ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Link to={createPageUrl("AkoToFunguje")}>
-              <Button size="lg" variant="outline" className="border-2 border-navy text-navy hover:bg-navy hover:text-white font-semibold px-8">
-                Zistiť viac o procese
-              </Button>
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* Referencie */}
-      {referencie.length > 0 && (
-        <section className="py-20 bg-[#F9FAFB]">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-4xl md:text-5xl font-bold text-navy mb-4">
-                Čo hovoria naši klienti
-              </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Spokojnosť našich klientov je našou prioritou
-              </p>
-            </motion.div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {referencie.map((ref, index) => (
-                <motion.div
-                  key={ref.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow"
-                >
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-5 h-5 ${
-                          i < ref.hodnotenie ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 mb-6 italic leading-relaxed">
-                    "{ref.text_referencie}"
-                  </p>
-                  <div className="border-t pt-4">
-                    <p className="font-bold text-navy">{ref.meno_klienta}</p>
-                    {ref.lokacia && (
-                      <p className="text-sm text-gray-500">{ref.lokacia}</p>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-navy via-navy to-navy/90 text-white relative overflow-hidden">
-        <div className="absolute inset-0 wood-accent opacity-10" />
-        <div className="container mx-auto px-4 relative z-10">
+      <section className="py-20 bg-gradient-to-br from-primary via-blue-700 to-primary text-white">
+        <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -413,22 +362,22 @@ export default function Domov() {
             className="max-w-4xl mx-auto text-center"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Začnime spoločne budovať váš sen
+              Moderný nízkoenergetický dom bez vysokých mesačných splátok
             </h2>
-            <p className="text-xl mb-8 text-gray-200">
-              Kontaktujte nás ešte dnes a dohodnite si nezáväznú konzultáciu. 
-              Radi vám poradíme a pripravíme ponuku na mieru.
+            <p className="text-xl mb-8 text-blue-100">
+              Kontaktujte nás ešte dnes a dohodnite si nezáväznú konzultáciu
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to={createPageUrl("Kontakt")}>
-                <Button size="lg" className="bg-red hover:bg-red/90 text-white font-semibold text-lg px-8 py-6 w-full sm:w-auto">
-                  Kontaktovať nás
-                  <ArrowRight className="ml-2 w-5 h-5" />
+              <a href="tel:+421948393553">
+                <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white font-semibold px-8 w-full sm:w-auto">
+                  <Phone className="mr-2 w-5 h-5" />
+                  +421 948 393 553
                 </Button>
-              </Link>
-              <Link to={createPageUrl("Konfigurator")}>
-                <Button size="lg" variant="outline" className="bg-white/10 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-navy font-semibold text-lg px-8 py-6 w-full sm:w-auto">
-                  Vyskúšať konfigurátor
+              </a>
+              <Link to={createPageUrl("Kontakt")}>
+                <Button size="lg" variant="outline" className="bg-white/10 border-2 border-white text-white hover:bg-white hover:text-primary font-semibold px-8 w-full sm:w-auto">
+                  Kontaktový formulár
+                  <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
             </div>
