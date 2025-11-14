@@ -8,6 +8,7 @@ import Kontakt from './pages/Kontakt';
 import SrovnaniDomu from './pages/SrovnaniDomu';
 import KonfiguratorProstoHouse from './pages/KonfiguratorProstoHouse';
 import KonfiguratorTicabhouse from './pages/KonfiguratorTicabhouse';
+import AdminGeneratorObrazkov from './pages/AdminGeneratorObrazkov';
 import Layout from './Layout.jsx';
 
 
@@ -22,6 +23,7 @@ export const PAGES = {
     "SrovnaniDomu": SrovnaniDomu,
     "KonfiguratorProstoHouse": KonfiguratorProstoHouse,
     "KonfiguratorTicabhouse": KonfiguratorTicabhouse,
+    "AdminGeneratorObrazkov": AdminGeneratorObrazkov,
 }
 
 export const pagesConfig = {
