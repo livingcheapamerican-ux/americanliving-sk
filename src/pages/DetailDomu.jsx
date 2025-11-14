@@ -60,6 +60,8 @@ export default function DetailDomu() {
     ? [dom.hlavny_obrazok, ...dom.galeria]
     : [dom.hlavny_obrazok];
 
+  const isProstoHouse = dom.vyrobca === "Prosto House";
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Back Button */}
@@ -297,12 +299,21 @@ export default function DetailDomu() {
 
             {/* CTA Buttons */}
             <div className="space-y-3 sticky top-24">
-              <Link to={`${createPageUrl("Konfigurator")}?id=${dom.id}`}>
-                <Button size="lg" className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold text-lg py-6">
-                  <Settings className="mr-2 w-5 h-5" />
-                  Spustiť konfigurátor
-                </Button>
-              </Link>
+              {isProstoHouse ? (
+                <Link to={`${createPageUrl("KonfiguratorProstoHouse")}?id=${dom.id}`}>
+                  <Button size="lg" className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold text-lg py-6">
+                    <Settings className="mr-2 w-5 h-5" />
+                    Spustiť konfigurátor Prosto House
+                  </Button>
+                </Link>
+              ) : (
+                <Link to={`${createPageUrl("Konfigurator")}?id=${dom.id}`}>
+                  <Button size="lg" className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold text-lg py-6">
+                    <Settings className="mr-2 w-5 h-5" />
+                    Spustiť konfigurátor
+                  </Button>
+                </Link>
+              )}
               <Link to={createPageUrl("Kontakt")}>
                 <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-lg py-6">
                   <Mail className="mr-2 w-5 h-5" />

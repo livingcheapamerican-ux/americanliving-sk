@@ -6,6 +6,7 @@ import AkoToFunguje from './pages/AkoToFunguje';
 import ONas from './pages/ONas';
 import Kontakt from './pages/Kontakt';
 import SrovnaniDomu from './pages/SrovnaniDomu';
+import KonfiguratorProstoHouse from './pages/KonfiguratorProstoHouse';
 import Layout from './Layout.jsx';
 
 
@@ -18,6 +19,7 @@ export const PAGES = {
     "ONas": ONas,
     "Kontakt": Kontakt,
     "SrovnaniDomu": SrovnaniDomu,
+    "KonfiguratorProstoHouse": KonfiguratorProstoHouse,
 }
 
 export const pagesConfig = {
