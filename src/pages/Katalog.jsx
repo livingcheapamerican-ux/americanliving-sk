@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -75,7 +76,7 @@ export default function Katalog() {
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Katalóg domov
             </h1>
-            <p className="text-xl text-blue-100">
+            <p className="text-xl text-white">
               Vyberte si zo širokej ponuky modulárnych a mobilných domov od overených výrobcov. 
               Každý dom je pripravený na kolaudáciu.
             </p>

@@ -70,10 +70,10 @@ export default function ONas() {
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               O nás
             </h1>
-            <p className="text-xl text-blue-100 mb-6">
+            <p className="text-xl text-white mb-6 font-semibold">
               Distribútor a realizátor stavby modulárnych domov
             </p>
-            <p className="text-lg text-blue-200">
+            <p className="text-lg text-gray-100">
               Vyrobených viac ako 700 domov od roku 2008. Sme tu pre vás s poctivým prístupom, 
               kde sa môžete spoľahnúť na transparentnosť a korektnosť.
             </p>
@@ -267,7 +267,7 @@ export default function ONas() {
             <h2 className="text-4xl font-bold mb-6">
               Pripravení na vlastný dom?
             </h2>
-            <p className="text-xl mb-8 text-blue-100">
+            <p className="text-xl mb-8 text-white">
               Kontaktujte nás a spoločne nájdeme ideálne riešenie pre vás
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

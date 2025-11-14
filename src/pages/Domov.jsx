@@ -182,13 +182,13 @@ export default function Domov() {
             animate={{ opacity: 1, y: 0 }}
             className="max-w-2xl text-white"
           >
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight drop-shadow-lg">
               Cenovo dostupný rodinný dom
             </h1>
-            <p className="text-2xl mb-6 font-semibold text-yellow-400">
+            <p className="text-2xl mb-6 font-bold text-yellow-300 drop-shadow-lg">
               Za cenu priamo od výrobcu! Bez navýšenia!
             </p>
-            <p className="text-xl mb-8 text-gray-200 leading-relaxed">
+            <p className="text-xl mb-8 text-gray-100 leading-relaxed drop-shadow-md">
               Už nemusíte hľadať ďalej – všetko, čo potrebujete, máte presne tu! 
               Vyberte si najbližšiu kanceláriu a naši kolegovia sa postarajú o kompletné 
               vybavenie všetkého, čo ste si na stránke pozreli.
@@ -234,8 +234,8 @@ export default function Domov() {
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
               Všetko na jednom mieste
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-6">
-              Nie sme len stavebná firma. Poskytujeme <strong className="text-yellow-400">komplexné služby</strong> - 
+            <p className="text-xl text-gray-200 max-w-3xl mx-auto mb-6">
+              Nie sme len stavebná firma. Poskytujeme <strong className="text-yellow-300">komplexné služby</strong> - 
               od realitnej kancelárie cez finančné poradenstvo až po stavebnú realizáciu.
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-lg font-semibold">
@@ -294,7 +294,7 @@ export default function Domov() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <p className="text-xl text-gray-300 mb-6">
+            <p className="text-xl text-gray-200 mb-6">
               <strong className="text-white">Vy nemusíte vybavovať nič.</strong> Postaráme sa o celý proces od A po Z.
             </p>
             <Link to={createPageUrl("Kontakt")}>
@@ -502,7 +502,7 @@ export default function Domov() {
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
               Moderný nízkoenergetický dom bez vysokých mesačných splátok
             </h2>
-            <p className="text-xl mb-8 text-gray-300">
+            <p className="text-xl mb-8 text-gray-200">
               Kontaktujte nás ešte dnes a dohodnite si nezáväznú konzultáciu
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

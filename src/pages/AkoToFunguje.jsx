@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -117,9 +118,9 @@ export default function AkoToFunguje() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="bg-gradient-to-r from-navy to-navy/90 text-white py-20">
+      <section className="bg-gradient-to-r from-primary to-blue-700 text-white py-20">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -129,7 +130,7 @@ export default function AkoToFunguje() {
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Ako to funguje?
             </h1>
-            <p className="text-xl text-gray-200">
+            <p className="text-xl text-white">
               Transparentný proces od prvého stretnutia až po odovzdanie kľúčov. 
               Sme s vami na každom kroku.
             </p>
@@ -147,10 +148,10 @@ export default function AkoToFunguje() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold text-navy mb-4">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
                 Proces v 5 krokoch
               </h2>
-              <p className="text-xl text-gray-600">
+              <p className="text-xl text-gray-700">
                 Od sna po realitu - jasný a prehľadný proces
               </p>
             </motion.div>
@@ -166,18 +167,18 @@ export default function AkoToFunguje() {
                 >
                   <Card className="overflow-hidden hover:shadow-xl transition-shadow">
                     <div className="flex flex-col md:flex-row">
-                      <div className="bg-gradient-to-br from-navy to-navy/80 text-white p-8 md:w-48 flex-shrink-0 flex items-center justify-center">
+                      <div className="bg-gradient-to-br from-primary to-blue-600 text-white p-8 md:w-48 flex-shrink-0 flex items-center justify-center">
                         <div className="text-center">
                           <krok.icon className="w-12 h-12 mx-auto mb-3" />
-                          <p className="text-5xl font-bold opacity-50">{krok.cislo}</p>
+                          <p className="text-5xl font-bold text-white/60">{krok.cislo}</p>
                         </div>
                       </div>
-                      <div className="p-8 flex-grow">
-                        <h3 className="text-2xl font-bold text-navy mb-3">{krok.nazov}</h3>
+                      <div className="p-8 flex-grow bg-white">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-3">{krok.nazov}</h3>
                         <p className="text-gray-700 mb-4 leading-relaxed">{krok.popis}</p>
                         <ul className="space-y-2">
                           {krok.details.map((detail, i) => (
-                            <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                            <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
                               <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
                               <span>{detail}</span>
                             </li>
@@ -194,7 +195,7 @@ export default function AkoToFunguje() {
       </section>
 
       {/* Technológia */}
-      <section className="py-20 bg-[#F9FAFB]">
+      <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -202,10 +203,10 @@ export default function AkoToFunguje() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-navy mb-4">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
               Technológia a kvalita
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-700 max-w-2xl mx-auto">
               Používame najmodernejšie technológie a kvalitné materiály pre váš komfort a úspory
             </p>
           </motion.div>
@@ -219,15 +220,15 @@ export default function AkoToFunguje() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="p-8 h-full hover:shadow-xl transition-shadow">
-                  <div className="w-16 h-16 bg-navy/10 rounded-xl flex items-center justify-center mb-6">
-                    <tech.icon className="w-8 h-8 text-navy" />
+                <Card className="p-8 h-full hover:shadow-xl transition-shadow bg-white">
+                  <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
+                    <tech.icon className="w-8 h-8 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold text-navy mb-3">{tech.nazov}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">{tech.nazov}</h3>
                   <p className="text-gray-700 mb-4 leading-relaxed">{tech.popis}</p>
                   <ul className="space-y-2">
                     {tech.features.map((feature, i) => (
-                      <li key={i} className="flex items-center gap-2 text-sm text-gray-600">
+                      <li key={i} className="flex items-center gap-2 text-sm text-gray-700">
                         <CheckCircle className="w-4 h-4 text-green-600" />
                         <span>{feature}</span>
                       </li>
@@ -249,10 +250,10 @@ export default function AkoToFunguje() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-navy mb-4">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
               Často kladené otázky
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-700">
               Odpovede na najčastejšie otázky našich klientov
             </p>
           </motion.div>
@@ -266,9 +267,9 @@ export default function AkoToFunguje() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Card className="p-6 hover:shadow-lg transition-shadow">
-                  <h3 className="text-lg font-bold text-navy mb-3 flex items-start gap-3">
-                    <span className="text-red flex-shrink-0">Q:</span>
+                <Card className="p-6 hover:shadow-lg transition-shadow bg-white">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-start gap-3">
+                    <span className="text-secondary flex-shrink-0">Q:</span>
                     {item.otazka}
                   </h3>
                   <p className="text-gray-700 leading-relaxed pl-8">
@@ -282,7 +283,7 @@ export default function AkoToFunguje() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-navy to-navy/90 text-white">
+      <section className="py-20 bg-gradient-to-br from-primary to-blue-600 text-white">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -294,7 +295,7 @@ export default function AkoToFunguje() {
             <h2 className="text-4xl font-bold mb-6">
               Máte ďalšie otázky?
             </h2>
-            <p className="text-xl mb-8 text-gray-200">
+            <p className="text-xl mb-8 text-white">
               Radi vám poradíme a zodpovieme všetky vaše otázky. Kontaktujte nás ešte dnes!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
