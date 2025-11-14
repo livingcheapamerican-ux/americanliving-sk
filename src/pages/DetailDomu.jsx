@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, X, Phone, Mail, Settings, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import PriceCalculator from "../components/PriceCalculator";
+import FloatingPrice from "../components/FloatingPrice";
 
 export default function DetailDomu() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -17,6 +19,8 @@ export default function DetailDomu() {
   const domSlug = urlParams.get('slug');
   const [selectedImage, setSelectedImage] = useState(0);
   const [showPodorys, setShowPodorys] = useState(false);
+  const [calculatedPrice, setCalculatedPrice] = useState(0);
+  const [showCalculator, setShowCalculator] = useState(false);
 
   const { data: dom, isLoading } = useQuery({
     queryKey: ['dom-detail', domId, domSlug],
@@ -74,6 +78,9 @@ export default function DetailDomu() {
         document.head.appendChild(ogImage);
       }
       ogImage.content = dom.hlavny_obrazok;
+
+      // Set initial calculatedPrice to base price
+      setCalculatedPrice(dom.zakladna_cena || 0);
     }
   }, [dom]);
 
@@ -210,6 +217,15 @@ export default function DetailDomu() {
                 </div>
               </Card>
             )}
+
+            {/* Price Calculator */}
+            <PriceCalculator 
+              dom={dom} 
+              onPriceChange={(price) => {
+                setCalculatedPrice(price);
+                setShowCalculator(price !== (dom.zakladna_cena || 0)); // Check if calculated price differs from base price
+              }}
+            />
           </motion.div>
 
           {/* Pravý stĺpec - Informácie */}
@@ -406,6 +422,9 @@ export default function DetailDomu() {
           />
         </DialogContent>
       </Dialog>
+
+      {/* Floating Price Display */}
+      <FloatingPrice price={calculatedPrice} isVisible={showCalculator} />
     </div>
   );
 }
