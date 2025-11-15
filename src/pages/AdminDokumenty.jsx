@@ -22,6 +22,7 @@ export default function AdminDokumenty() {
   const [showForm, setShowForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [cancelUpload, setCancelUpload] = useState(false);
   const [selectedVyrobca, setSelectedVyrobca] = useState("all");
   const [uploadMode, setUploadMode] = useState("files");
   const [viewingDocument, setViewingDocument] = useState(null);
@@ -109,6 +110,7 @@ export default function AdminDokumenty() {
     setCurrentFileProgress(0);
     setUploadedBytes(0);
     setTotalBytes(0);
+    setCancelUpload(false);
   };
 
   const shouldSkipFile = (fileName) => {
@@ -270,6 +272,9 @@ export default function AdminDokumenty() {
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
+        if (cancelUpload) {
+          throw new Error('Upload bol zrušený');
+        }
         if (attempt > 0) {
           console.log(`🔄 Pokus ${attempt + 1}/${maxRetries + 1} pre súbor: ${file.name}`);
           await new Promise(resolve => setTimeout(resolve, 500));
@@ -317,7 +322,7 @@ export default function AdminDokumenty() {
         
         const errorDetails = getErrorDetails(error, file);
 
-        if (!errorDetails.retryable || attempt === maxRetries) {
+        if (!errorDetails.retryable || attempt === maxRetries || cancelUpload) {
           throw error;
         }
 
@@ -340,6 +345,7 @@ export default function AdminDokumenty() {
     console.log('🚀 Počet súborov na spracovanie:', selectedFiles.length);
 
     setUploading(true);
+    setCancelUpload(false); // Reset cancel state at the start of new upload
     setUploadProgress({ current: 0, total: selectedFiles.length });
     setUploadResults(null);
     setUploadedBytes(0);
@@ -354,6 +360,17 @@ export default function AdminDokumenty() {
 
     try {
       for (let i = 0; i < selectedFiles.length; i++) {
+        if (cancelUpload) {
+          console.log('🛑 Upload zrušený používateľom');
+          results.failed.push({
+            name: `Zostávajúcich ${selectedFiles.length - i} súborov`,
+            error: 'Upload zrušený používateľom',
+            suggestion: 'Upload bol manuálne zastavený',
+            type: 'CANCELLED'
+          });
+          break; // Exit the loop if cancelled
+        }
+
         const file = selectedFiles[i];
         const fileNum = i + 1;
 
@@ -451,12 +468,16 @@ export default function AdminDokumenty() {
       console.log(`⏭️  Preskočené: ${results.skipped.length}`);
       console.log(`❌ Chybné: ${results.failed.length}`);
 
-      if (results.successful.length > 0) {
+      if (results.successful.length > 0 && !cancelUpload) { // Only analyze if not cancelled
         console.log('\n🧠 Spúšťam analýzu...');
         setCurrentFileName("Analyzujem dokumenty...");
         setUploadProgress({ current: 0, total: results.successful.length });
 
         for (let i = 0; i < results.successful.length; i++) {
+          if (cancelUpload) {
+            console.log('🛑 Analýza zrušená používateľom');
+            break; // Exit analysis loop if cancelled
+          }
           setUploadProgress({ current: i + 1, total: results.successful.length });
           try {
             await analyzeMutation.mutateAsync(results.successful[i].id);
@@ -478,6 +499,7 @@ export default function AdminDokumenty() {
       setUploadProgress({ current: 0, total: 0 });
       setCurrentFileName("");
       setCurrentFileProgress(0);
+      setCancelUpload(false); // Reset cancel state
     }
   };
 
@@ -948,12 +970,15 @@ export default function AdminDokumenty() {
                         type="button"
                         variant="outline"
                         onClick={() => {
-                          setShowForm(false);
-                          resetForm();
+                          if (uploading) {
+                            setCancelUpload(true); // Signal to stop the upload process
+                          } else {
+                            setShowForm(false);
+                            resetForm();
+                          }
                         }}
-                        disabled={uploading}
                       >
-                        Zrušiť
+                        {uploading ? 'Zastaviť' : 'Zrušiť'}
                       </Button>
                     </div>
                   </form>
