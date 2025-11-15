@@ -5,12 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { FolderOpen, RefreshCw, CheckCircle, Folder, Link as LinkIcon, AlertCircle, Settings } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { FolderOpen, RefreshCw, CheckCircle, Folder, Link as LinkIcon, AlertCircle, Settings, Search, FileText, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function AdminGoogleDrive() {
   const [selectedFolders, setSelectedFolders] = useState([]);
   const [copied, setCopied] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState(null);
+  const [isSearching, setIsSearching] = useState(false);
 
   const { data: user, refetch: refetchUser } = useQuery({
     queryKey: ['current-user'],
@@ -46,6 +50,42 @@ export default function AdminGoogleDrive() {
         ? prev.filter(id => id !== folderId)
         : [...prev, folderId]
     );
+  };
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+
+    setIsSearching(true);
+    try {
+      const response = await base44.functions.invoke('googleDrive', { 
+        action: 'searchFiles', 
+        q: searchQuery.trim() 
+      });
+      setSearchResults(response.data || []);
+    } catch (error) {
+      console.error('Search error:', error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const getFileIcon = (mimeType) => {
+    if (mimeType.includes('document')) return '📄';
+    if (mimeType.includes('spreadsheet')) return '📊';
+    if (mimeType.includes('presentation')) return '📽️';
+    if (mimeType.includes('pdf')) return '📕';
+    if (mimeType.includes('image')) return '🖼️';
+    return '📎';
+  };
+
+  const formatFileSize = (bytes) => {
+    if (!bytes) return 'N/A';
+    const kb = bytes / 1024;
+    if (kb < 1024) return `${kb.toFixed(1)} KB`;
+    const mb = kb / 1024;
+    return `${mb.toFixed(1)} MB`;
   };
 
   const isAdmin = user?.role === 'admin';
@@ -101,6 +141,80 @@ export default function AdminGoogleDrive() {
               </Button>
             </div>
           </Card>
+
+          {/* Search Files */}
+          {user?.google_drive_access_token && (
+            <Card className="p-6 mb-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Search className="w-6 h-6 text-primary" />
+                <h3 className="font-semibold text-gray-800">Hľadať súbory</h3>
+              </div>
+              <form onSubmit={handleSearch} className="flex gap-2 mb-4">
+                <Input
+                  placeholder="Zadajte názov súboru..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-grow"
+                />
+                <Button 
+                  type="submit" 
+                  disabled={isSearching || !searchQuery.trim()}
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  {isSearching ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                      Hľadám...
+                    </>
+                  ) : (
+                    <>
+                      <Search className="w-4 h-4 mr-2" />
+                      Hľadať
+                    </>
+                  )}
+                </Button>
+              </form>
+
+              {searchResults && (
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {searchResults.length > 0 ? (
+                    <>
+                      <p className="text-sm text-gray-600 mb-3">
+                        Nájdených: {searchResults.length}
+                      </p>
+                      {searchResults.map((file) => (
+                        <div
+                          key={file.id}
+                          className="flex items-center gap-3 p-3 rounded-lg border bg-white hover:bg-gray-50 transition-all"
+                        >
+                          <span className="text-2xl">{getFileIcon(file.mimeType)}</span>
+                          <div className="flex-grow">
+                            <p className="font-medium text-gray-800">{file.name}</p>
+                            <p className="text-xs text-gray-500">
+                              {file.mimeType.split('/').pop()} • {formatFileSize(file.size)}
+                            </p>
+                          </div>
+                          <a 
+                            href={file.webViewLink} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-primary hover:text-primary/80"
+                          >
+                            <ExternalLink className="w-5 h-5" />
+                          </a>
+                        </div>
+                      ))}
+                    </>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <FileText className="w-12 h-12 mx-auto mb-2 text-gray-300" />
+                      <p>Nenašli sa žiadne súbory</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </Card>
+          )}
 
           {/* Load folders */}
           {user?.google_drive_access_token && (
