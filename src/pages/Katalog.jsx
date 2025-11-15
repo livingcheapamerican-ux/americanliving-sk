@@ -1,7 +1,6 @@
-
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Square, LayoutGrid } from "lucide-react";
+import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Square, LayoutGrid, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Katalog() {
@@ -25,10 +24,32 @@ export default function Katalog() {
   const [zoradenie, setZoradenie] = useState("poradie");
   const [vybraneNaSrovnanie, setVybraneNaSrovnanie] = useState([]);
 
+  const queryClient = useQueryClient();
+
   const { data: domy = [], isLoading } = useQuery({
     queryKey: ['domy-katalog'],
     queryFn: () => base44.entities.Dom.list('poradie')
   });
+
+  const { data: user } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const deleteDomMutation = useMutation({
+    mutationFn: (domId) => base44.entities.Dom.delete(domId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['domy-katalog'] });
+    },
+  });
+
+  const handleDeleteDom = (dom, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (window.confirm(`Naozaj chcete vymazať dom "${dom.nazov}"?`)) {
+      deleteDomMutation.mutate(dom.id);
+    }
+  };
 
   const filtrovane = domy.filter((dom) => {
     const kategoriaMatch = kategoriaFilter === "vsetky" || dom.kategoria === kategoriaFilter;
@@ -62,6 +83,8 @@ export default function Katalog() {
       setVybraneNaSrovnanie([...vybraneNaSrovnanie, dom]);
     }
   };
+
+  const isAdmin = user?.role === 'admin';
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -331,17 +354,27 @@ export default function Katalog() {
                               </div>
                           }
                           </div>
-                          <button
-                          onClick={() => toggleSrovnanie(dom)}
-                          disabled={!jeVybrany && vybraneNaSrovnanie.length >= 3}
-                          className={`absolute top-4 right-4 p-2 rounded-full transition-all ${
-                          jeVybrany ?
-                          'bg-primary text-white' :
-                          'bg-white/90 text-primary hover:bg-primary hover:text-white'} ${
-                          !jeVybrany && vybraneNaSrovnanie.length >= 3 ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                          <div className="absolute top-4 right-4 flex gap-2">
+                            <button
+                            onClick={() => toggleSrovnanie(dom)}
+                            disabled={!jeVybrany && vybraneNaSrovnanie.length >= 3}
+                            className={`p-2 rounded-full transition-all ${
+                            jeVybrany ?
+                            'bg-primary text-white' :
+                            'bg-white/90 text-primary hover:bg-primary hover:text-white'} ${
+                            !jeVybrany && vybraneNaSrovnanie.length >= 3 ? 'opacity-50 cursor-not-allowed' : ''}`}>
 
-                            <Plus className={`w-5 h-5 transition-transform ${jeVybrany ? 'rotate-45' : ''}`} />
-                          </button>
+                              <Plus className={`w-5 h-5 transition-transform ${jeVybrany ? 'rotate-45' : ''}`} />
+                            </button>
+                            {isAdmin && (
+                              <button
+                                onClick={(e) => handleDeleteDom(dom, e)}
+                                disabled={deleteDomMutation.isPending}
+                                className="p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-all disabled:opacity-50">
+                                <Trash2 className="w-5 h-5" />
+                              </button>
+                            )}
+                          </div>
                         </div>
                         
                         <div className="p-5">
