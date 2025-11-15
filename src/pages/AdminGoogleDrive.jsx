@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,32 +11,11 @@ import { motion } from "framer-motion";
 export default function AdminGoogleDrive() {
   const [selectedFolders, setSelectedFolders] = useState([]);
   const [copied, setCopied] = useState(false);
-  const queryClient = useQueryClient();
 
-  const { data: user } = useQuery({
+  const { data: user, refetch: refetchUser } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me()
   });
-
-  // Check for token_key in URL and retrieve tokens
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tokenKey = urlParams.get('token_key');
-    
-    if (tokenKey) {
-      console.log('Token key found, retrieving tokens...');
-      base44.functions.invoke('googleDrive', { action: 'retrieveTokens', token_key: tokenKey })
-        .then(() => {
-          console.log('Tokens saved successfully');
-          queryClient.invalidateQueries({ queryKey: ['current-user'] });
-          // Remove token_key from URL
-          window.history.replaceState({}, '', window.location.pathname);
-        })
-        .catch(error => {
-          console.error('Error retrieving tokens:', error);
-        });
-    }
-  }, [queryClient]);
 
   const { data: folders, isLoading, error, refetch } = useQuery({
     queryKey: ['google-drive-folders'],
@@ -49,14 +28,15 @@ export default function AdminGoogleDrive() {
   });
 
   const handleAuthorize = () => {
-    const returnUrl = window.location.href.split('?')[0]; // Clean URL without params
+    const returnUrl = window.location.href.split('?')[0];
     const functionPath = window.location.pathname.includes('/preview/') 
       ? window.location.pathname.split('/preview/')[0] + '/functions/googleDrive'
       : '/functions/googleDrive';
     window.location.href = `${functionPath}?action=authorize&return_url=${encodeURIComponent(returnUrl)}`;
   };
 
-  const handleLoadFolders = () => {
+  const handleLoadFolders = async () => {
+    await refetchUser();
     refetch();
   };
 
@@ -103,13 +83,13 @@ export default function AdminGoogleDrive() {
           <Card className="p-6 mb-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <LinkIcon className="w-6 h-6 text-primary" />
+                <div className={`w-3 h-3 rounded-full ${user?.google_drive_access_token ? 'bg-green-500' : 'bg-red-500'}`} />
                 <div>
-                  <h3 className="font-semibold text-gray-800">Google Drive pripojenie</h3>
+                  <h3 className="font-semibold text-gray-800">Google Drive</h3>
                   <p className="text-sm text-gray-600">
                     {user?.google_drive_access_token 
-                      ? "✓ Pripojené - môžete načítať priečinky" 
-                      : "✗ Nepripojené - kliknite na Autorizovať"}
+                      ? "Pripojené - môžete načítať priečinky" 
+                      : "Nepripojené - autorizujte prístup"}
                   </p>
                 </div>
               </div>
@@ -117,7 +97,7 @@ export default function AdminGoogleDrive() {
                 onClick={handleAuthorize}
                 className="bg-primary hover:bg-primary/90"
               >
-                {user?.google_drive_access_token ? "Re-autorizovať" : "Autorizovať Google Drive"}
+                {user?.google_drive_access_token ? "Re-autorizovať" : "Autorizovať"}
               </Button>
             </div>
           </Card>
@@ -132,8 +112,8 @@ export default function AdminGoogleDrive() {
                     <h3 className="font-semibold text-gray-800">Načítať priečinky</h3>
                     <p className="text-sm text-gray-600">
                       {folders && folders.length > 0 
-                        ? `Nájdených ${folders.length} priečinkov`
-                        : "Kliknite na tlačidlo"}
+                        ? `Nájdených: ${folders.length}`
+                        : "Stlačte tlačidlo"}
                     </p>
                   </div>
                 </div>
@@ -150,14 +130,14 @@ export default function AdminGoogleDrive() {
                   ) : (
                     <>
                       <RefreshCw className="w-4 h-4 mr-2" />
-                      {folders ? "Obnoviť" : "Načítať priečinky"}
+                      {folders ? "Obnoviť" : "Načítať"}
                     </>
                   )}
                 </Button>
               </div>
               {error && !error.response?.data?.needsAuth && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-800">
-                  Chyba: {error.response?.data?.error || error.message}
+                  {error.response?.data?.error || error.message}
                 </div>
               )}
             </Card>
@@ -169,11 +149,11 @@ export default function AdminGoogleDrive() {
               <div className="flex items-center gap-3 mb-4">
                 <Folder className="w-6 h-6 text-primary" />
                 <h3 className="font-semibold text-gray-800">
-                  Vyberte priečinky ({selectedFolders.length} vybraných)
+                  Priečinky ({selectedFolders.length} vybraných)
                 </h3>
               </div>
               <p className="text-sm text-gray-600 mb-4">
-                Chatbot bude mať prístup len k súborom v týchto priečinkoch.
+                Chatbot bude mať prístup len k týmto priečinkom.
               </p>
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {folders.map((folder) => (
@@ -194,7 +174,7 @@ export default function AdminGoogleDrive() {
                       <p className="text-xs text-gray-500 font-mono">{folder.id}</p>
                     </div>
                     {selectedFolders.includes(folder.id) && (
-                      <Badge className="bg-primary text-white">Vybraný</Badge>
+                      <Badge className="bg-primary text-white">✓</Badge>
                     )}
                   </div>
                 ))}
@@ -208,10 +188,7 @@ export default function AdminGoogleDrive() {
               <div className="flex items-start gap-4">
                 <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
                 <div className="flex-grow">
-                  <h3 className="font-semibold text-gray-800 mb-3">Aktivácia obmedzenia</h3>
-                  <p className="text-sm text-gray-700 mb-4">
-                    Skopírujte ID priečinkov a nastavte ich v Dashboard:
-                  </p>
+                  <h3 className="font-semibold text-gray-800 mb-3">Nastavenie</h3>
                   
                   <div className="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 font-mono text-sm">
                     <div className="flex items-center justify-between mb-2">
@@ -226,18 +203,18 @@ export default function AdminGoogleDrive() {
                           setTimeout(() => setCopied(false), 2000);
                         }}
                       >
-                        {copied ? "✓ Skopírované" : "Kopírovať"}
+                        {copied ? "✓" : "Kopírovať"}
                       </Button>
                     </div>
-                    <div className="text-green-400 break-all">{folderIdsList}</div>
+                    <div className="text-green-400 break-all text-xs">{folderIdsList}</div>
                   </div>
 
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <ol className="text-sm text-blue-800 space-y-1 ml-4 list-decimal">
-                      <li>Skopírujte hodnotu vyššie</li>
+                      <li>Skopírujte hodnotu</li>
                       <li>Dashboard → Settings → Environment Variables</li>
-                      <li>Pridajte <code className="bg-blue-100 px-2 py-0.5 rounded font-mono text-xs">GOOGLE_DRIVE_FOLDER_IDS</code></li>
-                      <li>Vložte hodnotu a uložte</li>
+                      <li>Pridajte <code className="bg-blue-100 px-2 py-0.5 rounded">GOOGLE_DRIVE_FOLDER_IDS</code></li>
+                      <li>Vložte a uložte</li>
                     </ol>
                   </div>
                 </div>
@@ -252,8 +229,8 @@ export default function AdminGoogleDrive() {
               <h3 className="text-xl font-bold text-gray-700 mb-2">
                 Pripojte Google Drive
               </h3>
-              <p className="text-gray-500 mb-6">
-                Kliknite na tlačidlo "Autorizovať Google Drive".
+              <p className="text-gray-500">
+                Kliknite na "Autorizovať".
               </p>
             </Card>
           )}
@@ -265,7 +242,7 @@ export default function AdminGoogleDrive() {
                 Žiadne priečinky
               </h3>
               <p className="text-gray-500">
-                V Google Drive sa nenašli žiadne priečinky.
+                Nenašli sa priečinky.
               </p>
             </Card>
           )}
