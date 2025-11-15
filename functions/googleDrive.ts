@@ -6,6 +6,9 @@ const GOOGLE_CLIENT_ID = Deno.env.get("GOOGLE_CLIENT_ID");
 const GOOGLE_CLIENT_SECRET = Deno.env.get("GOOGLE_CLIENT_SECRET");
 const GOOGLE_DRIVE_FOLDER_IDS = Deno.env.get("GOOGLE_DRIVE_FOLDER_IDS");
 
+// Temporary storage for tokens (in production, use a proper database)
+const tokenStorage = new Map();
+
 Deno.serve(async (req) => {
     const url = new URL(req.url);
     const action = url.searchParams.get('action') || 'listFiles';
@@ -14,6 +17,7 @@ Deno.serve(async (req) => {
 
     try {
         const callbackUrl = `${url.origin}${url.pathname}?action=callback`;
+        console.log('[GoogleDrive] Callback URL:', callbackUrl);
 
         const oauth2Client = new OAuth2Client(
             GOOGLE_CLIENT_ID,
@@ -31,76 +35,55 @@ Deno.serve(async (req) => {
             }
             
             const returnUrl = url.searchParams.get('return_url') || '/';
+            const state = JSON.stringify({ userId: user.id, returnUrl });
             
             const authUrl = oauth2Client.generateAuthUrl({
                 access_type: 'offline',
                 scope: ['https://www.googleapis.com/auth/drive.readonly'],
                 prompt: 'consent',
-                state: returnUrl
+                state
             });
             
-            console.log('[GoogleDrive] Redirecting to Google');
+            console.log('[GoogleDrive] User:', user.email, 'redirecting to Google');
             return Response.redirect(authUrl, 302);
         }
 
         // Callback z Google
         if (action === 'callback') {
             const code = url.searchParams.get('code');
-            const returnUrl = url.searchParams.get('state') || '/';
+            const stateStr = url.searchParams.get('state');
+            
+            console.log('[GoogleDrive] Callback - code:', code ? 'YES' : 'NO', 'state:', stateStr ? 'YES' : 'NO');
             
             if (!code) {
-                return new Response('Authorization failed: No code', { status: 400 });
+                return new Response('No authorization code received', { status: 400 });
             }
 
             try {
                 const { tokens } = await oauth2Client.getToken(code);
-                console.log('[GoogleDrive] Tokens received');
+                const state = stateStr ? JSON.parse(stateStr) : { returnUrl: '/' };
                 
-                // Vrátime HTML, ktoré uloží tokeny a presmeruje
-                return new Response(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>Authorization Successful</title>
-                    </head>
-                    <body>
-                        <h1>Connecting to Google Drive...</h1>
-                        <p>Please wait...</p>
-                        <script>
-                            (async function() {
-                                try {
-                                    const tokens = ${JSON.stringify(tokens)};
-                                    
-                                    // Zavoláme saveTokens akciu
-                                    const response = await fetch('${url.pathname}?action=saveTokens', {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify(tokens)
-                                    });
-                                    
-                                    if (response.ok) {
-                                        window.location.href = '${returnUrl}';
-                                    } else {
-                                        document.body.innerHTML = '<h1>Error saving tokens</h1><p>' + await response.text() + '</p>';
-                                    }
-                                } catch (error) {
-                                    document.body.innerHTML = '<h1>Error</h1><p>' + error.message + '</p>';
-                                }
-                            })();
-                        </script>
-                    </body>
-                    </html>
-                `, {
-                    headers: { 'Content-Type': 'text/html' }
-                });
+                console.log('[GoogleDrive] Tokens received, storing for user:', state.userId);
+                
+                // Store tokens temporarily
+                const storageKey = `tokens_${state.userId}_${Date.now()}`;
+                tokenStorage.set(storageKey, tokens);
+                
+                // Clean up old tokens (older than 5 minutes)
+                setTimeout(() => tokenStorage.delete(storageKey), 5 * 60 * 1000);
+                
+                // Redirect with storage key
+                const redirectUrl = `${state.returnUrl}${state.returnUrl.includes('?') ? '&' : '?'}token_key=${storageKey}`;
+                console.log('[GoogleDrive] Redirecting to:', redirectUrl);
+                return Response.redirect(redirectUrl, 302);
             } catch (error) {
                 console.error('[GoogleDrive] Callback error:', error);
-                return new Response(`Authorization error: ${error.message}`, { status: 500 });
+                return new Response(`Error: ${error.message}`, { status: 500 });
             }
         }
 
-        // Uloženie tokenov
-        if (action === 'saveTokens') {
+        // Retrieve and save tokens
+        if (action === 'retrieveTokens') {
             const base44 = createClientFromRequest(req);
             const user = await base44.auth.me();
             
@@ -108,9 +91,17 @@ Deno.serve(async (req) => {
                 return Response.json({ error: 'Unauthorized' }, { status: 401 });
             }
             
-            const tokens = await req.json();
-            console.log('[GoogleDrive] Saving tokens for user:', user.email);
+            const tokenKey = url.searchParams.get('token_key');
+            console.log('[GoogleDrive] Retrieving tokens for key:', tokenKey);
             
+            if (!tokenKey || !tokenStorage.has(tokenKey)) {
+                return Response.json({ error: 'Invalid or expired token key' }, { status: 400 });
+            }
+            
+            const tokens = tokenStorage.get(tokenKey);
+            tokenStorage.delete(tokenKey);
+            
+            console.log('[GoogleDrive] Saving tokens for user:', user.email);
             await base44.auth.updateMe({
                 google_drive_access_token: tokens.access_token,
                 google_drive_refresh_token: tokens.refresh_token,
@@ -120,7 +111,7 @@ Deno.serve(async (req) => {
             return Response.json({ success: true });
         }
 
-        // Všetky ostatné akcie vyžadujú prihlásenie
+        // Všetky ostatné akcie
         const base44 = createClientFromRequest(req);
         const user = await base44.auth.me();
         
@@ -265,7 +256,7 @@ Deno.serve(async (req) => {
                 );
                 
                 if (!isInAllowedFolder) {
-                    return Response.json({ error: 'Access denied: File not in allowed folders' }, { status: 403 });
+                    return Response.json({ error: 'Access denied' }, { status: 403 });
                 }
             }
             
@@ -286,7 +277,7 @@ Deno.serve(async (req) => {
 
         return Response.json({ 
             error: 'Invalid action',
-            available: ['authorize', 'callback', 'saveTokens', 'listFolders', 'listFiles', 'getFileContent']
+            available: ['authorize', 'callback', 'retrieveTokens', 'listFolders', 'listFiles', 'getFileContent']
         }, { status: 400 });
 
     } catch (error) {
