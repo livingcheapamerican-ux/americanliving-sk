@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Upload, FileText, Trash2, Download, Search, 
-  AlertCircle, CheckCircle, Loader2, X, Building2
+  AlertCircle, CheckCircle, Loader2, X, Building2, FolderOpen
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -21,6 +21,7 @@ export default function AdminDokumenty() {
   const [searchQuery, setSearchQuery] = useState("");
   const [uploading, setUploading] = useState(false);
   const [selectedVyrobca, setSelectedVyrobca] = useState("all");
+  const [uploadMode, setUploadMode] = useState("files"); // "files" or "folder"
   const [formData, setFormData] = useState({
     popis: "",
     typ: "iné",
@@ -69,6 +70,7 @@ export default function AdminDokumenty() {
     setSelectedFiles([]);
     setTagInput("");
     setUploadProgress({ current: 0, total: 0 });
+    setUploadMode("files");
   };
 
   const handleFileSelect = (e) => {
@@ -178,6 +180,7 @@ export default function AdminDokumenty() {
     certifikát: "Certifikát",
     FAQ: "FAQ",
     blog: "Blog",
+    fotky: "Fotky",
     iné: "Iné"
   };
 
@@ -251,12 +254,44 @@ export default function AdminDokumenty() {
                 <Card className="p-6 mb-6">
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                      <Label>Súbory * (môžete vybrať viacero)</Label>
+                      <Label>Režim nahrávania</Label>
+                      <div className="flex gap-2 mt-2">
+                        <Button
+                          type="button"
+                          variant={uploadMode === "files" ? "default" : "outline"}
+                          onClick={() => {
+                            setUploadMode("files");
+                            setSelectedFiles([]);
+                          }}
+                          className="flex-1"
+                        >
+                          <Upload className="w-4 h-4 mr-2" />
+                          Súbory
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={uploadMode === "folder" ? "default" : "outline"}
+                          onClick={() => {
+                            setUploadMode("folder");
+                            setSelectedFiles([]);
+                          }}
+                          className="flex-1"
+                        >
+                          <FolderOpen className="w-4 h-4 mr-2" />
+                          Celý priečinok
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label>{uploadMode === "folder" ? "Priečinok *" : "Súbory *"}</Label>
                       <div className="mt-2">
                         <Input
                           type="file"
                           onChange={handleFileSelect}
-                          multiple
+                          multiple={uploadMode === "files"}
+                          webkitdirectory={uploadMode === "folder" ? "" : undefined}
+                          directory={uploadMode === "folder" ? "" : undefined}
                           required
                         />
                         {selectedFiles.length > 0 && (
@@ -264,22 +299,26 @@ export default function AdminDokumenty() {
                             <p className="text-sm font-medium text-gray-700">
                               Vybraných {selectedFiles.length} súborov:
                             </p>
-                            {selectedFiles.map((file, index) => (
-                              <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-lg">{getFileIcon(file.type)}</span>
-                                  <span className="text-sm text-gray-700">{file.name}</span>
-                                  <span className="text-xs text-gray-500">({formatFileSize(file.size)})</span>
+                            <div className="max-h-48 overflow-y-auto space-y-2">
+                              {selectedFiles.map((file, index) => (
+                                <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-lg">{getFileIcon(file.type)}</span>
+                                    <span className="text-sm text-gray-700">{file.name}</span>
+                                    <span className="text-xs text-gray-500">({formatFileSize(file.size)})</span>
+                                  </div>
+                                  {uploadMode === "files" && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveFile(index)}
+                                      className="text-red-600 hover:text-red-700"
+                                    >
+                                      <X className="w-4 h-4" />
+                                    </button>
+                                  )}
                                 </div>
-                                <button
-                                  type="button"
-                                  onClick={() => handleRemoveFile(index)}
-                                  className="text-red-600 hover:text-red-700"
-                                >
-                                  <X className="w-4 h-4" />
-                                </button>
-                              </div>
-                            ))}
+                              ))}
+                            </div>
                           </div>
                         )}
                       </div>
