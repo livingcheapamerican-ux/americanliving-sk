@@ -111,6 +111,7 @@ export default function AdminDokumenty() {
     setUploadedBytes(0);
     setTotalBytes(0);
     setCancelUpload(false);
+    window.currentUploadCancelRef = null; // Ensure global ref is reset
   };
 
   const shouldSkipFile = (fileName) => {
@@ -266,27 +267,31 @@ export default function AdminDokumenty() {
     };
   };
 
-  const uploadFileWithRetry = async (file, maxRetries = 1, onProgress) => {
+  const uploadFileWithRetry = async (file, maxRetries = 1, onProgress, cancelRef) => {
     let lastError;
     let progressInterval = null;
 
-    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    for (let attempt = 0; attempt <= maxRetries + 2; attempt++) { // Allow more retries for network errors
       try {
-        if (cancelUpload) {
+        if (cancelRef?.current) {
           throw new Error('Upload bol zrušený');
         }
         if (attempt > 0) {
-          console.log(`🔄 Pokus ${attempt + 1}/${maxRetries + 1} pre súbor: ${file.name}`);
-          await new Promise(resolve => setTimeout(resolve, 500));
+          console.log(`🔄 Pokus ${attempt + 1}/${maxRetries + 3} pre súbor: ${file.name}`);
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
 
         // Simulate progress
         if (onProgress) {
           onProgress(0);
           progressInterval = setInterval(() => {
+            if (cancelRef?.current) {
+              clearInterval(progressInterval);
+              return;
+            }
             setCurrentFileProgress(prev => {
-              if (prev >= 90) { // Stop at 90% as actual upload is about to happen
-                clearInterval(progressInterval); // Clear interval if it reaches 90% before actual upload finishes
+              if (prev >= 90) {
+                clearInterval(progressInterval);
                 return prev;
               }
               return prev + 10;
@@ -306,7 +311,7 @@ export default function AdminDokumenty() {
           clearInterval(progressInterval);
         }
         if (onProgress) {
-          onProgress(100); // Set to 100% on successful upload
+          onProgress(100);
         }
 
         return uploadResponse;
@@ -322,7 +327,13 @@ export default function AdminDokumenty() {
 
         const errorDetails = getErrorDetails(error, file);
 
-        if (!errorDetails.retryable || attempt === maxRetries || cancelUpload) {
+        // Network errors - retry more times
+        if (errorDetails.type === 'NETWORK' && attempt < maxRetries + 2) {
+          console.log(`⚠️  Sieťová chyba, skúšam znova (pokus ${attempt + 2}/${maxRetries + 3})...`);
+          continue; // Continue to the next attempt in the loop
+        }
+
+        if (!errorDetails.retryable || attempt >= maxRetries + 2 || cancelRef?.current) { // Use >= maxRetries + 2 for final attempt check
           throw error;
         }
 
@@ -345,7 +356,8 @@ export default function AdminDokumenty() {
     console.log('🚀 Počet súborov na spracovanie:', selectedFiles.length);
 
     setUploading(true);
-    setCancelUpload(false);
+    const cancelRef = { current: false };
+    window.currentUploadCancelRef = cancelRef; // Store reference globally for external cancellation
     setUploadProgress({ current: 0, total: selectedFiles.length });
     setUploadResults(null);
     setUploadedBytes(0);
@@ -363,13 +375,13 @@ export default function AdminDokumenty() {
       // Process files in parallel batches of 3
       const BATCH_SIZE = 3;
       const batches = [];
-      
+
       for (let i = 0; i < selectedFiles.length; i += BATCH_SIZE) {
         batches.push(selectedFiles.slice(i, i + BATCH_SIZE));
       }
 
       for (const batch of batches) {
-        if (cancelUpload) {
+        if (cancelRef.current) {
           console.log('🛑 Upload zrušený používateľom');
           const remaining = selectedFiles.length - completedCount;
           if (remaining > 0) {
@@ -385,11 +397,9 @@ export default function AdminDokumenty() {
 
         // Process batch in parallel
         const batchPromises = batch.map(async (file) => {
-          if (cancelUpload) return null; // Early exit for files in the batch if cancel was triggered
+          if (cancelRef.current) return null; // Early exit for files in the batch if cancel was triggered
 
-          // `completedCount` here represents files processed before this batch.
-          // This line is from the outline, but `fileNum` in parallel context can be tricky.
-          // For logging, we'll use a derived index for clarity within the batch.
+          // For logging, use a derived index for clarity within the batch.
           const fileNumInBatch = batch.indexOf(file) + 1; // Index within the current batch
           const overallFileNum = completedCount + fileNumInBatch; // Approximation for overall logging
 
@@ -423,7 +433,7 @@ export default function AdminDokumenty() {
             console.log(`📤 Nahrávam: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
             const uploadResponse = await uploadFileWithRetry(file, 1, (progress) => {
               setCurrentFileProgress(progress);
-            });
+            }, cancelRef);
             console.log(`✅ Nahraný: ${file.name}`);
 
             setCurrentFileProgress(100);
@@ -477,7 +487,7 @@ export default function AdminDokumenty() {
 
         // Wait for batch to complete
         const batchResults = await Promise.allSettled(batchPromises);
-        
+
         // Update progress for all files in the batch
         batchResults.forEach(result => {
           // Increment completedCount and cumulativeBytes for each file processed, regardless of outcome
@@ -496,7 +506,7 @@ export default function AdminDokumenty() {
       console.log(`⏭️  Preskočené: ${results.skipped.length}`);
       console.log(`❌ Chybné: ${results.failed.length}`);
 
-      if (results.successful.length > 0 && !cancelUpload) { // Only analyze if not cancelled
+      if (results.successful.length > 0 && !cancelRef.current) { // Only analyze if not cancelled
         console.log('\n🧠 Spúšťam analýzu...');
         setCurrentFileName("Analyzujem dokumenty...");
         setUploadProgress({ current: 0, total: results.successful.length });
@@ -510,20 +520,20 @@ export default function AdminDokumenty() {
 
         let analyzedCount = 0;
         for (const analysisBatch of analysisBatches) {
-          if (cancelUpload) {
+          if (cancelRef.current) {
             console.log('🛑 Analýza zrušená používateľom');
             break; // Exit analysis loop if cancelled
           }
-          
+
           await Promise.allSettled(
-            analysisBatch.map(item => 
+            analysisBatch.map(item =>
               analyzeMutation.mutateAsync(item.id).catch(err => {
                 console.error(`⚠️  Chyba analýzy pre: ${item.name}`, err);
                 return { status: 'rejected', reason: err }; // Ensure a resolved status for Promise.allSettled
               })
             )
           );
-          
+
           analyzedCount += analysisBatch.length;
           setUploadProgress({ current: analyzedCount, total: results.successful.length });
         }
@@ -541,7 +551,8 @@ export default function AdminDokumenty() {
       setUploadProgress({ current: 0, total: 0 });
       setCurrentFileName("");
       setCurrentFileProgress(0);
-      setCancelUpload(false); // Reset cancel state
+      setCancelUpload(false); // Reset cancel state for UI
+      window.currentUploadCancelRef = null; // Clear global reference
     }
   };
 
@@ -783,6 +794,10 @@ export default function AdminDokumenty() {
                   setUploadProgress({ current: 0, total: 0 });
                   setCurrentFileName("");
                   setFileStatuses({});
+                  if (window.currentUploadCancelRef) { // Also clear ref if form is closed normally
+                    window.currentUploadCancelRef.current = false;
+                    window.currentUploadCancelRef = null;
+                  }
                 }
               }} className="bg-primary">
                 <Upload className="w-4 h-4 mr-2" />
@@ -1024,7 +1039,10 @@ export default function AdminDokumenty() {
                         variant="outline"
                         onClick={() => {
                           if (uploading) {
-                            setCancelUpload(true); // Signal to stop the upload process
+                            if (window.currentUploadCancelRef) {
+                              window.currentUploadCancelRef.current = true;
+                            }
+                            setCancelUpload(true); // Keep this to trigger UI update (button text)
                           } else {
                             setShowForm(false);
                             resetForm();
