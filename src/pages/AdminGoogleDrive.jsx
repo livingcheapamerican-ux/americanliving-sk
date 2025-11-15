@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { FolderOpen, RefreshCw, CheckCircle, Folder, Link as LinkIcon, AlertCircle, Settings, Search, FileText, ExternalLink } from "lucide-react";
+import { FolderOpen, RefreshCw, CheckCircle, Folder, Link as LinkIcon, AlertCircle, Settings, Search, FileText, ExternalLink, Bug, Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 import GoogleDriveFilesList from "../components/GoogleDriveFilesList";
 
@@ -16,6 +16,9 @@ export default function AdminGoogleDrive() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [debugInfo, setDebugInfo] = useState(null);
+  const [isTesting, setIsTesting] = useState(false);
+  const [showTokens, setShowTokens] = useState(false);
 
   const { data: user, refetch: refetchUser } = useQuery({
     queryKey: ['current-user'],
@@ -32,11 +35,54 @@ export default function AdminGoogleDrive() {
     retry: false,
   });
 
+  const testConnection = async () => {
+    setIsTesting(true);
+    const info = {
+      timestamp: new Date().toISOString(),
+      currentUrl: window.location.href,
+      pathname: window.location.pathname,
+      isPreview: window.location.pathname.includes('/preview/'),
+      user: {
+        id: user?.id,
+        email: user?.email,
+        hasAccessToken: !!user?.google_drive_access_token,
+        hasRefreshToken: !!user?.google_drive_refresh_token,
+        tokenExpiry: user?.google_drive_token_expiry ? new Date(user.google_drive_token_expiry).toISOString() : null,
+      },
+      functionPath: window.location.pathname.includes('/preview/') 
+        ? window.location.pathname.split('/preview/')[0] + '/functions/googleDrive'
+        : '/functions/googleDrive',
+      callbackUrl: null,
+    };
+
+    try {
+      // Test if function is accessible
+      const response = await fetch(info.functionPath);
+      info.functionAccessible = response.ok;
+      info.functionStatus = response.status;
+    } catch (error) {
+      info.functionAccessible = false;
+      info.functionError = error.message;
+    }
+
+    // Test callback URL
+    const origin = window.location.origin;
+    info.callbackUrl = `${origin}${info.functionPath}?action=callback`;
+
+    setDebugInfo(info);
+    setIsTesting(false);
+  };
+
   const handleAuthorize = () => {
     const returnUrl = window.location.href.split('?')[0];
     const functionPath = window.location.pathname.includes('/preview/') 
       ? window.location.pathname.split('/preview/')[0] + '/functions/googleDrive'
       : '/functions/googleDrive';
+    
+    console.log('[AdminGoogleDrive] Authorizing...');
+    console.log('[AdminGoogleDrive] Return URL:', returnUrl);
+    console.log('[AdminGoogleDrive] Function path:', functionPath);
+    
     window.location.href = `${functionPath}?action=authorize&return_url=${encodeURIComponent(returnUrl)}`;
   };
 
@@ -89,6 +135,11 @@ export default function AdminGoogleDrive() {
     return `${mb.toFixed(1)} MB`;
   };
 
+  const maskToken = (token) => {
+    if (!token) return 'N/A';
+    return token.substring(0, 10) + '...' + token.substring(token.length - 10);
+  };
+
   const isAdmin = user?.role === 'admin';
 
   if (!isAdmin) {
@@ -119,6 +170,131 @@ export default function AdminGoogleDrive() {
               Google Drive - Správa priečinkov
             </h1>
           </div>
+
+          {/* Debug Info */}
+          <Card className="p-6 mb-6 bg-yellow-50 border-2 border-yellow-300">
+            <div className="flex items-start gap-4">
+              <Bug className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-1" />
+              <div className="flex-grow">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-gray-800">Diagnostika</h3>
+                  <Button
+                    onClick={testConnection}
+                    disabled={isTesting}
+                    size="sm"
+                    variant="outline"
+                  >
+                    {isTesting ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                        Testujem...
+                      </>
+                    ) : (
+                      <>
+                        <Bug className="w-4 h-4 mr-2" />
+                        Spustiť test
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+                {debugInfo && (
+                  <div className="bg-white rounded-lg p-4 text-sm font-mono space-y-2 border">
+                    <div className="grid grid-cols-3 gap-2">
+                      <span className="text-gray-600">User ID:</span>
+                      <span className="col-span-2 text-gray-900">{debugInfo.user.id}</span>
+                      
+                      <span className="text-gray-600">Email:</span>
+                      <span className="col-span-2 text-gray-900">{debugInfo.user.email}</span>
+                      
+                      <span className="text-gray-600">Access Token:</span>
+                      <span className="col-span-2 flex items-center gap-2">
+                        {debugInfo.user.hasAccessToken ? (
+                          <Badge className="bg-green-600">✓ Prítomný</Badge>
+                        ) : (
+                          <Badge variant="destructive">✗ Chýba</Badge>
+                        )}
+                      </span>
+                      
+                      <span className="text-gray-600">Refresh Token:</span>
+                      <span className="col-span-2">
+                        {debugInfo.user.hasRefreshToken ? (
+                          <Badge className="bg-green-600">✓ Prítomný</Badge>
+                        ) : (
+                          <Badge variant="destructive">✗ Chýba</Badge>
+                        )}
+                      </span>
+                      
+                      <span className="text-gray-600">Token Expiry:</span>
+                      <span className="col-span-2 text-gray-900 text-xs">
+                        {debugInfo.user.tokenExpiry || 'N/A'}
+                      </span>
+                      
+                      <span className="text-gray-600">Function Path:</span>
+                      <span className="col-span-2 text-blue-600 text-xs break-all">
+                        {debugInfo.functionPath}
+                      </span>
+                      
+                      <span className="text-gray-600">Callback URL:</span>
+                      <span className="col-span-2 text-blue-600 text-xs break-all">
+                        {debugInfo.callbackUrl}
+                      </span>
+                      
+                      <span className="text-gray-600">Function Status:</span>
+                      <span className="col-span-2">
+                        {debugInfo.functionAccessible ? (
+                          <Badge className="bg-green-600">✓ Dostupná ({debugInfo.functionStatus})</Badge>
+                        ) : (
+                          <Badge variant="destructive">✗ Nedostupná</Badge>
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Token Details */}
+                {user?.google_drive_access_token && (
+                  <div className="mt-4">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowTokens(!showTokens)}
+                      className="mb-2"
+                    >
+                      {showTokens ? (
+                        <>
+                          <EyeOff className="w-4 h-4 mr-2" />
+                          Skryť tokeny
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="w-4 h-4 mr-2" />
+                          Zobraziť tokeny
+                        </>
+                      )}
+                    </Button>
+
+                    {showTokens && (
+                      <div className="bg-white rounded-lg p-4 text-xs font-mono space-y-2 border">
+                        <div>
+                          <div className="text-gray-600 mb-1">Access Token:</div>
+                          <div className="text-gray-900 break-all bg-gray-50 p-2 rounded">
+                            {maskToken(user.google_drive_access_token)}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-gray-600 mb-1">Refresh Token:</div>
+                          <div className="text-gray-900 break-all bg-gray-50 p-2 rounded">
+                            {maskToken(user.google_drive_refresh_token)}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </Card>
 
           {/* Authorization status */}
           <Card className="p-6 mb-6">
