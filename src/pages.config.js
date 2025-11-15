@@ -9,6 +9,7 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import KonfiguratorProstoHouse from './pages/KonfiguratorProstoHouse';
 import KonfiguratorTicabhouse from './pages/KonfiguratorTicabhouse';
 import AdminGeneratorObrazkov from './pages/AdminGeneratorObrazkov';
+import AdminMigraciaObrazkov from './pages/AdminMigraciaObrazkov';
 import Layout from './Layout.jsx';
 
 
@@ -24,6 +25,7 @@ export const PAGES = {
     "KonfiguratorProstoHouse": KonfiguratorProstoHouse,
     "KonfiguratorTicabhouse": KonfiguratorTicabhouse,
     "AdminGeneratorObrazkov": AdminGeneratorObrazkov,
+    "AdminMigraciaObrazkov": AdminMigraciaObrazkov,
 }
 
 export const pagesConfig = {
