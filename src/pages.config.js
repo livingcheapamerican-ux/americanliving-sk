@@ -11,6 +11,7 @@ import KonfiguratorTicabhouse from './pages/KonfiguratorTicabhouse';
 import AdminGeneratorObrazkov from './pages/AdminGeneratorObrazkov';
 import AdminMigraciaObrazkov from './pages/AdminMigraciaObrazkov';
 import AdminGoogleDrive from './pages/AdminGoogleDrive';
+import AdminDokumenty from './pages/AdminDokumenty';
 import Layout from './Layout.jsx';
 
 
@@ -28,6 +29,7 @@ export const PAGES = {
     "AdminGeneratorObrazkov": AdminGeneratorObrazkov,
     "AdminMigraciaObrazkov": AdminMigraciaObrazkov,
     "AdminGoogleDrive": AdminGoogleDrive,
+    "AdminDokumenty": AdminDokumenty,
 }
 
 export const pagesConfig = {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings } from "lucide-react";
+import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
@@ -94,11 +94,18 @@ export default function Layout({ children }) {
             {/* CTA Button */}
             <div className="hidden lg:flex items-center gap-3">
               {isAdmin && (
-                <Link to={createPageUrl("AdminGoogleDrive")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80" title="Správa Google Drive">
-                    <Settings className="w-5 h-5" />
-                  </Button>
-                </Link>
+                <>
+                  <Link to={createPageUrl("AdminDokumenty")}>
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80" title="Správa dokumentov">
+                      <FileText className="w-5 h-5" />
+                    </Button>
+                  </Link>
+                  <Link to={createPageUrl("AdminGoogleDrive")}>
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80" title="Správa Google Drive">
+                      <Settings className="w-5 h-5" />
+                    </Button>
+                  </Link>
+                </>
               )}
               <a href="tel:+421905138124" className="text-primary font-semibold text-sm">
                 +421 905 138 124
@@ -142,14 +149,24 @@ export default function Layout({ children }) {
                 </Link>
               ))}
               {isAdmin && (
-                <Link
-                  to={createPageUrl("AdminGoogleDrive")}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
-                >
-                  <Settings className="w-5 h-5" />
-                  Správa Google Drive
-                </Link>
+                <>
+                  <Link
+                    to={createPageUrl("AdminDokumenty")}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                  >
+                    <FileText className="w-5 h-5" />
+                    Správa dokumentov
+                  </Link>
+                  <Link
+                    to={createPageUrl("AdminGoogleDrive")}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                  >
+                    <Settings className="w-5 h-5" />
+                    Správa Google Drive
+                  </Link>
+                </>
               )}
               <div className="pt-4 space-y-2">
                 <a
