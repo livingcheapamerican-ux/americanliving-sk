@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -12,7 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Upload, FileText, Trash2, Download, Search, 
-  AlertCircle, CheckCircle, Loader2, X, Building2, FolderOpen
+  AlertCircle, CheckCircle, Loader2, X, Building2, FolderOpen, Brain, Eye
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -22,6 +23,7 @@ export default function AdminDokumenty() {
   const [uploading, setUploading] = useState(false);
   const [selectedVyrobca, setSelectedVyrobca] = useState("all");
   const [uploadMode, setUploadMode] = useState("files"); // "files" or "folder"
+  const [viewingDocument, setViewingDocument] = useState(null); // NEW: State for viewing analysis modal
   const [formData, setFormData] = useState({
     popis: "",
     typ: "iné",
@@ -54,6 +56,17 @@ export default function AdminDokumenty() {
 
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.Dokument.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dokumenty'] });
+    }
+  });
+
+  // NEW: Mutation for analyzing documents
+  const analyzeMutation = useMutation({
+    mutationFn: async (documentId) => {
+      const response = await base44.functions.invoke('analyzujDokument', { document_id: documentId });
+      return response.data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dokumenty'] });
     }
@@ -111,13 +124,15 @@ export default function AdminDokumenty() {
     setUploadProgress({ current: 0, total: selectedFiles.length });
     
     try {
+      const uploadedDocIds = []; // NEW: To store IDs of uploaded documents for subsequent analysis
+      
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
         setUploadProgress({ current: i + 1, total: selectedFiles.length });
         
         const { file_url } = await base44.integrations.Core.UploadFile({ file });
         
-        await createMutation.mutateAsync({
+        const doc = await createMutation.mutateAsync({
           nazov: file.name,
           popis: formData.popis,
           typ: formData.typ,
@@ -128,6 +143,18 @@ export default function AdminDokumenty() {
           velkost: file.size,
           typ_suboru: file.type
         });
+        uploadedDocIds.push(doc.id); // NEW: Add document ID to the list
+      }
+      
+      // NEW: Automatically analyze all uploaded documents
+      setUploadProgress({ current: 0, total: uploadedDocIds.length });
+      for (let i = 0; i < uploadedDocIds.length; i++) {
+        setUploadProgress({ current: i + 1, total: uploadedDocIds.length });
+        try {
+          await analyzeMutation.mutateAsync(uploadedDocIds[i]);
+        } catch (error) {
+          console.error('Analysis error for doc', uploadedDocIds[i], error);
+        }
       }
       
       setShowForm(false);
@@ -220,10 +247,10 @@ export default function AdminDokumenty() {
 
           <Card className="p-4 mb-6 bg-blue-50 border-blue-200">
             <div className="flex items-start gap-3">
-              <Building2 className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+              <Brain className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" /> {/* CHANGED ICON */}
               <div className="text-sm text-blue-800">
-                <p className="font-semibold mb-1">Kategorizácia pre chatbota</p>
-                <p>Dokumenty sú rozdelené podľa výrobcov. Chatbot používa tieto dokumenty na poskytovanie špecifických informácií o domoch jednotlivých výrobcov.</p>
+                <p className="font-semibold mb-1">Automatická AI analýza</p> {/* CHANGED TEXT */}
+                <p>Všetky nahrané dokumenty sú automaticky analyzované. AI extrahuje informácie o modeloch domov, cenách, technických parametroch a rozpozná o ktorých domoch sa píše.</p> {/* CHANGED TEXT */}
               </div>
             </div>
           </Card>
@@ -411,7 +438,10 @@ export default function AdminDokumenty() {
                     {uploading && uploadProgress.total > 0 && (
                       <div className="bg-blue-50 p-4 rounded-lg">
                         <p className="text-sm font-medium text-blue-800 mb-2">
-                          Nahrávam {uploadProgress.current} z {uploadProgress.total} súborov...
+                          {analyzeMutation.isPending ? 
+                            `Analyzujem ${uploadProgress.current} z ${uploadProgress.total} dokumentov...` :
+                            `Nahrávam ${uploadProgress.current} z ${uploadProgress.total} súborov...`
+                          }
                         </p>
                         <div className="w-full bg-blue-200 rounded-full h-2">
                           <div 
@@ -504,6 +534,16 @@ export default function AdminDokumenty() {
                             )}
                           </div>
                           <div className="flex gap-2 flex-shrink-0">
+                            {dok.analyzovaný && ( // NEW: Show analysis button if document is analyzed
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setViewingDocument(dok)}
+                              >
+                                <Eye className="w-4 h-4 mr-1" />
+                                Analýza
+                              </Button>
+                            )}
                             <a href={dok.subor_url} target="_blank" rel="noopener noreferrer">
                               <Button size="sm" variant="outline">
                                 <Download className="w-4 h-4 mr-1" />
@@ -537,6 +577,12 @@ export default function AdminDokumenty() {
                               Pre chatbota
                             </Badge>
                           )}
+                          {dok.analyzovaný && ( // NEW: Show analysis badge if document is analyzed
+                            <Badge className="bg-purple-100 text-purple-800">
+                              <Brain className="w-3 h-3 mr-1" />
+                              Analyzované AI
+                            </Badge>
+                          )}
                           {dok.tags?.map(tag => (
                             <Badge key={tag} className="bg-blue-100 text-blue-800">
                               {tag}
@@ -553,6 +599,98 @@ export default function AdminDokumenty() {
               ))}
             </div>
           )}
+
+          {/* NEW: Modal pre zobrazenie analýzy */}
+          <AnimatePresence>
+            {viewingDocument && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+                onClick={() => setViewingDocument(null)}
+              >
+                <motion.div
+                  initial={{ scale: 0.9 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0.9 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="bg-white rounded-lg p-6 max-w-3xl w-full max-h-[80vh] overflow-y-auto"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-bold text-gray-800">AI Analýza dokumentu</h2>
+                    <Button variant="ghost" size="icon" onClick={() => setViewingDocument(null)}>
+                      <X className="w-5 h-5" />
+                    </Button>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2">Dokument:</h3>
+                      <p className="text-gray-700">{viewingDocument.nazov}</p>
+                    </div>
+
+                    {viewingDocument.extrahovaný_obsah && (
+                      <div>
+                        <h3 className="font-semibold text-lg mb-2">Extrahovaný obsah:</h3>
+                        <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded">
+                          {viewingDocument.extrahovaný_obsah}
+                        </p>
+                      </div>
+                    )}
+
+                    {viewingDocument.kľúčové_informácie && (
+                      <div>
+                        <h3 className="font-semibold text-lg mb-2">Kľúčové informácie:</h3>
+                        <div className="space-y-3">
+                          {viewingDocument.kľúčové_informácie.modely_domov?.length > 0 && (
+                            <div>
+                              <p className="font-medium text-gray-700 mb-1">Modely domov:</p>
+                              <div className="flex flex-wrap gap-2">
+                                {viewingDocument.kľúčové_informácie.modely_domov.map((model, i) => (
+                                  <Badge key={i} className="bg-blue-100 text-blue-800">{model}</Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          {viewingDocument.kľúčové_informácie.cenové_informácie?.length > 0 && (
+                            <div>
+                              <p className="font-medium text-gray-700 mb-1">Cenové informácie:</p>
+                              <ul className="list-disc list-inside text-gray-700">
+                                {viewingDocument.kľúčové_informácie.cenové_informácie.map((info, i) => (
+                                  <li key={i}>{info}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {viewingDocument.kľúčové_informácie.technické_údaje?.length > 0 && (
+                            <div>
+                              <p className="font-medium text-gray-700 mb-1">Technické údaje:</p>
+                              <ul className="list-disc list-inside text-gray-700">
+                                {viewingDocument.kľúčové_informácie.technické_údaje.map((info, i) => (
+                                  <li key={i}>{info}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {viewingDocument.kľúčové_informácie.ostatné?.length > 0 && (
+                            <div>
+                              <p className="font-medium text-gray-700 mb-1">Ostatné:</p>
+                              <ul className="list-disc list-inside text-gray-700">
+                                {viewingDocument.kľúčové_informácie.ostatné.map((info, i) => (
+                                  <li key={i}>{info}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </div>
     </div>
