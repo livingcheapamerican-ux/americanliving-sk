@@ -47,6 +47,7 @@ export default function AdminDokumenty() {
   const [totalBytes, setTotalBytes] = useState(0);
 
   const folderInputRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     // This useEffect is to ensure webkitdirectory attribute is set programmatically.
@@ -201,6 +202,84 @@ export default function AdminDokumenty() {
 
     // Reset input value to allow selecting the same folder again
     e.target.value = '';
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const items = e.dataTransfer.items;
+    if (!items) return;
+
+    const processEntries = async () => {
+      const allFiles = [];
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i].webkitGetAsEntry();
+        if (item) {
+          await traverseFileTree(item, allFiles);
+        }
+      }
+
+      const validFiles = allFiles.filter(file => !shouldSkipFile(file.name));
+      
+      console.log(`📁 Dropped ${allFiles.length} súborov, po filtrovaní ${validFiles.length} súborov`);
+      if (allFiles.length > validFiles.length) {
+        console.log(`🗑️  Vyfiltrovaných ${allFiles.length - validFiles.length} systémových súborov`);
+      }
+
+      setSelectedFiles(prev => {
+        const allSelectedFiles = [...prev, ...validFiles];
+        const total = allSelectedFiles.reduce((sum, file) => sum + file.size, 0);
+        setTotalBytes(total);
+
+        const initialStatuses = {};
+        validFiles.forEach(file => {
+          initialStatuses[file.name] = 'pending';
+        });
+        setFileStatuses(prevStatuses => ({ ...prevStatuses, ...initialStatuses }));
+
+        return allSelectedFiles;
+      });
+    };
+
+    processEntries();
+  };
+
+  const traverseFileTree = async (item, allFiles, path = '') => {
+    if (item.isFile) {
+      return new Promise((resolve) => {
+        item.file((file) => {
+          const modifiedFile = new File([file], file.name, { type: file.type });
+          Object.defineProperty(modifiedFile, 'webkitRelativePath', {
+            value: path + file.name,
+            writable: false
+          });
+          allFiles.push(modifiedFile);
+          resolve();
+        });
+      });
+    } else if (item.isDirectory) {
+      const dirReader = item.createReader();
+      return new Promise((resolve) => {
+        dirReader.readEntries(async (entries) => {
+          for (const entry of entries) {
+            await traverseFileTree(entry, allFiles, path + item.name + '/');
+          }
+          resolve();
+        });
+      });
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
   };
 
   const updateFileStatus = (fileName, status) => {
@@ -837,7 +916,26 @@ export default function AdminDokumenty() {
 
                     <div>
                       <Label>{uploadMode === "folder" ? "Priečinky *" : "Súbory *"}</Label>
-                      <div className="mt-2">
+                      
+                      {/* Drag & Drop Zone */}
+                      <div
+                        onDrop={handleDrop}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        className={`mt-2 border-2 border-dashed rounded-lg p-8 text-center transition-all ${
+                          isDragging 
+                            ? 'border-primary bg-blue-50' 
+                            : 'border-gray-300 hover:border-gray-400'
+                        }`}
+                      >
+                        <FolderOpen className={`w-12 h-12 mx-auto mb-3 ${isDragging ? 'text-primary' : 'text-gray-400'}`} />
+                        <p className="text-sm text-gray-600 mb-2">
+                          Pretiahnite priečinky sem alebo kliknite na tlačidlo nižšie
+                        </p>
+                        <p className="text-xs text-gray-500 mb-4">
+                          Môžete pretiahnuť viacero priečinkov naraz z Finder/Prieskumníka
+                        </p>
+                        
                         {uploadMode === "folder" ? (
                           <>
                             <input
@@ -847,87 +945,97 @@ export default function AdminDokumenty() {
                               multiple
                               webkitdirectory=""
                               directory=""
-                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                              className="hidden"
                             />
-                            {selectedFiles.length > 0 && (
-                              <Button
-                                type="button"
-                                onClick={() => folderInputRef.current?.click()}
-                                variant="outline"
-                                className="mt-2"
-                              >
-                                <FolderOpen className="w-4 h-4 mr-2" />
-                                Pridať ďalší priečinok
-                              </Button>
-                            )}
+                            <Button
+                              type="button"
+                              onClick={() => folderInputRef.current?.click()}
+                              variant="outline"
+                            >
+                              <FolderOpen className="w-4 h-4 mr-2" />
+                              Vybrať priečinky
+                            </Button>
                           </>
                         ) : (
-                          <Input
-                            type="file"
-                            onChange={handleFileSelect}
-                            multiple
-                            required={selectedFiles.length === 0}
-                          />
-                        )}
-                        {selectedFiles.length > 0 && (
-                          <div className="mt-3 space-y-2">
-                            <div className="flex items-center justify-between">
-                              <p className="text-sm font-medium text-gray-700">
-                                Vybraných {selectedFiles.length} súborov ({formatFileSize(totalBytes)})
-                              </p>
-                              <Button
-                                type="button"
-                                onClick={handleClearAllFiles}
-                                variant="ghost"
-                                size="sm"
-                                className="text-red-600 hover:text-red-700"
-                              >
-                                <X className="w-4 h-4 mr-1" />Vymazať všetko
-                              </Button>
-                            </div>
-                            <div className="max-h-64 overflow-y-auto space-y-2">
-                              {selectedFiles.map((file, index) => {
-                                const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
-                                const isDuplicate = isFileDuplicate(file.name, file.size, folderInfo.cesta_priecinku);
-                                const status = fileStatuses[file.name] || 'pending';
-
-                                return (
-                                  <div key={index} className="flex items-center justify-between p-2 rounded bg-gray-50 border border-gray-200">
-                                    <div className="flex items-center gap-2 flex-grow min-w-0">
-                                      <span className="text-lg flex-shrink-0">{getFileIcon(file.type)}</span>
-                                      <div className="min-w-0 flex-grow">
-                                        <span className="text-sm text-gray-700 block truncate">{file.name}</span>
-                                        {folderInfo.cesta_priecinku && (
-                                          <span className="text-xs text-gray-500 block truncate">
-                                            {folderInfo.cesta_priecinku}
-                                          </span>
-                                        )}
-                                        {folderInfo.model_domu && (
-                                          <span className="text-xs text-blue-600">
-                                            🏠 {folderInfo.model_domu}
-                                            {folderInfo.podpriecinok && ` / ${folderInfo.podpriecinok}`}
-                                          </span>
-                                        )}
-                                      </div>
-                                      <span className="text-xs text-gray-500 flex-shrink-0 mr-2">({formatFileSize(file.size)})</span>
-                                      {getStatusBadge(isDuplicate && status === 'pending' ? 'duplicita' : status)}
-                                    </div>
-                                    {!uploading && (
-                                      <button
-                                        type="button"
-                                        onClick={() => handleRemoveFile(index)}
-                                        className="text-red-600 hover:text-red-700 ml-2 flex-shrink-0"
-                                      >
-                                        <X className="w-4 h-4" />
-                                      </button>
-                                    )}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
+                          <>
+                            <Input
+                              type="file"
+                              onChange={handleFileSelect}
+                              multiple
+                              required={selectedFiles.length === 0}
+                              className="hidden"
+                              id="file-input"
+                            />
+                            <Button
+                              type="button"
+                              onClick={() => document.getElementById('file-input')?.click()}
+                              variant="outline"
+                            >
+                              <Upload className="w-4 h-4 mr-2" />
+                              Vybrať súbory
+                            </Button>
+                          </>
                         )}
                       </div>
+
+                      {selectedFiles.length > 0 && (
+                        <div className="mt-3 space-y-2">
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-medium text-gray-700">
+                              Vybraných {selectedFiles.length} súborov ({formatFileSize(totalBytes)})
+                            </p>
+                            <Button
+                              type="button"
+                              onClick={handleClearAllFiles}
+                              variant="ghost"
+                              size="sm"
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <X className="w-4 h-4 mr-1" />Vymazať všetko
+                            </Button>
+                          </div>
+                          <div className="max-h-64 overflow-y-auto space-y-2">
+                            {selectedFiles.map((file, index) => {
+                              const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
+                              const isDuplicate = isFileDuplicate(file.name, file.size, folderInfo.cesta_priecinku);
+                              const status = fileStatuses[file.name] || 'pending';
+
+                              return (
+                                <div key={index} className="flex items-center justify-between p-2 rounded bg-gray-50 border border-gray-200">
+                                  <div className="flex items-center gap-2 flex-grow min-w-0">
+                                    <span className="text-lg flex-shrink-0">{getFileIcon(file.type)}</span>
+                                    <div className="min-w-0 flex-grow">
+                                      <span className="text-sm text-gray-700 block truncate">{file.name}</span>
+                                      {folderInfo.cesta_priecinku && (
+                                        <span className="text-xs text-gray-500 block truncate">
+                                          {folderInfo.cesta_priecinku}
+                                        </span>
+                                      )}
+                                      {folderInfo.model_domu && (
+                                        <span className="text-xs text-blue-600">
+                                          🏠 {folderInfo.model_domu}
+                                          {folderInfo.podpriecinok && ` / ${folderInfo.podpriecinok}`}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <span className="text-xs text-gray-500 flex-shrink-0 mr-2">({formatFileSize(file.size)})</span>
+                                    {getStatusBadge(isDuplicate && status === 'pending' ? 'duplicita' : status)}
+                                  </div>
+                                  {!uploading && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveFile(index)}
+                                      className="text-red-600 hover:text-red-700 ml-2 flex-shrink-0"
+                                    >
+                                      <X className="w-4 h-4" />
+                                    </button>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     <div>
