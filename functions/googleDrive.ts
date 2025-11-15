@@ -14,7 +14,6 @@ Deno.serve(async (req) => {
     console.log('[GoogleDrive] URL:', url.href);
 
     try {
-        // OAuth callback URL - musí smerovať na túto funkciu
         const callbackUrl = `${url.origin}${url.pathname}?action=callback`;
         console.log('[GoogleDrive] Callback URL:', callbackUrl);
 
@@ -24,50 +23,61 @@ Deno.serve(async (req) => {
             callbackUrl
         );
 
-        // Krok 1: Autorizácia - presmerovanie na Google
+        // Autorizácia - získanie user ID a presmerovanie na Google
         if (action === 'authorize') {
             const base44 = createClientFromRequest(req);
-            await base44.auth.me(); // Verify user is logged in
+            const user = await base44.auth.me();
+            
+            if (!user) {
+                return Response.json({ error: 'Unauthorized' }, { status: 401 });
+            }
+            
+            const returnUrl = url.searchParams.get('return_url') || '/';
+            const state = JSON.stringify({ userId: user.id, returnUrl });
             
             const authUrl = oauth2Client.generateAuthUrl({
                 access_type: 'offline',
-                scope: [
-                    'https://www.googleapis.com/auth/drive.readonly',
-                ],
+                scope: ['https://www.googleapis.com/auth/drive.readonly'],
                 prompt: 'consent',
-                state: url.searchParams.get('return_url') || '/'
+                state
             });
             
-            console.log('[GoogleDrive] Redirecting to Google:', authUrl);
+            console.log('[GoogleDrive] Redirecting to Google for user:', user.id);
             return Response.redirect(authUrl, 302);
         }
 
-        // Krok 2: Callback z Google
+        // Callback z Google - uloženie tokenov
         if (action === 'callback') {
             const code = url.searchParams.get('code');
-            const state = url.searchParams.get('state') || '/';
+            const stateStr = url.searchParams.get('state');
             
             console.log('[GoogleDrive] Callback received, code:', code ? 'present' : 'missing');
             
-            if (!code) {
-                return new Response('Authorization failed: No code received', { status: 400 });
+            if (!code || !stateStr) {
+                return new Response('Authorization failed: Missing code or state', { status: 400 });
             }
 
             try {
-                // Získame tokeny
+                const state = JSON.parse(stateStr);
                 const { tokens } = await oauth2Client.getToken(code);
-                console.log('[GoogleDrive] Tokens received');
+                console.log('[GoogleDrive] Tokens received for user:', state.userId);
                 
-                // Uložíme tokeny cez base44
+                // Použijeme service role na uloženie tokenov
                 const base44 = createClientFromRequest(req);
-                await base44.asServiceRole.auth.updateUser(req.headers.get('cookie')?.match(/session=([^;]+)/)?.[1], {
+                const users = await base44.asServiceRole.entities.User.filter({ id: state.userId });
+                
+                if (users.length === 0) {
+                    throw new Error('User not found');
+                }
+                
+                await base44.asServiceRole.entities.User.update(state.userId, {
                     google_drive_access_token: tokens.access_token,
                     google_drive_refresh_token: tokens.refresh_token,
                     google_drive_token_expiry: tokens.expiry_date,
                 });
                 
-                console.log('[GoogleDrive] Tokens saved, redirecting to:', state);
-                return Response.redirect(state, 302);
+                console.log('[GoogleDrive] Tokens saved, redirecting to:', state.returnUrl);
+                return Response.redirect(state.returnUrl, 302);
             } catch (error) {
                 console.error('[GoogleDrive] Callback error:', error);
                 return new Response(`Authorization error: ${error.message}`, { status: 500 });
