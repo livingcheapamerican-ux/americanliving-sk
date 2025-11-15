@@ -58,7 +58,7 @@ export default function AdminDokumenty() {
 
   const queryClient = useQueryClient();
 
-  const { data: user } = useQuery({
+  const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me()
   });
@@ -296,7 +296,7 @@ export default function AdminDokumenty() {
 
         // Upload with timeout
         const uploadPromise = base44.integrations.Core.UploadFile({ file });
-        const timeoutPromise = new Promise((_, reject) => 
+        const timeoutPromise = new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Upload timeout - súbor je príliš veľký alebo pomalé pripojenie')), 60000)
         );
 
@@ -317,9 +317,9 @@ export default function AdminDokumenty() {
         if (progressInterval) {
           clearInterval(progressInterval);
         }
-        
+
         console.error(`❌ Chyba pri nahrávaní ${file.name}:`, error.message);
-        
+
         const errorDetails = getErrorDetails(error, file);
 
         if (!errorDetails.retryable || attempt === maxRetries || cancelUpload) {
@@ -581,6 +581,17 @@ export default function AdminDokumenty() {
 
   const isAdmin = user?.role === 'admin';
 
+  if (userLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <Card className="p-12 text-center max-w-md">
+          <Loader2 className="w-12 h-12 animate-spin mx-auto text-primary mb-4" />
+          <p className="text-gray-600">Načítavam...</p>
+        </Card>
+      </div>
+    );
+  }
+
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -800,7 +811,7 @@ export default function AdminDokumenty() {
                                 const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
                                 const isDuplicate = isFileDuplicate(file.name, file.size);
                                 const status = fileStatuses[file.name] || 'pending';
-                                
+
                                 return (
                                   <div key={index} className="flex items-center justify-between p-2 rounded bg-gray-50 border border-gray-200">
                                     <div className="flex items-center gap-2 flex-grow min-w-0">
