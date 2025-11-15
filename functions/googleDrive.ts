@@ -11,9 +11,12 @@ Deno.serve(async (req) => {
     const action = url.searchParams.get('action') || 'listFiles';
     
     console.log('[GoogleDrive] Action:', action);
+    console.log('[GoogleDrive] URL:', url.toString());
 
     try {
         const callbackUrl = `${url.origin}${url.pathname}?action=callback`;
+        console.log('[GoogleDrive] Callback URL:', callbackUrl);
+        
         const oauth2Client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, callbackUrl);
 
         // AUTHORIZE
@@ -22,11 +25,15 @@ Deno.serve(async (req) => {
             const user = await base44.auth.me();
             
             if (!user) {
+                console.error('[GoogleDrive] No user found');
                 return Response.json({ error: 'Unauthorized' }, { status: 401 });
             }
             
             const returnUrl = url.searchParams.get('return_url') || '/';
             const state = JSON.stringify({ userId: user.id, returnUrl });
+            
+            console.log('[GoogleDrive] User:', user.email, 'ID:', user.id);
+            console.log('[GoogleDrive] State:', state);
             
             const authUrl = oauth2Client.generateAuthUrl({
                 access_type: 'offline',
@@ -35,7 +42,7 @@ Deno.serve(async (req) => {
                 state
             });
             
-            console.log('[GoogleDrive] Authorizing user:', user.email);
+            console.log('[GoogleDrive] Redirecting to auth URL');
             return Response.redirect(authUrl, 302);
         }
 
@@ -45,28 +52,63 @@ Deno.serve(async (req) => {
             const stateStr = url.searchParams.get('state');
             const error = url.searchParams.get('error');
             
+            console.log('[GoogleDrive] Callback received');
+            console.log('[GoogleDrive] Code:', code ? 'present' : 'missing');
+            console.log('[GoogleDrive] State:', stateStr);
+            console.log('[GoogleDrive] Error:', error);
+            
             if (error) {
                 console.error('[GoogleDrive] OAuth error:', error);
-                return new Response(`Authorization failed: ${error}`, { status: 400 });
+                return new Response(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Authorization Failed</title>
+                        <style>
+                            body { font-family: Arial; text-align: center; padding: 50px; }
+                            .error { color: #dc2626; font-size: 48px; margin-bottom: 20px; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="error">✗</div>
+                        <h1>Autorizácia zlyhala</h1>
+                        <p>Chyba: ${error}</p>
+                        <p><a href="javascript:window.close()">Zavrieť okno</a></p>
+                    </body>
+                    </html>
+                `, { headers: { 'Content-Type': 'text/html' } });
             }
             
             if (!code || !stateStr) {
+                console.error('[GoogleDrive] Missing code or state');
                 return new Response('Missing code or state', { status: 400 });
             }
 
             try {
+                console.log('[GoogleDrive] Exchanging code for tokens...');
                 const { tokens } = await oauth2Client.getToken(code);
+                console.log('[GoogleDrive] Tokens received:', {
+                    hasAccessToken: !!tokens.access_token,
+                    hasRefreshToken: !!tokens.refresh_token,
+                    expiryDate: tokens.expiry_date
+                });
+                
                 const state = JSON.parse(stateStr);
+                console.log('[GoogleDrive] Parsed state:', state);
                 
-                console.log('[GoogleDrive] Tokens received for user:', state.userId);
-                
-                // Use service role to save tokens
+                // Create base44 client WITHOUT user context (service role only)
                 const base44 = createClientFromRequest(req);
+                
+                console.log('[GoogleDrive] Fetching user with ID:', state.userId);
                 const users = await base44.asServiceRole.entities.User.filter({ id: state.userId });
                 
                 if (users.length === 0) {
+                    console.error('[GoogleDrive] User not found:', state.userId);
                     return new Response('User not found', { status: 404 });
                 }
+                
+                console.log('[GoogleDrive] User found:', users[0].email);
+                console.log('[GoogleDrive] Updating user tokens...');
                 
                 await base44.asServiceRole.entities.User.update(state.userId, {
                     google_drive_access_token: tokens.access_token,
@@ -102,7 +144,25 @@ Deno.serve(async (req) => {
                 });
             } catch (error) {
                 console.error('[GoogleDrive] Token exchange error:', error);
-                return new Response(`Token exchange failed: ${error.message}`, { status: 500 });
+                console.error('[GoogleDrive] Error stack:', error.stack);
+                return new Response(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Token Exchange Failed</title>
+                        <style>
+                            body { font-family: Arial; text-align: center; padding: 50px; }
+                            .error { color: #dc2626; font-size: 48px; margin-bottom: 20px; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="error">✗</div>
+                        <h1>Chyba pri ukladaní tokenov</h1>
+                        <p>${error.message}</p>
+                        <p><a href="javascript:window.close()">Zavrieť okno</a></p>
+                    </body>
+                    </html>
+                `, { headers: { 'Content-Type': 'text/html' } });
             }
         }
 
@@ -111,15 +171,20 @@ Deno.serve(async (req) => {
         const user = await base44.auth.me();
         
         if (!user) {
+            console.error('[GoogleDrive] No authenticated user');
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
+
+        console.log('[GoogleDrive] User authenticated:', user.email);
 
         // Helper function to refresh tokens
         const refreshTokensIfNeeded = async () => {
             if (!user.google_drive_access_token) {
+                console.error('[GoogleDrive] No access token found for user');
                 throw new Error('Not authorized');
             }
 
+            console.log('[GoogleDrive] Setting credentials...');
             oauth2Client.setCredentials({
                 access_token: user.google_drive_access_token,
                 refresh_token: user.google_drive_refresh_token,
@@ -127,8 +192,12 @@ Deno.serve(async (req) => {
             });
 
             try {
+                console.log('[GoogleDrive] Refreshing access token...');
                 const { credentials } = await oauth2Client.refreshAccessToken();
+                console.log('[GoogleDrive] Token refreshed');
+                
                 if (credentials.access_token !== user.google_drive_access_token) {
+                    console.log('[GoogleDrive] Saving new tokens...');
                     await base44.auth.updateMe({
                         google_drive_access_token: credentials.access_token,
                         google_drive_refresh_token: credentials.refresh_token || user.google_drive_refresh_token,
@@ -144,6 +213,7 @@ Deno.serve(async (req) => {
 
         // LIST FOLDERS
         if (action === 'listFolders') {
+            console.log('[GoogleDrive] Listing folders...');
             await refreshTokensIfNeeded();
             const drive = google.drive({ version: 'v3', auth: oauth2Client });
             
@@ -165,6 +235,7 @@ Deno.serve(async (req) => {
                 return Response.json({ error: 'Search query missing' }, { status: 400 });
             }
 
+            console.log('[GoogleDrive] Searching files with query:', searchQuery);
             await refreshTokensIfNeeded();
             const drive = google.drive({ version: 'v3', auth: oauth2Client });
             
@@ -175,6 +246,8 @@ Deno.serve(async (req) => {
                 const folderQueries = folderIds.map(id => `'${id}' in parents`).join(' or ');
                 query += ` and (${folderQueries})`;
             }
+            
+            console.log('[GoogleDrive] Search query:', query);
             
             const res = await drive.files.list({
                 pageSize: 50,
@@ -189,6 +262,7 @@ Deno.serve(async (req) => {
 
         // LIST FILES
         if (action === 'listFiles') {
+            console.log('[GoogleDrive] Listing files...');
             await refreshTokensIfNeeded();
             const drive = google.drive({ version: 'v3', auth: oauth2Client });
             
@@ -199,12 +273,15 @@ Deno.serve(async (req) => {
                 query += ` and (${folderQueries})`;
             }
             
+            console.log('[GoogleDrive] List query:', query);
+            
             const res = await drive.files.list({
                 pageSize: 100,
                 q: query,
                 fields: 'nextPageToken, files(id, name, mimeType, modifiedTime, webViewLink, parents)',
             });
             
+            console.log('[GoogleDrive] Found files:', res.data.files?.length || 0);
             return Response.json(res.data.files || []);
         }
         
@@ -215,6 +292,7 @@ Deno.serve(async (req) => {
                 return Response.json({ error: 'File ID missing' }, { status: 400 });
             }
 
+            console.log('[GoogleDrive] Getting file content:', fileId);
             await refreshTokensIfNeeded();
             const drive = google.drive({ version: 'v3', auth: oauth2Client });
             
@@ -232,6 +310,7 @@ Deno.serve(async (req) => {
                 );
                 
                 if (!isInAllowedFolder) {
+                    console.error('[GoogleDrive] Access denied to file:', fileId);
                     return Response.json({ error: 'Access denied' }, { status: 403 });
                 }
             }
@@ -246,6 +325,7 @@ Deno.serve(async (req) => {
                 fileContent += new TextDecoder().decode(chunk);
             }
 
+            console.log('[GoogleDrive] File content retrieved, length:', fileContent.length);
             return new Response(fileContent, {
                 headers: { 'Content-Type': 'text/plain' }
             });
@@ -258,6 +338,7 @@ Deno.serve(async (req) => {
 
     } catch (error) {
         console.error('[GoogleDrive] Error:', error);
+        console.error('[GoogleDrive] Error stack:', error.stack);
         
         // Check if it's an auth error
         if (error.message && error.message.includes('Token expired')) {
