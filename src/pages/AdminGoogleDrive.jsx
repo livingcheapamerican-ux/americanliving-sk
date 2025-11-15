@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,11 +11,32 @@ import { motion } from "framer-motion";
 export default function AdminGoogleDrive() {
   const [selectedFolders, setSelectedFolders] = useState([]);
   const [copied, setCopied] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me()
   });
+
+  // Check for token_key in URL and retrieve tokens
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenKey = urlParams.get('token_key');
+    
+    if (tokenKey) {
+      console.log('Token key found, retrieving tokens...');
+      base44.functions.invoke('googleDrive', { action: 'retrieveTokens', token_key: tokenKey })
+        .then(() => {
+          console.log('Tokens saved successfully');
+          queryClient.invalidateQueries({ queryKey: ['current-user'] });
+          // Remove token_key from URL
+          window.history.replaceState({}, '', window.location.pathname);
+        })
+        .catch(error => {
+          console.error('Error retrieving tokens:', error);
+        });
+    }
+  }, [queryClient]);
 
   const { data: folders, isLoading, error, refetch } = useQuery({
     queryKey: ['google-drive-folders'],
@@ -28,7 +49,7 @@ export default function AdminGoogleDrive() {
   });
 
   const handleAuthorize = () => {
-    const returnUrl = window.location.href;
+    const returnUrl = window.location.href.split('?')[0]; // Clean URL without params
     const functionPath = window.location.pathname.includes('/preview/') 
       ? window.location.pathname.split('/preview/')[0] + '/functions/googleDrive'
       : '/functions/googleDrive';
@@ -88,7 +109,7 @@ export default function AdminGoogleDrive() {
                   <p className="text-sm text-gray-600">
                     {user?.google_drive_access_token 
                       ? "✓ Pripojené - môžete načítať priečinky" 
-                      : "✗ Nepripojené - kliknite na tlačidlo Autorizovať"}
+                      : "✗ Nepripojené - kliknite na Autorizovať"}
                   </p>
                 </div>
               </div>
@@ -112,7 +133,7 @@ export default function AdminGoogleDrive() {
                     <p className="text-sm text-gray-600">
                       {folders && folders.length > 0 
                         ? `Nájdených ${folders.length} priečinkov`
-                        : "Kliknite na tlačidlo pre načítanie priečinkov"}
+                        : "Kliknite na tlačidlo"}
                     </p>
                   </div>
                 </div>
@@ -148,7 +169,7 @@ export default function AdminGoogleDrive() {
               <div className="flex items-center gap-3 mb-4">
                 <Folder className="w-6 h-6 text-primary" />
                 <h3 className="font-semibold text-gray-800">
-                  Vyberte priečinky pre chatbot ({selectedFolders.length} vybraných)
+                  Vyberte priečinky ({selectedFolders.length} vybraných)
                 </h3>
               </div>
               <p className="text-sm text-gray-600 mb-4">
@@ -187,7 +208,7 @@ export default function AdminGoogleDrive() {
               <div className="flex items-start gap-4">
                 <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
                 <div className="flex-grow">
-                  <h3 className="font-semibold text-gray-800 mb-3">Ako aktivovať obmedzenie</h3>
+                  <h3 className="font-semibold text-gray-800 mb-3">Aktivácia obmedzenia</h3>
                   <p className="text-sm text-gray-700 mb-4">
                     Skopírujte ID priečinkov a nastavte ich v Dashboard:
                   </p>
@@ -212,12 +233,11 @@ export default function AdminGoogleDrive() {
                   </div>
 
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <p className="text-sm font-semibold text-blue-900 mb-2">Postup:</p>
                     <ol className="text-sm text-blue-800 space-y-1 ml-4 list-decimal">
                       <li>Skopírujte hodnotu vyššie</li>
-                      <li>Otvorte Dashboard → Settings → Environment Variables</li>
-                      <li>Pridajte premennú <code className="bg-blue-100 px-2 py-0.5 rounded font-mono text-xs">GOOGLE_DRIVE_FOLDER_IDS</code></li>
-                      <li>Vložte skopírovanú hodnotu a uložte</li>
+                      <li>Dashboard → Settings → Environment Variables</li>
+                      <li>Pridajte <code className="bg-blue-100 px-2 py-0.5 rounded font-mono text-xs">GOOGLE_DRIVE_FOLDER_IDS</code></li>
+                      <li>Vložte hodnotu a uložte</li>
                     </ol>
                   </div>
                 </div>
@@ -225,7 +245,7 @@ export default function AdminGoogleDrive() {
             </Card>
           )}
 
-          {/* Empty state - not authorized */}
+          {/* Empty states */}
           {needsAuth && !user?.google_drive_access_token && (
             <Card className="p-12 text-center">
               <LinkIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
@@ -233,12 +253,11 @@ export default function AdminGoogleDrive() {
                 Pripojte Google Drive
               </h3>
               <p className="text-gray-500 mb-6">
-                Kliknite na tlačidlo "Autorizovať Google Drive" vyššie.
+                Kliknite na tlačidlo "Autorizovať Google Drive".
               </p>
             </Card>
           )}
 
-          {/* Empty state - no folders */}
           {!isLoading && folders && folders.length === 0 && user?.google_drive_access_token && (
             <Card className="p-12 text-center">
               <FolderOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
