@@ -161,26 +161,32 @@ export default function AdminDokumenty() {
   };
 
   const handleFileSelect = (e) => {
-    const allFiles = Array.from(e.target.files);
-    const validFiles = allFiles.filter(file => !shouldSkipFile(file.name));
+    const newFiles = Array.from(e.target.files);
+    const validFiles = newFiles.filter(file => !shouldSkipFile(file.name));
 
-    console.log(`📁 Vybratých ${allFiles.length} súborov, po filtrovaní ${validFiles.length} súborov`);
-    if (allFiles.length > validFiles.length) {
-      console.log(`🗑️  Vyfiltrovaných ${allFiles.length - validFiles.length} systémových súborov`);
+    console.log(`📁 Vybratých ${newFiles.length} súborov, po filtrovaní ${validFiles.length} súborov`);
+    if (newFiles.length > validFiles.length) {
+      console.log(`🗑️  Vyfiltrovaných ${newFiles.length - validFiles.length} systémových súborov`);
     }
 
-    setSelectedFiles(validFiles);
+    // Add to existing files instead of replacing
+    setSelectedFiles(prev => {
+      const allSelectedFiles = [...prev, ...validFiles];
+      const total = allSelectedFiles.reduce((sum, file) => sum + file.size, 0);
+      setTotalBytes(total);
 
-    // Calculate total bytes
-    const total = validFiles.reduce((sum, file) => sum + file.size, 0);
-    setTotalBytes(total);
+      // Initialize file statuses for new files
+      const initialStatuses = {};
+      validFiles.forEach(file => {
+        initialStatuses[file.name] = 'pending';
+      });
+      setFileStatuses(prevStatuses => ({ ...prevStatuses, ...initialStatuses }));
 
-    // Initialize file statuses
-    const initialStatuses = {};
-    validFiles.forEach(file => {
-      initialStatuses[file.name] = 'pending';
+      return allSelectedFiles;
     });
-    setFileStatuses(initialStatuses);
+
+    // Reset input value to allow selecting the same folder again
+    e.target.value = '';
   };
 
   const updateFileStatus = (fileName, status) => {
@@ -191,7 +197,19 @@ export default function AdminDokumenty() {
   };
 
   const handleRemoveFile = (index) => {
-    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+    setSelectedFiles(prev => {
+      const newFiles = prev.filter((_, i) => i !== index);
+      const total = newFiles.reduce((sum, file) => sum + file.size, 0);
+      setTotalBytes(total);
+      return newFiles;
+    });
+  };
+
+  const handleClearAllFiles = () => {
+    setSelectedFiles([]);
+    setFileStatuses({});
+    setTotalBytes(0);
+    setUploadedBytes(0);
   };
 
   const handleAddTag = () => {
@@ -740,36 +758,61 @@ export default function AdminDokumenty() {
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="files">Súbory</SelectItem>
-                                <SelectItem value="folder">Priečinok</SelectItem>
+                                <SelectItem value="folder">Priečinky</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
 
                     <div>
-                      <Label>{uploadMode === "folder" ? "Priečinok *" : "Súbory *"}</Label>
+                      <Label>{uploadMode === "folder" ? "Priečinky *" : "Súbory *"}</Label>
                       <div className="mt-2">
                         {uploadMode === "folder" ? (
-                          <input
-                            ref={folderInputRef}
-                            type="file"
-                            onChange={handleFileSelect}
-                            multiple
-                            required
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                          />
+                          <>
+                            <input
+                              ref={folderInputRef}
+                              type="file"
+                              onChange={handleFileSelect}
+                              multiple
+                              webkitdirectory=""
+                              directory=""
+                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            />
+                            {selectedFiles.length > 0 && (
+                              <Button
+                                type="button"
+                                onClick={() => folderInputRef.current?.click()}
+                                variant="outline"
+                                className="mt-2"
+                              >
+                                <FolderOpen className="w-4 h-4 mr-2" />
+                                Pridať ďalší priečinok
+                              </Button>
+                            )}
+                          </>
                         ) : (
                           <Input
                             type="file"
                             onChange={handleFileSelect}
                             multiple
-                            required
+                            required={selectedFiles.length === 0}
                           />
                         )}
                         {selectedFiles.length > 0 && (
                           <div className="mt-3 space-y-2">
-                            <p className="text-sm font-medium text-gray-700">
-                              Vybraných {selectedFiles.length} súborov
-                            </p>
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm font-medium text-gray-700">
+                                Vybraných {selectedFiles.length} súborov ({formatFileSize(totalBytes)})
+                              </p>
+                              <Button
+                                type="button"
+                                onClick={handleClearAllFiles}
+                                variant="ghost"
+                                size="sm"
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                <X className="w-4 h-4 mr-1" />Vymazať všetko
+                              </Button>
+                            </div>
                             <div className="max-h-64 overflow-y-auto space-y-2">
                               {selectedFiles.map((file, index) => {
                                 const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
