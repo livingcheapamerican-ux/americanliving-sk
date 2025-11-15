@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -25,8 +24,9 @@ export default function AdminDokumenty() {
   const [selectedVyrobca, setSelectedVyrobca] = useState("all");
   const [uploadMode, setUploadMode] = useState("files");
   const [viewingDocument, setViewingDocument] = useState(null);
-  const [viewMode, setViewMode] = useState("list"); // "list" or "tree"
-  const [uploadResults, setUploadResults] = useState(null); // New state for upload summary
+  const [viewMode, setViewMode] = useState("list");
+  const [uploadResults, setUploadResults] = useState(null);
+  const [currentFileName, setCurrentFileName] = useState("");
   const [formData, setFormData] = useState({
     popis: "",
     typ: "iné",
@@ -86,44 +86,58 @@ export default function AdminDokumenty() {
     setTagInput("");
     setUploadProgress({ current: 0, total: 0 });
     setUploadMode("files");
-    // setUploadResults(null); // Removed this line as per the outline's implication
+    setCurrentFileName("");
   };
 
   const extractFolderInfo = (filePath) => {
-    // Extract folder structure from webkitRelativePath
-    // Example: "Dom_A1/exterior/photo1.jpg" or "JAK_Modul_50/interior/living.jpg"
-    const parts = filePath.split('/');
+    console.log('🔍 [extractFolderInfo] Input path:', filePath);
+    
+    if (!filePath || filePath === '') {
+      console.log('⚠️  [extractFolderInfo] Empty path');
+      return { model_domu: null, podpriecinok: null, cesta_priecinku: null };
+    }
+
+    const parts = filePath.split('/').filter(p => p && p.trim() !== '');
+    console.log('📂 [extractFolderInfo] Path parts:', parts);
     
     if (parts.length === 1) {
-      // Single file, no folder structure
+      console.log('📄 [extractFolderInfo] Single file, no folder structure');
       return { model_domu: null, podpriecinok: null, cesta_priecinku: null };
     }
     
-    const mainFolder = parts[0]; // e.g., "Dom_A1" or "JAK_Modul_50"
-    const subFolder = parts.length > 2 ? parts[parts.length - 2] : null; // e.g., "exterior", "interior"
-    const fullPath = parts.slice(0, -1).join('/'); // Full folder path without filename
+    const mainFolder = parts[0];
+    const subFolder = parts.length > 2 ? parts[parts.length - 2] : null;
+    const fullPath = parts.slice(0, -1).join('/');
     
-    // Extract model name - clean up underscores and common prefixes
     let modelDomu = mainFolder
       .replace(/_/g, ' ')
       .replace(/^(Dom|Model|Modul)\s*/i, '')
       .trim();
     
-    return {
-      model_domu: modelDomu || null,
+    const result = {
+      model_domu: modelDomu || mainFolder,
       podpriecinok: subFolder || null,
       cesta_priecinku: fullPath
     };
+    
+    console.log('✅ [extractFolderInfo] Result:', result);
+    return result;
   };
 
   const isFileDuplicate = (fileName, fileSize) => {
-    return dokumenty.some(dok => 
+    const isDup = dokumenty.some(dok => 
       dok.nazov === fileName && dok.velkost === fileSize
     );
+    if (isDup) {
+      console.log('🔄 [isFileDuplicate] Duplicate found:', fileName);
+    }
+    return isDup;
   };
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
+    console.log('📁 [handleFileSelect] Selected files count:', files.length);
+    console.log('📁 [handleFileSelect] First file path:', files[0]?.webkitRelativePath || files[0]?.name);
     setSelectedFiles(files);
   };
 
@@ -156,11 +170,15 @@ export default function AdminDokumenty() {
       return;
     }
 
-    console.log('🚀 Začínam upload, počet súborov:', selectedFiles.length);
+    console.log('🚀 ========== ZAČÍNAM UPLOAD ==========');
+    console.log('🚀 Počet súborov:', selectedFiles.length);
+    console.log('🚀 Režim:', uploadMode);
+    console.log('🚀 Výrobca:', formData.vyrobca);
+    console.log('🚀 Typ:', formData.typ);
     
     setUploading(true);
     setUploadProgress({ current: 0, total: selectedFiles.length });
-    setUploadResults(null); // Clear previous results
+    setUploadResults(null);
 
     const results = {
       successful: [],
@@ -171,60 +189,101 @@ export default function AdminDokumenty() {
     try {
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
-        setUploadProgress({ current: i + 1, total: selectedFiles.length });
+        const fileNum = i + 1;
         
-        console.log(`📁 Spracúvam súbor ${i + 1}/${selectedFiles.length}:`, file.name);
+        console.log(`\n📦 ========== SÚBOR ${fileNum}/${selectedFiles.length} ==========`);
+        console.log(`📦 Názov: ${file.name}`);
+        console.log(`📦 Veľkosť: ${file.size} bytes`);
+        console.log(`📦 Typ: ${file.type}`);
+        console.log(`📦 WebkitRelativePath: ${file.webkitRelativePath || 'N/A'}`);
+        
+        setUploadProgress({ current: fileNum, total: selectedFiles.length });
+        setCurrentFileName(file.name);
         
         try {
-          // Kontrola duplicity
+          // Step 1: Check duplicate
+          console.log(`⏱️  [STEP 1/${fileNum}] Kontrolujem duplicitu...`);
           if (isFileDuplicate(file.name, file.size)) {
-            console.log('⏭️  Preskakujem duplicitný súbor:', file.name);
+            console.log(`⏭️  [${fileNum}] PRESKOČENÝ - duplicita`);
             results.skipped.push({
               name: file.name,
               reason: 'Súbor už existuje (rovnaký názov a veľkosť)'
             });
-            continue; // Skip to next file
+            continue;
           }
+          console.log(`✅ [STEP 1/${fileNum}] Nie je duplicita`);
 
-          console.log('📤 Nahrávam súbor do storage...');
+          // Step 2: Upload file
+          console.log(`⏱️  [STEP 2/${fileNum}] Nahrávam súbor do storage...`);
+          console.time(`upload-${fileNum}`);
+          
           const uploadResponse = await base44.integrations.Core.UploadFile({ file });
-          console.log('✅ Súbor nahraný, URL:', uploadResponse.file_url);
           
-          // Extract folder information from file path
-          const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
-          console.log('📂 Folder info:', folderInfo);
+          console.timeEnd(`upload-${fileNum}`);
+          console.log(`✅ [STEP 2/${fileNum}] Súbor nahraný`);
+          console.log(`🔗 [STEP 2/${fileNum}] URL:`, uploadResponse.file_url);
           
-          // Add folder info to tags if available
+          // Step 3: Extract folder info
+          console.log(`⏱️  [STEP 3/${fileNum}] Extrahujem info o priečinku...`);
+          const filePath = file.webkitRelativePath || file.name;
+          console.log(`📂 [STEP 3/${fileNum}] Path na spracovanie:`, filePath);
+          
+          const folderInfo = extractFolderInfo(filePath);
+          console.log(`✅ [STEP 3/${fileNum}] Folder info extrahované:`, folderInfo);
+          
+          // Step 4: Prepare tags
+          console.log(`⏱️  [STEP 4/${fileNum}] Pripravujem tagy...`);
           const autoTags = [...formData.tags];
-          if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
-          if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
+          if (folderInfo.model_domu) {
+            autoTags.push(folderInfo.model_domu);
+            console.log(`🏷️  [STEP 4/${fileNum}] Pridaný tag z modelu:`, folderInfo.model_domu);
+          }
+          if (folderInfo.podpriecinok) {
+            autoTags.push(folderInfo.podpriecinok);
+            console.log(`🏷️  [STEP 4/${fileNum}] Pridaný tag z podpriečinka:`, folderInfo.podpriecinok);
+          }
+          const finalTags = [...new Set(autoTags)];
+          console.log(`✅ [STEP 4/${fileNum}] Finálne tagy:`, finalTags);
           
+          // Step 5: Create document
           const docData = {
             nazov: file.name,
             popis: formData.popis,
             typ: formData.typ,
             vyrobca: formData.vyrobca,
             pre_chatbota: formData.pre_chatbota,
-            tags: [...new Set(autoTags)], // Remove duplicates
+            tags: finalTags,
             model_domu: folderInfo.model_domu,
             podpriecinok: folderInfo.podpriecinok,
             cesta_priecinku: folderInfo.cesta_priecinku,
             subor_url: uploadResponse.file_url,
             velkost: file.size,
-            typ_suboru: file.type || 'application/octet-stream' // Fallback for unknown file types
+            typ_suboru: file.type || 'application/octet-stream'
           };
-
-          console.log('💾 Vytváram záznam v databáze...', docData);
+          
+          console.log(`⏱️  [STEP 5/${fileNum}] Vytváram dokument v DB...`);
+          console.log(`💾 [STEP 5/${fileNum}] Document data:`, JSON.stringify(docData, null, 2));
+          console.time(`create-doc-${fileNum}`);
+          
           const doc = await createMutation.mutateAsync(docData);
-          console.log('✅ Dokument vytvorený, ID:', doc.id);
+          
+          console.timeEnd(`create-doc-${fileNum}`);
+          console.log(`✅ [STEP 5/${fileNum}] Dokument vytvorený, ID:`, doc.id);
           
           results.successful.push({
             name: file.name,
             id: doc.id
           });
+          
+          console.log(`🎉 [${fileNum}] ÚSPECH - súbor kompletne spracovaný`);
 
         } catch (fileError) {
-          console.error(`❌ Chyba pri spracovaní súboru ${file.name}:`, fileError);
+          console.error(`\n❌❌❌ CHYBA PRI SÚBORE ${fileNum} ❌❌❌`);
+          console.error(`❌ Názov súboru: ${file.name}`);
+          console.error(`❌ Error message:`, fileError.message);
+          console.error(`❌ Error stack:`, fileError.stack);
+          console.error(`❌ Full error:`, fileError);
+          
           results.failed.push({
             name: file.name,
             error: fileError.message || 'Neznáma chyba pri nahrávaní'
@@ -232,37 +291,51 @@ export default function AdminDokumenty() {
         }
       }
       
-      console.log('📊 Upload dokončený. Úspešné:', results.successful.length, 'Preskočené:', results.skipped.length, 'Chybné:', results.failed.length);
+      console.log('\n📊 ========== UPLOAD SUMMARY ==========');
+      console.log('✅ Úspešné:', results.successful.length);
+      console.log('⏭️  Preskočené:', results.skipped.length);
+      console.log('❌ Chybné:', results.failed.length);
       
-      // Automaticky analyzuj všetky úspešne nahrané dokumenty
+      // Automatická analýza
       if (results.successful.length > 0) {
-        console.log('🧠 Začínam analýzu', results.successful.length, 'dokumentov...');
-        setUploadProgress({ current: 0, total: results.successful.length }); // Reset progress for analysis phase
+        console.log('\n🧠 ========== ZAČÍNAM ANALÝZU ==========');
+        setUploadProgress({ current: 0, total: results.successful.length });
+        setCurrentFileName("Analyzujem dokumenty...");
+        
         for (let i = 0; i < results.successful.length; i++) {
+          const docId = results.successful[i].id;
+          const docName = results.successful[i].name;
+          
+          console.log(`\n🔍 Analyzujem ${i + 1}/${results.successful.length}: ${docName} (ID: ${docId})`);
           setUploadProgress({ current: i + 1, total: results.successful.length });
+          
           try {
-            console.log(`🔍 Analyzujem dokument ${i + 1}/${results.successful.length}, ID:`, results.successful[i].id);
-            await analyzeMutation.mutateAsync(results.successful[i].id);
-            console.log('✅ Analýza dokončená');
+            console.time(`analysis-${i + 1}`);
+            await analyzeMutation.mutateAsync(docId);
+            console.timeEnd(`analysis-${i + 1}`);
+            console.log(`✅ Analýza dokončená pre: ${docName}`);
           } catch (error) {
-            console.error('⚠️  Chyba pri analýze dokumentu', results.successful[i].id, error);
-            // Optionally, mark this document as failed analysis or similar
+            console.error(`⚠️  Chyba pri analýze ${docName}:`, error.message);
           }
         }
+        
+        console.log('✅ Analýza všetkých dokumentov dokončená');
       }
       
-      console.log('🎉 Celý proces dokončený!');
-      setUploadResults(results); // Set final upload results
-      setShowForm(false);
-      resetForm(); // Reset form fields but not upload results right away
-    } catch (error) {
-      console.error('💥 Kritická chyba:', error);
-      alert("Kritická chyba pri spracovaní: " + error.message);
-      results.failed.push({ name: "Global error", error: error.message });
+      console.log('\n🎉 ========== CELÝ PROCES DOKONČENÝ ==========\n');
       setUploadResults(results);
+      setShowForm(false);
+      
+    } catch (error) {
+      console.error('\n💥💥💥 KRITICKÁ CHYBA 💥💥💥');
+      console.error('💥 Message:', error.message);
+      console.error('💥 Stack:', error.stack);
+      console.error('💥 Full error:', error);
+      alert("Kritická chyba pri spracovaní: " + error.message);
     } finally {
       setUploading(false);
-      setUploadProgress({ current: 0, total: 0 }); // Reset progress bar
+      setUploadProgress({ current: 0, total: 0 });
+      setCurrentFileName("");
     }
   };
 
@@ -359,9 +432,8 @@ export default function AdminDokumenty() {
             </div>
           </Card>
 
-          {/* Upload results summary */}
-          <AnimatePresence>
-            {uploadResults && (
+          {uploadResults && (
+            <AnimatePresence>
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
@@ -432,8 +504,8 @@ export default function AdminDokumenty() {
                   </div>
                 </Card>
               </motion.div>
-            )}
-          </AnimatePresence>
+            </AnimatePresence>
+          )}
 
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-grow">
@@ -668,20 +740,20 @@ export default function AdminDokumenty() {
                       <Label>Použiť ako zdroj vedomostí pre chatbota</Label>
                     </div>
 
-                    {uploading && uploadProgress.total > 0 && (
+                    {uploading && (
                       <div className="bg-blue-50 p-4 rounded-lg">
                         <p className="text-sm font-medium text-blue-800 mb-2">
-                          {analyzeMutation.isPending ? 
-                            `Analyzujem ${uploadProgress.current} z ${uploadProgress.total} dokumentov...` :
-                            `Spracúvam ${uploadProgress.current} z ${uploadProgress.total} súborov...`
-                          }
+                          {currentFileName || `Spracúvam ${uploadProgress.current} z ${uploadProgress.total}...`}
                         </p>
                         <div className="w-full bg-blue-200 rounded-full h-2">
                           <div 
                             className="bg-blue-600 h-2 rounded-full transition-all"
-                            style={{ width: `${(uploadProgress.current / uploadProgress.total) * 100}%` }}
+                            style={{ width: `${uploadProgress.total > 0 ? (uploadProgress.current / uploadProgress.total) * 100 : 0}%` }}
                           />
                         </div>
+                        <p className="text-xs text-blue-700 mt-2">
+                          Otvorte konzolu prehliadača (F12) pre detailné informácie o procese
+                        </p>
                       </div>
                     )}
 
@@ -847,7 +919,6 @@ export default function AdminDokumenty() {
             </div>
           )}
 
-          {/* Modal pre zobrazenie analýzy */}
           <AnimatePresence>
             {viewingDocument && (
               <motion.div
