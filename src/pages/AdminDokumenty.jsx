@@ -9,9 +9,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Upload, FileText, Trash2, Download, Search, 
-  AlertCircle, CheckCircle, Loader2, X 
+  AlertCircle, CheckCircle, Loader2, X, Building2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -19,10 +20,12 @@ export default function AdminDokumenty() {
   const [showForm, setShowForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [selectedVyrobca, setSelectedVyrobca] = useState("all");
   const [formData, setFormData] = useState({
     nazov: "",
     popis: "",
     typ: "iné",
+    vyrobca: "American Living",
     pre_chatbota: true,
     tags: []
   });
@@ -62,6 +65,7 @@ export default function AdminDokumenty() {
       nazov: "",
       popis: "",
       typ: "iné",
+      vyrobca: "American Living",
       pre_chatbota: true,
       tags: []
     });
@@ -122,11 +126,21 @@ export default function AdminDokumenty() {
     }
   };
 
-  const filteredDokumenty = dokumenty.filter(dok => 
-    dok.nazov?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    dok.popis?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    dok.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const vyrobcovia = ["American Living", "JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"];
+
+  const filteredDokumenty = dokumenty.filter(dok => {
+    const matchesSearch = dok.nazov?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      dok.popis?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      dok.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    const matchesVyrobca = selectedVyrobca === "all" || dok.vyrobca === selectedVyrobca;
+    
+    return matchesSearch && matchesVyrobca;
+  });
+
+  const getVyrobcaCount = (vyrobca) => {
+    return dokumenty.filter(d => d.vyrobca === vyrobca).length;
+  };
 
   const formatFileSize = (bytes) => {
     if (!bytes) return 'N/A';
@@ -152,7 +166,16 @@ export default function AdminDokumenty() {
     návod: "Návod",
     certifikát: "Certifikát",
     FAQ: "FAQ",
+    blog: "Blog",
     iné: "Iné"
+  };
+
+  const vyrobcaColors = {
+    "American Living": "bg-blue-100 text-blue-800",
+    "JAK Modules": "bg-purple-100 text-purple-800",
+    "Ticab house": "bg-green-100 text-green-800",
+    "Prosto House": "bg-orange-100 text-orange-800",
+    "Domki z Gór": "bg-pink-100 text-pink-800"
   };
 
   const isAdmin = user?.role === 'admin';
@@ -171,15 +194,25 @@ export default function AdminDokumenty() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
-      <div className="container mx-auto px-4 max-w-6xl">
+      <div className="container mx-auto px-4 max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="flex items-center gap-3 mb-8">
+          <div className="flex items-center gap-3 mb-4">
             <FileText className="w-8 h-8 text-primary" />
             <h1 className="text-4xl font-bold text-primary">Správa dokumentov</h1>
           </div>
+
+          <Card className="p-4 mb-6 bg-blue-50 border-blue-200">
+            <div className="flex items-start gap-3">
+              <Building2 className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-blue-800">
+                <p className="font-semibold mb-1">Kategorizácia pre chatbota</p>
+                <p>Dokumenty sú rozdelené podľa výrobcov. Chatbot používa tieto dokumenty na poskytovanie špecifických informácií o domoch jednotlivých výrobcov.</p>
+              </div>
+            </div>
+          </Card>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-grow">
@@ -222,7 +255,7 @@ export default function AdminDokumenty() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
                         <Label>Názov *</Label>
                         <Input
@@ -231,6 +264,25 @@ export default function AdminDokumenty() {
                           placeholder="Cenník modulárnych domov 2025"
                           required
                         />
+                      </div>
+                      <div>
+                        <Label>Výrobca *</Label>
+                        <Select
+                          value={formData.vyrobca}
+                          onValueChange={(value) => setFormData({...formData, vyrobca: value})}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {vyrobcovia.map(v => (
+                              <SelectItem key={v} value={v}>{v}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {formData.vyrobca === "American Living" && (
+                          <p className="text-xs text-gray-500 mt-1">Obchodný model, fungovanie, know-how, blog</p>
+                        )}
                       </div>
                       <div>
                         <Label>Typ *</Label>
@@ -327,6 +379,19 @@ export default function AdminDokumenty() {
             )}
           </AnimatePresence>
 
+          <Tabs value={selectedVyrobca} onValueChange={setSelectedVyrobca} className="mb-6">
+            <TabsList className="grid grid-cols-3 lg:grid-cols-6 w-full">
+              <TabsTrigger value="all">
+                Všetky ({dokumenty.length})
+              </TabsTrigger>
+              {vyrobcovia.map(v => (
+                <TabsTrigger key={v} value={v}>
+                  {v.split(' ')[0]} ({getVyrobcaCount(v)})
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+
           {isLoading ? (
             <div className="text-center py-12">
               <Loader2 className="w-12 h-12 animate-spin mx-auto text-primary mb-4" />
@@ -339,7 +404,7 @@ export default function AdminDokumenty() {
                 {searchQuery ? "Nenašli sa žiadne dokumenty" : "Žiadne dokumenty"}
               </p>
               <p className="text-sm text-gray-500">
-                {searchQuery ? "Skúste iný vyhľadávací výraz" : "Nahrajte prvý dokument"}
+                {searchQuery ? "Skúste iný vyhľadávací výraz" : `Nahrajte prvý dokument pre ${selectedVyrobca === "all" ? "výrobcov" : selectedVyrobca}`}
               </p>
             </Card>
           ) : (
@@ -386,6 +451,10 @@ export default function AdminDokumenty() {
                           </div>
                         </div>
                         <div className="flex flex-wrap gap-2 items-center">
+                          <Badge className={vyrobcaColors[dok.vyrobca]}>
+                            <Building2 className="w-3 h-3 mr-1" />
+                            {dok.vyrobca}
+                          </Badge>
                           <Badge variant="outline">{typLabels[dok.typ]}</Badge>
                           <Badge variant="secondary">{formatFileSize(dok.velkost)}</Badge>
                           {dok.pre_chatbota && (
