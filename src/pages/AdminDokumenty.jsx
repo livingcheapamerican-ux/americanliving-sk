@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,8 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Upload, FileText, Trash2, Download, Search, 
+import {
+  Upload, FileText, Trash2, Download, Search,
   AlertCircle, CheckCircle, Loader2, X, Building2, FolderOpen, Brain, Eye, Home, List, Folder, AlertTriangle, Info, Clock
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -38,6 +39,9 @@ export default function AdminDokumenty() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [tagInput, setTagInput] = useState("");
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
+  const [currentFileProgress, setCurrentFileProgress] = useState(0); // NEW
+  const [uploadedBytes, setUploadedBytes] = useState(0); // NEW
+  const [totalBytes, setTotalBytes] = useState(0); // NEW
 
   const queryClient = useQueryClient();
 
@@ -90,6 +94,9 @@ export default function AdminDokumenty() {
     setCurrentFileName("");
     setUploading(false);
     setFileStatuses({});
+    setCurrentFileProgress(0); // NEW
+    setUploadedBytes(0);      // NEW
+    setTotalBytes(0);        // NEW
   };
 
   const shouldSkipFile = (fileName) => {
@@ -101,7 +108,7 @@ export default function AdminDokumenty() {
       /^desktop\.ini$/i,
       /^\.(git|svn|hg)/
     ];
-    
+
     return skipPatterns.some(pattern => pattern.test(fileName));
   };
 
@@ -111,20 +118,20 @@ export default function AdminDokumenty() {
     }
 
     const parts = filePath.split('/').filter(p => p && p.trim() !== '' && !shouldSkipFile(p));
-    
+
     if (parts.length === 1) {
       return { model_domu: null, podpriecinok: null, cesta_priecinku: null };
     }
-    
+
     const mainFolder = parts[0];
     const subFolder = parts.length > 2 ? parts[parts.length - 2] : null;
     const fullPath = parts.slice(0, -1).join('/');
-    
+
     let modelDomu = mainFolder
       .replace(/_/g, ' ')
       .replace(/^(Dom|Model|Modul)\s*/i, '')
       .trim();
-    
+
     return {
       model_domu: modelDomu || mainFolder,
       podpriecinok: subFolder || null,
@@ -133,7 +140,7 @@ export default function AdminDokumenty() {
   };
 
   const isFileDuplicate = (fileName, fileSize) => {
-    return dokumenty.some(dok => 
+    return dokumenty.some(dok =>
       dok.nazov === fileName && dok.velkost === fileSize
     );
   };
@@ -141,14 +148,18 @@ export default function AdminDokumenty() {
   const handleFileSelect = (e) => {
     const allFiles = Array.from(e.target.files);
     const validFiles = allFiles.filter(file => !shouldSkipFile(file.name));
-    
+
     console.log(`📁 Vybratých ${allFiles.length} súborov, po filtrovaní ${validFiles.length} súborov`);
     if (allFiles.length > validFiles.length) {
       console.log(`🗑️  Vyfiltrovaných ${allFiles.length - validFiles.length} systémových súborov`);
     }
-    
+
     setSelectedFiles(validFiles);
-    
+
+    // Calculate total bytes
+    const total = validFiles.reduce((sum, file) => sum + file.size, 0);
+    setTotalBytes(total);
+
     // Initialize file statuses
     const initialStatuses = {};
     validFiles.forEach(file => {
@@ -187,7 +198,7 @@ export default function AdminDokumenty() {
 
   const getErrorDetails = (error, file) => {
     const errorMsg = error.message || error.toString();
-    
+
     if (errorMsg.includes('size') || errorMsg.includes('large') || errorMsg.includes('payload')) {
       return {
         type: 'FILE_SIZE',
@@ -196,7 +207,7 @@ export default function AdminDokumenty() {
         retryable: false
       };
     }
-    
+
     if (errorMsg.includes('network') || errorMsg.includes('fetch') || errorMsg.includes('timeout')) {
       return {
         type: 'NETWORK',
@@ -205,7 +216,7 @@ export default function AdminDokumenty() {
         retryable: true
       };
     }
-    
+
     if (errorMsg.includes('permission') || errorMsg.includes('unauthorized') || errorMsg.includes('403')) {
       return {
         type: 'PERMISSION',
@@ -214,7 +225,7 @@ export default function AdminDokumenty() {
         retryable: false
       };
     }
-    
+
     if (errorMsg.includes('database') || errorMsg.includes('constraint') || errorMsg.includes('duplicate')) {
       return {
         type: 'DATABASE',
@@ -223,7 +234,7 @@ export default function AdminDokumenty() {
         retryable: false
       };
     }
-    
+
     if (errorMsg.includes('format') || errorMsg.includes('type') || errorMsg.includes('mime')) {
       return {
         type: 'FORMAT',
@@ -232,7 +243,7 @@ export default function AdminDokumenty() {
         retryable: false
       };
     }
-    
+
     return {
       type: 'UNKNOWN',
       message: errorMsg,
@@ -241,37 +252,64 @@ export default function AdminDokumenty() {
     };
   };
 
-  const uploadFileWithRetry = async (file, maxRetries = 2) => {
+  const uploadFileWithRetry = async (file, maxRetries = 2, onProgress) => { // Added onProgress
     let lastError;
-    
+    let progressInterval = null;
+
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         if (attempt > 0) {
           console.log(`🔄 Pokus ${attempt + 1}/${maxRetries + 1} pre súbor: ${file.name}`);
           await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
         }
-        
+
+        // Simulate progress
+        if (onProgress) {
+          onProgress(0);
+          progressInterval = setInterval(() => {
+            setCurrentFileProgress(prev => {
+              if (prev >= 90) { // Stop at 90% as actual upload is about to happen
+                clearInterval(progressInterval); // Clear interval if it reaches 90% before actual upload finishes
+                return prev;
+              }
+              return prev + 10;
+            });
+          }, 100);
+        }
+
         const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+
+        if (progressInterval) {
+          clearInterval(progressInterval);
+        }
+        if (onProgress) {
+          onProgress(100); // Set to 100% on successful upload
+        }
+
         return uploadResponse;
-        
+
       } catch (error) {
         lastError = error;
+        // Clear interval on error too
+        if (progressInterval) {
+          clearInterval(progressInterval);
+        }
         const errorDetails = getErrorDetails(error, file);
-        
+
         if (!errorDetails.retryable || attempt === maxRetries) {
           throw error;
         }
-        
+
         console.log(`⚠️  Chyba pri pokuse ${attempt + 1}, skúšam znova...`);
       }
     }
-    
+
     throw lastError;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (selectedFiles.length === 0) {
       alert("Vyberte aspoň jeden súbor");
       return;
@@ -279,32 +317,38 @@ export default function AdminDokumenty() {
 
     console.log('🚀 ========== ZAČÍNAM UPLOAD ==========');
     console.log('🚀 Počet súborov na spracovanie:', selectedFiles.length);
-    
+
     setUploading(true);
     setUploadProgress({ current: 0, total: selectedFiles.length });
     setUploadResults(null);
+    setUploadedBytes(0); // NEW
 
     const results = {
       successful: [],
       skipped: [],
       failed: []
     };
-    
+
+    let cumulativeBytes = 0; // NEW
+
     try {
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
         const fileNum = i + 1;
-        
+
         console.log(`\n📦 [${fileNum}/${selectedFiles.length}] ${file.name}`);
-        
+
         setUploadProgress({ current: fileNum, total: selectedFiles.length });
         setCurrentFileName(file.name);
+        setCurrentFileProgress(0); // NEW - Reset for each file
         updateFileStatus(file.name, 'nahrávam');
-        
+
         try {
           if (shouldSkipFile(file.name)) {
             console.log(`⏭️  Preskočený systémový súbor: ${file.name}`);
             updateFileStatus(file.name, 'preskočený');
+            cumulativeBytes += file.size; // NEW
+            setUploadedBytes(cumulativeBytes); // NEW
             results.skipped.push({
               name: file.name,
               reason: 'Systémový súbor (ignorovaný)'
@@ -315,6 +359,8 @@ export default function AdminDokumenty() {
           if (isFileDuplicate(file.name, file.size)) {
             console.log(`⏭️  Duplicita: ${file.name}`);
             updateFileStatus(file.name, 'duplicita');
+            cumulativeBytes += file.size; // NEW
+            setUploadedBytes(cumulativeBytes); // NEW
             results.skipped.push({
               name: file.name,
               reason: 'Súbor už existuje'
@@ -323,16 +369,22 @@ export default function AdminDokumenty() {
           }
 
           console.log(`📤 Nahrávam: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
-          const uploadResponse = await uploadFileWithRetry(file);
+          const uploadResponse = await uploadFileWithRetry(file, 2, (progress) => {
+            setCurrentFileProgress(progress);
+          });
           console.log(`✅ Nahraný: ${file.name}`);
-          
+
+          cumulativeBytes += file.size; // NEW
+          setUploadedBytes(cumulativeBytes); // NEW
+          setCurrentFileProgress(100); // Ensure it's 100% on success // NEW
+
           const filePath = file.webkitRelativePath || file.name;
           const folderInfo = extractFolderInfo(filePath);
-          
+
           const autoTags = [...formData.tags];
           if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
           if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
-          
+
           const docData = {
             nazov: file.name,
             popis: formData.popis,
@@ -347,10 +399,10 @@ export default function AdminDokumenty() {
             velkost: file.size,
             typ_suboru: file.type || 'application/octet-stream'
           };
-          
+
           const doc = await createMutation.mutateAsync(docData);
           console.log(`✅ Vytvorený dokument ID: ${doc.id}`);
-          
+
           updateFileStatus(file.name, 'nahratý');
           results.successful.push({
             name: file.name,
@@ -359,7 +411,9 @@ export default function AdminDokumenty() {
 
         } catch (fileError) {
           console.error(`❌ Chyba pri ${file.name}:`, fileError);
-          
+
+          cumulativeBytes += file.size; // NEW
+          setUploadedBytes(cumulativeBytes); // NEW
           updateFileStatus(file.name, 'odmietnutý');
           const errorDetails = getErrorDetails(fileError, file);
           results.failed.push({
@@ -370,17 +424,17 @@ export default function AdminDokumenty() {
           });
         }
       }
-      
+
       console.log('\n📊 SUMMARY:');
       console.log(`✅ Úspešné: ${results.successful.length}`);
       console.log(`⏭️  Preskočené: ${results.skipped.length}`);
       console.log(`❌ Chybné: ${results.failed.length}`);
-      
+
       if (results.successful.length > 0) {
         console.log('\n🧠 Spúšťam analýzu...');
         setCurrentFileName("Analyzujem dokumenty...");
         setUploadProgress({ current: 0, total: results.successful.length });
-        
+
         for (let i = 0; i < results.successful.length; i++) {
           setUploadProgress({ current: i + 1, total: results.successful.length });
           try {
@@ -390,11 +444,11 @@ export default function AdminDokumenty() {
           }
         }
       }
-      
+
       console.log('🎉 HOTOVO!');
       setUploadResults(results);
       setShowForm(false);
-      
+
     } catch (error) {
       console.error('💥 KRITICKÁ CHYBA:', error);
       alert("Kritická chyba: " + error.message);
@@ -402,6 +456,7 @@ export default function AdminDokumenty() {
       setUploading(false);
       setUploadProgress({ current: 0, total: 0 });
       setCurrentFileName("");
+      setCurrentFileProgress(0); // NEW
     }
   };
 
@@ -412,9 +467,9 @@ export default function AdminDokumenty() {
       dok.popis?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       dok.model_domu?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       dok.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    
+
     const matchesVyrobca = selectedVyrobca === "all" || dok.vyrobca === selectedVyrobca;
-    
+
     return matchesSearch && matchesVyrobca;
   });
 
@@ -531,7 +586,7 @@ export default function AdminDokumenty() {
                       <X className="w-4 h-4" />
                     </Button>
                   </div>
-                  
+
                   <div className="space-y-4">
                     {uploadResults.successful.length > 0 && (
                       <div className="bg-green-50 border border-green-200 rounded-lg p-4">
@@ -624,8 +679,8 @@ export default function AdminDokumenty() {
               >
                 <Folder className="w-4 h-4" />
               </Button>
-              <Button onClick={() => { 
-                setShowForm(!showForm); 
+              <Button onClick={() => {
+                setShowForm(!showForm);
                 setUploadResults(null);
                 if (!showForm) {
                   setUploading(false);
@@ -707,7 +762,7 @@ export default function AdminDokumenty() {
                                 const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
                                 const isDuplicate = isFileDuplicate(file.name, file.size);
                                 const status = fileStatuses[file.name] || 'pending';
-                                
+
                                 return (
                                   <div key={index} className="flex items-center justify-between p-2 rounded bg-gray-50 border border-gray-200">
                                     <div className="flex items-center gap-2 flex-grow min-w-0">
@@ -805,8 +860,8 @@ export default function AdminDokumenty() {
                           {formData.tags.map(tag => (
                             <Badge key={tag} variant="secondary" className="flex items-center gap-1">
                               {tag}
-                              <X 
-                                className="w-3 h-3 cursor-pointer" 
+                              <X
+                                className="w-3 h-3 cursor-pointer"
                                 onClick={() => handleRemoveTag(tag)}
                               />
                             </Badge>
@@ -824,15 +879,39 @@ export default function AdminDokumenty() {
                     </div>
 
                     {uploading && (
-                      <div className="bg-blue-50 p-4 rounded-lg">
-                        <p className="text-sm font-medium text-blue-800 mb-2">
-                          {currentFileName || `Spracúvam ${uploadProgress.current} z ${uploadProgress.total}...`}
-                        </p>
-                        <div className="w-full bg-blue-200 rounded-full h-2">
-                          <div 
-                            className="bg-blue-600 h-2 rounded-full transition-all"
-                            style={{ width: `${uploadProgress.total > 0 ? (uploadProgress.current / uploadProgress.total) * 100 : 0}%` }}
-                          />
+                      <div className="bg-blue-50 p-4 rounded-lg space-y-3">
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="text-sm font-medium text-blue-800">
+                              {currentFileName || `Spracúvam ${uploadProgress.current} z ${uploadProgress.total}...`}
+                            </p>
+                            <span className="text-xs text-blue-600">
+                              {currentFileProgress}%
+                            </span>
+                          </div>
+                          <div className="w-full bg-blue-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-600 h-2 rounded-full transition-all"
+                              style={{ width: `${currentFileProgress}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="text-xs text-blue-700">
+                              Celkový progress: {uploadProgress.current} / {uploadProgress.total} súborov
+                            </p>
+                            <span className="text-xs text-blue-600">
+                              {formatFileSize(uploadedBytes)} / {formatFileSize(totalBytes)}
+                            </span>
+                          </div>
+                          <div className="w-full bg-blue-200 rounded-full h-1.5">
+                            <div
+                              className="bg-blue-500 h-1.5 rounded-full transition-all"
+                              style={{ width: `${uploadProgress.total > 0 ? (uploadProgress.current / uploadProgress.total) * 100 : 0}%` }}
+                            />
+                          </div>
                         </div>
                       </div>
                     )}
@@ -886,7 +965,7 @@ export default function AdminDokumenty() {
               <p className="text-gray-600">Načítavam dokumenty...</p>
             </div>
           ) : viewMode === "tree" ? (
-            <DokumentyTreeView 
+            <DokumentyTreeView
               dokumenty={filteredDokumenty}
               onViewDocument={setViewingDocument}
             />
