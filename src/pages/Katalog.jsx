@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -10,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowRight, Filter, Home, Maximize2, CheckCircle, Search, ArrowUpDown, Plus } from "lucide-react";
+import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Square, LayoutGrid } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Katalog() {
@@ -352,16 +353,22 @@ export default function Katalog() {
                           </Link>
                           
                           <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
-                            {dom.pocet_izieb &&
-                          <div className="flex items-center gap-2 text-gray-600">
+                            {dom.pocet_izieb && (
+                              <div className="flex items-center gap-2 text-gray-600">
                                 <Home className="w-4 h-4" />
                                 <span><span className="font-semibold text-primary">{dom.pocet_izieb}</span> izieb</span>
                               </div>
-                          }
+                            )}
                             <div className="flex items-center gap-2 text-gray-600">
-                              <Maximize2 className="w-4 h-4" />
-                              <span><span className="font-semibold text-primary">{dom.zastavana_plocha}</span> m²</span>
+                              <Square className="w-4 h-4" />
+                              <span title="Zastavaná plocha"><span className="font-semibold text-primary">{dom.zastavana_plocha}</span> m²</span>
                             </div>
+                            {dom.uzitkova_plocha && (
+                              <div className="flex items-center gap-2 text-gray-600">
+                                <LayoutGrid className="w-4 h-4" />
+                                <span title="Úžitková plocha"><span className="font-semibold text-primary">{dom.uzitkova_plocha}</span> m²</span>
+                              </div>
+                            )}
                           </div>
                           
                           <div className="flex items-center justify-between pt-4 border-t">
