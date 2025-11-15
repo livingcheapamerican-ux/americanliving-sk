@@ -705,53 +705,29 @@ export default function AdminDokumenty() {
                 <Card className="p-6 mb-6">
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                      <Label>Režim nahrávania</Label>
-                      <div className="flex gap-2 mt-2">
-                        <Button
-                          type="button"
-                          variant={uploadMode === "files" ? "default" : "outline"}
-                          onClick={() => {
-                            setUploadMode("files");
-                            setSelectedFiles([]);
-                            setFileStatuses({});
-                          }}
-                          className="flex-1"
-                        >
-                          <Upload className="w-4 h-4 mr-2" />
-                          Súbory
-                        </Button>
-                        <Button
-                          type="button"
-                          variant={uploadMode === "folder" ? "default" : "outline"}
-                          onClick={() => {
-                            setUploadMode("folder");
-                            setSelectedFiles([]);
-                            setFileStatuses({});
-                          }}
-                          className="flex-1"
-                        >
-                          <FolderOpen className="w-4 h-4 mr-2" />
-                          Celý priečinok
-                        </Button>
-                      </div>
-                      {uploadMode === "folder" && (
-                        <p className="text-xs text-gray-600 mt-2">
-                          💡 Systémové súbory (.DS_Store) sa automaticky preskočia
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
                       <Label>{uploadMode === "folder" ? "Priečinok *" : "Súbory *"}</Label>
                       <div className="mt-2">
-                        <Input
-                          type="file"
-                          onChange={handleFileSelect}
-                          multiple={uploadMode === "files"}
-                          webkitdirectory={uploadMode === "folder" ? "" : undefined}
-                          directory={uploadMode === "folder" ? "" : undefined}
-                          required
-                        />
+                        {uploadMode === "folder" ? (
+                          <Input
+                            id="folder-upload"
+                            name="folder-upload"
+                            type="file"
+                            onChange={handleFileSelect}
+                            webkitdirectory=""
+                            directory=""
+                            multiple
+                            required
+                          />
+                        ) : (
+                          <Input
+                            id="file-upload"
+                            name="file-upload"
+                            type="file"
+                            onChange={handleFileSelect}
+                            multiple
+                            required
+                          />
+                        )}
                         {selectedFiles.length > 0 && (
                           <div className="mt-3 space-y-2">
                             <p className="text-sm font-medium text-gray-700">
@@ -762,7 +738,7 @@ export default function AdminDokumenty() {
                                 const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
                                 const isDuplicate = isFileDuplicate(file.name, file.size);
                                 const status = fileStatuses[file.name] || 'pending';
-
+                                
                                 return (
                                   <div key={index} className="flex items-center justify-between p-2 rounded bg-gray-50 border border-gray-200">
                                     <div className="flex items-center gap-2 flex-grow min-w-0">
@@ -797,39 +773,37 @@ export default function AdminDokumenty() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>Výrobca *</Label>
-                        <Select
-                          value={formData.vyrobca}
-                          onValueChange={(value) => setFormData({...formData, vyrobca: value})}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {vyrobcovia.map(v => (
-                              <SelectItem key={v} value={v}>{v}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label>Typ *</Label>
-                        <Select
-                          value={formData.typ}
-                          onValueChange={(value) => setFormData({...formData, typ: value})}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Object.entries(typLabels).map(([key, label]) => (
-                              <SelectItem key={key} value={key}>{label}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
+                    <div>
+                      <Label>Výrobca *</Label>
+                      <Select
+                        value={formData.vyrobca}
+                        onValueChange={(value) => setFormData({...formData, vyrobca: value})}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {vyrobcovia.map(v => (
+                            <SelectItem key={v} value={v}>{v}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>Typ *</Label>
+                      <Select
+                        value={formData.typ}
+                        onValueChange={(value) => setFormData({...formData, typ: value})}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(typLabels).map(([key, label]) => (
+                            <SelectItem key={key} value={key}>{label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>
