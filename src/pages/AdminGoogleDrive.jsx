@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -10,53 +10,29 @@ import { motion } from "framer-motion";
 
 export default function AdminGoogleDrive() {
   const [selectedFolders, setSelectedFolders] = useState([]);
-  const [saved, setSaved] = useState(false);
-  const queryClient = useQueryClient();
+  const [copied, setCopied] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me()
   });
 
-  const { data: folders, isLoading, refetch } = useQuery({
+  const { data: folders, isLoading, error, refetch } = useQuery({
     queryKey: ['google-drive-folders'],
     queryFn: async () => {
       const response = await base44.functions.invoke('googleDrive', { action: 'listFolders' });
       return response.data || [];
     },
-    enabled: false,
+    enabled: !!user?.google_drive_access_token,
+    retry: false,
   });
 
-  // Po návrate z OAuth uložíme tokeny
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('save_tokens') === '1') {
-      const tokensStr = localStorage.getItem('google_drive_tokens');
-      if (tokensStr) {
-        try {
-          const tokens = JSON.parse(tokensStr);
-          base44.functions.invoke('googleDrive', {
-            action: 'saveTokens',
-            access_token: tokens.access_token,
-            refresh_token: tokens.refresh_token,
-            expiry_date: tokens.expiry_date,
-          }).then(() => {
-            localStorage.removeItem('google_drive_tokens');
-            queryClient.invalidateQueries({ queryKey: ['current-user'] });
-            window.history.replaceState({}, '', window.location.pathname);
-          });
-        } catch (error) {
-          console.error('Error saving tokens:', error);
-        }
-      }
-    }
-  }, [queryClient]);
-
   const handleAuthorize = () => {
-    const functionUrl = window.location.pathname.includes('/preview/') 
-      ? window.location.pathname.split('/preview/')[0] + '/functions/googleDrive?action=authorize'
-      : '/functions/googleDrive?action=authorize';
-    window.location.href = functionUrl;
+    const returnUrl = window.location.href;
+    const functionPath = window.location.pathname.includes('/preview/') 
+      ? window.location.pathname.split('/preview/')[0] + '/functions/googleDrive'
+      : '/functions/googleDrive';
+    window.location.href = `${functionPath}?action=authorize&return_url=${encodeURIComponent(returnUrl)}`;
   };
 
   const handleLoadFolders = () => {
@@ -85,6 +61,7 @@ export default function AdminGoogleDrive() {
     );
   }
 
+  const needsAuth = error?.response?.data?.needsAuth || !user?.google_drive_access_token;
   const folderIdsList = selectedFolders.join(',');
 
   return (
@@ -97,28 +74,27 @@ export default function AdminGoogleDrive() {
           <div className="flex items-center gap-3 mb-8">
             <Settings className="w-8 h-8 text-primary" />
             <h1 className="text-4xl font-bold text-primary">
-              Google Drive - Správa priečinkov pre chatbot
+              Google Drive - Správa priečinkov
             </h1>
           </div>
 
           {/* Authorization status */}
           <Card className="p-6 mb-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <LinkIcon className="w-6 h-6 text-primary" />
                 <div>
                   <h3 className="font-semibold text-gray-800">Google Drive pripojenie</h3>
                   <p className="text-sm text-gray-600">
                     {user?.google_drive_access_token 
-                      ? "✓ Pripojené" 
-                      : "Nepripojené - potrebná autorizácia"}
+                      ? "✓ Pripojené - môžete načítať priečinky" 
+                      : "✗ Nepripojené - kliknite na tlačidlo Autorizovať"}
                   </p>
                 </div>
               </div>
               <Button
                 onClick={handleAuthorize}
-                variant={user?.google_drive_access_token ? "outline" : "default"}
-                className={!user?.google_drive_access_token ? "bg-primary hover:bg-primary/90" : ""}
+                className="bg-primary hover:bg-primary/90"
               >
                 {user?.google_drive_access_token ? "Re-autorizovať" : "Autorizovať Google Drive"}
               </Button>
@@ -128,10 +104,17 @@ export default function AdminGoogleDrive() {
           {/* Load folders */}
           {user?.google_drive_access_token && (
             <Card className="p-6 mb-6">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
                 <div className="flex items-center gap-3">
                   <FolderOpen className="w-6 h-6 text-primary" />
-                  <h3 className="font-semibold text-gray-800">Načítať priečinky z Google Drive</h3>
+                  <div>
+                    <h3 className="font-semibold text-gray-800">Načítať priečinky</h3>
+                    <p className="text-sm text-gray-600">
+                      {folders && folders.length > 0 
+                        ? `Nájdených ${folders.length} priečinkov`
+                        : "Kliknite na tlačidlo pre načítanie priečinkov"}
+                    </p>
+                  </div>
                 </div>
                 <Button
                   onClick={handleLoadFolders}
@@ -146,14 +129,16 @@ export default function AdminGoogleDrive() {
                   ) : (
                     <>
                       <RefreshCw className="w-4 h-4 mr-2" />
-                      Načítať priečinky
+                      {folders ? "Obnoviť" : "Načítať priečinky"}
                     </>
                   )}
                 </Button>
               </div>
-              <p className="text-sm text-gray-600">
-                Načítajte všetky dostupné priečinky z vášho Google Drive účtu.
-              </p>
+              {error && !error.response?.data?.needsAuth && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-800">
+                  Chyba: {error.response?.data?.error || error.message}
+                </div>
+              )}
             </Card>
           )}
 
@@ -173,9 +158,10 @@ export default function AdminGoogleDrive() {
                 {folders.map((folder) => (
                   <div
                     key={folder.id}
-                    className={`flex items-center gap-3 p-3 rounded-lg border transition-all hover:bg-gray-50 ${
+                    className={`flex items-center gap-3 p-3 rounded-lg border transition-all hover:bg-gray-50 cursor-pointer ${
                       selectedFolders.includes(folder.id) ? 'bg-blue-50 border-primary' : 'bg-white border-gray-200'
                     }`}
+                    onClick={() => toggleFolder(folder.id)}
                   >
                     <Checkbox
                       checked={selectedFolders.includes(folder.id)}
@@ -184,7 +170,7 @@ export default function AdminGoogleDrive() {
                     <Folder className="w-5 h-5 text-gray-500" />
                     <div className="flex-grow">
                       <p className="font-medium text-gray-800">{folder.name}</p>
-                      <p className="text-xs text-gray-500">ID: {folder.id}</p>
+                      <p className="text-xs text-gray-500 font-mono">{folder.id}</p>
                     </div>
                     {selectedFolders.includes(folder.id) && (
                       <Badge className="bg-primary text-white">Vybraný</Badge>
@@ -201,62 +187,66 @@ export default function AdminGoogleDrive() {
               <div className="flex items-start gap-4">
                 <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
                 <div className="flex-grow">
-                  <h3 className="font-semibold text-gray-800 mb-3">Uložte nastavenie</h3>
+                  <h3 className="font-semibold text-gray-800 mb-3">Ako aktivovať obmedzenie</h3>
                   <p className="text-sm text-gray-700 mb-4">
-                    Pre aktiváciu obmedzenia skopírujte ID priečinkov a nastavte ich ako environment variable:
+                    Skopírujte ID priečinkov a nastavte ich v Dashboard:
                   </p>
                   
                   <div className="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 font-mono text-sm">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-gray-400">GOOGLE_DRIVE_FOLDER_IDS:</span>
+                      <span className="text-gray-400">GOOGLE_DRIVE_FOLDER_IDS</span>
                       <Button
                         size="sm"
                         variant="ghost"
                         className="text-white hover:bg-gray-800"
                         onClick={() => {
                           navigator.clipboard.writeText(folderIdsList);
-                          setSaved(true);
-                          setTimeout(() => setSaved(false), 2000);
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 2000);
                         }}
                       >
-                        {saved ? "✓ Skopírované" : "Kopírovať"}
+                        {copied ? "✓ Skopírované" : "Kopírovať"}
                       </Button>
                     </div>
                     <div className="text-green-400 break-all">{folderIdsList}</div>
                   </div>
 
-                  <ol className="text-sm text-gray-700 space-y-2 ml-4 list-decimal">
-                    <li>Skopírujte hodnotu vyššie (ID priečinkov oddelené čiarkou)</li>
-                    <li>Prejdite do Dashboard → Settings → Environment Variables</li>
-                    <li>Nastavte <code className="bg-gray-200 px-2 py-1 rounded">GOOGLE_DRIVE_FOLDER_IDS</code> s touto hodnotou</li>
-                    <li>Chatbot bude teraz čerpať informácie len z vybraných priečinkov</li>
-                  </ol>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="text-sm font-semibold text-blue-900 mb-2">Postup:</p>
+                    <ol className="text-sm text-blue-800 space-y-1 ml-4 list-decimal">
+                      <li>Skopírujte hodnotu vyššie</li>
+                      <li>Otvorte Dashboard → Settings → Environment Variables</li>
+                      <li>Pridajte premennú <code className="bg-blue-100 px-2 py-0.5 rounded font-mono text-xs">GOOGLE_DRIVE_FOLDER_IDS</code></li>
+                      <li>Vložte skopírovanú hodnotu a uložte</li>
+                    </ol>
+                  </div>
                 </div>
               </div>
             </Card>
           )}
 
-          {/* Empty state */}
-          {!user?.google_drive_access_token && (
+          {/* Empty state - not authorized */}
+          {needsAuth && !user?.google_drive_access_token && (
             <Card className="p-12 text-center">
               <LinkIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-xl font-bold text-gray-700 mb-2">
                 Pripojte Google Drive
               </h3>
               <p className="text-gray-500 mb-6">
-                Pre správu priečinkov najprv autorizujte prístup k vášmu Google Drive účtu.
+                Kliknite na tlačidlo "Autorizovať Google Drive" vyššie.
               </p>
             </Card>
           )}
 
-          {folders && folders.length === 0 && user?.google_drive_access_token && (
+          {/* Empty state - no folders */}
+          {!isLoading && folders && folders.length === 0 && user?.google_drive_access_token && (
             <Card className="p-12 text-center">
               <FolderOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-xl font-bold text-gray-700 mb-2">
                 Žiadne priečinky
               </h3>
               <p className="text-gray-500">
-                Nenašli sa žiadne priečinky v Google Drive alebo sa nepodarilo načítať údaje.
+                V Google Drive sa nenašli žiadne priečinky.
               </p>
             </Card>
           )}
