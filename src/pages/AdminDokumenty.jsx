@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -39,9 +39,21 @@ export default function AdminDokumenty() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [tagInput, setTagInput] = useState("");
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
-  const [currentFileProgress, setCurrentFileProgress] = useState(0); // NEW
-  const [uploadedBytes, setUploadedBytes] = useState(0); // NEW
-  const [totalBytes, setTotalBytes] = useState(0); // NEW
+  const [currentFileProgress, setCurrentFileProgress] = useState(0);
+  const [uploadedBytes, setUploadedBytes] = useState(0);
+  const [totalBytes, setTotalBytes] = useState(0);
+
+  const folderInputRef = useRef(null);
+
+  useEffect(() => {
+    // This useEffect is to ensure webkitdirectory attribute is set programmatically.
+    // It's a non-standard attribute but widely supported by browsers for folder upload.
+    // Setting it this way ensures it persists even if React re-renders the input.
+    if (folderInputRef.current && uploadMode === "folder") {
+      folderInputRef.current.setAttribute('webkitdirectory', '');
+      folderInputRef.current.setAttribute('directory', ''); // For older Firefox
+    }
+  }, [uploadMode]);
 
   const queryClient = useQueryClient();
 
@@ -94,9 +106,9 @@ export default function AdminDokumenty() {
     setCurrentFileName("");
     setUploading(false);
     setFileStatuses({});
-    setCurrentFileProgress(0); // NEW
-    setUploadedBytes(0);      // NEW
-    setTotalBytes(0);        // NEW
+    setCurrentFileProgress(0);
+    setUploadedBytes(0);
+    setTotalBytes(0);
   };
 
   const shouldSkipFile = (fileName) => {
@@ -252,7 +264,7 @@ export default function AdminDokumenty() {
     };
   };
 
-  const uploadFileWithRetry = async (file, maxRetries = 2, onProgress) => { // Added onProgress
+  const uploadFileWithRetry = async (file, maxRetries = 2, onProgress) => {
     let lastError;
     let progressInterval = null;
 
@@ -321,7 +333,7 @@ export default function AdminDokumenty() {
     setUploading(true);
     setUploadProgress({ current: 0, total: selectedFiles.length });
     setUploadResults(null);
-    setUploadedBytes(0); // NEW
+    setUploadedBytes(0);
 
     const results = {
       successful: [],
@@ -329,7 +341,7 @@ export default function AdminDokumenty() {
       failed: []
     };
 
-    let cumulativeBytes = 0; // NEW
+    let cumulativeBytes = 0;
 
     try {
       for (let i = 0; i < selectedFiles.length; i++) {
@@ -340,15 +352,15 @@ export default function AdminDokumenty() {
 
         setUploadProgress({ current: fileNum, total: selectedFiles.length });
         setCurrentFileName(file.name);
-        setCurrentFileProgress(0); // NEW - Reset for each file
+        setCurrentFileProgress(0);
         updateFileStatus(file.name, 'nahrávam');
 
         try {
           if (shouldSkipFile(file.name)) {
             console.log(`⏭️  Preskočený systémový súbor: ${file.name}`);
             updateFileStatus(file.name, 'preskočený');
-            cumulativeBytes += file.size; // NEW
-            setUploadedBytes(cumulativeBytes); // NEW
+            cumulativeBytes += file.size;
+            setUploadedBytes(cumulativeBytes);
             results.skipped.push({
               name: file.name,
               reason: 'Systémový súbor (ignorovaný)'
@@ -359,8 +371,8 @@ export default function AdminDokumenty() {
           if (isFileDuplicate(file.name, file.size)) {
             console.log(`⏭️  Duplicita: ${file.name}`);
             updateFileStatus(file.name, 'duplicita');
-            cumulativeBytes += file.size; // NEW
-            setUploadedBytes(cumulativeBytes); // NEW
+            cumulativeBytes += file.size;
+            setUploadedBytes(cumulativeBytes);
             results.skipped.push({
               name: file.name,
               reason: 'Súbor už existuje'
@@ -374,9 +386,9 @@ export default function AdminDokumenty() {
           });
           console.log(`✅ Nahraný: ${file.name}`);
 
-          cumulativeBytes += file.size; // NEW
-          setUploadedBytes(cumulativeBytes); // NEW
-          setCurrentFileProgress(100); // Ensure it's 100% on success // NEW
+          cumulativeBytes += file.size;
+          setUploadedBytes(cumulativeBytes);
+          setCurrentFileProgress(100); // Ensure it's 100% on success
 
           const filePath = file.webkitRelativePath || file.name;
           const folderInfo = extractFolderInfo(filePath);
@@ -412,8 +424,8 @@ export default function AdminDokumenty() {
         } catch (fileError) {
           console.error(`❌ Chyba pri ${file.name}:`, fileError);
 
-          cumulativeBytes += file.size; // NEW
-          setUploadedBytes(cumulativeBytes); // NEW
+          cumulativeBytes += file.size;
+          setUploadedBytes(cumulativeBytes);
           updateFileStatus(file.name, 'odmietnutý');
           const errorDetails = getErrorDetails(fileError, file);
           results.failed.push({
@@ -456,7 +468,7 @@ export default function AdminDokumenty() {
       setUploading(false);
       setUploadProgress({ current: 0, total: 0 });
       setCurrentFileName("");
-      setCurrentFileProgress(0); // NEW
+      setCurrentFileProgress(0);
     }
   };
 
@@ -478,7 +490,7 @@ export default function AdminDokumenty() {
   };
 
   const formatFileSize = (bytes) => {
-    if (!bytes) return 'N/A';
+    if (bytes === null || bytes === undefined) return 'N/A';
     const kb = bytes / 1024;
     if (kb < 1024) return `${kb.toFixed(1)} KB`;
     const mb = kb / 1024;
@@ -704,24 +716,43 @@ export default function AdminDokumenty() {
               >
                 <Card className="p-6 mb-6">
                   <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="flex items-center space-x-4">
+                        <Label htmlFor="upload-mode">Režim nahrávania:</Label>
+                        <Select
+                            value={uploadMode}
+                            onValueChange={(value) => {
+                                setUploadMode(value);
+                                setSelectedFiles([]); // Clear files when mode changes
+                                setFileStatuses({});
+                                setTotalBytes(0);
+                                setUploadedBytes(0);
+                                setCurrentFileProgress(0);
+                            }}
+                        >
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Vyberte režim" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="files">Súbory</SelectItem>
+                                <SelectItem value="folder">Priečinok</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
                     <div>
                       <Label>{uploadMode === "folder" ? "Priečinok *" : "Súbory *"}</Label>
                       <div className="mt-2">
                         {uploadMode === "folder" ? (
                           <input
-                            id="folder-upload"
-                            name="folder-upload"
+                            ref={folderInputRef}
                             type="file"
                             onChange={handleFileSelect}
-                            {...({ webkitdirectory: "", mozdirectory: "", directory: "" })}
                             multiple
                             required
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           />
                         ) : (
                           <Input
-                            id="file-upload"
-                            name="file-upload"
                             type="file"
                             onChange={handleFileSelect}
                             multiple
@@ -755,7 +786,7 @@ export default function AdminDokumenty() {
                                       <span className="text-xs text-gray-500 flex-shrink-0 mr-2">({formatFileSize(file.size)})</span>
                                       {getStatusBadge(isDuplicate && status === 'pending' ? 'duplicita' : status)}
                                     </div>
-                                    {uploadMode === "files" && !uploading && (
+                                    {!uploading && (
                                       <button
                                         type="button"
                                         onClick={() => handleRemoveFile(index)}
