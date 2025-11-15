@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -17,6 +16,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import DokumentyTreeView from "../components/DokumentyTreeView";
+
+const UPLOAD_STATE_KEY = 'document_upload_state';
 
 export default function AdminDokumenty() {
   const [showForm, setShowForm] = useState(false);
@@ -50,14 +51,40 @@ export default function AdminDokumenty() {
   const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
-    // This useEffect is to ensure webkitdirectory attribute is set programmatically.
-    // It's a non-standard attribute but widely supported by browsers for folder upload.
-    // Setting it this way ensures it persists even if React re-renders the input.
     if (folderInputRef.current && uploadMode === "folder") {
       folderInputRef.current.setAttribute('webkitdirectory', '');
-      folderInputRef.current.setAttribute('directory', ''); // For older Firefox
+      folderInputRef.current.setAttribute('directory', '');
     }
   }, [uploadMode]);
+
+  // Načítanie rozpracovaného uploadu pri štarte
+  useEffect(() => {
+    const savedState = localStorage.getItem(UPLOAD_STATE_KEY);
+    if (savedState) {
+      try {
+        const state = JSON.parse(savedState);
+        if (state.timestamp && Date.now() - state.timestamp < 24 * 60 * 60 * 1000) { // 24h
+          const hasIncomplete = Object.values(state.fileStatuses).some(
+            status => status === 'nahrávam' || status === 'pending'
+          );
+          if (hasIncomplete && window.confirm('Našiel som nedokončené nahrávanie. Chcete pokračovať?')) {
+            setFileStatuses(state.fileStatuses);
+            setUploadProgress(state.uploadProgress);
+            setFormData(state.formData);
+            setUploadMode(state.uploadMode);
+            // Súbory sa musia nanovo vybrať, nemôžeme ich uložiť do localStorage
+            alert('Prosím znova vyberte súbory/priečinky. Už nahrané súbory budú preskočené.');
+          } else {
+            localStorage.removeItem(UPLOAD_STATE_KEY);
+          }
+        } else {
+          localStorage.removeItem(UPLOAD_STATE_KEY);
+        }
+      } catch (e) {
+        localStorage.removeItem(UPLOAD_STATE_KEY);
+      }
+    }
+  }, []);
 
   const queryClient = useQueryClient();
 
@@ -114,7 +141,8 @@ export default function AdminDokumenty() {
     setUploadedBytes(0);
     setTotalBytes(0);
     setCancelUpload(false);
-    window.currentUploadCancelRef = null; // Ensure global ref is reset
+    window.currentUploadCancelRef = null;
+    localStorage.removeItem(UPLOAD_STATE_KEY);
   };
 
   const shouldSkipFile = (fileName) => {
@@ -137,17 +165,15 @@ export default function AdminDokumenty() {
 
     const parts = filePath.split('/').filter(p => p && p.trim() !== '' && !shouldSkipFile(p));
 
-    // If only one part, it's a file in the root or a folder picked directly
     if (parts.length === 1 && !filePath.endsWith('/')) {
         return { model_domu: null, podpriecinok: null, cesta_priecinku: null };
     }
 
-    // If it's a folder, the file name is the last part. We want the directory structure before it.
     const pathSegments = filePath.split('/').filter(p => p && p.trim() !== '');
-    const fileName = pathSegments[pathSegments.length - 1]; // The actual file name
-    const folderSegments = pathSegments.slice(0, -1); // The directory parts
+    const fileName = pathSegments[pathSegments.length - 1];
+    const folderSegments = pathSegments.slice(0, -1);
 
-    if (folderSegments.length === 0) { // File in the root of the upload
+    if (folderSegments.length === 0) {
         return { model_domu: null, podpriecinok: null, cesta_priecinku: null };
     }
 
@@ -169,7 +195,7 @@ export default function AdminDokumenty() {
 
   const isFileDuplicate = (fileName, fileSize, folderPath) => {
     return dokumenty.some(dok =>
-      dok.nazov === fileName &&
+      dok.nazov === fileName && 
       dok.velkost === fileSize &&
       dok.cesta_priecinku === folderPath
     );
@@ -184,23 +210,21 @@ export default function AdminDokumenty() {
       console.log(`🗑️  Vyfiltrovaných ${newFiles.length - validFiles.length} systémových súborov`);
     }
 
-    // Add to existing files instead of replacing
     setSelectedFiles(prev => {
       const allSelectedFiles = [...prev, ...validFiles];
       const total = allSelectedFiles.reduce((sum, file) => sum + file.size, 0);
       setTotalBytes(total);
 
-      // Initialize file statuses for new files
       const initialStatuses = {};
       validFiles.forEach(file => {
-        initialStatuses[file.name] = 'pending';
+        const existingStatus = fileStatuses[file.name];
+        initialStatuses[file.name] = existingStatus === 'nahratý' ? 'nahratý' : 'pending';
       });
       setFileStatuses(prevStatuses => ({ ...prevStatuses, ...initialStatuses }));
 
       return allSelectedFiles;
     });
 
-    // Reset input value to allow selecting the same folder again
     e.target.value = '';
   };
 
@@ -235,7 +259,8 @@ export default function AdminDokumenty() {
 
         const initialStatuses = {};
         validFiles.forEach(file => {
-          initialStatuses[file.name] = 'pending';
+          const existingStatus = fileStatuses[file.name];
+          initialStatuses[file.name] = existingStatus === 'nahratý' ? 'nahratý' : 'pending';
         });
         setFileStatuses(prevStatuses => ({ ...prevStatuses, ...initialStatuses }));
 
@@ -303,6 +328,7 @@ export default function AdminDokumenty() {
     setFileStatuses({});
     setTotalBytes(0);
     setUploadedBytes(0);
+    localStorage.removeItem(UPLOAD_STATE_KEY);
   };
 
   const handleAddTag = () => {
@@ -324,7 +350,7 @@ export default function AdminDokumenty() {
 
   const handleAnalyzeAll = async () => {
     const unanalyzed = dokumenty.filter(dok => !dok.analyzovaný);
-
+    
     if (unanalyzed.length === 0) {
       alert("Všetky dokumenty sú už analyzované!");
       return;
@@ -346,11 +372,11 @@ export default function AdminDokumenty() {
       let analyzedCount = 0;
       for (const analysisBatch of analysisBatches) {
         await Promise.allSettled(
-          analysisBatch.map(dok =>
+          analysisBatch.map(dok => 
             analyzeMutation.mutateAsync(dok.id).catch(() => {})
           )
         );
-
+        
         analyzedCount += analysisBatch.length;
         setAnalysisProgress({ current: analyzedCount, total: unanalyzed.length });
       }
@@ -446,7 +472,7 @@ export default function AdminDokumenty() {
         lastError = error;
         const errorDetails = getErrorDetails(error, file);
 
-        if (errorDetails.type === 'NETWORK' && attempt < maxRetries + 2) { // Allow more retries for network errors
+        if (errorDetails.type === 'NETWORK' && attempt < maxRetries + 2) {
           continue;
         }
 
@@ -457,6 +483,17 @@ export default function AdminDokumenty() {
     }
 
     throw lastError;
+  };
+
+  const saveUploadState = (statuses, progress, formData, uploadMode) => {
+    const state = {
+      fileStatuses: statuses,
+      uploadProgress: progress,
+      formData,
+      uploadMode,
+      timestamp: Date.now()
+    };
+    localStorage.setItem(UPLOAD_STATE_KEY, JSON.stringify(state));
   };
 
   const handleSubmit = async (e) => {
@@ -470,9 +507,11 @@ export default function AdminDokumenty() {
     setUploading(true);
     const cancelRef = { current: false };
     window.currentUploadCancelRef = cancelRef;
-    setUploadProgress({ current: 0, total: selectedFiles.length });
+    
+    // Zisti, koľko súborov už bolo nahratých
+    const alreadyUploaded = Object.values(fileStatuses).filter(s => s === 'nahratý').length;
+    setUploadProgress({ current: alreadyUploaded, total: selectedFiles.length });
     setUploadResults(null);
-    setUploadedBytes(0);
 
     const results = {
       successful: [],
@@ -480,20 +519,37 @@ export default function AdminDokumenty() {
       failed: []
     };
 
-    let completedCount = 0;
+    let completedCount = alreadyUploaded;
     let cumulativeBytes = 0;
+
+    // Vypočítaj už nahrané byty
+    selectedFiles.forEach((file, idx) => {
+      if (fileStatuses[file.name] === 'nahratý') {
+        cumulativeBytes += file.size;
+      }
+    });
+    setUploadedBytes(cumulativeBytes);
 
     try {
       const BATCH_SIZE = 10;
-      const batches = [];
+      
+      // Filtruj iba súbory, ktoré ešte neboli nahrané
+      const filesToUpload = selectedFiles.filter(file => fileStatuses[file.name] !== 'nahratý');
+      
+      if (filesToUpload.length === 0) {
+        alert("Všetky súbory sú už nahrané!");
+        setUploading(false);
+        return;
+      }
 
-      for (let i = 0; i < selectedFiles.length; i += BATCH_SIZE) {
-        batches.push(selectedFiles.slice(i, i + BATCH_SIZE));
+      const batches = [];
+      for (let i = 0; i < filesToUpload.length; i += BATCH_SIZE) {
+        batches.push(filesToUpload.slice(i, i + BATCH_SIZE));
       }
 
       for (const batch of batches) {
         if (cancelRef.current) {
-          const remaining = selectedFiles.length - completedCount;
+          const remaining = filesToUpload.length - (completedCount - alreadyUploaded);
           if (remaining > 0) {
             results.failed.push({
               name: `Zostávajúcich ${remaining} súborov`,
@@ -509,6 +565,7 @@ export default function AdminDokumenty() {
           if (cancelRef.current) return null;
 
           updateFileStatus(file.name, 'nahrávam');
+          setCurrentFileName(file.name);
 
           try {
             if (shouldSkipFile(file.name)) {
@@ -549,6 +606,15 @@ export default function AdminDokumenty() {
 
             updateFileStatus(file.name, 'nahratý');
             results.successful.push({ name: file.name, id: doc.id });
+            
+            // Ulož stav po každom úspešnom uploade
+            saveUploadState(
+              { ...fileStatuses, [file.name]: 'nahratý' },
+              { current: completedCount + 1, total: selectedFiles.length },
+              formData,
+              uploadMode
+            );
+            
             return { file, status: 'success', size: file.size };
 
           } catch (fileError) {
@@ -560,6 +626,15 @@ export default function AdminDokumenty() {
               suggestion: errorDetails.suggestion,
               type: errorDetails.type
             });
+            
+            // Ulož stav aj pri chybe
+            saveUploadState(
+              { ...fileStatuses, [file.name]: 'odmietnutý' },
+              { current: completedCount, total: selectedFiles.length },
+              formData,
+              uploadMode
+            );
+            
             return { file, status: 'failed', size: file.size };
           }
         });
@@ -582,7 +657,7 @@ export default function AdminDokumenty() {
         setUploadProgress({ current: 0, total: results.successful.length });
 
         const analysisBatches = [];
-        for (let i = 0; i < results.successful.length; i += 10) { // Changed from 5 to 10
+        for (let i = 0; i < results.successful.length; i += 10) {
           analysisBatches.push(results.successful.slice(i, i + 10));
         }
 
@@ -601,9 +676,11 @@ export default function AdminDokumenty() {
 
       setUploadResults(results);
       setShowForm(false);
+      localStorage.removeItem(UPLOAD_STATE_KEY);
 
     } catch (error) {
       alert("Kritická chyba: " + error.message);
+      // Stav je už uložený v localStorage, nemusíme tu nič robiť
     } finally {
       setUploading(false);
       setUploadProgress({ current: 0, total: 0 });
@@ -731,8 +808,8 @@ export default function AdminDokumenty() {
             <div className="flex items-start gap-3">
               <Brain className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-blue-800">
-                <p className="font-semibold mb-1">Automatická AI analýza a kategorizácia</p>
-                <p>Systém automaticky filtruje systémové súbory (.DS_Store, ._*, atď.) a rozpoznáva štruktúru priečinkov. Duplicitné súbory sa preskočia a pri chybách sa automaticky skúsi znova.</p>
+                <p className="font-semibold mb-1">Automatická AI analýza a kategorizácia + Ochrana pred prerušením</p>
+                <p>Systém automaticky filtruje systémové súbory (.DS_Store, ._*, atď.) a rozpoznáva štruktúru priečinkov. Duplicitné súbory sa preskočia a pri chybách sa automaticky skúsi znova. Pri prerušení nahrávania pokračuje tam, kde prestalo.</p>
               </div>
             </div>
           </Card>
@@ -844,7 +921,7 @@ export default function AdminDokumenty() {
               >
                 <Folder className="w-4 h-4" />
               </Button>
-              <Button
+              <Button 
                 onClick={handleAnalyzeAll}
                 disabled={analyzingAll || dokumenty.filter(d => !d.analyzovaný).length === 0}
                 variant="outline"
@@ -869,7 +946,6 @@ export default function AdminDokumenty() {
                   setUploading(false);
                   setUploadProgress({ current: 0, total: 0 });
                   setCurrentFileName("");
-                  setFileStatuses({});
                   if (window.currentUploadCancelRef) {
                     window.currentUploadCancelRef.current = false;
                     window.currentUploadCancelRef = null;
@@ -897,7 +973,7 @@ export default function AdminDokumenty() {
                             value={uploadMode}
                             onValueChange={(value) => {
                                 setUploadMode(value);
-                                setSelectedFiles([]); // Clear files when mode changes
+                                setSelectedFiles([]);
                                 setFileStatuses({});
                                 setTotalBytes(0);
                                 setUploadedBytes(0);
@@ -917,7 +993,6 @@ export default function AdminDokumenty() {
                     <div>
                       <Label>{uploadMode === "folder" ? "Priečinky *" : "Súbory *"}</Label>
                       
-                      {/* Drag & Drop Zone */}
                       <div
                         onDrop={handleDrop}
                         onDragOver={handleDragOver}
@@ -1021,7 +1096,7 @@ export default function AdminDokumenty() {
                                     <span className="text-xs text-gray-500 flex-shrink-0 mr-2">({formatFileSize(file.size)})</span>
                                     {getStatusBadge(isDuplicate && status === 'pending' ? 'duplicita' : status)}
                                   </div>
-                                  {!uploading && (
+                                  {!uploading && status !== 'nahratý' && (
                                     <button
                                       type="button"
                                       onClick={() => handleRemoveFile(index)}
@@ -1177,7 +1252,7 @@ export default function AdminDokumenty() {
                             if (window.currentUploadCancelRef) {
                               window.currentUploadCancelRef.current = true;
                             }
-                            setCancelUpload(true); // Keep this to trigger UI update (button text)
+                            setCancelUpload(true);
                           } else {
                             setShowForm(false);
                             resetForm();
