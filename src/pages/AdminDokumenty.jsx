@@ -22,15 +22,15 @@ export default function AdminDokumenty() {
   const [uploading, setUploading] = useState(false);
   const [selectedVyrobca, setSelectedVyrobca] = useState("all");
   const [formData, setFormData] = useState({
-    nazov: "",
     popis: "",
     typ: "iné",
     vyrobca: "American Living",
     pre_chatbota: true,
     tags: []
   });
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const [tagInput, setTagInput] = useState("");
+  const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
 
   const queryClient = useQueryClient();
 
@@ -48,8 +48,6 @@ export default function AdminDokumenty() {
     mutationFn: (data) => base44.entities.Dokument.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dokumenty'] });
-      setShowForm(false);
-      resetForm();
     }
   });
 
@@ -62,25 +60,24 @@ export default function AdminDokumenty() {
 
   const resetForm = () => {
     setFormData({
-      nazov: "",
       popis: "",
       typ: "iné",
       vyrobca: "American Living",
       pre_chatbota: true,
       tags: []
     });
-    setSelectedFile(null);
+    setSelectedFiles([]);
     setTagInput("");
+    setUploadProgress({ current: 0, total: 0 });
   };
 
   const handleFileSelect = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-      if (!formData.nazov) {
-        setFormData({ ...formData, nazov: file.name });
-      }
-    }
+    const files = Array.from(e.target.files);
+    setSelectedFiles(files);
+  };
+
+  const handleRemoveFile = (index) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleAddTag = () => {
@@ -103,22 +100,36 @@ export default function AdminDokumenty() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!selectedFile) {
-      alert("Vyberte súbor");
+    if (selectedFiles.length === 0) {
+      alert("Vyberte aspoň jeden súbor");
       return;
     }
 
     setUploading(true);
+    setUploadProgress({ current: 0, total: selectedFiles.length });
     
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file: selectedFile });
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+        setUploadProgress({ current: i + 1, total: selectedFiles.length });
+        
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        
+        await createMutation.mutateAsync({
+          nazov: file.name,
+          popis: formData.popis,
+          typ: formData.typ,
+          vyrobca: formData.vyrobca,
+          pre_chatbota: formData.pre_chatbota,
+          tags: formData.tags,
+          subor_url: file_url,
+          velkost: file.size,
+          typ_suboru: file.type
+        });
+      }
       
-      await createMutation.mutateAsync({
-        ...formData,
-        subor_url: file_url,
-        velkost: selectedFile.size,
-        typ_suboru: selectedFile.type
-      });
+      setShowForm(false);
+      resetForm();
     } catch (error) {
       alert("Chyba pri uploade: " + error.message);
     } finally {
@@ -226,7 +237,7 @@ export default function AdminDokumenty() {
             </div>
             <Button onClick={() => setShowForm(!showForm)} className="bg-primary">
               <Upload className="w-4 h-4 mr-2" />
-              Nahrať dokument
+              Nahrať dokumenty
             </Button>
           </div>
 
@@ -240,31 +251,41 @@ export default function AdminDokumenty() {
                 <Card className="p-6 mb-6">
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                      <Label>Súbor *</Label>
+                      <Label>Súbory * (môžete vybrať viacero)</Label>
                       <div className="mt-2">
                         <Input
                           type="file"
                           onChange={handleFileSelect}
+                          multiple
                           required
                         />
-                        {selectedFile && (
-                          <p className="text-sm text-gray-600 mt-2">
-                            {selectedFile.name} ({formatFileSize(selectedFile.size)})
-                          </p>
+                        {selectedFiles.length > 0 && (
+                          <div className="mt-3 space-y-2">
+                            <p className="text-sm font-medium text-gray-700">
+                              Vybraných {selectedFiles.length} súborov:
+                            </p>
+                            {selectedFiles.map((file, index) => (
+                              <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-lg">{getFileIcon(file.type)}</span>
+                                  <span className="text-sm text-gray-700">{file.name}</span>
+                                  <span className="text-xs text-gray-500">({formatFileSize(file.size)})</span>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveFile(index)}
+                                  className="text-red-600 hover:text-red-700"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
                         )}
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div>
-                        <Label>Názov *</Label>
-                        <Input
-                          value={formData.nazov}
-                          onChange={(e) => setFormData({...formData, nazov: e.target.value})}
-                          placeholder="Cenník modulárnych domov 2025"
-                          required
-                        />
-                      </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label>Výrobca *</Label>
                         <Select
@@ -303,17 +324,17 @@ export default function AdminDokumenty() {
                     </div>
 
                     <div>
-                      <Label>Popis</Label>
+                      <Label>Popis (platí pre všetky súbory)</Label>
                       <Textarea
                         value={formData.popis}
                         onChange={(e) => setFormData({...formData, popis: e.target.value})}
-                        placeholder="Detailný popis dokumentu..."
+                        placeholder="Detailný popis dokumentov..."
                         rows={3}
                       />
                     </div>
 
                     <div>
-                      <Label>Tagy</Label>
+                      <Label>Tagy (platia pre všetky súbory)</Label>
                       <div className="flex gap-2 mt-2">
                         <Input
                           value={tagInput}
@@ -348,6 +369,20 @@ export default function AdminDokumenty() {
                       <Label>Použiť ako zdroj vedomostí pre chatbota</Label>
                     </div>
 
+                    {uploading && uploadProgress.total > 0 && (
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <p className="text-sm font-medium text-blue-800 mb-2">
+                          Nahrávam {uploadProgress.current} z {uploadProgress.total} súborov...
+                        </p>
+                        <div className="w-full bg-blue-200 rounded-full h-2">
+                          <div 
+                            className="bg-blue-600 h-2 rounded-full transition-all"
+                            style={{ width: `${(uploadProgress.current / uploadProgress.total) * 100}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
                     <div className="flex gap-2 pt-4">
                       <Button type="submit" disabled={uploading} className="bg-primary">
                         {uploading ? (
@@ -358,7 +393,7 @@ export default function AdminDokumenty() {
                         ) : (
                           <>
                             <Upload className="w-4 h-4 mr-2" />
-                            Nahrať
+                            Nahrať {selectedFiles.length > 0 && `(${selectedFiles.length})`}
                           </>
                         )}
                       </Button>
