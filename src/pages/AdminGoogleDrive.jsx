@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { FolderOpen, RefreshCw, CheckCircle, Folder, Link as LinkIcon, AlertCircle, Settings, Search, FileText, ExternalLink, Bug, Eye, EyeOff } from "lucide-react";
+import { FolderOpen, RefreshCw, CheckCircle, Folder, Link as LinkIcon, AlertCircle, Settings, Search, FileText, ExternalLink, Bug, Eye, EyeOff, AlertTriangle, Copy } from "lucide-react";
 import { motion } from "framer-motion";
 import GoogleDriveFilesList from "../components/GoogleDriveFilesList";
 
@@ -19,6 +19,7 @@ export default function AdminGoogleDrive() {
   const [debugInfo, setDebugInfo] = useState(null);
   const [isTesting, setIsTesting] = useState(false);
   const [showTokens, setShowTokens] = useState(false);
+  const [oauthDiagnostics, setOauthDiagnostics] = useState(null);
 
   const { data: user, refetch: refetchUser } = useQuery({
     queryKey: ['current-user'],
@@ -34,6 +35,91 @@ export default function AdminGoogleDrive() {
     enabled: !!user?.google_drive_access_token,
     retry: false,
   });
+
+  const runOAuthDiagnostics = async () => {
+    setIsTesting(true);
+    
+    const diagnostics = {
+      timestamp: new Date().toISOString(),
+      environment: {
+        currentUrl: window.location.href,
+        origin: window.location.origin,
+        pathname: window.location.pathname,
+        isPreview: window.location.pathname.includes('/preview/'),
+      },
+      user: {
+        id: user?.id,
+        email: user?.email,
+        hasAccessToken: !!user?.google_drive_access_token,
+        hasRefreshToken: !!user?.google_drive_refresh_token,
+        tokenExpiry: user?.google_drive_token_expiry,
+        tokenExpiryDate: user?.google_drive_token_expiry ? new Date(user.google_drive_token_expiry).toISOString() : null,
+        tokenExpired: user?.google_drive_token_expiry ? new Date(user.google_drive_token_expiry) < new Date() : null,
+      },
+      urls: {}
+    };
+
+    // Calculate function path
+    const basePath = window.location.pathname.split('/preview/')[0];
+    const functionPath = `${basePath}/functions/googleDrive`;
+    const callbackUrl = `${window.location.origin}${functionPath}?action=callback`;
+    
+    diagnostics.urls.functionPath = functionPath;
+    diagnostics.urls.callbackUrl = callbackUrl;
+    diagnostics.urls.authUrl = `${functionPath}?action=authorize&return_url=${encodeURIComponent(window.location.href.split('?')[0])}`;
+
+    // Test function accessibility
+    try {
+      const testResponse = await fetch(functionPath);
+      diagnostics.functionTest = {
+        accessible: testResponse.ok,
+        status: testResponse.status,
+        statusText: testResponse.statusText,
+      };
+    } catch (error) {
+      diagnostics.functionTest = {
+        accessible: false,
+        error: error.message,
+      };
+    }
+
+    // OAuth Configuration Analysis
+    diagnostics.oauthConfig = {
+      expectedCallbackUrl: callbackUrl,
+      instructions: [
+        "1. Prejdite na Google Cloud Console: https://console.cloud.google.com/",
+        "2. Vyberte váš projekt",
+        "3. Prejdite na 'APIs & Services' → 'Credentials'",
+        "4. Nájdite váš OAuth 2.0 Client ID",
+        "5. V sekcii 'Authorized redirect URIs' MUSÍ byť presne:",
+        `   ${callbackUrl}`,
+        "",
+        "⚠️ DÔLEŽITÉ:",
+        "- URL musí byť PRESNE rovnaká (vrátane https://)",
+        "- Nesmie obsahovať /preview/ v ceste",
+        "- Po úprave môže trvať pár minút, kým sa zmeny prejavia"
+      ]
+    };
+
+    // Check if preview mode might cause issues
+    if (diagnostics.environment.isPreview) {
+      diagnostics.warnings = [
+        "⚠️ Používate PREVIEW režim",
+        "OAuth callback môže byť problematický v preview móde",
+        "Odporúčame použiť produkčnú URL namiesto preview",
+        "Preview URL sa môže zmeniť, čo by vyžadovalo update v Google Console"
+      ];
+    }
+
+    setOauthDiagnostics(diagnostics);
+    setIsTesting(false);
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const testConnection = async () => {
     setIsTesting(true);
@@ -56,7 +142,6 @@ export default function AdminGoogleDrive() {
     };
 
     try {
-      // Test if function is accessible
       const response = await fetch(info.functionPath);
       info.functionAccessible = response.ok;
       info.functionStatus = response.status;
@@ -65,7 +150,6 @@ export default function AdminGoogleDrive() {
       info.functionError = error.message;
     }
 
-    // Test callback URL
     const origin = window.location.origin;
     info.callbackUrl = `${origin}${info.functionPath}?action=callback`;
 
@@ -75,9 +159,8 @@ export default function AdminGoogleDrive() {
 
   const handleAuthorize = () => {
     const returnUrl = window.location.href.split('?')[0];
-    const functionPath = window.location.pathname.includes('/preview/') 
-      ? window.location.pathname.split('/preview/')[0] + '/functions/googleDrive'
-      : '/functions/googleDrive';
+    const basePath = window.location.pathname.split('/preview/')[0];
+    const functionPath = `${basePath}/functions/googleDrive`;
     
     console.log('[AdminGoogleDrive] Authorizing...');
     console.log('[AdminGoogleDrive] Return URL:', returnUrl);
@@ -171,132 +254,127 @@ export default function AdminGoogleDrive() {
             </h1>
           </div>
 
-          {/* Debug Info */}
-          <Card className="p-6 mb-6 bg-yellow-50 border-2 border-yellow-300">
+          {/* OAuth Deep Diagnostics */}
+          <Card className="p-6 mb-6 bg-gradient-to-br from-orange-50 to-white border-2 border-orange-300">
             <div className="flex items-start gap-4">
-              <Bug className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-1" />
+              <AlertTriangle className="w-6 h-6 text-orange-600 flex-shrink-0 mt-1" />
               <div className="flex-grow">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-gray-800">Diagnostika</h3>
+                  <h3 className="font-semibold text-gray-800 text-lg">🔍 Hlboková OAuth diagnostika</h3>
                   <Button
-                    onClick={testConnection}
+                    onClick={runOAuthDiagnostics}
                     disabled={isTesting}
-                    size="sm"
                     variant="outline"
+                    className="border-orange-400 text-orange-700 hover:bg-orange-50"
                   >
                     {isTesting ? (
                       <>
                         <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                        Testujem...
+                        Analyzujem...
                       </>
                     ) : (
                       <>
                         <Bug className="w-4 h-4 mr-2" />
-                        Spustiť test
+                        Spustiť diagnostiku
                       </>
                     )}
                   </Button>
                 </div>
 
-                {debugInfo && (
-                  <div className="bg-white rounded-lg p-4 text-sm font-mono space-y-2 border">
-                    <div className="grid grid-cols-3 gap-2">
-                      <span className="text-gray-600">User ID:</span>
-                      <span className="col-span-2 text-gray-900">{debugInfo.user.id}</span>
-                      
-                      <span className="text-gray-600">Email:</span>
-                      <span className="col-span-2 text-gray-900">{debugInfo.user.email}</span>
-                      
-                      <span className="text-gray-600">Access Token:</span>
-                      <span className="col-span-2 flex items-center gap-2">
-                        {debugInfo.user.hasAccessToken ? (
-                          <Badge className="bg-green-600">✓ Prítomný</Badge>
-                        ) : (
-                          <Badge variant="destructive">✗ Chýba</Badge>
-                        )}
-                      </span>
-                      
-                      <span className="text-gray-600">Refresh Token:</span>
-                      <span className="col-span-2">
-                        {debugInfo.user.hasRefreshToken ? (
-                          <Badge className="bg-green-600">✓ Prítomný</Badge>
-                        ) : (
-                          <Badge variant="destructive">✗ Chýba</Badge>
-                        )}
-                      </span>
-                      
-                      <span className="text-gray-600">Token Expiry:</span>
-                      <span className="col-span-2 text-gray-900 text-xs">
-                        {debugInfo.user.tokenExpiry || 'N/A'}
-                      </span>
-                      
-                      <span className="text-gray-600">Function Path:</span>
-                      <span className="col-span-2 text-blue-600 text-xs break-all">
-                        {debugInfo.functionPath}
-                      </span>
-                      
-                      <span className="text-gray-600">Callback URL:</span>
-                      <span className="col-span-2 text-blue-600 text-xs break-all">
-                        {debugInfo.callbackUrl}
-                      </span>
-                      
-                      <span className="text-gray-600">Function Status:</span>
-                      <span className="col-span-2">
-                        {debugInfo.functionAccessible ? (
-                          <Badge className="bg-green-600">✓ Dostupná ({debugInfo.functionStatus})</Badge>
-                        ) : (
-                          <Badge variant="destructive">✗ Nedostupná</Badge>
-                        )}
-                      </span>
+                {oauthDiagnostics && (
+                  <div className="space-y-4">
+                    {/* Callback URL */}
+                    <div className="bg-white rounded-lg p-4 border-2 border-orange-200">
+                      <h4 className="font-semibold mb-2 text-orange-800">📍 Callback URL (vyžadovaná v Google Console)</h4>
+                      <div className="bg-orange-50 p-3 rounded font-mono text-sm break-all mb-2">
+                        {oauthDiagnostics.urls.callbackUrl}
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => copyToClipboard(oauthDiagnostics.urls.callbackUrl)}
+                        className="w-full"
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        {copied ? '✓ Skopírované!' : 'Kopírovať'}
+                      </Button>
                     </div>
-                  </div>
-                )}
 
-                {/* Token Details */}
-                {user?.google_drive_access_token && (
-                  <div className="mt-4">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowTokens(!showTokens)}
-                      className="mb-2"
-                    >
-                      {showTokens ? (
-                        <>
-                          <EyeOff className="w-4 h-4 mr-2" />
-                          Skryť tokeny
-                        </>
-                      ) : (
-                        <>
-                          <Eye className="w-4 h-4 mr-2" />
-                          Zobraziť tokeny
-                        </>
-                      )}
-                    </Button>
+                    {/* Instructions */}
+                    <div className="bg-white rounded-lg p-4 border-2 border-blue-200">
+                      <h4 className="font-semibold mb-3 text-blue-800">📝 Inštrukcie pre Google Console</h4>
+                      <div className="bg-blue-50 p-4 rounded text-sm space-y-1 font-mono whitespace-pre-wrap">
+                        {oauthDiagnostics.oauthConfig.instructions.join('\n')}
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="w-full mt-3"
+                        onClick={() => window.open('https://console.cloud.google.com/', '_blank')}
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Otvoriť Google Cloud Console
+                      </Button>
+                    </div>
 
-                    {showTokens && (
-                      <div className="bg-white rounded-lg p-4 text-xs font-mono space-y-2 border">
-                        <div>
-                          <div className="text-gray-600 mb-1">Access Token:</div>
-                          <div className="text-gray-900 break-all bg-gray-50 p-2 rounded">
-                            {maskToken(user.google_drive_access_token)}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-gray-600 mb-1">Refresh Token:</div>
-                          <div className="text-gray-900 break-all bg-gray-50 p-2 rounded">
-                            {maskToken(user.google_drive_refresh_token)}
-                          </div>
-                        </div>
+                    {/* Warnings */}
+                    {oauthDiagnostics.warnings && (
+                      <div className="bg-yellow-50 rounded-lg p-4 border-2 border-yellow-300">
+                        <h4 className="font-semibold mb-2 text-yellow-800">⚠️ Upozornenia</h4>
+                        <ul className="space-y-1 text-sm">
+                          {oauthDiagnostics.warnings.map((warning, i) => (
+                            <li key={i} className="text-yellow-900">{warning}</li>
+                          ))}
+                        </ul>
                       </div>
                     )}
+
+                    {/* Technical Details */}
+                    <details className="bg-gray-50 rounded-lg p-4 border">
+                      <summary className="cursor-pointer font-semibold text-gray-700 mb-2">
+                        🔧 Technické detaily
+                      </summary>
+                      <pre className="text-xs bg-white p-3 rounded border overflow-auto max-h-64">
+                        {JSON.stringify(oauthDiagnostics, null, 2)}
+                      </pre>
+                    </details>
+
+                    {/* Token Status */}
+                    <div className="bg-white rounded-lg p-4 border">
+                      <h4 className="font-semibold mb-3 text-gray-800">🔑 Stav tokenov</h4>
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <span className="text-gray-600">Access Token:</span>
+                          <Badge className={oauthDiagnostics.user.hasAccessToken ? "bg-green-600 ml-2" : "bg-red-600 ml-2"}>
+                            {oauthDiagnostics.user.hasAccessToken ? '✓' : '✗'}
+                          </Badge>
+                        </div>
+                        <div>
+                          <span className="text-gray-600">Refresh Token:</span>
+                          <Badge className={oauthDiagnostics.user.hasRefreshToken ? "bg-green-600 ml-2" : "bg-red-600 ml-2"}>
+                            {oauthDiagnostics.user.hasRefreshToken ? '✓' : '✗'}
+                          </Badge>
+                        </div>
+                        <div className="col-span-2">
+                          <span className="text-gray-600">Token Expired:</span>
+                          <Badge className={oauthDiagnostics.user.tokenExpired ? "bg-red-600 ml-2" : "bg-green-600 ml-2"}>
+                            {oauthDiagnostics.user.tokenExpired ? 'ÁNO' : 'NIE'}
+                          </Badge>
+                        </div>
+                        {oauthDiagnostics.user.tokenExpiryDate && (
+                          <div className="col-span-2 text-xs text-gray-500">
+                            Expirácia: {oauthDiagnostics.user.tokenExpiryDate}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
             </div>
           </Card>
 
-          {/* Authorization status */}
+          {/* Rest of the existing UI */}
           <Card className="p-6 mb-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -517,31 +595,6 @@ export default function AdminGoogleDrive() {
                   </div>
                 </div>
               </div>
-            </Card>
-          )}
-
-          {/* Empty states */}
-          {needsAuth && !user?.google_drive_access_token && (
-            <Card className="p-12 text-center">
-              <LinkIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-700 mb-2">
-                Pripojte Google Drive
-              </h3>
-              <p className="text-gray-500">
-                Kliknite na "Autorizovať".
-              </p>
-            </Card>
-          )}
-
-          {!isLoading && folders && folders.length === 0 && user?.google_drive_access_token && (
-            <Card className="p-12 text-center">
-              <FolderOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-700 mb-2">
-                Žiadne priečinky
-              </h3>
-              <p className="text-gray-500">
-                Nenašli sa priečinky.
-              </p>
             </Card>
           )}
         </motion.div>
