@@ -4,6 +4,7 @@ import { google } from 'npm:googleapis';
 
 const GOOGLE_CLIENT_ID = Deno.env.get("GOOGLE_CLIENT_ID");
 const GOOGLE_CLIENT_SECRET = Deno.env.get("GOOGLE_CLIENT_SECRET");
+const GOOGLE_DRIVE_FOLDER_IDS = Deno.env.get("GOOGLE_DRIVE_FOLDER_IDS");
 
 Deno.serve(async (req) => {
     try {
@@ -77,9 +78,19 @@ Deno.serve(async (req) => {
                 }
 
                 const drive = google.drive({ version: 'v3', auth: oauth2Client });
+                
+                // Build query based on allowed folders
+                let query = "trashed=false";
+                if (GOOGLE_DRIVE_FOLDER_IDS && GOOGLE_DRIVE_FOLDER_IDS.trim()) {
+                    const folderIds = GOOGLE_DRIVE_FOLDER_IDS.split(',').map(id => id.trim());
+                    const folderQueries = folderIds.map(id => `'${id}' in parents`).join(' or ');
+                    query += ` and (${folderQueries})`;
+                }
+                
                 const res = await drive.files.list({
                     pageSize: 100,
-                    fields: 'nextPageToken, files(id, name, mimeType, modifiedTime, webViewLink)',
+                    q: query,
+                    fields: 'nextPageToken, files(id, name, mimeType, modifiedTime, webViewLink, parents)',
                 });
                 return Response.json(res.data.files);
             }
@@ -112,6 +123,26 @@ Deno.serve(async (req) => {
                 }
                 
                 const drive = google.drive({ version: 'v3', auth: oauth2Client });
+                
+                // Verify file is in allowed folders if restriction is set
+                if (GOOGLE_DRIVE_FOLDER_IDS && GOOGLE_DRIVE_FOLDER_IDS.trim()) {
+                    const fileMetadata = await drive.files.get({
+                        fileId: fileId,
+                        fields: 'parents'
+                    });
+                    
+                    const allowedFolderIds = GOOGLE_DRIVE_FOLDER_IDS.split(',').map(id => id.trim());
+                    const fileParents = fileMetadata.data.parents || [];
+                    
+                    const isInAllowedFolder = fileParents.some(parent => 
+                        allowedFolderIds.includes(parent)
+                    );
+                    
+                    if (!isInAllowedFolder) {
+                        return Response.json({ error: 'Access denied: File is not in allowed folders' }, { status: 403 });
+                    }
+                }
+                
                 const res = await drive.files.get({ 
                     fileId: fileId, 
                     alt: 'media'
