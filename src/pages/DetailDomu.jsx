@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -7,11 +6,10 @@ import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, X, Phone, Mail, Settings, AlertCircle } from "lucide-react";
+import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import PriceCalculator from "../components/PriceCalculator";
-import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse"; // New import
+import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
 import FloatingPrice from "../components/FloatingPrice";
 
 export default function DetailDomu() {
@@ -19,7 +17,6 @@ export default function DetailDomu() {
   const domId = urlParams.get('id');
   const domSlug = urlParams.get('slug');
   const [selectedImage, setSelectedImage] = useState(0);
-  const [showPodorys, setShowPodorys] = useState(false);
   const [calculatedPrice, setCalculatedPrice] = useState(0);
   const [showCalculator, setShowCalculator] = useState(false);
 
@@ -183,25 +180,23 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Pôdorys */}
-            {dom.podorys_url && (
+            {/* Pôdorysy */}
+            {dom.podorysy && dom.podorysy.length > 0 && (
               <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">Pôdorys</h3>
-                <button
-                  onClick={() => setShowPodorys(true)}
-                  className="relative w-full aspect-[4/3] rounded-lg overflow-hidden group"
-                >
-                  <img
-                    src={dom.podorys_url}
-                    alt="Pôdorys"
-                    className="w-full h-full object-contain bg-gray-50"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 px-4 py-2 rounded-lg">
-                      <p className="text-sm font-semibold text-primary">Kliknite pre zväčšenie</p>
+                <h3 className="text-lg font-bold text-primary mb-4">
+                  {dom.podorysy.length > 1 ? 'Pôdorysy' : 'Pôdorys'}
+                </h3>
+                <div className="space-y-4">
+                  {dom.podorysy.map((podorysUrl, index) => (
+                    <div key={index} className="rounded-lg overflow-hidden bg-gray-50">
+                      <img
+                        src={podorysUrl}
+                        alt={`Pôdorys ${index + 1}`}
+                        className="w-full h-auto object-contain"
+                      />
                     </div>
-                  </div>
-                </button>
+                  ))}
+                </div>
               </Card>
             )}
 
@@ -482,23 +477,6 @@ export default function DetailDomu() {
           </motion.div>
         </div>
       </div>
-
-      {/* Pôdorys Dialog */}
-      <Dialog open={showPodorys} onOpenChange={setShowPodorys}>
-        <DialogContent className="max-w-6xl">
-          <button
-            onClick={() => setShowPodorys(false)}
-            className="absolute top-4 right-4 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-colors z-50"
-          >
-            <X className="w-6 h-6 text-white" />
-          </button>
-          <img
-            src={dom.podorys_url}
-            alt="Pôdorys"
-            className="w-full h-auto"
-          />
-        </DialogContent>
-      </Dialog>
 
       {/* Floating Price Display */}
       <FloatingPrice price={calculatedPrice} isVisible={showCalculator} />
