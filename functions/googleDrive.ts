@@ -8,15 +8,10 @@ const GOOGLE_DRIVE_FOLDER_IDS = Deno.env.get("GOOGLE_DRIVE_FOLDER_IDS");
 
 Deno.serve(async (req) => {
     try {
-        const base44 = createClientFromRequest(req);
-        
         const url = new URL(req.url);
         const action = url.searchParams.get('action') || 'listFiles';
         
-        // Construct callback URL
-        const protocol = url.protocol;
-        const host = url.host;
-        const callbackUrl = `${protocol}//${host}/functions/googleDrive?action=oauthCallback`;
+        const callbackUrl = `${url.origin}/functions/googleDrive?action=oauthCallback`;
 
         const oauth2Client = new OAuth2Client(
             GOOGLE_CLIENT_ID,
@@ -24,13 +19,13 @@ Deno.serve(async (req) => {
             callbackUrl
         );
 
-        // For OAuth callback, we don't need authentication yet
         if (action === 'oauthCallback') {
             const code = url.searchParams.get('code');
             if (!code) {
                 return Response.json({ error: 'Authorization code missing' }, { status: 400 });
             }
 
+            const base44 = createClientFromRequest(req);
             const { tokens } = await oauth2Client.getToken(code);
             
             await base44.auth.updateMe({
@@ -39,167 +34,165 @@ Deno.serve(async (req) => {
                 google_drive_token_expiry: tokens.expiry_date,
             });
             
-            const redirectUrl = `${protocol}//${host}${createPageUrl('AdminGoogleDrive')}`;
-            return Response.redirect(redirectUrl, 302);
+            return Response.redirect(url.origin, 302);
         }
 
-        // For other actions, require authentication
+        const base44 = createClientFromRequest(req);
         const user = await base44.auth.me();
+        
         if (!user) {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        switch (action) {
-            case 'authorize': {
-                const authorizeUrl = oauth2Client.generateAuthUrl({
-                    access_type: 'offline',
-                    scope: [
-                        'https://www.googleapis.com/auth/drive.readonly',
-                        'https://www.googleapis.com/auth/userinfo.email',
-                        'https://www.googleapis.com/auth/userinfo.profile'
-                    ],
-                    prompt: 'consent',
-                });
-                return Response.redirect(authorizeUrl, 302);
+        if (action === 'authorize') {
+            const authorizeUrl = oauth2Client.generateAuthUrl({
+                access_type: 'offline',
+                scope: [
+                    'https://www.googleapis.com/auth/drive.readonly',
+                    'https://www.googleapis.com/auth/userinfo.email',
+                    'https://www.googleapis.com/auth/userinfo.profile'
+                ],
+                prompt: 'consent',
+            });
+            return Response.redirect(authorizeUrl, 302);
+        }
+
+        if (action === 'listFolders') {
+            if (!user.google_drive_access_token) {
+                return Response.json({ error: 'Google Drive not authorized. Please authorize first.' }, { status: 403 });
             }
 
-            case 'listFolders': {
-                if (!user.google_drive_access_token) {
-                    return Response.json({ error: 'Google Drive not authorized. Please authorize first.' }, { status: 403 });
-                }
+            oauth2Client.setCredentials({
+                access_token: user.google_drive_access_token,
+                refresh_token: user.google_drive_refresh_token,
+                expiry_date: user.google_drive_token_expiry,
+            });
 
-                oauth2Client.setCredentials({
-                    access_token: user.google_drive_access_token,
-                    refresh_token: user.google_drive_refresh_token,
-                    expiry_date: user.google_drive_token_expiry,
+            const tokens = await oauth2Client.refreshAccessToken();
+            if (tokens.credentials.access_token !== user.google_drive_access_token) {
+                await base44.auth.updateMe({
+                    google_drive_access_token: tokens.credentials.access_token,
+                    google_drive_refresh_token: tokens.credentials.refresh_token || user.google_drive_refresh_token,
+                    google_drive_token_expiry: tokens.credentials.expiry_date,
                 });
-
-                const tokens = await oauth2Client.refreshAccessToken();
-                if (tokens.credentials.access_token !== user.google_drive_access_token) {
-                    await base44.auth.updateMe({
-                        google_drive_access_token: tokens.credentials.access_token,
-                        google_drive_refresh_token: tokens.credentials.refresh_token || user.google_drive_refresh_token,
-                        google_drive_token_expiry: tokens.credentials.expiry_date,
-                    });
-                    oauth2Client.setCredentials(tokens.credentials);
-                }
-
-                const drive = google.drive({ version: 'v3', auth: oauth2Client });
-                
-                const res = await drive.files.list({
-                    pageSize: 100,
-                    q: "mimeType='application/vnd.google-apps.folder' and trashed=false",
-                    fields: 'files(id, name, modifiedTime, webViewLink)',
-                });
-                
-                return Response.json(res.data.files || []);
+                oauth2Client.setCredentials(tokens.credentials);
             }
 
-            case 'listFiles': {
-                if (!user.google_drive_access_token) {
-                    return Response.json({ error: 'Google Drive not authorized. Please authorize first.' }, { status: 403 });
-                }
+            const drive = google.drive({ version: 'v3', auth: oauth2Client });
+            
+            const res = await drive.files.list({
+                pageSize: 100,
+                q: "mimeType='application/vnd.google-apps.folder' and trashed=false",
+                fields: 'files(id, name, modifiedTime, webViewLink)',
+            });
+            
+            return Response.json(res.data.files || []);
+        }
 
-                oauth2Client.setCredentials({
-                    access_token: user.google_drive_access_token,
-                    refresh_token: user.google_drive_refresh_token,
-                    expiry_date: user.google_drive_token_expiry,
+        if (action === 'listFiles') {
+            if (!user.google_drive_access_token) {
+                return Response.json({ error: 'Google Drive not authorized. Please authorize first.' }, { status: 403 });
+            }
+
+            oauth2Client.setCredentials({
+                access_token: user.google_drive_access_token,
+                refresh_token: user.google_drive_refresh_token,
+                expiry_date: user.google_drive_token_expiry,
+            });
+
+            const tokens = await oauth2Client.refreshAccessToken();
+            if (tokens.credentials.access_token !== user.google_drive_access_token) {
+                await base44.auth.updateMe({
+                    google_drive_access_token: tokens.credentials.access_token,
+                    google_drive_refresh_token: tokens.credentials.refresh_token || user.google_drive_refresh_token,
+                    google_drive_token_expiry: tokens.credentials.expiry_date,
                 });
+                oauth2Client.setCredentials(tokens.credentials);
+            }
 
-                const tokens = await oauth2Client.refreshAccessToken();
-                if (tokens.credentials.access_token !== user.google_drive_access_token) {
-                    await base44.auth.updateMe({
-                        google_drive_access_token: tokens.credentials.access_token,
-                        google_drive_refresh_token: tokens.credentials.refresh_token || user.google_drive_refresh_token,
-                        google_drive_token_expiry: tokens.credentials.expiry_date,
-                    });
-                    oauth2Client.setCredentials(tokens.credentials);
-                }
-
-                const drive = google.drive({ version: 'v3', auth: oauth2Client });
-                
-                let query = "trashed=false and mimeType != 'application/vnd.google-apps.folder'";
-                if (GOOGLE_DRIVE_FOLDER_IDS && GOOGLE_DRIVE_FOLDER_IDS.trim()) {
-                    const folderIds = GOOGLE_DRIVE_FOLDER_IDS.split(',').map(id => id.trim());
-                    const folderQueries = folderIds.map(id => `'${id}' in parents`).join(' or ');
-                    query += ` and (${folderQueries})`;
-                }
-                
-                const res = await drive.files.list({
-                    pageSize: 100,
-                    q: query,
-                    fields: 'nextPageToken, files(id, name, mimeType, modifiedTime, webViewLink, parents)',
-                });
-                return Response.json(res.data.files || []);
+            const drive = google.drive({ version: 'v3', auth: oauth2Client });
+            
+            let query = "trashed=false and mimeType != 'application/vnd.google-apps.folder'";
+            if (GOOGLE_DRIVE_FOLDER_IDS && GOOGLE_DRIVE_FOLDER_IDS.trim()) {
+                const folderIds = GOOGLE_DRIVE_FOLDER_IDS.split(',').map(id => id.trim());
+                const folderQueries = folderIds.map(id => `'${id}' in parents`).join(' or ');
+                query += ` and (${folderQueries})`;
             }
             
-            case 'getFileContent': {
-                const fileId = url.searchParams.get('fileId');
-                if (!fileId) {
-                    return Response.json({ error: 'File ID missing' }, { status: 400 });
-                }
-
-                if (!user.google_drive_access_token) {
-                    return Response.json({ error: 'Google Drive not authorized. Please authorize first.' }, { status: 403 });
-                }
-
-                oauth2Client.setCredentials({
-                    access_token: user.google_drive_access_token,
-                    refresh_token: user.google_drive_refresh_token,
-                    expiry_date: user.google_drive_token_expiry,
-                });
-
-                const tokens = await oauth2Client.refreshAccessToken();
-                if (tokens.credentials.access_token !== user.google_drive_access_token) {
-                    await base44.auth.updateMe({
-                        google_drive_access_token: tokens.credentials.access_token,
-                        google_drive_refresh_token: tokens.credentials.refresh_token || user.google_drive_refresh_token,
-                        google_drive_token_expiry: tokens.credentials.expiry_date,
-                    });
-                    oauth2Client.setCredentials(tokens.credentials);
-                }
-                
-                const drive = google.drive({ version: 'v3', auth: oauth2Client });
-                
-                if (GOOGLE_DRIVE_FOLDER_IDS && GOOGLE_DRIVE_FOLDER_IDS.trim()) {
-                    const fileMetadata = await drive.files.get({
-                        fileId: fileId,
-                        fields: 'parents'
-                    });
-                    
-                    const allowedFolderIds = GOOGLE_DRIVE_FOLDER_IDS.split(',').map(id => id.trim());
-                    const fileParents = fileMetadata.data.parents || [];
-                    
-                    const isInAllowedFolder = fileParents.some(parent => 
-                        allowedFolderIds.includes(parent)
-                    );
-                    
-                    if (!isInAllowedFolder) {
-                        return Response.json({ error: 'Access denied: File is not in allowed folders' }, { status: 403 });
-                    }
-                }
-                
-                const res = await drive.files.get({ 
-                    fileId: fileId, 
-                    alt: 'media'
-                }, { responseType: 'stream' });
-
-                let fileContent = '';
-                for await (const chunk of res.data) {
-                    fileContent += new TextDecoder().decode(chunk);
-                }
-
-                return new Response(fileContent, {
-                    headers: { 'Content-Type': 'text/plain' }
-                });
+            const res = await drive.files.list({
+                pageSize: 100,
+                q: query,
+                fields: 'nextPageToken, files(id, name, mimeType, modifiedTime, webViewLink, parents)',
+            });
+            return Response.json(res.data.files || []);
+        }
+        
+        if (action === 'getFileContent') {
+            const fileId = url.searchParams.get('fileId');
+            if (!fileId) {
+                return Response.json({ error: 'File ID missing' }, { status: 400 });
             }
 
-            default:
-                return Response.json({ 
-                    error: 'Invalid action', 
-                    availableActions: ['authorize', 'listFolders', 'listFiles', 'getFileContent']
-                }, { status: 400 });
+            if (!user.google_drive_access_token) {
+                return Response.json({ error: 'Google Drive not authorized. Please authorize first.' }, { status: 403 });
+            }
+
+            oauth2Client.setCredentials({
+                access_token: user.google_drive_access_token,
+                refresh_token: user.google_drive_refresh_token,
+                expiry_date: user.google_drive_token_expiry,
+            });
+
+            const tokens = await oauth2Client.refreshAccessToken();
+            if (tokens.credentials.access_token !== user.google_drive_access_token) {
+                await base44.auth.updateMe({
+                    google_drive_access_token: tokens.credentials.access_token,
+                    google_drive_refresh_token: tokens.credentials.refresh_token || user.google_drive_refresh_token,
+                    google_drive_token_expiry: tokens.credentials.expiry_date,
+                });
+                oauth2Client.setCredentials(tokens.credentials);
+            }
+            
+            const drive = google.drive({ version: 'v3', auth: oauth2Client });
+            
+            if (GOOGLE_DRIVE_FOLDER_IDS && GOOGLE_DRIVE_FOLDER_IDS.trim()) {
+                const fileMetadata = await drive.files.get({
+                    fileId: fileId,
+                    fields: 'parents'
+                });
+                
+                const allowedFolderIds = GOOGLE_DRIVE_FOLDER_IDS.split(',').map(id => id.trim());
+                const fileParents = fileMetadata.data.parents || [];
+                
+                const isInAllowedFolder = fileParents.some(parent => 
+                    allowedFolderIds.includes(parent)
+                );
+                
+                if (!isInAllowedFolder) {
+                    return Response.json({ error: 'Access denied: File is not in allowed folders' }, { status: 403 });
+                }
+            }
+            
+            const res = await drive.files.get({ 
+                fileId: fileId, 
+                alt: 'media'
+            }, { responseType: 'stream' });
+
+            let fileContent = '';
+            for await (const chunk of res.data) {
+                fileContent += new TextDecoder().decode(chunk);
+            }
+
+            return new Response(fileContent, {
+                headers: { 'Content-Type': 'text/plain' }
+            });
         }
+
+        return Response.json({ 
+            error: 'Invalid action', 
+            availableActions: ['authorize', 'listFolders', 'listFiles', 'getFileContent']
+        }, { status: 400 });
+
     } catch (error) {
         console.error("Google Drive function error:", error);
         return Response.json({ 
@@ -208,7 +201,3 @@ Deno.serve(async (req) => {
         }, { status: 500 });
     }
 });
-
-function createPageUrl(pageName) {
-    return `/apps/${Deno.env.get('BASE44_APP_ID')}/preview/pages/${pageName}`;
-}
