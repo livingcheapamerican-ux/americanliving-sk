@@ -10,6 +10,7 @@ import KonfiguratorProstoHouse from './pages/KonfiguratorProstoHouse';
 import KonfiguratorTicabhouse from './pages/KonfiguratorTicabhouse';
 import AdminGeneratorObrazkov from './pages/AdminGeneratorObrazkov';
 import AdminMigraciaObrazkov from './pages/AdminMigraciaObrazkov';
+import AdminGoogleDrive from './pages/AdminGoogleDrive';
 import Layout from './Layout.jsx';
 
 
@@ -26,6 +27,7 @@ export const PAGES = {
     "KonfiguratorTicabhouse": KonfiguratorTicabhouse,
     "AdminGeneratorObrazkov": AdminGeneratorObrazkov,
     "AdminMigraciaObrazkov": AdminMigraciaObrazkov,
+    "AdminGoogleDrive": AdminGoogleDrive,
 }
 
 export const pagesConfig = {
