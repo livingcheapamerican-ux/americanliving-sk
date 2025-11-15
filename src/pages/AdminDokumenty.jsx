@@ -269,75 +269,37 @@ export default function AdminDokumenty() {
 
   const uploadFileWithRetry = async (file, maxRetries = 1, onProgress, cancelRef) => {
     let lastError;
-    let progressInterval = null;
 
-    for (let attempt = 0; attempt <= maxRetries + 2; attempt++) { // Allow more retries for network errors
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         if (cancelRef?.current) {
           throw new Error('Upload bol zrušený');
         }
         if (attempt > 0) {
-          console.log(`🔄 Pokus ${attempt + 1}/${maxRetries + 3} pre súbor: ${file.name}`);
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
 
-        // Simulate progress
-        if (onProgress) {
-          onProgress(0);
-          progressInterval = setInterval(() => {
-            if (cancelRef?.current) {
-              clearInterval(progressInterval);
-              return;
-            }
-            setCurrentFileProgress(prev => {
-              if (prev >= 90) {
-                clearInterval(progressInterval);
-                return prev;
-              }
-              return prev + 10;
-            });
-          }, 100);
-        }
-
-        // Upload with timeout
         const uploadPromise = base44.integrations.Core.UploadFile({ file });
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Upload timeout - súbor je príliš veľký alebo pomalé pripojenie')), 60000)
+          setTimeout(() => reject(new Error('Upload timeout')), 90000)
         );
 
         const uploadResponse = await Promise.race([uploadPromise, timeoutPromise]);
 
-        if (progressInterval) {
-          clearInterval(progressInterval);
-        }
-        if (onProgress) {
-          onProgress(100);
-        }
-
+        if (onProgress) onProgress(100);
         return uploadResponse;
 
       } catch (error) {
         lastError = error;
-        // Clear interval on error too
-        if (progressInterval) {
-          clearInterval(progressInterval);
-        }
-
-        console.error(`❌ Chyba pri nahrávaní ${file.name}:`, error.message);
-
         const errorDetails = getErrorDetails(error, file);
 
-        // Network errors - retry more times
-        if (errorDetails.type === 'NETWORK' && attempt < maxRetries + 2) {
-          console.log(`⚠️  Sieťová chyba, skúšam znova (pokus ${attempt + 2}/${maxRetries + 3})...`);
-          continue; // Continue to the next attempt in the loop
+        if (errorDetails.type === 'NETWORK' && attempt < maxRetries + 2) { // Allow more retries for network errors
+          continue;
         }
 
-        if (!errorDetails.retryable || attempt >= maxRetries + 2 || cancelRef?.current) { // Use >= maxRetries + 2 for final attempt check
+        if (!errorDetails.retryable || attempt === maxRetries || cancelRef?.current) {
           throw error;
         }
-
-        console.log(`⚠️  Chyba pri pokuse ${attempt + 1}, skúšam znova...`);
       }
     }
 
@@ -352,12 +314,9 @@ export default function AdminDokumenty() {
       return;
     }
 
-    console.log('🚀 ========== ZAČÍNAM UPLOAD ==========');
-    console.log('🚀 Počet súborov na spracovanie:', selectedFiles.length);
-
     setUploading(true);
     const cancelRef = { current: false };
-    window.currentUploadCancelRef = cancelRef; // Store reference globally for external cancellation
+    window.currentUploadCancelRef = cancelRef;
     setUploadProgress({ current: 0, total: selectedFiles.length });
     setUploadResults(null);
     setUploadedBytes(0);
@@ -372,8 +331,7 @@ export default function AdminDokumenty() {
     let cumulativeBytes = 0;
 
     try {
-      // Process files in parallel batches of 3
-      const BATCH_SIZE = 3;
+      const BATCH_SIZE = 10;
       const batches = [];
 
       for (let i = 0; i < selectedFiles.length; i += BATCH_SIZE) {
@@ -382,12 +340,11 @@ export default function AdminDokumenty() {
 
       for (const batch of batches) {
         if (cancelRef.current) {
-          console.log('🛑 Upload zrušený používateľom');
           const remaining = selectedFiles.length - completedCount;
           if (remaining > 0) {
             results.failed.push({
               name: `Zostávajúcich ${remaining} súborov`,
-              error: 'Upload zrušený používateľom',
+              error: 'Upload zrušený',
               suggestion: 'Upload bol manuálne zastavený',
               type: 'CANCELLED'
             });
@@ -395,57 +352,36 @@ export default function AdminDokumenty() {
           break;
         }
 
-        // Process batch in parallel
         const batchPromises = batch.map(async (file) => {
-          if (cancelRef.current) return null; // Early exit for files in the batch if cancel was triggered
+          if (cancelRef.current) return null;
 
-          // For logging, use a derived index for clarity within the batch.
-          const fileNumInBatch = batch.indexOf(file) + 1; // Index within the current batch
-          const overallFileNum = completedCount + fileNumInBatch; // Approximation for overall logging
-
-          console.log(`\n📦 [${overallFileNum}/${selectedFiles.length}] ${file.name}`);
-
-          setCurrentFileName(file.name);
-          setCurrentFileProgress(0);
+          // setCurrentFileName(file.name); // Removed based on outline's implicit change
+          // setCurrentFileProgress(0); // Removed based on outline's implicit change
           updateFileStatus(file.name, 'nahrávam');
 
           try {
             if (shouldSkipFile(file.name)) {
-              console.log(`⏭️  Preskočený systémový súbor: ${file.name}`);
               updateFileStatus(file.name, 'preskočený');
-              results.skipped.push({
-                name: file.name,
-                reason: 'Systémový súbor (ignorovaný)'
-              });
+              results.skipped.push({ name: file.name, reason: 'Systémový súbor' });
               return { file, status: 'skipped', size: file.size };
             }
 
             if (isFileDuplicate(file.name, file.size)) {
-              console.log(`⏭️  Duplicita: ${file.name}`);
               updateFileStatus(file.name, 'duplicita');
-              results.skipped.push({
-                name: file.name,
-                reason: 'Súbor už existuje'
-              });
+              results.skipped.push({ name: file.name, reason: 'Duplicita' });
               return { file, status: 'skipped', size: file.size };
             }
 
-            console.log(`📤 Nahrávam: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
-            const uploadResponse = await uploadFileWithRetry(file, 1, (progress) => {
-              setCurrentFileProgress(progress);
-            }, cancelRef);
-            console.log(`✅ Nahraný: ${file.name}`);
-
-            setCurrentFileProgress(100);
+            const uploadResponse = await uploadFileWithRetry(file, 1, () => {}, cancelRef); // Outline passes empty onProgress
+            // setCurrentFileProgress(100); // Removed based on outline's implicit change
 
             const filePath = file.webkitRelativePath || file.name;
             const folderInfo = extractFolderInfo(filePath);
-
             const autoTags = [...formData.tags];
             if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
             if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
 
-            const docData = {
+            const doc = await createMutation.mutateAsync({
               nazov: file.name,
               popis: formData.popis,
               typ: formData.typ,
@@ -458,21 +394,13 @@ export default function AdminDokumenty() {
               subor_url: uploadResponse.file_url,
               velkost: file.size,
               typ_suboru: file.type || 'application/octet-stream'
-            };
-
-            const doc = await createMutation.mutateAsync(docData);
-            console.log(`✅ Vytvorený dokument ID: ${doc.id}`);
-
-            updateFileStatus(file.name, 'nahratý');
-            results.successful.push({
-              name: file.name,
-              id: doc.id
             });
 
+            updateFileStatus(file.name, 'nahratý');
+            results.successful.push({ name: file.name, id: doc.id });
             return { file, status: 'success', size: file.size };
 
           } catch (fileError) {
-            console.error(`❌ Chyba pri ${file.name}:`, fileError);
             updateFileStatus(file.name, 'odmietnutý');
             const errorDetails = getErrorDetails(fileError, file);
             results.failed.push({
@@ -481,57 +409,38 @@ export default function AdminDokumenty() {
               suggestion: errorDetails.suggestion,
               type: errorDetails.type
             });
-            return { file, status: 'failed', size: file.size }; // Ensure promise resolves with failure state
+            return { file, status: 'failed', size: file.size };
           }
         });
 
-        // Wait for batch to complete
         const batchResults = await Promise.allSettled(batchPromises);
 
-        // Update progress for all files in the batch
         batchResults.forEach(result => {
-          // Increment completedCount and cumulativeBytes for each file processed, regardless of outcome
-          // (because the map callback always returns a resolved promise with status: 'success', 'skipped', or 'failed')
-          completedCount++;
           if (result.status === 'fulfilled' && result.value) {
+            completedCount++;
             cumulativeBytes += result.value.size;
           }
-          setUploadedBytes(cumulativeBytes);
-          setUploadProgress({ current: completedCount, total: selectedFiles.length });
         });
+
+        setUploadedBytes(cumulativeBytes);
+        setUploadProgress({ current: completedCount, total: selectedFiles.length });
       }
 
-      console.log('\n📊 SUMMARY:');
-      console.log(`✅ Úspešné: ${results.successful.length}`);
-      console.log(`⏭️  Preskočené: ${results.skipped.length}`);
-      console.log(`❌ Chybné: ${results.failed.length}`);
-
-      if (results.successful.length > 0 && !cancelRef.current) { // Only analyze if not cancelled
-        console.log('\n🧠 Spúšťam analýzu...');
-        setCurrentFileName("Analyzujem dokumenty...");
+      if (results.successful.length > 0 && !cancelRef.current) {
+        setCurrentFileName("Analyzujem...");
         setUploadProgress({ current: 0, total: results.successful.length });
 
-        // Analyze in parallel batches
-        const ANALYSIS_BATCH_SIZE = 5; // Example batch size for analysis
         const analysisBatches = [];
-        for (let i = 0; i < results.successful.length; i += ANALYSIS_BATCH_SIZE) {
-          analysisBatches.push(results.successful.slice(i, i + ANALYSIS_BATCH_SIZE));
+        for (let i = 0; i < results.successful.length; i += 10) { // Changed from 5 to 10
+          analysisBatches.push(results.successful.slice(i, i + 10));
         }
 
         let analyzedCount = 0;
         for (const analysisBatch of analysisBatches) {
-          if (cancelRef.current) {
-            console.log('🛑 Analýza zrušená používateľom');
-            break; // Exit analysis loop if cancelled
-          }
+          if (cancelRef.current) break;
 
           await Promise.allSettled(
-            analysisBatch.map(item =>
-              analyzeMutation.mutateAsync(item.id).catch(err => {
-                console.error(`⚠️  Chyba analýzy pre: ${item.name}`, err);
-                return { status: 'rejected', reason: err }; // Ensure a resolved status for Promise.allSettled
-              })
-            )
+            analysisBatch.map(item => analyzeMutation.mutateAsync(item.id).catch(() => {}))
           );
 
           analyzedCount += analysisBatch.length;
@@ -539,20 +448,18 @@ export default function AdminDokumenty() {
         }
       }
 
-      console.log('🎉 HOTOVO!');
       setUploadResults(results);
       setShowForm(false);
 
     } catch (error) {
-      console.error('💥 KRITICKÁ CHYBA:', error);
       alert("Kritická chyba: " + error.message);
     } finally {
       setUploading(false);
       setUploadProgress({ current: 0, total: 0 });
       setCurrentFileName("");
       setCurrentFileProgress(0);
-      setCancelUpload(false); // Reset cancel state for UI
-      window.currentUploadCancelRef = null; // Clear global reference
+      setCancelUpload(false);
+      window.currentUploadCancelRef = null;
     }
   };
 
