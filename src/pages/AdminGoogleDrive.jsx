@@ -11,7 +11,6 @@ import { motion } from "framer-motion";
 export default function AdminGoogleDrive() {
   const [selectedFolders, setSelectedFolders] = useState([]);
   const [saved, setSaved] = useState(false);
-  const [authWindow, setAuthWindow] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -28,43 +27,36 @@ export default function AdminGoogleDrive() {
     enabled: false,
   });
 
-  // Počúvame na postMessage z OAuth okna
+  // Po návrate z OAuth uložíme tokeny
   useEffect(() => {
-    const handleMessage = async (event) => {
-      if (event.data.type === 'GOOGLE_DRIVE_AUTH' && event.data.tokens) {
-        const tokens = event.data.tokens;
-        
-        // Uložíme tokeny cez API
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('save_tokens') === '1') {
+      const tokensStr = localStorage.getItem('google_drive_tokens');
+      if (tokensStr) {
         try {
-          await base44.functions.invoke('googleDrive', {
+          const tokens = JSON.parse(tokensStr);
+          base44.functions.invoke('googleDrive', {
             action: 'saveTokens',
             access_token: tokens.access_token,
             refresh_token: tokens.refresh_token,
             expiry_date: tokens.expiry_date,
+          }).then(() => {
+            localStorage.removeItem('google_drive_tokens');
+            queryClient.invalidateQueries({ queryKey: ['current-user'] });
+            window.history.replaceState({}, '', window.location.pathname);
           });
-          
-          // Refresh user data
-          queryClient.invalidateQueries({ queryKey: ['current-user'] });
-          
-          if (authWindow) {
-            authWindow.close();
-            setAuthWindow(null);
-          }
         } catch (error) {
           console.error('Error saving tokens:', error);
         }
       }
-    };
+    }
+  }, [queryClient]);
 
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [authWindow, queryClient]);
-
-  const handleAuthorize = async () => {
-    // Otvoríme popup okno pre OAuth
-    const functionUrl = `${window.location.origin}${window.location.pathname.split('/preview')[0]}/functions/googleDrive?action=authorize`;
-    const popup = window.open(functionUrl, 'Google Drive Authorization', 'width=600,height=700');
-    setAuthWindow(popup);
+  const handleAuthorize = () => {
+    const functionUrl = window.location.pathname.includes('/preview/') 
+      ? window.location.pathname.split('/preview/')[0] + '/functions/googleDrive?action=authorize'
+      : '/functions/googleDrive?action=authorize';
+    window.location.href = functionUrl;
   };
 
   const handleLoadFolders = () => {
