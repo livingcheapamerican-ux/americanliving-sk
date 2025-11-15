@@ -88,6 +88,7 @@ export default function AdminDokumenty() {
     setUploadProgress({ current: 0, total: 0 });
     setUploadMode("files");
     setCurrentFileName("");
+    setUploading(false); // Added: Ensure uploading state is reset
   };
 
   // Filter out system files
@@ -599,7 +600,15 @@ export default function AdminDokumenty() {
               >
                 <Folder className="w-4 h-4" />
               </Button>
-              <Button onClick={() => { setShowForm(!showForm); setUploadResults(null); }} className="bg-primary">
+              <Button onClick={() => { 
+                setShowForm(!showForm); 
+                setUploadResults(null);
+                if (!showForm) { // If the form is about to be opened
+                  setUploading(false);
+                  setUploadProgress({ current: 0, total: 0 });
+                  setCurrentFileName("");
+                }
+              }} className="bg-primary">
                 <Upload className="w-4 h-4 mr-2" />
                 Nahrať dokumenty
               </Button>
