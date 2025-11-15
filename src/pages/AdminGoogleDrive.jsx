@@ -29,7 +29,8 @@ export default function AdminGoogleDrive() {
   });
 
   const handleAuthorize = async () => {
-    window.location.href = '/functions/googleDrive?action=authorize';
+    const appId = window.location.pathname.split('/')[2];
+    window.location.href = `/api/apps/${appId}/functions/googleDrive?action=authorize`;
   };
 
   const handleLoadFolders = () => {
@@ -45,8 +46,6 @@ export default function AdminGoogleDrive() {
   };
 
   const handleSave = async () => {
-    // Tu by sa mali poslať vybrané folder IDs do environment variables
-    // Momentálne to zobrazíme užívateľovi ako inštrukciu
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };
