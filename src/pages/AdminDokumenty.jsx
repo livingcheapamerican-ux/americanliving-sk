@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -12,9 +13,10 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Upload, FileText, Trash2, Download, Search, 
-  AlertCircle, CheckCircle, Loader2, X, Building2, FolderOpen, Brain, Eye, Home
+  AlertCircle, CheckCircle, Loader2, X, Building2, FolderOpen, Brain, Eye, Home, List, Folder
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import DokumentyTreeView from "../components/DokumentyTreeView";
 
 export default function AdminDokumenty() {
   const [showForm, setShowForm] = useState(false);
@@ -23,6 +25,7 @@ export default function AdminDokumenty() {
   const [selectedVyrobca, setSelectedVyrobca] = useState("all");
   const [uploadMode, setUploadMode] = useState("files");
   const [viewingDocument, setViewingDocument] = useState(null);
+  const [viewMode, setViewMode] = useState("list"); // "list" or "tree"
   const [formData, setFormData] = useState({
     popis: "",
     typ: "iné",
@@ -303,10 +306,28 @@ export default function AdminDokumenty() {
                 className="pl-10"
               />
             </div>
-            <Button onClick={() => setShowForm(!showForm)} className="bg-primary">
-              <Upload className="w-4 h-4 mr-2" />
-              Nahrať dokumenty
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant={viewMode === "list" ? "default" : "outline"}
+                onClick={() => setViewMode("list")}
+                size="icon"
+                title="Zoznam"
+              >
+                <List className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={viewMode === "tree" ? "default" : "outline"}
+                onClick={() => setViewMode("tree")}
+                size="icon"
+                title="Stromová štruktúra"
+              >
+                <Folder className="w-4 h-4" />
+              </Button>
+              <Button onClick={() => setShowForm(!showForm)} className="bg-primary">
+                <Upload className="w-4 h-4 mr-2" />
+                Nahrať dokumenty
+              </Button>
+            </div>
           </div>
 
           <AnimatePresence>
@@ -550,24 +571,31 @@ export default function AdminDokumenty() {
             )}
           </AnimatePresence>
 
-          <Tabs value={selectedVyrobca} onValueChange={setSelectedVyrobca} className="mb-6">
-            <TabsList className="grid grid-cols-3 lg:grid-cols-6 w-full">
-              <TabsTrigger value="all">
-                Všetky ({dokumenty.length})
-              </TabsTrigger>
-              {vyrobcovia.map(v => (
-                <TabsTrigger key={v} value={v}>
-                  {v.split(' ')[0]} ({getVyrobcaCount(v)})
+          {viewMode === "list" && (
+            <Tabs value={selectedVyrobca} onValueChange={setSelectedVyrobca} className="mb-6">
+              <TabsList className="grid grid-cols-3 lg:grid-cols-6 w-full">
+                <TabsTrigger value="all">
+                  Všetky ({dokumenty.length})
                 </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
+                {vyrobcovia.map(v => (
+                  <TabsTrigger key={v} value={v}>
+                    {v.split(' ')[0]} ({getVyrobcaCount(v)})
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          )}
 
           {isLoading ? (
             <div className="text-center py-12">
               <Loader2 className="w-12 h-12 animate-spin mx-auto text-primary mb-4" />
               <p className="text-gray-600">Načítavam dokumenty...</p>
             </div>
+          ) : viewMode === "tree" ? (
+            <DokumentyTreeView 
+              dokumenty={filteredDokumenty}
+              onViewDocument={setViewingDocument}
+            />
           ) : filteredDokumenty.length === 0 ? (
             <Card className="p-12 text-center">
               <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
