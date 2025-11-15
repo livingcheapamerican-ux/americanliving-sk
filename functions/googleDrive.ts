@@ -210,6 +210,58 @@ Deno.serve(async (req) => {
             return Response.json(res.data.files || []);
         }
 
+        // SEARCH FILES
+        if (action === 'searchFiles') {
+            const searchQuery = url.searchParams.get('q');
+            if (!searchQuery || searchQuery.trim() === '') {
+                return Response.json({ error: 'Search query missing' }, { status: 400 });
+            }
+
+            if (!user.google_drive_access_token) {
+                return Response.json({ error: 'Not authorized' }, { status: 403 });
+            }
+
+            oauth2Client.setCredentials({
+                access_token: user.google_drive_access_token,
+                refresh_token: user.google_drive_refresh_token,
+                expiry_date: user.google_drive_token_expiry,
+            });
+
+            try {
+                const { credentials } = await oauth2Client.refreshAccessToken();
+                if (credentials.access_token !== user.google_drive_access_token) {
+                    await base44.auth.updateMe({
+                        google_drive_access_token: credentials.access_token,
+                        google_drive_refresh_token: credentials.refresh_token || user.google_drive_refresh_token,
+                        google_drive_token_expiry: credentials.expiry_date,
+                    });
+                    oauth2Client.setCredentials(credentials);
+                }
+            } catch (error) {
+                console.error('[GoogleDrive] Token refresh failed:', error);
+            }
+
+            const drive = google.drive({ version: 'v3', auth: oauth2Client });
+            
+            let query = `name contains '${searchQuery.replace(/'/g, "\\'")}' and trashed=false`;
+            
+            if (GOOGLE_DRIVE_FOLDER_IDS && GOOGLE_DRIVE_FOLDER_IDS.trim()) {
+                const folderIds = GOOGLE_DRIVE_FOLDER_IDS.split(',').map(id => id.trim());
+                const folderQueries = folderIds.map(id => `'${id}' in parents`).join(' or ');
+                query += ` and (${folderQueries})`;
+            }
+            
+            const res = await drive.files.list({
+                pageSize: 50,
+                q: query,
+                fields: 'files(id, name, mimeType, modifiedTime, webViewLink, size)',
+                orderBy: 'name'
+            });
+            
+            console.log('[GoogleDrive] Search results:', res.data.files?.length || 0);
+            return Response.json(res.data.files || []);
+        }
+
         // LIST FILES
         if (action === 'listFiles') {
             if (!user.google_drive_access_token) {
@@ -322,7 +374,7 @@ Deno.serve(async (req) => {
 
         return Response.json({ 
             error: 'Invalid action',
-            available: ['authorize', 'callback', 'saveTokens', 'listFolders', 'listFiles', 'getFileContent']
+            available: ['authorize', 'callback', 'saveTokens', 'listFolders', 'searchFiles', 'listFiles', 'getFileContent']
         }, { status: 400 });
 
     } catch (error) {
