@@ -116,7 +116,8 @@ export default function DetailDomu() {
     : [dom.hlavny_obrazok];
 
   const isProstoHouse = dom.vyrobca === "Prosto House";
-  const isTicabhouse = dom.vyrobca === "Ticab house" || dom.vyrobca === "JAK Modules" || dom.vyrobca === "Domki z Gór";
+  const isTicabhouse = dom.vyrobca === "Ticab house";
+  const isJAKModules = dom.vyrobca === "JAK Modules";
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -215,23 +216,27 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Price Calculator */}
-            {isTicabhouse ? (
-              <PriceCalculatorTicabhouse 
-                dom={dom} 
-                onPriceChange={(price) => {
-                  setCalculatedPrice(price);
-                  setShowCalculator(price !== (dom.zakladna_cena || 0));
-                }}
-              />
-            ) : (
-              <PriceCalculator 
-                dom={dom} 
-                onPriceChange={(price) => {
-                  setCalculatedPrice(price);
-                  setShowCalculator(price !== (dom.zakladna_cena || 0));
-                }}
-              />
+            {/* Price Calculator - len pre Ticab house a Prosto House */}
+            {!isJAKModules && (
+              <>
+                {isTicabhouse ? (
+                  <PriceCalculatorTicabhouse 
+                    dom={dom} 
+                    onPriceChange={(price) => {
+                      setCalculatedPrice(price);
+                      setShowCalculator(price !== (dom.zakladna_cena || 0));
+                    }}
+                  />
+                ) : isProstoHouse ? (
+                  <PriceCalculator 
+                    dom={dom} 
+                    onPriceChange={(price) => {
+                      setCalculatedPrice(price);
+                      setShowCalculator(price !== (dom.zakladna_cena || 0));
+                    }}
+                  />
+                ) : null}
+              </>
             )}
           </motion.div>
 
@@ -276,6 +281,12 @@ export default function DetailDomu() {
                   <p className="text-sm text-blue-700">
                     Základná cena zahŕňa kompletnú štandardnú výbavu pre <strong>rekreačnú stavbu</strong>. 
                     Možnosť upgradu na <strong>Rodinný dom s certifikátom A0</strong> v konfigurátore.
+                  </p>
+                </div>
+              ) : isJAKModules ? (
+                <div className="mt-3 bg-green-50 border border-green-200 rounded-lg p-3">
+                  <p className="text-sm text-green-800">
+                    <strong>Modulárny dom z drewna klejonego GL24</strong> – spojenie elegancie, pohodlia a inovácií.
                   </p>
                 </div>
               ) : (
@@ -408,6 +419,39 @@ export default function DetailDomu() {
               </Card>
             )}
 
+            {/* Štandardná výbava pre JAK Modules */}
+            {isJAKModules && (
+              <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
+                <h3 className="text-lg font-bold text-primary mb-4">✔ Hlavné vlastnosti</h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Konštrukcia z lepeného dreva GL24h – niezrównaná wytrzymałość a stabilita</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Doskonalá izolačná schopnosť U ≤ 0,16 W/(m²·K)</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Ekologické materiály - steny z platní Fermacell®, izolácia Steico®</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Rychlý čas realizácie - produkcia 60 dní, montáž 2 dni</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Kompletná dokumentácia na ohlásenie v cene</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Moderná a funkčná architektúra odolná voči extrémnym podmienkam</span>
+                  </div>
+                </div>
+              </Card>
+            )}
+
             {/* Špecifikácia */}
             {dom.specifikacia && (
               <Card className="p-6">
@@ -419,23 +463,25 @@ export default function DetailDomu() {
             )}
 
             {/* Čo obsahuje cena */}
-            <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
-              <h3 className="text-lg font-bold text-primary mb-4">✔ Možnosti využitia:</h3>
-              <ul className="space-y-2">
-                <li className="flex items-start gap-2 text-sm">
-                  <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                  <span>Rodinný dom s možnosťou kolaudácie</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm">
-                  <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                  <span>Možnosť energetického certifikátu A0</span>
-                </li>
-                <li className="flex items-start gap-2 text-sm">
-                  <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                  <span>Rekreačná budova (chata/záhradný domček)</span>
-                </li>
-              </ul>
-            </Card>
+            {!isJAKModules && (
+              <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
+                <h3 className="text-lg font-bold text-primary mb-4">✔ Možnosti využitia:</h3>
+                <ul className="space-y-2">
+                  <li className="flex items-start gap-2 text-sm">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Rodinný dom s možnosťou kolaudácie</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Možnosť energetického certifikátu A0</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Rekreačná budova (chata/záhradný domček)</span>
+                  </li>
+                </ul>
+              </Card>
+            )}
 
             {/* CTA Buttons */}
             <div className="space-y-3 sticky top-24">
@@ -453,14 +499,7 @@ export default function DetailDomu() {
                     Spustiť konfigurátor {dom.vyrobca}
                   </Button>
                 </Link>
-              ) : (
-                <Link to={`${createPageUrl("Konfigurator")}?id=${dom.id}`}>
-                  <Button size="lg" className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold text-lg py-6">
-                    <Settings className="mr-2 w-5 h-5" />
-                    Spustiť konfigurátor
-                  </Button>
-                </Link>
-              )}
+              ) : null}
               <Link to={createPageUrl("Kontakt")}>
                 <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-lg py-6">
                   <Mail className="mr-2 w-5 h-5" />
@@ -478,8 +517,8 @@ export default function DetailDomu() {
         </div>
       </div>
 
-      {/* Floating Price Display */}
-      <FloatingPrice price={calculatedPrice} isVisible={showCalculator} />
+      {/* Floating Price Display - len ak nie je JAK Modules */}
+      {!isJAKModules && <FloatingPrice price={calculatedPrice} isVisible={showCalculator} />}
     </div>
   );
 }
