@@ -223,8 +223,8 @@ export default function AdminDokumenty() {
     if (errorMsg.includes('network') || errorMsg.includes('fetch') || errorMsg.includes('timeout')) {
       return {
         type: 'NETWORK',
-        message: 'Problém s pripojením k internetu',
-        suggestion: 'Skontrolujte pripojenie a skúste znova',
+        message: 'Problém s pripojením k internetu alebo vypršal čas nahrávania',
+        suggestion: 'Skontrolujte pripojenie a skúste znova. Ak je súbor veľký, skúste ho rozdeliť alebo uploadovať jednotlivo.',
         retryable: true
       };
     }
@@ -289,7 +289,13 @@ export default function AdminDokumenty() {
           }, 100);
         }
 
-        const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+        // Upload with timeout
+        const uploadPromise = base44.integrations.Core.UploadFile({ file });
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Upload timeout - súbor je príliš veľký alebo pomalé pripojenie')), 60000)
+        );
+
+        const uploadResponse = await Promise.race([uploadPromise, timeoutPromise]);
 
         if (progressInterval) {
           clearInterval(progressInterval);
@@ -306,6 +312,9 @@ export default function AdminDokumenty() {
         if (progressInterval) {
           clearInterval(progressInterval);
         }
+        
+        console.error(`❌ Chyba pri nahrávaní ${file.name}:`, error.message);
+        
         const errorDetails = getErrorDetails(error, file);
 
         if (!errorDetails.retryable || attempt === maxRetries) {
