@@ -86,7 +86,7 @@ export default function AdminDokumenty() {
     setTagInput("");
     setUploadProgress({ current: 0, total: 0 });
     setUploadMode("files");
-    setUploadResults(null); // Reset upload results as well
+    // setUploadResults(null); // Removed this line as per the outline's implication
   };
 
   const extractFolderInfo = (filePath) => {
@@ -156,6 +156,8 @@ export default function AdminDokumenty() {
       return;
     }
 
+    console.log('🚀 Začínam upload, počet súborov:', selectedFiles.length);
+    
     setUploading(true);
     setUploadProgress({ current: 0, total: selectedFiles.length });
     setUploadResults(null); // Clear previous results
@@ -167,15 +169,16 @@ export default function AdminDokumenty() {
     };
     
     try {
-      const uploadedDocIds = [];
-      
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
         setUploadProgress({ current: i + 1, total: selectedFiles.length });
         
+        console.log(`📁 Spracúvam súbor ${i + 1}/${selectedFiles.length}:`, file.name);
+        
         try {
           // Kontrola duplicity
           if (isFileDuplicate(file.name, file.size)) {
+            console.log('⏭️  Preskakujem duplicitný súbor:', file.name);
             results.skipped.push({
               name: file.name,
               reason: 'Súbor už existuje (rovnaký názov a veľkosť)'
@@ -183,18 +186,20 @@ export default function AdminDokumenty() {
             continue; // Skip to next file
           }
 
-          // Upload súboru
-          const { file_url } = await base44.integrations.Core.UploadFile({ file });
+          console.log('📤 Nahrávam súbor do storage...');
+          const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+          console.log('✅ Súbor nahraný, URL:', uploadResponse.file_url);
           
           // Extract folder information from file path
           const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
+          console.log('📂 Folder info:', folderInfo);
           
           // Add folder info to tags if available
           const autoTags = [...formData.tags];
           if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
           if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
           
-          const doc = await createMutation.mutateAsync({
+          const docData = {
             nazov: file.name,
             popis: formData.popis,
             typ: formData.typ,
@@ -204,19 +209,22 @@ export default function AdminDokumenty() {
             model_domu: folderInfo.model_domu,
             podpriecinok: folderInfo.podpriecinok,
             cesta_priecinku: folderInfo.cesta_priecinku,
-            subor_url: file_url,
+            subor_url: uploadResponse.file_url,
             velkost: file.size,
             typ_suboru: file.type || 'application/octet-stream' // Fallback for unknown file types
-          });
+          };
+
+          console.log('💾 Vytváram záznam v databáze...', docData);
+          const doc = await createMutation.mutateAsync(docData);
+          console.log('✅ Dokument vytvorený, ID:', doc.id);
           
           results.successful.push({
             name: file.name,
             id: doc.id
           });
-          uploadedDocIds.push(doc.id);
 
         } catch (fileError) {
-          console.error(`Error processing file ${file.name}:`, fileError);
+          console.error(`❌ Chyba pri spracovaní súboru ${file.name}:`, fileError);
           results.failed.push({
             name: file.name,
             error: fileError.message || 'Neznáma chyba pri nahrávaní'
@@ -224,25 +232,32 @@ export default function AdminDokumenty() {
         }
       }
       
+      console.log('📊 Upload dokončený. Úspešné:', results.successful.length, 'Preskočené:', results.skipped.length, 'Chybné:', results.failed.length);
+      
       // Automaticky analyzuj všetky úspešne nahrané dokumenty
-      if (uploadedDocIds.length > 0) {
-        setUploadProgress({ current: 0, total: uploadedDocIds.length });
-        for (let i = 0; i < uploadedDocIds.length; i++) {
-          setUploadProgress({ current: i + 1, total: uploadedDocIds.length });
+      if (results.successful.length > 0) {
+        console.log('🧠 Začínam analýzu', results.successful.length, 'dokumentov...');
+        setUploadProgress({ current: 0, total: results.successful.length }); // Reset progress for analysis phase
+        for (let i = 0; i < results.successful.length; i++) {
+          setUploadProgress({ current: i + 1, total: results.successful.length });
           try {
-            await analyzeMutation.mutateAsync(uploadedDocIds[i]);
+            console.log(`🔍 Analyzujem dokument ${i + 1}/${results.successful.length}, ID:`, results.successful[i].id);
+            await analyzeMutation.mutateAsync(results.successful[i].id);
+            console.log('✅ Analýza dokončená');
           } catch (error) {
-            console.error('Analysis error for doc', uploadedDocIds[i], error);
+            console.error('⚠️  Chyba pri analýze dokumentu', results.successful[i].id, error);
             // Optionally, mark this document as failed analysis or similar
           }
         }
       }
       
+      console.log('🎉 Celý proces dokončený!');
       setUploadResults(results); // Set final upload results
       setShowForm(false);
       resetForm(); // Reset form fields but not upload results right away
     } catch (error) {
-      alert("Kritická chyba pri spracovaní nahrávania: " + error.message);
+      console.error('💥 Kritická chyba:', error);
+      alert("Kritická chyba pri spracovaní: " + error.message);
       results.failed.push({ name: "Global error", error: error.message });
       setUploadResults(results);
     } finally {
