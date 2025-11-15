@@ -11,7 +11,8 @@ Deno.serve(async (req) => {
         const url = new URL(req.url);
         const action = url.searchParams.get('action') || 'listFiles';
         
-        const callbackUrl = `${url.origin}/functions/googleDrive?action=oauthCallback`;
+        // Callback URL musí byť absolútna URL, ktorá smeruje na túto funkciu
+        const callbackUrl = `${url.protocol}//${url.host}${url.pathname}?action=oauthCallback`;
 
         const oauth2Client = new OAuth2Client(
             GOOGLE_CLIENT_ID,
@@ -19,24 +20,59 @@ Deno.serve(async (req) => {
             callbackUrl
         );
 
+        // OAuth callback - táto vetva sa volá po návrate z Google
         if (action === 'oauthCallback') {
             const code = url.searchParams.get('code');
             if (!code) {
                 return Response.json({ error: 'Authorization code missing' }, { status: 400 });
             }
 
-            const base44 = createClientFromRequest(req);
-            const { tokens } = await oauth2Client.getToken(code);
-            
-            await base44.auth.updateMe({
-                google_drive_access_token: tokens.access_token,
-                google_drive_refresh_token: tokens.refresh_token,
-                google_drive_token_expiry: tokens.expiry_date,
-            });
-            
-            return Response.redirect(url.origin, 302);
+            try {
+                const { tokens } = await oauth2Client.getToken(code);
+                
+                // Tu nemôžeme použiť base44 auth, pretože user ešte nie je prihlásený v tomto requeste
+                // Musíme získať session token z URL alebo cookies
+                const sessionToken = url.searchParams.get('state') || req.headers.get('cookie')?.match(/session=([^;]+)/)?.[1];
+                
+                if (!sessionToken) {
+                    return new Response(`
+                        <html>
+                            <body>
+                                <script>
+                                    // Pošleme tokeny cez postMessage na otvárajúce okno
+                                    if (window.opener) {
+                                        window.opener.postMessage({
+                                            type: 'GOOGLE_DRIVE_AUTH',
+                                            tokens: ${JSON.stringify(tokens)}
+                                        }, '*');
+                                        window.close();
+                                    } else {
+                                        window.location.href = '/?google_drive_tokens=' + encodeURIComponent(JSON.stringify(${JSON.stringify(tokens)}));
+                                    }
+                                </script>
+                            </body>
+                        </html>
+                    `, {
+                        headers: { 'Content-Type': 'text/html' }
+                    });
+                }
+                
+                // Ak máme session, skúsime uložiť tokeny
+                const base44 = createClientFromRequest(req);
+                await base44.auth.updateMe({
+                    google_drive_access_token: tokens.access_token,
+                    google_drive_refresh_token: tokens.refresh_token,
+                    google_drive_token_expiry: tokens.expiry_date,
+                });
+                
+                return Response.redirect(url.origin, 302);
+            } catch (error) {
+                console.error('OAuth callback error:', error);
+                return Response.json({ error: error.message }, { status: 500 });
+            }
         }
 
+        // Pre všetky ostatné akcie vyžadujeme autentifikáciu
         const base44 = createClientFromRequest(req);
         const user = await base44.auth.me();
         
@@ -55,6 +91,16 @@ Deno.serve(async (req) => {
                 prompt: 'consent',
             });
             return Response.redirect(authorizeUrl, 302);
+        }
+
+        if (action === 'saveTokens') {
+            const body = await req.json();
+            await base44.auth.updateMe({
+                google_drive_access_token: body.access_token,
+                google_drive_refresh_token: body.refresh_token,
+                google_drive_token_expiry: body.expiry_date,
+            });
+            return Response.json({ success: true });
         }
 
         if (action === 'listFolders') {
@@ -190,7 +236,7 @@ Deno.serve(async (req) => {
 
         return Response.json({ 
             error: 'Invalid action', 
-            availableActions: ['authorize', 'listFolders', 'listFiles', 'getFileContent']
+            availableActions: ['authorize', 'saveTokens', 'listFolders', 'listFiles', 'getFileContent']
         }, { status: 400 });
 
     } catch (error) {
