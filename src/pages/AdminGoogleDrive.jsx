@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { FolderOpen, RefreshCw, Save, CheckCircle, Folder, Link as LinkIcon, AlertCircle, Settings } from "lucide-react";
+import { FolderOpen, RefreshCw, CheckCircle, Folder, Link as LinkIcon, AlertCircle, Settings } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function AdminGoogleDrive() {
   const [selectedFolders, setSelectedFolders] = useState([]);
   const [saved, setSaved] = useState(false);
+  const [authWindow, setAuthWindow] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -28,9 +28,43 @@ export default function AdminGoogleDrive() {
     enabled: false,
   });
 
+  // Počúvame na postMessage z OAuth okna
+  useEffect(() => {
+    const handleMessage = async (event) => {
+      if (event.data.type === 'GOOGLE_DRIVE_AUTH' && event.data.tokens) {
+        const tokens = event.data.tokens;
+        
+        // Uložíme tokeny cez API
+        try {
+          await base44.functions.invoke('googleDrive', {
+            action: 'saveTokens',
+            access_token: tokens.access_token,
+            refresh_token: tokens.refresh_token,
+            expiry_date: tokens.expiry_date,
+          });
+          
+          // Refresh user data
+          queryClient.invalidateQueries({ queryKey: ['current-user'] });
+          
+          if (authWindow) {
+            authWindow.close();
+            setAuthWindow(null);
+          }
+        } catch (error) {
+          console.error('Error saving tokens:', error);
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [authWindow, queryClient]);
+
   const handleAuthorize = async () => {
-    const appId = window.location.pathname.split('/')[2];
-    window.location.href = `/api/apps/${appId}/functions/googleDrive?action=authorize`;
+    // Otvoríme popup okno pre OAuth
+    const functionUrl = `${window.location.origin}${window.location.pathname.split('/preview')[0]}/functions/googleDrive?action=authorize`;
+    const popup = window.open(functionUrl, 'Google Drive Authorization', 'width=600,height=700');
+    setAuthWindow(popup);
   };
 
   const handleLoadFolders = () => {
@@ -43,11 +77,6 @@ export default function AdminGoogleDrive() {
         ? prev.filter(id => id !== folderId)
         : [...prev, folderId]
     );
-  };
-
-  const handleSave = async () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
   };
 
   const isAdmin = user?.role === 'admin';
