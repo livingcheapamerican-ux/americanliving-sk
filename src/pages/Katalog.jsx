@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -20,8 +19,8 @@ export default function Katalog() {
   const [typFilter, setTypFilter] = useState("vsetky");
   const [plocharozsah, setPlocharozsah] = useState([18, 200]);
   const [hladanie, setHladanie] = useState("");
-  const [cenoveRozpatie, setCenoveRozpatie] = useState([15000, 150000]);
-  const [pocetIziebRozpatie, setPocetIziebRozpatie] = useState([1, 6]);
+  const [cenoveRozpatie, setCenoveRozpatie] = useState([15000, 200000]);
+  const [pocetIziebRozpatie, setPocetIziebRozpatie] = useState([1, 8]);
   const [zoradenie, setZoradenie] = useState("poradie");
   const [vybraneNaSrovnanie, setVybraneNaSrovnanie] = useState([]);
 
@@ -186,7 +185,7 @@ export default function Katalog() {
                   </label>
                   <Slider
                     min={15000}
-                    max={150000}
+                    max={200000}
                     step={5000}
                     value={cenoveRozpatie}
                     onValueChange={setCenoveRozpatie}
@@ -201,7 +200,7 @@ export default function Katalog() {
                   </label>
                   <Slider
                     min={1}
-                    max={6}
+                    max={8}
                     step={1}
                     value={pocetIziebRozpatie}
                     onValueChange={setPocetIziebRozpatie}
@@ -234,8 +233,8 @@ export default function Katalog() {
                     setTypFilter("vsetky");
                     setPlocharozsah([18, 200]);
                     setHladanie("");
-                    setCenoveRozpatie([15000, 150000]);
-                    setPocetIziebRozpatie([1, 6]);
+                    setCenoveRozpatie([15000, 200000]);
+                    setPocetIziebRozpatie([1, 8]);
                     setZoradenie("poradie");
                   }}>
 
@@ -401,8 +400,8 @@ export default function Katalog() {
                   setTypFilter("vsetky");
                   setPlocharozsah([18, 200]);
                   setHladanie("");
-                  setCenoveRozpatie([15000, 150000]);
-                  setPocetIziebRozpatie([1, 6]);
+                  setCenoveRozpatie([15000, 200000]);
+                  setPocetIziebRozpatie([1, 8]);
                   setZoradenie("poradie");
                 }}>
 
