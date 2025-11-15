@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -89,19 +90,28 @@ export default function AdminDokumenty() {
     setCurrentFileName("");
   };
 
-  const extractFolderInfo = (filePath) => {
-    console.log('🔍 [extractFolderInfo] Input path:', filePath);
+  // Filter out system files
+  const shouldSkipFile = (fileName) => {
+    const skipPatterns = [
+      /^\.DS_Store$/i,
+      /^\._/,  // Apple resource forks
+      /^__MACOSX/,
+      /^Thumbs\.db$/i,
+      /^desktop\.ini$/i,
+      /^\.(git|svn|hg)/
+    ];
     
+    return skipPatterns.some(pattern => pattern.test(fileName));
+  };
+
+  const extractFolderInfo = (filePath) => {
     if (!filePath || filePath === '') {
-      console.log('⚠️  [extractFolderInfo] Empty path');
       return { model_domu: null, podpriecinok: null, cesta_priecinku: null };
     }
 
-    const parts = filePath.split('/').filter(p => p && p.trim() !== '');
-    console.log('📂 [extractFolderInfo] Path parts:', parts);
+    const parts = filePath.split('/').filter(p => p && p.trim() !== '' && !shouldSkipFile(p));
     
     if (parts.length === 1) {
-      console.log('📄 [extractFolderInfo] Single file, no folder structure');
       return { model_domu: null, podpriecinok: null, cesta_priecinku: null };
     }
     
@@ -114,31 +124,30 @@ export default function AdminDokumenty() {
       .replace(/^(Dom|Model|Modul)\s*/i, '')
       .trim();
     
-    const result = {
+    return {
       model_domu: modelDomu || mainFolder,
       podpriecinok: subFolder || null,
       cesta_priecinku: fullPath
     };
-    
-    console.log('✅ [extractFolderInfo] Result:', result);
-    return result;
   };
 
   const isFileDuplicate = (fileName, fileSize) => {
-    const isDup = dokumenty.some(dok => 
+    return dokumenty.some(dok => 
       dok.nazov === fileName && dok.velkost === fileSize
     );
-    if (isDup) {
-      console.log('🔄 [isFileDuplicate] Duplicate found:', fileName);
-    }
-    return isDup;
   };
 
   const handleFileSelect = (e) => {
-    const files = Array.from(e.target.files);
-    console.log('📁 [handleFileSelect] Selected files count:', files.length);
-    console.log('📁 [handleFileSelect] First file path:', files[0]?.webkitRelativePath || files[0]?.name);
-    setSelectedFiles(files);
+    const allFiles = Array.from(e.target.files);
+    // Filter out system files immediately
+    const validFiles = allFiles.filter(file => !shouldSkipFile(file.name));
+    
+    console.log(`📁 Vybratých ${allFiles.length} súborov, po filtrovaní ${validFiles.length} súborov`);
+    if (allFiles.length > validFiles.length) {
+      console.log(`🗑️  Vyfiltrovaných ${allFiles.length - validFiles.length} systémových súborov`);
+    }
+    
+    setSelectedFiles(validFiles);
   };
 
   const handleRemoveFile = (index) => {
@@ -162,6 +171,96 @@ export default function AdminDokumenty() {
     });
   };
 
+  const getErrorDetails = (error, file) => {
+    const errorMsg = error.message || error.toString();
+    
+    // File size errors
+    if (errorMsg.includes('size') || errorMsg.includes('large') || errorMsg.includes('payload')) {
+      return {
+        type: 'FILE_SIZE',
+        message: `Súbor ${file.name} je príliš veľký (${(file.size / 1024 / 1024).toFixed(2)} MB)`,
+        suggestion: 'Skúste nahrať menšie súbory alebo komprimujte obrázky',
+        retryable: false
+      };
+    }
+    
+    // Network errors
+    if (errorMsg.includes('network') || errorMsg.includes('fetch') || errorMsg.includes('timeout') || error.response?.status >= 500) {
+      return {
+        type: 'NETWORK',
+        message: 'Problém s pripojením k internetu alebo serverom.',
+        suggestion: 'Skontrolujte pripojenie a skúste znova',
+        retryable: true
+      };
+    }
+    
+    // Permission errors
+    if (errorMsg.includes('permission') || errorMsg.includes('unauthorized') || error.response?.status === 403 || error.response?.status === 401) {
+      return {
+        type: 'PERMISSION',
+        message: 'Nemáte oprávnenie nahrať tento súbor',
+        suggestion: 'Kontaktujte administrátora',
+        retryable: false
+      };
+    }
+    
+    // Database errors
+    if (errorMsg.includes('database') || errorMsg.includes('constraint') || errorMsg.includes('duplicate')) {
+      return {
+        type: 'DATABASE',
+        message: 'Chyba pri ukladaní do databázy',
+        suggestion: 'Súbor možno už existuje alebo obsahuje neplatné údaje',
+        retryable: false
+      };
+    }
+    
+    // Format errors
+    if (errorMsg.includes('format') || errorMsg.includes('type') || errorMsg.includes('mime')) {
+      return {
+        type: 'FORMAT',
+        message: 'Nepodporovaný formát súboru',
+        suggestion: 'Skúste iný formát súboru',
+        retryable: false
+      };
+    }
+    
+    // Default
+    return {
+      type: 'UNKNOWN',
+      message: errorMsg,
+      suggestion: 'Skúste nahrať súbor znova',
+      retryable: true
+    };
+  };
+
+  const uploadFileWithRetry = async (file, maxRetries = 2) => {
+    let lastError;
+    
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        if (attempt > 0) {
+          console.log(`🔄 Pokus ${attempt + 1}/${maxRetries + 1} pre súbor: ${file.name}`);
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // Exponential backoff
+        }
+        
+        const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+        return uploadResponse;
+        
+      } catch (error) {
+        lastError = error;
+        const errorDetails = getErrorDetails(error, file);
+        
+        if (!errorDetails.retryable || attempt === maxRetries) {
+          throw error;
+        }
+        
+        console.log(`⚠️  Chyba pri pokuse ${attempt + 1}, skúšam znova...`);
+      }
+    }
+    
+    throw lastError;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -171,10 +270,7 @@ export default function AdminDokumenty() {
     }
 
     console.log('🚀 ========== ZAČÍNAM UPLOAD ==========');
-    console.log('🚀 Počet súborov:', selectedFiles.length);
-    console.log('🚀 Režim:', uploadMode);
-    console.log('🚀 Výrobca:', formData.vyrobca);
-    console.log('🚀 Typ:', formData.typ);
+    console.log('🚀 Počet súborov na spracovanie:', selectedFiles.length);
     
     setUploading(true);
     setUploadProgress({ current: 0, total: selectedFiles.length });
@@ -191,68 +287,54 @@ export default function AdminDokumenty() {
         const file = selectedFiles[i];
         const fileNum = i + 1;
         
-        console.log(`\n📦 ========== SÚBOR ${fileNum}/${selectedFiles.length} ==========`);
-        console.log(`📦 Názov: ${file.name}`);
-        console.log(`📦 Veľkosť: ${file.size} bytes`);
-        console.log(`📦 Typ: ${file.type}`);
-        console.log(`📦 WebkitRelativePath: ${file.webkitRelativePath || 'N/A'}`);
+        console.log(`\n📦 [${fileNum}/${selectedFiles.length}] ${file.name}`);
         
         setUploadProgress({ current: fileNum, total: selectedFiles.length });
         setCurrentFileName(file.name);
         
         try {
-          // Step 1: Check duplicate
-          console.log(`⏱️  [STEP 1/${fileNum}] Kontrolujem duplicitu...`);
-          if (isFileDuplicate(file.name, file.size)) {
-            console.log(`⏭️  [${fileNum}] PRESKOČENÝ - duplicita`);
+          // Skip system files (double check)
+          if (shouldSkipFile(file.name)) {
+            console.log(`⏭️  Preskočený systémový súbor: ${file.name}`);
             results.skipped.push({
               name: file.name,
-              reason: 'Súbor už existuje (rovnaký názov a veľkosť)'
+              reason: 'Systémový súbor (ignorovaný)'
             });
             continue;
           }
-          console.log(`✅ [STEP 1/${fileNum}] Nie je duplicita`);
 
-          // Step 2: Upload file
-          console.log(`⏱️  [STEP 2/${fileNum}] Nahrávam súbor do storage...`);
-          console.time(`upload-${fileNum}`);
+          // Check duplicate
+          if (isFileDuplicate(file.name, file.size)) {
+            console.log(`⏭️  Duplicita: ${file.name}`);
+            results.skipped.push({
+              name: file.name,
+              reason: 'Súbor už existuje'
+            });
+            continue;
+          }
+
+          // Upload with retry
+          console.log(`📤 Nahrávam: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
+          const uploadResponse = await uploadFileWithRetry(file);
+          console.log(`✅ Nahraný: ${file.name}`);
           
-          const uploadResponse = await base44.integrations.Core.UploadFile({ file });
-          
-          console.timeEnd(`upload-${fileNum}`);
-          console.log(`✅ [STEP 2/${fileNum}] Súbor nahraný`);
-          console.log(`🔗 [STEP 2/${fileNum}] URL:`, uploadResponse.file_url);
-          
-          // Step 3: Extract folder info
-          console.log(`⏱️  [STEP 3/${fileNum}] Extrahujem info o priečinku...`);
+          // Extract folder info
           const filePath = file.webkitRelativePath || file.name;
-          console.log(`📂 [STEP 3/${fileNum}] Path na spracovanie:`, filePath);
-          
           const folderInfo = extractFolderInfo(filePath);
-          console.log(`✅ [STEP 3/${fileNum}] Folder info extrahované:`, folderInfo);
           
-          // Step 4: Prepare tags
-          console.log(`⏱️  [STEP 4/${fileNum}] Pripravujem tagy...`);
+          // Prepare tags
           const autoTags = [...formData.tags];
-          if (folderInfo.model_domu) {
-            autoTags.push(folderInfo.model_domu);
-            console.log(`🏷️  [STEP 4/${fileNum}] Pridaný tag z modelu:`, folderInfo.model_domu);
-          }
-          if (folderInfo.podpriecinok) {
-            autoTags.push(folderInfo.podpriecinok);
-            console.log(`🏷️  [STEP 4/${fileNum}] Pridaný tag z podpriečinka:`, folderInfo.podpriecinok);
-          }
-          const finalTags = [...new Set(autoTags)];
-          console.log(`✅ [STEP 4/${fileNum}] Finálne tagy:`, finalTags);
+          if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
+          if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
           
-          // Step 5: Create document
+          // Create document
           const docData = {
             nazov: file.name,
             popis: formData.popis,
             typ: formData.typ,
             vyrobca: formData.vyrobca,
             pre_chatbota: formData.pre_chatbota,
-            tags: finalTags,
+            tags: [...new Set(autoTags)],
             model_domu: folderInfo.model_domu,
             podpriecinok: folderInfo.podpriecinok,
             cesta_priecinku: folderInfo.cesta_priecinku,
@@ -261,77 +343,55 @@ export default function AdminDokumenty() {
             typ_suboru: file.type || 'application/octet-stream'
           };
           
-          console.log(`⏱️  [STEP 5/${fileNum}] Vytváram dokument v DB...`);
-          console.log(`💾 [STEP 5/${fileNum}] Document data:`, JSON.stringify(docData, null, 2));
-          console.time(`create-doc-${fileNum}`);
-          
           const doc = await createMutation.mutateAsync(docData);
-          
-          console.timeEnd(`create-doc-${fileNum}`);
-          console.log(`✅ [STEP 5/${fileNum}] Dokument vytvorený, ID:`, doc.id);
+          console.log(`✅ Vytvorený dokument ID: ${doc.id}`);
           
           results.successful.push({
             name: file.name,
             id: doc.id
           });
-          
-          console.log(`🎉 [${fileNum}] ÚSPECH - súbor kompletne spracovaný`);
 
         } catch (fileError) {
-          console.error(`\n❌❌❌ CHYBA PRI SÚBORE ${fileNum} ❌❌❌`);
-          console.error(`❌ Názov súboru: ${file.name}`);
-          console.error(`❌ Error message:`, fileError.message);
-          console.error(`❌ Error stack:`, fileError.stack);
-          console.error(`❌ Full error:`, fileError);
+          console.error(`❌ Chyba pri ${file.name}:`, fileError);
           
+          const errorDetails = getErrorDetails(fileError, file);
           results.failed.push({
             name: file.name,
-            error: fileError.message || 'Neznáma chyba pri nahrávaní'
+            error: errorDetails.message,
+            suggestion: errorDetails.suggestion,
+            type: errorDetails.type
           });
         }
       }
       
-      console.log('\n📊 ========== UPLOAD SUMMARY ==========');
-      console.log('✅ Úspešné:', results.successful.length);
-      console.log('⏭️  Preskočené:', results.skipped.length);
-      console.log('❌ Chybné:', results.failed.length);
+      console.log('\n📊 SUMMARY:');
+      console.log(`✅ Úspešné: ${results.successful.length}`);
+      console.log(`⏭️  Preskočené: ${results.skipped.length}`);
+      console.log(`❌ Chybné: ${results.failed.length}`);
       
-      // Automatická analýza
+      // Auto-analyze successful uploads
       if (results.successful.length > 0) {
-        console.log('\n🧠 ========== ZAČÍNAM ANALÝZU ==========');
-        setUploadProgress({ current: 0, total: results.successful.length });
+        console.log('\n🧠 Spúšťam analýzu...');
         setCurrentFileName("Analyzujem dokumenty...");
+        setUploadProgress({ current: 0, total: results.successful.length });
         
         for (let i = 0; i < results.successful.length; i++) {
-          const docId = results.successful[i].id;
-          const docName = results.successful[i].name;
-          
-          console.log(`\n🔍 Analyzujem ${i + 1}/${results.successful.length}: ${docName} (ID: ${docId})`);
           setUploadProgress({ current: i + 1, total: results.successful.length });
-          
           try {
-            console.time(`analysis-${i + 1}`);
-            await analyzeMutation.mutateAsync(docId);
-            console.timeEnd(`analysis-${i + 1}`);
-            console.log(`✅ Analýza dokončená pre: ${docName}`);
+            await analyzeMutation.mutateAsync(results.successful[i].id);
           } catch (error) {
-            console.error(`⚠️  Chyba pri analýze ${docName}:`, error.message);
+            console.error(`⚠️  Chyba analýzy pre: ${results.successful[i].name}`);
           }
         }
-        
-        console.log('✅ Analýza všetkých dokumentov dokončená');
       }
       
-      console.log('\n🎉 ========== CELÝ PROCES DOKONČENÝ ==========\n');
+      console.log('🎉 HOTOVO!');
       setUploadResults(results);
       setShowForm(false);
       
     } catch (error) {
-      console.error('\n💥💥💥 KRITICKÁ CHYBA 💥💥💥');
-      console.error('💥 Message:', error.message);
-      console.error('💥 Stack:', error.stack);
-      console.error('💥 Full error:', error);
-      alert("Kritická chyba pri spracovaní: " + error.message);
+      console.error('💥 KRITICKÁ CHYBA:', error);
+      alert("Kritická chyba: " + error.message);
     } finally {
       setUploading(false);
       setUploadProgress({ current: 0, total: 0 });
@@ -427,7 +487,7 @@ export default function AdminDokumenty() {
               <Brain className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-blue-800">
                 <p className="font-semibold mb-1">Automatická AI analýza a kategorizácia</p>
-                <p>Pri nahrávaní priečinkov systém automaticky rozpozná štruktúru (napr. "Dom_A1/exterior", "Modul_50/interior") a priradí fotky k príslušným domom. Všetky typy súborov sú podporované. Duplicitné súbory (podľa názvu a veľkosti) sa automaticky preskočia.</p>
+                <p>Systém automaticky filtruje systémové súbory (.DS_Store, ._*, atď.) a rozpoznáva štruktúru priečinkov. Duplicitné súbory sa preskočia a pri chybách sa automaticky skúsi znova.</p>
               </div>
             </div>
           </Card>
@@ -491,11 +551,16 @@ export default function AdminDokumenty() {
                             Chybné: {uploadResults.failed.length}
                           </span>
                         </div>
-                        <div className="text-sm text-red-700 space-y-1 max-h-32 overflow-y-auto">
+                        <div className="text-sm text-red-700 space-y-2 max-h-48 overflow-y-auto">
                           {uploadResults.failed.map((item, i) => (
-                            <div key={i}>
-                              ✗ {item.name}
-                              <span className="text-xs ml-2">({item.error})</span>
+                            <div key={i} className="border-l-2 border-red-400 pl-2">
+                              <div className="font-medium">✗ {item.name}</div>
+                              <div className="text-xs ml-2">
+                                <div>❌ {item.error}</div>
+                                {item.suggestion && (
+                                  <div className="text-red-600 mt-1">💡 {item.suggestion}</div>
+                                )}
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -580,7 +645,7 @@ export default function AdminDokumenty() {
                       </div>
                       {uploadMode === "folder" && (
                         <p className="text-xs text-gray-600 mt-2">
-                          💡 Tip: Štruktúra priečinkov (napr. "Dom_A1/exterior") sa automaticky rozpozná a použije na kategorizáciu
+                          💡 Systémové súbory (.DS_Store) sa automaticky preskočia
                         </p>
                       )}
                     </div>
@@ -618,7 +683,7 @@ export default function AdminDokumenty() {
                                         <span className="text-sm text-gray-700 block truncate">{file.name}</span>
                                         {isDuplicate && (
                                           <span className="text-xs text-yellow-600 flex items-center gap-1">
-                                            <AlertTriangle className="w-3 h-3"/>Duplicita - bude preskočený
+                                            <AlertTriangle className="w-3 h-3"/>Duplicita
                                           </span>
                                         )}
                                         {!isDuplicate && folderInfo.model_domu && (
@@ -751,9 +816,6 @@ export default function AdminDokumenty() {
                             style={{ width: `${uploadProgress.total > 0 ? (uploadProgress.current / uploadProgress.total) * 100 : 0}%` }}
                           />
                         </div>
-                        <p className="text-xs text-blue-700 mt-2">
-                          Otvorte konzolu prehliadača (F12) pre detailné informácie o procese
-                        </p>
                       </div>
                     )}
 
