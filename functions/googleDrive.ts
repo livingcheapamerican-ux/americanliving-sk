@@ -5,14 +5,20 @@ import { google } from 'npm:googleapis@134.0.0';
 const GOOGLE_CLIENT_ID = Deno.env.get("GOOGLE_CLIENT_ID");
 const GOOGLE_CLIENT_SECRET = Deno.env.get("GOOGLE_CLIENT_SECRET");
 const GOOGLE_DRIVE_FOLDER_IDS = Deno.env.get("GOOGLE_DRIVE_FOLDER_IDS");
+const BASE44_APP_ID = Deno.env.get("BASE44_APP_ID");
 
 Deno.serve(async (req) => {
     try {
         const url = new URL(req.url);
         const action = url.searchParams.get('action') || 'listFiles';
         
-        // Callback URL musí byť absolútna URL, ktorá smeruje na túto funkciu
-        const callbackUrl = `${url.protocol}//${url.host}${url.pathname}?action=oauthCallback`;
+        // Dynamicky vytvoríme callback URL na základe požiadavky
+        const baseUrl = `${url.protocol}//${url.host}`;
+        const callbackPath = url.pathname; // zachováme rovnakú cestu
+        const callbackUrl = `${baseUrl}${callbackPath}?action=oauthCallback`;
+
+        console.log('Callback URL:', callbackUrl);
+        console.log('Action:', action);
 
         const oauth2Client = new OAuth2Client(
             GOOGLE_CLIENT_ID,
@@ -20,55 +26,58 @@ Deno.serve(async (req) => {
             callbackUrl
         );
 
-        // OAuth callback - táto vetva sa volá po návrate z Google
+        // OAuth callback - sem Google presmeruje po autorizácii
         if (action === 'oauthCallback') {
             const code = url.searchParams.get('code');
+            console.log('OAuth callback, code:', code ? 'present' : 'missing');
+            
             if (!code) {
-                return Response.json({ error: 'Authorization code missing' }, { status: 400 });
+                return new Response(`
+                    <html><body>
+                        <h1>Error: Authorization code missing</h1>
+                        <p>Please try authorizing again.</p>
+                        <a href="${baseUrl}">Go back</a>
+                    </body></html>
+                `, {
+                    headers: { 'Content-Type': 'text/html' },
+                    status: 400
+                });
             }
 
             try {
+                // Získame tokeny z Google
                 const { tokens } = await oauth2Client.getToken(code);
+                console.log('Tokens received:', tokens.access_token ? 'yes' : 'no');
                 
-                // Tu nemôžeme použiť base44 auth, pretože user ešte nie je prihlásený v tomto requeste
-                // Musíme získať session token z URL alebo cookies
-                const sessionToken = url.searchParams.get('state') || req.headers.get('cookie')?.match(/session=([^;]+)/)?.[1];
-                
-                if (!sessionToken) {
-                    return new Response(`
-                        <html>
-                            <body>
-                                <script>
-                                    // Pošleme tokeny cez postMessage na otvárajúce okno
-                                    if (window.opener) {
-                                        window.opener.postMessage({
-                                            type: 'GOOGLE_DRIVE_AUTH',
-                                            tokens: ${JSON.stringify(tokens)}
-                                        }, '*');
-                                        window.close();
-                                    } else {
-                                        window.location.href = '/?google_drive_tokens=' + encodeURIComponent(JSON.stringify(${JSON.stringify(tokens)}));
-                                    }
-                                </script>
-                            </body>
-                        </html>
-                    `, {
-                        headers: { 'Content-Type': 'text/html' }
-                    });
-                }
-                
-                // Ak máme session, skúsime uložiť tokeny
-                const base44 = createClientFromRequest(req);
-                await base44.auth.updateMe({
-                    google_drive_access_token: tokens.access_token,
-                    google_drive_refresh_token: tokens.refresh_token,
-                    google_drive_token_expiry: tokens.expiry_date,
+                // Uložíme tokeny do localStorage cez HTML
+                return new Response(`
+                    <html>
+                        <body>
+                            <h1>Authorization successful!</h1>
+                            <p>Saving credentials...</p>
+                            <script>
+                                // Uložíme tokeny do localStorage
+                                localStorage.setItem('google_drive_tokens', JSON.stringify(${JSON.stringify(tokens)}));
+                                // Presmerujeme na admin stránku
+                                window.location.href = '${baseUrl}/preview/pages/AdminGoogleDrive?save_tokens=1';
+                            </script>
+                        </body>
+                    </html>
+                `, {
+                    headers: { 'Content-Type': 'text/html' }
                 });
-                
-                return Response.redirect(url.origin, 302);
             } catch (error) {
                 console.error('OAuth callback error:', error);
-                return Response.json({ error: error.message }, { status: 500 });
+                return new Response(`
+                    <html><body>
+                        <h1>Error during authorization</h1>
+                        <p>${error.message}</p>
+                        <a href="${baseUrl}">Go back</a>
+                    </body></html>
+                `, {
+                    headers: { 'Content-Type': 'text/html' },
+                    status: 500
+                });
             }
         }
 
@@ -90,11 +99,13 @@ Deno.serve(async (req) => {
                 ],
                 prompt: 'consent',
             });
+            console.log('Redirecting to:', authorizeUrl);
             return Response.redirect(authorizeUrl, 302);
         }
 
         if (action === 'saveTokens') {
             const body = await req.json();
+            console.log('Saving tokens for user:', user.email);
             await base44.auth.updateMe({
                 google_drive_access_token: body.access_token,
                 google_drive_refresh_token: body.refresh_token,
@@ -114,14 +125,19 @@ Deno.serve(async (req) => {
                 expiry_date: user.google_drive_token_expiry,
             });
 
-            const tokens = await oauth2Client.refreshAccessToken();
-            if (tokens.credentials.access_token !== user.google_drive_access_token) {
-                await base44.auth.updateMe({
-                    google_drive_access_token: tokens.credentials.access_token,
-                    google_drive_refresh_token: tokens.credentials.refresh_token || user.google_drive_refresh_token,
-                    google_drive_token_expiry: tokens.credentials.expiry_date,
-                });
-                oauth2Client.setCredentials(tokens.credentials);
+            try {
+                const tokens = await oauth2Client.refreshAccessToken();
+                if (tokens.credentials.access_token !== user.google_drive_access_token) {
+                    await base44.auth.updateMe({
+                        google_drive_access_token: tokens.credentials.access_token,
+                        google_drive_refresh_token: tokens.credentials.refresh_token || user.google_drive_refresh_token,
+                        google_drive_token_expiry: tokens.credentials.expiry_date,
+                    });
+                    oauth2Client.setCredentials(tokens.credentials);
+                }
+            } catch (error) {
+                console.error('Token refresh error:', error);
+                return Response.json({ error: 'Failed to refresh token. Please re-authorize.' }, { status: 403 });
             }
 
             const drive = google.drive({ version: 'v3', auth: oauth2Client });
@@ -146,14 +162,19 @@ Deno.serve(async (req) => {
                 expiry_date: user.google_drive_token_expiry,
             });
 
-            const tokens = await oauth2Client.refreshAccessToken();
-            if (tokens.credentials.access_token !== user.google_drive_access_token) {
-                await base44.auth.updateMe({
-                    google_drive_access_token: tokens.credentials.access_token,
-                    google_drive_refresh_token: tokens.credentials.refresh_token || user.google_drive_refresh_token,
-                    google_drive_token_expiry: tokens.credentials.expiry_date,
-                });
-                oauth2Client.setCredentials(tokens.credentials);
+            try {
+                const tokens = await oauth2Client.refreshAccessToken();
+                if (tokens.credentials.access_token !== user.google_drive_access_token) {
+                    await base44.auth.updateMe({
+                        google_drive_access_token: tokens.credentials.access_token,
+                        google_drive_refresh_token: tokens.credentials.refresh_token || user.google_drive_refresh_token,
+                        google_drive_token_expiry: tokens.credentials.expiry_date,
+                    });
+                    oauth2Client.setCredentials(tokens.credentials);
+                }
+            } catch (error) {
+                console.error('Token refresh error:', error);
+                return Response.json({ error: 'Failed to refresh token. Please re-authorize.' }, { status: 403 });
             }
 
             const drive = google.drive({ version: 'v3', auth: oauth2Client });
@@ -189,14 +210,19 @@ Deno.serve(async (req) => {
                 expiry_date: user.google_drive_token_expiry,
             });
 
-            const tokens = await oauth2Client.refreshAccessToken();
-            if (tokens.credentials.access_token !== user.google_drive_access_token) {
-                await base44.auth.updateMe({
-                    google_drive_access_token: tokens.credentials.access_token,
-                    google_drive_refresh_token: tokens.credentials.refresh_token || user.google_drive_refresh_token,
-                    google_drive_token_expiry: tokens.credentials.expiry_date,
-                });
-                oauth2Client.setCredentials(tokens.credentials);
+            try {
+                const tokens = await oauth2Client.refreshAccessToken();
+                if (tokens.credentials.access_token !== user.google_drive_access_token) {
+                    await base44.auth.updateMe({
+                        google_drive_access_token: tokens.credentials.access_token,
+                        google_drive_refresh_token: tokens.credentials.refresh_token || user.google_drive_refresh_token,
+                        google_drive_token_expiry: tokens.credentials.expiry_date,
+                    });
+                    oauth2Client.setCredentials(tokens.credentials);
+                }
+            } catch (error) {
+                console.error('Token refresh error:', error);
+                return Response.json({ error: 'Failed to refresh token. Please re-authorize.' }, { status: 403 });
             }
             
             const drive = google.drive({ version: 'v3', auth: oauth2Client });
