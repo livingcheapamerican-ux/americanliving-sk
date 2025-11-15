@@ -30,6 +30,8 @@ export default function AdminDokumenty() {
   const [uploadResults, setUploadResults] = useState(null);
   const [currentFileName, setCurrentFileName] = useState("");
   const [fileStatuses, setFileStatuses] = useState({});
+  const [analyzingAll, setAnalyzingAll] = useState(false);
+  const [analysisProgress, setAnalysisProgress] = useState({ current: 0, total: 0 });
   const [formData, setFormData] = useState({
     popis: "",
     typ: "iné",
@@ -227,6 +229,48 @@ export default function AdminDokumenty() {
       ...formData,
       tags: formData.tags.filter(t => t !== tag)
     });
+  };
+
+  const handleAnalyzeAll = async () => {
+    const unanalyzed = dokumenty.filter(dok => !dok.analyzovaný);
+
+    if (unanalyzed.length === 0) {
+      alert("Všetky dokumenty sú už analyzované!");
+      return;
+    }
+
+    if (!confirm(`Chcete analyzovať ${unanalyzed.length} neanalyzovaných dokumentov?`)) {
+      return;
+    }
+
+    setAnalyzingAll(true);
+    setAnalysisProgress({ current: 0, total: unanalyzed.length });
+
+    try {
+      const analysisBatches = [];
+      for (let i = 0; i < unanalyzed.length; i += 10) {
+        analysisBatches.push(unanalyzed.slice(i, i + 10));
+      }
+
+      let analyzedCount = 0;
+      for (const analysisBatch of analysisBatches) {
+        await Promise.allSettled(
+          analysisBatch.map(dok =>
+            analyzeMutation.mutateAsync(dok.id).catch(() => {})
+          )
+        );
+
+        analyzedCount += analysisBatch.length;
+        setAnalysisProgress({ current: analyzedCount, total: unanalyzed.length });
+      }
+
+      alert(`Úspešne analyzovaných ${unanalyzed.length} dokumentov!`);
+    } catch (error) {
+      alert("Chyba pri hromadnej analýze: " + error.message);
+    } finally {
+      setAnalyzingAll(false);
+      setAnalysisProgress({ current: 0, total: 0 });
+    }
   };
 
   const getErrorDetails = (error, file) => {
@@ -711,6 +755,24 @@ export default function AdminDokumenty() {
               >
                 <Folder className="w-4 h-4" />
               </Button>
+              <Button
+                onClick={handleAnalyzeAll}
+                disabled={analyzingAll || dokumenty.filter(d => !d.analyzovaný).length === 0}
+                variant="outline"
+                className="border-purple-200 text-purple-700 hover:bg-purple-50"
+              >
+                {analyzingAll ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Analyzujem {analysisProgress.current}/{analysisProgress.total}
+                  </>
+                ) : (
+                  <>
+                    <Brain className="w-4 h-4 mr-2" />
+                    Analyzovať AI ({dokumenty.filter(d => !d.analyzovaný).length})
+                  </>
+                )}
+              </Button>
               <Button onClick={() => {
                 setShowForm(!showForm);
                 setUploadResults(null);
@@ -719,7 +781,7 @@ export default function AdminDokumenty() {
                   setUploadProgress({ current: 0, total: 0 });
                   setCurrentFileName("");
                   setFileStatuses({});
-                  if (window.currentUploadCancelRef) { // Also clear ref if form is closed normally
+                  if (window.currentUploadCancelRef) {
                     window.currentUploadCancelRef.current = false;
                     window.currentUploadCancelRef = null;
                   }
