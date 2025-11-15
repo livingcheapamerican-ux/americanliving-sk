@@ -13,7 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Upload, FileText, Trash2, Download, Search, 
-  AlertCircle, CheckCircle, Loader2, X, Building2, FolderOpen, Brain, Eye, Home, List, Folder
+  AlertCircle, CheckCircle, Loader2, X, Building2, FolderOpen, Brain, Eye, Home, List, Folder, AlertTriangle, Info
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import DokumentyTreeView from "../components/DokumentyTreeView";
@@ -26,6 +26,7 @@ export default function AdminDokumenty() {
   const [uploadMode, setUploadMode] = useState("files");
   const [viewingDocument, setViewingDocument] = useState(null);
   const [viewMode, setViewMode] = useState("list"); // "list" or "tree"
+  const [uploadResults, setUploadResults] = useState(null); // New state for upload summary
   const [formData, setFormData] = useState({
     popis: "",
     typ: "iné",
@@ -85,6 +86,7 @@ export default function AdminDokumenty() {
     setTagInput("");
     setUploadProgress({ current: 0, total: 0 });
     setUploadMode("files");
+    setUploadResults(null); // Reset upload results as well
   };
 
   const extractFolderInfo = (filePath) => {
@@ -112,6 +114,12 @@ export default function AdminDokumenty() {
       podpriecinok: subFolder || null,
       cesta_priecinku: fullPath
     };
+  };
+
+  const isFileDuplicate = (fileName, fileSize) => {
+    return dokumenty.some(dok => 
+      dok.nazov === fileName && dok.velkost === fileSize
+    );
   };
 
   const handleFileSelect = (e) => {
@@ -150,6 +158,13 @@ export default function AdminDokumenty() {
 
     setUploading(true);
     setUploadProgress({ current: 0, total: selectedFiles.length });
+    setUploadResults(null); // Clear previous results
+
+    const results = {
+      successful: [],
+      skipped: [],
+      failed: []
+    };
     
     try {
       const uploadedDocIds = [];
@@ -158,51 +173,81 @@ export default function AdminDokumenty() {
         const file = selectedFiles[i];
         setUploadProgress({ current: i + 1, total: selectedFiles.length });
         
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
-        
-        // Extract folder information from file path
-        const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
-        
-        // Add folder info to tags if available
-        const autoTags = [...formData.tags];
-        if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
-        if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
-        
-        const doc = await createMutation.mutateAsync({
-          nazov: file.name,
-          popis: formData.popis,
-          typ: formData.typ,
-          vyrobca: formData.vyrobca,
-          pre_chatbota: formData.pre_chatbota,
-          tags: [...new Set(autoTags)], // Remove duplicates
-          model_domu: folderInfo.model_domu,
-          podpriecinok: folderInfo.podpriecinok,
-          cesta_priecinku: folderInfo.cesta_priecinku,
-          subor_url: file_url,
-          velkost: file.size,
-          typ_suboru: file.type
-        });
-        
-        uploadedDocIds.push(doc.id);
-      }
-      
-      // Automaticky analyzuj všetky nahrané dokumenty
-      setUploadProgress({ current: 0, total: uploadedDocIds.length });
-      for (let i = 0; i < uploadedDocIds.length; i++) {
-        setUploadProgress({ current: i + 1, total: uploadedDocIds.length });
         try {
-          await analyzeMutation.mutateAsync(uploadedDocIds[i]);
-        } catch (error) {
-          console.error('Analysis error for doc', uploadedDocIds[i], error);
+          // Kontrola duplicity
+          if (isFileDuplicate(file.name, file.size)) {
+            results.skipped.push({
+              name: file.name,
+              reason: 'Súbor už existuje (rovnaký názov a veľkosť)'
+            });
+            continue; // Skip to next file
+          }
+
+          // Upload súboru
+          const { file_url } = await base44.integrations.Core.UploadFile({ file });
+          
+          // Extract folder information from file path
+          const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
+          
+          // Add folder info to tags if available
+          const autoTags = [...formData.tags];
+          if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
+          if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
+          
+          const doc = await createMutation.mutateAsync({
+            nazov: file.name,
+            popis: formData.popis,
+            typ: formData.typ,
+            vyrobca: formData.vyrobca,
+            pre_chatbota: formData.pre_chatbota,
+            tags: [...new Set(autoTags)], // Remove duplicates
+            model_domu: folderInfo.model_domu,
+            podpriecinok: folderInfo.podpriecinok,
+            cesta_priecinku: folderInfo.cesta_priecinku,
+            subor_url: file_url,
+            velkost: file.size,
+            typ_suboru: file.type || 'application/octet-stream' // Fallback for unknown file types
+          });
+          
+          results.successful.push({
+            name: file.name,
+            id: doc.id
+          });
+          uploadedDocIds.push(doc.id);
+
+        } catch (fileError) {
+          console.error(`Error processing file ${file.name}:`, fileError);
+          results.failed.push({
+            name: file.name,
+            error: fileError.message || 'Neznáma chyba pri nahrávaní'
+          });
         }
       }
       
+      // Automaticky analyzuj všetky úspešne nahrané dokumenty
+      if (uploadedDocIds.length > 0) {
+        setUploadProgress({ current: 0, total: uploadedDocIds.length });
+        for (let i = 0; i < uploadedDocIds.length; i++) {
+          setUploadProgress({ current: i + 1, total: uploadedDocIds.length });
+          try {
+            await analyzeMutation.mutateAsync(uploadedDocIds[i]);
+          } catch (error) {
+            console.error('Analysis error for doc', uploadedDocIds[i], error);
+            // Optionally, mark this document as failed analysis or similar
+          }
+        }
+      }
+      
+      setUploadResults(results); // Set final upload results
       setShowForm(false);
-      resetForm();
+      resetForm(); // Reset form fields but not upload results right away
     } catch (error) {
-      alert("Chyba pri uploade: " + error.message);
+      alert("Kritická chyba pri spracovaní nahrávania: " + error.message);
+      results.failed.push({ name: "Global error", error: error.message });
+      setUploadResults(results);
     } finally {
       setUploading(false);
+      setUploadProgress({ current: 0, total: 0 }); // Reset progress bar
     }
   };
 
@@ -238,6 +283,9 @@ export default function AdminDokumenty() {
     if (mimeType.includes('word') || mimeType.includes('document')) return '📘';
     if (mimeType.includes('sheet') || mimeType.includes('excel')) return '📊';
     if (mimeType.includes('text')) return '📝';
+    if (mimeType.includes('video')) return '🎬';
+    if (mimeType.includes('audio')) return '🎵';
+    if (mimeType.includes('zip') || mimeType.includes('archive')) return '📦';
     return '📄';
   };
 
@@ -291,10 +339,86 @@ export default function AdminDokumenty() {
               <Brain className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-blue-800">
                 <p className="font-semibold mb-1">Automatická AI analýza a kategorizácia</p>
-                <p>Pri nahrávaní priečinkov systém automaticky rozpozná štruktúru (napr. "Dom_A1/exterior", "Modul_50/interior") a priradí fotky k príslušným domom. AI potom analyzuje obsah pre chatbota.</p>
+                <p>Pri nahrávaní priečinkov systém automaticky rozpozná štruktúru (napr. "Dom_A1/exterior", "Modul_50/interior") a priradí fotky k príslušným domom. Všetky typy súborov sú podporované. Duplicitné súbory (podľa názvu a veľkosti) sa automaticky preskočia.</p>
               </div>
             </div>
           </Card>
+
+          {/* Upload results summary */}
+          <AnimatePresence>
+            {uploadResults && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+              >
+                <Card className="p-6 mb-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-800">Výsledky nahrávania</h3>
+                    <Button variant="ghost" size="sm" onClick={() => setUploadResults(null)}>
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    {uploadResults.successful.length > 0 && (
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <CheckCircle className="w-5 h-5 text-green-600" />
+                          <span className="font-semibold text-green-800">
+                            Úspešne nahrané: {uploadResults.successful.length}
+                          </span>
+                        </div>
+                        <div className="text-sm text-green-700 space-y-1 max-h-32 overflow-y-auto">
+                          {uploadResults.successful.map((item, i) => (
+                            <div key={i}>✓ {item.name}</div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {uploadResults.skipped.length > 0 && (
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Info className="w-5 h-5 text-yellow-600" />
+                          <span className="font-semibold text-yellow-800">
+                            Preskočené: {uploadResults.skipped.length}
+                          </span>
+                        </div>
+                        <div className="text-sm text-yellow-700 space-y-1 max-h-32 overflow-y-auto">
+                          {uploadResults.skipped.map((item, i) => (
+                            <div key={i}>
+                              ⊘ {item.name}
+                              <span className="text-xs ml-2">({item.reason})</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {uploadResults.failed.length > 0 && (
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <AlertTriangle className="w-5 h-5 text-red-600" />
+                          <span className="font-semibold text-red-800">
+                            Chybné: {uploadResults.failed.length}
+                          </span>
+                        </div>
+                        <div className="text-sm text-red-700 space-y-1 max-h-32 overflow-y-auto">
+                          {uploadResults.failed.map((item, i) => (
+                            <div key={i}>
+                              ✗ {item.name}
+                              <span className="text-xs ml-2">({item.error})</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-grow">
@@ -323,7 +447,7 @@ export default function AdminDokumenty() {
               >
                 <Folder className="w-4 h-4" />
               </Button>
-              <Button onClick={() => setShowForm(!showForm)} className="bg-primary">
+              <Button onClick={() => { setShowForm(!showForm); setUploadResults(null); }} className="bg-primary">
                 <Upload className="w-4 h-4 mr-2" />
                 Nahrať dokumenty
               </Button>
@@ -398,13 +522,19 @@ export default function AdminDokumenty() {
                             <div className="max-h-48 overflow-y-auto space-y-2">
                               {selectedFiles.slice(0, 10).map((file, index) => {
                                 const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
+                                const isDuplicate = isFileDuplicate(file.name, file.size);
                                 return (
-                                  <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                  <div key={index} className={`flex items-center justify-between p-2 rounded ${isDuplicate ? 'bg-yellow-50 border border-yellow-200' : 'bg-gray-50'}`}>
                                     <div className="flex items-center gap-2 flex-grow min-w-0">
                                       <span className="text-lg flex-shrink-0">{getFileIcon(file.type)}</span>
                                       <div className="min-w-0 flex-grow">
                                         <span className="text-sm text-gray-700 block truncate">{file.name}</span>
-                                        {folderInfo.model_domu && (
+                                        {isDuplicate && (
+                                          <span className="text-xs text-yellow-600 flex items-center gap-1">
+                                            <AlertTriangle className="w-3 h-3"/>Duplicita - bude preskočený
+                                          </span>
+                                        )}
+                                        {!isDuplicate && folderInfo.model_domu && (
                                           <span className="text-xs text-blue-600">
                                             🏠 {folderInfo.model_domu}
                                             {folderInfo.podpriecinok && ` / ${folderInfo.podpriecinok}`}
@@ -528,7 +658,7 @@ export default function AdminDokumenty() {
                         <p className="text-sm font-medium text-blue-800 mb-2">
                           {analyzeMutation.isPending ? 
                             `Analyzujem ${uploadProgress.current} z ${uploadProgress.total} dokumentov...` :
-                            `Nahrávam ${uploadProgress.current} z ${uploadProgress.total} súborov...`
+                            `Spracúvam ${uploadProgress.current} z ${uploadProgress.total} súborov...`
                           }
                         </p>
                         <div className="w-full bg-blue-200 rounded-full h-2">
