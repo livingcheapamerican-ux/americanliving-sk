@@ -15,10 +15,10 @@ Deno.serve(async (req) => {
     console.log('[GoogleDrive] URL:', url.toString());
 
     try {
-        // Build clean callback URL without /preview/
-        const origin = url.origin;
-        const basePath = BASE44_APP_ID ? `/apps/${BASE44_APP_ID}` : '';
-        const callbackUrl = `${origin}${basePath}/functions/googleDrive?action=callback`;
+        // Always use production domain for callback, not preview URLs
+        const callbackUrl = BASE44_APP_ID 
+            ? `https://${BASE44_APP_ID}.base44.io/functions/googleDrive?action=callback`
+            : `${url.origin}/functions/googleDrive?action=callback`;
         
         console.log('[GoogleDrive] Callback URL:', callbackUrl);
         
@@ -111,6 +111,11 @@ Deno.serve(async (req) => {
                 
                 console.log('[GoogleDrive] ✓ SUCCESS');
                 
+                // Redirect to production URL, not preview
+                const finalReturnUrl = BASE44_APP_ID 
+                    ? `https://${BASE44_APP_ID}.base44.io${state.returnUrl.startsWith('/') ? state.returnUrl : '/' + state.returnUrl}`
+                    : state.returnUrl;
+                
                 return new Response(`
                     <!DOCTYPE html>
                     <html>
@@ -127,7 +132,7 @@ Deno.serve(async (req) => {
                     <div class="success">✓</div>
                     <h1>Úspešne pripojené!</h1>
                     <div class="spinner"></div>
-                    <script>setTimeout(()=>{window.location.href='${state.returnUrl}'+(${state.returnUrl}.includes('?')?'&':'?')+'t='+Date.now()},1500)</script>
+                    <script>setTimeout(()=>{window.location.href='${finalReturnUrl}'+(${finalReturnUrl}.includes('?')?'&':'?')+'t='+Date.now()},1500)</script>
                     </body>
                     </html>
                 `, { headers: { 'Content-Type': 'text/html' } });
