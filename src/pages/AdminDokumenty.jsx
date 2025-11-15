@@ -345,7 +345,7 @@ export default function AdminDokumenty() {
     console.log('🚀 Počet súborov na spracovanie:', selectedFiles.length);
 
     setUploading(true);
-    setCancelUpload(false); // Reset cancel state at the start of new upload
+    setCancelUpload(false);
     setUploadProgress({ current: 0, total: selectedFiles.length });
     setUploadResults(null);
     setUploadedBytes(0);
@@ -356,111 +356,139 @@ export default function AdminDokumenty() {
       failed: []
     };
 
+    let completedCount = 0;
     let cumulativeBytes = 0;
 
     try {
-      for (let i = 0; i < selectedFiles.length; i++) {
+      // Process files in parallel batches of 3
+      const BATCH_SIZE = 3;
+      const batches = [];
+      
+      for (let i = 0; i < selectedFiles.length; i += BATCH_SIZE) {
+        batches.push(selectedFiles.slice(i, i + BATCH_SIZE));
+      }
+
+      for (const batch of batches) {
         if (cancelUpload) {
           console.log('🛑 Upload zrušený používateľom');
-          results.failed.push({
-            name: `Zostávajúcich ${selectedFiles.length - i} súborov`,
-            error: 'Upload zrušený používateľom',
-            suggestion: 'Upload bol manuálne zastavený',
-            type: 'CANCELLED'
-          });
-          break; // Exit the loop if cancelled
+          const remaining = selectedFiles.length - completedCount;
+          if (remaining > 0) {
+            results.failed.push({
+              name: `Zostávajúcich ${remaining} súborov`,
+              error: 'Upload zrušený používateľom',
+              suggestion: 'Upload bol manuálne zastavený',
+              type: 'CANCELLED'
+            });
+          }
+          break;
         }
 
-        const file = selectedFiles[i];
-        const fileNum = i + 1;
+        // Process batch in parallel
+        const batchPromises = batch.map(async (file) => {
+          if (cancelUpload) return null; // Early exit for files in the batch if cancel was triggered
 
-        console.log(`\n📦 [${fileNum}/${selectedFiles.length}] ${file.name}`);
+          // `completedCount` here represents files processed before this batch.
+          // This line is from the outline, but `fileNum` in parallel context can be tricky.
+          // For logging, we'll use a derived index for clarity within the batch.
+          const fileNumInBatch = batch.indexOf(file) + 1; // Index within the current batch
+          const overallFileNum = completedCount + fileNumInBatch; // Approximation for overall logging
 
-        setUploadProgress({ current: fileNum, total: selectedFiles.length });
-        setCurrentFileName(file.name);
-        setCurrentFileProgress(0);
-        updateFileStatus(file.name, 'nahrávam');
+          console.log(`\n📦 [${overallFileNum}/${selectedFiles.length}] ${file.name}`);
 
-        try {
-          if (shouldSkipFile(file.name)) {
-            console.log(`⏭️  Preskočený systémový súbor: ${file.name}`);
-            updateFileStatus(file.name, 'preskočený');
-            cumulativeBytes += file.size;
-            setUploadedBytes(cumulativeBytes);
-            results.skipped.push({
-              name: file.name,
-              reason: 'Systémový súbor (ignorovaný)'
+          setCurrentFileName(file.name);
+          setCurrentFileProgress(0);
+          updateFileStatus(file.name, 'nahrávam');
+
+          try {
+            if (shouldSkipFile(file.name)) {
+              console.log(`⏭️  Preskočený systémový súbor: ${file.name}`);
+              updateFileStatus(file.name, 'preskočený');
+              results.skipped.push({
+                name: file.name,
+                reason: 'Systémový súbor (ignorovaný)'
+              });
+              return { file, status: 'skipped', size: file.size };
+            }
+
+            if (isFileDuplicate(file.name, file.size)) {
+              console.log(`⏭️  Duplicita: ${file.name}`);
+              updateFileStatus(file.name, 'duplicita');
+              results.skipped.push({
+                name: file.name,
+                reason: 'Súbor už existuje'
+              });
+              return { file, status: 'skipped', size: file.size };
+            }
+
+            console.log(`📤 Nahrávam: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
+            const uploadResponse = await uploadFileWithRetry(file, 1, (progress) => {
+              setCurrentFileProgress(progress);
             });
-            continue;
-          }
+            console.log(`✅ Nahraný: ${file.name}`);
 
-          if (isFileDuplicate(file.name, file.size)) {
-            console.log(`⏭️  Duplicita: ${file.name}`);
-            updateFileStatus(file.name, 'duplicita');
-            cumulativeBytes += file.size;
-            setUploadedBytes(cumulativeBytes);
-            results.skipped.push({
+            setCurrentFileProgress(100);
+
+            const filePath = file.webkitRelativePath || file.name;
+            const folderInfo = extractFolderInfo(filePath);
+
+            const autoTags = [...formData.tags];
+            if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
+            if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
+
+            const docData = {
+              nazov: file.name,
+              popis: formData.popis,
+              typ: formData.typ,
+              vyrobca: formData.vyrobca,
+              pre_chatbota: formData.pre_chatbota,
+              tags: [...new Set(autoTags)],
+              model_domu: folderInfo.model_domu,
+              podpriecinok: folderInfo.podpriecinok,
+              cesta_priecinku: folderInfo.cesta_priecinku,
+              subor_url: uploadResponse.file_url,
+              velkost: file.size,
+              typ_suboru: file.type || 'application/octet-stream'
+            };
+
+            const doc = await createMutation.mutateAsync(docData);
+            console.log(`✅ Vytvorený dokument ID: ${doc.id}`);
+
+            updateFileStatus(file.name, 'nahratý');
+            results.successful.push({
               name: file.name,
-              reason: 'Súbor už existuje'
+              id: doc.id
             });
-            continue;
+
+            return { file, status: 'success', size: file.size };
+
+          } catch (fileError) {
+            console.error(`❌ Chyba pri ${file.name}:`, fileError);
+            updateFileStatus(file.name, 'odmietnutý');
+            const errorDetails = getErrorDetails(fileError, file);
+            results.failed.push({
+              name: file.name,
+              error: errorDetails.message,
+              suggestion: errorDetails.suggestion,
+              type: errorDetails.type
+            });
+            return { file, status: 'failed', size: file.size }; // Ensure promise resolves with failure state
           }
+        });
 
-          console.log(`📤 Nahrávam: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
-          const uploadResponse = await uploadFileWithRetry(file, 1, (progress) => {
-            setCurrentFileProgress(progress);
-          });
-          console.log(`✅ Nahraný: ${file.name}`);
-
-          cumulativeBytes += file.size;
+        // Wait for batch to complete
+        const batchResults = await Promise.allSettled(batchPromises);
+        
+        // Update progress for all files in the batch
+        batchResults.forEach(result => {
+          // Increment completedCount and cumulativeBytes for each file processed, regardless of outcome
+          // (because the map callback always returns a resolved promise with status: 'success', 'skipped', or 'failed')
+          completedCount++;
+          if (result.status === 'fulfilled' && result.value) {
+            cumulativeBytes += result.value.size;
+          }
           setUploadedBytes(cumulativeBytes);
-          setCurrentFileProgress(100); // Ensure it's 100% on success
-
-          const filePath = file.webkitRelativePath || file.name;
-          const folderInfo = extractFolderInfo(filePath);
-
-          const autoTags = [...formData.tags];
-          if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
-          if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
-
-          const docData = {
-            nazov: file.name,
-            popis: formData.popis,
-            typ: formData.typ,
-            vyrobca: formData.vyrobca,
-            pre_chatbota: formData.pre_chatbota,
-            tags: [...new Set(autoTags)],
-            model_domu: folderInfo.model_domu,
-            podpriecinok: folderInfo.podpriecinok,
-            cesta_priecinku: folderInfo.cesta_priecinku,
-            subor_url: uploadResponse.file_url,
-            velkost: file.size,
-            typ_suboru: file.type || 'application/octet-stream'
-          };
-
-          const doc = await createMutation.mutateAsync(docData);
-          console.log(`✅ Vytvorený dokument ID: ${doc.id}`);
-
-          updateFileStatus(file.name, 'nahratý');
-          results.successful.push({
-            name: file.name,
-            id: doc.id
-          });
-
-        } catch (fileError) {
-          console.error(`❌ Chyba pri ${file.name}:`, fileError);
-
-          cumulativeBytes += file.size;
-          setUploadedBytes(cumulativeBytes);
-          updateFileStatus(file.name, 'odmietnutý');
-          const errorDetails = getErrorDetails(fileError, file);
-          results.failed.push({
-            name: file.name,
-            error: errorDetails.message,
-            suggestion: errorDetails.suggestion,
-            type: errorDetails.type
-          });
-        }
+          setUploadProgress({ current: completedCount, total: selectedFiles.length });
+        });
       }
 
       console.log('\n📊 SUMMARY:');
@@ -473,17 +501,31 @@ export default function AdminDokumenty() {
         setCurrentFileName("Analyzujem dokumenty...");
         setUploadProgress({ current: 0, total: results.successful.length });
 
-        for (let i = 0; i < results.successful.length; i++) {
+        // Analyze in parallel batches
+        const ANALYSIS_BATCH_SIZE = 5; // Example batch size for analysis
+        const analysisBatches = [];
+        for (let i = 0; i < results.successful.length; i += ANALYSIS_BATCH_SIZE) {
+          analysisBatches.push(results.successful.slice(i, i + ANALYSIS_BATCH_SIZE));
+        }
+
+        let analyzedCount = 0;
+        for (const analysisBatch of analysisBatches) {
           if (cancelUpload) {
             console.log('🛑 Analýza zrušená používateľom');
             break; // Exit analysis loop if cancelled
           }
-          setUploadProgress({ current: i + 1, total: results.successful.length });
-          try {
-            await analyzeMutation.mutateAsync(results.successful[i].id);
-          } catch (error) {
-            console.error(`⚠️  Chyba analýzy pre: ${results.successful[i].name}`);
-          }
+          
+          await Promise.allSettled(
+            analysisBatch.map(item => 
+              analyzeMutation.mutateAsync(item.id).catch(err => {
+                console.error(`⚠️  Chyba analýzy pre: ${item.name}`, err);
+                return { status: 'rejected', reason: err }; // Ensure a resolved status for Promise.allSettled
+              })
+            )
+          );
+          
+          analyzedCount += analysisBatch.length;
+          setUploadProgress({ current: analyzedCount, total: results.successful.length });
         }
       }
 
