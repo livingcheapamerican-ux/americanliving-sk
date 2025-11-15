@@ -55,6 +55,39 @@ Deno.serve(async (req) => {
                 return Response.redirect(url.origin, 302);
             }
 
+            case 'listFolders': {
+                if (!user.google_drive_access_token) {
+                    return Response.json({ error: 'Google Drive not authorized. Please authorize first.' }, { status: 403 });
+                }
+
+                oauth2Client.setCredentials({
+                    access_token: user.google_drive_access_token,
+                    refresh_token: user.google_drive_refresh_token,
+                    expiry_date: user.google_drive_token_expiry,
+                });
+
+                await oauth2Client.refreshAccessToken();
+                const refreshedTokens = oauth2Client.credentials;
+
+                if (refreshedTokens.access_token !== user.google_drive_access_token) {
+                    await base44.auth.updateMe({
+                        google_drive_access_token: refreshedTokens.access_token,
+                        google_drive_refresh_token: refreshedTokens.refresh_token || user.google_drive_refresh_token,
+                        google_drive_token_expiry: refreshedTokens.expiry_date,
+                    });
+                }
+
+                const drive = google.drive({ version: 'v3', auth: oauth2Client });
+                
+                const res = await drive.files.list({
+                    pageSize: 100,
+                    q: "mimeType='application/vnd.google-apps.folder' and trashed=false",
+                    fields: 'files(id, name, modifiedTime, webViewLink)',
+                });
+                
+                return Response.json(res.data.files);
+            }
+
             case 'listFiles': {
                 if (!user.google_drive_access_token) {
                     return Response.json({ error: 'Google Drive not authorized. Please authorize first.' }, { status: 403 });
@@ -159,7 +192,7 @@ Deno.serve(async (req) => {
             }
 
             default:
-                return Response.json({ error: 'Invalid action. Use: authorize, listFiles, or getFileContent' }, { status: 400 });
+                return Response.json({ error: 'Invalid action. Use: authorize, listFolders, listFiles, or getFileContent' }, { status: 400 });
         }
     } catch (error) {
         console.error("Google Drive function error:", error);

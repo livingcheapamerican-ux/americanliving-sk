@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Home, Grid3x3, Phone, Info, Menu, X, Mail } from "lucide-react";
+import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { base44 } from "@/api/base44Client";
 import Chatbot from "./components/Chatbot";
 
 export default function Layout({ children }) {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const { data: user } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => base44.auth.me()
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +33,7 @@ export default function Layout({ children }) {
   ];
 
   const isActive = (path) => location.pathname === path;
+  const isAdmin = user?.role === 'admin';
 
   const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/5d6cd9430_AmericanLiving.png";
 
@@ -85,6 +93,13 @@ export default function Layout({ children }) {
 
             {/* CTA Button */}
             <div className="hidden lg:flex items-center gap-3">
+              {isAdmin && (
+                <Link to={createPageUrl("AdminGoogleDrive")}>
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80" title="Správa Google Drive">
+                    <Settings className="w-5 h-5" />
+                  </Button>
+                </Link>
+              )}
               <a href="tel:+421905138124" className="text-primary font-semibold text-sm">
                 +421 905 138 124
               </a>
@@ -126,6 +141,16 @@ export default function Layout({ children }) {
                   {item.name}
                 </Link>
               ))}
+              {isAdmin && (
+                <Link
+                  to={createPageUrl("AdminGoogleDrive")}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                >
+                  <Settings className="w-5 h-5" />
+                  Správa Google Drive
+                </Link>
+              )}
               <div className="pt-4 space-y-2">
                 <a
                   href="tel:+421905138124"
