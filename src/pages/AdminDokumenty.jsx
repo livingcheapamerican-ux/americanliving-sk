@@ -136,13 +136,23 @@ export default function AdminDokumenty() {
 
     const parts = filePath.split('/').filter(p => p && p.trim() !== '' && !shouldSkipFile(p));
 
-    if (parts.length === 1) {
-      return { model_domu: null, podpriecinok: null, cesta_priecinku: null };
+    // If only one part, it's a file in the root or a folder picked directly
+    if (parts.length === 1 && !filePath.endsWith('/')) {
+        return { model_domu: null, podpriecinok: null, cesta_priecinku: null };
     }
 
-    const mainFolder = parts[0];
-    const subFolder = parts.length > 2 ? parts[parts.length - 2] : null;
-    const fullPath = parts.slice(0, -1).join('/');
+    // If it's a folder, the file name is the last part. We want the directory structure before it.
+    const pathSegments = filePath.split('/').filter(p => p && p.trim() !== '');
+    const fileName = pathSegments[pathSegments.length - 1]; // The actual file name
+    const folderSegments = pathSegments.slice(0, -1); // The directory parts
+
+    if (folderSegments.length === 0) { // File in the root of the upload
+        return { model_domu: null, podpriecinok: null, cesta_priecinku: null };
+    }
+
+    const mainFolder = folderSegments[0];
+    const subFolder = folderSegments.length > 1 ? folderSegments[folderSegments.length - 1] : null;
+    const fullPath = folderSegments.join('/');
 
     let modelDomu = mainFolder
       .replace(/_/g, ' ')
@@ -156,9 +166,11 @@ export default function AdminDokumenty() {
     };
   };
 
-  const isFileDuplicate = (fileName, fileSize) => {
+  const isFileDuplicate = (fileName, fileSize, folderPath) => {
     return dokumenty.some(dok =>
-      dok.nazov === fileName && dok.velkost === fileSize
+      dok.nazov === fileName &&
+      dok.velkost === fileSize &&
+      dok.cesta_priecinku === folderPath
     );
   };
 
@@ -417,8 +429,6 @@ export default function AdminDokumenty() {
         const batchPromises = batch.map(async (file) => {
           if (cancelRef.current) return null;
 
-          // setCurrentFileName(file.name); // Removed based on outline's implicit change
-          // setCurrentFileProgress(0); // Removed based on outline's implicit change
           updateFileStatus(file.name, 'nahrávam');
 
           try {
@@ -428,17 +438,17 @@ export default function AdminDokumenty() {
               return { file, status: 'skipped', size: file.size };
             }
 
-            if (isFileDuplicate(file.name, file.size)) {
+            const filePath = file.webkitRelativePath || file.name;
+            const folderInfo = extractFolderInfo(filePath);
+
+            if (isFileDuplicate(file.name, file.size, folderInfo.cesta_priecinku)) {
               updateFileStatus(file.name, 'duplicita');
-              results.skipped.push({ name: file.name, reason: 'Duplicita' });
+              results.skipped.push({ name: file.name, reason: 'Duplicita v rovnakom priečinku' });
               return { file, status: 'skipped', size: file.size };
             }
 
-            const uploadResponse = await uploadFileWithRetry(file, 1, () => {}, cancelRef); // Outline passes empty onProgress
-            // setCurrentFileProgress(100); // Removed based on outline's implicit change
+            const uploadResponse = await uploadFileWithRetry(file, 1, () => {}, cancelRef);
 
-            const filePath = file.webkitRelativePath || file.name;
-            const folderInfo = extractFolderInfo(filePath);
             const autoTags = [...formData.tags];
             if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
             if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
@@ -878,7 +888,7 @@ export default function AdminDokumenty() {
                             <div className="max-h-64 overflow-y-auto space-y-2">
                               {selectedFiles.map((file, index) => {
                                 const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
-                                const isDuplicate = isFileDuplicate(file.name, file.size);
+                                const isDuplicate = isFileDuplicate(file.name, file.size, folderInfo.cesta_priecinku);
                                 const status = fileStatuses[file.name] || 'pending';
 
                                 return (
@@ -887,6 +897,11 @@ export default function AdminDokumenty() {
                                       <span className="text-lg flex-shrink-0">{getFileIcon(file.type)}</span>
                                       <div className="min-w-0 flex-grow">
                                         <span className="text-sm text-gray-700 block truncate">{file.name}</span>
+                                        {folderInfo.cesta_priecinku && (
+                                          <span className="text-xs text-gray-500 block truncate">
+                                            {folderInfo.cesta_priecinku}
+                                          </span>
+                                        )}
                                         {folderInfo.model_domu && (
                                           <span className="text-xs text-blue-600">
                                             🏠 {folderInfo.model_domu}
@@ -1109,6 +1124,9 @@ export default function AdminDokumenty() {
                         <div className="flex items-start justify-between gap-4 mb-2">
                           <div>
                             <h3 className="font-semibold text-gray-800 text-lg">{dok.nazov}</h3>
+                            {dok.cesta_priecinku && (
+                                <p className="text-xs text-gray-500 block truncate">{dok.cesta_priecinku}</p>
+                            )}
                             {dok.model_domu && (
                               <p className="text-sm text-blue-600 flex items-center gap-1 mt-1">
                                 <Home className="w-3 h-3" />Model: {dok.model_domu}{dok.podpriecinok && ` / ${dok.podpriecinok}`}
