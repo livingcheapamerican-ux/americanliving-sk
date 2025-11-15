@@ -47,28 +47,32 @@ DOKUMENT:
 Názov: ${dokument.nazov}
 Typ: ${dokument.typ}
 Výrobca: ${dokument.vyrobca}
+${dokument.model_domu ? `Model domu (z priečinka): ${dokument.model_domu}` : ''}
+${dokument.podpriecinok ? `Podpriečinok: ${dokument.podpriecinok}` : ''}
+${dokument.cesta_priecinku ? `Cesta: ${dokument.cesta_priecinku}` : ''}
 Popis: ${dokument.popis || 'N/A'}
 ${fileContent ? `Obsah súboru: ${fileContent.substring(0, 10000)}` : ''}
 
 ÚLOHA:
 1. Extrahuj všetky kľúčové informácie relevantné pre chatbota
-2. Identifikuj modely domov spomenuté v dokumente (napr. "Dom A1", "Modul 50", "Timber 100")
+2. Identifikuj modely domov spomenuté v dokumente (vrátane tých z názvu priečinka)
 3. Extrahuj cenové informácie
 4. Extrahuj technické parametre (rozmery, plocha, počet izieb, materiály, atď.)
 5. Identifikuj ostatné dôležité informácie
+6. Využi informácie zo štruktúry priečinkov na lepšie pochopenie obsahu
 
 VÝSTUP:
 Vráť JSON objekt s týmito poľami:
-- extrahovaný_obsah: Stručné zhrnutie obsahu dokumentu (max 500 slov) v slovenčine, optimalizované pre chatbota
+- extrahovaný_obsah: Stručné zhrnutie obsahu dokumentu (max 500 slov) v slovenčine, optimalizované pre chatbota. 
+  Ak je to fotka, popíš čo by mohla zobrazovať na základe názvu súboru, priečinka a kontextu (napr. "Exteriér domu ${dokument.model_domu || ''}, ${dokument.podpriecinok || 'fotografie'}").
 - kľúčové_informácie: {
-    modely_domov: [zoznam modelov domov spomenutých v dokumente],
+    modely_domov: [zoznam modelov domov - určite zahrň model z názvu priečinka ak existuje],
     cenové_informácie: [cenové údaje vo formáte "Model X: 50000 EUR" alebo podobne],
     technické_údaje: [technické parametre ako "Plocha: 50m²", "Počet izieb: 3", atď.],
-    ostatné: [ostatné dôležité info]
+    ostatné: [ostatné dôležité info, vrátane informácií o type fotky ak je to fotka (exteriér, interiér, atď.)]
   }
 
-Ak je dokument fotka, sústreď sa na to čo by fotka mohla zobrazovať na základe názvu a kontextu.
-Ak nemáš dostatok informácií, použi to čo máš (názov, typ, výrobca).
+Dôležité: Ak má dokument model_domu z priečinka, určite ho zahrň do modely_domov a do extrahovaného obsahu.
 `;
 
         const result = await base44.integrations.Core.InvokeLLM({

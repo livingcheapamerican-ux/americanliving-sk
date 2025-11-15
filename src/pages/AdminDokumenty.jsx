@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -13,7 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Upload, FileText, Trash2, Download, Search, 
-  AlertCircle, CheckCircle, Loader2, X, Building2, FolderOpen, Brain, Eye
+  AlertCircle, CheckCircle, Loader2, X, Building2, FolderOpen, Brain, Eye, Home
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -22,8 +21,8 @@ export default function AdminDokumenty() {
   const [searchQuery, setSearchQuery] = useState("");
   const [uploading, setUploading] = useState(false);
   const [selectedVyrobca, setSelectedVyrobca] = useState("all");
-  const [uploadMode, setUploadMode] = useState("files"); // "files" or "folder"
-  const [viewingDocument, setViewingDocument] = useState(null); // NEW: State for viewing analysis modal
+  const [uploadMode, setUploadMode] = useState("files");
+  const [viewingDocument, setViewingDocument] = useState(null);
   const [formData, setFormData] = useState({
     popis: "",
     typ: "iné",
@@ -61,7 +60,6 @@ export default function AdminDokumenty() {
     }
   });
 
-  // NEW: Mutation for analyzing documents
   const analyzeMutation = useMutation({
     mutationFn: async (documentId) => {
       const response = await base44.functions.invoke('analyzujDokument', { document_id: documentId });
@@ -84,6 +82,33 @@ export default function AdminDokumenty() {
     setTagInput("");
     setUploadProgress({ current: 0, total: 0 });
     setUploadMode("files");
+  };
+
+  const extractFolderInfo = (filePath) => {
+    // Extract folder structure from webkitRelativePath
+    // Example: "Dom_A1/exterior/photo1.jpg" or "JAK_Modul_50/interior/living.jpg"
+    const parts = filePath.split('/');
+    
+    if (parts.length === 1) {
+      // Single file, no folder structure
+      return { model_domu: null, podpriecinok: null, cesta_priecinku: null };
+    }
+    
+    const mainFolder = parts[0]; // e.g., "Dom_A1" or "JAK_Modul_50"
+    const subFolder = parts.length > 2 ? parts[parts.length - 2] : null; // e.g., "exterior", "interior"
+    const fullPath = parts.slice(0, -1).join('/'); // Full folder path without filename
+    
+    // Extract model name - clean up underscores and common prefixes
+    let modelDomu = mainFolder
+      .replace(/_/g, ' ')
+      .replace(/^(Dom|Model|Modul)\s*/i, '')
+      .trim();
+    
+    return {
+      model_domu: modelDomu || null,
+      podpriecinok: subFolder || null,
+      cesta_priecinku: fullPath
+    };
   };
 
   const handleFileSelect = (e) => {
@@ -124,7 +149,7 @@ export default function AdminDokumenty() {
     setUploadProgress({ current: 0, total: selectedFiles.length });
     
     try {
-      const uploadedDocIds = []; // NEW: To store IDs of uploaded documents for subsequent analysis
+      const uploadedDocIds = [];
       
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
@@ -132,21 +157,33 @@ export default function AdminDokumenty() {
         
         const { file_url } = await base44.integrations.Core.UploadFile({ file });
         
+        // Extract folder information from file path
+        const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
+        
+        // Add folder info to tags if available
+        const autoTags = [...formData.tags];
+        if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
+        if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
+        
         const doc = await createMutation.mutateAsync({
           nazov: file.name,
           popis: formData.popis,
           typ: formData.typ,
           vyrobca: formData.vyrobca,
           pre_chatbota: formData.pre_chatbota,
-          tags: formData.tags,
+          tags: [...new Set(autoTags)], // Remove duplicates
+          model_domu: folderInfo.model_domu,
+          podpriecinok: folderInfo.podpriecinok,
+          cesta_priecinku: folderInfo.cesta_priecinku,
           subor_url: file_url,
           velkost: file.size,
           typ_suboru: file.type
         });
-        uploadedDocIds.push(doc.id); // NEW: Add document ID to the list
+        
+        uploadedDocIds.push(doc.id);
       }
       
-      // NEW: Automatically analyze all uploaded documents
+      // Automaticky analyzuj všetky nahrané dokumenty
       setUploadProgress({ current: 0, total: uploadedDocIds.length });
       for (let i = 0; i < uploadedDocIds.length; i++) {
         setUploadProgress({ current: i + 1, total: uploadedDocIds.length });
@@ -171,6 +208,7 @@ export default function AdminDokumenty() {
   const filteredDokumenty = dokumenty.filter(dok => {
     const matchesSearch = dok.nazov?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       dok.popis?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      dok.model_domu?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       dok.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     
     const matchesVyrobca = selectedVyrobca === "all" || dok.vyrobca === selectedVyrobca;
@@ -247,10 +285,10 @@ export default function AdminDokumenty() {
 
           <Card className="p-4 mb-6 bg-blue-50 border-blue-200">
             <div className="flex items-start gap-3">
-              <Brain className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" /> {/* CHANGED ICON */}
+              <Brain className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-blue-800">
-                <p className="font-semibold mb-1">Automatická AI analýza</p> {/* CHANGED TEXT */}
-                <p>Všetky nahrané dokumenty sú automaticky analyzované. AI extrahuje informácie o modeloch domov, cenách, technických parametroch a rozpozná o ktorých domoch sa píše.</p> {/* CHANGED TEXT */}
+                <p className="font-semibold mb-1">Automatická AI analýza a kategorizácia</p>
+                <p>Pri nahrávaní priečinkov systém automaticky rozpozná štruktúru (napr. "Dom_A1/exterior", "Modul_50/interior") a priradí fotky k príslušným domom. AI potom analyzuje obsah pre chatbota.</p>
               </div>
             </div>
           </Card>
@@ -308,6 +346,11 @@ export default function AdminDokumenty() {
                           Celý priečinok
                         </Button>
                       </div>
+                      {uploadMode === "folder" && (
+                        <p className="text-xs text-gray-600 mt-2">
+                          💡 Tip: Štruktúra priečinkov (napr. "Dom_A1/exterior") sa automaticky rozpozná a použije na kategorizáciu
+                        </p>
+                      )}
                     </div>
 
                     <div>
@@ -324,27 +367,48 @@ export default function AdminDokumenty() {
                         {selectedFiles.length > 0 && (
                           <div className="mt-3 space-y-2">
                             <p className="text-sm font-medium text-gray-700">
-                              Vybraných {selectedFiles.length} súborov:
+                              Vybraných {selectedFiles.length} súborov
+                              {uploadMode === "folder" && selectedFiles[0]?.webkitRelativePath && (
+                                <span className="text-blue-600 ml-2">
+                                  (zo štruktúry: {extractFolderInfo(selectedFiles[0].webkitRelativePath).cesta_priecinku || 'root'})
+                                </span>
+                              )}
                             </p>
                             <div className="max-h-48 overflow-y-auto space-y-2">
-                              {selectedFiles.map((file, index) => (
-                                <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-lg">{getFileIcon(file.type)}</span>
-                                    <span className="text-sm text-gray-700">{file.name}</span>
-                                    <span className="text-xs text-gray-500">({formatFileSize(file.size)})</span>
+                              {selectedFiles.slice(0, 10).map((file, index) => {
+                                const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
+                                return (
+                                  <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                                    <div className="flex items-center gap-2 flex-grow min-w-0">
+                                      <span className="text-lg flex-shrink-0">{getFileIcon(file.type)}</span>
+                                      <div className="min-w-0 flex-grow">
+                                        <span className="text-sm text-gray-700 block truncate">{file.name}</span>
+                                        {folderInfo.model_domu && (
+                                          <span className="text-xs text-blue-600">
+                                            🏠 {folderInfo.model_domu}
+                                            {folderInfo.podpriecinok && ` / ${folderInfo.podpriecinok}`}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <span className="text-xs text-gray-500 flex-shrink-0">({formatFileSize(file.size)})</span>
+                                    </div>
+                                    {uploadMode === "files" && (
+                                      <button
+                                        type="button"
+                                        onClick={() => handleRemoveFile(index)}
+                                        className="text-red-600 hover:text-red-700 ml-2 flex-shrink-0"
+                                      >
+                                        <X className="w-4 h-4" />
+                                      </button>
+                                    )}
                                   </div>
-                                  {uploadMode === "files" && (
-                                    <button
-                                      type="button"
-                                      onClick={() => handleRemoveFile(index)}
-                                      className="text-red-600 hover:text-red-700"
-                                    >
-                                      <X className="w-4 h-4" />
-                                    </button>
-                                  )}
-                                </div>
-                              ))}
+                                );
+                              })}
+                              {selectedFiles.length > 10 && (
+                                <p className="text-xs text-gray-500 text-center">
+                                  ... a ďalších {selectedFiles.length - 10} súborov
+                                </p>
+                              )}
                             </div>
                           </div>
                         )}
@@ -425,6 +489,9 @@ export default function AdminDokumenty() {
                           ))}
                         </div>
                       )}
+                      <p className="text-xs text-gray-500 mt-2">
+                        💡 Názvy priečinkov a podpriečinkov sa automaticky pridajú ako tagy
+                      </p>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -529,12 +596,19 @@ export default function AdminDokumenty() {
                         <div className="flex items-start justify-between gap-4 mb-2">
                           <div>
                             <h3 className="font-semibold text-gray-800 text-lg">{dok.nazov}</h3>
+                            {dok.model_domu && (
+                              <p className="text-sm text-blue-600 flex items-center gap-1 mt-1">
+                                <Home className="w-3 h-3" />
+                                Model: {dok.model_domu}
+                                {dok.podpriecinok && ` / ${dok.podpriecinok}`}
+                              </p>
+                            )}
                             {dok.popis && (
                               <p className="text-sm text-gray-600 mt-1">{dok.popis}</p>
                             )}
                           </div>
                           <div className="flex gap-2 flex-shrink-0">
-                            {dok.analyzovaný && ( // NEW: Show analysis button if document is analyzed
+                            {dok.analyzovaný && (
                               <Button
                                 size="sm"
                                 variant="outline"
@@ -577,7 +651,7 @@ export default function AdminDokumenty() {
                               Pre chatbota
                             </Badge>
                           )}
-                          {dok.analyzovaný && ( // NEW: Show analysis badge if document is analyzed
+                          {dok.analyzovaný && (
                             <Badge className="bg-purple-100 text-purple-800">
                               <Brain className="w-3 h-3 mr-1" />
                               Analyzované AI
@@ -600,7 +674,7 @@ export default function AdminDokumenty() {
             </div>
           )}
 
-          {/* NEW: Modal pre zobrazenie analýzy */}
+          {/* Modal pre zobrazenie analýzy */}
           <AnimatePresence>
             {viewingDocument && (
               <motion.div
@@ -628,6 +702,12 @@ export default function AdminDokumenty() {
                     <div>
                       <h3 className="font-semibold text-lg mb-2">Dokument:</h3>
                       <p className="text-gray-700">{viewingDocument.nazov}</p>
+                      {viewingDocument.model_domu && (
+                        <p className="text-blue-600 text-sm mt-1">
+                          🏠 Model domu: {viewingDocument.model_domu}
+                          {viewingDocument.podpriecinok && ` / ${viewingDocument.podpriecinok}`}
+                        </p>
+                      )}
                     </div>
 
                     {viewingDocument.extrahovaný_obsah && (
