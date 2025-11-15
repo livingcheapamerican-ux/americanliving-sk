@@ -264,7 +264,7 @@ export default function AdminDokumenty() {
     };
   };
 
-  const uploadFileWithRetry = async (file, maxRetries = 2, onProgress) => {
+  const uploadFileWithRetry = async (file, maxRetries = 1, onProgress) => {
     let lastError;
     let progressInterval = null;
 
@@ -272,7 +272,7 @@ export default function AdminDokumenty() {
       try {
         if (attempt > 0) {
           console.log(`🔄 Pokus ${attempt + 1}/${maxRetries + 1} pre súbor: ${file.name}`);
-          await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+          await new Promise(resolve => setTimeout(resolve, 500));
         }
 
         // Simulate progress
@@ -381,7 +381,7 @@ export default function AdminDokumenty() {
           }
 
           console.log(`📤 Nahrávam: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
-          const uploadResponse = await uploadFileWithRetry(file, 2, (progress) => {
+          const uploadResponse = await uploadFileWithRetry(file, 1, (progress) => {
             setCurrentFileProgress(progress);
           });
           console.log(`✅ Nahraný: ${file.name}`);
