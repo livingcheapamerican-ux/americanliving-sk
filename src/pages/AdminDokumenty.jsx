@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -13,7 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Upload, FileText, Trash2, Download, Search, 
-  AlertCircle, CheckCircle, Loader2, X, Building2, FolderOpen, Brain, Eye, Home, List, Folder, AlertTriangle, Info
+  AlertCircle, CheckCircle, Loader2, X, Building2, FolderOpen, Brain, Eye, Home, List, Folder, AlertTriangle, Info, Clock
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import DokumentyTreeView from "../components/DokumentyTreeView";
@@ -28,6 +27,7 @@ export default function AdminDokumenty() {
   const [viewMode, setViewMode] = useState("list");
   const [uploadResults, setUploadResults] = useState(null);
   const [currentFileName, setCurrentFileName] = useState("");
+  const [fileStatuses, setFileStatuses] = useState({});
   const [formData, setFormData] = useState({
     popis: "",
     typ: "iné",
@@ -88,14 +88,14 @@ export default function AdminDokumenty() {
     setUploadProgress({ current: 0, total: 0 });
     setUploadMode("files");
     setCurrentFileName("");
-    setUploading(false); // Added: Ensure uploading state is reset
+    setUploading(false);
+    setFileStatuses({});
   };
 
-  // Filter out system files
   const shouldSkipFile = (fileName) => {
     const skipPatterns = [
       /^\.DS_Store$/i,
-      /^\._/,  // Apple resource forks
+      /^\._/,
       /^__MACOSX/,
       /^Thumbs\.db$/i,
       /^desktop\.ini$/i,
@@ -140,7 +140,6 @@ export default function AdminDokumenty() {
 
   const handleFileSelect = (e) => {
     const allFiles = Array.from(e.target.files);
-    // Filter out system files immediately
     const validFiles = allFiles.filter(file => !shouldSkipFile(file.name));
     
     console.log(`📁 Vybratých ${allFiles.length} súborov, po filtrovaní ${validFiles.length} súborov`);
@@ -149,6 +148,20 @@ export default function AdminDokumenty() {
     }
     
     setSelectedFiles(validFiles);
+    
+    // Initialize file statuses
+    const initialStatuses = {};
+    validFiles.forEach(file => {
+      initialStatuses[file.name] = 'pending';
+    });
+    setFileStatuses(initialStatuses);
+  };
+
+  const updateFileStatus = (fileName, status) => {
+    setFileStatuses(prev => ({
+      ...prev,
+      [fileName]: status
+    }));
   };
 
   const handleRemoveFile = (index) => {
@@ -175,7 +188,6 @@ export default function AdminDokumenty() {
   const getErrorDetails = (error, file) => {
     const errorMsg = error.message || error.toString();
     
-    // File size errors
     if (errorMsg.includes('size') || errorMsg.includes('large') || errorMsg.includes('payload')) {
       return {
         type: 'FILE_SIZE',
@@ -185,18 +197,16 @@ export default function AdminDokumenty() {
       };
     }
     
-    // Network errors
-    if (errorMsg.includes('network') || errorMsg.includes('fetch') || errorMsg.includes('timeout') || error.response?.status >= 500) {
+    if (errorMsg.includes('network') || errorMsg.includes('fetch') || errorMsg.includes('timeout')) {
       return {
         type: 'NETWORK',
-        message: 'Problém s pripojením k internetu alebo serverom.',
+        message: 'Problém s pripojením k internetu',
         suggestion: 'Skontrolujte pripojenie a skúste znova',
         retryable: true
       };
     }
     
-    // Permission errors
-    if (errorMsg.includes('permission') || errorMsg.includes('unauthorized') || error.response?.status === 403 || error.response?.status === 401) {
+    if (errorMsg.includes('permission') || errorMsg.includes('unauthorized') || errorMsg.includes('403')) {
       return {
         type: 'PERMISSION',
         message: 'Nemáte oprávnenie nahrať tento súbor',
@@ -205,7 +215,6 @@ export default function AdminDokumenty() {
       };
     }
     
-    // Database errors
     if (errorMsg.includes('database') || errorMsg.includes('constraint') || errorMsg.includes('duplicate')) {
       return {
         type: 'DATABASE',
@@ -215,7 +224,6 @@ export default function AdminDokumenty() {
       };
     }
     
-    // Format errors
     if (errorMsg.includes('format') || errorMsg.includes('type') || errorMsg.includes('mime')) {
       return {
         type: 'FORMAT',
@@ -225,7 +233,6 @@ export default function AdminDokumenty() {
       };
     }
     
-    // Default
     return {
       type: 'UNKNOWN',
       message: errorMsg,
@@ -241,7 +248,7 @@ export default function AdminDokumenty() {
       try {
         if (attempt > 0) {
           console.log(`🔄 Pokus ${attempt + 1}/${maxRetries + 1} pre súbor: ${file.name}`);
-          await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // Exponential backoff
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
         }
         
         const uploadResponse = await base44.integrations.Core.UploadFile({ file });
@@ -292,11 +299,12 @@ export default function AdminDokumenty() {
         
         setUploadProgress({ current: fileNum, total: selectedFiles.length });
         setCurrentFileName(file.name);
+        updateFileStatus(file.name, 'nahrávam');
         
         try {
-          // Skip system files (double check)
           if (shouldSkipFile(file.name)) {
             console.log(`⏭️  Preskočený systémový súbor: ${file.name}`);
+            updateFileStatus(file.name, 'preskočený');
             results.skipped.push({
               name: file.name,
               reason: 'Systémový súbor (ignorovaný)'
@@ -304,9 +312,9 @@ export default function AdminDokumenty() {
             continue;
           }
 
-          // Check duplicate
           if (isFileDuplicate(file.name, file.size)) {
             console.log(`⏭️  Duplicita: ${file.name}`);
+            updateFileStatus(file.name, 'duplicita');
             results.skipped.push({
               name: file.name,
               reason: 'Súbor už existuje'
@@ -314,21 +322,17 @@ export default function AdminDokumenty() {
             continue;
           }
 
-          // Upload with retry
           console.log(`📤 Nahrávam: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
           const uploadResponse = await uploadFileWithRetry(file);
           console.log(`✅ Nahraný: ${file.name}`);
           
-          // Extract folder info
           const filePath = file.webkitRelativePath || file.name;
           const folderInfo = extractFolderInfo(filePath);
           
-          // Prepare tags
           const autoTags = [...formData.tags];
           if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
           if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
           
-          // Create document
           const docData = {
             nazov: file.name,
             popis: formData.popis,
@@ -347,6 +351,7 @@ export default function AdminDokumenty() {
           const doc = await createMutation.mutateAsync(docData);
           console.log(`✅ Vytvorený dokument ID: ${doc.id}`);
           
+          updateFileStatus(file.name, 'nahratý');
           results.successful.push({
             name: file.name,
             id: doc.id
@@ -355,6 +360,7 @@ export default function AdminDokumenty() {
         } catch (fileError) {
           console.error(`❌ Chyba pri ${file.name}:`, fileError);
           
+          updateFileStatus(file.name, 'odmietnutý');
           const errorDetails = getErrorDetails(fileError, file);
           results.failed.push({
             name: file.name,
@@ -370,7 +376,6 @@ export default function AdminDokumenty() {
       console.log(`⏭️  Preskočené: ${results.skipped.length}`);
       console.log(`❌ Chybné: ${results.failed.length}`);
       
-      // Auto-analyze successful uploads
       if (results.successful.length > 0) {
         console.log('\n🧠 Spúšťam analýzu...');
         setCurrentFileName("Analyzujem dokumenty...");
@@ -436,6 +441,25 @@ export default function AdminDokumenty() {
     if (mimeType.includes('audio')) return '🎵';
     if (mimeType.includes('zip') || mimeType.includes('archive')) return '📦';
     return '📄';
+  };
+
+  const getStatusBadge = (status) => {
+    switch(status) {
+      case 'nahrávam':
+        return <Badge className="bg-blue-100 text-blue-800"><Loader2 className="w-3 h-3 mr-1 animate-spin" />Nahrávam</Badge>;
+      case 'nahratý':
+        return <Badge className="bg-green-100 text-green-800"><CheckCircle className="w-3 h-3 mr-1" />Nahratý</Badge>;
+      case 'odmietnutý':
+        return <Badge className="bg-red-100 text-red-800"><AlertCircle className="w-3 h-3 mr-1" />Odmietnutý</Badge>;
+      case 'duplicita':
+        return <Badge className="bg-yellow-100 text-yellow-800"><Info className="w-3 h-3 mr-1" />Duplicita</Badge>;
+      case 'preskočený':
+        return <Badge className="bg-gray-100 text-gray-800"><X className="w-3 h-3 mr-1" />Preskočený</Badge>;
+      case 'pending':
+        return <Badge variant="outline"><Clock className="w-3 h-3 mr-1" />Čaká</Badge>;
+      default:
+        return null;
+    }
   };
 
   const typLabels = {
@@ -603,10 +627,11 @@ export default function AdminDokumenty() {
               <Button onClick={() => { 
                 setShowForm(!showForm); 
                 setUploadResults(null);
-                if (!showForm) { // If the form is about to be opened
+                if (!showForm) {
                   setUploading(false);
                   setUploadProgress({ current: 0, total: 0 });
                   setCurrentFileName("");
+                  setFileStatuses({});
                 }
               }} className="bg-primary">
                 <Upload className="w-4 h-4 mr-2" />
@@ -633,6 +658,7 @@ export default function AdminDokumenty() {
                           onClick={() => {
                             setUploadMode("files");
                             setSelectedFiles([]);
+                            setFileStatuses({});
                           }}
                           className="flex-1"
                         >
@@ -645,6 +671,7 @@ export default function AdminDokumenty() {
                           onClick={() => {
                             setUploadMode("folder");
                             setSelectedFiles([]);
+                            setFileStatuses({});
                           }}
                           className="flex-1"
                         >
@@ -674,37 +701,30 @@ export default function AdminDokumenty() {
                           <div className="mt-3 space-y-2">
                             <p className="text-sm font-medium text-gray-700">
                               Vybraných {selectedFiles.length} súborov
-                              {uploadMode === "folder" && selectedFiles[0]?.webkitRelativePath && (
-                                <span className="text-blue-600 ml-2">
-                                  (zo štruktúry: {extractFolderInfo(selectedFiles[0].webkitRelativePath).cesta_priecinku || 'root'})
-                                </span>
-                              )}
                             </p>
-                            <div className="max-h-48 overflow-y-auto space-y-2">
-                              {selectedFiles.slice(0, 10).map((file, index) => {
+                            <div className="max-h-64 overflow-y-auto space-y-2">
+                              {selectedFiles.map((file, index) => {
                                 const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
                                 const isDuplicate = isFileDuplicate(file.name, file.size);
+                                const status = fileStatuses[file.name] || 'pending';
+                                
                                 return (
-                                  <div key={index} className={`flex items-center justify-between p-2 rounded ${isDuplicate ? 'bg-yellow-50 border border-yellow-200' : 'bg-gray-50'}`}>
+                                  <div key={index} className="flex items-center justify-between p-2 rounded bg-gray-50 border border-gray-200">
                                     <div className="flex items-center gap-2 flex-grow min-w-0">
                                       <span className="text-lg flex-shrink-0">{getFileIcon(file.type)}</span>
                                       <div className="min-w-0 flex-grow">
                                         <span className="text-sm text-gray-700 block truncate">{file.name}</span>
-                                        {isDuplicate && (
-                                          <span className="text-xs text-yellow-600 flex items-center gap-1">
-                                            <AlertTriangle className="w-3 h-3"/>Duplicita
-                                          </span>
-                                        )}
-                                        {!isDuplicate && folderInfo.model_domu && (
+                                        {folderInfo.model_domu && (
                                           <span className="text-xs text-blue-600">
                                             🏠 {folderInfo.model_domu}
                                             {folderInfo.podpriecinok && ` / ${folderInfo.podpriecinok}`}
                                           </span>
                                         )}
                                       </div>
-                                      <span className="text-xs text-gray-500 flex-shrink-0">({formatFileSize(file.size)})</span>
+                                      <span className="text-xs text-gray-500 flex-shrink-0 mr-2">({formatFileSize(file.size)})</span>
+                                      {getStatusBadge(isDuplicate && status === 'pending' ? 'duplicita' : status)}
                                     </div>
-                                    {uploadMode === "files" && (
+                                    {uploadMode === "files" && !uploading && (
                                       <button
                                         type="button"
                                         onClick={() => handleRemoveFile(index)}
@@ -716,11 +736,6 @@ export default function AdminDokumenty() {
                                   </div>
                                 );
                               })}
-                              {selectedFiles.length > 10 && (
-                                <p className="text-xs text-gray-500 text-center">
-                                  ... a ďalších {selectedFiles.length - 10} súborov
-                                </p>
-                              )}
                             </div>
                           </div>
                         )}
@@ -743,9 +758,6 @@ export default function AdminDokumenty() {
                             ))}
                           </SelectContent>
                         </Select>
-                        {formData.vyrobca === "American Living" && (
-                          <p className="text-xs text-gray-500 mt-1">Obchodný model, fungovanie, know-how, blog</p>
-                        )}
                       </div>
                       <div>
                         <Label>Typ *</Label>
@@ -801,9 +813,6 @@ export default function AdminDokumenty() {
                           ))}
                         </div>
                       )}
-                      <p className="text-xs text-gray-500 mt-2">
-                        💡 Názvy priečinkov a podpriečinkov sa automaticky pridajú ako tagy
-                      </p>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -849,6 +858,7 @@ export default function AdminDokumenty() {
                           setShowForm(false);
                           resetForm();
                         }}
+                        disabled={uploading}
                       >
                         Zrušiť
                       </Button>
@@ -862,13 +872,9 @@ export default function AdminDokumenty() {
           {viewMode === "list" && (
             <Tabs value={selectedVyrobca} onValueChange={setSelectedVyrobca} className="mb-6">
               <TabsList className="grid grid-cols-3 lg:grid-cols-6 w-full">
-                <TabsTrigger value="all">
-                  Všetky ({dokumenty.length})
-                </TabsTrigger>
+                <TabsTrigger value="all">Všetky ({dokumenty.length})</TabsTrigger>
                 {vyrobcovia.map(v => (
-                  <TabsTrigger key={v} value={v}>
-                    {v.split(' ')[0]} ({getVyrobcaCount(v)})
-                  </TabsTrigger>
+                  <TabsTrigger key={v} value={v}>{v.split(' ')[0]} ({getVyrobcaCount(v)})</TabsTrigger>
                 ))}
               </TabsList>
             </Tabs>
@@ -890,97 +896,55 @@ export default function AdminDokumenty() {
               <p className="text-lg font-medium text-gray-700 mb-2">
                 {searchQuery ? "Nenašli sa žiadne dokumenty" : "Žiadne dokumenty"}
               </p>
-              <p className="text-sm text-gray-500">
-                {searchQuery ? "Skúste iný vyhľadávací výraz" : `Nahrajte prvý dokument pre ${selectedVyrobca === "all" ? "výrobcov" : selectedVyrobca}`}
-              </p>
             </Card>
           ) : (
             <div className="grid gap-4">
               {filteredDokumenty.map((dok, index) => (
-                <motion.div
-                  key={dok.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                >
+                <motion.div key={dok.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.05 }}>
                   <Card className="p-4 hover:shadow-lg transition-shadow">
                     <div className="flex items-start gap-4">
-                      <div className="text-4xl flex-shrink-0">
-                        {getFileIcon(dok.typ_suboru)}
-                      </div>
+                      <div className="text-4xl flex-shrink-0">{getFileIcon(dok.typ_suboru)}</div>
                       <div className="flex-grow">
                         <div className="flex items-start justify-between gap-4 mb-2">
                           <div>
                             <h3 className="font-semibold text-gray-800 text-lg">{dok.nazov}</h3>
                             {dok.model_domu && (
                               <p className="text-sm text-blue-600 flex items-center gap-1 mt-1">
-                                <Home className="w-3 h-3" />
-                                Model: {dok.model_domu}
-                                {dok.podpriecinok && ` / ${dok.podpriecinok}`}
+                                <Home className="w-3 h-3" />Model: {dok.model_domu}{dok.podpriecinok && ` / ${dok.podpriecinok}`}
                               </p>
                             )}
-                            {dok.popis && (
-                              <p className="text-sm text-gray-600 mt-1">{dok.popis}</p>
-                            )}
+                            {dok.popis && <p className="text-sm text-gray-600 mt-1">{dok.popis}</p>}
                           </div>
                           <div className="flex gap-2 flex-shrink-0">
                             {dok.analyzovaný && (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => setViewingDocument(dok)}
-                              >
-                                <Eye className="w-4 h-4 mr-1" />
-                                Analýza
+                              <Button size="sm" variant="outline" onClick={() => setViewingDocument(dok)}>
+                                <Eye className="w-4 h-4 mr-1" />Analýza
                               </Button>
                             )}
                             <a href={dok.subor_url} target="_blank" rel="noopener noreferrer">
                               <Button size="sm" variant="outline">
-                                <Download className="w-4 h-4 mr-1" />
-                                Stiahnuť
+                                <Download className="w-4 h-4 mr-1" />Stiahnuť
                               </Button>
                             </a>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => {
-                                if (window.confirm('Naozaj chcete vymazať tento dokument?')) {
-                                  deleteMutation.mutate(dok.id);
-                                }
-                              }}
-                              className="text-red-600 hover:text-red-700"
-                            >
+                            <Button size="sm" variant="ghost" onClick={() => {
+                              if (window.confirm('Naozaj chcete vymazať tento dokument?')) {
+                                deleteMutation.mutate(dok.id);
+                              }
+                            }} className="text-red-600">
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
                         </div>
                         <div className="flex flex-wrap gap-2 items-center">
                           <Badge className={vyrobcaColors[dok.vyrobca]}>
-                            <Building2 className="w-3 h-3 mr-1" />
-                            {dok.vyrobca}
+                            <Building2 className="w-3 h-3 mr-1" />{dok.vyrobca}
                           </Badge>
                           <Badge variant="outline">{typLabels[dok.typ]}</Badge>
                           <Badge variant="secondary">{formatFileSize(dok.velkost)}</Badge>
-                          {dok.pre_chatbota && (
-                            <Badge className="bg-green-100 text-green-800">
-                              <CheckCircle className="w-3 h-3 mr-1" />
-                              Pre chatbota
-                            </Badge>
-                          )}
-                          {dok.analyzovaný && (
-                            <Badge className="bg-purple-100 text-purple-800">
-                              <Brain className="w-3 h-3 mr-1" />
-                              Analyzované AI
-                            </Badge>
-                          )}
-                          {dok.tags?.map(tag => (
-                            <Badge key={tag} className="bg-blue-100 text-blue-800">
-                              {tag}
-                            </Badge>
-                          ))}
-                          <span className="text-xs text-gray-500 ml-auto">
-                            {new Date(dok.created_date).toLocaleDateString('sk-SK')}
-                          </span>
+                          {dok.pre_chatbota && <Badge className="bg-green-100 text-green-800"><CheckCircle className="w-3 h-3 mr-1" />Pre chatbota</Badge>}
+                          {dok.analyzovaný && <Badge className="bg-purple-100 text-purple-800"><Brain className="w-3 h-3 mr-1" />Analyzované AI</Badge>}
+                          {dok.tags?.map(tag => <Badge key={tag} className="bg-blue-100 text-blue-800">{tag}</Badge>)}
+                          <span className="text-xs text-gray-500 ml-auto">{new Date(dok.created_date).toLocaleDateString('sk-SK')}</span>
                         </div>
                       </div>
                     </div>
@@ -992,48 +956,26 @@ export default function AdminDokumenty() {
 
           <AnimatePresence>
             {viewingDocument && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-                onClick={() => setViewingDocument(null)}
-              >
-                <motion.div
-                  initial={{ scale: 0.9 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0.9 }}
-                  onClick={(e) => e.stopPropagation()}
-                  className="bg-white rounded-lg p-6 max-w-3xl w-full max-h-[80vh] overflow-y-auto"
-                >
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setViewingDocument(null)}>
+                <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg p-6 max-w-3xl w-full max-h-[80vh] overflow-y-auto">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-2xl font-bold text-gray-800">AI Analýza dokumentu</h2>
-                    <Button variant="ghost" size="icon" onClick={() => setViewingDocument(null)}>
-                      <X className="w-5 h-5" />
-                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => setViewingDocument(null)}><X className="w-5 h-5" /></Button>
                   </div>
-                  
                   <div className="space-y-4">
                     <div>
                       <h3 className="font-semibold text-lg mb-2">Dokument:</h3>
                       <p className="text-gray-700">{viewingDocument.nazov}</p>
                       {viewingDocument.model_domu && (
-                        <p className="text-blue-600 text-sm mt-1">
-                          🏠 Model domu: {viewingDocument.model_domu}
-                          {viewingDocument.podpriecinok && ` / ${viewingDocument.podpriecinok}`}
-                        </p>
+                        <p className="text-blue-600 text-sm mt-1">🏠 Model domu: {viewingDocument.model_domu}{viewingDocument.podpriecinok && ` / ${viewingDocument.podpriecinok}`}</p>
                       )}
                     </div>
-
                     {viewingDocument.extrahovaný_obsah && (
                       <div>
                         <h3 className="font-semibold text-lg mb-2">Extrahovaný obsah:</h3>
-                        <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded">
-                          {viewingDocument.extrahovaný_obsah}
-                        </p>
+                        <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded">{viewingDocument.extrahovaný_obsah}</p>
                       </div>
                     )}
-
                     {viewingDocument.kľúčové_informácie && (
                       <div>
                         <h3 className="font-semibold text-lg mb-2">Kľúčové informácie:</h3>
@@ -1042,9 +984,7 @@ export default function AdminDokumenty() {
                             <div>
                               <p className="font-medium text-gray-700 mb-1">Modely domov:</p>
                               <div className="flex flex-wrap gap-2">
-                                {viewingDocument.kľúčové_informácie.modely_domov.map((model, i) => (
-                                  <Badge key={i} className="bg-blue-100 text-blue-800">{model}</Badge>
-                                ))}
+                                {viewingDocument.kľúčové_informácie.modely_domov.map((model, i) => <Badge key={i} className="bg-blue-100 text-blue-800">{model}</Badge>)}
                               </div>
                             </div>
                           )}
@@ -1052,9 +992,7 @@ export default function AdminDokumenty() {
                             <div>
                               <p className="font-medium text-gray-700 mb-1">Cenové informácie:</p>
                               <ul className="list-disc list-inside text-gray-700">
-                                {viewingDocument.kľúčové_informácie.cenové_informácie.map((info, i) => (
-                                  <li key={i}>{info}</li>
-                                ))}
+                                {viewingDocument.kľúčové_informácie.cenové_informácie.map((info, i) => <li key={i}>{info}</li>)}
                               </ul>
                             </div>
                           )}
@@ -1062,19 +1000,7 @@ export default function AdminDokumenty() {
                             <div>
                               <p className="font-medium text-gray-700 mb-1">Technické údaje:</p>
                               <ul className="list-disc list-inside text-gray-700">
-                                {viewingDocument.kľúčové_informácie.technické_údaje.map((info, i) => (
-                                  <li key={i}>{info}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                          {viewingDocument.kľúčové_informácie.ostatné?.length > 0 && (
-                            <div>
-                              <p className="font-medium text-gray-700 mb-1">Ostatné:</p>
-                              <ul className="list-disc list-inside text-gray-700">
-                                {viewingDocument.kľúčové_informácie.ostatné.map((info, i) => (
-                                  <li key={i}>{info}</li>
-                                ))}
+                                {viewingDocument.kľúčové_informácie.technické_údaje.map((info, i) => <li key={i}>{info}</li>)}
                               </ul>
                             </div>
                           )}
