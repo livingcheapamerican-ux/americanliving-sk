@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { FolderOpen, RefreshCw, CheckCircle, Folder, Link as LinkIcon, AlertCircle, Settings, Search, FileText, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
+import GoogleDriveFilesList from "../components/GoogleDriveFilesList";
 
 export default function AdminGoogleDrive() {
   const [selectedFolders, setSelectedFolders] = useState([]);
@@ -214,6 +215,13 @@ export default function AdminGoogleDrive() {
                 </div>
               )}
             </Card>
+          )}
+
+          {/* Files List Component */}
+          {user?.google_drive_access_token && (
+            <div className="mb-6">
+              <GoogleDriveFilesList />
+            </div>
           )}
 
           {/* Load folders */}
