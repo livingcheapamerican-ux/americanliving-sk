@@ -688,6 +688,9 @@ export default function AdminDokumenty() {
                   return { file, status: 'failed', size: file.size };
                 }
               }
+              
+              // Ak sa dostaneme sem, vyčerpali sa retry pokusy
+              return { file, status: 'failed', size: file.size };
             });
 
             const batchResults = await Promise.allSettled(batchPromises);
