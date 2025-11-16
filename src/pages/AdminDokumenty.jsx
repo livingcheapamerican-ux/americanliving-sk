@@ -233,6 +233,7 @@ export default function AdminDokumenty() {
     };
   };
 
+  // OPTIMALIZOVANÁ duplicita check - bez filter, len some
   const isFileDuplicate = (fileName, fileSize, folderPath) => {
     return dokumenty.some(dok =>
       dok.nazov === fileName && 
@@ -244,30 +245,24 @@ export default function AdminDokumenty() {
   const handleFileSelect = (e) => {
     const newFiles = Array.from(e.target.files);
     
-    // Validácia videí podľa typu
+    // RÝCHLA predvalidácia - bez čakania
     const validFiles = newFiles.filter(file => {
       if (shouldSkipFile(file.name)) return false;
       
-      // Ak je typ nastavený na video, akceptuj len videá
+      // Zrýchlená validácia typu - bez await
       if (formData.typ === 'video') {
-        return file.type.startsWith('video/');
+        return file.type.startsWith('video/') || file.name.match(/\.(mp4|mov|avi|mkv|webm)$/i);
       }
       
       return true;
     });
 
-    const rejectedVideos = newFiles.filter(file => 
-      formData.typ === 'video' && !file.type.startsWith('video/')
-    ).length;
-
-    if (rejectedVideos > 0) {
-      alert(`${rejectedVideos} súborov bolo odmietnutých. Pri type "Video" môžete nahrať len video súbory.`);
+    const rejectedCount = newFiles.length - validFiles.length;
+    if (rejectedCount > 0) {
+      alert(`${rejectedCount} súborov bolo odmietnutých (neplatný formát alebo systémový súbor).`);
     }
 
     console.log(`📁 Vybratých ${newFiles.length} súborov, po filtrovaní ${validFiles.length} súborov`);
-    if (newFiles.length > validFiles.length) {
-      console.log(`🗑️  Vyfiltrovaných ${newFiles.length - validFiles.length} systémových súborov`);
-    }
 
     setSelectedFiles(prev => {
       const allSelectedFiles = [...prev, ...validFiles];
@@ -304,29 +299,23 @@ export default function AdminDokumenty() {
         }
       }
 
-      // Validácia videí podľa typu
+      // RÝCHLA validácia pri drop
       const validFiles = allFiles.filter(file => {
         if (shouldSkipFile(file.name)) return false;
         
         if (formData.typ === 'video') {
-          return file.type.startsWith('video/');
+          return file.type.startsWith('video/') || file.name.match(/\.(mp4|mov|avi|mkv|webm)$/i);
         }
         
         return true;
       });
 
-      const rejectedVideos = allFiles.filter(file => 
-        formData.typ === 'video' && !file.type.startsWith('video/')
-      ).length;
-
-      if (rejectedVideos > 0) {
-        alert(`${rejectedVideos} súborov bolo odmietnutých. Pri type "Video" môžete nahrať len video súbory.`);
+      const rejectedCount = allFiles.length - validFiles.length;
+      if (rejectedCount > 0) {
+        alert(`${rejectedCount} súborov bolo odmietnutých.`);
       }
       
       console.log(`📁 Dropped ${allFiles.length} súborov, po filtrovaní ${validFiles.length} súborov`);
-      if (allFiles.length > validFiles.length) {
-        console.log(`🗑️  Vyfiltrovaných ${allFiles.length - validFiles.length} systémových súborov`);
-      }
 
       setSelectedFiles(prev => {
         const allSelectedFiles = [...prev, ...validFiles];
@@ -485,32 +474,31 @@ export default function AdminDokumenty() {
       return;
     }
 
-    // RÝCHLA PREDVALIDÁCIA - filtrovať duplicity a neplatné súbory PRED začatím
+    // SUPER RÝCHLA PREDVALIDÁCIA - všetko naraz pred začatím
     const filesToProcessInitially = selectedFiles.filter(file => {
-      // Check current status in fileStatuses (from potentially loaded saved state)
-      if (fileStatuses[file.name] === 'nahratý') {
-        return false; // Skip already uploaded files
-      }
+      if (fileStatuses[file.name] === 'nahratý') return false;
       if (shouldSkipFile(file.name)) {
-        setFileStatuses(prev => ({ ...prev, [file.name]: 'preskočený' }));
-        return false; // Skip system files
+        fileStatuses[file.name] = 'preskočený';
+        return false;
       }
+      
       const filePath = file.webkitRelativePath || file.name;
       const folderInfo = extractFolderInfo(filePath);
+      
       if (isFileDuplicate(file.name, file.size, folderInfo.cesta_priecinku)) {
-        setFileStatuses(prev => ({ ...prev, [file.name]: 'duplicita' }));
-        return false; // Skip duplicates
+        fileStatuses[file.name] = 'duplicita';
+        return false;
       }
-      return true; // File is eligible for upload
+      return true;
     });
 
     if (filesToProcessInitially.length === 0) {
-      alert("Žiadne nové súbory na nahranie. Všetky súbory sú už nahrané, preskočené alebo sú duplikáty.");
+      alert("Žiadne nové súbory na nahranie.");
       return;
     }
 
     setUploading(true);
-    uploadWorkerRef.current = { cancel: false }; // Initialize cancellation reference
+    uploadWorkerRef.current = { cancel: false };
     
     const alreadyUploadedCount = Object.values(fileStatuses).filter(s => s === 'nahratý').length;
     const totalFilesForProgress = selectedFiles.length; 
@@ -537,9 +525,10 @@ export default function AdminDokumenty() {
     setUploadedBytes(cumulativeBytes);
 
     try {
-      const BATCH_SIZE = 20;
+      // ZVÝŠENÁ rýchlosť - väčší batch
+      const BATCH_SIZE = 30;
       
-      const filesToActuallyUpload = filesToProcessInitially; 
+      const filesToActuallyUpload = filesToProcessInitially;
 
       const batches = [];
       for (let i = 0; i < filesToActuallyUpload.length; i += BATCH_SIZE) {
@@ -561,7 +550,6 @@ export default function AdminDokumenty() {
         const batchPromises = batch.map(async (file) => {
           if (uploadWorkerRef.current?.cancel) return null;
 
-          // Real-time update statusu - nahrávam
           updateFileStatus(file.name, 'nahrávam');
           setCurrentFileName(file.name);
 
@@ -590,14 +578,12 @@ export default function AdminDokumenty() {
               typ_suboru: file.type || 'application/octet-stream'
             });
 
-            // Real-time update statusu - nahratý
             updateFileStatus(file.name, 'nahratý');
             results.successful.push({ name: file.name, id: doc.id });
             
             return { file, status: 'success', size: file.size };
 
           } catch (fileError) {
-            // Real-time update statusu - odmietnutý
             updateFileStatus(file.name, 'odmietnutý');
             results.failed.push({
               name: file.name,
@@ -610,7 +596,6 @@ export default function AdminDokumenty() {
 
         const batchResults = await Promise.allSettled(batchPromises);
 
-        // Real-time update celkového priebehu
         batchResults.forEach(result => {
           if (result.status === 'fulfilled' && result.value && result.value.status === 'success') {
             completedCount++;
@@ -621,19 +606,19 @@ export default function AdminDokumenty() {
           }
         });
 
-        // Real-time update zobrazenia
         setUploadedBytes(cumulativeBytes);
         setUploadProgress({ current: completedCount, total: totalFilesForProgress });
         saveUploadState(fileStatuses, { current: completedCount, total: totalFilesForProgress }, formData, uploadMode);
       }
 
+      // AI analýza v pozadí - ešte rýchlejšie
       if (results.successful.length > 0 && !uploadWorkerRef.current?.cancel) {
         setCurrentFileName("Analyzujem v pozadí...");
         
         setTimeout(async () => {
           const analysisBatches = [];
-          for (let i = 0; i < results.successful.length; i += 15) {
-            analysisBatches.push(results.successful.slice(i, i + 15));
+          for (let i = 0; i < results.successful.length; i += 20) {
+            analysisBatches.push(results.successful.slice(i, i + 20));
           }
 
           for (const analysisBatch of analysisBatches) {
@@ -646,10 +631,10 @@ export default function AdminDokumenty() {
       }
 
       setUploadResults(results);
-      setShowForm(false); // Existing
-      localStorage.removeItem(UPLOAD_STATE_KEY); // Moved from finally
-      setCurrentFileName(""); // Moved from finally
-      setUploadProgress({ current: 0, total: 0 }); // Moved from finally
+      setShowForm(false);
+      localStorage.removeItem(UPLOAD_STATE_KEY);
+      setCurrentFileName("");
+      setUploadProgress({ current: 0, total: 0 });
 
     } catch (error) {
       alert("Kritická chyba: " + error.message);
@@ -1019,8 +1004,7 @@ export default function AdminDokumenty() {
                     {/* Drag & Drop Zone */}
                     <div>
                       <Label className="text-base font-semibold text-gray-700 mb-3 block">
-                        {uploadMode === "folder" ? "Priečinky *" : "Súbory *"}
-                      </Label>
+                        {uploadMode === "folder" ? "Priečinky *" : "Súbory *"}</Label>
                       
                       <div
                         onDrop={handleDrop}
