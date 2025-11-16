@@ -1229,36 +1229,63 @@ export default function AdminDokumenty() {
                           </div>
                         </div>
 
+                        {/* Celkový progress */}
                         <div>
                           <div className="flex items-center justify-between mb-2">
                             <p className="text-xs font-medium text-blue-800">
                               Celkový progress: {uploadProgress.current} / {uploadProgress.total}
                             </p>
-                            <span className="text-xs text-blue-700 font-medium">
-                              {formatFileSize(uploadedBytes)} / {formatFileSize(totalBytes)}
+                            <span className="text-xs text-blue-700 font-bold">
+                              {uploadProgress.total > 0 ? Math.round((uploadProgress.current / uploadProgress.total) * 100) : 0}%
                             </span>
                           </div>
-                          <div className="w-full bg-blue-200 rounded-full h-2 overflow-hidden">
+                          <div className="relative w-full bg-blue-200 rounded-full h-3 overflow-hidden">
                             <div
-                              className="bg-gradient-to-r from-blue-600 to-indigo-600 h-2 rounded-full transition-all duration-300"
+                              className="bg-gradient-to-r from-blue-600 to-indigo-600 h-3 rounded-full transition-all duration-300 flex items-center justify-center"
                               style={{ width: `${uploadProgress.total > 0 ? (uploadProgress.current / uploadProgress.total) * 100 : 0}%` }}
-                            />
+                            >
+                              {uploadProgress.total > 0 && (uploadProgress.current / uploadProgress.total) > 0.1 && (
+                                <span className="text-white text-xs font-bold">
+                                  {Math.round((uploadProgress.current / uploadProgress.total) * 100)}%
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex justify-between text-xs text-blue-700 mt-1">
+                            <span>{formatFileSize(uploadedBytes)}</span>
+                            <span>{formatFileSize(totalBytes)}</span>
                           </div>
                         </div>
 
-                        {/* Real-time file status list */}
-                        <div className="mt-4 max-h-48 overflow-y-auto space-y-2 bg-white/50 rounded-lg p-3">
-                          <p className="text-xs font-semibold text-blue-900 mb-2">Stav súborov:</p>
+                        {/* Real-time file status list s progress barmi */}
+                        <div className="mt-4 max-h-64 overflow-y-auto space-y-3 bg-white/50 rounded-lg p-4">
+                          <p className="text-xs font-semibold text-blue-900 mb-3 sticky top-0 bg-white/80 py-1">
+                            Stav jednotlivých súborov:
+                          </p>
                           {selectedFiles.map((file, index) => {
                             const status = fileStatuses[file.name] || 'pending';
-                            if (status === 'pending') return null; // Skip pending files in progress view
+                            const fileProgress = status === 'nahratý' ? 100 : status === 'nahrávam' ? 50 : status === 'odmietnutý' ? 100 : 0;
                             
                             return (
-                              <div key={file.name + index} className="flex items-center justify-between text-xs">
-                                <span className="truncate flex-1 text-gray-700">{file.name}</span>
-                                <span className="ml-2 flex-shrink-0">
-                                  {getStatusBadge(status)}
-                                </span>
+                              <div key={file.name + index} className="space-y-1">
+                                <div className="flex items-center justify-between text-xs">
+                                  <span className="truncate flex-1 text-gray-700 font-medium">{file.name}</span>
+                                  <span className="ml-2 flex-shrink-0 flex items-center gap-2">
+                                    <span className="text-xs font-bold text-gray-600">{fileProgress}%</span>
+                                    {getStatusBadge(status)}
+                                  </span>
+                                </div>
+                                <div className="relative w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                                  <div
+                                    className={`h-2 rounded-full transition-all duration-300 ${
+                                      status === 'nahratý' ? 'bg-gradient-to-r from-green-500 to-emerald-500' :
+                                      status === 'nahrávam' ? 'bg-gradient-to-r from-blue-500 to-indigo-500 animate-pulse' :
+                                      status === 'odmietnutý' ? 'bg-gradient-to-r from-red-500 to-rose-500' :
+                                      'bg-gray-300'
+                                    }`}
+                                    style={{ width: `${fileProgress}%` }}
+                                  />
+                                </div>
                               </div>
                             );
                           })}
