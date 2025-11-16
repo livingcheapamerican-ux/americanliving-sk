@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -20,7 +21,7 @@ export default function AdminAnalyzaDatabazy() {
 
   const queryClient = useQueryClient();
 
-  const { data: user } = useQuery({
+  const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me()
   });
@@ -167,12 +168,24 @@ export default function AdminAnalyzaDatabazy() {
     return vyrobcaMatch && modelMatch && typMatch;
   });
 
-  if (!user || !user.super_admin) {
+  if (userLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 text-primary mx-auto mb-4 animate-spin" />
+          <p className="text-gray-600">Načítavam...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user || (user.role !== 'admin' && !user.super_admin)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Card className="p-8">
           <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <p>Prístup len pre super administrátorov</p>
+          <p className="mb-2">Prístup len pre administrátorov</p>
+          <p className="text-xs text-gray-500">Role: {user?.role || 'none'}, Super Admin: {user?.super_admin ? 'áno' : 'nie'}</p>
         </Card>
       </div>
     );
