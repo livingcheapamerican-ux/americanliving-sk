@@ -194,7 +194,8 @@ export default function AdminDokumenty() {
       /^__MACOSX/,
       /^Thumbs\.db$/i,
       /^desktop\.ini$/i,
-      /^\.(git|svn|hg)/
+      /^\.(git|svn|hg)/,
+      /\.(tif|tiff)$/i  // Ignorovať .tif súbory
     ];
 
     return skipPatterns.some(pattern => pattern.test(fileName));
@@ -626,9 +627,18 @@ export default function AdminDokumenty() {
                 const filePath = file.webkitRelativePath || file.name;
                 const folderInfo = extractFolderInfo(filePath);
 
-                // Upload s progress tracking
+                // Upload s progress tracking a TIMEOUT
                 updateFileProgress(file.name, 30);
-                const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+                
+                // Timeout wrapper pre upload - 2 minúty
+                const uploadWithTimeout = Promise.race([
+                  base44.integrations.Core.UploadFile({ file }),
+                  new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Upload timeout - súbor je príliš veľký alebo nahrávanie trvá príliš dlho')), 120000)
+                  )
+                ]);
+                
+                const uploadResponse = await uploadWithTimeout;
                 updateFileProgress(file.name, 70);
 
                 // Preskočiť ak bol medzitým zrušený
