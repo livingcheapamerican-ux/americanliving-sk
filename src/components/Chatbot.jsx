@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { MessageCircle, X, Send, Loader2, Minimize2 } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Chatbot() {
@@ -11,12 +11,14 @@ export default function Chatbot() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "Dobrý deň! Som váš virtuálny asistent American Living. Ako vám môžem pomôcť s výberom modulárneho domu?"
+      content: "Dobrý deň! Som AI asistent American Living. Rád vám pomôžem s výberom modulárneho domu. Opýtajte sa ma na čokoľvek! 🏠"
     }
   ]);
-  const [inputValue, setInputValue] = useState("");
+  const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+
+  const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -26,79 +28,47 @@ export default function Chatbot() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = async () => {
-    if (!inputValue.trim() || isLoading) return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
 
-    const userMessage = inputValue.trim();
-    setInputValue("");
+    const userMessage = input.trim();
+    setInput("");
     setMessages(prev => [...prev, { role: "user", content: userMessage }]);
     setIsLoading(true);
 
     try {
-      const context = `
-Si virtuálny asistent pre American Living - distribútora a realizátora modulárnych domov na Slovensku.
-
-ZÁKLADNÉ INFORMÁCIE:
-- American Living je distribútor modulárnych a mobilných domov od roku 2008
-- Vyrobených viac ako 700 domov
-- Oficiálny distribútor 4 výrobcov: JAK Modules, Ticab House, Prosto House, Domki z Gór
-- Všetky domy spĺňajú normy a sú pripravené na kolaudáciu
-- Možnosť energetického certifikátu A0
-
-KOMPLEXNÉ SLUŽBY:
-1. Predaj nehnuteľnosti (realitná kancelária)
-2. Výber a nákup pozemku
-3. Vybavenie hypotéky (finančné služby)
-4. Projektová dokumentácia
-5. Stavebné povolenie
-6. Výstavba domu
-7. Napojenie na inžinierske siete
-8. Kolaudácia
-
-CENOVÉ ROZPÄTIE:
-- Ceny domov sa pohybujú od 15 000 € do 150 000 € s DPH
-- Orientačne 1500-2500 €/m² na kľúč
-- Základná cena zahŕňa konštrukciu, pre Prosto House len samotnú konštrukciu bez montáže
-
-VÝSTAVBA:
-- Rýchlosť výstavby: 4-6 mesiacov (samotná stavba)
-- Celkový čas vrátane povolení: 6-10 mesiacov
-- Drevostavby s dlhou životnosťou (100+ rokov pri správnej údržbe)
-
-KONTAKT:
-- Telefón: +421 905 138 124
-- Email: info@americanliving.sk
-- Pracovné hodiny: Po-Pia 8:00 - 17:00
-
-DÔLEŽITÉ:
-- Transparentné ceny bez skrytých poplatkov
-- Žiadne zavádzajúce reklamy
-- Domy spĺňajú všetky legislatívne požiadavky
-- 5-ročná záruka
-
-Odpovedaj priateľsky, profesionálne a stručne v slovenčine. Ak nevieš odpoveď, odporuč kontaktovať tím cez telefón alebo email.
-`;
-
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `${context}\n\nOtázka používateľa: ${userMessage}`,
+        prompt: `Si profesionálny AI asistent pre firmu American Living, ktorá sa zaoberá distribúciou a realizáciou modulárnych domov.
+
+Kontext spoločnosti:
+- Distribútor modulárnych domov (Ticab House, JAK Modules, Prosto House, Domki z Gór)
+- Vyrobených viac ako 700 domov od roku 2008
+- Ponúkame komplexné služby vrátane dovozu, montáže, pripojení
+
+Tvoja úloha:
+- Odpovedaj profesionálne, priateľsky a v slovenčine
+- Poskytuj konkrétne informácie o modulárnych domoch
+- Pri otázkach o cenách, modeloch alebo špecifikáciách odporúčaj kontakt alebo katalóg
+- Buď nápomocný a nadšený z modulárneho bývania
+
+Otázka zákazníka: ${userMessage}
+
+Odpoveď (max 200 slov, priateľsky tón):`,
         add_context_from_internet: false
       });
 
-      setMessages(prev => [...prev, { role: "assistant", content: response }]);
+      setMessages(prev => [...prev, { 
+        role: "assistant", 
+        content: response 
+      }]);
     } catch (error) {
       setMessages(prev => [...prev, { 
         role: "assistant", 
-        content: "Ospravedlňujem sa, ale nastala chyba. Prosím kontaktujte nás priamo na telefóne +421 905 138 124 alebo emaile info@americanliving.sk." 
+        content: "Prepáčte, nastala chyba. Skúste to prosím znova alebo nás kontaktujte priamo na +421 905 138 124." 
       }]);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
     }
   };
 
@@ -115,11 +85,13 @@ Odpovedaj priateľsky, profesionálne a stručne v slovenčine. Ak nevieš odpov
           >
             <Button
               onClick={() => setIsOpen(true)}
-              size="lg"
-              className="h-16 w-16 rounded-full bg-secondary hover:bg-secondary/90 shadow-2xl"
+              className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-secondary hover:from-secondary hover:to-primary shadow-2xl"
             >
-              <MessageCircle className="w-7 h-7" />
+              <MessageCircle className="w-7 h-7 text-white" />
             </Button>
+            <div className="absolute -top-2 -right-2 bg-gradient-to-br from-cyan-500 to-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
+              AI
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -128,54 +100,75 @@ Odpovedaj priateľsky, profesionálne a stručne v slovenčine. Ak nevieš odpov
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 100, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 100, scale: 0.8 }}
-            className="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-3rem)]"
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            className="fixed bottom-6 right-6 z-50 w-full max-w-md"
           >
-            <Card className="overflow-hidden shadow-2xl">
-              {/* Header */}
-              <div className="bg-gradient-to-r from-primary to-blue-700 text-white p-4 flex items-center justify-between">
+            <Card className="flex flex-col h-[600px] shadow-2xl border-2 border-primary/20 overflow-hidden">
+              {/* Header - Powered by Konfiga */}
+              <div className="bg-gradient-to-r from-primary to-secondary p-4 text-white flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                    <MessageCircle className="w-5 h-5" />
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                    <MessageCircle className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-bold">American Living</h3>
-                    <p className="text-xs text-white/80">Virtuálny asistent</p>
+                    <h3 className="font-bold text-lg">AI Asistent</h3>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="text-xs text-white/90">Powered by</span>
+                      <img 
+                        src={KONFIGA_LOGO_URL} 
+                        alt="Konfiga.eu" 
+                        className="h-5 w-auto"
+                      />
+                    </div>
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsOpen(false)}
-                  className="text-white hover:bg-white/20"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsOpen(false)}
+                    className="text-white hover:bg-white/20"
+                  >
+                    <Minimize2 className="w-5 h-5" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsOpen(false)}
+                    className="text-white hover:bg-white/20"
+                  >
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
               </div>
 
               {/* Messages */}
-              <div className="h-[400px] overflow-y-auto p-4 bg-gray-50 space-y-3">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
                 {messages.map((message, index) => (
-                  <div
+                  <motion.div
                     key={index}
-                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                   >
                     <div
-                      className={`max-w-[85%] rounded-2xl px-4 py-2 ${
-                        message.role === 'user'
-                          ? 'bg-primary text-white'
-                          : 'bg-white text-gray-800 shadow-sm'
+                      className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                        message.role === "user"
+                          ? "bg-primary text-white"
+                          : "bg-white border border-gray-200 text-gray-800"
                       }`}
                     >
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                        {message.content}
+                      </p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
                 {isLoading && (
                   <div className="flex justify-start">
-                    <div className="bg-white text-gray-800 rounded-2xl px-4 py-3 shadow-sm">
+                    <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
                       <Loader2 className="w-5 h-5 animate-spin text-primary" />
                     </div>
                   </div>
@@ -184,29 +177,30 @@ Odpovedaj priateľsky, profesionálne a stručne v slovenčine. Ak nevieš odpov
               </div>
 
               {/* Input */}
-              <div className="p-3 bg-white border-t">
+              <form onSubmit={handleSubmit} className="p-4 bg-white border-t border-gray-200">
                 <div className="flex gap-2">
                   <Input
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyPress={handleKeyPress}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
                     placeholder="Napíšte správu..."
                     disabled={isLoading}
-                    className="flex-1"
+                    className="flex-1 border-gray-300 focus:border-primary"
                   />
                   <Button
-                    onClick={handleSend}
-                    disabled={!inputValue.trim() || isLoading}
-                    className="bg-primary hover:bg-primary/90"
-                    size="icon"
+                    type="submit"
+                    disabled={isLoading || !input.trim()}
+                    className="bg-primary hover:bg-secondary"
                   >
-                    <Send className="w-4 h-4" />
+                    <Send className="w-5 h-5" />
                   </Button>
                 </div>
-                <p className="text-xs text-gray-500 mt-2 text-center">
-                  Alebo zavolajte: <a href="tel:+421905138124" className="text-primary hover:underline">+421 905 138 124</a>
+                <p className="text-xs text-gray-500 text-center mt-2 flex items-center justify-center gap-1">
+                  AI funkcie poskytované
+                  <a href="https://konfiga.eu" target="_blank" rel="noopener noreferrer" className="text-cyan-600 hover:underline font-semibold">
+                    Konfiga.eu
+                  </a>
                 </p>
-              </div>
+              </form>
             </Card>
           </motion.div>
         )}

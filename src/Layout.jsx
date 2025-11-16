@@ -36,6 +36,7 @@ export default function Layout({ children }) {
   const isAdmin = user?.role === 'admin';
 
   const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png";
+  const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -67,12 +68,12 @@ export default function Layout({ children }) {
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            {/* Logo */}
+            {/* Logo - PODSTATNE VÄČŠIE */}
             <Link to={createPageUrl("Domov")} className="flex items-center gap-3 group">
               <img 
                 src={LOGO_URL} 
                 alt="American Living" 
-                className="h-20 sm:h-24 md:h-28 w-auto transition-transform group-hover:scale-105"
+                className="h-28 sm:h-32 md:h-36 lg:h-40 w-auto transition-transform group-hover:scale-105"
               />
             </Link>
 
@@ -190,7 +191,7 @@ export default function Layout({ children }) {
       </header>
 
       {/* Main Content */}
-      <main className="pt-32 sm:pt-36 md:pt-40">
+      <main className="pt-36 sm:pt-40 md:pt-44 lg:pt-52">
         {children}
       </main>
 
@@ -199,11 +200,11 @@ export default function Layout({ children }) {
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div>
-              <div className="bg-white p-3 rounded-lg inline-block mb-4">
+              <div className="bg-white p-4 rounded-lg inline-block mb-4">
                 <img 
                   src={LOGO_URL} 
                   alt="American Living" 
-                  className="h-20 w-auto"
+                  className="h-24 w-auto"
                 />
               </div>
               <p className="text-gray-300 text-sm leading-relaxed mb-4">
@@ -243,13 +244,19 @@ export default function Layout({ children }) {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4 text-white">Výrobcovia</h4>
-              <ul className="space-y-2 text-sm text-gray-300">
-                <li>• Ticab House</li>
-                <li>• JAK Modules</li>
-                <li>• Prosto House</li>
-                <li>• Domki z Gór</li>
-              </ul>
+              <h4 className="font-semibold mb-4 text-white">Powered by AI</h4>
+              <div className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 p-4 rounded-xl border border-cyan-500/20">
+                <a href="https://konfiga.eu" target="_blank" rel="noopener noreferrer" className="block">
+                  <img 
+                    src={KONFIGA_LOGO_URL} 
+                    alt="Konfiga.eu - AI CRM" 
+                    className="h-20 w-auto mx-auto mb-2"
+                  />
+                  <p className="text-xs text-center text-cyan-300">
+                    AI funkcie na tejto stránke
+                  </p>
+                </a>
+              </div>
             </div>
           </div>
           
