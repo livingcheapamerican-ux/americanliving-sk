@@ -35,15 +35,16 @@ export default function Layout({ children }) {
   const isActive = (path) => location.pathname === path;
   const isAdmin = user?.role === 'admin';
 
-  const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/5d6cd9430_AmericanLiving.png";
+  const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png";
 
   return (
     <div className="min-h-screen bg-gray-50">
       <style>{`
         :root {
-          --primary: #1e40af;
+          --primary: #EF4444;
           --secondary: #dc2626;
-          --accent: #059669;
+          --accent: #B8860B;
+          --dark-brown: #3E2723;
         }
         
         .bg-primary { background-color: var(--primary); }
@@ -51,6 +52,7 @@ export default function Layout({ children }) {
         .bg-secondary { background-color: var(--secondary); }
         .text-secondary { color: var(--secondary); }
         .bg-accent { background-color: var(--accent); }
+        .text-accent { color: var(--accent); }
         .hover\\:bg-secondary:hover { background-color: var(--secondary); }
         .border-primary { border-color: var(--primary); }
         
@@ -70,7 +72,7 @@ export default function Layout({ children }) {
               <img 
                 src={LOGO_URL} 
                 alt="American Living" 
-                className="h-32 w-auto transition-transform group-hover:scale-105"
+                className="h-20 sm:h-24 md:h-28 w-auto transition-transform group-hover:scale-105"
               />
             </Link>
 
@@ -188,7 +190,7 @@ export default function Layout({ children }) {
       </header>
 
       {/* Main Content */}
-      <main className="pt-32">
+      <main className="pt-32 sm:pt-36 md:pt-40">
         {children}
       </main>
 
