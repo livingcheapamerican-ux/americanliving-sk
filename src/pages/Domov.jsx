@@ -491,7 +491,7 @@ export default function Domov() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      <section className="py-20 bg-gradient-to-br from-gray-900 via-primary to-gray-900">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -499,23 +499,23 @@ export default function Domov() {
             viewport={{ once: true }}
             className="max-w-4xl mx-auto text-center"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-              Moderný nízkoenergetický dom bez vysokých mesačných splátok
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white drop-shadow-lg">
+              Pripravení na vlastný dom?
             </h2>
-            <p className="text-xl mb-8 text-gray-200">
-              Kontaktujte nás ešte dnes a dohodnite si nezáväznú konzultáciu
+            <p className="text-xl mb-8 text-white drop-shadow-md">
+              Kontaktujte nás a spoločne nájdeme ideálne riešenie pre vás
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="tel:+421905138124">
-                <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white font-semibold px-8 w-full sm:w-auto shadow-xl">
-                  <Phone className="mr-2 w-5 h-5" />
-                  +421 905 138 124
-                </Button>
-              </a>
-              <Link to={createPageUrl("Kontakt")}>
-                <Button size="lg" variant="outline" className="bg-white text-gray-900 hover:bg-gray-100 border-2 border-white font-semibold px-8 w-full sm:w-auto shadow-xl">
-                  Kontaktový formulár
+              <Link to={createPageUrl("Katalog")}>
+                <Button size="lg" className="bg-white text-primary hover:bg-gray-100 font-semibold px-8 w-full sm:w-auto shadow-xl text-lg">
+                  Zobraziť ponuku
                   <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Link>
+              <Link to={createPageUrl("Kontakt")}>
+                <Button size="lg" variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary font-semibold px-8 w-full sm:w-auto shadow-xl text-lg">
+                  Kontaktovať nás
+                  <Phone className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
             </div>

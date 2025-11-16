@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -432,19 +433,19 @@ export default function GaleriaRealizacii() {
                 )}
 
                 {/* Price and CTA */}
-                <Card className="p-6 bg-gradient-to-r from-primary to-red-600 text-white">
+                <Card className="p-6 bg-gradient-to-r from-gray-900 via-primary to-gray-900 text-white shadow-xl">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm opacity-90">Základná cena s DPH</p>
-                      <p className="text-3xl font-bold">{formatPrice(selectedDom.zakladna_cena)}</p>
+                      <p className="text-sm text-white/90 drop-shadow">Základná cena s DPH</p>
+                      <p className="text-3xl font-bold drop-shadow-lg">{formatPrice(selectedDom.zakladna_cena)}</p>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="secondary" size="lg" asChild>
+                      <Button variant="secondary" size="lg" asChild className="shadow-lg">
                         <a href={`tel:+421905138124`}>
                           Zavolať
                         </a>
                       </Button>
-                      <Button variant="secondary" size="lg" className="bg-white text-primary hover:bg-gray-100">
+                      <Button variant="secondary" size="lg" className="bg-white text-primary hover:bg-gray-100 shadow-lg">
                         Konfigurovať
                       </Button>
                     </div>
