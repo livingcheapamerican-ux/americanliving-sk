@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -39,9 +40,16 @@ export default function AdminAnalyzaDatabazy() {
 
   const { data: dokumenty = [], isLoading, refetch } = useQuery({
     queryKey: ['dokumenty-all'],
-    queryFn: () => base44.entities.Dokument.filter({ typ: "fotky" }),
-    refetchInterval: 10000,
-    staleTime: 0
+    queryFn: async () => {
+      const docs = await base44.entities.Dokument.filter({ typ: "fotky" });
+      console.log('Načítaných dokumentov:', docs.length);
+      console.log('S podrobna_analyza_datum:', docs.filter(d => d.podrobna_analyza_datum).length);
+      console.log('Bez podrobna_analyza_datum:', docs.filter(d => !d.podrobna_analyza_datum).length);
+      return docs;
+    },
+    staleTime: 0,
+    cacheTime: 0,
+    refetchInterval: false
   });
 
   useEffect(() => {
@@ -50,15 +58,17 @@ export default function AdminAnalyzaDatabazy() {
 
   const reorganizeMutation = useMutation({
     mutationFn: () => base44.functions.invoke('reorganizujDokumenty'),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
+      await refetch();
     }
   });
 
   const autoAnalyzeMutation = useMutation({
     mutationFn: () => base44.functions.invoke('autoAnalyzujNoveDokumenty'),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
+      await refetch();
     }
   });
 
@@ -71,7 +81,10 @@ export default function AdminAnalyzaDatabazy() {
   const handleManualRefresh = async () => {
     setRefreshing(true);
     addLog('🔄 Manuálny refresh dát...', 'info');
+    
+    await queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
     await refetch();
+    
     setRefreshing(false);
     addLog('✅ Dáta obnovené', 'success');
   };
@@ -95,6 +108,7 @@ export default function AdminAnalyzaDatabazy() {
       addLog(`❌ Chyba automatickej analýzy: ${error.message}`, 'error');
     } finally {
       setAutoAnalyzing(false);
+      await queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
       await refetch();
     }
   };
@@ -113,6 +127,10 @@ export default function AdminAnalyzaDatabazy() {
 
       await base44.entities.Dokument.update(dokId, updateData);
       addLog(`💾 Uložené: ${dokId}`, 'info');
+      
+      // Okamžite invaliduj cache
+      await queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
+      
       return true;
     } catch (error) {
       addLog(`❌ Chyba ukladania: ${error.message}`, 'error');
@@ -251,6 +269,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
 
   const handleAnalyzaVsetkych = async () => {
     addLog('📊 Načítavam aktuálne dáta...', 'info');
+    await queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
     await refetch();
     
     const neanalyzovane = dokumenty.filter(d => !d.podrobna_analyza_datum);
@@ -326,6 +345,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
       }
 
       addLog(`✅ Checkpoint: ${processed} hotových z ${neanalyzovane.length}`, 'success');
+      await queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
       await refetch();
     }
 
@@ -340,6 +360,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
     setCurrentDoc(null);
     addLog(`🎉 Hotovo! Úspešných: ${processed}, Preskočených: ${skipped}, Chýb: ${failed}`, 'success');
     
+    await queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
     await refetch();
 
     if (autoReorganize && processed > 0) {
