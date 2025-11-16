@@ -20,25 +20,33 @@ Deno.serve(async (req) => {
       }, { status: 403 });
     }
 
-    const dokumenty = await base44.asServiceRole.entities.Dokument.filter({
+    // OPRAVA: Načítaj len NEANALYZOVANÉ dokumenty
+    const vsetkyDokumenty = await base44.asServiceRole.entities.Dokument.filter({
       typ: "fotky"
     });
+
+    // Filtruj len tie bez vizualna_analyza
+    const dokumenty = vsetkyDokumenty.filter(dok => !dok.vizualna_analyza);
 
     if (!dokumenty || dokumenty.length === 0) {
       return Response.json({
         success: true,
         processed: 0,
         total: 0,
-        message: 'Žiadne dokumenty na analýzu',
+        message: 'Všetky dokumenty sú už analyzované',
         results: []
       });
     }
+
+    console.log(`Starting analysis of ${dokumenty.length} documents out of ${vsetkyDokumenty.length} total`);
 
     const results = [];
     let processed = 0;
 
     for (const dok of dokumenty) {
       try {
+        console.log(`Processing ${processed + 1}/${dokumenty.length}: ${dok.nazov}`);
+        
         // Detailná AI vizuálna analýza pre každý obrázok
         const analyza = await base44.asServiceRole.integrations.Core.InvokeLLM({
           prompt: `Analyzuj tento obrázok modulárneho domu MAXIMÁLNE PODROBNE:
@@ -288,6 +296,7 @@ Buď MAXIMÁLNE KONKRÉTNY a PODROBNÝ v každom bode. Nepíš všeobecnosti. De
         });
 
         processed++;
+        console.log(`✓ Processed ${processed}/${dokumenty.length}`);
         
         // Rate limit protection - delay every 3 documents
         if (processed % 3 === 0) {
@@ -306,10 +315,13 @@ Buď MAXIMÁLNE KONKRÉTNY a PODROBNÝ v každom bode. Nepíš všeobecnosti. De
       }
     }
 
+    console.log(`✅ Analysis complete: ${processed} processed`);
+
     return Response.json({
       success: true,
       processed: processed,
       total: dokumenty.length,
+      total_documents: vsetkyDokumenty.length,
       results: results
     });
 
