@@ -40,7 +40,7 @@ export default function AdminAnalyzaDatabazy() {
   const { data: dokumenty = [], isLoading, refetch } = useQuery({
     queryKey: ['dokumenty-all'],
     queryFn: () => base44.entities.Dokument.filter({ typ: "fotky" }),
-    refetchInterval: 10000,
+    refetchInterval: 5000,
     staleTime: 0
   });
 
@@ -68,10 +68,17 @@ export default function AdminAnalyzaDatabazy() {
     console.log(`[${log.time}] ${message}`);
   };
 
+  const forceRefresh = async () => {
+    await queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
+    await refetch();
+    // Počkaj na aktualizáciu
+    await new Promise(resolve => setTimeout(resolve, 500));
+  };
+
   const handleManualRefresh = async () => {
     setRefreshing(true);
     addLog('🔄 Manuálny refresh dát...', 'info');
-    await refetch();
+    await forceRefresh();
     setRefreshing(false);
     addLog('✅ Dáta obnovené', 'success');
   };
@@ -95,7 +102,7 @@ export default function AdminAnalyzaDatabazy() {
       addLog(`❌ Chyba automatickej analýzy: ${error.message}`, 'error');
     } finally {
       setAutoAnalyzing(false);
-      await refetch();
+      await forceRefresh();
     }
   };
 
@@ -113,6 +120,10 @@ export default function AdminAnalyzaDatabazy() {
 
       await base44.entities.Dokument.update(dokId, updateData);
       addLog(`💾 Uložené: ${dokId}`, 'info');
+      
+      // Invaliduj cache okamžite po update
+      queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
+      
       return true;
     } catch (error) {
       addLog(`❌ Chyba ukladania: ${error.message}`, 'error');
@@ -251,7 +262,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
 
   const handleAnalyzaVsetkych = async () => {
     addLog('📊 Načítavam aktuálne dáta...', 'info');
-    await refetch();
+    await forceRefresh();
     
     const neanalyzovane = dokumenty.filter(d => !d.podrobna_analyza_datum);
     
@@ -326,7 +337,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
       }
 
       addLog(`✅ Checkpoint: ${processed} hotových z ${neanalyzovane.length}`, 'success');
-      await refetch();
+      await forceRefresh();
     }
 
     setResults({
@@ -340,7 +351,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
     setCurrentDoc(null);
     addLog(`🎉 Hotovo! Úspešných: ${processed}, Preskočených: ${skipped}, Chýb: ${failed}`, 'success');
     
-    await refetch();
+    await forceRefresh();
 
     if (autoReorganize && processed > 0) {
       addLog('🔄 Automatická reorganizácia...', 'info');
@@ -702,7 +713,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
           </TabsContent>
 
           <TabsContent value="bulk">
-            <DocumentTableWithBulkActions dokumenty={filteredDokumenty} onRefresh={refetch} />
+            <DocumentTableWithBulkActions dokumenty={filteredDokumenty} onRefresh={forceRefresh} />
           </TabsContent>
 
           <TabsContent value="comparison">
