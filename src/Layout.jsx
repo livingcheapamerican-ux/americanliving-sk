@@ -68,14 +68,32 @@ export default function Layout({ children }) {
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            {/* Logo - PODSTATNE VÄČŠIE */}
-            <Link to={createPageUrl("Domov")} className="flex items-center gap-3 group">
-              <img 
-                src={LOGO_URL} 
-                alt="American Living" 
-                className="h-28 sm:h-32 md:h-36 lg:h-40 w-auto transition-transform group-hover:scale-105"
-              />
-            </Link>
+            {/* Logá - American Living + Konfiga */}
+            <div className="flex items-center gap-4">
+              <Link to={createPageUrl("Domov")} className="group">
+                <img 
+                  src={LOGO_URL} 
+                  alt="American Living" 
+                  className="h-28 sm:h-32 md:h-36 lg:h-40 w-auto transition-transform group-hover:scale-105"
+                />
+              </Link>
+              
+              <div className="hidden md:flex flex-col items-center gap-1">
+                <span className="text-xs text-gray-600 font-medium whitespace-nowrap">Powered by</span>
+                <a 
+                  href="https://konfiga.eu" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="transition-transform hover:scale-105"
+                >
+                  <img 
+                    src={KONFIGA_LOGO_URL} 
+                    alt="Konfiga.eu - AI CRM" 
+                    className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto"
+                  />
+                </a>
+              </div>
+            </div>
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-1">
@@ -136,6 +154,22 @@ export default function Layout({ children }) {
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
             <nav className="lg:hidden mt-4 pb-4 border-t pt-4 space-y-2">
+              {/* Mobile Konfiga Logo */}
+              <div className="md:hidden flex items-center justify-center gap-2 py-3 border-b">
+                <span className="text-xs text-gray-600 font-medium">Powered by</span>
+                <a 
+                  href="https://konfiga.eu" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  <img 
+                    src={KONFIGA_LOGO_URL} 
+                    alt="Konfiga.eu" 
+                    className="h-12 w-auto"
+                  />
+                </a>
+              </div>
+              
               {navItems.map((item) => (
                 <Link
                   key={item.path}
