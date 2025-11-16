@@ -23,11 +23,13 @@ Deno.serve(async (req) => {
         
         const dokument = documents[0];
         
-        let fileContent = '';
+        // Detekcia typu súboru
+        const isImage = dokument.typ_suboru?.includes('image');
         const isTextFile = dokument.typ_suboru?.includes('text') || 
                           dokument.typ_suboru?.includes('pdf') ||
                           dokument.typ_suboru?.includes('document');
         
+        let fileContent = '';
         if (isTextFile) {
             try {
                 const response = await fetch(dokument.subor_url);
@@ -37,7 +39,60 @@ Deno.serve(async (req) => {
             }
         }
 
-        const analysisPrompt = `
+        let analysisPrompt = '';
+        let responseSchema = {};
+
+        // ANALÝZA OBRÁZKOV
+        if (isImage) {
+            analysisPrompt = `
+Analyzuj DETAILNE túto fotografiu modulárneho domu.
+
+DOKUMENT:
+Názov: ${dokument.nazov}
+Výrobca: ${dokument.vyrobca}
+${dokument.model_domu ? `Model: ${dokument.model_domu}` : ''}
+${dokument.podpriecinok ? `Kategória: ${dokument.podpriecinok}` : ''}
+
+ÚLOHY:
+1. Urči či je to EXTERIÉR alebo INTERIÉR
+2. FASÁDA (ak exteriér):
+   - Deteguj TYP FASÁDY: klasická biela omietka, drevený obklad, antracitový plech, sivý plech, kombinovaná fasáda, sklenená fasáda, kamenný obklad, atď.
+   - Urči FARBU fasády presne
+   - Identifikuj MATERIÁLY fasády viditeľné na fotografii
+3. INTERIÉR (ak interiér):
+   - Deteguj MATERIÁLY STIEN: drevo (aký typ), sádrokarton, maľovaná omietka, obklad, atď.
+   - Podlaha: drevo, laminát, dlažba, atď.
+   - Strop: drevo, sádrokarton, napnutý, atď.
+4. VŠEOBECNÉ:
+   - Architektonický ŠTÝL: moderný, tradičný, minimalistický, škandinávsky, industriálny, atď.
+   - DOMINANTNÉ FARBY (3-5 hlavných farieb)
+   - TECHNICKÉ DETAILY: typ okien, dverí, strešná krytina (ak viditeľná), terasa, balkón, atď.
+5. DETAILNÝ POPIS pre chatbota (200-300 slov) - ako by si profesionálne opisoval túto fotku potenciálnemu zákazníkovi
+
+Buď MAXIMÁLNE DETAILNÝ a PRESNÝ.
+`;
+
+            responseSchema = {
+                type: "object",
+                properties: {
+                    extrahovaný_obsah: { type: "string" },
+                    vizualna_analyza: {
+                        type: "object",
+                        properties: {
+                            typ_fasady: { type: "array", items: { type: "string" } },
+                            interier_materialy: { type: "array", items: { type: "string" } },
+                            extrier_materialy: { type: "array", items: { type: "string" } },
+                            technicka_analyza: { type: "string" },
+                            farby: { type: "array", items: { type: "string" } },
+                            styl: { type: "string" }
+                        }
+                    }
+                },
+                required: ["extrahovaný_obsah", "vizualna_analyza"]
+            };
+        } else {
+            // ANALÝZA TEXTOVÝCH DOKUMENTOV
+            analysisPrompt = `
 Analyzuj tento dokument pre slovenský web o modulárnych domoch. Vykonaj KOMPLEXNÚ a DETAILNÚ analýzu.
 
 DOKUMENT:
@@ -53,7 +108,7 @@ ${fileContent ? `Obsah súboru: ${fileContent.substring(0, 20000)}` : ''}
 ÚLOHY ANALÝZY:
 
 1. AUTOMATICKÁ KATEGORIZÁCIA
-   - Urči najpresnejší typ dokumentu: cenník, technická_špecifikácia, návod, certifikát, FAQ, blog, fotky, alebo iné
+   - Urči najpresnejší typ dokumentu: cenník, technická_špecifikácia, návod, certifikát, FAQ, blog, fotky, video alebo iné
    - Zohľadni názov, cestu a obsah
 
 2. EXTRAKCIA INFORMÁCIÍ (MAXIMÁLNE DETAILNE):
@@ -137,64 +192,27 @@ ${fileContent ? `Obsah súboru: ${fileContent.substring(0, 20000)}` : ''}
    - Odporúčané príslušenstvo
 
 4. ZHRNUTIE:
-   - Ak dokument > 200 slov: vytvor stručné zhrnutie (max 150 slov)
+   - Ak dokument má viac ako 200 slov: vytvor stručné zhrnutie (max 150 slov)
    - Zhrň najdôležitejšie fakty
    
 5. CHATBOT OBSAH:
    - Optimalizovaný text (max 1000 slov)
-   - Pre fotky: detailný popis na základe názvu a kontextu
    - Všetky čísla a parametre
    - Prirodzený, dobre štruktúrovaný text
-
-VÝSTUP (JSON):
-{
-  "odporucana_kategoria": "typ",
-  "extrahovaný_obsah": "text pre chatbota",
-  "zhrnutie": "stručné zhrnutie alebo null",
-  "kľúčové_informácie": {
-    "modely_domov": ["zoznam"],
-    "cenové_informácie": ["detailné položky s cenami"],
-    "technické_údaje": ["všetky parametre"],
-    "rozmery": {
-      "sirka": "X m",
-      "dlzka": "Y m", 
-      "vyska": "Z m",
-      "plocha": "XY m²",
-      "uzitkova_plocha": "XY m²",
-      "zastavana_plocha": "XY m²"
-    },
-    "materialy": ["detailné materiály so značkami"],
-    "energia": {
-      "trieda": "A0/A/B...",
-      "spotreba": "XXX kWh/m²/rok",
-      "u_hodnoty": "údaje o izolácii",
-      "vykurovanie": "typ systému",
-      "fotovoltaika": "áno/nie, špecifikácia"
-    },
-    "instalácie": ["voda, elektrina, vykurovanie..."],
-    "doprava_montaz": ["informácie o doprave a montáži"],
-    "zaruky": ["záručné podmienky"],
-    "odporucania": ["pre koho je vhodný, výhody"],
-    "ostatné": ["ostatné dôležité info"]
-  }
-}
 
 PRAVIDLÁ:
 - Buď MAXIMÁLNE detailný
 - Čísla a hodnoty PRESNE ako v dokumente
 - Model z priečinka MUSÍ byť v modely_domov
-- Ak údaje chýbajú, vynechaj ich
-- Nepoužívaj null hodnoty, iba reálne dáta
+- Ak údaje chýbajú, vynechaj ich (nepoužívaj null)
 `;
-        
-        const result = await base44.integrations.Core.InvokeLLM({
-            prompt: analysisPrompt,
-            response_json_schema: {
+
+            responseSchema = {
                 type: "object",
                 properties: {
                     odporucana_kategoria: { 
                         type: "string",
-                        enum: ["cenník", "technická_špecifikácia", "návod", "certifikát", "FAQ", "blog", "fotky", "iné"]
+                        enum: ["cenník", "technická_špecifikácia", "návod", "certifikát", "FAQ", "blog", "fotky", "video", "iné"]
                     },
                     extrahovaný_obsah: { type: "string" },
                     zhrnutie: { type: ["string", "null"] },
@@ -235,33 +253,137 @@ PRAVIDLÁ:
                     }
                 },
                 required: ["odporucana_kategoria", "extrahovaný_obsah", "kľúčové_informácie"]
-            }
-        });
-
-        const cleanedInfo = {};
-        for (const [key, value] of Object.entries(result.kľúčové_informácie)) {
-            if (Array.isArray(value)) {
-                if (value.length > 0) cleanedInfo[key] = value;
-            } else if (typeof value === 'object' && value !== null) {
-                const cleanedObj = {};
-                for (const [k, v] of Object.entries(value)) {
-                    if (v && v !== '') cleanedObj[k] = v;
-                }
-                if (Object.keys(cleanedObj).length > 0) cleanedInfo[key] = cleanedObj;
-            } else if (value) {
-                cleanedInfo[key] = value;
-            }
+            };
         }
 
+        // Zavolaj LLM s prílohou ak ide o obrázok
+        const llmParams = {
+            prompt: analysisPrompt,
+            response_json_schema: responseSchema
+        };
+
+        if (isImage) {
+            llmParams.file_urls = [dokument.subor_url];
+        }
+
+        const result = await base44.integrations.Core.InvokeLLM(llmParams);
+
+        // Vyčisti prázdne hodnoty
         const updateData = {
             extrahovaný_obsah: result.extrahovaný_obsah,
-            kľúčové_informácie: cleanedInfo,
-            odporucana_kategoria: result.odporucana_kategoria,
             analyzovaný: true
         };
 
-        if (result.zhrnutie) {
-            updateData.zhrnutie = result.zhrnutie;
+        if (isImage && result.vizualna_analyza) {
+            // Vyčisti vizuálnu analýzu
+            const cleanedVizualna = {};
+            for (const [key, value] of Object.entries(result.vizualna_analyza)) {
+                if (Array.isArray(value) && value.length > 0) {
+                    cleanedVizualna[key] = value;
+                } else if (typeof value === 'string' && value.trim() !== '') {
+                    cleanedVizualna[key] = value;
+                } else if (typeof value === 'object' && value !== null) {
+                    const cleanedObj = {};
+                    for (const [k, v] of Object.entries(value)) {
+                        if (v && v !== '') cleanedObj[k] = v;
+                    }
+                    if (Object.keys(cleanedObj).length > 0) cleanedVizualna[key] = cleanedObj;
+                }
+            }
+            if (Object.keys(cleanedVizualna).length > 0) {
+                updateData.vizualna_analyza = cleanedVizualna;
+            }
+        } else {
+            // Textové dokumenty
+            if (result.odporucana_kategoria) {
+                updateData.odporucana_kategoria = result.odporucana_kategoria;
+            }
+
+            if (result.zhrnutie) {
+                updateData.zhrnutie = result.zhrnutie;
+            }
+
+            if (result.kľúčové_informácie) {
+                const cleanedInfo = {};
+                for (const [key, value] of Object.entries(result.kľúčové_informácie)) {
+                    if (Array.isArray(value)) {
+                        if (value.length > 0) cleanedInfo[key] = value;
+                    } else if (typeof value === 'object' && value !== null) {
+                        const cleanedObj = {};
+                        for (const [k, v] of Object.entries(value)) {
+                            if (v && v !== '') cleanedObj[k] = v;
+                        }
+                        if (Object.keys(cleanedObj).length > 0) cleanedInfo[key] = cleanedObj;
+                    } else if (value) {
+                        cleanedInfo[key] = value;
+                    }
+                }
+                if (Object.keys(cleanedInfo).length > 0) {
+                    updateData.kľúčové_informácie = cleanedInfo;
+                }
+            }
+
+            // AUTOMATICKÁ AKTUALIZÁCIA ENTITY DOM
+            if (dokument.model_domu && result.kľúčové_informácie) {
+                try {
+                    const domy = await base44.asServiceRole.entities.Dom.filter({ 
+                        nazov: dokument.model_domu 
+                    });
+
+                    if (domy && domy.length > 0) {
+                        const dom = domy[0];
+                        const domUpdate = {};
+
+                        const info = result.kľúčové_informácie;
+
+                        // Aktualizuj rozmery
+                        if (info.rozmery) {
+                            if (info.rozmery.zastavana_plocha) {
+                                const match = info.rozmery.zastavana_plocha.match(/(\d+[.,]?\d*)/);
+                                if (match) domUpdate.zastavana_plocha = parseFloat(match[1].replace(',', '.'));
+                            }
+                            if (info.rozmery.uzitkova_plocha) {
+                                const match = info.rozmery.uzitkova_plocha.match(/(\d+[.,]?\d*)/);
+                                if (match) domUpdate.uzitkova_plocha = parseFloat(match[1].replace(',', '.'));
+                            }
+                            if (info.rozmery.sirka && info.rozmery.dlzka) {
+                                domUpdate.rozmery = {
+                                    sirka: parseFloat(info.rozmery.sirka.match(/(\d+[.,]?\d*)/)?.[1].replace(',', '.') || 0),
+                                    dlzka: parseFloat(info.rozmery.dlzka.match(/(\d+[.,]?\d*)/)?.[1].replace(',', '.') || 0),
+                                    vyska: parseFloat(info.rozmery.vyska?.match(/(\d+[.,]?\d*)/)?.[1].replace(',', '.') || 0)
+                                };
+                            }
+                        }
+
+                        // Aktualizuj cenu
+                        if (info.cenové_informácie && info.cenové_informácie.length > 0) {
+                            const prvaInfo = info.cenové_informácie[0];
+                            const match = prvaInfo.match(/(\d+[\s,]*\d*)\s*EUR/i);
+                            if (match) {
+                                domUpdate.zakladna_cena = parseInt(match[1].replace(/[\s,]/g, ''));
+                            }
+                        }
+
+                        // Aktualizuj špecifikáciu
+                        if (info.technické_údaje && info.technické_údaje.length > 0) {
+                            domUpdate.specifikacia = info.technické_údaje.join('\n');
+                        }
+
+                        // Aktualizuj energetický certifikát
+                        if (info.energia?.trieda) {
+                            domUpdate.energeticky_certifikat = info.energia.trieda.includes('A0') || info.energia.trieda.includes('A');
+                        }
+
+                        // Urob update ak máme nejaké zmeny
+                        if (Object.keys(domUpdate).length > 0) {
+                            await base44.asServiceRole.entities.Dom.update(dom.id, domUpdate);
+                        }
+                    }
+                } catch (domError) {
+                    console.error('Error updating Dom entity:', domError);
+                    // Nepadaj ak Dom update zlyhá
+                }
+            }
         }
 
         await base44.asServiceRole.entities.Dokument.update(document_id, updateData);
@@ -269,8 +391,10 @@ PRAVIDLÁ:
         return Response.json({
             success: true,
             analysis: result,
-            auto_category: result.odporucana_kategoria,
-            has_summary: !!result.zhrnutie
+            type: isImage ? 'image' : 'document',
+            auto_category: result.odporucana_kategoria || null,
+            has_summary: !!result.zhrnutie,
+            dom_updated: !!dokument.model_domu
         });
 
     } catch (error) {

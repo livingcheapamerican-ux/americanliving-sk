@@ -75,7 +75,7 @@ export default function AdminDokumenty() {
     tags: []
   });
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [tagInput, setTagInput] = useState("");
+  const [tagInput, setTagInput("");
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
   const [uploadedBytes, setUploadedBytes] = useState(0);
   const [totalBytes, setTotalBytes] = useState(0);
@@ -1650,7 +1650,8 @@ export default function AdminDokumenty() {
                           <div className="flex gap-2 flex-shrink-0">
                             {dok.analyzovaný && (
                               <Button size="sm" variant="outline" onClick={() => setViewingDocument(dok)} className="hover:bg-purple-50 hover:border-purple-300 transition-all">
-                                <Eye className="w-4 h-4 mr-1" />Analýza
+                                <Eye className="w-4 h-4 mr-1" />
+                                {isImage(dok.typ_suboru) ? 'Viz. analýza' : 'Analýza'}
                               </Button>
                             )}
                             <a href={dok.subor_url} target="_blank" rel="noopener noreferrer">
@@ -1798,7 +1799,99 @@ export default function AdminDokumenty() {
                       </div>
                     )}
 
-                    {viewingDocument.extrahovaný_obsah && (
+                    {viewingDocument.vizualna_analyza && (
+                      <div className="space-y-4">
+                        <h3 className="font-semibold text-lg mb-4 text-gray-800 flex items-center gap-2">
+                          <Eye className="w-5 h-5 text-purple-600" />
+                          Vizuálna AI analýza
+                        </h3>
+
+                        {viewingDocument.vizualna_analyza.technicka_analyza && (
+                          <div className="p-5 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100">
+                            <h4 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
+                              <Sparkles className="w-5 h-5" />
+                              Technická analýza obrázka
+                            </h4>
+                            <p className="text-gray-700 leading-relaxed">
+                              {viewingDocument.vizualna_analyza.technicka_analyza}
+                            </p>
+                          </div>
+                        )}
+
+                        {viewingDocument.vizualna_analyza.typ_fasady && viewingDocument.vizualna_analyza.typ_fasady.length > 0 && (
+                          <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                            <p className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                              🏠 Typ fasády
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {viewingDocument.vizualna_analyza.typ_fasady.map((fasada, i) => (
+                                <Badge key={i} className="bg-blue-100 text-blue-800 border-blue-200 px-3 py-1">
+                                  {fasada}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {viewingDocument.vizualna_analyza.extrier_materialy && viewingDocument.vizualna_analyza.extrier_materialy.length > 0 && (
+                          <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                            <p className="font-semibold text-emerald-900 mb-2 flex items-center gap-2">
+                              🏗️ Exteriérové materiály
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {viewingDocument.vizualna_analyza.extrier_materialy.map((material, i) => (
+                                <Badge key={i} className="bg-emerald-100 text-emerald-800 border-emerald-200 px-3 py-1">
+                                  {material}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {viewingDocument.vizualna_analyza.interier_materialy && viewingDocument.vizualna_analyza.interier_materialy.length > 0 && (
+                          <div className="p-4 bg-amber-50 rounded-xl border border-amber-100">
+                            <p className="font-semibold text-amber-900 mb-2 flex items-center gap-2">
+                              🪵 Interiérové materiály
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {viewingDocument.vizualna_analyza.interier_materialy.map((material, i) => (
+                                <Badge key={i} className="bg-amber-100 text-amber-800 border-amber-200 px-3 py-1">
+                                  {material}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {viewingDocument.vizualna_analyza.farby && viewingDocument.vizualna_analyza.farby.length > 0 && (
+                          <div className="p-4 bg-pink-50 rounded-xl border border-pink-100">
+                            <p className="font-semibold text-pink-900 mb-2 flex items-center gap-2">
+                              🎨 Dominantné farby
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {viewingDocument.vizualna_analyza.farby.map((farba, i) => (
+                                <Badge key={i} className="bg-pink-100 text-pink-800 border-pink-200 px-3 py-1">
+                                  {farba}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {viewingDocument.vizualna_analyza.styl && (
+                          <div className="p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+                            <p className="font-semibold text-indigo-900 mb-2 flex items-center gap-2">
+                              ✨ Architektonický štýl
+                            </p>
+                            <Badge className="bg-indigo-100 text-indigo-800 border-indigo-200 px-3 py-1.5 text-sm">
+                              {viewingDocument.vizualna_analyza.styl}
+                            </Badge>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {viewingDocument.extrahovaný_obsah && !viewingDocument.vizualna_analyza && (
                       <div>
                         <h3 className="font-semibold text-lg mb-3 text-gray-800">Extrahovaný obsah:</h3>
                         <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-5 rounded-xl border border-gray-200 leading-relaxed">
