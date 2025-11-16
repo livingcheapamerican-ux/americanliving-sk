@@ -243,7 +243,26 @@ export default function AdminDokumenty() {
 
   const handleFileSelect = (e) => {
     const newFiles = Array.from(e.target.files);
-    const validFiles = newFiles.filter(file => !shouldSkipFile(file.name));
+    
+    // Validácia videí podľa typu
+    const validFiles = newFiles.filter(file => {
+      if (shouldSkipFile(file.name)) return false;
+      
+      // Ak je typ nastavený na video, akceptuj len videá
+      if (formData.typ === 'video') {
+        return file.type.startsWith('video/');
+      }
+      
+      return true;
+    });
+
+    const rejectedVideos = newFiles.filter(file => 
+      formData.typ === 'video' && !file.type.startsWith('video/')
+    ).length;
+
+    if (rejectedVideos > 0) {
+      alert(`${rejectedVideos} súborov bolo odmietnutých. Pri type "Video" môžete nahrať len video súbory.`);
+    }
 
     console.log(`📁 Vybratých ${newFiles.length} súborov, po filtrovaní ${validFiles.length} súborov`);
     if (newFiles.length > validFiles.length) {
@@ -285,7 +304,24 @@ export default function AdminDokumenty() {
         }
       }
 
-      const validFiles = allFiles.filter(file => !shouldSkipFile(file.name));
+      // Validácia videí podľa typu
+      const validFiles = allFiles.filter(file => {
+        if (shouldSkipFile(file.name)) return false;
+        
+        if (formData.typ === 'video') {
+          return file.type.startsWith('video/');
+        }
+        
+        return true;
+      });
+
+      const rejectedVideos = allFiles.filter(file => 
+        formData.typ === 'video' && !file.type.startsWith('video/')
+      ).length;
+
+      if (rejectedVideos > 0) {
+        alert(`${rejectedVideos} súborov bolo odmietnutých. Pri type "Video" môžete nahrať len video súbory.`);
+      }
       
       console.log(`📁 Dropped ${allFiles.length} súborov, po filtrovaní ${validFiles.length} súborov`);
       if (allFiles.length > validFiles.length) {
@@ -525,6 +561,7 @@ export default function AdminDokumenty() {
         const batchPromises = batch.map(async (file) => {
           if (uploadWorkerRef.current?.cancel) return null;
 
+          // Real-time update statusu - nahrávam
           updateFileStatus(file.name, 'nahrávam');
           setCurrentFileName(file.name);
 
@@ -553,12 +590,14 @@ export default function AdminDokumenty() {
               typ_suboru: file.type || 'application/octet-stream'
             });
 
+            // Real-time update statusu - nahratý
             updateFileStatus(file.name, 'nahratý');
             results.successful.push({ name: file.name, id: doc.id });
             
             return { file, status: 'success', size: file.size };
 
           } catch (fileError) {
+            // Real-time update statusu - odmietnutý
             updateFileStatus(file.name, 'odmietnutý');
             results.failed.push({
               name: file.name,
@@ -571,6 +610,7 @@ export default function AdminDokumenty() {
 
         const batchResults = await Promise.allSettled(batchPromises);
 
+        // Real-time update celkového priebehu
         batchResults.forEach(result => {
           if (result.status === 'fulfilled' && result.value && result.value.status === 'success') {
             completedCount++;
@@ -581,6 +621,7 @@ export default function AdminDokumenty() {
           }
         });
 
+        // Real-time update zobrazenia
         setUploadedBytes(cumulativeBytes);
         setUploadProgress({ current: completedCount, total: totalFilesForProgress });
         saveUploadState(fileStatuses, { current: completedCount, total: totalFilesForProgress }, formData, uploadMode);
@@ -656,10 +697,10 @@ export default function AdminDokumenty() {
     if (!mimeType) return '📄';
     if (mimeType.includes('pdf')) return '📕';
     if (mimeType.includes('image')) return '🖼️';
+    if (mimeType.includes('video')) return '🎬'; // Added for video files
     if (mimeType.includes('word') || mimeType.includes('document')) return '📘';
     if (mimeType.includes('sheet') || mimeType.includes('excel')) return '📊';
     if (mimeType.includes('text')) return '📝';
-    if (mimeType.includes('video')) return '🎬';
     if (mimeType.includes('audio')) return '🎵';
     if (mimeType.includes('zip') || mimeType.includes('archive')) return '📦';
     return '📄';
@@ -671,6 +712,10 @@ export default function AdminDokumenty() {
 
   const isPDF = (mimeType) => {
     return mimeType && mimeType.includes('pdf');
+  };
+
+  const isVideo = (mimeType) => {
+    return mimeType && mimeType.includes('video');
   };
 
   const getStatusBadge = (status) => {
@@ -700,6 +745,7 @@ export default function AdminDokumenty() {
     FAQ: "FAQ",
     blog: "Blog",
     fotky: "Fotky",
+    video: "Video", // Added Video type
     iné: "Iné"
   };
 
@@ -1290,7 +1336,7 @@ export default function AdminDokumenty() {
                 >
                   <Card className="p-5 border-0 shadow-md hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur hover:scale-[1.01]">
                     <div className="flex items-start gap-4">
-                      {/* Náhľad obrázku alebo ikona */}
+                      {/* Náhľad obrázku, videa alebo ikona */}
                       {isImage(dok.typ_suboru) ? (
                         <div 
                           className="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 cursor-pointer hover:ring-2 hover:ring-primary transition-all"
@@ -1311,6 +1357,16 @@ export default function AdminDokumenty() {
                           <div className="text-center">
                             <span className="text-4xl">📕</span>
                             <p className="text-xs text-red-700 mt-1 font-medium">Otvoriť</p>
+                          </div>
+                        </div>
+                      ) : isVideo(dok.typ_suboru) ? (
+                        <div 
+                          className="w-24 h-24 flex-shrink-0 rounded-lg bg-indigo-50 flex items-center justify-center cursor-pointer hover:bg-indigo-100 transition-all"
+                          onClick={() => window.open(dok.subor_url, '_blank')}
+                        >
+                          <div className="text-center">
+                            <span className="text-4xl">🎬</span>
+                            <p className="text-xs text-indigo-700 mt-1 font-medium">Prehrať</p>
                           </div>
                         </div>
                       ) : (
