@@ -5,6 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Loader2, CheckCircle, XCircle, AlertTriangle, Image, FileText, RefreshCw, Pause, Play, SkipForward, FolderSync } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import DocumentTableWithBulkActions from "../components/admin/DocumentTableWithBulkActions";
+import DetailedAnalysisResults from "../components/admin/DetailedAnalysisResults";
+import ImageComparisonView from "../components/admin/ImageComparisonView";
 
 export default function AdminAnalyzaDatabazy() {
   const [analyzing, setAnalyzing] = useState(false);
@@ -236,7 +240,6 @@ Vráť JSON s týmito poľami (všetky hodnoty sú nepovinné, ak niečo nevidí
     setCurrentDoc(null);
     addLog(`🎉 Analýza dokončená! Úspešných: ${processed}, Preskočených: ${skipped}, Chýb: ${failed}`, 'success');
 
-    // Automatická reorganizácia po analýze
     if (autoReorganize && processed > 0) {
       addLog('🔄 Spúšťam automatickú reorganizáciu...', 'info');
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -383,7 +386,6 @@ Vráť JSON s týmito poľami (všetky hodnoty sú nepovinné, ak niečo nevidí
               )}
             </div>
 
-            {/* Auto-reorganize checkbox */}
             <div className="flex items-center gap-2 p-3 bg-cyan-50 rounded-lg border border-cyan-200">
               <Checkbox 
                 id="auto-reorganize" 
@@ -499,33 +501,56 @@ Vráť JSON s týmito poľami (všetky hodnoty sú nepovinné, ak niečo nevidí
           </div>
         </Card>
 
-        {/* Logs */}
-        {logs.length > 0 && (
-          <Card className="p-6 mb-8">
-            <h3 className="text-lg font-bold mb-4">📋 Log analýzy</h3>
-            <div className="space-y-1 max-h-96 overflow-y-auto font-mono text-xs">
-              {logs.slice(-50).reverse().map((log, i) => (
-                <div
-                  key={i}
-                  className={`flex gap-2 ${
-                    log.type === 'error' ? 'text-red-600' : 
-                    log.type === 'success' ? 'text-green-600' : 
-                    log.type === 'warning' ? 'text-yellow-600' :
-                    'text-gray-600'
-                  }`}
-                >
-                  <span className="text-gray-400">{log.time}</span>
-                  <span>{log.message}</span>
-                </div>
-              ))}
-            </div>
-          </Card>
-        )}
+        {/* Tabs for different views */}
+        <Tabs defaultValue="logs" className="mb-8">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="logs">Log analýzy</TabsTrigger>
+            <TabsTrigger value="results">Podrobné výsledky</TabsTrigger>
+            <TabsTrigger value="bulk">Hromadné akcie</TabsTrigger>
+            <TabsTrigger value="comparison">Porovnanie</TabsTrigger>
+          </TabsList>
 
-        {/* Výsledky analýzy */}
+          <TabsContent value="logs">
+            {logs.length > 0 && (
+              <Card className="p-6">
+                <h3 className="text-lg font-bold mb-4">📋 Log analýzy</h3>
+                <div className="space-y-1 max-h-96 overflow-y-auto font-mono text-xs">
+                  {logs.slice(-50).reverse().map((log, i) => (
+                    <div
+                      key={i}
+                      className={`flex gap-2 ${
+                        log.type === 'error' ? 'text-red-600' : 
+                        log.type === 'success' ? 'text-green-600' : 
+                        log.type === 'warning' ? 'text-yellow-600' :
+                        'text-gray-600'
+                      }`}
+                    >
+                      <span className="text-gray-400">{log.time}</span>
+                      <span>{log.message}</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="results">
+            <DetailedAnalysisResults results={results} dokumenty={dokumenty} />
+          </TabsContent>
+
+          <TabsContent value="bulk">
+            <DocumentTableWithBulkActions dokumenty={dokumenty} onRefresh={refetch} />
+          </TabsContent>
+
+          <TabsContent value="comparison">
+            <ImageComparisonView dokumenty={dokumenty} />
+          </TabsContent>
+        </Tabs>
+
+        {/* Summary Results */}
         {results && (
           <Card className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
-            <h3 className="text-xl font-bold mb-4">📊 Výsledky</h3>
+            <h3 className="text-xl font-bold mb-4">📊 Súhrn</h3>
             <div className="space-y-4">
               <div>
                 <p className="text-sm font-semibold text-gray-600 mb-2">Analýza:</p>
