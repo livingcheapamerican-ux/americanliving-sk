@@ -41,8 +41,8 @@ export default function AdminAnalyzaDatabazy() {
       const now = Date.now();
       const timeSinceLastUpdate = now - lastProgressUpdate;
 
-      // Ak je viac ako 30 sekúnd bez zmeny, aktivuj autoheal
-      if (timeSinceLastUpdate > 30000) {
+      // Ak je viac ako 10 sekúnd bez zmeny, aktivuj autoheal
+      if (timeSinceLastUpdate > 10000) {
         console.log('⚠️ AUTOHEAL: Detegované zaseknutie!');
         setStuckCount(prev => prev + 1);
         setAutoHealActive(true);
@@ -56,7 +56,7 @@ export default function AdminAnalyzaDatabazy() {
           setAutoHealActive(false);
         }, 2000);
       }
-    }, 10000); // Kontroluj každých 10 sekúnd
+    }, 5000); // Kontroluj každých 5 sekúnd
 
     return () => clearInterval(checkInterval);
   }, [analyzing, lastProgressUpdate, refetch]);
@@ -300,7 +300,7 @@ export default function AdminAnalyzaDatabazy() {
             <div>
               <h2 className="text-xl font-bold mb-2">🚀 Podrobná AI analýza s AutoHeal</h2>
               <p className="text-sm text-gray-600 mb-2">
-                Automaticky deteguje zaseknutie a obnoví proces • Batch processing po 5 fotiek
+                Automaticky deteguje zaseknutie (10s timeout) a obnoví proces • Batch processing po 5 fotiek
               </p>
               {neanalyzovaneCount > 0 && (
                 <p className="text-sm font-semibold text-orange-600">
