@@ -40,31 +40,27 @@ export default function AdminAnalyzaDatabazy() {
       }
 
       const analyza = await base44.integrations.Core.InvokeLLM({
-        prompt: `Analyzuj tento obrázok modulárneho domu:
+        prompt: `Analyzuj tento obrázok modulárneho domu a vráť JSON s týmito informáciami:
 
 Súbor: ${dok.nazov}
 Výrobca: ${dok.vyrobca || 'neznámy'}
 Model: ${dok.model_domu || 'neznámy'}
 
 Poskytni:
-1. TYP: exteriér/interiér/pôdorys/kombinacia
-2. MATERIÁLY FASÁDY: všetky viditeľné (drevo, plech, omietka, sklo...)
-3. OKNÁ: typ, farba rámu
-4. DVERE: typ, farba
-5. STRECHA: typ krytiny, farba
-6. STAV FASÁDY: výborný/dobrý/potrebuje údržbu
-7. ŠPECIFICKÁ KATEGÓRIA: detail fasády/celkový pohľad/interiér detaily/pôdorys...
-8. SPRÁVNY VÝROBCA: potvrď alebo oprav výrobcu
-9. SPRÁVNY MODEL: potvrď alebo oprav model domu
-10. ODPORÚČANÝ PRIEČINOK: kam má byť fotka presunutá`,
+- typ_obsahu: "exterier" alebo "interier" alebo "podorys" alebo "kombinacia"
+- specificka_kategoria: krátky popis (napr. "detail fasády", "celkový pohľad")
+- fasada_materialy: pole objektov s material a farba (napr. [{"material": "drevo", "farba": "hnedá"}])
+- okna: objekt s typ a farba_ramu
+- stresna_krytina: objekt s typ a farba
+- spravny_vyrobca: názov výrobcu (potvrď alebo oprav)
+- spravny_model_domu: názov modelu (potvrď alebo oprav)
+
+DÔLEŽITÉ: Všetky textové polia musia byť reťazce (strings), nie iné typy.`,
         file_urls: [dok.subor_url],
         response_json_schema: {
           type: "object",
           properties: {
-            typ_obsahu: {
-              type: "string",
-              enum: ["exterier", "interier", "podorys", "kombinacia"]
-            },
+            typ_obsahu: { type: "string" },
             specificka_kategoria: { type: "string" },
             fasada_materialy: {
               type: "array",
@@ -97,15 +93,9 @@ Poskytni:
                 farba: { type: "string" }
               }
             },
-            stav_fasady: {
-              type: "string",
-              enum: ["výborný", "dobrý", "potrebuje údržbu"]
-            },
             spravny_vyrobca: { type: "string" },
-            spravny_model_domu: { type: "string" },
-            odporucany_priecinok: { type: "string" }
-          },
-          required: ["typ_obsahu", "spravny_model_domu"]
+            spravny_model_domu: { type: "string" }
+          }
         }
       });
 
@@ -126,11 +116,10 @@ Poskytni:
       if (errorMsg.includes('unsupported image') || errorMsg.includes('ImageURL') || errorMsg.includes('Neplatná URL')) {
         addLog(`⚠️ Preskakujem (problémový obrázok): ${dok.nazov}`, 'warning');
         
-        // Označ dokument ako skipnutý
         await base44.entities.Dokument.update(dok.id, {
           podrobna_analyza_datum: new Date().toISOString(),
           vizualna_analyza: {
-            error: 'Problémový obrázok - nepodporovaný formát alebo poškodený súbor',
+            error: 'Problémový obrázok - nepodporovaný formát',
             skipped: true
           }
         });
@@ -151,7 +140,7 @@ Poskytni:
       return;
     }
 
-    if (!confirm(`Spustiť analýzu ${neanalyzovane.length} fotiek?\n\nAnalýza prebieha jeden obrázok po druhom.\nMôžete pozastaviť kedykoľvek.\n\nProblémové obrázky budú automaticky preskočené.`)) {
+    if (!confirm(`Spustiť analýzu ${neanalyzovane.length} fotiek?\n\nAnalýza prebieha jeden obrázok po druhom.\nMôžete pozastaviť kedykoľvek.`)) {
       return;
     }
 
@@ -166,13 +155,11 @@ Poskytni:
     let skipped = 0;
 
     for (let i = 0; i < neanalyzovane.length; i++) {
-      // Kontrola zastavenia
       if (stopRef.current) {
         addLog('⏹️ Analýza zastavená používateľom', 'info');
         break;
       }
 
-      // Kontrola pauzy
       while (pausedRef.current && !stopRef.current) {
         await new Promise(resolve => setTimeout(resolve, 500));
       }
@@ -199,16 +186,13 @@ Poskytni:
           skipped: skipped
         });
 
-        // Refresh každých 10 dokumentov
         if ((processed + skipped) % 10 === 0) {
           await refetch();
         }
 
-        // Krátka pauza medzi dokumentmi
         await new Promise(resolve => setTimeout(resolve, 1000));
         
       } catch (error) {
-        // Aj v prípade kritickej chyby pokračuj ďalej
         addLog(`💥 Kritická chyba pri ${dok.nazov}: ${error.message}`, 'error');
         failed++;
         setProgress(prev => ({...prev, failed: prev.failed + 1}));
@@ -216,7 +200,6 @@ Poskytni:
       }
     }
 
-    // Finálny refresh
     await refetch();
 
     setResults({
@@ -275,7 +258,7 @@ Poskytni:
           <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-blue-600 bg-clip-text text-transparent mb-2">
             🎯 Analýza celej databázy
           </h1>
-          <p className="text-gray-600">Postupná analýza všetkých dokumentov (problémové obrázky sa preskočia)</p>
+          <p className="text-gray-600">Postupná analýza všetkých dokumentov</p>
         </div>
 
         {/* Stats Cards */}
@@ -361,7 +344,7 @@ Poskytni:
             <div>
               <h2 className="text-xl font-bold mb-2">🚀 Postupná AI analýza</h2>
               <p className="text-sm text-gray-600 mb-2">
-                Analýza prebieha postupne (1 fotka po druhej) • Problémové obrázky sa automaticky preskočia
+                Analýza prebieha postupne (1 fotka po druhej)
               </p>
               {neanalyzovaneCount > 0 && (
                 <p className="text-sm font-semibold text-orange-600">
