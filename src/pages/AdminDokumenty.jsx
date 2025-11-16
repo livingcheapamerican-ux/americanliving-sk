@@ -253,21 +253,22 @@ export default function AdminDokumenty() {
       
       // Validácia podľa typu dokumentu
       if (formData.typ === 'video') {
-        return file.type.startsWith('video/') || file.name.match(/\.(mp4|mov|avi|mkv|webm)$/i);
+        const isVideo = file.type.startsWith('video/') || file.name.match(/\.(mp4|mov|avi|mkv|webm)$/i);
+        return isVideo;
       }
       
       if (formData.typ === 'fotky') {
-        return file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i);
+        const isImage = file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif|webp|svg|tif|tiff|bmp|ico)$/i);
+        return isImage;
       }
       
-      // Pre ostatné typy - odmietni videá a obrázky, ak nie sú povolené explicitne
-      // Ak nie je video alebo fotka, odmietni videá a obrázky
-      if (file.type.startsWith('video/') || file.name.match(/\.(mp4|mov|avi|mkv|webm)$/i)) {
-        return false;
-      }
-      if (file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
-        return false;
-      }
+      // Pre ostatné typy - odmietni videá a veľké obrázky
+      const isVideo = file.type.startsWith('video/') || file.name.match(/\.(mp4|mov|avi|mkv|webm)$/i);
+      if (isVideo) return false;
+      
+      // Ak je to obrázok väčší ako 50MB, odmietni
+      const isLargeImage = (file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif|webp|svg|tif|tiff|bmp)$/i)) && file.size > 50 * 1024 * 1024;
+      if (isLargeImage) return false;
       
       return true;
     });
@@ -322,21 +323,21 @@ export default function AdminDokumenty() {
         if (shouldSkipFile(file.name)) return false;
         
         if (formData.typ === 'video') {
-          return file.type.startsWith('video/') || file.name.match(/\.(mp4|mov|avi|mkv|webm)$/i);
+          const isVideo = file.type.startsWith('video/') || file.name.match(/\.(mp4|mov|avi|mkv|webm)$/i);
+          return isVideo;
         }
         
         if (formData.typ === 'fotky') {
-          return file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i);
+          const isImage = file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif|webp|svg|tif|tiff|bmp|ico)$/i);
+          return isImage;
         }
         
-        // Pre ostatné typy - odmietni videá a obrázky, ak nie sú povolené explicitne
-        // Ak nie je video alebo fotka, odmietni videá a obrázky
-        if (file.type.startsWith('video/') || file.name.match(/\.(mp4|mov|avi|mkv|webm)$/i)) {
-          return false;
-        }
-        if (file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
-          return false;
-        }
+        // Pre ostatné typy - odmietni videá a veľké obrázky
+        const isVideo = file.type.startsWith('video/') || file.name.match(/\.(mp4|mov|avi|mkv|webm)$/i);
+        if (isVideo) return false;
+        
+        const isLargeImage = (file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif|webp|svg|tif|tiff|bmp)$/i)) && file.size > 50 * 1024 * 1024;
+        if (isLargeImage) return false;
         
         return true;
       });
@@ -418,6 +419,11 @@ export default function AdminDokumenty() {
       ...prev,
       [fileName]: progress
     }));
+  };
+
+  const handleCancelFile = (fileName) => {
+    updateFileStatus(fileName, 'zrušený');
+    updateFileProgress(fileName, 100);
   };
 
   const handleRemoveFile = (index) => {
@@ -562,7 +568,7 @@ export default function AdminDokumenty() {
     let cumulativeBytes = 0;
 
     selectedFiles.forEach((file) => {
-      if (fileStatuses[file.name] === 'nahratý' || fileStatuses[file.name] === 'preskočený' || fileStatuses[file.name] === 'duplicita') {
+      if (fileStatuses[file.name] === 'nahratý' || fileStatuses[file.name] === 'preskočený' || fileStatuses[file.name] === 'duplicita' || fileStatuses[file.name] === 'zrušený') {
         cumulativeBytes += file.size;
       }
     });
@@ -593,12 +599,22 @@ export default function AdminDokumenty() {
 
         const batchPromises = batch.map(async (file) => {
           if (uploadWorkerRef.current?.cancel) return null;
+          
+          // Preskočiť súbory ktoré boli manuálne zrušené
+          if (fileStatuses[file.name] === 'zrušený') {
+            return { file, status: 'cancelled', size: file.size };
+          }
 
           updateFileStatus(file.name, 'nahrávam');
           updateFileProgress(file.name, 0); // Initialize individual file progress
           setCurrentFileName(file.name);
 
           try {
+            // Preskočiť ak bol medzitým zrušený
+            if (fileStatuses[file.name] === 'zrušený') {
+              return { file, status: 'cancelled', size: file.size };
+            }
+            
             const filePath = file.webkitRelativePath || file.name;
             const folderInfo = extractFolderInfo(filePath);
 
@@ -606,6 +622,11 @@ export default function AdminDokumenty() {
             updateFileProgress(file.name, 30);
             const uploadResponse = await base44.integrations.Core.UploadFile({ file });
             updateFileProgress(file.name, 70);
+
+            // Preskočiť ak bol medzitým zrušený
+            if (fileStatuses[file.name] === 'zrušený') {
+              return { file, status: 'cancelled', size: file.size };
+            }
 
             const autoTags = [...formData.tags];
             if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
@@ -657,7 +678,9 @@ export default function AdminDokumenty() {
 
         batchResults.forEach(result => {
           if (result.status === 'fulfilled' && result.value) { // Count both success and handled failures
-            completedCount++;
+            if (result.value.status !== 'cancelled') { // Only increment completedCount for non-cancelled
+                completedCount++;
+            }
           } else if (result.status === 'rejected') { // Should ideally not happen if catch handles errors
             console.error('Batch promise rejected:', result.reason);
             completedCount++; // Still count as processed
@@ -774,6 +797,8 @@ export default function AdminDokumenty() {
         return <Badge className="bg-amber-500/10 text-amber-700 border-amber-200"><Info className="w-3 h-3 mr-1" />Duplicita</Badge>;
       case 'preskočený':
         return <Badge className="bg-gray-500/10 text-gray-700 border-gray-200"><X className="w-3 h-3 mr-1" />Preskočený</Badge>;
+      case 'zrušený':
+        return <Badge className="bg-orange-500/10 text-orange-700 border-orange-200"><X className="w-3 h-3 mr-1" />Zrušený</Badge>;
       case 'pending':
         return <Badge variant="outline" className="border-slate-300"><Clock className="w-3 h-3 mr-1" />Čaká</Badge>;
       default:
@@ -1362,7 +1387,7 @@ export default function AdminDokumenty() {
                             const individualProgress = fileProgress[file.name] || 0;
                             const displayProgress = status === 'nahratý' ? 100 : 
                                                    status === 'nahrávam' ? individualProgress : 
-                                                   status === 'odmietnutý' ? 100 : 0;
+                                                   status === 'odmietnutý' || status === 'zrušený' ? 100 : 0;
                             
                             return (
                               <motion.div
@@ -1383,6 +1408,18 @@ export default function AdminDokumenty() {
                                       {displayProgress}%
                                     </span>
                                     {getStatusBadge(status)}
+                                    {status === 'nahrávam' && (
+                                      <Button
+                                        type="button"
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => handleCancelFile(file.name)}
+                                        className="h-6 w-6 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                        title="Zrušiť nahrávanie tohto súboru"
+                                      >
+                                        <X className="w-4 h-4" />
+                                      </Button>
+                                    )}
                                   </div>
                                 </div>
                                 <div className="relative w-full bg-gray-200 rounded-full h-2.5 overflow-hidden shadow-inner">
@@ -1391,6 +1428,7 @@ export default function AdminDokumenty() {
                                       status === 'nahratý' ? 'bg-gradient-to-r from-green-500 to-emerald-500' :
                                       status === 'nahrávam' ? 'bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500 animate-pulse' :
                                       status === 'odmietnutý' ? 'bg-gradient-to-r from-red-500 to-rose-500' :
+                                      status === 'zrušený' ? 'bg-gradient-to-r from-orange-500 to-amber-500' :
                                       'bg-gray-300'
                                     }`}
                                     style={{ width: `${displayProgress}%` }}
