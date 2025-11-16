@@ -42,12 +42,16 @@ export default function AdminAnalyzaDatabazy() {
   useEffect(() => {
     if (analyzing) {
       progressIntervalRef.current = setInterval(async () => {
-        const analyzovaneDokumenty = await base44.entities.Dokument.filter({ 
-          typ: "fotky",
-          analyzovaný: true
-        });
-        const aktualnyPocet = analyzovaneDokumenty.length - analyzaStartCountRef.current;
-        setProgress(prev => ({ ...prev, current: Math.max(0, aktualnyPocet) }));
+        try {
+          const analyzovaneDokumenty = await base44.entities.Dokument.filter({ 
+            typ: "fotky",
+            analyzovaný: true
+          });
+          const aktualnyPocet = analyzovaneDokumenty.length - analyzaStartCountRef.current;
+          setProgress(prev => ({ ...prev, current: Math.max(0, aktualnyPocet) }));
+        } catch (error) {
+          console.error('Progress tracking error:', error);
+        }
       }, 2000);
     } else {
       if (progressIntervalRef.current) {
@@ -67,23 +71,27 @@ export default function AdminAnalyzaDatabazy() {
       return;
     }
 
-    // Zisti koľko je už analyzovaných pred začatím
-    const analyzovaneTeraz = await base44.entities.Dokument.filter({ 
-      typ: "fotky",
-      analyzovaný: true
-    });
-    analyzaStartCountRef.current = analyzovaneTeraz.length;
-
-    setAnalyzing(true);
-    setProgress({ current: 0, total: dokumenty.length });
-
     try {
+      // Zisti koľko je už analyzovaných pred začatím
+      const analyzovaneTeraz = await base44.entities.Dokument.filter({ 
+        typ: "fotky",
+        analyzovaný: true
+      });
+      analyzaStartCountRef.current = analyzovaneTeraz.length;
+
+      setAnalyzing(true);
+      setProgress({ current: 0, total: dokumenty.length });
+
       const response = await base44.functions.invoke('analyzujVsetkyDokumentyPodrobne', {});
+      
+      console.log('Analysis response:', response);
+      
       setResults(response.data);
       queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
       alert(`Analýza dokončená! Spracovaných: ${response.data.processed} z ${response.data.total}`);
     } catch (error) {
-      alert('Chyba: ' + error.message);
+      console.error('Analysis error:', error);
+      alert('Chyba pri analýze: ' + (error.response?.data?.error || error.message));
     } finally {
       setAnalyzing(false);
       analyzaStartCountRef.current = 0;
