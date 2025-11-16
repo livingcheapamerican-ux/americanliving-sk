@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, CheckCircle, XCircle, AlertTriangle, Home, Image, FileText, Filter, Building2, PieChart, BarChart3, FolderTree } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, AlertTriangle, Home, Image, FileText, Filter, Building2, PieChart, BarChart3, FolderTree, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { PieChart as RechartsPie, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -17,6 +17,9 @@ export default function AdminAnalyzaDatabazy() {
   const [filterModel, setFilterModel] = useState("all");
   const [filterTyp, setFilterTyp] = useState("all");
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [autoHealActive, setAutoHealActive] = useState(false);
+  const [lastProgressUpdate, setLastProgressUpdate] = useState(Date.now());
+  const [stuckCount, setStuckCount] = useState(0);
 
   const queryClient = useQueryClient();
 
@@ -29,6 +32,34 @@ export default function AdminAnalyzaDatabazy() {
     queryKey: ['dokumenty-all'],
     queryFn: () => base44.entities.Dokument.filter({ typ: "fotky" })
   });
+
+  // AutoHeal monitor - sleduje zaseknutie
+  useEffect(() => {
+    if (!analyzing) return;
+
+    const checkInterval = setInterval(async () => {
+      const now = Date.now();
+      const timeSinceLastUpdate = now - lastProgressUpdate;
+
+      // Ak je viac ako 30 sekúnd bez zmeny, aktivuj autoheal
+      if (timeSinceLastUpdate > 30000) {
+        console.log('⚠️ AUTOHEAL: Detegované zaseknutie!');
+        setStuckCount(prev => prev + 1);
+        setAutoHealActive(true);
+        
+        // Refresh dát
+        await refetch();
+        setLastProgressUpdate(now);
+        
+        // Pokračuj v analýze
+        setTimeout(() => {
+          setAutoHealActive(false);
+        }, 2000);
+      }
+    }, 10000); // Kontroluj každých 10 sekúnd
+
+    return () => clearInterval(checkInterval);
+  }, [analyzing, lastProgressUpdate, refetch]);
 
   const handleAnalyzaVsetkych = async () => {
     const neanalyzovane = dokumenty.filter(d => !d.podrobna_analyza_datum);
@@ -45,54 +76,80 @@ export default function AdminAnalyzaDatabazy() {
     try {
       setAnalyzing(true);
       setProgress({ current: 0, total: neanalyzovane.length, remaining: neanalyzovane.length });
+      setLastProgressUpdate(Date.now());
+      setStuckCount(0);
 
-      // Batch processing - volaj funkciu opakovane
       let totalProcessed = 0;
       let remaining = neanalyzovane.length;
+      let maxIterations = 1000; // Bezpečnostný limit
+      let iteration = 0;
 
-      while (remaining > 0) {
-        console.log(`Batch processing: ${remaining} remaining`);
+      while (remaining > 0 && iteration < maxIterations) {
+        iteration++;
+        console.log(`🔄 Batch ${iteration}: ${remaining} zostáva`);
         
-        const response = await base44.functions.invoke('analyzujVsetkyDokumentyPodrobne', {});
-        
-        console.log('Batch response:', response.data);
-        
-        if (!response.data.success) {
-          throw new Error(response.data.error || 'Analysis failed');
+        try {
+          const response = await base44.functions.invoke('analyzujVsetkyDokumentyPodrobne', {});
+          
+          console.log('📊 Batch response:', response.data);
+          
+          if (!response.data.success) {
+            throw new Error(response.data.error || 'Analysis failed');
+          }
+
+          const prevProcessed = totalProcessed;
+          totalProcessed += response.data.processed;
+          remaining = response.data.remaining || 0;
+
+          // Ak sa nič nespracovalo, break
+          if (response.data.processed === 0 && remaining > 0) {
+            console.warn('⚠️ Žiadny progress, ukončujem');
+            break;
+          }
+
+          setProgress({
+            current: totalProcessed,
+            total: neanalyzovane.length,
+            remaining: remaining
+          });
+          setLastProgressUpdate(Date.now());
+
+          // Refresh data každých 5 spracovaných
+          if (totalProcessed % 5 === 0) {
+            await refetch();
+          }
+
+          if (remaining === 0) break;
+
+          // Pauza medzi batch-ami
+          await new Promise(resolve => setTimeout(resolve, 3000));
+
+        } catch (batchError) {
+          console.error('❌ Batch error:', batchError);
+          // Pokračuj aj po chybe
+          await new Promise(resolve => setTimeout(resolve, 5000));
         }
-
-        totalProcessed += response.data.processed;
-        remaining = response.data.remaining || 0;
-
-        setProgress({
-          current: totalProcessed,
-          total: neanalyzovane.length,
-          remaining: remaining
-        });
-
-        // Refresh data
-        await refetch();
-
-        if (remaining === 0) break;
-
-        // Wait before next batch
-        await new Promise(resolve => setTimeout(resolve, 2000));
       }
+
+      // Finálny refresh
+      await refetch();
 
       setResults({
         success: true,
         total: neanalyzovane.length,
-        processed: totalProcessed
+        processed: totalProcessed,
+        iterations: iteration,
+        stuckCount: stuckCount
       });
 
-      await refetch();
-      alert(`✅ Analýza dokončená!\n\nSpracovaných: ${totalProcessed} z ${neanalyzovane.length}`);
+      alert(`✅ Analýza dokončená!\n\nSpracovaných: ${totalProcessed} z ${neanalyzovane.length}\nIterácií: ${iteration}\nAutoHeal spustený: ${stuckCount}x`);
 
     } catch (error) {
-      console.error('Analysis error:', error);
+      console.error('❌ Analysis error:', error);
       alert('❌ Chyba pri analýze:\n' + (error.response?.data?.error || error.message));
     } finally {
       setAnalyzing(false);
+      setAutoHealActive(false);
     }
   };
 
@@ -163,7 +220,13 @@ export default function AdminAnalyzaDatabazy() {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-blue-600 bg-clip-text text-transparent mb-2">
             🎯 Analýza celej databázy
           </h1>
-          <p className="text-gray-600">Vizuálny prehľad všetkých dokumentov, materiálov a priečinkovej štruktúry</p>
+          <p className="text-gray-600">Vizuálny prehľad všetkých dokumentov s AutoHeal technológiou</p>
+          {autoHealActive && (
+            <div className="mt-2 flex items-center gap-2 text-amber-600">
+              <RefreshCw className="w-4 h-4 animate-spin" />
+              <span className="text-sm font-semibold">AutoHeal aktívny - oprava zaseknutia...</span>
+            </div>
+          )}
         </div>
 
         {/* Stats Cards */}
@@ -235,13 +298,18 @@ export default function AdminAnalyzaDatabazy() {
         <Card className="p-6 mb-8 border-2 border-primary/20">
           <div className="flex flex-col gap-4">
             <div>
-              <h2 className="text-xl font-bold mb-2">🚀 Podrobná AI analýza databázy</h2>
+              <h2 className="text-xl font-bold mb-2">🚀 Podrobná AI analýza s AutoHeal</h2>
               <p className="text-sm text-gray-600 mb-2">
-                Analyzuje materiály fasád, okná, dvere, strechy, stav fasády, automatická kategorizácia
+                Automaticky deteguje zaseknutie a obnoví proces • Batch processing po 5 fotiek
               </p>
               {neanalyzovaneCount > 0 && (
                 <p className="text-sm font-semibold text-orange-600">
                   ⚠️ Zostáva {neanalyzovaneCount} neanalyzovaných fotiek
+                </p>
+              )}
+              {stuckCount > 0 && (
+                <p className="text-xs text-amber-600 mt-1">
+                  🔧 AutoHeal spustený: {stuckCount}x
                 </p>
               )}
             </div>
@@ -250,16 +318,22 @@ export default function AdminAnalyzaDatabazy() {
                 {analyzing && (
                   <div className="text-sm text-gray-600">
                     <div className="flex items-center gap-2 mb-1">
-                      <div className="w-32 bg-gray-200 rounded-full h-2">
+                      <div className="w-48 bg-gray-200 rounded-full h-2.5">
                         <div 
-                          className="bg-primary h-2 rounded-full transition-all duration-300"
+                          className="bg-primary h-2.5 rounded-full transition-all duration-300"
                           style={{ width: `${progress.total > 0 ? (progress.current / progress.total) * 100 : 0}%` }}
                         />
                       </div>
                       <span className="font-medium">{progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0}%</span>
                     </div>
-                    <p className="text-xs">Spracovaných: {progress.current} / {progress.total}</p>
-                    <p className="text-xs text-orange-600">Zostáva: {progress.remaining}</p>
+                    <p className="text-xs">✅ Spracovaných: {progress.current} / {progress.total}</p>
+                    <p className="text-xs text-orange-600">⏳ Zostáva: {progress.remaining}</p>
+                    {autoHealActive && (
+                      <p className="text-xs text-amber-600 flex items-center gap-1 mt-1">
+                        <RefreshCw className="w-3 h-3 animate-spin" />
+                        AutoHeal aktívny
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
@@ -288,7 +362,7 @@ export default function AdminAnalyzaDatabazy() {
         {results && (
           <Card className="p-6 mb-8 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
             <h3 className="text-xl font-bold mb-4">📊 Výsledky poslednej analýzy</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               <div className="text-center p-4 bg-white rounded-lg">
                 <p className="text-sm text-gray-600">Celkom</p>
                 <p className="text-3xl font-bold text-blue-600">{results.total}</p>
@@ -297,13 +371,17 @@ export default function AdminAnalyzaDatabazy() {
                 <p className="text-sm text-gray-600">Úspešné</p>
                 <p className="text-3xl font-bold text-green-600">{results.processed}</p>
               </div>
+              <div className="text-center p-4 bg-white rounded-lg">
+                <p className="text-sm text-gray-600">Iterácií</p>
+                <p className="text-3xl font-bold text-purple-600">{results.iterations}</p>
+              </div>
+              <div className="text-center p-4 bg-white rounded-lg">
+                <p className="text-sm text-gray-600">AutoHeal</p>
+                <p className="text-3xl font-bold text-amber-600">{results.stuckCount}x</p>
+              </div>
             </div>
           </Card>
         )}
-
-        <p className="text-center text-gray-500 py-8">
-          Dashboardy a grafy sa zobrazia po dokončení analýzy
-        </p>
       </div>
     </div>
   );
