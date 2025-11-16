@@ -19,8 +19,8 @@ export default function AdminAnalyzaDatabazy() {
   const [logs, setLogs] = useState([]);
   const [results, setResults] = useState(null);
   const [autoReorganize, setAutoReorganize] = useState(true);
-  const [batchSize] = useState(10); // Väčší batch
-  const [parallelLimit] = useState(3); // 3 súčasne
+  const [batchSize] = useState(5);
+  const [parallelLimit] = useState(2);
   
   const pausedRef = useRef(false);
   const stopRef = useRef(false);
@@ -35,7 +35,7 @@ export default function AdminAnalyzaDatabazy() {
   const { data: dokumenty = [], isLoading, refetch } = useQuery({
     queryKey: ['dokumenty-all'],
     queryFn: () => base44.entities.Dokument.filter({ typ: "fotky" }),
-    refetchInterval: 15000
+    refetchInterval: 5000
   });
 
   const reorganizeMutation = useMutation({
@@ -53,7 +53,9 @@ export default function AdminAnalyzaDatabazy() {
   });
 
   const addLog = (message, type = 'info') => {
-    setLogs(prev => [...prev, { message, type, time: new Date().toLocaleTimeString() }]);
+    const log = { message, type, time: new Date().toLocaleTimeString() };
+    setLogs(prev => [...prev, log]);
+    console.log(`[${log.time}] ${message}`);
   };
 
   const handleAutoAnalyza = async () => {
@@ -78,9 +80,31 @@ export default function AdminAnalyzaDatabazy() {
     }
   };
 
+  const oznacAkoAnalyzovany = async (dokId, popis, analyza = null) => {
+    try {
+      const updateData = {
+        podrobna_analyza_datum: new Date().toISOString(),
+        ai_generovany_popis: popis
+      };
+      
+      if (analyza) {
+        updateData.vizualna_analyza = analyza;
+        updateData.analyzovaný = true;
+      }
+
+      await base44.entities.Dokument.update(dokId, updateData);
+      addLog(`💾 Uložené do DB: ${dokId}`, 'info');
+      return true;
+    } catch (error) {
+      addLog(`❌ Chyba ukladania do DB: ${error.message}`, 'error');
+      return false;
+    }
+  };
+
   const analyzujJedenDokument = async (dok) => {
     try {
       setCurrentDoc(dok.nazov);
+      addLog(`🔍 Začínam: ${dok.nazov}`, 'info');
 
       if (!dok.subor_url || !dok.subor_url.startsWith('http')) {
         throw new Error('Neplatná URL obrázka');
@@ -155,35 +179,26 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
         }
       });
 
-      await base44.entities.Dokument.update(dok.id, {
-        ai_generovany_popis: popis,
-        vizualna_analyza: strukturovaneData,
-        analyzovaný: true,
-        podrobna_analyza_datum: new Date().toISOString()
-      });
-
-      addLog(`✅ ${dok.nazov} (${strukturovaneData.typ_obsahu || 'N/A'})`, 'success');
-      return { success: true, dok, analyza: strukturovaneData, popis };
+      const saved = await oznacAkoAnalyzovany(dok.id, popis, strukturovaneData);
+      
+      if (saved) {
+        addLog(`✅ ${dok.nazov} (${strukturovaneData.typ_obsahu || 'N/A'})`, 'success');
+        return { success: true, dok, analyza: strukturovaneData, popis };
+      } else {
+        throw new Error('Nepodarilo sa uložiť do databázy');
+      }
 
     } catch (error) {
       const errorMsg = error.message || error.toString();
       
       if (errorMsg.includes('unsupported image') || errorMsg.includes('ImageURL')) {
-        await base44.entities.Dokument.update(dok.id, {
-          podrobna_analyza_datum: new Date().toISOString(),
-          ai_generovany_popis: 'Problémový obrázok - nepodporovaný formát'
-        });
-        
+        addLog(`⚠️ Preskakujem: ${dok.nazov}`, 'warning');
+        await oznacAkoAnalyzovany(dok.id, 'Problémový obrázok - nepodporovaný formát');
         return { success: false, skipped: true, dok, error: errorMsg };
       }
       
-      try {
-        await base44.entities.Dokument.update(dok.id, {
-          podrobna_analyza_datum: new Date().toISOString(),
-          ai_generovany_popis: `Chyba analýzy: ${errorMsg}`
-        });
-      } catch {}
-      
+      addLog(`❌ Chyba: ${dok.nazov} - ${errorMsg}`, 'error');
+      await oznacAkoAnalyzovany(dok.id, `Chyba analýzy: ${errorMsg}`);
       return { success: false, skipped: false, dok, error: errorMsg };
     }
   };
@@ -216,6 +231,8 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
   };
 
   const handleAnalyzaVsetkych = async () => {
+    await refetch();
+    
     const neanalyzovane = dokumenty.filter(d => !d.podrobna_analyza_datum);
     
     if (neanalyzovane.length === 0) {
@@ -223,7 +240,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
       return;
     }
 
-    if (!confirm(`Spustiť analýzu ${neanalyzovane.length} fotiek?\n\nRýchla analýza: ${parallelLimit} súčasne v dávkach po ${batchSize}.`)) {
+    if (!confirm(`Spustiť analýzu ${neanalyzovane.length} fotiek?\n\n${parallelLimit} súčasne, dávky po ${batchSize}.`)) {
       return;
     }
 
@@ -232,6 +249,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
     stopRef.current = false;
     setLogs([]);
     setProgress({ current: 0, total: neanalyzovane.length, failed: 0, skipped: 0 });
+    addLog(`🚀 Štart analýzy ${neanalyzovane.length} fotiek`, 'info');
     
     let processed = 0;
     let failed = 0;
@@ -250,9 +268,10 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
       if (stopRef.current) break;
 
       const batch = neanalyzovane.slice(i, i + batchSize);
-      addLog(`📦 Dávka ${Math.floor(i/batchSize) + 1}/${Math.ceil(neanalyzovane.length/batchSize)} (${batch.length} súborov)`, 'info');
+      const batchNum = Math.floor(i/batchSize) + 1;
+      const totalBatches = Math.ceil(neanalyzovane.length/batchSize);
+      addLog(`📦 Dávka ${batchNum}/${totalBatches} (${batch.length} súborov)`, 'info');
 
-      // Spracuj v paralelných podskupinách
       for (let j = 0; j < batch.length; j += parallelLimit) {
         if (stopRef.current) break;
         
@@ -279,11 +298,11 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
           skipped: skipped
         });
 
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
 
+      addLog(`✅ Checkpoint: ${processed} hotových z ${neanalyzovane.length}`, 'success');
       await refetch();
-      addLog(`✅ Celkovo: ${processed} úspešných, ${skipped} preskočených, ${failed} chýb`, 'success');
     }
 
     setResults({
@@ -295,7 +314,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
 
     setAnalyzing(false);
     setCurrentDoc(null);
-    addLog(`🎉 Dokončené! Úspešných: ${processed}, Preskočených: ${skipped}, Chýb: ${failed}`, 'success');
+    addLog(`🎉 Hotovo! Úspešných: ${processed}, Preskočených: ${skipped}, Chýb: ${failed}`, 'success');
 
     if (autoReorganize && processed > 0) {
       addLog('🔄 Automatická reorganizácia...', 'info');
@@ -306,12 +325,14 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
 
   const handlePause = () => {
     pausedRef.current = !pausedRef.current;
+    addLog(pausedRef.current ? '⏸️ Pozastavené' : '▶️ Pokračujem', 'info');
   };
 
   const handleStop = () => {
     stopRef.current = true;
     pausedRef.current = false;
     setAnalyzing(false);
+    addLog('⏹️ Zastavené používateľom', 'info');
   };
 
   const analyzovaneCount = dokumenty.filter(d => d.ai_generovany_popis).length;
@@ -348,10 +369,9 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
           <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-blue-600 bg-clip-text text-transparent mb-2">
             🎯 Analýza celej databázy
           </h1>
-          <p className="text-gray-600">Rýchly paralelný režim - {parallelLimit} súčasne, dávky po {batchSize}</p>
+          <p className="text-gray-600">Stabilný režim - {parallelLimit} súčasne, dávky po {batchSize}, checkpoint po každej dávke</p>
         </div>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-8">
           <Card className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
             <div className="flex items-center gap-4">
@@ -428,15 +448,14 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
           </Card>
         </div>
 
-        {/* Speed info */}
-        <Card className="p-4 mb-6 bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+        <Card className="p-4 mb-6 bg-green-50 border-green-200">
           <div className="flex items-start gap-3">
-            <Zap className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+            <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
             <div className="text-sm">
-              <p className="font-semibold text-purple-900 mb-1">⚡ Rýchly režim</p>
-              <p className="text-purple-700">
-                Paralelné spracovanie {parallelLimit} obrázkov súčasne v dávkach po {batchSize}. 
-                Až ~{parallelLimit * 3}x rýchlejšie než sekvenčná analýza.
+              <p className="font-semibold text-green-900 mb-1">✅ Stabilný checkpoint režim</p>
+              <p className="text-green-700">
+                Okamžité ukladanie do DB po každej analýze + checkpoint po každej dávce. 
+                Auto-refresh každých 5s. Pokračuje presne tam kde skončil.
               </p>
             </div>
           </div>
@@ -587,7 +606,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
                   {neanalyzovaneCount === 0 ? (
                     '✓ Všetko analyzované'
                   ) : (
-                    `⚡ Rýchla analýza (${neanalyzovaneCount})`
+                    `Pokračovať v analýze (${neanalyzovaneCount})`
                   )}
                 </Button>
               </div>
@@ -608,7 +627,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
               <Card className="p-6">
                 <h3 className="text-lg font-bold mb-4">📋 Log analýzy</h3>
                 <div className="space-y-1 max-h-96 overflow-y-auto font-mono text-xs">
-                  {logs.slice(-50).reverse().map((log, i) => (
+                  {logs.slice(-100).reverse().map((log, i) => (
                     <div
                       key={i}
                       className={`flex gap-2 ${
