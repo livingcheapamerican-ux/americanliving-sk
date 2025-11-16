@@ -3,11 +3,11 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Loader2, CheckCircle, XCircle, AlertTriangle, Image, FileText, RefreshCw, Pause, Play } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, AlertTriangle, Image, FileText, RefreshCw, Pause, Play, SkipForward } from "lucide-react";
 
 export default function AdminAnalyzaDatabazy() {
   const [analyzing, setAnalyzing] = useState(false);
-  const [progress, setProgress] = useState({ current: 0, total: 0, failed: 0 });
+  const [progress, setProgress] = useState({ current: 0, total: 0, failed: 0, skipped: 0 });
   const [currentDoc, setCurrentDoc] = useState(null);
   const [logs, setLogs] = useState([]);
   const [results, setResults] = useState(null);
@@ -33,6 +33,11 @@ export default function AdminAnalyzaDatabazy() {
     try {
       setCurrentDoc(dok.nazov);
       addLog(`Analyzujem: ${dok.nazov}`, 'info');
+
+      // Skontroluj či je URL validná a obrázok dostupný
+      if (!dok.subor_url || !dok.subor_url.startsWith('http')) {
+        throw new Error('Neplatná URL obrázka');
+      }
 
       const analyza = await base44.integrations.Core.InvokeLLM({
         prompt: `Analyzuj tento obrázok modulárneho domu:
@@ -115,8 +120,26 @@ Poskytni:
       return { success: true, dok, analyza };
 
     } catch (error) {
-      addLog(`❌ Chyba: ${dok.nazov} - ${error.message}`, 'error');
-      return { success: false, dok, error: error.message };
+      const errorMsg = error.message || error.toString();
+      
+      // Ak je problém s obrázkom, označ dokument ako problémový
+      if (errorMsg.includes('unsupported image') || errorMsg.includes('ImageURL') || errorMsg.includes('Neplatná URL')) {
+        addLog(`⚠️ Preskakujem (problémový obrázok): ${dok.nazov}`, 'warning');
+        
+        // Označ dokument ako skipnutý
+        await base44.entities.Dokument.update(dok.id, {
+          podrobna_analyza_datum: new Date().toISOString(),
+          vizualna_analyza: {
+            error: 'Problémový obrázok - nepodporovaný formát alebo poškodený súbor',
+            skipped: true
+          }
+        });
+        
+        return { success: false, skipped: true, dok, error: errorMsg };
+      }
+      
+      addLog(`❌ Chyba: ${dok.nazov} - ${errorMsg}`, 'error');
+      return { success: false, skipped: false, dok, error: errorMsg };
     }
   };
 
@@ -128,7 +151,7 @@ Poskytni:
       return;
     }
 
-    if (!confirm(`Spustiť analýzu ${neanalyzovane.length} fotiek?\n\nAnalýza prebieha jeden obrázok po druhom.\nMôžete pozastaviť kedykoľvek.`)) {
+    if (!confirm(`Spustiť analýzu ${neanalyzovane.length} fotiek?\n\nAnalýza prebieha jeden obrázok po druhom.\nMôžete pozastaviť kedykoľvek.\n\nProblémové obrázky budú automaticky preskočené.`)) {
       return;
     }
 
@@ -136,10 +159,11 @@ Poskytni:
     pausedRef.current = false;
     stopRef.current = false;
     setLogs([]);
-    setProgress({ current: 0, total: neanalyzovane.length, failed: 0 });
+    setProgress({ current: 0, total: neanalyzovane.length, failed: 0, skipped: 0 });
     
     let processed = 0;
     let failed = 0;
+    let skipped = 0;
 
     for (let i = 0; i < neanalyzovane.length; i++) {
       // Kontrola zastavenia
@@ -156,27 +180,40 @@ Poskytni:
       if (stopRef.current) break;
 
       const dok = neanalyzovane[i];
-      const result = await analyzujJedenDokument(dok);
+      
+      try {
+        const result = await analyzujJedenDokument(dok);
 
-      if (result.success) {
-        processed++;
-      } else {
+        if (result.success) {
+          processed++;
+        } else if (result.skipped) {
+          skipped++;
+        } else {
+          failed++;
+        }
+
+        setProgress({
+          current: processed,
+          total: neanalyzovane.length,
+          failed: failed,
+          skipped: skipped
+        });
+
+        // Refresh každých 10 dokumentov
+        if ((processed + skipped) % 10 === 0) {
+          await refetch();
+        }
+
+        // Krátka pauza medzi dokumentmi
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+      } catch (error) {
+        // Aj v prípade kritickej chyby pokračuj ďalej
+        addLog(`💥 Kritická chyba pri ${dok.nazov}: ${error.message}`, 'error');
         failed++;
+        setProgress(prev => ({...prev, failed: prev.failed + 1}));
+        await new Promise(resolve => setTimeout(resolve, 2000));
       }
-
-      setProgress({
-        current: processed,
-        total: neanalyzovane.length,
-        failed: failed
-      });
-
-      // Refresh každých 10 dokumentov
-      if (processed % 10 === 0) {
-        await refetch();
-      }
-
-      // Krátka pauza medzi dokumentmi
-      await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
     // Finálny refresh
@@ -185,12 +222,13 @@ Poskytni:
     setResults({
       total: neanalyzovane.length,
       processed: processed,
-      failed: failed
+      failed: failed,
+      skipped: skipped
     });
 
     setAnalyzing(false);
     setCurrentDoc(null);
-    addLog(`🎉 Analýza dokončená! Úspešných: ${processed}, Chýb: ${failed}`, 'success');
+    addLog(`🎉 Analýza dokončená! Úspešných: ${processed}, Preskočených: ${skipped}, Chýb: ${failed}`, 'success');
   };
 
   const handlePause = () => {
@@ -206,6 +244,7 @@ Poskytni:
   const analyzovaneCount = dokumenty.filter(d => d.vizualna_analyza).length;
   const podrobneAnalyzovaneCount = dokumenty.filter(d => d.podrobna_analyza_datum).length;
   const neanalyzovaneCount = dokumenty.filter(d => !d.podrobna_analyza_datum).length;
+  const skipnuteCount = dokumenty.filter(d => d.vizualna_analyza?.skipped).length;
 
   if (userLoading) {
     return (
@@ -236,18 +275,18 @@ Poskytni:
           <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-blue-600 bg-clip-text text-transparent mb-2">
             🎯 Analýza celej databázy
           </h1>
-          <p className="text-gray-600">Postupná analýza všetkých dokumentov (jeden po druhom)</p>
+          <p className="text-gray-600">Postupná analýza všetkých dokumentov (problémové obrázky sa preskočia)</p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-8">
           <Card className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
                 <Image className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Celkom fotiek</p>
+                <p className="text-sm text-gray-600">Celkom</p>
                 <p className="text-2xl font-bold text-blue-900">{dokumenty.length}</p>
               </div>
             </div>
@@ -259,7 +298,7 @@ Poskytni:
                 <CheckCircle className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Základná analýza</p>
+                <p className="text-sm text-gray-600">Základná</p>
                 <p className="text-2xl font-bold text-green-900">{analyzovaneCount}</p>
               </div>
             </div>
@@ -271,7 +310,7 @@ Poskytni:
                 <CheckCircle className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Podrobná analýza</p>
+                <p className="text-sm text-gray-600">Podrobná</p>
                 <p className="text-2xl font-bold text-purple-900">{podrobneAnalyzovaneCount}</p>
               </div>
             </div>
@@ -283,8 +322,20 @@ Poskytni:
                 <XCircle className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Neanalyzované</p>
+                <p className="text-sm text-gray-600">Zostáva</p>
                 <p className="text-2xl font-bold text-orange-900">{neanalyzovaneCount}</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6 bg-gradient-to-br from-yellow-50 to-amber-50 border-yellow-200">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center">
+                <SkipForward className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Skipnuté</p>
+                <p className="text-2xl font-bold text-yellow-900">{skipnuteCount}</p>
               </div>
             </div>
           </Card>
@@ -310,7 +361,7 @@ Poskytni:
             <div>
               <h2 className="text-xl font-bold mb-2">🚀 Postupná AI analýza</h2>
               <p className="text-sm text-gray-600 mb-2">
-                Analýza prebieha postupne (1 fotka po druhej) • Môžete pozastaviť a pokračovať kedykoľvek
+                Analýza prebieha postupne (1 fotka po druhej) • Problémové obrázky sa automaticky preskočia
               </p>
               {neanalyzovaneCount > 0 && (
                 <p className="text-sm font-semibold text-orange-600">
@@ -326,18 +377,21 @@ Poskytni:
                     <div className="w-full bg-gray-200 rounded-full h-3">
                       <div 
                         className="bg-gradient-to-r from-purple-600 to-pink-600 h-3 rounded-full transition-all duration-300"
-                        style={{ width: `${progress.total > 0 ? (progress.current / progress.total) * 100 : 0}%` }}
+                        style={{ width: `${progress.total > 0 ? ((progress.current + progress.skipped) / progress.total) * 100 : 0}%` }}
                       />
                     </div>
                   </div>
                   <span className="font-bold text-lg min-w-[60px]">
-                    {progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0}%
+                    {progress.total > 0 ? Math.round(((progress.current + progress.skipped) / progress.total) * 100) : 0}%
                   </span>
                 </div>
                 
                 <div className="flex items-center justify-between text-sm">
                   <div className="space-y-1">
-                    <p className="font-medium">✅ Spracovaných: {progress.current} / {progress.total}</p>
+                    <p className="font-medium">✅ Úspešných: {progress.current} / {progress.total}</p>
+                    {progress.skipped > 0 && (
+                      <p className="text-yellow-600">⏭️ Preskočených: {progress.skipped}</p>
+                    )}
                     {progress.failed > 0 && (
                       <p className="text-red-600">❌ Chýb: {progress.failed}</p>
                     )}
@@ -405,13 +459,14 @@ Poskytni:
         {logs.length > 0 && (
           <Card className="p-6 mb-8">
             <h3 className="text-lg font-bold mb-4">📋 Log analýzy</h3>
-            <div className="space-y-1 max-h-96 overflow-y-auto">
+            <div className="space-y-1 max-h-96 overflow-y-auto font-mono text-xs">
               {logs.slice(-50).reverse().map((log, i) => (
                 <div
                   key={i}
-                  className={`text-sm flex gap-2 ${
+                  className={`flex gap-2 ${
                     log.type === 'error' ? 'text-red-600' : 
                     log.type === 'success' ? 'text-green-600' : 
+                    log.type === 'warning' ? 'text-yellow-600' :
                     'text-gray-600'
                   }`}
                 >
@@ -427,7 +482,7 @@ Poskytni:
         {results && (
           <Card className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
             <h3 className="text-xl font-bold mb-4">📊 Výsledky analýzy</h3>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               <div className="text-center p-4 bg-white rounded-lg">
                 <p className="text-sm text-gray-600">Celkom</p>
                 <p className="text-3xl font-bold text-blue-600">{results.total}</p>
@@ -435,6 +490,10 @@ Poskytni:
               <div className="text-center p-4 bg-white rounded-lg">
                 <p className="text-sm text-gray-600">Úspešné</p>
                 <p className="text-3xl font-bold text-green-600">{results.processed}</p>
+              </div>
+              <div className="text-center p-4 bg-white rounded-lg">
+                <p className="text-sm text-gray-600">Preskočené</p>
+                <p className="text-3xl font-bold text-yellow-600">{results.skipped}</p>
               </div>
               <div className="text-center p-4 bg-white rounded-lg">
                 <p className="text-sm text-gray-600">Chyby</p>
