@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -122,9 +123,9 @@ Odpoveď (max 200 slov, priateľsky tón, využívaj údaje z dokumentov):`,
           >
             <Button
               onClick={() => setIsOpen(true)}
-              className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-secondary hover:from-secondary hover:to-primary shadow-2xl"
+              className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-secondary hover:from-secondary hover:to-primary shadow-2xl text-white"
             >
-              <MessageCircle className="w-7 h-7 text-white" />
+              <MessageCircle className="w-7 h-7" />
             </Button>
             <div className="absolute -top-2 -right-2 bg-gradient-to-br from-cyan-500 to-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
               AI
