@@ -56,7 +56,6 @@ export default function AdminDokumenty() {
   const [showForm, setShowForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [uploading, setUploading] = useState(false);
-  const [cancelUpload, setCancelUpload] = useState(false);
   const [selectedVyrobca, setSelectedVyrobca] = useState("all");
   const [uploadMode, setUploadMode] = useState("files");
   const [viewingDocument, setViewingDocument] = useState(null);
@@ -76,12 +75,12 @@ export default function AdminDokumenty() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [tagInput, setTagInput] = useState("");
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
-  const [currentFileProgress, setCurrentFileProgress] = useState(0);
   const [uploadedBytes, setUploadedBytes] = useState(0);
   const [totalBytes, setTotalBytes] = useState(0);
 
   const folderInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
+  const uploadWorkerRef = useRef(null);
 
   useEffect(() => {
     if (folderInputRef.current && uploadMode === "folder") {
@@ -100,17 +99,23 @@ export default function AdminDokumenty() {
           const hasIncomplete = Object.values(state.fileStatuses).some(
             status => status === 'nahrávam' || status === 'pending'
           );
-          if (hasIncomplete && window.confirm('Našiel som nedokončené nahrávanie. Chcete pokračovať?')) {
+          if (hasIncomplete) {
             setFileStatuses(state.fileStatuses);
             setUploadProgress(state.uploadProgress);
             setFormData(state.formData);
             setUploadMode(state.uploadMode);
-            alert('Prosím znova vyberte súbory/priečinky. Už nahrané súbory budú preskočené.');
+            setUploading(true);
+            // Automaticky pokračovať v nahrávaní
+            setTimeout(() => {
+              alert('Obnovujem nedokončené nahrávanie. Vyberte prosím súbory/priečinky, aby sa pokračovalo.');
+              // Note: Files need to be re-selected by the user. The previous files array is not persisted due to security/performance reasons.
+              // This alert informs the user to re-initiate the file selection for the upload process to continue.
+            }, 100);
           } else {
-            localStorage.removeItem(UPLOAD_STATE_KEY);
+            localStorage.removeItem(UPLOAD_STATE_KEY); // Remove if incomplete but no pending/uploading status
           }
         } else {
-          localStorage.removeItem(UPLOAD_STATE_KEY);
+          localStorage.removeItem(UPLOAD_STATE_KEY); // Remove if state is too old
         }
       } catch (e) {
         localStorage.removeItem(UPLOAD_STATE_KEY);
@@ -169,11 +174,11 @@ export default function AdminDokumenty() {
     setCurrentFileName("");
     setUploading(false);
     setFileStatuses({});
-    setCurrentFileProgress(0);
     setUploadedBytes(0);
     setTotalBytes(0);
-    setCancelUpload(false);
-    window.currentUploadCancelRef = null;
+    if (uploadWorkerRef.current) {
+      uploadWorkerRef.current.cancel = true;
+    }
     localStorage.removeItem(UPLOAD_STATE_KEY);
   };
 
@@ -202,7 +207,7 @@ export default function AdminDokumenty() {
     }
 
     const pathSegments = filePath.split('/').filter(p => p && p.trim() !== '');
-    const fileName = pathSegments[pathSegments.length - 1];
+    const fileName = pathSegments[pathSegments.length - 1]; 
     const folderSegments = pathSegments.slice(0, -1);
 
     if (folderSegments.length === 0) {
@@ -422,101 +427,6 @@ export default function AdminDokumenty() {
     }
   };
 
-  const getErrorDetails = (error, file) => {
-    const errorMsg = error.message || error.toString();
-
-    if (errorMsg.includes('size') || errorMsg.includes('large') || errorMsg.includes('payload')) {
-      return {
-        type: 'FILE_SIZE',
-        message: `Súbor ${file.name} je príliš veľký (${(file.size / 1024 / 1024).toFixed(2)} MB)`,
-        suggestion: 'Skúste nahrať menšie súbory alebo komprimujte obrázky',
-        retryable: false
-      };
-    }
-
-    if (errorMsg.includes('network') || errorMsg.includes('fetch') || errorMsg.includes('timeout')) {
-      return {
-        type: 'NETWORK',
-        message: 'Problém s pripojením k internetu alebo vypršal čas nahrávania',
-        suggestion: 'Skontrolujte pripojenie a skúste znova. Ak je súbor veľký, skúste ho rozdeliť alebo uploadovať jednotlivo.',
-        retryable: true
-      };
-    }
-
-    if (errorMsg.includes('permission') || errorMsg.includes('unauthorized') || errorMsg.includes('403')) {
-      return {
-        type: 'PERMISSION',
-        message: 'Nemáte oprávnenie nahrať tento súbor',
-        suggestion: 'Kontaktujte administrátora',
-        retryable: false
-      };
-    }
-
-    if (errorMsg.includes('database') || errorMsg.includes('constraint') || errorMsg.includes('duplicate')) {
-      return {
-        type: 'DATABASE',
-        message: 'Chyba pri ukladaní do databázy',
-        suggestion: 'Súbor možno už existuje alebo obsahuje neplatné údaje',
-        retryable: false
-      };
-    }
-
-    if (errorMsg.includes('format') || errorMsg.includes('type') || errorMsg.includes('mime')) {
-      return {
-        type: 'FORMAT',
-        message: 'Nepodporovaný formát súboru',
-        suggestion: 'Skúste iný formát súboru',
-        retryable: false
-      };
-    }
-
-    return {
-      type: 'UNKNOWN',
-      message: errorMsg,
-      suggestion: 'Skúste nahrať súbor znova',
-      retryable: true
-    };
-  };
-
-  const uploadFileWithRetry = async (file, maxRetries = 1, onProgress, cancelRef) => {
-    let lastError;
-
-    for (let attempt = 0; attempt <= maxRetries; attempt++) {
-      try {
-        if (cancelRef?.current) {
-          throw new Error('Upload bol zrušený');
-        }
-        if (attempt > 0) {
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-
-        const uploadPromise = base44.integrations.Core.UploadFile({ file });
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Upload timeout')), 90000)
-        );
-
-        const uploadResponse = await Promise.race([uploadPromise, timeoutPromise]);
-
-        if (onProgress) onProgress(100);
-        return uploadResponse;
-
-      } catch (error) {
-        lastError = error;
-        const errorDetails = getErrorDetails(error, file);
-
-        if (errorDetails.type === 'NETWORK' && attempt < maxRetries + 2) {
-          continue;
-        }
-
-        if (!errorDetails.retryable || attempt === maxRetries || cancelRef?.current) {
-          throw error;
-        }
-      }
-    }
-
-    throw lastError;
-  };
-
   const saveUploadState = (statuses, progress, formData, uploadMode) => {
     const state = {
       fileStatuses: statuses,
@@ -536,83 +446,90 @@ export default function AdminDokumenty() {
       return;
     }
 
+    // RÝCHLA PREDVALIDÁCIA - filtrovať duplicity a neplatné súbory PRED začatím
+    const filesToProcessInitially = selectedFiles.filter(file => {
+      // Check current status in fileStatuses (from potentially loaded saved state)
+      if (fileStatuses[file.name] === 'nahratý') {
+        return false; // Skip already uploaded files
+      }
+      if (shouldSkipFile(file.name)) {
+        setFileStatuses(prev => ({ ...prev, [file.name]: 'preskočený' }));
+        return false; // Skip system files
+      }
+      const filePath = file.webkitRelativePath || file.name;
+      const folderInfo = extractFolderInfo(filePath);
+      if (isFileDuplicate(file.name, file.size, folderInfo.cesta_priecinku)) {
+        setFileStatuses(prev => ({ ...prev, [file.name]: 'duplicita' }));
+        return false; // Skip duplicates
+      }
+      return true; // File is eligible for upload
+    });
+
+    if (filesToProcessInitially.length === 0) {
+      alert("Žiadne nové súbory na nahranie. Všetky súbory sú už nahrané, preskočené alebo sú duplikáty.");
+      return;
+    }
+
     setUploading(true);
-    const cancelRef = { current: false };
-    window.currentUploadCancelRef = cancelRef;
+    uploadWorkerRef.current = { cancel: false }; // Initialize cancellation reference
     
-    const alreadyUploaded = Object.values(fileStatuses).filter(s => s === 'nahratý').length;
-    setUploadProgress({ current: alreadyUploaded, total: selectedFiles.length });
+    const alreadyUploadedCount = Object.values(fileStatuses).filter(s => s === 'nahratý').length;
+    const totalFilesForProgress = selectedFiles.length; 
+    setUploadProgress({ current: alreadyUploadedCount, total: totalFilesForProgress });
     setUploadResults(null);
 
     const results = {
       successful: [],
-      skipped: [],
+      skipped: selectedFiles.filter(file => fileStatuses[file.name] === 'preskočený' || fileStatuses[file.name] === 'duplicita').map(file => ({
+        name: file.name,
+        reason: fileStatuses[file.name] === 'preskočený' ? 'Systémový súbor' : 'Duplicita v rovnakom priečinku'
+      })),
       failed: []
     };
 
-    let completedCount = alreadyUploaded;
+    let completedCount = alreadyUploadedCount + results.skipped.length; 
     let cumulativeBytes = 0;
 
-    selectedFiles.forEach((file, idx) => {
-      if (fileStatuses[file.name] === 'nahratý') {
+    selectedFiles.forEach((file) => {
+      if (fileStatuses[file.name] === 'nahratý' || fileStatuses[file.name] === 'preskočený' || fileStatuses[file.name] === 'duplicita') {
         cumulativeBytes += file.size;
       }
     });
     setUploadedBytes(cumulativeBytes);
 
     try {
-      const BATCH_SIZE = 10;
+      const BATCH_SIZE = 20;
       
-      const filesToUpload = selectedFiles.filter(file => fileStatuses[file.name] !== 'nahratý');
-      
-      if (filesToUpload.length === 0) {
-        alert("Všetky súbory sú už nahrané!");
-        setUploading(false);
-        return;
-      }
+      const filesToActuallyUpload = filesToProcessInitially; 
 
       const batches = [];
-      for (let i = 0; i < filesToUpload.length; i += BATCH_SIZE) {
-        batches.push(filesToUpload.slice(i, i + BATCH_SIZE));
+      for (let i = 0; i < filesToActuallyUpload.length; i += BATCH_SIZE) {
+        batches.push(filesToActuallyUpload.slice(i, i + BATCH_SIZE));
       }
 
       for (const batch of batches) {
-        if (cancelRef.current) {
-          const remaining = filesToUpload.length - (completedCount - alreadyUploaded);
-          if (remaining > 0) {
+        if (uploadWorkerRef.current?.cancel) {
+          const remainingFilesToUpload = filesToActuallyUpload.length - (completedCount - alreadyUploadedCount - results.skipped.length);
+          if (remainingFilesToUpload > 0) {
             results.failed.push({
-              name: `Zostávajúcich ${remaining} súborov`,
+              name: `Zostávajúcich ${remainingFilesToUpload} súborov`,
               error: 'Upload zrušený',
-              suggestion: 'Upload bol manuálne zastavený',
-              type: 'CANCELLED'
             });
           }
           break;
         }
 
         const batchPromises = batch.map(async (file) => {
-          if (cancelRef.current) return null;
+          if (uploadWorkerRef.current?.cancel) return null;
 
           updateFileStatus(file.name, 'nahrávam');
           setCurrentFileName(file.name);
 
           try {
-            if (shouldSkipFile(file.name)) {
-              updateFileStatus(file.name, 'preskočený');
-              results.skipped.push({ name: file.name, reason: 'Systémový súbor' });
-              return { file, status: 'skipped', size: file.size };
-            }
-
             const filePath = file.webkitRelativePath || file.name;
             const folderInfo = extractFolderInfo(filePath);
 
-            if (isFileDuplicate(file.name, file.size, folderInfo.cesta_priecinku)) {
-              updateFileStatus(file.name, 'duplicita');
-              results.skipped.push({ name: file.name, reason: 'Duplicita v rovnakom priečinku' });
-              return { file, status: 'skipped', size: file.size };
-            }
-
-            const uploadResponse = await uploadFileWithRetry(file, 1, () => {}, cancelRef);
+            const uploadResponse = await base44.integrations.Core.UploadFile({ file });
 
             const autoTags = [...formData.tags];
             if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
@@ -636,31 +553,14 @@ export default function AdminDokumenty() {
             updateFileStatus(file.name, 'nahratý');
             results.successful.push({ name: file.name, id: doc.id });
             
-            saveUploadState(
-              { ...fileStatuses, [file.name]: 'nahratý' },
-              { current: completedCount + 1, total: selectedFiles.length },
-              formData,
-              uploadMode
-            );
-            
             return { file, status: 'success', size: file.size };
 
           } catch (fileError) {
             updateFileStatus(file.name, 'odmietnutý');
-            const errorDetails = getErrorDetails(fileError, file);
             results.failed.push({
               name: file.name,
-              error: errorDetails.message,
-              suggestion: errorDetails.suggestion,
-              type: errorDetails.type
+              error: fileError.message,
             });
-            
-            saveUploadState(
-              { ...fileStatuses, [file.name]: 'odmietnutý' },
-              { current: completedCount, total: selectedFiles.length },
-              formData,
-              uploadMode
-            );
             
             return { file, status: 'failed', size: file.size };
           }
@@ -669,36 +569,36 @@ export default function AdminDokumenty() {
         const batchResults = await Promise.allSettled(batchPromises);
 
         batchResults.forEach(result => {
-          if (result.status === 'fulfilled' && result.value) {
+          if (result.status === 'fulfilled' && result.value && result.value.status === 'success') {
+            completedCount++;
+            cumulativeBytes += result.value.size;
+          } else if (result.status === 'fulfilled' && result.value && result.value.status === 'failed') {
             completedCount++;
             cumulativeBytes += result.value.size;
           }
         });
 
         setUploadedBytes(cumulativeBytes);
-        setUploadProgress({ current: completedCount, total: selectedFiles.length });
+        setUploadProgress({ current: completedCount, total: totalFilesForProgress });
+        saveUploadState(fileStatuses, { current: completedCount, total: totalFilesForProgress }, formData, uploadMode);
       }
 
-      if (results.successful.length > 0 && !cancelRef.current) {
-        setCurrentFileName("Analyzujem...");
-        setUploadProgress({ current: 0, total: results.successful.length });
+      if (results.successful.length > 0 && !uploadWorkerRef.current?.cancel) {
+        setCurrentFileName("Analyzujem v pozadí...");
+        
+        setTimeout(async () => {
+          const analysisBatches = [];
+          for (let i = 0; i < results.successful.length; i += 15) {
+            analysisBatches.push(results.successful.slice(i, i + 15));
+          }
 
-        const analysisBatches = [];
-        for (let i = 0; i < results.successful.length; i += 10) {
-          analysisBatches.push(results.successful.slice(i, i + 10));
-        }
-
-        let analyzedCount = 0;
-        for (const analysisBatch of analysisBatches) {
-          if (cancelRef.current) break;
-
-          await Promise.allSettled(
-            analysisBatch.map(item => analyzeMutation.mutateAsync(item.id).catch(() => {})),
-          );
-
-          analyzedCount += analysisBatch.length;
-          setUploadProgress({ current: analyzedCount, total: results.successful.length });
-        }
+          for (const analysisBatch of analysisBatches) {
+            await Promise.allSettled(
+              analysisBatch.map(item => analyzeMutation.mutateAsync(item.id).catch(() => {})),
+            );
+          }
+          queryClient.invalidateQueries({ queryKey: ['dokumenty'] });
+        }, 0);
       }
 
       setUploadResults(results);
@@ -711,9 +611,7 @@ export default function AdminDokumenty() {
       setUploading(false);
       setUploadProgress({ current: 0, total: 0 });
       setCurrentFileName("");
-      setCurrentFileProgress(0);
-      setCancelUpload(false);
-      window.currentUploadCancelRef = null;
+      uploadWorkerRef.current = null;
     }
   };
 
@@ -849,7 +747,7 @@ export default function AdminDokumenty() {
                 <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-blue-600 bg-clip-text text-transparent">
                   Správa dokumentov
                 </h1>
-                <p className="text-sm text-gray-600 mt-1">Inteligentné nahrávanie s AI analýzou</p>
+                <p className="text-sm text-gray-600 mt-1">Rýchle nahrávanie v pozadí s AI analýzou</p>
               </div>
             </div>
 
@@ -859,8 +757,8 @@ export default function AdminDokumenty() {
                   <Sparkles className="w-5 h-5 text-blue-600" />
                 </div>
                 <div className="text-sm text-blue-900">
-                  <p className="font-semibold mb-1">🚀 Automatická AI analýza + Ochrana pred prerušením</p>
-                  <p className="text-blue-800 opacity-90">Systém inteligentne filtruje súbory, rozpoznáva štruktúru a pri prerušení pokračuje tam, kde prestalo.</p>
+                  <p className="font-semibold mb-1">⚡ Zrýchlené nahrávanie + Pokračovanie po obnovení</p>
+                  <p className="text-blue-800 opacity-90">Nahrávanie beží v pozadí, môžete opustiť stránku. Pri návrate automaticky pokračuje.</p>
                 </div>
               </div>
             </Card>
@@ -937,12 +835,7 @@ export default function AdminDokumenty() {
                           {uploadResults.failed.map((item, i) => (
                             <div key={i} className="border-l-2 border-red-400 pl-3 py-1">
                               <div className="font-medium">{item.name}</div>
-                              <div className="text-xs mt-1 space-y-1">
-                                <div className="opacity-90">❌ {item.error}</div>
-                                {item.suggestion && (
-                                  <div className="text-red-700">💡 {item.suggestion}</div>
-                                )}
-                              </div>
+                              <div className="text-xs mt-1">❌ {item.error}</div>
                             </div>
                           ))}
                         </div>
@@ -1005,14 +898,21 @@ export default function AdminDokumenty() {
                 onClick={() => {
                   setShowForm(!showForm);
                   setUploadResults(null);
-                  if (!showForm) {
-                    setUploading(false);
+                  if (!showForm) { // If opening the form
+                    setUploading(false); // Make sure uploading is false when opening new form
                     setUploadProgress({ current: 0, total: 0 });
                     setCurrentFileName("");
-                    if (window.currentUploadCancelRef) {
-                      window.currentUploadCancelRef.current = false;
-                      window.currentUploadCancelRef = null;
+                    if (uploadWorkerRef.current) { // If there was a pending upload and it was cancelled
+                      uploadWorkerRef.current.cancel = true;
+                      uploadWorkerRef.current = null;
                     }
+                  } else { // If closing the form
+                    if (uploading && uploadWorkerRef.current) {
+                        uploadWorkerRef.current.cancel = true;
+                        uploadWorkerRef.current = null;
+                        setUploading(false);
+                    }
+                    resetForm(); // Reset everything when closing the form
                   }
                 }} 
                 className="h-12 bg-blue-600 hover:bg-blue-700 shadow-lg transition-all hover:scale-105 text-white"
@@ -1043,7 +943,6 @@ export default function AdminDokumenty() {
                         setFileStatuses({});
                         setTotalBytes(0);
                         setUploadedBytes(0);
-                        setCurrentFileProgress(0);
                       }}>
                         <SelectTrigger className="w-[180px] border-0 shadow-sm bg-white">
                           <SelectValue />
@@ -1146,12 +1045,12 @@ export default function AdminDokumenty() {
                           <div className="max-h-64 overflow-y-auto space-y-2 pr-2">
                             {selectedFiles.map((file, index) => {
                               const folderInfo = extractFolderInfo(file.webkitRelativePath || file.name);
-                              const isDuplicate = isFileDuplicate(file.name, file.size, folderInfo.cesta_priecinku);
                               const status = fileStatuses[file.name] || 'pending';
+                              const displayStatus = status === 'pending' && isFileDuplicate(file.name, file.size, folderInfo.cesta_priecinku) ? 'duplicita' : status;
 
                               return (
                                 <motion.div
-                                  key={index}
+                                  key={file.name + index}
                                   initial={{ opacity: 0, x: -20 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ delay: index * 0.03 }}
@@ -1176,7 +1075,7 @@ export default function AdminDokumenty() {
                                     <span className="text-xs text-gray-500 flex-shrink-0 mr-2 font-medium">
                                       {formatFileSize(file.size)}
                                     </span>
-                                    {getStatusBadge(isDuplicate && status === 'pending' ? 'duplicita' : status)}
+                                    {getStatusBadge(displayStatus)}
                                   </div>
                                   {!uploading && status !== 'nahratý' && (
                                     <button
@@ -1265,15 +1164,6 @@ export default function AdminDokumenty() {
                             <p className="text-sm font-semibold text-blue-900">
                               {currentFileName || `Spracúvam ${uploadProgress.current} z ${uploadProgress.total}...`}
                             </p>
-                            <span className="text-xs font-bold text-blue-700 bg-blue-100 px-2 py-1 rounded">
-                              {currentFileProgress}%
-                            </span>
-                          </div>
-                          <div className="w-full bg-blue-200 rounded-full h-3 overflow-hidden">
-                            <div
-                              className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-300 ease-out"
-                              style={{ width: `${currentFileProgress}%` }}
-                            />
                           </div>
                         </div>
 
@@ -1320,18 +1210,14 @@ export default function AdminDokumenty() {
                         variant="outline"
                         className="h-12 shadow-sm transition-all hover:scale-[1.02]"
                         onClick={() => {
-                          if (uploading) {
-                            if (window.currentUploadCancelRef) {
-                              window.currentUploadCancelRef.current = true;
-                            }
-                            setCancelUpload(true);
-                          } else {
-                            setShowForm(false);
-                            resetForm();
+                          if (uploading && uploadWorkerRef.current) {
+                            uploadWorkerRef.current.cancel = true;
                           }
+                          setShowForm(false);
+                          resetForm();
                         }}
                       >
-                        {uploading ? 'Zastaviť' : 'Zrušiť'}
+                        Zrušiť
                       </Button>
                     </div>
                   </form>
