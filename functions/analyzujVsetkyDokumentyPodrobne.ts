@@ -20,61 +20,95 @@ Deno.serve(async (req) => {
       try {
         // Detailná AI vizuálna analýza pre každý obrázok
         const analyza = await base44.asServiceRole.integrations.Core.InvokeLLM({
-          prompt: `Analyzuj tento obrázok modulárneho domu:
+          prompt: `Analyzuj tento obrázok modulárneho domu MAXIMÁLNE PODROBNE:
 
 Súbor: ${dok.nazov}
 Výrobca: ${dok.vyrobca || 'neznámy'}
 Model domu: ${dok.model_domu || 'neznámy'}
 Cesta: ${dok.cesta_priecinku || 'neurčená'}
 
-ÚLOHA: Poskytni PRESNÉ a DETAILNÉ informácie:
+ÚLOHA - Poskytni PRESNÉ a DETAILNÉ informácie:
 
-1. TYP OBSAHU (povinné):
+1. TYP OBSAHU A KATEGORIZÁCIA:
    - Je to exteriér, interiér alebo pôdorys?
-   - Ak je to viacero pohľadov, špecifikuj všetky
+   - Špecifický typ: "celkový pohľad na dom", "detail fasády", "pohľad zo strany", "interiérový detail", "kuchyňa", "obývacia izba", "kúpeľňa", "spálňa", atď.
+   - Je to reklamná fotka, reálna realizácia, alebo vizualizácia?
 
-2. MATERIÁLY FASÁDY (ak je exteriér):
-   - Antracitový plech (drážkový)
-   - Drevený obklad (typ dreva)
+2. MATERIÁLY FASÁDY (DETEGUJ VŠETKY VIDITEĽNÉ):
+   - Antracitový plech (drážkový/hladký)
+   - Drevený obklad (smrekový/borovicový/modrinový/céder/termodrevo)
    - Biely plech
-   - Kamenný obklad
-   - Sadrokartón
-   - Suchá fasáda
-   - Kombinovaná fasáda
-   - Omietnutá fasáda
-   - Farba materiálov
-   - Povrchová úprava
+   - Tmavý plech (čierna, antracit)
+   - Kamenný obklad (prírodný/umelý)
+   - Omietka (jemná/hrubá/zatieraná)
+   - Tehla (obkladová/viditeľná)
+   - Suchá fasáda (SDK)
+   - Sklenená fasáda / veľké presklené plochy
+   - Kombinovaná fasáda (špecifikuj kombináciu)
+   - Farby každého materiálu
+   - Povrchová úprava a stav
 
-3. PÔDORYS (ak je to pôdorys):
-   - Detailné rozmery každej miestnosti s rozmermi
+3. OKNÁ A DVERE (VEĽMI DÔLEŽITÉ):
+   - Typ okien: plastové/drevené/hliníkové/drevo-hliníkové
+   - Farba rámu okien
+   - Veľkosť okien (malé/stredné/veľké/panoramatické)
+   - Rozdelenie okien (jednodielne/dvojdielne/trojdielne)
+   - Tvar okien (štandardné/oblúkové/atypické)
+   - Typ dverí: vchodové/posuvné/terasové
+   - Materiál dverí
+   - Farba dverí
+   - Špeciálne prvky (presklenie, madlá, zámky)
+
+4. STREŠNÁ KRYTINA:
+   - Typ krytiny: plechová/škridla (betónová/keramická)/šindel/plochá strecha/zelená strecha
+   - Materiál a farba krytiny
+   - Sklon strechy (plochá/šikmá/strmá)
+   - Typ strechy: sedlová/pultová/valbová/mansardová
+   - Viditeľné prvky: komín/strešné okná/klampiarské prvky/okapy
+   - Farba klampiarskych prvkov
+   - Stav krytiny
+
+5. STAV A KVALITA FASÁDY:
+   - Stav: nová/stará/potrebuje údržbu/poškodená
+   - Viditeľné nedostatky: praskliny/odlupovanie/znečistenie/plesne
+   - Kvalita prevedenia: vysoká/priemerná/nízka
+   - Potreba opravy alebo renovácie
+
+6. PÔDORYS (ak je to pôdorys):
+   - Detailné rozmery každej miestnosti
    - Celková plocha
    - Počet izieb
    - Rozloženie priestoru
    - Umiestnenie dverí a okien
    - Označenie miestností
 
-4. INTERIÉR (ak je interiér):
-   - Aká miestnosť je zobrazená
-   - Materiály podláh (vinyl, drevo, dlaždice)
-   - Materiály stien (sadrokartón, obklad, drevo)
-   - Zariadenie a nábytek
-   - Farby a štýl
-   - Osvetlenie
+7. INTERIÉR (ak je interiér):
+   - Aká miestnosť (obývačka/kuchyňa/spálňa/kúpeľňa/chodba/iné)
+   - Podlaha: vinyl/laminát/drevená/dlaždice/koberec
+   - Farba a vzor podlahy
+   - Steny: sadrokartón/obklad/drevo/tehla/maľba
+   - Farba stien
+   - Nábytek a zariadenie
+   - Štýl interiéru: moderný/klasický/škandinávsky/industriálny
+   - Osvetlenie: LED pásy/lustry/bodové/prírodné svetlo
+   - Stav interiéru
 
-5. PRIRAĎOVANIE K DOMU:
+8. PRIRAĎOVANIE K DOMU:
    - Ktorému modelu domu PRESNE patrí táto fotka?
    - Je názov priečinka správny?
    - Mal by byť tento súbor presunutý do iného priečinka?
    - Je to správny výrobca?
+   - Odporúčaný priečinok: Výrobca/Model/Typ (napr. "JAK Modules/LARGE ESTATE/exterier")
 
-6. TECHNICKÉ DETAILY:
-   - Rozmery viditeľné na obrázku
-   - Konštrukčné prvky
+9. TECHNICKÉ A KONŠTRUKČNÉ DETAILY:
+   - Viditeľné rozmery
+   - Konštrukčné riešenia
+   - Izolácia (viditeľná)
+   - Inštalácie (elektroinštalácia/vykurovanie/klimatizácia)
    - Špeciálne vlastnosti
-   - Okná a dvere
-   - Strecha
+   - Technologické riešenia
 
-Buď MAXIMÁLNE KONKRÉTNÝ a PODROBNÝ. Nepíš všeobecnosti.`,
+Buď MAXIMÁLNE KONKRÉTNÝ a PODROBNÝ v každom bode. Nepíš všeobecnosti. Deteguj VŠETKY viditeľné prvky!`,
           file_urls: [dok.subor_url],
           response_json_schema: {
             type: "object",
@@ -83,21 +117,77 @@ Buď MAXIMÁLNE KONKRÉTNÝ a PODROBNÝ. Nepíš všeobecnosti.`,
                 type: "string",
                 enum: ["exterier", "interier", "podorys", "kombinacia"]
               },
-              podrobny_typ: {
+              specificka_kategoria: {
                 type: "string",
-                description: "Detailný popis čo presne obrázok zobrazuje"
+                description: "Presná kategória ako 'celkový pohľad na dom', 'detail fasády', 'kuchyňa', atď."
+              },
+              typ_fotky: {
+                type: "string",
+                enum: ["reklamna", "realna_realizacia", "vizualizacia"]
               },
               fasada_materialy: {
                 type: "array",
-                items: { type: "string" },
-                description: "Všetky materiály viditeľné na fasáde"
+                items: { 
+                  type: "object",
+                  properties: {
+                    material: { type: "string" },
+                    podtyp: { type: "string" },
+                    farba: { type: "string" },
+                    povrchova_uprava: { type: "string" },
+                    umiestnenie: { type: "string" }
+                  }
+                },
+                description: "Všetky materiály viditeľné na fasáde s detailmi"
               },
-              fasada_farby: {
-                type: "array",
-                items: { type: "string" }
+              okna: {
+                type: "object",
+                properties: {
+                  typ: { type: "string" },
+                  material: { type: "string" },
+                  farba_ramu: { type: "string" },
+                  velkost: { type: "string" },
+                  rozdelenie: { type: "string" },
+                  tvar: { type: "string" },
+                  pocet_viditelnych: { type: "number" }
+                }
               },
-              fasada_povrchova_uprava: {
-                type: "string"
+              dvere: {
+                type: "object",
+                properties: {
+                  typ: { type: "string" },
+                  material: { type: "string" },
+                  farba: { type: "string" },
+                  specialne_prvky: { type: "array", items: { type: "string" } }
+                }
+              },
+              stresna_krytina: {
+                type: "object",
+                properties: {
+                  typ: { type: "string" },
+                  material: { type: "string" },
+                  farba: { type: "string" },
+                  sklon: { type: "string" },
+                  typ_strechy: { type: "string" },
+                  prvky: { type: "array", items: { type: "string" } },
+                  farba_klampiarskeho: { type: "string" },
+                  stav: { type: "string" }
+                }
+              },
+              stav_fasady: {
+                type: "object",
+                properties: {
+                  celkovy_stav: { 
+                    type: "string",
+                    enum: ["nova", "stara", "potrebuje_udrzbu", "poskodena"]
+                  },
+                  nedostatky: { type: "array", items: { type: "string" } },
+                  kvalita_prevedenia: {
+                    type: "string",
+                    enum: ["vysoka", "priemerna", "nizka"]
+                  },
+                  potreba_opravy: { type: "boolean" },
+                  popis_stavu: { type: "string" }
+                }
               },
               interier_miestnost: {
                 type: "string"
@@ -106,8 +196,13 @@ Buď MAXIMÁLNE KONKRÉTNÝ a PODROBNÝ. Nepíš všeobecnosti.`,
                 type: "object",
                 properties: {
                   podlaha: { type: "string" },
+                  farba_podlahy: { type: "string" },
                   steny: { type: "string" },
-                  nabytok: { type: "string" }
+                  farba_stien: { type: "string" },
+                  nabytok: { type: "string" },
+                  styl: { type: "string" },
+                  osvetlenie: { type: "string" },
+                  stav: { type: "string" }
                 }
               },
               podorys_info: {
@@ -137,25 +232,19 @@ Buď MAXIMÁLNE KONKRÉTNÝ a PODROBNÝ. Nepíš všeobecnosti.`,
               },
               odporucany_priecinok: {
                 type: "string",
-                description: "Kam by mal byť súbor umiestnený"
+                description: "Plná cesta: Výrobca/Model/Typ"
               },
               technicke_detaily: {
                 type: "array",
                 items: { type: "string" },
                 description: "Všetky viditeľné technické detaily"
               },
-              okna_dvere: {
-                type: "string"
-              },
-              strecha: {
-                type: "string"
-              },
               kvalita_analyzy: {
                 type: "string",
                 enum: ["vysoka", "stredna", "nizka"]
               }
             },
-            required: ["typ_obsahu", "spravny_model_domu", "odporucany_priecinok"]
+            required: ["typ_obsahu", "specificka_kategoria", "spravny_model_domu", "odporucany_priecinok"]
           }
         });
 
@@ -173,6 +262,7 @@ Buď MAXIMÁLNE KONKRÉTNÝ a PODROBNÝ. Nepíš všeobecnosti.`,
           povodny_model: dok.model_domu,
           novy_model: analyza.spravny_model_domu,
           typ: analyza.typ_obsahu,
+          kategoria: analyza.specificka_kategoria,
           status: 'success'
         });
 

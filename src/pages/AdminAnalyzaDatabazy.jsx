@@ -19,6 +19,7 @@ export default function AdminAnalyzaDatabazy() {
   const [filterTyp, setFilterTyp] = useState("all");
   const [activeTab, setActiveTab] = useState("dashboard");
   const progressIntervalRef = useRef(null);
+  const analyzaStartCountRef = useRef(0);
 
   const queryClient = useQueryClient();
 
@@ -45,7 +46,8 @@ export default function AdminAnalyzaDatabazy() {
           typ: "fotky",
           analyzovaný: true
         });
-        setProgress(prev => ({ ...prev, current: analyzovaneDokumenty.length }));
+        const aktualnyPocet = analyzovaneDokumenty.length - analyzaStartCountRef.current;
+        setProgress(prev => ({ ...prev, current: Math.max(0, aktualnyPocet) }));
       }, 2000);
     } else {
       if (progressIntervalRef.current) {
@@ -65,6 +67,13 @@ export default function AdminAnalyzaDatabazy() {
       return;
     }
 
+    // Zisti koľko je už analyzovaných pred začatím
+    const analyzovaneTeraz = await base44.entities.Dokument.filter({ 
+      typ: "fotky",
+      analyzovaný: true
+    });
+    analyzaStartCountRef.current = analyzovaneTeraz.length;
+
     setAnalyzing(true);
     setProgress({ current: 0, total: dokumenty.length });
 
@@ -77,6 +86,7 @@ export default function AdminAnalyzaDatabazy() {
       alert('Chyba: ' + error.message);
     } finally {
       setAnalyzing(false);
+      analyzaStartCountRef.current = 0;
     }
   };
 
@@ -88,15 +98,18 @@ export default function AdminAnalyzaDatabazy() {
     const materialy = {};
     analyzovane.forEach(dok => {
       dok.vizualna_analyza?.fasada_materialy?.forEach(mat => {
-        materialy[mat] = (materialy[mat] || 0) + 1;
+        const materialName = typeof mat === 'string' ? mat : mat.material;
+        materialy[materialName] = (materialy[materialName] || 0) + 1;
       });
     });
 
     // Farby fasád
     const farby = {};
     analyzovane.forEach(dok => {
-      dok.vizualna_analyza?.fasada_farby?.forEach(farba => {
-        farby[farba] = (farby[farba] || 0) + 1;
+      dok.vizualna_analyza?.fasada_materialy?.forEach(mat => {
+        if (mat.farba) {
+          farby[mat.farba] = (farby[mat.farba] || 0) + 1;
+        }
       });
     });
 
@@ -114,7 +127,8 @@ export default function AdminAnalyzaDatabazy() {
       const vyrobca = dok.vyrobca || 'Neznámy';
       if (!materialyPodlaVyrobcu[vyrobca]) materialyPodlaVyrobcu[vyrobca] = {};
       dok.vizualna_analyza?.fasada_materialy?.forEach(mat => {
-        materialyPodlaVyrobcu[vyrobca][mat] = (materialyPodlaVyrobcu[vyrobca][mat] || 0) + 1;
+        const materialName = typeof mat === 'string' ? mat : mat.material;
+        materialyPodlaVyrobcu[vyrobca][materialName] = (materialyPodlaVyrobcu[vyrobca][materialName] || 0) + 1;
       });
     });
 
@@ -299,7 +313,7 @@ export default function AdminAnalyzaDatabazy() {
             <div>
               <h2 className="text-xl font-bold mb-2">🚀 Podrobná AI analýza CELEJ databázy</h2>
               <p className="text-sm text-gray-600">
-                Analyzuje všetky fotky pre všetkých výrobcov - materiály fasád, farby, typ obsahu, priraďovanie k domom
+                Analyzuje všetky fotky - materiály fasád, okná, dvere, strechy, stav fasády, automatická kategorizácia
               </p>
             </div>
             <Button
@@ -517,7 +531,7 @@ export default function AdminAnalyzaDatabazy() {
                         </div>
                         <Badge className="text-lg px-4 py-2">{info.celkom} súborov</Badge>
                       </div>
-                      <div className="grid grid-cols-6 gap-2 mt-3">
+                      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 mt-3">
                         {info.dokumenty.slice(0, 6).map(dok => (
                           <div key={dok.id} className="aspect-square rounded-lg overflow-hidden bg-gray-200">
                             <img src={dok.subor_url} alt={dok.nazov} className="w-full h-full object-cover" />
@@ -639,14 +653,14 @@ export default function AdminAnalyzaDatabazy() {
                                               <div className="mt-2">
                                                 <p className="font-semibold">Materiály:</p>
                                                 {dok.vizualna_analyza.fasada_materialy.slice(0, 3).map((mat, i) => (
-                                                  <p key={i} className="text-xs">• {mat}</p>
+                                                  <p key={i} className="text-xs">• {typeof mat === 'string' ? mat : mat.material}</p>
                                                 ))}
                                               </div>
                                             )}
-                                            {dok.vizualna_analyza.fasada_farby?.length > 0 && (
+                                            {dok.vizualna_analyza.fasada_materialy?.some(mat => mat.farba) && ( // Check if any material has a color
                                               <div className="mt-1">
                                                 <p className="font-semibold">Farby:</p>
-                                                <p>{dok.vizualna_analyza.fasada_farby.slice(0, 2).join(', ')}</p>
+                                                <p>{dok.vizualna_analyza.fasada_materialy.filter(mat => mat.farba).map(mat => mat.farba).slice(0, 2).join(', ')}</p>
                                               </div>
                                             )}
                                           </>
