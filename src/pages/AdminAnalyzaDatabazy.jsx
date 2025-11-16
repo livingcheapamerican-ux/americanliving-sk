@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -7,11 +7,13 @@ import { Loader2, CheckCircle, XCircle, AlertTriangle, Image, FileText, RefreshC
 
 export default function AdminAnalyzaDatabazy() {
   const [analyzing, setAnalyzing] = useState(false);
-  const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0, failed: 0 });
   const [currentDoc, setCurrentDoc] = useState(null);
   const [logs, setLogs] = useState([]);
   const [results, setResults] = useState(null);
+  
+  const pausedRef = useRef(false);
+  const stopRef = useRef(false);
 
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['current-user'],
@@ -131,7 +133,8 @@ Poskytni:
     }
 
     setAnalyzing(true);
-    setPaused(false);
+    pausedRef.current = false;
+    stopRef.current = false;
     setLogs([]);
     setProgress({ current: 0, total: neanalyzovane.length, failed: 0 });
     
@@ -139,12 +142,18 @@ Poskytni:
     let failed = 0;
 
     for (let i = 0; i < neanalyzovane.length; i++) {
+      // Kontrola zastavenia
+      if (stopRef.current) {
+        addLog('⏹️ Analýza zastavená používateľom', 'info');
+        break;
+      }
+
       // Kontrola pauzy
-      while (paused) {
+      while (pausedRef.current && !stopRef.current) {
         await new Promise(resolve => setTimeout(resolve, 500));
       }
 
-      if (!analyzing) break; // Ak bolo zastavené
+      if (stopRef.current) break;
 
       const dok = neanalyzovane[i];
       const result = await analyzujJedenDokument(dok);
@@ -182,6 +191,16 @@ Poskytni:
     setAnalyzing(false);
     setCurrentDoc(null);
     addLog(`🎉 Analýza dokončená! Úspešných: ${processed}, Chýb: ${failed}`, 'success');
+  };
+
+  const handlePause = () => {
+    pausedRef.current = !pausedRef.current;
+  };
+
+  const handleStop = () => {
+    stopRef.current = true;
+    pausedRef.current = false;
+    setAnalyzing(false);
   };
 
   const analyzovaneCount = dokumenty.filter(d => d.vizualna_analyza).length;
@@ -328,15 +347,18 @@ Poskytni:
                         Práve: {currentDoc}
                       </p>
                     )}
+                    {pausedRef.current && (
+                      <p className="text-amber-600 font-semibold">⏸️ POZASTAVENÉ</p>
+                    )}
                   </div>
                   
                   <div className="flex gap-2">
                     <Button
-                      onClick={() => setPaused(!paused)}
+                      onClick={handlePause}
                       variant="outline"
                       size="sm"
                     >
-                      {paused ? (
+                      {pausedRef.current ? (
                         <>
                           <Play className="w-4 h-4 mr-2" />
                           Pokračovať
@@ -349,10 +371,7 @@ Poskytni:
                       )}
                     </Button>
                     <Button
-                      onClick={() => {
-                        setAnalyzing(false);
-                        setPaused(false);
-                      }}
+                      onClick={handleStop}
                       variant="destructive"
                       size="sm"
                     >
