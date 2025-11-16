@@ -19,6 +19,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import DokumentyTreeView from "../components/DokumentyTreeView";
 
 const UPLOAD_STATE_KEY = 'document_upload_state';
+const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
 // Optimalizované Select komponenty
 const VyrobcaSelect = React.memo(({ value, onChange }) => {
@@ -76,13 +77,11 @@ export default function AdminDokumenty() {
   const [tagInput, setTagInput] = useState("");
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
   const [uploadedBytes, setUploadedBytes] = useState(0);
-  const [totalBytes, setTotalBytes] = 0);
+  const [totalBytes, setTotalBytes] = useState(0);
 
   const folderInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const uploadWorkerRef = useRef(null);
-
-  const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
   useEffect(() => {
     if (folderInputRef.current && uploadMode === "folder") {
@@ -1073,7 +1072,7 @@ export default function AdminDokumenty() {
                                         </span>
                                       )}
                                       {folderInfo.model_domu && (
-                                        <span className="text-xs text-blue-600 font-medium">
+                                        <span className="text-sm text-blue-600 font-medium">
                                           🏠 {folderInfo.model_domu}
                                           {folderInfo.podpriecinok && ` / ${folderInfo.podpriecinok}`}
                                         </span>
