@@ -544,7 +544,7 @@ export default function AdminDokumenty() {
 
     try {
       // ZVÝŠENÁ rýchlosť - väčší batch
-      const BATCH_SIZE = 30;
+      const BATCH_SIZE = 40;
       
       const filesToActuallyUpload = filesToProcessInitially;
 
