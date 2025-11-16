@@ -83,6 +83,8 @@ export default function AdminDokumenty() {
   const [isDragging, setIsDragging] = useState(false);
   const uploadWorkerRef = useRef(null);
 
+  const [imagePreview, setImagePreview] = useState(null);
+
   useEffect(() => {
     if (folderInputRef.current && uploadMode === "folder") {
       folderInputRef.current.setAttribute('webkitdirectory', '');
@@ -661,6 +663,14 @@ export default function AdminDokumenty() {
     if (mimeType.includes('audio')) return '🎵';
     if (mimeType.includes('zip') || mimeType.includes('archive')) return '📦';
     return '📄';
+  };
+
+  const isImage = (mimeType) => {
+    return mimeType && mimeType.includes('image');
+  };
+
+  const isPDF = (mimeType) => {
+    return mimeType && mimeType.includes('pdf');
   };
 
   const getStatusBadge = (status) => {
@@ -1280,7 +1290,33 @@ export default function AdminDokumenty() {
                 >
                   <Card className="p-5 border-0 shadow-md hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur hover:scale-[1.01]">
                     <div className="flex items-start gap-4">
-                      <div className="text-5xl flex-shrink-0">{getFileIcon(dok.typ_suboru)}</div>
+                      {/* Náhľad obrázku alebo ikona */}
+                      {isImage(dok.typ_suboru) ? (
+                        <div 
+                          className="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 cursor-pointer hover:ring-2 hover:ring-primary transition-all"
+                          onClick={() => setImagePreview(dok.subor_url)}
+                        >
+                          <img 
+                            src={dok.subor_url} 
+                            alt={dok.nazov}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                      ) : isPDF(dok.typ_suboru) ? (
+                        <div 
+                          className="w-24 h-24 flex-shrink-0 rounded-lg bg-red-50 flex items-center justify-center cursor-pointer hover:bg-red-100 transition-all"
+                          onClick={() => window.open(dok.subor_url, '_blank')}
+                        >
+                          <div className="text-center">
+                            <span className="text-4xl">📕</span>
+                            <p className="text-xs text-red-700 mt-1 font-medium">Otvoriť</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-5xl flex-shrink-0">{getFileIcon(dok.typ_suboru)}</div>
+                      )}
+                      
                       <div className="flex-grow min-w-0">
                         <div className="flex items-start justify-between gap-4 mb-3">
                           <div className="min-w-0 flex-grow">
@@ -1347,7 +1383,42 @@ export default function AdminDokumenty() {
             </div>
           )}
 
-          {/* View Document Modal */}
+          {/* Image Preview Modal */}
+          <AnimatePresence>
+            {imagePreview && (
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                exit={{ opacity: 0 }} 
+                className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4" 
+                onClick={() => setImagePreview(null)}
+              >
+                <motion.div 
+                  initial={{ scale: 0.9, opacity: 0 }} 
+                  animate={{ scale: 1, opacity: 1 }} 
+                  exit={{ scale: 0.9, opacity: 0 }} 
+                  className="relative max-w-6xl w-full max-h-[90vh]"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => setImagePreview(null)} 
+                    className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white z-10"
+                  >
+                    <X className="w-6 h-6" />
+                  </Button>
+                  <img 
+                    src={imagePreview} 
+                    alt="Náhľad" 
+                    className="w-full h-full object-contain rounded-lg"
+                  />
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* View Document Modal - enhanced */}
           <AnimatePresence>
             {viewingDocument && (
               <motion.div 
@@ -1491,6 +1562,70 @@ export default function AdminDokumenty() {
                             </div>
                           )}
                           
+                          {viewingDocument.kľúčové_informácie.instalácie?.length > 0 && (
+                            <div className="p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+                              <p className="font-semibold text-indigo-900 mb-2 flex items-center gap-2">
+                                🔌 Inštalácie
+                              </p>
+                              <ul className="space-y-1.5">
+                                {viewingDocument.kľúčové_informácie.instalácie.map((info, i) => (
+                                  <li key={i} className="text-indigo-800 text-sm flex items-start gap-2">
+                                    <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full mt-1.5 flex-shrink-0"></span>
+                                    <span>{info}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {viewingDocument.kľúčové_informácie.doprava_montaz?.length > 0 && (
+                            <div className="p-4 bg-cyan-50 rounded-xl border border-cyan-100">
+                              <p className="font-semibold text-cyan-900 mb-2 flex items-center gap-2">
+                                🚚 Doprava a montáž
+                              </p>
+                              <ul className="space-y-1.5">
+                                {viewingDocument.kľúčové_informácie.doprava_montaz.map((info, i) => (
+                                  <li key={i} className="text-cyan-800 text-sm flex items-start gap-2">
+                                    <span className="w-1.5 h-1.5 bg-cyan-600 rounded-full mt-1.5 flex-shrink-0"></span>
+                                    <span>{info}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {viewingDocument.kľúčové_informácie.zaruky?.length > 0 && (
+                            <div className="p-4 bg-teal-50 rounded-xl border border-teal-100">
+                              <p className="font-semibold text-teal-900 mb-2 flex items-center gap-2">
+                                🛡️ Záruky a servis
+                              </p>
+                              <ul className="space-y-1.5">
+                                {viewingDocument.kľúčové_informácie.zaruky.map((info, i) => (
+                                  <li key={i} className="text-teal-800 text-sm flex items-start gap-2">
+                                    <span className="w-1.5 h-1.5 bg-teal-600 rounded-full mt-1.5 flex-shrink-0"></span>
+                                    <span>{info}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {viewingDocument.kľúčové_informácie.odporucania?.length > 0 && (
+                            <div className="p-4 bg-violet-50 rounded-xl border border-violet-100">
+                              <p className="font-semibold text-violet-900 mb-2 flex items-center gap-2">
+                                💡 Odporúčania
+                              </p>
+                              <ul className="space-y-1.5">
+                                {viewingDocument.kľúčové_informácie.odporucania.map((info, i) => (
+                                  <li key={i} className="text-violet-800 text-sm flex items-start gap-2">
+                                    <span className="w-1.5 h-1.5 bg-violet-600 rounded-full mt-1.5 flex-shrink-0"></span>
+                                    <span>{info}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
                           {viewingDocument.kľúčové_informácie.technické_údaje?.length > 0 && (
                             <div className="p-4 bg-purple-50 rounded-xl border border-purple-100">
                               <p className="font-semibold text-purple-900 mb-2 flex items-center gap-2">
@@ -1522,22 +1657,40 @@ export default function AdminDokumenty() {
                             </div>
                           )}
 
-                          {viewingDocument.kľúčové_informácie.energia && (viewingDocument.kľúčové_informácie.energia.trieda || viewingDocument.kľúčové_informácie.energia.spotreba) && (
+                          {viewingDocument.kľúčové_informácie.energia && Object.keys(viewingDocument.kľúčové_informácie.energia).length > 0 && (
                             <div className="p-4 bg-green-50 rounded-xl border border-green-100">
                               <p className="font-semibold text-green-900 mb-3 flex items-center gap-2">
-                                ⚡ Energia
+                                ⚡ Energetické parametre
                               </p>
-                              <div className="space-y-2">
+                              <div className="grid grid-cols-2 gap-3">
                                 {viewingDocument.kľúčové_informácie.energia.trieda && (
-                                  <div>
+                                  <div className="bg-white p-3 rounded-lg">
                                     <p className="text-xs text-green-700">Energetická trieda</p>
                                     <p className="font-semibold text-green-900 text-lg">{viewingDocument.kľúčové_informácie.energia.trieda}</p>
                                   </div>
                                 )}
                                 {viewingDocument.kľúčové_informácie.energia.spotreba && (
-                                  <div>
+                                  <div className="bg-white p-3 rounded-lg">
                                     <p className="text-xs text-green-700">Spotreba</p>
                                     <p className="font-medium text-green-900">{viewingDocument.kľúčové_informácie.energia.spotreba}</p>
+                                  </div>
+                                )}
+                                {viewingDocument.kľúčové_informácie.energia.u_hodnoty && (
+                                  <div className="bg-white p-3 rounded-lg">
+                                    <p className="text-xs text-green-700">U-hodnoty</p>
+                                    <p className="font-medium text-green-900 text-sm">{viewingDocument.kľúčové_informácie.energia.u_hodnoty}</p>
+                                  </div>
+                                )}
+                                {viewingDocument.kľúčové_informácie.energia.vykurovanie && (
+                                  <div className="bg-white p-3 rounded-lg">
+                                    <p className="text-xs text-green-700">Vykurovanie</p>
+                                    <p className="font-medium text-green-900 text-sm">{viewingDocument.kľúčové_informácie.energia.vykurovanie}</p>
+                                  </div>
+                                )}
+                                {viewingDocument.kľúčové_informácie.energia.fotovoltaika && (
+                                  <div className="bg-white p-3 rounded-lg col-span-2">
+                                    <p className="text-xs text-green-700">Fotovoltaika</p>
+                                    <p className="font-medium text-green-900 text-sm">{viewingDocument.kľúčové_informácie.energia.fotovoltaika}</p>
                                   </div>
                                 )}
                               </div>

@@ -15,7 +15,6 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Missing document_id' }, { status: 400 });
         }
 
-        // Získaj dokument
         const documents = await base44.entities.Dokument.filter({ id: document_id });
         
         if (!documents || documents.length === 0) {
@@ -24,7 +23,6 @@ Deno.serve(async (req) => {
         
         const dokument = documents[0];
         
-        // Načítaj obsah súboru ak je to text alebo PDF
         let fileContent = '';
         const isTextFile = dokument.typ_suboru?.includes('text') || 
                           dokument.typ_suboru?.includes('pdf') ||
@@ -39,7 +37,6 @@ Deno.serve(async (req) => {
             }
         }
 
-        // Rozšírená analýza dokumentu pomocou AI
         const analysisPrompt = `
 Analyzuj tento dokument pre slovenský web o modulárnych domoch. Vykonaj KOMPLEXNÚ a DETAILNÚ analýzu.
 
@@ -51,93 +48,145 @@ ${dokument.model_domu ? `Model domu (z priečinka): ${dokument.model_domu}` : ''
 ${dokument.podpriecinok ? `Podpriečinok: ${dokument.podpriecinok}` : ''}
 ${dokument.cesta_priecinku ? `Cesta: ${dokument.cesta_priecinku}` : ''}
 Popis: ${dokument.popis || 'N/A'}
-${fileContent ? `Obsah súboru: ${fileContent.substring(0, 15000)}` : ''}
+${fileContent ? `Obsah súboru: ${fileContent.substring(0, 20000)}` : ''}
 
-ÚLOHY:
+ÚLOHY ANALÝZY:
 
 1. AUTOMATICKÁ KATEGORIZÁCIA
    - Urči najpresnejší typ dokumentu: cenník, technická_špecifikácia, návod, certifikát, FAQ, blog, fotky, alebo iné
-   - Zohľadni názov súboru, cestu priečinka a obsah
+   - Zohľadni názov, cestu a obsah
 
-2. EXTRAKCIA KĽÚČOVÝCH INFORMÁCIÍ (VEĽMI DETAILNE)
-   
+2. EXTRAKCIA INFORMÁCIÍ (MAXIMÁLNE DETAILNE):
+
    A) MODELY DOMOV:
-   - Extrahuj VŠETKY spomenuté modely/typy domov
+   - Všetky spomenuté modely/typy
    - Zahrň aj model z názvu priečinka
    - Formát: "Názov modelu" alebo "Séria - Model"
    
-   B) CENOVÉ INFORMÁCIE (ak sú):
-   - Extrahuj VŠETKY ceny s presným popisom
-   - Formát: "Model/Položka: XXXX EUR (s/bez DPH) - popis"
-   - Zahrň aj prirážky, zľavy, balíčky
+   B) CENOVÉ INFORMÁCIE:
+   - Základné ceny s DPH/bez DPH
+   - Cenové rozpätia (od-do)
+   - Prirážky a zľavy
+   - Ceny príslušenstva/doplnkov
+   - Ceny montáže, dopravy
+   - Formát: "Položka: XXX EUR (s/bez DPH) - detailný popis"
    
-   C) TECHNICKÉ ÚDAJE:
-   - Rozmery (šírka x dĺžka x výška)
-   - Plocha (úžitková, zastavaná)
-   - Počet izieb/miestností
-   - Konštrukcia a materiály
-   - Energetická trieda
-   - Izolačné hodnoty
-   - Hmotnosť
-   - Doprava a montáž
-   - Záruky
+   C) ROZMERY A PLOCHY:
+   - Šírka, dĺžka, výška (v metroch)
+   - Úžitková plocha (m²)
+   - Zastavaná plocha (m²)
+   - Podlahová plocha (m²)
+   - Rozmery miestností
    
-   D) ROZMERY (ak sú):
-   - Šírka, dĺžka, výška, plocha
-   - Vo formáte s jednotkami (m, m², atď.)
+   D) MATERIÁLY A KONŠTRUKCIA:
+   - Konštrukčný systém (drevo, oceľ, beton)
+   - Izolačné materiály (typ, hrúbka, U-hodnota)
+   - Strešná krytina
+   - Fasádne materiály
+   - Výplne otvorov (okná, dvere)
+   - Značky a výrobcovia
+   - Certifikáty materiálov
    
-   E) MATERIÁLY:
-   - Všetky použité materiály
-   - Výrobcovia/značky
-   - Certifikáty
+   E) ENERGETICKÉ PARAMETRE:
+   - Energetická trieda (A0, A, B, C...)
+   - Spotreba energie (kWh/m²/rok)
+   - Tepelná izolácia (U-hodnoty)
+   - Typ vykurovania
+   - Možnosti fotovoltaiky
+   - Tepelné čerpadlo
+   - Rekuperácia
    
-   F) ENERGIA (ak sú):
-   - Energetická trieda (A0, A, B, atď.)
-   - Spotreba energie
-   - Typ vykurovania/chladenia
+   F) TECHNICKÉ ŠPECIFIKÁCIE:
+   - Počet izieb/poschodí
+   - Výška stropu
+   - Hmotnosť konštrukcie
+   - Zaťažiteľnosť
+   - Akustické parametre
+   - Požiarna odolnosť
+   - Životnosť
+   - Záručná doba
+   - Čas výroby a montáže
+   
+   G) INŠTALÁCIE A VYBAVENIE:
+   - Elektroinštalácia (specifikácia)
+   - Voda a kanalizácia
+   - Vykurovanie/chladenie
+   - Vetranie
+   - Smart home systémy
+   - Štandardné vybavenie
+   - Možné príplatky
+   
+   H) PRÁVNE A ADMINISTRATÍVNE:
+   - Stavebné povolenie (požiadavky)
+   - Energetický certifikát
+   - Kolaudácia
+   - Projektová dokumentácia
+   - Záruky a servis
+   
+   I) DOPRAVA A MONTÁŽ:
+   - Spôsob dopravy
+   - Cena dopravy
+   - Čas montáže
+   - Požiadavky na pozemok
+   - Prípojné body
 
-3. INTELIGENTNÉ ZHRNUTIE
-   - Ak je dokument dlhší ako 200 slov, vytvor STRUČNÉ zhrnutie (max 150 slov)
-   - Zhrnutie musí obsahovať najdôležitejšie informácie
-   - Ak je dokument krátky, zhrnutie nemusí byť
+3. INTELIGENTNÉ ODPORÚČANIA:
+   - Pre akú skupinu zákazníkov je dom vhodný
+   - Výhody a nevýhody
+   - Porovnanie s podobnými modelmi
+   - Odporúčané príslušenstvo
+
+4. ZHRNUTIE:
+   - Ak dokument > 200 slov: vytvor stručné zhrnutie (max 150 slov)
+   - Zhrň najdôležitejšie fakty
    
-4. EXTRAHOVANÝ OBSAH PRE CHATBOTA
-   - Vytvor OPTIMALIZOVANÝ text pre chatbota (max 800 slov)
-   - Pre fotky: popíš čo by mohla zobrazovať na základe názvu, priečinka a kontextu
-   - Zahrň všetky dôležité detaily, čísla, technické údaje
-   - Formát: prirodzený text, dobre štruktúrovaný
-   - Ak je to fotka: "Fotografia: [typ fotky] domu ${dokument.model_domu || ''}, ${dokument.podpriecinok || 'zobrazenie'}. [Popis na základe kontextu]"
+5. CHATBOT OBSAH:
+   - Optimalizovaný text (max 1000 slov)
+   - Pre fotky: detailný popis na základe názvu a kontextu
+   - Všetky čísla a parametre
+   - Prirodzený, dobre štruktúrovaný text
 
 VÝSTUP (JSON):
-Vráť JSON objekt s týmito poľami:
-- odporucana_kategoria: najpresnejší typ (cenník / technická_špecifikácia / atď.)
-- extrahovaný_obsah: optimalizovaný text pre chatbota (max 800 slov)
-- zhrnutie: stručné zhrnutie ak dokument >200 slov, inak null
-- kľúčové_informácie: {
-    modely_domov: [zoznam modelov - zahrň model z priečinka],
-    cenové_informácie: [detailné cenové údaje s popisom],
-    technické_údaje: [všetky technické parametre],
-    rozmery: {
-      sirka: "X m",
-      dlzka: "Y m", 
-      vyska: "Z m",
-      plocha: "XY m²"
+{
+  "odporucana_kategoria": "typ",
+  "extrahovaný_obsah": "text pre chatbota",
+  "zhrnutie": "stručné zhrnutie alebo null",
+  "kľúčové_informácie": {
+    "modely_domov": ["zoznam"],
+    "cenové_informácie": ["detailné položky s cenami"],
+    "technické_údaje": ["všetky parametre"],
+    "rozmery": {
+      "sirka": "X m",
+      "dlzka": "Y m", 
+      "vyska": "Z m",
+      "plocha": "XY m²",
+      "uzitkova_plocha": "XY m²",
+      "zastavana_plocha": "XY m²"
     },
-    materialy: [zoznam materiálov a značiek],
-    energia: {
-      trieda: "A0/A/B/...",
-      spotreba: "XXX kWh/m²"
+    "materialy": ["detailné materiály so značkami"],
+    "energia": {
+      "trieda": "A0/A/B...",
+      "spotreba": "XXX kWh/m²/rok",
+      "u_hodnoty": "údaje o izolácii",
+      "vykurovanie": "typ systému",
+      "fotovoltaika": "áno/nie, špecifikácia"
     },
-    ostatné: [ostatné dôležité info]
+    "instalácie": ["voda, elektrina, vykurovanie..."],
+    "doprava_montaz": ["informácie o doprave a montáži"],
+    "zaruky": ["záručné podmienky"],
+    "odporucania": ["pre koho je vhodný, výhody"],
+    "ostatné": ["ostatné dôležité info"]
   }
+}
 
 PRAVIDLÁ:
-- Buď MAXIMÁLNE detailný pri extrakcii
-- Ak niektoré údaje chýbajú, vynechaj ich (nedávaj null hodnoty)
-- Čísla a hodnoty extrahuj PRESNE ako sú v dokumente
-- Model domu z priečinka MUSÍ byť v modely_domov
+- Buď MAXIMÁLNE detailný
+- Čísla a hodnoty PRESNE ako v dokumente
+- Model z priečinka MUSÍ byť v modely_domov
+- Ak údaje chýbajú, vynechaj ich
+- Nepoužívaj null hodnoty, iba reálne dáta
 `;
-
+        
         const result = await base44.integrations.Core.InvokeLLM({
             prompt: analysisPrompt,
             response_json_schema: {
@@ -161,7 +210,9 @@ PRAVIDLÁ:
                                     sirka: { type: "string" },
                                     dlzka: { type: "string" },
                                     vyska: { type: "string" },
-                                    plocha: { type: "string" }
+                                    plocha: { type: "string" },
+                                    uzitkova_plocha: { type: "string" },
+                                    zastavana_plocha: { type: "string" }
                                 }
                             },
                             materialy: { type: "array", items: { type: "string" } },
@@ -169,9 +220,16 @@ PRAVIDLÁ:
                                 type: "object",
                                 properties: {
                                     trieda: { type: "string" },
-                                    spotreba: { type: "string" }
+                                    spotreba: { type: "string" },
+                                    u_hodnoty: { type: "string" },
+                                    vykurovanie: { type: "string" },
+                                    fotovoltaika: { type: "string" }
                                 }
                             },
+                            instalácie: { type: "array", items: { type: "string" } },
+                            doprava_montaz: { type: "array", items: { type: "string" } },
+                            zaruky: { type: "array", items: { type: "string" } },
+                            odporucania: { type: "array", items: { type: "string" } },
                             ostatné: { type: "array", items: { type: "string" } }
                         }
                     }
@@ -180,7 +238,6 @@ PRAVIDLÁ:
             }
         });
 
-        // Vyčisti prázdne hodnoty z kľúčových informácií
         const cleanedInfo = {};
         for (const [key, value] of Object.entries(result.kľúčové_informácie)) {
             if (Array.isArray(value)) {
@@ -196,7 +253,6 @@ PRAVIDLÁ:
             }
         }
 
-        // Aktualizuj dokument s analyzovanými dátami
         const updateData = {
             extrahovaný_obsah: result.extrahovaný_obsah,
             kľúčové_informácie: cleanedInfo,
@@ -204,7 +260,6 @@ PRAVIDLÁ:
             analyzovaný: true
         };
 
-        // Pridaj zhrnutie len ak existuje
         if (result.zhrnutie) {
             updateData.zhrnutie = result.zhrnutie;
         }
