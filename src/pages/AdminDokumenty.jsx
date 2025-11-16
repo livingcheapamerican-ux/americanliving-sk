@@ -522,219 +522,229 @@ export default function AdminDokumenty() {
       return;
     }
 
-    // SUPER RÝCHLA PREDVALIDÁCIA - všetko naraz pred začatím
-    const filesToProcessInitially = selectedFiles.filter(file => {
-      if (fileStatuses[file.name] === 'nahratý') return false;
-      if (shouldSkipFile(file.name)) {
-        updateFileStatus(file.name, 'preskočený');
-        updateFileProgress(file.name, 100);
-        return false;
-      }
-      
-      const filePath = file.webkitRelativePath || file.name;
-      const folderInfo = extractFolderInfo(filePath);
-      
-      if (isFileDuplicate(file.name, file.size, folderInfo.cesta_priecinku)) {
-        updateFileStatus(file.name, 'duplicita');
-        updateFileProgress(file.name, 100);
-        return false;
-      }
-      return true;
-    });
-
-    if (filesToProcessInitially.length === 0) {
-      alert("Žiadne nové súbory na nahranie.");
-      return;
-    }
-
-    setUploading(true);
-    uploadWorkerRef.current = { cancel: false };
-    
-    const alreadyUploadedCount = Object.values(fileStatuses).filter(s => s === 'nahratý').length;
-    const totalFilesForProgress = selectedFiles.length; 
-    setUploadProgress({ current: alreadyUploadedCount, total: totalFilesForProgress });
-    setUploadResults(null);
-
-    const results = {
-      successful: [],
-      skipped: selectedFiles.filter(file => fileStatuses[file.name] === 'preskočený' || fileStatuses[file.name] === 'duplicita').map(file => ({
-        name: file.name,
-        reason: fileStatuses[file.name] === 'preskočený' ? 'Systémový súbor' : 'Duplicita v rovnakom priečinku'
-      })),
-      failed: []
-    };
-
-    let completedCount = alreadyUploadedCount + results.skipped.length; 
-    let cumulativeBytes = 0;
-
-    selectedFiles.forEach((file) => {
-      if (fileStatuses[file.name] === 'nahratý' || fileStatuses[file.name] === 'preskočený' || fileStatuses[file.name] === 'duplicita' || fileStatuses[file.name] === 'zrušený') {
-        cumulativeBytes += file.size;
-      }
-    });
-    setUploadedBytes(cumulativeBytes);
-
     try {
-          // ZNÍŽENÁ rýchlosť kvôli rate limit - menší batch s delayom
-          const BATCH_SIZE = 10;
-          
-          const filesToActuallyUpload = filesToProcessInitially;
+      // SUPER RÝCHLA PREDVALIDÁCIA - všetko naraz pred začatím
+      const filesToProcessInitially = selectedFiles.filter(file => {
+        if (fileStatuses[file.name] === 'nahratý') return false;
+        if (shouldSkipFile(file.name)) {
+          updateFileStatus(file.name, 'preskočený');
+          updateFileProgress(file.name, 100);
+          return false;
+        }
+        
+        const filePath = file.webkitRelativePath || file.name;
+        const folderInfo = extractFolderInfo(filePath);
+        
+        if (isFileDuplicate(file.name, file.size, folderInfo.cesta_priecinku)) {
+          updateFileStatus(file.name, 'duplicita');
+          updateFileProgress(file.name, 100);
+          return false;
+        }
+        return true;
+      });
 
-          const batches = [];
-          for (let i = 0; i < filesToActuallyUpload.length; i += BATCH_SIZE) {
-            batches.push(filesToActuallyUpload.slice(i, i + BATCH_SIZE));
+      if (filesToProcessInitially.length === 0) {
+        alert("Žiadne nové súbory na nahranie.");
+        return;
+      }
+
+      setUploading(true);
+      uploadWorkerRef.current = { cancel: false };
+      
+      const alreadyUploadedCount = Object.values(fileStatuses).filter(s => s === 'nahratý').length;
+      const totalFilesForProgress = selectedFiles.length; 
+      setUploadProgress({ current: alreadyUploadedCount, total: totalFilesForProgress });
+      setUploadResults(null);
+
+      const results = {
+        successful: [],
+        skipped: selectedFiles.filter(file => fileStatuses[file.name] === 'preskočený' || fileStatuses[file.name] === 'duplicita').map(file => ({
+          name: file.name,
+          reason: fileStatuses[file.name] === 'preskočený' ? 'Systémový súbor' : 'Duplicita v rovnakom priečinku'
+        })),
+        failed: []
+      };
+
+      let completedCount = alreadyUploadedCount + results.skipped.length; 
+      let cumulativeBytes = 0;
+
+      selectedFiles.forEach((file) => {
+        if (fileStatuses[file.name] === 'nahratý' || fileStatuses[file.name] === 'preskočený' || fileStatuses[file.name] === 'duplicita' || fileStatuses[file.name] === 'zrušený') {
+          cumulativeBytes += file.size;
+        }
+      });
+      setUploadedBytes(cumulativeBytes);
+
+      // ZNÍŽENÁ rýchlosť kvôli rate limit - menší batch s delayom
+      const BATCH_SIZE = 10;
+      
+      const filesToActuallyUpload = filesToProcessInitially;
+
+      const batches = [];
+      for (let i = 0; i < filesToActuallyUpload.length; i += BATCH_SIZE) {
+        batches.push(filesToActuallyUpload.slice(i, i + BATCH_SIZE));
+      }
+
+      for (const batch of batches) {
+        if (uploadWorkerRef.current?.cancel) {
+          const remainingFilesToUpload = filesToActuallyUpload.length - (completedCount - alreadyUploadedCount - results.skipped.length);
+          if (remainingFilesToUpload > 0) {
+            results.failed.push({
+              name: `Zostávajúcich ${remainingFilesToUpload} súborov`,
+              error: 'Upload zrušený',
+            });
           }
+          break;
+        }
 
-          for (const batch of batches) {
+        const batchPromises = batch.map(async (file) => {
+          try { // Outer try-catch for individual file processing
             if (uploadWorkerRef.current?.cancel) {
-              const remainingFilesToUpload = filesToActuallyUpload.length - (completedCount - alreadyUploadedCount - results.skipped.length);
-              if (remainingFilesToUpload > 0) {
-                results.failed.push({
-                  name: `Zostávajúcich ${remainingFilesToUpload} súborov`,
-                  error: 'Upload zrušený',
+              return { file, status: 'cancelled', size: file.size };
+            }
+            
+            // Preskočiť súbory ktoré boli manuálne zrušené
+            if (fileStatuses[file.name] === 'zrušený') {
+              return { file, status: 'cancelled', size: file.size };
+            }
+
+            updateFileStatus(file.name, 'nahrávam');
+            updateFileProgress(file.name, 0);
+            setCurrentFileName(file.name);
+
+            // Retry mechanizmus pre rate limit
+            let retries = 0;
+            const maxRetries = 3;
+            
+            while (retries <= maxRetries) {
+              try {
+                // Preskočiť ak bol medzitým zrušený
+                if (fileStatuses[file.name] === 'zrušený') {
+                  return { file, status: 'cancelled', size: file.size };
+                }
+                
+                const filePath = file.webkitRelativePath || file.name;
+                const folderInfo = extractFolderInfo(filePath);
+
+                // Upload s progress tracking
+                updateFileProgress(file.name, 30);
+                const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+                updateFileProgress(file.name, 70);
+
+                // Preskočiť ak bol medzitým zrušený
+                if (fileStatuses[file.name] === 'zrušený') {
+                  return { file, status: 'cancelled', size: file.size };
+                }
+
+                const autoTags = [...formData.tags];
+                if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
+                if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
+
+                const doc = await createMutation.mutateAsync({
+                  nazov: file.name,
+                  popis: formData.popis,
+                  typ: formData.typ,
+                  vyrobca: formData.vyrobca,
+                  pre_chatbota: formData.pre_chatbota,
+                  tags: [...new Set(autoTags)],
+                  model_domu: folderInfo.model_domu,
+                  podpriecinok: folderInfo.podpriecinok,
+                  cesta_priecinku: folderInfo.cesta_priecinku,
+                  subor_url: uploadResponse.file_url,
+                  velkost: file.size,
+                  typ_suboru: file.type || 'application/octet-stream'
                 });
+
+                updateFileStatus(file.name, 'nahratý');
+                updateFileProgress(file.name, 100);
+                results.successful.push({ name: file.name, id: doc.id });
+                
+                cumulativeBytes += file.size;
+                setUploadedBytes(cumulativeBytes);
+                
+                return { file, status: 'success', size: file.size };
+
+              } catch (fileError) { // Catch for specific upload/mutation errors within the retry loop
+                // Ak je to rate limit error, skús znova po delay
+                if (fileError.message?.includes('rate limit') || fileError.message?.includes('Rate limit') || fileError.response?.status === 429) {
+                  retries++;
+                  if (retries <= maxRetries) {
+                    const delay = Math.pow(2, retries) * 1000; // Exponenciálny backoff
+                    console.log(`Rate limit pre ${file.name}, retry ${retries}/${maxRetries} za ${delay}ms`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    continue; // Skús znova
+                  }
+                }
+                
+                // Iná chyba alebo vyčerpané retry. Re-throw to be caught by the outer file-level try-catch.
+                throw fileError;
               }
-              break;
             }
-
-            const batchPromises = batch.map(async (file) => {
-              if (uploadWorkerRef.current?.cancel) return null;
-              
-              // Preskočiť súbory ktoré boli manuálne zrušené
-              if (fileStatuses[file.name] === 'zrušený') {
-                return { file, status: 'cancelled', size: file.size };
-              }
-
-              updateFileStatus(file.name, 'nahrávam');
-              updateFileProgress(file.name, 0);
-              setCurrentFileName(file.name);
-
-              // Retry mechanizmus pre rate limit
-              let retries = 0;
-              const maxRetries = 3;
-              
-              while (retries <= maxRetries) {
-                try {
-                  // Preskočiť ak bol medzitým zrušený
-                  if (fileStatuses[file.name] === 'zrušený') {
-                    return { file, status: 'cancelled', size: file.size };
-                  }
-                  
-                  const filePath = file.webkitRelativePath || file.name;
-                  const folderInfo = extractFolderInfo(filePath);
-
-                  // Upload s progress tracking
-                  updateFileProgress(file.name, 30);
-                  const uploadResponse = await base44.integrations.Core.UploadFile({ file });
-                  updateFileProgress(file.name, 70);
-
-                  // Preskočiť ak bol medzitým zrušený
-                  if (fileStatuses[file.name] === 'zrušený') {
-                    return { file, status: 'cancelled', size: file.size };
-                  }
-
-                  const autoTags = [...formData.tags];
-                  if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
-                  if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
-
-                  const doc = await createMutation.mutateAsync({
-                    nazov: file.name,
-                    popis: formData.popis,
-                    typ: formData.typ,
-                    vyrobca: formData.vyrobca,
-                    pre_chatbota: formData.pre_chatbota,
-                    tags: [...new Set(autoTags)],
-                    model_domu: folderInfo.model_domu,
-                    podpriecinok: folderInfo.podpriecinok,
-                    cesta_priecinku: folderInfo.cesta_priecinku,
-                    subor_url: uploadResponse.file_url,
-                    velkost: file.size,
-                    typ_suboru: file.type || 'application/octet-stream'
-                  });
-
-                  updateFileStatus(file.name, 'nahratý');
-                  updateFileProgress(file.name, 100);
-                  results.successful.push({ name: file.name, id: doc.id });
-                  
-                  cumulativeBytes += file.size;
-                  setUploadedBytes(cumulativeBytes);
-                  
-                  return { file, status: 'success', size: file.size };
-
-                } catch (fileError) {
-                  // Ak je to rate limit error, skús znova po delay
-                  if (fileError.message?.includes('rate limit') || fileError.message?.includes('Rate limit') || fileError.response?.status === 429) {
-                    retries++;
-                    if (retries <= maxRetries) {
-                      const delay = Math.pow(2, retries) * 1000; // Exponenciálny backoff
-                      console.log(`Rate limit pre ${file.name}, retry ${retries}/${maxRetries} za ${delay}ms`);
-                      await new Promise(resolve => setTimeout(resolve, delay));
-                      continue; // Skús znova
-                    }
-                  }
-                  
-                  // Iná chyba alebo vyčerpané retry
-                  console.error(`Chyba pri súbore ${file.name}:`, fileError);
-                  updateFileStatus(file.name, 'odmietnutý');
-                  updateFileProgress(file.name, 100);
-                  results.failed.push({
-                    name: file.name,
-                    error: fileError.message || 'Neznáma chyba',
-                  });
-                  
-                  cumulativeBytes += file.size;
-                  setUploadedBytes(cumulativeBytes);
-                  
-                  return { file, status: 'failed', size: file.size };
-                }
-              }
-              
-              // Ak sa dostaneme sem, vyčerpali sa retry pokusy
-              return { file, status: 'failed', size: file.size };
+            // Ak sa dostaneme sem, vyčerpali sa retry pokusy a posledný pokus neuspel.
+            throw new Error(`Vyčerpané pokusy pre súbor ${file.name}`);
+            
+          } catch (fileProcessingError) { // Outer catch for any error during a single file's processing
+            console.error(`Kritická chyba pri súbore ${file.name}:`, fileProcessingError);
+            updateFileStatus(file.name, 'odmietnutý');
+            updateFileProgress(file.name, 100);
+            results.failed.push({
+              name: file.name,
+              error: fileProcessingError.message || 'Neznáma chyba',
             });
+            
+            cumulativeBytes += file.size;
+            setUploadedBytes(cumulativeBytes);
+            
+            return { file, status: 'failed', size: file.size };
+          }
+        });
 
-            const batchResults = await Promise.allSettled(batchPromises);
+        const batchResults = await Promise.allSettled(batchPromises);
 
-            batchResults.forEach(result => {
-              if (result.status === 'fulfilled' && result.value) {
-                if (result.value.status !== 'cancelled') {
-                    completedCount++;
-                }
-              } else if (result.status === 'rejected') {
-                console.error('Batch promise rejected:', result.reason);
+        batchResults.forEach(result => {
+          if (result.status === 'fulfilled' && result.value) {
+            if (result.value.status !== 'cancelled') {
                 completedCount++;
-              }
-            });
-
-            setUploadProgress({ current: completedCount, total: totalFilesForProgress });
-            saveUploadState(fileStatuses, { current: completedCount, total: totalFilesForProgress }, formData, uploadMode);
-            
-            // Delay medzi batch-ami pre vyhnutie sa rate limit
-            if (batches.indexOf(batch) < batches.length - 1) {
-              await new Promise(resolve => setTimeout(resolve, 2000));
             }
+          } else if (result.status === 'rejected') {
+            console.error('Batch promise rejected:', result.reason);
+            completedCount++;
           }
+        });
 
-          // AI analýza v pozadí - ešte pomalšie
-          if (results.successful.length > 0 && !uploadWorkerRef.current?.cancel) {
-            setCurrentFileName("Analyzujem v pozadí...");
-            
-            setTimeout(async () => {
-              const analysisBatches = [];
-              for (let i = 0; i < results.successful.length; i += 5) {
-                analysisBatches.push(results.successful.slice(i, i + 5));
-              }
+        setUploadProgress({ current: completedCount, total: totalFilesForProgress });
+        saveUploadState(fileStatuses, { current: completedCount, total: totalFilesForProgress }, formData, uploadMode);
+        
+        // Delay medzi batch-ami pre vyhnutie sa rate limit
+        if (batches.indexOf(batch) < batches.length - 1) {
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+      }
 
-              for (const analysisBatch of analysisBatches) {
-                await Promise.allSettled(
-                  analysisBatch.map(item => analyzeMutation.mutateAsync(item.id).catch(() => {})),
-                );
-                // Delay medzi analýzami
-                await new Promise(resolve => setTimeout(resolve, 3000));
-              }
-              queryClient.invalidateQueries({ queryKey: ['dokumenty'] });
-            }, 0);
+      // AI analýza v pozadí - ešte pomalšie
+      if (results.successful.length > 0 && !uploadWorkerRef.current?.cancel) {
+        setCurrentFileName("Analyzujem v pozadí...");
+        
+        setTimeout(async () => {
+          try {
+            const analysisBatches = [];
+            for (let i = 0; i < results.successful.length; i += 5) {
+              analysisBatches.push(results.successful.slice(i, i + 5));
+            }
+
+            for (const analysisBatch of analysisBatches) {
+              await Promise.allSettled(
+                analysisBatch.map(item => analyzeMutation.mutateAsync(item.id).catch(() => {})),
+              );
+              // Delay medzi analýzami
+              await new Promise(resolve => setTimeout(resolve, 3000));
+            }
+            queryClient.invalidateQueries({ queryKey: ['dokumenty'] });
+          } catch (analysisError) {
+            console.error('Chyba pri AI analýze:', analysisError);
           }
+        }, 0);
+      }
 
       setUploadResults(results);
       setShowForm(false);
@@ -745,7 +755,9 @@ export default function AdminDokumenty() {
       setFileStatuses({}); // Clear individual file statuses after successful upload
 
     } catch (error) {
-      alert("Kritická chyba: " + error.message);
+      console.error("Kritická chyba pri nahrávaní:", error);
+      alert("Kritická chyba: " + (error.message || 'Neznáma chyba. Skúste to znova.'));
+      setUploading(false); // Set uploading to false in case of a critical error that stops the process
     } finally {
       setUploading(false);
       uploadWorkerRef.current = null;
