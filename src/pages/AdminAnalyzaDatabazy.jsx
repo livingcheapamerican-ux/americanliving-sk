@@ -34,94 +34,50 @@ export default function AdminAnalyzaDatabazy() {
       setCurrentDoc(dok.nazov);
       addLog(`Analyzujem: ${dok.nazov}`, 'info');
 
-      // Skontroluj či je URL validná a obrázok dostupný
       if (!dok.subor_url || !dok.subor_url.startsWith('http')) {
         throw new Error('Neplatná URL obrázka');
       }
 
-      const analyza = await base44.integrations.Core.InvokeLLM({
-        prompt: `Analyzuj tento obrázok modulárneho domu a vráť JSON s týmito informáciami:
+      // Použiť voľný text bez JSON schémy - spoľahlivejšie
+      const analyzaText = await base44.integrations.Core.InvokeLLM({
+        prompt: `Analyzuj tento obrázok modulárneho domu a popíš čo vidíš:
 
 Súbor: ${dok.nazov}
 Výrobca: ${dok.vyrobca || 'neznámy'}
 Model: ${dok.model_domu || 'neznámy'}
 
-Poskytni:
-- typ_obsahu: "exterier" alebo "interier" alebo "podorys" alebo "kombinacia"
-- specificka_kategoria: krátky popis (napr. "detail fasády", "celkový pohľad")
-- fasada_materialy: pole objektov s material a farba (napr. [{"material": "drevo", "farba": "hnedá"}])
-- okna: objekt s typ a farba_ramu
-- stresna_krytina: objekt s typ a farba
-- spravny_vyrobca: názov výrobcu (potvrď alebo oprav)
-- spravny_model_domu: názov modelu (potvrď alebo oprav)
+Popíš:
+1. Typ obsahu (exteriér/interiér/pôdorys/kombinacia)
+2. Materiály fasády a farby
+3. Typ a farba okien
+4. Typ a farba strechy
+5. Celkový stav a kvalita
+6. Správny výrobca (potvrď alebo oprav)
+7. Správny model domu (potvrď alebo oprav)
 
-DÔLEŽITÉ: Všetky textové polia musia byť reťazce (strings), nie iné typy.`,
-        file_urls: [dok.subor_url],
-        response_json_schema: {
-          type: "object",
-          properties: {
-            typ_obsahu: { type: "string" },
-            specificka_kategoria: { type: "string" },
-            fasada_materialy: {
-              type: "array",
-              items: { 
-                type: "object",
-                properties: {
-                  material: { type: "string" },
-                  farba: { type: "string" }
-                }
-              }
-            },
-            okna: {
-              type: "object",
-              properties: {
-                typ: { type: "string" },
-                farba_ramu: { type: "string" }
-              }
-            },
-            dvere: {
-              type: "object",
-              properties: {
-                typ: { type: "string" },
-                farba: { type: "string" }
-              }
-            },
-            stresna_krytina: {
-              type: "object",
-              properties: {
-                typ: { type: "string" },
-                farba: { type: "string" }
-              }
-            },
-            spravny_vyrobca: { type: "string" },
-            spravny_model_domu: { type: "string" }
-          }
-        }
+Buď konkrétny a detailný.`,
+        file_urls: [dok.subor_url]
       });
 
-      // Aktualizuj dokument
+      // Uložiť analýzu ako text
       await base44.entities.Dokument.update(dok.id, {
-        vizualna_analyza: analyza,
+        ai_generovany_popis: analyzaText,
         analyzovaný: true,
         podrobna_analyza_datum: new Date().toISOString()
       });
 
       addLog(`✅ Hotovo: ${dok.nazov}`, 'success');
-      return { success: true, dok, analyza };
+      return { success: true, dok, analyza: analyzaText };
 
     } catch (error) {
       const errorMsg = error.message || error.toString();
       
-      // Ak je problém s obrázkom, označ dokument ako problémový
-      if (errorMsg.includes('unsupported image') || errorMsg.includes('ImageURL') || errorMsg.includes('Neplatná URL')) {
+      if (errorMsg.includes('unsupported image') || errorMsg.includes('ImageURL')) {
         addLog(`⚠️ Preskakujem (problémový obrázok): ${dok.nazov}`, 'warning');
         
         await base44.entities.Dokument.update(dok.id, {
           podrobna_analyza_datum: new Date().toISOString(),
-          vizualna_analyza: {
-            error: 'Problémový obrázok - nepodporovaný formát',
-            skipped: true
-          }
+          ai_generovany_popis: 'Problémový obrázok - nepodporovaný formát'
         });
         
         return { success: false, skipped: true, dok, error: errorMsg };
@@ -224,10 +180,9 @@ DÔLEŽITÉ: Všetky textové polia musia byť reťazce (strings), nie iné typy
     setAnalyzing(false);
   };
 
-  const analyzovaneCount = dokumenty.filter(d => d.vizualna_analyza).length;
+  const analyzovaneCount = dokumenty.filter(d => d.ai_generovany_popis).length;
   const podrobneAnalyzovaneCount = dokumenty.filter(d => d.podrobna_analyza_datum).length;
   const neanalyzovaneCount = dokumenty.filter(d => !d.podrobna_analyza_datum).length;
-  const skipnuteCount = dokumenty.filter(d => d.vizualna_analyza?.skipped).length;
 
   if (userLoading) {
     return (
@@ -262,7 +217,7 @@ DÔLEŽITÉ: Všetky textové polia musia byť reťazce (strings), nie iné typy
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
           <Card className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
@@ -281,7 +236,7 @@ DÔLEŽITÉ: Všetky textové polia musia byť reťazce (strings), nie iné typy
                 <CheckCircle className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Základná</p>
+                <p className="text-sm text-gray-600">Analyzované</p>
                 <p className="text-2xl font-bold text-green-900">{analyzovaneCount}</p>
               </div>
             </div>
@@ -293,7 +248,7 @@ DÔLEŽITÉ: Všetky textové polia musia byť reťazce (strings), nie iné typy
                 <CheckCircle className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Podrobná</p>
+                <p className="text-sm text-gray-600">Dokončené</p>
                 <p className="text-2xl font-bold text-purple-900">{podrobneAnalyzovaneCount}</p>
               </div>
             </div>
@@ -307,18 +262,6 @@ DÔLEŽITÉ: Všetky textové polia musia byť reťazce (strings), nie iné typy
               <div>
                 <p className="text-sm text-gray-600">Zostáva</p>
                 <p className="text-2xl font-bold text-orange-900">{neanalyzovaneCount}</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-6 bg-gradient-to-br from-yellow-50 to-amber-50 border-yellow-200">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center">
-                <SkipForward className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Skipnuté</p>
-                <p className="text-2xl font-bold text-yellow-900">{skipnuteCount}</p>
               </div>
             </div>
           </Card>
@@ -344,7 +287,7 @@ DÔLEŽITÉ: Všetky textové polia musia byť reťazce (strings), nie iné typy
             <div>
               <h2 className="text-xl font-bold mb-2">🚀 Postupná AI analýza</h2>
               <p className="text-sm text-gray-600 mb-2">
-                Analýza prebieha postupne (1 fotka po druhej)
+                Analýza prebieha postupne (1 fotka po druhej) • Ukladá sa ako textový popis
               </p>
               {neanalyzovaneCount > 0 && (
                 <p className="text-sm font-semibold text-orange-600">
