@@ -14,6 +14,7 @@ import AdminGoogleDrive from './pages/AdminGoogleDrive';
 import AdminDokumenty from './pages/AdminDokumenty';
 import InteraktivnyKonfigurator from './pages/InteraktivnyKonfigurator';
 import GaleriaRealizacii from './pages/GaleriaRealizacii';
+import AdminSpravaDomov from './pages/AdminSpravaDomov';
 import Layout from './Layout.jsx';
 
 
@@ -34,6 +35,7 @@ export const PAGES = {
     "AdminDokumenty": AdminDokumenty,
     "InteraktivnyKonfigurator": InteraktivnyKonfigurator,
     "GaleriaRealizacii": GaleriaRealizacii,
+    "AdminSpravaDomov": AdminSpravaDomov,
 }
 
 export const pagesConfig = {

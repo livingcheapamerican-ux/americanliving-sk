@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText } from "lucide-react";
+import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
@@ -37,6 +36,7 @@ export default function Layout({ children }) {
 
   const isActive = (path) => location.pathname === path;
   const isAdmin = user?.role === 'admin';
+  const isSuperAdmin = user?.super_admin === true;
 
   const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png";
   const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
@@ -117,6 +117,13 @@ export default function Layout({ children }) {
 
             {/* CTA Button */}
             <div className="hidden lg:flex items-center gap-3">
+              {isSuperAdmin && (
+                <Link to={createPageUrl("AdminSpravaDomov")}>
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80" title="Správa domov">
+                    <Image className="w-5 h-5" />
+                  </Button>
+                </Link>
+              )}
               {isAdmin && (
                 <>
                   <Link to={createPageUrl("AdminDokumenty")}>
@@ -188,6 +195,16 @@ export default function Layout({ children }) {
                   {item.name}
                 </Link>
               ))}
+              {isSuperAdmin && (
+                <Link
+                  to={createPageUrl("AdminSpravaDomov")}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                >
+                  <Image className="w-5 h-5" />
+                  Správa domov
+                </Link>
+              )}
               {isAdmin && (
                 <>
                   <Link
