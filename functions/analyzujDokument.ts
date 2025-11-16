@@ -45,31 +45,111 @@ Deno.serve(async (req) => {
         // ANALÝZA OBRÁZKOV
         if (isImage) {
             analysisPrompt = `
-Analyzuj DETAILNE túto fotografiu modulárneho domu.
+Analyzuj MAXIMÁLNE DETAILNE túto fotografiu/obrázok modulárneho domu.
 
 DOKUMENT:
-Názov: ${dokument.nazov}
+Názov súboru: ${dokument.nazov}
 Výrobca: ${dokument.vyrobca}
-${dokument.model_domu ? `Model: ${dokument.model_domu}` : ''}
+${dokument.model_domu ? `Model (z priečinka): ${dokument.model_domu}` : ''}
 ${dokument.podpriecinok ? `Kategória: ${dokument.podpriecinok}` : ''}
+${dokument.cesta_priecinku ? `Cesta: ${dokument.cesta_priecinku}` : ''}
 
-ÚLOHY:
-1. Urči či je to EXTERIÉR alebo INTERIÉR
-2. FASÁDA (ak exteriér):
-   - Deteguj TYP FASÁDY: klasická biela omietka, drevený obklad, antracitový plech, sivý plech, kombinovaná fasáda, sklenená fasáda, kamenný obklad, atď.
-   - Urči FARBU fasády presne
-   - Identifikuj MATERIÁLY fasády viditeľné na fotografii
-3. INTERIÉR (ak interiér):
-   - Deteguj MATERIÁLY STIEN: drevo (aký typ), sádrokarton, maľovaná omietka, obklad, atď.
-   - Podlaha: drevo, laminát, dlažba, atď.
-   - Strop: drevo, sádrokarton, napnutý, atď.
-4. VŠEOBECNÉ:
-   - Architektonický ŠTÝL: moderný, tradičný, minimalistický, škandinávsky, industriálny, atď.
-   - DOMINANTNÉ FARBY (3-5 hlavných farieb)
-   - TECHNICKÉ DETAILY: typ okien, dverí, strešná krytina (ak viditeľná), terasa, balkón, atď.
-5. DETAILNÝ POPIS pre chatbota (200-300 slov) - ako by si profesionálne opisoval túto fotku potenciálnemu zákazníkovi
+ÚLOHY ANALÝZY:
 
-Buď MAXIMÁLNE DETAILNÝ a PRESNÝ.
+1. IDENTIFIKÁCIA TYPU OBSAHU:
+   Urči či je to:
+   - EXTERIÉR domu (vonkajší pohľad)
+   - INTERIÉR domu (vnútorné priestory)
+   - PÔDORYS (technický výkres, blueprint)
+   - INÉ (grafika, diagram, atď.)
+
+2. AK JE TO PÔDORYS (technický výkres):
+   KRITICKÉ: Toto je najdôležitejšia časť! Podrobne analyzuj:
+   
+   A) IDENTIFIKÁCIA MODELU:
+   - Zisti model domu z názvu súboru alebo priečinka
+   - Hľadaj čísla, písmená, kódy (napr. "A1", "Modul 50", "Dom 123")
+   
+   B) CELKOVÉ ROZMERY:
+   - Šírka domu (m) - číselná hodnota z pôdorysu
+   - Dĺžka domu (m) - číselná hodnota z pôdorysu
+   - Vypočítaj ZASTAVANÁ PLOCHA = šírka × dĺžka (m²)
+   
+   C) MIESTNOSTI - pre KAŽDÚ miestnosť urči:
+   - Názov (obývačka, spálňa, kuchyňa, kúpeľňa, chodba, atď.)
+   - Rozmery (napr. "3.5 × 4.2 m")
+   - Plocha jednotlivej miestnosti (m²)
+   
+   D) UŽITKOVÁ PLOCHA:
+   - Spočítaj plochu všetkých obytných miestností
+   - Nezapočítavaj terasy, balkóny, technické miestnosti
+   
+   E) VONKAJŠIE PRIESTORY:
+   - Terasa/balkón - rozmery a plocha ak sú
+   
+   F) POČET IZIEB:
+   - Spočítaj spálne, obývacie izby (nie kúpeľne, chodby, WC)
+   
+   BUĎTE MAXIMÁLNE PRESNÝ S ČÍSLAMI!
+
+3. AK JE TO EXTERIÉR:
+   
+   A) FASÁDA:
+   - Typ fasády: klasická biela omietka, drevený obklad, antracitový plech, sivý plech, kombinovaná fasáda, sklenená, kamenný obklad, atď.
+   - Farba fasády presne
+   - Materiály fasády viditeľné na fotografii
+   
+   B) STREŠNÁ KRYTINA:
+   - Typ: plechová krytina, betónové škridly, keramické škridly, bridlica, plochá strecha, zelená strecha, atď.
+   - Farba strechy
+   - Tvar strechy (sedlová, pultová, valbová, plochá)
+   
+   C) SLNEČNÁ EXPOZÍCIA:
+   - Odhad orientácie domu: južná, severná, východná, západná, juhovýchodná, juhozápadná, severovýchodná, severozápadná
+   - Ak nie je možné určiť, uveď "neidentifikovateľná"
+   - Zdôvodni odhad (tiene, osvetlenie, vegetácia, atď.)
+   
+   D) TERÉN A OKOLIE:
+   - Typ terénu: rovina, mierny svah, strmý svah, kopec
+   - Okolie: les, lúka, pole, vodná plocha, jazero, rieka, záhrada, mestská zástavba, dedina, izolovaná poloha, atď.
+   
+   E) DETAILY:
+   - Typ okien, dverí
+   - Terasa, balkón, veranda
+   - Oplotenie, plot
+   - Vstup, prístupová cesta
+   - Osvetlenie
+   - Okolité stromy, vegetácia
+
+4. AK JE TO INTERIÉR:
+   
+   A) MATERIÁLY:
+   - Steny: drevo (aký typ - smrek, borovica, dub), sádrokarton, maľovaná omietka, obklad, tapeta, atď.
+   - Podlaha: drevo, laminát, dlažba, vinyl, koberec, atď.
+   - Strop: drevo, sádrokarton, napnutý, kazetový, atď.
+   
+   B) PRIESTOR:
+   - Typ miestnosti: obývačka, kuchyňa, spálňa, kúpeľňa, chodba, atď.
+   - Štýl zariadenia
+
+5. VŠEOBECNÉ (pre exteriér aj interiér):
+   - Architektonický ŠTÝL: moderný, tradičný, minimalistický, škandinávsky, industriálny, rustikálny, atď.
+   - DOMINANTNÉ FARBY (3-5 hlavných farieb) - buď presný
+   - TECHNICKÉ DETAILY viditeľné na fotografii
+
+6. VIZUÁLNE ODPORÚČANIA:
+   Navrhni 3-5 konkrétnych vylepšení:
+   - Pre exteriér: zmena fasády, úprava strechy, osadenie zelene, moderné osvetlenie, atď.
+   - Pre interiér: zmena materiálov, farebné riešenia, priestorové úpravy, atď.
+   - Každé odporúčanie má byť konkrétne a realizovateľné
+
+7. DETAILNÝ POPIS pre chatbota:
+   - 200-300 slov
+   - Profesionálny opis pre potenciálneho zákazníka
+   - Všetky technické detaily
+   - Zvýrazni výhody
+
+Buď MAXIMÁLNE DETAILNÝ, PRESNÝ a KONKRÉTNY!
 `;
 
             responseSchema = {
@@ -79,12 +159,54 @@ Buď MAXIMÁLNE DETAILNÝ a PRESNÝ.
                     vizualna_analyza: {
                         type: "object",
                         properties: {
+                            typ_obsahu: { 
+                                type: "string",
+                                enum: ["exterier", "interier", "podorys", "ine"]
+                            },
                             typ_fasady: { type: "array", items: { type: "string" } },
                             interier_materialy: { type: "array", items: { type: "string" } },
                             extrier_materialy: { type: "array", items: { type: "string" } },
+                            stresna_krytina: { type: "string" },
+                            slnecna_expoziacia: { type: "string" },
+                            teren_okolie: {
+                                type: "object",
+                                properties: {
+                                    typ_terenu: { type: "string" },
+                                    okolie: { type: "array", items: { type: "string" } }
+                                }
+                            },
+                            podorys_analyza: {
+                                type: "object",
+                                properties: {
+                                    je_podorys: { type: "boolean" },
+                                    celkove_rozmery: {
+                                        type: "object",
+                                        properties: {
+                                            sirka: { type: "string" },
+                                            dlzka: { type: "string" },
+                                            zastavana_plocha: { type: "string" }
+                                        }
+                                    },
+                                    miestnosti: {
+                                        type: "array",
+                                        items: {
+                                            type: "object",
+                                            properties: {
+                                                nazov: { type: "string" },
+                                                rozmery: { type: "string" },
+                                                plocha: { type: "string" }
+                                            }
+                                        }
+                                    },
+                                    uzitkova_plocha: { type: "string" },
+                                    terasa_balkon: { type: "string" },
+                                    pocet_izieb: { type: "number" }
+                                }
+                            },
                             technicka_analyza: { type: "string" },
                             farby: { type: "array", items: { type: "string" } },
-                            styl: { type: "string" }
+                            styl: { type: "string" },
+                            vizualne_odporucania: { type: "array", items: { type: "string" } }
                         }
                     }
                 },
@@ -285,13 +407,74 @@ PRAVIDLÁ:
                 } else if (typeof value === 'object' && value !== null) {
                     const cleanedObj = {};
                     for (const [k, v] of Object.entries(value)) {
-                        if (v && v !== '') cleanedObj[k] = v;
+                        if (Array.isArray(v) && v.length > 0) {
+                            cleanedObj[k] = v;
+                        } else if (typeof v === 'string' && v.trim() !== '') {
+                            cleanedObj[k] = v;
+                        } else if (typeof v === 'number') {
+                            cleanedObj[k] = v;
+                        } else if (typeof v === 'boolean') {
+                            cleanedObj[k] = v;
+                        } else if (typeof v === 'object' && v !== null) {
+                            const deepClean = {};
+                            for (const [dk, dv] of Object.entries(v)) {
+                                if ((typeof dv === 'string' && dv.trim() !== '') || typeof dv === 'number' || typeof dv === 'boolean') {
+                                    deepClean[dk] = dv;
+                                }
+                            }
+                            if (Object.keys(deepClean).length > 0) cleanedObj[k] = deepClean;
+                        }
                     }
                     if (Object.keys(cleanedObj).length > 0) cleanedVizualna[key] = cleanedObj;
                 }
             }
             if (Object.keys(cleanedVizualna).length > 0) {
                 updateData.vizualna_analyza = cleanedVizualna;
+            }
+
+            // AUTOMATICKÁ AKTUALIZÁCIA ENTITY DOM Z PÔDORYSOV
+            if (dokument.model_domu && result.vizualna_analyza?.podorys_analyza?.je_podorys) {
+                try {
+                    const podorys = result.vizualna_analyza.podorys_analyza;
+                    const domy = await base44.asServiceRole.entities.Dom.filter({ 
+                        nazov: dokument.model_domu 
+                    });
+
+                    if (domy && domy.length > 0) {
+                        const dom = domy[0];
+                        const domUpdate = {};
+
+                        // Aktualizuj rozmery z pôdorysu
+                        if (podorys.celkove_rozmery?.zastavana_plocha) {
+                            const match = podorys.celkove_rozmery.zastavana_plocha.match(/(\d+[.,]?\d*)/);
+                            if (match) domUpdate.zastavana_plocha = parseFloat(match[1].replace(',', '.'));
+                        }
+
+                        if (podorys.uzitkova_plocha) {
+                            const match = podorys.uzitkova_plocha.match(/(\d+[.,]?\d*)/);
+                            if (match) domUpdate.uzitkova_plocha = parseFloat(match[1].replace(',', '.'));
+                        }
+
+                        if (podorys.celkove_rozmery?.sirka && podorys.celkove_rozmery?.dlzka) {
+                            domUpdate.rozmery = {
+                                sirka: parseFloat(podorys.celkove_rozmery.sirka.match(/(\d+[.,]?\d*)/)?.[1].replace(',', '.') || 0),
+                                dlzka: parseFloat(podorys.celkove_rozmery.dlzka.match(/(\d+[.,]?\d*)/)?.[1].replace(',', '.') || 0),
+                                vyska: 0
+                            };
+                        }
+
+                        if (podorys.pocet_izieb) {
+                            domUpdate.pocet_izieb = podorys.pocet_izieb;
+                        }
+
+                        // Urob update ak máme nejaké zmeny
+                        if (Object.keys(domUpdate).length > 0) {
+                            await base44.asServiceRole.entities.Dom.update(dom.id, domUpdate);
+                        }
+                    }
+                } catch (domError) {
+                    console.error('Error updating Dom from podorys:', domError);
+                }
             }
         } else {
             // Textové dokumenty
@@ -323,7 +506,7 @@ PRAVIDLÁ:
                 }
             }
 
-            // AUTOMATICKÁ AKTUALIZÁCIA ENTITY DOM
+            // AUTOMATICKÁ AKTUALIZÁCIA ENTITY DOM Z TEXTOVÝCH DOKUMENTOV
             if (dokument.model_domu && result.kľúčové_informácie) {
                 try {
                     const domy = await base44.asServiceRole.entities.Dom.filter({ 
@@ -381,7 +564,6 @@ PRAVIDLÁ:
                     }
                 } catch (domError) {
                     console.error('Error updating Dom entity:', domError);
-                    // Nepadaj ak Dom update zlyhá
                 }
             }
         }
@@ -394,7 +576,8 @@ PRAVIDLÁ:
             type: isImage ? 'image' : 'document',
             auto_category: result.odporucana_kategoria || null,
             has_summary: !!result.zhrnutie,
-            dom_updated: !!dokument.model_domu
+            dom_updated: !!dokument.model_domu,
+            has_podorys: !!(isImage && result.vizualna_analyza?.podorys_analyza?.je_podorys)
         });
 
     } catch (error) {

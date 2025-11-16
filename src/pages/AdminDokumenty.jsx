@@ -1806,6 +1806,86 @@ export default function AdminDokumenty() {
                           Vizuálna AI analýza
                         </h3>
 
+                        {viewingDocument.vizualna_analyza.typ_obsahu && (
+                          <Badge className="bg-purple-500 text-white px-4 py-2 text-sm">
+                            Typ: {viewingDocument.vizualna_analyza.typ_obsahu === 'podorys' ? 'Pôdorys' : 
+                                  viewingDocument.vizualna_analyza.typ_obsahu === 'exterier' ? 'Exteriér' :
+                                  viewingDocument.vizualna_analyza.typ_obsahu === 'interier' ? 'Interiér' : 'Iné'}
+                          </Badge>
+                        )}
+
+                        {viewingDocument.vizualna_analyza.podorys_analyza?.je_podorys && (
+                          <div className="space-y-4">
+                            <h4 className="font-semibold text-lg text-indigo-900 flex items-center gap-2">
+                              📐 Analýza pôdorysu
+                            </h4>
+
+                            {viewingDocument.vizualna_analyza.podorys_analyza.celkove_rozmery && (
+                              <div className="p-4 bg-indigo-50 rounded-xl border border-indigo-200">
+                                <p className="font-semibold text-indigo-900 mb-3">📏 Celkové rozmery domu</p>
+                                <div className="grid grid-cols-3 gap-3">
+                                  {viewingDocument.vizualna_analyza.podorys_analyza.celkove_rozmery.sirka && (
+                                    <div className="bg-white p-3 rounded-lg">
+                                      <p className="text-xs text-indigo-700">Šírka</p>
+                                      <p className="font-bold text-indigo-900">{viewingDocument.vizualna_analyza.podorys_analyza.celkove_rozmery.sirka}</p>
+                                    </div>
+                                  )}
+                                  {viewingDocument.vizualna_analyza.podorys_analyza.celkove_rozmery.dlzka && (
+                                    <div className="bg-white p-3 rounded-lg">
+                                      <p className="text-xs text-indigo-700">Dĺžka</p>
+                                      <p className="font-bold text-indigo-900">{viewingDocument.vizualna_analyza.podorys_analyza.celkove_rozmery.dlzka}</p>
+                                    </div>
+                                  )}
+                                  {viewingDocument.vizualna_analyza.podorys_analyza.celkove_rozmery.zastavana_plocha && (
+                                    <div className="bg-white p-3 rounded-lg">
+                                      <p className="text-xs text-indigo-700">Zastavaná plocha</p>
+                                      <p className="font-bold text-indigo-900">{viewingDocument.vizualna_analyza.podorys_analyza.celkove_rozmery.zastavana_plocha}</p>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+
+                            {viewingDocument.vizualna_analyza.podorys_analyza.uzitkova_plocha && (
+                              <div className="p-4 bg-green-50 rounded-xl border border-green-200">
+                                <p className="font-semibold text-green-900 mb-2">🏠 Úžitková plocha</p>
+                                <p className="text-2xl font-bold text-green-900">{viewingDocument.vizualna_analyza.podorys_analyza.uzitkova_plocha}</p>
+                              </div>
+                            )}
+
+                            {viewingDocument.vizualna_analyza.podorys_analyza.pocet_izieb && (
+                              <div className="p-4 bg-blue-50 rounded-xl border border-blue-200">
+                                <p className="font-semibold text-blue-900 mb-2">🛏️ Počet izieb</p>
+                                <p className="text-2xl font-bold text-blue-900">{viewingDocument.vizualna_analyza.podorys_analyza.pocet_izieb}</p>
+                              </div>
+                            )}
+
+                            {viewingDocument.vizualna_analyza.podorys_analyza.miestnosti && viewingDocument.vizualna_analyza.podorys_analyza.miestnosti.length > 0 && (
+                              <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
+                                <p className="font-semibold text-amber-900 mb-3">🚪 Miestnosti</p>
+                                <div className="space-y-2">
+                                  {viewingDocument.vizualna_analyza.podorys_analyza.miestnosti.map((m, i) => (
+                                    <div key={i} className="bg-white p-3 rounded-lg flex justify-between items-center">
+                                      <span className="font-medium text-amber-900">{m.nazov}</span>
+                                      <div className="text-right">
+                                        {m.rozmery && <p className="text-sm text-amber-700">{m.rozmery}</p>}
+                                        {m.plocha && <p className="text-xs font-semibold text-amber-900">{m.plocha}</p>}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {viewingDocument.vizualna_analyza.podorys_analyza.terasa_balkon && (
+                              <div className="p-4 bg-teal-50 rounded-xl border border-teal-200">
+                                <p className="font-semibold text-teal-900 mb-2">🌿 Terasa / Balkón</p>
+                                <p className="text-teal-800">{viewingDocument.vizualna_analyza.podorys_analyza.terasa_balkon}</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
                         {viewingDocument.vizualna_analyza.technicka_analyza && (
                           <div className="p-5 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100">
                             <h4 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
@@ -1830,6 +1910,56 @@ export default function AdminDokumenty() {
                                 </Badge>
                               ))}
                             </div>
+                          </div>
+                        )}
+
+                        {viewingDocument.vizualna_analyza.stresna_krytina && (
+                          <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            <p className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+                              🏚️ Strešná krytina
+                            </p>
+                            <Badge className="bg-slate-100 text-slate-800 border-slate-200 px-3 py-1.5">
+                              {viewingDocument.vizualna_analyza.stresna_krytina}
+                            </Badge>
+                          </div>
+                        )}
+
+                        {viewingDocument.vizualna_analyza.slnecna_expoziacia && (
+                          <div className="p-4 bg-yellow-50 rounded-xl border border-yellow-200">
+                            <p className="font-semibold text-yellow-900 mb-2 flex items-center gap-2">
+                              ☀️ Slnečná expozícia
+                            </p>
+                            <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200 px-3 py-1.5 text-sm">
+                              {viewingDocument.vizualna_analyza.slnecna_expoziacia}
+                            </Badge>
+                          </div>
+                        )}
+
+                        {viewingDocument.vizualna_analyza.teren_okolie && (
+                          <div className="p-4 bg-green-50 rounded-xl border border-green-200">
+                            <p className="font-semibold text-green-900 mb-3 flex items-center gap-2">
+                              🌍 Terén a okolie
+                            </p>
+                            {viewingDocument.vizualna_analyza.teren_okolie.typ_terenu && (
+                              <div className="mb-2">
+                                <p className="text-xs text-green-700 mb-1">Typ terénu:</p>
+                                <Badge className="bg-green-100 text-green-800 border-green-200 px-3 py-1">
+                                  {viewingDocument.vizualna_analyza.teren_okolie.typ_terenu}
+                                </Badge>
+                              </div>
+                            )}
+                            {viewingDocument.vizualna_analyza.teren_okolie.okolie && viewingDocument.vizualna_analyza.teren_okolie.okolie.length > 0 && (
+                              <div>
+                                <p className="text-xs text-green-700 mb-2">Okolie:</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {viewingDocument.vizualna_analyza.teren_okolie.okolie.map((item, i) => (
+                                    <Badge key={i} className="bg-green-100 text-green-800 border-green-200 px-3 py-1">
+                                      {item}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         )}
 
@@ -1886,6 +2016,24 @@ export default function AdminDokumenty() {
                             <Badge className="bg-indigo-100 text-indigo-800 border-indigo-200 px-3 py-1.5 text-sm">
                               {viewingDocument.vizualna_analyza.styl}
                             </Badge>
+                          </div>
+                        )}
+
+                        {viewingDocument.vizualna_analyza.vizualne_odporucania && viewingDocument.vizualna_analyza.vizualne_odporucania.length > 0 && (
+                          <div className="p-5 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl border border-cyan-200">
+                            <h4 className="font-semibold text-cyan-900 mb-3 flex items-center gap-2">
+                              💡 AI odporúčania na vylepšenie
+                            </h4>
+                            <ul className="space-y-2">
+                              {viewingDocument.vizualna_analyza.vizualne_odporucania.map((odporucanie, i) => (
+                                <li key={i} className="flex items-start gap-3 bg-white p-3 rounded-lg">
+                                  <span className="flex-shrink-0 w-6 h-6 bg-cyan-100 text-cyan-700 rounded-full flex items-center justify-center text-sm font-bold">
+                                    {i + 1}
+                                  </span>
+                                  <span className="text-cyan-900 text-sm leading-relaxed">{odporucanie}</span>
+                                </li>
+                              ))}
+                            </ul>
                           </div>
                         )}
                       </div>
