@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -394,12 +395,18 @@ export default function Katalog() {
                             )}
                             <div className="flex items-center gap-2 text-gray-600">
                               <Square className="w-4 h-4" />
-                              <span title="Zastavaná plocha"><span className="font-semibold text-primary">{dom.zastavana_plocha}</span> m²</span>
+                              <div className="flex flex-col">
+                                <span className="font-semibold text-primary">{dom.zastavana_plocha} m²</span>
+                                <span className="text-xs text-gray-500">Zastavaná pl.</span>
+                              </div>
                             </div>
                             {dom.uzitkova_plocha && (
                               <div className="flex items-center gap-2 text-gray-600">
                                 <LayoutGrid className="w-4 h-4" />
-                                <span title="Úžitková plocha"><span className="font-semibold text-primary">{dom.uzitkova_plocha}</span> m²</span>
+                                <div className="flex flex-col">
+                                  <span className="font-semibold text-primary">{dom.uzitkova_plocha} m²</span>
+                                  <span className="text-xs text-gray-500">Úžitková pl.</span>
+                                </div>
                               </div>
                             )}
                           </div>

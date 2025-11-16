@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -462,7 +463,7 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Čo obsahuje cena */}
+            {/* Možnosti využitia pre ostatných výrobcov */}
             {!isJAKModules && (
               <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
                 <h3 className="text-lg font-bold text-primary mb-4">✔ Možnosti využitia:</h3>
@@ -480,6 +481,71 @@ export default function DetailDomu() {
                     <span>Rekreačná budova (chata/záhradný domček)</span>
                   </li>
                 </ul>
+              </Card>
+            )}
+
+            {/* Čo obsahuje cena pre JAK Modules */}
+            {isJAKModules && (
+              <Card className="p-6 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+                <h3 className="text-lg font-bold text-primary mb-4">💰 Čo obsahuje cena?</h3>
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">✔ Konštrukcia:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Certifikované borovicové lepené drevo GL24h</li>
+                      <li>Oceľové profily 100x60x5mm a 60x40x4mm</li>
+                      <li>Izolačná schopnosť U ≤ 0,16 W/(m²·K)</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">✔ Izolácia:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>PUR pena 12 cm (Uw=0,15W/m²K)</li>
+                      <li>Minerálna vlna najvyššej kvality</li>
+                      <li>Ekologické materiály Steico®</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">✔ Vykurovanie a klimatizácia:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Klimatizácia ROTENSO s tepelným čerpadlom</li>
+                      <li>Funkcia ohrevu do -25°C</li>
+                      <li>Infračervené ohrievače</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">✔ Okná a dvere:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>PVC okná s 6-komorovou konštrukciou</li>
+                      <li>Moderné dvere v antracitovej farbe</li>
+                      <li>Vynikajúca tepelná izolácia</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">✔ Vybavenie:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Kompletná kúpeľňa s kvalitným vybavením</li>
+                      <li>Kuchynská linka na mieru</li>
+                      <li>Vinylové panely Kronostep SPC</li>
+                      <li>Komplexná elektrická inštalácia (3-fázová)</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">✔ Fasáda a strecha:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Antracitový alebo biely plech na drážku</li>
+                      <li>Možnosť výberu typu fasády</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">✔ Ďalšie:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Kompletná dokumentácia na ohlásenie</li>
+                      <li>Rýchla montáž (2 dni)</li>
+                      <li>Produkcia 60 dní</li>
+                    </ul>
+                  </div>
+                </div>
               </Card>
             )}
 
