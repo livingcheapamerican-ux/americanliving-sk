@@ -64,7 +64,7 @@ export default function AdminDokumenty() {
   const [uploadResults, setUploadResults] = useState(null);
   const [currentFileName, setCurrentFileName] = useState("");
   const [fileStatuses, setFileStatuses] = useState({});
-  const [fileProgress, setFileProgress] = useState({}); // Pridané pre individual file progress
+  const [fileProgress, setFileProgress] = useState({});
   const [analyzingAll, setAnalyzingAll] = useState(false);
   const [analysisProgress, setAnalysisProgress] = useState({ current: 0, total: 0 });
   const [formData, setFormData] = useState({
@@ -75,10 +75,12 @@ export default function AdminDokumenty() {
     tags: []
   });
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [tagInput, setTagInput("");
+  const [tagInput, setTagInput] = useState("");
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
   const [uploadedBytes, setUploadedBytes] = useState(0);
   const [totalBytes, setTotalBytes] = useState(0);
+  const [comparingDocs, setComparingDocs] = useState([]);
+  const [compareResult, setCompareResult] = useState(null);
 
   const folderInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -162,9 +164,6 @@ export default function AdminDokumenty() {
       queryClient.invalidateQueries({ queryKey: ['dokumenty'] });
     }
   });
-
-  const [comparingDocs, setComparingDocs] = useState([]);
-  const [compareResult, setCompareResult] = useState(null);
 
   const handleCompareDocuments = async () => {
     if (comparingDocs.length !== 2) {
@@ -2025,7 +2024,7 @@ export default function AdminDokumenty() {
                     {viewingDocument.vizualna_analyza && (
                       <div className="space-y-4">
                         <h3 className="font-semibold text-lg mb-4 text-gray-800 flex items-center gap-2">
-                          <Eye className="w-5 h-5 text-purple-600" />
+                          <Eye className="w-5 h-5" />
                           Vizuálna AI analýza
                         </h3>
 
