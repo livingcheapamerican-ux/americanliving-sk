@@ -16,7 +16,7 @@ import InteraktivnyKonfigurator from './pages/InteraktivnyKonfigurator';
 import GaleriaRealizacii from './pages/GaleriaRealizacii';
 import AdminSpravaDomov from './pages/AdminSpravaDomov';
 import AdminAnalyzaDatabazy from './pages/AdminAnalyzaDatabazy';
-import Layout from './Layout.jsx';
+import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
@@ -43,5 +43,5 @@ export const PAGES = {
 export const pagesConfig = {
     mainPage: "Domov",
     Pages: PAGES,
-    Layout: Layout,
+    Layout: __Layout,
 };

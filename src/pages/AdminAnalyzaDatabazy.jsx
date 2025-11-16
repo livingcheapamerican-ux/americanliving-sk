@@ -38,36 +38,67 @@ export default function AdminAnalyzaDatabazy() {
         throw new Error('Neplatná URL obrázka');
       }
 
-      // Použiť voľný text bez JSON schémy - spoľahlivejšie
-      const analyzaText = await base44.integrations.Core.InvokeLLM({
-        prompt: `Analyzuj tento obrázok modulárneho domu a popíš čo vidíš:
+      // Získaj najprv textový popis
+      const popis = await base44.integrations.Core.InvokeLLM({
+        prompt: `Analyzuj tento obrázok modulárneho domu a vytvor krátky ale informatívny popis:
 
 Súbor: ${dok.nazov}
 Výrobca: ${dok.vyrobca || 'neznámy'}
 Model: ${dok.model_domu || 'neznámy'}
 
-Popíš:
-1. Typ obsahu (exteriér/interiér/pôdorys/kombinacia)
-2. Materiály fasády a farby
-3. Typ a farba okien
-4. Typ a farba strechy
-5. Celkový stav a kvalita
-6. Správny výrobca (potvrď alebo oprav)
-7. Správny model domu (potvrď alebo oprav)
-
-Buď konkrétny a detailný.`,
+Vytvor 2-3 vetový popis zahŕňajúci typ obsahu, materiály, farby a hlavné charakteristiky.`,
         file_urls: [dok.subor_url]
       });
 
-      // Uložiť analýzu ako text
+      // Následne získaj štruktúrované dáta
+      const strukturovaneData = await base44.integrations.Core.InvokeLLM({
+        prompt: `Analyzuj tento obrázok modulárneho domu a extrahuj štruktúrované informácie:
+
+Vráť JSON s týmito poľami (všetky hodnoty sú nepovinné, ak niečo nevidíš, vynechaj to):
+- typ_obsahu: jeden z "exterier", "interier", "podorys", "detail"
+- fasada_materialy: pole textov, napr. ["drevo", "plech", "omietka"]
+- fasada_farby: pole textov, napr. ["tmavohnedá", "biela", "sivá"]
+- okna_typ: text, napr. "plastové", "drevené", "hliníkové"
+- okna_farba: text
+- dvere_typ: text
+- dvere_farba: text
+- strecha_typ: text, napr. "plechová", "škridlová", "plochá"
+- strecha_farba: text
+- stav_fasady: jeden z "výborný", "dobrý", "potrebuje údržbu"
+- spravny_vyrobca: text (potvrď alebo oprav)
+- spravny_model: text (potvrď alebo oprav)
+- specificka_kategoria: text, napr. "celkový pohľad", "detail fasády", "rohový pohľad"`,
+        file_urls: [dok.subor_url],
+        response_json_schema: {
+          type: "object",
+          properties: {
+            typ_obsahu: { type: "string" },
+            fasada_materialy: { type: "array", items: { type: "string" } },
+            fasada_farby: { type: "array", items: { type: "string" } },
+            okna_typ: { type: "string" },
+            okna_farba: { type: "string" },
+            dvere_typ: { type: "string" },
+            dvere_farba: { type: "string" },
+            strecha_typ: { type: "string" },
+            strecha_farba: { type: "string" },
+            stav_fasady: { type: "string" },
+            spravny_vyrobca: { type: "string" },
+            spravny_model: { type: "string" },
+            specificka_kategoria: { type: "string" }
+          }
+        }
+      });
+
+      // Aktualizuj dokument s obomi informáciami
       await base44.entities.Dokument.update(dok.id, {
-        ai_generovany_popis: analyzaText,
+        ai_generovany_popis: popis,
+        vizualna_analyza: strukturovaneData,
         analyzovaný: true,
         podrobna_analyza_datum: new Date().toISOString()
       });
 
-      addLog(`✅ Hotovo: ${dok.nazov}`, 'success');
-      return { success: true, dok, analyza: analyzaText };
+      addLog(`✅ Hotovo: ${dok.nazov} (${strukturovaneData.typ_obsahu || 'N/A'})`, 'success');
+      return { success: true, dok, analyza: strukturovaneData, popis };
 
     } catch (error) {
       const errorMsg = error.message || error.toString();
@@ -146,7 +177,7 @@ Buď konkrétny a detailný.`,
           await refetch();
         }
 
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 1500));
         
       } catch (error) {
         addLog(`💥 Kritická chyba pri ${dok.nazov}: ${error.message}`, 'error');
@@ -213,7 +244,7 @@ Buď konkrétny a detailný.`,
           <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-blue-600 bg-clip-text text-transparent mb-2">
             🎯 Analýza celej databázy
           </h1>
-          <p className="text-gray-600">Postupná analýza všetkých dokumentov</p>
+          <p className="text-gray-600">Postupná analýza so štruktúrovanou extrakciou dát</p>
         </div>
 
         {/* Stats Cards */}
@@ -285,9 +316,9 @@ Buď konkrétny a detailný.`,
         <Card className="p-6 mb-8 border-2 border-primary/20">
           <div className="flex flex-col gap-4">
             <div>
-              <h2 className="text-xl font-bold mb-2">🚀 Postupná AI analýza</h2>
+              <h2 className="text-xl font-bold mb-2">🚀 Štruktúrovaná AI analýza</h2>
               <p className="text-sm text-gray-600 mb-2">
-                Analýza prebieha postupne (1 fotka po druhej) • Ukladá sa ako textový popis
+                Extrahuje materiály, farby, typy okien, striech a ďalšie údaje do databázy • Umožňuje presné filtrovanie
               </p>
               {neanalyzovaneCount > 0 && (
                 <p className="text-sm font-semibold text-orange-600">
