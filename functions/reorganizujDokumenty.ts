@@ -11,39 +11,56 @@ Deno.serve(async (req) => {
 
     // Načítaj všetky dokumenty s vizuálnou analýzou
     const dokumenty = await base44.asServiceRole.entities.Dokument.filter({
-      vizualna_analyza: { $exists: true }
+      vizualna_analyza: { $exists: true },
+      podrobna_analyza_datum: { $exists: true }
     });
 
     const results = [];
     let presunute = 0;
     let chyby = 0;
+    let nezmenene = 0;
 
     for (const dok of dokumenty) {
       try {
         const analyza = dok.vizualna_analyza;
         
-        if (!analyza.odporucany_priecinok || !analyza.spravny_vyrobca || !analyza.spravny_model_domu) {
+        if (!analyza.spravny_vyrobca || !analyza.spravny_model) {
           results.push({
             id: dok.id,
             nazov: dok.nazov,
             status: 'skipped',
-            reason: 'Chýbajúce údaje z analýzy'
+            reason: 'Chýbajúce údaje z analýzy (výrobca alebo model)'
           });
           continue;
         }
 
-        // Nová cesta priečinka: Výrobca/Model
-        const novaCesta = `${analyza.spravny_vyrobca}/${analyza.spravny_model_domu}`;
+        // Vytvor typ priečinka podľa typu obsahu
+        let typPriecinok = '';
+        if (analyza.typ_obsahu === 'exterier') {
+          typPriecinok = '/exterier';
+        } else if (analyza.typ_obsahu === 'interier') {
+          typPriecinok = '/interier';
+        } else if (analyza.typ_obsahu === 'podorys') {
+          typPriecinok = '/podorysy';
+        } else if (analyza.typ_obsahu === 'detail') {
+          typPriecinok = '/detaily';
+        }
+
+        // Nová cesta priečinka: Výrobca/Model/Typ
+        const novaCesta = `${analyza.spravny_vyrobca}/${analyza.spravny_model}${typPriecinok}`;
         const staraCesta = dok.cesta_priecinku;
 
         // Ak je cesta už správna, preskočíme
-        if (staraCesta === novaCesta && dok.vyrobca === analyza.spravny_vyrobca && dok.model_domu === analyza.spravny_model_domu) {
+        if (staraCesta === novaCesta && 
+            dok.vyrobca === analyza.spravny_vyrobca && 
+            dok.model_domu === analyza.spravny_model) {
           results.push({
             id: dok.id,
             nazov: dok.nazov,
             status: 'unchanged',
             cesta: novaCesta
           });
+          nezmenene++;
           continue;
         }
 
@@ -51,7 +68,8 @@ Deno.serve(async (req) => {
         await base44.asServiceRole.entities.Dokument.update(dok.id, {
           cesta_priecinku: novaCesta,
           vyrobca: analyza.spravny_vyrobca,
-          model_domu: analyza.spravny_model_domu,
+          model_domu: analyza.spravny_model,
+          podpriecinok: typPriecinok ? typPriecinok.substring(1) : '',
           reorganizovany: true,
           reorganizovany_datum: new Date().toISOString()
         });
@@ -65,7 +83,8 @@ Deno.serve(async (req) => {
           stary_vyrobca: dok.vyrobca,
           novy_vyrobca: analyza.spravny_vyrobca,
           stary_model: dok.model_domu,
-          novy_model: analyza.spravny_model_domu
+          novy_model: analyza.spravny_model,
+          typ_obsahu: analyza.typ_obsahu
         });
 
         presunute++;
@@ -86,7 +105,7 @@ Deno.serve(async (req) => {
       total: dokumenty.length,
       presunute,
       chyby,
-      nezmenene: results.filter(r => r.status === 'unchanged').length,
+      nezmenene,
       preskocene: results.filter(r => r.status === 'skipped').length,
       results
     });

@@ -1,19 +1,24 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Loader2, CheckCircle, XCircle, AlertTriangle, Image, FileText, RefreshCw, Pause, Play, SkipForward } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, AlertTriangle, Image, FileText, RefreshCw, Pause, Play, SkipForward, FolderSync } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function AdminAnalyzaDatabazy() {
   const [analyzing, setAnalyzing] = useState(false);
+  const [reorganizing, setReorganizing] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0, failed: 0, skipped: 0 });
   const [currentDoc, setCurrentDoc] = useState(null);
   const [logs, setLogs] = useState([]);
   const [results, setResults] = useState(null);
+  const [autoReorganize, setAutoReorganize] = useState(true);
   
   const pausedRef = useRef(false);
   const stopRef = useRef(false);
+
+  const queryClient = useQueryClient();
 
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['current-user'],
@@ -23,6 +28,13 @@ export default function AdminAnalyzaDatabazy() {
   const { data: dokumenty = [], isLoading, refetch } = useQuery({
     queryKey: ['dokumenty-all'],
     queryFn: () => base44.entities.Dokument.filter({ typ: "fotky" })
+  });
+
+  const reorganizeMutation = useMutation({
+    mutationFn: () => base44.functions.invoke('reorganizujDokumenty'),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
+    }
   });
 
   const addLog = (message, type = 'info') => {
@@ -38,7 +50,6 @@ export default function AdminAnalyzaDatabazy() {
         throw new Error('Neplatná URL obrázka');
       }
 
-      // Získaj najprv textový popis
       const popis = await base44.integrations.Core.InvokeLLM({
         prompt: `Analyzuj tento obrázok modulárneho domu a vytvor krátky ale informatívny popis:
 
@@ -50,7 +61,6 @@ Vytvor 2-3 vetový popis zahŕňajúci typ obsahu, materiály, farby a hlavné c
         file_urls: [dok.subor_url]
       });
 
-      // Následne získaj štruktúrované dáta
       const strukturovaneData = await base44.integrations.Core.InvokeLLM({
         prompt: `Analyzuj tento obrázok modulárneho domu a extrahuj štruktúrované informácie:
 
@@ -89,7 +99,6 @@ Vráť JSON s týmito poľami (všetky hodnoty sú nepovinné, ak niečo nevidí
         }
       });
 
-      // Aktualizuj dokument s obomi informáciami
       await base44.entities.Dokument.update(dok.id, {
         ai_generovany_popis: popis,
         vizualna_analyza: strukturovaneData,
@@ -116,6 +125,33 @@ Vráť JSON s týmito poľami (všetky hodnoty sú nepovinné, ak niečo nevidí
       
       addLog(`❌ Chyba: ${dok.nazov} - ${errorMsg}`, 'error');
       return { success: false, skipped: false, dok, error: errorMsg };
+    }
+  };
+
+  const handleReorganizacia = async () => {
+    if (!confirm('Reorganizovať všetky analyzované súbory do priečinkov podľa AI analýzy?')) {
+      return;
+    }
+
+    setReorganizing(true);
+    addLog('🔄 Spúšťam reorganizáciu...', 'info');
+
+    try {
+      const response = await reorganizeMutation.mutateAsync();
+      
+      if (response.data.success) {
+        addLog(`✅ Reorganizácia dokončená! Presunutých: ${response.data.presunute}, Nezmenených: ${response.data.nezmenene}, Chýb: ${response.data.chyby}`, 'success');
+        setResults({
+          ...results,
+          reorganizacia: response.data
+        });
+      } else {
+        addLog(`❌ Reorganizácia zlyhala: ${response.data.error}`, 'error');
+      }
+    } catch (error) {
+      addLog(`❌ Chyba reorganizácie: ${error.message}`, 'error');
+    } finally {
+      setReorganizing(false);
     }
   };
 
@@ -199,6 +235,13 @@ Vráť JSON s týmito poľami (všetky hodnoty sú nepovinné, ak niečo nevidí
     setAnalyzing(false);
     setCurrentDoc(null);
     addLog(`🎉 Analýza dokončená! Úspešných: ${processed}, Preskočených: ${skipped}, Chýb: ${failed}`, 'success');
+
+    // Automatická reorganizácia po analýze
+    if (autoReorganize && processed > 0) {
+      addLog('🔄 Spúšťam automatickú reorganizáciu...', 'info');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await handleReorganizacia();
+    }
   };
 
   const handlePause = () => {
@@ -214,6 +257,7 @@ Vráť JSON s týmito poľami (všetky hodnoty sú nepovinné, ak niečo nevidí
   const analyzovaneCount = dokumenty.filter(d => d.ai_generovany_popis).length;
   const podrobneAnalyzovaneCount = dokumenty.filter(d => d.podrobna_analyza_datum).length;
   const neanalyzovaneCount = dokumenty.filter(d => !d.podrobna_analyza_datum).length;
+  const reorganizovaneCount = dokumenty.filter(d => d.reorganizovany).length;
 
   if (userLoading) {
     return (
@@ -244,11 +288,11 @@ Vráť JSON s týmito poľami (všetky hodnoty sú nepovinné, ak niečo nevidí
           <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-blue-600 bg-clip-text text-transparent mb-2">
             🎯 Analýza celej databázy
           </h1>
-          <p className="text-gray-600">Postupná analýza so štruktúrovanou extrakciou dát</p>
+          <p className="text-gray-600">Postupná analýza so štruktúrovanou extrakciou dát a automatickou organizáciou</p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-8">
           <Card className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
@@ -297,6 +341,18 @@ Vráť JSON s týmito poľami (všetky hodnoty sú nepovinné, ak niečo nevidí
             </div>
           </Card>
 
+          <Card className="p-6 bg-gradient-to-br from-cyan-50 to-blue-50 border-cyan-200">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-cyan-500 rounded-xl flex items-center justify-center">
+                <FolderSync className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Reorganizované</p>
+                <p className="text-2xl font-bold text-cyan-900">{reorganizovaneCount}</p>
+              </div>
+            </div>
+          </Card>
+
           <Card className="p-6 bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center">
@@ -318,13 +374,25 @@ Vráť JSON s týmito poľami (všetky hodnoty sú nepovinné, ak niečo nevidí
             <div>
               <h2 className="text-xl font-bold mb-2">🚀 Štruktúrovaná AI analýza</h2>
               <p className="text-sm text-gray-600 mb-2">
-                Extrahuje materiály, farby, typy okien, striech a ďalšie údaje do databázy • Umožňuje presné filtrovanie
+                Extrahuje materiály, farby, typy okien, striech a automaticky organizuje do priečinkov
               </p>
               {neanalyzovaneCount > 0 && (
                 <p className="text-sm font-semibold text-orange-600">
                   ⚠️ Zostáva {neanalyzovaneCount} neanalyzovaných fotiek
                 </p>
               )}
+            </div>
+
+            {/* Auto-reorganize checkbox */}
+            <div className="flex items-center gap-2 p-3 bg-cyan-50 rounded-lg border border-cyan-200">
+              <Checkbox 
+                id="auto-reorganize" 
+                checked={autoReorganize}
+                onCheckedChange={setAutoReorganize}
+              />
+              <label htmlFor="auto-reorganize" className="text-sm font-medium cursor-pointer">
+                Automaticky reorganizovať súbory po analýze
+              </label>
             </div>
             
             {analyzing && (
@@ -394,7 +462,26 @@ Vráť JSON s týmito poľami (všetky hodnoty sú nepovinné, ak niečo nevidí
             )}
             
             {!analyzing && (
-              <div className="flex justify-end">
+              <div className="flex gap-3 justify-end">
+                <Button
+                  onClick={handleReorganizacia}
+                  disabled={reorganizing || podrobneAnalyzovaneCount === 0}
+                  size="lg"
+                  variant="outline"
+                  className="border-cyan-500 text-cyan-700 hover:bg-cyan-50"
+                >
+                  {reorganizing ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Reorganizujem...
+                    </>
+                  ) : (
+                    <>
+                      <FolderSync className="w-5 h-5 mr-2" />
+                      Reorganizovať súbory
+                    </>
+                  )}
+                </Button>
                 <Button
                   onClick={handleAnalyzaVsetkych}
                   disabled={neanalyzovaneCount === 0}
@@ -438,24 +525,53 @@ Vráť JSON s týmito poľami (všetky hodnoty sú nepovinné, ak niečo nevidí
         {/* Výsledky analýzy */}
         {results && (
           <Card className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
-            <h3 className="text-xl font-bold mb-4">📊 Výsledky analýzy</h3>
-            <div className="grid grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-white rounded-lg">
-                <p className="text-sm text-gray-600">Celkom</p>
-                <p className="text-3xl font-bold text-blue-600">{results.total}</p>
+            <h3 className="text-xl font-bold mb-4">📊 Výsledky</h3>
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm font-semibold text-gray-600 mb-2">Analýza:</p>
+                <div className="grid grid-cols-4 gap-4">
+                  <div className="text-center p-4 bg-white rounded-lg">
+                    <p className="text-sm text-gray-600">Celkom</p>
+                    <p className="text-3xl font-bold text-blue-600">{results.total}</p>
+                  </div>
+                  <div className="text-center p-4 bg-white rounded-lg">
+                    <p className="text-sm text-gray-600">Úspešné</p>
+                    <p className="text-3xl font-bold text-green-600">{results.processed}</p>
+                  </div>
+                  <div className="text-center p-4 bg-white rounded-lg">
+                    <p className="text-sm text-gray-600">Preskočené</p>
+                    <p className="text-3xl font-bold text-yellow-600">{results.skipped}</p>
+                  </div>
+                  <div className="text-center p-4 bg-white rounded-lg">
+                    <p className="text-sm text-gray-600">Chyby</p>
+                    <p className="text-3xl font-bold text-red-600">{results.failed}</p>
+                  </div>
+                </div>
               </div>
-              <div className="text-center p-4 bg-white rounded-lg">
-                <p className="text-sm text-gray-600">Úspešné</p>
-                <p className="text-3xl font-bold text-green-600">{results.processed}</p>
-              </div>
-              <div className="text-center p-4 bg-white rounded-lg">
-                <p className="text-sm text-gray-600">Preskočené</p>
-                <p className="text-3xl font-bold text-yellow-600">{results.skipped}</p>
-              </div>
-              <div className="text-center p-4 bg-white rounded-lg">
-                <p className="text-sm text-gray-600">Chyby</p>
-                <p className="text-3xl font-bold text-red-600">{results.failed}</p>
-              </div>
+
+              {results.reorganizacia && (
+                <div>
+                  <p className="text-sm font-semibold text-gray-600 mb-2">Reorganizácia:</p>
+                  <div className="grid grid-cols-4 gap-4">
+                    <div className="text-center p-4 bg-white rounded-lg">
+                      <p className="text-sm text-gray-600">Celkom</p>
+                      <p className="text-3xl font-bold text-blue-600">{results.reorganizacia.total}</p>
+                    </div>
+                    <div className="text-center p-4 bg-white rounded-lg">
+                      <p className="text-sm text-gray-600">Presunuté</p>
+                      <p className="text-3xl font-bold text-cyan-600">{results.reorganizacia.presunute}</p>
+                    </div>
+                    <div className="text-center p-4 bg-white rounded-lg">
+                      <p className="text-sm text-gray-600">Nezmenené</p>
+                      <p className="text-3xl font-bold text-gray-600">{results.reorganizacia.nezmenene}</p>
+                    </div>
+                    <div className="text-center p-4 bg-white rounded-lg">
+                      <p className="text-sm text-gray-600">Chyby</p>
+                      <p className="text-3xl font-bold text-red-600">{results.reorganizacia.chyby}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </Card>
         )}
