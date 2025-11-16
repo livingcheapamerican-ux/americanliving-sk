@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ export default function AdminAnalyzaDatabazy() {
   const [filterModel, setFilterModel] = useState("all");
   const [filterTyp, setFilterTyp] = useState("all");
   const [activeTab, setActiveTab] = useState("dashboard");
+  const progressIntervalRef = useRef(null);
 
   const queryClient = useQueryClient();
 
@@ -35,6 +36,29 @@ export default function AdminAnalyzaDatabazy() {
     queryKey: ['domy-all'],
     queryFn: () => base44.entities.Dom.list()
   });
+
+  // Real-time progress tracking
+  useEffect(() => {
+    if (analyzing) {
+      progressIntervalRef.current = setInterval(async () => {
+        const analyzovaneDokumenty = await base44.entities.Dokument.filter({ 
+          typ: "fotky",
+          analyzovaný: true
+        });
+        setProgress(prev => ({ ...prev, current: analyzovaneDokumenty.length }));
+      }, 2000);
+    } else {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+      }
+    }
+
+    return () => {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+      }
+    };
+  }, [analyzing]);
 
   const handleAnalyzaVsetkych = async () => {
     if (!confirm(`Chcete spustiť podrobnú AI analýzu všetkých ${dokumenty.length} fotiek? Toto môže trvať dlhšie.`)) {
