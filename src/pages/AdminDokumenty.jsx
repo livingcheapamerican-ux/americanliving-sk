@@ -987,7 +987,7 @@ export default function AdminDokumenty() {
               <Button 
                 onClick={handleAnalyzeAll}
                 disabled={analyzingAll || dokumenty.filter(d => !d.analyzovaný).length === 0}
-                className="h-12 bg-blue-900 hover:bg-blue-800 text-white shadow-md transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                className="h-12 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-md transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
               >
                 {analyzingAll ? (
                   <>
@@ -1015,7 +1015,7 @@ export default function AdminDokumenty() {
                     }
                   }
                 }} 
-                className="h-12 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg transition-all hover:scale-105 text-white"
+                className="h-12 bg-blue-600 hover:bg-blue-700 shadow-lg transition-all hover:scale-105 text-white"
               >
                 <Upload className="w-4 h-4 mr-2" />
                 Nahrať dokumenty
@@ -1436,7 +1436,7 @@ export default function AdminDokumenty() {
                             </Badge>
                           )}
                           {dok.analyzovaný && (
-                            <Badge className="bg-purple-500/10 text-purple-700 border-purple-200">
+                            <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0">
                               <Brain className="w-3 h-3 mr-1" />AI
                             </Badge>
                           )}
@@ -1475,10 +1475,10 @@ export default function AdminDokumenty() {
                   <div className="flex items-start justify-between mb-6">
                     <div>
                       <div className="flex items-center gap-3 mb-2">
-                        <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                          <Brain className="w-6 h-6 text-purple-600" />
+                        <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
+                          <Brain className="w-6 h-6 text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900">AI Analýza</h2>
+                        <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">AI Analýza</h2>
                       </div>
                       <p className="text-sm text-gray-600">Automaticky extrahované informácie</p>
                     </div>
