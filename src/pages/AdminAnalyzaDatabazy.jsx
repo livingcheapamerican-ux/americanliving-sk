@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, CheckCircle, XCircle, AlertTriangle, Home, Image, FileText, Filter, Building2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Loader2, CheckCircle, XCircle, AlertTriangle, Home, Image, FileText, Filter, Building2, BarChart3, PieChart, FolderTree } from "lucide-react";
 import { motion } from "framer-motion";
+import { PieChart as RechartsPie, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
+const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'];
 
 export default function AdminAnalyzaDatabazy() {
   const [analyzing, setAnalyzing] = useState(false);
@@ -14,6 +18,7 @@ export default function AdminAnalyzaDatabazy() {
   const [filterVyrobca, setFilterVyrobca] = useState("all");
   const [filterModel, setFilterModel] = useState("all");
   const [filterTyp, setFilterTyp] = useState("all");
+  const [activeTab, setActiveTab] = useState("dashboard");
 
   const queryClient = useQueryClient();
 
@@ -31,6 +36,100 @@ export default function AdminAnalyzaDatabazy() {
     queryKey: ['domy-all'],
     queryFn: () => base44.entities.Dom.list()
   });
+
+  // Štatistiky materiálov
+  const materialStats = useMemo(() => {
+    const stats = {};
+    dokumenty.forEach(dok => {
+      if (dok.vizualna_analyza?.fasada_materialy) {
+        dok.vizualna_analyza.fasada_materialy.forEach(material => {
+          stats[material] = (stats[material] || 0) + 1;
+        });
+      }
+    });
+    return Object.entries(stats)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value);
+  }, [dokumenty]);
+
+  // Štatistiky farieb
+  const colorStats = useMemo(() => {
+    const stats = {};
+    dokumenty.forEach(dok => {
+      if (dok.vizualna_analyza?.fasada_farby) {
+        dok.vizualna_analyza.fasada_farby.forEach(farba => {
+          stats[farba] = (stats[farba] || 0) + 1;
+        });
+      }
+    });
+    return Object.entries(stats)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 10);
+  }, [dokumenty]);
+
+  // Štatistiky typov obsahu
+  const typObsahuStats = useMemo(() => {
+    const stats = { exterier: 0, interier: 0, podorys: 0, kombinacia: 0, neanalyzovane: 0 };
+    dokumenty.forEach(dok => {
+      const typ = dok.vizualna_analyza?.typ_obsahu;
+      if (typ) {
+        stats[typ] = (stats[typ] || 0) + 1;
+      } else {
+        stats.neanalyzovane += 1;
+      }
+    });
+    return Object.entries(stats).map(([name, value]) => ({ name, value }));
+  }, [dokumenty]);
+
+  // Materiály podľa výrobcov
+  const materialyPodlaVyrobcov = useMemo(() => {
+    const stats = {};
+    dokumenty.forEach(dok => {
+      const vyrobca = dok.vyrobca || 'Neznámy';
+      if (!stats[vyrobca]) stats[vyrobca] = {};
+      
+      if (dok.vizualna_analyza?.fasada_materialy) {
+        dok.vizualna_analyza.fasada_materialy.forEach(material => {
+          stats[vyrobca][material] = (stats[vyrobca][material] || 0) + 1;
+        });
+      }
+    });
+
+    // Transformuj na formát pre graf
+    const result = [];
+    const allMaterials = new Set();
+    Object.values(stats).forEach(vyrobcaStats => {
+      Object.keys(vyrobcaStats).forEach(mat => allMaterials.add(mat));
+    });
+
+    Object.entries(stats).forEach(([vyrobca, materials]) => {
+      const entry = { vyrobca };
+      Array.from(allMaterials).forEach(mat => {
+        entry[mat] = materials[mat] || 0;
+      });
+      result.push(entry);
+    });
+
+    return { data: result, materials: Array.from(allMaterials) };
+  }, [dokumenty]);
+
+  // Stromová štruktúra priečinkov
+  const folderStructure = useMemo(() => {
+    const structure = {};
+    dokumenty.forEach(dok => {
+      const vyrobca = dok.vyrobca || 'Bez výrobcu';
+      const model = dok.model_domu || 'Bez modelu';
+      const podpriecinok = dok.podpriecinok || 'Hlavný priečinok';
+      
+      if (!structure[vyrobca]) structure[vyrobca] = {};
+      if (!structure[vyrobca][model]) structure[vyrobca][model] = {};
+      if (!structure[vyrobca][model][podpriecinok]) structure[vyrobca][model][podpriecinok] = [];
+      
+      structure[vyrobca][model][podpriecinok].push(dok);
+    });
+    return structure;
+  }, [dokumenty]);
 
   const handleAnalyzaVsetkych = async () => {
     if (!confirm(`Chcete spustiť podrobnú AI analýzu všetkých ${dokumenty.length} fotiek? Toto môže trvať dlhšie.`)) {
@@ -52,37 +151,15 @@ export default function AdminAnalyzaDatabazy() {
     }
   };
 
-  // Zoskupenie dokumentov podľa výrobcu a modelu
-  const dokumentyPodlaVyrobcu = dokumenty.reduce((acc, dok) => {
-    const vyrobca = dok.vyrobca || 'Bez výrobcu';
-    if (!acc[vyrobca]) acc[vyrobca] = {};
-    
-    const model = dok.model_domu || 'Bez modelu';
-    if (!acc[vyrobca][model]) acc[vyrobca][model] = [];
-    acc[vyrobca][model].push(dok);
-    return acc;
-  }, {});
-
   const uniqueVyrobcovia = [...new Set(dokumenty.map(d => d.vyrobca).filter(Boolean))];
   const uniqueModels = [...new Set(dokumenty.map(d => d.model_domu).filter(Boolean))];
 
-  // Filtrovanie
-  const filteredDokumenty = dokumenty.filter(dok => {
-    const vyrobcaMatch = filterVyrobca === "all" || dok.vyrobca === filterVyrobca;
-    const modelMatch = filterModel === "all" || dok.model_domu === filterModel;
-    const typMatch = filterTyp === "all" || 
-      (filterTyp === "exterier" && dok.vizualna_analyza?.typ_obsahu === "exterier") ||
-      (filterTyp === "interier" && dok.vizualna_analyza?.typ_obsahu === "interier") ||
-      (filterTyp === "podorys" && dok.vizualna_analyza?.typ_obsahu === "podorys");
-    return vyrobcaMatch && modelMatch && typMatch;
-  });
-
-  if (!user || user.role !== 'admin') {
+  if (!user || !user.super_admin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Card className="p-8">
           <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <p>Prístup len pre administrátorov</p>
+          <p>Prístup len pre super administrátorov</p>
         </Card>
       </div>
     );
@@ -94,9 +171,9 @@ export default function AdminAnalyzaDatabazy() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-blue-600 bg-clip-text text-transparent mb-2">
-            Analýza celej databázy
+            📊 Super Admin Dashboard
           </h1>
-          <p className="text-gray-600">Podrobný prehľad všetkých dokumentov, fotiek a pôdorysov pre všetkých výrobcov</p>
+          <p className="text-gray-600">Kompletný prehľad databázy s AI analýzou a vizualizáciami</p>
         </div>
 
         {/* Stats Cards */}
@@ -184,7 +261,7 @@ export default function AdminAnalyzaDatabazy() {
               {analyzing ? (
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Analyzujem... {progress.current}/{progress.total}
+                  Analyzujem...
                 </>
               ) : (
                 <>
@@ -195,185 +272,265 @@ export default function AdminAnalyzaDatabazy() {
           </div>
         </Card>
 
-        {/* Filters */}
-        <Card className="p-4 mb-6">
-          <div className="flex items-center gap-4 flex-wrap">
-            <Filter className="w-5 h-5 text-gray-500" />
-            <select
-              value={filterVyrobca}
-              onChange={(e) => setFilterVyrobca(e.target.value)}
-              className="border rounded-lg px-4 py-2"
-            >
-              <option value="all">Všetci výrobcovia</option>
-              {uniqueVyrobcovia.map(vyrobca => (
-                <option key={vyrobca} value={vyrobca}>{vyrobca}</option>
-              ))}
-            </select>
-            <select
-              value={filterModel}
-              onChange={(e) => setFilterModel(e.target.value)}
-              className="border rounded-lg px-4 py-2"
-            >
-              <option value="all">Všetky modely</option>
-              {uniqueModels.map(model => (
-                <option key={model} value={model}>{model}</option>
-              ))}
-            </select>
-            <select
-              value={filterTyp}
-              onChange={(e) => setFilterTyp(e.target.value)}
-              className="border rounded-lg px-4 py-2"
-            >
-              <option value="all">Všetky typy</option>
-              <option value="exterier">Exteriér</option>
-              <option value="interier">Interiér</option>
-              <option value="podorys">Pôdorys</option>
-            </select>
-          </div>
-        </Card>
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid grid-cols-4 w-full mb-8">
+            <TabsTrigger value="dashboard" className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Dashboard
+            </TabsTrigger>
+            <TabsTrigger value="materialy" className="flex items-center gap-2">
+              <PieChart className="w-4 h-4" />
+              Materiály
+            </TabsTrigger>
+            <TabsTrigger value="struktura" className="flex items-center gap-2">
+              <FolderTree className="w-4 h-4" />
+              Štruktúra priečinkov
+            </TabsTrigger>
+            <TabsTrigger value="galeria" className="flex items-center gap-2">
+              <Image className="w-4 h-4" />
+              Galéria
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Documents by Manufacturer and Model */}
-        <div className="space-y-8">
-          {Object.entries(dokumentyPodlaVyrobcu).map(([vyrobca, modely]) => {
-            if (filterVyrobca !== "all" && filterVyrobca !== vyrobca) return null;
-            
-            return (
-              <motion.div
-                key={vyrobca}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <div className="mb-4">
-                  <div className="flex items-center gap-3">
-                    <Building2 className="w-8 h-8 text-primary" />
-                    <h2 className="text-3xl font-bold">{vyrobca}</h2>
-                    <Badge variant="outline" className="text-lg px-3 py-1">
-                      {Object.values(modely).reduce((sum, docs) => sum + docs.length, 0)} fotiek
-                    </Badge>
-                  </div>
+          {/* Dashboard Tab */}
+          <TabsContent value="dashboard" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Typy obsahu */}
+              <Card className="p-6">
+                <h3 className="text-lg font-bold mb-4">Rozloženie typov obsahu</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <RechartsPie>
+                    <Pie
+                      data={typObsahuStats}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {typObsahuStats.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </RechartsPie>
+                </ResponsiveContainer>
+              </Card>
+
+              {/* Top materiály */}
+              <Card className="p-6">
+                <h3 className="text-lg font-bold mb-4">Top 10 materiálov fasád</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={materialStats.slice(0, 10)}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#3B82F6" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </Card>
+
+              {/* Farby */}
+              <Card className="p-6">
+                <h3 className="text-lg font-bold mb-4">Najčastejšie farby</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={colorStats}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#10B981" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </Card>
+
+              {/* Materiály podľa výrobcov */}
+              <Card className="p-6">
+                <h3 className="text-lg font-bold mb-4">Materiály podľa výrobcov</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={materialyPodlaVyrobcov.data}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="vyrobca" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    {materialyPodlaVyrobcov.materials.slice(0, 5).map((material, index) => (
+                      <Bar key={material} dataKey={material} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </BarChart>
+                </ResponsiveContainer>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Materiály Tab */}
+          <TabsContent value="materialy" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className="p-6">
+                <h3 className="text-lg font-bold mb-4">Všetky materiály fasád</h3>
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {materialStats.map((stat, i) => (
+                    <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <span className="font-medium">{stat.name}</span>
+                      <Badge variant="outline">{stat.value} použití</Badge>
+                    </div>
+                  ))}
                 </div>
+              </Card>
 
-                <div className="space-y-6 ml-8">
-                  {Object.entries(modely).map(([model, docs]) => {
-                    if (filterModel !== "all" && filterModel !== model) return null;
-                    
-                    const filteredDocs = docs.filter(dok => {
-                      const typMatch = filterTyp === "all" || 
-                        (filterTyp === "exterier" && dok.vizualna_analyza?.typ_obsahu === "exterier") ||
-                        (filterTyp === "interier" && dok.vizualna_analyza?.typ_obsahu === "interier") ||
-                        (filterTyp === "podorys" && dok.vizualna_analyza?.podorys_info?.je_podorys);
-                      return typMatch;
-                    });
+              <Card className="p-6">
+                <h3 className="text-lg font-bold mb-4">Všetky farby</h3>
+                <div className="space-y-2 max-h-96 overflow-y-auto">
+                  {colorStats.map((stat, i) => (
+                    <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <span className="font-medium">{stat.name}</span>
+                      <Badge variant="outline">{stat.value} použití</Badge>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </div>
+          </TabsContent>
 
-                    if (filteredDocs.length === 0) return null;
-
-                    return (
-                      <Card key={model} className="p-6">
-                        <div className="flex items-center gap-3 mb-4">
-                          <Home className="w-6 h-6 text-blue-600" />
-                          <h3 className="text-xl font-bold">{model}</h3>
-                          <Badge variant="outline">{filteredDocs.length} fotiek</Badge>
-                        </div>
-
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                          {filteredDocs.map(dok => (
-                            <div key={dok.id} className="group relative">
-                              <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 relative">
-                                <img
-                                  src={dok.subor_url}
-                                  alt={dok.nazov}
-                                  className="w-full h-full object-cover"
-                                />
-                                
-                                {/* Overlay s info */}
-                                <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-all p-2 text-white text-xs flex flex-col justify-between overflow-y-auto">
-                                  <div>
-                                    <p className="font-semibold truncate">{dok.nazov}</p>
-                                    {dok.vizualna_analyza && (
-                                      <>
-                                        <Badge className="mt-1 text-xs bg-blue-500">
-                                          {dok.vizualna_analyza.typ_obsahu}
-                                        </Badge>
-                                        {dok.vizualna_analyza.fasada_materialy?.length > 0 && (
-                                          <div className="mt-2">
-                                            <p className="font-semibold">Materiály:</p>
-                                            {dok.vizualna_analyza.fasada_materialy.slice(0, 3).map((mat, i) => (
-                                              <p key={i} className="text-xs">• {mat}</p>
-                                            ))}
-                                          </div>
-                                        )}
-                                        {dok.vizualna_analyza.fasada_farby?.length > 0 && (
-                                          <div className="mt-1">
-                                            <p className="font-semibold">Farby:</p>
-                                            <p>{dok.vizualna_analyza.fasada_farby.slice(0, 2).join(', ')}</p>
-                                          </div>
-                                        )}
-                                      </>
-                                    )}
-                                  </div>
-                                  
-                                  {!dok.vizualna_analyza && (
-                                    <Badge variant="destructive" className="text-xs">
-                                      Neanalyzované
-                                    </Badge>
-                                  )}
-                                </div>
-                              </div>
+          {/* Štruktúra priečinkov Tab */}
+          <TabsContent value="struktura" className="space-y-4">
+            {Object.entries(folderStructure).map(([vyrobca, modely]) => (
+              <Card key={vyrobca} className="p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <Building2 className="w-6 h-6 text-primary" />
+                  <h3 className="text-xl font-bold">{vyrobca}</h3>
+                  <Badge variant="outline">
+                    {Object.values(modely).reduce((sum, model) => 
+                      sum + Object.values(model).reduce((s, docs) => s + docs.length, 0), 0
+                    )} súborov
+                  </Badge>
+                </div>
+                
+                <div className="ml-8 space-y-3">
+                  {Object.entries(modely).map(([model, podpriecinky]) => (
+                    <div key={model} className="border-l-2 border-gray-200 pl-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Home className="w-4 h-4 text-blue-600" />
+                        <span className="font-semibold">{model}</span>
+                        <Badge variant="secondary" className="text-xs">
+                          {Object.values(podpriecinky).reduce((s, docs) => s + docs.length, 0)} súborov
+                        </Badge>
+                      </div>
+                      
+                      <div className="ml-6 space-y-2">
+                        {Object.entries(podpriecinky).map(([podpriecinok, docs]) => (
+                          <div key={podpriecinok} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                            <div className="flex items-center gap-2">
+                              <FileText className="w-4 h-4 text-gray-500" />
+                              <span className="text-sm">{podpriecinok}</span>
                             </div>
-                          ))}
-                        </div>
-                      </Card>
-                    );
-                  })}
+                            <Badge variant="outline" className="text-xs">{docs.length}</Badge>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </motion.div>
-            );
-          })}
-        </div>
+              </Card>
+            ))}
+          </TabsContent>
 
-        {/* Results */}
-        {results && (
-          <Card className="p-6 mt-8">
-            <h3 className="text-xl font-bold mb-4">Výsledky analýzy</h3>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <Card className="p-4 bg-green-50">
-                <p className="text-sm text-green-700">Úspešne spracované</p>
-                <p className="text-2xl font-bold text-green-900">
-                  {results.results?.filter(r => r.status === 'success').length || 0}
-                </p>
-              </Card>
-              <Card className="p-4 bg-red-50">
-                <p className="text-sm text-red-700">Chyby</p>
-                <p className="text-2xl font-bold text-red-900">
-                  {results.results?.filter(r => r.status === 'error').length || 0}
-                </p>
-              </Card>
+          {/* Galéria Tab */}
+          <TabsContent value="galeria">
+            <Card className="p-4 mb-6">
+              <div className="flex items-center gap-4 flex-wrap">
+                <Filter className="w-5 h-5 text-gray-500" />
+                <select
+                  value={filterVyrobca}
+                  onChange={(e) => setFilterVyrobca(e.target.value)}
+                  className="border rounded-lg px-4 py-2"
+                >
+                  <option value="all">Všetci výrobcovia</option>
+                  {uniqueVyrobcovia.map(vyrobca => (
+                    <option key={vyrobca} value={vyrobca}>{vyrobca}</option>
+                  ))}
+                </select>
+                <select
+                  value={filterModel}
+                  onChange={(e) => setFilterModel(e.target.value)}
+                  className="border rounded-lg px-4 py-2"
+                >
+                  <option value="all">Všetky modely</option>
+                  {uniqueModels.map(model => (
+                    <option key={model} value={model}>{model}</option>
+                  ))}
+                </select>
+                <select
+                  value={filterTyp}
+                  onChange={(e) => setFilterTyp(e.target.value)}
+                  className="border rounded-lg px-4 py-2"
+                >
+                  <option value="all">Všetky typy</option>
+                  <option value="exterier">Exteriér</option>
+                  <option value="interier">Interiér</option>
+                  <option value="podorys">Pôdorys</option>
+                </select>
+              </div>
+            </Card>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {dokumenty
+                .filter(dok => {
+                  const vyrobcaMatch = filterVyrobca === "all" || dok.vyrobca === filterVyrobca;
+                  const modelMatch = filterModel === "all" || dok.model_domu === filterModel;
+                  const typMatch = filterTyp === "all" || 
+                    (filterTyp === "exterier" && dok.vizualna_analyza?.typ_obsahu === "exterier") ||
+                    (filterTyp === "interier" && dok.vizualna_analyza?.typ_obsahu === "interier") ||
+                    (filterTyp === "podorys" && dok.vizualna_analyza?.podorys_info?.je_podorys);
+                  return vyrobcaMatch && modelMatch && typMatch;
+                })
+                .map(dok => (
+                  <div key={dok.id} className="group relative">
+                    <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 relative">
+                      <img
+                        src={dok.subor_url}
+                        alt={dok.nazov}
+                        className="w-full h-full object-cover"
+                      />
+                      
+                      <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-all p-2 text-white text-xs flex flex-col justify-between overflow-y-auto">
+                        <div>
+                          <p className="font-semibold truncate">{dok.nazov}</p>
+                          <p className="text-xs text-gray-300">{dok.vyrobca}</p>
+                          <p className="text-xs text-gray-300">{dok.model_domu}</p>
+                          {dok.vizualna_analyza && (
+                            <>
+                              <Badge className="mt-1 text-xs bg-blue-500">
+                                {dok.vizualna_analyza.typ_obsahu}
+                              </Badge>
+                              {dok.vizualna_analyza.fasada_materialy?.length > 0 && (
+                                <div className="mt-2">
+                                  <p className="font-semibold">Materiály:</p>
+                                  {dok.vizualna_analyza.fasada_materialy.slice(0, 2).map((mat, i) => (
+                                    <p key={i} className="text-xs">• {mat}</p>
+                                  ))}
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </div>
+                        
+                        {!dok.vizualna_analyza && (
+                          <Badge variant="destructive" className="text-xs">
+                            Neanalyzované
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
             </div>
-            <div className="space-y-2 max-h-96 overflow-y-auto">
-              {results.results?.map((result, i) => (
-                <div key={i} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                  {result.status === 'success' ? (
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                  ) : (
-                    <XCircle className="w-4 h-4 text-red-600" />
-                  )}
-                  <span className="text-xs text-gray-600">{result.vyrobca}</span>
-                  <span className="text-sm font-medium">{result.nazov}</span>
-                  {result.povodny_model !== result.novy_model && (
-                    <Badge variant="outline" className="ml-auto text-xs">
-                      {result.povodny_model} → {result.novy_model}
-                    </Badge>
-                  )}
-                  {result.status === 'success' && (
-                    <Badge className="bg-blue-100 text-blue-800 text-xs">
-                      {result.typ}
-                    </Badge>
-                  )}
-                </div>
-              ))}
-            </div>
-          </Card>
-        )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
