@@ -646,15 +646,15 @@ export default function AdminDokumenty() {
       }
 
       setUploadResults(results);
-      setShowForm(false);
-      localStorage.removeItem(UPLOAD_STATE_KEY);
+      setShowForm(false); // Existing
+      localStorage.removeItem(UPLOAD_STATE_KEY); // Moved from finally
+      setCurrentFileName(""); // Moved from finally
+      setUploadProgress({ current: 0, total: 0 }); // Moved from finally
 
     } catch (error) {
       alert("Kritická chyba: " + error.message);
     } finally {
       setUploading(false);
-      setUploadProgress({ current: 0, total: 0 });
-      setCurrentFileName("");
       uploadWorkerRef.current = null;
     }
   };
@@ -994,10 +994,10 @@ export default function AdminDokumenty() {
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Card className="p-6 mb-6 border-0 shadow-xl bg-white/90 backdrop-blur">
+                <Card className="p-6 mb-6 border-0 shadow-xl bg-gradient-to-br from-white via-blue-50/30 to-white backdrop-blur">
                   <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Režim nahrávania */}
-                    <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl">
+                    <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-xl border border-blue-200">
                       <Label className="font-semibold text-gray-700">Režim nahrávania:</Label>
                       <Select value={uploadMode} onValueChange={(value) => {
                         setUploadMode(value);
@@ -1005,8 +1005,8 @@ export default function AdminDokumenty() {
                         setFileStatuses({});
                         setTotalBytes(0);
                         setUploadedBytes(0);
-                      }}>
-                        <SelectTrigger className="w-[180px] border-0 shadow-sm bg-white">
+                      }} disabled={uploading}>
+                        <SelectTrigger className="w-[180px] border-blue-300 shadow-sm bg-white">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -1028,14 +1028,14 @@ export default function AdminDokumenty() {
                         onDragLeave={handleDragLeave}
                         className={`border-2 border-dashed rounded-2xl p-10 text-center transition-all duration-300 ${
                           isDragging 
-                            ? 'border-primary bg-blue-100 scale-[1.02]' 
-                            : 'border-gray-300 bg-gradient-to-br from-gray-50 to-white hover:border-primary/50 hover:bg-blue-50/30'
+                            ? 'border-blue-500 bg-blue-100 scale-[1.02]' 
+                            : 'border-blue-300 bg-gradient-to-br from-blue-50/50 to-white hover:border-blue-400 hover:bg-blue-50/40'
                         }`}
                       >
                         <div className={`w-16 h-16 mx-auto mb-4 rounded-xl flex items-center justify-center transition-all ${
-                          isDragging ? 'bg-primary scale-110' : 'bg-gray-100'
+                          isDragging ? 'bg-blue-500 scale-110' : 'bg-gradient-to-br from-blue-500 to-indigo-500'
                         }`}>
-                          <FolderOpen className={`w-8 h-8 ${isDragging ? 'text-white' : 'text-gray-400'}`} />
+                          <FolderOpen className="w-8 h-8 text-white" />
                         </div>
                         <p className="text-base font-medium text-gray-700 mb-2">
                           Pretiahnite priečinky sem
@@ -1054,11 +1054,13 @@ export default function AdminDokumenty() {
                               webkitdirectory=""
                               directory=""
                               className="hidden"
+                              disabled={uploading}
                             />
                             <Button
                               type="button"
                               onClick={() => folderInputRef.current?.click()}
-                              className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg transition-all hover:scale-105 text-white"
+                              disabled={uploading}
+                              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg transition-all hover:scale-105 text-white disabled:opacity-50"
                             >
                               <FolderOpen className="w-4 h-4 mr-2" />
                               Vybrať priečinky
@@ -1073,11 +1075,13 @@ export default function AdminDokumenty() {
                               required={selectedFiles.length === 0}
                               className="hidden"
                               id="file-input"
+                              disabled={uploading}
                             />
                             <Button
                               type="button"
                               onClick={() => document.getElementById('file-input')?.click()}
-                              className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg transition-all hover:scale-105 text-white"
+                              disabled={uploading}
+                              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg transition-all hover:scale-105 text-white disabled:opacity-50"
                             >
                               <Upload className="w-4 h-4 mr-2" />
                               Vybrať súbory
@@ -1089,9 +1093,9 @@ export default function AdminDokumenty() {
                       {/* Selected Files List */}
                       {selectedFiles.length > 0 && (
                         <div className="mt-4 space-y-3">
-                          <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+                          <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-lg border border-blue-200">
                             <p className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                              <FileText className="w-4 h-4" />
+                              <FileText className="w-4 h-4 text-blue-600" />
                               {selectedFiles.length} súborov ({formatFileSize(totalBytes)})
                             </p>
                             <Button
@@ -1099,7 +1103,8 @@ export default function AdminDokumenty() {
                               onClick={handleClearAllFiles}
                               variant="ghost"
                               size="sm"
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              disabled={uploading}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 disabled:opacity-50"
                             >
                               <X className="w-4 h-4 mr-1" />Vymazať všetko
                             </Button>
@@ -1116,7 +1121,7 @@ export default function AdminDokumenty() {
                                   initial={{ opacity: 0, x: -20 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ delay: index * 0.03 }}
-                                  className="flex items-center justify-between p-3 rounded-xl bg-white border border-gray-200 hover:border-primary/30 hover:shadow-md transition-all"
+                                  className="flex items-center justify-between p-3 rounded-xl bg-white border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all"
                                 >
                                   <div className="flex items-center gap-3 flex-grow min-w-0">
                                     <span className="text-2xl flex-shrink-0">{getFileIcon(file.type)}</span>
@@ -1175,7 +1180,8 @@ export default function AdminDokumenty() {
                         onChange={(e) => setFormData({...formData, popis: e.target.value})}
                         placeholder="Detailný popis dokumentov..."
                         rows={3}
-                        className="resize-none border-gray-200 focus:border-primary transition-all"
+                        disabled={uploading}
+                        className="resize-none border-blue-200 focus:border-blue-500 transition-all disabled:opacity-50"
                       />
                     </div>
 
@@ -1187,9 +1193,15 @@ export default function AdminDokumenty() {
                           onChange={(e) => setTagInput(e.target.value)}
                           onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
                           placeholder="Pridať tag..."
-                          className="border-gray-200 focus:border-primary transition-all"
+                          disabled={uploading}
+                          className="border-blue-200 focus:border-blue-500 transition-all disabled:opacity-50"
                         />
-                        <Button type="button" onClick={handleAddTag} variant="outline" className="flex-shrink-0">
+                        <Button 
+                          type="button" 
+                          onClick={handleAddTag} 
+                          disabled={uploading}
+                          className="flex-shrink-0 bg-blue-600 hover:bg-blue-700 text-white"
+                        >
                           Pridať
                         </Button>
                       </div>
@@ -1200,7 +1212,7 @@ export default function AdminDokumenty() {
                               {tag}
                               <X
                                 className="w-3 h-3 cursor-pointer hover:text-blue-900"
-                                onClick={() => handleRemoveTag(tag)}
+                                onClick={() => !uploading && handleRemoveTag(tag)}
                               />
                             </Badge>
                           ))}
@@ -1208,102 +1220,140 @@ export default function AdminDokumenty() {
                       )}
                     </div>
 
-                    <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl">
+                    <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl border border-emerald-200">
                       <Switch
                         checked={formData.pre_chatbota}
                         onCheckedChange={(checked) => setFormData({...formData, pre_chatbota: checked})}
+                        disabled={uploading}
                       />
                       <Label className="font-medium text-gray-700 cursor-pointer">
                         Použiť ako zdroj vedomostí pre chatbota
                       </Label>
                     </div>
 
-                    {/* Upload Progress */}
+                    {/* Upload Progress - VŽDY VIDITEĽNÝ POČAS NAHRÁVANIA */}
                     {uploading && (
-                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl space-y-4 border border-blue-100">
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-blue-500/10 p-6 rounded-2xl space-y-4 border-2 border-blue-400 shadow-2xl"
+                      >
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-lg font-bold text-blue-900 flex items-center gap-2">
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            Nahrávanie prebieha
+                          </h3>
+                          <Badge className="bg-blue-600 text-white text-xs px-3 py-1">
+                            LIVE
+                          </Badge>
+                        </div>
+
                         <div>
                           <div className="flex items-center justify-between mb-2">
                             <p className="text-sm font-semibold text-blue-900">
-                              Aktuálne nahrávam: {currentFileName || 'Pripravujem...'}
+                              ⚡ Aktuálne: {currentFileName || 'Pripravujem...'}
                             </p>
                           </div>
                         </div>
 
                         {/* Celkový progress */}
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <p className="text-xs font-medium text-blue-800">
-                              Celkový progress: {uploadProgress.current} / {uploadProgress.total}
+                        <div className="bg-white/70 rounded-xl p-4 border border-blue-300">
+                          <div className="flex items-center justify-between mb-3">
+                            <p className="text-sm font-bold text-blue-900">
+                              📊 Celkový progress
                             </p>
-                            <span className="text-xs text-blue-700 font-bold">
+                            <span className="text-lg font-bold text-blue-700">
                               {uploadProgress.total > 0 ? Math.round((uploadProgress.current / uploadProgress.total) * 100) : 0}%
                             </span>
                           </div>
-                          <div className="relative w-full bg-blue-200 rounded-full h-3 overflow-hidden">
+                          <div className="relative w-full bg-blue-200 rounded-full h-4 overflow-hidden shadow-inner">
                             <div
-                              className="bg-gradient-to-r from-blue-600 to-indigo-600 h-3 rounded-full transition-all duration-300 flex items-center justify-center"
+                              className="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 h-4 rounded-full transition-all duration-500 flex items-center justify-center animate-pulse"
                               style={{ width: `${uploadProgress.total > 0 ? (uploadProgress.current / uploadProgress.total) * 100 : 0}%` }}
                             >
-                              {uploadProgress.total > 0 && (uploadProgress.current / uploadProgress.total) > 0.1 && (
-                                <span className="text-white text-xs font-bold">
+                              {uploadProgress.total > 0 && (uploadProgress.current / uploadProgress.total) > 0.15 && (
+                                <span className="text-white text-xs font-bold drop-shadow">
                                   {Math.round((uploadProgress.current / uploadProgress.total) * 100)}%
                                 </span>
                               )}
                             </div>
                           </div>
-                          <div className="flex justify-between text-xs text-blue-700 mt-1">
-                            <span>{formatFileSize(uploadedBytes)}</span>
-                            <span>{formatFileSize(totalBytes)}</span>
+                          <div className="flex justify-between text-xs text-blue-700 mt-2 font-medium">
+                            <span>📦 {formatFileSize(uploadedBytes)}</span>
+                            <span>{uploadProgress.current} / {uploadProgress.total} súborov</span>
+                            <span>🎯 {formatFileSize(totalBytes)}</span>
                           </div>
                         </div>
 
                         {/* Real-time file status list s progress barmi */}
-                        <div className="mt-4 max-h-64 overflow-y-auto space-y-3 bg-white/50 rounded-lg p-4">
-                          <p className="text-xs font-semibold text-blue-900 mb-3 sticky top-0 bg-white/80 py-1">
-                            Stav jednotlivých súborov:
-                          </p>
+                        <div className="max-h-80 overflow-y-auto space-y-2 bg-white/70 rounded-xl p-4 border border-blue-300">
+                          <div className="flex items-center justify-between mb-3 sticky top-0 bg-white/90 py-2 rounded-lg px-2">
+                            <p className="text-sm font-bold text-blue-900">
+                              📁 Stav jednotlivých súborov
+                            </p>
+                            <Badge variant="outline" className="text-xs border-blue-400">
+                              {Object.values(fileStatuses).filter(s => s === 'nahratý').length} hotovo
+                            </Badge>
+                          </div>
                           {selectedFiles.map((file, index) => {
                             const status = fileStatuses[file.name] || 'pending';
                             const fileProgress = status === 'nahratý' ? 100 : status === 'nahrávam' ? 50 : status === 'odmietnutý' ? 100 : 0;
                             
                             return (
-                              <div key={file.name + index} className="space-y-1">
+                              <motion.div
+                                key={file.name + index}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="bg-white rounded-lg p-3 space-y-2 border border-blue-200 shadow-sm"
+                              >
                                 <div className="flex items-center justify-between text-xs">
-                                  <span className="truncate flex-1 text-gray-700 font-medium">{file.name}</span>
-                                  <span className="ml-2 flex-shrink-0 flex items-center gap-2">
-                                    <span className="text-xs font-bold text-gray-600">{fileProgress}%</span>
+                                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                                    <span className="text-lg flex-shrink-0">{getFileIcon(file.type)}</span>
+                                    <span className="truncate text-gray-700 font-medium">{file.name}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                                    <span className="text-xs font-bold text-blue-700 bg-blue-100 px-2 py-1 rounded">
+                                      {fileProgress}%
+                                    </span>
                                     {getStatusBadge(status)}
-                                  </span>
+                                  </div>
                                 </div>
-                                <div className="relative w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                                <div className="relative w-full bg-gray-200 rounded-full h-2.5 overflow-hidden shadow-inner">
                                   <div
-                                    className={`h-2 rounded-full transition-all duration-300 ${
+                                    className={`h-2.5 rounded-full transition-all duration-500 ${
                                       status === 'nahratý' ? 'bg-gradient-to-r from-green-500 to-emerald-500' :
-                                      status === 'nahrávam' ? 'bg-gradient-to-r from-blue-500 to-indigo-500 animate-pulse' :
+                                      status === 'nahrávam' ? 'bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500 animate-pulse' :
                                       status === 'odmietnutý' ? 'bg-gradient-to-r from-red-500 to-rose-500' :
                                       'bg-gray-300'
                                     }`}
                                     style={{ width: `${fileProgress}%` }}
                                   />
                                 </div>
-                              </div>
+                              </motion.div>
                             );
                           })}
                         </div>
-                      </div>
+
+                        <div className="bg-amber-50 border border-amber-300 rounded-lg p-3 flex items-start gap-2">
+                          <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                          <p className="text-xs text-amber-800">
+                            <strong>Tip:</strong> Neopúšťajte túto stránku počas nahrávania. Progress sa ukladá a môžete pokračovať po návrate.
+                          </p>
+                        </div>
+                      </motion.div>
                     )}
 
                     {/* Action Buttons */}
                     <div className="flex gap-3 pt-2">
                       <Button 
                         type="submit" 
-                        disabled={uploading} 
-                        className="flex-1 h-12 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 text-white"
+                        disabled={uploading || selectedFiles.length === 0} 
+                        className="flex-1 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 text-white font-semibold"
                       >
                         {uploading ? (
                           <>
                             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            Nahrávam...
+                            Nahrávam {uploadProgress.current}/{uploadProgress.total}
                           </>
                         ) : (
                           <>
@@ -1315,16 +1365,21 @@ export default function AdminDokumenty() {
                       <Button
                         type="button"
                         variant="outline"
-                        className="h-12 shadow-sm transition-all hover:scale-[1.02]"
+                        className="h-12 shadow-sm transition-all hover:scale-[1.02] border-blue-300 hover:border-blue-500 hover:bg-blue-50"
                         onClick={() => {
-                          if (uploading && uploadWorkerRef.current) {
-                            uploadWorkerRef.current.cancel = true;
+                          if (uploading) {
+                            if (!confirm('Nahrávanie prebieha. Naozaj chcete zrušiť?')) {
+                              return;
+                            }
+                            if (uploadWorkerRef.current) {
+                              uploadWorkerRef.current.cancel = true;
+                            }
                           }
                           setShowForm(false);
                           resetForm();
                         }}
                       >
-                        Zrušiť
+                        {uploading ? 'Zrušiť nahrávanie' : 'Zatvoriť'}
                       </Button>
                     </div>
                   </form>
