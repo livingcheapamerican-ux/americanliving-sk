@@ -19,6 +19,7 @@ export default function AdminAnalyzaDatabazy() {
   const [logs, setLogs] = useState([]);
   const [results, setResults] = useState(null);
   const [autoReorganize, setAutoReorganize] = useState(true);
+  const [batchSize] = useState(3); // Menší batch pre stabilitu
   
   const pausedRef = useRef(false);
   const stopRef = useRef(false);
@@ -32,7 +33,8 @@ export default function AdminAnalyzaDatabazy() {
 
   const { data: dokumenty = [], isLoading, refetch } = useQuery({
     queryKey: ['dokumenty-all'],
-    queryFn: () => base44.entities.Dokument.filter({ typ: "fotky" })
+    queryFn: () => base44.entities.Dokument.filter({ typ: "fotky" }),
+    refetchInterval: 10000 // Refresh každých 10s
   });
 
   const reorganizeMutation = useMutation({
@@ -153,6 +155,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
         }
       });
 
+      // KRITICKÉ: Okamžite ulož že bol analyzovaný
       await base44.entities.Dokument.update(dok.id, {
         ai_generovany_popis: popis,
         vizualna_analyza: strukturovaneData,
@@ -169,6 +172,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
       if (errorMsg.includes('unsupported image') || errorMsg.includes('ImageURL')) {
         addLog(`⚠️ Preskakujem (problémový obrázok): ${dok.nazov}`, 'warning');
         
+        // Aj pri chybe označ že bol spracovaný
         await base44.entities.Dokument.update(dok.id, {
           podrobna_analyza_datum: new Date().toISOString(),
           ai_generovany_popis: 'Problémový obrázok - nepodporovaný formát'
@@ -178,6 +182,15 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
       }
       
       addLog(`❌ Chyba: ${dok.nazov} - ${errorMsg}`, 'error');
+      
+      // Aj pri chybe označ aby sa neopakoval
+      try {
+        await base44.entities.Dokument.update(dok.id, {
+          podrobna_analyza_datum: new Date().toISOString(),
+          ai_generovany_popis: `Chyba analýzy: ${errorMsg}`
+        });
+      } catch {}
+      
       return { success: false, skipped: false, dok, error: errorMsg };
     }
   };
@@ -217,7 +230,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
       return;
     }
 
-    if (!confirm(`Spustiť analýzu ${neanalyzovane.length} fotiek?\n\nAnalýza prebieha jeden obrázok po druhom.\nMôžete pozastaviť kedykoľvek.`)) {
+    if (!confirm(`Spustiť analýzu ${neanalyzovane.length} fotiek?\n\nAnalýza prebieha v dávkach po ${batchSize} obrázkoch.\nMôžete pozastaviť kedykoľvek.`)) {
       return;
     }
 
@@ -231,7 +244,8 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
     let failed = 0;
     let skipped = 0;
 
-    for (let i = 0; i < neanalyzovane.length; i++) {
+    // Spracuj v dávkach
+    for (let i = 0; i < neanalyzovane.length; i += batchSize) {
       if (stopRef.current) {
         addLog('⏹️ Analýza zastavená používateľom', 'info');
         break;
@@ -243,41 +257,51 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
 
       if (stopRef.current) break;
 
-      const dok = neanalyzovane[i];
-      
-      try {
-        const result = await analyzujJedenDokument(dok);
+      const batch = neanalyzovane.slice(i, i + batchSize);
+      addLog(`📦 Spracovávam dávku ${Math.floor(i/batchSize) + 1}/${Math.ceil(neanalyzovane.length/batchSize)} (${batch.length} súborov)`, 'info');
 
-        if (result.success) {
-          processed++;
-        } else if (result.skipped) {
-          skipped++;
-        } else {
-          failed++;
-        }
-
-        setProgress({
-          current: processed,
-          total: neanalyzovane.length,
-          failed: failed,
-          skipped: skipped
-        });
-
-        if ((processed + skipped) % 10 === 0) {
-          await refetch();
-        }
-
-        await new Promise(resolve => setTimeout(resolve, 1500));
+      for (const dok of batch) {
+        if (stopRef.current) break;
         
-      } catch (error) {
-        addLog(`💥 Kritická chyba pri ${dok.nazov}: ${error.message}`, 'error');
-        failed++;
-        setProgress(prev => ({...prev, failed: prev.failed + 1}));
-        await new Promise(resolve => setTimeout(resolve, 2000));
-      }
-    }
+        try {
+          const result = await analyzujJedenDokument(dok);
 
-    await refetch();
+          if (result.success) {
+            processed++;
+          } else if (result.skipped) {
+            skipped++;
+          } else {
+            failed++;
+          }
+
+          setProgress({
+            current: processed,
+            total: neanalyzovane.length,
+            failed: failed,
+            skipped: skipped
+          });
+
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+        } catch (error) {
+          addLog(`💥 Kritická chyba pri ${dok.nazov}: ${error.message}`, 'error');
+          failed++;
+          setProgress(prev => ({...prev, failed: prev.failed + 1}));
+          
+          // Označ aj pri kritickej chybe
+          try {
+            await base44.entities.Dokument.update(dok.id, {
+              podrobna_analyza_datum: new Date().toISOString(),
+              ai_generovany_popis: `Kritická chyba: ${error.message}`
+            });
+          } catch {}
+        }
+      }
+
+      // Refresh po každej dávke
+      await refetch();
+      addLog(`✅ Dávka dokončená. Celkovo: ${processed} úspešných, ${skipped} preskočených, ${failed} chýb`, 'success');
+    }
 
     setResults({
       total: neanalyzovane.length,
@@ -341,7 +365,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
           <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-blue-600 bg-clip-text text-transparent mb-2">
             🎯 Analýza celej databázy
           </h1>
-          <p className="text-gray-600">Postupná analýza so štruktúrovanou extrakciou dát a automatickou organizáciou</p>
+          <p className="text-gray-600">Stabilná analýza v malých dávkach s automatickým checkpointom</p>
         </div>
 
         {/* Stats Cards */}
@@ -420,6 +444,20 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
             </div>
           </Card>
         </div>
+
+        {/* Upozornenie o stabilite */}
+        <Card className="p-4 mb-6 bg-blue-50 border-blue-200">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <p className="font-semibold text-blue-900 mb-1">Stabilný režim</p>
+              <p className="text-blue-700">
+                Analýza prebieha v dávkach po {batchSize} obrázkoch s automatickým ukladaním. 
+                Pri prerušení pokračuje presne tam kde skončila. Údaje sa refreshujú každých 10s.
+              </p>
+            </div>
+          </div>
+        </Card>
 
         {/* Automatic Analysis Card */}
         <Card className="p-6 mb-6 border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50">
@@ -576,7 +614,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
                   {neanalyzovaneCount === 0 ? (
                     '✓ Všetko analyzované'
                   ) : (
-                    `Spustiť manuálnu analýzu (${neanalyzovaneCount} fotiek)`
+                    `Pokračovať v analýze (${neanalyzovaneCount} fotiek)`
                   )}
                 </Button>
               </div>
@@ -584,7 +622,6 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
           </div>
         </Card>
 
-        {/* ... rest of the code stays the same ... */}
         <Tabs defaultValue="logs" className="mb-8">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="logs">Log analýzy</TabsTrigger>
