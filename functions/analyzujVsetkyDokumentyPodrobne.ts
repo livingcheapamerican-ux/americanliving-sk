@@ -20,13 +20,13 @@ Deno.serve(async (req) => {
       }, { status: 403 });
     }
 
-    // OPRAVA: Načítaj len NEANALYZOVANÉ dokumenty
+    // Načítaj všetky fotky
     const vsetkyDokumenty = await base44.asServiceRole.entities.Dokument.filter({
       typ: "fotky"
     });
 
-    // Filtruj len tie bez vizualna_analyza
-    const dokumenty = vsetkyDokumenty.filter(dok => !dok.vizualna_analyza);
+    // OPRAVA: Filtruj len tie BEZ podrobna_analyza_datum (nie podľa vizualna_analyza)
+    const dokumenty = vsetkyDokumenty.filter(dok => !dok.podrobna_analyza_datum);
 
     if (!dokumenty || dokumenty.length === 0) {
       return Response.json({
@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
       try {
         console.log(`Processing ${processed + 1}/${dokumenty.length}: ${dok.nazov}`);
         
-        // Detailná AI vizuálna analýza pre každý obrázok
+        // Detailná AI vizuálna analýza
         const analyza = await base44.asServiceRole.integrations.Core.InvokeLLM({
           prompt: `Analyzuj tento obrázok modulárneho domu MAXIMÁLNE PODROBNE:
 
@@ -298,7 +298,7 @@ Buď MAXIMÁLNE KONKRÉTNY a PODROBNÝ v každom bode. Nepíš všeobecnosti. De
         processed++;
         console.log(`✓ Processed ${processed}/${dokumenty.length}`);
         
-        // Rate limit protection - delay every 3 documents
+        // Rate limit protection
         if (processed % 3 === 0) {
           await new Promise(resolve => setTimeout(resolve, 3000));
         }
