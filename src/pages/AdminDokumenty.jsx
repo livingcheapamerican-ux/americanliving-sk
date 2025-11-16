@@ -76,11 +76,13 @@ export default function AdminDokumenty() {
   const [tagInput, setTagInput] = useState("");
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
   const [uploadedBytes, setUploadedBytes] = useState(0);
-  const [totalBytes, setTotalBytes] = useState(0);
+  const [totalBytes, setTotalBytes] = 0);
 
   const folderInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const uploadWorkerRef = useRef(null);
+
+  const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
   useEffect(() => {
     if (folderInputRef.current && uploadMode === "folder") {
@@ -880,17 +882,22 @@ export default function AdminDokumenty() {
               <Button 
                 onClick={handleAnalyzeAll}
                 disabled={analyzingAll || dokumenty.filter(d => !d.analyzovaný).length === 0}
-                className="h-12 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-md transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                className="h-12 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-md transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2"
               >
                 {analyzingAll ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin" />
                     {analysisProgress.current}/{analysisProgress.total}
                   </>
                 ) : (
                   <>
-                    <Brain className="w-4 h-4 mr-2" />
-                    Analyzovať AI ({dokumenty.filter(d => !d.analyzovaný).length})
+                    <Brain className="w-4 h-4" />
+                    <img 
+                      src={KONFIGA_LOGO_URL} 
+                      alt="Konfiga.eu" 
+                      className="h-6 w-auto"
+                    />
+                    <span>Analyzovať AI ({dokumenty.filter(d => !d.analyzovaný).length})</span>
                   </>
                 )}
               </Button>
