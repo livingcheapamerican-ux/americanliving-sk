@@ -11,14 +11,12 @@ import { PieChart as RechartsPie, Pie, Cell, BarChart, Bar, XAxis, YAxis, Cartes
 
 export default function AdminAnalyzaDatabazy() {
   const [analyzing, setAnalyzing] = useState(false);
-  const [progress, setProgress] = useState({ current: 0, total: 0 });
+  const [progress, setProgress] = useState({ current: 0, total: 0, remaining: 0 });
   const [results, setResults] = useState(null);
   const [filterVyrobca, setFilterVyrobca] = useState("all");
   const [filterModel, setFilterModel] = useState("all");
   const [filterTyp, setFilterTyp] = useState("all");
   const [activeTab, setActiveTab] = useState("dashboard");
-  const progressIntervalRef = useRef(null);
-  const analyzaStartCountRef = useRef(0);
 
   const queryClient = useQueryClient();
 
@@ -27,84 +25,78 @@ export default function AdminAnalyzaDatabazy() {
     queryFn: () => base44.auth.me()
   });
 
-  const { data: dokumenty = [], isLoading } = useQuery({
+  const { data: dokumenty = [], isLoading, refetch } = useQuery({
     queryKey: ['dokumenty-all'],
     queryFn: () => base44.entities.Dokument.filter({ typ: "fotky" })
   });
 
-  // Real-time progress tracking - kontroluj pole podrobna_analyza_datum
-  useEffect(() => {
-    if (analyzing) {
-      progressIntervalRef.current = setInterval(async () => {
-        try {
-          const analyzovaneDokumenty = await base44.entities.Dokument.filter({ 
-            typ: "fotky",
-            podrobna_analyza_datum: { $exists: true }
-          });
-          const aktualnyPocet = analyzovaneDokumenty.length - analyzaStartCountRef.current;
-          setProgress(prev => ({ ...prev, current: Math.max(0, aktualnyPocet) }));
-        } catch (error) {
-          console.error('Progress tracking error:', error);
-        }
-      }, 3000);
-    } else {
-      if (progressIntervalRef.current) {
-        clearInterval(progressIntervalRef.current);
-      }
-    }
-
-    return () => {
-      if (progressIntervalRef.current) {
-        clearInterval(progressIntervalRef.current);
-      }
-    };
-  }, [analyzing]);
-
   const handleAnalyzaVsetkych = async () => {
-    const neanalyzovane = dokumenty.filter(d => !d.vizualna_analyza);
+    const neanalyzovane = dokumenty.filter(d => !d.podrobna_analyza_datum);
     
     if (neanalyzovane.length === 0) {
       alert('Všetky fotky sú už analyzované!');
       return;
     }
 
-    if (!confirm(`Chcete spustiť podrobnú AI analýzu ${neanalyzovane.length} neanalyzovaných fotiek? (Celkom: ${dokumenty.length})`)) {
+    if (!confirm(`Spustiť podrobnú analýzu ${neanalyzovane.length} neanalyzovaných fotiek?`)) {
       return;
     }
 
     try {
-      // Zisti koľko je už analyzovaných pred začatím
-      const analyzovaneTeraz = await base44.entities.Dokument.filter({ 
-        typ: "fotky",
-        podrobna_analyza_datum: { $exists: true }
-      });
-      analyzaStartCountRef.current = analyzovaneTeraz.length;
-
       setAnalyzing(true);
-      setProgress({ current: 0, total: neanalyzovane.length });
+      setProgress({ current: 0, total: neanalyzovane.length, remaining: neanalyzovane.length });
 
-      const response = await base44.functions.invoke('analyzujVsetkyDokumentyPodrobne', {});
-      
-      console.log('Analysis response:', response);
-      
-      setResults(response.data);
-      queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
-      
-      if (response.data.success) {
-        alert(`✅ Analýza dokončená!\n\nSpracovaných: ${response.data.processed} z ${response.data.total}\nÚspešných: ${response.data.results?.filter(r => r.status === 'success').length || 0}\nChýb: ${response.data.results?.filter(r => r.status === 'error').length || 0}`);
-      } else {
-        alert('❌ Analýza zlyhala: ' + response.data.error);
+      // Batch processing - volaj funkciu opakovane
+      let totalProcessed = 0;
+      let remaining = neanalyzovane.length;
+
+      while (remaining > 0) {
+        console.log(`Batch processing: ${remaining} remaining`);
+        
+        const response = await base44.functions.invoke('analyzujVsetkyDokumentyPodrobne', {});
+        
+        console.log('Batch response:', response.data);
+        
+        if (!response.data.success) {
+          throw new Error(response.data.error || 'Analysis failed');
+        }
+
+        totalProcessed += response.data.processed;
+        remaining = response.data.remaining || 0;
+
+        setProgress({
+          current: totalProcessed,
+          total: neanalyzovane.length,
+          remaining: remaining
+        });
+
+        // Refresh data
+        await refetch();
+
+        if (remaining === 0) break;
+
+        // Wait before next batch
+        await new Promise(resolve => setTimeout(resolve, 2000));
       }
+
+      setResults({
+        success: true,
+        total: neanalyzovane.length,
+        processed: totalProcessed
+      });
+
+      await refetch();
+      alert(`✅ Analýza dokončená!\n\nSpracovaných: ${totalProcessed} z ${neanalyzovane.length}`);
+
     } catch (error) {
       console.error('Analysis error:', error);
       alert('❌ Chyba pri analýze:\n' + (error.response?.data?.error || error.message));
     } finally {
       setAnalyzing(false);
-      analyzaStartCountRef.current = 0;
     }
   };
 
-  // Štatistiky - používaj vizualna_analyza
+  // Štatistiky
   const stats = useMemo(() => {
     const analyzovane = dokumenty.filter(d => d.vizualna_analyza);
     
@@ -134,66 +126,12 @@ export default function AdminAnalyzaDatabazy() {
       kombinacia: analyzovane.filter(d => d.vizualna_analyza?.typ_obsahu === 'kombinacia').length
     };
 
-    const materialyPodlaVyrobcu = {};
-    analyzovane.forEach(dok => {
-      const vyrobca = dok.vyrobca || 'Neznámy';
-      if (!materialyPodlaVyrobcu[vyrobca]) materialyPodlaVyrobcu[vyrobca] = {};
-      dok.vizualna_analyza?.fasada_materialy?.forEach(mat => {
-        const materialName = typeof mat === 'string' ? mat : mat.material;
-        if (materialName) {
-          materialyPodlaVyrobcu[vyrobca][materialName] = (materialyPodlaVyrobcu[vyrobca][materialName] || 0) + 1;
-        }
-      });
-    });
-
-    const priecinky = {};
-    dokumenty.forEach(dok => {
-      const cesta = dok.cesta_priecinku || 'Bez priečinka';
-      if (!priecinky[cesta]) {
-        priecinky[cesta] = {
-          celkom: 0,
-          vyrobca: dok.vyrobca,
-          model: dok.model_domu,
-          dokumenty: []
-        };
-      }
-      priecinky[cesta].celkom++;
-      priecinky[cesta].dokumenty.push(dok);
-    });
-
-    return {
-      materialy,
-      farby,
-      typyObsahu,
-      materialyPodlaVyrobcu,
-      priecinky
-    };
+    return { materialy, farby, typyObsahu };
   }, [dokumenty]);
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#ff7c7c'];
-
-  const materialyData = Object.entries(stats.materialy).map(([name, value]) => ({ name, value }));
-  const farbyData = Object.entries(stats.farby).map(([name, value]) => ({ name, value }));
-  const typyData = Object.entries(stats.typyObsahu).map(([name, value]) => ({ 
-    name: name.charAt(0).toUpperCase() + name.slice(1), 
-    value 
-  }));
-
-  const uniqueVyrobcovia = [...new Set(dokumenty.map(d => d.vyrobca).filter(Boolean))];
-  const uniqueModels = [...new Set(dokumenty.map(d => d.model_domu).filter(Boolean))];
-
-  const dokumentyPodlaVyrobcu = dokumenty.reduce((acc, dok) => {
-    const vyrobca = dok.vyrobca || 'Bez výrobcu';
-    if (!acc[vyrobca]) acc[vyrobca] = {};
-    
-    const model = dok.model_domu || 'Bez modelu';
-    if (!acc[vyrobca][model]) acc[vyrobca][model] = [];
-    acc[vyrobca][model].push(dok);
-    return acc;
-  }, {});
-
   const analyzovaneCount = dokumenty.filter(d => d.vizualna_analyza).length;
-  const neanalyzovaneCount = dokumenty.length - analyzovaneCount;
+  const podrobneAnalyzovaneCount = dokumenty.filter(d => d.podrobna_analyza_datum).length;
+  const neanalyzovaneCount = dokumenty.filter(d => !d.podrobna_analyza_datum).length;
 
   if (userLoading) {
     return (
@@ -248,8 +186,20 @@ export default function AdminAnalyzaDatabazy() {
                 <CheckCircle className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Analyzované</p>
+                <p className="text-sm text-gray-600">Základná analýza</p>
                 <p className="text-2xl font-bold text-green-900">{analyzovaneCount}</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6 bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
+                <CheckCircle className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Podrobná analýza</p>
+                <p className="text-2xl font-bold text-purple-900">{podrobneAnalyzovaneCount}</p>
               </div>
             </div>
           </Card>
@@ -266,27 +216,15 @@ export default function AdminAnalyzaDatabazy() {
             </div>
           </Card>
 
-          <Card className="p-6 bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
-                <Building2 className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Výrobcovia</p>
-                <p className="text-2xl font-bold text-purple-900">{uniqueVyrobcovia.length}</p>
-              </div>
-            </div>
-          </Card>
-
           <Card className="p-6 bg-gradient-to-br from-amber-50 to-orange-50 border-amber-200">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center">
                 <FileText className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600">Pôdorysy</p>
+                <p className="text-sm text-gray-600">Percento</p>
                 <p className="text-2xl font-bold text-amber-900">
-                  {dokumenty.filter(d => d.vizualna_analyza?.podorys_info?.je_podorys).length}
+                  {dokumenty.length > 0 ? Math.round((podrobneAnalyzovaneCount / dokumenty.length) * 100) : 0}%
                 </p>
               </div>
             </div>
@@ -315,12 +253,13 @@ export default function AdminAnalyzaDatabazy() {
                       <div className="w-32 bg-gray-200 rounded-full h-2">
                         <div 
                           className="bg-primary h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${(progress.current / progress.total) * 100}%` }}
+                          style={{ width: `${progress.total > 0 ? (progress.current / progress.total) * 100 : 0}%` }}
                         />
                       </div>
-                      <span className="font-medium">{Math.round((progress.current / progress.total) * 100)}%</span>
+                      <span className="font-medium">{progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0}%</span>
                     </div>
                     <p className="text-xs">Spracovaných: {progress.current} / {progress.total}</p>
+                    <p className="text-xs text-orange-600">Zostáva: {progress.remaining}</p>
                   </div>
                 )}
               </div>
@@ -349,28 +288,19 @@ export default function AdminAnalyzaDatabazy() {
         {results && (
           <Card className="p-6 mb-8 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
             <h3 className="text-xl font-bold mb-4">📊 Výsledky poslednej analýzy</h3>
-            <div className="grid grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="text-center p-4 bg-white rounded-lg">
                 <p className="text-sm text-gray-600">Celkom</p>
                 <p className="text-3xl font-bold text-blue-600">{results.total}</p>
               </div>
               <div className="text-center p-4 bg-white rounded-lg">
                 <p className="text-sm text-gray-600">Úspešné</p>
-                <p className="text-3xl font-bold text-green-600">
-                  {results.results?.filter(r => r.status === 'success').length || 0}
-                </p>
-              </div>
-              <div className="text-center p-4 bg-white rounded-lg">
-                <p className="text-sm text-gray-600">Chyby</p>
-                <p className="text-3xl font-bold text-red-600">
-                  {results.results?.filter(r => r.status === 'error').length || 0}
-                </p>
+                <p className="text-3xl font-bold text-green-600">{results.processed}</p>
               </div>
             </div>
           </Card>
         )}
 
-        {/* Rest stays same - dashboards, charts, etc */}
         <p className="text-center text-gray-500 py-8">
           Dashboardy a grafy sa zobrazia po dokončení analýzy
         </p>
