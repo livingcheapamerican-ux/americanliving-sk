@@ -693,7 +693,7 @@ export default function AdminDokumenty() {
           if (cancelRef.current) break;
 
           await Promise.allSettled(
-            analysisBatch.map(item => analyzeMutation.mutateAsync(item.id).catch(() => {}))
+            analysisBatch.map(item => analyzeMutation.mutateAsync(item.id).catch(() => {})),
           );
 
           analyzedCount += analysisBatch.length;
@@ -987,8 +987,7 @@ export default function AdminDokumenty() {
               <Button 
                 onClick={handleAnalyzeAll}
                 disabled={analyzingAll || dokumenty.filter(d => !d.analyzovaný).length === 0}
-                variant="outline"
-                className="h-12 border-purple-200 text-purple-700 hover:bg-purple-50 shadow-md transition-all hover:scale-105"
+                className="h-12 bg-blue-900 hover:bg-blue-800 text-white shadow-md transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
               >
                 {analyzingAll ? (
                   <>
@@ -998,7 +997,7 @@ export default function AdminDokumenty() {
                 ) : (
                   <>
                     <Brain className="w-4 h-4 mr-2" />
-                    AI Analýza ({dokumenty.filter(d => !d.analyzovaný).length})
+                    Analyzovať AI ({dokumenty.filter(d => !d.analyzovaný).length})
                   </>
                 )}
               </Button>
