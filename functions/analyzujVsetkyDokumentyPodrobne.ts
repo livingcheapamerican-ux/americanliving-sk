@@ -3,15 +3,36 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
+    
+    // Skontroluj autentifikáciu
+    let user;
+    try {
+      user = await base44.auth.me();
+    } catch (error) {
+      return Response.json({ error: 'Authentication failed', details: error.message }, { status: 401 });
+    }
     
     if (!user || (user.role !== 'admin' && !user.super_admin)) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+      return Response.json({ 
+        error: 'Unauthorized', 
+        user_role: user?.role,
+        is_super_admin: user?.super_admin 
+      }, { status: 403 });
     }
 
     const dokumenty = await base44.asServiceRole.entities.Dokument.filter({
       typ: "fotky"
     });
+
+    if (!dokumenty || dokumenty.length === 0) {
+      return Response.json({
+        success: true,
+        processed: 0,
+        total: 0,
+        message: 'Žiadne dokumenty na analýzu',
+        results: []
+      });
+    }
 
     const results = [];
     let processed = 0;
@@ -268,7 +289,7 @@ Buď MAXIMÁLNE KONKRÉTNY a PODROBNÝ v každom bode. Nepíš všeobecnosti. De
 
         processed++;
         
-        // Rate limit protection
+        // Rate limit protection - delay every 3 documents
         if (processed % 3 === 0) {
           await new Promise(resolve => setTimeout(resolve, 3000));
         }
@@ -293,9 +314,10 @@ Buď MAXIMÁLNE KONKRÉTNY a PODROBNÝ v každom bode. Nepíš všeobecnosti. De
     });
 
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Main error:', error);
     return Response.json({ 
       error: error.message,
+      stack: error.stack,
       success: false 
     }, { status: 500 });
   }
