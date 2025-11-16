@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -123,11 +122,11 @@ Odpoveď (max 200 slov, priateľsky tón, využívaj údaje z dokumentov):`,
           >
             <Button
               onClick={() => setIsOpen(true)}
-              className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-secondary hover:from-secondary hover:to-primary shadow-2xl text-white"
+              className="h-16 w-16 rounded-full bg-red-600 hover:bg-red-700 shadow-2xl text-white border-2 border-white"
             >
               <MessageCircle className="w-7 h-7" />
             </Button>
-            <div className="absolute -top-2 -right-2 bg-gradient-to-br from-cyan-500 to-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
+            <div className="absolute -top-2 -right-2 bg-gradient-to-br from-cyan-500 to-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse shadow-lg">
               AI
             </div>
           </motion.div>
@@ -145,10 +144,10 @@ Odpoveď (max 200 slov, priateľsky tón, využívaj údaje z dokumentov):`,
           >
             <Card className="flex flex-col h-[600px] shadow-2xl border-2 border-primary/20 overflow-hidden">
               {/* Header */}
-              <div className="bg-gradient-to-r from-primary to-secondary p-4 text-white flex items-center justify-between">
+              <div className="bg-gradient-to-r from-red-600 to-red-700 p-4 text-white flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                    <MessageCircle className="w-6 h-6 text-primary" />
+                    <MessageCircle className="w-6 h-6 text-red-600" />
                   </div>
                   <div>
                     <h3 className="font-bold text-lg">AI Asistent</h3>
@@ -194,7 +193,7 @@ Odpoveď (max 200 slov, priateľsky tón, využívaj údaje z dokumentov):`,
                     <div
                       className={`max-w-[80%] rounded-2xl px-4 py-3 ${
                         message.role === "user"
-                          ? "bg-primary text-white"
+                          ? "bg-red-600 text-white"
                           : "bg-white border border-gray-200 text-gray-800"
                       }`}
                     >
@@ -207,7 +206,7 @@ Odpoveď (max 200 slov, priateľsky tón, využívaj údaje z dokumentov):`,
                 {isLoading && (
                   <div className="flex justify-start">
                     <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
-                      <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                      <Loader2 className="w-5 h-5 animate-spin text-red-600" />
                     </div>
                   </div>
                 )}
@@ -222,12 +221,12 @@ Odpoveď (max 200 slov, priateľsky tón, využívaj údaje z dokumentov):`,
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Napíšte správu..."
                     disabled={isLoading}
-                    className="flex-1 border-gray-300 focus:border-primary"
+                    className="flex-1 border-gray-300 focus:border-red-600"
                   />
                   <Button
                     type="submit"
                     disabled={isLoading || !input.trim()}
-                    className="bg-primary hover:bg-secondary"
+                    className="bg-red-600 hover:bg-red-700"
                   >
                     <Send className="w-5 h-5" />
                   </Button>
