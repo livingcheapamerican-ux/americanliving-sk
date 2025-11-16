@@ -575,140 +575,163 @@ export default function AdminDokumenty() {
     setUploadedBytes(cumulativeBytes);
 
     try {
-      // ZVÝŠENÁ rýchlosť - väčší batch
-      const BATCH_SIZE = 40;
-      
-      const filesToActuallyUpload = filesToProcessInitially;
-
-      const batches = [];
-      for (let i = 0; i < filesToActuallyUpload.length; i += BATCH_SIZE) {
-        batches.push(filesToActuallyUpload.slice(i, i + BATCH_SIZE));
-      }
-
-      for (const batch of batches) {
-        if (uploadWorkerRef.current?.cancel) {
-          const remainingFilesToUpload = filesToActuallyUpload.length - (completedCount - alreadyUploadedCount - results.skipped.length);
-          if (remainingFilesToUpload > 0) {
-            results.failed.push({
-              name: `Zostávajúcich ${remainingFilesToUpload} súborov`,
-              error: 'Upload zrušený',
-            });
-          }
-          break;
-        }
-
-        const batchPromises = batch.map(async (file) => {
-          if (uploadWorkerRef.current?.cancel) return null;
+          // ZNÍŽENÁ rýchlosť kvôli rate limit - menší batch s delayom
+          const BATCH_SIZE = 10;
           
-          // Preskočiť súbory ktoré boli manuálne zrušené
-          if (fileStatuses[file.name] === 'zrušený') {
-            return { file, status: 'cancelled', size: file.size };
+          const filesToActuallyUpload = filesToProcessInitially;
+
+          const batches = [];
+          for (let i = 0; i < filesToActuallyUpload.length; i += BATCH_SIZE) {
+            batches.push(filesToActuallyUpload.slice(i, i + BATCH_SIZE));
           }
 
-          updateFileStatus(file.name, 'nahrávam');
-          updateFileProgress(file.name, 0); // Initialize individual file progress
-          setCurrentFileName(file.name);
-
-          try {
-            // Preskočiť ak bol medzitým zrušený
-            if (fileStatuses[file.name] === 'zrušený') {
-              return { file, status: 'cancelled', size: file.size };
-            }
-            
-            const filePath = file.webkitRelativePath || file.name;
-            const folderInfo = extractFolderInfo(filePath);
-
-            // Upload s progress tracking
-            updateFileProgress(file.name, 30);
-            const uploadResponse = await base44.integrations.Core.UploadFile({ file });
-            updateFileProgress(file.name, 70);
-
-            // Preskočiť ak bol medzitým zrušený
-            if (fileStatuses[file.name] === 'zrušený') {
-              return { file, status: 'cancelled', size: file.size };
+          for (const batch of batches) {
+            if (uploadWorkerRef.current?.cancel) {
+              const remainingFilesToUpload = filesToActuallyUpload.length - (completedCount - alreadyUploadedCount - results.skipped.length);
+              if (remainingFilesToUpload > 0) {
+                results.failed.push({
+                  name: `Zostávajúcich ${remainingFilesToUpload} súborov`,
+                  error: 'Upload zrušený',
+                });
+              }
+              break;
             }
 
-            const autoTags = [...formData.tags];
-            if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
-            if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
+            const batchPromises = batch.map(async (file) => {
+              if (uploadWorkerRef.current?.cancel) return null;
+              
+              // Preskočiť súbory ktoré boli manuálne zrušené
+              if (fileStatuses[file.name] === 'zrušený') {
+                return { file, status: 'cancelled', size: file.size };
+              }
 
-            const doc = await createMutation.mutateAsync({
-              nazov: file.name,
-              popis: formData.popis,
-              typ: formData.typ,
-              vyrobca: formData.vyrobca,
-              pre_chatbota: formData.pre_chatbota,
-              tags: [...new Set(autoTags)],
-              model_domu: folderInfo.model_domu,
-              podpriecinok: folderInfo.podpriecinok,
-              cesta_priecinku: folderInfo.cesta_priecinku,
-              subor_url: uploadResponse.file_url,
-              velkost: file.size,
-              typ_suboru: file.type || 'application/octet-stream'
+              updateFileStatus(file.name, 'nahrávam');
+              updateFileProgress(file.name, 0);
+              setCurrentFileName(file.name);
+
+              // Retry mechanizmus pre rate limit
+              let retries = 0;
+              const maxRetries = 3;
+              
+              while (retries <= maxRetries) {
+                try {
+                  // Preskočiť ak bol medzitým zrušený
+                  if (fileStatuses[file.name] === 'zrušený') {
+                    return { file, status: 'cancelled', size: file.size };
+                  }
+                  
+                  const filePath = file.webkitRelativePath || file.name;
+                  const folderInfo = extractFolderInfo(filePath);
+
+                  // Upload s progress tracking
+                  updateFileProgress(file.name, 30);
+                  const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+                  updateFileProgress(file.name, 70);
+
+                  // Preskočiť ak bol medzitým zrušený
+                  if (fileStatuses[file.name] === 'zrušený') {
+                    return { file, status: 'cancelled', size: file.size };
+                  }
+
+                  const autoTags = [...formData.tags];
+                  if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
+                  if (folderInfo.podpriecinok) autoTags.push(folderInfo.podpriecinok);
+
+                  const doc = await createMutation.mutateAsync({
+                    nazov: file.name,
+                    popis: formData.popis,
+                    typ: formData.typ,
+                    vyrobca: formData.vyrobca,
+                    pre_chatbota: formData.pre_chatbota,
+                    tags: [...new Set(autoTags)],
+                    model_domu: folderInfo.model_domu,
+                    podpriecinok: folderInfo.podpriecinok,
+                    cesta_priecinku: folderInfo.cesta_priecinku,
+                    subor_url: uploadResponse.file_url,
+                    velkost: file.size,
+                    typ_suboru: file.type || 'application/octet-stream'
+                  });
+
+                  updateFileStatus(file.name, 'nahratý');
+                  updateFileProgress(file.name, 100);
+                  results.successful.push({ name: file.name, id: doc.id });
+                  
+                  cumulativeBytes += file.size;
+                  setUploadedBytes(cumulativeBytes);
+                  
+                  return { file, status: 'success', size: file.size };
+
+                } catch (fileError) {
+                  // Ak je to rate limit error, skús znova po delay
+                  if (fileError.message?.includes('rate limit') || fileError.message?.includes('Rate limit') || fileError.response?.status === 429) {
+                    retries++;
+                    if (retries <= maxRetries) {
+                      const delay = Math.pow(2, retries) * 1000; // Exponenciálny backoff
+                      console.log(`Rate limit pre ${file.name}, retry ${retries}/${maxRetries} za ${delay}ms`);
+                      await new Promise(resolve => setTimeout(resolve, delay));
+                      continue; // Skús znova
+                    }
+                  }
+                  
+                  // Iná chyba alebo vyčerpané retry
+                  console.error(`Chyba pri súbore ${file.name}:`, fileError);
+                  updateFileStatus(file.name, 'odmietnutý');
+                  updateFileProgress(file.name, 100);
+                  results.failed.push({
+                    name: file.name,
+                    error: fileError.message || 'Neznáma chyba',
+                  });
+                  
+                  cumulativeBytes += file.size;
+                  setUploadedBytes(cumulativeBytes);
+                  
+                  return { file, status: 'failed', size: file.size };
+                }
+              }
             });
 
-            updateFileStatus(file.name, 'nahratý');
-            updateFileProgress(file.name, 100);
-            results.successful.push({ name: file.name, id: doc.id });
-            
-            // OKAMŽITÉ updatovanie objemu
-            cumulativeBytes += file.size;
-            setUploadedBytes(cumulativeBytes);
-            
-            return { file, status: 'success', size: file.size };
+            const batchResults = await Promise.allSettled(batchPromises);
 
-          } catch (fileError) {
-            console.error(`Chyba pri súbore ${file.name}:`, fileError);
-            updateFileStatus(file.name, 'odmietnutý');
-            updateFileProgress(file.name, 100);
-            results.failed.push({
-              name: file.name,
-              error: fileError.message,
-            });
-            
-            // Aj pri chybe updatovať
-            cumulativeBytes += file.size;
-            setUploadedBytes(cumulativeBytes);
-            
-            return { file, status: 'failed', size: file.size };
-          }
-        });
-
-        const batchResults = await Promise.allSettled(batchPromises);
-
-        batchResults.forEach(result => {
-          if (result.status === 'fulfilled' && result.value) { // Count both success and handled failures
-            if (result.value.status !== 'cancelled') { // Only increment completedCount for non-cancelled
+            batchResults.forEach(result => {
+              if (result.status === 'fulfilled' && result.value) {
+                if (result.value.status !== 'cancelled') {
+                    completedCount++;
+                }
+              } else if (result.status === 'rejected') {
+                console.error('Batch promise rejected:', result.reason);
                 completedCount++;
+              }
+            });
+
+            setUploadProgress({ current: completedCount, total: totalFilesForProgress });
+            saveUploadState(fileStatuses, { current: completedCount, total: totalFilesForProgress }, formData, uploadMode);
+            
+            // Delay medzi batch-ami pre vyhnutie sa rate limit
+            if (batches.indexOf(batch) < batches.length - 1) {
+              await new Promise(resolve => setTimeout(resolve, 2000));
             }
-          } else if (result.status === 'rejected') { // Should ideally not happen if catch handles errors
-            console.error('Batch promise rejected:', result.reason);
-            completedCount++; // Still count as processed
-          }
-        });
-
-        setUploadProgress({ current: completedCount, total: totalFilesForProgress });
-        saveUploadState(fileStatuses, { current: completedCount, total: totalFilesForProgress }, formData, uploadMode);
-      }
-
-      // AI analýza v pozadí - ešte rýchlejšie
-      if (results.successful.length > 0 && !uploadWorkerRef.current?.cancel) {
-        setCurrentFileName("Analyzujem v pozadí...");
-        
-        setTimeout(async () => {
-          const analysisBatches = [];
-          for (let i = 0; i < results.successful.length; i += 20) {
-            analysisBatches.push(results.successful.slice(i, i + 20));
           }
 
-          for (const analysisBatch of analysisBatches) {
-            await Promise.allSettled(
-              analysisBatch.map(item => analyzeMutation.mutateAsync(item.id).catch(() => {})),
-            );
+          // AI analýza v pozadí - ešte pomalšie
+          if (results.successful.length > 0 && !uploadWorkerRef.current?.cancel) {
+            setCurrentFileName("Analyzujem v pozadí...");
+            
+            setTimeout(async () => {
+              const analysisBatches = [];
+              for (let i = 0; i < results.successful.length; i += 5) {
+                analysisBatches.push(results.successful.slice(i, i + 5));
+              }
+
+              for (const analysisBatch of analysisBatches) {
+                await Promise.allSettled(
+                  analysisBatch.map(item => analyzeMutation.mutateAsync(item.id).catch(() => {})),
+                );
+                // Delay medzi analýzami
+                await new Promise(resolve => setTimeout(resolve, 3000));
+              }
+              queryClient.invalidateQueries({ queryKey: ['dokumenty'] });
+            }, 0);
           }
-          queryClient.invalidateQueries({ queryKey: ['dokumenty'] });
-        }, 0);
-      }
 
       setUploadResults(results);
       setShowForm(false);
