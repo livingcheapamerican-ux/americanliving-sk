@@ -251,9 +251,22 @@ export default function AdminDokumenty() {
     const validFiles = newFiles.filter(file => {
       if (shouldSkipFile(file.name)) return false;
       
-      // Zrýchlená validácia typu - bez await
+      // Validácia podľa typu dokumentu
       if (formData.typ === 'video') {
         return file.type.startsWith('video/') || file.name.match(/\.(mp4|mov|avi|mkv|webm)$/i);
+      }
+      
+      if (formData.typ === 'fotky') {
+        return file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i);
+      }
+      
+      // Pre ostatné typy - odmietni videá a obrázky, ak nie sú povolené explicitne
+      // Ak nie je video alebo fotka, odmietni videá a obrázky
+      if (file.type.startsWith('video/') || file.name.match(/\.(mp4|mov|avi|mkv|webm)$/i)) {
+        return false;
+      }
+      if (file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+        return false;
       }
       
       return true;
@@ -312,9 +325,22 @@ export default function AdminDokumenty() {
           return file.type.startsWith('video/') || file.name.match(/\.(mp4|mov|avi|mkv|webm)$/i);
         }
         
+        if (formData.typ === 'fotky') {
+          return file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i);
+        }
+        
+        // Pre ostatné typy - odmietni videá a obrázky, ak nie sú povolené explicitne
+        // Ak nie je video alebo fotka, odmietni videá a obrázky
+        if (file.type.startsWith('video/') || file.name.match(/\.(mp4|mov|avi|mkv|webm)$/i)) {
+          return false;
+        }
+        if (file.type.startsWith('image/') || file.name.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+          return false;
+        }
+        
         return true;
       });
-
+      
       const rejectedCount = allFiles.length - validFiles.length;
       if (rejectedCount > 0) {
         alert(`${rejectedCount} súborov bolo odmietnutých.`);
