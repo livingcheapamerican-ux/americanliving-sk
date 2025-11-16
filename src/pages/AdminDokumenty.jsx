@@ -672,7 +672,8 @@ export default function AdminDokumenty() {
                 cumulativeBytes += file.size;
                 setUploadedBytes(cumulativeBytes);
                 
-                return { file, status: 'success', size: file.size };
+                // Úspech - break z while loop
+                break;
 
               } catch (fileError) { // Catch for specific upload/mutation errors within the retry loop
                 // Ak je to rate limit error, skús znova po delay
@@ -690,6 +691,11 @@ export default function AdminDokumenty() {
                 throw fileError;
               }
             }
+            // After the while loop, if the file was successfully uploaded and status is 'nahratý'
+            if (fileStatuses[file.name] === 'nahratý') {
+                 return { file, status: 'success', size: file.size };
+            }
+            
             // Ak sa dostaneme sem, vyčerpali sa retry pokusy a posledný pokus neuspel.
             throw new Error(`Vyčerpané pokusy pre súbor ${file.name}`);
             
@@ -896,7 +902,7 @@ export default function AdminDokumenty() {
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <AlertCircle className="w-8 h-8 text-red-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Prístup zamietnutý</h2>
+          <h2 className="2xl font-bold text-gray-800 mb-2">Prístup zamietnutý</h2>
           <p className="text-gray-600">Táto stránka je dostupná len pre administrátorov.</p>
         </Card>
       </div>
