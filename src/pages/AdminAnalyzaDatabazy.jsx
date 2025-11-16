@@ -21,6 +21,7 @@ export default function AdminAnalyzaDatabazy() {
   const [autoReorganize, setAutoReorganize] = useState(true);
   const [batchSize] = useState(5);
   const [parallelLimit] = useState(2);
+  const [refreshing, setRefreshing] = useState(false);
   
   const pausedRef = useRef(false);
   const stopRef = useRef(false);
@@ -35,7 +36,8 @@ export default function AdminAnalyzaDatabazy() {
   const { data: dokumenty = [], isLoading, refetch } = useQuery({
     queryKey: ['dokumenty-all'],
     queryFn: () => base44.entities.Dokument.filter({ typ: "fotky" }),
-    refetchInterval: 5000
+    refetchInterval: 10000,
+    staleTime: 0
   });
 
   const reorganizeMutation = useMutation({
@@ -58,6 +60,14 @@ export default function AdminAnalyzaDatabazy() {
     console.log(`[${log.time}] ${message}`);
   };
 
+  const handleManualRefresh = async () => {
+    setRefreshing(true);
+    addLog('🔄 Manuálny refresh dát...', 'info');
+    await refetch();
+    setRefreshing(false);
+    addLog('✅ Dáta obnovené', 'success');
+  };
+
   const handleAutoAnalyza = async () => {
     setAutoAnalyzing(true);
     addLog('🤖 Spúšťam automatickú analýzu nových dokumentov...', 'info');
@@ -77,6 +87,7 @@ export default function AdminAnalyzaDatabazy() {
       addLog(`❌ Chyba automatickej analýzy: ${error.message}`, 'error');
     } finally {
       setAutoAnalyzing(false);
+      await refetch();
     }
   };
 
@@ -93,10 +104,10 @@ export default function AdminAnalyzaDatabazy() {
       }
 
       await base44.entities.Dokument.update(dokId, updateData);
-      addLog(`💾 Uložené do DB: ${dokId}`, 'info');
+      addLog(`💾 Uložené: ${dokId}`, 'info');
       return true;
     } catch (error) {
-      addLog(`❌ Chyba ukladania do DB: ${error.message}`, 'error');
+      addLog(`❌ Chyba ukladania: ${error.message}`, 'error');
       return false;
     }
   };
@@ -231,9 +242,14 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
   };
 
   const handleAnalyzaVsetkych = async () => {
+    addLog('📊 Načítavam aktuálne dáta...', 'info');
     await refetch();
     
     const neanalyzovane = dokumenty.filter(d => !d.podrobna_analyza_datum);
+    
+    addLog(`📋 Celkom fotiek: ${dokumenty.length}`, 'info');
+    addLog(`✅ Analyzovaných: ${dokumenty.length - neanalyzovane.length}`, 'info');
+    addLog(`⏳ Zostáva: ${neanalyzovane.length}`, 'info');
     
     if (neanalyzovane.length === 0) {
       alert('Všetky fotky sú už analyzované!');
@@ -315,6 +331,8 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
     setAnalyzing(false);
     setCurrentDoc(null);
     addLog(`🎉 Hotovo! Úspešných: ${processed}, Preskočených: ${skipped}, Chýb: ${failed}`, 'success');
+    
+    await refetch();
 
     if (autoReorganize && processed > 0) {
       addLog('🔄 Automatická reorganizácia...', 'info');
@@ -365,11 +383,31 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 p-8">
       <div className="container mx-auto max-w-7xl">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-blue-600 bg-clip-text text-transparent mb-2">
-            🎯 Analýza celej databázy
-          </h1>
-          <p className="text-gray-600">Stabilný režim - {parallelLimit} súčasne, dávky po {batchSize}, checkpoint po každej dávke</p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-blue-600 bg-clip-text text-transparent mb-2">
+              🎯 Analýza celej databázy
+            </h1>
+            <p className="text-gray-600">Stabilný režim - {parallelLimit} súčasne, dávky po {batchSize}, checkpoint po každej dávke</p>
+          </div>
+          <Button 
+            onClick={handleManualRefresh} 
+            disabled={refreshing || isLoading}
+            variant="outline"
+            size="lg"
+          >
+            {refreshing || isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Načítavam...
+              </>
+            ) : (
+              <>
+                <RefreshCw className="w-5 h-5 mr-2" />
+                Obnoviť dáta
+              </>
+            )}
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-8">
@@ -454,8 +492,8 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
             <div className="text-sm">
               <p className="font-semibold text-green-900 mb-1">✅ Stabilný checkpoint režim</p>
               <p className="text-green-700">
-                Okamžité ukladanie do DB po každej analýze + checkpoint po každej dávce. 
-                Auto-refresh každých 5s. Pokračuje presne tam kde skončil.
+                Okamžité ukladanie do DB po každej analýze + checkpoint po každej dávke. 
+                Auto-refresh každých 10s. Pokračuje presne tam kde skončil.
               </p>
             </div>
           </div>
