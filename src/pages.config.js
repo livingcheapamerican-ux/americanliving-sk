@@ -12,6 +12,7 @@ import AdminGeneratorObrazkov from './pages/AdminGeneratorObrazkov';
 import AdminMigraciaObrazkov from './pages/AdminMigraciaObrazkov';
 import AdminGoogleDrive from './pages/AdminGoogleDrive';
 import AdminDokumenty from './pages/AdminDokumenty';
+import InteraktivnyKonfigurator from './pages/InteraktivnyKonfigurator';
 import Layout from './Layout.jsx';
 
 
@@ -30,6 +31,7 @@ export const PAGES = {
     "AdminMigraciaObrazkov": AdminMigraciaObrazkov,
     "AdminGoogleDrive": AdminGoogleDrive,
     "AdminDokumenty": AdminDokumenty,
+    "InteraktivnyKonfigurator": InteraktivnyKonfigurator,
 }
 
 export const pagesConfig = {

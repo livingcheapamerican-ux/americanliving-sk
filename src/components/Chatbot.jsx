@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { MessageCircle, X, Send, Loader2, Minimize2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,6 +20,15 @@ export default function Chatbot() {
   const messagesEndRef = useRef(null);
 
   const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
+
+  // Načítaj analyzované dokumenty pre kontext
+  const { data: dokumenty = [] } = useQuery({
+    queryKey: ['dokumenty-chatbot'],
+    queryFn: () => base44.entities.Dokument.filter({ 
+      pre_chatbota: true,
+      analyzovaný: true 
+    })
+  });
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -38,6 +48,29 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
+      // Priprav kontext z dokumentov
+      const kontext = dokumenty
+        .map(dok => {
+          let info = `Dokument: ${dok.nazov} (${dok.vyrobca})\n`;
+          if (dok.extrahovaný_obsah) {
+            info += `Obsah: ${dok.extrahovaný_obsah.substring(0, 500)}\n`;
+          }
+          if (dok.kľúčové_informácie) {
+            if (dok.kľúčové_informácie.modely_domov?.length) {
+              info += `Modely: ${dok.kľúčové_informácie.modely_domov.join(', ')}\n`;
+            }
+            if (dok.kľúčové_informácie.cenové_informácie?.length) {
+              info += `Ceny: ${dok.kľúčové_informácie.cenové_informácie.slice(0, 3).join(', ')}\n`;
+            }
+            if (dok.kľúčové_informácie.rozmery) {
+              info += `Rozmery: ${JSON.stringify(dok.kľúčové_informácie.rozmery)}\n`;
+            }
+          }
+          return info;
+        })
+        .slice(0, 10)
+        .join('\n---\n');
+
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `Si profesionálny AI asistent pre firmu American Living, ktorá sa zaoberá distribúciou a realizáciou modulárnych domov.
 
@@ -46,15 +79,19 @@ Kontext spoločnosti:
 - Vyrobených viac ako 700 domov od roku 2008
 - Ponúkame komplexné služby vrátane dovozu, montáže, pripojení
 
+AKTUÁLNE INFORMÁCIE Z DATABÁZY DOKUMENTOV:
+${kontext}
+
 Tvoja úloha:
 - Odpovedaj profesionálne, priateľsky a v slovenčine
-- Poskytuj konkrétne informácie o modulárnych domoch
-- Pri otázkach o cenách, modeloch alebo špecifikáciách odporúčaj kontakt alebo katalóg
+- Využívaj PRESNE informácie z dokumentov vyššie
+- Pri otázkach o cenách, modeloch uvádzaj konkrétne údaje z databázy
+- Ak nevieš odpoveď, odporúčaj kontakt alebo interaktívny konfigurátor
 - Buď nápomocný a nadšený z modulárneho bývania
 
 Otázka zákazníka: ${userMessage}
 
-Odpoveď (max 200 slov, priateľsky tón):`,
+Odpoveď (max 200 slov, priateľsky tón, využívaj údaje z dokumentov):`,
         add_context_from_internet: false
       });
 
@@ -106,7 +143,7 @@ Odpoveď (max 200 slov, priateľsky tón):`,
             className="fixed bottom-6 right-6 z-50 w-full max-w-md"
           >
             <Card className="flex flex-col h-[600px] shadow-2xl border-2 border-primary/20 overflow-hidden">
-              {/* Header - Powered by Konfiga */}
+              {/* Header */}
               <div className="bg-gradient-to-r from-primary to-secondary p-4 text-white flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
@@ -195,10 +232,7 @@ Odpoveď (max 200 slov, priateľsky tón):`,
                   </Button>
                 </div>
                 <p className="text-xs text-gray-500 text-center mt-2 flex items-center justify-center gap-1">
-                  AI funkcie poskytované
-                  <a href="https://konfiga.eu" target="_blank" rel="noopener noreferrer" className="text-cyan-600 hover:underline font-semibold">
-                    Konfiga.eu
-                  </a>
+                  AI s aktuálnymi vedomosťami z {dokumenty.length} dokumentov
                 </p>
               </form>
             </Card>

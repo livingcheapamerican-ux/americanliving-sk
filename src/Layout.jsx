@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -28,6 +29,7 @@ export default function Layout({ children }) {
   const navItems = [
     { name: "Domov", path: createPageUrl("Domov"), icon: Home },
     { name: "Katalóg domov", path: createPageUrl("Katalog"), icon: Grid3x3 },
+    { name: "Konfigurátor", path: createPageUrl("InteraktivnyKonfigurator"), icon: Settings },
     { name: "O nás", path: createPageUrl("ONas"), icon: Info },
     { name: "Kontakt", path: createPageUrl("Kontakt"), icon: Phone },
   ];
