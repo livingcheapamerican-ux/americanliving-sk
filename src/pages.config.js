@@ -13,6 +13,7 @@ import AdminMigraciaObrazkov from './pages/AdminMigraciaObrazkov';
 import AdminGoogleDrive from './pages/AdminGoogleDrive';
 import AdminDokumenty from './pages/AdminDokumenty';
 import InteraktivnyKonfigurator from './pages/InteraktivnyKonfigurator';
+import GaleriaRealizacii from './pages/GaleriaRealizacii';
 import Layout from './Layout.jsx';
 
 
@@ -32,6 +33,7 @@ export const PAGES = {
     "AdminGoogleDrive": AdminGoogleDrive,
     "AdminDokumenty": AdminDokumenty,
     "InteraktivnyKonfigurator": InteraktivnyKonfigurator,
+    "GaleriaRealizacii": GaleriaRealizacii,
 }
 
 export const pagesConfig = {
