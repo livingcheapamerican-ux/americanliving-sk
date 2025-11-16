@@ -64,6 +64,7 @@ export default function AdminDokumenty() {
   const [uploadResults, setUploadResults] = useState(null);
   const [currentFileName, setCurrentFileName] = useState("");
   const [fileStatuses, setFileStatuses] = useState({});
+  const [fileProgress, setFileProgress] = useState({}); // Pridané pre individual file progress
   const [analyzingAll, setAnalyzingAll] = useState(false);
   const [analysisProgress, setAnalysisProgress] = useState({ current: 0, total: 0 });
   const [formData, setFormData] = useState({
@@ -177,6 +178,7 @@ export default function AdminDokumenty() {
     setCurrentFileName("");
     setUploading(false);
     setFileStatuses({});
+    setFileProgress({}); // Reset individual file progress
     setUploadedBytes(0);
     setTotalBytes(0);
     if (uploadWorkerRef.current) {
@@ -270,11 +272,14 @@ export default function AdminDokumenty() {
       setTotalBytes(total);
 
       const initialStatuses = {};
+      const initialProgress = {};
       validFiles.forEach(file => {
         const existingStatus = fileStatuses[file.name];
         initialStatuses[file.name] = existingStatus === 'nahratý' ? 'nahratý' : 'pending';
+        initialProgress[file.name] = existingStatus === 'nahratý' ? 100 : 0;
       });
       setFileStatuses(prevStatuses => ({ ...prevStatuses, ...initialStatuses }));
+      setFileProgress(prevProgress => ({ ...prevProgress, ...initialProgress }));
 
       return allSelectedFiles;
     });
@@ -323,11 +328,14 @@ export default function AdminDokumenty() {
         setTotalBytes(total);
 
         const initialStatuses = {};
+        const initialProgress = {};
         validFiles.forEach(file => {
           const existingStatus = fileStatuses[file.name];
           initialStatuses[file.name] = existingStatus === 'nahratý' ? 'nahratý' : 'pending';
+          initialProgress[file.name] = existingStatus === 'nahratý' ? 100 : 0;
         });
         setFileStatuses(prevStatuses => ({ ...prevStatuses, ...initialStatuses }));
+        setFileProgress(prevProgress => ({ ...prevProgress, ...initialProgress }));
 
         return allSelectedFiles;
       });
@@ -379,6 +387,13 @@ export default function AdminDokumenty() {
     }));
   };
 
+  const updateFileProgress = (fileName, progress) => {
+    setFileProgress(prev => ({
+      ...prev,
+      [fileName]: progress
+    }));
+  };
+
   const handleRemoveFile = (index) => {
     setSelectedFiles(prev => {
       const newFiles = prev.filter((_, i) => i !== index);
@@ -391,6 +406,7 @@ export default function AdminDokumenty() {
   const handleClearAllFiles = () => {
     setSelectedFiles([]);
     setFileStatuses({});
+    setFileProgress({}); // Clear individual file progress
     setTotalBytes(0);
     setUploadedBytes(0);
     localStorage.removeItem(UPLOAD_STATE_KEY);
@@ -478,7 +494,8 @@ export default function AdminDokumenty() {
     const filesToProcessInitially = selectedFiles.filter(file => {
       if (fileStatuses[file.name] === 'nahratý') return false;
       if (shouldSkipFile(file.name)) {
-        fileStatuses[file.name] = 'preskočený';
+        updateFileStatus(file.name, 'preskočený');
+        updateFileProgress(file.name, 100);
         return false;
       }
       
@@ -486,7 +503,8 @@ export default function AdminDokumenty() {
       const folderInfo = extractFolderInfo(filePath);
       
       if (isFileDuplicate(file.name, file.size, folderInfo.cesta_priecinku)) {
-        fileStatuses[file.name] = 'duplicita';
+        updateFileStatus(file.name, 'duplicita');
+        updateFileProgress(file.name, 100);
         return false;
       }
       return true;
@@ -551,13 +569,17 @@ export default function AdminDokumenty() {
           if (uploadWorkerRef.current?.cancel) return null;
 
           updateFileStatus(file.name, 'nahrávam');
+          updateFileProgress(file.name, 0); // Initialize individual file progress
           setCurrentFileName(file.name);
 
           try {
             const filePath = file.webkitRelativePath || file.name;
             const folderInfo = extractFolderInfo(filePath);
 
+            // Upload s progress tracking
+            updateFileProgress(file.name, 30);
             const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+            updateFileProgress(file.name, 70);
 
             const autoTags = [...formData.tags];
             if (folderInfo.model_domu) autoTags.push(folderInfo.model_domu);
@@ -579,16 +601,27 @@ export default function AdminDokumenty() {
             });
 
             updateFileStatus(file.name, 'nahratý');
+            updateFileProgress(file.name, 100);
             results.successful.push({ name: file.name, id: doc.id });
+            
+            // OKAMŽITÉ updatovanie objemu
+            cumulativeBytes += file.size;
+            setUploadedBytes(cumulativeBytes);
             
             return { file, status: 'success', size: file.size };
 
           } catch (fileError) {
+            console.error(`Chyba pri súbore ${file.name}:`, fileError);
             updateFileStatus(file.name, 'odmietnutý');
+            updateFileProgress(file.name, 100);
             results.failed.push({
               name: file.name,
               error: fileError.message,
             });
+            
+            // Aj pri chybe updatovať
+            cumulativeBytes += file.size;
+            setUploadedBytes(cumulativeBytes);
             
             return { file, status: 'failed', size: file.size };
           }
@@ -597,16 +630,14 @@ export default function AdminDokumenty() {
         const batchResults = await Promise.allSettled(batchPromises);
 
         batchResults.forEach(result => {
-          if (result.status === 'fulfilled' && result.value && result.value.status === 'success') {
+          if (result.status === 'fulfilled' && result.value) { // Count both success and handled failures
             completedCount++;
-            cumulativeBytes += result.value.size;
-          } else if (result.status === 'fulfilled' && result.value && result.value.status === 'failed') {
-            completedCount++;
-            cumulativeBytes += result.value.size;
+          } else if (result.status === 'rejected') { // Should ideally not happen if catch handles errors
+            console.error('Batch promise rejected:', result.reason);
+            completedCount++; // Still count as processed
           }
         });
 
-        setUploadedBytes(cumulativeBytes);
         setUploadProgress({ current: completedCount, total: totalFilesForProgress });
         saveUploadState(fileStatuses, { current: completedCount, total: totalFilesForProgress }, formData, uploadMode);
       }
@@ -635,6 +666,8 @@ export default function AdminDokumenty() {
       localStorage.removeItem(UPLOAD_STATE_KEY);
       setCurrentFileName("");
       setUploadProgress({ current: 0, total: 0 });
+      setFileProgress({}); // Clear individual file progress after successful upload
+      setFileStatuses({}); // Clear individual file statuses after successful upload
 
     } catch (error) {
       alert("Kritická chyba: " + error.message);
@@ -949,6 +982,8 @@ export default function AdminDokumenty() {
                     setUploading(false); // Make sure uploading is false when opening new form
                     setUploadProgress({ current: 0, total: 0 });
                     setCurrentFileName("");
+                    setFileProgress({}); // Clear individual file progress
+                    setFileStatuses({}); // Clear individual file statuses
                     if (uploadWorkerRef.current) { // If there was a pending upload and it was cancelled
                       uploadWorkerRef.current.cancel = true;
                       uploadWorkerRef.current = null;
@@ -988,6 +1023,7 @@ export default function AdminDokumenty() {
                         setUploadMode(value);
                         setSelectedFiles([]);
                         setFileStatuses({});
+                        setFileProgress({});
                         setTotalBytes(0);
                         setUploadedBytes(0);
                       }} disabled={uploading}>
@@ -1279,16 +1315,37 @@ export default function AdminDokumenty() {
                               {Object.values(fileStatuses).filter(s => s === 'nahratý').length} hotovo
                             </Badge>
                           </div>
-                          {selectedFiles.map((file, index) => {
+                          {selectedFiles
+                            .slice()
+                            .sort((a, b) => {
+                              const statusA = fileStatuses[a.name] || 'pending';
+                              const statusB = fileStatuses[b.name] || 'pending';
+                              
+                              // Nahrávajúce sa súbory hore
+                              if (statusA === 'nahrávam' && statusB !== 'nahrávam') return -1;
+                              if (statusA !== 'nahrávam' && statusB === 'nahrávam') return 1;
+                              
+                              // Potom nahraté
+                              if (statusA === 'nahratý' && statusB !== 'nahratý') return -1;
+                              if (statusA !== 'nahratý' && statusB === 'nahratý') return 1;
+                              
+                              return 0;
+                            })
+                            .map((file, index) => {
                             const status = fileStatuses[file.name] || 'pending';
-                            const fileProgress = status === 'nahratý' ? 100 : status === 'nahrávam' ? 50 : status === 'odmietnutý' ? 100 : 0;
+                            const individualProgress = fileProgress[file.name] || 0;
+                            const displayProgress = status === 'nahratý' ? 100 : 
+                                                   status === 'nahrávam' ? individualProgress : 
+                                                   status === 'odmietnutý' ? 100 : 0;
                             
                             return (
                               <motion.div
                                 key={file.name + index}
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="bg-white rounded-lg p-3 space-y-2 border border-blue-200 shadow-sm"
+                                className={`bg-white rounded-lg p-3 space-y-2 border shadow-sm transition-all ${
+                                  status === 'nahrávam' ? 'border-blue-500 shadow-blue-200' : 'border-blue-200'
+                                }`}
                               >
                                 <div className="flex items-center justify-between text-xs">
                                   <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -1297,7 +1354,7 @@ export default function AdminDokumenty() {
                                   </div>
                                   <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                                     <span className="text-xs font-bold text-blue-700 bg-blue-100 px-2 py-1 rounded">
-                                      {fileProgress}%
+                                      {displayProgress}%
                                     </span>
                                     {getStatusBadge(status)}
                                   </div>
@@ -1310,7 +1367,7 @@ export default function AdminDokumenty() {
                                       status === 'odmietnutý' ? 'bg-gradient-to-r from-red-500 to-rose-500' :
                                       'bg-gray-300'
                                     }`}
-                                    style={{ width: `${fileProgress}%` }}
+                                    style={{ width: `${displayProgress}%` }}
                                   />
                                 </div>
                               </motion.div>
