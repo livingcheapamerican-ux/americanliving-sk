@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -1015,7 +1016,7 @@ export default function AdminDokumenty() {
                     }
                   }
                 }} 
-                className="h-12 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg transition-all hover:scale-105"
+                className="h-12 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg transition-all hover:scale-105 text-white"
               >
                 <Upload className="w-4 h-4 mr-2" />
                 Nahrať dokumenty
@@ -1097,7 +1098,7 @@ export default function AdminDokumenty() {
                             <Button
                               type="button"
                               onClick={() => folderInputRef.current?.click()}
-                              className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg transition-all hover:scale-105"
+                              className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg transition-all hover:scale-105 text-white"
                             >
                               <FolderOpen className="w-4 h-4 mr-2" />
                               Vybrať priečinky
@@ -1116,7 +1117,7 @@ export default function AdminDokumenty() {
                             <Button
                               type="button"
                               onClick={() => document.getElementById('file-input')?.click()}
-                              className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg transition-all hover:scale-105"
+                              className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg transition-all hover:scale-105 text-white"
                             >
                               <Upload className="w-4 h-4 mr-2" />
                               Vybrať súbory
@@ -1301,7 +1302,7 @@ export default function AdminDokumenty() {
                       <Button 
                         type="submit" 
                         disabled={uploading} 
-                        className="flex-1 h-12 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100"
+                        className="flex-1 h-12 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 shadow-lg transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 text-white"
                       >
                         {uploading ? (
                           <>
