@@ -386,24 +386,26 @@ export default function Katalog() {
                             </h3>
                           </Link>
                           
-                          <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
+                          <div className="grid gap-3 mb-4 text-sm" style={{ gridTemplateColumns: `repeat(${[dom.pocet_izieb, true, dom.uzitkova_plocha].filter(Boolean).length}, 1fr)` }}>
                             {dom.pocet_izieb && (
                               <div className="flex items-center gap-2 text-gray-600">
-                                <Home className="w-4 h-4" />
-                                <span><span className="font-semibold text-primary">{dom.pocet_izieb}</span> izieb</span>
+                                <Home className="w-4 h-4 flex-shrink-0" />
+                                <div className="flex flex-col min-w-0">
+                                  <span className="font-semibold text-primary">{dom.pocet_izieb} izieb</span>
+                                </div>
                               </div>
                             )}
                             <div className="flex items-center gap-2 text-gray-600">
-                              <Square className="w-4 h-4" />
-                              <div className="flex flex-col">
+                              <Square className="w-4 h-4 flex-shrink-0" />
+                              <div className="flex flex-col min-w-0">
                                 <span className="font-semibold text-primary">{dom.zastavana_plocha} m²</span>
                                 <span className="text-xs text-gray-500">Zastavaná pl.</span>
                               </div>
                             </div>
                             {dom.uzitkova_plocha && (
                               <div className="flex items-center gap-2 text-gray-600">
-                                <LayoutGrid className="w-4 h-4" />
-                                <div className="flex flex-col">
+                                <LayoutGrid className="w-4 h-4 flex-shrink-0" />
+                                <div className="flex flex-col min-w-0">
                                   <span className="font-semibold text-primary">{dom.uzitkova_plocha} m²</span>
                                   <span className="text-xs text-gray-500">Úžitková pl.</span>
                                 </div>
