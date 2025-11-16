@@ -75,7 +75,7 @@ export default function AdminDokumenty() {
     tags: []
   });
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [tagInput, setTagInput] = useState("");
+  const [tagInput, setTagInput("");
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
   const [uploadedBytes, setUploadedBytes] = useState(0);
   const [totalBytes, setTotalBytes] = useState(0);
@@ -162,6 +162,29 @@ export default function AdminDokumenty() {
       queryClient.invalidateQueries({ queryKey: ['dokumenty'] });
     }
   });
+
+  const [comparingDocs, setComparingDocs] = useState([]);
+  const [compareResult, setCompareResult] = useState(null);
+
+  const handleCompareDocuments = async () => {
+    if (comparingDocs.length !== 2) {
+      alert('Vyberte presne 2 dokumenty na porovnanie');
+      return;
+    }
+
+    try {
+      const response = await base44.functions.invoke('porovnajDokumenty', {
+        document_id1: comparingDocs[0].id,
+        document_id2: comparingDocs[1].id,
+        threshold: 0.7
+      });
+      setCompareResult(response.data);
+      setComparingDocs([]); // Clear selection after comparison
+    } catch (error) {
+      console.error("Error comparing documents:", error);
+      alert('Chyba pri porovnávaní: ' + (error.message || 'Neznáma chyba'));
+    }
+  };
 
   const resetForm = () => {
     setFormData({
@@ -794,7 +817,10 @@ export default function AdminDokumenty() {
       const matchesSearch = dok.nazov?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         dok.popis?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         dok.model_domu?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        dok.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+        dok.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        dok.ai_generovany_popis?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        dok.ai_generovane_tagy?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+
 
       const matchesVyrobca = selectedVyrobca === "all" || dok.vyrobca === selectedVyrobca;
 
@@ -1646,8 +1672,38 @@ export default function AdminDokumenty() {
                               </p>
                             )}
                             {dok.popis && <p className="text-sm text-gray-600 mt-2 line-clamp-2">{dok.popis}</p>}
+                            {dok.ai_generovany_popis && (
+                              <p className="text-sm text-gray-600 mt-2 italic line-clamp-2">
+                                💬 AI: {dok.ai_generovany_popis}
+                              </p>
+                            )}
+                            {dok.ai_generovane_tagy && dok.ai_generovane_tagy.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {dok.ai_generovane_tagy.slice(0, 5).map(tag => (
+                                  <Badge key={tag} className="bg-purple-500/10 text-purple-700 border-purple-200 text-xs">
+                                    {tag}
+                                  </Badge>
+                                ))}
+                              </div>
+                            )}
                           </div>
                           <div className="flex gap-2 flex-shrink-0">
+                            <Button
+                                size="sm"
+                                variant={comparingDocs.find(d => d.id === dok.id) ? "default" : "outline"}
+                                onClick={() => {
+                                  if (comparingDocs.find(d => d.id === dok.id)) {
+                                    setComparingDocs(comparingDocs.filter(d => d.id !== dok.id));
+                                  } else if (comparingDocs.length < 2) {
+                                    setComparingDocs([...comparingDocs, dok]);
+                                  } else {
+                                    alert('Môžete vybrať max 2 dokumenty na porovnanie.');
+                                  }
+                                }}
+                                className="hover:bg-blue-50 hover:border-blue-300 transition-all"
+                            >
+                                {comparingDocs.find(d => d.id === dok.id) ? '✓' : '⚖️'}
+                            </Button>
                             {dok.analyzovaný && (
                               <Button size="sm" variant="outline" onClick={() => setViewingDocument(dok)} className="hover:bg-purple-50 hover:border-purple-300 transition-all">
                                 <Eye className="w-4 h-4 mr-1" />
@@ -1698,6 +1754,137 @@ export default function AdminDokumenty() {
               ))}
             </div>
           )}
+
+          {/* Compare Bar */}
+          {comparingDocs.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50"
+            >
+              <Card className="p-4 bg-white shadow-2xl border-2 border-blue-500">
+                <div className="flex items-center gap-4">
+                  <Badge className="bg-blue-500 text-white">
+                    {comparingDocs.length}/2 vybraných
+                  </Badge>
+                  <div className="text-sm">
+                    {comparingDocs.map(d => d.nazov).join(' vs ')}
+                  </div>
+                  <Button
+                    onClick={handleCompareDocuments}
+                    disabled={comparingDocs.length !== 2}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    Porovnať
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setComparingDocs([])}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              </Card>
+            </motion.div>
+          )}
+
+          {/* Compare Result Modal */}
+          <AnimatePresence>
+            {compareResult && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+                onClick={() => setCompareResult(null)}
+              >
+                <motion.div
+                  initial={{ scale: 0.95 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0.95 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="bg-white rounded-2xl p-8 max-w-3xl w-full max-h-[85vh] overflow-y-auto shadow-2xl"
+                >
+                  <div className="flex items-start justify-between mb-6">
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900 mb-2">Porovnanie dokumentov</h2>
+                      <p className="text-sm text-gray-600">{compareResult.recommendation}</p>
+                    </div>
+                    <Button variant="ghost" size="icon" onClick={() => setCompareResult(null)}>
+                      <X className="w-5 h-5" />
+                    </Button>
+                  </div>
+
+                  <div className="space-y-6">
+                    {/* Celková podobnosť */}
+                    <Card className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50">
+                      <h3 className="font-semibold text-lg mb-4">Celková podobnosť</h3>
+                      <div className="relative w-full bg-gray-200 rounded-full h-8">
+                        <div
+                          className="bg-gradient-to-r from-blue-600 to-indigo-600 h-8 rounded-full flex items-center justify-center text-white font-bold transition-all"
+                          style={{ width: `${compareResult.similarity.total}%` }}
+                        >
+                          {compareResult.similarity.total}%
+                        </div>
+                      </div>
+                    </Card>
+
+                    {/* Detaily podobnosti */}
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <Card className="p-4">
+                        <p className="text-sm font-semibold text-gray-700 mb-2">Hash podobnosť</p>
+                        <Badge className="bg-blue-100 text-blue-800">{compareResult.similarity.hash}%</Badge>
+                      </Card>
+                      <Card className="p-4">
+                        <p className="text-sm font-semibold text-gray-700 mb-2">Tagy podobnosť</p>
+                        <Badge className="bg-green-100 text-green-800">{compareResult.similarity.tags}%</Badge>
+                      </Card>
+                      <Card className="p-4">
+                        <p className="text-sm font-semibold text-gray-700 mb-2">Sémantická podobnosť</p>
+                        <Badge className="bg-purple-100 text-purple-800">{compareResult.similarity.semantic}%</Badge>
+                      </Card>
+                      <Card className="p-4">
+                        <p className="text-sm font-semibold text-gray-700 mb-2">Rovnaké atribúty</p>
+                        <div className="flex gap-2">
+                          {compareResult.similarity.same_type && <Badge variant="outline">Typ ✓</Badge>}
+                          {compareResult.similarity.same_manufacturer && <Badge variant="outline">Výrobca ✓</Badge>}
+                          {compareResult.similarity.same_model && <Badge variant="outline">Model ✓</Badge>}
+                        </div>
+                      </Card>
+                    </div>
+
+                    {/* Spoločné tagy */}
+                    {compareResult.common_tags && compareResult.common_tags.length > 0 && (
+                      <Card className="p-6">
+                        <h3 className="font-semibold mb-3">Spoločné tagy</h3>
+                        <div className="flex flex-wrap gap-2">
+                          {compareResult.common_tags.map((tag, i) => (
+                            <Badge key={i} className="bg-amber-100 text-amber-800">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      </Card>
+                    )}
+
+                    {/* Dokumenty */}
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <Card className="p-4">
+                        <h4 className="font-semibold mb-2">Dokument 1</h4>
+                        <p className="text-sm text-gray-700">{compareResult.document1.nazov}</p>
+                        <Badge variant="outline" className="mt-2">{compareResult.document1.typ}</Badge>
+                      </Card>
+                      <Card className="p-4">
+                        <h4 className="font-semibold mb-2">Dokument 2</h4>
+                        <p className="text-sm text-gray-700">{compareResult.document2.nazov}</p>
+                        <Badge variant="outline" className="mt-2">{compareResult.document2.typ}</Badge>
+                      </Card>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Image Preview Modal */}
           <AnimatePresence>
@@ -1796,6 +1983,42 @@ export default function AdminDokumenty() {
                         <p className="text-gray-700 leading-relaxed">
                           {viewingDocument.zhrnutie}
                         </p>
+                      </div>
+                    )}
+
+                    {viewingDocument.detailne_zhrnutie && (
+                      <div className="p-5 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl border border-cyan-200">
+                        <h4 className="font-semibold text-cyan-900 mb-4">📝 Pokročilé zhrnutie</h4>
+                        
+                        {viewingDocument.detailne_zhrnutie.kratke && (
+                          <div className="mb-4">
+                            <p className="text-xs font-semibold text-cyan-700 mb-1">Krátke zhrnutie:</p>
+                            <p className="text-sm text-cyan-900 italic">{viewingDocument.detailne_zhrnutie.kratke}</p>
+                          </div>
+                        )}
+
+                        {viewingDocument.detailne_zhrnutie.stredne && (
+                          <div className="mb-4">
+                            <p className="text-xs font-semibold text-cyan-700 mb-1">Detailné zhrnutie:</p>
+                            <p className="text-sm text-cyan-900 leading-relaxed">{viewingDocument.detailne_zhrnutie.stredne}</p>
+                          </div>
+                        )}
+
+                        {viewingDocument.detailne_zhrnutie.klucove_body && viewingDocument.detailne_zhrnutie.klucove_body.length > 0 && (
+                          <div>
+                            <p className="text-xs font-semibold text-cyan-700 mb-2">Kľúčové body:</p>
+                            <ul className="space-y-1">
+                              {viewingDocument.detailne_zhrnutie.klucove_body.map((bod, i) => (
+                                <li key={i} className="flex items-start gap-2 text-sm text-cyan-900">
+                                  <span className="flex-shrink-0 w-5 h-5 bg-cyan-100 rounded-full flex items-center justify-center text-xs font-bold text-cyan-700">
+                                    {i + 1}
+                                  </span>
+                                  <span>{bod}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
                     )}
 
