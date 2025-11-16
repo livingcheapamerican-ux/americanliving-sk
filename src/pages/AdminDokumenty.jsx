@@ -1224,7 +1224,7 @@ export default function AdminDokumenty() {
                         <div>
                           <div className="flex items-center justify-between mb-2">
                             <p className="text-sm font-semibold text-blue-900">
-                              {currentFileName || `Spracúvam ${uploadProgress.current} z ${uploadProgress.total}...`}
+                              Aktuálne nahrávam: {currentFileName || 'Pripravujem...'}
                             </p>
                           </div>
                         </div>
@@ -1244,6 +1244,24 @@ export default function AdminDokumenty() {
                               style={{ width: `${uploadProgress.total > 0 ? (uploadProgress.current / uploadProgress.total) * 100 : 0}%` }}
                             />
                           </div>
+                        </div>
+
+                        {/* Real-time file status list */}
+                        <div className="mt-4 max-h-48 overflow-y-auto space-y-2 bg-white/50 rounded-lg p-3">
+                          <p className="text-xs font-semibold text-blue-900 mb-2">Stav súborov:</p>
+                          {selectedFiles.map((file, index) => {
+                            const status = fileStatuses[file.name] || 'pending';
+                            if (status === 'pending') return null; // Skip pending files in progress view
+                            
+                            return (
+                              <div key={file.name + index} className="flex items-center justify-between text-xs">
+                                <span className="truncate flex-1 text-gray-700">{file.name}</span>
+                                <span className="ml-2 flex-shrink-0">
+                                  {getStatusBadge(status)}
+                                </span>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     )}
