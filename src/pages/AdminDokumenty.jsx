@@ -75,7 +75,7 @@ export default function AdminDokumenty() {
     tags: []
   });
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [tagInput, setTagInput("");
+  const [tagInput, setTagInput] = useState("");
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
   const [uploadedBytes, setUploadedBytes] = useState(0);
   const [totalBytes, setTotalBytes] = useState(0);
