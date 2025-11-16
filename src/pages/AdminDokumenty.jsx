@@ -1471,7 +1471,7 @@ export default function AdminDokumenty() {
                   animate={{ scale: 1, opacity: 1 }} 
                   exit={{ scale: 0.95, opacity: 0 }} 
                   onClick={(e) => e.stopPropagation()} 
-                  className="bg-white rounded-2xl p-8 max-w-3xl w-full max-h-[85vh] overflow-y-auto shadow-2xl"
+                  className="bg-white rounded-2xl p-8 max-w-4xl w-full max-h-[85vh] overflow-y-auto shadow-2xl"
                 >
                   <div className="flex items-start justify-between mb-6">
                     <div>
@@ -1501,7 +1501,25 @@ export default function AdminDokumenty() {
                           {viewingDocument.model_domu}{viewingDocument.podpriecinok && ` / ${viewingDocument.podpriecinok}`}
                         </p>
                       )}
+                      {viewingDocument.odporucana_kategoria && viewingDocument.odporucana_kategoria !== viewingDocument.typ && (
+                        <div className="mt-3 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                          <p className="text-xs font-semibold text-amber-900 mb-1">💡 AI odporúča inú kategóriu:</p>
+                          <p className="text-sm text-amber-800 font-medium">{typLabels[viewingDocument.odporucana_kategoria]}</p>
+                        </div>
+                      )}
                     </div>
+
+                    {viewingDocument.zhrnutie && (
+                      <div className="p-5 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100">
+                        <h3 className="font-semibold text-lg mb-3 text-purple-900 flex items-center gap-2">
+                          <Sparkles className="w-5 h-5" />
+                          AI Zhrnutie
+                        </h3>
+                        <p className="text-gray-700 leading-relaxed">
+                          {viewingDocument.zhrnutie}
+                        </p>
+                      </div>
+                    )}
 
                     {viewingDocument.extrahovaný_obsah && (
                       <div>
@@ -1515,12 +1533,12 @@ export default function AdminDokumenty() {
                     {viewingDocument.kľúčové_informácie && (
                       <div>
                         <h3 className="font-semibold text-lg mb-4 text-gray-800">Kľúčové informácie:</h3>
-                        <div className="space-y-4">
+                        <div className="grid gap-4">
                           {viewingDocument.kľúčové_informácie.modely_domov?.length > 0 && (
-                            <div className="p-4 bg-blue-50 rounded-xl">
+                            <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
                               <p className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
                                 <Home className="w-4 h-4" />
-                                Modely domov:
+                                Modely domov
                               </p>
                               <div className="flex flex-wrap gap-2">
                                 {viewingDocument.kľúčové_informácie.modely_domov.map((model, i) => (
@@ -1531,22 +1549,121 @@ export default function AdminDokumenty() {
                               </div>
                             </div>
                           )}
+                          
                           {viewingDocument.kľúčové_informácie.cenové_informácie?.length > 0 && (
-                            <div className="p-4 bg-emerald-50 rounded-xl">
-                              <p className="font-semibold text-emerald-900 mb-2">Cenové informácie:</p>
-                              <ul className="list-disc list-inside text-emerald-800 space-y-1">
+                            <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                              <p className="font-semibold text-emerald-900 mb-2 flex items-center gap-2">
+                                💰 Cenové informácie
+                              </p>
+                              <ul className="space-y-1.5">
                                 {viewingDocument.kľúčové_informácie.cenové_informácie.map((info, i) => (
-                                  <li key={i}>{info}</li>
+                                  <li key={i} className="text-emerald-800 text-sm flex items-start gap-2">
+                                    <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full mt-1.5 flex-shrink-0"></span>
+                                    <span>{info}</span>
+                                  </li>
                                 ))}
                               </ul>
                             </div>
                           )}
+                          
+                          {viewingDocument.kľúčové_informácie.rozmery && Object.keys(viewingDocument.kľúčové_informácie.rozmery).length > 0 && (
+                            <div className="p-4 bg-orange-50 rounded-xl border border-orange-100">
+                              <p className="font-semibold text-orange-900 mb-3 flex items-center gap-2">
+                                📏 Rozmery
+                              </p>
+                              <div className="grid grid-cols-2 gap-3">
+                                {viewingDocument.kľúčové_informácie.rozmery.sirka && (
+                                  <div className="bg-white p-2 rounded-lg">
+                                    <p className="text-xs text-orange-700">Šírka</p>
+                                    <p className="font-semibold text-orange-900">{viewingDocument.kľúčové_informácie.rozmery.sirka}</p>
+                                  </div>
+                                )}
+                                {viewingDocument.kľúčové_informácie.rozmery.dlzka && (
+                                  <div className="bg-white p-2 rounded-lg">
+                                    <p className="text-xs text-orange-700">Dĺžka</p>
+                                    <p className="font-semibold text-orange-900">{viewingDocument.kľúčové_informácie.rozmery.dlzka}</p>
+                                  </div>
+                                )}
+                                {viewingDocument.kľúčové_informácie.rozmery.vyska && (
+                                  <div className="bg-white p-2 rounded-lg">
+                                    <p className="text-xs text-orange-700">Výška</p>
+                                    <p className="font-semibold text-orange-900">{viewingDocument.kľúčové_informácie.rozmery.vyska}</p>
+                                  </div>
+                                )}
+                                {viewingDocument.kľúčové_informácie.rozmery.plocha && (
+                                  <div className="bg-white p-2 rounded-lg">
+                                    <p className="text-xs text-orange-700">Plocha</p>
+                                    <p className="font-semibold text-orange-900">{viewingDocument.kľúčové_informácie.rozmery.plocha}</p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                          
                           {viewingDocument.kľúčové_informácie.technické_údaje?.length > 0 && (
-                            <div className="p-4 bg-purple-50 rounded-xl">
-                              <p className="font-semibold text-purple-900 mb-2">Technické údaje:</p>
-                              <ul className="list-disc list-inside text-purple-800 space-y-1">
+                            <div className="p-4 bg-purple-50 rounded-xl border border-purple-100">
+                              <p className="font-semibold text-purple-900 mb-2 flex items-center gap-2">
+                                ⚙️ Technické údaje
+                              </p>
+                              <ul className="space-y-1.5">
                                 {viewingDocument.kľúčové_informácie.technické_údaje.map((info, i) => (
-                                  <li key={i}>{info}</li>
+                                  <li key={i} className="text-purple-800 text-sm flex items-start gap-2">
+                                    <span className="w-1.5 h-1.5 bg-purple-600 rounded-full mt-1.5 flex-shrink-0"></span>
+                                    <span>{info}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {viewingDocument.kľúčové_informácie.materialy?.length > 0 && (
+                            <div className="p-4 bg-amber-50 rounded-xl border border-amber-100">
+                              <p className="font-semibold text-amber-900 mb-2 flex items-center gap-2">
+                                🏗️ Materiály
+                              </p>
+                              <div className="flex flex-wrap gap-2">
+                                {viewingDocument.kľúčové_informácie.materialy.map((material, i) => (
+                                  <Badge key={i} className="bg-amber-100 text-amber-800 border-amber-200">
+                                    {material}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {viewingDocument.kľúčové_informácie.energia && (viewingDocument.kľúčové_informácie.energia.trieda || viewingDocument.kľúčové_informácie.energia.spotreba) && (
+                            <div className="p-4 bg-green-50 rounded-xl border border-green-100">
+                              <p className="font-semibold text-green-900 mb-3 flex items-center gap-2">
+                                ⚡ Energia
+                              </p>
+                              <div className="space-y-2">
+                                {viewingDocument.kľúčové_informácie.energia.trieda && (
+                                  <div>
+                                    <p className="text-xs text-green-700">Energetická trieda</p>
+                                    <p className="font-semibold text-green-900 text-lg">{viewingDocument.kľúčové_informácie.energia.trieda}</p>
+                                  </div>
+                                )}
+                                {viewingDocument.kľúčové_informácie.energia.spotreba && (
+                                  <div>
+                                    <p className="text-xs text-green-700">Spotreba</p>
+                                    <p className="font-medium text-green-900">{viewingDocument.kľúčové_informácie.energia.spotreba}</p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {viewingDocument.kľúčové_informácie.ostatné?.length > 0 && (
+                            <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                              <p className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                                📌 Ostatné informácie
+                              </p>
+                              <ul className="space-y-1.5">
+                                {viewingDocument.kľúčové_informácie.ostatné.map((info, i) => (
+                                  <li key={i} className="text-gray-700 text-sm flex items-start gap-2">
+                                    <span className="w-1.5 h-1.5 bg-gray-600 rounded-full mt-1.5 flex-shrink-0"></span>
+                                    <span>{info}</span>
+                                  </li>
                                 ))}
                               </ul>
                             </div>
