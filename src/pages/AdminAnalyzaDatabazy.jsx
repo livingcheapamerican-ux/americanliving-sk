@@ -3,12 +3,15 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Loader2, CheckCircle, XCircle, AlertTriangle, Image, FileText, RefreshCw, Pause, Play, SkipForward, FolderSync, Zap } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, AlertTriangle, Image, FileText, RefreshCw, Pause, Play, FolderSync, Zap } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DocumentTableWithBulkActions from "../components/admin/DocumentTableWithBulkActions";
 import DetailedAnalysisResults from "../components/admin/DetailedAnalysisResults";
 import ImageComparisonView from "../components/admin/ImageComparisonView";
+import AdvancedFilters from "../components/admin/AdvancedFilters";
+import AnalysisStatistics from "../components/admin/AnalysisStatistics";
+import AIComparisonTool from "../components/admin/AIComparisonTool";
 
 export default function AdminAnalyzaDatabazy() {
   const [analyzing, setAnalyzing] = useState(false);
@@ -22,6 +25,7 @@ export default function AdminAnalyzaDatabazy() {
   const [batchSize] = useState(5);
   const [parallelLimit] = useState(2);
   const [refreshing, setRefreshing] = useState(false);
+  const [filteredDokumenty, setFilteredDokumenty] = useState([]);
   
   const pausedRef = useRef(false);
   const stopRef = useRef(false);
@@ -39,6 +43,10 @@ export default function AdminAnalyzaDatabazy() {
     refetchInterval: 10000,
     staleTime: 0
   });
+
+  useEffect(() => {
+    setFilteredDokumenty(dokumenty);
+  }, [dokumenty]);
 
   const reorganizeMutation = useMutation({
     mutationFn: () => base44.functions.invoke('reorganizujDokumenty'),
@@ -388,7 +396,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
             <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-blue-600 bg-clip-text text-transparent mb-2">
               🎯 Analýza celej databázy
             </h1>
-            <p className="text-gray-600">Stabilný režim - {parallelLimit} súčasne, dávky po {batchSize}, checkpoint po každej dávke</p>
+            <p className="text-gray-600">Pokročilé filtrovanie, vizualizácie a AI porovnávanie</p>
           </div>
           <Button 
             onClick={handleManualRefresh} 
@@ -410,6 +418,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
           </Button>
         </div>
 
+        {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-8">
           <Card className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
             <div className="flex items-center gap-4">
@@ -486,19 +495,12 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
           </Card>
         </div>
 
-        <Card className="p-4 mb-6 bg-green-50 border-green-200">
-          <div className="flex items-start gap-3">
-            <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-            <div className="text-sm">
-              <p className="font-semibold text-green-900 mb-1">✅ Stabilný checkpoint režim</p>
-              <p className="text-green-700">
-                Okamžité ukladanie do DB po každej analýze + checkpoint po každej dávke. 
-                Auto-refresh každých 10s. Pokračuje presne tam kde skončil.
-              </p>
-            </div>
-          </div>
-        </Card>
+        {/* Advanced Filters */}
+        <div className="mb-6">
+          <AdvancedFilters dokumenty={dokumenty} onFilterChange={setFilteredDokumenty} />
+        </div>
 
+        {/* Auto Analyze */}
         <Card className="p-6 mb-6 border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50">
           <div className="flex items-center justify-between">
             <div>
@@ -531,6 +533,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
           </div>
         </Card>
 
+        {/* Manual Analysis */}
         <Card className="p-6 mb-8 border-2 border-primary/20">
           <div className="flex flex-col gap-4">
             <div>
@@ -652,13 +655,23 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
           </div>
         </Card>
 
-        <Tabs defaultValue="logs" className="mb-8">
-          <TabsList className="grid w-full grid-cols-4">
+        <Tabs defaultValue="statistics" className="mb-8">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger value="statistics">Štatistiky</TabsTrigger>
+            <TabsTrigger value="ai-tools">AI nástroje</TabsTrigger>
             <TabsTrigger value="logs">Log</TabsTrigger>
             <TabsTrigger value="results">Výsledky</TabsTrigger>
             <TabsTrigger value="bulk">Hromadné akcie</TabsTrigger>
             <TabsTrigger value="comparison">Porovnanie</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="statistics">
+            <AnalysisStatistics dokumenty={filteredDokumenty} />
+          </TabsContent>
+
+          <TabsContent value="ai-tools">
+            <AIComparisonTool dokumenty={dokumenty} />
+          </TabsContent>
 
           <TabsContent value="logs">
             {logs.length > 0 && (
@@ -685,11 +698,11 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
           </TabsContent>
 
           <TabsContent value="results">
-            <DetailedAnalysisResults results={results} dokumenty={dokumenty} />
+            <DetailedAnalysisResults results={results} dokumenty={filteredDokumenty} />
           </TabsContent>
 
           <TabsContent value="bulk">
-            <DocumentTableWithBulkActions dokumenty={dokumenty} onRefresh={refetch} />
+            <DocumentTableWithBulkActions dokumenty={filteredDokumenty} onRefresh={refetch} />
           </TabsContent>
 
           <TabsContent value="comparison">
