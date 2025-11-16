@@ -433,10 +433,11 @@ export default function GaleriaRealizacii() {
                 )}
 
                 {/* Price and CTA */}
-                <Card className="p-6 bg-gradient-to-r from-gray-900 via-primary to-gray-900 text-white shadow-xl">
-                  <div className="flex items-center justify-between">
+                <Card className="p-6 bg-gradient-to-r from-gray-950 via-gray-900 to-black text-white shadow-xl relative overflow-hidden">
+                  <div className="absolute inset-0 bg-black/30"></div>
+                  <div className="flex items-center justify-between relative z-10">
                     <div>
-                      <p className="text-sm text-white/90 drop-shadow">Základná cena s DPH</p>
+                      <p className="text-sm text-white/90 drop-shadow-md">Základná cena s DPH</p>
                       <p className="text-3xl font-bold drop-shadow-lg">{formatPrice(selectedDom.zakladna_cena)}</p>
                     </div>
                     <div className="flex gap-2">

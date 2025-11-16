@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -6,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import Chatbot from "./components/Chatbot";
+import AIAsistent from "./components/AIAsistent";
 
 export default function Layout({ children }) {
   const location = useLocation();
@@ -323,6 +325,9 @@ export default function Layout({ children }) {
 
       {/* Chatbot */}
       <Chatbot />
+
+      {/* AI Asistent */}
+      <AIAsistent />
     </div>
   );
 }
