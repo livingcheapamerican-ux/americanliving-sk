@@ -94,7 +94,7 @@ export default function DetailedAnalysisResults({ results, dokumenty }) {
                     )}
 
                     <div className="grid grid-cols-2 gap-4">
-                      {/* Fasáda */}
+                      {/* Fasáda - Materiály */}
                       {analyza?.fasada_materialy && analyza.fasada_materialy.length > 0 && (
                         <div>
                           <p className="text-xs font-semibold text-gray-600 mb-1">Fasáda - Materiály:</p>
@@ -106,6 +106,43 @@ export default function DetailedAnalysisResults({ results, dokumenty }) {
                         </div>
                       )}
 
+                      {/* Typy drevín - NOVÉ */}
+                      {analyza?.fasada_typy_drevin && analyza.fasada_typy_drevin.length > 0 && (
+                        <div>
+                          <p className="text-xs font-semibold text-gray-600 mb-1">Typy drevín:</p>
+                          <div className="flex flex-wrap gap-1">
+                            {analyza.fasada_typy_drevin.map((drevina, i) => (
+                              <Badge key={i} className="text-xs bg-amber-100 text-amber-800 border-amber-300">{drevina}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Povrchové úpravy - NOVÉ */}
+                      {analyza?.fasada_povrchove_upravy && analyza.fasada_povrchove_upravy.length > 0 && (
+                        <div>
+                          <p className="text-xs font-semibold text-gray-600 mb-1">Povrchové úpravy:</p>
+                          <div className="flex flex-wrap gap-1">
+                            {analyza.fasada_povrchove_upravy.map((uprava, i) => (
+                              <Badge key={i} className="text-xs bg-blue-100 text-blue-800 border-blue-300">{uprava}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Fasádne prvky - NOVÉ */}
+                      {analyza?.fasada_prvky && analyza.fasada_prvky.length > 0 && (
+                        <div className="col-span-2">
+                          <p className="text-xs font-semibold text-gray-600 mb-1">Fasádne prvky:</p>
+                          <div className="flex flex-wrap gap-1">
+                            {analyza.fasada_prvky.map((prvok, i) => (
+                              <Badge key={i} className="text-xs bg-purple-100 text-purple-800 border-purple-300">{prvok}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Farby */}
                       {analyza?.fasada_farby && analyza.fasada_farby.length > 0 && (
                         <div>
                           <p className="text-xs font-semibold text-gray-600 mb-1">Fasáda - Farby:</p>
@@ -159,6 +196,14 @@ export default function DetailedAnalysisResults({ results, dokumenty }) {
                         <div>
                           <p className="text-xs font-semibold text-gray-600 mb-1">Strecha - Farba:</p>
                           <Badge variant="outline" className="text-xs">{analyza.strecha_farba}</Badge>
+                        </div>
+                      )}
+
+                      {/* Materiál strechy - NOVÉ */}
+                      {analyza?.strecha_material && (
+                        <div>
+                          <p className="text-xs font-semibold text-gray-600 mb-1">Strecha - Materiál:</p>
+                          <Badge className="text-xs bg-slate-100 text-slate-800 border-slate-300">{analyza.strecha_material}</Badge>
                         </div>
                       )}
 
