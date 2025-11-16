@@ -5,7 +5,7 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
     
-    if (!user || user.role !== 'admin') {
+    if (!user || (user.role !== 'admin' && !user.super_admin)) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -108,7 +108,7 @@ Cesta: ${dok.cesta_priecinku || 'neurčená'}
    - Špeciálne vlastnosti
    - Technologické riešenia
 
-Buď MAXIMÁLNE KONKRÉTNÝ a PODROBNÝ v každom bode. Nepíš všeobecnosti. Deteguj VŠETKY viditeľné prvky!`,
+Buď MAXIMÁLNE KONKRÉTNY a PODROBNÝ v každom bode. Nepíš všeobecnosti. Deteguj VŠETKY viditeľné prvky!`,
           file_urls: [dok.subor_url],
           response_json_schema: {
             type: "object",
@@ -274,6 +274,7 @@ Buď MAXIMÁLNE KONKRÉTNÝ a PODROBNÝ v každom bode. Nepíš všeobecnosti. D
         }
 
       } catch (error) {
+        console.error('Error processing document:', dok.id, error);
         results.push({
           id: dok.id,
           nazov: dok.nazov,
