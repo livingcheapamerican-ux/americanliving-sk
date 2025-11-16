@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Loader2, CheckCircle, XCircle, AlertTriangle, Image, FileText, RefreshCw, Pause, Play, SkipForward, FolderSync } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, AlertTriangle, Image, FileText, RefreshCw, Pause, Play, SkipForward, FolderSync, Zap } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DocumentTableWithBulkActions from "../components/admin/DocumentTableWithBulkActions";
@@ -13,6 +13,7 @@ import ImageComparisonView from "../components/admin/ImageComparisonView";
 export default function AdminAnalyzaDatabazy() {
   const [analyzing, setAnalyzing] = useState(false);
   const [reorganizing, setReorganizing] = useState(false);
+  const [autoAnalyzing, setAutoAnalyzing] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0, failed: 0, skipped: 0 });
   const [currentDoc, setCurrentDoc] = useState(null);
   const [logs, setLogs] = useState([]);
@@ -41,8 +42,37 @@ export default function AdminAnalyzaDatabazy() {
     }
   });
 
+  const autoAnalyzeMutation = useMutation({
+    mutationFn: () => base44.functions.invoke('autoAnalyzujNoveDokumenty'),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
+    }
+  });
+
   const addLog = (message, type = 'info') => {
     setLogs(prev => [...prev, { message, type, time: new Date().toLocaleTimeString() }]);
+  };
+
+  const handleAutoAnalyza = async () => {
+    setAutoAnalyzing(true);
+    addLog('🤖 Spúšťam automatickú analýzu nových dokumentov...', 'info');
+
+    try {
+      const response = await autoAnalyzeMutation.mutateAsync();
+      
+      if (response.data.success) {
+        addLog(`✅ ${response.data.message}`, 'success');
+        if (response.data.processed > 0) {
+          addLog(`📊 Úspešných: ${response.data.processed}, Chýb: ${response.data.failed}`, 'info');
+        }
+      } else {
+        addLog(`❌ Automatická analýza zlyhala: ${response.data.error}`, 'error');
+      }
+    } catch (error) {
+      addLog(`❌ Chyba automatickej analýzy: ${error.message}`, 'error');
+    } finally {
+      setAutoAnalyzing(false);
+    }
   };
 
   const analyzujJedenDokument = async (dok) => {
@@ -391,7 +421,40 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
           </Card>
         </div>
 
-        {/* Actions */}
+        {/* Automatic Analysis Card */}
+        <Card className="p-6 mb-6 border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
+                <Zap className="w-6 h-6 text-emerald-600" />
+                🤖 Automatická analýza nových dokumentov
+              </h2>
+              <p className="text-sm text-gray-600">
+                Analyzuje a reorganizuje nové nahrané súbory (max 10 naraz)
+              </p>
+            </div>
+            <Button
+              onClick={handleAutoAnalyza}
+              disabled={autoAnalyzing || neanalyzovaneCount === 0}
+              size="lg"
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
+              {autoAnalyzing ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Analyzujem...
+                </>
+              ) : (
+                <>
+                  <Zap className="w-5 h-5 mr-2" />
+                  Spustiť automatickú analýzu
+                </>
+              )}
+            </Button>
+          </div>
+        </Card>
+
+        {/* Manual Analysis Actions */}
         <Card className="p-6 mb-8 border-2 border-primary/20">
           <div className="flex flex-col gap-4">
             <div>
@@ -513,7 +576,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
                   {neanalyzovaneCount === 0 ? (
                     '✓ Všetko analyzované'
                   ) : (
-                    `Spustiť analýzu (${neanalyzovaneCount} fotiek)`
+                    `Spustiť manuálnu analýzu (${neanalyzovaneCount} fotiek)`
                   )}
                 </Button>
               </div>
@@ -521,7 +584,7 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
           </div>
         </Card>
 
-        {/* Tabs for different views */}
+        {/* ... rest of the code stays the same ... */}
         <Tabs defaultValue="logs" className="mb-8">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="logs">Log analýzy</TabsTrigger>
@@ -567,7 +630,6 @@ POZNÁMKA: Pri fasáde sa sústreď na KONKRÉTNE detaily - aký je presný typ 
           </TabsContent>
         </Tabs>
 
-        {/* Summary Results */}
         {results && (
           <Card className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
             <h3 className="text-xl font-bold mb-4">📊 Súhrn</h3>
