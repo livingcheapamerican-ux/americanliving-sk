@@ -119,7 +119,7 @@ Odpoveď (max 200 slov, priateľsky tón, využívaj údaje z dokumentov):`,
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className="fixed bottom-24 right-6 z-40"
+            className="fixed bottom-28 right-6 z-40"
           >
             <Button
               onClick={() => setIsOpen(true)}
@@ -141,7 +141,7 @@ Odpoveď (max 200 slov, priateľsky tón, využívaj údaje z dokumentov):`,
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 100 }}
-            className="fixed bottom-24 right-6 z-40 w-full max-w-md"
+            className="fixed bottom-28 right-6 z-40 w-full max-w-md"
           >
             <Card className="flex flex-col h-[600px] shadow-2xl border-2 border-primary/20 overflow-hidden">
               {/* Header */}
