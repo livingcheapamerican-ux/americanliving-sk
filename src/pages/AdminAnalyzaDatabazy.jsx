@@ -18,6 +18,7 @@ export default function AdminAnalyzaDatabazy() {
   const [filteredDokumenty, setFilteredDokumenty] = useState([]);
   const [results, setResults] = useState(null);
   const [autoStarted, setAutoStarted] = useState(false);
+  const [reorganizing, setReorganizing] = useState(false);
   
   const queryClient = useQueryClient();
 
@@ -26,12 +27,43 @@ export default function AdminAnalyzaDatabazy() {
     queryFn: () => base44.auth.me()
   });
 
+  // ZMENA: Refresh dokumenty častejšie ak prebieha reorganizácia
   const { data: dokumenty = [], isLoading, refetch } = useQuery({
     queryKey: ['dokumenty-all'],
     queryFn: () => base44.entities.Dokument.filter({ typ: "fotky" }),
-    refetchInterval: analyzing ? 3000 : 10000,
+    refetchInterval: (analyzing || reorganizing) ? 2000 : 10000,
     staleTime: 0
   });
+
+  // NOVÉ: Sleduj logy reorganizácie
+  const { data: reorganizationLogs = [] } = useQuery({
+    queryKey: ['reorganization-logs'],
+    queryFn: async () => {
+      const allLogs = await base44.entities.GoogleDriveNotification.filter({
+        'metadata.type': { $in: ['reorganization_log', 'reorganization_control'] }
+      });
+      return allLogs.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+    },
+    refetchInterval: 1000,
+    staleTime: 0
+  });
+
+  // NOVÉ: Aktualizuj stav reorganizácie podľa logov
+  useEffect(() => {
+    const runningLog = reorganizationLogs.find(log => log.metadata?.status === 'running');
+    if (runningLog) {
+      setReorganizing(true);
+    } else {
+      const hasCompleted = reorganizationLogs.find(log => 
+        log.metadata?.status === 'completed' || 
+        log.metadata?.status === 'stopped' ||
+        log.metadata?.status === 'error'
+      );
+      if (hasCompleted) {
+        setReorganizing(false);
+      }
+    }
+  }, [reorganizationLogs]);
 
   useEffect(() => {
     setFilteredDokumenty(dokumenty);
@@ -159,10 +191,10 @@ export default function AdminAnalyzaDatabazy() {
             </div>
           </Card>
 
-          <Card className="p-6 bg-gradient-to-br from-cyan-50 to-blue-50 border-cyan-200">
+          <Card className={`p-6 bg-gradient-to-br from-cyan-50 to-blue-50 border-cyan-200 ${reorganizing ? 'animate-pulse' : ''}`}>
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-cyan-500 rounded-xl flex items-center justify-center">
-                <FolderSync className="w-6 h-6 text-white" />
+                <FolderSync className={`w-6 h-6 text-white ${reorganizing ? 'animate-spin' : ''}`} />
               </div>
               <div>
                 <p className="text-sm text-gray-600">Reorganizované</p>
@@ -200,7 +232,7 @@ export default function AdminAnalyzaDatabazy() {
                 <div>
                   <h2 className="text-xl font-bold text-blue-900">🤖 Analýza prebieha automaticky</h2>
                   <p className="text-sm text-gray-600">Zostáva: {neanalyzovaneCount} fotiek</p>
-                  <p className="text-xs text-gray-500 mt-1">Dáta sa aktualizujú každé 3 sekundy</p>
+                  <p className="text-xs text-gray-500 mt-1">Dáta sa aktualizujú každé 2 sekundy</p>
                 </div>
               </div>
               <Button
