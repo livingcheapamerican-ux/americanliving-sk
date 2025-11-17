@@ -110,25 +110,35 @@ Deno.serve(async (req) => {
     await log(base44, user.id, '🚀 Reorganizácia spustená', { status: 'running' });
     console.log('📥 Loading documents...');
 
-    // Načítaj dokumenty
+    // Načítaj VŠETKY fotky s vizuálnou analýzou
     const dokumenty = await base44.asServiceRole.entities.Dokument.filter({
-      typ: 'fotky',
-      podrobna_analyza_datum: { $exists: true }
+      typ: 'fotky'
     });
 
-    console.log(`✅ Loaded ${dokumenty?.length || 0} documents`);
+    console.log(`✅ Loaded ${dokumenty?.length || 0} total documents`);
 
-    if (!dokumenty || !Array.isArray(dokumenty) || dokumenty.length === 0) {
+    // Filtruj len tie s vizuálnou analýzou
+    const analyzovane = dokumenty.filter(d => 
+      d.vizualna_analyza && 
+      d.vizualna_analyza.spravny_vyrobca && 
+      d.vizualna_analyza.spravny_model
+    );
+
+    console.log(`✅ ${analyzovane.length} documents with analysis`);
+
+    if (!analyzovane || analyzovane.length === 0) {
       await log(base44, user.id, '⚠️ Žiadne dokumenty na spracovanie', {
         status: 'completed',
-        severity: 'warning'
+        severity: 'warning',
+        total: dokumenty.length,
+        analyzed: 0
       });
       return Response.json({ success: true, presunute: 0, nezmenene: 0, chyby: 0 });
     }
 
-    await log(base44, user.id, `📦 Načítaných ${dokumenty.length} dokumentov`, {
+    await log(base44, user.id, `📦 Našiel som ${analyzovane.length} dokumentov na reorganizáciu`, {
       status: 'running',
-      total: dokumenty.length,
+      total: analyzovane.length,
       processed: 0,
       percent: 0
     });
@@ -140,13 +150,13 @@ Deno.serve(async (req) => {
     // Spracuj dokumenty JEDEN PO JEDNOM
     console.log('🔄 Processing documents...');
     
-    for (let i = 0; i < dokumenty.length; i++) {
+    for (let i = 0; i < analyzovane.length; i++) {
       // Check stop každých 10
       if (i > 0 && i % 10 === 0) {
         const shouldStop = await checkStopFlag(base44);
         if (shouldStop) {
-          console.log(`⏸️ Stopped at ${i}/${dokumenty.length}`);
-          await log(base44, user.id, `⏸️ Zastavené na ${i}/${dokumenty.length}`, {
+          console.log(`⏸️ Stopped at ${i}/${analyzovane.length}`);
+          await log(base44, user.id, `⏸️ Zastavené na ${i}/${analyzovane.length}`, {
             status: 'stopped',
             severity: 'warning',
             presunute,
@@ -157,7 +167,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      const dok = dokumenty[i];
+      const dok = analyzovane[i];
 
       try {
         // Získaj novú cestu
@@ -192,16 +202,16 @@ Deno.serve(async (req) => {
       }
 
       // Progress log každých 5
-      if ((i + 1) % 5 === 0 || i === dokumenty.length - 1) {
+      if ((i + 1) % 5 === 0 || i === analyzovane.length - 1) {
         const processed = i + 1;
-        const percent = Math.round((processed / dokumenty.length) * 100);
+        const percent = Math.round((processed / analyzovane.length) * 100);
         
-        console.log(`📊 ${percent}% (${processed}/${dokumenty.length}) | ✓${presunute} ≈${nezmenene} ✗${chyby}`);
+        console.log(`📊 ${percent}% (${processed}/${analyzovane.length}) | ✓${presunute} ≈${nezmenene} ✗${chyby}`);
         
-        await log(base44, user.id, `📊 ${percent}% | ${processed}/${dokumenty.length}`, {
+        await log(base44, user.id, `📊 ${percent}% | ${processed}/${analyzovane.length} | ✓${presunute} ≈${nezmenene} ✗${chyby}`, {
           status: 'running',
           processed,
-          total: dokumenty.length,
+          total: analyzovane.length,
           percent,
           presunute,
           nezmenene,
@@ -223,7 +233,7 @@ Deno.serve(async (req) => {
       presunute,
       nezmenene,
       chyby,
-      total: dokumenty.length,
+      total: analyzovane.length,
       duration
     });
 
@@ -232,7 +242,7 @@ Deno.serve(async (req) => {
       presunute,
       nezmenene,
       chyby,
-      total: dokumenty.length,
+      total: analyzovane.length,
       duration
     });
 
