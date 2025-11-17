@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
-import { Loader2, CheckCircle, XCircle, PlayCircle, StopCircle, Trash2, RefreshCw, Zap } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, PlayCircle, StopCircle, Trash2, RefreshCw, Zap, AlertTriangle, Info } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
 
 export default function SmartProcessMonitor() {
   const [isRunning, setIsRunning] = useState(false);
+  const [expandedLogs, setExpandedLogs] = useState({});
   const queryClient = useQueryClient();
 
   const { data: analysisLogs = [], refetch: refetchAnalysis } = useQuery({
@@ -111,8 +112,23 @@ export default function SmartProcessMonitor() {
         return 'bg-blue-500';
       case 'completed':
         return 'bg-green-500';
+      case 'stopped':
+        return 'bg-yellow-500';
       default:
         return 'bg-gray-400';
+    }
+  };
+
+  const getSeverityIcon = (severity) => {
+    switch (severity) {
+      case 'error':
+        return <XCircle className="w-4 h-4 text-red-600" />;
+      case 'warning':
+        return <AlertTriangle className="w-4 h-4 text-yellow-600" />;
+      case 'success':
+        return <CheckCircle className="w-4 h-4 text-green-600" />;
+      default:
+        return <Info className="w-4 h-4 text-blue-600" />;
     }
   };
 
@@ -126,7 +142,7 @@ export default function SmartProcessMonitor() {
               Smart Process Monitor
             </h3>
             <p className="text-sm text-gray-600">
-              Refresh každých 5s (len keď beží)
+              Refresh každých 5s (len keď beží) • Rozšírené logy s kontextom
             </p>
           </div>
           
@@ -275,16 +291,32 @@ export default function SmartProcessMonitor() {
                 {analysisLogs.map((log, idx) => (
                   <div
                     key={log.id}
-                    className={`p-2 rounded text-sm ${
-                      idx === 0 ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50'
-                    } ${log.severity === 'error' ? 'bg-red-50 border-red-200' : ''}`}
+                    className={`p-3 rounded-lg text-sm border ${
+                      idx === 0 ? 'bg-blue-50 border-blue-300' : 'bg-gray-50 border-gray-200'
+                    } ${log.severity === 'error' ? 'bg-red-50 border-red-300' : ''} ${log.severity === 'warning' ? 'bg-yellow-50 border-yellow-300' : ''}`}
                   >
-                    <div className="flex justify-between items-start gap-2">
-                      <span className="font-mono text-xs flex-1">{log.message}</span>
+                    <div className="flex justify-between items-start gap-2 mb-1">
+                      <div className="flex items-start gap-2 flex-1">
+                        {getSeverityIcon(log.severity)}
+                        <span className="font-mono text-xs flex-1 break-words">{log.message}</span>
+                      </div>
                       <span className="text-xs text-gray-500 whitespace-nowrap">
                         {new Date(log.created_date).toLocaleTimeString('sk-SK')}
                       </span>
                     </div>
+                    
+                    {log.metadata && Object.keys(log.metadata).length > 3 && (
+                      <details className="mt-2">
+                        <summary className="text-xs text-blue-600 cursor-pointer hover:text-blue-700 font-medium">
+                          Zobraziť kontext a detaily
+                        </summary>
+                        <div className="mt-2 p-2 bg-white rounded border text-xs">
+                          <pre className="whitespace-pre-wrap overflow-x-auto">
+                            {JSON.stringify(log.metadata, null, 2)}
+                          </pre>
+                        </div>
+                      </details>
+                    )}
                   </div>
                 ))}
               </div>
@@ -308,16 +340,32 @@ export default function SmartProcessMonitor() {
                 {reorgLogs.map((log, idx) => (
                   <div
                     key={log.id}
-                    className={`p-2 rounded text-sm ${
-                      idx === 0 ? 'bg-cyan-50 border border-cyan-200' : 'bg-gray-50'
+                    className={`p-3 rounded-lg text-sm border ${
+                      idx === 0 ? 'bg-cyan-50 border-cyan-300' : 'bg-gray-50 border-gray-200'
                     }`}
                   >
-                    <div className="flex justify-between items-start gap-2">
-                      <span className="font-mono text-xs flex-1">{log.message}</span>
+                    <div className="flex justify-between items-start gap-2 mb-1">
+                      <div className="flex items-start gap-2 flex-1">
+                        {getSeverityIcon(log.severity)}
+                        <span className="font-mono text-xs flex-1 break-words">{log.message}</span>
+                      </div>
                       <span className="text-xs text-gray-500 whitespace-nowrap">
                         {new Date(log.created_date).toLocaleTimeString('sk-SK')}
                       </span>
                     </div>
+                    
+                    {log.metadata && Object.keys(log.metadata).length > 3 && (
+                      <details className="mt-2">
+                        <summary className="text-xs text-cyan-600 cursor-pointer hover:text-cyan-700 font-medium">
+                          Zobraziť kontext
+                        </summary>
+                        <div className="mt-2 p-2 bg-white rounded border text-xs">
+                          <pre className="whitespace-pre-wrap overflow-x-auto">
+                            {JSON.stringify(log.metadata, null, 2)}
+                          </pre>
+                        </div>
+                      </details>
+                    )}
                   </div>
                 ))}
               </div>
