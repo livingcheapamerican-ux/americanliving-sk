@@ -8,8 +8,6 @@ import { base44 } from "@/api/base44Client";
 import { Toaster } from "sonner";
 import Chatbot from "./components/Chatbot";
 import AIAsistent from "./components/AIAsistent";
-import NotificationCenter from "./components/NotificationCenter";
-import ProcessMonitor from "./components/ProcessMonitor";
 
 export default function Layout({ children }) {
   const location = useLocation();
@@ -70,9 +68,6 @@ export default function Layout({ children }) {
       {/* Toast Container */}
       <Toaster position="top-right" richColors closeButton />
 
-      {/* Process Monitor - neviditeľný ale aktívny */}
-      <ProcessMonitor />
-
       {/* Header */}
       <header 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -124,9 +119,6 @@ export default function Layout({ children }) {
             </nav>
 
             <div className="hidden lg:flex items-center gap-3">
-              {/* Notification Center */}
-              {(isAdmin || isSuperAdmin) && <NotificationCenter />}
-              
               {isSuperAdmin && (
                 <>
                   <Link to={createPageUrl("AdminAnalyzaDatabazy")}>

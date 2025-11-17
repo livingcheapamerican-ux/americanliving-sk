@@ -1,6 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
-// Helper na real-time logovanie
 async function logProgress(base44, userId, message, metadata = {}) {
   try {
     await base44.asServiceRole.entities.GoogleDriveNotification.create({
@@ -21,6 +20,18 @@ async function logProgress(base44, userId, message, metadata = {}) {
   }
 }
 
+async function checkStopFlag(base44) {
+  try {
+    const flags = await base44.asServiceRole.entities.GoogleDriveNotification.filter({
+      'metadata.should_stop': true,
+      'metadata.type': 'analysis_control'
+    });
+    return flags && flags.length > 0;
+  } catch {
+    return false;
+  }
+}
+
 Deno.serve(async (req) => {
   const startTime = Date.now();
   console.log('\n🚀 ========== ANALÝZA + REORGANIZÁCIA START ==========');
@@ -35,7 +46,6 @@ Deno.serve(async (req) => {
 
     const { action } = await req.json();
 
-    // Stop príkaz
     if (action === 'stop') {
       await logProgress(base44, user.id, '⏸️ Stop príkaz prijatý', {
         type: 'analysis_control',
@@ -45,7 +55,6 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, message: 'Analýza bude zastavená' });
     }
 
-    // Načítaj VŠETKY fotky
     const vsetkyFotky = await base44.asServiceRole.entities.Dokument.filter({
       typ: 'fotky'
     });
@@ -56,7 +65,6 @@ Deno.serve(async (req) => {
       total: vsetkyFotky.length
     });
 
-    // Filtruj tie bez vizuálnej analýzy
     const bezAnalyzy = vsetkyFotky.filter(d => !d.vizualna_analyza || !d.vizualna_analyza.spravny_vyrobca);
     
     console.log(`🔍 Na analýzu: ${bezAnalyzy.length}`);
@@ -67,7 +75,6 @@ Deno.serve(async (req) => {
     });
 
     if (bezAnalyzy.length === 0) {
-      // Už všetko analyzované - iba spusti reorganizáciu
       await logProgress(base44, user.id, '✅ Všetky fotky už analyzované, spúšťam reorganizáciu...', {
         status: 'running',
         severity: 'success'
@@ -94,7 +101,6 @@ Deno.serve(async (req) => {
     let failed = 0;
     let skipped = 0;
 
-    // Spracuj každú fotku INDIVIDUÁLNE
     for (let i = 0; i < bezAnalyzy.length; i++) {
       const dok = bezAnalyzy[i];
       const current = i + 1;
@@ -102,45 +108,46 @@ Deno.serve(async (req) => {
 
       console.log(`\n[${current}/${bezAnalyzy.length}] ${dok.nazov}`);
 
-      try {
-        // Check stop flag každých 5 fotiek
-        if (i > 0 && i % 5 === 0) {
-          const stopFlags = await base44.asServiceRole.entities.GoogleDriveNotification.filter({
-            'metadata.should_stop': true,
-            'metadata.type': 'analysis_control'
+      // Check stop každých 5
+      if (i > 0 && i % 5 === 0) {
+        const shouldStop = await checkStopFlag(base44);
+        if (shouldStop) {
+          await logProgress(base44, user.id, `⏸️ Zastavené na ${current}/${bezAnalyzy.length}`, {
+            status: 'stopped',
+            severity: 'warning',
+            processed,
+            failed,
+            skipped,
+            last_index: i
           });
-          
-          if (stopFlags && stopFlags.length > 0) {
-            await logProgress(base44, user.id, `⏸️ Zastavené na ${current}/${bezAnalyzy.length}`, {
-              status: 'stopped',
-              severity: 'warning',
-              processed,
-              failed,
-              skipped
-            });
-            return Response.json({
-              success: true,
-              stopped: true,
-              processed,
-              failed,
-              skipped
-            });
-          }
+          return Response.json({
+            success: true,
+            stopped: true,
+            processed,
+            failed,
+            skipped,
+            last_index: i
+          });
         }
+      }
 
-        // Popis
-        const popis = await base44.asServiceRole.integrations.Core.InvokeLLM({
-          prompt: `Analyzuj tento obrázok modulárneho domu a vytvor krátky slovenský popis (2-3 vety).
-          
+      // Retry mechanizmus
+      let retries = 0;
+      let success = false;
+      
+      while (retries < 3 && !success) {
+        try {
+          const popis = await base44.asServiceRole.integrations.Core.InvokeLLM({
+            prompt: `Analyzuj tento obrázok modulárneho domu a vytvor krátky slovenský popis (2-3 vety).
+            
 Súbor: ${dok.nazov}
 Výrobca: ${dok.vyrobca || 'neznámy'}
 Model: ${dok.model_domu || 'neznámy'}`,
-          file_urls: [dok.subor_url]
-        });
+            file_urls: [dok.subor_url]
+          });
 
-        // Vizuálna analýza
-        const vizAnalyza = await base44.asServiceRole.integrations.Core.InvokeLLM({
-          prompt: `Analyzuj obrázok modulárneho domu a extrahuj PRESNÉ detailné informácie.
+          const vizAnalyza = await base44.asServiceRole.integrations.Core.InvokeLLM({
+            prompt: `Analyzuj obrázok modulárneho domu a extrahuj PRESNÉ detailné informácie.
 
 DÔLEŽITÉ:
 - spravny_vyrobca: presný názov výrobcu z ["JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"]
@@ -162,108 +169,102 @@ OKNÁ/DVERE:
 - dvere_typ, dvere_farba
 
 STRECHA:
-- strecha_typ: "sedlová/plochá/..."
-- strecha_farba, strecha_material
+- strecha_typ, strecha_farba, strecha_material
 
 KVALITA:
 - stav_fasady: "výborný", "dobrý", "potrebuje údržbu"
 
-Kontext z metadát súboru:
+Kontext:
 - Súbor: ${dok.nazov}
 - Aktuálny výrobca: ${dok.vyrobca}
 - Aktuálny model: ${dok.model_domu}
 - Priečinok: ${dok.cesta_priecinku}`,
-          file_urls: [dok.subor_url],
-          response_json_schema: {
-            type: "object",
-            properties: {
-              typ_obsahu: { type: "string" },
-              specificka_kategoria: { type: "string" },
-              fasada_materialy: { type: "array", items: { type: "string" } },
-              fasada_typy_drevin: { type: "array", items: { type: "string" } },
-              fasada_povrchove_upravy: { type: "array", items: { type: "string" } },
-              fasada_prvky: { type: "array", items: { type: "string" } },
-              fasada_farby: { type: "array", items: { type: "string" } },
-              okna_typ: { type: "string" },
-              okna_farba: { type: "string" },
-              dvere_typ: { type: "string" },
-              dvere_farba: { type: "string" },
-              strecha_typ: { type: "string" },
-              strecha_farba: { type: "string" },
-              strecha_material: { type: "string" },
-              stav_fasady: { type: "string" },
-              spravny_vyrobca: { type: "string" },
-              spravny_model: { type: "string" }
+            file_urls: [dok.subor_url],
+            response_json_schema: {
+              type: "object",
+              properties: {
+                typ_obsahu: { type: "string" },
+                specificka_kategoria: { type: "string" },
+                fasada_materialy: { type: "array", items: { type: "string" } },
+                fasada_typy_drevin: { type: "array", items: { type: "string" } },
+                fasada_povrchove_upravy: { type: "array", items: { type: "string" } },
+                fasada_prvky: { type: "array", items: { type: "string" } },
+                fasada_farby: { type: "array", items: { type: "string" } },
+                okna_typ: { type: "string" },
+                okna_farba: { type: "string" },
+                dvere_typ: { type: "string" },
+                dvere_farba: { type: "string" },
+                strecha_typ: { type: "string" },
+                strecha_farba: { type: "string" },
+                strecha_material: { type: "string" },
+                stav_fasady: { type: "string" },
+                spravny_vyrobca: { type: "string" },
+                spravny_model: { type: "string" }
+              }
             }
+          });
+
+          await base44.asServiceRole.entities.Dokument.update(dok.id, {
+            podrobna_analyza_datum: new Date().toISOString(),
+            ai_generovany_popis: popis,
+            vizualna_analyza: vizAnalyza,
+            analyzovaný: true
+          });
+
+          processed++;
+          success = true;
+          
+          await logProgress(base44, user.id, `✓ ${current}/${bezAnalyzy.length} | ${dok.nazov} | ${vizAnalyza.spravny_vyrobca} - ${vizAnalyza.spravny_model}`, {
+            status: 'running',
+            processed: current,
+            total: bezAnalyzy.length,
+            percent,
+            current_file: dok.nazov,
+            success_count: processed
+          });
+
+          console.log(`✓ OK | ${vizAnalyza.spravny_vyrobca} - ${vizAnalyza.spravny_model}`);
+
+        } catch (error) {
+          retries++;
+          const errorMsg = error.message || error.toString();
+          
+          if (retries >= 3) {
+            console.error(`✗ CHYBA po ${retries} pokusoch: ${errorMsg}`);
+            
+            if (errorMsg.includes('unsupported image') || errorMsg.includes('ImageURL')) {
+              await base44.asServiceRole.entities.Dokument.update(dok.id, {
+                podrobna_analyza_datum: new Date().toISOString(),
+                ai_generovany_popis: 'Problémový obrázok - nepodporovaný formát'
+              });
+              skipped++;
+            } else {
+              await base44.asServiceRole.entities.Dokument.update(dok.id, {
+                podrobna_analyza_datum: new Date().toISOString(),
+                ai_generovany_popis: `Chyba analýzy: ${errorMsg}`
+              });
+              failed++;
+            }
+            
+            await logProgress(base44, user.id, `✗ ${current}/${bezAnalyzy.length} | ${dok.nazov} | Chyba: ${errorMsg}`, {
+              status: 'running',
+              processed: current,
+              total: bezAnalyzy.length,
+              percent,
+              current_file: dok.nazov,
+              error_count: failed,
+              severity: 'error'
+            });
+          } else {
+            console.log(`⚠️ Retry ${retries}/3...`);
+            await new Promise(resolve => setTimeout(resolve, 1000));
           }
-        });
-
-        // Ulož výsledky
-        await base44.asServiceRole.entities.Dokument.update(dok.id, {
-          podrobna_analyza_datum: new Date().toISOString(),
-          ai_generovany_popis: popis,
-          vizualna_analyza: vizAnalyza,
-          analyzovaný: true
-        });
-
-        processed++;
-        
-        // Log každú fotku
-        await logProgress(base44, user.id, `✓ ${current}/${bezAnalyzy.length} | ${dok.nazov} | ${vizAnalyza.spravny_vyrobca} - ${vizAnalyza.spravny_model}`, {
-          status: 'running',
-          processed: current,
-          total: bezAnalyzy.length,
-          percent,
-          current_file: dok.nazov,
-          success_count: processed
-        });
-
-        console.log(`✓ OK | ${vizAnalyza.spravny_vyrobca} - ${vizAnalyza.spravny_model}`);
-
-      } catch (error) {
-        const errorMsg = error.message || error.toString();
-        
-        console.error(`✗ CHYBA: ${errorMsg}`);
-        
-        if (errorMsg.includes('unsupported image') || errorMsg.includes('ImageURL')) {
-          await base44.asServiceRole.entities.Dokument.update(dok.id, {
-            podrobna_analyza_datum: new Date().toISOString(),
-            ai_generovany_popis: 'Problémový obrázok - nepodporovaný formát'
-          });
-          skipped++;
-          
-          await logProgress(base44, user.id, `⊘ ${current}/${bezAnalyzy.length} | ${dok.nazov} | Preskočené`, {
-            status: 'running',
-            processed: current,
-            total: bezAnalyzy.length,
-            percent,
-            current_file: dok.nazov,
-            skipped_count: skipped
-          });
-        } else {
-          await base44.asServiceRole.entities.Dokument.update(dok.id, {
-            podrobna_analyza_datum: new Date().toISOString(),
-            ai_generovany_popis: `Chyba analýzy: ${errorMsg}`
-          });
-          failed++;
-          
-          await logProgress(base44, user.id, `✗ ${current}/${bezAnalyzy.length} | ${dok.nazov} | Chyba: ${errorMsg}`, {
-            status: 'running',
-            processed: current,
-            total: bezAnalyzy.length,
-            percent,
-            current_file: dok.nazov,
-            error_count: failed,
-            severity: 'error'
-          });
         }
       }
 
-      // Krátka pauza
       await new Promise(resolve => setTimeout(resolve, 300));
     }
 
-    // Analýza hotová
     const analysisDuration = ((Date.now() - startTime) / 1000).toFixed(1);
     
     await logProgress(base44, user.id, `✅ ANALÝZA HOTOVÁ za ${analysisDuration}s | ✓${processed} ⊘${skipped} ✗${failed}`, {
@@ -277,7 +278,6 @@ Kontext z metadát súboru:
 
     console.log(`\n✅ Analýza hotová, spúšťam reorganizáciu...`);
 
-    // Teraz spusti reorganizáciu
     await logProgress(base44, user.id, '🔄 Spúšťam reorganizáciu súborov...', {
       status: 'reorganizing',
       severity: 'info'
