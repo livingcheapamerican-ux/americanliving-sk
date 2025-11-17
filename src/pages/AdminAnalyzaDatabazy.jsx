@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Loader2, CheckCircle, XCircle, AlertTriangle, Image, FileText, RefreshCw, StopCircle, FolderSync, Zap, Play } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, AlertTriangle, Image, FileText, StopCircle, FolderSync } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DocumentTableWithBulkActions from "../components/admin/DocumentTableWithBulkActions";
 import DetailedAnalysisResults from "../components/admin/DetailedAnalysisResults";
@@ -17,6 +17,7 @@ export default function AdminAnalyzaDatabazy() {
   const [reorganizing, setReorganizing] = useState(false);
   const [filteredDokumenty, setFilteredDokumenty] = useState([]);
   const [results, setResults] = useState(null);
+  const [autoStarted, setAutoStarted] = useState(false);
   
   const queryClient = useQueryClient();
 
@@ -42,6 +43,7 @@ export default function AdminAnalyzaDatabazy() {
       if (response.data.success) {
         setResults(response.data);
         setAnalyzing(false);
+        queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
       }
     },
     onError: () => {
@@ -56,22 +58,19 @@ export default function AdminAnalyzaDatabazy() {
     }
   });
 
-  const handleStartAnalyza = async () => {
-    const neanalyzovaneCount = dokumenty.filter(d => !d.podrobna_analyza_datum).length;
-    
-    if (neanalyzovaneCount === 0) {
-      alert('Všetky fotky sú už analyzované!');
-      return;
+  // Automatické spustenie analýzy pri načítaní stránky
+  useEffect(() => {
+    if (!isLoading && dokumenty.length > 0 && !autoStarted && !analyzing) {
+      const neanalyzovane = dokumenty.filter(d => !d.podrobna_analyza_datum);
+      
+      if (neanalyzovane.length > 0) {
+        console.log(`🚀 Automaticky spúšťam analýzu ${neanalyzovane.length} fotiek`);
+        setAnalyzing(true);
+        setAutoStarted(true);
+        analyzaMutation.mutate('start');
+      }
     }
-
-    if (!confirm(`Spustiť automatickú analýzu ${neanalyzovaneCount} fotiek na pozadí?\n\nAnalýza beží stabilne bez záťaže frontendu.`)) {
-      return;
-    }
-
-    setAnalyzing(true);
-    setResults(null);
-    analyzaMutation.mutate('start');
-  };
+  }, [dokumenty, isLoading, autoStarted, analyzing]);
 
   const handleStopAnalyza = () => {
     if (confirm('Zastaviť analýzu?')) {
@@ -130,31 +129,11 @@ export default function AdminAnalyzaDatabazy() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 p-8">
       <div className="container mx-auto max-w-7xl">
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-blue-600 bg-clip-text text-transparent mb-2">
-              🎯 Analýza celej databázy
-            </h1>
-            <p className="text-gray-600">Automatická analýza na pozadí bez záťaže frontendu</p>
-          </div>
-          <Button 
-            onClick={() => refetch()} 
-            disabled={isLoading}
-            variant="outline"
-            size="lg"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Načítavam...
-              </>
-            ) : (
-              <>
-                <RefreshCw className="w-5 h-5 mr-2" />
-                Obnoviť dáta
-              </>
-            )}
-          </Button>
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-primary to-blue-600 bg-clip-text text-transparent mb-2">
+            🎯 Automatická analýza databázy
+          </h1>
+          <p className="text-gray-600">Systém automaticky analyzuje všetky fotky na pozadí</p>
         </div>
 
         {/* Stats */}
@@ -239,84 +218,59 @@ export default function AdminAnalyzaDatabazy() {
           <AdvancedFilters dokumenty={dokumenty} onFilterChange={setFilteredDokumenty} />
         </div>
 
-        {/* Background Analysis Control */}
-        <Card className="p-6 mb-8 border-2 border-primary/20">
-          <div className="flex flex-col gap-4">
-            <div>
-              <h2 className="text-xl font-bold mb-2">🤖 Automatická analýza na pozadí</h2>
-              <p className="text-sm text-gray-600 mb-2">
-                Stabilná analýza beží na serveri bez záťaže frontendu. Dáta sa automaticky aktualizujú každé 3 sekundy.
-              </p>
-              {neanalyzovaneCount > 0 && (
-                <p className="text-sm font-semibold text-orange-600">
-                  ⚠️ Zostáva {neanalyzovaneCount} neanalyzovaných fotiek
-                </p>
-              )}
-            </div>
-
-            {analyzing ? (
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
-                  <div className="flex-grow">
-                    <p className="font-semibold text-blue-900">Analýza prebieha na pozadí...</p>
-                    <p className="text-sm text-gray-600">Progress sa aktualizuje automaticky</p>
-                  </div>
+        {/* Status Panel */}
+        {analyzing && (
+          <Card className="p-6 mb-8 border-2 border-blue-500 bg-gradient-to-br from-blue-50 to-indigo-50">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                <div>
+                  <h2 className="text-xl font-bold text-blue-900">🤖 Analýza prebieha automaticky</h2>
+                  <p className="text-sm text-gray-600">Zostáva: {neanalyzovaneCount} fotiek</p>
+                  <p className="text-xs text-gray-500 mt-1">Dáta sa aktualizujú každé 3 sekundy</p>
                 </div>
-                
-                <Button
-                  onClick={handleStopAnalyza}
-                  variant="destructive"
-                  size="lg"
-                  className="w-full"
-                >
-                  <StopCircle className="w-5 h-5 mr-2" />
-                  Zastaviť analýzu
-                </Button>
               </div>
-            ) : (
-              <div className="flex gap-3">
-                <Button
-                  onClick={handleReorganizacia}
-                  disabled={reorganizing || podrobneAnalyzovaneCount === 0}
-                  size="lg"
-                  variant="outline"
-                  className="flex-1 border-cyan-500 text-cyan-700 hover:bg-cyan-50"
-                >
-                  {reorganizing ? (
-                    <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Reorganizujem...
-                    </>
-                  ) : (
-                    <>
-                      <FolderSync className="w-5 h-5 mr-2" />
-                      Reorganizovať
-                    </>
-                  )}
-                </Button>
-                <Button
-                  onClick={handleStartAnalyza}
-                  disabled={neanalyzovaneCount === 0 || analyzaMutation.isPending}
-                  size="lg"
-                  className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg"
-                >
-                  {neanalyzovaneCount === 0 ? (
-                    <>
-                      <CheckCircle className="w-5 h-5 mr-2" />
-                      Všetko analyzované
-                    </>
-                  ) : (
-                    <>
-                      <Play className="w-5 h-5 mr-2" />
-                      Spustiť analýzu ({neanalyzovaneCount})
-                    </>
-                  )}
-                </Button>
+              <Button
+                onClick={handleStopAnalyza}
+                variant="destructive"
+                size="lg"
+              >
+                <StopCircle className="w-5 h-5 mr-2" />
+                Zastaviť
+              </Button>
+            </div>
+          </Card>
+        )}
+
+        {/* Reorganization Button */}
+        {!analyzing && podrobneAnalyzovaneCount > 0 && (
+          <Card className="p-6 mb-8 bg-gradient-to-br from-cyan-50 to-blue-50 border-cyan-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-cyan-900">📁 Reorganizácia súborov</h3>
+                <p className="text-sm text-gray-600">Presunúť súbory do správnych priečinkov podľa AI analýzy</p>
               </div>
-            )}
-          </div>
-        </Card>
+              <Button
+                onClick={handleReorganizacia}
+                disabled={reorganizing}
+                size="lg"
+                className="bg-cyan-600 hover:bg-cyan-700"
+              >
+                {reorganizing ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Reorganizujem...
+                  </>
+                ) : (
+                  <>
+                    <FolderSync className="w-5 h-5 mr-2" />
+                    Reorganizovať
+                  </>
+                )}
+              </Button>
+            </div>
+          </Card>
+        )}
 
         <Tabs defaultValue="statistics" className="mb-8">
           <TabsList className="grid w-full grid-cols-5">
@@ -348,9 +302,9 @@ export default function AdminAnalyzaDatabazy() {
           </TabsContent>
         </Tabs>
 
-        {results && (
+        {results && !analyzing && (
           <Card className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
-            <h3 className="text-xl font-bold mb-4">📊 Výsledky analýzy</h3>
+            <h3 className="text-xl font-bold mb-4">✅ Analýza dokončená</h3>
             <div className="grid grid-cols-4 gap-4">
               <div className="text-center p-4 bg-white rounded-lg">
                 <p className="text-sm text-gray-600">Celkom</p>
@@ -369,7 +323,7 @@ export default function AdminAnalyzaDatabazy() {
                 <p className="text-3xl font-bold text-red-600">{results.failed || 0}</p>
               </div>
             </div>
-          </Card>
+          </div>
         )}
       </div>
     </div>
