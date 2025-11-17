@@ -9,6 +9,36 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { action } = await req.json().catch(() => ({}));
+
+    // Ak je akcia 'stop', nastav flag na zastavenie
+    if (action === 'stop') {
+      await base44.asServiceRole.entities.GoogleDriveNotification.create({
+        notification_type: 'sync_completed',
+        message: 'Reorganizácia bude zastavená',
+        severity: 'info',
+        read: false,
+        user_id: user.id,
+        metadata: { type: 'reorganization_control', should_stop: true }
+      });
+      return Response.json({ success: true, message: 'Reorganizácia bude zastavená' });
+    }
+
+    // Vytvor inicializačný log
+    await base44.asServiceRole.entities.GoogleDriveNotification.create({
+      notification_type: 'sync_completed',
+      message: '🚀 Reorganizácia spustená',
+      severity: 'info',
+      read: false,
+      user_id: user.id,
+      metadata: { 
+        type: 'reorganization_log',
+        status: 'running',
+        processed: 0,
+        total: 0
+      }
+    });
+
     // Načítaj všetky analyzované dokumenty
     const dokumenty = await base44.asServiceRole.entities.Dokument.filter({
       typ: 'fotky',
@@ -17,6 +47,15 @@ Deno.serve(async (req) => {
     });
 
     if (dokumenty.length === 0) {
+      await base44.asServiceRole.entities.GoogleDriveNotification.create({
+        notification_type: 'sync_completed',
+        message: '✅ Žiadne dokumenty na reorganizáciu',
+        severity: 'success',
+        read: false,
+        user_id: user.id,
+        metadata: { type: 'reorganization_log', status: 'completed' }
+      });
+      
       return Response.json({
         success: true,
         message: 'Žiadne dokumenty na reorganizáciu',
@@ -29,12 +68,42 @@ Deno.serve(async (req) => {
     let presunute = 0;
     let nezmenene = 0;
     let chyby = 0;
-
-    // Mapa pre sledovanie verzií súborov
     const verzieMap = new Map();
+    const logInterval = 5; // Log každých 5 súborov
 
-    for (const dok of dokumenty) {
+    for (let i = 0; i < dokumenty.length; i++) {
+      const dok = dokumenty[i];
+      
       try {
+        // Kontrola stop flagu každých 10 súborov
+        if (i % 10 === 0) {
+          const stopCheck = await base44.asServiceRole.entities.GoogleDriveNotification.filter({
+            user_id: user.id,
+            'metadata.type': 'reorganization_control',
+            'metadata.should_stop': true
+          });
+          
+          if (stopCheck.length > 0) {
+            await base44.asServiceRole.entities.GoogleDriveNotification.create({
+              notification_type: 'sync_failed',
+              message: `⏸️ Reorganizácia zastavená používateľom (${presunute} presunute)`,
+              severity: 'warning',
+              read: false,
+              user_id: user.id,
+              metadata: { type: 'reorganization_log', status: 'stopped', presunute, nezmenene, chyby }
+            });
+            
+            return Response.json({
+              success: true,
+              message: 'Reorganizácia zastavená',
+              presunute,
+              nezmenene,
+              chyby,
+              stopped: true
+            });
+          }
+        }
+
         const analyza = dok.vizualna_analyza;
 
         if (!analyza.spravny_vyrobca || !analyza.spravny_model) {
@@ -85,7 +154,7 @@ Deno.serve(async (req) => {
             hlavnyMaterial = 'štandard';
           }
         } else if (typObsahu === 'podorys') {
-          hlavnyMaterial = ''; // pôdorys nemá materiál v názve
+          hlavnyMaterial = '';
         } else {
           hlavnyMaterial = 'detaily';
         }
@@ -98,31 +167,26 @@ Deno.serve(async (req) => {
           podpriecinok = `${model} ${typObsahu}${hlavnyMaterial ? ' ' + hlavnyMaterial : ''}`;
         }
 
-        // Vytvor novú cestu
         const novaCesta = `${vyrobca}/${model}/${podpriecinok}`;
 
         // Vytvor nový názov súboru
         const originalName = dok.nazov.split('.')[0];
         const extension = dok.nazov.split('.').pop();
         
-        // Klúč pre sledovanie verzií
         const verziaKey = `${novaCesta}/${originalName}`;
         
-        // Skontroluj či už existuje tento súbor v tejto ceste
         let novyNazov = dok.nazov;
         if (verzieMap.has(verziaKey)) {
           const verzia = verzieMap.get(verziaKey) + 1;
           verzieMap.set(verziaKey, verzia);
           novyNazov = `${originalName} Verzia ${verzia}.${extension}`;
         } else {
-          // Skontroluj v databáze či už existuje
           const existujuce = await base44.asServiceRole.entities.Dokument.filter({
             cesta_priecinku: novaCesta,
             nazov: { $regex: `^${originalName}` }
           });
           
           if (existujuce.length > 0) {
-            // Nájdi najvyššie číslo verzie
             let maxVerzia = 0;
             for (const ex of existujuce) {
               const match = ex.nazov.match(/Verzia (\d+)/);
@@ -143,30 +207,65 @@ Deno.serve(async (req) => {
           }
         }
 
-        // Skontroluj či sa cesta zmenila
         if (dok.cesta_priecinku === novaCesta && dok.nazov === novyNazov) {
           nezmenene++;
-          continue;
+        } else {
+          await base44.asServiceRole.entities.Dokument.update(dok.id, {
+            cesta_priecinku: novaCesta,
+            nazov: novyNazov,
+            vyrobca: vyrobca,
+            model_domu: model,
+            podpriecinok: podpriecinok,
+            reorganizovany: true,
+            reorganizovany_datum: new Date().toISOString()
+          });
+          presunute++;
         }
 
-        // Update dokumentu
-        await base44.asServiceRole.entities.Dokument.update(dok.id, {
-          cesta_priecinku: novaCesta,
-          nazov: novyNazov,
-          vyrobca: vyrobca,
-          model_domu: model,
-          podpriecinok: podpriecinok,
-          reorganizovany: true,
-          reorganizovany_datum: new Date().toISOString()
-        });
-
-        presunute++;
+        // Log každých X súborov
+        if ((i + 1) % logInterval === 0 || (i + 1) === dokumenty.length) {
+          const percent = Math.round(((i + 1) / dokumenty.length) * 100);
+          await base44.asServiceRole.entities.GoogleDriveNotification.create({
+            notification_type: 'sync_completed',
+            message: `📊 Progress: ${i + 1}/${dokumenty.length} (${percent}%) | Presunute: ${presunute} | Nezmenené: ${nezmenene}`,
+            severity: 'info',
+            read: false,
+            user_id: user.id,
+            metadata: { 
+              type: 'reorganization_log',
+              status: 'running',
+              processed: i + 1,
+              total: dokumenty.length,
+              presunute,
+              nezmenene,
+              chyby,
+              percent
+            }
+          });
+        }
 
       } catch (error) {
         console.error(`Chyba pri reorganizácii ${dok.nazov}:`, error);
         chyby++;
       }
     }
+
+    // Finálny log
+    await base44.asServiceRole.entities.GoogleDriveNotification.create({
+      notification_type: 'sync_completed',
+      message: `✅ Reorganizácia dokončená! Presunute: ${presunute} | Nezmenené: ${nezmenene} | Chyby: ${chyby}`,
+      severity: 'success',
+      read: false,
+      user_id: user.id,
+      metadata: { 
+        type: 'reorganization_log',
+        status: 'completed',
+        presunute,
+        nezmenene,
+        chyby,
+        total: dokumenty.length
+      }
+    });
 
     return Response.json({
       success: true,
@@ -179,6 +278,21 @@ Deno.serve(async (req) => {
 
   } catch (error) {
     console.error('Error:', error);
+    
+    try {
+      const base44 = createClientFromRequest(req);
+      const user = await base44.auth.me();
+      
+      await base44.asServiceRole.entities.GoogleDriveNotification.create({
+        notification_type: 'sync_failed',
+        message: `❌ Chyba reorganizácie: ${error.message}`,
+        severity: 'error',
+        read: false,
+        user_id: user.id,
+        metadata: { type: 'reorganization_log', status: 'error' }
+      });
+    } catch {}
+    
     return Response.json({ 
       error: error.message,
       success: false 
