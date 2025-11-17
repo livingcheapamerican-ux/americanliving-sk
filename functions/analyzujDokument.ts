@@ -32,42 +32,135 @@ Deno.serve(async (req) => {
         let llmParams = {};
 
         if (isImage) {
-            analysisPrompt = `Analyzuj DETAILNE túto fotografiu modulárneho domu.
+            analysisPrompt = `DETAILNÁ VIZUÁLNA ANALÝZA OBRÁZKA MODULÁRNEHO DOMU
 
-DOKUMENT INFO:
-- Názov: ${dok.nazov}
-- Výrobca: ${dok.vyrobca}
-${dok.model_domu ? `- Model: ${dok.model_domu}` : ''}
+KONTEXT DOKUMENTU:
+- Názov súboru: ${dok.nazov}
+- Aktuálny výrobca: ${dok.vyrobca}
+- Aktuálny model: ${dok.model_domu || 'neurčený'}
+- Podpriečinok: ${dok.podpriecinok || 'neurčený'}
 
-POŽADOVANÉ:
-1. spravny_vyrobca - urči správneho výrobcu z: JAK Modules, Ticab house, Prosto House, Domki z Gór
-2. spravny_model - presný názov modelu
-3. typ_obsahu - exterier, interier alebo podorys
-4. fasada_materialy - pole materiálov fasády (len exterier)
-5. fasada_farby - pole farieb (len exterier)
-6. technicka_analyza - detailný popis toho čo vidíš
-7. Popis pre chatbot (150-200 slov)
-8. Tagy (5-10 kľúčových slov)`;
+ÚLOHA 1 - IDENTIFIKÁCIA (KRITICKÉ):
+Urči SPRÁVNEHO výrobcu a PRESNÝ model z obrázka:
+- Výrobca: JAK Modules | Ticab house | Prosto House | Domki z Gór
+- Model: presný názov (napr. "Modul 50", "70 Barcelona", "Capri 51")
+- Typ obsahu: exterier | interier | podorys | ine
+
+ÚLOHA 2 - EXTERIER (ak typ=exterier):
+Fasáda:
+- Materiály: [drevo, omietka, obklad, sklo, kov, panel, ...]
+- Farby: [biela, sivá, hnedá, čierna, prírodná, ...]
+- Typ drevin (ak drevo): [smrek, borovica, céder, ...]
+- Povrchové úpravy: [matná, lesklá, štrukturovaná, ...]
+
+Detaily:
+- Okná: typ, farba rámov
+- Dvere: typ, farba
+- Strecha: typ, materiál, farba, sklon
+- Terasa/balkón: áno/nie, materiál
+- Okolie: typ terénu, vegetácia
+
+ÚLOHA 3 - INTERIER (ak typ=interier):
+- Materiály: podlahy, steny, stropy
+- Štýl: moderný, rustikálny, minimalistický, ...
+- Farby: dominantné farby
+- Miestnosť: obývačka, kuchyňa, spálňa, ...
+- Vybavenie: áno/nie
+
+ÚLOHA 4 - PÔDORYS (ak typ=podorys):
+- Je to pôdorys: áno/nie
+- Počet izieb: číslo
+- Celková plocha: m²
+- Rozmery: dĺžka x šírka
+- Miestnosti: zoznam s rozmermi
+
+ÚLOHA 5 - AI GENEROVANIE:
+- Popis pre chatbot (150-200 slov, slovensky)
+- Tagy (8-12 kľúčových slov)
+- Technická analýza (čo všetko vidíš na obrázku)`;
 
             responseSchema = {
                 type: "object",
                 properties: {
-                    extrahovaný_obsah: { type: "string" },
-                    ai_generovany_popis: { type: "string" },
-                    ai_generovane_tagy: { type: "array", items: { type: "string" } },
+                    extrahovaný_obsah: { 
+                        type: "string",
+                        description: "Detailný popis pre chatbot, 150-200 slov"
+                    },
+                    ai_generovany_popis: { 
+                        type: "string",
+                        description: "Krátky popis 2-3 vety"
+                    },
+                    ai_generovane_tagy: { 
+                        type: "array", 
+                        items: { type: "string" },
+                        description: "8-12 relevantných tagov"
+                    },
                     vizualna_analyza: {
                         type: "object",
                         properties: {
-                            spravny_vyrobca: { type: "string" },
+                            spravny_vyrobca: { 
+                                type: "string",
+                                enum: ["JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"]
+                            },
                             spravny_model: { type: "string" },
-                            typ_obsahu: { type: "string" },
-                            fasada_materialy: { type: "array", items: { type: "string" } },
-                            fasada_farby: { type: "array", items: { type: "string" } },
-                            technicka_analyza: { type: "string" },
+                            typ_obsahu: { 
+                                type: "string",
+                                enum: ["exterier", "interier", "podorys", "ine"]
+                            },
+                            fasada_materialy: { 
+                                type: "array", 
+                                items: { type: "string" }
+                            },
+                            fasada_farby: { 
+                                type: "array", 
+                                items: { type: "string" }
+                            },
+                            fasada_typy_drevin: {
+                                type: "array",
+                                items: { type: "string" }
+                            },
+                            fasada_povrchove_upravy: {
+                                type: "array",
+                                items: { type: "string" }
+                            },
+                            okna_typ: { type: "string" },
+                            okna_farba: { type: "string" },
+                            dvere_typ: { type: "string" },
+                            dvere_farba: { type: "string" },
+                            strecha_typ: { type: "string" },
+                            strecha_material: { type: "string" },
+                            strecha_farba: { type: "string" },
+                            interier_materialy: {
+                                type: "array",
+                                items: { type: "string" }
+                            },
+                            podorys_analyza: {
+                                type: "object",
+                                properties: {
+                                    je_podorys: { type: "boolean" },
+                                    pocet_izieb: { type: "number" },
+                                    uzitkova_plocha: { type: "string" },
+                                    celkove_rozmery: {
+                                        type: "object",
+                                        properties: {
+                                            sirka: { type: "string" },
+                                            dlzka: { type: "string" }
+                                        }
+                                    },
+                                    miestnosti: {
+                                        type: "array",
+                                        items: { type: "string" }
+                                    }
+                                }
+                            },
+                            technicka_analyza: { 
+                                type: "string",
+                                description: "Detailný technický popis toho čo vidíš"
+                            },
                             styl: { type: "string" },
                             farby: { type: "array", items: { type: "string" } }
                         },
-                        required: ["spravny_vyrobca", "spravny_model", "typ_obsahu"]
+                        required: ["spravny_vyrobca", "spravny_model", "typ_obsahu", "technicka_analyza"]
                     }
                 },
                 required: ["extrahovaný_obsah", "ai_generovany_popis", "ai_generovane_tagy", "vizualna_analyza"]
@@ -79,58 +172,135 @@ POŽADOVANÉ:
                 response_json_schema: responseSchema
             };
         } else if (isPDF || isDocument) {
-            // Pre PDF a dokumenty - fetch obsahu
+            // Pre PDF a dokumenty
             let fileContent = '';
             try {
                 const response = await fetch(dok.subor_url);
-                const blob = await response.blob();
-                fileContent = await blob.text();
+                const text = await response.text();
+                fileContent = text.substring(0, 30000);
             } catch (e) {
                 console.error('Fetch error:', e);
+                fileContent = '';
             }
 
-            analysisPrompt = `SMART ANALÝZA DOKUMENTU
+            analysisPrompt = `SMART ANALÝZA A EXTRAKCIA DÁT Z DOKUMENTU
 
+══════════════════════════════════════════════
 DOKUMENT:
-Názov: ${dok.nazov}
-Typ: ${dok.typ}
-Výrobca: ${dok.vyrobca}
-Obsah prvých 20000 znakov: ${fileContent.substring(0, 20000)}
+- Názov: ${dok.nazov}
+- Aktuálny typ: ${dok.typ}
+- Výrobca: ${dok.vyrobca}
+- Obsah (prvých 30000 znakov):
 
-ÚLOHY:
+${fileContent}
+══════════════════════════════════════════════
 
-1. DETEKCIA TYPU - urči presný typ:
-   - **zmluva** ak obsahuje: "zmluva", "zmluvné strany", "článok", právne formulácie
-   - **faktúra** ak obsahuje: "faktúra", "invoice", VS, suma, DPH, splatnosť
-   - **ponuka** ak obsahuje: "cenová ponuka", "ponúkame", cena
-   - **objednávka** ak obsahuje: "objednávka", "objednávam"
-   - cenník, technická_špecifikácia, návod, certifikát, FAQ, blog, iné
+ÚLOHA 1 - PRESNÁ DETEKCIA TYPU:
 
-2. EXTRAKCIA INFO (podľa typu):
+Analyzuj obsah a urči PRESNÝ typ dokumentu:
+
+A) **zmluva** - ak obsahuje:
+   ✓ Slová: "zmluva", "zmluvné strany", "článok", "bod"
+   ✓ Právne formulácie
+   ✓ Podpisy, pečiatky
+   ✓ Identifikácia zmluvných strán
+
+B) **faktúra** - ak obsahuje:
+   ✓ Slová: "faktúra", "invoice", "fa", "daňový doklad"
+   ✓ VS (variabilný symbol)
+   ✓ Suma, DPH, splatnosť
+   ✓ Dodávateľ, odberateľ
+   ✓ Položky s cenami
+
+C) **ponuka** - ak obsahuje:
+   ✓ Slová: "cenová ponuka", "ponúkame", "cena"
+   ✓ Zoznam produktov/služieb s cenami
+   ✓ Platnosť ponuky
+   ✓ Podmienky
+
+D) **objednávka** - ak obsahuje:
+   ✓ Slová: "objednávka", "objednávam"
+   ✓ Zoznam objednaných položiek
+   ✓ Množstvá, ceny
+   ✓ Termín dodania
+
+E) **cenník** - systematický zoznam cien
+
+F) **technická_špecifikácia** - technické parametre, normy
+
+G) **návod** - postup, kroky, inštrukcie
+
+H) **certifikát** - osvedčenie, certifikát kvality
+
+I) **FAQ** - často kladené otázky
+
+J) **blog** - článok, blog post
+
+K) **iné** - ak nepadá do vyššie uvedených
+
+══════════════════════════════════════════════
+ÚLOHA 2 - EXTRAKCIA KĽÚČOVÝCH DÁT:
+
+PRE ZMLUVU extrahuj:
+- cislo_zmluvy: "2024/123" (presný formát)
+- datum_podpisu: "2024-11-17" (ISO formát)
+- zmluvne_strany: ["Firma A, s.r.o., IČO: 12345678", "Firma B, a.s., IČO: 87654321"]
+- predmet_zmluvy: "stručný popis čo je predmetom zmluvy"
+- platnost_od: "2024-11-17"
+- platnost_do: "2025-11-17" (alebo null)
+
+PRE FAKTÚRU extrahuj:
+- cislo_faktury: "2024001234" (presné číslo)
+- datum_vystavenia: "2024-11-17"
+- datum_splatnosti: "2024-12-17"
+- dodavatel: "Názov firmy dodávateľa, IČO"
+- odberatel: "Názov firmy odberateľa, IČO"
+- suma_bez_dph: "1000.00 EUR"
+- dph: "200.00 EUR (20%)"
+- suma_s_dph: "1200.00 EUR"
+- polozky: ["Položka 1: 500 EUR", "Položka 2: 500 EUR"]
+
+PRE PONUKU extrahuj:
+- cislo_ponuky: "P-2024-001"
+- datum_ponuky: "2024-11-17"
+- platnost_do: "2024-12-17"
+- ponukane_produkty: ["Produkt A", "Produkt B", "Služba X"]
+- celkova_cena: "5000.00 EUR s DPH"
+
+PRE OBJEDNÁVKU extrahuj:
+- cislo_objednavky: "OBJ-2024-001"
+- datum_objednavky: "2024-11-17"
+- pozadovany_termin: "2024-12-01"
+- objednavatel: "Názov firmy"
+- objednane_polozky: ["Položka A: 10 ks", "Položka B: 5 ks"]
+- celkova_suma: "3000.00 EUR"
+
+PRE VŠETKY TYPY:
+- modely_domov: ["všetky zmienené modely domov"]
+- cenové_informácie: ["všetky zmienené ceny"]
+- technické_údaje: ["všetky technické parametre"]
+
+══════════════════════════════════════════════
+ÚLOHA 3 - AI GENEROVANIE:
+
+1. extrahovaný_obsah: Optimalizovaný text pre AI chatbot (300-500 slov)
+   - Súhrn dokumentu
+   - Kľúčové informácie
+   - Dôležité body
    
-   Pre ZMLUVU:
-   - cislo_zmluvy, datum_podpisu, zmluvne_strany[], predmet_zmluvy, platnost_od, platnost_do
-   
-   Pre FAKTÚRU:
-   - cislo_faktury, datum_vystavenia, datum_splatnosti
-   - dodavatel, odberatel
-   - suma_bez_dph, dph, suma_s_dph
-   - polozky[]
-   
-   Pre PONUKU:
-   - cislo_ponuky, datum_ponuky, platnost_do
-   - ponukane_produkty[], celkova_cena
-   
-   Pre OBJEDNÁVKU:
-   - cislo_objednavky, datum_objednavky
-   - objednavatel, objednane_polozky[], celkova_suma
+2. ai_generovany_popis: Krátky popis (2-3 vety)
 
-3. AI GENEROVANIE:
-   - Popis (2-3 vety)
-   - Tagy (8-12 kľúčových slov)
-   - Zhrnutie ak >500 slov
+3. ai_generovane_tagy: 10-15 kľúčových slov/fráz
 
-4. CHATBOT obsah - optimalizovaný text pre AI chatbota`;
+4. zhrnutie: Ak dokument > 1000 slov, vytvor zhrnutie
+
+══════════════════════════════════════════════
+POZNÁMKY:
+- Buď PRESNÝ pri extrakcii čísel, dátumov a súm
+- Zachovaj formát čísel a mien
+- Extrahuj IČO, DIČ ak sú dostupné
+- Pri neurčitých dátach použi null
+- Všetky sumy uvádzaj s menou (EUR, CZK, ...)`;
 
             responseSchema = {
                 type: "object",
@@ -139,10 +309,23 @@ Obsah prvých 20000 znakov: ${fileContent.substring(0, 20000)}
                         type: "string",
                         enum: ["cenník", "technická_špecifikácia", "návod", "certifikát", "FAQ", "blog", "zmluva", "faktúra", "ponuka", "objednávka", "iné"]
                     },
-                    extrahovaný_obsah: { type: "string" },
-                    ai_generovany_popis: { type: "string" },
-                    ai_generovane_tagy: { type: "array", items: { type: "string" } },
-                    zhrnutie: { type: "string" },
+                    extrahovaný_obsah: { 
+                        type: "string",
+                        description: "Optimalizovaný text pre chatbot, 300-500 slov"
+                    },
+                    ai_generovany_popis: { 
+                        type: "string",
+                        description: "Krátky popis 2-3 vety"
+                    },
+                    ai_generovane_tagy: { 
+                        type: "array", 
+                        items: { type: "string" },
+                        description: "10-15 relevantných tagov"
+                    },
+                    zhrnutie: { 
+                        type: "string",
+                        description: "Zhrnutie ak dokument dlhší ako 1000 slov"
+                    },
                     kľúčové_informácie: {
                         type: "object",
                         properties: {
@@ -192,8 +375,30 @@ Obsah prvých 20000 znakov: ${fileContent.substring(0, 20000)}
                                     celkova_suma: { type: "string" }
                                 }
                             },
-                            modely_domov: { type: "array", items: { type: "string" } },
-                            cenové_informácie: { type: "array", items: { type: "string" } }
+                            modely_domov: { 
+                                type: "array", 
+                                items: { type: "string" },
+                                description: "Všetky zmienené modely domov"
+                            },
+                            cenové_informácie: { 
+                                type: "array", 
+                                items: { type: "string" },
+                                description: "Všetky zmienené ceny"
+                            },
+                            technické_údaje: {
+                                type: "array",
+                                items: { type: "string" },
+                                description: "Technické parametre"
+                            },
+                            rozmery: {
+                                type: "object",
+                                properties: {
+                                    sirka: { type: "string" },
+                                    dlzka: { type: "string" },
+                                    vyska: { type: "string" },
+                                    plocha: { type: "string" }
+                                }
+                            }
                         }
                     }
                 },
@@ -251,13 +456,13 @@ Obsah prvých 20000 znakov: ${fileContent.substring(0, 20000)}
         return Response.json({
             success: true,
             type: isImage ? 'image' : 'document',
-            analyzed: true
+            analyzed: true,
+            data: result
         });
 
     } catch (error) {
         console.error('❌ Analysis error:', error);
         
-        // Mark document for manual review
         try {
             const base44 = createClientFromRequest(req);
             const { document_id } = await req.json();
