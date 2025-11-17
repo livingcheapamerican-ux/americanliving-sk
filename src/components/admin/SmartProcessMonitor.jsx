@@ -13,7 +13,6 @@ export default function SmartProcessMonitor() {
   const [isRunning, setIsRunning] = useState(false);
   const queryClient = useQueryClient();
 
-  // Fetch analysis logs - ZNÍŽENÉ na 5s
   const { data: analysisLogs = [], refetch: refetchAnalysis } = useQuery({
     queryKey: ['smart-analysis-logs'],
     queryFn: async () => {
@@ -26,7 +25,6 @@ export default function SmartProcessMonitor() {
     staleTime: 3000
   });
 
-  // Fetch reorganization logs - ZNÍŽENÉ na 5s
   const { data: reorgLogs = [], refetch: refetchReorg } = useQuery({
     queryKey: ['smart-reorg-logs'],
     queryFn: async () => {
@@ -39,7 +37,6 @@ export default function SmartProcessMonitor() {
     staleTime: 3000
   });
 
-  // Check if process is running
   useEffect(() => {
     const latestAnalysis = analysisLogs[0];
     const latestReorg = reorgLogs[0];
@@ -53,7 +50,6 @@ export default function SmartProcessMonitor() {
     setIsRunning(isAnalysisRunning || isReorgRunning);
   }, [analysisLogs, reorgLogs]);
 
-  // Start analysis
   const startMutation = useMutation({
     mutationFn: () => base44.functions.invoke('smartAnalysis', {}),
     onSuccess: () => {
@@ -67,7 +63,31 @@ export default function SmartProcessMonitor() {
     }
   });
 
-  // Clear logs
+  const stopMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.GoogleDriveNotification.create({
+        notification_type: 'sync_completed',
+        message: 'STOP príkaz',
+        severity: 'warning',
+        read: false,
+        user_id: (await base44.auth.me()).id,
+        metadata: {
+          type: 'stop_command',
+          stop_analysis: true,
+          stop_reorg: true,
+          timestamp: new Date().toISOString()
+        }
+      });
+    },
+    onSuccess: () => {
+      toast.info('Stop príkaz odoslaný');
+      setTimeout(() => {
+        refetchAnalysis();
+        refetchReorg();
+      }, 1000);
+    }
+  });
+
   const clearLogsMutation = useMutation({
     mutationFn: async () => {
       for (const log of [...analysisLogs, ...reorgLogs]) {
@@ -98,7 +118,6 @@ export default function SmartProcessMonitor() {
 
   return (
     <div className="space-y-6">
-      {/* Control Panel */}
       <Card className="p-6 bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -135,30 +154,40 @@ export default function SmartProcessMonitor() {
               </Button>
             )}
             
-            <Button
-              onClick={() => startMutation.mutate()}
-              disabled={startMutation.isPending || isRunning}
-              size="lg"
-              className="bg-purple-600 hover:bg-purple-700"
-            >
-              {startMutation.isPending || isRunning ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Beží...
-                </>
-              ) : (
-                <>
-                  <PlayCircle className="w-5 h-5 mr-2" />
-                  Spustiť
-                </>
-              )}
-            </Button>
+            {isRunning ? (
+              <Button
+                onClick={() => stopMutation.mutate()}
+                variant="destructive"
+                size="lg"
+                disabled={stopMutation.isPending}
+              >
+                <StopCircle className="w-5 h-5 mr-2" />
+                Zastaviť
+              </Button>
+            ) : (
+              <Button
+                onClick={() => startMutation.mutate()}
+                disabled={startMutation.isPending}
+                size="lg"
+                className="bg-purple-600 hover:bg-purple-700"
+              >
+                {startMutation.isPending ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Spúšťam...
+                  </>
+                ) : (
+                  <>
+                    <PlayCircle className="w-5 h-5 mr-2" />
+                    Spustiť
+                  </>
+                )}
+              </Button>
+            )}
           </div>
         </div>
 
-        {/* Status Bars */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Analysis Status */}
           <div className="bg-white rounded-lg p-4 border-2 border-blue-200">
             <div className="flex items-center justify-between mb-2">
               <h4 className="font-semibold text-gray-900 flex items-center gap-2">
@@ -193,7 +222,6 @@ export default function SmartProcessMonitor() {
             )}
           </div>
 
-          {/* Reorganization Status */}
           <div className="bg-white rounded-lg p-4 border-2 border-cyan-200">
             <div className="flex items-center justify-between mb-2">
               <h4 className="font-semibold text-gray-900 flex items-center gap-2">
@@ -230,9 +258,7 @@ export default function SmartProcessMonitor() {
         </div>
       </Card>
 
-      {/* Logs */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Analysis Logs */}
         <Card className="p-4">
           <h4 className="font-semibold mb-3 flex items-center gap-2">
             <div className="w-2 h-2 bg-blue-500 rounded-full" />
@@ -266,7 +292,6 @@ export default function SmartProcessMonitor() {
           </ScrollArea>
         </Card>
 
-        {/* Reorganization Logs */}
         <Card className="p-4">
           <h4 className="font-semibold mb-3 flex items-center gap-2">
             <div className="w-2 h-2 bg-cyan-500 rounded-full" />

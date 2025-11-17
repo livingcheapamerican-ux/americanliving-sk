@@ -19,6 +19,18 @@ async function log(base44, userId, message, data = {}) {
   }
 }
 
+async function checkStopFlag(base44) {
+  try {
+    const flags = await base44.asServiceRole.entities.GoogleDriveNotification.filter({
+      'metadata.stop_reorg': true,
+      'metadata.type': 'stop_command'
+    });
+    return flags && flags.length > 0;
+  } catch {
+    return false;
+  }
+}
+
 function getNewPath(dok) {
   const va = dok?.vizualna_analyza;
   if (!va?.spravny_vyrobca || !va?.spravny_model) return null;
@@ -53,7 +65,6 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Clear old logs
     const oldLogs = await base44.asServiceRole.entities.GoogleDriveNotification.filter({
       'metadata.type': 'smart_reorg_log'
     });
@@ -91,6 +102,21 @@ Deno.serve(async (req) => {
     let errors = 0;
 
     for (let i = 0; i < total; i++) {
+      if (i > 0 && i % 10 === 0) {
+        if (await checkStopFlag(base44)) {
+          await log(base44, user.id, `⏸️ ZASTAVENÉ na ${i}/${total}`, {
+            status: 'stopped',
+            severity: 'warning',
+            total,
+            processed: i,
+            moved,
+            unchanged,
+            errors
+          });
+          return Response.json({ success: true, stopped: true, total, processed: i, moved, unchanged, errors });
+        }
+      }
+
       const dok = needReorg[i];
       
       try {

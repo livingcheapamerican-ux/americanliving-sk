@@ -1,6 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
-// Memory management
 let processMemory = {
   currentBatch: [],
   failedItems: [],
@@ -35,6 +34,18 @@ async function log(base44, userId, message, data = {}) {
     });
   } catch (err) {
     console.error('[LOG ERROR]', err.message);
+  }
+}
+
+async function checkStopFlag(base44) {
+  try {
+    const flags = await base44.asServiceRole.entities.GoogleDriveNotification.filter({
+      'metadata.stop_analysis': true,
+      'metadata.type': 'stop_command'
+    });
+    return flags && flags.length > 0;
+  } catch {
+    return false;
   }
 }
 
@@ -104,12 +115,6 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    let body = {};
-    try {
-      body = await req.json();
-    } catch {}
-
-    // Clear old logs on start
     const oldLogs = await base44.asServiceRole.entities.GoogleDriveNotification.filter({
       'metadata.type': 'smart_analysis_log'
     });
@@ -119,7 +124,6 @@ Deno.serve(async (req) => {
 
     await log(base44, user.id, '🎯 Štart smart analýzy', { status: 'starting' });
 
-    // Get photos needing analysis
     const allPhotos = await base44.asServiceRole.entities.Dokument.filter({ typ: 'fotky' });
     const needAnalysis = allPhotos.filter(d => !d.vizualna_analyza?.spravny_vyrobca);
     
@@ -140,17 +144,40 @@ Deno.serve(async (req) => {
       percent: 0
     });
 
-    // Process in batches of 10
     const BATCH_SIZE = 10;
     let processed = 0;
     let success = 0;
     let failed = 0;
 
     for (let i = 0; i < total; i += BATCH_SIZE) {
+      if (await checkStopFlag(base44)) {
+        await log(base44, user.id, `⏸️ ZASTAVENÉ na ${processed}/${total}`, {
+          status: 'stopped',
+          severity: 'warning',
+          total,
+          processed,
+          success,
+          failed
+        });
+        return Response.json({ success: true, stopped: true, processed, total, success, failed });
+      }
+
       const batch = needAnalysis.slice(i, Math.min(i + BATCH_SIZE, total));
       processMemory.currentBatch = batch;
 
       for (const dok of batch) {
+        if (await checkStopFlag(base44)) {
+          await log(base44, user.id, `⏸️ ZASTAVENÉ na ${processed}/${total}`, {
+            status: 'stopped',
+            severity: 'warning',
+            total,
+            processed,
+            success,
+            failed
+          });
+          return Response.json({ success: true, stopped: true, processed, total, success, failed });
+        }
+
         const result = await analyzeSingle(base44, dok);
         
         if (result.success) {
@@ -183,7 +210,6 @@ Deno.serve(async (req) => {
         await new Promise(resolve => setTimeout(resolve, 200));
       }
 
-      // Clean memory after each batch
       cleanMemory();
       await new Promise(resolve => setTimeout(resolve, 500));
     }
@@ -200,7 +226,6 @@ Deno.serve(async (req) => {
       duration
     });
 
-    // Auto-start reorganization if successful
     if (success > 0) {
       await log(base44, user.id, '🔄 Spúšťam reorganizáciu...', {
         status: 'reorganizing'
