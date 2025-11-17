@@ -1,12 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
-// ===== KONFIGURÁCIA =====
-const BATCH_SIZE = 5; // Spracovať 5 súborov naraz
-const LOG_INTERVAL = 3; // Logovať každé 3 súbory
-const MAX_RETRIES = 3;
-
-// ===== HELPER FUNKCIE =====
-async function createLog(base44, userId, message, metadata = {}) {
+async function log(base44, userId, message, metadata = {}) {
   try {
     await base44.asServiceRole.entities.GoogleDriveNotification.create({
       notification_type: 'sync_completed',
@@ -20,342 +14,215 @@ async function createLog(base44, userId, message, metadata = {}) {
         ...metadata
       }
     });
-    console.log(`📝 LOG: ${message}`);
-  } catch (error) {
-    console.error('❌ Failed to create log:', error);
+    console.log(`📝 ${message}`);
+  } catch (err) {
+    console.error('Log error:', err);
   }
 }
 
-async function shouldStop(base44, userId) {
+async function checkStop(base44, userId) {
   try {
     const stopFlags = await base44.asServiceRole.entities.GoogleDriveNotification.filter({
-      user_id: userId,
-      'metadata.type': 'reorganization_control',
       'metadata.should_stop': true,
-      created_date: { $gte: new Date(Date.now() - 60000).toISOString() } // Posledná minúta
+      'metadata.type': 'reorganization_control'
     });
     return stopFlags.length > 0;
-  } catch (error) {
-    console.error('⚠️ Error checking stop flag:', error);
+  } catch {
     return false;
   }
 }
 
-function determineNewPath(dokument) {
-  const analyza = dokument.vizualna_analyza;
-  
-  if (!analyza?.spravny_vyrobca || !analyza?.spravny_model) {
-    return null; // Nemôžeme určiť cestu
+function getNewPath(dok) {
+  const va = dok.vizualna_analyza;
+  if (!va?.spravny_vyrobca || !va?.spravny_model) return null;
+
+  const vyrobca = va.spravny_vyrobca;
+  const model = va.spravny_model;
+  const typ = va.typ_obsahu || 'ine';
+
+  let material = '';
+  if (typ === 'exterier' && va.fasada_materialy?.length > 0) {
+    const mat = va.fasada_materialy[0].toLowerCase();
+    if (mat.includes('drevo')) material = 'drevený';
+    else if (mat.includes('omietk')) material = `${va.fasada_farby?.[0] || 'biela'} omietka`;
+    else if (mat.includes('kameň')) material = 'kamenný';
+    else material = va.fasada_materialy[0];
+  } else if (typ === 'interier' && va.interier_materialy?.length > 0) {
+    const mat = va.interier_materialy[0].toLowerCase();
+    if (mat.includes('drevo')) material = 'drevený';
+    else if (mat.includes('sádro')) material = 'sádrokartón';
+    else material = va.interier_materialy[0];
   }
 
-  const vyrobca = analyza.spravny_vyrobca;
-  const model = analyza.spravny_model;
-  const typObsahu = analyza.typ_obsahu || 'ine';
+  const podpriecinok = typ === 'podorys' 
+    ? `${model} pôdorys`
+    : `${model} ${typ}${material ? ' ' + material : ''}`;
 
-  // Určiť hlavný materiál
-  let hlavnyMaterial = '';
-  
-  if (typObsahu === 'exterier') {
-    if (analyza.fasada_materialy && analyza.fasada_materialy.length > 0) {
-      const material = analyza.fasada_materialy[0].toLowerCase();
-      if (material.includes('drevo') || material.includes('drevený')) {
-        hlavnyMaterial = 'drevený';
-      } else if (material.includes('omietk')) {
-        const farba = analyza.fasada_farby?.[0] || 'biela';
-        hlavnyMaterial = `${farba} omietka`;
-      } else if (material.includes('kameň')) {
-        hlavnyMaterial = 'kamenný';
-      } else if (material.includes('skl')) {
-        hlavnyMaterial = 'sklený';
-      } else {
-        hlavnyMaterial = analyza.fasada_materialy[0];
-      }
-    } else {
-      hlavnyMaterial = 'štandard';
-    }
-  } else if (typObsahu === 'interier') {
-    if (analyza.interier_materialy && analyza.interier_materialy.length > 0) {
-      const material = analyza.interier_materialy[0].toLowerCase();
-      if (material.includes('drevo') || material.includes('drevený')) {
-        hlavnyMaterial = 'drevený';
-      } else if (material.includes('sádrokart') || material.includes('sadrokart')) {
-        hlavnyMaterial = 'sádrokartón';
-      } else if (material.includes('obklad')) {
-        hlavnyMaterial = 'obklad';
-      } else {
-        hlavnyMaterial = analyza.interier_materialy[0];
-      }
-    } else {
-      hlavnyMaterial = 'štandard';
-    }
-  }
-
-  // Určiť podpriečinok
-  let podpriecinok = '';
-  if (typObsahu === 'podorys') {
-    podpriecinok = `${model} pôdorys`;
-  } else {
-    podpriecinok = `${model} ${typObsahu}${hlavnyMaterial ? ' ' + hlavnyMaterial : ''}`;
-  }
-
-  const novaCesta = `${vyrobca}/${model}/${podpriecinok}`;
-  
   return {
-    cesta_priecinku: novaCesta,
+    cesta_priecinku: `${vyrobca}/${model}/${podpriecinok}`,
     vyrobca,
     model_domu: model,
-    podpriecinok,
-    typObsahu,
-    hlavnyMaterial
+    podpriecinok
   };
 }
 
-async function processDocument(base44, dokument, verzieMap) {
-  const newPathData = determineNewPath(dokument);
-  
-  if (!newPathData) {
-    return { status: 'skipped', reason: 'Chýbajú údaje o výrobcovi/modeli' };
-  }
-
-  const { cesta_priecinku, vyrobca, model_domu, podpriecinok } = newPathData;
-
-  // Kontrola verzie názvu súboru
-  const originalName = dokument.nazov.split('.')[0];
-  const extension = dokument.nazov.split('.').pop();
-  const verziaKey = `${cesta_priecinku}/${originalName}`;
-  
-  let novyNazov = dokument.nazov;
-  
-  if (verzieMap.has(verziaKey)) {
-    const verzia = verzieMap.get(verziaKey) + 1;
-    verzieMap.set(verziaKey, verzia);
-    novyNazov = `${originalName} Verzia ${verzia}.${extension}`;
-  } else {
-    verzieMap.set(verziaKey, 1);
-  }
-
-  // Skontrolovať, či sa niečo zmenilo
-  if (
-    dokument.cesta_priecinku === cesta_priecinku &&
-    dokument.nazov === novyNazov &&
-    dokument.reorganizovany === true
-  ) {
-    return { status: 'unchanged' };
-  }
-
-  // Aktualizovať dokument
-  try {
-    await base44.asServiceRole.entities.Dokument.update(dokument.id, {
-      cesta_priecinku,
-      nazov: novyNazov,
-      vyrobca,
-      model_domu,
-      podpriecinok,
-      reorganizovany: true,
-      reorganizovany_datum: new Date().toISOString()
-    });
-    
-    return { status: 'moved', newPath: cesta_priecinku, newName: novyNazov };
-  } catch (error) {
-    console.error(`❌ Error updating document ${dokument.id}:`, error);
-    return { status: 'error', error: error.message };
-  }
-}
-
-async function processBatch(base44, dokumenty, startIdx, verzieMap, stats, userId) {
-  const endIdx = Math.min(startIdx + BATCH_SIZE, dokumenty.length);
-  const batch = dokumenty.slice(startIdx, endIdx);
-  
-  const results = await Promise.allSettled(
-    batch.map(dok => processDocument(base44, dok, verzieMap))
-  );
-  
-  results.forEach((result, idx) => {
-    const dokument = batch[idx];
-    
-    if (result.status === 'fulfilled') {
-      const res = result.value;
-      
-      if (res.status === 'moved') {
-        stats.presunute++;
-      } else if (res.status === 'unchanged') {
-        stats.nezmenene++;
-      } else if (res.status === 'skipped') {
-        stats.preskocene++;
-      } else if (res.status === 'error') {
-        stats.chyby++;
-      }
-    } else {
-      stats.chyby++;
-      console.error(`❌ Promise rejected for ${dokument.nazov}:`, result.reason);
-    }
-  });
-  
-  return endIdx;
-}
-
-// ===== HLAVNÁ FUNKCIA =====
 Deno.serve(async (req) => {
+  console.log('🚀 === REORGANIZÁCIA START ===');
   const startTime = Date.now();
-  console.log('🚀 ============ REORGANIZÁCIA ŠTART ============');
-  
+
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
-    if (!user || (user.role !== 'admin' && !user.super_admin)) {
+    if (!user?.role === 'admin' && !user?.super_admin) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { action } = await req.json().catch(() => ({}));
+    const body = await req.json().catch(() => ({}));
 
-    // STOP ACTION
-    if (action === 'stop') {
-      console.log('⏸️ Stop request received');
-      await createLog(base44, user.id, '⏸️ Zastavovací príkaz prijatý', {
+    if (body.action === 'stop') {
+      await log(base44, user.id, '⏸️ Stop príkaz prijatý', {
         type: 'reorganization_control',
         should_stop: true,
         severity: 'warning'
       });
-      return Response.json({ success: true, message: 'Stop signal sent' });
+      return Response.json({ success: true });
     }
 
-    // ŠTART LOGU
-    await createLog(base44, user.id, '🚀 Reorganizácia spustená - načítavam dokumenty...', {
-      status: 'running',
-      processed: 0,
-      total: 0,
-      percent: 0
-    });
+    await log(base44, user.id, '🚀 Spustené - načítavam dokumenty...', { status: 'running' });
 
-    // NAČÍTANIE DOKUMENTOV
-    console.log('📥 Fetching documents...');
     const dokumenty = await base44.asServiceRole.entities.Dokument.filter({
       typ: 'fotky',
-      vizualna_analyza: { $exists: true },
-      podrobna_analyza_datum: { $exists: true }
+      'vizualna_analyza': { $exists: true },
+      'podrobna_analyza_datum': { $exists: true }
     });
 
-    console.log(`✅ Loaded ${dokumenty.length} documents`);
+    console.log(`✅ Loaded ${dokumenty.length} docs`);
 
-    if (dokumenty.length === 0) {
-      await createLog(base44, user.id, '⚠️ Žiadne dokumenty na spracovanie', {
-        status: 'completed',
-        severity: 'warning'
-      });
-      return Response.json({
-        success: true,
-        message: 'No documents to process',
-        presunute: 0,
-        nezmenene: 0,
-        chyby: 0
-      });
+    if (!dokumenty || dokumenty.length === 0) {
+      await log(base44, user.id, '⚠️ Žiadne dokumenty', { status: 'completed', severity: 'warning' });
+      return Response.json({ success: true, presunute: 0, nezmenene: 0, chyby: 0 });
     }
 
-    await createLog(base44, user.id, `✅ Načítaných ${dokumenty.length} dokumentov - začínam spracovanie`, {
+    await log(base44, user.id, `✅ Načítaných ${dokumenty.length} dokumentov`, {
       status: 'running',
       total: dokumenty.length,
       processed: 0,
       percent: 0
     });
 
-    // INICIALIZÁCIA ŠTATISTÍK
-    const stats = {
-      presunute: 0,
-      nezmenene: 0,
-      chyby: 0,
-      preskocene: 0,
-      total: dokumenty.length
-    };
+    let presunute = 0;
+    let nezmenene = 0;
+    let chyby = 0;
+    const nameMap = new Map();
 
-    const verzieMap = new Map();
-    let processedCount = 0;
-
-    // BATCH PROCESSING LOOP
-    while (processedCount < dokumenty.length) {
-      // Kontrola stop flagu
-      if (await shouldStop(base44, user.id)) {
-        await createLog(base44, user.id, `⏸️ Proces zastavený na ${processedCount}/${dokumenty.length}`, {
-          status: 'stopped',
-          processed: processedCount,
-          total: dokumenty.length,
-          ...stats,
-          severity: 'warning'
-        });
-        
-        return Response.json({
-          success: true,
-          stopped: true,
-          ...stats,
-          processed: processedCount
-        });
+    for (let i = 0; i < dokumenty.length; i++) {
+      if (i % 10 === 0) {
+        const shouldStop = await checkStop(base44, user.id);
+        if (shouldStop) {
+          await log(base44, user.id, `⏸️ Zastavené na ${i}/${dokumenty.length}`, {
+            status: 'stopped',
+            presunute, nezmenene, chyby,
+            severity: 'warning'
+          });
+          return Response.json({ success: true, stopped: true, presunute, nezmenene, chyby });
+        }
       }
 
-      // Spracovať batch
-      const previousCount = processedCount;
-      processedCount = await processBatch(base44, dokumenty, processedCount, verzieMap, stats, user.id);
+      const dok = dokumenty[i];
       
-      const percent = Math.round((processedCount / dokumenty.length) * 100);
-      
-      // Logovať progress každých LOG_INTERVAL súborov
-      if (processedCount % LOG_INTERVAL === 0 || processedCount === dokumenty.length) {
-        const batchMsg = `📊 ${percent}% | ${processedCount}/${dokumenty.length} | ✓${stats.presunute} ≈${stats.nezmenene} ✗${stats.chyby}`;
+      try {
+        const newPath = getNewPath(dok);
         
-        await createLog(base44, user.id, batchMsg, {
-          status: 'running',
-          processed: processedCount,
-          total: dokumenty.length,
-          percent,
-          presunute: stats.presunute,
-          nezmenene: stats.nezmenene,
-          chyby: stats.chyby,
-          preskocene: stats.preskocene
-        });
+        if (!newPath) {
+          nezmenene++;
+          continue;
+        }
+
+        const { cesta_priecinku, vyrobca, model_domu, podpriecinok } = newPath;
+
+        const origName = dok.nazov.split('.')[0];
+        const ext = dok.nazov.split('.').pop();
+        const key = `${cesta_priecinku}/${origName}`;
+        
+        let novyNazov = dok.nazov;
+        if (nameMap.has(key)) {
+          const ver = nameMap.get(key) + 1;
+          nameMap.set(key, ver);
+          novyNazov = `${origName} Verzia ${ver}.${ext}`;
+        } else {
+          nameMap.set(key, 1);
+        }
+
+        if (dok.cesta_priecinku === cesta_priecinku && dok.nazov === novyNazov && dok.reorganizovany) {
+          nezmenene++;
+        } else {
+          await base44.asServiceRole.entities.Dokument.update(dok.id, {
+            cesta_priecinku,
+            nazov: novyNazov,
+            vyrobca,
+            model_domu,
+            podpriecinok,
+            reorganizovany: true,
+            reorganizovany_datum: new Date().toISOString()
+          });
+          presunute++;
+        }
+
+        if ((i + 1) % 5 === 0 || i === dokumenty.length - 1) {
+          const percent = Math.round(((i + 1) / dokumenty.length) * 100);
+          await log(base44, user.id, `📊 ${percent}% | ${i + 1}/${dokumenty.length} | ✓${presunute} ≈${nezmenene} ✗${chyby}`, {
+            status: 'running',
+            processed: i + 1,
+            total: dokumenty.length,
+            percent,
+            presunute,
+            nezmenene,
+            chyby
+          });
+        }
+
+      } catch (err) {
+        console.error(`Error ${dok.id}:`, err);
+        chyby++;
       }
     }
 
-    // FINÁLNY LOG
-    const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-    const finalMsg = `🎉 DOKONČENÉ za ${duration}s | ✓${stats.presunute} ≈${stats.nezmenene} ✗${stats.chyby}`;
-    
-    await createLog(base44, user.id, finalMsg, {
+    const duration = ((Date.now() - startTime) / 1000).toFixed(1);
+    await log(base44, user.id, `🎉 HOTOVO za ${duration}s | ✓${presunute} ≈${nezmenene} ✗${chyby}`, {
       status: 'completed',
       severity: 'success',
-      ...stats,
-      duration: `${duration}s`
+      presunute,
+      nezmenene,
+      chyby,
+      total: dokumenty.length,
+      duration
     });
 
-    console.log('✅ ============ REORGANIZÁCIA DOKONČENÁ ============');
+    console.log('✅ === REORGANIZÁCIA DONE ===');
 
     return Response.json({
       success: true,
-      message: 'Reorganization completed',
-      ...stats,
-      duration: `${duration}s`
+      presunute,
+      nezmenene,
+      chyby,
+      total: dokumenty.length,
+      duration
     });
 
   } catch (error) {
-    console.error('💥 FATAL ERROR:', error);
-    console.error('Stack:', error.stack);
+    console.error('💥 FATAL:', error);
     
     try {
       const base44 = createClientFromRequest(req);
       const user = await base44.auth.me();
-      
-      await createLog(base44, user.id, `💥 FATAL: ${error.message}`, {
+      await log(base44, user.id, `💥 CHYBA: ${error.message}`, {
         status: 'error',
         severity: 'error',
-        error: error.message,
-        stack: error.stack
+        error: error.message
       });
-    } catch (logError) {
-      console.error('Failed to log fatal error:', logError);
-    }
+    } catch {}
     
-    return Response.json({ 
-      error: error.message, 
-      success: false,
-      stack: error.stack 
-    }, { status: 500 });
+    return Response.json({ error: error.message, success: false }, { status: 500 });
   }
 });
