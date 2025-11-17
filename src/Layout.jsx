@@ -5,8 +5,11 @@ import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, B
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
+import { Toaster } from "sonner";
 import Chatbot from "./components/Chatbot";
 import AIAsistent from "./components/AIAsistent";
+import NotificationCenter from "./components/NotificationCenter";
+import ProcessMonitor from "./components/ProcessMonitor";
 
 export default function Layout({ children }) {
   const location = useLocation();
@@ -64,6 +67,12 @@ export default function Layout({ children }) {
         html { scroll-behavior: smooth; }
       `}</style>
 
+      {/* Toast Container */}
+      <Toaster position="top-right" richColors closeButton />
+
+      {/* Process Monitor - neviditeľný ale aktívny */}
+      <ProcessMonitor />
+
       {/* Header */}
       <header 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -72,7 +81,6 @@ export default function Layout({ children }) {
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            {/* Logá - American Living + Konfiga */}
             <div className="flex items-center gap-4">
               <Link to={createPageUrl("Domov")} className="group">
                 <img 
@@ -99,7 +107,6 @@ export default function Layout({ children }) {
               </div>
             </div>
 
-            {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-1">
               {navItems.map((item) => (
                 <Link
@@ -116,8 +123,10 @@ export default function Layout({ children }) {
               ))}
             </nav>
 
-            {/* CTA Button */}
             <div className="hidden lg:flex items-center gap-3">
+              {/* Notification Center */}
+              {(isAdmin || isSuperAdmin) && <NotificationCenter />}
+              
               {isSuperAdmin && (
                 <>
                   <Link to={createPageUrl("AdminAnalyzaDatabazy")}>
@@ -156,7 +165,6 @@ export default function Layout({ children }) {
               </Link>
             </div>
 
-            {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
@@ -169,10 +177,8 @@ export default function Layout({ children }) {
             </button>
           </div>
 
-          {/* Mobile Navigation */}
           {mobileMenuOpen && (
             <nav className="lg:hidden mt-4 pb-4 border-t pt-4 space-y-2">
-              {/* Mobile Konfiga Logo */}
               <div className="md:hidden flex items-center justify-center gap-2 py-3 border-b">
                 <span className="text-xs text-gray-600 font-medium">Powered by</span>
                 <a 
@@ -262,12 +268,10 @@ export default function Layout({ children }) {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="pt-36 sm:pt-40 md:pt-44 lg:pt-52">
         {children}
       </main>
 
-      {/* Footer */}
       <footer className="bg-gray-900 text-white mt-20">
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -339,10 +343,7 @@ export default function Layout({ children }) {
         </div>
       </footer>
 
-      {/* Chatbot */}
       <Chatbot />
-
-      {/* AI Asistent */}
       <AIAsistent />
     </div>
   );
