@@ -11,7 +11,6 @@ Deno.serve(async (req) => {
 
     const { action } = await req.json().catch(() => ({}));
 
-    // Ak je akcia 'stop', nastav flag na zastavenie
     if (action === 'stop') {
       await base44.asServiceRole.entities.GoogleDriveNotification.create({
         notification_type: 'sync_completed',
@@ -24,11 +23,10 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, message: 'Reorganizácia bude zastavená' });
     }
 
-    // Vytvor inicializačný log
-    console.log('🚀 Reorganizácia spustená');
+    console.log('🚀 START: Reorganizácia spustená');
     await base44.asServiceRole.entities.GoogleDriveNotification.create({
       notification_type: 'sync_completed',
-      message: '🚀 Reorganizácia spustená - načítavam dokumenty...',
+      message: '🚀 START: Spúšťam reorganizáciu...',
       severity: 'info',
       read: false,
       user_id: user.id,
@@ -36,23 +34,21 @@ Deno.serve(async (req) => {
         type: 'reorganization_log',
         status: 'running',
         processed: 0,
-        total: 0,
-        timestamp: new Date().toISOString()
+        total: 0
       }
     });
 
-    // Načítaj všetky analyzované dokumenty
+    console.log('📥 Načítavam dokumenty...');
     const dokumenty = await base44.asServiceRole.entities.Dokument.filter({
       typ: 'fotky',
       vizualna_analyza: { $exists: true },
       podrobna_analyza_datum: { $exists: true }
     });
 
-    console.log(`📊 Načítané dokumenty: ${dokumenty.length}`);
-
+    console.log(`✅ Načítaných ${dokumenty.length} dokumentov`);
     await base44.asServiceRole.entities.GoogleDriveNotification.create({
       notification_type: 'sync_completed',
-      message: `📊 Načítaných ${dokumenty.length} dokumentov - začínam spracovanie...`,
+      message: `✅ Načítaných ${dokumenty.length} dokumentov - začínam FOR cyklus...`,
       severity: 'info',
       read: false,
       user_id: user.id,
@@ -71,7 +67,7 @@ Deno.serve(async (req) => {
     if (dokumenty.length === 0) {
       await base44.asServiceRole.entities.GoogleDriveNotification.create({
         notification_type: 'sync_completed',
-        message: '✅ Žiadne dokumenty na reorganizáciu',
+        message: '⚠️ Žiadne dokumenty na reorganizáciu',
         severity: 'success',
         read: false,
         user_id: user.id,
@@ -92,13 +88,37 @@ Deno.serve(async (req) => {
     let chyby = 0;
     const verzieMap = new Map();
 
+    console.log(`🔄 Začínam FOR loop pre ${dokumenty.length} dokumentov`);
+
     for (let i = 0; i < dokumenty.length; i++) {
       const dok = dokumenty[i];
       
-      console.log(`[${i + 1}/${dokumenty.length}] Spracúvam: ${dok.nazov}`);
-      
       try {
-        // Kontrola stop flagu každých 10 súborov
+        // LOG KAŽDÝ SÚBOR PRED SPRACOVANÍM
+        const percent = Math.round(((i + 1) / dokumenty.length) * 100);
+        const currentLogMsg = `⏳ Spracúvam [${i + 1}/${dokumenty.length}] ${dok.nazov.substring(0, 30)}...`;
+        
+        console.log(currentLogMsg);
+        
+        await base44.asServiceRole.entities.GoogleDriveNotification.create({
+          notification_type: 'sync_completed',
+          message: currentLogMsg,
+          severity: 'info',
+          read: false,
+          user_id: user.id,
+          metadata: { 
+            type: 'reorganization_log',
+            status: 'running',
+            processed: i,
+            total: dokumenty.length,
+            presunute,
+            nezmenene,
+            chyby,
+            percent: Math.round((i / dokumenty.length) * 100)
+          }
+        });
+
+        // Kontrola stop flagu
         if (i % 10 === 0 && i > 0) {
           const stopCheck = await base44.asServiceRole.entities.GoogleDriveNotification.filter({
             user_id: user.id,
@@ -109,7 +129,7 @@ Deno.serve(async (req) => {
           if (stopCheck.length > 0) {
             await base44.asServiceRole.entities.GoogleDriveNotification.create({
               notification_type: 'sync_failed',
-              message: `⏸️ Reorganizácia zastavená používateľom (${presunute} presunute)`,
+              message: `⏸️ Zastavené na ${i}/${dokumenty.length}`,
               severity: 'warning',
               read: false,
               user_id: user.id,
@@ -131,7 +151,6 @@ Deno.serve(async (req) => {
 
         if (!analyza.spravny_vyrobca || !analyza.spravny_model) {
           nezmenene++;
-          console.log(`  ⏭️ Preskakujem - chýba výrobca/model`);
           continue;
         }
 
@@ -139,13 +158,11 @@ Deno.serve(async (req) => {
         const model = analyza.spravny_model;
         const typObsahu = analyza.typ_obsahu || 'ine';
 
-        // Urč hlavný materiál pre podpriečinok
         let hlavnyMaterial = '';
         
         if (typObsahu === 'exterier') {
           if (analyza.fasada_materialy && analyza.fasada_materialy.length > 0) {
             const material = analyza.fasada_materialy[0].toLowerCase();
-            
             if (material.includes('drevo') || material.includes('drevený')) {
               hlavnyMaterial = 'drevený';
             } else if (material.includes('omietk')) {
@@ -164,7 +181,6 @@ Deno.serve(async (req) => {
         } else if (typObsahu === 'interier') {
           if (analyza.interier_materialy && analyza.interier_materialy.length > 0) {
             const material = analyza.interier_materialy[0].toLowerCase();
-            
             if (material.includes('drevo') || material.includes('drevený')) {
               hlavnyMaterial = 'drevený';
             } else if (material.includes('sádrokart') || material.includes('sadrokart')) {
@@ -183,7 +199,6 @@ Deno.serve(async (req) => {
           hlavnyMaterial = 'detaily';
         }
 
-        // Vytvor názov podpriečinka
         let podpriecinok = '';
         if (typObsahu === 'podorys') {
           podpriecinok = `${model} pôdorys`;
@@ -192,48 +207,23 @@ Deno.serve(async (req) => {
         }
 
         const novaCesta = `${vyrobca}/${model}/${podpriecinok}`;
-
-        // Vytvor nový názov súboru
         const originalName = dok.nazov.split('.')[0];
         const extension = dok.nazov.split('.').pop();
-        
         const verziaKey = `${novaCesta}/${originalName}`;
         
         let novyNazov = dok.nazov;
+        
+        // ZJEDNODUŠENÁ LOGIKA PRE VERZIE - bez ďalšieho načítavania z DB
         if (verzieMap.has(verziaKey)) {
           const verzia = verzieMap.get(verziaKey) + 1;
           verzieMap.set(verziaKey, verzia);
           novyNazov = `${originalName} Verzia ${verzia}.${extension}`;
         } else {
-          const existujuce = await base44.asServiceRole.entities.Dokument.filter({
-            cesta_priecinku: novaCesta,
-            nazov: { $regex: `^${originalName}` }
-          });
-          
-          if (existujuce.length > 0) {
-            let maxVerzia = 0;
-            for (const ex of existujuce) {
-              const match = ex.nazov.match(/Verzia (\d+)/);
-              if (match) {
-                maxVerzia = Math.max(maxVerzia, parseInt(match[1]));
-              }
-            }
-            
-            if (maxVerzia > 0 || existujuce.length > 0) {
-              const verzia = maxVerzia + 1;
-              verzieMap.set(verziaKey, verzia);
-              novyNazov = `${originalName} Verzia ${verzia}.${extension}`;
-            } else {
-              verzieMap.set(verziaKey, 1);
-            }
-          } else {
-            verzieMap.set(verziaKey, 1);
-          }
+          verzieMap.set(verziaKey, 1);
         }
 
         if (dok.cesta_priecinku === novaCesta && dok.nazov === novyNazov) {
           nezmenene++;
-          console.log(`  ✓ Nezmenené`);
         } else {
           await base44.asServiceRole.entities.Dokument.update(dok.id, {
             cesta_priecinku: novaCesta,
@@ -245,18 +235,14 @@ Deno.serve(async (req) => {
             reorganizovany_datum: new Date().toISOString()
           });
           presunute++;
-          console.log(`  ✓ Presunuté: ${novaCesta}/${novyNazov}`);
         }
 
-        // LOG KAŽDÝ SÚBOR - REAL TIME
-        const percent = Math.round(((i + 1) / dokumenty.length) * 100);
-        const logMsg = `📊 ${percent}% | ${i + 1}/${dokumenty.length} | ✓${presunute} ≈${nezmenene} ✗${chyby}`;
-        
-        console.log(logMsg);
+        // PROGRESS LOG PO SPRACOVANÍ
+        const finishLogMsg = `✅ ${percent}% | ${i + 1}/${dokumenty.length} | ✓${presunute} ≈${nezmenene} ✗${chyby}`;
         
         await base44.asServiceRole.entities.GoogleDriveNotification.create({
           notification_type: 'sync_completed',
-          message: logMsg,
+          message: finishLogMsg,
           severity: 'info',
           read: false,
           user_id: user.id,
@@ -268,19 +254,30 @@ Deno.serve(async (req) => {
             presunute,
             nezmenene,
             chyby,
-            percent,
-            timestamp: new Date().toISOString()
+            percent
           }
         });
 
       } catch (error) {
-        console.error(`❌ Chyba pri ${dok.nazov}:`, error);
+        console.error(`❌ Chyba:`, error);
         chyby++;
+        
+        await base44.asServiceRole.entities.GoogleDriveNotification.create({
+          notification_type: 'sync_failed',
+          message: `❌ Chyba na súbore ${i + 1}: ${error.message}`,
+          severity: 'error',
+          read: false,
+          user_id: user.id,
+          metadata: { 
+            type: 'reorganization_log',
+            status: 'running',
+            error: error.message
+          }
+        });
       }
     }
 
-    // Finálny log
-    const finalMsg = `✅ Dokončené! ✓${presunute} ≈${nezmenene} ✗${chyby}`;
+    const finalMsg = `🎉 DOKONČENÉ! ✓${presunute} ≈${nezmenene} ✗${chyby}`;
     console.log(finalMsg);
     
     await base44.asServiceRole.entities.GoogleDriveNotification.create({
@@ -295,8 +292,7 @@ Deno.serve(async (req) => {
         presunute,
         nezmenene,
         chyby,
-        total: dokumenty.length,
-        timestamp: new Date().toISOString()
+        total: dokumenty.length
       }
     });
 
@@ -310,7 +306,7 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('💥 FATAL ERROR:', error);
+    console.error('💥 FATAL:', error);
     
     try {
       const base44 = createClientFromRequest(req);
@@ -318,7 +314,7 @@ Deno.serve(async (req) => {
       
       await base44.asServiceRole.entities.GoogleDriveNotification.create({
         notification_type: 'sync_failed',
-        message: `❌ Kritická chyba: ${error.message}`,
+        message: `💥 FATAL: ${error.message}`,
         severity: 'error',
         read: false,
         user_id: user.id,
@@ -326,9 +322,6 @@ Deno.serve(async (req) => {
       });
     } catch {}
     
-    return Response.json({ 
-      error: error.message,
-      success: false 
-    }, { status: 500 });
+    return Response.json({ error: error.message, success: false }, { status: 500 });
   }
 });
