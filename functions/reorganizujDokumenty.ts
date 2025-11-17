@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
-async function log(base44, userId, message, metadata = {}) {
+async function createLog(base44, userId, message, metadata = {}) {
   try {
     await base44.asServiceRole.entities.GoogleDriveNotification.create({
       notification_type: 'sync_completed',
@@ -10,78 +10,42 @@ async function log(base44, userId, message, metadata = {}) {
       user_id: userId,
       metadata: {
         type: 'reorganization_log',
-        timestamp: new Date().toISOString(),
         ...metadata
       }
     });
-    console.log(`📝 ${message}`);
+    console.log(message);
   } catch (err) {
     console.error('Log error:', err);
   }
 }
 
-async function checkStop(base44, userId) {
+async function shouldStop(base44) {
   try {
-    const stopFlags = await base44.asServiceRole.entities.GoogleDriveNotification.filter({
-      'metadata.should_stop': true,
-      'metadata.type': 'reorganization_control'
+    const flags = await base44.asServiceRole.entities.GoogleDriveNotification.filter({
+      'metadata.should_stop': true
     });
-    return stopFlags.length > 0;
+    return flags.length > 0;
   } catch {
     return false;
   }
 }
 
-function getNewPath(dok) {
-  const va = dok.vizualna_analyza;
-  if (!va?.spravny_vyrobca || !va?.spravny_model) return null;
-
-  const vyrobca = va.spravny_vyrobca;
-  const model = va.spravny_model;
-  const typ = va.typ_obsahu || 'ine';
-
-  let material = '';
-  if (typ === 'exterier' && va.fasada_materialy?.length > 0) {
-    const mat = va.fasada_materialy[0].toLowerCase();
-    if (mat.includes('drevo')) material = 'drevený';
-    else if (mat.includes('omietk')) material = `${va.fasada_farby?.[0] || 'biela'} omietka`;
-    else if (mat.includes('kameň')) material = 'kamenný';
-    else material = va.fasada_materialy[0];
-  } else if (typ === 'interier' && va.interier_materialy?.length > 0) {
-    const mat = va.interier_materialy[0].toLowerCase();
-    if (mat.includes('drevo')) material = 'drevený';
-    else if (mat.includes('sádro')) material = 'sádrokartón';
-    else material = va.interier_materialy[0];
-  }
-
-  const podpriecinok = typ === 'podorys' 
-    ? `${model} pôdorys`
-    : `${model} ${typ}${material ? ' ' + material : ''}`;
-
-  return {
-    cesta_priecinku: `${vyrobca}/${model}/${podpriecinok}`,
-    vyrobca,
-    model_domu: model,
-    podpriecinok
-  };
-}
-
 Deno.serve(async (req) => {
-  console.log('🚀 === REORGANIZÁCIA START ===');
   const startTime = Date.now();
-
+  
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
-    if (!user?.role === 'admin' && !user?.super_admin) {
+    if (!user || (user.role !== 'admin' && !user.super_admin)) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await req.json().catch(() => ({}));
 
+    // Stop príkaz
     if (body.action === 'stop') {
-      await log(base44, user.id, '⏸️ Stop príkaz prijatý', {
+      await createLog(base44, user.id, '⏸️ Stop príkaz', {
         type: 'reorganization_control',
         should_stop: true,
         severity: 'warning'
@@ -89,107 +53,108 @@ Deno.serve(async (req) => {
       return Response.json({ success: true });
     }
 
-    await log(base44, user.id, '🚀 Spustené - načítavam dokumenty...', { status: 'running' });
+    await createLog(base44, user.id, '🚀 Reorganizácia začala', { status: 'running' });
 
+    // Načítaj dokumenty
     const dokumenty = await base44.asServiceRole.entities.Dokument.filter({
       typ: 'fotky',
-      'vizualna_analyza': { $exists: true },
-      'podrobna_analyza_datum': { $exists: true }
+      podrobna_analyza_datum: { $exists: true }
     });
 
-    console.log(`✅ Loaded ${dokumenty.length} docs`);
-
     if (!dokumenty || dokumenty.length === 0) {
-      await log(base44, user.id, '⚠️ Žiadne dokumenty', { status: 'completed', severity: 'warning' });
-      return Response.json({ success: true, presunute: 0, nezmenene: 0, chyby: 0 });
+      await createLog(base44, user.id, '⚠️ Žiadne dokumenty na spracovanie', { 
+        status: 'completed',
+        severity: 'warning' 
+      });
+      return Response.json({ success: true, message: 'No documents' });
     }
 
-    await log(base44, user.id, `✅ Načítaných ${dokumenty.length} dokumentov`, {
+    await createLog(base44, user.id, `📦 Nájdených ${dokumenty.length} dokumentov`, {
       status: 'running',
-      total: dokumenty.length,
-      processed: 0,
-      percent: 0
+      total: dokumenty.length
     });
 
     let presunute = 0;
     let nezmenene = 0;
     let chyby = 0;
-    const nameMap = new Map();
 
+    // Spracuj dokumenty jeden po druhom
     for (let i = 0; i < dokumenty.length; i++) {
-      if (i % 10 === 0) {
-        const shouldStop = await checkStop(base44, user.id);
-        if (shouldStop) {
-          await log(base44, user.id, `⏸️ Zastavené na ${i}/${dokumenty.length}`, {
-            status: 'stopped',
-            presunute, nezmenene, chyby,
-            severity: 'warning'
-          });
-          return Response.json({ success: true, stopped: true, presunute, nezmenene, chyby });
-        }
+      // Check stop každých 10 dokumentov
+      if (i % 10 === 0 && await shouldStop(base44)) {
+        await createLog(base44, user.id, `⏸️ Zastavené na ${i}/${dokumenty.length}`, {
+          status: 'stopped',
+          severity: 'warning',
+          presunute,
+          nezmenene,
+          chyby
+        });
+        return Response.json({ success: true, stopped: true });
       }
 
       const dok = dokumenty[i];
-      
+
       try {
-        const newPath = getNewPath(dok);
-        
-        if (!newPath) {
+        const va = dok.vizualna_analyza;
+
+        // Skip ak nie je analýza
+        if (!va || !va.spravny_vyrobca || !va.spravny_model) {
           nezmenene++;
           continue;
         }
 
-        const { cesta_priecinku, vyrobca, model_domu, podpriecinok } = newPath;
+        const vyrobca = va.spravny_vyrobca;
+        const model = va.spravny_model;
+        const typ = va.typ_obsahu || 'ine';
 
-        const origName = dok.nazov.split('.')[0];
-        const ext = dok.nazov.split('.').pop();
-        const key = `${cesta_priecinku}/${origName}`;
-        
-        let novyNazov = dok.nazov;
-        if (nameMap.has(key)) {
-          const ver = nameMap.get(key) + 1;
-          nameMap.set(key, ver);
-          novyNazov = `${origName} Verzia ${ver}.${ext}`;
-        } else {
-          nameMap.set(key, 1);
+        // Vytvor cestu
+        let podpriecinok = typ;
+        if (typ === 'exterier' && va.fasada_materialy?.length > 0) {
+          podpriecinok = `${typ}-${va.fasada_materialy[0]}`;
+        } else if (typ === 'interier' && va.interier_materialy?.length > 0) {
+          podpriecinok = `${typ}-${va.interier_materialy[0]}`;
         }
 
-        if (dok.cesta_priecinku === cesta_priecinku && dok.nazov === novyNazov && dok.reorganizovany) {
+        const novaCesta = `${vyrobca}/${model}/${podpriecinok}`;
+
+        // Update len ak je iná cesta
+        if (dok.cesta_priecinku === novaCesta && dok.reorganizovany) {
           nezmenene++;
         } else {
           await base44.asServiceRole.entities.Dokument.update(dok.id, {
-            cesta_priecinku,
-            nazov: novyNazov,
-            vyrobca,
-            model_domu,
-            podpriecinok,
+            cesta_priecinku: novaCesta,
+            vyrobca: vyrobca,
+            model_domu: model,
+            podpriecinok: podpriecinok,
             reorganizovany: true,
             reorganizovany_datum: new Date().toISOString()
           });
           presunute++;
         }
 
-        if ((i + 1) % 5 === 0 || i === dokumenty.length - 1) {
-          const percent = Math.round(((i + 1) / dokumenty.length) * 100);
-          await log(base44, user.id, `📊 ${percent}% | ${i + 1}/${dokumenty.length} | ✓${presunute} ≈${nezmenene} ✗${chyby}`, {
-            status: 'running',
-            processed: i + 1,
-            total: dokumenty.length,
-            percent,
-            presunute,
-            nezmenene,
-            chyby
-          });
-        }
-
       } catch (err) {
-        console.error(`Error ${dok.id}:`, err);
+        console.error(`Error processing ${dok.id}:`, err);
         chyby++;
+      }
+
+      // Progress update každých 5 súborov
+      if ((i + 1) % 5 === 0 || i === dokumenty.length - 1) {
+        const percent = Math.round(((i + 1) / dokumenty.length) * 100);
+        await createLog(base44, user.id, `Progress: ${i + 1}/${dokumenty.length} (${percent}%)`, {
+          status: 'running',
+          processed: i + 1,
+          total: dokumenty.length,
+          percent,
+          presunute,
+          nezmenene,
+          chyby
+        });
       }
     }
 
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
-    await log(base44, user.id, `🎉 HOTOVO za ${duration}s | ✓${presunute} ≈${nezmenene} ✗${chyby}`, {
+    
+    await createLog(base44, user.id, `✅ Dokončené za ${duration}s | Presunuté: ${presunute}, Nezmenené: ${nezmenene}, Chyby: ${chyby}`, {
       status: 'completed',
       severity: 'success',
       presunute,
@@ -198,8 +163,6 @@ Deno.serve(async (req) => {
       total: dokumenty.length,
       duration
     });
-
-    console.log('✅ === REORGANIZÁCIA DONE ===');
 
     return Response.json({
       success: true,
@@ -211,18 +174,21 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('💥 FATAL:', error);
+    console.error('FATAL ERROR:', error);
     
     try {
       const base44 = createClientFromRequest(req);
       const user = await base44.auth.me();
-      await log(base44, user.id, `💥 CHYBA: ${error.message}`, {
+      await createLog(base44, user.id, `❌ Chyba: ${error.message}`, {
         status: 'error',
-        severity: 'error',
-        error: error.message
+        severity: 'error'
       });
     } catch {}
     
-    return Response.json({ error: error.message, success: false }, { status: 500 });
+    return Response.json({ 
+      success: false,
+      error: error.message,
+      stack: error.stack 
+    }, { status: 500 });
   }
 });
