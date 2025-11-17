@@ -110,35 +110,51 @@ Deno.serve(async (req) => {
     await log(base44, user.id, '🚀 Reorganizácia spustená', { status: 'running' });
     console.log('📥 Loading documents...');
 
-    // Načítaj VŠETKY fotky
-    let dokumentyRaw = await base44.asServiceRole.entities.Dokument.list();
+    // Načítaj VŠETKY dokumenty - bez limitu
+    let allDocs = await base44.asServiceRole.entities.Dokument.list('-created_date', 10000);
     
-    console.log(`RAW result type: ${typeof dokumentyRaw}`);
-    console.log(`RAW result:`, dokumentyRaw);
-
-    // Ensure we have an array
-    let dokumenty = Array.isArray(dokumentyRaw) ? dokumentyRaw : [];
-    
-    console.log(`✅ Loaded ${dokumenty.length} total documents`);
+    console.log(`✅ Loaded ${allDocs?.length || 0} total documents`);
 
     // Filtruj len fotky
-    dokumenty = dokumenty.filter(d => d.typ === 'fotky');
-    console.log(`✅ ${dokumenty.length} fotky`);
+    let fotky = allDocs.filter(d => d.typ === 'fotky');
+    console.log(`✅ ${fotky.length} fotky`);
 
-    // Filtruj len tie s vizuálnou analýzou
-    const analyzovane = dokumenty.filter(d => 
-      d.vizualna_analyza && 
-      d.vizualna_analyza.spravny_vyrobca && 
-      d.vizualna_analyza.spravny_model
-    );
+    // Debug - ukáž prvý dokument
+    if (fotky.length > 0) {
+      const sample = fotky[0];
+      console.log('Sample fotka:', {
+        id: sample.id,
+        nazov: sample.nazov,
+        has_va: !!sample.vizualna_analyza,
+        vyrobca: sample.vizualna_analyza?.spravny_vyrobca,
+        model: sample.vizualna_analyza?.spravny_model,
+        reorganizovany: sample.reorganizovany
+      });
+    }
 
-    console.log(`✅ ${analyzovane.length} documents with complete analysis`);
+    // Filtruj len tie s vizuálnou analýzou - NIE reorganizované
+    const analyzovane = fotky.filter(d => {
+      if (!d.vizualna_analyza) return false;
+      if (d.reorganizovany === true) return false; // Preskočiť už reorganizované
+      
+      const va = d.vizualna_analyza;
+      return va.spravny_vyrobca && va.spravny_model;
+    });
+
+    console.log(`✅ ${analyzovane.length} documents ready for reorganization`);
+
+    await log(base44, user.id, `📊 Stav: ${fotky.length} fotiek, ${analyzovane.length} na reorganizáciu`, {
+      status: 'running',
+      total_photos: fotky.length,
+      to_reorganize: analyzovane.length,
+      percent: 0
+    });
 
     if (!analyzovane || analyzovane.length === 0) {
-      await log(base44, user.id, '⚠️ Žiadne dokumenty na spracovanie', {
+      await log(base44, user.id, '⚠️ Všetky fotky už sú reorganizované alebo nemajú analýzu', {
         status: 'completed',
         severity: 'warning',
-        total: dokumenty.length,
+        total: fotky.length,
         analyzed: 0
       });
       return Response.json({ 
@@ -146,11 +162,11 @@ Deno.serve(async (req) => {
         presunute: 0, 
         nezmenene: 0, 
         chyby: 0,
-        info: `Celkom ${dokumenty.length} fotiek, žiadna nemá vizuálnu analýzu`
+        info: `Všetkých ${fotky.length} fotiek je už reorganizovaných`
       });
     }
 
-    await log(base44, user.id, `📦 Našiel som ${analyzovane.length} dokumentov na reorganizáciu`, {
+    await log(base44, user.id, `📦 Spúšťam reorganizáciu ${analyzovane.length} fotiek`, {
       status: 'running',
       total: analyzovane.length,
       processed: 0,
@@ -193,7 +209,12 @@ Deno.serve(async (req) => {
         }
 
         // Check ak už je správne
-        if (dok.cesta_priecinku === newPath.cesta_priecinku && dok.reorganizovany === true) {
+        if (dok.cesta_priecinku === newPath.cesta_priecinku) {
+          // Len označ ako reorganizované
+          await base44.asServiceRole.entities.Dokument.update(dok.id, {
+            reorganizovany: true,
+            reorganizovany_datum: new Date().toISOString()
+          });
           nezmenene++;
           continue;
         }
@@ -215,8 +236,8 @@ Deno.serve(async (req) => {
         chyby++;
       }
 
-      // Progress log každých 5
-      if ((i + 1) % 5 === 0 || i === analyzovane.length - 1) {
+      // Progress log každých 10
+      if ((i + 1) % 10 === 0 || i === analyzovane.length - 1) {
         const processed = i + 1;
         const percent = Math.round((processed / analyzovane.length) * 100);
         
