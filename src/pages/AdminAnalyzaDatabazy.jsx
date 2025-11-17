@@ -323,7 +323,7 @@ export default function AdminAnalyzaDatabazy() {
                 <p className="text-3xl font-bold text-red-600">{results.failed || 0}</p>
               </div>
             </div>
-          </div>
+          </Card>
         )}
       </div>
     </div>
