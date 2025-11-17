@@ -110,30 +110,40 @@ Deno.serve(async (req) => {
     await log(base44, user.id, '🚀 Reorganizácia spustená', { status: 'running' });
     console.log('📥 Loading documents...');
 
-    // Načítaj VŠETKY dokumenty - bez limitu
-    let allDocs = await base44.asServiceRole.entities.Dokument.list('-created_date', 10000);
+    // Načítaj VŠETKY fotky - použijem filter namiesto list
+    const allDocs = await base44.asServiceRole.entities.Dokument.filter({
+      typ: 'fotky'
+    });
     
-    console.log(`✅ Loaded ${allDocs?.length || 0} total documents`);
+    console.log(`✅ Loaded ${allDocs?.length || 0} fotky`);
 
-    // Filtruj len fotky
-    let fotky = allDocs.filter(d => d.typ === 'fotky');
-    console.log(`✅ ${fotky.length} fotky`);
-
-    // Debug - ukáž prvý dokument
-    if (fotky.length > 0) {
-      const sample = fotky[0];
-      console.log('Sample fotka:', {
-        id: sample.id,
-        nazov: sample.nazov,
-        has_va: !!sample.vizualna_analyza,
-        vyrobca: sample.vizualna_analyza?.spravny_vyrobca,
-        model: sample.vizualna_analyza?.spravny_model,
-        reorganizovany: sample.reorganizovany
+    if (!Array.isArray(allDocs) || allDocs.length === 0) {
+      await log(base44, user.id, '⚠️ Žiadne fotky v databáze', {
+        status: 'completed',
+        severity: 'warning'
+      });
+      return Response.json({ 
+        success: true, 
+        presunute: 0, 
+        nezmenene: 0, 
+        chyby: 0,
+        info: 'Žiadne fotky v databáze'
       });
     }
 
+    // Debug - ukáž prvý dokument
+    const sample = allDocs[0];
+    console.log('Sample fotka:', {
+      id: sample.id,
+      nazov: sample.nazov,
+      has_va: !!sample.vizualna_analyza,
+      vyrobca: sample.vizualna_analyza?.spravny_vyrobca,
+      model: sample.vizualna_analyza?.spravny_model,
+      reorganizovany: sample.reorganizovany
+    });
+
     // Filtruj len tie s vizuálnou analýzou - NIE reorganizované
-    const analyzovane = fotky.filter(d => {
+    const analyzovane = allDocs.filter(d => {
       if (!d.vizualna_analyza) return false;
       if (d.reorganizovany === true) return false; // Preskočiť už reorganizované
       
@@ -143,26 +153,25 @@ Deno.serve(async (req) => {
 
     console.log(`✅ ${analyzovane.length} documents ready for reorganization`);
 
-    await log(base44, user.id, `📊 Stav: ${fotky.length} fotiek, ${analyzovane.length} na reorganizáciu`, {
+    await log(base44, user.id, `📊 Stav: ${allDocs.length} fotiek, ${analyzovane.length} na reorganizáciu`, {
       status: 'running',
-      total_photos: fotky.length,
+      total_photos: allDocs.length,
       to_reorganize: analyzovane.length,
       percent: 0
     });
 
-    if (!analyzovane || analyzovane.length === 0) {
-      await log(base44, user.id, '⚠️ Všetky fotky už sú reorganizované alebo nemajú analýzu', {
+    if (analyzovane.length === 0) {
+      await log(base44, user.id, '✅ Všetky fotky už sú reorganizované', {
         status: 'completed',
-        severity: 'warning',
-        total: fotky.length,
-        analyzed: 0
+        severity: 'success',
+        total: allDocs.length
       });
       return Response.json({ 
         success: true, 
         presunute: 0, 
-        nezmenene: 0, 
+        nezmenene: allDocs.length, 
         chyby: 0,
-        info: `Všetkých ${fotky.length} fotiek je už reorganizovaných`
+        info: `Všetkých ${allDocs.length} fotiek je už reorganizovaných`
       });
     }
 
