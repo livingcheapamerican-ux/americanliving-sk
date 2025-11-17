@@ -110,12 +110,20 @@ Deno.serve(async (req) => {
     await log(base44, user.id, '🚀 Reorganizácia spustená', { status: 'running' });
     console.log('📥 Loading documents...');
 
-    // Načítaj VŠETKY fotky s vizuálnou analýzou
-    const dokumenty = await base44.asServiceRole.entities.Dokument.filter({
-      typ: 'fotky'
-    });
+    // Načítaj VŠETKY fotky
+    let dokumentyRaw = await base44.asServiceRole.entities.Dokument.list();
+    
+    console.log(`RAW result type: ${typeof dokumentyRaw}`);
+    console.log(`RAW result:`, dokumentyRaw);
 
-    console.log(`✅ Loaded ${dokumenty?.length || 0} total documents`);
+    // Ensure we have an array
+    let dokumenty = Array.isArray(dokumentyRaw) ? dokumentyRaw : [];
+    
+    console.log(`✅ Loaded ${dokumenty.length} total documents`);
+
+    // Filtruj len fotky
+    dokumenty = dokumenty.filter(d => d.typ === 'fotky');
+    console.log(`✅ ${dokumenty.length} fotky`);
 
     // Filtruj len tie s vizuálnou analýzou
     const analyzovane = dokumenty.filter(d => 
@@ -124,7 +132,7 @@ Deno.serve(async (req) => {
       d.vizualna_analyza.spravny_model
     );
 
-    console.log(`✅ ${analyzovane.length} documents with analysis`);
+    console.log(`✅ ${analyzovane.length} documents with complete analysis`);
 
     if (!analyzovane || analyzovane.length === 0) {
       await log(base44, user.id, '⚠️ Žiadne dokumenty na spracovanie', {
@@ -133,7 +141,13 @@ Deno.serve(async (req) => {
         total: dokumenty.length,
         analyzed: 0
       });
-      return Response.json({ success: true, presunute: 0, nezmenene: 0, chyby: 0 });
+      return Response.json({ 
+        success: true, 
+        presunute: 0, 
+        nezmenene: 0, 
+        chyby: 0,
+        info: `Celkom ${dokumenty.length} fotiek, žiadna nemá vizuálnu analýzu`
+      });
     }
 
     await log(base44, user.id, `📦 Našiel som ${analyzovane.length} dokumentov na reorganizáciu`, {
