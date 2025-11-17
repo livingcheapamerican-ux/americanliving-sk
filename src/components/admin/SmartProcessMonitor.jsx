@@ -13,7 +13,7 @@ export default function SmartProcessMonitor() {
   const [isRunning, setIsRunning] = useState(false);
   const queryClient = useQueryClient();
 
-  // Fetch analysis logs
+  // Fetch analysis logs - ZNÍŽENÉ na 5s
   const { data: analysisLogs = [], refetch: refetchAnalysis } = useQuery({
     queryKey: ['smart-analysis-logs'],
     queryFn: async () => {
@@ -22,11 +22,11 @@ export default function SmartProcessMonitor() {
       });
       return logs.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
     },
-    refetchInterval: 1000,
-    staleTime: 0
+    refetchInterval: isRunning ? 5000 : false,
+    staleTime: 3000
   });
 
-  // Fetch reorganization logs
+  // Fetch reorganization logs - ZNÍŽENÉ na 5s
   const { data: reorgLogs = [], refetch: refetchReorg } = useQuery({
     queryKey: ['smart-reorg-logs'],
     queryFn: async () => {
@@ -35,8 +35,8 @@ export default function SmartProcessMonitor() {
       });
       return logs.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
     },
-    refetchInterval: 1000,
-    staleTime: 0
+    refetchInterval: isRunning ? 5000 : false,
+    staleTime: 3000
   });
 
   // Check if process is running
@@ -58,6 +58,7 @@ export default function SmartProcessMonitor() {
     mutationFn: () => base44.functions.invoke('smartAnalysis', {}),
     onSuccess: () => {
       toast.success('Smart analýza spustená');
+      setIsRunning(true);
       refetchAnalysis();
       refetchReorg();
     },
@@ -106,7 +107,7 @@ export default function SmartProcessMonitor() {
               Smart Process Monitor
             </h3>
             <p className="text-sm text-gray-600">
-              Real-time sledovanie analýzy a reorganizácie
+              Refresh každých 5s (len keď beží)
             </p>
           </div>
           
@@ -161,7 +162,7 @@ export default function SmartProcessMonitor() {
           <div className="bg-white rounded-lg p-4 border-2 border-blue-200">
             <div className="flex items-center justify-between mb-2">
               <h4 className="font-semibold text-gray-900 flex items-center gap-2">
-                <div className={`w-3 h-3 rounded-full ${getStatusColor(latestAnalysis?.metadata?.status)} animate-pulse`} />
+                <div className={`w-3 h-3 rounded-full ${getStatusColor(latestAnalysis?.metadata?.status)} ${isRunning ? 'animate-pulse' : ''}`} />
                 Analýza
               </h4>
               {latestAnalysis?.metadata?.percent !== undefined && (
@@ -196,7 +197,7 @@ export default function SmartProcessMonitor() {
           <div className="bg-white rounded-lg p-4 border-2 border-cyan-200">
             <div className="flex items-center justify-between mb-2">
               <h4 className="font-semibold text-gray-900 flex items-center gap-2">
-                <div className={`w-3 h-3 rounded-full ${getStatusColor(latestReorg?.metadata?.status)} animate-pulse`} />
+                <div className={`w-3 h-3 rounded-full ${getStatusColor(latestReorg?.metadata?.status)} ${isRunning ? 'animate-pulse' : ''}`} />
                 Reorganizácia
               </h4>
               {latestReorg?.metadata?.percent !== undefined && (
