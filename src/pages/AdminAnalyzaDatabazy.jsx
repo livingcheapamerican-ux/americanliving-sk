@@ -11,10 +11,10 @@ import ImageComparisonView from "../components/admin/ImageComparisonView";
 import AdvancedFilters from "../components/admin/AdvancedFilters";
 import AnalysisStatistics from "../components/admin/AnalysisStatistics";
 import AIComparisonTool from "../components/admin/AIComparisonTool";
+import ReorganizationLogPanel from "../components/admin/ReorganizationLogPanel";
 
 export default function AdminAnalyzaDatabazy() {
   const [analyzing, setAnalyzing] = useState(false);
-  const [reorganizing, setReorganizing] = useState(false);
   const [filteredDokumenty, setFilteredDokumenty] = useState([]);
   const [results, setResults] = useState(null);
   const [autoStarted, setAutoStarted] = useState(false);
@@ -51,13 +51,6 @@ export default function AdminAnalyzaDatabazy() {
     }
   });
 
-  const reorganizeMutation = useMutation({
-    mutationFn: () => base44.functions.invoke('reorganizujDokumenty'),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dokumenty-all'] });
-    }
-  });
-
   // Automatické spustenie analýzy pri načítaní stránky
   useEffect(() => {
     if (!isLoading && dokumenty.length > 0 && !autoStarted && !analyzing) {
@@ -76,26 +69,6 @@ export default function AdminAnalyzaDatabazy() {
     if (confirm('Zastaviť analýzu?')) {
       analyzaMutation.mutate('stop');
       setAnalyzing(false);
-    }
-  };
-
-  const handleReorganizacia = async () => {
-    if (!confirm('Reorganizovať všetky analyzované súbory?')) {
-      return;
-    }
-
-    setReorganizing(true);
-
-    try {
-      const response = await reorganizeMutation.mutateAsync();
-      
-      if (response.data.success) {
-        alert(`✅ Reorganizácia dokončená!\n\nPresunutých: ${response.data.presunute}\nNezmenených: ${response.data.nezmenene}\nChýb: ${response.data.chyby}`);
-      }
-    } catch (error) {
-      alert(`Chyba: ${error.message}`);
-    } finally {
-      setReorganizing(false);
     }
   };
 
@@ -242,34 +215,11 @@ export default function AdminAnalyzaDatabazy() {
           </Card>
         )}
 
-        {/* Reorganization Button */}
+        {/* Reorganization Log Panel */}
         {!analyzing && podrobneAnalyzovaneCount > 0 && (
-          <Card className="p-6 mb-8 bg-gradient-to-br from-cyan-50 to-blue-50 border-cyan-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-bold text-cyan-900">📁 Reorganizácia súborov</h3>
-                <p className="text-sm text-gray-600">Presunúť súbory do správnych priečinkov podľa AI analýzy</p>
-              </div>
-              <Button
-                onClick={handleReorganizacia}
-                disabled={reorganizing}
-                size="lg"
-                className="bg-cyan-600 hover:bg-cyan-700"
-              >
-                {reorganizing ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Reorganizujem...
-                  </>
-                ) : (
-                  <>
-                    <FolderSync className="w-5 h-5 mr-2" />
-                    Reorganizovať
-                  </>
-                )}
-              </Button>
-            </div>
-          </Card>
+          <div className="mb-8">
+            <ReorganizationLogPanel />
+          </div>
         )}
 
         <Tabs defaultValue="statistics" className="mb-8">
