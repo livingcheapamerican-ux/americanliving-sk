@@ -52,14 +52,19 @@ Deno.serve(async (req) => {
 
     await base44.asServiceRole.entities.GoogleDriveNotification.create({
       notification_type: 'sync_completed',
-      message: `📊 Načítaných ${dokumenty.length} dokumentov na spracovanie`,
+      message: `📊 Načítaných ${dokumenty.length} dokumentov - začínam spracovanie...`,
       severity: 'info',
       read: false,
       user_id: user.id,
       metadata: { 
         type: 'reorganization_log',
         status: 'running',
-        total: dokumenty.length
+        total: dokumenty.length,
+        processed: 0,
+        presunute: 0,
+        nezmenene: 0,
+        chyby: 0,
+        percent: 0
       }
     });
 
@@ -86,7 +91,6 @@ Deno.serve(async (req) => {
     let nezmenene = 0;
     let chyby = 0;
     const verzieMap = new Map();
-    const logInterval = 5; // Log každých 5 súborov
 
     for (let i = 0; i < dokumenty.length; i++) {
       const dok = dokumenty[i];
@@ -95,7 +99,7 @@ Deno.serve(async (req) => {
       
       try {
         // Kontrola stop flagu každých 10 súborov
-        if (i % 10 === 0) {
+        if (i % 10 === 0 && i > 0) {
           const stopCheck = await base44.asServiceRole.entities.GoogleDriveNotification.filter({
             user_id: user.id,
             'metadata.type': 'reorganization_control',
@@ -244,35 +248,30 @@ Deno.serve(async (req) => {
           console.log(`  ✓ Presunuté: ${novaCesta}/${novyNazov}`);
         }
 
-        // Log každých X súborov
-        if ((i + 1) % logInterval === 0 || (i + 1) === dokumenty.length) {
-          const percent = Math.round(((i + 1) / dokumenty.length) * 100);
-          const logMsg = `📊 ${percent}% | ${i + 1}/${dokumenty.length} | ✓${presunute} ≈${nezmenene} ✗${chyby}`;
-          
-          console.log(logMsg);
-          
-          await base44.asServiceRole.entities.GoogleDriveNotification.create({
-            notification_type: 'sync_completed',
-            message: logMsg,
-            severity: 'info',
-            read: false,
-            user_id: user.id,
-            metadata: { 
-              type: 'reorganization_log',
-              status: 'running',
-              processed: i + 1,
-              total: dokumenty.length,
-              presunute,
-              nezmenene,
-              chyby,
-              percent,
-              timestamp: new Date().toISOString()
-            }
-          });
-        }
-
-        // Malý delay aby databáza stihla
-        await new Promise(resolve => setTimeout(resolve, 50));
+        // LOG KAŽDÝ SÚBOR - REAL TIME
+        const percent = Math.round(((i + 1) / dokumenty.length) * 100);
+        const logMsg = `📊 ${percent}% | ${i + 1}/${dokumenty.length} | ✓${presunute} ≈${nezmenene} ✗${chyby}`;
+        
+        console.log(logMsg);
+        
+        await base44.asServiceRole.entities.GoogleDriveNotification.create({
+          notification_type: 'sync_completed',
+          message: logMsg,
+          severity: 'info',
+          read: false,
+          user_id: user.id,
+          metadata: { 
+            type: 'reorganization_log',
+            status: 'running',
+            processed: i + 1,
+            total: dokumenty.length,
+            presunute,
+            nezmenene,
+            chyby,
+            percent,
+            timestamp: new Date().toISOString()
+          }
+        });
 
       } catch (error) {
         console.error(`❌ Chyba pri ${dok.nazov}:`, error);
