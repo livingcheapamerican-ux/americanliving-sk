@@ -126,7 +126,7 @@ Buď PRESNÝ a DETAILNÝ!
             };
         } else {
             analysisPrompt = `
-POKROČILÁ AI ANALÝZA DOKUMENTU
+POKROČILÁ AI ANALÝZA DOKUMENTU - SMART DETECTION
 
 DOKUMENT:
 Názov: ${dokument.nazov}
@@ -137,46 +137,57 @@ ${fileContent ? `Obsah: ${fileContent.substring(0, 25000)}` : ''}
 
 KRITICKÉ ÚLOHY:
 
-1. AUTOMATICKÁ IDENTIFIKÁCIA TYPU:
-   Urči najpresnejší typ:
-   - cenník, technická_špecifikácia, návod, certifikát, FAQ, blog
-   - **ZMLUVA** (hľadaj: "zmluva", "zmluvné strany", "článok", právnické formulácie)
-   - **FAKTÚRA** (hľadaj: "faktúra", "invoice", "suma", "DPH", "splatnosť", číslo faktúry)
-   - **PONUKA** (hľadaj: "cenová ponuka", "cena bez DPH", "ponúkame")
-   - **OBJEDNÁVKA** (hľadaj: "objednávka", "objednávam", číslo objednávky)
-   - fotky, video, iné
+1. AUTOMATICKÁ DETEKCIA TYPU (najvyššia priorita):
+   Analyzuj obsah a urči SPRÁVNY typ:
+   
+   **ZMLUVA** keď obsahuje:
+   - slová: "zmluva", "zmluvné strany", "článok I", "článok II", právnické formulácie
+   - číslo zmluvy, dátum podpisu, zmluvné strany, predmet zmluvy, platnosť
+   
+   **FAKTÚRA** keď obsahuje:
+   - slová: "faktúra", "invoice", "dodávateľ", "odberateľ", "číslo faktúry", "VS", "splatnosť"
+   - číslo faktúry, dátumy (vystavenia, dodania, splatnosti), sumy (bez DPH, DPH, s DPH), položky
+   
+   **PONUKA** keď obsahuje:
+   - slová: "cenová ponuka", "ponúkame", "cena bez DPH", "platnosť ponuky"
+   - číslo ponuky, dátum, ponúkané produkty/služby, ceny, platnosť
+   
+   **OBJEDNÁVKA** keď obsahuje:
+   - slová: "objednávka", "objednávam", "číslo objednávky"
+   - číslo objednávky, dátum, objednávateľ, objednané položky, termín dodania
+   
+   **CENNÍK** - cenové zoznamy, tabuľky cien
+   **TECHNICKÁ_ŠPECIFIKÁCIA** - technické parametre, rozmery, materiály
+   Iné typy: návod, certifikát, FAQ, blog, fotky, video, iné
 
-2. POKROČILÁ SUMARIZÁCIA (ak dokument >500 slov):
+2. INTELIGENTNÁ EXTRAKCIA KĽÚČOVÝCH INFORMÁCIÍ:
+   
+   Pre ZMLUVY extrahuj:
+   - cislo_zmluvy, datum_podpisu, zmluvne_strany (pole), predmet_zmluvy, platnost_od, platnost_do
+   
+   Pre FAKTÚRY extrahuj:
+   - cislo_faktury, datum_vystavenia, datum_splatnosti, dodavatel, odberatel
+   - suma_bez_dph, dph, suma_s_dph, polozky (pole)
+   
+   Pre PONUKY extrahuj:
+   - cislo_ponuky, datum_ponuky, platnost_do, ponukane_produkty (pole), celkova_cena
+   
+   Pre OBJEDNÁVKY extrahuj:
+   - cislo_objednavky, datum_objednavky, pozadovany_termin, objednavatel
+   - objednane_polozky (pole), celkova_suma
+
+3. POKROČILÁ SUMARIZÁCIA (ak dokument >500 slov):
    A) KRÁTKE ZHRNUTIE: 1-2 vety - hlavná myšlienka
    B) STREDNÉ ZHRNUTIE: 100-150 slov - kľúčové fakty
    C) KĽÚČOVÉ BODY: 5-10 bodov - najdôležitejšie informácie
 
-3. AI GENEROVANIE:
+4. AI GENEROVANIE:
    A) POPIS: Vytvor atraktívny popis dokumentu (2-3 vety) pre používateľov
-   B) TAGY: Vygeneruj 8-15 relevantných tagov (slovensky):
-      - Kľúčové slová z obsahu
-      - Model domu
-      - Technické parametre
-      - Cenové kategórie
-      - Materiály
-      Príklad: ["A0 dom", "nízkoenergetický", "drevostavba", "cenník 2024"]
+   B) TAGY: Vygeneruj 8-15 relevantných tagov (slovensky)
 
-4. EXTRAKCIA DÔLEŽITÝCH INFORMÁCIÍ:
-   - Modely domov
-   - Ceny (presné čísla s menou a DPH)
-   - Rozmery (šírka, dĺžka, výška, plochy)
-   - Materiály (detailne so značkami)
-   - Energetické parametre (trieda, spotreba, U-hodnoty)
-   - Technické špecifikácie
-   - Inštalácie
-   - Doprava a montáž
-   - Záruky
-   - Odporúčania
-
-5. CHATBOT OBSAH:
-   - Optimalizovaný text (max 1500 slov)
-   - Prirodzený jazyk
-   - Všetky dôležité fakty a čísla
+5. EXTRAKCIA PRE VŠETKY DOKUMENTY:
+   - Modely domov, ceny, rozmery, materiály, energetické parametre
+   - Technické špecifikácie, inštalácie, doprava, záruky, odporúčania
 
 VÝSTUP: JSON so všetkými požadovanými poľami.
 `;
@@ -226,6 +237,52 @@ VÝSTUP: JSON so všetkými požadovanými poľami.
                                     u_hodnoty: { type: "string" },
                                     vykurovanie: { type: "string" },
                                     fotovoltaika: { type: "string" }
+                                }
+                            },
+                            zmluva_info: {
+                                type: ["object", "null"],
+                                properties: {
+                                    cislo_zmluvy: { type: "string" },
+                                    datum_podpisu: { type: "string" },
+                                    zmluvne_strany: { type: "array", items: { type: "string" } },
+                                    predmet_zmluvy: { type: "string" },
+                                    platnost_od: { type: "string" },
+                                    platnost_do: { type: "string" }
+                                }
+                            },
+                            faktura_info: {
+                                type: ["object", "null"],
+                                properties: {
+                                    cislo_faktury: { type: "string" },
+                                    datum_vystavenia: { type: "string" },
+                                    datum_splatnosti: { type: "string" },
+                                    dodavatel: { type: "string" },
+                                    odberatel: { type: "string" },
+                                    suma_bez_dph: { type: "string" },
+                                    dph: { type: "string" },
+                                    suma_s_dph: { type: "string" },
+                                    polozky: { type: "array", items: { type: "string" } }
+                                }
+                            },
+                            ponuka_info: {
+                                type: ["object", "null"],
+                                properties: {
+                                    cislo_ponuky: { type: "string" },
+                                    datum_ponuky: { type: "string" },
+                                    platnost_do: { type: "string" },
+                                    ponukane_produkty: { type: "array", items: { type: "string" } },
+                                    celkova_cena: { type: "string" }
+                                }
+                            },
+                            objednavka_info: {
+                                type: ["object", "null"],
+                                properties: {
+                                    cislo_objednavky: { type: "string" },
+                                    datum_objednavky: { type: "string" },
+                                    pozadovany_termin: { type: "string" },
+                                    objednavatel: { type: "string" },
+                                    objednane_polozky: { type: "array", items: { type: "string" } },
+                                    celkova_suma: { type: "string" }
                                 }
                             },
                             instalácie: { type: "array", items: { type: "string" } },
@@ -439,6 +496,10 @@ VÝSTUP: JSON so všetkými požadovanými poľami.
             auto_category: result.odporucana_kategoria || null,
             has_detailed_summary: !!result.detailne_zhrnutie,
             generated_tags_count: result.ai_generovane_tagy?.length || 0,
+            extracted_invoice: !!result.kľúčové_informácie?.faktura_info,
+            extracted_contract: !!result.kľúčové_informácie?.zmluva_info,
+            extracted_offer: !!result.kľúčové_informácie?.ponuka_info,
+            extracted_order: !!result.kľúčové_informácie?.objednavka_info,
             dom_updated: !!dokument.model_domu
         });
 
