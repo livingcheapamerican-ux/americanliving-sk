@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Loader2, AlertTriangle, Image, CheckCircle, XCircle, FolderSync } from "lucide-react";
 import SmartProcessMonitor from "../components/admin/SmartProcessMonitor";
+import SystemPerformanceMonitor from "../components/admin/SystemPerformanceMonitor";
 
 export default function AdminAnalyzaDatabazy() {
   const { data: user, isLoading: userLoading } = useQuery({
@@ -55,7 +56,12 @@ export default function AdminAnalyzaDatabazy() {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent mb-2">
             🚀 Smart Analysis Dashboard
           </h1>
-          <p className="text-gray-600">Real-time monitoring s auto-heal mechanizmom</p>
+          <p className="text-gray-600">Real-time monitoring s výkonovými metrikami</p>
+        </div>
+
+        {/* System Performance Monitor */}
+        <div className="mb-8">
+          <SystemPerformanceMonitor />
         </div>
 
         {/* Stats */}
