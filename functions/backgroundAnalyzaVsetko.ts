@@ -26,15 +26,21 @@ Deno.serve(async (req) => {
     });
 
     if (neanalyzovane.length === 0) {
+      // Spusti validáciu a reorganizáciu
+      const validaciaResponse = await base44.asServiceRole.functions.invoke('validujDokumenty');
+      const reorganizaciaResponse = await base44.asServiceRole.functions.invoke('reorganizujDokumenty');
+
       return Response.json({
         success: true,
-        message: 'Všetky dokumenty sú analyzované',
+        message: 'Všetky dokumenty analyzované, validácia a reorganizácia dokončené',
         total: 0,
-        processed: 0
+        processed: 0,
+        validacia: validaciaResponse.data,
+        reorganizacia: reorganizaciaResponse.data
       });
     }
 
-    const BATCH_SIZE = 3; // Ešte menšie dávky pre stabilitu
+    const BATCH_SIZE = 3;
     let processed = 0;
     let failed = 0;
     let skipped = 0;
@@ -149,21 +155,25 @@ KVALITA:
           }
         }
 
-        // Malá pauza medzi dokumentmi
         await new Promise(resolve => setTimeout(resolve, 500));
       }
 
-      // Checkpoint po každej dávke
       console.log(`Checkpoint: ${processed} z ${neanalyzovane.length}`);
     }
 
+    // Po dokončení analýzy spusti automaticky validáciu a reorganizáciu
+    const validaciaResponse = await base44.asServiceRole.functions.invoke('validujDokumenty');
+    const reorganizaciaResponse = await base44.asServiceRole.functions.invoke('reorganizujDokumenty');
+
     return Response.json({
       success: true,
-      message: 'Analýza dokončená',
+      message: 'Analýza, validácia a reorganizácia dokončené',
       total: neanalyzovane.length,
       processed,
       failed,
-      skipped
+      skipped,
+      validacia: validaciaResponse.data,
+      reorganizacia: reorganizaciaResponse.data
     });
 
   } catch (error) {
