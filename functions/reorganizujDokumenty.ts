@@ -1,17 +1,25 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 Deno.serve(async (req) => {
+  console.log('🔵 FUNCTION CALLED - reorganizujDokumenty');
+  
   try {
     const base44 = createClientFromRequest(req);
+    console.log('🔵 Base44 client created');
+    
     const user = await base44.auth.me();
+    console.log('🔵 User authenticated:', user?.email);
 
     if (!user || (user.role !== 'admin' && !user.super_admin)) {
+      console.log('❌ Unauthorized user');
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { action } = await req.json().catch(() => ({}));
+    console.log('🔵 Action:', action);
 
     if (action === 'stop') {
+      console.log('⏸️ Stop action received');
       await base44.asServiceRole.entities.GoogleDriveNotification.create({
         notification_type: 'sync_completed',
         message: '⏸️ Zastavovací príkaz prijatý',
@@ -23,48 +31,68 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, message: 'Reorganizácia bude zastavená' });
     }
 
-    console.log('🚀 START: Reorganizácia spustená');
-    await base44.asServiceRole.entities.GoogleDriveNotification.create({
-      notification_type: 'sync_completed',
-      message: '🚀 START: Spúšťam reorganizáciu...',
-      severity: 'info',
-      read: false,
-      user_id: user.id,
-      metadata: { 
-        type: 'reorganization_log',
-        status: 'running',
-        processed: 0,
-        total: 0
-      }
-    });
+    // CREATE INITIAL LOG - IMMEDIATELY
+    console.log('🔵 Creating initial log...');
+    try {
+      await base44.asServiceRole.entities.GoogleDriveNotification.create({
+        notification_type: 'sync_completed',
+        message: '🚀 ŠTART - Funkcia sa spustila, načítavam dokumenty...',
+        severity: 'info',
+        read: false,
+        user_id: user.id,
+        metadata: { 
+          type: 'reorganization_log',
+          status: 'running',
+          processed: 0,
+          total: 0,
+          timestamp: new Date().toISOString()
+        }
+      });
+      console.log('✅ Initial log created');
+    } catch (logError) {
+      console.error('❌ Failed to create initial log:', logError);
+    }
 
-    console.log('📥 Načítavam dokumenty...');
-    const dokumenty = await base44.asServiceRole.entities.Dokument.filter({
-      typ: 'fotky',
-      vizualna_analyza: { $exists: true },
-      podrobna_analyza_datum: { $exists: true }
-    });
+    console.log('🔵 Fetching documents...');
+    let dokumenty;
+    try {
+      dokumenty = await base44.asServiceRole.entities.Dokument.filter({
+        typ: 'fotky',
+        vizualna_analyza: { $exists: true },
+        podrobna_analyza_datum: { $exists: true }
+      });
+      console.log(`✅ Fetched ${dokumenty.length} documents`);
+    } catch (fetchError) {
+      console.error('❌ Failed to fetch documents:', fetchError);
+      throw fetchError;
+    }
 
-    console.log(`✅ Načítaných ${dokumenty.length} dokumentov`);
-    await base44.asServiceRole.entities.GoogleDriveNotification.create({
-      notification_type: 'sync_completed',
-      message: `✅ Načítaných ${dokumenty.length} dokumentov - začínam FOR cyklus...`,
-      severity: 'info',
-      read: false,
-      user_id: user.id,
-      metadata: { 
-        type: 'reorganization_log',
-        status: 'running',
-        total: dokumenty.length,
-        processed: 0,
-        presunute: 0,
-        nezmenene: 0,
-        chyby: 0,
-        percent: 0
-      }
-    });
+    // LOG AFTER FETCH
+    try {
+      await base44.asServiceRole.entities.GoogleDriveNotification.create({
+        notification_type: 'sync_completed',
+        message: `✅ Načítaných ${dokumenty.length} dokumentov - pripravujem spracovanie`,
+        severity: 'info',
+        read: false,
+        user_id: user.id,
+        metadata: { 
+          type: 'reorganization_log',
+          status: 'running',
+          total: dokumenty.length,
+          processed: 0,
+          presunute: 0,
+          nezmenene: 0,
+          chyby: 0,
+          percent: 0
+        }
+      });
+      console.log('✅ Post-fetch log created');
+    } catch (logError) {
+      console.error('❌ Failed to create post-fetch log:', logError);
+    }
 
     if (dokumenty.length === 0) {
+      console.log('⚠️ No documents to process');
       await base44.asServiceRole.entities.GoogleDriveNotification.create({
         notification_type: 'sync_completed',
         message: '⚠️ Žiadne dokumenty na reorganizáciu',
@@ -88,37 +116,41 @@ Deno.serve(async (req) => {
     let chyby = 0;
     const verzieMap = new Map();
 
-    console.log(`🔄 Začínam FOR loop pre ${dokumenty.length} dokumentov`);
+    console.log(`🔵 Starting loop for ${dokumenty.length} documents`);
 
     for (let i = 0; i < dokumenty.length; i++) {
       const dok = dokumenty[i];
       
       try {
-        // LOG KAŽDÝ SÚBOR PRED SPRACOVANÍM
         const percent = Math.round(((i + 1) / dokumenty.length) * 100);
-        const currentLogMsg = `⏳ Spracúvam [${i + 1}/${dokumenty.length}] ${dok.nazov.substring(0, 30)}...`;
+        const shortName = dok.nazov.substring(0, 30);
         
-        console.log(currentLogMsg);
+        console.log(`[${i + 1}/${dokumenty.length}] Processing: ${shortName}`);
         
-        await base44.asServiceRole.entities.GoogleDriveNotification.create({
-          notification_type: 'sync_completed',
-          message: currentLogMsg,
-          severity: 'info',
-          read: false,
-          user_id: user.id,
-          metadata: { 
-            type: 'reorganization_log',
-            status: 'running',
-            processed: i,
-            total: dokumenty.length,
-            presunute,
-            nezmenene,
-            chyby,
-            percent: Math.round((i / dokumenty.length) * 100)
-          }
-        });
+        // LOG EVERY FILE
+        try {
+          await base44.asServiceRole.entities.GoogleDriveNotification.create({
+            notification_type: 'sync_completed',
+            message: `⏳ [${i + 1}/${dokumenty.length}] ${shortName}... (${percent}%)`,
+            severity: 'info',
+            read: false,
+            user_id: user.id,
+            metadata: { 
+              type: 'reorganization_log',
+              status: 'running',
+              processed: i,
+              total: dokumenty.length,
+              presunute,
+              nezmenene,
+              chyby,
+              percent: Math.round((i / dokumenty.length) * 100)
+            }
+          });
+        } catch (logErr) {
+          console.error('Failed to create file log:', logErr);
+        }
 
-        // Kontrola stop flagu
+        // Check stop flag every 10 files
         if (i % 10 === 0 && i > 0) {
           const stopCheck = await base44.asServiceRole.entities.GoogleDriveNotification.filter({
             user_id: user.id,
@@ -127,6 +159,7 @@ Deno.serve(async (req) => {
           });
           
           if (stopCheck.length > 0) {
+            console.log('⏸️ Stop flag detected');
             await base44.asServiceRole.entities.GoogleDriveNotification.create({
               notification_type: 'sync_failed',
               message: `⏸️ Zastavené na ${i}/${dokumenty.length}`,
@@ -213,7 +246,6 @@ Deno.serve(async (req) => {
         
         let novyNazov = dok.nazov;
         
-        // ZJEDNODUŠENÁ LOGIKA PRE VERZIE - bez ďalšieho načítavania z DB
         if (verzieMap.has(verziaKey)) {
           const verzia = verzieMap.get(verziaKey) + 1;
           verzieMap.set(verziaKey, verzia);
@@ -237,43 +269,49 @@ Deno.serve(async (req) => {
           presunute++;
         }
 
-        // PROGRESS LOG PO SPRACOVANÍ
+        // PROGRESS LOG
         const finishLogMsg = `✅ ${percent}% | ${i + 1}/${dokumenty.length} | ✓${presunute} ≈${nezmenene} ✗${chyby}`;
         
-        await base44.asServiceRole.entities.GoogleDriveNotification.create({
-          notification_type: 'sync_completed',
-          message: finishLogMsg,
-          severity: 'info',
-          read: false,
-          user_id: user.id,
-          metadata: { 
-            type: 'reorganization_log',
-            status: 'running',
-            processed: i + 1,
-            total: dokumenty.length,
-            presunute,
-            nezmenene,
-            chyby,
-            percent
-          }
-        });
+        try {
+          await base44.asServiceRole.entities.GoogleDriveNotification.create({
+            notification_type: 'sync_completed',
+            message: finishLogMsg,
+            severity: 'info',
+            read: false,
+            user_id: user.id,
+            metadata: { 
+              type: 'reorganization_log',
+              status: 'running',
+              processed: i + 1,
+              total: dokumenty.length,
+              presunute,
+              nezmenene,
+              chyby,
+              percent
+            }
+          });
+        } catch (logErr) {
+          console.error('Failed to create progress log:', logErr);
+        }
 
       } catch (error) {
-        console.error(`❌ Chyba:`, error);
+        console.error(`❌ Error processing file ${i}:`, error);
         chyby++;
         
-        await base44.asServiceRole.entities.GoogleDriveNotification.create({
-          notification_type: 'sync_failed',
-          message: `❌ Chyba na súbore ${i + 1}: ${error.message}`,
-          severity: 'error',
-          read: false,
-          user_id: user.id,
-          metadata: { 
-            type: 'reorganization_log',
-            status: 'running',
-            error: error.message
-          }
-        });
+        try {
+          await base44.asServiceRole.entities.GoogleDriveNotification.create({
+            notification_type: 'sync_failed',
+            message: `❌ Chyba: ${error.message}`,
+            severity: 'error',
+            read: false,
+            user_id: user.id,
+            metadata: { 
+              type: 'reorganization_log',
+              status: 'running',
+              error: error.message
+            }
+          });
+        } catch {}
       }
     }
 
@@ -307,6 +345,7 @@ Deno.serve(async (req) => {
 
   } catch (error) {
     console.error('💥 FATAL:', error);
+    console.error('Stack:', error.stack);
     
     try {
       const base44 = createClientFromRequest(req);
@@ -320,7 +359,9 @@ Deno.serve(async (req) => {
         user_id: user.id,
         metadata: { type: 'reorganization_log', status: 'error', error: error.message }
       });
-    } catch {}
+    } catch (logError) {
+      console.error('Failed to log fatal error:', logError);
+    }
     
     return Response.json({ error: error.message, success: false }, { status: 500 });
   }
