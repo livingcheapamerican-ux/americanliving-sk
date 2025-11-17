@@ -11,7 +11,11 @@ async function logProgress(base44, userId, message, metadata = {}) {
       metadata: {
         type: 'analysis_log',
         timestamp: new Date().toISOString(),
-        ...metadata
+        ...metadata,
+        // Ensure numbers are numbers
+        total: Number(metadata.total) || 0,
+        processed: Number(metadata.processed) || 0,
+        percent: Number(metadata.percent) || 0
       }
     });
     console.log(`[LOG] ${message}`);
@@ -44,9 +48,12 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { action } = await req.json();
+    let body = {};
+    try {
+      body = await req.json();
+    } catch {}
 
-    if (action === 'stop') {
+    if (body.action === 'stop') {
       await logProgress(base44, user.id, '⏸️ Stop príkaz prijatý', {
         type: 'analysis_control',
         should_stop: true,
@@ -55,29 +62,45 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, message: 'Analýza bude zastavená' });
     }
 
+    // Vyčistiť staré logy pri štarte
+    console.log('🧹 Čistím staré logy...');
+    const oldLogs = await base44.asServiceRole.entities.GoogleDriveNotification.filter({
+      'metadata.type': 'analysis_log'
+    });
+    for (const log of oldLogs) {
+      await base44.asServiceRole.entities.GoogleDriveNotification.delete(log.id);
+    }
+    console.log(`✓ Vymazané ${oldLogs.length} starých logov`);
+
     const vsetkyFotky = await base44.asServiceRole.entities.Dokument.filter({
       typ: 'fotky'
     });
 
-    console.log(`📊 Celkom fotiek: ${vsetkyFotky.length}`);
-    await logProgress(base44, user.id, `📊 Načítané: ${vsetkyFotky.length} fotiek`, {
+    const pocet = vsetkyFotky.length;
+    console.log(`📊 Celkom fotiek: ${pocet}`);
+    
+    await logProgress(base44, user.id, `📊 Načítané: ${pocet} fotiek`, {
       status: 'running',
-      total: vsetkyFotky.length
+      total: pocet
     });
 
     const bezAnalyzy = vsetkyFotky.filter(d => !d.vizualna_analyza || !d.vizualna_analyza.spravny_vyrobca);
+    const naAnalyzu = bezAnalyzy.length;
     
-    console.log(`🔍 Na analýzu: ${bezAnalyzy.length}`);
-    await logProgress(base44, user.id, `🔍 ${bezAnalyzy.length} fotiek potrebuje vizuálnu analýzu`, {
+    console.log(`🔍 Na analýzu: ${naAnalyzu}`);
+    await logProgress(base44, user.id, `🔍 ${naAnalyzu} fotiek potrebuje vizuálnu analýzu`, {
       status: 'running',
-      total: bezAnalyzy.length,
+      total: naAnalyzu,
+      processed: 0,
       percent: 0
     });
 
-    if (bezAnalyzy.length === 0) {
+    if (naAnalyzu === 0) {
       await logProgress(base44, user.id, '✅ Všetky fotky už analyzované, spúšťam reorganizáciu...', {
         status: 'running',
-        severity: 'success'
+        severity: 'success',
+        total: 0,
+        processed: 0
       });
       
       const reorganizaciaResponse = await base44.asServiceRole.functions.invoke('reorganizujDokumenty', {});
@@ -85,7 +108,9 @@ Deno.serve(async (req) => {
       await logProgress(base44, user.id, `✅ Reorganizácia dokončená`, {
         status: 'completed',
         severity: 'success',
-        reorganizacia: reorganizaciaResponse.data
+        reorganizacia: reorganizaciaResponse.data,
+        total: 0,
+        processed: 0
       });
 
       return Response.json({
@@ -101,21 +126,23 @@ Deno.serve(async (req) => {
     let failed = 0;
     let skipped = 0;
 
-    for (let i = 0; i < bezAnalyzy.length; i++) {
+    for (let i = 0; i < naAnalyzu; i++) {
       const dok = bezAnalyzy[i];
       const current = i + 1;
-      const percent = Math.round((current / bezAnalyzy.length) * 100);
+      const percent = Math.round((current / naAnalyzu) * 100);
 
-      console.log(`\n[${current}/${bezAnalyzy.length}] ${dok.nazov}`);
+      console.log(`\n[${current}/${naAnalyzu}] ${dok.nazov}`);
 
       // Check stop každých 5
       if (i > 0 && i % 5 === 0) {
         const shouldStop = await checkStopFlag(base44);
         if (shouldStop) {
-          await logProgress(base44, user.id, `⏸️ Zastavené na ${current}/${bezAnalyzy.length}`, {
+          await logProgress(base44, user.id, `⏸️ Zastavené na ${current}/${naAnalyzu}`, {
             status: 'stopped',
             severity: 'warning',
-            processed,
+            total: naAnalyzu,
+            processed: current,
+            percent,
             failed,
             skipped,
             last_index: i
@@ -123,7 +150,8 @@ Deno.serve(async (req) => {
           return Response.json({
             success: true,
             stopped: true,
-            processed,
+            processed: current,
+            total: naAnalyzu,
             failed,
             skipped,
             last_index: i
@@ -214,10 +242,10 @@ Kontext:
           processed++;
           success = true;
           
-          await logProgress(base44, user.id, `✓ ${current}/${bezAnalyzy.length} | ${dok.nazov} | ${vizAnalyza.spravny_vyrobca} - ${vizAnalyza.spravny_model}`, {
+          await logProgress(base44, user.id, `✓ ${current}/${naAnalyzu} | ${dok.nazov} | ${vizAnalyza.spravny_vyrobca} - ${vizAnalyza.spravny_model}`, {
             status: 'running',
+            total: naAnalyzu,
             processed: current,
-            total: bezAnalyzy.length,
             percent,
             current_file: dok.nazov,
             success_count: processed
@@ -246,10 +274,10 @@ Kontext:
               failed++;
             }
             
-            await logProgress(base44, user.id, `✗ ${current}/${bezAnalyzy.length} | ${dok.nazov} | Chyba: ${errorMsg}`, {
+            await logProgress(base44, user.id, `✗ ${current}/${naAnalyzu} | ${dok.nazov} | Chyba: ${errorMsg}`, {
               status: 'running',
+              total: naAnalyzu,
               processed: current,
-              total: bezAnalyzy.length,
               percent,
               current_file: dok.nazov,
               error_count: failed,
@@ -270,9 +298,9 @@ Kontext:
     await logProgress(base44, user.id, `✅ ANALÝZA HOTOVÁ za ${analysisDuration}s | ✓${processed} ⊘${skipped} ✗${failed}`, {
       status: 'analysis_completed',
       severity: 'success',
-      processed,
-      failed,
-      skipped,
+      total: naAnalyzu,
+      processed: naAnalyzu,
+      percent: 100,
       duration: analysisDuration
     });
 
@@ -280,7 +308,9 @@ Kontext:
 
     await logProgress(base44, user.id, '🔄 Spúšťam reorganizáciu súborov...', {
       status: 'reorganizing',
-      severity: 'info'
+      severity: 'info',
+      total: 0,
+      processed: 0
     });
 
     const reorganizaciaResponse = await base44.asServiceRole.functions.invoke('reorganizujDokumenty', {});
@@ -290,6 +320,8 @@ Kontext:
     await logProgress(base44, user.id, `🎉 HOTOVO za ${totalDuration}s | Analýza + Reorganizácia dokončené`, {
       status: 'completed',
       severity: 'success',
+      total: 0,
+      processed: 0,
       analysis: { processed, failed, skipped },
       reorganizacia: reorganizaciaResponse.data,
       total_duration: totalDuration
@@ -301,7 +333,7 @@ Kontext:
       success: true,
       message: 'Analýza a reorganizácia dokončené',
       analysis: {
-        total: bezAnalyzy.length,
+        total: naAnalyzu,
         processed,
         failed,
         skipped
