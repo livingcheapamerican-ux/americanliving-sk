@@ -21,7 +21,7 @@ export default function ReorganizationLogPanel() {
       console.log('📋 Načítané logy:', allLogs.length, 'Last update:', new Date().toLocaleTimeString());
       return allLogs.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
     },
-    refetchInterval: 1000,
+    refetchInterval: 500, // ZMENA: každú pol sekundu
     staleTime: 0
   });
 
@@ -190,6 +190,12 @@ export default function ReorganizationLogPanel() {
               <span className="font-semibold">Status:</span>{' '}
               {latestStatus?.metadata?.status || 'N/A'}
             </div>
+            <div className="col-span-3 bg-white p-2 rounded">
+              <span className="font-semibold">Metadata:</span>
+              <pre className="text-xs mt-1 overflow-auto max-h-32">
+                {JSON.stringify(latestStatus?.metadata, null, 2)}
+              </pre>
+            </div>
           </div>
         </div>
       )}
@@ -220,7 +226,7 @@ export default function ReorganizationLogPanel() {
               </span>
             </div>
             
-            {latestStatus.metadata.percent && (
+            {latestStatus.metadata.percent !== undefined && (
               <Badge className="bg-cyan-600 text-white">
                 {latestStatus.metadata.percent}%
               </Badge>
@@ -261,9 +267,9 @@ export default function ReorganizationLogPanel() {
           <p className="text-xs font-semibold text-gray-600">
             LIVE LOG ({progressLogs.length} záznamov)
           </p>
-          {progressLogs.length === 0 && !running && (
-            <Badge variant="outline" className="text-red-600">
-              Žiadne logy - proces možno nebeží!
+          {progressLogs.length === 0 && running && (
+            <Badge variant="outline" className="text-orange-600 animate-pulse">
+              ⚠️ Proces beží ale žiadne logy - možno je zaseknutý!
             </Badge>
           )}
         </div>
@@ -276,10 +282,15 @@ export default function ReorganizationLogPanel() {
                   {running ? '⏳ Čakám na logy z procesu...' : 'Klikni na tlačidlo "Spustiť" pre začatie reorganizácie'}
                 </p>
                 {running && (
-                  <Button size="sm" variant="outline" onClick={() => queryClient.invalidateQueries()}>
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    Obnoviť teraz
-                  </Button>
+                  <div className="space-y-2">
+                    <Button size="sm" variant="outline" onClick={() => queryClient.invalidateQueries()}>
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                      Obnoviť teraz
+                    </Button>
+                    <p className="text-xs text-orange-600 mt-2">
+                      ⚠️ Ak logy stále nejdú, proces sa pravdepodobne zasekol pri prvom načítaní dokumentov
+                    </p>
+                  </div>
                 )}
               </div>
             ) : (
