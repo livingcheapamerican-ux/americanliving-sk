@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, CheckCircle, StopCircle, Trash2, FolderSync, RefreshCw, PlayCircle, Clock } from "lucide-react";
+import { Loader2, CheckCircle, StopCircle, Trash2, FolderSync, RefreshCw, PlayCircle, Clock, AlertOctagon } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
@@ -24,7 +24,6 @@ export default function ReorganizationLogPanel() {
     staleTime: 0
   });
 
-  // Automaticky zistiť stav z logov
   useEffect(() => {
     if (logs.length === 0) {
       setRunning(false);
@@ -61,6 +60,18 @@ export default function ReorganizationLogPanel() {
     mutationFn: () => base44.functions.invoke('reorganizujDokumenty', { action: 'stop' }),
     onSuccess: () => {
       toast.info('Stop príkaz odoslaný');
+    }
+  });
+
+  const forceStopAllMutation = useMutation({
+    mutationFn: () => base44.functions.invoke('stopAllProcesses', {}),
+    onSuccess: (response) => {
+      toast.success(response.data.message || 'Všetky procesy zastavené');
+      queryClient.invalidateQueries({ queryKey: ['reorganization-logs'] });
+      setRunning(false);
+    },
+    onError: (error) => {
+      toast.error(`Chyba: ${error.message}`);
     }
   });
 
@@ -118,6 +129,17 @@ export default function ReorganizationLogPanel() {
             title="Refresh"
           >
             <RefreshCw className="w-4 h-4" />
+          </Button>
+
+          <Button
+            onClick={() => forceStopAllMutation.mutate()}
+            variant="destructive"
+            size="sm"
+            disabled={forceStopAllMutation.isPending}
+            title="Zastaviť všetky zaseknuté procesy"
+          >
+            <AlertOctagon className="w-4 h-4 mr-2" />
+            Force Stop
           </Button>
           
           {logs.length > 0 && !running && (
