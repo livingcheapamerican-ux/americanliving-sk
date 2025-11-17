@@ -108,31 +108,61 @@ Deno.serve(async (req) => {
 
     // Start
     await log(base44, user.id, '🚀 Reorganizácia spustená', { status: 'running' });
-    console.log('📥 Loading documents...');
+    console.log('📥 Loading ALL documents...');
 
-    // Načítaj VŠETKY fotky - použijem filter namiesto list
-    const allDocs = await base44.asServiceRole.entities.Dokument.filter({
-      typ: 'fotky'
-    });
+    // Načítaj ÚPLNE VŠETKY dokumenty bez filtra
+    const vsetky = await base44.asServiceRole.entities.Dokument.list('-created_date', 5000);
     
-    console.log(`✅ Loaded ${allDocs?.length || 0} fotky`);
+    console.log(`✅ Raw result: ${vsetky?.length || 0} total documents`);
+    console.log(`✅ Is array: ${Array.isArray(vsetky)}`);
 
-    if (!Array.isArray(allDocs) || allDocs.length === 0) {
+    if (!Array.isArray(vsetky) || vsetky.length === 0) {
+      await log(base44, user.id, '⚠️ Žiadne dokumenty v databáze!', {
+        status: 'completed',
+        severity: 'error'
+      });
+      return Response.json({ 
+        success: false, 
+        error: 'Žiadne dokumenty v databáze',
+        info: `Result type: ${typeof vsetky}, isArray: ${Array.isArray(vsetky)}`
+      });
+    }
+
+    // Ukáž typy dokumentov
+    const typy = {};
+    vsetky.forEach(d => {
+      const typ = d.typ || 'undefined';
+      typy[typ] = (typy[typ] || 0) + 1;
+    });
+    console.log('Document types:', typy);
+
+    // Filtruj fotky V JAVASCRIPTE
+    const fotky = vsetky.filter(d => d.typ === 'fotky');
+    console.log(`✅ ${fotky.length} fotky`);
+
+    await log(base44, user.id, `📊 Načítané: ${vsetky.length} celkom, ${fotky.length} fotiek`, {
+      status: 'running',
+      types: typy
+    });
+
+    if (fotky.length === 0) {
       await log(base44, user.id, '⚠️ Žiadne fotky v databáze', {
         status: 'completed',
-        severity: 'warning'
+        severity: 'warning',
+        total: vsetky.length,
+        types: typy
       });
       return Response.json({ 
         success: true, 
         presunute: 0, 
         nezmenene: 0, 
         chyby: 0,
-        info: 'Žiadne fotky v databáze'
+        info: `Celkom ${vsetky.length} dokumentov, ale 0 fotiek`
       });
     }
 
-    // Debug - ukáž prvý dokument
-    const sample = allDocs[0];
+    // Debug - ukáž prvú fotku
+    const sample = fotky[0];
     console.log('Sample fotka:', {
       id: sample.id,
       nazov: sample.nazov,
@@ -143,9 +173,9 @@ Deno.serve(async (req) => {
     });
 
     // Filtruj len tie s vizuálnou analýzou - NIE reorganizované
-    const analyzovane = allDocs.filter(d => {
+    const analyzovane = fotky.filter(d => {
       if (!d.vizualna_analyza) return false;
-      if (d.reorganizovany === true) return false; // Preskočiť už reorganizované
+      if (d.reorganizovany === true) return false;
       
       const va = d.vizualna_analyza;
       return va.spravny_vyrobca && va.spravny_model;
@@ -153,9 +183,9 @@ Deno.serve(async (req) => {
 
     console.log(`✅ ${analyzovane.length} documents ready for reorganization`);
 
-    await log(base44, user.id, `📊 Stav: ${allDocs.length} fotiek, ${analyzovane.length} na reorganizáciu`, {
+    await log(base44, user.id, `📊 ${fotky.length} fotiek, ${analyzovane.length} na reorganizáciu`, {
       status: 'running',
-      total_photos: allDocs.length,
+      total_photos: fotky.length,
       to_reorganize: analyzovane.length,
       percent: 0
     });
@@ -164,14 +194,14 @@ Deno.serve(async (req) => {
       await log(base44, user.id, '✅ Všetky fotky už sú reorganizované', {
         status: 'completed',
         severity: 'success',
-        total: allDocs.length
+        total: fotky.length
       });
       return Response.json({ 
         success: true, 
         presunute: 0, 
-        nezmenene: allDocs.length, 
+        nezmenene: fotky.length, 
         chyby: 0,
-        info: `Všetkých ${allDocs.length} fotiek je už reorganizovaných`
+        info: `Všetkých ${fotky.length} fotiek je už reorganizovaných`
       });
     }
 
