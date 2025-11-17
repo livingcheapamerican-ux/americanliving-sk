@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
     if (action === 'stop') {
       await base44.asServiceRole.entities.GoogleDriveNotification.create({
         notification_type: 'sync_completed',
-        message: 'Reorganizácia bude zastavená',
+        message: '⏸️ Zastavovací príkaz prijatý',
         severity: 'info',
         read: false,
         user_id: user.id,
@@ -25,9 +25,10 @@ Deno.serve(async (req) => {
     }
 
     // Vytvor inicializačný log
+    console.log('🚀 Reorganizácia spustená');
     await base44.asServiceRole.entities.GoogleDriveNotification.create({
       notification_type: 'sync_completed',
-      message: '🚀 Reorganizácia spustená',
+      message: '🚀 Reorganizácia spustená - načítavam dokumenty...',
       severity: 'info',
       read: false,
       user_id: user.id,
@@ -35,7 +36,8 @@ Deno.serve(async (req) => {
         type: 'reorganization_log',
         status: 'running',
         processed: 0,
-        total: 0
+        total: 0,
+        timestamp: new Date().toISOString()
       }
     });
 
@@ -44,6 +46,21 @@ Deno.serve(async (req) => {
       typ: 'fotky',
       vizualna_analyza: { $exists: true },
       podrobna_analyza_datum: { $exists: true }
+    });
+
+    console.log(`📊 Načítané dokumenty: ${dokumenty.length}`);
+
+    await base44.asServiceRole.entities.GoogleDriveNotification.create({
+      notification_type: 'sync_completed',
+      message: `📊 Načítaných ${dokumenty.length} dokumentov na spracovanie`,
+      severity: 'info',
+      read: false,
+      user_id: user.id,
+      metadata: { 
+        type: 'reorganization_log',
+        status: 'running',
+        total: dokumenty.length
+      }
     });
 
     if (dokumenty.length === 0) {
@@ -73,6 +90,8 @@ Deno.serve(async (req) => {
 
     for (let i = 0; i < dokumenty.length; i++) {
       const dok = dokumenty[i];
+      
+      console.log(`[${i + 1}/${dokumenty.length}] Spracúvam: ${dok.nazov}`);
       
       try {
         // Kontrola stop flagu každých 10 súborov
@@ -108,6 +127,7 @@ Deno.serve(async (req) => {
 
         if (!analyza.spravny_vyrobca || !analyza.spravny_model) {
           nezmenene++;
+          console.log(`  ⏭️ Preskakujem - chýba výrobca/model`);
           continue;
         }
 
@@ -209,6 +229,7 @@ Deno.serve(async (req) => {
 
         if (dok.cesta_priecinku === novaCesta && dok.nazov === novyNazov) {
           nezmenene++;
+          console.log(`  ✓ Nezmenené`);
         } else {
           await base44.asServiceRole.entities.Dokument.update(dok.id, {
             cesta_priecinku: novaCesta,
@@ -220,14 +241,19 @@ Deno.serve(async (req) => {
             reorganizovany_datum: new Date().toISOString()
           });
           presunute++;
+          console.log(`  ✓ Presunuté: ${novaCesta}/${novyNazov}`);
         }
 
         // Log každých X súborov
         if ((i + 1) % logInterval === 0 || (i + 1) === dokumenty.length) {
           const percent = Math.round(((i + 1) / dokumenty.length) * 100);
+          const logMsg = `📊 ${percent}% | ${i + 1}/${dokumenty.length} | ✓${presunute} ≈${nezmenene} ✗${chyby}`;
+          
+          console.log(logMsg);
+          
           await base44.asServiceRole.entities.GoogleDriveNotification.create({
             notification_type: 'sync_completed',
-            message: `📊 Progress: ${i + 1}/${dokumenty.length} (${percent}%) | Presunute: ${presunute} | Nezmenené: ${nezmenene}`,
+            message: logMsg,
             severity: 'info',
             read: false,
             user_id: user.id,
@@ -239,21 +265,28 @@ Deno.serve(async (req) => {
               presunute,
               nezmenene,
               chyby,
-              percent
+              percent,
+              timestamp: new Date().toISOString()
             }
           });
         }
 
+        // Malý delay aby databáza stihla
+        await new Promise(resolve => setTimeout(resolve, 50));
+
       } catch (error) {
-        console.error(`Chyba pri reorganizácii ${dok.nazov}:`, error);
+        console.error(`❌ Chyba pri ${dok.nazov}:`, error);
         chyby++;
       }
     }
 
     // Finálny log
+    const finalMsg = `✅ Dokončené! ✓${presunute} ≈${nezmenene} ✗${chyby}`;
+    console.log(finalMsg);
+    
     await base44.asServiceRole.entities.GoogleDriveNotification.create({
       notification_type: 'sync_completed',
-      message: `✅ Reorganizácia dokončená! Presunute: ${presunute} | Nezmenené: ${nezmenene} | Chyby: ${chyby}`,
+      message: finalMsg,
       severity: 'success',
       read: false,
       user_id: user.id,
@@ -263,7 +296,8 @@ Deno.serve(async (req) => {
         presunute,
         nezmenene,
         chyby,
-        total: dokumenty.length
+        total: dokumenty.length,
+        timestamp: new Date().toISOString()
       }
     });
 
@@ -277,7 +311,7 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('Error:', error);
+    console.error('💥 FATAL ERROR:', error);
     
     try {
       const base44 = createClientFromRequest(req);
@@ -285,11 +319,11 @@ Deno.serve(async (req) => {
       
       await base44.asServiceRole.entities.GoogleDriveNotification.create({
         notification_type: 'sync_failed',
-        message: `❌ Chyba reorganizácie: ${error.message}`,
+        message: `❌ Kritická chyba: ${error.message}`,
         severity: 'error',
         read: false,
         user_id: user.id,
-        metadata: { type: 'reorganization_log', status: 'error' }
+        metadata: { type: 'reorganization_log', status: 'error', error: error.message }
       });
     } catch {}
     
