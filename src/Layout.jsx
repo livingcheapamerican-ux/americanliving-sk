@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, BarChart3 } from "lucide-react";
+import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
@@ -121,9 +121,9 @@ export default function Layout({ children }) {
             <div className="hidden lg:flex items-center gap-3">
               {isSuperAdmin && (
                 <>
-                  <Link to={createPageUrl("AdminAnalyzaDatabazy")}>
-                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80" title="Analýza databázy">
-                      <BarChart3 className="w-5 h-5" />
+                  <Link to={createPageUrl("AdminAnalyzaDomov")}>
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80" title="AI Analýza domov">
+                      <Brain className="w-5 h-5" />
                     </Button>
                   </Link>
                   <Link to={createPageUrl("AdminSpravaDomov")}>
@@ -204,12 +204,12 @@ export default function Layout({ children }) {
               {isSuperAdmin && (
                 <>
                   <Link
-                    to={createPageUrl("AdminAnalyzaDatabazy")}
+                    to={createPageUrl("AdminAnalyzaDomov")}
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                   >
-                    <BarChart3 className="w-5 h-5" />
-                    Analýza databázy
+                    <Brain className="w-5 h-5" />
+                    AI Analýza domov
                   </Link>
                   <Link
                     to={createPageUrl("AdminSpravaDomov")}
