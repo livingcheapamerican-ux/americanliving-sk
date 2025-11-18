@@ -114,8 +114,9 @@ async function runBatchAnalysisInBackground(documents, userId) {
     for (let i = 0; i < documents.length; i++) {
         try {
             // Kontrola či má pokračovať - načíta user data
-            const userData = await serviceClient.entities.User.filter({ id: userId });
-            const currentState = userData[0]?.[BATCH_STATE_KEY];
+            const users = await serviceClient.entities.User.list();
+            const currentUser = users.find(u => u.id === userId);
+            const currentState = currentUser?.[BATCH_STATE_KEY];
 
             if (!currentState || currentState.status === 'stopped') {
                 console.log('Analysis stopped by user');
