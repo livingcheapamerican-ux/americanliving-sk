@@ -109,9 +109,7 @@ Deno.serve(async (req) => {
 
 // Background processing function - beží na serveri nezávisle
 async function runBatchAnalysisInBackground(documents, userId) {
-    const APP_ID = Deno.env.get('BASE44_APP_ID');
-    const SERVICE_KEY = Deno.env.get('BASE44_SERVICE_ROLE_KEY');
-    const serviceClient = createServiceRoleClient(APP_ID, SERVICE_KEY);
+    const serviceClient = createServiceRoleClient();
 
     for (let i = 0; i < documents.length; i++) {
         try {
