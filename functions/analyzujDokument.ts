@@ -32,133 +32,327 @@ Deno.serve(async (req) => {
         let llmParams = {};
 
         if (isImage) {
-            analysisPrompt = `DETAILNÁ VIZUÁLNA ANALÝZA OBRÁZKA MODULÁRNEHO DOMU
+            analysisPrompt = `KOMPLEXNÁ VIZUÁLNA ANALÝZA MODULÁRNEHO DOMU - VŠETKY KRITÉRIÁ
 
+════════════════════════════════════════════════════════════════
 KONTEXT DOKUMENTU:
 - Názov súboru: ${dok.nazov}
 - Aktuálny výrobca: ${dok.vyrobca}
 - Aktuálny model: ${dok.model_domu || 'neurčený'}
 - Podpriečinok: ${dok.podpriecinok || 'neurčený'}
+════════════════════════════════════════════════════════════════
 
-ÚLOHA 1 - IDENTIFIKÁCIA (KRITICKÉ):
-Urči SPRÁVNEHO výrobcu a PRESNÝ model z obrázka:
-- Výrobca: JAK Modules | Ticab house | Prosto House | Domki z Gór
-- Model: presný názov (napr. "Modul 50", "70 Barcelona", "Capri 51")
-- Typ obsahu: exterier | interier | podorys | ine
+HLAVNÁ ÚLOHA: Analyzuj VŠETKY aspekty obrázka podľa nižšie uvedených kritérií.
 
-ÚLOHA 2 - EXTERIER (ak typ=exterier):
-Fasáda:
-- Materiály: [drevo, omietka, obklad, sklo, kov, panel, ...]
-- Farby: [biela, sivá, hnedá, čierna, prírodná, ...]
-- Typ drevin (ak drevo): [smrek, borovica, céder, ...]
-- Povrchové úpravy: [matná, lesklá, štrukturovaná, ...]
+════════════════════════════════════════════════════════════════
+1️⃣ ZÁKLADNÁ IDENTIFIKÁCIA (POVINNÉ):
+════════════════════════════════════════════════════════════════
 
-Detaily:
-- Okná: typ, farba rámov
-- Dvere: typ, farba
-- Strecha: typ, materiál, farba, sklon
-- Terasa/balkón: áno/nie, materiál
-- Okolie: typ terénu, vegetácia
+A) Urči SPRÁVNEHO výrobcu:
+   - JAK Modules (pozor na logo, dizajn, typické pre nich)
+   - Ticab house (ich charakteristický dizajn)
+   - Prosto House (ich štýl)
+   - Domki z Gór (poľský výrobca)
 
-ÚLOHA 3 - INTERIER (ak typ=interier):
-- Materiály: podlahy, steny, stropy
-- Štýl: moderný, rustikálny, minimalistický, ...
-- Farby: dominantné farby
-- Miestnosť: obývačka, kuchyňa, spálňa, ...
-- Vybavenie: áno/nie
+B) Urči PRESNÝ model domu:
+   - Názov modelu (napr. "Modul 50", "70 Barcelona", "Capri 51")
+   - Hľadaj v texte, na fasáde, v kontexte
 
-ÚLOHA 4 - PÔDORYS (ak typ=podorys):
-- Je to pôdorys: áno/nie
-- Počet izieb: číslo
-- Celková plocha: m²
-- Rozmery: dĺžka x šírka
-- Miestnosti: zoznam s rozmermi
+C) Typ obsahu:
+   - exterier (vonkajší pohľad na dom)
+   - interier (vnútorné priestory)
+   - podorys (plán rozloženia miestností)
+   - ine (ostatné)
 
-ÚLOHA 5 - AI GENEROVANIE:
-- Popis pre chatbot (150-200 slov, slovensky)
-- Tagy (8-12 kľúčových slov)
-- Technická analýza (čo všetko vidíš na obrázku)`;
+════════════════════════════════════════════════════════════════
+2️⃣ AK JE TYP = EXTERIER - FASÁDA (detailne):
+════════════════════════════════════════════════════════════════
+
+A) MATERIÁLY FASÁDY (zoznam):
+   - drevo, omietka, obklad, sklo, kov, panel, composite, cement, tehla
+   - Uveď VŠETKY viditeľné materiály
+
+B) FARBY FASÁDY (zoznam):
+   - biela, sivá, hnedá, čierna, prírodná, tmavá, svetlá
+   - Uveď VŠETKY dominantné farby
+
+C) TYPY DREVÍN (ak je drevo):
+   - smrek, borovica, céder, dub, modřín, thermowood
+   - Len ak je viditeľné drevo na fasáde
+
+D) POVRCHOVÉ ÚPRAVY:
+   - matná, lesklá, štrukturovaná, hladká, hrubá, natieraná
+
+════════════════════════════════════════════════════════════════
+3️⃣ AK JE TYP = EXTERIER - DETAILY:
+════════════════════════════════════════════════════════════════
+
+A) OKNÁ:
+   - Typ: plastové / drevené / hliníkové / drevo-hliníkové
+   - Farba rámov: biela / čierna / hnedá / sivá / antracit
+
+B) DVERE:
+   - Typ: vstupné / posuvné / francúzske / presklené
+   - Farba: biela / čierna / hnedá / sivá / prírodná
+
+C) STRECHA:
+   - Typ: sedlová / pultová / plochá / valbová
+   - Materiál: plechová / škridla / šindel / bitumen
+   - Farba: čierna / hnedá / sivá / červená / zelená
+
+D) TERASA/BALKÓN:
+   - Materiál: drevo / kompozit / kameň / betón
+   - Prítomnosť: áno / nie
+
+E) OKOLIE A TERÉN:
+   - Typ terénu: rovný / svah / kopec / les
+   - Okolie: lúka / les / mesto / dedina / jazero
+
+F) SLNEČNÁ EXPOZÍCIA:
+   - juh / sever / východ / západ / neurčená
+   - Na základe tieňov a osvetlenia
+
+════════════════════════════════════════════════════════════════
+4️⃣ AK JE TYP = INTERIER:
+════════════════════════════════════════════════════════════════
+
+A) MATERIÁLY (zoznam):
+   - Podlahy: parkety / laminát / dlažba / vinyl / koberec
+   - Steny: sadrokartón / drevo / omietka / tapeta / obklad
+   - Stropy: sadrokartón / drevo / napínané
+
+B) ŠTÝL:
+   - moderný / rustikálny / minimalistický / škandinávsky / industriálny / klasický
+
+C) FARBY (zoznam):
+   - Dominantné farby interiéru
+
+D) MIESTNOSŤ:
+   - obývačka / kuchyňa / spálňa / kúpeľňa / chodba / WC
+
+════════════════════════════════════════════════════════════════
+5️⃣ AK JE TYP = PODORYS:
+════════════════════════════════════════════════════════════════
+
+A) Je to pôdorys? (áno/nie)
+
+B) Ak ÁNO, extrahuj:
+   - Počet izieb (číslo)
+   - Celková plocha (m²)
+   - Rozmery: dĺžka x šírka (m)
+   - Zoznam miestností s rozmermi
+   - Úžitková plocha
+   - Terasa/balkón plocha
+
+════════════════════════════════════════════════════════════════
+6️⃣ AI GENEROVANIE (POVINNÉ PRE VŠETKY):
+════════════════════════════════════════════════════════════════
+
+A) EXTRAHOVANÝ OBSAH (300-400 slov):
+   - Detailný popis pre AI chatbot
+   - Čo sa nachádza na obrázku
+   - Kľúčové vlastnosti
+   - Technické detaily
+   - MUSÍ obsahovať dostatok informácií pre chatbot
+
+B) AI GENEROVANÝ POPIS (50-80 slov):
+   - Krátky ale výstižný popis
+   - Pre zobrazenie v katalógu
+
+C) AI GENEROVANÉ TAGY (10-15 tagov):
+   - Kľúčové slová a frázy
+   - Zahrnúť: výrobca, model, typ, materiály, farby, štýl
+
+D) TECHNICKÁ ANALÝZA (200-300 slov):
+   - Čo PRESNE vidíš na obrázku
+   - Architektonické detaily
+   - Konštrukčné prvky
+   - Estetické prvky
+   - Technické špecifikácie ktoré je možné odhadnúť
+
+════════════════════════════════════════════════════════════════
+DÔLEŽITÉ POZNÁMKY:
+════════════════════════════════════════════════════════════════
+- Buď PRESNÝ a DETAILNÝ
+- Neodhadzuj prázdne polia - radšej nezaplň ako hádzať
+- Ak niečo NEVIDÍŠ alebo si NEISTÝ, použi null/[]
+- VŽDY vyplň required polia
+- Tagy musia byť v slovenčine
+- Technická analýza musí byť DETAILNÁ
+
+VÝSTUP MÁ BYŤ V SLOVENČINE!`;
 
             responseSchema = {
                 type: "object",
                 properties: {
                     extrahovaný_obsah: { 
                         type: "string",
-                        description: "Detailný popis pre chatbot, 150-200 slov"
+                        description: "Detailný popis pre chatbot, 300-400 slov, SLOVENSKY"
                     },
                     ai_generovany_popis: { 
                         type: "string",
-                        description: "Krátky popis 2-3 vety"
+                        description: "Krátky popis 50-80 slov, SLOVENSKY"
                     },
                     ai_generovane_tagy: { 
                         type: "array", 
                         items: { type: "string" },
-                        description: "8-12 relevantných tagov"
+                        description: "10-15 relevantných tagov v SLOVENČINE"
                     },
                     vizualna_analyza: {
                         type: "object",
                         properties: {
+                            // ZÁKLADNÁ IDENTIFIKÁCIA
                             spravny_vyrobca: { 
                                 type: "string",
-                                enum: ["JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"]
+                                enum: ["JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"],
+                                description: "KRITICKÉ: Správny výrobca podľa vizuálnej analýzy"
                             },
-                            spravny_model: { type: "string" },
+                            spravny_model: { 
+                                type: "string",
+                                description: "KRITICKÉ: Presný názov modelu"
+                            },
                             typ_obsahu: { 
                                 type: "string",
-                                enum: ["exterier", "interier", "podorys", "ine"]
+                                enum: ["exterier", "interier", "podorys", "ine"],
+                                description: "KRITICKÉ: Typ obsahu"
                             },
+                            
+                            // FASÁDA - MATERIÁLY
                             fasada_materialy: { 
                                 type: "array", 
-                                items: { type: "string" }
+                                items: { type: "string" },
+                                description: "VŠETKY viditeľné materiály fasády"
                             },
                             fasada_farby: { 
                                 type: "array", 
-                                items: { type: "string" }
+                                items: { type: "string" },
+                                description: "VŠETKY dominantné farby fasády"
                             },
                             fasada_typy_drevin: {
                                 type: "array",
-                                items: { type: "string" }
+                                items: { type: "string" },
+                                description: "Typy drevín ak je drevo viditeľné"
                             },
                             fasada_povrchove_upravy: {
                                 type: "array",
-                                items: { type: "string" }
+                                items: { type: "string" },
+                                description: "Povrchové úpravy fasády"
                             },
-                            okna_typ: { type: "string" },
-                            okna_farba: { type: "string" },
-                            dvere_typ: { type: "string" },
-                            dvere_farba: { type: "string" },
-                            strecha_typ: { type: "string" },
-                            strecha_material: { type: "string" },
-                            strecha_farba: { type: "string" },
+                            
+                            // EXTERIER DETAILY
+                            okna_typ: { 
+                                type: "string",
+                                description: "Typ okien: plastové/drevené/hliníkové/drevo-hliníkové"
+                            },
+                            okna_farba: { 
+                                type: "string",
+                                description: "Farba rámov okien"
+                            },
+                            dvere_typ: { 
+                                type: "string",
+                                description: "Typ dverí: vstupné/posuvné/francúzske/presklené"
+                            },
+                            dvere_farba: { 
+                                type: "string",
+                                description: "Farba dverí"
+                            },
+                            strecha_typ: { 
+                                type: "string",
+                                description: "Typ strechy: sedlová/pultová/plochá/valbová"
+                            },
+                            strecha_material: { 
+                                type: "string",
+                                description: "Materiál strechy: plechová/škridla/šindel/bitumen"
+                            },
+                            strecha_farba: { 
+                                type: "string",
+                                description: "Farba strechy"
+                            },
+                            
+                            // OKOLIE
+                            slnecna_expoziacia: {
+                                type: "string",
+                                description: "Slnečná expozícia podľa tieňov: juh/sever/východ/západ"
+                            },
+                            teren_okolie: {
+                                type: "object",
+                                properties: {
+                                    typ_terenu: { 
+                                        type: "string",
+                                        description: "rovný/svah/kopec/les"
+                                    },
+                                    okolie: { 
+                                        type: "array", 
+                                        items: { type: "string" },
+                                        description: "lúka/les/mesto/dedina/jazero/..."
+                                    }
+                                }
+                            },
+                            
+                            // INTERIER
                             interier_materialy: {
                                 type: "array",
-                                items: { type: "string" }
+                                items: { type: "string" },
+                                description: "Materiály interiéru: podlahy, steny, stropy"
                             },
+                            styl: { 
+                                type: "string",
+                                description: "Architektonický štýl"
+                            },
+                            farby: { 
+                                type: "array", 
+                                items: { type: "string" },
+                                description: "Dominantné farby"
+                            },
+                            
+                            // PÔDORYS
                             podorys_analyza: {
                                 type: "object",
                                 properties: {
-                                    je_podorys: { type: "boolean" },
-                                    pocet_izieb: { type: "number" },
-                                    uzitkova_plocha: { type: "string" },
+                                    je_podorys: { 
+                                        type: "boolean",
+                                        description: "Je to pôdorys?"
+                                    },
+                                    pocet_izieb: { 
+                                        type: "number",
+                                        description: "Počet izieb ak je pôdorys"
+                                    },
+                                    uzitkova_plocha: { 
+                                        type: "string",
+                                        description: "Úžitková plocha napr. '65 m²'"
+                                    },
                                     celkove_rozmery: {
                                         type: "object",
                                         properties: {
-                                            sirka: { type: "string" },
-                                            dlzka: { type: "string" }
+                                            sirka: { type: "string", description: "napr. '8 m'" },
+                                            dlzka: { type: "string", description: "napr. '12 m'" },
+                                            zastavana_plocha: { type: "string", description: "napr. '96 m²'" }
                                         }
                                     },
                                     miestnosti: {
                                         type: "array",
-                                        items: { type: "string" }
+                                        items: {
+                                            type: "object",
+                                            properties: {
+                                                nazov: { type: "string" },
+                                                rozmery: { type: "string" },
+                                                plocha: { type: "string" }
+                                            }
+                                        },
+                                        description: "Zoznam miestností s rozmermi"
+                                    },
+                                    terasa_balkon: {
+                                        type: "string",
+                                        description: "Plocha terasy/balkónu"
                                     }
                                 }
                             },
+                            
+                            // TECHNICKÁ ANALÝZA
                             technicka_analyza: { 
                                 type: "string",
-                                description: "Detailný technický popis toho čo vidíš"
-                            },
-                            styl: { type: "string" },
-                            farby: { type: "array", items: { type: "string" } }
+                                description: "DETAILNÝ technický popis 200-300 slov - ČO PRESNE VIDÍŠ, architektonické prvky, konštrukcia, materiály, detaily"
+                            }
                         },
                         required: ["spravny_vyrobca", "spravny_model", "typ_obsahu", "technicka_analyza"]
                     }
@@ -171,8 +365,9 @@ Detaily:
                 file_urls: [dok.subor_url],
                 response_json_schema: responseSchema
             };
+            
         } else if (isPDF || isDocument) {
-            // Pre PDF a dokumenty
+            // Pre PDF a dokumenty - zachované z pôvodnej verzie
             let fileContent = '';
             try {
                 const response = await fetch(dok.subor_url);
@@ -185,122 +380,13 @@ Detaily:
 
             analysisPrompt = `SMART ANALÝZA A EXTRAKCIA DÁT Z DOKUMENTU
 
-══════════════════════════════════════════════
 DOKUMENT:
 - Názov: ${dok.nazov}
 - Aktuálny typ: ${dok.typ}
 - Výrobca: ${dok.vyrobca}
-- Obsah (prvých 30000 znakov):
+- Obsah: ${fileContent}
 
-${fileContent}
-══════════════════════════════════════════════
-
-ÚLOHA 1 - PRESNÁ DETEKCIA TYPU:
-
-Analyzuj obsah a urči PRESNÝ typ dokumentu:
-
-A) **zmluva** - ak obsahuje:
-   ✓ Slová: "zmluva", "zmluvné strany", "článok", "bod"
-   ✓ Právne formulácie
-   ✓ Podpisy, pečiatky
-   ✓ Identifikácia zmluvných strán
-
-B) **faktúra** - ak obsahuje:
-   ✓ Slová: "faktúra", "invoice", "fa", "daňový doklad"
-   ✓ VS (variabilný symbol)
-   ✓ Suma, DPH, splatnosť
-   ✓ Dodávateľ, odberateľ
-   ✓ Položky s cenami
-
-C) **ponuka** - ak obsahuje:
-   ✓ Slová: "cenová ponuka", "ponúkame", "cena"
-   ✓ Zoznam produktov/služieb s cenami
-   ✓ Platnosť ponuky
-   ✓ Podmienky
-
-D) **objednávka** - ak obsahuje:
-   ✓ Slová: "objednávka", "objednávam"
-   ✓ Zoznam objednaných položiek
-   ✓ Množstvá, ceny
-   ✓ Termín dodania
-
-E) **cenník** - systematický zoznam cien
-
-F) **technická_špecifikácia** - technické parametre, normy
-
-G) **návod** - postup, kroky, inštrukcie
-
-H) **certifikát** - osvedčenie, certifikát kvality
-
-I) **FAQ** - často kladené otázky
-
-J) **blog** - článok, blog post
-
-K) **iné** - ak nepadá do vyššie uvedených
-
-══════════════════════════════════════════════
-ÚLOHA 2 - EXTRAKCIA KĽÚČOVÝCH DÁT:
-
-PRE ZMLUVU extrahuj:
-- cislo_zmluvy: "2024/123" (presný formát)
-- datum_podpisu: "2024-11-17" (ISO formát)
-- zmluvne_strany: ["Firma A, s.r.o., IČO: 12345678", "Firma B, a.s., IČO: 87654321"]
-- predmet_zmluvy: "stručný popis čo je predmetom zmluvy"
-- platnost_od: "2024-11-17"
-- platnost_do: "2025-11-17" (alebo null)
-
-PRE FAKTÚRU extrahuj:
-- cislo_faktury: "2024001234" (presné číslo)
-- datum_vystavenia: "2024-11-17"
-- datum_splatnosti: "2024-12-17"
-- dodavatel: "Názov firmy dodávateľa, IČO"
-- odberatel: "Názov firmy odberateľa, IČO"
-- suma_bez_dph: "1000.00 EUR"
-- dph: "200.00 EUR (20%)"
-- suma_s_dph: "1200.00 EUR"
-- polozky: ["Položka 1: 500 EUR", "Položka 2: 500 EUR"]
-
-PRE PONUKU extrahuj:
-- cislo_ponuky: "P-2024-001"
-- datum_ponuky: "2024-11-17"
-- platnost_do: "2024-12-17"
-- ponukane_produkty: ["Produkt A", "Produkt B", "Služba X"]
-- celkova_cena: "5000.00 EUR s DPH"
-
-PRE OBJEDNÁVKU extrahuj:
-- cislo_objednavky: "OBJ-2024-001"
-- datum_objednavky: "2024-11-17"
-- pozadovany_termin: "2024-12-01"
-- objednavatel: "Názov firmy"
-- objednane_polozky: ["Položka A: 10 ks", "Položka B: 5 ks"]
-- celkova_suma: "3000.00 EUR"
-
-PRE VŠETKY TYPY:
-- modely_domov: ["všetky zmienené modely domov"]
-- cenové_informácie: ["všetky zmienené ceny"]
-- technické_údaje: ["všetky technické parametre"]
-
-══════════════════════════════════════════════
-ÚLOHA 3 - AI GENEROVANIE:
-
-1. extrahovaný_obsah: Optimalizovaný text pre AI chatbot (300-500 slov)
-   - Súhrn dokumentu
-   - Kľúčové informácie
-   - Dôležité body
-   
-2. ai_generovany_popis: Krátky popis (2-3 vety)
-
-3. ai_generovane_tagy: 10-15 kľúčových slov/fráz
-
-4. zhrnutie: Ak dokument > 1000 slov, vytvor zhrnutie
-
-══════════════════════════════════════════════
-POZNÁMKY:
-- Buď PRESNÝ pri extrakcii čísel, dátumov a súm
-- Zachovaj formát čísel a mien
-- Extrahuj IČO, DIČ ak sú dostupné
-- Pri neurčitých dátach použi null
-- Všetky sumy uvádzaj s menou (EUR, CZK, ...)`;
+Analyzuj a extrahuj kľúčové informácie vrátane typu dokumentu, dát, cien, technických údajov.`;
 
             responseSchema = {
                 type: "object",
@@ -309,96 +395,16 @@ POZNÁMKY:
                         type: "string",
                         enum: ["cenník", "technická_špecifikácia", "návod", "certifikát", "FAQ", "blog", "zmluva", "faktúra", "ponuka", "objednávka", "iné"]
                     },
-                    extrahovaný_obsah: { 
-                        type: "string",
-                        description: "Optimalizovaný text pre chatbot, 300-500 slov"
-                    },
-                    ai_generovany_popis: { 
-                        type: "string",
-                        description: "Krátky popis 2-3 vety"
-                    },
-                    ai_generovane_tagy: { 
-                        type: "array", 
-                        items: { type: "string" },
-                        description: "10-15 relevantných tagov"
-                    },
-                    zhrnutie: { 
-                        type: "string",
-                        description: "Zhrnutie ak dokument dlhší ako 1000 slov"
-                    },
+                    extrahovaný_obsah: { type: "string" },
+                    ai_generovany_popis: { type: "string" },
+                    ai_generovane_tagy: { type: "array", items: { type: "string" } },
+                    zhrnutie: { type: "string" },
                     kľúčové_informácie: {
                         type: "object",
                         properties: {
-                            zmluva_info: {
-                                type: "object",
-                                properties: {
-                                    cislo_zmluvy: { type: "string" },
-                                    datum_podpisu: { type: "string" },
-                                    zmluvne_strany: { type: "array", items: { type: "string" } },
-                                    predmet_zmluvy: { type: "string" },
-                                    platnost_od: { type: "string" },
-                                    platnost_do: { type: "string" }
-                                }
-                            },
-                            faktura_info: {
-                                type: "object",
-                                properties: {
-                                    cislo_faktury: { type: "string" },
-                                    datum_vystavenia: { type: "string" },
-                                    datum_splatnosti: { type: "string" },
-                                    dodavatel: { type: "string" },
-                                    odberatel: { type: "string" },
-                                    suma_bez_dph: { type: "string" },
-                                    dph: { type: "string" },
-                                    suma_s_dph: { type: "string" },
-                                    polozky: { type: "array", items: { type: "string" } }
-                                }
-                            },
-                            ponuka_info: {
-                                type: "object",
-                                properties: {
-                                    cislo_ponuky: { type: "string" },
-                                    datum_ponuky: { type: "string" },
-                                    platnost_do: { type: "string" },
-                                    ponukane_produkty: { type: "array", items: { type: "string" } },
-                                    celkova_cena: { type: "string" }
-                                }
-                            },
-                            objednavka_info: {
-                                type: "object",
-                                properties: {
-                                    cislo_objednavky: { type: "string" },
-                                    datum_objednavky: { type: "string" },
-                                    pozadovany_termin: { type: "string" },
-                                    objednavatel: { type: "string" },
-                                    objednane_polozky: { type: "array", items: { type: "string" } },
-                                    celkova_suma: { type: "string" }
-                                }
-                            },
-                            modely_domov: { 
-                                type: "array", 
-                                items: { type: "string" },
-                                description: "Všetky zmienené modely domov"
-                            },
-                            cenové_informácie: { 
-                                type: "array", 
-                                items: { type: "string" },
-                                description: "Všetky zmienené ceny"
-                            },
-                            technické_údaje: {
-                                type: "array",
-                                items: { type: "string" },
-                                description: "Technické parametre"
-                            },
-                            rozmery: {
-                                type: "object",
-                                properties: {
-                                    sirka: { type: "string" },
-                                    dlzka: { type: "string" },
-                                    vyska: { type: "string" },
-                                    plocha: { type: "string" }
-                                }
-                            }
+                            modely_domov: { type: "array", items: { type: "string" } },
+                            cenové_informácie: { type: "array", items: { type: "string" } },
+                            technické_údaje: { type: "array", items: { type: "string" } }
                         }
                     }
                 },
