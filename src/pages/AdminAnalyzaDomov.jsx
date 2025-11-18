@@ -77,16 +77,27 @@ export default function AdminAnalyzaDomov() {
   }, []);
 
   const handleStartAnalysis = async () => {
+    if (dokumenty.length === 0) {
+      alert('Nie sú žiadne neanalyzované fotky pre vybraného výrobcu. Zmeňte filter alebo všetky fotky sú už analyzované.');
+      return;
+    }
+    
     try {
+      console.log('Starting analysis with filters:', filters);
       const response = await base44.functions.invoke('analyzujDomyBatch', {
         action: 'start',
         filters
       });
       
+      console.log('Analysis response:', response);
+      
       if (response.data.success) {
-        setBatchState({ status: 'running', total: response.data.total, current: 0 });
+        setBatchState({ status: 'running', total: response.data.total, current: 0, successful: [], failed: [] });
+      } else {
+        alert('Nepodarilo sa spustiť analýzu: ' + (response.data.message || 'Neznáma chyba'));
       }
     } catch (error) {
+      console.error('Analysis start error:', error);
       alert('Chyba pri spustení: ' + error.message);
     }
   };
