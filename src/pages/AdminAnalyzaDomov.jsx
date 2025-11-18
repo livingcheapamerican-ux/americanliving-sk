@@ -277,24 +277,30 @@ export default function AdminAnalyzaDomov() {
                       key={log.id + index}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className={`flex items-start gap-3 p-2 rounded ${
-                        log.type === 'success' ? 'bg-green-900/30' : 'bg-red-900/30'
+                      className={`flex items-start gap-3 p-3 rounded-lg border-l-4 ${
+                        log.type === 'success' 
+                          ? 'bg-green-900/30 border-green-500' 
+                          : 'bg-red-900/40 border-red-500'
                       }`}
                     >
                       {log.type === 'success' ? (
-                        <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
                       ) : (
-                        <XCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+                        <XCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
                       )}
                       <div className="flex-grow min-w-0">
-                        <p className={log.type === 'success' ? 'text-green-300' : 'text-red-300'}>
+                        <p className={`font-medium break-all ${log.type === 'success' ? 'text-green-300' : 'text-red-300'}`}>
                           {log.name}
                         </p>
                         {log.error && (
-                          <p className="text-red-400 text-xs mt-1">{log.error}</p>
+                          <div className="mt-2 bg-red-950/50 border border-red-700/50 rounded px-2 py-1.5">
+                            <p className="text-red-300 text-xs font-mono leading-relaxed">
+                              ⚠️ {log.error}
+                            </p>
+                          </div>
                         )}
                       </div>
-                      <span className="text-gray-500 text-xs flex-shrink-0">
+                      <span className="text-gray-500 text-xs flex-shrink-0 font-semibold">
                         #{index + 1}
                       </span>
                     </motion.div>
