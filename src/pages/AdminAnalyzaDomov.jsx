@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AlertCircle, Loader2, Brain, CheckCircle, XCircle, Play, Square, RefreshCw, Eye } from "lucide-react";
+import { AlertCircle, Loader2, Brain, CheckCircle, XCircle, Play, Square, RefreshCw, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function AdminAnalyzaDomov() {
   const [filters, setFilters] = useState({ vyrobca: 'Ticab house', model_domu: 'all' });
-  const [viewingDocument, setViewingDocument] = useState(null);
   const [batchState, setBatchState] = useState(null);
   const [pollingInterval, setPollingInterval] = useState(null);
+  const logEndRef = useRef(null);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -57,6 +56,13 @@ export default function AdminAnalyzaDomov() {
     }
   }, [batchState?.status]);
 
+  // Auto-scroll logu
+  useEffect(() => {
+    if (batchState?.status === 'running') {
+      logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [batchState?.successful?.length, batchState?.failed?.length]);
+
   // Iniciálna kontrola stavu
   useEffect(() => {
     const loadInitialState = async () => {
@@ -78,7 +84,6 @@ export default function AdminAnalyzaDomov() {
       });
       
       if (response.data.success) {
-        // Začať polling
         setBatchState({ status: 'running', total: response.data.total, current: 0 });
       }
     } catch (error) {
@@ -122,6 +127,12 @@ export default function AdminAnalyzaDomov() {
   const isRunning = batchState?.status === 'running';
   const isCompleted = batchState?.status === 'completed';
   const isStopped = batchState?.status === 'stopped';
+
+  // Kombinovaný log - successful aj failed
+  const allLogs = [
+    ...(batchState?.successful || []).map(s => ({ ...s, type: 'success' })),
+    ...(batchState?.failed || []).map(f => ({ ...f, type: 'error' }))
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 py-8 sm:py-12">
@@ -250,21 +261,67 @@ export default function AdminAnalyzaDomov() {
             </Card>
           )}
 
-          {/* Info */}
-          <Card className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-semibold text-blue-900 mb-2">Server-side analýza</h3>
-                <ul className="text-sm text-blue-800 space-y-1">
-                  <li>✅ Analýza beží na serveri v pozadí</li>
-                  <li>✅ Môžete zatvoriť stránku, vypnúť PC - analýza pokračuje</li>
-                  <li>✅ Pri návrate stav automaticky obnoví</li>
-                  <li>✅ Tlačidlo "Zastaviť" ukončí proces kedykoľvek</li>
-                </ul>
+          {/* Live Log */}
+          {batchState && allLogs.length > 0 && (
+            <Card className="p-6 border-0 shadow-lg bg-white/80 backdrop-blur">
+              <div className="flex items-center gap-2 mb-4">
+                <FileText className="w-5 h-5 text-purple-600" />
+                <h3 className="font-semibold text-lg">Live Log</h3>
+                {isRunning && <Loader2 className="w-4 h-4 animate-spin text-blue-500" />}
               </div>
-            </div>
-          </Card>
+
+              <div className="bg-gray-900 rounded-xl p-4 max-h-96 overflow-y-auto font-mono text-sm">
+                <div className="space-y-2">
+                  {allLogs.map((log, index) => (
+                    <motion.div
+                      key={log.id + index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className={`flex items-start gap-3 p-2 rounded ${
+                        log.type === 'success' ? 'bg-green-900/30' : 'bg-red-900/30'
+                      }`}
+                    >
+                      {log.type === 'success' ? (
+                        <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
+                      ) : (
+                        <XCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+                      )}
+                      <div className="flex-grow min-w-0">
+                        <p className={log.type === 'success' ? 'text-green-300' : 'text-red-300'}>
+                          {log.name}
+                        </p>
+                        {log.error && (
+                          <p className="text-red-400 text-xs mt-1">{log.error}</p>
+                        )}
+                      </div>
+                      <span className="text-gray-500 text-xs flex-shrink-0">
+                        #{index + 1}
+                      </span>
+                    </motion.div>
+                  ))}
+                  <div ref={logEndRef} />
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* Info */}
+          {!batchState && (
+            <Card className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-blue-900 mb-2">Server-side analýza</h3>
+                  <ul className="text-sm text-blue-800 space-y-1">
+                    <li>✅ Analýza beží na serveri v pozadí</li>
+                    <li>✅ Môžete zatvoriť stránku, vypnúť PC - analýza pokračuje</li>
+                    <li>✅ Pri návrate stav automaticky obnoví</li>
+                    <li>✅ Tlačidlo "Zastaviť" ukončí proces kedykoľvek</li>
+                  </ul>
+                </div>
+              </div>
+            </Card>
+          )}
         </motion.div>
       </div>
     </div>
