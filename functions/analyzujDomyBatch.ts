@@ -208,8 +208,9 @@ async function runBatchAnalysisInBackground(documents, userId) {
 
     // Označiť ako dokončené
     try {
-        const finalUser = await serviceClient.entities.User.filter({ id: userId });
-        const finalState = finalUser[0]?.[BATCH_STATE_KEY];
+        const finalUsers = await serviceClient.entities.User.list();
+        const finalUser = finalUsers.find(u => u.id === userId);
+        const finalState = finalUser?.[BATCH_STATE_KEY];
 
         if (finalState) {
             await serviceClient.entities.User.update(userId, {
@@ -219,12 +220,11 @@ async function runBatchAnalysisInBackground(documents, userId) {
                     completed_at: new Date().toISOString()
                 }
             });
+            console.log('🎉 Batch analysis completed successfully');
         }
     } catch (finalError) {
         console.error('Failed to mark as completed:', finalError);
     }
-
-    console.log('Batch analysis completed');
 }
 
 function generateAnalysisPrompt(dok) {
