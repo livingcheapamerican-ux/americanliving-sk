@@ -158,8 +158,9 @@ async function runBatchAnalysisInBackground(documents, userId) {
                 await serviceClient.entities.Dokument.update(doc.id, updateData);
 
                 // Aktualizovať stav - úspech
-                const updatedUser = await serviceClient.entities.User.filter({ id: userId });
-                const latestState = updatedUser[0]?.[BATCH_STATE_KEY] || currentState;
+                const users2 = await serviceClient.entities.User.list();
+                const latestUser = users2.find(u => u.id === userId);
+                const latestState = latestUser?.[BATCH_STATE_KEY] || currentState;
                 
                 await serviceClient.entities.User.update(userId, {
                     [BATCH_STATE_KEY]: {
@@ -171,6 +172,8 @@ async function runBatchAnalysisInBackground(documents, userId) {
                         }]
                     }
                 });
+                
+                console.log(`✅ Analyzed ${i + 1}/${documents.length}: ${doc.nazov}`);
 
                 // Delay medzi analýzami
                 await new Promise(resolve => setTimeout(resolve, 2000));
