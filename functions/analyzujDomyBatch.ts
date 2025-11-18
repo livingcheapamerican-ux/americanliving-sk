@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { createClientFromRequest, createServiceRoleClient } from 'npm:@base44/sdk@0.8.4';
 
 const BATCH_STATE_KEY = 'house_analysis_batch_state';
 
@@ -26,6 +26,13 @@ Deno.serve(async (req) => {
             }
 
             const documents = await base44.asServiceRole.entities.Dokument.filter(query);
+
+            if (documents.length === 0) {
+                return Response.json({
+                    success: false,
+                    message: 'No documents to analyze'
+                });
+            }
 
             // Uložiť stav analýzy do user data
             await base44.auth.updateMe({
@@ -65,9 +72,10 @@ Deno.serve(async (req) => {
 
         if (action === 'stop') {
             // Zastaviť analýzu
+            const currentState = user[BATCH_STATE_KEY] || {};
             await base44.auth.updateMe({
                 [BATCH_STATE_KEY]: {
-                    ...user[BATCH_STATE_KEY],
+                    ...currentState,
                     status: 'stopped',
                     stopped_at: new Date().toISOString()
                 }
@@ -99,115 +107,206 @@ Deno.serve(async (req) => {
     }
 });
 
-// Background processing function
+// Background processing function - beží na serveri nezávisle
 async function runBatchAnalysisInBackground(documents, userId) {
-    // Vytvoríme service role client pre background processing
-    const base44Url = Deno.env.get('BASE44_API_URL') || 'https://base44.app/api';
-    const appId = Deno.env.get('BASE44_APP_ID');
-    const serviceKey = Deno.env.get('BASE44_SERVICE_ROLE_KEY');
+    const serviceClient = createServiceRoleClient();
 
     for (let i = 0; i < documents.length; i++) {
-        // Kontrola či má pokračovať
-        const stateCheck = await fetch(`${base44Url}/apps/${appId}/entities/User/${userId}`, {
-            headers: { 'Authorization': `Bearer ${serviceKey}` }
-        });
-        const userData = await stateCheck.json();
-        const currentState = userData.data?.[BATCH_STATE_KEY];
-
-        if (!currentState || currentState.status === 'stopped') {
-            console.log('Analysis stopped by user');
-            break;
-        }
-
-        const doc = documents[i];
-
         try {
-            // Zavolať analyzujDokument funkciu
-            const response = await fetch(`${base44Url}/apps/${appId}/functions/analyzujDokument`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${serviceKey}`
-                },
-                body: JSON.stringify({ document_id: doc.id })
-            });
+            // Kontrola či má pokračovať - načíta user data
+            const userData = await serviceClient.entities.User.filter({ id: userId });
+            const currentState = userData[0]?.[BATCH_STATE_KEY];
 
-            const result = await response.json();
+            if (!currentState || currentState.status === 'stopped') {
+                console.log('Analysis stopped by user');
+                break;
+            }
 
-            // Aktualizovať stav - úspech
-            await fetch(`${base44Url}/apps/${appId}/entities/User/${userId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${serviceKey}`
-                },
-                body: JSON.stringify({
-                    data: {
-                        [BATCH_STATE_KEY]: {
-                            ...currentState,
-                            current: i + 1,
-                            successful: [...(currentState.successful || []), {
-                                id: doc.id,
-                                name: doc.nazov
-                            }]
-                        }
+            const doc = documents[i];
+
+            try {
+                // Zavolať analyzujDokument - používame InvokeLLM priamo
+                const result = await serviceClient.integrations.Core.InvokeLLM({
+                    prompt: generateAnalysisPrompt(doc),
+                    file_urls: [doc.subor_url],
+                    response_json_schema: getAnalysisSchema()
+                });
+
+                // Uložiť výsledky
+                const updateData = {
+                    extrahovaný_obsah: result.extrahovaný_obsah,
+                    ai_generovany_popis: result.ai_generovany_popis,
+                    ai_generovane_tagy: result.ai_generovane_tagy || [],
+                    vizualna_analyza: result.vizualna_analyza,
+                    analyzovaný: true,
+                    podrobna_analyza_datum: new Date().toISOString()
+                };
+
+                // Hash
+                if (result.extrahovaný_obsah) {
+                    const hash = await crypto.subtle.digest(
+                        'SHA-256',
+                        new TextEncoder().encode(result.extrahovaný_obsah.substring(0, 1000))
+                    );
+                    updateData.podobnost_hash = Array.from(new Uint8Array(hash))
+                        .map(b => b.toString(16).padStart(2, '0'))
+                        .join('')
+                        .substring(0, 32);
+                }
+
+                await serviceClient.entities.Dokument.update(doc.id, updateData);
+
+                // Aktualizovať stav - úspech
+                const updatedUser = await serviceClient.entities.User.filter({ id: userId });
+                const latestState = updatedUser[0]?.[BATCH_STATE_KEY] || currentState;
+                
+                await serviceClient.entities.User.update(userId, {
+                    [BATCH_STATE_KEY]: {
+                        ...latestState,
+                        current: i + 1,
+                        successful: [...(latestState.successful || []), {
+                            id: doc.id,
+                            name: doc.nazov
+                        }]
                     }
-                })
-            });
+                });
 
-            // Delay medzi analýzami
-            await new Promise(resolve => setTimeout(resolve, 2000));
+                // Delay medzi analýzami
+                await new Promise(resolve => setTimeout(resolve, 2000));
 
-        } catch (error) {
-            console.error(`Failed to analyze ${doc.nazov}:`, error);
+            } catch (error) {
+                console.error(`Failed to analyze ${doc.nazov}:`, error);
 
-            // Aktualizovať stav - chyba
-            await fetch(`${base44Url}/apps/${appId}/entities/User/${userId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${serviceKey}`
-                },
-                body: JSON.stringify({
-                    data: {
-                        [BATCH_STATE_KEY]: {
-                            ...currentState,
-                            current: i + 1,
-                            failed: [...(currentState.failed || []), {
-                                id: doc.id,
-                                name: doc.nazov,
-                                error: error.message
-                            }]
-                        }
+                // Aktualizovať stav - chyba
+                const updatedUser = await serviceClient.entities.User.filter({ id: userId });
+                const latestState = updatedUser[0]?.[BATCH_STATE_KEY] || currentState;
+
+                await serviceClient.entities.User.update(userId, {
+                    [BATCH_STATE_KEY]: {
+                        ...latestState,
+                        current: i + 1,
+                        failed: [...(latestState.failed || []), {
+                            id: doc.id,
+                            name: doc.nazov,
+                            error: error.message
+                        }]
                     }
-                })
-            });
+                });
+            }
+
+        } catch (stateError) {
+            console.error('State check/update error:', stateError);
+            break;
         }
     }
 
     // Označiť ako dokončené
-    const finalState = await fetch(`${base44Url}/apps/${appId}/entities/User/${userId}`, {
-        headers: { 'Authorization': `Bearer ${serviceKey}` }
-    });
-    const finalUserData = await finalState.json();
-    const finalBatchState = finalUserData.data?.[BATCH_STATE_KEY];
+    try {
+        const finalUser = await serviceClient.entities.User.filter({ id: userId });
+        const finalState = finalUser[0]?.[BATCH_STATE_KEY];
 
-    await fetch(`${base44Url}/apps/${appId}/entities/User/${userId}`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${serviceKey}`
-        },
-        body: JSON.stringify({
-            data: {
+        if (finalState) {
+            await serviceClient.entities.User.update(userId, {
                 [BATCH_STATE_KEY]: {
-                    ...finalBatchState,
+                    ...finalState,
                     status: 'completed',
                     completed_at: new Date().toISOString()
                 }
-            }
-        })
-    });
+            });
+        }
+    } catch (finalError) {
+        console.error('Failed to mark as completed:', finalError);
+    }
 
     console.log('Batch analysis completed');
+}
+
+function generateAnalysisPrompt(dok) {
+    return `KOMPLEXNÁ VIZUÁLNA ANALÝZA MODULÁRNEHO DOMU - VŠETKY KRITÉRIÁ
+
+════════════════════════════════════════════════════════════════
+KONTEXT DOKUMENTU:
+- Názov súboru: ${dok.nazov}
+- Aktuálny výrobca: ${dok.vyrobca}
+- Aktuálny model: ${dok.model_domu || 'neurčený'}
+- Podpriečinok: ${dok.podpriecinok || 'neurčený'}
+════════════════════════════════════════════════════════════════
+
+HLAVNÁ ÚLOHA: Analyzuj VŠETKY aspekty obrázka.
+
+1️⃣ ZÁKLADNÁ IDENTIFIKÁCIA:
+- Urči SPRÁVNEHO výrobcu (JAK Modules / Ticab house / Prosto House / Domki z Gór)
+- Urči PRESNÝ model domu
+- Typ obsahu: exterier / interier / podorys / ine
+
+2️⃣ FASÁDA (ak exterier):
+- Materiály fasády (všetky)
+- Farby fasády (všetky)
+- Typy drevín (ak drevo)
+- Povrchové úpravy
+
+3️⃣ DETAILY (ak exterier):
+- Okná: typ, farba
+- Dvere: typ, farba
+- Strecha: typ, materiál, farba
+- Terén a okolie
+- Slnečná expozícia
+
+4️⃣ AI GENEROVANIE (POVINNÉ):
+- Extrahovaný obsah (300-400 slov pre chatbot)
+- AI popis (50-80 slov)
+- AI tagy (10-15 tagov v slovenčine)
+- Technická analýza (200-300 slov detailne)
+
+Buď PRESNÝ a DETAILNÝ. Výstup v SLOVENČINE!`;
+}
+
+function getAnalysisSchema() {
+    return {
+        type: "object",
+        properties: {
+            extrahovaný_obsah: { type: "string" },
+            ai_generovany_popis: { type: "string" },
+            ai_generovane_tagy: { type: "array", items: { type: "string" } },
+            vizualna_analyza: {
+                type: "object",
+                properties: {
+                    spravny_vyrobca: { 
+                        type: "string",
+                        enum: ["JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"]
+                    },
+                    spravny_model: { type: "string" },
+                    typ_obsahu: { 
+                        type: "string",
+                        enum: ["exterier", "interier", "podorys", "ine"]
+                    },
+                    fasada_materialy: { type: "array", items: { type: "string" } },
+                    fasada_farby: { type: "array", items: { type: "string" } },
+                    fasada_typy_drevin: { type: "array", items: { type: "string" } },
+                    fasada_povrchove_upravy: { type: "array", items: { type: "string" } },
+                    okna_typ: { type: "string" },
+                    okna_farba: { type: "string" },
+                    dvere_typ: { type: "string" },
+                    dvere_farba: { type: "string" },
+                    strecha_typ: { type: "string" },
+                    strecha_material: { type: "string" },
+                    strecha_farba: { type: "string" },
+                    slnecna_expoziacia: { type: "string" },
+                    teren_okolie: {
+                        type: "object",
+                        properties: {
+                            typ_terenu: { type: "string" },
+                            okolie: { type: "array", items: { type: "string" } }
+                        }
+                    },
+                    interier_materialy: { type: "array", items: { type: "string" } },
+                    styl: { type: "string" },
+                    farby: { type: "array", items: { type: "string" } },
+                    technicka_analyza: { type: "string" }
+                },
+                required: ["spravny_vyrobca", "spravny_model", "typ_obsahu", "technicka_analyza"]
+            }
+        },
+        required: ["extrahovaný_obsah", "ai_generovany_popis", "ai_generovane_tagy", "vizualna_analyza"]
+    };
 }
