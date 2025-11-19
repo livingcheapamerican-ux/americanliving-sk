@@ -120,6 +120,21 @@ export default function AdminAnalyzaDomov() {
     }
   };
 
+  const handleStopAllProcesses = async () => {
+    if (!confirm('Naozaj chcete zastaviť VŠETKY bežiace procesy v pozadí?')) {
+      return;
+    }
+    try {
+      const response = await base44.functions.invoke('stopAllProcesses');
+      if (response.data.success) {
+        alert(response.data.message);
+        setBatchState(prev => prev ? { ...prev, status: 'stopped' } : null);
+      }
+    } catch (error) {
+      alert('Chyba pri zastavení: ' + error.message);
+    }
+  };
+
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
   if (!isAdmin) {
