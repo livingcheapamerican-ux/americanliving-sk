@@ -203,7 +203,7 @@ export default function AdminAnalyzaDomov() {
                 </Select>
               </div>
             </div>
-            <div className="mt-4 flex gap-3">
+            <div className="mt-4 flex flex-wrap gap-3">
               <Button 
                 onClick={handleStartAnalysis} 
                 disabled={isRunning || dokumenty.length === 0}
@@ -224,6 +224,14 @@ export default function AdminAnalyzaDomov() {
                   Reset
                 </Button>
               )}
+              <Button 
+                onClick={handleStopAllProcesses} 
+                variant="outline"
+                className="border-red-500 text-red-600 hover:bg-red-50"
+              >
+                <AlertCircle className="w-4 h-4 mr-2" />
+                Zastaviť všetky procesy
+              </Button>
             </div>
           </Card>
 
