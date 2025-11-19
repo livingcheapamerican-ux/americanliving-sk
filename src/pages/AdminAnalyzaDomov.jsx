@@ -232,6 +232,29 @@ export default function AdminAnalyzaDomov() {
                 <AlertCircle className="w-4 h-4 mr-2" />
                 Zastaviť všetky procesy
               </Button>
+              <Button 
+                onClick={async () => {
+                  try {
+                    const response = await base44.functions.invoke('exportProjectCode');
+                    const blob = new Blob([JSON.stringify(response.data, null, 2)], { type: 'application/json' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `american-living-export-${Date.now()}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    a.remove();
+                  } catch (error) {
+                    alert('Chyba pri exporte: ' + error.message);
+                  }
+                }}
+                variant="outline"
+                className="border-blue-500 text-blue-600 hover:bg-blue-50"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                Export projektu (JSON)
+              </Button>
             </div>
           </Card>
 
