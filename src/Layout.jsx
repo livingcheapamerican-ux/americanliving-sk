@@ -32,6 +32,7 @@ export default function Layout({ children }) {
     { name: "Katalóg domov", path: createPageUrl("Katalog"), icon: Grid3x3 },
     { name: "Galéria realizácií", path: createPageUrl("GaleriaRealizacii"), icon: Home },
     { name: "Konfigurátor", path: createPageUrl("InteraktivnyKonfigurator"), icon: Settings },
+    { name: "3D Studio", path: createPageUrl("Konfigurator3D"), icon: Settings },
     { name: "O nás", path: createPageUrl("ONas"), icon: Info },
     { name: "Kontakt", path: createPageUrl("Kontakt"), icon: Phone },
   ];
