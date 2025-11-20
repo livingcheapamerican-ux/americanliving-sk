@@ -16,6 +16,7 @@ import InteraktivnyKonfigurator from './pages/InteraktivnyKonfigurator';
 import GaleriaRealizacii from './pages/GaleriaRealizacii';
 import AdminSpravaDomov from './pages/AdminSpravaDomov';
 import AdminAnalyzaDomov from './pages/AdminAnalyzaDomov';
+import Konfigurator3D from './pages/Konfigurator3D';
 import __Layout from './Layout.jsx';
 
 
@@ -38,6 +39,7 @@ export const PAGES = {
     "GaleriaRealizacii": GaleriaRealizacii,
     "AdminSpravaDomov": AdminSpravaDomov,
     "AdminAnalyzaDomov": AdminAnalyzaDomov,
+    "Konfigurator3D": Konfigurator3D,
 }
 
 export const pagesConfig = {
