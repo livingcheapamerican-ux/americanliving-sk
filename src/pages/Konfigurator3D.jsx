@@ -39,20 +39,30 @@ export default function Konfigurator3D() {
 
   // Inicializácia Three.js scény
   useEffect(() => {
-    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    if (!canvas || canvas.width === 0 || canvas.height === 0) return;
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xe5e5e5);
     sceneRef.current = scene;
 
-    const camera = new THREE.PerspectiveCamera(50, canvasRef.current.clientWidth / canvasRef.current.clientHeight, 0.1, 1000);
+    const width = canvas.clientWidth || 800;
+    const height = canvas.clientHeight || 600;
+
+    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
     camera.position.set(0, 8, 20);
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
 
-    const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, antialias: true, alpha: true });
-    renderer.setSize(canvasRef.current.clientWidth, canvasRef.current.clientHeight);
+    const renderer = new THREE.WebGLRenderer({ 
+      canvas: canvas, 
+      antialias: true, 
+      alpha: true,
+      preserveDrawingBuffer: true
+    });
+    renderer.setSize(width, height);
     renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     rendererRef.current = renderer;
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -76,16 +86,20 @@ export default function Konfigurator3D() {
     scene.add(houseGroup);
 
     const animate = () => {
+      if (!renderer || !scene || !camera) return;
       animationIdRef.current = requestAnimationFrame(animate);
       renderer.render(scene, camera);
     };
     animate();
 
     const handleResize = () => {
-      if (!canvasRef.current) return;
-      camera.aspect = canvasRef.current.clientWidth / canvasRef.current.clientHeight;
+      const canvas = canvasRef.current;
+      if (!canvas || !camera || !renderer) return;
+      const width = canvas.clientWidth || 800;
+      const height = canvas.clientHeight || 600;
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      renderer.setSize(canvasRef.current.clientWidth, canvasRef.current.clientHeight);
+      renderer.setSize(width, height);
     };
     window.addEventListener('resize', handleResize);
 
@@ -93,14 +107,22 @@ export default function Konfigurator3D() {
       window.removeEventListener('resize', handleResize);
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
+        animationIdRef.current = null;
       }
-      renderer.dispose();
+      if (renderer) {
+        renderer.dispose();
+        renderer.forceContextLoss();
+      }
+      if (scene) {
+        scene.clear();
+      }
     };
   }, []);
 
   // Aktualizácia domu pri zmene parametrov
   useEffect(() => {
-    if (!houseGroupRef.current) return;
+    const houseGroup = houseGroupRef.current;
+    if (!houseGroup || !sceneRef.current) return;
 
     while (houseGroupRef.current.children.length > 0) {
       houseGroupRef.current.remove(houseGroupRef.current.children[0]);
