@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -551,21 +550,6 @@ export default function DetailDomu() {
 
             {/* CTA Buttons */}
             <div className="space-y-3 sticky top-24">
-              {isProstoHouse ? (
-                <Link to={`${createPageUrl("KonfiguratorProstoHouse")}?id=${dom.id}`}>
-                  <Button size="lg" className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold text-lg py-6">
-                    <Settings className="mr-2 w-5 h-5" />
-                    Spustiť konfigurátor Prosto House
-                  </Button>
-                </Link>
-              ) : isTicabhouse ? (
-                <Link to={`${createPageUrl("KonfiguratorTicabhouse")}?id=${dom.id}`}>
-                  <Button size="lg" className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold text-lg py-6">
-                    <Settings className="mr-2 w-5 h-5" />
-                    Spustiť konfigurátor {dom.vyrobca}
-                  </Button>
-                </Link>
-              ) : null}
               <Link to={createPageUrl("Kontakt")}>
                 <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-lg py-6">
                   <Mail className="mr-2 w-5 h-5" />
