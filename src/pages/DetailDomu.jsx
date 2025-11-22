@@ -216,28 +216,7 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Price Calculator - len pre Ticab house a Prosto House */}
-            {!isJAKModules && (
-              <>
-                {isTicabhouse ? (
-                  <PriceCalculatorTicabhouse 
-                    dom={dom} 
-                    onPriceChange={(price) => {
-                      setCalculatedPrice(price);
-                      setShowCalculator(price !== (dom.zakladna_cena || 0));
-                    }}
-                  />
-                ) : isProstoHouse ? (
-                  <PriceCalculator 
-                    dom={dom} 
-                    onPriceChange={(price) => {
-                      setCalculatedPrice(price);
-                      setShowCalculator(price !== (dom.zakladna_cena || 0));
-                    }}
-                  />
-                ) : null}
-              </>
-            )}
+
           </motion.div>
 
           {/* Pravý stĺpec - Informácie */}
