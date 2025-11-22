@@ -308,6 +308,9 @@ export default function DetailDomu() {
                     <div>
                       <p className="text-sm text-gray-500">Energetická trieda</p>
                       <p className="text-xl font-bold text-primary">A0</p>
+                      {isTicabhouse && (
+                        <p className="text-xs text-gray-500 mt-1">príplatková možnosť</p>
+                      )}
                     </div>
                   </div>
                 )}
