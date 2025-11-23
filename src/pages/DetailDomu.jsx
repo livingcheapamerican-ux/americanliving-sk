@@ -362,7 +362,7 @@ export default function DetailDomu() {
                     <p className="font-semibold text-gray-800 mb-1">Konštrukcia a izolácia:</p>
                     <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
                       <li>Rám zo suchého reziva ošetreného bio-roztokom</li>
-                      <li>Izolácia stien 85mm-150mm (bazaltová vlna)</li>
+                      <li>Izolácia stien 85mm-350mm (bazaltová vlna) podľa typu stavby rodinný dom v en. triede A0 / rekreačná stavba</li>
                       <li>Izolácia podlahy a stropu 200mm stlačených na 150mm</li>
                       <li>Konštrukcia certifikovaná na prepravu po celej EÚ</li>
                     </ul>
