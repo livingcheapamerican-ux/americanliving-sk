@@ -594,17 +594,25 @@ export default function AdminUploadFotiekDomov() {
                         <div className="flex-grow space-y-3">
                           <div>
                             <p className="font-semibold text-gray-800">{file.name}</p>
-                            {assignment.dom ? (
-                              <Badge className="bg-green-100 text-green-800 mt-1">
-                                <CheckCircle className="w-3 h-3 mr-1" />
-                                Priradené
-                              </Badge>
-                            ) : (
-                              <Badge className="bg-red-100 text-red-800 mt-1">
-                                <AlertCircle className="w-3 h-3 mr-1" />
-                                Nebol detegovaný dom
-                              </Badge>
-                            )}
+                            <div className="flex gap-2 mt-1">
+                              {assignment.dom ? (
+                                <Badge className="bg-green-100 text-green-800">
+                                  <CheckCircle className="w-3 h-3 mr-1" />
+                                  Priradené
+                                </Badge>
+                              ) : (
+                                <Badge className="bg-red-100 text-red-800">
+                                  <AlertCircle className="w-3 h-3 mr-1" />
+                                  Nebol detegovaný dom
+                                </Badge>
+                              )}
+                              {assignment.isDuplicate && (
+                                <Badge className="bg-orange-100 text-orange-800">
+                                  <AlertCircle className="w-3 h-3 mr-1" />
+                                  Duplicita
+                                </Badge>
+                              )}
+                            </div>
                           </div>
 
                           <div className="grid sm:grid-cols-2 gap-3">
