@@ -13,6 +13,7 @@ export default function AdminMigraciaObrazkov() {
   const [logs, setLogs] = useState([]);
   const [isMigrating, setIsMigrating] = useState(false);
   const [stats, setStats] = useState({ total: 0, success: 0, failed: 0 });
+  const [shouldStop, setShouldStop] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -48,6 +49,7 @@ export default function AdminMigraciaObrazkov() {
     setProgress(0);
     setLogs([]);
     setStats({ total: 0, success: 0, failed: 0 });
+    setShouldStop(false);
 
     const externalUrls = [
       'americanliving.sk',
@@ -101,6 +103,11 @@ export default function AdminMigraciaObrazkov() {
 
     // Migrácia po jednom
     for (let i = 0; i < imagesToMigrate.length; i++) {
+      if (shouldStop) {
+        addLog('Migrácia zastavená používateľom', 'error');
+        break;
+      }
+
       const item = imagesToMigrate[i];
       setCurrentImage(`${item.domNazov} - ${item.field}`);
       setProgress(Math.round(((i + 1) / imagesToMigrate.length) * 100));
@@ -136,10 +143,18 @@ export default function AdminMigraciaObrazkov() {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
 
-    addLog('Migrácia dokončená!', 'success');
+    if (!shouldStop) {
+      addLog('Migrácia dokončená!', 'success');
+    }
     setCurrentImage('');
     setIsMigrating(false);
+    setShouldStop(false);
     queryClient.invalidateQueries({ queryKey: ['domy-migracia'] });
+  };
+
+  const stopMigration = () => {
+    setShouldStop(true);
+    addLog('Zastavenie migrácie...', 'error');
   };
 
   if (isLoading) {
@@ -213,6 +228,15 @@ export default function AdminMigraciaObrazkov() {
                   </AlertDescription>
                 </Alert>
               )}
+
+              <Button
+                variant="destructive"
+                onClick={stopMigration}
+                disabled={shouldStop}
+                className="w-full"
+              >
+                {shouldStop ? 'Zastavuje sa...' : 'Zastaviť migráciu'}
+              </Button>
             </div>
           </Card>
         )}
