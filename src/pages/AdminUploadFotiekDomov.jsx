@@ -45,13 +45,42 @@ export default function AdminUploadFotiekDomov() {
     // Prvé slovo v názve súboru (do prvej medzery alebo podčiarkovníka)
     const firstWord = nameWithoutExt.split(/[\s_-]/)[0].toLowerCase();
     
-    // Skús nájsť dom, ktorého názov začína týmto slovom alebo obsahuje toto slovo
+    // Skús nájsť dom Ticab house, ktorého nazov obsahuje prvé slovo
     const matchedDom = domy.find(dom => {
+      // Iba Ticab house domy
+      if (dom.vyrobca !== 'Ticab house') return false;
+      
       const domName = dom.nazov.toLowerCase();
-      return domName.includes(firstWord) || firstWord.includes(domName.split(' ')[0].toLowerCase());
+      // Skontroluj, či názov domu obsahuje prvé slovo zo súboru
+      return domName.includes(firstWord);
     });
 
     return matchedDom || null;
+  };
+
+  // Funkcia na kontrolu, či súbor už existuje v galérii/hlavnom obrázku domu
+  const checkIfDuplicate = (file, domId, type) => {
+    const dom = domy.find(d => d.id === domId);
+    if (!dom) return false;
+
+    const fileName = file.name.toLowerCase();
+    
+    // Kontrola hlavného obrázka
+    if (dom.hlavny_obrazok && dom.hlavny_obrazok.toLowerCase().includes(fileName.replace(/\.(jpg|jpeg|png|webp|gif)$/i, ''))) {
+      return true;
+    }
+
+    // Kontrola základnej konfigurácie
+    if (dom.zakladna_konfiguracia_obrazok && dom.zakladna_konfiguracia_obrazok.toLowerCase().includes(fileName.replace(/\.(jpg|jpeg|png|webp|gif)$/i, ''))) {
+      return true;
+    }
+
+    // Kontrola galérie
+    if (dom.galeria && dom.galeria.length > 0) {
+      return dom.galeria.some(url => url.toLowerCase().includes(fileName.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '')));
+    }
+
+    return false;
   };
 
   const handleFileSelect = (e) => {
