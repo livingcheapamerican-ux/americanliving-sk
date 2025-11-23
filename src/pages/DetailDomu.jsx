@@ -6,7 +6,7 @@ import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle } from "lucide-react";
+import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle, Boxes, Grid2x2 } from "lucide-react";
 import { motion } from "framer-motion";
 import PriceCalculator from "../components/PriceCalculator";
 import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
@@ -285,7 +285,7 @@ export default function DetailDomu() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Home className="w-6 h-6 text-accent" />
+                  <Boxes className="w-6 h-6 text-accent" />
                   <div>
                     <p className="text-sm text-gray-500">Typ domu</p>
                     <p className="text-xl font-bold text-primary">
@@ -295,7 +295,7 @@ export default function DetailDomu() {
                 </div>
                 {dom.pocet_izieb && (
                   <div className="flex items-center gap-3">
-                    <Home className="w-6 h-6 text-primary" />
+                    <Grid2x2 className="w-6 h-6 text-primary" />
                     <div>
                       <p className="text-sm text-gray-500">Počet izieb</p>
                       <p className="text-xl font-bold text-primary">{dom.pocet_izieb}</p>
