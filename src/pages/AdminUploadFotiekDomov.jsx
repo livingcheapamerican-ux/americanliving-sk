@@ -613,6 +613,9 @@ export default function AdminUploadFotiekDomov() {
                                 <Home className="w-3 h-3 inline mr-1" />
                                 {selectedDom.nazov} ({selectedDom.vyrobca})
                               </p>
+                              <p className="text-xs text-blue-600 mt-1">
+                                ID: {selectedDom.id}
+                              </p>
                             </div>
                           )}
                         </div>
