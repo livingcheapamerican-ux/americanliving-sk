@@ -431,7 +431,7 @@ export default function DetailDomu() {
                 <div className="mt-6 pt-6 border-t border-green-300">
                   <h4 className="font-bold text-red-700 mb-3 flex items-center gap-2">
                     <AlertCircle className="w-5 h-5" />
-                    DÔLEŽITÉ - Cena nezahŕňa:
+                    DÔLEŽITÉ - Cena základného modelu bez nastavenia v konfigurátore nezahŕňa:
                   </h4>
                   <ul className="list-disc list-inside text-gray-700 space-y-2 text-sm ml-2">
                     <li><strong>Dodanie a transport</strong> - možnosť objednať v konfigurátore</li>
