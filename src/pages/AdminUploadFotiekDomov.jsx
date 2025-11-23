@@ -38,14 +38,17 @@ export default function AdminUploadFotiekDomov() {
     }
   });
 
-  // Funkcia na detekciu domu z názvu súboru
+  // Funkcia na detekciu domu z názvu súboru - prvé slovo definuje dom
   const detectDomFromFilename = (filename) => {
-    const nameWithoutExt = filename.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '').toLowerCase();
+    const nameWithoutExt = filename.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '');
     
-    // Skús nájsť dom podľa názvu
+    // Prvé slovo v názve súboru (do prvej medzery alebo podčiarkovníka)
+    const firstWord = nameWithoutExt.split(/[\s_-]/)[0].toLowerCase();
+    
+    // Skús nájsť dom, ktorého názov začína týmto slovom alebo obsahuje toto slovo
     const matchedDom = domy.find(dom => {
       const domName = dom.nazov.toLowerCase();
-      return nameWithoutExt.includes(domName) || domName.includes(nameWithoutExt);
+      return domName.includes(firstWord) || firstWord.includes(domName.split(' ')[0].toLowerCase());
     });
 
     return matchedDom || null;
@@ -443,23 +446,77 @@ export default function AdminUploadFotiekDomov() {
                 <h3 className="text-lg font-semibold text-gray-800">
                   Priradenie fotiek ({selectedFiles.length})
                 </h3>
-                <Button
-                  onClick={handleSubmit}
-                  disabled={uploading}
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
-                >
-                  {uploading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Nahrávam {uploadProgress.current}/{uploadProgress.total}
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="w-4 h-4 mr-2" />
-                      Nahrať do databázy
-                    </>
-                  )}
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={uploading}
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
+                  >
+                    {uploading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Nahrávam {uploadProgress.current}/{uploadProgress.total}
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="w-4 h-4 mr-2" />
+                        Nahrať do databázy
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Bulk Actions */}
+              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h4 className="text-sm font-semibold text-blue-900 mb-3">Hromadné akcie:</h4>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      const newAssignments = {...fileAssignments};
+                      selectedFiles.forEach(file => {
+                        if (newAssignments[file.name]) {
+                          newAssignments[file.name].type = 'galeria';
+                        }
+                      });
+                      setFileAssignments(newAssignments);
+                    }}
+                  >
+                    Všetky → Galéria
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      const newAssignments = {...fileAssignments};
+                      selectedFiles.forEach(file => {
+                        if (newAssignments[file.name]) {
+                          newAssignments[file.name].type = 'zakladna_konfiguracia';
+                        }
+                      });
+                      setFileAssignments(newAssignments);
+                    }}
+                  >
+                    Všetky → Základná konfigurácia
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      const newAssignments = {...fileAssignments};
+                      selectedFiles.forEach(file => {
+                        if (newAssignments[file.name]) {
+                          newAssignments[file.name].type = 'hlavny_obrazok';
+                        }
+                      });
+                      setFileAssignments(newAssignments);
+                    }}
+                  >
+                    Všetky → Hlavný obrázok
+                  </Button>
+                </div>
               </div>
 
               <div className="grid gap-4">
