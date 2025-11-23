@@ -94,10 +94,12 @@ export default function AdminUploadFotiekDomov() {
     const assignments = {};
     imageFiles.forEach(file => {
       const detectedDom = detectDomFromFilename(file.name);
+      const isDuplicate = detectedDom ? checkIfDuplicate(file, detectedDom.id, 'galeria') : false;
       assignments[file.name] = {
         dom: detectedDom?.id || null,
         type: 'galeria', // Default: pridať do galérie
-        preview: URL.createObjectURL(file)
+        preview: URL.createObjectURL(file),
+        isDuplicate: isDuplicate
       };
     });
 
