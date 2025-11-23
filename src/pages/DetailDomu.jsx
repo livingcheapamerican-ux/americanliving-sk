@@ -371,7 +371,7 @@ export default function DetailDomu() {
 
             {/* Štandardná výbava pre Ticabhouse */}
             {isTicabhouse && (
-              <div className="grid lg:grid-cols-2 gap-6">
+              <div className="space-y-6">
                 {/* Obrázok základnej konfigurácie */}
                 {dom.zakladna_konfiguracia_obrazok && (
                   <Card className="p-6 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
