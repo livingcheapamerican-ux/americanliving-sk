@@ -458,7 +458,7 @@ export default function DetailDomu() {
                   <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
                     <p className="text-sm text-blue-800">
                       <strong>Výhoda modulárnej konštrukcie:</strong> Dom prichádza plne dokončený na nákladnom aute. 
-                      Pomocou žeriavu sa vyloží, namontuje na základy, pripojaé komunikácie a môžete sa nasťahovať! 
+                      Pomocou žeriavu sa vyloží, namontuje na základy, pripojí na komunikácie a môžete sa nasťahovať! 
                       Ideálne pre rodiny aj seniorov hľadajúcich dom mimo mesta.
                     </p>
                   </div>
