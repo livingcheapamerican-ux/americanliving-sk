@@ -45,16 +45,21 @@ export default function AdminUploadFotiekDomov() {
     // Prvé slovo v názve súboru (do prvej medzery alebo podčiarkovníka)
     const firstWord = nameWithoutExt.split(/[\s_-]/)[0].toLowerCase();
     
-    // Skús nájsť dom Ticab house, ktorého nazov obsahuje prvé slovo
+    console.log('Detekujem dom pre súbor:', filename);
+    console.log('Prvé slovo:', firstWord);
+    
+    // Skús nájsť dom, ktorého názov obsahuje prvé slovo zo súboru
     const matchedDom = domy.find(dom => {
-      // Iba Ticab house domy
-      if (dom.vyrobca !== 'Ticab house') return false;
-      
       const domName = dom.nazov.toLowerCase();
-      // Skontroluj, či názov domu obsahuje prvé slovo zo súboru
-      return domName.includes(firstWord);
+      const modelWord = domName.split(/[\s,]/)[1]; // Druhé slovo je zvyčajne názov modelu (napr. "Model VIENNA")
+      
+      console.log('Porovnávam s domom:', domName, '| Model:', modelWord);
+      
+      // Skontroluj, či druhé slovo z názvu domu (model) obsahuje prvé slovo zo súboru
+      return modelWord && modelWord.includes(firstWord);
     });
 
+    console.log('Nájdený dom:', matchedDom?.nazov || 'žiadny');
     return matchedDom || null;
   };
 
