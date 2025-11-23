@@ -16,6 +16,7 @@ export default function DetailDomu() {
   const urlParams = new URLSearchParams(window.location.search);
   const domId = urlParams.get('id');
   const domSlug = urlParams.get('slug');
+  const returnUrl = urlParams.get('return') || createPageUrl("Katalog");
   const [selectedImage, setSelectedImage] = useState(0);
   const [calculatedPrice, setCalculatedPrice] = useState(0);
   const [showCalculator, setShowCalculator] = useState(false);
@@ -124,7 +125,7 @@ export default function DetailDomu() {
       {/* Back Button */}
       <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-4">
-          <Link to={createPageUrl("Katalog")}>
+          <Link to={returnUrl}>
             <Button variant="ghost" className="text-primary hover:text-primary/80">
               <ArrowLeft className="mr-2 w-4 h-4" />
               Späť do katalógu

@@ -1,8 +1,7 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -15,17 +14,52 @@ import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Squar
 import { motion } from "framer-motion";
 
 export default function Katalog() {
-  const [kategoriaFilter, setKategoriaFilter] = useState("vsetky");
-  const [vyrobcaFilter, setVyrobcaFilter] = useState("vsetci");
-  const [typFilter, setTypFilter] = useState("vsetky");
-  const [plocharozsah, setPlocharozsah] = useState([18, 200]);
-  const [hladanie, setHladanie] = useState("");
-  const [cenoveRozpatie, setCenoveRozpatie] = useState([15000, 200000]);
-  const [pocetIziebRozpatie, setPocetIziebRozpatie] = useState([1, 8]);
-  const [zoradenie, setZoradenie] = useState("poradie");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+
+  const [kategoriaFilter, setKategoriaFilter] = useState(searchParams.get("kategoria") || "vsetky");
+  const [vyrobcaFilter, setVyrobcaFilter] = useState(searchParams.get("vyrobca") || "vsetci");
+  const [typFilter, setTypFilter] = useState(searchParams.get("typ") || "vsetky");
+  const [plocharozsah, setPlocharozsah] = useState([
+    parseInt(searchParams.get("plocha_min")) || 18,
+    parseInt(searchParams.get("plocha_max")) || 200
+  ]);
+  const [hladanie, setHladanie] = useState(searchParams.get("hladanie") || "");
+  const [cenoveRozpatie, setCenoveRozpatie] = useState([
+    parseInt(searchParams.get("cena_min")) || 15000,
+    parseInt(searchParams.get("cena_max")) || 200000
+  ]);
+  const [pocetIziebRozpatie, setPocetIziebRozpatie] = useState([
+    parseInt(searchParams.get("izby_min")) || 1,
+    parseInt(searchParams.get("izby_max")) || 8
+  ]);
+  const [zoradenie, setZoradenie] = useState(searchParams.get("zoradenie") || "poradie");
   const [vybraneNaSrovnanie, setVybraneNaSrovnanie] = useState([]);
 
   const queryClient = useQueryClient();
+
+  // Synchronizovať filtre s URL
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (kategoriaFilter !== "vsetky") params.set("kategoria", kategoriaFilter);
+    if (vyrobcaFilter !== "vsetci") params.set("vyrobca", vyrobcaFilter);
+    if (typFilter !== "vsetky") params.set("typ", typFilter);
+    if (plocharozsah[0] !== 18) params.set("plocha_min", plocharozsah[0].toString());
+    if (plocharozsah[1] !== 200) params.set("plocha_max", plocharozsah[1].toString());
+    if (hladanie) params.set("hladanie", hladanie);
+    if (cenoveRozpatie[0] !== 15000) params.set("cena_min", cenoveRozpatie[0].toString());
+    if (cenoveRozpatie[1] !== 200000) params.set("cena_max", cenoveRozpatie[1].toString());
+    if (pocetIziebRozpatie[0] !== 1) params.set("izby_min", pocetIziebRozpatie[0].toString());
+    if (pocetIziebRozpatie[1] !== 8) params.set("izby_max", pocetIziebRozpatie[1].toString());
+    if (zoradenie !== "poradie") params.set("zoradenie", zoradenie);
+
+    const newSearch = params.toString();
+    const currentSearch = location.search.substring(1);
+    if (newSearch !== currentSearch) {
+      navigate(`${location.pathname}${newSearch ? `?${newSearch}` : ""}`, { replace: true });
+    }
+  }, [kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, hladanie, cenoveRozpatie, pocetIziebRozpatie, zoradenie]);
 
   const { data: domy = [], isLoading } = useQuery({
     queryKey: ['domy-katalog'],
@@ -336,7 +370,7 @@ export default function Katalog() {
 
                       <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white ${jeVybrany ? 'ring-2 ring-primary' : ''}`}>
                         <div className="relative h-56 overflow-hidden">
-                          <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
+                          <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
                             <img
                             src={dom.hlavny_obrazok}
                             alt={dom.nazov}
@@ -380,7 +414,7 @@ export default function Katalog() {
                         
                         <div className="p-5">
                           <div className="text-sm text-gray-500 mb-2">{dom.vyrobca}</div>
-                          <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
+                          <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
                             <h3 className="text-xl font-bold text-primary mb-3 group-hover:text-secondary transition-colors">
                               {dom.nazov}
                             </h3>
@@ -420,7 +454,7 @@ export default function Katalog() {
                                 {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                               </p>
                             </div>
-                            <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
+                            <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
                               <Button size="sm" className="bg-primary hover:bg-primary/90 group-hover:bg-secondary">
                                 Detail
                                 <ArrowRight className="ml-1 w-4 h-4" />
