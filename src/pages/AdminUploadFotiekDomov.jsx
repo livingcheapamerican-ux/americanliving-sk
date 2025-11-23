@@ -58,31 +58,6 @@ export default function AdminUploadFotiekDomov() {
     return matchedDom || null;
   };
 
-  // Funkcia na kontrolu, či súbor už existuje v galérii/hlavnom obrázku domu
-  const checkIfDuplicate = (file, domId, type) => {
-    const dom = domy.find(d => d.id === domId);
-    if (!dom) return false;
-
-    const fileName = file.name.toLowerCase();
-    
-    // Kontrola hlavného obrázka
-    if (dom.hlavny_obrazok && dom.hlavny_obrazok.toLowerCase().includes(fileName.replace(/\.(jpg|jpeg|png|webp|gif)$/i, ''))) {
-      return true;
-    }
-
-    // Kontrola základnej konfigurácie
-    if (dom.zakladna_konfiguracia_obrazok && dom.zakladna_konfiguracia_obrazok.toLowerCase().includes(fileName.replace(/\.(jpg|jpeg|png|webp|gif)$/i, ''))) {
-      return true;
-    }
-
-    // Kontrola galérie
-    if (dom.galeria && dom.galeria.length > 0) {
-      return dom.galeria.some(url => url.toLowerCase().includes(fileName.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '')));
-    }
-
-    return false;
-  };
-
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
     const imageFiles = files.filter(file => 
@@ -94,12 +69,10 @@ export default function AdminUploadFotiekDomov() {
     const assignments = {};
     imageFiles.forEach(file => {
       const detectedDom = detectDomFromFilename(file.name);
-      const isDuplicate = detectedDom ? checkIfDuplicate(file, detectedDom.id, 'galeria') : false;
       assignments[file.name] = {
         dom: detectedDom?.id || null,
         type: 'galeria', // Default: pridať do galérie
-        preview: URL.createObjectURL(file),
-        isDuplicate: isDuplicate
+        preview: URL.createObjectURL(file)
       };
     });
 
@@ -121,12 +94,10 @@ export default function AdminUploadFotiekDomov() {
     const assignments = {};
     imageFiles.forEach(file => {
       const detectedDom = detectDomFromFilename(file.name);
-      const isDuplicate = detectedDom ? checkIfDuplicate(file, detectedDom.id, 'galeria') : false;
       assignments[file.name] = {
         dom: detectedDom?.id || null,
         type: 'galeria',
-        preview: URL.createObjectURL(file),
-        isDuplicate: isDuplicate
+        preview: URL.createObjectURL(file)
       };
     });
 
@@ -135,28 +106,13 @@ export default function AdminUploadFotiekDomov() {
   };
 
   const updateAssignment = (filename, field, value) => {
-    setFileAssignments(prev => {
-      const newAssignments = {
-        ...prev,
-        [filename]: {
-          ...prev[filename],
-          [field]: value
-        }
-      };
-      
-      // Ak sa zmenil dom alebo type, prekontroluj duplicitu
-      if (field === 'dom' || field === 'type') {
-        const file = selectedFiles.find(f => f.name === filename);
-        const domId = field === 'dom' ? value : prev[filename]?.dom;
-        const type = field === 'type' ? value : prev[filename]?.type;
-        
-        if (file && domId) {
-          newAssignments[filename].isDuplicate = checkIfDuplicate(file, domId, type);
-        }
+    setFileAssignments(prev => ({
+      ...prev,
+      [filename]: {
+        ...prev[filename],
+        [field]: value
       }
-      
-      return newAssignments;
-    });
+    }));
   };
 
   const handleDeleteImage = async (domId, imageType, imageUrl = null) => {
@@ -594,25 +550,17 @@ export default function AdminUploadFotiekDomov() {
                         <div className="flex-grow space-y-3">
                           <div>
                             <p className="font-semibold text-gray-800">{file.name}</p>
-                            <div className="flex gap-2 mt-1">
-                              {assignment.dom ? (
-                                <Badge className="bg-green-100 text-green-800">
-                                  <CheckCircle className="w-3 h-3 mr-1" />
-                                  Priradené
-                                </Badge>
-                              ) : (
-                                <Badge className="bg-red-100 text-red-800">
-                                  <AlertCircle className="w-3 h-3 mr-1" />
-                                  Nebol detegovaný dom
-                                </Badge>
-                              )}
-                              {assignment.isDuplicate && (
-                                <Badge className="bg-orange-100 text-orange-800">
-                                  <AlertCircle className="w-3 h-3 mr-1" />
-                                  Duplicita
-                                </Badge>
-                              )}
-                            </div>
+                            {assignment.dom ? (
+                              <Badge className="bg-green-100 text-green-800 mt-1">
+                                <CheckCircle className="w-3 h-3 mr-1" />
+                                Priradené
+                              </Badge>
+                            ) : (
+                              <Badge className="bg-red-100 text-red-800 mt-1">
+                                <AlertCircle className="w-3 h-3 mr-1" />
+                                Nebol detegovaný dom
+                              </Badge>
+                            )}
                           </div>
 
                           <div className="grid sm:grid-cols-2 gap-3">
