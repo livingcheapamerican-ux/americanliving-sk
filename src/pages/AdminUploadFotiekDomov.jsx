@@ -1,23 +1,18 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Upload, Home, CheckCircle, AlertCircle, Loader2, X, Image as ImageIcon, Trash2, Eye } from "lucide-react";
+import { Upload, AlertCircle, CheckCircle, Loader2, X, Trash2, Image as ImageIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function AdminUploadFotiekDomov() {
+  const [selectedDomId, setSelectedDomId] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
-  const [fileAssignments, setFileAssignments] = useState({});
   const [uploadResults, setUploadResults] = useState(null);
-  const folderInputRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [selectedDomForDelete, setSelectedDomForDelete] = useState(null);
-  const [deleting, setDeleting] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -38,85 +33,114 @@ export default function AdminUploadFotiekDomov() {
     }
   });
 
-  // Funkcia na detekciu domu z názvu súboru - nový jednoduchší prístup
-  const detectDomFromFilename = (filename) => {
-    const nameWithoutExt = filename.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '');
-    
-    // Prvé slovo v názve súboru (do prvej medzery alebo podčiarkovníka)
-    const firstWord = nameWithoutExt.split(/[\s_-]/)[0].toLowerCase();
-    
-    // Nájdi dom, ktorý obsahuje prvé slovo súboru v názve
-    // Priorita: hľadaj len v domoch s konkrétnymi modelovými názvami (nie všeobecné)
-    const matchedDom = domy.find(dom => {
-      const domName = dom.nazov.toLowerCase();
-      
-      // Vylúč domy s "fotky" alebo "konfigurácie" v názve - to sú všeobecné zberné entity
-      if (domName.includes('fotky') || domName.includes('konfiguráci')) {
-        return false;
-      }
-      
-      // Jednoducho skontroluj, či názov domu obsahuje prvé slovo zo súboru
-      return domName.includes(firstWord);
-    });
-
-    return matchedDom || null;
-  };
-
-  const handleFileSelect = (e) => {
+  const handleFilesSelect = (e) => {
     const files = Array.from(e.target.files);
     const imageFiles = files.filter(file => 
       file.type.startsWith('image/') || 
       /\.(jpg|jpeg|png|webp|gif)$/i.test(file.name)
     );
-
-    // Automatická detekcia priradenia
-    const assignments = {};
-    imageFiles.forEach(file => {
-      const detectedDom = detectDomFromFilename(file.name);
-      assignments[file.name] = {
-        dom: detectedDom?.id || null,
-        type: 'galeria', // Default: pridať do galérie
-        preview: URL.createObjectURL(file)
-      };
-    });
-
-    setSelectedFiles(imageFiles);
-    setFileAssignments(assignments);
+    
+    const filesWithPreviews = imageFiles.map(file => ({
+      file,
+      preview: URL.createObjectURL(file),
+      type: 'galeria'
+    }));
+    
+    setSelectedFiles(prev => [...prev, ...filesWithPreviews]);
     e.target.value = '';
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    setIsDragging(false);
-
     const files = Array.from(e.dataTransfer.files);
     const imageFiles = files.filter(file => 
       file.type.startsWith('image/') || 
       /\.(jpg|jpeg|png|webp|gif)$/i.test(file.name)
     );
-
-    const assignments = {};
-    imageFiles.forEach(file => {
-      const detectedDom = detectDomFromFilename(file.name);
-      assignments[file.name] = {
-        dom: detectedDom?.id || null,
-        type: 'galeria',
-        preview: URL.createObjectURL(file)
-      };
-    });
-
-    setSelectedFiles(imageFiles);
-    setFileAssignments(assignments);
+    
+    const filesWithPreviews = imageFiles.map(file => ({
+      file,
+      preview: URL.createObjectURL(file),
+      type: 'galeria'
+    }));
+    
+    setSelectedFiles(prev => [...prev, ...filesWithPreviews]);
   };
 
-  const updateAssignment = (filename, field, value) => {
-    setFileAssignments(prev => ({
-      ...prev,
-      [filename]: {
-        ...prev[filename],
-        [field]: value
+  const removeFile = (index) => {
+    setSelectedFiles(prev => {
+      const newFiles = [...prev];
+      URL.revokeObjectURL(newFiles[index].preview);
+      newFiles.splice(index, 1);
+      return newFiles;
+    });
+  };
+
+  const updateFileType = (index, type) => {
+    setSelectedFiles(prev => {
+      const newFiles = [...prev];
+      newFiles[index].type = type;
+      return newFiles;
+    });
+  };
+
+  const handleUpload = async () => {
+    if (!selectedDomId) {
+      alert("Vyberte dom");
+      return;
+    }
+    if (selectedFiles.length === 0) {
+      alert("Vyberte fotky");
+      return;
+    }
+
+    const dom = domy.find(d => d.id === selectedDomId);
+    if (!dom) return;
+
+    setUploading(true);
+    setUploadProgress({ current: 0, total: selectedFiles.length });
+
+    const results = { successful: [], failed: [] };
+    const uploadedUrls = [];
+
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const { file, type } = selectedFiles[i];
+      
+      try {
+        const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+        uploadedUrls.push({ url: uploadResponse.file_url, type });
+        results.successful.push({ name: file.name, type });
+        setUploadProgress({ current: i + 1, total: selectedFiles.length });
+      } catch (error) {
+        results.failed.push({ name: file.name, error: error.message });
+        setUploadProgress({ current: i + 1, total: selectedFiles.length });
       }
-    }));
+    }
+
+    // Aktualizuj dom
+    try {
+      const updateData = {};
+      
+      const hlavnyUrl = uploadedUrls.find(u => u.type === 'hlavny_obrazok')?.url;
+      const zakladnaUrl = uploadedUrls.find(u => u.type === 'zakladna_konfiguracia')?.url;
+      const galeriaUrls = uploadedUrls.filter(u => u.type === 'galeria').map(u => u.url);
+
+      if (hlavnyUrl) updateData.hlavny_obrazok = hlavnyUrl;
+      if (zakladnaUrl) updateData.zakladna_konfiguracia_obrazok = zakladnaUrl;
+      if (galeriaUrls.length > 0) {
+        updateData.galeria = [...(dom.galeria || []), ...galeriaUrls];
+      }
+
+      if (Object.keys(updateData).length > 0) {
+        await updateDomMutation.mutateAsync({ domId: dom.id, data: updateData });
+      }
+    } catch (error) {
+      alert(`Chyba pri aktualizácii domu: ${error.message}`);
+    }
+
+    setUploadResults(results);
+    setUploading(false);
+    setSelectedFiles([]);
   };
 
   const handleDeleteImage = async (domId, imageType, imageUrl = null) => {
@@ -131,7 +155,6 @@ export default function AdminUploadFotiekDomov() {
 
     if (!window.confirm(confirmMsg)) return;
 
-    setDeleting(true);
     try {
       const updateData = {};
       
@@ -144,149 +167,11 @@ export default function AdminUploadFotiekDomov() {
         updateData.galeria = newGaleria;
       }
 
-      await updateDomMutation.mutateAsync({
-        domId: dom.id,
-        data: updateData
-      });
-
+      await updateDomMutation.mutateAsync({ domId: dom.id, data: updateData });
       alert('Fotka bola úspešne vymazaná');
     } catch (error) {
       alert(`Chyba pri vymazávaní: ${error.message}`);
-    } finally {
-      setDeleting(false);
     }
-  };
-
-  const handleDeleteAllGallery = async (domId) => {
-    const dom = domy.find(d => d.id === domId);
-    if (!dom || !dom.galeria || dom.galeria.length === 0) return;
-
-    if (!window.confirm(`Naozaj chcete vymazať všetkých ${dom.galeria.length} fotiek z galérie?`)) return;
-
-    setDeleting(true);
-    try {
-      await updateDomMutation.mutateAsync({
-        domId: dom.id,
-        data: { galeria: [] }
-      });
-
-      alert('Všetky fotky z galérie boli vymazané');
-    } catch (error) {
-      alert(`Chyba pri vymazávaní: ${error.message}`);
-    } finally {
-      setDeleting(false);
-    }
-  };
-
-  const handleSubmit = async () => {
-    if (selectedFiles.length === 0) {
-      alert("Vyberte aspoň jednu fotku");
-      return;
-    }
-
-    // Skontroluj, či všetky fotky majú priradený dom
-    const unassigned = selectedFiles.filter(file => !fileAssignments[file.name]?.dom);
-    if (unassigned.length > 0) {
-      alert(`${unassigned.length} fotiek nemá priradený dom. Priraďte všetkým fotkám dom.`);
-      return;
-    }
-
-    setUploading(true);
-    setUploadProgress({ current: 0, total: selectedFiles.length });
-
-    const results = {
-      successful: [],
-      failed: []
-    };
-
-    // Zoskupiť súbory podľa domu pre optimalizáciu
-    const filesByDom = {};
-    selectedFiles.forEach(file => {
-      const assignment = fileAssignments[file.name];
-      const domId = assignment.dom;
-      if (!filesByDom[domId]) {
-        filesByDom[domId] = { hlavny: null, galeria: [] };
-      }
-      if (assignment.type === 'hlavny_obrazok') {
-        filesByDom[domId].hlavny = file;
-      } else {
-        filesByDom[domId].galeria.push(file);
-      }
-    });
-
-    let processedCount = 0;
-
-    // Spracuj každý dom
-    for (const [domId, files] of Object.entries(filesByDom)) {
-      const dom = domy.find(d => d.id === domId);
-      const uploadedUrls = [];
-
-      try {
-        // Upload všetkých fotiek pre tento dom naraz
-        const allFiles = [files.hlavny, ...files.galeria].filter(Boolean);
-        
-        for (const file of allFiles) {
-          try {
-            const uploadResponse = await base44.integrations.Core.UploadFile({ file });
-            uploadedUrls.push({ file, url: uploadResponse.file_url });
-            processedCount++;
-            setUploadProgress({ current: processedCount, total: selectedFiles.length });
-          } catch (error) {
-            results.failed.push({
-              name: file.name,
-              error: error.message
-            });
-            processedCount++;
-            setUploadProgress({ current: processedCount, total: selectedFiles.length });
-          }
-        }
-
-        // Aktualizuj dom s všetkými URL naraz
-        const updateData = {};
-        const hlavnyUrl = uploadedUrls.find(u => u.file === files.hlavny)?.url;
-        const galeriaUrls = uploadedUrls.filter(u => files.galeria.includes(u.file)).map(u => u.url);
-
-        if (hlavnyUrl) {
-          updateData.hlavny_obrazok = hlavnyUrl;
-        }
-        if (galeriaUrls.length > 0) {
-          updateData.galeria = [...(dom.galeria || []), ...galeriaUrls];
-        }
-
-        if (Object.keys(updateData).length > 0) {
-          await updateDomMutation.mutateAsync({
-            domId: dom.id,
-            data: updateData
-          });
-        }
-
-        // Pridaj úspešné výsledky
-        uploadedUrls.forEach(({ file }) => {
-          const assignment = fileAssignments[file.name];
-          results.successful.push({
-            name: file.name,
-            dom: dom.nazov,
-            type: assignment.type
-          });
-        });
-
-      } catch (error) {
-        // Ak zlyhá aktualizácia domu
-        [files.hlavny, ...files.galeria].filter(Boolean).forEach(file => {
-          if (!results.failed.find(r => r.name === file.name)) {
-            results.failed.push({
-              name: file.name,
-              error: `Chyba pri aktualizácii domu: ${error.message}`
-            });
-          }
-        });
-      }
-    }
-
-    setUploadResults(results);
-    setUploading(false);
-    setSelectedFiles([]);
-    setFileAssignments({});
   };
 
   const isAdmin = user?.role === 'admin';
@@ -304,13 +189,12 @@ export default function AdminUploadFotiekDomov() {
     );
   }
 
+  const selectedDom = domy.find(d => d.id === selectedDomId);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 py-8">
-      <div className="container mx-auto px-4 max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
+      <div className="container mx-auto px-4 max-w-5xl">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           {/* Header */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-3">
@@ -318,37 +202,16 @@ export default function AdminUploadFotiekDomov() {
                 <ImageIcon className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">
-                  Upload fotiek domov
-                </h1>
-                <p className="text-sm text-gray-600 mt-1">Automatické priradenie fotiek k domom podľa názvu súboru</p>
+                <h1 className="text-3xl font-bold text-gray-900">Upload fotiek domov</h1>
+                <p className="text-sm text-gray-600 mt-1">Vyberte dom a nahrajte fotky</p>
               </div>
             </div>
-
-            <Card className="p-4 border-0 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-sm">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                <div className="text-sm text-blue-900">
-                  <p className="font-semibold mb-1">💡 Ako to funguje:</p>
-                  <p className="text-blue-800 opacity-90">
-                    1. Nahrajte priečinok s fotkami domov<br/>
-                    2. Systém automaticky priradí fotky k domom podľa názvu súboru<br/>
-                    3. Upravte priradenia a vyberte, či je to hlavný obrázok alebo galéria<br/>
-                    4. Nahrajte fotky do databázy
-                  </p>
-                </div>
-              </div>
-            </Card>
           </div>
 
           {/* Upload Results */}
           {uploadResults && (
             <AnimatePresence>
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
+              <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
                 <Card className="p-6 mb-6 border-0 shadow-lg bg-white">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
@@ -365,16 +228,7 @@ export default function AdminUploadFotiekDomov() {
                       <div className="bg-green-50 border border-green-200 rounded-xl p-4">
                         <div className="flex items-center gap-2 mb-2">
                           <CheckCircle className="w-5 h-5 text-green-600" />
-                          <span className="font-semibold text-green-900">
-                            Úspešne: {uploadResults.successful.length}
-                          </span>
-                        </div>
-                        <div className="text-sm text-green-800 space-y-1">
-                          {uploadResults.successful.map((item, i) => (
-                            <div key={i}>
-                              ✓ {item.name} → {item.dom} ({item.type === 'hlavny_obrazok' ? 'Hlavný obrázok' : 'Galéria'})
-                            </div>
-                          ))}
+                          <span className="font-semibold text-green-900">Úspešne: {uploadResults.successful.length}</span>
                         </div>
                       </div>
                     )}
@@ -383,15 +237,11 @@ export default function AdminUploadFotiekDomov() {
                       <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                         <div className="flex items-center gap-2 mb-2">
                           <AlertCircle className="w-5 h-5 text-red-600" />
-                          <span className="font-semibold text-red-900">
-                            Chybné: {uploadResults.failed.length}
-                          </span>
+                          <span className="font-semibold text-red-900">Chybné: {uploadResults.failed.length}</span>
                         </div>
                         <div className="text-sm text-red-800 space-y-1">
                           {uploadResults.failed.map((item, i) => (
-                            <div key={i}>
-                              ✗ {item.name}: {item.error}
-                            </div>
+                            <div key={i}>✗ {item.name}: {item.error}</div>
                           ))}
                         </div>
                       </div>
@@ -402,232 +252,126 @@ export default function AdminUploadFotiekDomov() {
             </AnimatePresence>
           )}
 
-          {/* Upload Zone */}
+          {/* Select Dom */}
           <Card className="p-6 mb-6 border-0 shadow-xl bg-white">
-            <div
-              onDrop={handleDrop}
-              onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-              onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
-              className={`border-2 border-dashed rounded-2xl p-10 text-center transition-all ${
-                isDragging 
-                  ? 'border-blue-500 bg-blue-50' 
-                  : 'border-blue-300 bg-blue-50/30'
-              }`}
-            >
-              <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center">
-                <ImageIcon className="w-8 h-8 text-white" />
-              </div>
-              <p className="text-base font-medium text-gray-700 mb-2">
-                Pretiahnite priečinok s fotkami sem
-              </p>
-              <p className="text-sm text-gray-500 mb-6">
-                alebo kliknite na tlačidlo nižšie
-              </p>
-              
-              <input
-                ref={folderInputRef}
-                type="file"
-                onChange={handleFileSelect}
-                multiple
-                webkitdirectory=""
-                directory=""
-                accept="image/*"
-                className="hidden"
-                disabled={uploading}
-              />
-              <Button
-                type="button"
-                onClick={() => folderInputRef.current?.click()}
-                disabled={uploading}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
-              >
-                <Upload className="w-4 h-4 mr-2" />
-                Vybrať priečinok s fotkami
-              </Button>
-            </div>
+            <label className="block text-sm font-semibold text-gray-700 mb-3">
+              1. Vyberte dom *
+            </label>
+            <Select value={selectedDomId || ''} onValueChange={setSelectedDomId}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Vyberte dom..." />
+              </SelectTrigger>
+              <SelectContent>
+                {domy
+                  .filter(dom => !dom.nazov.toLowerCase().includes('fotky') && !dom.nazov.toLowerCase().includes('konfiguráci'))
+                  .map(dom => (
+                    <SelectItem key={dom.id} value={dom.id}>
+                      {dom.nazov} - {dom.vyrobca}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
           </Card>
 
-          {/* File List with Assignments */}
+          {/* Upload Zone */}
+          {selectedDomId && (
+            <Card className="p-6 mb-6 border-0 shadow-xl bg-white">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                2. Nahrajte fotky *
+              </label>
+              <div
+                onDrop={handleDrop}
+                onDragOver={(e) => e.preventDefault()}
+                className="border-2 border-dashed border-blue-300 rounded-2xl p-10 text-center bg-blue-50/30 hover:bg-blue-50 transition-all"
+              >
+                <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center">
+                  <ImageIcon className="w-8 h-8 text-white" />
+                </div>
+                <p className="text-base font-medium text-gray-700 mb-2">Pretiahnite fotky sem</p>
+                <p className="text-sm text-gray-500 mb-6">alebo</p>
+                <input
+                  type="file"
+                  onChange={handleFilesSelect}
+                  multiple
+                  accept="image/*"
+                  className="hidden"
+                  id="file-input"
+                  disabled={uploading}
+                />
+                <label htmlFor="file-input">
+                  <Button type="button" asChild disabled={uploading}>
+                    <span className="cursor-pointer">
+                      <Upload className="w-4 h-4 mr-2" />
+                      Vyberte fotky
+                    </span>
+                  </Button>
+                </label>
+              </div>
+            </Card>
+          )}
+
+          {/* Selected Files */}
           {selectedFiles.length > 0 && (
             <Card className="p-6 mb-6 border-0 shadow-xl bg-white">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-800">
-                  Priradenie fotiek ({selectedFiles.length})
+                  Vybrané fotky ({selectedFiles.length})
                 </h3>
-                <div className="flex gap-2">
-                  <Button
-                    onClick={handleSubmit}
-                    disabled={uploading}
-                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
-                  >
-                    {uploading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Nahrávam {uploadProgress.current}/{uploadProgress.total}
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="w-4 h-4 mr-2" />
-                        Nahrať do databázy
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </div>
-
-              {/* Bulk Actions */}
-              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <h4 className="text-sm font-semibold text-blue-900 mb-3">Hromadné akcie:</h4>
-                <div className="flex flex-wrap gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => {
-                      const newAssignments = {...fileAssignments};
-                      selectedFiles.forEach(file => {
-                        if (newAssignments[file.name]) {
-                          newAssignments[file.name].type = 'galeria';
-                        }
-                      });
-                      setFileAssignments(newAssignments);
-                    }}
-                  >
-                    Všetky → Galéria
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => {
-                      const newAssignments = {...fileAssignments};
-                      selectedFiles.forEach(file => {
-                        if (newAssignments[file.name]) {
-                          newAssignments[file.name].type = 'zakladna_konfiguracia';
-                        }
-                      });
-                      setFileAssignments(newAssignments);
-                    }}
-                  >
-                    Všetky → Základná konfigurácia
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => {
-                      const newAssignments = {...fileAssignments};
-                      selectedFiles.forEach(file => {
-                        if (newAssignments[file.name]) {
-                          newAssignments[file.name].type = 'hlavny_obrazok';
-                        }
-                      });
-                      setFileAssignments(newAssignments);
-                    }}
-                  >
-                    Všetky → Hlavný obrázok
-                  </Button>
-                </div>
+                <Button
+                  onClick={handleUpload}
+                  disabled={uploading}
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
+                >
+                  {uploading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Nahrávam {uploadProgress.current}/{uploadProgress.total}
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-4 h-4 mr-2" />
+                      Nahrať všetky
+                    </>
+                  )}
+                </Button>
               </div>
 
               <div className="grid gap-4">
-                {selectedFiles.map((file, index) => {
-                  const assignment = fileAssignments[file.name] || {};
-                  const selectedDom = domy.find(d => d.id === assignment.dom);
+                {selectedFiles.map((fileData, index) => (
+                  <div key={index} className="border border-gray-200 rounded-xl p-4 hover:border-blue-300 hover:shadow-md transition-all">
+                    <div className="flex gap-4">
+                      <div className="w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                        <img src={fileData.preview} alt={fileData.file.name} className="w-full h-full object-cover" />
+                      </div>
 
-                  return (
-                    <motion.div
-                      key={file.name}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="border border-gray-200 rounded-xl p-4 hover:border-blue-300 hover:shadow-md transition-all"
-                    >
-                      <div className="flex gap-4">
-                        {/* Preview */}
-                        <div className="w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
-                          <img 
-                            src={assignment.preview} 
-                            alt={file.name}
-                            className="w-full h-full object-cover"
-                          />
+                      <div className="flex-grow space-y-3">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <p className="font-semibold text-gray-800">{fileData.file.name}</p>
+                            <p className="text-sm text-gray-500">{(fileData.file.size / 1024).toFixed(1)} KB</p>
+                          </div>
+                          <Button variant="ghost" size="sm" onClick={() => removeFile(index)}>
+                            <X className="w-4 h-4" />
+                          </Button>
                         </div>
 
-                        {/* Details */}
-                        <div className="flex-grow space-y-3">
-                          <div>
-                            <p className="font-semibold text-gray-800">{file.name}</p>
-                            {assignment.dom ? (
-                              <Badge className="bg-green-100 text-green-800 mt-1">
-                                <CheckCircle className="w-3 h-3 mr-1" />
-                                Priradené
-                              </Badge>
-                            ) : (
-                              <Badge className="bg-red-100 text-red-800 mt-1">
-                                <AlertCircle className="w-3 h-3 mr-1" />
-                                Nebol detegovaný dom
-                              </Badge>
-                            )}
-                          </div>
-
-                          <div className="grid sm:grid-cols-2 gap-3">
-                            <div>
-                              <label className="text-xs font-semibold text-gray-700 mb-1 block">
-                                Dom *
-                              </label>
-                              <Select
-                                value={assignment.dom || ''}
-                                onValueChange={(value) => updateAssignment(file.name, 'dom', value)}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Vyberte dom" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {domy.map(dom => (
-                                    <SelectItem key={dom.id} value={dom.id}>
-                                      {dom.nazov} - {dom.vyrobca}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-
-                            <div>
-                              <label className="text-xs font-semibold text-gray-700 mb-1 block">
-                                Umiestnenie *
-                              </label>
-                              <Select
-                                value={assignment.type || 'galeria'}
-                                onValueChange={(value) => updateAssignment(file.name, 'type', value)}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="hlavny_obrazok">Hlavný obrázok</SelectItem>
-                                  <SelectItem value="zakladna_konfiguracia">Základná konfigurácia</SelectItem>
-                                  <SelectItem value="galeria">Galéria</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-
-                          {selectedDom && (
-                            <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-                              <p className="text-xs font-semibold text-blue-900 mb-1">
-                                Priradené k:
-                              </p>
-                              <p className="text-sm text-blue-800">
-                                <Home className="w-3 h-3 inline mr-1" />
-                                {selectedDom.nazov} ({selectedDom.vyrobca})
-                              </p>
-                              <p className="text-xs text-blue-600 mt-1">
-                                ID: {selectedDom.id}
-                              </p>
-                            </div>
-                          )}
+                        <div>
+                          <label className="text-xs font-semibold text-gray-700 mb-1 block">Umiestnenie</label>
+                          <Select value={fileData.type} onValueChange={(value) => updateFileType(index, value)}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="galeria">Galéria</SelectItem>
+                              <SelectItem value="hlavny_obrazok">Hlavný obrázok</SelectItem>
+                              <SelectItem value="zakladna_konfiguracia">Základná konfigurácia</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
                       </div>
-                    </motion.div>
-                  );
-                })}
+                    </div>
+                  </div>
+                ))}
               </div>
             </Card>
           )}
@@ -657,146 +401,89 @@ export default function AdminUploadFotiekDomov() {
           )}
 
           {/* Delete Photos Section */}
-          <Card className="p-6 border-0 shadow-xl bg-white mt-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-rose-600 rounded-xl flex items-center justify-center shadow-lg">
-                <Trash2 className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  Vymazať fotky domov
-                </h2>
-                <p className="text-sm text-gray-600 mt-1">Vyberte dom a vymažte jeho fotky</p>
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <label className="text-sm font-semibold text-gray-700 mb-2 block">
-                Vyberte dom *
-              </label>
-              <Select
-                value={selectedDomForDelete || ''}
-                onValueChange={(value) => setSelectedDomForDelete(value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Vyberte dom..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {domy.map(dom => (
-                    <SelectItem key={dom.id} value={dom.id}>
-                      {dom.nazov} - {dom.vyrobca}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {selectedDomForDelete && (() => {
-              const dom = domy.find(d => d.id === selectedDomForDelete);
-              if (!dom) return null;
-
-              return (
-                <div className="space-y-6">
-                  {/* Hlavný obrázok */}
-                  {dom.hlavny_obrazok && (
-                    <div className="border border-gray-200 rounded-xl p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="font-semibold text-gray-900">Hlavný obrázok</h3>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => handleDeleteImage(dom.id, 'hlavny_obrazok')}
-                          disabled={deleting}
-                        >
-                          <Trash2 className="w-4 h-4 mr-1" />
-                          Vymazať
-                        </Button>
-                      </div>
-                      <div className="w-full max-w-md">
-                        <img 
-                          src={dom.hlavny_obrazok} 
-                          alt="Hlavný obrázok"
-                          className="w-full h-48 object-cover rounded-lg"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Základná konfigurácia */}
-                  {dom.zakladna_konfiguracia_obrazok && (
-                    <div className="border border-gray-200 rounded-xl p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="font-semibold text-gray-900">Základná konfigurácia</h3>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => handleDeleteImage(dom.id, 'zakladna_konfiguracia')}
-                          disabled={deleting}
-                        >
-                          <Trash2 className="w-4 h-4 mr-1" />
-                          Vymazať
-                        </Button>
-                      </div>
-                      <div className="w-full max-w-md">
-                        <img 
-                          src={dom.zakladna_konfiguracia_obrazok} 
-                          alt="Základná konfigurácia"
-                          className="w-full h-48 object-cover rounded-lg"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Galéria */}
-                  {dom.galeria && dom.galeria.length > 0 && (
-                    <div className="border border-gray-200 rounded-xl p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="font-semibold text-gray-900">
-                          Galéria ({dom.galeria.length} fotiek)
-                        </h3>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => handleDeleteAllGallery(dom.id)}
-                          disabled={deleting}
-                        >
-                          <Trash2 className="w-4 h-4 mr-1" />
-                          Vymazať všetky
-                        </Button>
-                      </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                        {dom.galeria.map((url, index) => (
-                          <div key={index} className="relative group">
-                            <img 
-                              src={url} 
-                              alt={`Galéria ${index + 1}`}
-                              className="w-full h-32 object-cover rounded-lg"
-                            />
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              onClick={() => handleDeleteImage(dom.id, 'galeria', url)}
-                              disabled={deleting}
-                              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              <Trash2 className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {!dom.hlavny_obrazok && !dom.zakladna_konfiguracia_obrazok && (!dom.galeria || dom.galeria.length === 0) && (
-                    <div className="text-center py-8 text-gray-500">
-                      <ImageIcon className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                      <p>Tento dom nemá žiadne fotky</p>
-                    </div>
-                  )}
+          {selectedDomId && selectedDom && (
+            <Card className="p-6 border-0 shadow-xl bg-white mt-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-rose-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <Trash2 className="w-6 h-6 text-white" />
                 </div>
-              );
-            })()}
-          </Card>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Existujúce fotky</h2>
+                  <p className="text-sm text-gray-600 mt-1">{selectedDom.nazov}</p>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                {selectedDom.hlavny_obrazok && (
+                  <div className="border border-gray-200 rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-gray-900">Hlavný obrázok</h3>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDeleteImage(selectedDom.id, 'hlavny_obrazok')}
+                      >
+                        <Trash2 className="w-4 h-4 mr-1" />
+                        Vymazať
+                      </Button>
+                    </div>
+                    <div className="w-full max-w-md">
+                      <img src={selectedDom.hlavny_obrazok} alt="Hlavný obrázok" className="w-full h-48 object-cover rounded-lg" />
+                    </div>
+                  </div>
+                )}
+
+                {selectedDom.zakladna_konfiguracia_obrazok && (
+                  <div className="border border-gray-200 rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-gray-900">Základná konfigurácia</h3>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDeleteImage(selectedDom.id, 'zakladna_konfiguracia')}
+                      >
+                        <Trash2 className="w-4 h-4 mr-1" />
+                        Vymazať
+                      </Button>
+                    </div>
+                    <div className="w-full max-w-md">
+                      <img src={selectedDom.zakladna_konfiguracia_obrazok} alt="Základná konfigurácia" className="w-full h-48 object-cover rounded-lg" />
+                    </div>
+                  </div>
+                )}
+
+                {selectedDom.galeria && selectedDom.galeria.length > 0 && (
+                  <div className="border border-gray-200 rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-semibold text-gray-900">Galéria ({selectedDom.galeria.length} fotiek)</h3>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                      {selectedDom.galeria.map((url, index) => (
+                        <div key={index} className="relative group">
+                          <img src={url} alt={`Galéria ${index + 1}`} className="w-full h-32 object-cover rounded-lg" />
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => handleDeleteImage(selectedDom.id, 'galeria', url)}
+                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {!selectedDom.hlavny_obrazok && !selectedDom.zakladna_konfiguracia_obrazok && (!selectedDom.galeria || selectedDom.galeria.length === 0) && (
+                  <div className="text-center py-8 text-gray-500">
+                    <ImageIcon className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                    <p>Tento dom nemá žiadne fotky</p>
+                  </div>
+                )}
+              </div>
+            </Card>
+          )}
         </motion.div>
       </div>
     </div>
