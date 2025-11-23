@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -599,7 +598,7 @@ export default function AdminDokumenty() {
       setUploadedBytes(cumulativeBytes);
 
       // ZNÍŽENÁ rýchlosť kvôli rate limit - menší batch s delayom
-      const BATCH_SIZE = 10;
+      const BATCH_SIZE = 5; // Znížené z 10 na 5 pre menšiu záťaž
       
       const filesToActuallyUpload = filesToProcessInitially;
 
@@ -637,7 +636,7 @@ export default function AdminDokumenty() {
 
             // Retry mechanizmus pre rate limit
             let retries = 0;
-            const maxRetries = 3;
+            const maxRetries = 5; // Zvýšené z 3 na 5
             
             while (retries <= maxRetries) {
               try {
@@ -652,11 +651,11 @@ export default function AdminDokumenty() {
                 // Upload s progress tracking a TIMEOUT
                 updateFileProgress(file.name, 30);
                 
-                // Timeout wrapper pre upload - 2 minúty
+                // Timeout wrapper pre upload - 5 minút (predtým 2 min)
                 const uploadWithTimeout = Promise.race([
                   base44.integrations.Core.UploadFile({ file }),
                   new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Upload timeout - súbor je príliš veľký alebo nahrávanie trvá príliš dlho')), 120000)
+                    setTimeout(() => reject(new Error('Upload timeout - súbor je príliš veľký alebo nahrávanie trvá príliš dlho')), 300000)
                   )
                 ]);
                 
@@ -698,15 +697,24 @@ export default function AdminDokumenty() {
                 break;
 
               } catch (fileError) { // Catch for specific upload/mutation errors within the retry loop
-                // Ak je to rate limit error, skús znova po delay
-                if (fileError.message?.includes('rate limit') || fileError.message?.includes('Rate limit') || fileError.response?.status === 429) {
-                  retries++;
-                  if (retries <= maxRetries) {
-                    const delay = Math.pow(2, retries) * 1000; // Exponenciálny backoff
-                    console.log(`Rate limit pre ${file.name}, retry ${retries}/${maxRetries} za ${delay}ms`);
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    continue; // Skús znova
-                  }
+                retries++;
+                
+                // Ak je to rate limit, timeout alebo sieťová chyba, skús znova
+                const isRetryableError = 
+                  fileError.message?.includes('rate limit') || 
+                  fileError.message?.includes('Rate limit') || 
+                  fileError.message?.includes('timeout') ||
+                  fileError.message?.includes('network') ||
+                  fileError.message?.includes('fetch') ||
+                  fileError.response?.status === 429 ||
+                  fileError.response?.status === 503 ||
+                  fileError.response?.status === 504;
+                
+                if (isRetryableError && retries <= maxRetries) {
+                  const delay = Math.pow(2, retries) * 1000 + Math.random() * 1000; // Exponenciálny backoff + náhodný jitter
+                  console.log(`⚠️ Chyba pre ${file.name} (${fileError.message}), retry ${retries}/${maxRetries} za ${Math.round(delay/1000)}s`);
+                  await new Promise(resolve => setTimeout(resolve, delay));
+                  continue; // Skús znova
                 }
                 
                 // Iná chyba alebo vyčerpané retry. Re-throw to be caught by the outer file-level try-catch.
@@ -755,7 +763,7 @@ export default function AdminDokumenty() {
         
         // Delay medzi batch-ami pre vyhnutie sa rate limit
         if (batches.indexOf(batch) < batches.length - 1) {
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          await new Promise(resolve => setTimeout(resolve, 3000)); // Zvýšené z 2s na 3s
         }
       }
 
