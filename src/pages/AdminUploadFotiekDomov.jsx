@@ -1,0 +1,490 @@
+import React, { useState, useRef } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Upload, Home, CheckCircle, AlertCircle, Loader2, X, Image as ImageIcon } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+export default function AdminUploadFotiekDomov() {
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
+  const [fileAssignments, setFileAssignments] = useState({});
+  const [uploadResults, setUploadResults] = useState(null);
+  const folderInputRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  const { data: user } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const { data: domy = [] } = useQuery({
+    queryKey: ['domy-all'],
+    queryFn: () => base44.entities.Dom.list()
+  });
+
+  const updateDomMutation = useMutation({
+    mutationFn: ({ domId, data }) => base44.entities.Dom.update(domId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['domy-all'] });
+    }
+  });
+
+  // Funkcia na detekciu domu z názvu súboru
+  const detectDomFromFilename = (filename) => {
+    const nameWithoutExt = filename.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '').toLowerCase();
+    
+    // Skús nájsť dom podľa názvu
+    const matchedDom = domy.find(dom => {
+      const domName = dom.nazov.toLowerCase();
+      return nameWithoutExt.includes(domName) || domName.includes(nameWithoutExt);
+    });
+
+    return matchedDom || null;
+  };
+
+  const handleFileSelect = (e) => {
+    const files = Array.from(e.target.files);
+    const imageFiles = files.filter(file => 
+      file.type.startsWith('image/') || 
+      /\.(jpg|jpeg|png|webp|gif)$/i.test(file.name)
+    );
+
+    // Automatická detekcia priradenia
+    const assignments = {};
+    imageFiles.forEach(file => {
+      const detectedDom = detectDomFromFilename(file.name);
+      assignments[file.name] = {
+        dom: detectedDom?.id || null,
+        type: 'galeria', // Default: pridať do galérie
+        preview: URL.createObjectURL(file)
+      };
+    });
+
+    setSelectedFiles(imageFiles);
+    setFileAssignments(assignments);
+    e.target.value = '';
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    const imageFiles = files.filter(file => 
+      file.type.startsWith('image/') || 
+      /\.(jpg|jpeg|png|webp|gif)$/i.test(file.name)
+    );
+
+    const assignments = {};
+    imageFiles.forEach(file => {
+      const detectedDom = detectDomFromFilename(file.name);
+      assignments[file.name] = {
+        dom: detectedDom?.id || null,
+        type: 'galeria',
+        preview: URL.createObjectURL(file)
+      };
+    });
+
+    setSelectedFiles(imageFiles);
+    setFileAssignments(assignments);
+  };
+
+  const updateAssignment = (filename, field, value) => {
+    setFileAssignments(prev => ({
+      ...prev,
+      [filename]: {
+        ...prev[filename],
+        [field]: value
+      }
+    }));
+  };
+
+  const handleSubmit = async () => {
+    if (selectedFiles.length === 0) {
+      alert("Vyberte aspoň jednu fotku");
+      return;
+    }
+
+    // Skontroluj, či všetky fotky majú priradený dom
+    const unassigned = selectedFiles.filter(file => !fileAssignments[file.name]?.dom);
+    if (unassigned.length > 0) {
+      alert(`${unassigned.length} fotiek nemá priradený dom. Priraďte všetkým fotkám dom.`);
+      return;
+    }
+
+    setUploading(true);
+    setUploadProgress({ current: 0, total: selectedFiles.length });
+
+    const results = {
+      successful: [],
+      failed: []
+    };
+
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const file = selectedFiles[i];
+      const assignment = fileAssignments[file.name];
+
+      try {
+        // Upload fotky
+        const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+        
+        // Získaj aktuálny dom
+        const dom = domy.find(d => d.id === assignment.dom);
+        
+        if (assignment.type === 'hlavny_obrazok') {
+          // Nastav ako hlavný obrázok
+          await updateDomMutation.mutateAsync({
+            domId: dom.id,
+            data: { hlavny_obrazok: uploadResponse.file_url }
+          });
+        } else {
+          // Pridaj do galérie
+          const currentGaleria = dom.galeria || [];
+          await updateDomMutation.mutateAsync({
+            domId: dom.id,
+            data: { galeria: [...currentGaleria, uploadResponse.file_url] }
+          });
+        }
+
+        results.successful.push({
+          name: file.name,
+          dom: dom.nazov,
+          type: assignment.type
+        });
+
+      } catch (error) {
+        results.failed.push({
+          name: file.name,
+          error: error.message
+        });
+      }
+
+      setUploadProgress({ current: i + 1, total: selectedFiles.length });
+    }
+
+    setUploadResults(results);
+    setUploading(false);
+    setSelectedFiles([]);
+    setFileAssignments({});
+  };
+
+  const isAdmin = user?.role === 'admin';
+  const isSuperAdmin = user?.super_admin === true;
+
+  if (!isSuperAdmin) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 flex items-center justify-center p-4">
+        <Card className="p-12 text-center max-w-md shadow-xl">
+          <AlertCircle className="w-16 h-16 text-red-600 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Prístup zamietnutý</h2>
+          <p className="text-gray-600">Táto stránka je dostupná len pre super administrátorov.</p>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 py-8">
+      <div className="container mx-auto px-4 max-w-7xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                <ImageIcon className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Upload fotiek domov
+                </h1>
+                <p className="text-sm text-gray-600 mt-1">Automatické priradenie fotiek k domom podľa názvu súboru</p>
+              </div>
+            </div>
+
+            <Card className="p-4 border-0 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-sm">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div className="text-sm text-blue-900">
+                  <p className="font-semibold mb-1">💡 Ako to funguje:</p>
+                  <p className="text-blue-800 opacity-90">
+                    1. Nahrajte priečinok s fotkami domov<br/>
+                    2. Systém automaticky priradí fotky k domom podľa názvu súboru<br/>
+                    3. Upravte priradenia a vyberte, či je to hlavný obrázok alebo galéria<br/>
+                    4. Nahrajte fotky do databázy
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Upload Results */}
+          {uploadResults && (
+            <AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <Card className="p-6 mb-6 border-0 shadow-lg bg-white">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      Výsledky nahrávania
+                    </h3>
+                    <Button variant="ghost" size="sm" onClick={() => setUploadResults(null)}>
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {uploadResults.successful.length > 0 && (
+                      <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <CheckCircle className="w-5 h-5 text-green-600" />
+                          <span className="font-semibold text-green-900">
+                            Úspešne: {uploadResults.successful.length}
+                          </span>
+                        </div>
+                        <div className="text-sm text-green-800 space-y-1">
+                          {uploadResults.successful.map((item, i) => (
+                            <div key={i}>
+                              ✓ {item.name} → {item.dom} ({item.type === 'hlavny_obrazok' ? 'Hlavný obrázok' : 'Galéria'})
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {uploadResults.failed.length > 0 && (
+                      <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <AlertCircle className="w-5 h-5 text-red-600" />
+                          <span className="font-semibold text-red-900">
+                            Chybné: {uploadResults.failed.length}
+                          </span>
+                        </div>
+                        <div className="text-sm text-red-800 space-y-1">
+                          {uploadResults.failed.map((item, i) => (
+                            <div key={i}>
+                              ✗ {item.name}: {item.error}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              </motion.div>
+            </AnimatePresence>
+          )}
+
+          {/* Upload Zone */}
+          <Card className="p-6 mb-6 border-0 shadow-xl bg-white">
+            <div
+              onDrop={handleDrop}
+              onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+              onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
+              className={`border-2 border-dashed rounded-2xl p-10 text-center transition-all ${
+                isDragging 
+                  ? 'border-blue-500 bg-blue-50' 
+                  : 'border-blue-300 bg-blue-50/30'
+              }`}
+            >
+              <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center">
+                <ImageIcon className="w-8 h-8 text-white" />
+              </div>
+              <p className="text-base font-medium text-gray-700 mb-2">
+                Pretiahnite priečinok s fotkami sem
+              </p>
+              <p className="text-sm text-gray-500 mb-6">
+                alebo kliknite na tlačidlo nižšie
+              </p>
+              
+              <input
+                ref={folderInputRef}
+                type="file"
+                onChange={handleFileSelect}
+                multiple
+                webkitdirectory=""
+                directory=""
+                accept="image/*"
+                className="hidden"
+                disabled={uploading}
+              />
+              <Button
+                type="button"
+                onClick={() => folderInputRef.current?.click()}
+                disabled={uploading}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Vybrať priečinok s fotkami
+              </Button>
+            </div>
+          </Card>
+
+          {/* File List with Assignments */}
+          {selectedFiles.length > 0 && (
+            <Card className="p-6 mb-6 border-0 shadow-xl bg-white">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Priradenie fotiek ({selectedFiles.length})
+                </h3>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={uploading}
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
+                >
+                  {uploading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Nahrávam {uploadProgress.current}/{uploadProgress.total}
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-4 h-4 mr-2" />
+                      Nahrať do databázy
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              <div className="grid gap-4">
+                {selectedFiles.map((file, index) => {
+                  const assignment = fileAssignments[file.name] || {};
+                  const selectedDom = domy.find(d => d.id === assignment.dom);
+
+                  return (
+                    <motion.div
+                      key={file.name}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="border border-gray-200 rounded-xl p-4 hover:border-blue-300 hover:shadow-md transition-all"
+                    >
+                      <div className="flex gap-4">
+                        {/* Preview */}
+                        <div className="w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                          <img 
+                            src={assignment.preview} 
+                            alt={file.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+
+                        {/* Details */}
+                        <div className="flex-grow space-y-3">
+                          <div>
+                            <p className="font-semibold text-gray-800">{file.name}</p>
+                            {assignment.dom ? (
+                              <Badge className="bg-green-100 text-green-800 mt-1">
+                                <CheckCircle className="w-3 h-3 mr-1" />
+                                Priradené
+                              </Badge>
+                            ) : (
+                              <Badge className="bg-red-100 text-red-800 mt-1">
+                                <AlertCircle className="w-3 h-3 mr-1" />
+                                Nebol detegovaný dom
+                              </Badge>
+                            )}
+                          </div>
+
+                          <div className="grid sm:grid-cols-2 gap-3">
+                            <div>
+                              <label className="text-xs font-semibold text-gray-700 mb-1 block">
+                                Dom *
+                              </label>
+                              <Select
+                                value={assignment.dom || ''}
+                                onValueChange={(value) => updateAssignment(file.name, 'dom', value)}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Vyberte dom" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {domy.map(dom => (
+                                    <SelectItem key={dom.id} value={dom.id}>
+                                      {dom.nazov} - {dom.vyrobca}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            <div>
+                              <label className="text-xs font-semibold text-gray-700 mb-1 block">
+                                Umiestnenie *
+                              </label>
+                              <Select
+                                value={assignment.type || 'galeria'}
+                                onValueChange={(value) => updateAssignment(file.name, 'type', value)}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="hlavny_obrazok">Hlavný obrázok</SelectItem>
+                                  <SelectItem value="galeria">Galéria</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+
+                          {selectedDom && (
+                            <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                              <p className="text-xs font-semibold text-blue-900 mb-1">
+                                Priradené k:
+                              </p>
+                              <p className="text-sm text-blue-800">
+                                <Home className="w-3 h-3 inline mr-1" />
+                                {selectedDom.nazov} ({selectedDom.vyrobca})
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </Card>
+          )}
+
+          {/* Progress Bar */}
+          {uploading && (
+            <Card className="p-6 border-0 shadow-xl bg-gradient-to-r from-blue-50 to-indigo-50">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-lg font-bold text-blue-900 flex items-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Nahrávanie prebieha
+                </h3>
+                <span className="text-lg font-bold text-blue-700">
+                  {Math.round((uploadProgress.current / uploadProgress.total) * 100)}%
+                </span>
+              </div>
+              <div className="relative w-full bg-blue-200 rounded-full h-4 overflow-hidden">
+                <div
+                  className="bg-gradient-to-r from-blue-600 to-indigo-600 h-4 rounded-full transition-all duration-500"
+                  style={{ width: `${(uploadProgress.current / uploadProgress.total) * 100}%` }}
+                />
+              </div>
+              <p className="text-sm text-blue-800 mt-2 text-center">
+                {uploadProgress.current} / {uploadProgress.total} fotiek
+              </p>
+            </Card>
+          )}
+        </motion.div>
+      </div>
+    </div>
+  );
+}
