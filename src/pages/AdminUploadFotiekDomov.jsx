@@ -38,20 +38,25 @@ export default function AdminUploadFotiekDomov() {
     }
   });
 
-  // Funkcia na detekciu domu z názvu súboru - prvé slovo definuje dom
+  // Funkcia na detekciu domu z názvu súboru - nový jednoduchší prístup
   const detectDomFromFilename = (filename) => {
     const nameWithoutExt = filename.replace(/\.(jpg|jpeg|png|webp|gif)$/i, '');
     
     // Prvé slovo v názve súboru (do prvej medzery alebo podčiarkovníka)
     const firstWord = nameWithoutExt.split(/[\s_-]/)[0].toLowerCase();
     
-    // Skús nájsť dom, ktorého názov obsahuje prvé slovo zo súboru
+    // Nájdi dom, ktorý obsahuje prvé slovo súboru v názve
+    // Priorita: hľadaj len v domoch s konkrétnymi modelovými názvami (nie všeobecné)
     const matchedDom = domy.find(dom => {
       const domName = dom.nazov.toLowerCase();
-      const modelWord = domName.split(/[\s,]/)[1]; // Druhé slovo je zvyčajne názov modelu (napr. "Model VIENNA")
       
-      // Skontroluj, či druhé slovo z názvu domu (model) obsahuje prvé slovo zo súboru
-      return modelWord && modelWord.includes(firstWord);
+      // Vylúč domy s "fotky" alebo "konfigurácie" v názve - to sú všeobecné zberné entity
+      if (domName.includes('fotky') || domName.includes('konfiguráci')) {
+        return false;
+      }
+      
+      // Jednoducho skontroluj, či názov domu obsahuje prvé slovo zo súboru
+      return domName.includes(firstWord);
     });
 
     return matchedDom || null;
