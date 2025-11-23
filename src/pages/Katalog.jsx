@@ -449,7 +449,7 @@ export default function Katalog() {
                           
                           <div className="flex items-center justify-between pt-4 border-t">
                             <div>
-                              <p className="text-xs text-gray-500 mb-1">Cena od</p>
+                              <p className="text-xs text-gray-500 mb-1">{dom.vyrobca === "Ticab house" ? "Cena základnej konfigurácie" : "Cena od"}</p>
                               <p className="text-xl font-bold text-primary">
                                 {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                               </p>

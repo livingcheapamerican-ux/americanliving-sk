@@ -240,7 +240,7 @@ export default function DetailDomu() {
                 {dom.nazov}
               </h1>
               <div className="flex items-baseline gap-2">
-                <span className="text-sm text-gray-500">Cena od</span>
+                <span className="text-sm text-gray-500">{isTicabhouse ? "Cena základnej konfigurácie" : "Cena od"}</span>
                 <span className="text-4xl font-bold text-primary">
                   {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                 </span>
