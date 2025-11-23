@@ -127,46 +127,88 @@ export default function AdminUploadFotiekDomov() {
       failed: []
     };
 
-    for (let i = 0; i < selectedFiles.length; i++) {
-      const file = selectedFiles[i];
+    // Zoskupiť súbory podľa domu pre optimalizáciu
+    const filesByDom = {};
+    selectedFiles.forEach(file => {
       const assignment = fileAssignments[file.name];
+      const domId = assignment.dom;
+      if (!filesByDom[domId]) {
+        filesByDom[domId] = { hlavny: null, galeria: [] };
+      }
+      if (assignment.type === 'hlavny_obrazok') {
+        filesByDom[domId].hlavny = file;
+      } else {
+        filesByDom[domId].galeria.push(file);
+      }
+    });
+
+    let processedCount = 0;
+
+    // Spracuj každý dom
+    for (const [domId, files] of Object.entries(filesByDom)) {
+      const dom = domy.find(d => d.id === domId);
+      const uploadedUrls = [];
 
       try {
-        // Upload fotky
-        const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+        // Upload všetkých fotiek pre tento dom naraz
+        const allFiles = [files.hlavny, ...files.galeria].filter(Boolean);
         
-        // Získaj aktuálny dom
-        const dom = domy.find(d => d.id === assignment.dom);
-        
-        if (assignment.type === 'hlavny_obrazok') {
-          // Nastav ako hlavný obrázok
+        for (const file of allFiles) {
+          try {
+            const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+            uploadedUrls.push({ file, url: uploadResponse.file_url });
+            processedCount++;
+            setUploadProgress({ current: processedCount, total: selectedFiles.length });
+          } catch (error) {
+            results.failed.push({
+              name: file.name,
+              error: error.message
+            });
+            processedCount++;
+            setUploadProgress({ current: processedCount, total: selectedFiles.length });
+          }
+        }
+
+        // Aktualizuj dom s všetkými URL naraz
+        const updateData = {};
+        const hlavnyUrl = uploadedUrls.find(u => u.file === files.hlavny)?.url;
+        const galeriaUrls = uploadedUrls.filter(u => files.galeria.includes(u.file)).map(u => u.url);
+
+        if (hlavnyUrl) {
+          updateData.hlavny_obrazok = hlavnyUrl;
+        }
+        if (galeriaUrls.length > 0) {
+          updateData.galeria = [...(dom.galeria || []), ...galeriaUrls];
+        }
+
+        if (Object.keys(updateData).length > 0) {
           await updateDomMutation.mutateAsync({
             domId: dom.id,
-            data: { hlavny_obrazok: uploadResponse.file_url }
-          });
-        } else {
-          // Pridaj do galérie
-          const currentGaleria = dom.galeria || [];
-          await updateDomMutation.mutateAsync({
-            domId: dom.id,
-            data: { galeria: [...currentGaleria, uploadResponse.file_url] }
+            data: updateData
           });
         }
 
-        results.successful.push({
-          name: file.name,
-          dom: dom.nazov,
-          type: assignment.type
+        // Pridaj úspešné výsledky
+        uploadedUrls.forEach(({ file }) => {
+          const assignment = fileAssignments[file.name];
+          results.successful.push({
+            name: file.name,
+            dom: dom.nazov,
+            type: assignment.type
+          });
         });
 
       } catch (error) {
-        results.failed.push({
-          name: file.name,
-          error: error.message
+        // Ak zlyhá aktualizácia domu
+        [files.hlavny, ...files.galeria].filter(Boolean).forEach(file => {
+          if (!results.failed.find(r => r.name === file.name)) {
+            results.failed.push({
+              name: file.name,
+              error: `Chyba pri aktualizácii domu: ${error.message}`
+            });
+          }
         });
       }
-
-      setUploadProgress({ current: i + 1, total: selectedFiles.length });
     }
 
     setUploadResults(results);
@@ -434,6 +476,7 @@ export default function AdminUploadFotiekDomov() {
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectItem value="hlavny_obrazok">Hlavný obrázok</SelectItem>
+                                  <SelectItem value="zakladna_konfiguracia">Základná konfigurácia</SelectItem>
                                   <SelectItem value="galeria">Galéria</SelectItem>
                                 </SelectContent>
                               </Select>
