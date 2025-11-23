@@ -281,13 +281,13 @@ export default function AdminUploadFotiekDomov() {
   const isAdmin = user?.role === 'admin';
   const isSuperAdmin = user?.super_admin === true;
 
-  if (!isSuperAdmin) {
+  if (!isAdmin && !isSuperAdmin) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 flex items-center justify-center p-4">
         <Card className="p-12 text-center max-w-md shadow-xl">
           <AlertCircle className="w-16 h-16 text-red-600 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Prístup zamietnutý</h2>
-          <p className="text-gray-600">Táto stránka je dostupná len pre super administrátorov.</p>
+          <p className="text-gray-600">Táto stránka je dostupná len pre administrátorov.</p>
         </Card>
       </div>
     );
