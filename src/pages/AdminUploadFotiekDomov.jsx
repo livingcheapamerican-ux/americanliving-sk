@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Upload, Home, CheckCircle, AlertCircle, Loader2, X, Image as ImageIcon } from "lucide-react";
+import { Upload, Home, CheckCircle, AlertCircle, Loader2, X, Image as ImageIcon, Trash2, Eye } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function AdminUploadFotiekDomov() {
@@ -16,6 +16,8 @@ export default function AdminUploadFotiekDomov() {
   const [uploadResults, setUploadResults] = useState(null);
   const folderInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [selectedDomForDelete, setSelectedDomForDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -104,6 +106,65 @@ export default function AdminUploadFotiekDomov() {
         [field]: value
       }
     }));
+  };
+
+  const handleDeleteImage = async (domId, imageType, imageUrl = null) => {
+    const dom = domy.find(d => d.id === domId);
+    if (!dom) return;
+
+    const confirmMsg = imageType === 'hlavny_obrazok' 
+      ? 'Naozaj chcete vymazať hlavný obrázok?' 
+      : imageType === 'zakladna_konfiguracia'
+      ? 'Naozaj chcete vymazať obrázok základnej konfigurácie?'
+      : 'Naozaj chcete vymazať túto fotku z galérie?';
+
+    if (!window.confirm(confirmMsg)) return;
+
+    setDeleting(true);
+    try {
+      const updateData = {};
+      
+      if (imageType === 'hlavny_obrazok') {
+        updateData.hlavny_obrazok = null;
+      } else if (imageType === 'zakladna_konfiguracia') {
+        updateData.zakladna_konfiguracia_obrazok = null;
+      } else if (imageType === 'galeria' && imageUrl) {
+        const newGaleria = (dom.galeria || []).filter(url => url !== imageUrl);
+        updateData.galeria = newGaleria;
+      }
+
+      await updateDomMutation.mutateAsync({
+        domId: dom.id,
+        data: updateData
+      });
+
+      alert('Fotka bola úspešne vymazaná');
+    } catch (error) {
+      alert(`Chyba pri vymazávaní: ${error.message}`);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleDeleteAllGallery = async (domId) => {
+    const dom = domy.find(d => d.id === domId);
+    if (!dom || !dom.galeria || dom.galeria.length === 0) return;
+
+    if (!window.confirm(`Naozaj chcete vymazať všetkých ${dom.galeria.length} fotiek z galérie?`)) return;
+
+    setDeleting(true);
+    try {
+      await updateDomMutation.mutateAsync({
+        domId: dom.id,
+        data: { galeria: [] }
+      });
+
+      alert('Všetky fotky z galérie boli vymazané');
+    } catch (error) {
+      alert(`Chyba pri vymazávaní: ${error.message}`);
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const handleSubmit = async () => {
@@ -526,6 +587,148 @@ export default function AdminUploadFotiekDomov() {
               </p>
             </Card>
           )}
+
+          {/* Delete Photos Section */}
+          <Card className="p-6 border-0 shadow-xl bg-white mt-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-rose-600 rounded-xl flex items-center justify-center shadow-lg">
+                <Trash2 className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Vymazať fotky domov
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">Vyberte dom a vymažte jeho fotky</p>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <label className="text-sm font-semibold text-gray-700 mb-2 block">
+                Vyberte dom *
+              </label>
+              <Select
+                value={selectedDomForDelete || ''}
+                onValueChange={(value) => setSelectedDomForDelete(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Vyberte dom..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {domy.map(dom => (
+                    <SelectItem key={dom.id} value={dom.id}>
+                      {dom.nazov} - {dom.vyrobca}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {selectedDomForDelete && (() => {
+              const dom = domy.find(d => d.id === selectedDomForDelete);
+              if (!dom) return null;
+
+              return (
+                <div className="space-y-6">
+                  {/* Hlavný obrázok */}
+                  {dom.hlavny_obrazok && (
+                    <div className="border border-gray-200 rounded-xl p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-semibold text-gray-900">Hlavný obrázok</h3>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDeleteImage(dom.id, 'hlavny_obrazok')}
+                          disabled={deleting}
+                        >
+                          <Trash2 className="w-4 h-4 mr-1" />
+                          Vymazať
+                        </Button>
+                      </div>
+                      <div className="w-full max-w-md">
+                        <img 
+                          src={dom.hlavny_obrazok} 
+                          alt="Hlavný obrázok"
+                          className="w-full h-48 object-cover rounded-lg"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Základná konfigurácia */}
+                  {dom.zakladna_konfiguracia_obrazok && (
+                    <div className="border border-gray-200 rounded-xl p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-semibold text-gray-900">Základná konfigurácia</h3>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDeleteImage(dom.id, 'zakladna_konfiguracia')}
+                          disabled={deleting}
+                        >
+                          <Trash2 className="w-4 h-4 mr-1" />
+                          Vymazať
+                        </Button>
+                      </div>
+                      <div className="w-full max-w-md">
+                        <img 
+                          src={dom.zakladna_konfiguracia_obrazok} 
+                          alt="Základná konfigurácia"
+                          className="w-full h-48 object-cover rounded-lg"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Galéria */}
+                  {dom.galeria && dom.galeria.length > 0 && (
+                    <div className="border border-gray-200 rounded-xl p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="font-semibold text-gray-900">
+                          Galéria ({dom.galeria.length} fotiek)
+                        </h3>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDeleteAllGallery(dom.id)}
+                          disabled={deleting}
+                        >
+                          <Trash2 className="w-4 h-4 mr-1" />
+                          Vymazať všetky
+                        </Button>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        {dom.galeria.map((url, index) => (
+                          <div key={index} className="relative group">
+                            <img 
+                              src={url} 
+                              alt={`Galéria ${index + 1}`}
+                              className="w-full h-32 object-cover rounded-lg"
+                            />
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => handleDeleteImage(dom.id, 'galeria', url)}
+                              disabled={deleting}
+                              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {!dom.hlavny_obrazok && !dom.zakladna_konfiguracia_obrazok && (!dom.galeria || dom.galeria.length === 0) && (
+                    <div className="text-center py-8 text-gray-500">
+                      <ImageIcon className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                      <p>Tento dom nemá žiadne fotky</p>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+          </Card>
         </motion.div>
       </div>
     </div>
