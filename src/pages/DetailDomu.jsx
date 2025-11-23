@@ -483,7 +483,7 @@ export default function DetailDomu() {
                   </div>
                 </div>
                 </Card>
-                </Card>
+                </div>
                 </div>
                 )}
 
