@@ -277,6 +277,22 @@ export default function DetailDomu() {
             <Card className="p-6 bg-gradient-to-br from-blue-50 to-white">
               <h3 className="text-lg font-bold text-primary mb-4">Základné parametre</h3>
               <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center gap-3">
+                  <Home className="w-6 h-6 text-primary" />
+                  <div>
+                    <p className="text-sm text-gray-500">Výrobca</p>
+                    <p className="text-xl font-bold text-primary">{dom.vyrobca}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Home className="w-6 h-6 text-accent" />
+                  <div>
+                    <p className="text-sm text-gray-500">Typ domu</p>
+                    <p className="text-xl font-bold text-primary">
+                      {dom.typ_domu === 'modularny' ? 'Modulárny dom' : 'Mobilný dom'}
+                    </p>
+                  </div>
+                </div>
                 {dom.pocet_izieb && (
                   <div className="flex items-center gap-3">
                     <Home className="w-6 h-6 text-primary" />
