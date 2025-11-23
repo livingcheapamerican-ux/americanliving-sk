@@ -482,10 +482,12 @@ export default function DetailDomu() {
                     </p>
                   </div>
                 </div>
-              </Card>
-            )}
+                </Card>
+                </Card>
+                </div>
+                )}
 
-            {/* Štandardná výbava pre JAK Modules */}
+                {/* Štandardná výbava pre JAK Modules */}
             {isJAKModules && (
               <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
                 <h3 className="text-lg font-bold text-primary mb-4">✔ Hlavné vlastnosti</h3>
