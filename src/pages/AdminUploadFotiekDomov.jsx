@@ -135,13 +135,28 @@ export default function AdminUploadFotiekDomov() {
   };
 
   const updateAssignment = (filename, field, value) => {
-    setFileAssignments(prev => ({
-      ...prev,
-      [filename]: {
-        ...prev[filename],
-        [field]: value
+    setFileAssignments(prev => {
+      const newAssignments = {
+        ...prev,
+        [filename]: {
+          ...prev[filename],
+          [field]: value
+        }
+      };
+      
+      // Ak sa zmenil dom alebo type, prekontroluj duplicitu
+      if (field === 'dom' || field === 'type') {
+        const file = selectedFiles.find(f => f.name === filename);
+        const domId = field === 'dom' ? value : prev[filename]?.dom;
+        const type = field === 'type' ? value : prev[filename]?.type;
+        
+        if (file && domId) {
+          newAssignments[filename].isDuplicate = checkIfDuplicate(file, domId, type);
+        }
       }
-    }));
+      
+      return newAssignments;
+    });
   };
 
   const handleDeleteImage = async (domId, imageType, imageUrl = null) => {
