@@ -362,8 +362,9 @@ export default function DetailDomu() {
                     <p className="font-semibold text-gray-800 mb-1">Konštrukcia a izolácia:</p>
                     <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
                       <li>Rám zo suchého reziva ošetreného bio-roztokom</li>
-                      <li>Izolácia stien 150mm (bazaltová vlna)</li>
+                      <li>Izolácia stien 85mm-150mm (bazaltová vlna)</li>
                       <li>Izolácia podlahy a stropu 200mm stlačených na 150mm</li>
+                      <li>Konštrukcia certifikovaná na prepravu po celej EÚ</li>
                     </ul>
                   </div>
                   <div>
@@ -372,30 +373,78 @@ export default function DetailDomu() {
                       <li>Dvojkomorové kovoplastové okná, energeticky úsporné</li>
                       <li>Kovoplastové vchodové dvere</li>
                       <li>Interiérové dvere MDF</li>
+                      <li>Francúzske balkónové okná (pri vybraných modeloch)</li>
                     </ul>
                   </div>
                   <div>
                     <p className="font-semibold text-gray-800 mb-1">Exteriér:</p>
                     <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
-                      <li>Fasáda z prírodného dreva alebo panelových systémov</li>
-                      <li>Strešná krytina (kovová škridla / falcované panely)</li>
+                      <li>Fasáda: Škandinávskeho smrekovca / Thermowood / Vinylové panely / Kompozitné panely</li>
+                      <li>Strešná krytina: Kovová škridla / Falcované panely / Vlnitý plech</li>
+                      <li>Sviečtená debnenie strechy z OSB dosiek hrúbky 15 mm</li>
                     </ul>
                   </div>
                   <div>
                     <p className="font-semibold text-gray-800 mb-1">Interiér:</p>
                     <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
-                      <li>Obloženie prírodným drevom alebo laminátovými panelmi</li>
-                      <li>Polo-komerčný laminát</li>
+                      <li>Obloženie stien: Prírodné drevo / Laminátové panely / Sadrokartón s tapetami</li>
+                      <li>Podlahy: Polo-komerčný laminát</li>
+                      <li>Malované stropy zo sadrokartónu</li>
                     </ul>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-800 mb-1">Technológie:</p>
+                    <p className="font-semibold text-gray-800 mb-1">Kúpeľňa (podľa modelu):</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Malovaný sadrokartónový strop</li>
+                      <li>Obklady na stenách</li>
+                      <li>Umývadlo (vybrané modely)</li>
+                      <li>Geberit WC</li>
+                      <li>Grohe sprcha</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Kuchyňa (podľa modelu):</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Kuchynský nábytok zahrnutý v cene (vybrané modely)</li>
+                      <li>Obklad za kuchynskou linkou (vybrané modely)</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Technológie a inštalácie:</p>
                     <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
                       <li>Elektrické rozvody, LED osvetlenie</li>
-                      <li>Bojler 80l</li>
-                      <li>Príprava na vykurovanie (zásuvky pod oknami)</li>
+                      <li>Bojler 80l (vybrané modely)</li>
+                      <li>Zásuvka a výstuženie v stene pre montáž klimatizácie</li>
+                      <li>Podlahové kúrenie (vybrané modely - v obytných priestoroch a kúpeľni)</li>
                       <li>Vodoinštalácia, prípojky pre kuchyňu a práčku</li>
                     </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Terasa (podľa modelu):</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Zabudovaná terasa (vybrané modely)</li>
+                      <li>Príplatkové terasy k dispozícii pre všetky modely</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-green-300">
+                  <h4 className="font-bold text-red-700 mb-3 flex items-center gap-2">
+                    <AlertCircle className="w-5 h-5" />
+                    DÔLEŽITÉ - Cena nezahŕňa:
+                  </h4>
+                  <ul className="list-disc list-inside text-gray-700 space-y-2 text-sm ml-2">
+                    <li><strong>Dodanie a transport</strong> - možnosť objednať v konfigurátore</li>
+                    <li><strong>Základy</strong> - jednomodulové domy nevyžadujú "tehlové" základy</li>
+                    <li><strong>Vonkajšie komunikácie</strong> (prípojky vody, elektriky, kanalizácie)</li>
+                    <li><strong>Autožeriav pre výkladku</strong> - potrebný na umiestnenie domu na pozemok</li>
+                  </ul>
+                  <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <p className="text-sm text-blue-800">
+                      <strong>Výhoda modulárnej konštrukcie:</strong> Dom prichádza plne dokončený na nákladnom aute. 
+                      Pomocou žeriavu sa vyloží, namontuje na základy, pripojaé komunikácie a môžete sa nasťahovať! 
+                      Ideálne pre rodiny aj seniorov hľadajúcich dom mimo mesta.
+                    </p>
                   </div>
                 </div>
               </Card>
