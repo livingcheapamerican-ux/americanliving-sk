@@ -8,9 +8,10 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, AlertCircle, CheckCircle, Loader2, X, Trash2, Image as ImageIcon, Star, Settings, Images, RotateCcw, Archive, Sparkles, ArrowRight } from "lucide-react";
+import { Upload, AlertCircle, CheckCircle, Loader2, X, Trash2, Image as ImageIcon, Star, Settings, Images, RotateCcw, Archive, Sparkles, ArrowRight, FolderOpen } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import GoogleDrivePhotoImport from "../components/GoogleDrivePhotoImport";
 
 export default function AdminUploadFotiekDomov() {
   const [selectedDomIds, setSelectedDomIds] = useState([]);
@@ -454,17 +455,35 @@ export default function AdminUploadFotiekDomov() {
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="upload" className="flex items-center gap-2">
                 <Upload className="w-4 h-4" />
                 Nahrať fotky
               </TabsTrigger>
+              <TabsTrigger value="gdrive" className="flex items-center gap-2">
+                <FolderOpen className="w-4 h-4" />
+                Google Drive
+              </TabsTrigger>
               <TabsTrigger value="ticab" className="flex items-center gap-2">
                 <Archive className="w-4 h-4" />
-                Ticab House - Staré / Nové fotky
+                Ticab House
               </TabsTrigger>
             </TabsList>
           </Tabs>
+
+          {/* Google Drive Import Tab */}
+          {activeTab === 'gdrive' && (
+            <Card className="p-6 border-0 shadow-xl bg-white">
+              <GoogleDrivePhotoImport 
+                domy={domy}
+                onImportComplete={(uploadedFiles) => {
+                  // Po importe aktualizovať zoznam domov
+                  queryClient.invalidateQueries({ queryKey: ['domy-all'] });
+                  toast.success(`Importovaných ${uploadedFiles.length} fotiek z Google Drive`);
+                }}
+              />
+            </Card>
+          )}
 
           {activeTab === 'upload' && (
           <>
