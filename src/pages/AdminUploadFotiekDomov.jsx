@@ -4,15 +4,20 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Upload, AlertCircle, CheckCircle, Loader2, X, Trash2, Image as ImageIcon } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Upload, AlertCircle, CheckCircle, Loader2, X, Trash2, Image as ImageIcon, Star, Settings, Images, RotateCcw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 
 export default function AdminUploadFotiekDomov() {
   const [selectedDomId, setSelectedDomId] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
+  const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0, currentFile: '' });
   const [uploadResults, setUploadResults] = useState(null);
+  const [dragOver, setDragOver] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -40,31 +45,46 @@ export default function AdminUploadFotiekDomov() {
       /\.(jpg|jpeg|png|webp|gif)$/i.test(file.name)
     );
     
+    if (imageFiles.length === 0) {
+      toast.error('Neboli nájdené žiadne obrázky');
+      return;
+    }
+    
     const filesWithPreviews = imageFiles.map(file => ({
       file,
       preview: URL.createObjectURL(file),
-      type: 'galeria'
+      type: 'galeria',
+      status: 'pending'
     }));
     
     setSelectedFiles(prev => [...prev, ...filesWithPreviews]);
+    toast.success(`Pridané ${imageFiles.length} fotiek`);
     e.target.value = '';
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
+    setDragOver(false);
     const files = Array.from(e.dataTransfer.files);
     const imageFiles = files.filter(file => 
       file.type.startsWith('image/') || 
       /\.(jpg|jpeg|png|webp|gif)$/i.test(file.name)
     );
     
+    if (imageFiles.length === 0) {
+      toast.error('Neboli nájdené žiadne obrázky');
+      return;
+    }
+    
     const filesWithPreviews = imageFiles.map(file => ({
       file,
       preview: URL.createObjectURL(file),
-      type: 'galeria'
+      type: 'galeria',
+      status: 'pending' // pending, uploading, success, error
     }));
     
     setSelectedFiles(prev => [...prev, ...filesWithPreviews]);
+    toast.success(`Pridané ${imageFiles.length} fotiek`);
   };
 
   const removeFile = (index) => {
@@ -86,11 +106,11 @@ export default function AdminUploadFotiekDomov() {
 
   const handleUpload = async () => {
     if (!selectedDomId) {
-      alert("Vyberte dom");
+      toast.error("Vyberte dom");
       return;
     }
     if (selectedFiles.length === 0) {
-      alert("Vyberte fotky");
+      toast.error("Vyberte fotky");
       return;
     }
 
@@ -98,7 +118,7 @@ export default function AdminUploadFotiekDomov() {
     if (!dom) return;
 
     setUploading(true);
-    setUploadProgress({ current: 0, total: selectedFiles.length });
+    setUploadProgress({ current: 0, total: selectedFiles.length, currentFile: '' });
 
     const results = { successful: [], failed: [] };
     const uploadedUrls = [];
@@ -106,15 +126,34 @@ export default function AdminUploadFotiekDomov() {
     for (let i = 0; i < selectedFiles.length; i++) {
       const { file, type } = selectedFiles[i];
       
+      // Update file status to uploading
+      setSelectedFiles(prev => prev.map((f, idx) => 
+        idx === i ? { ...f, status: 'uploading' } : f
+      ));
+      setUploadProgress({ current: i, total: selectedFiles.length, currentFile: file.name });
+      
       try {
         const uploadResponse = await base44.integrations.Core.UploadFile({ file });
         uploadedUrls.push({ url: uploadResponse.file_url, type });
         results.successful.push({ name: file.name, type });
-        setUploadProgress({ current: i + 1, total: selectedFiles.length });
+        
+        // Update file status to success
+        setSelectedFiles(prev => prev.map((f, idx) => 
+          idx === i ? { ...f, status: 'success' } : f
+        ));
+        
       } catch (error) {
         results.failed.push({ name: file.name, error: error.message });
-        setUploadProgress({ current: i + 1, total: selectedFiles.length });
+        
+        // Update file status to error
+        setSelectedFiles(prev => prev.map((f, idx) => 
+          idx === i ? { ...f, status: 'error', errorMessage: error.message } : f
+        ));
+        
+        toast.error(`Chyba: ${file.name}`);
       }
+      
+      setUploadProgress({ current: i + 1, total: selectedFiles.length, currentFile: '' });
     }
 
     // Aktualizuj dom
@@ -133,14 +172,52 @@ export default function AdminUploadFotiekDomov() {
 
       if (Object.keys(updateData).length > 0) {
         await updateDomMutation.mutateAsync({ domId: dom.id, data: updateData });
+        toast.success('Dom bol úspešne aktualizovaný');
       }
     } catch (error) {
-      alert(`Chyba pri aktualizácii domu: ${error.message}`);
+      toast.error(`Chyba pri aktualizácii domu: ${error.message}`);
     }
 
     setUploadResults(results);
     setUploading(false);
+    
+    // Clear only successful uploads
+    setSelectedFiles(prev => prev.filter(f => f.status === 'error'));
+  };
+
+  const retryFailedUpload = (index) => {
+    setSelectedFiles(prev => prev.map((f, idx) => 
+      idx === index ? { ...f, status: 'pending', errorMessage: undefined } : f
+    ));
+  };
+
+  const clearAllFiles = () => {
+    selectedFiles.forEach(f => URL.revokeObjectURL(f.preview));
     setSelectedFiles([]);
+  };
+
+  const getTypeIcon = (type) => {
+    switch (type) {
+      case 'hlavny_obrazok': return <Star className="w-4 h-4" />;
+      case 'zakladna_konfiguracia': return <Settings className="w-4 h-4" />;
+      default: return <Images className="w-4 h-4" />;
+    }
+  };
+
+  const getTypeLabel = (type) => {
+    switch (type) {
+      case 'hlavny_obrazok': return 'Hlavný';
+      case 'zakladna_konfiguracia': return 'Základná';
+      default: return 'Galéria';
+    }
+  };
+
+  const getTypeColor = (type) => {
+    switch (type) {
+      case 'hlavny_obrazok': return 'bg-amber-500';
+      case 'zakladna_konfiguracia': return 'bg-blue-500';
+      default: return 'bg-gray-500';
+    }
   };
 
   const handleDeleteImage = async (domId, imageType, imageUrl = null) => {
@@ -281,13 +358,23 @@ export default function AdminUploadFotiekDomov() {
               </label>
               <div
                 onDrop={handleDrop}
-                onDragOver={(e) => e.preventDefault()}
-                className="border-2 border-dashed border-blue-300 rounded-2xl p-10 text-center bg-blue-50/30 hover:bg-blue-50 transition-all"
+                onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                onDragLeave={() => setDragOver(false)}
+                className={`border-2 border-dashed rounded-2xl p-10 text-center transition-all duration-300 ${
+                  dragOver 
+                    ? 'border-blue-500 bg-blue-100 scale-[1.02]' 
+                    : 'border-blue-300 bg-blue-50/30 hover:bg-blue-50'
+                }`}
               >
-                <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center">
+                <motion.div 
+                  animate={{ scale: dragOver ? 1.1 : 1 }}
+                  className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center"
+                >
                   <ImageIcon className="w-8 h-8 text-white" />
-                </div>
-                <p className="text-base font-medium text-gray-700 mb-2">Pretiahnite fotky sem</p>
+                </motion.div>
+                <p className="text-base font-medium text-gray-700 mb-2">
+                  {dragOver ? 'Pustite pre nahratie' : 'Pretiahnite fotky sem'}
+                </p>
                 <p className="text-sm text-gray-500 mb-6">alebo</p>
                 <input
                   type="file"
@@ -299,7 +386,7 @@ export default function AdminUploadFotiekDomov() {
                   disabled={uploading}
                 />
                 <label htmlFor="file-input">
-                  <Button type="button" asChild disabled={uploading}>
+                  <Button type="button" asChild disabled={uploading} className="bg-gradient-to-r from-blue-600 to-indigo-600">
                     <span className="cursor-pointer">
                       <Upload className="w-4 h-4 mr-2" />
                       Vyberte fotky
@@ -317,68 +404,150 @@ export default function AdminUploadFotiekDomov() {
                 <h3 className="text-lg font-semibold text-gray-800">
                   Vybrané fotky ({selectedFiles.length})
                 </h3>
-                <Button
-                  onClick={handleUpload}
-                  disabled={uploading}
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
-                >
-                  {uploading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Nahrávam {uploadProgress.current}/{uploadProgress.total}
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="w-4 h-4 mr-2" />
-                      Nahrať všetky
-                    </>
-                  )}
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={clearAllFiles}
+                    disabled={uploading}
+                    className="text-gray-600"
+                  >
+                    <X className="w-4 h-4 mr-2" />
+                    Vymazať všetky
+                  </Button>
+                  <Button
+                    onClick={handleUpload}
+                    disabled={uploading || selectedFiles.every(f => f.status === 'success')}
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
+                  >
+                    {uploading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Nahrávam {uploadProgress.current}/{uploadProgress.total}
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="w-4 h-4 mr-2" />
+                        Nahrať všetky
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
 
-              <div className="grid gap-4">
-                {selectedFiles.map((fileData, index) => (
-                  <div key={index} className="border border-gray-200 rounded-xl p-4 hover:border-blue-300 hover:shadow-md transition-all">
-                    <div className="flex gap-4">
-                      <div className="w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
-                        <img src={fileData.preview} alt={fileData.file.name} className="w-full h-full object-cover" />
-                      </div>
+              <div className="grid gap-3">
+                <AnimatePresence>
+                  {selectedFiles.map((fileData, index) => (
+                    <motion.div 
+                      key={index}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, x: -100 }}
+                      className={`border rounded-xl p-4 transition-all ${
+                        fileData.status === 'success' ? 'border-green-300 bg-green-50' :
+                        fileData.status === 'error' ? 'border-red-300 bg-red-50' :
+                        fileData.status === 'uploading' ? 'border-blue-300 bg-blue-50' :
+                        'border-gray-200 hover:border-blue-300 hover:shadow-md'
+                      }`}
+                    >
+                      <div className="flex gap-4">
+                        {/* Preview */}
+                        <div className="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 relative">
+                          <img src={fileData.preview} alt={fileData.file.name} className="w-full h-full object-cover" />
+                          
+                          {/* Status overlay */}
+                          {fileData.status === 'uploading' && (
+                            <div className="absolute inset-0 bg-blue-500/70 flex items-center justify-center">
+                              <Loader2 className="w-8 h-8 text-white animate-spin" />
+                            </div>
+                          )}
+                          {fileData.status === 'success' && (
+                            <div className="absolute inset-0 bg-green-500/70 flex items-center justify-center">
+                              <CheckCircle className="w-8 h-8 text-white" />
+                            </div>
+                          )}
+                          {fileData.status === 'error' && (
+                            <div className="absolute inset-0 bg-red-500/70 flex items-center justify-center">
+                              <AlertCircle className="w-8 h-8 text-white" />
+                            </div>
+                          )}
+                        </div>
 
-                      <div className="flex-grow space-y-3">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <p className="font-semibold text-gray-800">{fileData.file.name}</p>
-                            <p className="text-sm text-gray-500">{(fileData.file.size / 1024).toFixed(1)} KB</p>
+                        {/* File info */}
+                        <div className="flex-grow flex flex-col justify-between min-w-0">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <p className="font-semibold text-gray-800 truncate">{fileData.file.name}</p>
+                              <p className="text-sm text-gray-500">{(fileData.file.size / 1024).toFixed(1)} KB</p>
+                              {fileData.errorMessage && (
+                                <p className="text-xs text-red-600 mt-1">{fileData.errorMessage}</p>
+                              )}
+                            </div>
+                            
+                            <div className="flex gap-1 flex-shrink-0">
+                              {fileData.status === 'error' && (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button variant="ghost" size="sm" onClick={() => retryFailedUpload(index)} className="text-blue-600 hover:text-blue-700">
+                                        <RotateCcw className="w-4 h-4" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Skúsiť znova</TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              )}
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => removeFile(index)}
+                                disabled={fileData.status === 'uploading'}
+                                className="text-gray-400 hover:text-red-500"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
                           </div>
-                          <Button variant="ghost" size="sm" onClick={() => removeFile(index)}>
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
 
-                        <div>
-                          <label className="text-xs font-semibold text-gray-700 mb-1 block">Umiestnenie</label>
-                          <Select value={fileData.type} onValueChange={(value) => updateFileType(index, value)}>
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="galeria">Galéria</SelectItem>
-                              <SelectItem value="hlavny_obrazok">Hlavný obrázok</SelectItem>
-                              <SelectItem value="zakladna_konfiguracia">Základná konfigurácia</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          {/* Type selector */}
+                          <div className="flex gap-2 mt-2">
+                            <TooltipProvider>
+                              {['galeria', 'hlavny_obrazok', 'zakladna_konfiguracia'].map((type) => (
+                                <Tooltip key={type}>
+                                  <TooltipTrigger asChild>
+                                    <button
+                                      onClick={() => updateFileType(index, type)}
+                                      disabled={fileData.status === 'uploading' || fileData.status === 'success'}
+                                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                                        fileData.type === type
+                                          ? `${getTypeColor(type)} text-white shadow-md`
+                                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                      } ${(fileData.status === 'uploading' || fileData.status === 'success') ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    >
+                                      {getTypeIcon(type)}
+                                      {getTypeLabel(type)}
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    {type === 'hlavny_obrazok' && 'Hlavný obrázok domu (zobrazí sa v katalógu)'}
+                                    {type === 'zakladna_konfiguracia' && 'Obrázok základnej konfigurácie'}
+                                    {type === 'galeria' && 'Fotka do galérie'}
+                                  </TooltipContent>
+                                </Tooltip>
+                              ))}
+                            </TooltipProvider>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             </Card>
           )}
 
           {/* Progress Bar */}
           {uploading && (
-            <Card className="p-6 border-0 shadow-xl bg-gradient-to-r from-blue-50 to-indigo-50">
+            <Card className="p-6 border-0 shadow-xl bg-gradient-to-r from-blue-50 to-indigo-50 mb-6">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-bold text-blue-900 flex items-center gap-2">
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -388,15 +557,20 @@ export default function AdminUploadFotiekDomov() {
                   {Math.round((uploadProgress.current / uploadProgress.total) * 100)}%
                 </span>
               </div>
-              <div className="relative w-full bg-blue-200 rounded-full h-4 overflow-hidden">
-                <div
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 h-4 rounded-full transition-all duration-500"
-                  style={{ width: `${(uploadProgress.current / uploadProgress.total) * 100}%` }}
-                />
+              <Progress 
+                value={(uploadProgress.current / uploadProgress.total) * 100} 
+                className="h-3 mb-3"
+              />
+              <div className="flex items-center justify-between text-sm">
+                <p className="text-blue-800">
+                  {uploadProgress.current} / {uploadProgress.total} fotiek
+                </p>
+                {uploadProgress.currentFile && (
+                  <p className="text-blue-600 truncate max-w-xs">
+                    {uploadProgress.currentFile}
+                  </p>
+                )}
               </div>
-              <p className="text-sm text-blue-800 mt-2 text-center">
-                {uploadProgress.current} / {uploadProgress.total} fotiek
-              </p>
             </Card>
           )}
 
