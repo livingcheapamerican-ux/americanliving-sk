@@ -22,6 +22,7 @@ import {
   Home
 } from "lucide-react";
 import { toast } from "sonner";
+import PhotoMetadataEditor from "./PhotoMetadataEditor";
 
 export default function GoogleDrivePhotoImport({ domy, onImportComplete }) {
   const [isConnected, setIsConnected] = useState(false);
@@ -37,6 +38,8 @@ export default function GoogleDrivePhotoImport({ domy, onImportComplete }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [step, setStep] = useState('select-folders'); // select-folders, preview-files, assign-to-dom
   const [selectedDomId, setSelectedDomId] = useState(null);
+  const [editingPhoto, setEditingPhoto] = useState(null);
+  const [completedImports, setCompletedImports] = useState([]);
 
   const queryClient = useQueryClient();
 
@@ -172,7 +175,9 @@ export default function GoogleDrivePhotoImport({ domy, onImportComplete }) {
     setImportProgress({ current: filesToImport.length, total: filesToImport.length, currentFile: '' });
     
     if (uploadedFiles.length > 0) {
-      toast.success(`Úspešne importovaných ${uploadedFiles.length} fotiek`);
+      setCompletedImports(uploadedFiles);
+      setStep('edit-metadata');
+      toast.success(`Úspešne importovaných ${uploadedFiles.length} fotiek - teraz môžete upraviť metadáta`);
       if (onImportComplete) {
         onImportComplete(uploadedFiles);
       }
@@ -267,6 +272,7 @@ export default function GoogleDrivePhotoImport({ domy, onImportComplete }) {
             <p className="text-xs text-gray-500">
               {step === 'select-folders' && 'Vyberte priečinky s fotkami'}
               {step === 'preview-files' && `Nájdených ${importedFiles.length} fotiek`}
+              {step === 'edit-metadata' && `Upravte metadáta ${completedImports.length} fotiek`}
             </p>
           </div>
         </div>
@@ -489,6 +495,91 @@ export default function GoogleDrivePhotoImport({ domy, onImportComplete }) {
           </Button>
         </>
       )}
+
+      {/* Step 3: Edit Metadata */}
+      {step === 'edit-metadata' && (
+        <>
+          <div className="flex items-center gap-2 mb-2">
+            <Button variant="ghost" size="sm" onClick={() => {
+              setStep('select-folders');
+              setCompletedImports([]);
+            }}>
+              ← Nový import
+            </Button>
+          </div>
+
+          <Card className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-semibold text-gray-700">
+                Importované fotky ({completedImports.length})
+              </p>
+              <p className="text-xs text-gray-500">
+                Kliknite na fotku pre úpravu metadát
+              </p>
+            </div>
+
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+              {completedImports.map((photo, index) => (
+                <div 
+                  key={index}
+                  onClick={() => setEditingPhoto(photo)}
+                  className="relative cursor-pointer rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 hover:shadow-lg transition-all group"
+                >
+                  <div className="aspect-square bg-gray-100">
+                    <img 
+                      src={photo.url} 
+                      alt={photo.originalName}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center">
+                    <span className="text-white opacity-0 group-hover:opacity-100 text-xs font-medium">
+                      Upraviť
+                    </span>
+                  </div>
+                  <p className="text-[9px] text-gray-600 p-1 truncate bg-white" title={photo.originalName}>
+                    {photo.originalName}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <div className="flex gap-2">
+            <Button 
+              variant="outline"
+              onClick={() => {
+                setStep('select-folders');
+                setCompletedImports([]);
+              }}
+              className="flex-1"
+            >
+              Importovať ďalšie
+            </Button>
+            <Button 
+              onClick={() => {
+                toast.success('Import dokončený');
+                setStep('select-folders');
+                setCompletedImports([]);
+              }}
+              className="flex-1 bg-green-600 hover:bg-green-700"
+            >
+              Dokončiť
+            </Button>
+          </div>
+        </>
+      )}
+
+      {/* Photo Metadata Editor Modal */}
+      <PhotoMetadataEditor
+        photo={editingPhoto}
+        isOpen={!!editingPhoto}
+        onClose={() => setEditingPhoto(null)}
+        domy={domy}
+        onSave={() => {
+          queryClient.invalidateQueries({ queryKey: ['fotky'] });
+        }}
+      />
     </div>
   );
 }
