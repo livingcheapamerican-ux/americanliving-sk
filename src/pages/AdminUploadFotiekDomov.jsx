@@ -7,7 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Upload, AlertCircle, CheckCircle, Loader2, X, Trash2, Image as ImageIcon, Star, Settings, Images, RotateCcw } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Upload, AlertCircle, CheckCircle, Loader2, X, Trash2, Image as ImageIcon, Star, Settings, Images, RotateCcw, RefreshCw, Archive, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
