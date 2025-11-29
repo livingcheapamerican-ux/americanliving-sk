@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, AlertCircle, CheckCircle, Loader2, X, Trash2, Image as ImageIcon, Star, Settings, Images, RotateCcw, RefreshCw, Archive, Sparkles } from "lucide-react";
+import { Upload, AlertCircle, CheckCircle, Loader2, X, Trash2, Image as ImageIcon, Star, Settings, Images, RotateCcw, Archive, Sparkles, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
@@ -266,6 +266,21 @@ export default function AdminUploadFotiekDomov() {
   }
 
   const selectedDom = selectedDomIds.length === 1 ? domy.find(d => d.id === selectedDomIds[0]) : null;
+  
+  // Ticab house domy pre správu starých/nových fotiek
+  const ticabDomy = domy.filter(d => d.vyrobca === 'Ticab house');
+  const [activeTab, setActiveTab] = useState('upload');
+  const [selectedTicabDomId, setSelectedTicabDomId] = useState(null);
+  const selectedTicabDom = ticabDomy.find(d => d.id === selectedTicabDomId);
+
+  // Presun fotky zo starých do nových alebo naopak
+  const movePhotoToNew = async (domId, photoUrl, photoType) => {
+    const dom = domy.find(d => d.id === domId);
+    if (!dom) return;
+    
+    // Toto je len UI simulácia - v reálnom prípade by sme označili fotku ako "na výmenu"
+    toast.success('Fotka označená na výmenu');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 py-8">
@@ -278,12 +293,28 @@ export default function AdminUploadFotiekDomov() {
                 <ImageIcon className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Upload fotiek domov</h1>
-                <p className="text-sm text-gray-600 mt-1">Vyberte dom a nahrajte fotky</p>
+                <h1 className="text-3xl font-bold text-gray-900">Správa fotiek domov</h1>
+                <p className="text-sm text-gray-600 mt-1">Nahrávanie a výmena fotiek</p>
               </div>
             </div>
           </div>
 
+          {/* Tabs */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="upload" className="flex items-center gap-2">
+                <Upload className="w-4 h-4" />
+                Nahrať fotky
+              </TabsTrigger>
+              <TabsTrigger value="ticab" className="flex items-center gap-2">
+                <Archive className="w-4 h-4" />
+                Ticab House - Staré / Nové fotky
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          {activeTab === 'upload' && (
+          <>
           {/* Upload Results */}
           {uploadResults && (
             <AnimatePresence>
@@ -686,6 +717,134 @@ export default function AdminUploadFotiekDomov() {
                 )}
               </div>
             </Card>
+          )}
+          </>
+          )}
+
+          {/* Ticab House - Staré / Nové fotky Tab */}
+          {activeTab === 'ticab' && (
+            <div className="space-y-6">
+              {/* Výber Ticab domu */}
+              <Card className="p-6 border-0 shadow-xl bg-white">
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Vyberte Ticab House dom
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-48 overflow-y-auto">
+                  {ticabDomy.map(dom => (
+                    <button
+                      key={dom.id}
+                      onClick={() => setSelectedTicabDomId(dom.id)}
+                      className={`text-left p-3 rounded-lg border-2 transition-all ${
+                        selectedTicabDomId === dom.id 
+                          ? 'border-orange-500 bg-orange-50' 
+                          : 'border-gray-200 hover:border-orange-300'
+                      }`}
+                    >
+                      <p className="font-medium text-gray-800 text-sm truncate">{dom.nazov}</p>
+                    </button>
+                  ))}
+                </div>
+              </Card>
+
+              {/* Zobrazenie starých a nových fotiek */}
+              {selectedTicabDom && (
+                <div className="grid lg:grid-cols-2 gap-6">
+                  {/* Staré fotky (aktuálne v galérii) */}
+                  <Card className="p-6 border-0 shadow-xl bg-gradient-to-br from-amber-50 to-orange-50">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center">
+                        <Archive className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-amber-900">Staré fotky</h3>
+                        <p className="text-xs text-amber-700">Aktuálne zobrazené na stránke</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      {/* Hlavný obrázok */}
+                      {selectedTicabDom.hlavny_obrazok && (
+                        <div className="border border-amber-200 rounded-lg p-3 bg-white">
+                          <div className="flex items-center justify-between mb-2">
+                            <Badge className="bg-amber-100 text-amber-800">Hlavný</Badge>
+                          </div>
+                          <img src={selectedTicabDom.hlavny_obrazok} alt="Hlavný" className="w-full h-32 object-cover rounded-lg" />
+                        </div>
+                      )}
+
+                      {/* Galéria */}
+                      {selectedTicabDom.galeria && selectedTicabDom.galeria.length > 0 && (
+                        <div>
+                          <p className="text-sm font-semibold text-amber-800 mb-2">Galéria ({selectedTicabDom.galeria.length})</p>
+                          <div className="grid grid-cols-3 gap-2">
+                            {selectedTicabDom.galeria.slice(0, 9).map((url, index) => (
+                              <div key={index} className="relative group">
+                                <img src={url} alt={`Stará ${index + 1}`} className="w-full h-20 object-cover rounded-lg border border-amber-200" />
+                              </div>
+                            ))}
+                            {selectedTicabDom.galeria.length > 9 && (
+                              <div className="w-full h-20 bg-amber-100 rounded-lg flex items-center justify-center text-amber-700 font-semibold">
+                                +{selectedTicabDom.galeria.length - 9}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {!selectedTicabDom.hlavny_obrazok && (!selectedTicabDom.galeria || selectedTicabDom.galeria.length === 0) && (
+                        <div className="text-center py-6 text-amber-600">
+                          <ImageIcon className="w-10 h-10 mx-auto mb-2 opacity-50" />
+                          <p className="text-sm">Žiadne staré fotky</p>
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+
+                  {/* Nové fotky (na výmenu) */}
+                  <Card className="p-6 border-0 shadow-xl bg-gradient-to-br from-emerald-50 to-green-50">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center">
+                        <Sparkles className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-emerald-900">Nové fotky</h3>
+                        <p className="text-xs text-emerald-700">Nahrajte nové fotky na výmenu</p>
+                      </div>
+                    </div>
+
+                    {/* Upload zone pre nové fotky */}
+                    <div
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        // Tu by sa riešil upload nových fotiek pre konkrétny Ticab dom
+                        toast.info('Funkcia nahrávania nových fotiek - použite záložku "Nahrať fotky"');
+                      }}
+                      onDragOver={(e) => e.preventDefault()}
+                      className="border-2 border-dashed border-emerald-300 rounded-xl p-8 text-center bg-white/50 hover:bg-white transition-all"
+                    >
+                      <Sparkles className="w-10 h-10 mx-auto mb-3 text-emerald-400" />
+                      <p className="text-sm font-medium text-emerald-700 mb-1">Pretiahnite nové fotky sem</p>
+                      <p className="text-xs text-emerald-600">alebo použite záložku "Nahrať fotky"</p>
+                    </div>
+
+                    <div className="mt-4 p-4 bg-emerald-100 rounded-lg">
+                      <p className="text-xs text-emerald-800">
+                        <strong>Tip:</strong> Pre nahratie nových fotiek prejdite na záložku "Nahrať fotky", 
+                        vyberte tento dom a nahrajte nové fotky. Potom sa zobrazia tu.
+                      </p>
+                    </div>
+                  </Card>
+                </div>
+              )}
+
+              {!selectedTicabDomId && (
+                <Card className="p-12 text-center border-0 shadow-xl bg-white">
+                  <Archive className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                  <h3 className="text-xl font-bold text-gray-700 mb-2">Vyberte Ticab House dom</h3>
+                  <p className="text-gray-500">Pre zobrazenie starých a nových fotiek vyberte dom zo zoznamu vyššie.</p>
+                </Card>
+              )}
+            </div>
           )}
         </motion.div>
       </div>
