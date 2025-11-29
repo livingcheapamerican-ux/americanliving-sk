@@ -203,7 +203,15 @@ Odpovedz v slovenčine.`,
     saveMutation.mutate(formData);
   };
 
-  if (!photo) return null;
+  if (!photo) {
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent>
+          <div className="p-4 text-center text-gray-500">Žiadna fotka na úpravu</div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
