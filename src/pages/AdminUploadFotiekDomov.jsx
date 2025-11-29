@@ -272,14 +272,157 @@ export default function AdminUploadFotiekDomov() {
   const [activeTab, setActiveTab] = useState('upload');
   const [selectedTicabDomId, setSelectedTicabDomId] = useState(null);
   const selectedTicabDom = ticabDomy.find(d => d.id === selectedTicabDomId);
+  
+  // Stavy pre označenie fotiek na presun
+  const [selectedOldPhotos, setSelectedOldPhotos] = useState([]);
+  const [selectedNewPhotos, setSelectedNewPhotos] = useState([]);
+  const [processingPhotos, setProcessingPhotos] = useState(false);
 
-  // Presun fotky zo starých do nových alebo naopak
-  const movePhotoToNew = async (domId, photoUrl, photoType) => {
-    const dom = domy.find(d => d.id === domId);
-    if (!dom) return;
+  // Presun označených starých fotiek do zoznamu stare_fotky
+  const archiveSelectedPhotos = async () => {
+    if (!selectedTicabDom || selectedOldPhotos.length === 0) return;
     
-    // Toto je len UI simulácia - v reálnom prípade by sme označili fotku ako "na výmenu"
-    toast.success('Fotka označená na výmenu');
+    setProcessingPhotos(true);
+    try {
+      const currentStareFotky = selectedTicabDom.stare_fotky || [];
+      const currentGaleria = selectedTicabDom.galeria || [];
+      
+      // Presunúť vybrané fotky do stare_fotky
+      const newStareFotky = [...currentStareFotky, ...selectedOldPhotos];
+      // Odstrániť z galérie
+      const newGaleria = currentGaleria.filter(url => !selectedOldPhotos.includes(url));
+      
+      // Skontrolovať aj hlavný obrázok
+      let newHlavny = selectedTicabDom.hlavny_obrazok;
+      if (selectedOldPhotos.includes(selectedTicabDom.hlavny_obrazok)) {
+        newHlavny = null;
+      }
+      
+      await updateDomMutation.mutateAsync({
+        domId: selectedTicabDom.id,
+        data: {
+          stare_fotky: newStareFotky,
+          galeria: newGaleria,
+          hlavny_obrazok: newHlavny
+        }
+      });
+      
+      setSelectedOldPhotos([]);
+      toast.success(`${selectedOldPhotos.length} fotiek presunutých do archívu`);
+    } catch (error) {
+      toast.error(`Chyba: ${error.message}`);
+    }
+    setProcessingPhotos(false);
+  };
+
+  // Nastaviť fotku z nových ako hlavný obrázok
+  const setAsMainPhoto = async (photoUrl) => {
+    if (!selectedTicabDom) return;
+    
+    setProcessingPhotos(true);
+    try {
+      // Ak už je hlavný obrázok, presunúť ho do starých
+      const currentStareFotky = selectedTicabDom.stare_fotky || [];
+      const noveFotky = selectedTicabDom.nove_fotky || [];
+      
+      let newStareFotky = [...currentStareFotky];
+      if (selectedTicabDom.hlavny_obrazok) {
+        newStareFotky.push(selectedTicabDom.hlavny_obrazok);
+      }
+      
+      // Odstrániť fotku z nove_fotky
+      const newNoveFotky = noveFotky.filter(url => url !== photoUrl);
+      
+      await updateDomMutation.mutateAsync({
+        domId: selectedTicabDom.id,
+        data: {
+          hlavny_obrazok: photoUrl,
+          stare_fotky: newStareFotky,
+          nove_fotky: newNoveFotky
+        }
+      });
+      
+      toast.success('Hlavný obrázok bol zmenený');
+    } catch (error) {
+      toast.error(`Chyba: ${error.message}`);
+    }
+    setProcessingPhotos(false);
+  };
+
+  // Pridať nové fotky do galérie
+  const addNewPhotosToGallery = async () => {
+    if (!selectedTicabDom || selectedNewPhotos.length === 0) return;
+    
+    setProcessingPhotos(true);
+    try {
+      const currentGaleria = selectedTicabDom.galeria || [];
+      const noveFotky = selectedTicabDom.nove_fotky || [];
+      
+      // Pridať vybrané do galérie
+      const newGaleria = [...currentGaleria, ...selectedNewPhotos];
+      // Odstrániť z nove_fotky
+      const newNoveFotky = noveFotky.filter(url => !selectedNewPhotos.includes(url));
+      
+      await updateDomMutation.mutateAsync({
+        domId: selectedTicabDom.id,
+        data: {
+          galeria: newGaleria,
+          nove_fotky: newNoveFotky
+        }
+      });
+      
+      setSelectedNewPhotos([]);
+      toast.success(`${selectedNewPhotos.length} fotiek pridaných do galérie`);
+    } catch (error) {
+      toast.error(`Chyba: ${error.message}`);
+    }
+    setProcessingPhotos(false);
+  };
+
+  // Nahraj nové fotky priamo pre Ticab dom
+  const handleTicabNewPhotosUpload = async (files) => {
+    if (!selectedTicabDom) return;
+    
+    setProcessingPhotos(true);
+    const uploadedUrls = [];
+    
+    for (const file of files) {
+      try {
+        const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+        uploadedUrls.push(uploadResponse.file_url);
+      } catch (error) {
+        toast.error(`Chyba pri nahrávaní ${file.name}`);
+      }
+    }
+    
+    if (uploadedUrls.length > 0) {
+      try {
+        const currentNoveFotky = selectedTicabDom.nove_fotky || [];
+        await updateDomMutation.mutateAsync({
+          domId: selectedTicabDom.id,
+          data: {
+            nove_fotky: [...currentNoveFotky, ...uploadedUrls]
+          }
+        });
+        toast.success(`${uploadedUrls.length} nových fotiek nahratých`);
+      } catch (error) {
+        toast.error(`Chyba pri ukladaní: ${error.message}`);
+      }
+    }
+    setProcessingPhotos(false);
+  };
+
+  // Toggle výber fotky
+  const toggleOldPhotoSelection = (url) => {
+    setSelectedOldPhotos(prev => 
+      prev.includes(url) ? prev.filter(u => u !== url) : [...prev, url]
+    );
+  };
+
+  const toggleNewPhotoSelection = (url) => {
+    setSelectedNewPhotos(prev => 
+      prev.includes(url) ? prev.filter(u => u !== url) : [...prev, url]
+    );
   };
 
   return (
@@ -733,7 +876,11 @@ export default function AdminUploadFotiekDomov() {
                   {ticabDomy.map(dom => (
                     <button
                       key={dom.id}
-                      onClick={() => setSelectedTicabDomId(dom.id)}
+                      onClick={() => {
+                        setSelectedTicabDomId(dom.id);
+                        setSelectedOldPhotos([]);
+                        setSelectedNewPhotos([]);
+                      }}
                       className={`text-left p-3 rounded-lg border-2 transition-all ${
                         selectedTicabDomId === dom.id 
                           ? 'border-orange-500 bg-orange-50' 
@@ -741,6 +888,14 @@ export default function AdminUploadFotiekDomov() {
                       }`}
                     >
                       <p className="font-medium text-gray-800 text-sm truncate">{dom.nazov}</p>
+                      <div className="flex gap-2 mt-1">
+                        {dom.nove_fotky?.length > 0 && (
+                          <Badge className="bg-emerald-100 text-emerald-700 text-xs">{dom.nove_fotky.length} nových</Badge>
+                        )}
+                        {dom.stare_fotky?.length > 0 && (
+                          <Badge className="bg-amber-100 text-amber-700 text-xs">{dom.stare_fotky.length} archív</Badge>
+                        )}
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -751,22 +906,49 @@ export default function AdminUploadFotiekDomov() {
                 <div className="grid lg:grid-cols-2 gap-6">
                   {/* Staré fotky (aktuálne v galérii) */}
                   <Card className="p-6 border-0 shadow-xl bg-gradient-to-br from-amber-50 to-orange-50">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center">
-                        <Archive className="w-5 h-5 text-white" />
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center">
+                          <Archive className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-bold text-amber-900">Aktuálne fotky</h3>
+                          <p className="text-xs text-amber-700">Zobrazené na stránke</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-bold text-amber-900">Staré fotky</h3>
-                        <p className="text-xs text-amber-700">Aktuálne zobrazené na stránke</p>
-                      </div>
+                      {selectedOldPhotos.length > 0 && (
+                        <Button
+                          size="sm"
+                          onClick={archiveSelectedPhotos}
+                          disabled={processingPhotos}
+                          className="bg-amber-600 hover:bg-amber-700 text-white"
+                        >
+                          {processingPhotos ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+                            <>
+                              <Archive className="w-4 h-4 mr-1" />
+                              Archivovať ({selectedOldPhotos.length})
+                            </>
+                          )}
+                        </Button>
+                      )}
                     </div>
 
                     <div className="space-y-4">
                       {/* Hlavný obrázok */}
                       {selectedTicabDom.hlavny_obrazok && (
-                        <div className="border border-amber-200 rounded-lg p-3 bg-white">
+                        <div 
+                          onClick={() => toggleOldPhotoSelection(selectedTicabDom.hlavny_obrazok)}
+                          className={`border-2 rounded-lg p-3 bg-white cursor-pointer transition-all ${
+                            selectedOldPhotos.includes(selectedTicabDom.hlavny_obrazok) 
+                              ? 'border-red-500 ring-2 ring-red-200' 
+                              : 'border-amber-200 hover:border-amber-400'
+                          }`}
+                        >
                           <div className="flex items-center justify-between mb-2">
-                            <Badge className="bg-amber-100 text-amber-800">Hlavný</Badge>
+                            <Badge className="bg-amber-100 text-amber-800">Hlavný obrázok</Badge>
+                            {selectedOldPhotos.includes(selectedTicabDom.hlavny_obrazok) && (
+                              <Badge className="bg-red-100 text-red-800">Na archiváciu</Badge>
+                            )}
                           </div>
                           <img src={selectedTicabDom.hlavny_obrazok} alt="Hlavný" className="w-full h-32 object-cover rounded-lg" />
                         </div>
@@ -775,16 +957,59 @@ export default function AdminUploadFotiekDomov() {
                       {/* Galéria */}
                       {selectedTicabDom.galeria && selectedTicabDom.galeria.length > 0 && (
                         <div>
-                          <p className="text-sm font-semibold text-amber-800 mb-2">Galéria ({selectedTicabDom.galeria.length})</p>
-                          <div className="grid grid-cols-3 gap-2">
-                            {selectedTicabDom.galeria.slice(0, 9).map((url, index) => (
-                              <div key={index} className="relative group">
-                                <img src={url} alt={`Stará ${index + 1}`} className="w-full h-20 object-cover rounded-lg border border-amber-200" />
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="text-sm font-semibold text-amber-800">Galéria ({selectedTicabDom.galeria.length})</p>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                if (selectedOldPhotos.length === selectedTicabDom.galeria.length) {
+                                  setSelectedOldPhotos([]);
+                                } else {
+                                  setSelectedOldPhotos([...selectedTicabDom.galeria]);
+                                }
+                              }}
+                              className="text-xs h-7"
+                            >
+                              {selectedOldPhotos.length === selectedTicabDom.galeria.length ? 'Odznačiť všetky' : 'Označiť všetky'}
+                            </Button>
+                          </div>
+                          <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto">
+                            {selectedTicabDom.galeria.map((url, index) => (
+                              <div 
+                                key={index} 
+                                onClick={() => toggleOldPhotoSelection(url)}
+                                className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
+                                  selectedOldPhotos.includes(url) 
+                                    ? 'border-red-500 ring-2 ring-red-200' 
+                                    : 'border-amber-200 hover:border-amber-400'
+                                }`}
+                              >
+                                <img src={url} alt={`Galéria ${index + 1}`} className="w-full h-20 object-cover" />
+                                {selectedOldPhotos.includes(url) && (
+                                  <div className="absolute inset-0 bg-red-500/30 flex items-center justify-center">
+                                    <CheckCircle className="w-6 h-6 text-white" />
+                                  </div>
+                                )}
                               </div>
                             ))}
-                            {selectedTicabDom.galeria.length > 9 && (
-                              <div className="w-full h-20 bg-amber-100 rounded-lg flex items-center justify-center text-amber-700 font-semibold">
-                                +{selectedTicabDom.galeria.length - 9}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Archivované fotky */}
+                      {selectedTicabDom.stare_fotky && selectedTicabDom.stare_fotky.length > 0 && (
+                        <div className="border-t border-amber-200 pt-4">
+                          <p className="text-sm font-semibold text-amber-600 mb-2">
+                            📦 Archív ({selectedTicabDom.stare_fotky.length} fotiek)
+                          </p>
+                          <div className="grid grid-cols-4 gap-1">
+                            {selectedTicabDom.stare_fotky.slice(0, 8).map((url, index) => (
+                              <img key={index} src={url} alt={`Archív ${index + 1}`} className="w-full h-12 object-cover rounded opacity-60" />
+                            ))}
+                            {selectedTicabDom.stare_fotky.length > 8 && (
+                              <div className="w-full h-12 bg-amber-200 rounded flex items-center justify-center text-amber-700 text-xs font-semibold">
+                                +{selectedTicabDom.stare_fotky.length - 8}
                               </div>
                             )}
                           </div>
@@ -794,7 +1019,7 @@ export default function AdminUploadFotiekDomov() {
                       {!selectedTicabDom.hlavny_obrazok && (!selectedTicabDom.galeria || selectedTicabDom.galeria.length === 0) && (
                         <div className="text-center py-6 text-amber-600">
                           <ImageIcon className="w-10 h-10 mx-auto mb-2 opacity-50" />
-                          <p className="text-sm">Žiadne staré fotky</p>
+                          <p className="text-sm">Žiadne aktuálne fotky</p>
                         </div>
                       )}
                     </div>
@@ -802,35 +1027,137 @@ export default function AdminUploadFotiekDomov() {
 
                   {/* Nové fotky (na výmenu) */}
                   <Card className="p-6 border-0 shadow-xl bg-gradient-to-br from-emerald-50 to-green-50">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center">
-                        <Sparkles className="w-5 h-5 text-white" />
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center">
+                          <Sparkles className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-bold text-emerald-900">Nové fotky</h3>
+                          <p className="text-xs text-emerald-700">Na výmenu</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-bold text-emerald-900">Nové fotky</h3>
-                        <p className="text-xs text-emerald-700">Nahrajte nové fotky na výmenu</p>
-                      </div>
+                      {selectedNewPhotos.length > 0 && (
+                        <Button
+                          size="sm"
+                          onClick={addNewPhotosToGallery}
+                          disabled={processingPhotos}
+                          className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                        >
+                          {processingPhotos ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+                            <>
+                              <Images className="w-4 h-4 mr-1" />
+                              Do galérie ({selectedNewPhotos.length})
+                            </>
+                          )}
+                        </Button>
+                      )}
                     </div>
 
-                    {/* Upload zone pre nové fotky */}
-                    <div
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        // Tu by sa riešil upload nových fotiek pre konkrétny Ticab dom
-                        toast.info('Funkcia nahrávania nových fotiek - použite záložku "Nahrať fotky"');
-                      }}
-                      onDragOver={(e) => e.preventDefault()}
-                      className="border-2 border-dashed border-emerald-300 rounded-xl p-8 text-center bg-white/50 hover:bg-white transition-all"
-                    >
-                      <Sparkles className="w-10 h-10 mx-auto mb-3 text-emerald-400" />
-                      <p className="text-sm font-medium text-emerald-700 mb-1">Pretiahnite nové fotky sem</p>
-                      <p className="text-xs text-emerald-600">alebo použite záložku "Nahrať fotky"</p>
-                    </div>
+                    {/* Zobrazenie nových fotiek */}
+                    {selectedTicabDom.nove_fotky && selectedTicabDom.nove_fotky.length > 0 ? (
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-semibold text-emerald-800">
+                            {selectedTicabDom.nove_fotky.length} nových fotiek
+                          </p>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              if (selectedNewPhotos.length === selectedTicabDom.nove_fotky.length) {
+                                setSelectedNewPhotos([]);
+                              } else {
+                                setSelectedNewPhotos([...selectedTicabDom.nove_fotky]);
+                              }
+                            }}
+                            className="text-xs h-7"
+                          >
+                            {selectedNewPhotos.length === selectedTicabDom.nove_fotky.length ? 'Odznačiť' : 'Označiť všetky'}
+                          </Button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3 max-h-64 overflow-y-auto">
+                          {selectedTicabDom.nove_fotky.map((url, index) => (
+                            <div key={index} className="space-y-2">
+                              <div 
+                                onClick={() => toggleNewPhotoSelection(url)}
+                                className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
+                                  selectedNewPhotos.includes(url) 
+                                    ? 'border-emerald-500 ring-2 ring-emerald-200' 
+                                    : 'border-emerald-200 hover:border-emerald-400'
+                                }`}
+                              >
+                                <img src={url} alt={`Nová ${index + 1}`} className="w-full h-24 object-cover" />
+                                {selectedNewPhotos.includes(url) && (
+                                  <div className="absolute inset-0 bg-emerald-500/30 flex items-center justify-center">
+                                    <CheckCircle className="w-6 h-6 text-white" />
+                                  </div>
+                                )}
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setAsMainPhoto(url)}
+                                disabled={processingPhotos}
+                                className="w-full text-xs h-7 border-amber-300 text-amber-700 hover:bg-amber-50"
+                              >
+                                <Star className="w-3 h-3 mr-1" />
+                                Nastaviť ako hlavný
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Upload zone pre nové fotky */}
+                        <div
+                          onDrop={(e) => {
+                            e.preventDefault();
+                            const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+                            if (files.length > 0) {
+                              handleTicabNewPhotosUpload(files);
+                            }
+                          }}
+                          onDragOver={(e) => e.preventDefault()}
+                          className="border-2 border-dashed border-emerald-300 rounded-xl p-8 text-center bg-white/50 hover:bg-white transition-all"
+                        >
+                          <Sparkles className="w-10 h-10 mx-auto mb-3 text-emerald-400" />
+                          <p className="text-sm font-medium text-emerald-700 mb-2">Pretiahnite nové fotky sem</p>
+                          <input
+                            type="file"
+                            multiple
+                            accept="image/*"
+                            onChange={(e) => {
+                              const files = Array.from(e.target.files);
+                              if (files.length > 0) {
+                                handleTicabNewPhotosUpload(files);
+                              }
+                              e.target.value = '';
+                            }}
+                            className="hidden"
+                            id="ticab-new-photos"
+                            disabled={processingPhotos}
+                          />
+                          <label htmlFor="ticab-new-photos">
+                            <Button type="button" asChild disabled={processingPhotos} size="sm" className="bg-emerald-600 hover:bg-emerald-700">
+                              <span className="cursor-pointer">
+                                {processingPhotos ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Upload className="w-4 h-4 mr-1" />}
+                                Vybrať fotky
+                              </span>
+                            </Button>
+                          </label>
+                        </div>
+                      </>
+                    )}
 
+                    {/* Info panel */}
                     <div className="mt-4 p-4 bg-emerald-100 rounded-lg">
                       <p className="text-xs text-emerald-800">
-                        <strong>Tip:</strong> Pre nahratie nových fotiek prejdite na záložku "Nahrať fotky", 
-                        vyberte tento dom a nahrajte nové fotky. Potom sa zobrazia tu.
+                        <strong>Postup výmeny:</strong><br />
+                        1. Nahrajte nové fotky<br />
+                        2. Označte ich a pridajte do galérie alebo nastavte ako hlavný<br />
+                        3. V ľavom stĺpci označte staré fotky na archiváciu
                       </p>
                     </div>
                   </Card>
@@ -841,7 +1168,7 @@ export default function AdminUploadFotiekDomov() {
                 <Card className="p-12 text-center border-0 shadow-xl bg-white">
                   <Archive className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                   <h3 className="text-xl font-bold text-gray-700 mb-2">Vyberte Ticab House dom</h3>
-                  <p className="text-gray-500">Pre zobrazenie starých a nových fotiek vyberte dom zo zoznamu vyššie.</p>
+                  <p className="text-gray-500">Pre zobrazenie a správu fotiek vyberte dom zo zoznamu vyššie.</p>
                 </Card>
               )}
             </div>
