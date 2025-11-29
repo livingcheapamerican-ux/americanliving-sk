@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { X, Save, Tag, Image as ImageIcon, Home, Loader2 } from "lucide-react";
+import { X, Save, Tag, Image as ImageIcon, Home, Loader2, Sparkles, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 
 const TYP_FOTKY_OPTIONS = [
@@ -46,6 +46,8 @@ export default function PhotoMetadataEditor({
     poradie: 0
   });
   const [newTag, setNewTag] = useState('');
+  const [analyzing, setAnalyzing] = useState(false);
+  const [aiSuggestions, setAiSuggestions] = useState(null);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -109,6 +111,93 @@ export default function PhotoMetadataEditor({
     }));
   };
 
+  const analyzeWithAI = async () => {
+    const photoUrl = photo.url || photo.file_url;
+    if (!photoUrl) {
+      toast.error('Chýba URL fotky');
+      return;
+    }
+
+    setAnalyzing(true);
+    setAiSuggestions(null);
+
+    try {
+      const domyInfo = domy.map(d => `${d.nazov} (${d.vyrobca})`).join(', ');
+      
+      const result = await base44.integrations.Core.InvokeLLM({
+        prompt: `Analyzuj túto fotku modulárneho/mobilného domu a navrhni metadáta.
+
+Dostupné domy v systéme: ${domyInfo}
+
+Na základe vizuálneho obsahu fotky urči:
+1. Kategória obsahu (exterier, interier, podorys, detail, okolie, ine)
+2. Typ fotky (hlavny_obrazok - reprezentatívna foto celého domu zvonka, galeria - bežná foto, podorys - technický výkres, stare_fotky, nove_fotky)
+3. 3-6 relevantných tagov/kľúčových slov v slovenčine (napr. fasáda, drevo, terasa, kuchyňa, spálňa, moderný dizajn)
+4. Krátky popis fotky (1-2 vety)
+5. Ak rozpoznáš konkrétny model domu zo zoznamu, navrhni jeho názov
+
+Odpovedz v slovenčine.`,
+        file_urls: [photoUrl],
+        response_json_schema: {
+          type: "object",
+          properties: {
+            kategoria: { 
+              type: "string", 
+              enum: ["exterier", "interier", "podorys", "detail", "okolie", "ine"]
+            },
+            typ_fotky: { 
+              type: "string", 
+              enum: ["hlavny_obrazok", "galeria", "podorys", "stare_fotky", "nove_fotky"]
+            },
+            tagy: { 
+              type: "array", 
+              items: { type: "string" }
+            },
+            popis: { type: "string" },
+            navrhnuty_dom: { type: "string" },
+            dovera_priradenia: { 
+              type: "string",
+              enum: ["vysoka", "stredna", "nizka", "nerozpoznane"]
+            }
+          },
+          required: ["kategoria", "typ_fotky", "tagy", "popis"]
+        }
+      });
+
+      setAiSuggestions(result);
+      toast.success('AI analýza dokončená');
+    } catch (error) {
+      toast.error(`Chyba AI analýzy: ${error.message}`);
+    }
+    
+    setAnalyzing(false);
+  };
+
+  const applyAiSuggestions = () => {
+    if (!aiSuggestions) return;
+
+    const updates = {
+      kategoria: aiSuggestions.kategoria,
+      typ_fotky: aiSuggestions.typ_fotky,
+      popis: aiSuggestions.popis || formData.popis,
+      tagy: [...new Set([...formData.tagy, ...(aiSuggestions.tagy || [])])]
+    };
+
+    // Ak AI navrhlo dom s vysokou alebo strednou dôverou
+    if (aiSuggestions.navrhnuty_dom && ['vysoka', 'stredna'].includes(aiSuggestions.dovera_priradenia)) {
+      const matchedDom = domy.find(d => 
+        d.nazov.toLowerCase().includes(aiSuggestions.navrhnuty_dom.toLowerCase()) ||
+        aiSuggestions.navrhnuty_dom.toLowerCase().includes(d.nazov.toLowerCase())
+      );
+      if (matchedDom) {
+        updates.dom_id = matchedDom.id;
+      }
+    }
+
+    setFormData(prev => ({ ...prev, ...updates }));
+    toast.success('AI návrhy aplikované');
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     saveMutation.mutate(formData);
@@ -127,6 +216,65 @@ export default function PhotoMetadataEditor({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* AI Analysis Button */}
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={analyzeWithAI}
+              disabled={analyzing}
+              className="flex-1 border-purple-300 text-purple-700 hover:bg-purple-50"
+            >
+              {analyzing ? (
+                <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Analyzujem...</>
+              ) : (
+                <><Wand2 className="w-4 h-4 mr-2" />AI Analýza fotky</>
+              )}
+            </Button>
+            {aiSuggestions && (
+              <Button
+                type="button"
+                onClick={applyAiSuggestions}
+                className="bg-purple-600 hover:bg-purple-700"
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                Použiť návrhy
+              </Button>
+            )}
+          </div>
+
+          {/* AI Suggestions Panel */}
+          {aiSuggestions && (
+            <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-sm">
+              <div className="flex items-center gap-1 text-purple-700 font-medium mb-2">
+                <Sparkles className="w-4 h-4" />
+                AI návrhy
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div><span className="text-gray-500">Kategória:</span> {KATEGORIA_OPTIONS.find(k => k.value === aiSuggestions.kategoria)?.label}</div>
+                <div><span className="text-gray-500">Typ:</span> {TYP_FOTKY_OPTIONS.find(t => t.value === aiSuggestions.typ_fotky)?.label}</div>
+              </div>
+              {aiSuggestions.popis && (
+                <p className="text-xs text-gray-600 mt-1">{aiSuggestions.popis}</p>
+              )}
+              {aiSuggestions.tagy?.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {aiSuggestions.tagy.map((tag, i) => (
+                    <Badge key={i} className="bg-purple-100 text-purple-700 text-xs">{tag}</Badge>
+                  ))}
+                </div>
+              )}
+              {aiSuggestions.navrhnuty_dom && (
+                <div className="mt-2 text-xs">
+                  <span className="text-gray-500">Možný dom:</span> {aiSuggestions.navrhnuty_dom}
+                  <Badge className="ml-1 text-xs" variant="outline">
+                    {aiSuggestions.dovera_priradenia}
+                  </Badge>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Preview */}
           <div className="flex gap-4">
             <div className="w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
