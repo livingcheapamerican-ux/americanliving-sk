@@ -261,6 +261,166 @@ Deno.serve(async (req) => {
             return new Response(content, { headers: { 'Content-Type': 'text/plain' } });
         }
 
+        // Načítať obsah priečinka vrátane podpriečinkov rekurzívne
+        if (action === 'listFolderContents') {
+            const folderId = url.searchParams.get('folderId');
+            const recursive = url.searchParams.get('recursive') === 'true';
+            
+            if (!folderId) return Response.json({ error: 'Missing folderId' }, { status: 400 });
+
+            await refreshTokens();
+            const drive = google.drive({ version: 'v3', auth: oauth2Client });
+            
+            const listFolderRecursive = async (parentId, path = '') => {
+                const results = [];
+                
+                // Získať info o priečinku
+                const folderInfo = await drive.files.get({ fileId: parentId, fields: 'name' });
+                const currentPath = path ? `${path}/${folderInfo.data.name}` : folderInfo.data.name;
+                
+                // Načítať všetky súbory a priečinky v tomto priečinku
+                const res = await drive.files.list({
+                    pageSize: 1000,
+                    q: `'${parentId}' in parents and trashed=false`,
+                    fields: 'files(id, name, mimeType, modifiedTime, webViewLink, size, thumbnailLink)',
+                    orderBy: 'name'
+                });
+                
+                for (const file of res.data.files || []) {
+                    if (file.mimeType === 'application/vnd.google-apps.folder') {
+                        // Je to priečinok
+                        if (recursive) {
+                            const subResults = await listFolderRecursive(file.id, currentPath);
+                            results.push(...subResults);
+                        }
+                    } else if (file.mimeType?.startsWith('image/')) {
+                        // Je to obrázok
+                        results.push({
+                            ...file,
+                            path: currentPath,
+                            folderName: folderInfo.data.name
+                        });
+                    }
+                }
+                
+                return results;
+            };
+            
+            const files = await listFolderRecursive(folderId);
+            return Response.json(files);
+        }
+
+        // Získať náhľad/URL obrázka z Google Drive
+        if (action === 'getImageUrl') {
+            const fileId = url.searchParams.get('fileId');
+            if (!fileId) return Response.json({ error: 'Missing fileId' }, { status: 400 });
+
+            await refreshTokens();
+            const drive = google.drive({ version: 'v3', auth: oauth2Client });
+            
+            // Získať webContentLink pre priamy prístup
+            const res = await drive.files.get({ 
+                fileId, 
+                fields: 'webContentLink, thumbnailLink, name, mimeType' 
+            });
+            
+            return Response.json({
+                webContentLink: res.data.webContentLink,
+                thumbnailLink: res.data.thumbnailLink,
+                name: res.data.name,
+                mimeType: res.data.mimeType
+            });
+        }
+
+        // Stiahnuť obrázok a nahrať ho do Base44 storage
+        if (action === 'importImage') {
+            const fileId = url.searchParams.get('fileId');
+            if (!fileId) return Response.json({ error: 'Missing fileId' }, { status: 400 });
+
+            await refreshTokens();
+            const drive = google.drive({ version: 'v3', auth: oauth2Client });
+            
+            // Získať metadata súboru
+            const meta = await drive.files.get({ fileId, fields: 'name, mimeType, size' });
+            
+            // Stiahnuť obsah súboru
+            const res = await drive.files.get({ fileId, alt: 'media' }, { responseType: 'arraybuffer' });
+            
+            // Vytvoriť Blob z dát
+            const blob = new Blob([res.data], { type: meta.data.mimeType });
+            const file = new File([blob], meta.data.name, { type: meta.data.mimeType });
+            
+            // Nahrať do Base44 storage
+            const uploadResult = await base44.integrations.Core.UploadFile({ file });
+            
+            return Response.json({
+                file_url: uploadResult.file_url,
+                originalName: meta.data.name,
+                mimeType: meta.data.mimeType
+            });
+        }
+
+        // Hromadný import obrázkov z viacerých priečinkov
+        if (action === 'bulkImportFromFolders') {
+            if (req.method !== 'POST') {
+                return Response.json({ error: 'POST required' }, { status: 405 });
+            }
+            
+            const body = await req.json();
+            const { folderIds } = body;
+            
+            if (!folderIds || !Array.isArray(folderIds) || folderIds.length === 0) {
+                return Response.json({ error: 'Missing folderIds array' }, { status: 400 });
+            }
+
+            await refreshTokens();
+            const drive = google.drive({ version: 'v3', auth: oauth2Client });
+            
+            const allFiles = [];
+            
+            // Rekurzívna funkcia na získanie všetkých obrázkov
+            const listFolderRecursive = async (parentId, path = '') => {
+                const results = [];
+                
+                const folderInfo = await drive.files.get({ fileId: parentId, fields: 'name' });
+                const currentPath = path ? `${path}/${folderInfo.data.name}` : folderInfo.data.name;
+                
+                const res = await drive.files.list({
+                    pageSize: 1000,
+                    q: `'${parentId}' in parents and trashed=false`,
+                    fields: 'files(id, name, mimeType, modifiedTime, size)',
+                    orderBy: 'name'
+                });
+                
+                for (const file of res.data.files || []) {
+                    if (file.mimeType === 'application/vnd.google-apps.folder') {
+                        const subResults = await listFolderRecursive(file.id, currentPath);
+                        results.push(...subResults);
+                    } else if (file.mimeType?.startsWith('image/')) {
+                        results.push({
+                            ...file,
+                            path: currentPath,
+                            folderName: folderInfo.data.name,
+                            parentPath: path
+                        });
+                    }
+                }
+                
+                return results;
+            };
+            
+            // Spracovať všetky vybrané priečinky
+            for (const folderId of folderIds) {
+                const files = await listFolderRecursive(folderId);
+                allFiles.push(...files);
+            }
+            
+            return Response.json({
+                totalFiles: allFiles.length,
+                files: allFiles
+            });
+        }
+
         return Response.json({ error: 'Invalid action' }, { status: 400 });
 
     } catch (error) {
