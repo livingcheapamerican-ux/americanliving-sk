@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
 export default function AdminUploadFotiekDomov() {
-  const [selectedDomId, setSelectedDomId] = useState(null);
+  const [selectedDomIds, setSelectedDomIds] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0, currentFile: '' });
@@ -105,8 +105,8 @@ export default function AdminUploadFotiekDomov() {
   };
 
   const handleUpload = async () => {
-    if (!selectedDomId) {
-      toast.error("Vyberte dom");
+    if (selectedDomIds.length === 0) {
+      toast.error("Vyberte aspoň jeden dom");
       return;
     }
     if (selectedFiles.length === 0) {
@@ -114,19 +114,16 @@ export default function AdminUploadFotiekDomov() {
       return;
     }
 
-    const dom = domy.find(d => d.id === selectedDomId);
-    if (!dom) return;
-
     setUploading(true);
     setUploadProgress({ current: 0, total: selectedFiles.length, currentFile: '' });
 
     const results = { successful: [], failed: [] };
     const uploadedUrls = [];
 
+    // Upload all files first
     for (let i = 0; i < selectedFiles.length; i++) {
       const { file, type } = selectedFiles[i];
       
-      // Update file status to uploading
       setSelectedFiles(prev => prev.map((f, idx) => 
         idx === i ? { ...f, status: 'uploading' } : f
       ));
@@ -137,7 +134,6 @@ export default function AdminUploadFotiekDomov() {
         uploadedUrls.push({ url: uploadResponse.file_url, type });
         results.successful.push({ name: file.name, type });
         
-        // Update file status to success
         setSelectedFiles(prev => prev.map((f, idx) => 
           idx === i ? { ...f, status: 'success' } : f
         ));
@@ -145,7 +141,6 @@ export default function AdminUploadFotiekDomov() {
       } catch (error) {
         results.failed.push({ name: file.name, error: error.message });
         
-        // Update file status to error
         setSelectedFiles(prev => prev.map((f, idx) => 
           idx === i ? { ...f, status: 'error', errorMessage: error.message } : f
         ));
@@ -156,32 +151,35 @@ export default function AdminUploadFotiekDomov() {
       setUploadProgress({ current: i + 1, total: selectedFiles.length, currentFile: '' });
     }
 
-    // Aktualizuj dom
-    try {
-      const updateData = {};
-      
-      const hlavnyUrl = uploadedUrls.find(u => u.type === 'hlavny_obrazok')?.url;
-      const zakladnaUrl = uploadedUrls.find(u => u.type === 'zakladna_konfiguracia')?.url;
-      const galeriaUrls = uploadedUrls.filter(u => u.type === 'galeria').map(u => u.url);
+    // Update all selected doms
+    for (const domId of selectedDomIds) {
+      const dom = domy.find(d => d.id === domId);
+      if (!dom) continue;
 
-      if (hlavnyUrl) updateData.hlavny_obrazok = hlavnyUrl;
-      if (zakladnaUrl) updateData.zakladna_konfiguracia_obrazok = zakladnaUrl;
-      if (galeriaUrls.length > 0) {
-        updateData.galeria = [...(dom.galeria || []), ...galeriaUrls];
-      }
+      try {
+        const updateData = {};
+        
+        const hlavnyUrl = uploadedUrls.find(u => u.type === 'hlavny_obrazok')?.url;
+        const zakladnaUrl = uploadedUrls.find(u => u.type === 'zakladna_konfiguracia')?.url;
+        const galeriaUrls = uploadedUrls.filter(u => u.type === 'galeria').map(u => u.url);
 
-      if (Object.keys(updateData).length > 0) {
-        await updateDomMutation.mutateAsync({ domId: dom.id, data: updateData });
-        toast.success('Dom bol úspešne aktualizovaný');
+        if (hlavnyUrl) updateData.hlavny_obrazok = hlavnyUrl;
+        if (zakladnaUrl) updateData.zakladna_konfiguracia_obrazok = zakladnaUrl;
+        if (galeriaUrls.length > 0) {
+          updateData.galeria = [...(dom.galeria || []), ...galeriaUrls];
+        }
+
+        if (Object.keys(updateData).length > 0) {
+          await updateDomMutation.mutateAsync({ domId: dom.id, data: updateData });
+        }
+      } catch (error) {
+        toast.error(`Chyba pri aktualizácii ${dom.nazov}: ${error.message}`);
       }
-    } catch (error) {
-      toast.error(`Chyba pri aktualizácii domu: ${error.message}`);
     }
 
+    toast.success(`Fotky boli nahrané do ${selectedDomIds.length} domov`);
     setUploadResults(results);
     setUploading(false);
-    
-    // Clear only successful uploads
     setSelectedFiles(prev => prev.filter(f => f.status === 'error'));
   };
 
@@ -266,7 +264,7 @@ export default function AdminUploadFotiekDomov() {
     );
   }
 
-  const selectedDom = domy.find(d => d.id === selectedDomId);
+  const selectedDom = selectedDomIds.length === 1 ? domy.find(d => d.id === selectedDomIds[0]) : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 py-8">
@@ -329,29 +327,59 @@ export default function AdminUploadFotiekDomov() {
             </AnimatePresence>
           )}
 
-          {/* Select Dom */}
+          {/* Select Doms */}
           <Card className="p-6 mb-6 border-0 shadow-xl bg-white">
-            <label className="block text-sm font-semibold text-gray-700 mb-3">
-              1. Vyberte dom *
-            </label>
-            <Select value={selectedDomId || ''} onValueChange={setSelectedDomId}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Vyberte dom..." />
-              </SelectTrigger>
-              <SelectContent>
-                {domy
-                  .filter(dom => !dom.nazov.toLowerCase().includes('fotky') && !dom.nazov.toLowerCase().includes('konfiguráci'))
-                  .map(dom => (
-                    <SelectItem key={dom.id} value={dom.id}>
-                      {dom.nazov} - {dom.vyrobca}
-                    </SelectItem>
-                  ))}
-              </SelectContent>
-            </Select>
+            <div className="flex items-center justify-between mb-3">
+              <label className="block text-sm font-semibold text-gray-700">
+                1. Vyberte domy * ({selectedDomIds.length} vybraných)
+              </label>
+              {selectedDomIds.length > 0 && (
+                <Button variant="ghost" size="sm" onClick={() => setSelectedDomIds([])}>
+                  Zrušiť výber
+                </Button>
+              )}
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-64 overflow-y-auto p-1">
+              {domy
+                .filter(dom => !dom.nazov.toLowerCase().includes('fotky') && !dom.nazov.toLowerCase().includes('konfiguráci'))
+                .map(dom => {
+                  const isSelected = selectedDomIds.includes(dom.id);
+                  return (
+                    <button
+                      key={dom.id}
+                      onClick={() => {
+                        if (isSelected) {
+                          setSelectedDomIds(prev => prev.filter(id => id !== dom.id));
+                        } else {
+                          setSelectedDomIds(prev => [...prev, dom.id]);
+                        }
+                      }}
+                      className={`text-left p-3 rounded-lg border-2 transition-all ${
+                        isSelected 
+                          ? 'border-blue-500 bg-blue-50' 
+                          : 'border-gray-200 hover:border-blue-300'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className={`w-4 h-4 rounded border-2 flex items-center justify-center ${
+                          isSelected ? 'bg-blue-500 border-blue-500' : 'border-gray-300'
+                        }`}>
+                          {isSelected && <CheckCircle className="w-3 h-3 text-white" />}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-medium text-gray-800 text-sm truncate">{dom.nazov}</p>
+                          <p className="text-xs text-gray-500">{dom.vyrobca}</p>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+            </div>
           </Card>
 
           {/* Upload Zone */}
-          {selectedDomId && (
+          {selectedDomIds.length > 0 && (
             <Card className="p-6 mb-6 border-0 shadow-xl bg-white">
               <label className="block text-sm font-semibold text-gray-700 mb-3">
                 2. Nahrajte fotky *
@@ -575,7 +603,7 @@ export default function AdminUploadFotiekDomov() {
           )}
 
           {/* Delete Photos Section */}
-          {selectedDomId && selectedDom && (
+          {selectedDomIds.length === 1 && domy.find(d => d.id === selectedDomIds[0]) && (
             <Card className="p-6 border-0 shadow-xl bg-white mt-8">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-rose-600 rounded-xl flex items-center justify-center shadow-lg">
