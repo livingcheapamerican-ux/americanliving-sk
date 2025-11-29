@@ -19,11 +19,13 @@ import {
   Upload,
   X,
   Sparkles,
-  Home
+  Home,
+  Edit
 } from "lucide-react";
 import { toast } from "sonner";
 import PhotoMetadataEditor from "./PhotoMetadataEditor";
 import GoogleDriveSyncManager from "./GoogleDriveSyncManager";
+import PhotoDetailViewer from "./PhotoDetailViewer";
 
 export default function GoogleDrivePhotoImport({ domy, onImportComplete }) {
   const [isConnected, setIsConnected] = useState(false);
@@ -41,6 +43,8 @@ export default function GoogleDrivePhotoImport({ domy, onImportComplete }) {
   const [selectedDomId, setSelectedDomId] = useState(null);
   const [editingPhoto, setEditingPhoto] = useState(null);
   const [completedImports, setCompletedImports] = useState([]);
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewerIndex, setViewerIndex] = useState(0);
 
   const queryClient = useQueryClient();
 
@@ -523,24 +527,42 @@ export default function GoogleDrivePhotoImport({ domy, onImportComplete }) {
               {completedImports.map((photo, index) => (
                 <div 
                   key={index}
-                  onClick={() => setEditingPhoto(photo)}
                   className="relative cursor-pointer rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 hover:shadow-lg transition-all group"
                 >
-                  <div className="aspect-square bg-gray-100">
+                  <div 
+                    className="aspect-square bg-gray-100"
+                    onClick={() => {
+                      setViewerIndex(index);
+                      setViewerOpen(true);
+                    }}
+                  >
                     <img 
                       src={photo.url} 
                       alt={photo.originalName}
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center">
+                  <div 
+                    className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center pointer-events-none"
+                  >
                     <span className="text-white opacity-0 group-hover:opacity-100 text-xs font-medium">
-                      Upraviť
+                      Zobraziť
                     </span>
                   </div>
-                  <p className="text-[9px] text-gray-600 p-1 truncate bg-white" title={photo.originalName}>
-                    {photo.originalName}
-                  </p>
+                  <div className="flex items-center justify-between bg-white p-1">
+                    <p className="text-[9px] text-gray-600 truncate flex-grow" title={photo.originalName}>
+                      {photo.originalName}
+                    </p>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditingPhoto(photo);
+                      }}
+                      className="text-blue-500 hover:text-blue-700 p-0.5"
+                    >
+                      <Edit className="w-3 h-3" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -577,6 +599,22 @@ export default function GoogleDrivePhotoImport({ domy, onImportComplete }) {
           <GoogleDriveSyncManager folders={folders} domy={domy} />
         </div>
       )}
+
+      {/* Photo Detail Viewer */}
+      <PhotoDetailViewer
+        photos={completedImports.map(p => ({
+          ...p,
+          nazov: p.originalName,
+          url: p.url
+        }))}
+        initialIndex={viewerIndex}
+        isOpen={viewerOpen}
+        onClose={() => setViewerOpen(false)}
+        onEdit={(photo) => {
+          setViewerOpen(false);
+          setEditingPhoto(photo);
+        }}
+      />
 
       {/* Photo Metadata Editor Modal */}
       <PhotoMetadataEditor
