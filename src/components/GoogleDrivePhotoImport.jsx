@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import PhotoMetadataEditor from "./PhotoMetadataEditor";
+import GoogleDriveSyncManager from "./GoogleDriveSyncManager";
 
 export default function GoogleDrivePhotoImport({ domy, onImportComplete }) {
   const [isConnected, setIsConnected] = useState(false);
@@ -568,6 +569,13 @@ export default function GoogleDrivePhotoImport({ domy, onImportComplete }) {
             </Button>
           </div>
         </>
+      )}
+
+      {/* Sync Manager Section */}
+      {isConnected && folders.length > 0 && (
+        <div className="mt-6 pt-6 border-t">
+          <GoogleDriveSyncManager folders={folders} domy={domy} />
+        </div>
       )}
 
       {/* Photo Metadata Editor Modal */}
