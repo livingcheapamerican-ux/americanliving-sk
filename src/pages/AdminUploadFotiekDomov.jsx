@@ -1339,10 +1339,83 @@ export default function AdminUploadFotiekDomov() {
               )}
 
               {selectedTicabDomIds.length === 0 && (
-                <Card className="p-12 text-center border-0 shadow-xl bg-white">
-                  <Archive className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                  <h3 className="text-xl font-bold text-gray-700 mb-2">Vyberte Ticab House domy</h3>
-                  <p className="text-gray-500">Pre zobrazenie a správu fotiek vyberte jeden alebo viac domov.</p>
+                <Card className="p-8 border-0 shadow-xl bg-white">
+                  <div className="text-center mb-6">
+                    <Archive className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                    <h3 className="text-xl font-bold text-gray-700 mb-2">Vyberte Ticab House domy</h3>
+                    <p className="text-gray-500 mb-6">Pre zobrazenie a správu fotiek vyberte jeden alebo viac domov.</p>
+                  </div>
+                  
+                  <div className="border-t pt-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <Upload className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-800">Rýchly upload fotiek</h3>
+                        <p className="text-xs text-gray-500">Nahrať fotky z počítača do internej pamäte</p>
+                      </div>
+                    </div>
+                    
+                    <div
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+                        if (files.length > 0) {
+                          handleQuickUpload(files);
+                        }
+                      }}
+                      onDragOver={(e) => e.preventDefault()}
+                      className="border-2 border-dashed border-blue-300 rounded-xl p-8 text-center bg-blue-50/30 hover:bg-blue-50 transition-all"
+                    >
+                      <ImageIcon className="w-10 h-10 mx-auto mb-3 text-blue-400" />
+                      <p className="text-sm font-medium text-blue-700 mb-4">Pretiahnite fotky sem alebo</p>
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={(e) => {
+                          const files = Array.from(e.target.files);
+                          if (files.length > 0) handleQuickUpload(files);
+                          e.target.value = '';
+                        }}
+                        className="hidden"
+                        id="quick-upload-files"
+                      />
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={(e) => {
+                          const files = Array.from(e.target.files);
+                          if (files.length > 0) handleQuickUpload(files);
+                          e.target.value = '';
+                        }}
+                        className="hidden"
+                        id="quick-upload-folder"
+                        webkitdirectory=""
+                        directory=""
+                      />
+                      <div className="flex gap-3 justify-center">
+                        <label htmlFor="quick-upload-files">
+                          <Button type="button" asChild className="bg-blue-600 hover:bg-blue-700">
+                            <span className="cursor-pointer">
+                              <Upload className="w-4 h-4 mr-2" />
+                              Vybrať fotky
+                            </span>
+                          </Button>
+                        </label>
+                        <label htmlFor="quick-upload-folder">
+                          <Button type="button" asChild variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-50">
+                            <span className="cursor-pointer">
+                              <FolderOpen className="w-4 h-4 mr-2" />
+                              Vybrať priečinok
+                            </span>
+                          </Button>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
                 </Card>
               )}
             </div>
