@@ -434,6 +434,32 @@ export default function AdminUploadFotiekDomov() {
     );
   };
 
+  // Rýchly upload fotiek do internej pamäte (bez priradenia k domu)
+  const handleQuickUpload = async (files) => {
+    const imageFiles = files.filter(f => f.type.startsWith('image/'));
+    if (imageFiles.length === 0) {
+      toast.error('Neboli nájdené žiadne obrázky');
+      return;
+    }
+    
+    setProcessingPhotos(true);
+    let uploaded = 0;
+    
+    for (const file of imageFiles) {
+      try {
+        await base44.integrations.Core.UploadFile({ file });
+        uploaded++;
+      } catch (error) {
+        toast.error(`Chyba: ${file.name}`);
+      }
+    }
+    
+    setProcessingPhotos(false);
+    if (uploaded > 0) {
+      toast.success(`Nahratých ${uploaded} fotiek do internej pamäte`);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 py-8">
       <div className="container mx-auto px-4 max-w-5xl">
