@@ -71,7 +71,7 @@ export default function GoogleDrivePhotoImport({ domy, onImportComplete }) {
 
   const handleConnect = () => {
     const returnUrl = window.location.pathname;
-    window.location.href = `/functions/googleDrive?action=authorize&return_url=${encodeURIComponent(returnUrl)}`;
+    window.location.href = `/api/functions/googleDrive?action=authorize&return_url=${encodeURIComponent(returnUrl)}`;
   };
 
   const toggleFolderSelection = (folderId) => {
