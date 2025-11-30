@@ -15,10 +15,8 @@ Deno.serve(async (req) => {
     console.log('[GoogleDrive] URL:', url.toString());
 
     try {
-        // Always use production domain for callback, not preview URLs
-        const callbackUrl = BASE44_APP_ID 
-            ? `https://${BASE44_APP_ID}.base44.io/functions/googleDrive?action=callback`
-            : `${url.origin}/functions/googleDrive?action=callback`;
+        // Always use production domain for callback
+        const callbackUrl = `https://americanliving-6916d89a485af231beb54c71.base44.app/api/functions/googleDrive?action=callback`;
         
         console.log('[GoogleDrive] Callback URL:', callbackUrl);
         
@@ -111,10 +109,8 @@ Deno.serve(async (req) => {
                 
                 console.log('[GoogleDrive] ✓ SUCCESS');
                 
-                // Redirect to production URL, not preview
-                const finalReturnUrl = BASE44_APP_ID 
-                    ? `https://${BASE44_APP_ID}.base44.io${state.returnUrl.startsWith('/') ? state.returnUrl : '/' + state.returnUrl}`
-                    : state.returnUrl;
+                // Redirect to production URL
+                const finalReturnUrl = `https://americanliving-6916d89a485af231beb54c71.base44.app${state.returnUrl.startsWith('/') ? state.returnUrl : '/' + state.returnUrl}`;
                 
                 return new Response(`
                     <!DOCTYPE html>
