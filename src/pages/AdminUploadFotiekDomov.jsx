@@ -22,6 +22,7 @@ export default function AdminUploadFotiekDomov() {
   const [dragOver, setDragOver] = useState(false);
   const [activeTab, setActiveTab] = useState('upload');
   const [selectedTicabDomIds, setSelectedTicabDomIds] = useState([]);
+  const [selectedProstoDomIds, setSelectedProstoDomIds] = useState([]);
   const [selectedOldPhotos, setSelectedOldPhotos] = useState([]);
   const [selectedNewPhotos, setSelectedNewPhotos] = useState([]);
   const [processingPhotos, setProcessingPhotos] = useState(false);
@@ -274,9 +275,13 @@ export default function AdminUploadFotiekDomov() {
   const selectedDom = selectedDomIds.length === 1 ? domy.find(d => d.id === selectedDomIds[0]) : null;
   
   // Ticab house domy pre správu starých/nových fotiek
-  const ticabDomy = domy.filter(d => d.vyrobca === 'Ticab house');
-  const selectedTicabDomy = ticabDomy.filter(d => selectedTicabDomIds.includes(d.id));
-  const selectedTicabDom = selectedTicabDomy.length === 1 ? selectedTicabDomy[0] : null;
+      const ticabDomy = domy.filter(d => d.vyrobca === 'Ticab house');
+      const selectedTicabDomy = ticabDomy.filter(d => selectedTicabDomIds.includes(d.id));
+      const selectedTicabDom = selectedTicabDomy.length === 1 ? selectedTicabDomy[0] : null;
+
+      // Prosto House domy
+      const prostoDomy = domy.filter(d => d.vyrobca === 'Prosto House');
+      const selectedProstoDomy = prostoDomy.filter(d => selectedProstoDomIds.includes(d.id));
 
   // Presun označených starých fotiek do zoznamu stare_fotky
   const archiveSelectedPhotos = async () => {
@@ -380,46 +385,87 @@ export default function AdminUploadFotiekDomov() {
   };
 
   // Nahraj nové fotky priamo pre Ticab domy (viacero naraz)
-  const handleTicabNewPhotosUpload = async (files) => {
-    if (selectedTicabDomIds.length === 0) {
-      toast.error('Vyberte aspoň jeden dom');
-      return;
-    }
-    
-    setProcessingPhotos(true);
-    const uploadedUrls = [];
-    
-    for (const file of files) {
-      try {
-        const uploadResponse = await base44.integrations.Core.UploadFile({ file });
-        uploadedUrls.push(uploadResponse.file_url);
-      } catch (error) {
-        toast.error(`Chyba pri nahrávaní ${file.name}`);
-      }
-    }
-    
-    if (uploadedUrls.length > 0) {
-      // Nahrať do všetkých vybraných domov
-      for (const domId of selectedTicabDomIds) {
-        const dom = ticabDomy.find(d => d.id === domId);
-        if (!dom) continue;
-        
-        try {
-          const currentNoveFotky = dom.nove_fotky || [];
-          await updateDomMutation.mutateAsync({
-            domId: dom.id,
-            data: {
-              nove_fotky: [...currentNoveFotky, ...uploadedUrls]
-            }
-          });
-        } catch (error) {
-          toast.error(`Chyba pri ukladaní do ${dom.nazov}: ${error.message}`);
+      const handleTicabNewPhotosUpload = async (files) => {
+        if (selectedTicabDomIds.length === 0) {
+          toast.error('Vyberte aspoň jeden dom');
+          return;
         }
-      }
-      toast.success(`${uploadedUrls.length} fotiek nahratých do ${selectedTicabDomIds.length} domov`);
-    }
-    setProcessingPhotos(false);
-  };
+
+        setProcessingPhotos(true);
+        const uploadedUrls = [];
+
+        for (const file of files) {
+          try {
+            const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+            uploadedUrls.push(uploadResponse.file_url);
+          } catch (error) {
+            toast.error(`Chyba pri nahrávaní ${file.name}`);
+          }
+        }
+
+        if (uploadedUrls.length > 0) {
+          // Nahrať do všetkých vybraných domov
+          for (const domId of selectedTicabDomIds) {
+            const dom = ticabDomy.find(d => d.id === domId);
+            if (!dom) continue;
+
+            try {
+              const currentNoveFotky = dom.nove_fotky || [];
+              await updateDomMutation.mutateAsync({
+                domId: dom.id,
+                data: {
+                  nove_fotky: [...currentNoveFotky, ...uploadedUrls]
+                }
+              });
+            } catch (error) {
+              toast.error(`Chyba pri ukladaní do ${dom.nazov}: ${error.message}`);
+            }
+          }
+          toast.success(`${uploadedUrls.length} fotiek nahratých do ${selectedTicabDomIds.length} domov`);
+        }
+        setProcessingPhotos(false);
+      };
+
+      // Nahraj nové fotky priamo pre Prosto domy (viacero naraz)
+      const handleProstoNewPhotosUpload = async (files) => {
+        if (selectedProstoDomIds.length === 0) {
+          toast.error('Vyberte aspoň jeden dom');
+          return;
+        }
+
+        setProcessingPhotos(true);
+        const uploadedUrls = [];
+
+        for (const file of files) {
+          try {
+            const uploadResponse = await base44.integrations.Core.UploadFile({ file });
+            uploadedUrls.push(uploadResponse.file_url);
+          } catch (error) {
+            toast.error(`Chyba pri nahrávaní ${file.name}`);
+          }
+        }
+
+        if (uploadedUrls.length > 0) {
+          for (const domId of selectedProstoDomIds) {
+            const dom = prostoDomy.find(d => d.id === domId);
+            if (!dom) continue;
+
+            try {
+              const currentNoveFotky = dom.nove_fotky || [];
+              await updateDomMutation.mutateAsync({
+                domId: dom.id,
+                data: {
+                  nove_fotky: [...currentNoveFotky, ...uploadedUrls]
+                }
+              });
+            } catch (error) {
+              toast.error(`Chyba pri ukladaní do ${dom.nazov}: ${error.message}`);
+            }
+          }
+          toast.success(`${uploadedUrls.length} fotiek nahratých do ${selectedProstoDomIds.length} domov`);
+        }
+        setProcessingPhotos(false);
+      };
 
   // Toggle výber fotky
   const toggleOldPhotoSelection = (url) => {
@@ -479,7 +525,7 @@ export default function AdminUploadFotiekDomov() {
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="upload" className="flex items-center gap-2">
                 <Upload className="w-4 h-4" />
                 Nahrať fotky
@@ -489,9 +535,13 @@ export default function AdminUploadFotiekDomov() {
                 Google Drive
               </TabsTrigger>
               <TabsTrigger value="ticab" className="flex items-center gap-2">
-                <Archive className="w-4 h-4" />
-                Ticab House
-              </TabsTrigger>
+                                  <Archive className="w-4 h-4" />
+                                  Ticab House
+                                </TabsTrigger>
+                                <TabsTrigger value="prosto" className="flex items-center gap-2">
+                                  <Archive className="w-4 h-4" />
+                                  Prosto House
+                                </TabsTrigger>
             </TabsList>
           </Tabs>
 
@@ -1433,6 +1483,246 @@ export default function AdminUploadFotiekDomov() {
                         </label>
                         <label htmlFor="quick-upload-folder">
                           <Button type="button" asChild variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-50">
+                            <span className="cursor-pointer">
+                              <FolderOpen className="w-4 h-4 mr-2" />
+                              Vybrať priečinok
+                            </span>
+                          </Button>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              )}
+            </div>
+          )}
+
+          {/* Prosto House Tab */}
+          {activeTab === 'prosto' && (
+            <div className="space-y-6">
+              {/* Výber Prosto domov */}
+              <Card className="p-6 border-0 shadow-xl bg-white">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Vyberte Prosto House domy ({selectedProstoDomIds.length} vybraných)
+                  </label>
+                  <div className="flex gap-2">
+                    {selectedProstoDomIds.length > 0 && (
+                      <Button variant="ghost" size="sm" onClick={() => setSelectedProstoDomIds([])}>
+                        Zrušiť výber
+                      </Button>
+                    )}
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setSelectedProstoDomIds(prostoDomy.map(d => d.id))}
+                    >
+                      Vybrať všetky
+                    </Button>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-48 overflow-y-auto">
+                  {prostoDomy.map(dom => {
+                    const isSelected = selectedProstoDomIds.includes(dom.id);
+                    return (
+                      <button
+                        key={dom.id}
+                        onClick={() => {
+                          if (isSelected) {
+                            setSelectedProstoDomIds(prev => prev.filter(id => id !== dom.id));
+                          } else {
+                            setSelectedProstoDomIds(prev => [...prev, dom.id]);
+                          }
+                        }}
+                        className={`text-left p-3 rounded-lg border-2 transition-all ${
+                          isSelected 
+                            ? 'border-purple-500 bg-purple-50' 
+                            : 'border-gray-200 hover:border-purple-300'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+                            isSelected ? 'bg-purple-500 border-purple-500' : 'border-gray-300'
+                          }`}>
+                            {isSelected && <CheckCircle className="w-3 h-3 text-white" />}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-medium text-gray-800 text-sm truncate">{dom.nazov}</p>
+                            <div className="flex gap-1 mt-1">
+                              {dom.nove_fotky?.length > 0 && (
+                                <Badge className="bg-emerald-100 text-emerald-700 text-xs">{dom.nove_fotky.length} nových</Badge>
+                              )}
+                              {dom.galeria?.length > 0 && (
+                                <Badge className="bg-blue-100 text-blue-700 text-xs">{dom.galeria.length} v galérii</Badge>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </Card>
+
+              {/* Upload pre viacero Prosto domov naraz */}
+              {selectedProstoDomIds.length > 0 && (
+                <Card className="p-6 border-0 shadow-xl bg-gradient-to-br from-purple-50 to-violet-50">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                      <Sparkles className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-purple-900">Nahrávanie fotiek</h3>
+                      <p className="text-xs text-purple-700">Nahrať fotky do {selectedProstoDomIds.length} domov</p>
+                    </div>
+                  </div>
+
+                  <div
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+                      if (files.length > 0) {
+                        handleProstoNewPhotosUpload(files);
+                      }
+                    }}
+                    onDragOver={(e) => e.preventDefault()}
+                    className="border-2 border-dashed border-purple-300 rounded-xl p-8 text-center bg-white/50 hover:bg-white transition-all"
+                  >
+                    <Sparkles className="w-10 h-10 mx-auto mb-3 text-purple-400" />
+                    <p className="text-sm font-medium text-purple-700 mb-2">Pretiahnite fotky sem</p>
+                    <p className="text-xs text-purple-600 mb-4">Budú nahrané do všetkých {selectedProstoDomIds.length} vybraných domov</p>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files);
+                        if (files.length > 0) {
+                          handleProstoNewPhotosUpload(files);
+                        }
+                        e.target.value = '';
+                      }}
+                      className="hidden"
+                      id="prosto-bulk-photos"
+                      disabled={processingPhotos}
+                    />
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files);
+                        if (files.length > 0) {
+                          handleProstoNewPhotosUpload(files);
+                        }
+                        e.target.value = '';
+                      }}
+                      className="hidden"
+                      id="prosto-bulk-folder"
+                      disabled={processingPhotos}
+                      webkitdirectory=""
+                      directory=""
+                    />
+                    <div className="flex gap-2 justify-center">
+                      <label htmlFor="prosto-bulk-photos">
+                        <Button type="button" asChild disabled={processingPhotos} className="bg-purple-600 hover:bg-purple-700">
+                          <span className="cursor-pointer">
+                            {processingPhotos ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Upload className="w-4 h-4 mr-1" />}
+                            Vybrať fotky
+                          </span>
+                        </Button>
+                      </label>
+                      <label htmlFor="prosto-bulk-folder">
+                        <Button type="button" asChild disabled={processingPhotos} variant="outline" className="border-purple-300 text-purple-700 hover:bg-purple-50">
+                          <span className="cursor-pointer">
+                            {processingPhotos ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <FolderOpen className="w-4 h-4 mr-1" />}
+                            Vybrať priečinok
+                          </span>
+                        </Button>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 p-3 bg-purple-100 rounded-lg">
+                    <p className="text-xs text-purple-800 font-medium mb-2">Vybrané domy:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {selectedProstoDomy.map(dom => (
+                        <Badge key={dom.id} className="bg-white text-purple-700 text-xs">{dom.nazov}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                </Card>
+              )}
+
+              {selectedProstoDomIds.length === 0 && (
+                <Card className="p-8 border-0 shadow-xl bg-white">
+                  <div className="text-center mb-6">
+                    <Archive className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                    <h3 className="text-xl font-bold text-gray-700 mb-2">Vyberte Prosto House domy</h3>
+                    <p className="text-gray-500 mb-6">Pre nahrávanie fotiek vyberte jeden alebo viac domov.</p>
+                  </div>
+                  
+                  <div className="border-t pt-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                        <Upload className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-800">Rýchly upload fotiek</h3>
+                        <p className="text-xs text-gray-500">Nahrať fotky z počítača do internej pamäte</p>
+                      </div>
+                    </div>
+                    
+                    <div
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+                        if (files.length > 0) {
+                          handleQuickUpload(files);
+                        }
+                      }}
+                      onDragOver={(e) => e.preventDefault()}
+                      className="border-2 border-dashed border-purple-300 rounded-xl p-8 text-center bg-purple-50/30 hover:bg-purple-50 transition-all"
+                    >
+                      <ImageIcon className="w-10 h-10 mx-auto mb-3 text-purple-400" />
+                      <p className="text-sm font-medium text-purple-700 mb-4">Pretiahnite fotky sem alebo</p>
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={(e) => {
+                          const files = Array.from(e.target.files);
+                          if (files.length > 0) handleQuickUpload(files);
+                          e.target.value = '';
+                        }}
+                        className="hidden"
+                        id="prosto-quick-upload-files"
+                      />
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={(e) => {
+                          const files = Array.from(e.target.files);
+                          if (files.length > 0) handleQuickUpload(files);
+                          e.target.value = '';
+                        }}
+                        className="hidden"
+                        id="prosto-quick-upload-folder"
+                        webkitdirectory=""
+                        directory=""
+                      />
+                      <div className="flex gap-3 justify-center">
+                        <label htmlFor="prosto-quick-upload-files">
+                          <Button type="button" asChild className="bg-purple-600 hover:bg-purple-700">
+                            <span className="cursor-pointer">
+                              <Upload className="w-4 h-4 mr-2" />
+                              Vybrať fotky
+                            </span>
+                          </Button>
+                        </label>
+                        <label htmlFor="prosto-quick-upload-folder">
+                          <Button type="button" asChild variant="outline" className="border-purple-300 text-purple-700 hover:bg-purple-50">
                             <span className="cursor-pointer">
                               <FolderOpen className="w-4 h-4 mr-2" />
                               Vybrať priečinok
