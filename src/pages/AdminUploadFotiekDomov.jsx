@@ -1027,14 +1027,41 @@ export default function AdminUploadFotiekDomov() {
                       id="ticab-bulk-photos"
                       disabled={processingPhotos}
                     />
-                    <label htmlFor="ticab-bulk-photos">
-                      <Button type="button" asChild disabled={processingPhotos} className="bg-emerald-600 hover:bg-emerald-700">
-                        <span className="cursor-pointer">
-                          {processingPhotos ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Upload className="w-4 h-4 mr-1" />}
-                          Vybrať fotky pre {selectedTicabDomIds.length} domov
-                        </span>
-                      </Button>
-                    </label>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files);
+                        if (files.length > 0) {
+                          handleTicabNewPhotosUpload(files);
+                        }
+                        e.target.value = '';
+                      }}
+                      className="hidden"
+                      id="ticab-bulk-folder"
+                      disabled={processingPhotos}
+                      webkitdirectory=""
+                      directory=""
+                    />
+                    <div className="flex gap-2 justify-center">
+                      <label htmlFor="ticab-bulk-photos">
+                        <Button type="button" asChild disabled={processingPhotos} className="bg-emerald-600 hover:bg-emerald-700">
+                          <span className="cursor-pointer">
+                            {processingPhotos ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Upload className="w-4 h-4 mr-1" />}
+                            Vybrať fotky
+                          </span>
+                        </Button>
+                      </label>
+                      <label htmlFor="ticab-bulk-folder">
+                        <Button type="button" asChild disabled={processingPhotos} variant="outline" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50">
+                          <span className="cursor-pointer">
+                            {processingPhotos ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <FolderOpen className="w-4 h-4 mr-1" />}
+                            Vybrať priečinok
+                          </span>
+                        </Button>
+                      </label>
+                    </div>
                   </div>
 
                   <div className="mt-4 p-3 bg-emerald-100 rounded-lg">
