@@ -615,14 +615,35 @@ export default function AdminUploadFotiekDomov() {
                   id="file-input"
                   disabled={uploading}
                 />
-                <label htmlFor="file-input">
-                  <Button type="button" asChild disabled={uploading} className="bg-gradient-to-r from-blue-600 to-indigo-600">
-                    <span className="cursor-pointer">
-                      <Upload className="w-4 h-4 mr-2" />
-                      Vyberte fotky
-                    </span>
-                  </Button>
-                </label>
+                <input
+                  type="file"
+                  onChange={handleFilesSelect}
+                  multiple
+                  accept="image/*"
+                  className="hidden"
+                  id="folder-input"
+                  disabled={uploading}
+                  webkitdirectory=""
+                  directory=""
+                />
+                <div className="flex gap-3 justify-center">
+                  <label htmlFor="file-input">
+                    <Button type="button" asChild disabled={uploading} className="bg-gradient-to-r from-blue-600 to-indigo-600">
+                      <span className="cursor-pointer">
+                        <Upload className="w-4 h-4 mr-2" />
+                        Vyberte fotky
+                      </span>
+                    </Button>
+                  </label>
+                  <label htmlFor="folder-input">
+                    <Button type="button" asChild disabled={uploading} variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-50">
+                      <span className="cursor-pointer">
+                        <FolderOpen className="w-4 h-4 mr-2" />
+                        Vyberte priečinok
+                      </span>
+                    </Button>
+                  </label>
+                </div>
               </div>
             </Card>
           )}
