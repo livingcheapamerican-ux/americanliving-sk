@@ -239,28 +239,63 @@ export default function GoogleDrivePhotoImport({ domy, onImportComplete }) {
     return groups;
   };
 
+  // Render modals first to maintain hook consistency
+  const modals = (
+    <>
+      <PhotoDetailViewer
+        photos={completedImports.map(p => ({
+          ...p,
+          nazov: p.originalName,
+          url: p.url
+        }))}
+        initialIndex={viewerIndex}
+        isOpen={viewerOpen}
+        onClose={() => setViewerOpen(false)}
+        onEdit={(photo) => {
+          setViewerOpen(false);
+          setEditingPhoto(photo);
+        }}
+      />
+      <PhotoMetadataEditor
+        photo={editingPhoto}
+        isOpen={!!editingPhoto}
+        onClose={() => setEditingPhoto(null)}
+        domy={domy}
+        onSave={() => {
+          queryClient.invalidateQueries({ queryKey: ['fotky'] });
+        }}
+      />
+    </>
+  );
+
   if (checking) {
     return (
-      <Card className="p-8 text-center">
-        <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-500" />
-        <p className="text-gray-600">Kontrolujem pripojenie k Google Drive...</p>
-      </Card>
+      <>
+        {modals}
+        <Card className="p-8 text-center">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-500" />
+          <p className="text-gray-600">Kontrolujem pripojenie k Google Drive...</p>
+        </Card>
+      </>
     );
   }
 
   if (!isConnected) {
     return (
-      <Card className="p-8 text-center border-2 border-dashed border-blue-300 bg-blue-50">
-        <FolderOpen className="w-16 h-16 mx-auto mb-4 text-blue-400" />
-        <h3 className="text-xl font-bold text-gray-800 mb-2">Pripojte Google Drive</h3>
-        <p className="text-gray-600 mb-6">
-          Pre import fotiek z priečinkov je potrebné pripojiť váš Google Drive účet.
-        </p>
-        <Button onClick={handleConnect} className="bg-blue-600 hover:bg-blue-700">
-          <FolderOpen className="w-4 h-4 mr-2" />
-          Pripojiť Google Drive
-        </Button>
-      </Card>
+      <>
+        {modals}
+        <Card className="p-8 text-center border-2 border-dashed border-blue-300 bg-blue-50">
+          <FolderOpen className="w-16 h-16 mx-auto mb-4 text-blue-400" />
+          <h3 className="text-xl font-bold text-gray-800 mb-2">Pripojte Google Drive</h3>
+          <p className="text-gray-600 mb-6">
+            Pre import fotiek z priečinkov je potrebné pripojiť váš Google Drive účet.
+          </p>
+          <Button onClick={handleConnect} className="bg-blue-600 hover:bg-blue-700">
+            <FolderOpen className="w-4 h-4 mr-2" />
+            Pripojiť Google Drive
+          </Button>
+        </Card>
+      </>
     );
   }
 
@@ -600,32 +635,7 @@ export default function GoogleDrivePhotoImport({ domy, onImportComplete }) {
         </div>
       )}
 
-      {/* Photo Detail Viewer */}
-      <PhotoDetailViewer
-        photos={completedImports.map(p => ({
-          ...p,
-          nazov: p.originalName,
-          url: p.url
-        }))}
-        initialIndex={viewerIndex}
-        isOpen={viewerOpen}
-        onClose={() => setViewerOpen(false)}
-        onEdit={(photo) => {
-          setViewerOpen(false);
-          setEditingPhoto(photo);
-        }}
-      />
-
-      {/* Photo Metadata Editor Modal */}
-      <PhotoMetadataEditor
-        photo={editingPhoto}
-        isOpen={!!editingPhoto}
-        onClose={() => setEditingPhoto(null)}
-        domy={domy}
-        onSave={() => {
-          queryClient.invalidateQueries({ queryKey: ['fotky'] });
-        }}
-      />
+      {modals}
     </div>
   );
 }
