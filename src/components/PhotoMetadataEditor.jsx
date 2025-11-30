@@ -65,6 +65,11 @@ export default function PhotoMetadataEditor({
     }
   }, [photo, isOpen]);
 
+  // Always render the Dialog to maintain consistent hooks
+  if (!isOpen) {
+    return null;
+  }
+
   const saveMutation = useMutation({
     mutationFn: async (data) => {
       const selectedDom = domy.find(d => d.id === data.dom_id);
@@ -205,7 +210,7 @@ Odpovedz v slovenčine.`,
   };
 
   return (
-    <Dialog open={isOpen && !!photo} onOpenChange={onClose}>
+    <Dialog open={!!photo} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
