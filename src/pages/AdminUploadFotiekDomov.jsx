@@ -20,6 +20,11 @@ export default function AdminUploadFotiekDomov() {
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0, currentFile: '' });
   const [uploadResults, setUploadResults] = useState(null);
   const [dragOver, setDragOver] = useState(false);
+  const [activeTab, setActiveTab] = useState('upload');
+  const [selectedTicabDomIds, setSelectedTicabDomIds] = useState([]);
+  const [selectedOldPhotos, setSelectedOldPhotos] = useState([]);
+  const [selectedNewPhotos, setSelectedNewPhotos] = useState([]);
+  const [processingPhotos, setProcessingPhotos] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -270,15 +275,8 @@ export default function AdminUploadFotiekDomov() {
   
   // Ticab house domy pre správu starých/nových fotiek
   const ticabDomy = domy.filter(d => d.vyrobca === 'Ticab house');
-  const [activeTab, setActiveTab] = useState('upload');
-  const [selectedTicabDomIds, setSelectedTicabDomIds] = useState([]);
   const selectedTicabDomy = ticabDomy.filter(d => selectedTicabDomIds.includes(d.id));
   const selectedTicabDom = selectedTicabDomy.length === 1 ? selectedTicabDomy[0] : null;
-  
-  // Stavy pre označenie fotiek na presun
-  const [selectedOldPhotos, setSelectedOldPhotos] = useState([]);
-  const [selectedNewPhotos, setSelectedNewPhotos] = useState([]);
-  const [processingPhotos, setProcessingPhotos] = useState(false);
 
   // Presun označených starých fotiek do zoznamu stare_fotky
   const archiveSelectedPhotos = async () => {
