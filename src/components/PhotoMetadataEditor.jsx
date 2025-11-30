@@ -51,7 +51,7 @@ export default function PhotoMetadataEditor({
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (photo) {
+    if (photo && isOpen) {
       setFormData({
         nazov: photo.nazov || photo.originalName || photo.name || '',
         popis: photo.popis || '',
@@ -61,8 +61,9 @@ export default function PhotoMetadataEditor({
         dom_id: photo.dom_id || '',
         poradie: photo.poradie || 0
       });
+      setAiSuggestions(null);
     }
-  }, [photo]);
+  }, [photo, isOpen]);
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
@@ -203,18 +204,8 @@ Odpovedz v slovenčine.`,
     saveMutation.mutate(formData);
   };
 
-  if (!photo) {
-    return (
-      <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent>
-          <div className="p-4 text-center text-gray-500">Žiadna fotka na úpravu</div>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen && !!photo} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -223,7 +214,7 @@ Odpovedz v slovenčine.`,
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {photo && <form onSubmit={handleSubmit} className="space-y-4">
           {/* AI Analysis Button */}
           <div className="flex gap-2">
             <Button
@@ -453,7 +444,7 @@ Odpovedz v slovenčine.`,
               )}
             </Button>
           </div>
-        </form>
+        </form>}
       </DialogContent>
     </Dialog>
   );
