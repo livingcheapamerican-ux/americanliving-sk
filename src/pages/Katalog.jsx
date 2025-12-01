@@ -106,8 +106,12 @@ export default function Katalog() {
   const canManage = isAdmin || isSuperAdmin;
 
   const filtrovane = domy.filter((dom) => {
-    // Pre verejnosť zobrazovať len verejné domy, admin/super_admin vidí všetky
-    const verejnyMatch = canManage || dom.verejny !== false;
+    // Tab "skryte" zobrazuje len skryté domy, ostatné taby len verejné
+    if (kategoriaFilter === "skryte") {
+      return dom.verejny === false;
+    }
+    // Pre ostatné taby zobrazovať len verejné domy
+    const verejnyMatch = dom.verejny !== false;
     const kategoriaMatch = kategoriaFilter === "vsetky" || dom.kategoria === kategoriaFilter;
     const vyrobcaMatch = vyrobcaFilter === "vsetci" || dom.vyrobca === vyrobcaFilter;
     const typMatch = typFilter === "vsetky" || dom.typ_domu === typFilter;
@@ -118,14 +122,8 @@ export default function Katalog() {
     return verejnyMatch && kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && hladanieMatch && cenaMatch && izbyMatch;
   });
 
-  // Zoradenie - skryté domy vždy na koniec
+  // Zoradenie
   const zoradeneDomy = [...filtrovane].sort((a, b) => {
-    // Najprv rozdeliť podľa verejnosti - verejné hore, skryté dole
-    const aVerejny = a.verejny !== false ? 0 : 1;
-    const bVerejny = b.verejny !== false ? 0 : 1;
-    if (aVerejny !== bVerejny) return aVerejny - bVerejny;
-    
-    // Potom zoradiť podľa vybraného kritéria
     if (zoradenie === "cena_vzostupne") return a.zakladna_cena - b.zakladna_cena;
     if (zoradenie === "cena_zostupne") return b.zakladna_cena - a.zakladna_cena;
     if (zoradenie === "plocha_vzostupne") return a.zastavana_plocha - b.zastavana_plocha;
@@ -135,8 +133,9 @@ export default function Katalog() {
 
   const vyrobcovia = ["JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"];
 
-  // Pre počty v taboch použiť len verejné domy (alebo všetky ak je admin)
-  const verejneDomy = canManage ? domy : domy.filter((d) => d.verejny !== false);
+  // Pre počty v taboch použiť len verejné domy
+  const verejneDomy = domy.filter((d) => d.verejny !== false);
+  const skryteDomy = domy.filter((d) => d.verejny === false);
   const rodinneDomy = verejneDomy.filter((d) => d.kategoria === "rodinne_domy");
   const mobilneDomy = verejneDomy.filter((d) => d.kategoria === "mobilne_domy");
 
@@ -172,10 +171,13 @@ export default function Katalog() {
       <div className="container mx-auto px-4 py-12">
         {/* Tabs pre kategórie */}
         <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-8">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 h-12">
+          <TabsList className={`grid w-full max-w-xl mx-auto h-12 ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
             <TabsTrigger value="vsetky" className="text-base">Všetky ({verejneDomy.length})</TabsTrigger>
             <TabsTrigger value="rodinne_domy" className="text-base">Rodinné domy ({rodinneDomy.length})</TabsTrigger>
             <TabsTrigger value="mobilne_domy" className="text-base">Mobilné domy ({mobilneDomy.length})</TabsTrigger>
+            {canManage && (
+              <TabsTrigger value="skryte" className="text-base">Skryté domy ({skryteDomy.length})</TabsTrigger>
+            )}
           </TabsList>
         </Tabs>
 
