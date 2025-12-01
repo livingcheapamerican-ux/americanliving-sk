@@ -135,8 +135,10 @@ export default function Katalog() {
 
   const vyrobcovia = ["JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"];
 
-  const rodinneDomy = domy.filter((d) => d.kategoria === "rodinne_domy");
-  const mobilneDomy = domy.filter((d) => d.kategoria === "mobilne_domy");
+  // Pre počty v taboch použiť len verejné domy (alebo všetky ak je admin)
+  const verejneDomy = canManage ? domy : domy.filter((d) => d.verejny !== false);
+  const rodinneDomy = verejneDomy.filter((d) => d.kategoria === "rodinne_domy");
+  const mobilneDomy = verejneDomy.filter((d) => d.kategoria === "mobilne_domy");
 
   const toggleSrovnanie = (dom) => {
     if (vybraneNaSrovnanie.find((d) => d.id === dom.id)) {
@@ -171,7 +173,7 @@ export default function Katalog() {
         {/* Tabs pre kategórie */}
         <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-8">
           <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 h-12">
-            <TabsTrigger value="vsetky" className="text-base">Všetky ({domy.length})</TabsTrigger>
+            <TabsTrigger value="vsetky" className="text-base">Všetky ({verejneDomy.length})</TabsTrigger>
             <TabsTrigger value="rodinne_domy" className="text-base">Rodinné domy ({rodinneDomy.length})</TabsTrigger>
             <TabsTrigger value="mobilne_domy" className="text-base">Mobilné domy ({mobilneDomy.length})</TabsTrigger>
           </TabsList>
@@ -329,7 +331,7 @@ export default function Katalog() {
               {/* Stats */}
               <div className="mt-8 pt-6 border-t">
                 <p className="text-sm text-gray-600">
-                  Zobrazuje sa <span className="font-bold text-primary">{zoradeneDomy.length}</span> z {domy.length} domov
+                  Zobrazuje sa <span className="font-bold text-primary">{zoradeneDomy.length}</span> z {verejneDomy.length} domov
                 </p>
               </div>
             </Card>
