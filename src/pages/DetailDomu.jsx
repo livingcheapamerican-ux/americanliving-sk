@@ -267,16 +267,14 @@ export default function DetailDomu() {
                       <div className="flex items-center gap-3">
                         {/* Info */}
                         <div className="flex-shrink-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-lg">{GALERIA_TYPY_LABELS[galeria.typ]?.split(" ")[0] || "📁"}</span>
-                            <span className="font-semibold text-gray-800">{galeria.nazov}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg font-semibold text-gray-800">
+                              {GALERIA_TYPY_LABELS[galeria.typ] || galeria.typ}
+                            </span>
                             <Badge className="bg-gray-100 text-gray-600 text-xs">
                               {galeria.fotky.length} fotiek
                             </Badge>
                           </div>
-                          <p className="text-xs text-gray-500">
-                            {GALERIA_TYPY_LABELS[galeria.typ] || galeria.typ}
-                          </p>
                         </div>
                         
                         {/* Náhľady fotiek */}
