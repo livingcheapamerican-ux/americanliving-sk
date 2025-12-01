@@ -18,8 +18,10 @@ import {
   Save,
   Home,
   Layers,
-  Grid3x3
+  Grid3x3,
+  CheckCircle
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
 const GALERIA_TYPY = [
@@ -33,9 +35,14 @@ export default function DomGalerieManager({ dom, onUpdate }) {
   const [galerie, setGalerie] = useState(dom.galerie || []);
   const [podorys2D, setPodorys2D] = useState(dom.podorys_2d || "");
   const [podorys3D, setPodorys3D] = useState(dom.podorys_3d || "");
+  const [zakladnaKonfiguracia, setZakladnaKonfiguracia] = useState(dom.zakladna_konfiguracia_obrazok || "");
+  const [hlavnyObrazok, setHlavnyObrazok] = useState(dom.hlavny_obrazok || "");
+  const [uploadedPhotos, setUploadedPhotos] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("galerie");
+  
+  const isTicabhouse = dom.vyrobca === "Ticab house";
 
   const queryClient = useQueryClient();
 
@@ -56,9 +63,39 @@ export default function DomGalerieManager({ dom, onUpdate }) {
     await updateDomMutation.mutateAsync({
       galerie: galerie,
       podorys_2d: podorys2D || null,
-      podorys_3d: podorys3D || null
+      podorys_3d: podorys3D || null,
+      zakladna_konfiguracia_obrazok: zakladnaKonfiguracia || null,
+      hlavny_obrazok: hlavnyObrazok || null
     });
     setSaving(false);
+  };
+
+  const handleUploadToLibrary = async (files) => {
+    setUploading(true);
+    const newPhotos = [];
+
+    for (const file of files) {
+      try {
+        const response = await base44.integrations.Core.UploadFile({ file });
+        newPhotos.push({
+          url: response.file_url,
+          name: file.name
+        });
+      } catch (error) {
+        toast.error(`Chyba pri nahrávaní ${file.name}`);
+      }
+    }
+
+    if (newPhotos.length > 0) {
+      setUploadedPhotos([...uploadedPhotos, ...newPhotos]);
+      toast.success(`Nahratých ${newPhotos.length} fotiek do knižnice`);
+    }
+    setUploading(false);
+  };
+
+  const setAsHlavnyObrazok = (url) => {
+    setHlavnyObrazok(url);
+    toast.success("Titulná fotka nastavená");
   };
 
   const addGaleria = () => {
@@ -156,7 +193,11 @@ export default function DomGalerieManager({ dom, onUpdate }) {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2 mb-6">
+        <TabsList className={`grid w-full mb-6 ${isTicabhouse ? 'grid-cols-4' : 'grid-cols-3'}`}>
+          <TabsTrigger value="titulna" className="flex items-center gap-2">
+            <ImageIcon className="w-4 h-4" />
+            Titulná fotka
+          </TabsTrigger>
           <TabsTrigger value="galerie" className="flex items-center gap-2">
             <FolderOpen className="w-4 h-4" />
             Galérie ({galerie.length})
@@ -165,7 +206,112 @@ export default function DomGalerieManager({ dom, onUpdate }) {
             <Grid3x3 className="w-4 h-4" />
             Pôdorysy
           </TabsTrigger>
+          {isTicabhouse && (
+            <TabsTrigger value="zakladna" className="flex items-center gap-2">
+              <Home className="w-4 h-4" />
+              Zákl. konfigurácia
+            </TabsTrigger>
+          )}
         </TabsList>
+
+        <TabsContent value="titulna" className="space-y-4">
+          <Card className="p-4 border border-gray-200">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="font-semibold text-gray-900">Titulná fotka v katalógu</h3>
+                <p className="text-xs text-gray-500">Táto fotka sa zobrazuje v zozname domov</p>
+              </div>
+            </div>
+            
+            {/* Aktuálna titulná fotka */}
+            {hlavnyObrazok ? (
+              <div className="mb-4">
+                <p className="text-sm font-medium text-gray-700 mb-2">Aktuálna titulná fotka:</p>
+                <div className="relative w-full max-w-md">
+                  <img src={hlavnyObrazok} alt="Titulná fotka" className="w-full h-48 object-cover rounded-lg border-2 border-green-500" />
+                  <Badge className="absolute top-2 left-2 bg-green-600">Aktívna</Badge>
+                </div>
+              </div>
+            ) : (
+              <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-yellow-800 text-sm">Žiadna titulná fotka nie je nastavená</p>
+              </div>
+            )}
+
+            {/* Upload do knižnice */}
+            <div className="border-t pt-4 mt-4">
+              <p className="text-sm font-medium text-gray-700 mb-3">Nahrať fotky do knižnice:</p>
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={(e) => handleUploadToLibrary(Array.from(e.target.files))}
+                className="hidden"
+                id="library-upload"
+                disabled={uploading}
+              />
+              <label htmlFor="library-upload">
+                <Button type="button" variant="outline" asChild disabled={uploading} className="cursor-pointer">
+                  <span>
+                    {uploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+                    Nahrať fotky
+                  </span>
+                </Button>
+              </label>
+            </div>
+
+            {/* Knižnica fotiek */}
+            {uploadedPhotos.length > 0 && (
+              <div className="mt-4">
+                <p className="text-sm font-medium text-gray-700 mb-2">Knižnica fotiek ({uploadedPhotos.length}):</p>
+                <p className="text-xs text-gray-500 mb-3">Kliknite na fotku pre nastavenie ako titulnú</p>
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                  {uploadedPhotos.map((photo, index) => (
+                    <div 
+                      key={index} 
+                      className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition-all hover:scale-105 ${
+                        hlavnyObrazok === photo.url ? 'border-green-500 ring-2 ring-green-200' : 'border-gray-200 hover:border-blue-400'
+                      }`}
+                      onClick={() => setAsHlavnyObrazok(photo.url)}
+                    >
+                      <img src={photo.url} alt={photo.name} className="w-full h-24 object-cover" />
+                      {hlavnyObrazok === photo.url && (
+                        <div className="absolute inset-0 bg-green-500/20 flex items-center justify-center">
+                          <CheckCircle className="w-6 h-6 text-green-600" />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Existujúce fotky z galérie */}
+            {dom.galeria && dom.galeria.length > 0 && (
+              <div className="mt-4 border-t pt-4">
+                <p className="text-sm font-medium text-gray-700 mb-2">Fotky z galérie ({dom.galeria.length}):</p>
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                  {dom.galeria.map((foto, index) => (
+                    <div 
+                      key={index} 
+                      className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition-all hover:scale-105 ${
+                        hlavnyObrazok === foto ? 'border-green-500 ring-2 ring-green-200' : 'border-gray-200 hover:border-blue-400'
+                      }`}
+                      onClick={() => setAsHlavnyObrazok(foto)}
+                    >
+                      <img src={foto} alt={`Galéria ${index + 1}`} className="w-full h-24 object-cover" />
+                      {hlavnyObrazok === foto && (
+                        <div className="absolute inset-0 bg-green-500/20 flex items-center justify-center">
+                          <CheckCircle className="w-6 h-6 text-green-600" />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </Card>
+        </TabsContent>
 
         <TabsContent value="galerie" className="space-y-4">
           {/* Pridať novú galériu */}
@@ -379,6 +525,89 @@ export default function DomGalerieManager({ dom, onUpdate }) {
             )}
           </Card>
         </TabsContent>
+
+        {/* Základná konfigurácia - len pre Ticab house */}
+        {isTicabhouse && (
+          <TabsContent value="zakladna" className="space-y-4">
+            <Card className="p-4 border border-gray-200">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="font-semibold text-gray-900">Ako vyzerá dom v základnej konfigurácii</h3>
+                  <p className="text-xs text-gray-500">Fotka zobrazujúca dom v štandardnej výbave bez príplatkov</p>
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    if (e.target.files[0]) {
+                      setUploading(true);
+                      base44.integrations.Core.UploadFile({ file: e.target.files[0] })
+                        .then(response => {
+                          setZakladnaKonfiguracia(response.file_url);
+                          toast.success("Fotka základnej konfigurácie nahratá");
+                        })
+                        .catch(error => toast.error(`Chyba: ${error.message}`))
+                        .finally(() => setUploading(false));
+                    }
+                  }}
+                  className="hidden"
+                  id="zakladna-upload"
+                  disabled={uploading}
+                />
+                <label htmlFor="zakladna-upload">
+                  <Button type="button" variant="outline" size="sm" asChild disabled={uploading}>
+                    <span>
+                      {uploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+                      Nahrať
+                    </span>
+                  </Button>
+                </label>
+              </div>
+              
+              {zakladnaKonfiguracia ? (
+                <div className="relative">
+                  <img src={zakladnaKonfiguracia} alt="Základná konfigurácia" className="w-full h-auto rounded-lg border" />
+                  <button
+                    onClick={() => setZakladnaKonfiguracia("")}
+                    className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                  <Badge className="absolute bottom-2 left-2 bg-blue-600">Základná konfigurácia</Badge>
+                </div>
+              ) : (
+                <div className="text-center py-12 border-2 border-dashed rounded-lg text-gray-400">
+                  <Home className="w-12 h-12 mx-auto mb-3" />
+                  <p className="text-sm font-medium">Fotka základnej konfigurácie nie je nahratá</p>
+                  <p className="text-xs mt-1">Nahrajte fotku domu v štandardnej výbave</p>
+                </div>
+              )}
+
+              {/* Možnosť vybrať z knižnice */}
+              {uploadedPhotos.length > 0 && (
+                <div className="mt-4 border-t pt-4">
+                  <p className="text-sm font-medium text-gray-700 mb-2">Alebo vyberte z knižnice:</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {uploadedPhotos.map((photo, index) => (
+                      <div 
+                        key={index} 
+                        className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
+                          zakladnaKonfiguracia === photo.url ? 'border-blue-500' : 'border-gray-200 hover:border-blue-400'
+                        }`}
+                        onClick={() => {
+                          setZakladnaKonfiguracia(photo.url);
+                          toast.success("Fotka základnej konfigurácie nastavená");
+                        }}
+                      >
+                        <img src={photo.url} alt={photo.name} className="w-full h-16 object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </Card>
+          </TabsContent>
+        )}
       </Tabs>
     </Card>
   );
