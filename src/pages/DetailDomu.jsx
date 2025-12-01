@@ -6,11 +6,13 @@ import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle, Boxes, Grid2x2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle, Boxes, Grid2x2, Layers, Edit } from "lucide-react";
 import { motion } from "framer-motion";
 import PriceCalculator from "../components/PriceCalculator";
 import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
 import FloatingPrice from "../components/FloatingPrice";
+import DomGalerieManager from "../components/admin/DomGalerieManager";
 
 export default function DetailDomu() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -20,6 +22,17 @@ export default function DetailDomu() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [calculatedPrice, setCalculatedPrice] = useState(0);
   const [showCalculator, setShowCalculator] = useState(false);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
+  const [activeGaleriaTab, setActiveGaleriaTab] = useState("hlavna");
+
+  const { data: user } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const isAdmin = user?.role === 'admin';
+  const isSuperAdmin = user?.super_admin === true;
+  const canManage = isAdmin || isSuperAdmin;
 
   const { data: dom, isLoading } = useQuery({
     queryKey: ['dom-detail', domId, domSlug],
@@ -120,19 +133,44 @@ export default function DetailDomu() {
   const isTicabhouse = dom.vyrobca === "Ticab house";
   const isJAKModules = dom.vyrobca === "JAK Modules";
 
+  // Typy galérií pre zobrazenie
+  const GALERIA_TYPY_LABELS = {
+    "exterier_drevo_plech": "🏠 Exteriér - Drevo/Plech",
+    "exterier_murovka": "🏡 Exteriér - Murovka",
+    "interier_drevo": "🪵 Interiér - Drevo",
+    "interier_sadrokarton": "🏢 Interiér - Sadrokartón"
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Back Button */}
       <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link to={returnUrl}>
             <Button variant="ghost" className="text-primary hover:text-primary/80">
               <ArrowLeft className="mr-2 w-4 h-4" />
               Späť do katalógu
             </Button>
           </Link>
+          {canManage && (
+            <Button
+              onClick={() => setShowAdminPanel(!showAdminPanel)}
+              variant={showAdminPanel ? "default" : "outline"}
+              className={showAdminPanel ? "bg-blue-600 hover:bg-blue-700" : ""}
+            >
+              <Edit className="w-4 h-4 mr-2" />
+              {showAdminPanel ? "Zavrieť správu" : "Správa galérií"}
+            </Button>
+          )}
         </div>
       </div>
+
+      {/* Admin Panel */}
+      {canManage && showAdminPanel && (
+        <div className="container mx-auto px-4 py-6">
+          <DomGalerieManager dom={dom} onUpdate={() => {}} />
+        </div>
+      )}
 
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-8">
@@ -180,6 +218,94 @@ export default function DetailDomu() {
                   </button>
                 ))}
               </div>
+            )}
+
+            {/* Pomenované galérie */}
+            {dom.galerie && dom.galerie.length > 0 && (
+              <Card className="p-6">
+                <h3 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                  <Layers className="w-5 h-5" />
+                  Galérie
+                </h3>
+                <Tabs value={activeGaleriaTab} onValueChange={setActiveGaleriaTab}>
+                  <TabsList className="flex flex-wrap h-auto gap-1 mb-4">
+                    {dom.galerie.map((galeria, index) => (
+                      <TabsTrigger 
+                        key={index} 
+                        value={`galeria-${index}`}
+                        className="text-xs"
+                      >
+                        {GALERIA_TYPY_LABELS[galeria.typ]?.split(" ")[0] || "📁"} {galeria.nazov}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                  {dom.galerie.map((galeria, index) => (
+                    <TabsContent key={index} value={`galeria-${index}`}>
+                      <div className="mb-2">
+                        <Badge className="bg-gray-100 text-gray-700">
+                          {GALERIA_TYPY_LABELS[galeria.typ] || galeria.typ}
+                        </Badge>
+                      </div>
+                      {galeria.fotky && galeria.fotky.length > 0 ? (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                          {galeria.fotky.map((foto, fotoIndex) => (
+                            <div 
+                              key={fotoIndex} 
+                              className="aspect-video rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                              onClick={() => window.open(foto, '_blank')}
+                            >
+                              <img
+                                src={foto}
+                                alt={`${galeria.nazov} - foto ${fotoIndex + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-500 text-sm text-center py-4">
+                          Žiadne fotky v tejto galérii
+                        </p>
+                      )}
+                    </TabsContent>
+                  ))}
+                </Tabs>
+              </Card>
+            )}
+
+            {/* 2D a 3D Pôdorysy */}
+            {(dom.podorys_2d || dom.podorys_3d) && (
+              <Card className="p-6">
+                <h3 className="text-lg font-bold text-primary mb-4">Pôdorysy</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {dom.podorys_2d && (
+                    <div>
+                      <p className="text-sm font-semibold text-gray-700 mb-2">2D Pôdorys</p>
+                      <div className="rounded-lg overflow-hidden bg-gray-50 border">
+                        <img
+                          src={dom.podorys_2d}
+                          alt="2D Pôdorys"
+                          className="w-full h-auto object-contain cursor-pointer hover:opacity-90"
+                          onClick={() => window.open(dom.podorys_2d, '_blank')}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  {dom.podorys_3d && (
+                    <div>
+                      <p className="text-sm font-semibold text-gray-700 mb-2">3D Pôdorys</p>
+                      <div className="rounded-lg overflow-hidden bg-gray-50 border">
+                        <img
+                          src={dom.podorys_3d}
+                          alt="3D Pôdorys"
+                          className="w-full h-auto object-contain cursor-pointer hover:opacity-90"
+                          onClick={() => window.open(dom.podorys_3d, '_blank')}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </Card>
             )}
 
             {/* Pôdorysy */}
