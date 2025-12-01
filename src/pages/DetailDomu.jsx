@@ -256,31 +256,21 @@ export default function DetailDomu() {
                   <Layers className="w-5 h-5" />
                   Galérie
                 </h3>
-                <div className="space-y-6">
-                  {/* Zoskupiť galérie podľa typu */}
-                  {Object.entries(
-                    dom.galerie
-                      .filter(g => g.fotky && g.fotky.length > 0)
-                      .reduce((acc, galeria) => {
-                        const typ = galeria.typ || 'ine';
-                        if (!acc[typ]) acc[typ] = [];
-                        acc[typ].push(...galeria.fotky);
-                        return acc;
-                      }, {})
-                  ).map(([typ, fotky]) => (
+                <div className="space-y-4">
+                  {dom.galerie.filter(g => g.fotky && g.fotky.length > 0).map((galeria, index) => (
                     <div 
-                      key={typ}
+                      key={index}
                       className="border rounded-xl p-4 hover:border-primary hover:shadow-md transition-all cursor-pointer group"
-                      onClick={() => openLightbox(fotky, 0)}
+                      onClick={() => openLightbox(galeria.fotky, 0)}
                     >
                       {/* Header s typom */}
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
                           <span className="text-lg font-semibold text-gray-800">
-                            {GALERIA_TYPY_LABELS[typ] || typ}
+                            {GALERIA_TYPY_LABELS[galeria.typ] || galeria.typ}
                           </span>
                           <Badge className="bg-gray-100 text-gray-600 text-xs">
-                            {fotky.length} fotiek
+                            {galeria.fotky.length} fotiek
                           </Badge>
                         </div>
                         <p className="text-xs text-gray-400 group-hover:text-primary transition-colors">
@@ -290,7 +280,7 @@ export default function DetailDomu() {
                       
                       {/* Náhľady fotiek */}
                       <div className="flex gap-2 flex-wrap">
-                        {fotky.slice(0, 6).map((foto, fotoIndex) => (
+                        {galeria.fotky.slice(0, 6).map((foto, fotoIndex) => (
                           <div 
                             key={fotoIndex} 
                             className="w-16 h-16 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0 relative"
@@ -301,10 +291,10 @@ export default function DetailDomu() {
                               className="w-full h-full object-cover"
                             />
                             {/* Overlay pre posledný ak je viac */}
-                            {fotoIndex === 5 && fotky.length > 6 && (
+                            {fotoIndex === 5 && galeria.fotky.length > 6 && (
                               <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                                 <span className="text-white font-bold text-sm">
-                                  +{fotky.length - 6}
+                                  +{galeria.fotky.length - 6}
                                 </span>
                               </div>
                             )}
