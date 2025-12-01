@@ -101,6 +101,10 @@ export default function Katalog() {
     toggleVerejnyMutation.mutate({ domId: dom.id, verejny: !dom.verejny });
   };
 
+  const isAdmin = user?.role === 'admin';
+  const isSuperAdmin = user?.super_admin === true;
+  const canManage = isAdmin || isSuperAdmin;
+
   const filtrovane = domy.filter((dom) => {
     // Pre verejnosť zobrazovať len verejné domy, admin/super_admin vidí všetky
     const verejnyMatch = canManage || dom.verejny !== false;
@@ -135,10 +139,6 @@ export default function Katalog() {
       setVybraneNaSrovnanie([...vybraneNaSrovnanie, dom]);
     }
   };
-
-  const isAdmin = user?.role === 'admin';
-  const isSuperAdmin = user?.super_admin === true;
-  const canManage = isAdmin || isSuperAdmin;
 
   return (
     <div className="min-h-screen bg-gray-50">
