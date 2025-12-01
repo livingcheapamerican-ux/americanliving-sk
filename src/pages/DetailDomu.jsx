@@ -256,55 +256,61 @@ export default function DetailDomu() {
                   <Layers className="w-5 h-5" />
                   Galérie
                 </h3>
-                <div className="space-y-4">
-                  {dom.galerie.filter(g => g.fotky && g.fotky.length > 0).map((galeria, index) => (
+                <div className="space-y-6">
+                  {/* Zoskupiť galérie podľa typu */}
+                  {Object.entries(
+                    dom.galerie
+                      .filter(g => g.fotky && g.fotky.length > 0)
+                      .reduce((acc, galeria) => {
+                        const typ = galeria.typ || 'ine';
+                        if (!acc[typ]) acc[typ] = [];
+                        acc[typ].push(...galeria.fotky);
+                        return acc;
+                      }, {})
+                  ).map(([typ, fotky]) => (
                     <div 
-                      key={index}
-                      className="border rounded-xl p-3 hover:border-primary hover:shadow-md transition-all cursor-pointer group"
-                      onClick={() => openLightbox(galeria.fotky, 0)}
+                      key={typ}
+                      className="border rounded-xl p-4 hover:border-primary hover:shadow-md transition-all cursor-pointer group"
+                      onClick={() => openLightbox(fotky, 0)}
                     >
-                      {/* Header s názvom a náhľadmi */}
-                      <div className="flex items-center gap-3">
-                        {/* Info */}
-                        <div className="flex-shrink-0">
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg font-semibold text-gray-800">
-                              {GALERIA_TYPY_LABELS[galeria.typ] || galeria.typ}
-                            </span>
-                            <Badge className="bg-gray-100 text-gray-600 text-xs">
-                              {galeria.fotky.length} fotiek
-                            </Badge>
-                          </div>
+                      {/* Header s typom */}
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg font-semibold text-gray-800">
+                            {GALERIA_TYPY_LABELS[typ] || typ}
+                          </span>
+                          <Badge className="bg-gray-100 text-gray-600 text-xs">
+                            {fotky.length} fotiek
+                          </Badge>
                         </div>
-                        
-                        {/* Náhľady fotiek */}
-                        <div className="flex-grow flex justify-end gap-1">
-                          {galeria.fotky.slice(0, 5).map((foto, fotoIndex) => (
-                            <div 
-                              key={fotoIndex} 
-                              className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0 relative"
-                            >
-                              <img
-                                src={foto}
-                                alt={`Náhľad ${fotoIndex + 1}`}
-                                className="w-full h-full object-cover"
-                              />
-                              {/* Overlay pre posledný ak je viac */}
-                              {fotoIndex === 4 && galeria.fotky.length > 5 && (
-                                <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                                  <span className="text-white font-bold text-xs">
-                                    +{galeria.fotky.length - 5}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
+                        <p className="text-xs text-gray-400 group-hover:text-primary transition-colors">
+                          Kliknite pre zobrazenie →
+                        </p>
                       </div>
                       
-                      <p className="text-xs text-gray-400 mt-2 group-hover:text-primary transition-colors text-right">
-                        Kliknite pre zobrazenie →
-                      </p>
+                      {/* Náhľady fotiek */}
+                      <div className="flex gap-2 flex-wrap">
+                        {fotky.slice(0, 6).map((foto, fotoIndex) => (
+                          <div 
+                            key={fotoIndex} 
+                            className="w-16 h-16 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0 relative"
+                          >
+                            <img
+                              src={foto}
+                              alt={`Náhľad ${fotoIndex + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                            {/* Overlay pre posledný ak je viac */}
+                            {fotoIndex === 5 && fotky.length > 6 && (
+                              <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                <span className="text-white font-bold text-sm">
+                                  +{fotky.length - 6}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>
