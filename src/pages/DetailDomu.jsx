@@ -249,6 +249,45 @@ export default function DetailDomu() {
               </div>
             )}
 
+            {/* 2D a 3D Pôdorysy - hneď pod titulnou fotkou */}
+            {(dom.podorys_2d || dom.podorys_3d) && (
+              <Card className="p-6">
+                <h3 className="text-lg font-bold text-primary mb-4">Pôdorysy</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {dom.podorys_2d && (
+                    <div>
+                      <p className="text-sm font-semibold text-gray-700 mb-2">2D Pôdorys</p>
+                      <div 
+                        className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
+                        onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), 0)}
+                      >
+                        <img
+                          src={dom.podorys_2d}
+                          alt="2D Pôdorys"
+                          className="w-full h-auto object-contain hover:opacity-90"
+                        />
+                      </div>
+                    </div>
+                  )}
+                  {dom.podorys_3d && (
+                    <div>
+                      <p className="text-sm font-semibold text-gray-700 mb-2">3D Pôdorys</p>
+                      <div 
+                        className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
+                        onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), dom.podorys_2d ? 1 : 0)}
+                      >
+                        <img
+                          src={dom.podorys_3d}
+                          alt="3D Pôdorys"
+                          className="w-full h-auto object-contain hover:opacity-90"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </Card>
+            )}
+
             {/* Pomenované galérie - zobrazovať len ak majú aspoň jednu galériu s fotkami */}
             {dom.galerie && dom.galerie.length > 0 && dom.galerie.some(g => g.fotky && g.fotky.length > 0) && (
               <Card className="p-6">
@@ -303,45 +342,6 @@ export default function DetailDomu() {
                       </div>
                     </div>
                   ))}
-                </div>
-              </Card>
-            )}
-
-            {/* 2D a 3D Pôdorysy */}
-            {(dom.podorys_2d || dom.podorys_3d) && (
-              <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">Pôdorysy</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {dom.podorys_2d && (
-                    <div>
-                      <p className="text-sm font-semibold text-gray-700 mb-2">2D Pôdorys</p>
-                      <div 
-                        className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
-                        onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), 0)}
-                      >
-                        <img
-                          src={dom.podorys_2d}
-                          alt="2D Pôdorys"
-                          className="w-full h-auto object-contain hover:opacity-90"
-                        />
-                      </div>
-                    </div>
-                  )}
-                  {dom.podorys_3d && (
-                    <div>
-                      <p className="text-sm font-semibold text-gray-700 mb-2">3D Pôdorys</p>
-                      <div 
-                        className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
-                        onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), dom.podorys_2d ? 1 : 0)}
-                      >
-                        <img
-                          src={dom.podorys_3d}
-                          alt="3D Pôdorys"
-                          className="w-full h-auto object-contain hover:opacity-90"
-                        />
-                      </div>
-                    </div>
-                  )}
                 </div>
               </Card>
             )}
