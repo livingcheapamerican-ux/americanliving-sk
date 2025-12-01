@@ -270,26 +270,53 @@ export default function DetailDomu() {
                   </TabsList>
                   {dom.galerie.map((galeria, index) => (
                     <TabsContent key={index} value={`galeria-${index}`}>
-                      <div className="mb-2">
+                      <div className="mb-3">
                         <Badge className="bg-gray-100 text-gray-700">
                           {GALERIA_TYPY_LABELS[galeria.typ] || galeria.typ}
                         </Badge>
+                        {galeria.fotky && galeria.fotky.length > 0 && (
+                          <span className="ml-2 text-sm text-gray-500">
+                            {galeria.fotky.length} fotiek
+                          </span>
+                        )}
                       </div>
                       {galeria.fotky && galeria.fotky.length > 0 ? (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                          {galeria.fotky.map((foto, fotoIndex) => (
-                            <div 
-                              key={fotoIndex} 
-                              className="aspect-video rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                              onClick={() => openLightbox(galeria.fotky, fotoIndex)}
-                            >
+                        <div 
+                          className="cursor-pointer group"
+                          onClick={() => openLightbox(galeria.fotky, 0)}
+                        >
+                          {/* Náhľad galérie - grid s prvými fotkami */}
+                          <div className="grid grid-cols-4 gap-2 rounded-xl overflow-hidden border-2 border-gray-200 group-hover:border-primary transition-colors">
+                            {/* Hlavná fotka */}
+                            <div className="col-span-2 row-span-2 aspect-square">
                               <img
-                                src={foto}
-                                alt={`${galeria.nazov} - foto ${fotoIndex + 1}`}
+                                src={galeria.fotky[0]}
+                                alt={`${galeria.nazov} - hlavná`}
                                 className="w-full h-full object-cover"
                               />
                             </div>
-                          ))}
+                            {/* Menšie náhľady */}
+                            {galeria.fotky.slice(1, 5).map((foto, fotoIndex) => (
+                              <div key={fotoIndex} className="aspect-square relative">
+                                <img
+                                  src={foto}
+                                  alt={`${galeria.nazov} - foto ${fotoIndex + 2}`}
+                                  className="w-full h-full object-cover"
+                                />
+                                {/* Overlay pre posledný obrázok ak je viac fotiek */}
+                                {fotoIndex === 3 && galeria.fotky.length > 5 && (
+                                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                    <span className="text-white font-bold text-lg">
+                                      +{galeria.fotky.length - 5}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                          <p className="text-center text-sm text-gray-500 mt-2 group-hover:text-primary transition-colors">
+                            Kliknite pre zobrazenie galérie
+                          </p>
                         </div>
                       ) : (
                         <p className="text-gray-500 text-sm text-center py-4">
