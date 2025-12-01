@@ -1205,47 +1205,67 @@ export default function AdminUploadFotiekDomov() {
                       )}
 
                       {/* Galéria */}
-                      {selectedTicabDom.galeria && selectedTicabDom.galeria.length > 0 && (
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm font-semibold text-amber-800">Galéria ({selectedTicabDom.galeria.length})</p>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => {
-                                if (selectedOldPhotos.length === selectedTicabDom.galeria.length) {
-                                  setSelectedOldPhotos([]);
-                                } else {
-                                  setSelectedOldPhotos([...selectedTicabDom.galeria]);
-                                }
-                              }}
-                              className="text-xs h-7"
-                            >
-                              {selectedOldPhotos.length === selectedTicabDom.galeria.length ? 'Odznačiť všetky' : 'Označiť všetky'}
-                            </Button>
-                          </div>
-                          <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto">
-                            {selectedTicabDom.galeria.map((url, index) => (
-                              <div 
-                                key={index} 
-                                onClick={() => toggleOldPhotoSelection(url)}
-                                className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
-                                  selectedOldPhotos.includes(url) 
-                                    ? 'border-red-500 ring-2 ring-red-200' 
-                                    : 'border-amber-200 hover:border-amber-400'
-                                }`}
-                              >
-                                <img src={url} alt={`Galéria ${index + 1}`} className="w-full h-20 object-cover" />
-                                {selectedOldPhotos.includes(url) && (
-                                  <div className="absolute inset-0 bg-red-500/30 flex items-center justify-center">
-                                    <CheckCircle className="w-6 h-6 text-white" />
-                                  </div>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                                                {selectedTicabDom.galeria && selectedTicabDom.galeria.length > 0 && (
+                                                  <div>
+                                                    <div className="flex items-center justify-between mb-2">
+                                                      <p className="text-sm font-semibold text-amber-800">Galéria ({selectedTicabDom.galeria.length})</p>
+                                                      <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        onClick={() => {
+                                                          if (selectedOldPhotos.length === selectedTicabDom.galeria.length) {
+                                                            setSelectedOldPhotos([]);
+                                                          } else {
+                                                            setSelectedOldPhotos([...selectedTicabDom.galeria]);
+                                                          }
+                                                        }}
+                                                        className="text-xs h-7"
+                                                      >
+                                                        {selectedOldPhotos.length === selectedTicabDom.galeria.length ? 'Odznačiť všetky' : 'Označiť všetky'}
+                                                      </Button>
+                                                    </div>
+                                                    <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto">
+                                                      {selectedTicabDom.galeria.map((url, index) => (
+                                                        <div 
+                                                          key={index} 
+                                                          className={`relative group rounded-lg overflow-hidden border-2 transition-all ${
+                                                            selectedOldPhotos.includes(url) 
+                                                              ? 'border-red-500 ring-2 ring-red-200' 
+                                                              : 'border-amber-200 hover:border-amber-400'
+                                                          }`}
+                                                        >
+                                                          <div 
+                                                            onClick={() => toggleOldPhotoSelection(url)}
+                                                            className="cursor-pointer"
+                                                          >
+                                                            <img src={url} alt={`Galéria ${index + 1}`} className="w-full h-20 object-cover" />
+                                                            {selectedOldPhotos.includes(url) && (
+                                                              <div className="absolute inset-0 bg-red-500/30 flex items-center justify-center">
+                                                                <CheckCircle className="w-6 h-6 text-white" />
+                                                              </div>
+                                                            )}
+                                                          </div>
+                                                          <button
+                                                            onClick={(e) => {
+                                                              e.stopPropagation();
+                                                              if (window.confirm('Naozaj chcete vymazať túto fotku?')) {
+                                                                const newGaleria = selectedTicabDom.galeria.filter(u => u !== url);
+                                                                updateDomMutation.mutate({
+                                                                  domId: selectedTicabDom.id,
+                                                                  data: { galeria: newGaleria }
+                                                                });
+                                                                toast.success('Fotka bola vymazaná');
+                                                              }
+                                                            }}
+                                                            className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                                                          >
+                                                            <Trash2 className="w-3 h-3" />
+                                                          </button>
+                                                        </div>
+                                                      ))}
+                                                    </div>
+                                                  </div>
+                                                )}
 
                       {/* Archivované fotky */}
                       {selectedTicabDom.stare_fotky && selectedTicabDom.stare_fotky.length > 0 && (
