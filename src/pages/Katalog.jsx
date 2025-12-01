@@ -118,8 +118,14 @@ export default function Katalog() {
     return verejnyMatch && kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && hladanieMatch && cenaMatch && izbyMatch;
   });
 
-  // Zoradenie
+  // Zoradenie - skryté domy vždy na koniec
   const zoradeneDomy = [...filtrovane].sort((a, b) => {
+    // Najprv rozdeliť podľa verejnosti - verejné hore, skryté dole
+    const aVerejny = a.verejny !== false ? 0 : 1;
+    const bVerejny = b.verejny !== false ? 0 : 1;
+    if (aVerejny !== bVerejny) return aVerejny - bVerejny;
+    
+    // Potom zoradiť podľa vybraného kritéria
     if (zoradenie === "cena_vzostupne") return a.zakladna_cena - b.zakladna_cena;
     if (zoradenie === "cena_zostupne") return b.zakladna_cena - a.zakladna_cena;
     if (zoradenie === "plocha_vzostupne") return a.zastavana_plocha - b.zastavana_plocha;
