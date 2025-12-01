@@ -10,7 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Square, LayoutGrid, Trash2 } from "lucide-react";
+import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Square, LayoutGrid, Trash2, Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 import { motion } from "framer-motion";
 
 export default function Katalog() {
@@ -78,6 +79,14 @@ export default function Katalog() {
     },
   });
 
+  const toggleVerejnyMutation = useMutation({
+    mutationFn: ({ domId, verejny }) => base44.entities.Dom.update(domId, { verejny }),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['domy-katalog'] });
+      toast.success(variables.verejny ? 'Dom je teraz verejný' : 'Dom je teraz skrytý');
+    },
+  });
+
   const handleDeleteDom = (dom, e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -86,7 +95,15 @@ export default function Katalog() {
     }
   };
 
+  const handleToggleVerejny = (dom, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleVerejnyMutation.mutate({ domId: dom.id, verejny: !dom.verejny });
+  };
+
   const filtrovane = domy.filter((dom) => {
+    // Pre verejnosť zobrazovať len verejné domy, admin/super_admin vidí všetky
+    const verejnyMatch = canManage || dom.verejny !== false;
     const kategoriaMatch = kategoriaFilter === "vsetky" || dom.kategoria === kategoriaFilter;
     const vyrobcaMatch = vyrobcaFilter === "vsetci" || dom.vyrobca === vyrobcaFilter;
     const typMatch = typFilter === "vsetky" || dom.typ_domu === typFilter;
@@ -94,7 +111,7 @@ export default function Katalog() {
     const hladanieMatch = hladanie === "" || dom.nazov.toLowerCase().includes(hladanie.toLowerCase());
     const cenaMatch = dom.zakladna_cena >= cenoveRozpatie[0] && dom.zakladna_cena <= cenoveRozpatie[1];
     const izbyMatch = !dom.pocet_izieb || (dom.pocet_izieb >= pocetIziebRozpatie[0] && dom.pocet_izieb <= pocetIziebRozpatie[1]);
-    return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && hladanieMatch && cenaMatch && izbyMatch;
+    return verejnyMatch && kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && hladanieMatch && cenaMatch && izbyMatch;
   });
 
   // Zoradenie
@@ -120,6 +137,8 @@ export default function Katalog() {
   };
 
   const isAdmin = user?.role === 'admin';
+  const isSuperAdmin = user?.super_admin === true;
+  const canManage = isAdmin || isSuperAdmin;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -368,7 +387,7 @@ export default function Katalog() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}>
 
-                      <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white ${jeVybrany ? 'ring-2 ring-primary' : ''}`}>
+                      <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
                         <div className="relative h-56 overflow-hidden">
                           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
                             <img
@@ -401,7 +420,20 @@ export default function Katalog() {
 
                               <Plus className={`w-5 h-5 transition-transform ${jeVybrany ? 'rotate-45' : ''}`} />
                             </button>
-                            {isAdmin && (
+                            {canManage && (
+                              <button
+                                onClick={(e) => handleToggleVerejny(dom, e)}
+                                disabled={toggleVerejnyMutation.isPending}
+                                title={dom.verejny !== false ? 'Skryť pre verejnosť' : 'Zobraziť pre verejnosť'}
+                                className={`p-2 rounded-full transition-all disabled:opacity-50 ${
+                                  dom.verejny !== false 
+                                    ? 'bg-green-600 text-white hover:bg-green-700' 
+                                    : 'bg-gray-600 text-white hover:bg-gray-700'
+                                }`}>
+                                {dom.verejny !== false ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+                              </button>
+                            )}
+                            {canManage && (
                               <button
                                 onClick={(e) => handleDeleteDom(dom, e)}
                                 disabled={deleteDomMutation.isPending}
