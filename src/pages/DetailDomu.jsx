@@ -256,54 +256,45 @@ export default function DetailDomu() {
                   <Layers className="w-5 h-5" />
                   Galérie
                 </h3>
-                <Tabs value={activeGaleriaTab} onValueChange={setActiveGaleriaTab} defaultValue={`galeria-${dom.galerie.findIndex(g => g.fotky && g.fotky.length > 0)}`}>
-                  <TabsList className="flex flex-wrap h-auto gap-1 mb-4">
-                    {dom.galerie.filter(g => g.fotky && g.fotky.length > 0).map((galeria, index) => (
-                      <TabsTrigger 
-                        key={index} 
-                        value={`galeria-${index}`}
-                        className="text-xs"
-                      >
-                        {GALERIA_TYPY_LABELS[galeria.typ]?.split(" ")[0] || "📁"} {galeria.nazov} ({galeria.fotky.length})
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
+                <div className="space-y-4">
                   {dom.galerie.filter(g => g.fotky && g.fotky.length > 0).map((galeria, index) => (
-                    <TabsContent key={index} value={`galeria-${index}`}>
-                      <div className="mb-3">
-                        <Badge className="bg-gray-100 text-gray-700">
-                          {GALERIA_TYPY_LABELS[galeria.typ] || galeria.typ}
-                        </Badge>
-                        <span className="ml-2 text-sm text-gray-500">
-                          {galeria.fotky.length} fotiek
-                        </span>
-                      </div>
-                      <div 
-                        className="cursor-pointer group"
-                        onClick={() => openLightbox(galeria.fotky, 0)}
-                      >
-                        {/* Náhľad galérie - grid s prvými fotkami */}
-                        <div className="grid grid-cols-4 gap-2 rounded-xl overflow-hidden border-2 border-gray-200 group-hover:border-primary transition-colors">
-                          {/* Hlavná fotka */}
-                          <div className="col-span-2 row-span-2 aspect-square">
-                            <img
-                              src={galeria.fotky[0]}
-                              alt={`${galeria.nazov} - hlavná`}
-                              className="w-full h-full object-cover"
-                            />
+                    <div 
+                      key={index}
+                      className="border rounded-xl p-3 hover:border-primary hover:shadow-md transition-all cursor-pointer group"
+                      onClick={() => openLightbox(galeria.fotky, 0)}
+                    >
+                      {/* Header s názvom a náhľadmi */}
+                      <div className="flex items-center gap-3">
+                        {/* Info */}
+                        <div className="flex-shrink-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-lg">{GALERIA_TYPY_LABELS[galeria.typ]?.split(" ")[0] || "📁"}</span>
+                            <span className="font-semibold text-gray-800">{galeria.nazov}</span>
+                            <Badge className="bg-gray-100 text-gray-600 text-xs">
+                              {galeria.fotky.length} fotiek
+                            </Badge>
                           </div>
-                          {/* Menšie náhľady */}
-                          {galeria.fotky.slice(1, 5).map((foto, fotoIndex) => (
-                            <div key={fotoIndex} className="aspect-square relative">
+                          <p className="text-xs text-gray-500">
+                            {GALERIA_TYPY_LABELS[galeria.typ] || galeria.typ}
+                          </p>
+                        </div>
+                        
+                        {/* Náhľady fotiek */}
+                        <div className="flex-grow flex justify-end gap-1">
+                          {galeria.fotky.slice(0, 5).map((foto, fotoIndex) => (
+                            <div 
+                              key={fotoIndex} 
+                              className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0 relative"
+                            >
                               <img
                                 src={foto}
-                                alt={`${galeria.nazov} - foto ${fotoIndex + 2}`}
+                                alt={`Náhľad ${fotoIndex + 1}`}
                                 className="w-full h-full object-cover"
                               />
-                              {/* Overlay pre posledný obrázok ak je viac fotiek */}
-                              {fotoIndex === 3 && galeria.fotky.length > 5 && (
+                              {/* Overlay pre posledný ak je viac */}
+                              {fotoIndex === 4 && galeria.fotky.length > 5 && (
                                 <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                                  <span className="text-white font-bold text-lg">
+                                  <span className="text-white font-bold text-xs">
                                     +{galeria.fotky.length - 5}
                                   </span>
                                 </div>
@@ -311,13 +302,14 @@ export default function DetailDomu() {
                             </div>
                           ))}
                         </div>
-                        <p className="text-center text-sm text-gray-500 mt-2 group-hover:text-primary transition-colors">
-                          Kliknite pre zobrazenie galérie
-                        </p>
                       </div>
-                    </TabsContent>
+                      
+                      <p className="text-xs text-gray-400 mt-2 group-hover:text-primary transition-colors text-right">
+                        Kliknite pre zobrazenie →
+                      </p>
+                    </div>
                   ))}
-                </Tabs>
+                </div>
               </Card>
             )}
 
