@@ -25,10 +25,10 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
 const GALERIA_TYPY = [
-  { value: "exterier_drevo_plech", label: "Exteriér - Drevený/Plechový dizajn", icon: "🏠" },
   { value: "exterier_murovka", label: "Exteriér - Murovka (biela omietka)", icon: "🏡" },
-  { value: "interier_drevo", label: "Interiér - Drevený obklad", icon: "🪵" },
+  { value: "exterier_drevo_plech", label: "Exteriér - Drevo/Plech", icon: "🏠" },
   { value: "interier_sadrokarton", label: "Interiér - Sadrokartón", icon: "🏢" },
+  { value: "interier_drevo", label: "Interiér - Drevený obklad", icon: "🪵" },
 ];
 
 export default function DomGalerieManager({ dom, onUpdate }) {
@@ -101,7 +101,7 @@ export default function DomGalerieManager({ dom, onUpdate }) {
   const addGaleria = () => {
     setGalerie([...galerie, {
       nazov: "Nová galéria",
-      typ: "exterier_drevo_plech",
+      typ: "exterier_murovka",
       fotky: []
     }]);
   };
