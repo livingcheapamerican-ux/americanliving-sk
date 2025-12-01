@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -17,7 +16,11 @@ export default function Domov() {
   
   const { data: domy = [] } = useQuery({
     queryKey: ['domy-popularne'],
-    queryFn: () => base44.entities.Dom.filter({ popularny: true }, 'poradie', 6),
+    queryFn: async () => {
+      const all = await base44.entities.Dom.filter({ popularny: true }, 'poradie', 20);
+      // Filtrovať len verejné domy
+      return all.filter(dom => dom.verejny !== false).slice(0, 6);
+    },
   });
 
   const heroImages = [
