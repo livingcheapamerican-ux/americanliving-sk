@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle, Boxes, Grid2x2, Layers, Edit } from "lucide-react";
+import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle, Boxes, Grid2x2, Layers, Edit, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import PriceCalculator from "../components/PriceCalculator";
 import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
@@ -24,6 +24,9 @@ export default function DetailDomu() {
   const [showCalculator, setShowCalculator] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [activeGaleriaTab, setActiveGaleriaTab] = useState("hlavna");
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImages, setLightboxImages] = useState([]);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -141,6 +144,24 @@ export default function DetailDomu() {
     "interier_sadrokarton": "🏢 Interiér - Sadrokartón"
   };
 
+  const openLightbox = (images, startIndex = 0) => {
+    setLightboxImages(images);
+    setLightboxIndex(startIndex);
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+  };
+
+  const nextImage = () => {
+    setLightboxIndex((prev) => (prev + 1) % lightboxImages.length);
+  };
+
+  const prevImage = () => {
+    setLightboxIndex((prev) => (prev - 1 + lightboxImages.length) % lightboxImages.length);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Back Button */}
@@ -181,7 +202,10 @@ export default function DetailDomu() {
             className="space-y-4"
           >
             {/* Hlavný obrázok */}
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl bg-gray-200">
+            <div 
+              className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl bg-gray-200 cursor-pointer"
+              onClick={() => openLightbox(allImages, selectedImage)}
+            >
               <img
                 src={allImages[selectedImage]}
                 alt={`${dom.nazov} - obrázok ${selectedImage + 1}`}
@@ -194,6 +218,11 @@ export default function DetailDomu() {
                 {dom.energeticky_certifikat && (
                   <Badge className="bg-green-600 text-white px-4 py-2">✔ CERTIFIKÁT A0</Badge>
                 )}
+              </div>
+              <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-all flex items-center justify-center">
+                <span className="text-white opacity-0 hover:opacity-100 text-sm font-medium bg-black/50 px-3 py-1 rounded-full">
+                  Zobraziť galériu
+                </span>
               </div>
             </div>
 
@@ -252,7 +281,7 @@ export default function DetailDomu() {
                             <div 
                               key={fotoIndex} 
                               className="aspect-video rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                              onClick={() => window.open(foto, '_blank')}
+                              onClick={() => openLightbox(galeria.fotky, fotoIndex)}
                             >
                               <img
                                 src={foto}
@@ -281,12 +310,14 @@ export default function DetailDomu() {
                   {dom.podorys_2d && (
                     <div>
                       <p className="text-sm font-semibold text-gray-700 mb-2">2D Pôdorys</p>
-                      <div className="rounded-lg overflow-hidden bg-gray-50 border">
+                      <div 
+                        className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
+                        onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), 0)}
+                      >
                         <img
                           src={dom.podorys_2d}
                           alt="2D Pôdorys"
-                          className="w-full h-auto object-contain cursor-pointer hover:opacity-90"
-                          onClick={() => window.open(dom.podorys_2d, '_blank')}
+                          className="w-full h-auto object-contain hover:opacity-90"
                         />
                       </div>
                     </div>
@@ -294,12 +325,14 @@ export default function DetailDomu() {
                   {dom.podorys_3d && (
                     <div>
                       <p className="text-sm font-semibold text-gray-700 mb-2">3D Pôdorys</p>
-                      <div className="rounded-lg overflow-hidden bg-gray-50 border">
+                      <div 
+                        className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
+                        onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), dom.podorys_2d ? 1 : 0)}
+                      >
                         <img
                           src={dom.podorys_3d}
                           alt="3D Pôdorys"
-                          className="w-full h-auto object-contain cursor-pointer hover:opacity-90"
-                          onClick={() => window.open(dom.podorys_3d, '_blank')}
+                          className="w-full h-auto object-contain hover:opacity-90"
                         />
                       </div>
                     </div>
@@ -763,6 +796,76 @@ export default function DetailDomu() {
 
       {/* Floating Price Display - len ak nie je JAK Modules */}
       {!isJAKModules && <FloatingPrice price={calculatedPrice} isVisible={showCalculator} />}
+
+      {/* Lightbox */}
+      {lightboxOpen && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          onClick={closeLightbox}
+        >
+          {/* Close button */}
+          <button 
+            className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
+            onClick={closeLightbox}
+          >
+            <X className="w-8 h-8" />
+          </button>
+
+          {/* Navigation */}
+          {lightboxImages.length > 1 && (
+            <>
+              <button 
+                className="absolute left-4 text-white hover:text-gray-300 z-10 p-2"
+                onClick={(e) => { e.stopPropagation(); prevImage(); }}
+              >
+                <ChevronLeft className="w-10 h-10" />
+              </button>
+              <button 
+                className="absolute right-4 text-white hover:text-gray-300 z-10 p-2"
+                onClick={(e) => { e.stopPropagation(); nextImage(); }}
+              >
+                <ChevronRight className="w-10 h-10" />
+              </button>
+            </>
+          )}
+
+          {/* Image */}
+          <div 
+            className="max-w-[90vw] max-h-[90vh] flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={lightboxImages[lightboxIndex]}
+              alt={`Fotka ${lightboxIndex + 1}`}
+              className="max-w-full max-h-[90vh] object-contain"
+              onContextMenu={(e) => e.preventDefault()}
+              draggable={false}
+            />
+          </div>
+
+          {/* Counter */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-sm">
+            {lightboxIndex + 1} / {lightboxImages.length}
+          </div>
+
+          {/* Thumbnails */}
+          {lightboxImages.length > 1 && (
+            <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex gap-2 max-w-[80vw] overflow-x-auto p-2">
+              {lightboxImages.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={(e) => { e.stopPropagation(); setLightboxIndex(idx); }}
+                  className={`flex-shrink-0 w-16 h-12 rounded overflow-hidden border-2 transition-all ${
+                    idx === lightboxIndex ? 'border-white' : 'border-transparent opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <img src={img} alt="" className="w-full h-full object-cover" onContextMenu={(e) => e.preventDefault()} draggable={false} />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
