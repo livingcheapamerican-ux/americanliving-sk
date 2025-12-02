@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Square, LayoutGrid, Trash2, Eye, EyeOff, Grid3x3, Zap } from "lucide-react";
+import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Square, LayoutGrid, Trash2, Eye, EyeOff, Grid3x3, Zap, Hammer } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
@@ -496,10 +496,10 @@ export default function Katalog() {
                             </div>
                             <div className="flex items-center gap-2 text-gray-600">
                               {dom.typ_domu === 'montovany' ? (
-                                <Home className="w-4 h-4 flex-shrink-0 text-orange-600" />
-                              ) : (
-                                <LayoutGrid className="w-4 h-4 flex-shrink-0 text-amber-500" />
-                              )}
+                                                                    <Hammer className="w-4 h-4 flex-shrink-0 text-orange-600" />
+                                                                  ) : (
+                                                                    <LayoutGrid className="w-4 h-4 flex-shrink-0 text-amber-500" />
+                                                                  )}
                               <div className="flex flex-col min-w-0">
                                 <span className="text-xs text-gray-500">Typ domu</span>
                                 <span className="font-semibold text-primary text-xs">{dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom'}</span>
