@@ -23,10 +23,12 @@ export default function Katalog() {
     const params = new URLSearchParams(location.search);
     return {
       kategoria: params.get("kategoria") || "vsetky",
-      vyrobca: params.get("vyrobca") || "vsetci",
-      typ: params.get("typ") || "vsetky",
+      vyrobca: params.get("vyrobca") || "",
+      typ: params.get("typ") || "",
       plocha_min: parseInt(params.get("plocha_min")) || 18,
       plocha_max: parseInt(params.get("plocha_max")) || 200,
+      uzitkova_min: parseInt(params.get("uzitkova_min")) || 0,
+      uzitkova_max: parseInt(params.get("uzitkova_max")) || 200,
       hladanie: params.get("hladanie") || "",
       cena_min: parseInt(params.get("cena_min")) || 15000,
       cena_max: parseInt(params.get("cena_max")) || 200000,
@@ -39,9 +41,10 @@ export default function Katalog() {
   const initialFilters = getInitialFilters();
 
   const [kategoriaFilter, setKategoriaFilter] = useState(initialFilters.kategoria);
-  const [vyrobcaFilter, setVyrobcaFilter] = useState(initialFilters.vyrobca);
-  const [typFilter, setTypFilter] = useState(initialFilters.typ);
+  const [vyrobcaFilter, setVyrobcaFilter] = useState(initialFilters.vyrobca ? initialFilters.vyrobca.split(',') : []);
+  const [typFilter, setTypFilter] = useState(initialFilters.typ ? initialFilters.typ.split(',') : []);
   const [plocharozsah, setPlocharozsah] = useState([initialFilters.plocha_min, initialFilters.plocha_max]);
+  const [uzitkovaRozsah, setUzitkovaRozsah] = useState([initialFilters.uzitkova_min, initialFilters.uzitkova_max]);
   const [hladanie, setHladanie] = useState(initialFilters.hladanie);
   const [cenoveRozpatie, setCenoveRozpatie] = useState([initialFilters.cena_min, initialFilters.cena_max]);
   const [pocetIziebRozpatie, setPocetIziebRozpatie] = useState([initialFilters.izby_min, initialFilters.izby_max]);
@@ -62,10 +65,12 @@ export default function Katalog() {
     
     const params = new URLSearchParams();
     if (kategoriaFilter !== "vsetky") params.set("kategoria", kategoriaFilter);
-    if (vyrobcaFilter !== "vsetci") params.set("vyrobca", vyrobcaFilter);
-    if (typFilter !== "vsetky") params.set("typ", typFilter);
+    if (vyrobcaFilter.length > 0) params.set("vyrobca", vyrobcaFilter.join(','));
+    if (typFilter.length > 0) params.set("typ", typFilter.join(','));
     if (plocharozsah[0] !== 18) params.set("plocha_min", plocharozsah[0].toString());
     if (plocharozsah[1] !== 200) params.set("plocha_max", plocharozsah[1].toString());
+    if (uzitkovaRozsah[0] !== 0) params.set("uzitkova_min", uzitkovaRozsah[0].toString());
+    if (uzitkovaRozsah[1] !== 200) params.set("uzitkova_max", uzitkovaRozsah[1].toString());
     if (hladanie) params.set("hladanie", hladanie);
     if (cenoveRozpatie[0] !== 15000) params.set("cena_min", cenoveRozpatie[0].toString());
     if (cenoveRozpatie[1] !== 200000) params.set("cena_max", cenoveRozpatie[1].toString());
@@ -78,7 +83,7 @@ export default function Katalog() {
     if (newSearch !== currentSearch) {
       navigate(`${location.pathname}${newSearch ? `?${newSearch}` : ""}`, { replace: true });
     }
-  }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, hladanie, cenoveRozpatie, pocetIziebRozpatie, zoradenie]);
+  }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebRozpatie, zoradenie]);
 
   const { data: domy = [], isLoading } = useQuery({
     queryKey: ['domy-katalog'],
@@ -131,13 +136,14 @@ export default function Katalog() {
     // Pre ostatné taby zobrazovať len verejné domy
     const verejnyMatch = dom.verejny !== false;
     const kategoriaMatch = kategoriaFilter === "vsetky" || dom.kategoria === kategoriaFilter;
-    const vyrobcaMatch = vyrobcaFilter === "vsetci" || dom.vyrobca === vyrobcaFilter;
-    const typMatch = typFilter === "vsetky" || dom.typ_domu === typFilter;
+    const vyrobcaMatch = vyrobcaFilter.length === 0 || vyrobcaFilter.includes(dom.vyrobca);
+    const typMatch = typFilter.length === 0 || typFilter.includes(dom.typ_domu);
     const plochaMatch = dom.zastavana_plocha >= plocharozsah[0] && dom.zastavana_plocha <= plocharozsah[1];
+    const uzitkovaMatch = !dom.uzitkova_plocha || (dom.uzitkova_plocha >= uzitkovaRozsah[0] && dom.uzitkova_plocha <= uzitkovaRozsah[1]);
     const hladanieMatch = hladanie === "" || dom.nazov.toLowerCase().includes(hladanie.toLowerCase());
     const cenaMatch = dom.zakladna_cena >= cenoveRozpatie[0] && dom.zakladna_cena <= cenoveRozpatie[1];
     const izbyMatch = !dom.pocet_izieb || (dom.pocet_izieb >= pocetIziebRozpatie[0] && dom.pocet_izieb <= pocetIziebRozpatie[1]);
-    return verejnyMatch && kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && hladanieMatch && cenaMatch && izbyMatch;
+    return verejnyMatch && kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch;
   });
 
   // Zoradenie
@@ -146,6 +152,12 @@ export default function Katalog() {
     if (zoradenie === "cena_zostupne") return b.zakladna_cena - a.zakladna_cena;
     if (zoradenie === "plocha_vzostupne") return a.zastavana_plocha - b.zastavana_plocha;
     if (zoradenie === "plocha_zostupne") return b.zastavana_plocha - a.zastavana_plocha;
+    if (zoradenie === "uzitkova_vzostupne") return (a.uzitkova_plocha || 0) - (b.uzitkova_plocha || 0);
+    if (zoradenie === "uzitkova_zostupne") return (b.uzitkova_plocha || 0) - (a.uzitkova_plocha || 0);
+    if (zoradenie === "izby_vzostupne") return (a.pocet_izieb || 0) - (b.pocet_izieb || 0);
+    if (zoradenie === "izby_zostupne") return (b.pocet_izieb || 0) - (a.pocet_izieb || 0);
+    if (zoradenie === "nazov_az") return a.nazov.localeCompare(b.nazov, 'sk');
+    if (zoradenie === "nazov_za") return b.nazov.localeCompare(a.nazov, 'sk');
     return (a.poradie || 0) - (b.poradie || 0);
   });
 
@@ -243,8 +255,14 @@ export default function Katalog() {
                       <SelectItem value="poradie">Predvolené</SelectItem>
                       <SelectItem value="cena_vzostupne">Cena: Najlacnejšie</SelectItem>
                       <SelectItem value="cena_zostupne">Cena: Najdrahšie</SelectItem>
-                      <SelectItem value="plocha_vzostupne">Plocha: Najmenšie</SelectItem>
-                      <SelectItem value="plocha_zostupne">Plocha: Najväčšie</SelectItem>
+                      <SelectItem value="plocha_vzostupne">Zastavaná plocha: Najmenšie</SelectItem>
+                      <SelectItem value="plocha_zostupne">Zastavaná plocha: Najväčšie</SelectItem>
+                      <SelectItem value="uzitkova_vzostupne">Úžitková plocha: Najmenšie</SelectItem>
+                      <SelectItem value="uzitkova_zostupne">Úžitková plocha: Najväčšie</SelectItem>
+                      <SelectItem value="izby_vzostupne">Počet izieb: Najmenej</SelectItem>
+                      <SelectItem value="izby_zostupne">Počet izieb: Najviac</SelectItem>
+                      <SelectItem value="nazov_az">Názov: A-Z</SelectItem>
+                      <SelectItem value="nazov_za">Názov: Z-A</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -254,17 +272,24 @@ export default function Katalog() {
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Výrobca
                   </label>
-                  <Select value={vyrobcaFilter} onValueChange={setVyrobcaFilter}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="vsetci">Všetci výrobcovia</SelectItem>
-                      {vyrobcovia.map((v) =>
-                      <SelectItem key={v} value={v}>{v}</SelectItem>
-                      )}
-                    </SelectContent>
-                  </Select>
+                  <div className="space-y-2">
+                    {vyrobcovia.map((v) => (
+                      <div key={v} className="flex items-center gap-2">
+                        <Checkbox
+                          id={`vyrobca-${v}`}
+                          checked={vyrobcaFilter.includes(v)}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setVyrobcaFilter([...vyrobcaFilter, v]);
+                            } else {
+                              setVyrobcaFilter(vyrobcaFilter.filter((x) => x !== v));
+                            }
+                          }}
+                        />
+                        <label htmlFor={`vyrobca-${v}`} className="text-sm cursor-pointer">{v}</label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Typ domu */}
@@ -272,16 +297,28 @@ export default function Katalog() {
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Typ domu
                   </label>
-                  <Select value={typFilter} onValueChange={setTypFilter}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="vsetky">Všetky typy</SelectItem>
-                      <SelectItem value="modularny">Rodinný dom</SelectItem>
-                      <SelectItem value="mobilny">Mobilný dom</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="space-y-2">
+                    {[
+                      { value: "modularny", label: "Modulárny dom" },
+                      { value: "montovany", label: "Montovaný dom" },
+                      { value: "mobilny", label: "Mobilný dom" }
+                    ].map((typ) => (
+                      <div key={typ.value} className="flex items-center gap-2">
+                        <Checkbox
+                          id={`typ-${typ.value}`}
+                          checked={typFilter.includes(typ.value)}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setTypFilter([...typFilter, typ.value]);
+                            } else {
+                              setTypFilter(typFilter.filter((x) => x !== typ.value));
+                            }
+                          }}
+                        />
+                        <label htmlFor={`typ-${typ.value}`} className="text-sm cursor-pointer">{typ.label}</label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Cenové rozpätie */}
@@ -326,7 +363,20 @@ export default function Katalog() {
                     value={plocharozsah}
                     onValueChange={setPlocharozsah}
                     className="mt-4" />
+                </div>
 
+                {/* Úžitková plocha */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Úžitková plocha: {uzitkovaRozsah[0]} - {uzitkovaRozsah[1]} m²
+                  </label>
+                  <Slider
+                    min={0}
+                    max={200}
+                    step={5}
+                    value={uzitkovaRozsah}
+                    onValueChange={setUzitkovaRozsah}
+                    className="mt-4" />
                 </div>
 
                 {/* Reset */}
@@ -335,9 +385,10 @@ export default function Katalog() {
                   className="w-full"
                   onClick={() => {
                     setKategoriaFilter("vsetky");
-                    setVyrobcaFilter("vsetci");
-                    setTypFilter("vsetky");
+                    setVyrobcaFilter([]);
+                    setTypFilter([]);
                     setPlocharozsah([18, 200]);
+                    setUzitkovaRozsah([0, 200]);
                     setHladanie("");
                     setCenoveRozpatie([15000, 200000]);
                     setPocetIziebRozpatie([1, 8]);
@@ -566,9 +617,10 @@ export default function Katalog() {
                 <Button
                 onClick={() => {
                   setKategoriaFilter("vsetky");
-                  setVyrobcaFilter("vsetci");
-                  setTypFilter("vsetky");
+                  setVyrobcaFilter([]);
+                  setTypFilter([]);
                   setPlocharozsah([18, 200]);
+                  setUzitkovaRozsah([0, 200]);
                   setHladanie("");
                   setCenoveRozpatie([15000, 200000]);
                   setPocetIziebRozpatie([1, 8]);
