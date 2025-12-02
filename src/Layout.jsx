@@ -10,6 +10,20 @@ import Chatbot from "./components/Chatbot";
 import AIAsistent from "./components/AIAsistent";
 import ChristmasEffects from "./components/ChristmasEffects";
 
+// Wrapper pre vianočné efekty s načítaním nastavení
+function ChristmasEffectsWrapper() {
+  const { data: christmasSettings } = useQuery({
+    queryKey: ['site-settings', 'christmas'],
+    queryFn: async () => {
+      const settings = await base44.entities.SiteSettings.filter({ klic: 'christmas_effects' });
+      return settings[0] || null;
+    },
+  });
+
+  const enabled = christmasSettings?.christmas_enabled !== false;
+  return <ChristmasEffects enabled={enabled} />;
+}
+
 export default function Layout({ children }) {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
@@ -349,7 +363,7 @@ export default function Layout({ children }) {
         </div>
       </footer>
 
-      <ChristmasEffects />
+      <ChristmasEffectsWrapper />
               <Chatbot />
               <AIAsistent />
     </div>
