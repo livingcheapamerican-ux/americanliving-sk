@@ -595,7 +595,7 @@ export default function DetailDomu() {
             {/* Popis */}
             {dom.popis && (
               <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">Popis modulového domu</h3>
+                <h3 className="text-lg font-bold text-primary mb-4">{isProstoHouse ? "Popis montovaného domu" : "Popis modulového domu"}</h3>
                 <div className="text-gray-700 leading-relaxed whitespace-pre-line">
                   {dom.popis}
                 </div>
