@@ -496,7 +496,7 @@ export default function Katalog() {
                             </div>
                             <div className="flex items-center gap-2 text-gray-600">
                               {dom.typ_domu === 'montovany' ? (
-                                <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/58590b86b_image.png" alt="Montovaný dom" className="w-5 h-5 flex-shrink-0 object-contain" />
+                                <Home className="w-4 h-4 flex-shrink-0 text-orange-600" />
                               ) : (
                                 <LayoutGrid className="w-4 h-4 flex-shrink-0 text-amber-500" />
                               )}

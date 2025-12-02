@@ -502,7 +502,7 @@ export default function DetailDomu() {
                 </div>
                 <div className="flex items-center gap-3">
                     {dom.typ_domu === 'montovany' ? (
-                      <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/58590b86b_image.png" alt="Montovaný dom" className="w-8 h-8 object-contain" />
+                      <Home className="w-6 h-6 text-orange-600" />
                     ) : (
                       <Boxes className="w-6 h-6 text-accent" />
                     )}
