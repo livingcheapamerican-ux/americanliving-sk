@@ -7,34 +7,56 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { 
   ArrowRight, CheckCircle, Home, Zap, Clock, Shield, Euro,
-  FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp
+  FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings
 } from "lucide-react";
 import { motion } from "framer-motion";
+import HeroSettingsManager from "../components/admin/HeroSettingsManager";
+
+const DEFAULT_HERO_IMAGES = [
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80",
+  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80",
+  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80"
+];
 
 export default function Domov() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showSettings, setShowSettings] = useState(false);
   
   const { data: domy = [] } = useQuery({
     queryKey: ['domy-popularne'],
     queryFn: async () => {
       const all = await base44.entities.Dom.filter({ popularny: true }, 'poradie', 20);
-      // Filtrovať len verejné domy
       return all.filter(dom => dom.verejny !== false).slice(0, 6);
     },
   });
 
-  const heroImages = [
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80",
-    "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80",
-    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80"
-  ];
+  const { data: user } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const { data: heroSettings } = useQuery({
+    queryKey: ['site-settings', 'hero'],
+    queryFn: async () => {
+      const settings = await base44.entities.SiteSettings.filter({ klic: 'hero_settings' });
+      return settings[0] || null;
+    },
+  });
+
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
+
+  const heroImages = heroSettings?.hero_images?.length > 0 
+    ? heroSettings.hero_images 
+    : DEFAULT_HERO_IMAGES;
+  
+  const heroInterval = heroSettings?.hero_interval || 5000;
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
+    }, heroInterval);
     return () => clearInterval(interval);
-  }, []);
+  }, [heroImages.length, heroInterval]);
 
   const vyhody = [
     {
