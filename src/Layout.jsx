@@ -8,6 +8,7 @@ import { base44 } from "@/api/base44Client";
 import { Toaster } from "sonner";
 import Chatbot from "./components/Chatbot";
 import AIAsistent from "./components/AIAsistent";
+import ChristmasEffects from "./components/ChristmasEffects";
 
 export default function Layout({ children }) {
   const location = useLocation();
