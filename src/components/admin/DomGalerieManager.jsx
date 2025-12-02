@@ -198,7 +198,7 @@ export default function DomGalerieManager({ dom, onUpdate }) {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className={`grid w-full mb-6 ${isTicabhouse ? 'grid-cols-4' : 'grid-cols-3'}`}>
+        <TabsList className={`grid w-full mb-6 ${showZakladnaKonfiguracia ? 'grid-cols-4' : 'grid-cols-3'}`}>
           <TabsTrigger value="titulna" className="flex items-center gap-2">
             <ImageIcon className="w-4 h-4" />
             Titulná fotka
@@ -211,7 +211,7 @@ export default function DomGalerieManager({ dom, onUpdate }) {
             <Grid3x3 className="w-4 h-4" />
             Pôdorysy
           </TabsTrigger>
-          {isTicabhouse && (
+          {showZakladnaKonfiguracia && (
             <TabsTrigger value="zakladna" className="flex items-center gap-2">
               <Home className="w-4 h-4" />
               Zákl. konfigurácia
