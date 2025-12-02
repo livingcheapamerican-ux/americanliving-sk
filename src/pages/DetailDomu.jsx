@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle, Boxes, Grid2x2, Layers, Edit, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw, Hammer } from "lucide-react";
+import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle, Boxes, Grid2x2, Layers, Edit, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw, Hammer, Caravan } from "lucide-react";
 import { motion } from "framer-motion";
 import PriceCalculator from "../components/PriceCalculator";
 import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
@@ -503,6 +503,8 @@ export default function DetailDomu() {
                 <div className="flex items-center gap-3">
                     {dom.typ_domu === 'montovany' ? (
                                               <Hammer className="w-6 h-6 text-orange-600" />
+                                            ) : dom.typ_domu === 'mobilny' ? (
+                                              <Caravan className="w-6 h-6 text-teal-600" />
                                             ) : (
                                               <Boxes className="w-6 h-6 text-accent" />
                                             )}
