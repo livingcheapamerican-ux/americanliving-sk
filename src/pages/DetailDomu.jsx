@@ -519,9 +519,9 @@ export default function DetailDomu() {
                   </div>
                 )}
                 <div className="flex items-center gap-3">
-                  <Maximize2 className="w-6 h-6 text-primary" />
-                  <div>
-                    <p className="text-sm text-gray-500">Zastavaná plocha</p>
+                    <div className="w-6 h-4 border-2 border-primary rounded-sm" />
+                    <div>
+                      <p className="text-sm text-gray-500">Zastavaná plocha</p>
                     <p className="text-xl font-bold text-primary">{dom.zastavana_plocha} m²</p>
                   </div>
                 </div>
