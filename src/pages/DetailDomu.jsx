@@ -13,6 +13,7 @@ import PriceCalculator from "../components/PriceCalculator";
 import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
 import FloatingPrice from "../components/FloatingPrice";
 import DomGalerieManager from "../components/admin/DomGalerieManager";
+import KonfiguratorFlatDoubleInline from "../components/KonfiguratorFlatDoubleInline";
 
 export default function DetailDomu() {
   const urlParams = new URLSearchParams(window.location.search);
