@@ -433,6 +433,10 @@ export default function DetailDomu() {
               </Card>
             )}
 
+            {/* Inline konfigurátor pre Flat Double 142m² */}
+            {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
+              <KonfiguratorFlatDoubleInline dom={dom} />
+            )}
 
           </motion.div>
 
