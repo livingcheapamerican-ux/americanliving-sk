@@ -498,6 +498,23 @@ export default function DetailDomu() {
               </div>
             </Card>
 
+            {/* Obrázok základnej konfigurácie - pre Prosto House - hneď pod parametre */}
+            {isProstoHouse && dom.zakladna_konfiguracia_obrazok && (
+              <Card className="p-6 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+                <h3 className="text-lg font-bold text-primary mb-4">📸 Základná konfigurácia</h3>
+                <div className="rounded-lg overflow-hidden shadow-lg">
+                  <img 
+                    src={dom.zakladna_konfiguracia_obrazok} 
+                    alt={`${dom.nazov} - základná konfigurácia`}
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+                <p className="text-sm text-blue-800 mt-3 text-center font-medium">
+                  Takto vyzerá dom v základnej konfigurácii
+                </p>
+              </Card>
+            )}
+
             {/* Rozmery */}
             {dom.rozmery && (
               <Card className="p-6">
