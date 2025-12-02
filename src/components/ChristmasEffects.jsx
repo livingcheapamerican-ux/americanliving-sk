@@ -122,24 +122,24 @@ export default function ChristmasEffects({ enabled = true }) {
       return {
         id,
         x: Math.random() * 100,
-        size: 2 + Math.random() * 6,
+        size: 4 + Math.random() * 10,
         duration: 8 + Math.random() * 12,
-        opacity: 0.4 + Math.random() * 0.5,
+        opacity: 0.5 + Math.random() * 0.4,
         drift: -20 + Math.random() * 40,
       };
     };
 
     // Vytvor počiatočné vločky
-    const initialSnowflakes = Array.from({ length: 60 }, createSnowflake);
+    const initialSnowflakes = Array.from({ length: 80 }, createSnowflake);
     setSnowflakes(initialSnowflakes);
 
     // Pridávaj nové vločky
     const interval = setInterval(() => {
       setSnowflakes(prev => {
-        const newFlakes = prev.length > 100 ? prev.slice(5) : prev;
+        const newFlakes = prev.length > 130 ? prev.slice(5) : prev;
         return [...newFlakes, createSnowflake()];
       });
-    }, 300);
+    }, 230);
 
     return () => clearInterval(interval);
   }, [enabled]);
