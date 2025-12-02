@@ -17,31 +17,49 @@ import { motion } from "framer-motion";
 export default function Katalog() {
   const location = useLocation();
   const navigate = useNavigate();
-  const searchParams = new URLSearchParams(location.search);
+  
+  // Funkcia na parsovanie URL parametrov
+  const getInitialFilters = () => {
+    const params = new URLSearchParams(location.search);
+    return {
+      kategoria: params.get("kategoria") || "vsetky",
+      vyrobca: params.get("vyrobca") || "vsetci",
+      typ: params.get("typ") || "vsetky",
+      plocha_min: parseInt(params.get("plocha_min")) || 18,
+      plocha_max: parseInt(params.get("plocha_max")) || 200,
+      hladanie: params.get("hladanie") || "",
+      cena_min: parseInt(params.get("cena_min")) || 15000,
+      cena_max: parseInt(params.get("cena_max")) || 200000,
+      izby_min: parseInt(params.get("izby_min")) || 1,
+      izby_max: parseInt(params.get("izby_max")) || 8,
+      zoradenie: params.get("zoradenie") || "poradie"
+    };
+  };
 
-  const [kategoriaFilter, setKategoriaFilter] = useState(searchParams.get("kategoria") || "vsetky");
-  const [vyrobcaFilter, setVyrobcaFilter] = useState(searchParams.get("vyrobca") || "vsetci");
-  const [typFilter, setTypFilter] = useState(searchParams.get("typ") || "vsetky");
-  const [plocharozsah, setPlocharozsah] = useState([
-    parseInt(searchParams.get("plocha_min")) || 18,
-    parseInt(searchParams.get("plocha_max")) || 200
-  ]);
-  const [hladanie, setHladanie] = useState(searchParams.get("hladanie") || "");
-  const [cenoveRozpatie, setCenoveRozpatie] = useState([
-    parseInt(searchParams.get("cena_min")) || 15000,
-    parseInt(searchParams.get("cena_max")) || 200000
-  ]);
-  const [pocetIziebRozpatie, setPocetIziebRozpatie] = useState([
-    parseInt(searchParams.get("izby_min")) || 1,
-    parseInt(searchParams.get("izby_max")) || 8
-  ]);
-  const [zoradenie, setZoradenie] = useState(searchParams.get("zoradenie") || "poradie");
+  const initialFilters = getInitialFilters();
+
+  const [kategoriaFilter, setKategoriaFilter] = useState(initialFilters.kategoria);
+  const [vyrobcaFilter, setVyrobcaFilter] = useState(initialFilters.vyrobca);
+  const [typFilter, setTypFilter] = useState(initialFilters.typ);
+  const [plocharozsah, setPlocharozsah] = useState([initialFilters.plocha_min, initialFilters.plocha_max]);
+  const [hladanie, setHladanie] = useState(initialFilters.hladanie);
+  const [cenoveRozpatie, setCenoveRozpatie] = useState([initialFilters.cena_min, initialFilters.cena_max]);
+  const [pocetIziebRozpatie, setPocetIziebRozpatie] = useState([initialFilters.izby_min, initialFilters.izby_max]);
+  const [zoradenie, setZoradenie] = useState(initialFilters.zoradenie);
   const [vybraneNaSrovnanie, setVybraneNaSrovnanie] = useState([]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const queryClient = useQueryClient();
 
-  // Synchronizovať filtre s URL
+  // Označiť ako inicializované po prvom renderovaní
   useEffect(() => {
+    setIsInitialized(true);
+  }, []);
+
+  // Synchronizovať filtre s URL - len po inicializácii
+  useEffect(() => {
+    if (!isInitialized) return;
+    
     const params = new URLSearchParams();
     if (kategoriaFilter !== "vsetky") params.set("kategoria", kategoriaFilter);
     if (vyrobcaFilter !== "vsetci") params.set("vyrobca", vyrobcaFilter);
@@ -60,7 +78,7 @@ export default function Katalog() {
     if (newSearch !== currentSearch) {
       navigate(`${location.pathname}${newSearch ? `?${newSearch}` : ""}`, { replace: true });
     }
-  }, [kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, hladanie, cenoveRozpatie, pocetIziebRozpatie, zoradenie]);
+  }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, hladanie, cenoveRozpatie, pocetIziebRozpatie, zoradenie]);
 
   const { data: domy = [], isLoading } = useQuery({
     queryKey: ['domy-katalog'],
