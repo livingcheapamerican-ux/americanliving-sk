@@ -43,6 +43,8 @@ export default function DomGalerieManager({ dom, onUpdate }) {
   const [activeTab, setActiveTab] = useState("galerie");
   
   const isTicabhouse = dom.vyrobca === "Ticab house";
+  const isProstoHouse = dom.vyrobca === "Prosto House";
+  const showZakladnaKonfiguracia = isTicabhouse || isProstoHouse;
 
   const queryClient = useQueryClient();
 
