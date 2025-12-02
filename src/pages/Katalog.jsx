@@ -505,6 +505,13 @@ export default function Katalog() {
                                 <span className="font-semibold text-primary text-xs">{dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom'}</span>
                               </div>
                             </div>
+                            <div className="flex items-center gap-2 text-gray-600">
+                              <div className="w-4 h-3 border-2 border-primary rounded-sm flex-shrink-0" />
+                              <div className="flex flex-col min-w-0">
+                                <span className="text-xs text-gray-500">Zastavaná plocha</span>
+                                <span className="font-semibold text-primary text-xs">{dom.zastavana_plocha} m²</span>
+                              </div>
+                            </div>
                             {dom.pocet_izieb && (
                               <div className="flex items-center gap-2 text-gray-600">
                                 <Grid3x3 className="w-4 h-4 flex-shrink-0 text-blue-500" />
@@ -514,13 +521,6 @@ export default function Katalog() {
                                 </div>
                               </div>
                             )}
-                            <div className="flex items-center gap-2 text-gray-600">
-                              <div className="w-4 h-3 border-2 border-primary rounded-sm flex-shrink-0" />
-                              <div className="flex flex-col min-w-0">
-                                <span className="text-xs text-gray-500">Zastavaná plocha</span>
-                                <span className="font-semibold text-primary text-xs">{dom.zastavana_plocha} m²</span>
-                              </div>
-                            </div>
                             {dom.energeticky_certifikat && (
                               <div className="flex items-center gap-2 text-gray-600 col-span-2">
                                 <Zap className="w-4 h-4 flex-shrink-0 text-green-600" />
