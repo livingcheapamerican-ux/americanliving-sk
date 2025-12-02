@@ -349,8 +349,9 @@ export default function Layout({ children }) {
         </div>
       </footer>
 
-      <Chatbot />
-      <AIAsistent />
+      <ChristmasEffects />
+              <Chatbot />
+              <AIAsistent />
     </div>
   );
 }
