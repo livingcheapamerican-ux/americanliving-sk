@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { 
   ArrowRight, CheckCircle, Home, Zap, Clock, Shield, Euro,
-  FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings, Snowflake
+  FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings
 } from "lucide-react";
 import { motion } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
@@ -21,7 +21,6 @@ const DEFAULT_HERO_IMAGES = [
 export default function Domov() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
-  const queryClient = useQueryClient();
   
   const { data: domy = [] } = useQuery({
     queryKey: ['domy-popularne'],
@@ -44,28 +43,7 @@ export default function Domov() {
     },
   });
 
-  const { data: christmasSettings } = useQuery({
-    queryKey: ['site-settings', 'christmas'],
-    queryFn: async () => {
-      const settings = await base44.entities.SiteSettings.filter({ klic: 'christmas_effects' });
-      return settings[0] || null;
-    },
-  });
 
-  const toggleChristmasMutation = useMutation({
-    mutationFn: async (enabled) => {
-      if (christmasSettings?.id) {
-        return base44.entities.SiteSettings.update(christmasSettings.id, { christmas_enabled: enabled });
-      } else {
-        return base44.entities.SiteSettings.create({ klic: 'christmas_effects', christmas_enabled: enabled });
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['site-settings', 'christmas'] });
-    },
-  });
-
-  const christmasEnabled = christmasSettings?.christmas_enabled !== false;
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
   const heroImages = heroSettings?.hero_images?.length > 0 
@@ -220,27 +198,15 @@ export default function Domov() {
 
       {/* Hero Section */}
       <section className="relative h-[90vh] min-h-[600px] overflow-hidden">
-        {/* Admin toggle buttons */}
+        {/* Admin toggle button */}
         {isAdmin && (
-          <div className="absolute top-4 right-4 z-30 flex gap-2">
-            <button
-              onClick={() => toggleChristmasMutation.mutate(!christmasEnabled)}
-              className={`p-2 rounded-lg shadow-lg transition-all ${
-                christmasEnabled ? 'bg-green-500 hover:bg-green-600' : 'bg-white/90 hover:bg-white'
-              }`}
-              title={christmasEnabled ? 'Vypnúť vianočné efekty' : 'Zapnúť vianočné efekty'}
-              disabled={toggleChristmasMutation.isPending}
-            >
-              <Snowflake className={`w-5 h-5 ${christmasEnabled ? 'text-white' : 'text-blue-500'}`} />
-            </button>
-            <button
-              onClick={() => setShowSettings(!showSettings)}
-              className="bg-white/90 hover:bg-white p-2 rounded-lg shadow-lg transition-all"
-              title="Nastavenia hero sekcie"
-            >
-              <Settings className={`w-5 h-5 ${showSettings ? 'text-purple-600' : 'text-gray-600'}`} />
-            </button>
-          </div>
+          <button
+            onClick={() => setShowSettings(!showSettings)}
+            className="absolute top-4 right-4 z-30 bg-white/90 hover:bg-white p-2 rounded-lg shadow-lg transition-all"
+            title="Nastavenia hero sekcie"
+          >
+            <Settings className={`w-5 h-5 ${showSettings ? 'text-purple-600' : 'text-gray-600'}`} />
+          </button>
         )}
         
         {heroImages.map((img, index) => (

@@ -31,11 +31,11 @@ const SantaSleigh = ({ isVisible, direction, topPosition }) => {
             top: `${topPosition}%`,
           }}
           initial={{ 
-            x: direction === 'left' ? '100vw' : '-400px',
+            x: direction === 'right' ? '100vw' : '-400px',
             opacity: 1 
           }}
           animate={{ 
-            x: direction === 'left' ? '-400px' : '100vw',
+            x: direction === 'right' ? '-400px' : '100vw',
             opacity: 1 
           }}
           exit={{ opacity: 0 }}

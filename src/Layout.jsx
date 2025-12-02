@@ -9,19 +9,39 @@ import { Toaster } from "sonner";
 import Chatbot from "./components/Chatbot";
 import AIAsistent from "./components/AIAsistent";
 import ChristmasEffects from "./components/ChristmasEffects";
+import { Snowflake as SnowflakeIcon } from "lucide-react";
 
-// Wrapper pre vianočné efekty s načítaním nastavení
+// Wrapper pre vianočné efekty s lokálnym uložením
 function ChristmasEffectsWrapper() {
-  const { data: christmasSettings } = useQuery({
-    queryKey: ['site-settings', 'christmas'],
-    queryFn: async () => {
-      const settings = await base44.entities.SiteSettings.filter({ klic: 'christmas_effects' });
-      return settings[0] || null;
-    },
+  const [enabled, setEnabled] = React.useState(() => {
+    const saved = localStorage.getItem('christmas_effects_enabled');
+    return saved === null ? true : saved === 'true';
   });
 
-  const enabled = christmasSettings?.christmas_enabled !== false;
-  return <ChristmasEffects enabled={enabled} />;
+  const toggleEffects = () => {
+    const newValue = !enabled;
+    setEnabled(newValue);
+    localStorage.setItem('christmas_effects_enabled', String(newValue));
+  };
+
+  return (
+    <>
+      <ChristmasEffects enabled={enabled} />
+      {/* Tlačidlo pre všetkých návštevníkov */}
+      <button
+        onClick={toggleEffects}
+        className={`fixed bottom-24 right-6 z-50 p-3 rounded-full shadow-lg transition-all ${
+          enabled ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 hover:bg-gray-500'
+        }`}
+        title={enabled ? 'Vypnúť vianočné efekty' : 'Zapnúť vianočné efekty'}
+      >
+        <SnowflakeIcon 
+          className="w-7 h-7 text-white animate-spin" 
+          style={{ animationDuration: '4s' }} 
+        />
+      </button>
+    </>
+  );
 }
 
 export default function Layout({ children }) {
