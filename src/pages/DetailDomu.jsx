@@ -868,14 +868,7 @@ export default function DetailDomu() {
 
             {/* CTA Buttons */}
             <div className="space-y-3 sticky top-24">
-              {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
-                <Link to={createPageUrl("KonfiguratorFlatDouble")}>
-                  <Button size="lg" className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold text-lg py-6">
-                    <Settings className="mr-2 w-5 h-5" />
-                    Otvoriť konfigurátor ceny
-                  </Button>
-                </Link>
-              )}
+
               <Link to={createPageUrl("Kontakt")}>
                 <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-lg py-6">
                   <Mail className="mr-2 w-5 h-5" />
