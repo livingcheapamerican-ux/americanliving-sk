@@ -400,10 +400,16 @@ export default function Katalog() {
                       <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
                         <div className="relative h-56 overflow-hidden">
                           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-                            <img
-                            src={dom.hlavny_obrazok}
-                            alt={dom.nazov}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                            {dom.hlavny_obrazok ? (
+                              <img
+                                src={dom.hlavny_obrazok}
+                                alt={dom.nazov}
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                            ) : (
+                              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <Home className="w-16 h-16 text-gray-400" />
+                              </div>
+                            )}
 
                           </Link>
                           <div className="absolute top-4 left-4 space-y-2">
