@@ -285,7 +285,7 @@ export default function Katalog() {
                               setVyrobcaFilter(vyrobcaFilter.filter((x) => x !== v));
                             }
                           }}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                          className="data-[state=checked]:bg-black data-[state=checked]:border-black"
                         />
                         <label htmlFor={`vyrobca-${v}`} className="text-sm cursor-pointer">{v}</label>
                       </div>
@@ -315,7 +315,7 @@ export default function Katalog() {
                               setTypFilter(typFilter.filter((x) => x !== typ.value));
                             }
                           }}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                          className="data-[state=checked]:bg-black data-[state=checked]:border-black"
                         />
                         <label htmlFor={`typ-${typ.value}`} className="text-sm cursor-pointer">{typ.label}</label>
                       </div>
