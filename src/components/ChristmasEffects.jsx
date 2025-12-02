@@ -1,70 +1,102 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Snehová vločka komponenta
-const Snowflake = ({ style }) => (
+// Realistická snehová vločka
+const Snowflake = ({ flake }) => (
   <div
-    className="fixed pointer-events-none text-white opacity-80 z-40"
-    style={style}
-  >
-    ❄
-  </div>
+    className="fixed pointer-events-none z-40"
+    style={{
+      left: `${flake.x}%`,
+      top: '-10px',
+      width: `${flake.size}px`,
+      height: `${flake.size}px`,
+      borderRadius: '50%',
+      background: 'radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%)',
+      boxShadow: '0 0 3px rgba(255,255,255,0.8)',
+      animation: `snowfall-${flake.id} ${flake.duration}s linear infinite`,
+      opacity: flake.opacity,
+      filter: 'blur(0.5px)',
+    }}
+  />
 );
 
 // Santa na saniach komponenta
-const SantaSleigh = ({ isVisible, direction }) => {
+const SantaSleigh = ({ isVisible, direction, topPosition }) => {
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="fixed z-50 pointer-events-none whitespace-nowrap"
+          className="fixed z-50 pointer-events-none"
           style={{ 
-            top: `${15 + Math.random() * 20}%`,
-            fontSize: direction === 'left' ? '2.5rem' : '2.5rem',
-            transform: direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)'
+            top: `${topPosition}%`,
           }}
           initial={{ 
-            x: direction === 'left' ? '100vw' : '-100vw',
+            x: direction === 'left' ? '100vw' : '-400px',
             opacity: 1 
           }}
           animate={{ 
-            x: direction === 'left' ? '-100vw' : '100vw',
+            x: direction === 'left' ? '-400px' : '100vw',
             opacity: 1 
           }}
           exit={{ opacity: 0 }}
           transition={{ 
-            duration: 8,
+            duration: 15,
             ease: "linear"
           }}
         >
-          <div className="flex items-center gap-1">
-            {direction === 'right' ? (
-              <>
-                <span className="animate-bounce" style={{ animationDuration: '0.5s' }}>🦌</span>
-                <span className="animate-bounce" style={{ animationDuration: '0.6s', animationDelay: '0.1s' }}>🦌</span>
-                <span className="animate-bounce" style={{ animationDuration: '0.5s', animationDelay: '0.2s' }}>🦌</span>
-                <span>🛷</span>
-                <motion.span
-                  animate={{ rotate: [0, 10, 0, -10, 0] }}
-                  transition={{ duration: 0.5, repeat: Infinity }}
-                >
-                  🎅
-                </motion.span>
-              </>
-            ) : (
-              <>
-                <motion.span
-                  animate={{ rotate: [0, -10, 0, 10, 0] }}
-                  transition={{ duration: 0.5, repeat: Infinity }}
-                >
-                  🎅
-                </motion.span>
-                <span>🛷</span>
-                <span className="animate-bounce" style={{ animationDuration: '0.5s' }}>🦌</span>
-                <span className="animate-bounce" style={{ animationDuration: '0.6s', animationDelay: '0.1s' }}>🦌</span>
-                <span className="animate-bounce" style={{ animationDuration: '0.5s', animationDelay: '0.2s' }}>🦌</span>
-              </>
-            )}
+          <div 
+            className="flex items-center"
+            style={{ transform: direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)' }}
+          >
+            {/* Soby */}
+            <div className="flex items-center">
+              <motion.span 
+                className="text-4xl"
+                animate={{ y: [0, -5, 0, -3, 0] }}
+                transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
+              >
+                🦌
+              </motion.span>
+              <motion.span 
+                className="text-4xl -ml-2"
+                animate={{ y: [0, -3, 0, -5, 0] }}
+                transition={{ duration: 0.9, repeat: Infinity, ease: "easeInOut", delay: 0.1 }}
+              >
+                🦌
+              </motion.span>
+              <motion.span 
+                className="text-4xl -ml-2"
+                animate={{ y: [0, -4, 0, -2, 0] }}
+                transition={{ duration: 0.7, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+              >
+                🦌
+              </motion.span>
+            </div>
+            
+            {/* Sane */}
+            <span className="text-5xl -ml-1">🛷</span>
+            
+            {/* Santa kývajúci */}
+            <motion.div
+              className="relative -ml-3"
+              animate={{ 
+                rotate: [0, 3, 0, -3, 0],
+              }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <span className="text-5xl">🎅</span>
+              {/* Kývajúca ruka */}
+              <motion.span
+                className="absolute -right-2 top-2 text-2xl"
+                animate={{ 
+                  rotate: [-20, 20, -20],
+                  x: [0, 3, 0],
+                }}
+                transition={{ duration: 0.4, repeat: Infinity, ease: "easeInOut" }}
+              >
+                👋
+              </motion.span>
+            </motion.div>
           </div>
         </motion.div>
       )}
@@ -72,102 +104,114 @@ const SantaSleigh = ({ isVisible, direction }) => {
   );
 };
 
-export default function ChristmasEffects() {
+export default function ChristmasEffects({ enabled = true }) {
   const [snowflakes, setSnowflakes] = useState([]);
   const [santaVisible, setSantaVisible] = useState(false);
   const [santaDirection, setSantaDirection] = useState('right');
+  const [santaTop, setSantaTop] = useState(15);
 
-  // Generovanie snehových vločiek
+  // Generovanie realistických snehových vločiek
   useEffect(() => {
-    const createSnowflake = () => {
-      const id = Date.now() + Math.random();
-      const left = Math.random() * 100;
-      const animationDuration = 5 + Math.random() * 10;
-      const fontSize = 10 + Math.random() * 20;
-      const delay = Math.random() * 2;
+    if (!enabled) {
+      setSnowflakes([]);
+      return;
+    }
 
+    const createSnowflake = () => {
+      const id = Math.random().toString(36).substr(2, 9);
       return {
         id,
-        style: {
-          left: `${left}%`,
-          top: '-20px',
-          fontSize: `${fontSize}px`,
-          animation: `snowfall ${animationDuration}s linear ${delay}s infinite`,
-        }
+        x: Math.random() * 100,
+        size: 2 + Math.random() * 6,
+        duration: 8 + Math.random() * 12,
+        opacity: 0.4 + Math.random() * 0.5,
+        drift: -20 + Math.random() * 40,
       };
     };
 
     // Vytvor počiatočné vločky
-    const initialSnowflakes = Array.from({ length: 50 }, createSnowflake);
+    const initialSnowflakes = Array.from({ length: 60 }, createSnowflake);
     setSnowflakes(initialSnowflakes);
 
-    // Pridávaj nové vločky priebežne
+    // Pridávaj nové vločky
     const interval = setInterval(() => {
       setSnowflakes(prev => {
-        if (prev.length > 80) {
-          return [...prev.slice(10), createSnowflake()];
-        }
-        return [...prev, createSnowflake()];
+        const newFlakes = prev.length > 100 ? prev.slice(5) : prev;
+        return [...newFlakes, createSnowflake()];
       });
-    }, 500);
+    }, 300);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [enabled]);
 
   // Santa prechádza náhodne
   useEffect(() => {
+    if (!enabled) {
+      setSantaVisible(false);
+      return;
+    }
+
     const showSanta = () => {
       setSantaDirection(Math.random() > 0.5 ? 'right' : 'left');
+      setSantaTop(10 + Math.random() * 15);
       setSantaVisible(true);
       
-      // Skry Santu po animácii
       setTimeout(() => {
         setSantaVisible(false);
-      }, 9000);
+      }, 16000);
     };
 
-    // Prvý Santa po 5-15 sekundách
-    const initialTimeout = setTimeout(showSanta, 5000 + Math.random() * 10000);
+    const initialTimeout = setTimeout(showSanta, 3000 + Math.random() * 5000);
 
-    // Potom každých 20-40 sekúnd
     const interval = setInterval(() => {
       if (!santaVisible) {
         showSanta();
       }
-    }, 20000 + Math.random() * 20000);
+    }, 25000 + Math.random() * 15000);
 
     return () => {
       clearTimeout(initialTimeout);
       clearInterval(interval);
     };
-  }, [santaVisible]);
+  }, [enabled, santaVisible]);
+
+  if (!enabled) return null;
 
   return (
     <>
       {/* CSS pre animáciu sneženia */}
       <style>{`
-        @keyframes snowfall {
-          0% {
-            transform: translateY(0) rotate(0deg);
-            opacity: 1;
+        ${snowflakes.map(flake => `
+          @keyframes snowfall-${flake.id} {
+            0% {
+              transform: translateY(0) translateX(0) rotate(0deg);
+              opacity: ${flake.opacity};
+            }
+            25% {
+              transform: translateY(25vh) translateX(${flake.drift * 0.3}px) rotate(90deg);
+            }
+            50% {
+              transform: translateY(50vh) translateX(${flake.drift}px) rotate(180deg);
+              opacity: ${flake.opacity * 0.8};
+            }
+            75% {
+              transform: translateY(75vh) translateX(${flake.drift * 0.5}px) rotate(270deg);
+            }
+            100% {
+              transform: translateY(105vh) translateX(${flake.drift * 0.2}px) rotate(360deg);
+              opacity: 0;
+            }
           }
-          50% {
-            opacity: 0.8;
-          }
-          100% {
-            transform: translateY(100vh) rotate(360deg);
-            opacity: 0.3;
-          }
-        }
+        `).join('\n')}
       `}</style>
 
       {/* Snehové vločky */}
       {snowflakes.map(flake => (
-        <Snowflake key={flake.id} style={flake.style} />
+        <Snowflake key={flake.id} flake={flake} />
       ))}
 
       {/* Santa na saniach */}
-      <SantaSleigh isVisible={santaVisible} direction={santaDirection} />
+      <SantaSleigh isVisible={santaVisible} direction={santaDirection} topPosition={santaTop} />
     </>
   );
 }
