@@ -25,12 +25,12 @@ export default function Katalog() {
       kategoria: params.get("kategoria") || "vsetky",
       vyrobca: params.get("vyrobca") || "",
       typ: params.get("typ") || "",
-      plocha_min: parseInt(params.get("plocha_min")) || 18,
+      plocha_min: parseInt(params.get("plocha_min")) || 0,
       plocha_max: parseInt(params.get("plocha_max")) || 200,
       uzitkova_min: parseInt(params.get("uzitkova_min")) || 0,
       uzitkova_max: parseInt(params.get("uzitkova_max")) || 200,
       hladanie: params.get("hladanie") || "",
-      cena_min: parseInt(params.get("cena_min")) || 15000,
+      cena_min: parseInt(params.get("cena_min")) || 0,
       cena_max: parseInt(params.get("cena_max")) || 200000,
       izby: params.get("izby") || "",
       zoradenie: params.get("zoradenie") || "poradie"
@@ -42,10 +42,10 @@ export default function Katalog() {
   const [kategoriaFilter, setKategoriaFilter] = useState(initialFilters.kategoria);
   const [vyrobcaFilter, setVyrobcaFilter] = useState(initialFilters.vyrobca ? initialFilters.vyrobca.split(',') : []);
   const [typFilter, setTypFilter] = useState(initialFilters.typ ? initialFilters.typ.split(',') : []);
-  const [plocharozsah, setPlocharozsah] = useState([initialFilters.plocha_min, initialFilters.plocha_max]);
+  const [plocharozsah, setPlocharozsah] = useState([initialFilters.plocha_min, initialFilters.plocha_max || 200]);
   const [uzitkovaRozsah, setUzitkovaRozsah] = useState([initialFilters.uzitkova_min, initialFilters.uzitkova_max]);
   const [hladanie, setHladanie] = useState(initialFilters.hladanie);
-  const [cenoveRozpatie, setCenoveRozpatie] = useState([initialFilters.cena_min, initialFilters.cena_max]);
+  const [cenoveRozpatie, setCenoveRozpatie] = useState([initialFilters.cena_min, initialFilters.cena_max || 200000]);
   const [pocetIziebFilter, setPocetIziebFilter] = useState(initialFilters.izby ? initialFilters.izby.split(',').map(Number) : []);
   const [zoradenie, setZoradenie] = useState(initialFilters.zoradenie);
   const [vybraneNaSrovnanie, setVybraneNaSrovnanie] = useState([]);
@@ -66,12 +66,12 @@ export default function Katalog() {
     if (kategoriaFilter !== "vsetky") params.set("kategoria", kategoriaFilter);
     if (vyrobcaFilter.length > 0) params.set("vyrobca", vyrobcaFilter.join(','));
     if (typFilter.length > 0) params.set("typ", typFilter.join(','));
-    if (plocharozsah[0] !== 18) params.set("plocha_min", plocharozsah[0].toString());
+    if (plocharozsah[0] !== 0) params.set("plocha_min", plocharozsah[0].toString());
     if (plocharozsah[1] !== 200) params.set("plocha_max", plocharozsah[1].toString());
     if (uzitkovaRozsah[0] !== 0) params.set("uzitkova_min", uzitkovaRozsah[0].toString());
     if (uzitkovaRozsah[1] !== 200) params.set("uzitkova_max", uzitkovaRozsah[1].toString());
     if (hladanie) params.set("hladanie", hladanie);
-    if (cenoveRozpatie[0] !== 15000) params.set("cena_min", cenoveRozpatie[0].toString());
+    if (cenoveRozpatie[0] !== 0) params.set("cena_min", cenoveRozpatie[0].toString());
     if (cenoveRozpatie[1] !== 200000) params.set("cena_max", cenoveRozpatie[1].toString());
     if (pocetIziebFilter.length > 0) params.set("izby", pocetIziebFilter.join(','));
     if (zoradenie !== "poradie") params.set("zoradenie", zoradenie);
@@ -327,8 +327,8 @@ export default function Katalog() {
                     Cena: {cenoveRozpatie[0].toLocaleString('sk-SK')} - {cenoveRozpatie[1].toLocaleString('sk-SK')} €
                   </label>
                   <Slider
-                    min={15000}
-                    max={200000}
+                    min={0}
+                    max={Math.max(...domy.map(d => d.zakladna_cena || 0), 200000)}
                     step={5000}
                     value={cenoveRozpatie}
                     onValueChange={setCenoveRozpatie}
@@ -368,8 +368,8 @@ export default function Katalog() {
                     Zastavaná plocha: {plocharozsah[0]} - {plocharozsah[1]} m²
                   </label>
                   <Slider
-                    min={18}
-                    max={200}
+                    min={0}
+                    max={Math.max(...domy.map(d => d.zastavana_plocha || 0), 200)}
                     step={5}
                     value={plocharozsah}
                     onValueChange={setPlocharozsah}
@@ -383,7 +383,7 @@ export default function Katalog() {
                   </label>
                   <Slider
                     min={0}
-                    max={200}
+                    max={Math.max(...domy.map(d => d.uzitkova_plocha || 0), 200)}
                     step={5}
                     value={uzitkovaRozsah}
                     onValueChange={setUzitkovaRozsah}
@@ -398,10 +398,10 @@ export default function Katalog() {
                     setKategoriaFilter("vsetky");
                     setVyrobcaFilter([]);
                     setTypFilter([]);
-                    setPlocharozsah([18, 200]);
-                    setUzitkovaRozsah([0, 200]);
+                    setPlocharozsah([0, Math.max(...domy.map(d => d.zastavana_plocha || 0), 200)]);
+                    setUzitkovaRozsah([0, Math.max(...domy.map(d => d.uzitkova_plocha || 0), 200)]);
                     setHladanie("");
-                    setCenoveRozpatie([15000, 200000]);
+                    setCenoveRozpatie([0, Math.max(...domy.map(d => d.zakladna_cena || 0), 200000)]);
                     setPocetIziebFilter([]);
                     setZoradenie("poradie");
                   }}>
