@@ -937,20 +937,23 @@ export default function DetailDomu() {
 
           {/* Image */}
           <div 
-            className="max-w-[90vw] max-h-[90vh] flex items-center justify-center overflow-hidden"
+            className="w-full h-full flex items-center justify-center overflow-hidden"
             onClick={(e) => e.stopPropagation()}
             onWheel={handleWheel}
+            onMouseDown={handleMouseDown}
           >
             <img
               src={lightboxImages[lightboxIndex]}
               alt={`Fotka ${lightboxIndex + 1}`}
-              className={`max-w-full max-h-[90vh] object-contain transition-transform ${zoomLevel > 1 ? 'cursor-grab' : 'cursor-zoom-in'} ${isDragging ? 'cursor-grabbing' : ''}`}
+              className={`transition-transform duration-100 select-none ${zoomLevel > 1 ? 'cursor-grab' : 'cursor-zoom-in'} ${isDragging ? 'cursor-grabbing' : ''}`}
               style={{
+                maxWidth: zoomLevel === 1 ? '90vw' : 'none',
+                maxHeight: zoomLevel === 1 ? '80vh' : 'none',
                 transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
+                transformOrigin: 'center center',
               }}
               onContextMenu={(e) => e.preventDefault()}
               draggable={false}
-              onMouseDown={handleMouseDown}
               onClick={(e) => {
                 e.stopPropagation();
                 if (zoomLevel === 1) handleZoomIn();
