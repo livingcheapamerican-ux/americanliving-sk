@@ -573,6 +573,15 @@ export default function Katalog() {
                                 <span className="font-semibold text-primary text-xs">{dom.zastavana_plocha} m²</span>
                               </div>
                             </div>
+                            {dom.uzitkova_plocha && (
+                              <div className="flex items-center gap-2 text-gray-600">
+                                <Square className="w-4 h-4 flex-shrink-0 text-purple-500" />
+                                <div className="flex flex-col min-w-0">
+                                  <span className="text-xs text-gray-500">Úžitková plocha</span>
+                                  <span className="font-semibold text-primary text-xs">{dom.uzitkova_plocha} m²</span>
+                                </div>
+                              </div>
+                            )}
                             {dom.pocet_izieb && (
                               <div className="flex items-center gap-2 text-gray-600">
                                 <Grid3x3 className="w-4 h-4 flex-shrink-0 text-blue-500" />
