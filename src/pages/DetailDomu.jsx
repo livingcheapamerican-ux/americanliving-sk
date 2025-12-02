@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle, Boxes, Grid2x2, Layers, Edit, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle, Boxes, Grid2x2, Layers, Edit, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
 import PriceCalculator from "../components/PriceCalculator";
 import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
@@ -27,6 +27,10 @@ export default function DetailDomu() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImages, setLightboxImages] = useState([]);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [panPosition, setPanPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -152,14 +156,61 @@ export default function DetailDomu() {
 
   const closeLightbox = () => {
     setLightboxOpen(false);
+    setZoomLevel(1);
+    setPanPosition({ x: 0, y: 0 });
   };
 
   const nextImage = () => {
     setLightboxIndex((prev) => (prev + 1) % lightboxImages.length);
+    setZoomLevel(1);
+    setPanPosition({ x: 0, y: 0 });
   };
 
   const prevImage = () => {
     setLightboxIndex((prev) => (prev - 1 + lightboxImages.length) % lightboxImages.length);
+    setZoomLevel(1);
+    setPanPosition({ x: 0, y: 0 });
+  };
+
+  const handleZoomIn = () => {
+    setZoomLevel((prev) => Math.min(prev + 0.5, 4));
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel((prev) => {
+      const newZoom = Math.max(prev - 0.5, 1);
+      if (newZoom === 1) setPanPosition({ x: 0, y: 0 });
+      return newZoom;
+    });
+  };
+
+  const handleMouseDown = (e) => {
+    if (zoomLevel > 1) {
+      setIsDragging(true);
+      setDragStart({ x: e.clientX - panPosition.x, y: e.clientY - panPosition.y });
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging && zoomLevel > 1) {
+      setPanPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleWheel = (e) => {
+    e.preventDefault();
+    if (e.deltaY < 0) {
+      handleZoomIn();
+    } else {
+      handleZoomOut();
+    }
   };
 
   return (
@@ -824,6 +875,9 @@ export default function DetailDomu() {
         <div 
           className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
           onClick={closeLightbox}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
         >
           {/* Close button */}
           <button 
@@ -832,6 +886,36 @@ export default function DetailDomu() {
           >
             <X className="w-8 h-8" />
           </button>
+
+          {/* Zoom controls */}
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 z-10 bg-black/50 rounded-full px-4 py-2">
+            <button 
+              onClick={(e) => { e.stopPropagation(); handleZoomOut(); }}
+              disabled={zoomLevel <= 1}
+              className="text-white hover:text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed p-1"
+              title="Oddialiť"
+            >
+              <ZoomOut className="w-6 h-6" />
+            </button>
+            <span className="text-white text-sm min-w-[60px] text-center">{Math.round(zoomLevel * 100)}%</span>
+            <button 
+              onClick={(e) => { e.stopPropagation(); handleZoomIn(); }}
+              disabled={zoomLevel >= 4}
+              className="text-white hover:text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed p-1"
+              title="Priblížiť"
+            >
+              <ZoomIn className="w-6 h-6" />
+            </button>
+            {zoomLevel > 1 && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setZoomLevel(1); setPanPosition({ x: 0, y: 0 }); }}
+                className="text-white hover:text-gray-300 p-1 ml-2"
+                title="Reset"
+              >
+                <RotateCcw className="w-5 h-5" />
+              </button>
+            )}
+          </div>
 
           {/* Navigation */}
           {lightboxImages.length > 1 && (
@@ -853,30 +937,41 @@ export default function DetailDomu() {
 
           {/* Image */}
           <div 
-            className="max-w-[90vw] max-h-[90vh] flex items-center justify-center"
+            className="max-w-[90vw] max-h-[90vh] flex items-center justify-center overflow-hidden"
             onClick={(e) => e.stopPropagation()}
+            onWheel={handleWheel}
           >
             <img
               src={lightboxImages[lightboxIndex]}
               alt={`Fotka ${lightboxIndex + 1}`}
-              className="max-w-full max-h-[90vh] object-contain"
+              className={`max-w-full max-h-[90vh] object-contain transition-transform ${zoomLevel > 1 ? 'cursor-grab' : 'cursor-zoom-in'} ${isDragging ? 'cursor-grabbing' : ''}`}
+              style={{
+                transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
+              }}
               onContextMenu={(e) => e.preventDefault()}
               draggable={false}
+              onMouseDown={handleMouseDown}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (zoomLevel === 1) handleZoomIn();
+              }}
             />
           </div>
 
-          {/* Counter */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-sm">
-            {lightboxIndex + 1} / {lightboxImages.length}
+          {/* Counter and zoom hint */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-sm text-center">
+            <div>{lightboxIndex + 1} / {lightboxImages.length}</div>
+            {zoomLevel === 1 && <div className="text-xs text-gray-400 mt-1">Kliknite alebo použite koliesko myši pre zoom</div>}
+            {zoomLevel > 1 && <div className="text-xs text-gray-400 mt-1">Ťahajte pre posun obrázka</div>}
           </div>
 
           {/* Thumbnails */}
           {lightboxImages.length > 1 && (
-            <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex gap-2 max-w-[80vw] overflow-x-auto p-2">
+            <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex gap-2 max-w-[80vw] overflow-x-auto p-2">
               {lightboxImages.map((img, idx) => (
                 <button
                   key={idx}
-                  onClick={(e) => { e.stopPropagation(); setLightboxIndex(idx); }}
+                  onClick={(e) => { e.stopPropagation(); setLightboxIndex(idx); setZoomLevel(1); setPanPosition({ x: 0, y: 0 }); }}
                   className={`flex-shrink-0 w-16 h-12 rounded overflow-hidden border-2 transition-all ${
                     idx === lightboxIndex ? 'border-white' : 'border-transparent opacity-60 hover:opacity-100'
                   }`}
