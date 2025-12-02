@@ -48,7 +48,7 @@ const SantaSleigh = ({ isVisible, direction, topPosition }) => {
             className="flex items-center"
             style={{ transform: direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)' }}
           >
-            {/* Soby */}
+            {/* Soby ťahajú sane */}
             <div className="flex items-center">
               <motion.span 
                 className="text-4xl"
@@ -73,30 +73,30 @@ const SantaSleigh = ({ isVisible, direction, topPosition }) => {
               </motion.span>
             </div>
             
-            {/* Sane */}
-            <span className="text-5xl -ml-1">🛷</span>
-            
-            {/* Santa kývajúci */}
-            <motion.div
-              className="relative -ml-3"
-              animate={{ 
-                rotate: [0, 3, 0, -3, 0],
-              }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <span className="text-5xl">🎅</span>
-              {/* Kývajúca ruka */}
-              <motion.span
-                className="absolute -right-2 top-2 text-2xl"
+            {/* Sane so Santom */}
+            <div className="relative -ml-1">
+              <span className="text-5xl">🛷</span>
+              {/* Santa sediaci v saniach */}
+              <motion.div
+                className="absolute -top-6 left-1"
                 animate={{ 
-                  rotate: [-20, 20, -20],
-                  x: [0, 3, 0],
+                  rotate: [0, 2, 0, -2, 0],
                 }}
-                transition={{ duration: 0.4, repeat: Infinity, ease: "easeInOut" }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
               >
-                👋
-              </motion.span>
-            </motion.div>
+                <span className="text-4xl">🎅</span>
+                {/* Kývajúca ruka */}
+                <motion.span
+                  className="absolute -right-3 top-0 text-xl"
+                  animate={{ 
+                    rotate: [-30, 30, -30],
+                  }}
+                  transition={{ duration: 0.35, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  👋
+                </motion.span>
+              </motion.div>
+            </div>
           </div>
         </motion.div>
       )}
