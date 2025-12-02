@@ -18,6 +18,7 @@ import AdminSpravaDomov from './pages/AdminSpravaDomov';
 import AdminAnalyzaDomov from './pages/AdminAnalyzaDomov';
 import Konfigurator3D from './pages/Konfigurator3D';
 import AdminUploadFotiekDomov from './pages/AdminUploadFotiekDomov';
+import KonfiguratorFlatDouble from './pages/KonfiguratorFlatDouble';
 import __Layout from './Layout.jsx';
 
 
@@ -42,6 +43,7 @@ export const PAGES = {
     "AdminAnalyzaDomov": AdminAnalyzaDomov,
     "Konfigurator3D": Konfigurator3D,
     "AdminUploadFotiekDomov": AdminUploadFotiekDomov,
+    "KonfiguratorFlatDouble": KonfiguratorFlatDouble,
 }
 
 export const pagesConfig = {
