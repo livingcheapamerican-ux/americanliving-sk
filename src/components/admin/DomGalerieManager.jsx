@@ -60,13 +60,16 @@ export default function DomGalerieManager({ dom, onUpdate }) {
 
   const handleSave = async () => {
     setSaving(true);
-    await updateDomMutation.mutateAsync({
+    const dataToSave = {
       galerie: galerie,
-      podorys_2d: podorys2D || null,
-      podorys_3d: podorys3D || null,
-      zakladna_konfiguracia_obrazok: zakladnaKonfiguracia || null,
-      hlavny_obrazok: hlavnyObrazok || null
-    });
+    };
+    // Only include fields if they have valid URLs, otherwise don't update them
+    if (podorys2D) dataToSave.podorys_2d = podorys2D;
+    if (podorys3D) dataToSave.podorys_3d = podorys3D;
+    if (zakladnaKonfiguracia) dataToSave.zakladna_konfiguracia_obrazok = zakladnaKonfiguracia;
+    if (hlavnyObrazok) dataToSave.hlavny_obrazok = hlavnyObrazok;
+    
+    await updateDomMutation.mutateAsync(dataToSave);
     setSaving(false);
   };
 
