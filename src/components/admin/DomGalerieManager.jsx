@@ -531,8 +531,8 @@ export default function DomGalerieManager({ dom, onUpdate }) {
           </Card>
         </TabsContent>
 
-        {/* Základná konfigurácia - len pre Ticab house */}
-        {isTicabhouse && (
+        {/* Základná konfigurácia - pre Ticab house a Prosto House */}
+        {showZakladnaKonfiguracia && (
           <TabsContent value="zakladna" className="space-y-4">
             <Card className="p-4 border border-gray-200">
               <div className="flex items-center justify-between mb-4">
