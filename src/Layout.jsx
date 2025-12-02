@@ -30,7 +30,7 @@ function ChristmasEffectsWrapper() {
       {/* Tlačidlo pre všetkých návštevníkov */}
       <button
         onClick={toggleEffects}
-        className={`fixed top-4 right-20 z-40 p-3 rounded-full shadow-lg transition-all ${
+        className={`fixed top-48 left-4 z-40 p-3 rounded-full shadow-lg transition-all ${
           enabled ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 hover:bg-gray-500'
         }`}
         title={enabled ? 'Vypnúť vianočné efekty' : 'Zapnúť vianočné efekty'}
