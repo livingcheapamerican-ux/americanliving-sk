@@ -417,7 +417,7 @@ export default function DetailDomu() {
                     <strong>Základná cena je za samotnú konštrukciu bez montážnych prác.</strong> Cenu montáže si môžete vypočítať v konfigurátore.
                   </p>
                 </div>
-              ) : isTicabhouse ? (
+              ) : (isTicabhouse) ? (
                 <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
                   <p className="text-sm text-blue-800 mb-2">
                     <strong>Modulárna konštrukcia domu – flexibilné riešenie pre vaše bývanie.</strong>
