@@ -498,7 +498,7 @@ export default function Katalog() {
                               <LayoutGrid className="w-4 h-4 flex-shrink-0 text-amber-500" />
                               <div className="flex flex-col min-w-0">
                                 <span className="text-xs text-gray-500">Typ domu</span>
-                                <span className="font-semibold text-primary text-xs">{dom.typ_domu === 'modularny' ? 'Modulárny dom' : 'Mobilný dom'}</span>
+                                <span className="font-semibold text-primary text-xs">{dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom'}</span>
                               </div>
                             </div>
                             {dom.pocet_izieb && (

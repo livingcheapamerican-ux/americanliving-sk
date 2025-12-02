@@ -61,7 +61,7 @@ export default function DetailDomu() {
   useEffect(() => {
     if (dom) {
       const metaTitle = dom.meta_title || `${dom.nazov} - ${dom.vyrobca} | ${dom.zastavana_plocha}m² | American Living`;
-      const metaDescription = dom.meta_description || `${dom.nazov} od ${dom.vyrobca} - ${dom.typ_domu === 'modularny' ? 'Modulárny dom' : 'Mobilný dom'} s plochou ${dom.zastavana_plocha}m²${dom.pocet_izieb ? `, ${dom.pocet_izieb} izby` : ''}. Cena od ${dom.zakladna_cena?.toLocaleString('sk-SK')}€. Energetická trieda A0.`;
+      const metaDescription = dom.meta_description || `${dom.nazov} od ${dom.vyrobca} - ${dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom'} s plochou ${dom.zastavana_plocha}m²${dom.pocet_izieb ? `, ${dom.pocet_izieb} izby` : ''}. Cena od ${dom.zakladna_cena?.toLocaleString('sk-SK')}€. Energetická trieda A0.`;
       
       document.title = metaTitle;
       
@@ -448,7 +448,7 @@ export default function DetailDomu() {
                   {dom.vyrobca}
                 </Badge>
                 <Badge className="bg-gray-100 text-gray-700 px-3 py-1">
-                  {dom.typ_domu === 'modularny' ? 'Modulárny dom' : 'Mobilný dom'}
+                  {dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom'}
                 </Badge>
               </div>
               <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
@@ -505,7 +505,7 @@ export default function DetailDomu() {
                   <div>
                     <p className="text-sm text-gray-500">Typ domu</p>
                     <p className="text-xl font-bold text-primary">
-                      {dom.typ_domu === 'modularny' ? 'Modulárny dom' : 'Mobilný dom'}
+                      {dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom'}
                     </p>
                   </div>
                 </div>
