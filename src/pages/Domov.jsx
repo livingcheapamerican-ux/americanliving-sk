@@ -185,8 +185,29 @@ export default function Domov() {
 
   return (
     <div className="min-h-screen">
+      {/* Admin Settings Panel */}
+      {isAdmin && showSettings && (
+        <div className="container mx-auto px-4 py-8">
+          <HeroSettingsManager 
+            settings={heroSettings} 
+            onUpdate={() => setShowSettings(false)} 
+          />
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="relative h-[90vh] min-h-[600px] overflow-hidden">
+        {/* Admin toggle button */}
+        {isAdmin && (
+          <button
+            onClick={() => setShowSettings(!showSettings)}
+            className="absolute top-4 right-4 z-30 bg-white/90 hover:bg-white p-2 rounded-lg shadow-lg transition-all"
+            title="Nastavenia hero sekcie"
+          >
+            <Settings className={`w-5 h-5 ${showSettings ? 'text-purple-600' : 'text-gray-600'}`} />
+          </button>
+        )}
+        
         {heroImages.map((img, index) => (
           <motion.div
             key={index}
