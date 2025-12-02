@@ -32,8 +32,7 @@ export default function Katalog() {
       hladanie: params.get("hladanie") || "",
       cena_min: parseInt(params.get("cena_min")) || 15000,
       cena_max: parseInt(params.get("cena_max")) || 200000,
-      izby_min: parseInt(params.get("izby_min")) || 1,
-      izby_max: parseInt(params.get("izby_max")) || 8,
+      izby: params.get("izby") || "",
       zoradenie: params.get("zoradenie") || "poradie"
     };
   };
@@ -47,7 +46,7 @@ export default function Katalog() {
   const [uzitkovaRozsah, setUzitkovaRozsah] = useState([initialFilters.uzitkova_min, initialFilters.uzitkova_max]);
   const [hladanie, setHladanie] = useState(initialFilters.hladanie);
   const [cenoveRozpatie, setCenoveRozpatie] = useState([initialFilters.cena_min, initialFilters.cena_max]);
-  const [pocetIziebRozpatie, setPocetIziebRozpatie] = useState([initialFilters.izby_min, initialFilters.izby_max]);
+  const [pocetIziebFilter, setPocetIziebFilter] = useState(initialFilters.izby ? initialFilters.izby.split(',').map(Number) : []);
   const [zoradenie, setZoradenie] = useState(initialFilters.zoradenie);
   const [vybraneNaSrovnanie, setVybraneNaSrovnanie] = useState([]);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -74,8 +73,7 @@ export default function Katalog() {
     if (hladanie) params.set("hladanie", hladanie);
     if (cenoveRozpatie[0] !== 15000) params.set("cena_min", cenoveRozpatie[0].toString());
     if (cenoveRozpatie[1] !== 200000) params.set("cena_max", cenoveRozpatie[1].toString());
-    if (pocetIziebRozpatie[0] !== 1) params.set("izby_min", pocetIziebRozpatie[0].toString());
-    if (pocetIziebRozpatie[1] !== 8) params.set("izby_max", pocetIziebRozpatie[1].toString());
+    if (pocetIziebFilter.length > 0) params.set("izby", pocetIziebFilter.join(','));
     if (zoradenie !== "poradie") params.set("zoradenie", zoradenie);
 
     const newSearch = params.toString();
@@ -83,7 +81,7 @@ export default function Katalog() {
     if (newSearch !== currentSearch) {
       navigate(`${location.pathname}${newSearch ? `?${newSearch}` : ""}`, { replace: true });
     }
-  }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebRozpatie, zoradenie]);
+  }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie]);
 
   const { data: domy = [], isLoading } = useQuery({
     queryKey: ['domy-katalog'],
@@ -142,7 +140,7 @@ export default function Katalog() {
     const uzitkovaMatch = !dom.uzitkova_plocha || (dom.uzitkova_plocha >= uzitkovaRozsah[0] && dom.uzitkova_plocha <= uzitkovaRozsah[1]);
     const hladanieMatch = hladanie === "" || dom.nazov.toLowerCase().includes(hladanie.toLowerCase());
     const cenaMatch = dom.zakladna_cena >= cenoveRozpatie[0] && dom.zakladna_cena <= cenoveRozpatie[1];
-    const izbyMatch = !dom.pocet_izieb || (dom.pocet_izieb >= pocetIziebRozpatie[0] && dom.pocet_izieb <= pocetIziebRozpatie[1]);
+    const izbyMatch = pocetIziebFilter.length === 0 || (dom.pocet_izieb && pocetIziebFilter.includes(dom.pocet_izieb));
     return verejnyMatch && kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch;
   });
 
@@ -341,16 +339,27 @@ export default function Katalog() {
                 {/* Počet izieb */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Počet izieb: {pocetIziebRozpatie[0]} - {pocetIziebRozpatie[1]}
+                    Počet izieb
                   </label>
-                  <Slider
-                    min={1}
-                    max={8}
-                    step={1}
-                    value={pocetIziebRozpatie}
-                    onValueChange={setPocetIziebRozpatie}
-                    className="mt-4" />
-
+                  <div className="flex flex-wrap gap-2">
+                    {[...new Set(domy.filter(d => d.pocet_izieb).map(d => d.pocet_izieb))].sort((a, b) => a - b).map((izby) => (
+                      <div key={izby} className="flex items-center gap-1">
+                        <Checkbox
+                          id={`izby-${izby}`}
+                          checked={pocetIziebFilter.includes(izby)}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setPocetIziebFilter([...pocetIziebFilter, izby]);
+                            } else {
+                              setPocetIziebFilter(pocetIziebFilter.filter((x) => x !== izby));
+                            }
+                          }}
+                          className="data-[state=checked]:bg-black data-[state=checked]:border-black"
+                        />
+                        <label htmlFor={`izby-${izby}`} className="text-sm cursor-pointer">{izby}</label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Zastavaná plocha */}
@@ -393,7 +402,7 @@ export default function Katalog() {
                     setUzitkovaRozsah([0, 200]);
                     setHladanie("");
                     setCenoveRozpatie([15000, 200000]);
-                    setPocetIziebRozpatie([1, 8]);
+                    setPocetIziebFilter([]);
                     setZoradenie("poradie");
                   }}>
 
