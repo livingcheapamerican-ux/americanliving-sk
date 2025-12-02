@@ -152,8 +152,7 @@ export default function Katalog() {
     if (zoradenie === "plocha_zostupne") return b.zastavana_plocha - a.zastavana_plocha;
     if (zoradenie === "uzitkova_vzostupne") return (a.uzitkova_plocha || 0) - (b.uzitkova_plocha || 0);
     if (zoradenie === "uzitkova_zostupne") return (b.uzitkova_plocha || 0) - (a.uzitkova_plocha || 0);
-    if (zoradenie === "izby_vzostupne") return (a.pocet_izieb || 0) - (b.pocet_izieb || 0);
-    if (zoradenie === "izby_zostupne") return (b.pocet_izieb || 0) - (a.pocet_izieb || 0);
+
     if (zoradenie === "nazov_az") return a.nazov.localeCompare(b.nazov, 'sk');
     if (zoradenie === "nazov_za") return b.nazov.localeCompare(a.nazov, 'sk');
     return (a.poradie || 0) - (b.poradie || 0);
@@ -257,8 +256,6 @@ export default function Katalog() {
                       <SelectItem value="plocha_zostupne">Zastavaná plocha: Najväčšie</SelectItem>
                       <SelectItem value="uzitkova_vzostupne">Úžitková plocha: Najmenšie</SelectItem>
                       <SelectItem value="uzitkova_zostupne">Úžitková plocha: Najväčšie</SelectItem>
-                      <SelectItem value="izby_vzostupne">Počet izieb: Najmenej</SelectItem>
-                      <SelectItem value="izby_zostupne">Počet izieb: Najviac</SelectItem>
                       <SelectItem value="nazov_az">Názov: A-Z</SelectItem>
                       <SelectItem value="nazov_za">Názov: Z-A</SelectItem>
                     </SelectContent>
