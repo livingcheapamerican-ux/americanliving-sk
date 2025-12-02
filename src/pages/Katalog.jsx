@@ -495,7 +495,11 @@ export default function Katalog() {
                               </div>
                             </div>
                             <div className="flex items-center gap-2 text-gray-600">
-                              <LayoutGrid className="w-4 h-4 flex-shrink-0 text-amber-500" />
+                              {dom.typ_domu === 'montovany' ? (
+                                <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/58590b86b_image.png" alt="Montovaný dom" className="w-5 h-5 flex-shrink-0 object-contain" />
+                              ) : (
+                                <LayoutGrid className="w-4 h-4 flex-shrink-0 text-amber-500" />
+                              )}
                               <div className="flex flex-col min-w-0">
                                 <span className="text-xs text-gray-500">Typ domu</span>
                                 <span className="font-semibold text-primary text-xs">{dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom'}</span>

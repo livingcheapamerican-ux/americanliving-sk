@@ -501,14 +501,18 @@ export default function DetailDomu() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Boxes className="w-6 h-6 text-accent" />
-                  <div>
-                    <p className="text-sm text-gray-500">Typ domu</p>
-                    <p className="text-xl font-bold text-primary">
-                      {dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom'}
-                    </p>
+                    {dom.typ_domu === 'montovany' ? (
+                      <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/58590b86b_image.png" alt="Montovaný dom" className="w-8 h-8 object-contain" />
+                    ) : (
+                      <Boxes className="w-6 h-6 text-accent" />
+                    )}
+                    <div>
+                      <p className="text-sm text-gray-500">Typ domu</p>
+                      <p className="text-xl font-bold text-primary">
+                        {dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom'}
+                      </p>
+                    </div>
                   </div>
-                </div>
                 {dom.pocet_izieb && (
                   <div className="flex items-center gap-3">
                     <Grid2x2 className="w-6 h-6 text-primary" />
