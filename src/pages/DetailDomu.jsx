@@ -534,8 +534,8 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Obrázok základnej konfigurácie - pre Ticabhouse a Prosto House */}
-            {(isTicabhouse || isProstoHouse) && dom.zakladna_konfiguracia_obrazok && (
+            {/* Obrázok základnej konfigurácie - pre Ticabhouse */}
+            {isTicabhouse && dom.zakladna_konfiguracia_obrazok && (
               <Card className="p-6 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
                 <h3 className="text-lg font-bold text-primary mb-4">📸 Základná konfigurácia</h3>
                 <div className="rounded-lg overflow-hidden shadow-lg">
