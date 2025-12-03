@@ -277,28 +277,63 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     setBocneOknoVyklopne55(0);
   };
 
-  // Sekcia Header komponenta
+  // Sekcia Header komponenta s animáciou
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
-    <div className={`relative flex items-center gap-4 p-5 bg-gradient-to-r ${color}`}>
+    <motion.div 
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className={`relative flex items-center gap-4 p-5 bg-gradient-to-r ${color} overflow-hidden`}
+    >
       {/* Dekoratívny vzor */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-1/2 w-24 h-24 bg-white rounded-full blur-2xl"></div>
       </div>
       
-      <div className="relative flex items-center justify-center w-14 h-14 bg-white/25 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20">
+      {/* Animovaný kruh */}
+      <motion.div 
+        className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/5"
+        animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+      />
+      
+      <motion.div 
+        whileHover={{ scale: 1.1, rotate: 5 }}
+        className="relative flex items-center justify-center w-14 h-14 bg-white/25 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20"
+      >
         <Icon className="w-7 h-7 text-white" />
-      </div>
+      </motion.div>
       <div className="relative flex-1">
         <div className="flex items-center gap-3 mb-1">
-          <span className="inline-flex items-center justify-center px-3 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs font-bold uppercase tracking-wider">
-            Krok {step}
-          </span>
+          <motion.span 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: "spring" }}
+            className="inline-flex items-center justify-center px-3 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs font-bold uppercase tracking-wider"
+          >
+            Fáza {step}
+          </motion.span>
         </div>
         <h3 className="text-2xl font-bold text-white tracking-tight">{title}</h3>
         {subtitle && <p className="text-white/80 text-sm mt-1">{subtitle}</p>}
       </div>
-    </div>
+    </motion.div>
+  );
+
+  // Animovaný checkbox wrapper
+  const AnimatedOption = ({ children, isSelected, color = "blue" }) => (
+    <motion.div
+      whileHover={{ scale: 1.01, x: 4 }}
+      whileTap={{ scale: 0.99 }}
+      animate={{ 
+        backgroundColor: isSelected ? `rgba(var(--${color}-rgb), 0.05)` : "transparent",
+        borderColor: isSelected ? `rgba(var(--${color}-rgb), 0.5)` : "rgba(229, 231, 235, 1)"
+      }}
+      transition={{ duration: 0.2 }}
+    >
+      {children}
+    </motion.div>
   );
 
   return (
