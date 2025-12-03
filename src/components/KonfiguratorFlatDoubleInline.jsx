@@ -498,29 +498,56 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         <div className="p-6 space-y-6 bg-gradient-to-b from-amber-50/50 to-white">
 
           {/* Montáž hrubej stavby */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+          <motion.div 
+            className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+            whileHover={{ scale: 1.005 }}
+          >
             <Label className="text-lg font-bold text-gray-800 mb-3 block flex items-center gap-2">
-              <Wrench className="w-5 h-5 text-amber-600" />
+              <motion.div
+                animate={{ rotate: montazHolodomu === "ano" ? [0, 10, -10, 0] : 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Wrench className="w-5 h-5 text-amber-600" />
+              </motion.div>
               Montáž hrubej stavby
             </Label>
             <p className="text-sm text-red-600 mb-4">Montážne práce (dodatočne sa účtuje ubytovanie montážnej brigády 3–4 osoby)</p>
             <RadioGroup value={montazHolodomu} onValueChange={setMontazHolodomu} className="space-y-3">
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all">
+              <motion.label 
+                whileHover={{ x: 4 }}
+                whileTap={{ scale: 0.98 }}
+                className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${montazHolodomu === "nie" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
+              >
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="nie" id="montaz-nie" />
                   <span className="font-semibold text-gray-800">Nie (Iba dodanie sady)</span>
                 </div>
                 <span className="text-gray-400 font-medium">+ 0 €</span>
-              </label>
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all">
+              </motion.label>
+              <motion.label 
+                whileHover={{ x: 4 }}
+                whileTap={{ scale: 0.98 }}
+                className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${montazHolodomu === "ano" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
+              >
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="ano" id="montaz-ano" />
                   <span className="font-semibold text-gray-800">Áno (Montáž hrubej stavby)</span>
                 </div>
+                <AnimatePresence>
+                  {montazHolodomu === "ano" && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="mr-2"
+                    >
+                      <CheckCircle className="w-5 h-5 text-green-500" />
+                    </motion.span>
+                  )}
+                </AnimatePresence>
                 <span className="font-bold text-green-600">+ 17 970 €</span>
-              </label>
+              </motion.label>
             </RadioGroup>
-          </div>
+          </motion.div>
           
           {/* Komplet pre montáž - info box */}
           <div className="bg-white border border-amber-200 rounded-xl p-5 shadow-sm">
