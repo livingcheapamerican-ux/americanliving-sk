@@ -861,6 +861,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <motion.label 
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); }}
                 className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${vodaKanalizacia ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
               >
                 <div className="flex items-center gap-3">
@@ -889,6 +890,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <motion.label 
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); }}
                 className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${sanitaKomplet ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
               >
                 <div className="flex items-center gap-3">
@@ -917,6 +919,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <motion.label 
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); }}
                 className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${bojler ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
               >
                 <div className="flex items-center gap-3">
