@@ -185,7 +185,7 @@ export default function Domov() {
   ];
 
   return (
-    <div className="min-h-screen -mt-20 sm:-mt-28 md:-mt-36 lg:-mt-44">
+    <div className="min-h-screen -mt-14 sm:-mt-16 md:-mt-20 lg:-mt-24">
       {/* Admin Settings Panel */}
       {isAdmin && showSettings && (
         <div className="container mx-auto px-4 py-8">

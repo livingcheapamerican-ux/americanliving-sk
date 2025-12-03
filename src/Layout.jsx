@@ -116,12 +116,12 @@ export default function Layout({ children }) {
                 <img 
                   src={LOGO_URL} 
                   alt="American Living" 
-                  className="h-16 sm:h-24 md:h-32 lg:h-40 w-auto transition-transform group-hover:scale-105"
+                  className="h-10 sm:h-12 md:h-16 lg:h-20 w-auto transition-transform group-hover:scale-105"
                 />
               </Link>
               
-              <div className="hidden md:flex flex-col items-center gap-1">
-                <span className="text-xs text-gray-600 font-medium whitespace-nowrap">Powered by</span>
+              <div className="hidden md:flex flex-col items-center gap-0.5">
+                <span className="text-[10px] text-gray-600 font-medium whitespace-nowrap">Powered by</span>
                 <a 
                   href="https://konfiga.eu" 
                   target="_blank" 
@@ -131,7 +131,7 @@ export default function Layout({ children }) {
                   <img 
                     src={KONFIGA_LOGO_URL} 
                     alt="Konfiga.eu - AI CRM" 
-                    className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto"
+                    className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto"
                   />
                 </a>
               </div>
@@ -308,7 +308,7 @@ export default function Layout({ children }) {
         </div>
       </header>
 
-      <main className="pt-20 sm:pt-28 md:pt-36 lg:pt-44">
+      <main className="pt-14 sm:pt-16 md:pt-20 lg:pt-24">
         {children}
       </main>
 
