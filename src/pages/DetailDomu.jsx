@@ -187,16 +187,22 @@ export default function DetailDomu() {
 
   const handleMouseDown = (e) => {
     if (zoomLevel > 1) {
+      e.preventDefault();
       setIsDragging(true);
-      setDragStart({ x: e.clientX - panPosition.x, y: e.clientY - panPosition.y });
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      setDragStart({ x: clientX - panPosition.x, y: clientY - panPosition.y });
     }
   };
 
   const handleMouseMove = (e) => {
     if (isDragging && zoomLevel > 1) {
+      e.preventDefault();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       setPanPosition({
-        x: e.clientX - dragStart.x,
-        y: e.clientY - dragStart.y
+        x: clientX - dragStart.x,
+        y: clientY - dragStart.y
       });
     }
   };
@@ -894,9 +900,6 @@ export default function DetailDomu() {
         <div 
           className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
           onClick={closeLightbox}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
         >
           {/* Close button */}
           <button 
@@ -956,20 +959,27 @@ export default function DetailDomu() {
 
           {/* Image */}
           <div 
-            className="w-full h-full flex items-center justify-center overflow-hidden"
+            className="w-full h-full flex items-center justify-center overflow-hidden touch-none"
             onClick={(e) => e.stopPropagation()}
             onWheel={handleWheel}
             onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            onTouchStart={handleMouseDown}
+            onTouchMove={handleMouseMove}
+            onTouchEnd={handleMouseUp}
           >
             <img
               src={lightboxImages[lightboxIndex]}
               alt={`Fotka ${lightboxIndex + 1}`}
-              className={`transition-transform duration-100 select-none ${zoomLevel > 1 ? 'cursor-grab' : 'cursor-zoom-in'} ${isDragging ? 'cursor-grabbing' : ''}`}
+              className={`select-none ${zoomLevel > 1 ? 'cursor-grab' : 'cursor-zoom-in'} ${isDragging ? 'cursor-grabbing' : ''}`}
               style={{
                 maxWidth: zoomLevel === 1 ? '90vw' : 'none',
                 maxHeight: zoomLevel === 1 ? '80vh' : 'none',
                 transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
                 transformOrigin: 'center center',
+                transition: isDragging ? 'none' : 'transform 0.1s ease-out',
               }}
               onContextMenu={(e) => e.preventDefault()}
               draggable={false}
