@@ -209,6 +209,32 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         </p>
       </div>
 
+      {/* 3D Náhľad */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <Box className="w-5 h-5 text-indigo-600" />
+          <h3 className="text-lg font-semibold text-gray-800">3D Náhľad konfigurácie</h3>
+          <Badge className="bg-indigo-100 text-indigo-700 text-xs">LIVE</Badge>
+        </div>
+        <House3DPreview 
+          config={{
+            vonkajsiaFasada,
+            povrchokaOkien,
+            tonovaneSkla,
+            zaklady,
+            pergola,
+            vstupneDvere,
+            stresneOkno,
+            bocneOknoFixne,
+            bocneOknoVyklopne90,
+            bocneOknoVyklopne55,
+          }} 
+        />
+        <p className="text-xs text-gray-500 mt-2 text-center">
+          Použite myš na otáčanie a zoom. Model sa aktualizuje pri zmene konfigurácie.
+        </p>
+      </div>
+
       {/* Sekcia 1: Konštrukcia */}
       <div className="border rounded-lg p-5 mb-6">
         <div className="flex items-center gap-3 mb-4">
