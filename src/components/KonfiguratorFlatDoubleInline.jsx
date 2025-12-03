@@ -606,7 +606,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <OptionCheckbox
             id="doprava"
             label="Doprava na miesto stavby"
-            priceBezDPH={2195}
+            priceSDPH={CENY.doprava}
             checked={config.doprava}
             onChange={(checked) => updateConfig('doprava', checked)}
             description="Vrátane vyloženia a manipulácie"
