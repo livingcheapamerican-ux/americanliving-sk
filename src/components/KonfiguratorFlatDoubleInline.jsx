@@ -606,13 +606,22 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           </div>
 
           {/* Hrúbka izolácie */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+          <motion.div 
+            className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+            whileHover={{ scale: 1.005 }}
+          >
             <Label className="text-lg font-bold text-gray-800 mb-4 block flex items-center gap-2">
-              <ThermometerSun className="w-5 h-5 text-amber-600" />
+              <motion.div animate={{ scale: izolaciaNavysenie === "premium" ? [1, 1.2, 1] : 1 }} transition={{ duration: 0.3 }}>
+                <ThermometerSun className="w-5 h-5 text-amber-600" />
+              </motion.div>
               Hrúbka izolácie
             </Label>
             <RadioGroup value={izolaciaNavysenie} onValueChange={setIzolaciaNavysenie} className="space-y-3">
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all">
+              <motion.label 
+                whileHover={{ x: 4 }}
+                whileTap={{ scale: 0.98 }}
+                className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${izolaciaNavysenie === "standard" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
+              >
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="standard" id="izolacia-standard" />
                   <div>
@@ -622,8 +631,12 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                   </div>
                 </div>
                 <span className="text-gray-400 font-medium">+ 0 €</span>
-              </label>
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all">
+              </motion.label>
+              <motion.label 
+                whileHover={{ x: 4 }}
+                whileTap={{ scale: 0.98 }}
+                className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${izolaciaNavysenie === "zvysena" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
+              >
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="zvysena" id="izolacia-zvysena" />
                   <div>
@@ -633,23 +646,41 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                   </div>
                 </div>
                 <span className="font-bold text-green-600">+ 5 799 €</span>
-              </label>
-              <label className="flex items-center justify-between p-4 border-2 border-green-400 rounded-xl bg-green-50 hover:bg-green-100 cursor-pointer transition-all">
+              </motion.label>
+              <motion.label 
+                whileHover={{ x: 4, scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+                className={`relative flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all overflow-hidden ${izolaciaNavysenie === "premium" ? "border-green-500 bg-green-50 shadow-md ring-2 ring-green-200" : "border-green-400 bg-green-50/50 hover:bg-green-100"}`}
+              >
+                {izolaciaNavysenie === "premium" && (
+                  <motion.div 
+                    className="absolute top-0 right-0"
+                    initial={{ scale: 0, rotate: -45 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                  >
+                    <div className="bg-green-500 text-white text-[10px] font-bold px-8 py-0.5 transform rotate-45 translate-x-6 -translate-y-1">
+                      ✓
+                    </div>
+                  </motion.div>
+                )}
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="premium" id="izolacia-premium" />
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-gray-800">Premium / A0</span>
-                      <Badge className="bg-green-600 text-xs">Odporúčané pre A0</Badge>
+                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-xs animate-pulse">
+                        <Sparkles className="w-3 h-3 mr-1" />
+                        Odporúčané pre A0
+                      </Badge>
                     </div>
                     <p className="text-sm text-gray-500">Steny 250mm, Strecha 300mm</p>
                     <p className="text-xs text-green-700 font-medium">Potrebná položka pre status rodinného domu</p>
                   </div>
                 </div>
                 <span className="font-bold text-green-600">+ 11 600 €</span>
-              </label>
+              </motion.label>
             </RadioGroup>
-          </div>
+          </motion.div>
 
           {/* Typ základov */}
           <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
