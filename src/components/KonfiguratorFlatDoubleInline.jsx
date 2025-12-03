@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
+import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
 
 export default function KonfiguratorFlatDoubleInline({ dom }) {
   // Základná cena
