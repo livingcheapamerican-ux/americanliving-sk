@@ -11,11 +11,45 @@ import {
 export default function KonfiguratorFlatDoubleInline({ dom }) {
   const BASE_PRICE = 59900;
 
+  // Defaultné hodnoty pre reset
+  const defaultConfig = {
+    montazHolodomu: "nie",
+    cenaHolodomu: "so_strechou",
+    vstupneDvere: "ziadne",
+    izolaciaNavysenie: "standard",
+    elektroinstalacia: false,
+    vodaKanalizacia: false,
+    sanitaKomplet: false,
+    bojler: false,
+    tepelneCerpadlo: false,
+    rekuperacia: false,
+    zaklady: "bez",
+    pripojkaSiete: false,
+    inziniering: false,
+    projektA0: false,
+    dodatkovaIzolacia: "bez",
+    interierHviezd: "bez",
+    vonkajsiaKrytina: "bez",
+    porchStilAntracit: false,
+    doplnokVybavenie: false,
+    interiorPodlahy: "bez",
+    elektrickePodlaha: false,
+    predlzenieDomy: "bez",
+    dekorativnaPergola: false,
+    interierovoOkno: false,
+    rohoveOkno: "bez",
+    bocneOknoFixed: "bez",
+    bocneOknoPripojenie: "bez",
+    francuzskeAkroSokol: false,
+    doprava: false,
+    dokumentaciaStavba: false
+  };
+
   // State pre všetky voľby - rozšírené podľa screenshotov
-  const [montazHolodomu, setMontazHolodomu] = useState("nie");
-  const [cenaHolodomu, setCenaHolodomu] = useState("so_strechou");
-  const [vstupneDvere, setVstupneDvere] = useState("ziadne");
-  const [izolaciaNavysenie, setIzolaciaNavysenie] = useState("standard");
+  const [montazHolodomu, setMontazHolodomu] = useState(defaultConfig.montazHolodomu);
+  const [cenaHolodomu, setCenaHolodomu] = useState(defaultConfig.cenaHolodomu);
+  const [vstupneDvere, setVstupneDvere] = useState(defaultConfig.vstupneDvere);
+  const [izolaciaNavysenie, setIzolaciaNavysenie] = useState(defaultConfig.izolaciaNavysenie);
   
   const [elektroinstalacia, setElektroinstalacia] = useState(false);
   const [vodaKanalizacia, setVodaKanalizacia] = useState(false);
