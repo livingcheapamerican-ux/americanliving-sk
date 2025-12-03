@@ -546,13 +546,13 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         </div>
       </div>
 
-      {/* Sekcia 4: Vnútorný a vonkajší dizajn */}
+      {/* Sekcia 4: Vonkajší dizajn */}
       <div className="border rounded-lg p-5 mb-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-8 h-8 bg-pink-100 rounded-lg flex items-center justify-center">
             <Paintbrush className="w-4 h-4 text-pink-600" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-800">Vnútorný a vonkajší dizajn</h3>
+          <h3 className="text-lg font-semibold text-gray-800">Vonkajší dizajn</h3>
         </div>
 
         {/* Vonkajšia fasáda */}
