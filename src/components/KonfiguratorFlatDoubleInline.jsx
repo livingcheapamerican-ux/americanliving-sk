@@ -1202,7 +1202,10 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             {/* Laminácia a tónované sklá */}
             <div className="space-y-3 pt-4 border-t mt-4">
               <p className="text-sm font-medium text-gray-600 mb-2">Úpravy okien</p>
-              <label className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
+              <label 
+                onClick={(e) => { if (!povrchokaOkien) triggerAnimation("oknoAntracit", e.currentTarget); }}
+                className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
+              >
                 <div className="flex items-center gap-3">
                   <Checkbox 
                     id="povrch-okien" 
@@ -1217,7 +1220,10 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 </div>
                 <span className="font-bold text-green-600">+ 3 100 €</span>
               </label>
-              <label className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
+              <label 
+                onClick={(e) => { if (!tonovaneSkla) triggerAnimation("oknoTonovane", e.currentTarget); }}
+                className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
+              >
                 <div className="flex items-center gap-3">
                   <Checkbox 
                     id="tonovane-skla" 
