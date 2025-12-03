@@ -460,16 +460,18 @@ export default function Domov() {
             </p>
             </div>
 
-            <div className="max-w-7xl mx-auto grid grid-cols-4 lg:grid-cols-8 gap-1.5 sm:gap-4">
+            <div className="max-w-7xl mx-auto grid grid-cols-4 lg:grid-cols-8 gap-1 sm:gap-2">
             {proces.map((krok, index) => (
               <div key={index}>
-                <Card className="p-1.5 sm:p-4 h-full hover:shadow-xl transition-shadow bg-white border border-gray-100">
-                  <div className="text-lg sm:text-3xl font-bold text-primary/20 mb-0.5 sm:mb-2">{krok.cislo}</div>
-                  <div className="w-6 h-6 sm:w-10 sm:h-10 bg-gradient-to-br from-primary to-blue-600 rounded-md sm:rounded-lg flex items-center justify-center mb-1.5 sm:mb-2 shadow-lg">
-                    <krok.icon className="w-3 h-3 sm:w-5 sm:h-5 text-white" />
+                <Card className="p-1 sm:p-2 h-full hover:shadow-lg transition-shadow bg-white border border-gray-100">
+                  <div className="flex items-center gap-0.5 sm:gap-1 mb-0.5">
+                    <span className="text-[9px] sm:text-sm font-bold text-primary/40">{krok.cislo}</span>
+                    <div className="w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-br from-primary to-blue-600 rounded sm:rounded-md flex items-center justify-center shadow">
+                      <krok.icon className="w-2 h-2 sm:w-3 sm:h-3 text-white" />
+                    </div>
                   </div>
-                  <h3 className="text-[10px] sm:text-sm font-bold text-gray-900 mb-0.5">{krok.nazov}</h3>
-                  <p className="text-[10px] sm:text-xs text-gray-700 hidden sm:block">{krok.popis}</p>
+                  <h3 className="text-[8px] sm:text-xs font-bold text-gray-900 leading-tight">{krok.nazov}</h3>
+                  <p className="text-[7px] sm:text-[10px] text-gray-600 leading-tight hidden sm:block mt-0.5">{krok.popis}</p>
                   </Card>
                   </div>
                   ))}
