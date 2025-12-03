@@ -1,270 +1,246 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { 
-  Send, AlertTriangle, CheckCircle, Calculator, RotateCcw, Eye
+  Send, AlertTriangle, CheckCircle, Calculator, RotateCcw, Leaf
 } from "lucide-react";
 
 export default function KonfiguratorFlatDoubleInline({ dom }) {
-  const BASE_PRICE = 59900;
+  // Základná cena bez DPH
+  const BASE_PRICE_BEZ_DPH = 49512;
+  const DPH_RATE = 1.23;
 
-  // Defaultné hodnoty pre reset
+  // Defaultné hodnoty
   const defaultConfig = {
-    montazHolodomu: "nie",
-    cenaHolodomu: "so_strechou",
-    vstupneDvere: "ziadne",
-    izolaciaNavysenie: "standard",
-    elektroinstalacia: false,
-    vodaKanalizacia: false,
-    sanitaKomplet: false,
-    bojler: false,
-    tepelneCerpadlo: false,
-    rekuperacia: false,
+    montaz: false,
+    vstupneDvere: "standard",
     zaklady: "bez",
-    pripojkaSiete: false,
+    pilotyVyrovnanie: false,
+    pilotyMontaz: false,
+    pilotyDopravaZeriav: false,
+    izolacia: "standard",
+    elektroinstalacia: false,
+    voda: false,
+    pisoarWc: false,
+    umyvadloSprcha: false,
+    bojler80l: false,
+    podlahovka: false,
+    rekuperacia: false,
+    klimatizacia: false,
+    interierDrevo: false,
+    interierSadrokarton: false,
+    exterierDrevo: false,
+    oknaAntracit: false,
+    podlahyLaminat: false,
+    kuchynskaLinka: false,
+    dokumentaciaProjekt: false,
     inziniering: false,
-    projektA0: false,
-    dodatkovaIzolacia: "bez",
-    interierHviezd: "bez",
-    vonkajsiaKrytina: "bez",
-    porchStilAntracit: false,
-    doplnokVybavenie: false,
-    interiorPodlahy: "bez",
-    elektrickePodlaha: false,
-    predlzenieDomy: "bez",
-    dekorativnaPergola: false,
-    interierovoOkno: false,
-    rohoveOkno: "bez",
-    bocneOknoFixed: "bez",
-    bocneOknoPripojenie: "bez",
-    francuzskeAkroSokol: false,
-    doprava: false,
-    dokumentaciaStavba: false
+    doprava: false
   };
 
-  // State pre všetky voľby - rozšírené podľa screenshotov
-  const [montazHolodomu, setMontazHolodomu] = useState(defaultConfig.montazHolodomu);
-  const [cenaHolodomu, setCenaHolodomu] = useState(defaultConfig.cenaHolodomu);
-  const [vstupneDvere, setVstupneDvere] = useState(defaultConfig.vstupneDvere);
-  const [izolaciaNavysenie, setIzolaciaNavysenie] = useState(defaultConfig.izolaciaNavysenie);
-  
-  const [elektroinstalacia, setElektroinstalacia] = useState(false);
-  const [vodaKanalizacia, setVodaKanalizacia] = useState(false);
-  const [sanitaKomplet, setSanitaKomplet] = useState(false);
-  const [bojler, setBojler] = useState(false);
-  const [tepelneCerpadlo, setTepelneCerpadlo] = useState(false);
-  const [rekuperacia, setRekuperacia] = useState(false);
-  
-  const [zaklady, setZaklady] = useState("bez");
-  const [pripojkaSiete, setPripojkaSiete] = useState(false);
-  
-  const [inziniering, setInziniering] = useState(false);
-  const [projektA0, setProjektA0] = useState(false);
+  const [config, setConfig] = useState(defaultConfig);
 
-  // Nové položky zo screenshotov
-  const [dodatkovaIzolacia, setDodatkovaIzolacia] = useState("bez");
-  const [interierHviezd, setInterierHviezd] = useState("bez");
-  const [vonkajsiaKrytina, setVonkajsiaKrytina] = useState("bez");
-  const [porchStilAntracit, setPorchStilAntracit] = useState(false);
-  const [doplnokVybavenie, setDoplnokVybavenie] = useState(false);
-  const [interiorPodlahy, setInteriorPodlahy] = useState("bez");
-  const [elektrickePodlaha, setElektrickePodlaha] = useState(false);
-  const [predlzenieDomy, setPredlzenieDomy] = useState("bez");
-  const [dekorativnaPergola, setDekorativnaPergola] = useState(false);
-  const [interierovoOkno, setInterierovoOkno] = useState(false);
-  const [rohoveOkno, setRohoveOkno] = useState("bez");
-  const [bocneOknoFixed, setBocneOknoFixed] = useState("bez");
-  const [bocneOknoPripojenie, setBocneOknoPripojenie] = useState("bez");
-  const [francuzskeAkroSokol, setFrancuzskeAkroSokol] = useState(false);
-  const [doprava, setDoprava] = useState(false);
-  const [dokumentaciaStavba, setDokumentaciaStavba] = useState(false);
-
-  // Cenník
+  // Cenník (bez DPH)
   const CENY = {
-    montaz: { nie: 0, ano: 17970 },
-    cenaHolodomu: { so_strechou: 0, bez_strechy: -3000 },
-    dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 5799, premium: 11600 },
-    elektroinstalacia: 7400,
-    vodaKanalizacia: 2380,
-    sanitaKomplet: 1169,
-    bojler: 246,
-    tepelneCerpadlo: 5535,
-    rekuperacia: 2700,
-    zaklady: { bez: 0, skrutky: 8140, doska: 17946, pasove: 21079 },
-    pripojkaSiete: 1501,
-    inziniering: 2592,
-    projektA0: 3500,
-    // Nové položky
-    dodatkovaIzolacia: { bez: 0, strecha_steny: 2800, strop_podlaha: 3200 },
-    interierHviezd: { bez: 0, drevo_obklad: 4500, sadrokarton: 3800 },
-    vonkajsiaKrytina: { bez: 0, drevo_plech: 0, falcovany_plech: 1200 },
-    porchStilAntracit: 1800,
-    doplnokVybavenie: 850,
-    interiorPodlahy: { bez: 0, laminat: 2400, vinyl: 3200 },
-    elektrickePodlaha: 3800,
-    predlzenieDomy: { bez: 0, l2m: 11999, l4m: 19800, l6m: 28500, l8m: 35800 },
-    dekorativnaPergola: 4500,
-    interierovoOkno: 3900,
-    rohoveOkno: { bez: 0, fixed3: 5800 },
-    bocneOknoFixed: { bez: 0, v60x180: 890, v90x180: 1150 },
-    bocneOknoPripojenie: { bez: 0, s60x60w: 650, s90x90w: 890, s120x60w: 1100 },
-    francuzskeAkroSokol: 4900,
-    doprava: 1690,
-    dokumentaciaStavba: 4500
+    montaz: 12091,
+    vstupneDvere: { standard: 0, kovove: 480, plastove: 440 },
+    zaklady: { bez: 0, piloty: 6128, pasove: 17840, doska: 22940 },
+    pilotyVyrovnanie: 2016,
+    pilotyMontaz: 1440,
+    pilotyDopravaZeriav: 720,
+    izolacia: { standard: 0, steny200: by, steny250: 4878, steny300: 6097 },
+    elektroinstalacia: 6000,
+    voda: 1520,
+    pisoarWc: 456,
+    umyvadloSprcha: 760,
+    bojler80l: 320,
+    podlahovka: 4200,
+    rekuperacia: 2195,
+    klimatizacia: 2032,
+    interierDrevo: 9756,
+    interierSadrokarton: 8130,
+    exterierDrevo: 5691,
+    oknaAntracit: 1463,
+    podlahyLaminat: 3252,
+    kuchynskaLinka: 4065,
+    dokumentaciaProjekt: 4878,
+    inziniering: 1626,
+    doprava: 2195
   };
 
-  // Výpočet celkovej ceny
-  const totalPrice = useMemo(() => {
-    let total = BASE_PRICE;
-    
-    total += CENY.montaz[montazHolodomu];
-    total += CENY.cenaHolodomu[cenaHolodomu];
-    total += CENY.dvere[vstupneDvere];
-    total += CENY.izolacia[izolaciaNavysenie];
-    
-    if (elektroinstalacia) total += CENY.elektroinstalacia;
-    if (vodaKanalizacia) total += CENY.vodaKanalizacia;
-    if (sanitaKomplet) total += CENY.sanitaKomplet;
-    if (bojler) total += CENY.bojler;
-    if (tepelneCerpadlo) total += CENY.tepelneCerpadlo;
-    if (rekuperacia) total += CENY.rekuperacia;
-    
-    total += CENY.zaklady[zaklady];
-    if (pripojkaSiete) total += CENY.pripojkaSiete;
-    
-    if (inziniering) total += CENY.inziniering;
-    if (projektA0) total += CENY.projektA0;
+  // Aktualizácia cenníka podľa HTML
+  const CENY_UPDATED = {
+    montaz: 12091,
+    vstupneDvere: { standard: 0, kovove: 480, plastove: 440 },
+    zaklady: { bez: 0, piloty: 6128, pasove: 17840, doska: 22940 },
+    pilotyVyrovnanie: by16,
+    pilotyMontaz: 1440,
+    pilotyDopravaZeriav: 720,
+    izolacia: { standard: 0, steny250: 4878, steny300: 6097 },
+    elektroinstalacia: 6000,
+    voda: 1520,
+    pisoarWc: 456,
+    umyvadloSprcha: 760,
+    bojler80l: 320,
+    podlahovka: 4200,
+    rekuperacia: 2195,
+    klimatizacia: 2032,
+    interierDrevo: 9756,
+    interierSadrokarton: 8130,
+    exterierDrevo: 5691,
+    oknaAntracit: 1463,
+    podlahyLaminat: 3252,
+    kuchynskaLinka: 4065,
+    dokumentaciaProjekt: 4878,
+    inziniering: 1626,
+    doprava: 2195
+  };
 
-    // Nové položky
-    total += CENY.dodatkovaIzolacia[dodatkovaIzolacia];
-    total += CENY.interierHviezd[interierHviezd];
-    total += CENY.vonkajsiaKrytina[vonkajsiaKrytina];
-    if (porchStilAntracit) total += CENY.porchStilAntracit;
-    if (doplnokVybavenie) total += CENY.doplnokVybavenie;
-    total += CENY.interiorPodlahy[interiorPodlahy];
-    if (elektrickePodlaha) total += CENY.elektrickePodlaha;
-    total += CENY.predlzenieDomy[predlzenieDomy];
-    if (dekorativnaPergola) total += CENY.dekorativnaPergola;
-    if (interierovoOkno) total += CENY.interierovoOkno;
-    total += CENY.rohoveOkno[rohoveOkno];
-    total += CENY.bocneOknoFixed[bocneOknoFixed];
-    total += CENY.bocneOknoPripojenie[bocneOknoPripojenie];
-    if (francuzskeAkroSokol) total += CENY.francuzskeAkroSokol;
-    if (doprava) total += CENY.doprava;
-    if (dokumentaciaStavba) total += CENY.dokumentaciaStavba;
+  // Výpočet ceny
+  const { totalBezDPH, totalSDPH } = useMemo(() => {
+    let total = BASE_PRICE_BEZ_DPH;
     
-    return total;
-  }, [montazHolodomu, cenaHolodomu, vstupneDvere, izolaciaNavysenie, elektroinstalacia, 
-      vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia,
-      zaklady, pripojkaSiete, inziniering, projektA0, dodatkovaIzolacia, interierHviezd,
-      vonkajsiaKrytina, porchStilAntracit, doplnokVybavenie, interiorPodlahy, elektrickePodlaha,
-      predlzenieDomy, dekorativnaPergola, interierovoOkno, rohoveOkno, bocneOknoFixed,
-      bocneOknoPripojenie, francuzskeAkroSokol, doprava, dokumentaciaStavba]);
-
-  const pricatkyCena = totalPrice - BASE_PRICE;
-
-  // Kontrola A0 odporúčaní
-  const a0Odporucania = useMemo(() => {
-    if (!projektA0) return null;
+    if (config.montaz) total += 12091;
+    total += CENY.vstupneDvere[config.vstupneDvere] || 0;
+    total += CENY.zaklady[config.zaklady] || 0;
     
-    const chybajuce = [];
-    if (izolaciaNavysenie !== "premium") chybajuce.push("Premium izolácia (250mm steny, 300mm strecha)");
-    if (!tepelneCerpadlo) chybajuce.push("Tepelné čerpadlo / Klimatizácia");
-    if (!rekuperacia) chybajuce.push("Rekuperácia");
+    if (config.zaklady === "piloty") {
+      if (config.pilotyVyrovnanie) total += 2016;
+      if (config.pilotyMontaz) total += 1440;
+      if (config.pilotyDopravaZeriav) total += 720;
+    }
     
-    return chybajuce.length > 0 ? chybajuce : null;
-  }, [projektA0, izolaciaNavysenie, tepelneCerpadlo, rekuperacia]);
+    if (config.izolacia === "steny250") total += 4878;
+    if (config.izolacia === "steny300") total += 6097;
+    
+    if (config.elektroinstalacia) total += 6000;
+    if (config.voda) total += 1520;
+    if (config.pisoarWc) total += 456;
+    if (config.umyvadloSprcha) total += 760;
+    if (config.bojler80l) total += 320;
+    if (config.podlahovka) total += 4200;
+    if (config.rekuperacia) total += 2195;
+    if (config.klimatizacia) total += 2032;
+    if (config.interierDrevo) total += 9756;
+    if (config.interierSadrokarton) total += 8130;
+    if (config.exterierDrevo) total += 5691;
+    if (config.oknaAntracit) total += 1463;
+    if (config.podlahyLaminat) total += 3252;
+    if (config.kuchynskaLinka) total += 4065;
+    if (config.dokumentaciaProjekt) total += 4878;
+    if (config.inziniering) total += 1626;
+    if (config.doprava) total += 2195;
+    
+    return {
+      totalBezDPH: total,
+      totalSDPH: Math.round(total * DPH_RATE * 100) / 100
+    };
+  }, [config]);
 
-  const formatPrice = (price) => price.toLocaleString('sk-SK') + " €";
+  // A0 kontrola
+  const isA0Ready = useMemo(() => {
+    return (
+      (config.izolacia === "steny250" || config.izolacia === "steny300") &&
+      config.rekuperacia &&
+      config.klimatizacia &&
+      config.dokumentaciaProjekt
+    );
+  }, [config]);
 
-  // Reset funkcia
+  const a0Missing = useMemo(() => {
+    const missing = [];
+    if (config.izolacia === "standard") missing.push("Dodatočná izolácia (250mm alebo 300mm)");
+    if (!config.rekuperacia) missing.push("Rekuperácia");
+    if (!config.klimatizacia) missing.push("Klimatizácia s tepelným čerpadlom");
+    if (!config.dokumentaciaProjekt) missing.push("Projektová dokumentácia");
+    return missing;
+  }, [config]);
+
   const handleReset = () => {
-    setMontazHolodomu(defaultConfig.montazHolodomu);
-    setCenaHolodomu(defaultConfig.cenaHolodomu);
-    setVstupneDvere(defaultConfig.vstupneDvere);
-    setIzolaciaNavysenie(defaultConfig.izolaciaNavysenie);
-    setElektroinstalacia(defaultConfig.elektroinstalacia);
-    setVodaKanalizacia(defaultConfig.vodaKanalizacia);
-    setSanitaKomplet(defaultConfig.sanitaKomplet);
-    setBojler(defaultConfig.bojler);
-    setTepelneCerpadlo(defaultConfig.tepelneCerpadlo);
-    setRekuperacia(defaultConfig.rekuperacia);
-    setZaklady(defaultConfig.zaklady);
-    setPripojkaSiete(defaultConfig.pripojkaSiete);
-    setInziniering(defaultConfig.inziniering);
-    setProjektA0(defaultConfig.projektA0);
-    setDodatkovaIzolacia(defaultConfig.dodatkovaIzolacia);
-    setInterierHviezd(defaultConfig.interierHviezd);
-    setVonkajsiaKrytina(defaultConfig.vonkajsiaKrytina);
-    setPorchStilAntracit(defaultConfig.porchStilAntracit);
-    setDoplnokVybavenie(defaultConfig.doplnokVybavenie);
-    setInteriorPodlahy(defaultConfig.interiorPodlahy);
-    setElektrickePodlaha(defaultConfig.elektrickePodlaha);
-    setPredlzenieDomy(defaultConfig.predlzenieDomy);
-    setDekorativnaPergola(defaultConfig.dekorativnaPergola);
-    setInterierovoOkno(defaultConfig.interierovoOkno);
-    setRohoveOkno(defaultConfig.rohoveOkno);
-    setBocneOknoFixed(defaultConfig.bocneOknoFixed);
-    setBocneOknoPripojenie(defaultConfig.bocneOknoPripojenie);
-    setFrancuzskeAkroSokol(defaultConfig.francuzskeAkroSokol);
-    setDoprava(defaultConfig.doprava);
-    setDokumentaciaStavba(defaultConfig.dokumentaciaStavba);
+    setConfig(defaultConfig);
   };
 
-  // Aktívne výbery pre preview
-  const activeFeatures = useMemo(() => {
-    const features = [];
-    if (montazHolodomu === "ano") features.push({ label: "Montáž", icon: "🔧" });
-    if (vstupneDvere !== "ziadne") features.push({ label: vstupneDvere === "kovove" ? "Kovové dvere" : "Plastové dvere", icon: "🚪" });
-    if (izolaciaNavysenie === "zvysena") features.push({ label: "Zvýšená izolácia", icon: "🧱" });
-    if (izolaciaNavysenie === "premium") features.push({ label: "Premium izolácia A0", icon: "🏆" });
-    if (elektroinstalacia) features.push({ label: "Elektroinštalácia", icon: "⚡" });
-    if (vodaKanalizacia) features.push({ label: "Voda + kanalizácia", icon: "🚿" });
-    if (tepelneCerpadlo) features.push({ label: "Tepelné čerpadlo", icon: "♨️" });
-    if (rekuperacia) features.push({ label: "Rekuperácia", icon: "💨" });
-    if (zaklady !== "bez") features.push({ label: zaklady === "skrutky" ? "Pätky" : zaklady === "doska" ? "Základová doska" : "Pásové základy", icon: "🏗️" });
-    if (projektA0) features.push({ label: "Certifikát A0", icon: "📜" });
-    if (dekorativnaPergola) features.push({ label: "Pergola", icon: "🏡" });
-    if (predlzenieDomy !== "bez") features.push({ label: `Predĺženie ${predlzenieDomy.replace('l', '').replace('m', '')}m`, icon: "📏" });
-    if (porchStilAntracit) features.push({ label: "Antracit okná", icon: "🪟" });
-    if (francuzskeAkroSokol) features.push({ label: "Francúzske okno", icon: "🚪" });
-    return features;
-  }, [montazHolodomu, vstupneDvere, izolaciaNavysenie, elektroinstalacia, vodaKanalizacia, 
-      tepelneCerpadlo, rekuperacia, zaklady, projektA0, dekorativnaPergola, predlzenieDomy,
-      porchStilAntracit, francuzskeAkroSokol]);
+  const updateConfig = (key, value) => {
+    setConfig(prev => ({ ...prev, [key]: value }));
+  };
 
-  // Komponenta pre výber s obrázkami
-  const ImageOption = ({ selected, onClick, label, price, image, disabled }) => (
-    <div 
-      onClick={disabled ? undefined : onClick}
-      className={`cursor-pointer border-2 rounded-lg p-2 transition-all ${
-        selected ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-400'
-      } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-    >
-      <div className="aspect-square bg-gray-100 rounded mb-2 flex items-center justify-center overflow-hidden">
-        {image ? (
-          <img src={image} alt={label} className="w-full h-full object-cover" />
-        ) : (
-          <span className="text-gray-400 text-xs text-center p-1">Nie</span>
+  const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+
+  // Komponenta pre checkbox položku
+  const OptionCheckbox = ({ id, label, priceBezDPH, checked, onChange, isA0, disabled, description }) => {
+    const priceSDPH = Math.round(priceBezDPH * DPH_RATE * 100) / 100;
+    return (
+      <div className={`flex items-start justify-between p-3 rounded-lg border ${isA0 ? 'bg-green-50 border-l-4 border-l-green-500' : 'bg-white'} ${disabled ? 'opacity-50' : ''}`}>
+        <div className="flex items-start gap-3 flex-1">
+          <Checkbox
+            id={id}
+            checked={checked}
+            onCheckedChange={onChange}
+            disabled={disabled}
+            className="mt-1"
+          />
+          <div className="flex-1">
+            <Label htmlFor={id} className={`cursor-pointer font-medium ${disabled ? 'text-gray-400' : 'text-gray-800'}`}>
+              {label}
+              {isA0 && <Leaf className="inline w-4 h-4 ml-2 text-green-600" />}
+            </Label>
+            {description && <p className="text-xs text-gray-500 mt-1">{description}</p>}
+          </div>
+        </div>
+        {priceBezDPH > 0 && (
+          <div className="text-right ml-4">
+            <div className="font-semibold text-green-600">+{formatPrice(priceBezDPH)} <span className="text-xs font-normal">(bez DPH)</span></div>
+            <div className="text-sm text-gray-500">+{formatPrice(priceSDPH)} <span className="text-xs">(s DPH)</span></div>
+          </div>
         )}
       </div>
-      <p className="text-xs font-medium text-center truncate">{label}</p>
-      <p className={`text-xs text-center ${price > 0 ? 'text-red-600 font-semibold' : 'text-gray-500'}`}>
-        {price > 0 ? `+ ${formatPrice(price)}` : price < 0 ? `${formatPrice(price)}` : 'Zahrnuté'}
-      </p>
-    </div>
-  );
+    );
+  };
+
+  // Komponenta pre radio položku
+  const OptionRadio = ({ name, value, label, priceBezDPH, selected, onChange, isA0 }) => {
+    const priceSDPH = Math.round(priceBezDPH * DPH_RATE * 100) / 100;
+    return (
+      <div className={`flex items-center justify-between p-3 rounded-lg border ${isA0 ? 'bg-green-50 border-l-4 border-l-green-500' : 'bg-white'} ${selected ? 'ring-2 ring-blue-500' : ''}`}>
+        <div className="flex items-center gap-3">
+          <input
+            type="radio"
+            name={name}
+            value={value}
+            checked={selected}
+            onChange={() => onChange(value)}
+            className="w-4 h-4 text-blue-600"
+          />
+          <Label className="cursor-pointer font-medium text-gray-800">
+            {label}
+            {isA0 && <Leaf className="inline w-4 h-4 ml-2 text-green-600" />}
+          </Label>
+        </div>
+        {priceBezDPH > 0 ? (
+          <div className="text-right">
+            <div className="font-semibold text-green-600">+{formatPrice(priceBezDPH)} <span className="text-xs font-normal">(bez DPH)</span></div>
+            <div className="text-sm text-gray-500">+{formatPrice(priceSDPH)} <span className="text-xs">(s DPH)</span></div>
+          </div>
+        ) : (
+          <span className="text-sm text-gray-500">Zahrnuté v cene</span>
+        )}
+      </div>
+    );
+  };
 
   return (
-    <Card className="p-6 mt-6 bg-gradient-to-br from-amber-50 to-white border-2 border-amber-300">
+    <Card className="p-6 mt-6 bg-white border-2 border-gray-200 shadow-lg">
+      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Calculator className="w-6 h-6 text-amber-600" />
-          <h2 className="text-2xl font-bold text-primary">Konfigurátor ceny</h2>
+          <Calculator className="w-7 h-7 text-blue-600" />
+          <h2 className="text-2xl font-bold text-gray-800">Konfigurátor Domu: Flat double, 142m²</h2>
         </div>
         <Button 
           variant="outline" 
@@ -277,724 +253,447 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         </Button>
       </div>
 
-      {/* Vizuálny náhľad konfigurácie */}
-      <div className="mb-8 p-4 bg-white rounded-xl border-2 border-gray-200 shadow-sm">
-        <div className="flex items-center gap-2 mb-3">
-          <Eye className="w-5 h-5 text-primary" />
-          <h3 className="font-semibold text-gray-800">Vaša konfigurácia</h3>
+      {/* Základná cena info */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <p className="text-blue-900">
+          Základná konfigurácia domu za <strong>{formatPrice(BASE_PRICE_BEZ_DPH * DPH_RATE)} s DPH</strong> ({formatPrice(BASE_PRICE_BEZ_DPH)} bez DPH) je sada stavebnice pre svojpomocnú montáž.
+        </p>
+        <p className="font-semibold text-blue-800 mt-2">Obsah základnej stavebnice:</p>
+        <ul className="list-disc list-inside text-blue-800 text-sm mt-1 space-y-1">
+          <li>Nosná prefabrikovaná konštrukcia (steny, strecha, podlaha).</li>
+          <li>Základná tepelná izolácia (150mm steny/strecha, 200mm podlaha).</li>
+          <li>Strešná krytina (falcovaný plech) a vonkajší plášť (plechová fasáda).</li>
+          <li>Okná (plastové, 3-sklo) a vchodové dvere (plastové) podľa projektu.</li>
+          <li>Kompletná revízna dokumentácia (povinná položka).</li>
+        </ul>
+      </div>
+
+      {/* Cenový display */}
+      <div className="bg-gray-100 border-l-4 border-blue-500 rounded-lg p-5 mb-8 text-right">
+        <div className="text-gray-600">Celková cena bez DPH</div>
+        <div className="text-2xl font-bold text-gray-800">{formatPrice(totalBezDPH)}</div>
+        <div className="text-gray-600 mt-3">Celková cena s 23% DPH</div>
+        <div className="text-2xl font-bold text-gray-800">{formatPrice(totalSDPH)}</div>
+      </div>
+
+      {/* SEKCIA 1: Hrubá Stavba a Exteriér */}
+      <h2 className="text-xl font-bold text-gray-800 border-b-2 border-blue-500 pb-2 mb-6 mt-8">
+        Časť 1: Hrubá Stavba a Exteriér
+      </h2>
+
+      {/* Základné prvky */}
+      <div className="border rounded-lg p-5 mb-6">
+        <h3 className="text-lg font-semibold text-blue-600 mb-4">Základné Prvky</h3>
+        <div className="space-y-3">
+          <OptionCheckbox
+            id="montaz"
+            label="Cena montáže holodomu"
+            priceBezDPH={12091}
+            checked={config.montaz}
+            onChange={(checked) => updateConfig('montaz', checked)}
+          />
+          
+          <div className="mt-4">
+            <p className="font-medium text-gray-700 mb-2">Vstupné dvere:</p>
+            <div className="space-y-2">
+              <OptionRadio
+                name="vstupneDvere"
+                value="standard"
+                label="Štandardné dvere (zahrnuté v cene)"
+                priceBezDPH={0}
+                selected={config.vstupneDvere === "standard"}
+                onChange={(v) => updateConfig('vstupneDvere', v)}
+              />
+              <OptionRadio
+                name="vstupneDvere"
+                value="kovove"
+                label="Vstupné dvere: Kovové s 2 zámkami"
+                priceBezDPH={480}
+                selected={config.vstupneDvere === "kovove"}
+                onChange={(v) => updateConfig('vstupneDvere', v)}
+              />
+              <OptionRadio
+                name="vstupneDvere"
+                value="plastove"
+                label="Vstupné dvere: Plastovo-kovové"
+                priceBezDPH={440}
+                selected={config.vstupneDvere === "plastove"}
+                onChange={(v) => updateConfig('vstupneDvere', v)}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Základy */}
+      <div className="border rounded-lg p-5 mb-6">
+        <h3 className="text-lg font-semibold text-blue-600 mb-4">Základy</h3>
+        <div className="space-y-2">
+          <OptionRadio
+            name="zaklady"
+            value="bez"
+            label="Bez základov"
+            priceBezDPH={0}
+            selected={config.zaklady === "bez"}
+            onChange={(v) => updateConfig('zaklady', v)}
+          />
+          <OptionRadio
+            name="zaklady"
+            value="piloty"
+            label="Pilóty alebo pätky"
+            priceBezDPH={6128}
+            selected={config.zaklady === "piloty"}
+            onChange={(v) => updateConfig('zaklady', v)}
+          />
+          <OptionRadio
+            name="zaklady"
+            value="pasove"
+            label="Pásové základy"
+            priceBezDPH={17840}
+            selected={config.zaklady === "pasove"}
+            onChange={(v) => updateConfig('zaklady', v)}
+          />
+          <OptionRadio
+            name="zaklady"
+            value="doska"
+            label="Základová doska"
+            priceBezDPH={22940}
+            selected={config.zaklady === "doska"}
+            onChange={(v) => updateConfig('zaklady', v)}
+          />
+        </div>
+
+        {/* Dodatočné možnosti pre pilóty */}
+        {config.zaklady === "piloty" && (
+          <div className="mt-4 ml-6 space-y-2 border-l-2 border-gray-300 pl-4">
+            <OptionCheckbox
+              id="pilotyVyrovnanie"
+              label="Vyrovnanie terénu"
+              priceBezDPH={2016}
+              checked={config.pilotyVyrovnanie}
+              onChange={(checked) => updateConfig('pilotyVyrovnanie', checked)}
+            />
+            <OptionCheckbox
+              id="pilotyMontaz"
+              label="Montáž pilót"
+              priceBezDPH={1440}
+              checked={config.pilotyMontaz}
+              onChange={(checked) => updateConfig('pilotyMontaz', checked)}
+            />
+            <OptionCheckbox
+              id="pilotyDopravaZeriav"
+              label="Doprava a žeriav"
+              priceBezDPH={720}
+              checked={config.pilotyDopravaZeriav}
+              onChange={(checked) => updateConfig('pilotyDopravaZeriav', checked)}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* A0 Info Box */}
+      <div className="bg-green-50 border-l-4 border-green-500 rounded-lg p-5 mb-6">
+        <h3 className="text-lg font-semibold text-green-700 flex items-center gap-2">
+          <Leaf className="w-5 h-5" />
+          Dôležité upozornenie pre Kolaudáciu a Certifikát A0
+        </h3>
+        <p className="text-green-800 mt-2">
+          Pokiaľ si želáte, aby Váš dom spĺňal požiadavky pre energetický certifikát <strong>A0</strong>, je nevyhnutné v konfigurácii zvoliť:
+        </p>
+        <ul className="list-disc list-inside text-green-800 mt-2 space-y-1">
+          <li><strong>všetky položky</strong>, ktoré sú označené zelenou farbou,</li>
+          <li>pri dodatočnej izolácii <strong>jednu z možností</strong> taktiež v zelenom rámčeku (250mm alebo 300mm).</li>
+        </ul>
+      </div>
+
+      {/* SEKCIA 2: Kolaudácia a Energetický Certifikát */}
+      <h2 className="text-xl font-bold text-gray-800 border-b-2 border-blue-500 pb-2 mb-6 mt-8">
+        Časť 2: Kolaudácia a Energetický Certifikát
+      </h2>
+
+      {/* Dodatočná izolácia */}
+      <div className="border rounded-lg p-5 mb-6">
+        <h3 className="text-lg font-semibold text-blue-600 mb-4">Dodatočná Izolácia (Pre normu A0)</h3>
+        <div className="space-y-2">
+          <OptionRadio
+            name="izolacia"
+            value="standard"
+            label="Štandardná izolácia (zahrnuté v cene)"
+            priceBezDPH={0}
+            selected={config.izolacia === "standard"}
+            onChange={(v) => updateConfig('izolacia', v)}
+          />
+          <OptionRadio
+            name="izolacia"
+            value="steny250"
+            label="Izolácia stien 250mm (spĺňa A0)"
+            priceBezDPH={4878}
+            selected={config.izolacia === "steny250"}
+            onChange={(v) => updateConfig('izolacia', v)}
+            isA0={true}
+          />
+          <OptionRadio
+            name="izolacia"
+            value="steny300"
+            label="Izolácia stien 300mm (spĺňa A0+)"
+            priceBezDPH={6097}
+            selected={config.izolacia === "steny300"}
+            onChange={(v) => updateConfig('izolacia', v)}
+            isA0={true}
+          />
+        </div>
+      </div>
+
+      {/* Technológie */}
+      <div className="border rounded-lg p-5 mb-6">
+        <h3 className="text-lg font-semibold text-blue-600 mb-4">Technológie</h3>
+        <div className="space-y-3">
+          <OptionCheckbox
+            id="rekuperacia"
+            label="Rekuperácia (povinné pre A0)"
+            priceBezDPH={2195}
+            checked={config.rekuperacia}
+            onChange={(checked) => updateConfig('rekuperacia', checked)}
+            isA0={true}
+          />
+          <OptionCheckbox
+            id="klimatizacia"
+            label="Klimatizácia s tepelným čerpadlom (povinné pre A0)"
+            priceBezDPH={2032}
+            checked={config.klimatizacia}
+            onChange={(checked) => updateConfig('klimatizacia', checked)}
+            isA0={true}
+          />
+        </div>
+      </div>
+
+      {/* Dokumentácia */}
+      <div className="border rounded-lg p-5 mb-6">
+        <h3 className="text-lg font-semibold text-blue-600 mb-4">Dokumentácia</h3>
+        <div className="space-y-3">
+          <OptionCheckbox
+            id="dokumentaciaProjekt"
+            label="Projektová dokumentácia pre A0"
+            priceBezDPH={4878}
+            checked={config.dokumentaciaProjekt}
+            onChange={(checked) => updateConfig('dokumentaciaProjekt', checked)}
+            isA0={true}
+          />
+          <OptionCheckbox
+            id="inziniering"
+            label="Inžiniering (stavebné povolenie)"
+            priceBezDPH={1626}
+            checked={config.inziniering}
+            onChange={(checked) => updateConfig('inziniering', checked)}
+          />
+        </div>
+      </div>
+
+      {/* SEKCIA 3: Interiér a Inštalácie */}
+      <h2 className="text-xl font-bold text-gray-800 border-b-2 border-blue-500 pb-2 mb-6 mt-8">
+        Časť 3: Interiér a Inštalácie
+      </h2>
+
+      {/* Elektrika */}
+      <div className="border rounded-lg p-5 mb-6">
+        <h3 className="text-lg font-semibold text-blue-600 mb-4">Elektroinštalácia</h3>
+        <div className="space-y-3">
+          <OptionCheckbox
+            id="elektroinstalacia"
+            label="Kompletná elektroinštalácia"
+            priceBezDPH={6000}
+            checked={config.elektroinstalacia}
+            onChange={(checked) => updateConfig('elektroinstalacia', checked)}
+            description="Rozvodová skriňa, zásuvky, osvetlenie, vypínače"
+          />
+        </div>
+      </div>
+
+      {/* Voda a sanita */}
+      <div className="border rounded-lg p-5 mb-6">
+        <h3 className="text-lg font-semibold text-blue-600 mb-4">Voda a Sanita</h3>
+        <div className="space-y-3">
+          <OptionCheckbox
+            id="voda"
+            label="Rozvody vody a kanalizácie"
+            priceBezDPH={1520}
+            checked={config.voda}
+            onChange={(checked) => updateConfig('voda', checked)}
+          />
+          <OptionCheckbox
+            id="pisoarWc"
+            label="Pisoár a WC"
+            priceBezDPH={456}
+            checked={config.pisoarWc}
+            onChange={(checked) => updateConfig('pisoarWc', checked)}
+            disabled={!config.voda}
+          />
+          <OptionCheckbox
+            id="umyvadloSprcha"
+            label="Umývadlo a sprchový kút"
+            priceBezDPH={760}
+            checked={config.umyvadloSprcha}
+            onChange={(checked) => updateConfig('umyvadloSprcha', checked)}
+            disabled={!config.voda}
+          />
+          <OptionCheckbox
+            id="bojler80l"
+            label="Bojler 80L"
+            priceBezDPH={320}
+            checked={config.bojler80l}
+            onChange={(checked) => updateConfig('bojler80l', checked)}
+            disabled={!config.voda}
+          />
+        </div>
+      </div>
+
+      {/* Vykurovanie */}
+      <div className="border rounded-lg p-5 mb-6">
+        <h3 className="text-lg font-semibold text-blue-600 mb-4">Vykurovanie</h3>
+        <div className="space-y-3">
+          <OptionCheckbox
+            id="podlahovka"
+            label="Podlahové vykurovanie"
+            priceBezDPH={4200}
+            checked={config.podlahovka}
+            onChange={(checked) => updateConfig('podlahovka', checked)}
+          />
+        </div>
+      </div>
+
+      {/* Povrchové úpravy */}
+      <div className="border rounded-lg p-5 mb-6">
+        <h3 className="text-lg font-semibold text-blue-600 mb-4">Povrchové úpravy</h3>
+        <div className="space-y-3">
+          <OptionCheckbox
+            id="interierDrevo"
+            label="Interiér - Drevené obloženie"
+            priceBezDPH={9756}
+            checked={config.interierDrevo}
+            onChange={(checked) => {
+              updateConfig('interierDrevo', checked);
+              if (checked) updateConfig('interierSadrokarton', false);
+            }}
+          />
+          <OptionCheckbox
+            id="interierSadrokarton"
+            label="Interiér - Sadrokartón"
+            priceBezDPH={8130}
+            checked={config.interierSadrokarton}
+            onChange={(checked) => {
+              updateConfig('interierSadrokarton', checked);
+              if (checked) updateConfig('interierDrevo', false);
+            }}
+          />
+          <OptionCheckbox
+            id="exterierDrevo"
+            label="Exteriér - Drevená fasáda"
+            priceBezDPH={5691}
+            checked={config.exterierDrevo}
+            onChange={(checked) => updateConfig('exterierDrevo', checked)}
+          />
+          <OptionCheckbox
+            id="oknaAntracit"
+            label="Okná v antracitovej farbe"
+            priceBezDPH={1463}
+            checked={config.oknaAntracit}
+            onChange={(checked) => updateConfig('oknaAntracit', checked)}
+          />
+          <OptionCheckbox
+            id="podlahyLaminat"
+            label="Podlahy - Laminát"
+            priceBezDPH={3252}
+            checked={config.podlahyLaminat}
+            onChange={(checked) => updateConfig('podlahyLaminat', checked)}
+          />
+        </div>
+      </div>
+
+      {/* Kuchyňa */}
+      <div className="border rounded-lg p-5 mb-6">
+        <h3 className="text-lg font-semibold text-blue-600 mb-4">Kuchyňa</h3>
+        <div className="space-y-3">
+          <OptionCheckbox
+            id="kuchynskaLinka"
+            label="Kuchynská linka"
+            priceBezDPH={4065}
+            checked={config.kuchynskaLinka}
+            onChange={(checked) => updateConfig('kuchynskaLinka', checked)}
+          />
+        </div>
+      </div>
+
+      {/* SEKCIA 4: Doprava */}
+      <h2 className="text-xl font-bold text-gray-800 border-b-2 border-blue-500 pb-2 mb-6 mt-8">
+        Časť 4: Doprava
+      </h2>
+
+      <div className="border rounded-lg p-5 mb-6">
+        <h3 className="text-lg font-semibold text-blue-600 mb-4">Doprava a Montáž</h3>
+        <div className="space-y-3">
+          <OptionCheckbox
+            id="doprava"
+            label="Doprava na miesto stavby"
+            priceBezDPH={2195}
+            checked={config.doprava}
+            onChange={(checked) => updateConfig('doprava', checked)}
+            description="Vrátane vyloženia a manipulácie"
+          />
+        </div>
+      </div>
+
+      {/* A0 Status */}
+      {isA0Ready ? (
+        <div className="bg-green-100 border-2 border-green-500 rounded-lg p-5 mb-6">
+          <div className="flex items-center gap-3">
+            <CheckCircle className="w-8 h-8 text-green-600" />
+            <div>
+              <h3 className="text-lg font-bold text-green-700">✓ Konfigurácia spĺňa normu A0</h3>
+              <p className="text-green-600">Váš dom je pripravený na získanie energetického certifikátu A0.</p>
+            </div>
+          </div>
+        </div>
+      ) : a0Missing.length > 0 && (config.izolacia !== "standard" || config.rekuperacia || config.klimatizacia || config.dokumentaciaProjekt) && (
+        <div className="bg-amber-50 border-2 border-amber-400 rounded-lg p-5 mb-6">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <h3 className="text-lg font-bold text-amber-700">Pre splnenie normy A0 ešte chýba:</h3>
+              <ul className="list-disc list-inside text-amber-700 mt-2">
+                {a0Missing.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Finálny cenový súhrn */}
+      <div className="bg-gray-800 text-white rounded-xl p-6 mt-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h3 className="text-xl font-bold">Flat double, 142m²</h3>
+            {isA0Ready && (
+              <Badge className="bg-green-500 text-white mt-2">✓ Spĺňa A0</Badge>
+            )}
+          </div>
+          <div className="text-right">
+            <div className="text-gray-400">Celková cena bez DPH</div>
+            <div className="text-2xl font-bold">{formatPrice(totalBezDPH)}</div>
+            <div className="text-gray-400 mt-2">Celková cena s 23% DPH</div>
+            <div className="text-3xl font-bold text-green-400">{formatPrice(totalSDPH)}</div>
+          </div>
         </div>
         
-        <div className="flex gap-4">
-          {/* Náhľadový obrázok */}
-          <div className="w-32 h-24 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 border">
-            <img 
-              src={dom?.hlavny_obrazok || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/flat-double-preview.jpg"} 
-              alt="Flat Double 142m²" 
-              className="w-full h-full object-cover"
-            />
-          </div>
-          
-          {/* Aktívne funkcie */}
-          <div className="flex-1">
-            {activeFeatures.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {activeFeatures.map((feature, idx) => (
-                  <Badge 
-                    key={idx} 
-                    className="bg-green-100 text-green-800 border border-green-300 px-2 py-1 text-xs"
-                  >
-                    <span className="mr-1">{feature.icon}</span>
-                    {feature.label}
-                  </Badge>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500 italic">Základná konfigurácia - vyberte si doplnky nižšie</p>
-            )}
-            
-            {/* Rýchly cenový prehľad */}
-            <div className="mt-3 pt-2 border-t border-gray-200">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Aktuálna cena:</span>
-                <span className="text-lg font-bold text-red-600">{formatPrice(totalPrice)}</span>
-              </div>
-              {pricatkyCena > 0 && (
-                <p className="text-xs text-gray-500 text-right">
-                  (základ {formatPrice(BASE_PRICE)} + príplatky {formatPrice(pricatkyCena)})
-                </p>
-              )}
-            </div>
-          </div>
+        <div className="mt-6 pt-6 border-t border-gray-700 flex flex-col sm:flex-row gap-4 justify-center">
+          <Link to={`${createPageUrl("Kontakt")}?dom=Flat%20Double%20142m²&cena=${totalSDPH}`}>
+            <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 w-full sm:w-auto">
+              <Send className="mr-2 w-5 h-5" />
+              Odoslať dopyt
+            </Button>
+          </Link>
         </div>
-      </div>
-
-      <div className="space-y-8">
-        {/* Montáž holodomu */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Montáž sady domu</h3>
-          <p className="text-xs text-gray-500 mb-3">- objednajte sadu Dvou&play s drevenej súčasti<br/>- dverá, topenie<br/>- základná izolácia<br/>- tepelná izolácia (180 mm - steny), 200 mm - podlaha a strecha)</p>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={montazHolodomu === "nie"}
-              onClick={() => setMontazHolodomu("nie")}
-              label="Nie"
-              price={0}
-            />
-            <ImageOption
-              selected={montazHolodomu === "ano"}
-              onClick={() => setMontazHolodomu("ano")}
-              label="Áno"
-              price={17970}
-            />
-          </div>
-        </div>
-
-        {/* Cena montáže holodomu */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Cena montáže holodomu (cena za stále strany XD = závislosti od lokality)</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={cenaHolodomu === "so_strechou"}
-              onClick={() => setCenaHolodomu("so_strechou")}
-              label="Áno 17 970€"
-              price={0}
-            />
-            <ImageOption
-              selected={cenaHolodomu === "bez_strechy"}
-              onClick={() => setCenaHolodomu("bez_strechy")}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* Vstupné dvere */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Vstupné dvere</h3>
-          <div className="grid grid-cols-3 gap-3">
-            <ImageOption
-              selected={vstupneDvere === "ziadne"}
-              onClick={() => setVstupneDvere("ziadne")}
-              label="Štandard"
-              price={0}
-            />
-            <ImageOption
-              selected={vstupneDvere === "kovove"}
-              onClick={() => setVstupneDvere("kovove")}
-              label="Kovové 2 zámky"
-              price={720}
-            />
-            <ImageOption
-              selected={vstupneDvere === "plastove"}
-              onClick={() => setVstupneDvere("plastove")}
-              label="Plastovo-kovové"
-              price={660}
-            />
-          </div>
-        </div>
-
-        {/* Základná elektrická inštalácia */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Základná elektrická inštalácia (auto-upevní projekt)</h3>
-          <p className="text-xs text-gray-500 mb-3">Elektroinštalácia: rám na ističov, rozvádzka, zďaleka, lete, dle schématu ohledně zvýšení, zásuvkomat, zásuvka/komat a elektrický spot/smer...</p>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={elektroinstalacia}
-              onClick={() => setElektroinstalacia(true)}
-              label="Áno 7400€"
-              price={7400}
-            />
-            <ImageOption
-              selected={!elektroinstalacia}
-              onClick={() => setElektroinstalacia(false)}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* Rozvody vody a kanalizácie */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Rozvody vody a sanita zahnutie</h3>
-          <div className="grid grid-cols-4 gap-3">
-            <ImageOption
-              selected={vodaKanalizacia && !sanitaKomplet && !bojler}
-              onClick={() => { setVodaKanalizacia(true); setSanitaKomplet(false); setBojler(false); }}
-              label="Rozvody vody s odpadnou na pripojenia na kanaliz..."
-              price={2380}
-            />
-            <ImageOption
-              selected={vodaKanalizacia && sanitaKomplet && !bojler}
-              onClick={() => { setVodaKanalizacia(true); setSanitaKomplet(true); setBojler(false); }}
-              label="Sanitárne vybavenie, WC spádov + 2 ..."
-              price={2380 + 1169}
-            />
-            <ImageOption
-              selected={vodaKanalizacia && sanitaKomplet && bojler}
-              onClick={() => { setVodaKanalizacia(true); setSanitaKomplet(true); setBojler(true); }}
-              label="Elektrický boiler"
-              price={2380 + 1169 + 246}
-            />
-            <ImageOption
-              selected={!vodaKanalizacia && !sanitaKomplet && !bojler}
-              onClick={() => { setVodaKanalizacia(false); setSanitaKomplet(false); setBojler(false); }}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* Prípojka na siete */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Prípojku na inžinierske siete (do10m)</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={pripojkaSiete}
-              onClick={() => setPripojkaSiete(true)}
-              label="Áno 1501€"
-              price={1501}
-            />
-            <ImageOption
-              selected={!pripojkaSiete}
-              onClick={() => setPripojkaSiete(false)}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* Základy */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Základy: Cena základov je orientačná, ale to presnejšie ceny základov na tento typ domu. (potrebné uloženie a vyrovnanie)</h3>
-          <div className="grid grid-cols-4 gap-3">
-            <ImageOption
-              selected={zaklady === "skrutky"}
-              onClick={() => setZaklady("skrutky")}
-              label="Pätky alebo pásiky"
-              price={8140}
-            />
-            <ImageOption
-              selected={zaklady === "doska"}
-              onClick={() => setZaklady("doska")}
-              label="Základová doska"
-              price={17946}
-            />
-            <ImageOption
-              selected={zaklady === "pasove"}
-              onClick={() => setZaklady("pasove")}
-              label="Pásové základy"
-              price={21079}
-            />
-            <ImageOption
-              selected={zaklady === "bez"}
-              onClick={() => setZaklady("bez")}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* Tepelné čerpadlo */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3 text-red-600">Konfigurátor polož, ktoré vyplyňajú štadničiek míľke dvestina</h3>
-          <p className="text-xs text-gray-500 mb-3">Prístály s konečným výtlakom a vyzdvihte sa vložkou dvahodinku kvality, Vysvetli s vytiahnuť pláštňne na priadáme na kotadamu = energetická certifikácie do 1 drzačke všeobecnú podmistrom u uložište MAT ;-)</p>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={tepelneCerpadlo}
-              onClick={() => setTepelneCerpadlo(true)}
-              label="Áno 5535€"
-              price={5535}
-            />
-            <ImageOption
-              selected={!tepelneCerpadlo}
-              onClick={() => setTepelneCerpadlo(false)}
-              label="Nie"
-              price={0}
-            />
-          </div>
-          <p className="text-xs text-gray-400 mt-2">*Tepeln a jednotiek</p>
-        </div>
-
-        {/* Inžiniering stavebného povolenia */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Inžiniering stavebného povolenia</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={inziniering}
-              onClick={() => setInziniering(true)}
-              label="Áno 2592€"
-              price={2592}
-            />
-            <ImageOption
-              selected={!inziniering}
-              onClick={() => setInziniering(false)}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* Rekuperácia */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Rekuperácia 5ks</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={rekuperacia}
-              onClick={() => setRekuperacia(true)}
-              label="Áno 2700€"
-              price={2700}
-            />
-            <ImageOption
-              selected={!rekuperacia}
-              onClick={() => setRekuperacia(false)}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* Dodatková izolácia */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Dodatková izolácia Strecha/Steny</h3>
-          <div className="grid grid-cols-4 gap-3">
-            <ImageOption
-              selected={dodatkovaIzolacia === "strecha_steny"}
-              onClick={() => setDodatkovaIzolacia("strecha_steny")}
-              label="Dodatková izolac +50mm Strecha, Steny podlaha 100mm..."
-              price={2800}
-            />
-            <ImageOption
-              selected={dodatkovaIzolacia === "strop_podlaha"}
-              onClick={() => setDodatkovaIzolacia("strop_podlaha")}
-              label="podlahovaá izolać 20mm"
-              price={3200}
-            />
-            <ImageOption
-              selected={izolaciaNavysenie === "premium"}
-              onClick={() => setIzolaciaNavysenie("premium")}
-              label="Premium / A0 celková"
-              price={11600}
-            />
-            <ImageOption
-              selected={dodatkovaIzolacia === "bez" && izolaciaNavysenie !== "premium"}
-              onClick={() => { setDodatkovaIzolacia("bez"); setIzolaciaNavysenie("standard"); }}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* Projektant, Energetická certifikácia */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Projektant, Energetická certifikácia</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={projektA0}
-              onClick={() => setProjektA0(true)}
-              label="Áno 3500€"
-              price={3500}
-            />
-            <ImageOption
-              selected={!projektA0}
-              onClick={() => setProjektA0(false)}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* A0 Upozornenie */}
-        {projektA0 && (
-          <div className="p-4 bg-green-50 border border-green-300 rounded-lg flex items-center gap-2">
-            <CheckCircle className="w-5 h-5 text-green-600" />
-            <p className="text-sm text-green-800">
-              <strong>✅ Gratulujem k získaniu certifikátu A0 ✅</strong>
-            </p>
-          </div>
-        )}
-
-        {a0Odporucania && (
-          <div className="p-4 bg-amber-50 border border-amber-300 rounded-lg">
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-amber-800 mb-2">
-                  Pre splnenie normy A0 odporúčame doplniť:
-                </p>
-                <ul className="space-y-1">
-                  {a0Odporucania.map((item, index) => (
-                    <li key={index} className="text-sm text-amber-700 flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Interiér hviezd */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3 text-red-600">Možnosti a vonkajší dizajn</h3>
-        </div>
-
-        {/* Interiér First */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Interiér First - správne okno, montáž prídechu</h3>
-          <div className="grid grid-cols-3 gap-3">
-            <ImageOption
-              selected={interierHviezd === "drevo_obklad"}
-              onClick={() => setInterierHviezd("drevo_obklad")}
-              label="Drevobýv obklad interiér s hnezdost..."
-              price={4500}
-            />
-            <ImageOption
-              selected={interierHviezd === "sadrokarton"}
-              onClick={() => setInterierHviezd("sadrokarton")}
-              label="*Finálna: hviezd panel"
-              price={3800}
-            />
-            <ImageOption
-              selected={interierHviezd === "bez"}
-              onClick={() => setInterierHviezd("bez")}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* Vonkajšia krytina */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Vonkajšia krytina Drevo / Falcovaný plech antracit - podla modelu domu - bez príplatku</h3>
-          <div className="grid grid-cols-3 gap-3">
-            <ImageOption
-              selected={vonkajsiaKrytina === "drevo_plech"}
-              onClick={() => setVonkajsiaKrytina("drevo_plech")}
-              label="Drevo / Prílesné kryt. antracit pléch krať. príplatku"
-              price={0}
-            />
-            <ImageOption
-              selected={vonkajsiaKrytina === "falcovany_plech"}
-              onClick={() => setVonkajsiaKrytina("falcovany_plech")}
-              label="Falcovaný pléch v Rodbondené..."
-              price={1200}
-            />
-            <ImageOption
-              selected={vonkajsiaKrytina === "bez"}
-              onClick={() => setVonkajsiaKrytina("bez")}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* Porch štíl Antracit */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Porch okna Antracit</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={porchStilAntracit}
-              onClick={() => setPorchStilAntracit(true)}
-              label="Áno +1 800€"
-              price={1800}
-            />
-            <ImageOption
-              selected={!porchStilAntracit}
-              onClick={() => setPorchStilAntracit(false)}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* Doplnok výbavennie */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3 text-red-600">Doplnok výbavennie</h3>
-        </div>
-
-        {/* Interiór podlahy */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Interiér podlahy - Sanitár (voda za VAT podla výberu, obrázkov)</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={interiorPodlahy === "laminat"}
-              onClick={() => setInteriorPodlahy("laminat")}
-              label="Áno 2 400€"
-              price={2400}
-            />
-            <ImageOption
-              selected={interiorPodlahy === "bez"}
-              onClick={() => setInteriorPodlahy("bez")}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* Elektrické podlahové vykurovanie */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Elektrické podlahové vykurovanie s WIFI termostatom</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={elektrickePodlaha}
-              onClick={() => setElektrickePodlaha(true)}
-              label="Áno"
-              price={3800}
-            />
-            <ImageOption
-              selected={!elektrickePodlaha}
-              onClick={() => setElektrickePodlaha(false)}
-              label="Nie"
-              price={0}
-            />
-          </div>
-          <p className="text-xs text-gray-400 mt-2">*CE jednotiek za zriče šíri 20 Fm lesy rkotky kého vývoz za kvietku. Nepotrželek bely na + Chin. 0000_LAWE 13, penelhootem štaty vodra, pree sekvencera: Nefer, HOP, ISO-WL Hovmblerg, kvalitatívno vadita, Wezotmburg, Fany + Bogotón</p>
-        </div>
-
-        {/* Predĺženie domu */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Predĺžene dĺžky domu, v násobkoch 1,1m</h3>
-          <p className="text-xs text-gray-500 mb-3">*Rozloženie stien</p>
-          <div className="grid grid-cols-5 gap-3">
-            <ImageOption
-              selected={predlzenieDomy === "l2m"}
-              onClick={() => setPredlzenieDomy("l2m")}
-              label="1,2 m (+1 m²)"
-              price={11999}
-            />
-            <ImageOption
-              selected={predlzenieDomy === "l4m"}
-              onClick={() => setPredlzenieDomy("l4m")}
-              label="2,4 m (+2 x m²)"
-              price={19800}
-            />
-            <ImageOption
-              selected={predlzenieDomy === "l6m"}
-              onClick={() => setPredlzenieDomy("l6m")}
-              label="3.6M m (+3 x m²)"
-              price={28500}
-            />
-            <ImageOption
-              selected={predlzenieDomy === "l8m"}
-              onClick={() => setPredlzenieDomy("l8m")}
-              label="4,8 m (+3 x m²)"
-              price={35800}
-            />
-            <ImageOption
-              selected={predlzenieDomy === "bez"}
-              onClick={() => setPredlzenieDomy("bez")}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* Dekoratívna pergola */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Dekoratívna pergola na Konsólou</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={dekorativnaPergola}
-              onClick={() => setDekorativnaPergola(true)}
-              label="Áno +4 500€"
-              price={4500}
-            />
-            <ImageOption
-              selected={!dekorativnaPergola}
-              onClick={() => setDekorativnaPergola(false)}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-
-        {/* Interiérovo okno */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Interiérovo okno, okná as 3 kos sol</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={interierovoOkno}
-              onClick={() => setInterierovoOkno(true)}
-              label="Áno 3 900€"
-              price={3900}
-            />
-            <ImageOption
-              selected={!interierovoOkno}
-              onClick={() => setInterierovoOkno(false)}
-              label="Nie"
-              price={0}
-            />
-          </div>
-          <p className="text-xs text-gray-400 mt-2">*Interiérove okno</p>
-        </div>
-
-        {/* Rohové okno */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Rohové okno</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={rohoveOkno === "fixed3"}
-              onClick={() => setRohoveOkno("fixed3")}
-              label="Áno 5 800€"
-              price={5800}
-            />
-            <ImageOption
-              selected={rohoveOkno === "bez"}
-              onClick={() => setRohoveOkno("bez")}
-              label="Nie"
-              price={0}
-            />
-          </div>
-          <p className="text-xs text-gray-400 mt-2">*Rohové okno</p>
-        </div>
-
-        {/* Bočné okno Fixed 3 90x180cm */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Bočné okno Fixed 3 90x180cm</h3>
-          <div className="grid grid-cols-3 gap-3">
-            <ImageOption
-              selected={bocneOknoFixed === "v60x180"}
-              onClick={() => setBocneOknoFixed("v60x180")}
-              label="60x180cm"
-              price={890}
-            />
-            <ImageOption
-              selected={bocneOknoFixed === "v90x180"}
-              onClick={() => setBocneOknoFixed("v90x180")}
-              label="90x180cm"
-              price={1150}
-            />
-            <ImageOption
-              selected={bocneOknoFixed === "bez"}
-              onClick={() => setBocneOknoFixed("bez")}
-              label="Nie"
-              price={0}
-            />
-          </div>
-          <p className="text-xs text-gray-400 mt-2">*Rozložené stenu</p>
-        </div>
-
-        {/* Bočné okno (Pripojeno-okrapné) */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Bočné okno (Pripojeno-okrapné)</h3>
-          <div className="grid grid-cols-4 gap-3">
-            <ImageOption
-              selected={bocneOknoPripojenie === "s60x60w"}
-              onClick={() => setBocneOknoPripojenie("s60x60w")}
-              label="60x60flop"
-              price={650}
-            />
-            <ImageOption
-              selected={bocneOknoPripojenie === "s90x90w"}
-              onClick={() => setBocneOknoPripojenie("s90x90w")}
-              label="90*90w"
-              price={890}
-            />
-            <ImageOption
-              selected={bocneOknoPripojenie === "s120x60w"}
-              onClick={() => setBocneOknoPripojenie("s120x60w")}
-              label="120*60w"
-              price={1100}
-            />
-            <ImageOption
-              selected={bocneOknoPripojenie === "bez"}
-              onClick={() => setBocneOknoPripojenie("bez")}
-              label="Nie"
-              price={0}
-            />
-          </div>
-          <p className="text-xs text-gray-400 mt-2">*Rozložené stenu</p>
-        </div>
-
-        {/* Francúzske akro Sokol */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Francúzske okno Sokol</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={francuzskeAkroSokol}
-              onClick={() => setFrancuzskeAkroSokol(true)}
-              label="Áno +4 900€"
-              price={4900}
-            />
-            <ImageOption
-              selected={!francuzskeAkroSokol}
-              onClick={() => setFrancuzskeAkroSokol(false)}
-              label="Nie"
-              price={0}
-            />
-          </div>
-          <p className="text-xs text-gray-400 mt-2">*Rozložené okná</p>
-        </div>
-
-        {/* Doprava */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Doprava</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={doprava}
-              onClick={() => setDoprava(true)}
-              label="Áno 1690€"
-              price={1690}
-            />
-            <ImageOption
-              selected={!doprava}
-              onClick={() => setDoprava(false)}
-              label="Nie"
-              price={0}
-            />
-          </div>
-          <p className="text-xs text-gray-400 mt-2">DOPRAVA ŽERIAVY</p>
-        </div>
-
-        {/* Kompletná realizná dokumentácia */}
-        <div>
-          <h3 className="font-semibold text-gray-800 mb-3">Kompletná realizná dokumentácia k stavbe ´</h3>
-          <div className="grid grid-cols-2 gap-3">
-            <ImageOption
-              selected={dokumentaciaStavba}
-              onClick={() => setDokumentaciaStavba(true)}
-              label="Áno 4 500€"
-              price={4500}
-            />
-            <ImageOption
-              selected={!dokumentaciaStavba}
-              onClick={() => setDokumentaciaStavba(false)}
-              label="Nie"
-              price={0}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Cenový súhrn */}
-      <div className="mt-8 pt-6 border-t-2 border-gray-300">
-        <div className="bg-white rounded-lg p-4 shadow-sm border">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-gray-600">Základná cena produktu</span>
-            <span className="font-semibold">{formatPrice(BASE_PRICE)} <span className="text-xs text-gray-400">s DPH</span></span>
-          </div>
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-gray-600">Príplatky spolu</span>
-            <span className="font-semibold text-red-600">+ {formatPrice(pricatkyCena)} <span className="text-xs text-gray-400">s DPH</span></span>
-          </div>
-          <div className="flex justify-between items-center pt-3 border-t">
-            <span className="text-lg font-bold text-gray-800">Spolu</span>
-            <span className="text-2xl font-bold text-red-600">{formatPrice(totalPrice)} <span className="text-xs text-gray-400">s DPH</span></span>
-          </div>
-        </div>
-      </div>
-
-      {/* CTA */}
-      <div className="mt-6 text-center">
-        <p className="text-red-600 font-semibold mb-4">Zavolajte nám alebo</p>
-        <p className="text-gray-800 mb-4">Zavolajte nám alebo <span className="font-bold">pošlite správu</span> a náš tím vám rád pomôže.</p>
-        <Link to={`${createPageUrl("Kontakt")}?dom=Flat%20Double%20142m²&cena=${totalPrice}`}>
-          <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white font-semibold px-8">
-            <Send className="mr-2 w-5 h-5" />
-            ODOSLAŤ
-          </Button>
-        </Link>
       </div>
     </Card>
   );
