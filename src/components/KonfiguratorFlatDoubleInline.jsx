@@ -260,7 +260,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <OptionCheckbox
             id="montaz"
             label="Cena montáže holodomu"
-            priceBezDPH={12091}
+            priceSDPH={CENY.montaz}
             checked={config.montaz}
             onChange={(checked) => updateConfig('montaz', checked)}
           />
@@ -272,7 +272,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 name="vstupneDvere"
                 value="standard"
                 label="Štandardné dvere (zahrnuté v cene)"
-                priceBezDPH={0}
+                priceSDPH={0}
                 selected={config.vstupneDvere === "standard"}
                 onChange={(v) => updateConfig('vstupneDvere', v)}
               />
@@ -280,7 +280,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 name="vstupneDvere"
                 value="kovove"
                 label="Vstupné dvere: Kovové s 2 zámkami"
-                priceBezDPH={480}
+                priceSDPH={CENY.vstupneDvere.kovove}
                 selected={config.vstupneDvere === "kovove"}
                 onChange={(v) => updateConfig('vstupneDvere', v)}
               />
@@ -288,7 +288,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 name="vstupneDvere"
                 value="plastove"
                 label="Vstupné dvere: Plastovo-kovové"
-                priceBezDPH={440}
+                priceSDPH={CENY.vstupneDvere.plastove}
                 selected={config.vstupneDvere === "plastove"}
                 onChange={(v) => updateConfig('vstupneDvere', v)}
               />
