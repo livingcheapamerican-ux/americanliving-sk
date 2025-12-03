@@ -46,32 +46,33 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
 
   const [config, setConfig] = useState(defaultConfig);
 
-  // Cenník (bez DPH)
+  // Cenník (bez DPH) - hodnoty z HTML sú v skutočnosti s DPH, takže delíme 1.23
+  // Poznámka: Ceny v HTML boli mylne označené ako "bez DPH", ale boli to ceny s DPH
   const CENY = {
-    montaz: 12091,
-    vstupneDvere: { standard: 0, kovove: 480, plastove: 440 },
-    zaklady: { bez: 0, piloty: 6128, pasove: 17840, doska: 22940 },
-    pilotyVyrovnanie: 2016,
-    pilotyMontaz: 1440,
-    pilotyDopravaZeriav: 720,
-    izolacia: { standard: 0, steny250: 4878, steny300: 6097 },
-    elektroinstalacia: 6000,
-    voda: 1520,
-    pisoarWc: 456,
-    umyvadloSprcha: 760,
-    bojler80l: 320,
-    podlahovka: 4200,
-    rekuperacia: 2195,
-    klimatizacia: 2032,
-    interierDrevo: 9756,
-    interierSadrokarton: 8130,
-    exterierDrevo: 5691,
-    oknaAntracit: 1463,
-    podlahyLaminat: 3252,
-    kuchynskaLinka: 4065,
-    dokumentaciaProjekt: 4878,
-    inziniering: 1626,
-    doprava: 2195
+    montaz: 14871.93,           // z HTML: 14 871,93 € (s DPH) -> toto JE cena s DPH, bez DPH = 12091
+    vstupneDvere: { standard: 0, kovove: 590.40, plastove: 541.20 },  // z HTML: 590,40 a 541,20 sú s DPH
+    zaklady: { bez: 0, piloty: 7537.44, pasove: 21943.20, doska: 28216.20 },  // z HTML s DPH
+    pilotyVyrovnanie: 2479.68,  // z HTML: 2 479,68 € (s DPH)
+    pilotyMontaz: 1771.20,      // z HTML: 1 771,20 € (s DPH)
+    pilotyDopravaZeriav: 885.60, // z HTML: 885,60 € (s DPH)
+    izolacia: { standard: 0, steny250: 5999.94, steny300: 7499.31 },  // z HTML s DPH
+    elektroinstalacia: 7380,    // z HTML: 7 380 € (s DPH)
+    voda: 1869.60,              // z HTML: 1 869,60 € (s DPH)
+    pisoarWc: 560.88,           // z HTML: 560,88 € (s DPH)
+    umyvadloSprcha: 934.80,     // z HTML: 934,80 € (s DPH)
+    bojler80l: 393.60,          // z HTML: 393,60 € (s DPH)
+    podlahovka: 5166,           // z HTML: 5 166 € (s DPH)
+    rekuperacia: 2699.85,       // z HTML: 2 699,85 € (s DPH)
+    klimatizacia: 2499.36,      // z HTML: 2 499,36 € (s DPH)
+    interierDrevo: 11999.88,    // z HTML: 11 999,88 € (s DPH)
+    interierSadrokarton: 9999.90, // z HTML: 9 999,90 € (s DPH)
+    exterierDrevo: 6999.93,     // z HTML: 6 999,93 € (s DPH)
+    oknaAntracit: 1799.49,      // z HTML: 1 799,49 € (s DPH)
+    podlahyLaminat: 3999.96,    // z HTML: 3 999,96 € (s DPH)
+    kuchynskaLinka: 4999.95,    // z HTML: 4 999,95 € (s DPH)
+    dokumentaciaProjekt: 5999.94, // z HTML: 5 999,94 € (s DPH)
+    inziniering: 1999.98,       // z HTML: 1 999,98 € (s DPH)
+    doprava: 2699.85            // z HTML: 2 699,85 € (s DPH)
   };
 
   // Výpočet ceny
