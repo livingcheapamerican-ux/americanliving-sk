@@ -1039,7 +1039,10 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <Cable className="w-5 h-5 text-gray-600" />
               Pripojenie na siete
             </Label>
-            <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
+            <label 
+              onClick={(e) => { if (!pripojkaSiete) triggerAnimation("siete", e.currentTarget); }}
+              className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
+            >
               <div className="flex items-center gap-3">
                 <Checkbox 
                   id="pripojky" 
