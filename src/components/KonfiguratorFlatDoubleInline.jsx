@@ -47,7 +47,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
   const [interieroveDvere, setInterieroveDvere] = useState(0);
   const [tonovaneSkla, setTonovaneSkla] = useState(false);
   const [doprava, setDoprava] = useState(false);
-  const [revizna, setRevizna] = useState(false);
+  const [revizna, setRevizna] = useState(true);
   
   // Rozšírenia
   const [predlzenieDlzky, setPredlzenieDlzky] = useState(0);
