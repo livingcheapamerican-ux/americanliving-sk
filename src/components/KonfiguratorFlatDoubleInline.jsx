@@ -1407,7 +1407,10 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <DoorOpen className="w-5 h-5 text-emerald-600" />
               Interiérové dvere
             </Label>
-            <div className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl">
+            <div 
+              className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl"
+              onClick={(e) => { if (interieroveDvere === 0) triggerAnimation("interieroveDvere", e.currentTarget); }}
+            >
               <div>
                 <span className="font-semibold text-gray-800">Interiérové dvere, cena za 1 kus od</span>
               </div>
@@ -1416,7 +1419,11 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                   type="number" 
                   min="0" 
                   value={interieroveDvere} 
-                  onChange={(e) => setInterieroveDvere(parseInt(e.target.value) || 0)}
+                  onChange={(e) => {
+                    const newVal = parseInt(e.target.value) || 0;
+                    if (newVal > interieroveDvere) triggerAnimation("interieroveDvere", e.target);
+                    setInterieroveDvere(newVal);
+                  }}
                   className="w-16 text-center"
                 />
                 <span className="font-bold text-green-600">× 250 € <span className="text-xs text-gray-500">s DPH</span></span>
