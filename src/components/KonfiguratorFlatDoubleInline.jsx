@@ -754,7 +754,16 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               </Label>
             </div>
           </div>
-          <span className="text-gray-500 italic">individuálne nacenenie</span>
+          <div className="flex items-center gap-2">
+            <Input 
+              type="number" 
+              min="0" 
+              value={stresneOkno} 
+              onChange={(e) => setStresneOkno(parseInt(e.target.value) || 0)}
+              className="w-16 text-center"
+            />
+            <span className="font-semibold text-green-600">× 760 €</span>
+          </div>
         </div>
 
         {/* Bočné okno fixné */}
@@ -767,20 +776,60 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               </Label>
             </div>
           </div>
-          <span className="text-gray-500 italic">individuálne nacenenie</span>
+          <div className="flex items-center gap-2">
+            <Input 
+              type="number" 
+              min="0" 
+              value={bocneOknoFixne} 
+              onChange={(e) => setBocneOknoFixne(parseInt(e.target.value) || 0)}
+              className="w-16 text-center"
+            />
+            <span className="font-semibold text-green-600">× 501 €</span>
+          </div>
         </div>
 
-        {/* Bočné okno výklopné */}
+        {/* Bočné okno výklopné 90x205cm */}
         <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
           <div className="flex items-center gap-3">
             <Square className="w-4 h-4 text-indigo-600" />
             <div>
               <Label className="cursor-pointer">
-                Bočné okno (Výklopno-sklopné)
+                Bočné okno (Výklopno-sklopné) 90x205cm
               </Label>
             </div>
           </div>
-          <span className="text-gray-500 italic">individuálne nacenenie</span>
+          <div className="flex items-center gap-2">
+            <Input 
+              type="number" 
+              min="0" 
+              value={bocneOknoVyklopne90} 
+              onChange={(e) => setBocneOknoVyklopne90(parseInt(e.target.value) || 0)}
+              className="w-16 text-center"
+            />
+            <span className="font-semibold text-green-600">× 540 €</span>
+          </div>
+        </div>
+
+        {/* Bočné okno výklopné 55x90cm */}
+        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center gap-3">
+            <Square className="w-4 h-4 text-indigo-600" />
+            <div>
+              <Label className="cursor-pointer">
+                Bočné okno (Výklopno-sklopné) 55x90cm
+              </Label>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Input 
+              type="number" 
+              min="0" 
+              value={bocneOknoVyklopne55} 
+              onChange={(e) => setBocneOknoVyklopne55(parseInt(e.target.value) || 0)}
+              className="w-16 text-center"
+            />
+            <span className="font-semibold text-green-600">× 225 €</span>
+          </div>
         </div>
       </div>
 
