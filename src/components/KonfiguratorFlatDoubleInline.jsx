@@ -963,6 +963,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <motion.label 
                 whileHover={{ x: 4, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={(e) => { if (!tepelneCerpadlo) triggerAnimation("klimatizacia", e.currentTarget); }}
                 className={`relative flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all overflow-hidden ${tepelneCerpadlo ? 'border-green-500 bg-green-50 shadow-md ring-2 ring-green-200' : projektA0 && !tepelneCerpadlo ? 'border-amber-400 bg-amber-50' : 'border-green-300 bg-green-50/50 hover:bg-green-100'}`}
               >
                 <div className="flex items-center gap-3">
@@ -997,6 +998,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <motion.label 
                 whileHover={{ x: 4, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={(e) => { if (!rekuperacia) triggerAnimation("rekuperacia", e.currentTarget); }}
                 className={`relative flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all overflow-hidden ${rekuperacia ? 'border-green-500 bg-green-50 shadow-md ring-2 ring-green-200' : projektA0 && !rekuperacia ? 'border-amber-400 bg-amber-50' : 'border-green-300 bg-green-50/50 hover:bg-green-100'}`}
               >
                 <div className="flex items-center gap-3">
