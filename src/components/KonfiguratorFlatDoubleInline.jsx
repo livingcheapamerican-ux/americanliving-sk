@@ -479,6 +479,17 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <h3 className="text-lg font-semibold text-gray-800">Základy a Prípojky</h3>
         </div>
 
+        {/* Info o základoch */}
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 text-sm text-amber-900">
+          <p className="font-semibold mb-2">Základ:</p>
+          <ul className="space-y-1 list-disc list-inside">
+            <li>môže byť realizovaný vo forme vrutových kovových stĺpov, betónových stĺpikov alebo betónovej dosky</li>
+            <li>uvedená je minimálne možná cena základu za rovnom teréne</li>
+            <li>konečná cena základu sa vypočíta samostatne po obdržaní výsledkov geodetickej analýzy pozemku (v prípade potreby) a po zhodnotení potrebných prác s ohľadom na terén pozemku</li>
+            <li>cena prípravných prác na pozemku nie je zahrnutá v cene montáže základu</li>
+          </ul>
+        </div>
+
         {/* Typ základov */}
         <div className="mb-6">
           <Label className="text-base font-semibold mb-3 block">Typ základov</Label>
