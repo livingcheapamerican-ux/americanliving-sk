@@ -1316,14 +1316,20 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 </div>
                 <span className="text-gray-400 font-medium">+ 0 €</span>
               </label>
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all">
+              <label 
+                onClick={(e) => { if (interierFinis !== "drevo") triggerAnimation("drevo", e.currentTarget); }}
+                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
+              >
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="drevo" id="interier-drevo" />
                   <span className="font-semibold text-gray-800">Obloženie drevom 12mm</span>
                 </div>
                 <span className="font-bold text-green-600">+ 16 400 €</span>
               </label>
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all">
+              <label 
+                onClick={(e) => { if (interierFinis !== "sadrokarton") triggerAnimation("sadrokarton", e.currentTarget); }}
+                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
+              >
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="sadrokarton" id="interier-sadrokarton" />
                   <span className="font-semibold text-gray-800">Sádrokartón</span>
