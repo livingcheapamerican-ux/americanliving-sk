@@ -739,24 +739,31 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         </div>
 
         {/* Interiérové dvere */}
-        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
-          <div className="flex items-center gap-3">
-            <DoorOpen className="w-4 h-4 text-amber-600" />
-            <div>
-              <Label className="cursor-pointer">
-                Interiérové dvere, cena za 1 kus od
-              </Label>
+        <div className="p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <DoorOpen className="w-4 h-4 text-amber-600" />
+              <div>
+                <Label className="cursor-pointer">
+                  Interiérové dvere, cena za 1 kus od
+                </Label>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Input 
+                type="number" 
+                min="0" 
+                value={interieroveDvere} 
+                onChange={(e) => setInterieroveDvere(parseInt(e.target.value) || 0)}
+                className="w-16 text-center"
+              />
+              <span className="font-semibold text-green-600">× 250 € <span className="text-xs text-gray-500">s DPH</span></span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Input 
-              type="number" 
-              min="0" 
-              value={interieroveDvere} 
-              onChange={(e) => setInterieroveDvere(parseInt(e.target.value) || 0)}
-              className="w-16 text-center"
-            />
-            <span className="font-semibold text-green-600">× 180 € <span className="text-xs text-gray-500">s DPH</span></span>
+          <div className="ml-9 mt-2 p-3 bg-gray-50 rounded-lg text-xs text-gray-600 space-y-1">
+            <p className="text-gray-700 font-medium">Interiérové dvere, сena jednej sady od 190 eur.</p>
+            <p className="text-gray-600">- dvere môžu byť zabezpečené zákazníkom</p>
+            <p className="text-gray-600">- cena za inštaláciu jedných dverí od 60 €</p>
           </div>
         </div>
 
