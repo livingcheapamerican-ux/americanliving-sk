@@ -439,7 +439,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 <Label htmlFor="cerpadlo" className="cursor-pointer flex items-center gap-2">
                   <ThermometerSun className="w-4 h-4 text-red-500" />
                   Tepelné čerpadlo / Klimatizácia
-                  <Badge className="bg-green-600 text-xs">Pre A0</Badge>
+                  <Badge className="bg-green-600 text-xs">Odporúčané pre A0</Badge>
                 </Label>
                 <p className="text-sm text-gray-500">1x vonkajšia + 5x vnútorná jednotka</p>
               </div>
@@ -460,7 +460,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 <Label htmlFor="rekuperacia" className="cursor-pointer flex items-center gap-2">
                   <Wind className="w-4 h-4 text-teal-500" />
                   Rekuperácia
-                  <Badge className="bg-green-600 text-xs">Pre A0</Badge>
+                  <Badge className="bg-green-600 text-xs">Odporúčané pre A0</Badge>
                 </Label>
                 <p className="text-sm text-gray-500">5ks lokálnych jednotiek</p>
               </div>
