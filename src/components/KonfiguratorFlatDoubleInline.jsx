@@ -690,22 +690,29 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         </div>
 
         {/* Vnútorné podlahy */}
-        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
-          <div className="flex items-center gap-3">
-            <Checkbox 
-              id="vnutorne-podlahy" 
-              checked={vnutornePodlahy} 
-              onCheckedChange={setVnutornePodlahy}
-              className="data-[state=checked]:bg-pink-600"
-            />
-            <div>
-              <Label htmlFor="vnutorne-podlahy" className="cursor-pointer">
-                Vnútorné podlahy - laminát
-              </Label>
-              <p className="text-sm text-gray-500">Môže sa líšiť podľa výberu zákazníka</p>
+        <div className="p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Checkbox 
+                id="vnutorne-podlahy" 
+                checked={vnutornePodlahy} 
+                onCheckedChange={setVnutornePodlahy}
+                className="data-[state=checked]:bg-pink-600"
+              />
+              <div>
+                <Label htmlFor="vnutorne-podlahy" className="cursor-pointer">
+                  Vnútorné podlahy - laminát
+                </Label>
+                <p className="text-sm text-gray-500">Môže sa líšiť podľa výberu zákazníka</p>
+              </div>
             </div>
+            <span className="font-semibold text-green-600 whitespace-nowrap">+ 3 351 €</span>
           </div>
-          <span className="font-semibold text-green-600">+ 3 351 €</span>
+          <div className="ml-9 mt-2 p-3 bg-gray-50 rounded-lg text-xs text-gray-600 space-y-1">
+            <p className="text-red-600 font-medium">Vnútorné podlahy, montáž laminátu s cenou do 10 € za meter štvorcový na celej podlahovej ploche domu:</p>
+            <p className="text-red-600">- podlahová krytina môže byť dodaná objednávateľom; v takom prípade sa z cenovej ponuky odpočíta suma rovná ploche podlahy vynásobenej 10 €</p>
+            <p className="text-red-600">- orientačná cena pokládky: laminát od 10 €/m², dlažba od 25 €/m²</p>
+          </div>
         </div>
 
         {/* Podlahové vykurovanie */}
