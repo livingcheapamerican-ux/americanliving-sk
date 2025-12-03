@@ -10,7 +10,7 @@ const FLYING_ITEMS = {
   elektro: "💡", // žiarovka
   voda: "🚰", // potrubie s vodou
   sanita: "🚿🪥🚽", // sanita
-  bojler: "🏠🔥", // bojler - ohrievač vody
+  bojler: "♨️", // bojler - horúca para
   klimatizacia: "❄️", // klimatizácia
   rekuperacia: "🌀", // ventilátor
   siete: "🚜", // bager
