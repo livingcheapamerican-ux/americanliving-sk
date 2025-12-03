@@ -807,9 +807,14 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             </motion.div>
 
           {/* Voda a kanalizácia */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+          <motion.div 
+            className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+            whileHover={{ scale: 1.005 }}
+          >
             <Label className="text-lg font-bold text-gray-800 mb-3 block flex items-center gap-2">
-              <Droplets className="w-5 h-5 text-blue-500" />
+              <motion.div animate={{ y: vodaKanalizacia ? [0, -3, 0] : 0 }} transition={{ duration: 0.3, repeat: vodaKanalizacia ? 2 : 0 }}>
+                <Droplets className="w-5 h-5 text-blue-500" />
+              </motion.div>
               Voda a kanalizácia
             </Label>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 text-sm">
