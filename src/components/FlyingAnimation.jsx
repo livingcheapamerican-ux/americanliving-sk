@@ -70,14 +70,14 @@ export default function FlyingAnimation({
             position: "fixed",
             left: startPosition.x,
             top: startPosition.y,
-            scale: 1,
+            scale: 11,
             opacity: 1,
             zIndex: 9999,
           }}
           animate={{ 
             left: targetX,
             top: targetY,
-            scale: 0.5,
+            scale: 5.5,
             opacity: 0.8,
             rotate: type === "skrutky" ? 720 : type === "rekuperacia" ? 360 : 0,
           }}
@@ -86,11 +86,11 @@ export default function FlyingAnimation({
             scale: 0 
           }}
           transition={{ 
-            duration: 0.7,
+            duration: 6.3,
             ease: "easeInOut",
           }}
           className="pointer-events-none text-3xl"
-          style={{ filter: type === "elektro" ? "drop-shadow(0 0 10px yellow)" : "none" }}
+          style={{ filter: type === "elektro" ? "drop-shadow(0 0 30px yellow)" : "none" }}
         >
           {flyingItem}
         </motion.div>
