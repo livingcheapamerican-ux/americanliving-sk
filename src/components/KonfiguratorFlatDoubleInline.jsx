@@ -261,9 +261,71 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
 
   return (
     <Card className="p-6 mt-6 bg-gradient-to-br from-amber-50 to-white border-2 border-amber-300">
-      <div className="flex items-center gap-3 mb-6">
-        <Calculator className="w-6 h-6 text-amber-600" />
-        <h2 className="text-2xl font-bold text-primary">Konfigurátor ceny</h2>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <Calculator className="w-6 h-6 text-amber-600" />
+          <h2 className="text-2xl font-bold text-primary">Konfigurátor ceny</h2>
+        </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={handleReset}
+          className="text-gray-600 hover:text-red-600 hover:border-red-300"
+        >
+          <RotateCcw className="w-4 h-4 mr-2" />
+          Resetovať
+        </Button>
+      </div>
+
+      {/* Vizuálny náhľad konfigurácie */}
+      <div className="mb-8 p-4 bg-white rounded-xl border-2 border-gray-200 shadow-sm">
+        <div className="flex items-center gap-2 mb-3">
+          <Eye className="w-5 h-5 text-primary" />
+          <h3 className="font-semibold text-gray-800">Vaša konfigurácia</h3>
+        </div>
+        
+        <div className="flex gap-4">
+          {/* Náhľadový obrázok */}
+          <div className="w-32 h-24 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 border">
+            <img 
+              src={dom?.hlavny_obrazok || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/flat-double-preview.jpg"} 
+              alt="Flat Double 142m²" 
+              className="w-full h-full object-cover"
+            />
+          </div>
+          
+          {/* Aktívne funkcie */}
+          <div className="flex-1">
+            {activeFeatures.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {activeFeatures.map((feature, idx) => (
+                  <Badge 
+                    key={idx} 
+                    className="bg-green-100 text-green-800 border border-green-300 px-2 py-1 text-xs"
+                  >
+                    <span className="mr-1">{feature.icon}</span>
+                    {feature.label}
+                  </Badge>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500 italic">Základná konfigurácia - vyberte si doplnky nižšie</p>
+            )}
+            
+            {/* Rýchly cenový prehľad */}
+            <div className="mt-3 pt-2 border-t border-gray-200">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Aktuálna cena:</span>
+                <span className="text-lg font-bold text-red-600">{formatPrice(totalPrice)}</span>
+              </div>
+              {pricatkyCena > 0 && (
+                <p className="text-xs text-gray-500 text-right">
+                  (základ {formatPrice(BASE_PRICE)} + príplatky {formatPrice(pricatkyCena)})
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="space-y-8">
