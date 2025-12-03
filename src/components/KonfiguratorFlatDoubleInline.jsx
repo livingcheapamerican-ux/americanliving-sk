@@ -128,6 +128,12 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     setPripojkaSiete(false);
     setInziniering(false);
     setProjektA0(false);
+    setInterierFinis("ziadne");
+    setPodlaha("ziadne");
+    setObkladKupelna(false);
+    setKuchynskaLinka(false);
+    setVnutorneDvere(false);
+    setSchodisko(false);
   };
 
   return (
