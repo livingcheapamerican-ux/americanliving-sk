@@ -722,21 +722,30 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 </div>
                 <span className="text-gray-400 font-medium">+ 0 €</span>
               </label>
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all">
+              <label 
+                onClick={(e) => { if (zaklady !== "skrutky") triggerAnimation("skrutky", e.currentTarget); }}
+                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all"
+              >
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="skrutky" id="zaklady-skrutky" />
                   <span className="font-semibold text-gray-800">Zemné skrutky / Pätky</span>
                 </div>
                 <span className="font-bold text-green-600">+ 8 140 €</span>
               </label>
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all">
+              <label 
+                onClick={(e) => { if (zaklady !== "doska") triggerAnimation("beton", e.currentTarget); }}
+                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all"
+              >
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="doska" id="zaklady-doska" />
                   <span className="font-semibold text-gray-800">Základová doska</span>
                 </div>
                 <span className="font-bold text-green-600">+ 17 946 €</span>
               </label>
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all">
+              <label 
+                onClick={(e) => { if (zaklady !== "pasove") triggerAnimation("beton", e.currentTarget); }}
+                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all"
+              >
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="pasove" id="zaklady-pasove" />
                   <span className="font-semibold text-gray-800">Pásové základy</span>
