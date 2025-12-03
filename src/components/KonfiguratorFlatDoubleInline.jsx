@@ -488,14 +488,14 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <OptionCheckbox
             id="voda"
             label="Rozvody vody a kanalizácie"
-            priceBezDPH={1520}
+            priceSDPH={CENY.voda}
             checked={config.voda}
             onChange={(checked) => updateConfig('voda', checked)}
           />
           <OptionCheckbox
             id="pisoarWc"
             label="Pisoár a WC"
-            priceBezDPH={456}
+            priceSDPH={CENY.pisoarWc}
             checked={config.pisoarWc}
             onChange={(checked) => updateConfig('pisoarWc', checked)}
             disabled={!config.voda}
@@ -503,7 +503,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <OptionCheckbox
             id="umyvadloSprcha"
             label="Umývadlo a sprchový kút"
-            priceBezDPH={760}
+            priceSDPH={CENY.umyvadloSprcha}
             checked={config.umyvadloSprcha}
             onChange={(checked) => updateConfig('umyvadloSprcha', checked)}
             disabled={!config.voda}
@@ -511,7 +511,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <OptionCheckbox
             id="bojler80l"
             label="Bojler 80L"
-            priceBezDPH={320}
+            priceSDPH={CENY.bojler80l}
             checked={config.bojler80l}
             onChange={(checked) => updateConfig('bojler80l', checked)}
             disabled={!config.voda}
