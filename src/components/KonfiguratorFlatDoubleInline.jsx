@@ -473,7 +473,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <OptionCheckbox
             id="elektroinstalacia"
             label="Kompletná elektroinštalácia"
-            priceBezDPH={6000}
+            priceSDPH={CENY.elektroinstalacia}
             checked={config.elektroinstalacia}
             onChange={(checked) => updateConfig('elektroinstalacia', checked)}
             description="Rozvodová skriňa, zásuvky, osvetlenie, vypínače"
