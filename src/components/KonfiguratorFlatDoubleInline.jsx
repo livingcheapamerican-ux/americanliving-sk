@@ -175,7 +175,8 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     setPredlzenieDlzky(0);
     setStresneOkno(0);
     setBocneOknoFixne(0);
-    setBocneOknoVyklopne(0);
+    setBocneOknoVyklopne90(0);
+    setBocneOknoVyklopne55(0);
   };
 
   return (
