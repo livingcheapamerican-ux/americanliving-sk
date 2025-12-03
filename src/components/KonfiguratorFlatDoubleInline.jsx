@@ -326,7 +326,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           </div>
 
           {/* Súhrn položiek */}
-          <div className="max-h-64 overflow-y-auto p-3 space-y-1">
+          <div className="p-3 space-y-1">
             {selectedItems.map((item, index) => {
               const isBase = item.section === "base";
               const prevItem = selectedItems[index - 1];
