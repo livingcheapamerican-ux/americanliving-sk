@@ -540,7 +540,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <OptionCheckbox
             id="interierDrevo"
             label="Interiér - Drevené obloženie"
-            priceBezDPH={9756}
+            priceSDPH={CENY.interierDrevo}
             checked={config.interierDrevo}
             onChange={(checked) => {
               updateConfig('interierDrevo', checked);
@@ -550,7 +550,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <OptionCheckbox
             id="interierSadrokarton"
             label="Interiér - Sadrokartón"
-            priceBezDPH={8130}
+            priceSDPH={CENY.interierSadrokarton}
             checked={config.interierSadrokarton}
             onChange={(checked) => {
               updateConfig('interierSadrokarton', checked);
@@ -560,21 +560,21 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <OptionCheckbox
             id="exterierDrevo"
             label="Exteriér - Drevená fasáda"
-            priceBezDPH={5691}
+            priceSDPH={CENY.exterierDrevo}
             checked={config.exterierDrevo}
             onChange={(checked) => updateConfig('exterierDrevo', checked)}
           />
           <OptionCheckbox
             id="oknaAntracit"
             label="Okná v antracitovej farbe"
-            priceBezDPH={1463}
+            priceSDPH={CENY.oknaAntracit}
             checked={config.oknaAntracit}
             onChange={(checked) => updateConfig('oknaAntracit', checked)}
           />
           <OptionCheckbox
             id="podlahyLaminat"
             label="Podlahy - Laminát"
-            priceBezDPH={3252}
+            priceSDPH={CENY.podlahyLaminat}
             checked={config.podlahyLaminat}
             onChange={(checked) => updateConfig('podlahyLaminat', checked)}
           />
