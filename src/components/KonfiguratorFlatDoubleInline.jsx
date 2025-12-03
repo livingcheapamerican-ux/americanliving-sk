@@ -21,6 +21,9 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
   // Základná cena
   const BASE_PRICE = 59900;
 
+  // Flying animation hook
+  const { animations, triggerAnimation } = useFlyingAnimation();
+
   // State pre všetky voľby
   const [montazHolodomu, setMontazHolodomu] = useState("nie");
   const [vstupneDvere, setVstupneDvere] = useState("ziadne");
