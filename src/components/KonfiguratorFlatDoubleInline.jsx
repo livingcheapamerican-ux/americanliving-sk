@@ -87,10 +87,18 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     if (inziniering) total += CENY.inziniering;
     if (projektA0) total += CENY.projektA0;
     
+    total += CENY.interierFinis[interierFinis];
+    total += CENY.podlaha[podlaha];
+    if (obkladKupelna) total += CENY.obkladKupelna;
+    if (kuchynskaLinka) total += CENY.kuchynskaLinka;
+    if (vnutorneDvere) total += CENY.vnutorneDvere;
+    if (schodisko) total += CENY.schodisko;
+    
     return total;
   }, [montazHolodomu, vstupneDvere, izolaciaNavysenie, elektroinstalacia, 
       vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia,
-      zaklady, pripojkaSiete, inziniering, projektA0]);
+      zaklady, pripojkaSiete, inziniering, projektA0, interierFinis, podlaha,
+      obkladKupelna, kuchynskaLinka, vnutorneDvere, schodisko]);
 
   // Kontrola A0 odporúčaní
   const a0Odporucania = useMemo(() => {
