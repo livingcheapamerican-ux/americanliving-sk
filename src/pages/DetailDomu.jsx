@@ -33,6 +33,8 @@ export default function DetailDomu() {
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [lastTouchDistance, setLastTouchDistance] = useState(null);
+  const [swipeStart, setSwipeStart] = useState(null);
+  const [swipeOffset, setSwipeOffset] = useState(0);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -198,15 +200,21 @@ export default function DetailDomu() {
       // Pinch zoom start
       e.preventDefault();
       setLastTouchDistance(getTouchDistance(e.touches));
+      setSwipeStart(null);
       return;
     }
+    
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
     
     if (zoomLevel > 1) {
       e.preventDefault();
       setIsDragging(true);
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       setDragStart({ x: clientX - panPosition.x, y: clientY - panPosition.y });
+    } else if (e.touches && lightboxImages.length > 1) {
+      // Start swipe for navigation
+      setSwipeStart({ x: clientX, y: clientY });
+      setSwipeOffset(0);
     }
   };
 
@@ -227,20 +235,37 @@ export default function DetailDomu() {
       return;
     }
     
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    
     if (isDragging && zoomLevel > 1) {
       e.preventDefault();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       setPanPosition({
         x: clientX - dragStart.x,
         y: clientY - dragStart.y
       });
+    } else if (swipeStart && zoomLevel === 1 && e.touches) {
+      // Swipe navigation
+      const deltaX = clientX - swipeStart.x;
+      setSwipeOffset(deltaX);
     }
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (e) => {
+    // Handle swipe end for navigation
+    if (swipeStart && zoomLevel === 1 && lightboxImages.length > 1) {
+      const threshold = 80;
+      if (swipeOffset < -threshold) {
+        nextImage();
+      } else if (swipeOffset > threshold) {
+        prevImage();
+      }
+    }
+    
     setIsDragging(false);
     setLastTouchDistance(null);
+    setSwipeStart(null);
+    setSwipeOffset(0);
   };
 
   const handleWheel = (e) => {
@@ -1009,15 +1034,17 @@ export default function DetailDomu() {
               style={{
                 maxWidth: zoomLevel === 1 ? '90vw' : 'none',
                 maxHeight: zoomLevel === 1 ? '80vh' : 'none',
-                transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
+                transform: zoomLevel === 1 
+                  ? `translateX(${swipeOffset}px)` 
+                  : `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
                 transformOrigin: 'center center',
-                transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+                transition: (isDragging || swipeStart) ? 'none' : 'transform 0.2s ease-out',
               }}
               onContextMenu={(e) => e.preventDefault()}
               draggable={false}
               onClick={(e) => {
                 e.stopPropagation();
-                if (zoomLevel === 1) handleZoomIn();
+                if (zoomLevel === 1 && !swipeStart) handleZoomIn();
               }}
             />
           </div>
