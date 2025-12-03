@@ -532,8 +532,68 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <h3 className="text-lg font-semibold text-gray-800">Vnútorný a vonkajší dizajn</h3>
         </div>
 
+        {/* Vonkajšia fasáda */}
+        <div className="mb-6">
+          <Label className="text-base font-semibold mb-3 block">Vonkajšia fasáda</Label>
+          <p className="text-sm text-gray-500 mb-3">Drevo / Falcovaný plech anthracit - podľa modelu domu - bez príplatku</p>
+          <RadioGroup value={vonkajsiaFasada} onValueChange={setVonkajsiaFasada} className="space-y-2">
+            <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+              <div className="flex items-center gap-3">
+                <RadioGroupItem value="standard" id="fasada-standard" />
+                <Label htmlFor="fasada-standard" className="cursor-pointer">Štandard (Drevo / Falcovaný plech)</Label>
+              </div>
+              <span className="text-gray-500">+ 0 €</span>
+            </div>
+            <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+              <div className="flex items-center gap-3">
+                <RadioGroupItem value="suchana" id="fasada-suchana" />
+                <Label htmlFor="fasada-suchana" className="cursor-pointer">Škúchaná fasáda - individuálne nacenenie</Label>
+              </div>
+              <span className="font-semibold text-green-600">+ 12 841 €</span>
+            </div>
+          </RadioGroup>
+        </div>
+
+        {/* Povrch okien */}
+        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center gap-3">
+            <Checkbox 
+              id="povrch-okien" 
+              checked={povrchokaOkien} 
+              onCheckedChange={setPovrchokaOkien}
+              className="data-[state=checked]:bg-pink-600"
+            />
+            <div>
+              <Label htmlFor="povrch-okien" className="cursor-pointer flex items-center gap-2">
+                <Square className="w-4 h-4 text-gray-600" />
+                Povrch okien Antracit
+              </Label>
+            </div>
+          </div>
+          <span className="font-semibold text-green-600">+ 3 100 €</span>
+        </div>
+
+        {/* Tónované sklá */}
+        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center gap-3">
+            <Checkbox 
+              id="tonovane-skla" 
+              checked={tonovaneSkla} 
+              onCheckedChange={setTonovaneSkla}
+              className="data-[state=checked]:bg-pink-600"
+            />
+            <div>
+              <Label htmlFor="tonovane-skla" className="cursor-pointer flex items-center gap-2">
+                <Sun className="w-4 h-4 text-amber-500" />
+                Tónované sklá (Solar)
+              </Label>
+            </div>
+          </div>
+          <span className="font-semibold text-green-600">+ 1 300 €</span>
+        </div>
+
         {/* Interiér finiš */}
-        <div>
+        <div className="mb-6">
           <Label className="text-base font-semibold mb-3 block">Interiér finiš - úpravy stien, montáž priečky</Label>
           <RadioGroup value={interierFinis} onValueChange={setInterierFinis} className="space-y-2">
             <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
@@ -561,6 +621,198 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <span className="font-semibold text-green-600">+ 19 475 €</span>
             </div>
           </RadioGroup>
+        </div>
+
+        {/* Vnútorné podlahy */}
+        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center gap-3">
+            <Checkbox 
+              id="vnutorne-podlahy" 
+              checked={vnutornePodlahy} 
+              onCheckedChange={setVnutornePodlahy}
+              className="data-[state=checked]:bg-pink-600"
+            />
+            <div>
+              <Label htmlFor="vnutorne-podlahy" className="cursor-pointer">
+                Vnútorné podlahy - laminát
+              </Label>
+              <p className="text-sm text-gray-500">Môže sa líšiť podľa výberu zákazníka</p>
+            </div>
+          </div>
+          <span className="font-semibold text-green-600">+ 3 351 €</span>
+        </div>
+
+        {/* Podlahové vykurovanie */}
+        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center gap-3">
+            <Checkbox 
+              id="podlahove-vykurovanie" 
+              checked={podlahovVykurovanie} 
+              onCheckedChange={setPodlahovVykurovanie}
+              className="data-[state=checked]:bg-pink-600"
+            />
+            <div>
+              <Label htmlFor="podlahove-vykurovanie" className="cursor-pointer flex items-center gap-2">
+                <Flame className="w-4 h-4 text-orange-500" />
+                Elektrické podlahové vykurovanie s WiFi termostatom
+              </Label>
+            </div>
+          </div>
+          <span className="font-semibold text-green-600">+ 5 525 €</span>
+        </div>
+
+        {/* Interiérové dvere */}
+        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center gap-3">
+            <DoorOpen className="w-4 h-4 text-amber-600" />
+            <div>
+              <Label className="cursor-pointer">
+                Interiérové dvere, cena za 1 kus od
+              </Label>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Input 
+              type="number" 
+              min="0" 
+              value={interieroveDvere} 
+              onChange={(e) => setInterieroveDvere(parseInt(e.target.value) || 0)}
+              className="w-16 text-center"
+            />
+            <span className="font-semibold text-green-600">× 180 €</span>
+          </div>
+        </div>
+
+        {/* Pergola */}
+        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center gap-3">
+            <Checkbox 
+              id="pergola" 
+              checked={pergola} 
+              onCheckedChange={setPergola}
+              className="data-[state=checked]:bg-pink-600"
+            />
+            <div>
+              <Label htmlFor="pergola" className="cursor-pointer">
+                Dekoratívna pergola na konektory
+              </Label>
+            </div>
+          </div>
+          <span className="font-semibold text-green-600">+ 1 845 €</span>
+        </div>
+      </div>
+
+      {/* Sekcia: Rozšírenia a úpravy */}
+      <div className="border rounded-lg p-5 mb-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+            <Maximize className="w-4 h-4 text-indigo-600" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-800">Rozšírenia a úpravy</h3>
+        </div>
+
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4 text-sm text-amber-800">
+          <strong>Poznámka:</strong> Tieto položky vyžadujú individuálne nacenenie. Kontaktujte nás pre presnú cenu.
+        </div>
+
+        {/* Predĺženie dĺžky domu */}
+        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center gap-3">
+            <Scaling className="w-4 h-4 text-indigo-600" />
+            <div>
+              <Label className="cursor-pointer">
+                Predĺženie dĺžky domu, v násobkoch 1,2m
+              </Label>
+            </div>
+          </div>
+          <span className="text-gray-500 italic">individuálne nacenenie</span>
+        </div>
+
+        {/* Strešné okno */}
+        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center gap-3">
+            <Square className="w-4 h-4 text-indigo-600" />
+            <div>
+              <Label className="cursor-pointer">
+                Strešné okno
+              </Label>
+            </div>
+          </div>
+          <span className="text-gray-500 italic">individuálne nacenenie</span>
+        </div>
+
+        {/* Bočné okno fixné */}
+        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center gap-3">
+            <Square className="w-4 h-4 text-indigo-600" />
+            <div>
+              <Label className="cursor-pointer">
+                Bočné okno (Fixné) 90x205cm
+              </Label>
+            </div>
+          </div>
+          <span className="text-gray-500 italic">individuálne nacenenie</span>
+        </div>
+
+        {/* Bočné okno výklopné */}
+        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center gap-3">
+            <Square className="w-4 h-4 text-indigo-600" />
+            <div>
+              <Label className="cursor-pointer">
+                Bočné okno (Výklopno-sklopné)
+              </Label>
+            </div>
+          </div>
+          <span className="text-gray-500 italic">individuálne nacenenie</span>
+        </div>
+      </div>
+
+      {/* Sekcia: Doprava a dokumentácia */}
+      <div className="border rounded-lg p-5 mb-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
+            <Truck className="w-4 h-4 text-teal-600" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-800">Doprava a dokumentácia</h3>
+        </div>
+
+        {/* Doprava */}
+        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center gap-3">
+            <Checkbox 
+              id="doprava" 
+              checked={doprava} 
+              onCheckedChange={setDoprava}
+              className="data-[state=checked]:bg-teal-600"
+            />
+            <div>
+              <Label htmlFor="doprava" className="cursor-pointer flex items-center gap-2">
+                <Truck className="w-4 h-4 text-teal-500" />
+                Doprava
+              </Label>
+            </div>
+          </div>
+          <span className="text-gray-500">+ 0 €</span>
+        </div>
+
+        {/* Revízna dokumentácia */}
+        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+          <div className="flex items-center gap-3">
+            <Checkbox 
+              id="revizna" 
+              checked={revizna} 
+              onCheckedChange={setRevizna}
+              className="data-[state=checked]:bg-teal-600"
+            />
+            <div>
+              <Label htmlFor="revizna" className="cursor-pointer flex items-center gap-2">
+                <FileCheck className="w-4 h-4 text-teal-500" />
+                Kompletná revízna dokumentácia k stavbe
+              </Label>
+            </div>
+          </div>
+          <span className="font-semibold text-green-600">+ 1 000 €</span>
         </div>
       </div>
 
