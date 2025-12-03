@@ -287,7 +287,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className={`relative flex items-center gap-4 p-5 bg-gradient-to-r ${color} overflow-hidden`}
+      className={`relative flex items-center gap-2 sm:gap-4 p-3 sm:p-5 bg-gradient-to-r ${color} overflow-hidden`}
     >
       {/* Dekoratívny vzor */}
       <div className="absolute inset-0 opacity-10">
@@ -304,23 +304,23 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
       
       <motion.div 
         whileHover={{ scale: 1.1, rotate: 5 }}
-        className="relative flex items-center justify-center w-14 h-14 bg-white/25 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20"
+        className="relative flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 bg-white/25 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-white/20"
       >
-        <Icon className="w-7 h-7 text-white" />
+        <Icon className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
       </motion.div>
       <div className="relative flex-1">
-        <div className="flex items-center gap-3 mb-1">
+        <div className="flex items-center gap-2 sm:gap-3 mb-0.5 sm:mb-1">
           <motion.span 
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring" }}
-            className="inline-flex items-center justify-center px-3 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs font-bold uppercase tracking-wider"
+            className="inline-flex items-center justify-center px-2 sm:px-3 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider"
           >
             Fáza {step}
           </motion.span>
         </div>
-        <h3 className="text-2xl font-bold text-white tracking-tight">{title}</h3>
-        {subtitle && <p className="text-white/80 text-sm mt-1">{subtitle}</p>}
+        <h3 className="text-lg sm:text-2xl font-bold text-white tracking-tight">{title}</h3>
+        {subtitle && <p className="text-white/80 text-xs sm:text-sm mt-0.5 sm:mt-1">{subtitle}</p>}
       </div>
     </motion.div>
   );
@@ -468,36 +468,37 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           {/* Dekoratívny gradient na vrchu */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
           
-          <div className="p-6 md:p-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/30 animate-pulse">
-                  <Calculator className="w-8 h-8 text-white" />
+          <div className="p-4 sm:p-6 md:p-8">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/30 animate-pulse">
+                  <Calculator className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
                 <div>
-                  <p className="text-blue-400 text-sm font-semibold uppercase tracking-wider mb-1">Interaktívny konfigurátor</p>
-                  <h2 className="text-2xl md:text-3xl font-bold text-white">Flat Double 142m²</h2>
-                  <p className="text-slate-400 mt-1">142m² zastavaná | 99m² úžitková | 40m² terasa</p>
+                  <p className="text-blue-400 text-[10px] sm:text-sm font-semibold uppercase tracking-wider mb-0.5 sm:mb-1">Interaktívny konfigurátor</p>
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">Flat Double 142m²</h2>
+                  <p className="text-slate-400 text-xs sm:text-base mt-0.5 sm:mt-1">142m² zastavaná | 99m² úžitková | 40m² terasa</p>
                 </div>
               </div>
               <Button 
                 variant="outline" 
+                size="sm"
                 onClick={handleReset}
                 className="border-slate-600 text-slate-300 hover:bg-red-500/20 hover:border-red-500/50 hover:text-red-300 transition-all"
               >
-                <RotateCcw className="w-4 h-4 mr-2" />
-                Resetovať
+                <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="text-xs sm:text-sm">Resetovať</span>
               </Button>
             </div>
-            
+
             {/* Základná cena */}
-            <div className="mt-6 p-5 bg-gradient-to-r from-blue-500/20 via-indigo-500/20 to-purple-500/20 border border-blue-400/30 rounded-2xl backdrop-blur">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="mt-4 sm:mt-6 p-3 sm:p-5 bg-gradient-to-r from-blue-500/20 via-indigo-500/20 to-purple-500/20 border border-blue-400/30 rounded-xl sm:rounded-2xl backdrop-blur">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
                 <div>
-                  <p className="text-blue-300 font-semibold text-lg">Základná cena sady</p>
-                  <p className="text-slate-400 text-sm">na svojpomocnú montáž • s DPH</p>
+                  <p className="text-blue-300 font-semibold text-sm sm:text-lg">Základná cena sady</p>
+                  <p className="text-slate-400 text-xs sm:text-sm">na svojpomocnú montáž • s DPH</p>
                 </div>
-                <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">{formatPrice(BASE_PRICE)}</div>
+                <div className="text-2xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">{formatPrice(BASE_PRICE)}</div>
               </div>
             </div>
           </div>
@@ -520,7 +521,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           color="from-amber-600 to-orange-600"
           step="1"
         />
-        <div className="p-6 space-y-6 bg-gradient-to-b from-amber-50/50 to-white">
+        <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-amber-50/50 to-white">
 
           {/* Montáž hrubej stavby */}
           <motion.div 
@@ -786,7 +787,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           color="from-blue-600 to-indigo-600"
           step="2"
         />
-        <div className="p-6 space-y-6 bg-gradient-to-b from-blue-50/50 to-white">
+        <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-blue-50/50 to-white">
 
           {/* Elektroinštalácia */}
           <motion.div 
@@ -1301,7 +1302,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           color="from-emerald-600 to-teal-600"
           step="3"
         />
-        <div className="p-6 space-y-6 bg-gradient-to-b from-emerald-50/50 to-white">
+        <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-emerald-50/50 to-white">
 
           {/* Vonkajšia fasáda */}
           <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
@@ -1522,7 +1523,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           color="from-purple-600 to-violet-600"
           step="4"
         />
-        <div className="p-6 space-y-6 bg-gradient-to-b from-purple-50/50 to-white">
+        <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-purple-50/50 to-white">
 
           {/* Dokumentácia */}
           <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
