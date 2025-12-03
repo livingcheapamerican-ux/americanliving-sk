@@ -67,17 +67,17 @@ export default function FlyingAnimation({
       {isFlying && (
         <motion.div
           initial={{ 
-            position: "fixed",
-            left: startPosition.x,
-            top: startPosition.y,
-            scale: 11,
-            opacity: 1,
-            zIndex: 9999,
-          }}
-          animate={{ 
-            left: targetX,
-            top: targetY,
-            scale: 5.5,
+                    position: "fixed",
+                    left: startPosition.x,
+                    top: startPosition.y,
+                    scale: 7.7,
+                    opacity: 1,
+                    zIndex: 9999,
+                  }}
+                  animate={{ 
+                    left: targetX,
+                    top: targetY,
+                    scale: 3.85,
             opacity: 0.8,
             rotate: type === "skrutky" ? 720 : type === "rekuperacia" ? 360 : 0,
           }}
