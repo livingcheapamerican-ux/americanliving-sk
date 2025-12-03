@@ -37,11 +37,6 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
   
   // Interiér a dokončenie
   const [interierFinis, setInterierFinis] = useState("ziadne");
-  const [podlaha, setPodlaha] = useState("ziadne");
-  const [obkladKupelna, setObkladKupelna] = useState(false);
-  const [kuchynskaLinka, setKuchynskaLinka] = useState(false);
-  const [vnutorneDvere, setVnutorneDvere] = useState(false);
-  const [schodisko, setSchodisko] = useState(false);
 
   // Cenník (z pôvodného konfigurátora)
   const CENY = {
