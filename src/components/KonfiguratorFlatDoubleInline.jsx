@@ -478,13 +478,13 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         </div>
 
         {/* Interiér finiš */}
-        <div className="mb-6">
+        <div>
           <Label className="text-base font-semibold mb-3 block">Interiér finiš - úpravy stien, montáž priečky</Label>
           <RadioGroup value={interierFinis} onValueChange={setInterierFinis} className="space-y-2">
             <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
               <div className="flex items-center gap-3">
                 <RadioGroupItem value="ziadne" id="interier-ziadne" />
-                <Label htmlFor="interier-ziadne" className="cursor-pointer">Bez dokončenia</Label>
+                <Label htmlFor="interier-ziadne" className="cursor-pointer">Nie</Label>
               </div>
               <span className="text-gray-500">+ 0 €</span>
             </div>
@@ -498,121 +498,11 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
               <div className="flex items-center gap-3">
                 <RadioGroupItem value="sadrokarton" id="interier-sadrokarton" />
-                <Label htmlFor="interier-sadrokarton" className="cursor-pointer">Sadrokartón + maľovanie</Label>
+                <Label htmlFor="interier-sadrokarton" className="cursor-pointer">Sádrokartón</Label>
               </div>
-              <span className="font-semibold text-green-600">+ 14 200 €</span>
+              <span className="font-semibold text-green-600">+ 19 475 €</span>
             </div>
           </RadioGroup>
-        </div>
-
-        {/* Podlaha */}
-        <div className="mb-6">
-          <Label className="text-base font-semibold mb-3 block">Podlahová krytina</Label>
-          <RadioGroup value={podlaha} onValueChange={setPodlaha} className="space-y-2">
-            <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
-              <div className="flex items-center gap-3">
-                <RadioGroupItem value="ziadne" id="podlaha-ziadne" />
-                <Label htmlFor="podlaha-ziadne" className="cursor-pointer">Bez podlahovej krytiny</Label>
-              </div>
-              <span className="text-gray-500">+ 0 €</span>
-            </div>
-            <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
-              <div className="flex items-center gap-3">
-                <RadioGroupItem value="laminat" id="podlaha-laminat" />
-                <Label htmlFor="podlaha-laminat" className="cursor-pointer">Laminátová podlaha 8mm AC4</Label>
-              </div>
-              <span className="font-semibold text-green-600">+ 9 860 €</span>
-            </div>
-            <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
-              <div className="flex items-center gap-3">
-                <RadioGroupItem value="spc" id="podlaha-spc" />
-                <Label htmlFor="podlaha-spc" className="cursor-pointer">SPC podlaha (vodeodolná)</Label>
-              </div>
-              <span className="font-semibold text-green-600">+ 16 200 €</span>
-            </div>
-          </RadioGroup>
-        </div>
-
-        <div className="space-y-3">
-          {/* Obklad kúpeľňa */}
-          <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-            <div className="flex items-center gap-3">
-              <Checkbox 
-                id="obklad" 
-                checked={obkladKupelna} 
-                onCheckedChange={setObkladKupelna}
-                className="data-[state=checked]:bg-pink-600"
-              />
-              <div>
-                <Label htmlFor="obklad" className="cursor-pointer flex items-center gap-2">
-                  <Bath className="w-4 h-4 text-blue-500" />
-                  Obklad v kúpeľni
-                </Label>
-                <p className="text-sm text-gray-500">Keramický obklad stien a podlahy</p>
-              </div>
-            </div>
-            <span className="font-semibold text-green-600">+ 4 800 €</span>
-          </div>
-
-          {/* Kuchynská linka */}
-          <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-            <div className="flex items-center gap-3">
-              <Checkbox 
-                id="kuchyna" 
-                checked={kuchynskaLinka} 
-                onCheckedChange={setKuchynskaLinka}
-                className="data-[state=checked]:bg-pink-600"
-              />
-              <div>
-                <Label htmlFor="kuchyna" className="cursor-pointer flex items-center gap-2">
-                  <ChefHat className="w-4 h-4 text-orange-500" />
-                  Kuchynská linka
-                </Label>
-                <p className="text-sm text-gray-500">Základná kuchynská linka (bez spotrebičov)</p>
-              </div>
-            </div>
-            <span className="font-semibold text-green-600">+ 4 000 €</span>
-          </div>
-
-          {/* Vnútorné dvere */}
-          <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-            <div className="flex items-center gap-3">
-              <Checkbox 
-                id="vnutorne-dvere" 
-                checked={vnutorneDvere} 
-                onCheckedChange={setVnutorneDvere}
-                className="data-[state=checked]:bg-pink-600"
-              />
-              <div>
-                <Label htmlFor="vnutorne-dvere" className="cursor-pointer flex items-center gap-2">
-                  <DoorOpen className="w-4 h-4 text-amber-600" />
-                  Vnútorné dvere
-                </Label>
-                <p className="text-sm text-gray-500">Interiérové dvere do všetkých miestností</p>
-              </div>
-            </div>
-            <span className="font-semibold text-green-600">+ 1 920 €</span>
-          </div>
-
-          {/* Schodisko */}
-          <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-            <div className="flex items-center gap-3">
-              <Checkbox 
-                id="schodisko" 
-                checked={schodisko} 
-                onCheckedChange={setSchodisko}
-                className="data-[state=checked]:bg-pink-600"
-              />
-              <div>
-                <Label htmlFor="schodisko" className="cursor-pointer flex items-center gap-2">
-                  <ArrowUp className="w-4 h-4 text-gray-600" />
-                  Schodisko
-                </Label>
-                <p className="text-sm text-gray-500">Drevené schodisko na poschodie</p>
-              </div>
-            </div>
-            <span className="font-semibold text-green-600">+ 2 400 €</span>
-          </div>
         </div>
       </div>
 
