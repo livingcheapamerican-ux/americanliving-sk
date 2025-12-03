@@ -659,6 +659,8 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 <Flame className="w-4 h-4 text-orange-500" />
                 Elektrické podlahové vykurovanie s WiFi termostatom
               </Label>
+              <p className="text-xs text-gray-500 mt-1">Wi-Fi termostat do každej izby (8-9 ks)</p>
+              <p className="text-xs text-gray-400">Cena zahŕňa komplet: Vykurovacia fólia 1m a 0,5m, Vodič, LDPE 0.2 parozábranná fólia, izolácia pod vykurovacou fóliou XPS 500-700, Konektory, Uzemňovacia sieťka, Termostaty, Práca + Doprava</p>
             </div>
           </div>
           <span className="font-semibold text-green-600">+ 5 525 €</span>
