@@ -358,6 +358,22 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           </div>
         </div>
 
+        {/* Info box o elektrike */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4 text-sm">
+          <p className="text-yellow-900 font-medium mb-2">Základná elektroinštalácia podľa projektu zahŕňa všetky potrebné materiály a vykonanie týchto prác:</p>
+          <ul className="text-yellow-800 space-y-1 list-disc list-inside mb-3">
+            <li>montáž elektrických káblov</li>
+            <li>inštalácia rozvádzača s ističmi</li>
+            <li>uloženie chráničky pre prívodný vonkajší kábel</li>
+            <li>montáž inštalačných krabíc pre vypínače a zásuvky (v prípade, že vnútorné dokončovacie práce realizujeme my)</li>
+          </ul>
+          <div className="space-y-1 pt-3 border-t border-yellow-300">
+            <p className="text-red-600 font-medium">Cena neobsahuje: Montáž bleskozvodu a vydanie revíznych dokladov nie sú zahrnuté v základnej ponuke; cena týchto prác sa počíta zvlášť.</p>
+            <p className="text-red-600">Montáž zásuviek, vypínačov a svietidiel môže byť vykonaná za príplatok, pričom všetky potrebné komponenty dodáva objednávateľ.</p>
+            <p className="text-red-600">Vonkajšie pripojenie sa vykonáva na základe samostatnej dohody.</p>
+          </div>
+        </div>
+
         <div className="space-y-3">
           {/* Elektroinštalácia */}
           <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
