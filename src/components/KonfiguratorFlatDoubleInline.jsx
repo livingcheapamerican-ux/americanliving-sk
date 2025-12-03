@@ -944,7 +944,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
       {/* ═══════════════════════════════════════════════════════════════════════
           FÁZA 4: DOKUMENTÁCIA A DOPRAVA
           ═══════════════════════════════════════════════════════════════════════ */}
-      <Card className="overflow-hidden border-0 shadow-lg">
+      <Card className="overflow-hidden border-0 shadow-xl ring-1 ring-purple-200/50">
         <SectionHeader 
           icon={FileText} 
           title="Dokumentácia a služby" 
