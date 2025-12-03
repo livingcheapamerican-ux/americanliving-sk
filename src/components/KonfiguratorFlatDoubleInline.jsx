@@ -1268,14 +1268,20 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             </Label>
             <p className="text-sm text-gray-500 mb-4">Drevo / Falcovaný plech anthracit - podľa modelu domu - bez príplatku</p>
             <RadioGroup value={vonkajsiaFasada} onValueChange={setVonkajsiaFasada} className="space-y-3">
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all">
+              <label 
+                onClick={(e) => { if (vonkajsiaFasada !== "standard") triggerAnimation("fasadaStandard", e.currentTarget); }}
+                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
+              >
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="standard" id="fasada-standard" />
                   <span className="font-semibold text-gray-800">Štandard (Drevo / Falcovaný plech)</span>
                 </div>
                 <span className="text-gray-400 font-medium">+ 0 €</span>
               </label>
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all">
+              <label 
+                onClick={(e) => { if (vonkajsiaFasada !== "suchana") triggerAnimation("fasadaSuchana", e.currentTarget); }}
+                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
+              >
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="suchana" id="fasada-suchana" />
                   <span className="font-semibold text-gray-800">Škúchaná fasáda - individuálne nacenenie</span>
