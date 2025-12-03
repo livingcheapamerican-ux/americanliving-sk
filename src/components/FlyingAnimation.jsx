@@ -20,7 +20,7 @@ const FLYING_ITEMS = {
   oknoAntracit: "⬛", // antracit okno
   oknoTonovane: "🕶️", // tónované
   fasadaStandard: "🏠", // domček antracit
-  fasadaSuchana: "🏡", // domček biely
+  fasadaSuchana: "🏠", // domček s bielou fasádou
   drevo: "🪵", // drevo
   sadrokarton: "📋", // sadrokartón
   podlaha: "🪵", // lamely
