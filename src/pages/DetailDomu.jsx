@@ -32,6 +32,7 @@ export default function DetailDomu() {
   const [panPosition, setPanPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [lastTouchDistance, setLastTouchDistance] = useState(null);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -185,7 +186,21 @@ export default function DetailDomu() {
     });
   };
 
+  const getTouchDistance = (touches) => {
+    if (touches.length < 2) return null;
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
   const handleMouseDown = (e) => {
+    if (e.touches && e.touches.length === 2) {
+      // Pinch zoom start
+      e.preventDefault();
+      setLastTouchDistance(getTouchDistance(e.touches));
+      return;
+    }
+    
     if (zoomLevel > 1) {
       e.preventDefault();
       setIsDragging(true);
@@ -196,6 +211,22 @@ export default function DetailDomu() {
   };
 
   const handleMouseMove = (e) => {
+    if (e.touches && e.touches.length === 2) {
+      // Pinch zoom move
+      e.preventDefault();
+      const newDistance = getTouchDistance(e.touches);
+      if (lastTouchDistance && newDistance) {
+        const scale = newDistance / lastTouchDistance;
+        setZoomLevel(prev => {
+          const newZoom = Math.min(Math.max(prev * scale, 1), 4);
+          if (newZoom === 1) setPanPosition({ x: 0, y: 0 });
+          return newZoom;
+        });
+        setLastTouchDistance(newDistance);
+      }
+      return;
+    }
+    
     if (isDragging && zoomLevel > 1) {
       e.preventDefault();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -209,6 +240,7 @@ export default function DetailDomu() {
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    setLastTouchDistance(null);
   };
 
   const handleWheel = (e) => {
