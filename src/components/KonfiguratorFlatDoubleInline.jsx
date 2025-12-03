@@ -177,16 +177,24 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
 
   // Sekcia Header komponenta
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
-    <div className={`flex items-center gap-4 p-4 rounded-t-xl bg-gradient-to-r ${color}`}>
-      <div className="flex items-center justify-center w-12 h-12 bg-white/20 backdrop-blur rounded-xl">
-        <Icon className="w-6 h-6 text-white" />
+    <div className={`relative flex items-center gap-4 p-5 bg-gradient-to-r ${color}`}>
+      {/* Dekoratívny vzor */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-1/2 w-24 h-24 bg-white rounded-full blur-2xl"></div>
       </div>
-      <div className="flex-1">
-        <div className="flex items-center gap-2">
-          <span className="text-white/70 text-sm font-medium">KROK {step}</span>
+      
+      <div className="relative flex items-center justify-center w-14 h-14 bg-white/25 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20">
+        <Icon className="w-7 h-7 text-white" />
+      </div>
+      <div className="relative flex-1">
+        <div className="flex items-center gap-3 mb-1">
+          <span className="inline-flex items-center justify-center px-3 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs font-bold uppercase tracking-wider">
+            Krok {step}
+          </span>
         </div>
-        <h3 className="text-xl font-bold text-white">{title}</h3>
-        {subtitle && <p className="text-white/80 text-sm mt-0.5">{subtitle}</p>}
+        <h3 className="text-2xl font-bold text-white tracking-tight">{title}</h3>
+        {subtitle && <p className="text-white/80 text-sm mt-1">{subtitle}</p>}
       </div>
     </div>
   );
