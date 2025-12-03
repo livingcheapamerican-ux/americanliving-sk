@@ -57,7 +57,13 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     zaklady: { bez: 0, skrutky: 8140, doska: 17946, pasove: 21079 },
     pripojkaSiete: 1501,
     inziniering: 2592,
-    projektA0: 3500
+    projektA0: 3500,
+    interierFinis: { ziadne: 0, drevo: 16400, sadrokarton: 14200 },
+    podlaha: { ziadne: 0, laminat: 9860, spc: 16200 },
+    obkladKupelna: 4800,
+    kuchynskaLinka: 4000,
+    vnutorneDvere: 1920,
+    schodisko: 2400
   };
 
   // Výpočet celkovej ceny
