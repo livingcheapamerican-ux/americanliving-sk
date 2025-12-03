@@ -761,9 +761,9 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             </div>
           </div>
           <div className="ml-9 mt-2 p-3 bg-gray-50 rounded-lg text-xs text-gray-600 space-y-1">
-            <p className="text-blue-700 font-medium">Interiérové dvere, cena jednej sady od 190 eur.</p>
-            <p className="text-blue-600">- dvere môžu byť zabezpečené zákazníkom</p>
-            <p className="text-blue-600">- cena za inštaláciu jedných dverí od 60 €</p>
+            <p className="text-gray-700 font-medium">Interiérové dvere, сena jednej sady od 190 eur.</p>
+            <p className="text-gray-600">- dvere môžu byť zabezpečené zákazníkom</p>
+            <p className="text-gray-600">- cena za inštaláciu jedných dverí od 60 €</p>
           </div>
         </div>
 
