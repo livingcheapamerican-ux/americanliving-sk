@@ -588,7 +588,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <OptionCheckbox
             id="kuchynskaLinka"
             label="Kuchynská linka"
-            priceBezDPH={4065}
+            priceSDPH={CENY.kuchynskaLinka}
             checked={config.kuchynskaLinka}
             onChange={(checked) => updateConfig('kuchynskaLinka', checked)}
           />
