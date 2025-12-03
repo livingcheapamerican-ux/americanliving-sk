@@ -1105,11 +1105,18 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <p className="text-sm font-medium text-gray-600 mb-2">Doplnkové okná</p>
               <div className="grid gap-3">
                 <div 
-                  className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg"
-                  onClick={(e) => { if (stresneOkno === 0) triggerAnimation("okno", e.currentTarget); }}
+                  className={`flex items-center justify-between p-3 border-2 rounded-lg cursor-pointer transition-all ${stresneOkno > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
+                  onClick={(e) => { 
+                    if (stresneOkno === 0) {
+                      triggerAnimation("okno", e.currentTarget);
+                      setStresneOkno(1);
+                    } else {
+                      setStresneOkno(0);
+                    }
+                  }}
                 >
                   <div className="flex items-center gap-3">
-                    <Square className="w-4 h-4 text-blue-500" />
+                    <Checkbox checked={stresneOkno > 0} className="data-[state=checked]:bg-blue-600" />
                     <span className="text-gray-800">Strešné okno</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -1117,6 +1124,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                       type="number" 
                       min="0" 
                       value={stresneOkno} 
+                      onClick={(e) => e.stopPropagation()}
                       onChange={(e) => { 
                         const newVal = parseInt(e.target.value) || 0;
                         if (newVal > stresneOkno) triggerAnimation("okno", e.target);
@@ -1128,11 +1136,18 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                   </div>
                 </div>
                 <div 
-                  className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg"
-                  onClick={(e) => { if (bocneOknoFixne === 0) triggerAnimation("okno", e.currentTarget); }}
+                  className={`flex items-center justify-between p-3 border-2 rounded-lg cursor-pointer transition-all ${bocneOknoFixne > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
+                  onClick={(e) => { 
+                    if (bocneOknoFixne === 0) {
+                      triggerAnimation("okno", e.currentTarget);
+                      setBocneOknoFixne(1);
+                    } else {
+                      setBocneOknoFixne(0);
+                    }
+                  }}
                 >
                   <div className="flex items-center gap-3">
-                    <Square className="w-4 h-4 text-blue-500" />
+                    <Checkbox checked={bocneOknoFixne > 0} className="data-[state=checked]:bg-blue-600" />
                     <span className="text-gray-800">Bočné okno (Fixné) 90x205cm</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -1140,6 +1155,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                       type="number" 
                       min="0" 
                       value={bocneOknoFixne} 
+                      onClick={(e) => e.stopPropagation()}
                       onChange={(e) => {
                         const newVal = parseInt(e.target.value) || 0;
                         if (newVal > bocneOknoFixne) triggerAnimation("okno", e.target);
@@ -1151,11 +1167,18 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                   </div>
                 </div>
                 <div 
-                  className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg"
-                  onClick={(e) => { if (bocneOknoVyklopne90 === 0) triggerAnimation("okno", e.currentTarget); }}
+                  className={`flex items-center justify-between p-3 border-2 rounded-lg cursor-pointer transition-all ${bocneOknoVyklopne90 > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
+                  onClick={(e) => { 
+                    if (bocneOknoVyklopne90 === 0) {
+                      triggerAnimation("okno", e.currentTarget);
+                      setBocneOknoVyklopne90(1);
+                    } else {
+                      setBocneOknoVyklopne90(0);
+                    }
+                  }}
                 >
                   <div className="flex items-center gap-3">
-                    <Square className="w-4 h-4 text-blue-500" />
+                    <Checkbox checked={bocneOknoVyklopne90 > 0} className="data-[state=checked]:bg-blue-600" />
                     <span className="text-gray-800">Bočné okno (Výklopno-sklopné) 90x205cm</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -1163,6 +1186,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                       type="number" 
                       min="0" 
                       value={bocneOknoVyklopne90} 
+                      onClick={(e) => e.stopPropagation()}
                       onChange={(e) => {
                         const newVal = parseInt(e.target.value) || 0;
                         if (newVal > bocneOknoVyklopne90) triggerAnimation("okno", e.target);
@@ -1174,11 +1198,18 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                   </div>
                 </div>
                 <div 
-                  className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg"
-                  onClick={(e) => { if (bocneOknoVyklopne55 === 0) triggerAnimation("okno", e.currentTarget); }}
+                  className={`flex items-center justify-between p-3 border-2 rounded-lg cursor-pointer transition-all ${bocneOknoVyklopne55 > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
+                  onClick={(e) => { 
+                    if (bocneOknoVyklopne55 === 0) {
+                      triggerAnimation("okno", e.currentTarget);
+                      setBocneOknoVyklopne55(1);
+                    } else {
+                      setBocneOknoVyklopne55(0);
+                    }
+                  }}
                 >
                   <div className="flex items-center gap-3">
-                    <Square className="w-4 h-4 text-blue-500" />
+                    <Checkbox checked={bocneOknoVyklopne55 > 0} className="data-[state=checked]:bg-blue-600" />
                     <span className="text-gray-800">Bočné okno (Výklopno-sklopné) 55x90cm</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -1186,6 +1217,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                       type="number" 
                       min="0" 
                       value={bocneOknoVyklopne55} 
+                      onClick={(e) => e.stopPropagation()}
                       onChange={(e) => {
                         const newVal = parseInt(e.target.value) || 0;
                         if (newVal > bocneOknoVyklopne55) triggerAnimation("okno", e.target);
