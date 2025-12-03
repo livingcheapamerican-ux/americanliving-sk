@@ -423,7 +423,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <OptionCheckbox
             id="rekuperacia"
             label="Rekuperácia (povinné pre A0)"
-            priceBezDPH={2195}
+            priceSDPH={CENY.rekuperacia}
             checked={config.rekuperacia}
             onChange={(checked) => updateConfig('rekuperacia', checked)}
             isA0={true}
@@ -431,7 +431,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <OptionCheckbox
             id="klimatizacia"
             label="Klimatizácia s tepelným čerpadlom (povinné pre A0)"
-            priceBezDPH={2032}
+            priceSDPH={CENY.klimatizacia}
             checked={config.klimatizacia}
             onChange={(checked) => updateConfig('klimatizacia', checked)}
             isA0={true}
