@@ -399,7 +399,7 @@ export default function Domov() {
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 sm:gap-4 mb-4 sm:mb-10">
-                {domy.slice(0, 6).map((dom, index) => (
+                {domy.map((dom, index) => (
                   <div key={dom.id}>
                     <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
                       <Card className="group overflow-hidden hover:shadow-2xl transition-shadow bg-white border border-gray-200">
