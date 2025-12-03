@@ -13,7 +13,7 @@ const FLYING_ITEMS = {
   bojler: "♨️", // bojler - horúca para
   klimatizacia: "❄️", // klimatizácia
   rekuperacia: "🌀", // ventilátor
-  siete: "🚜", // bager
+  siete: "🏗️", // bager kopajúci
   dvereKovove: "🚪", // antracit dvere
   dverePlastove: "🚪", // biele dvere
   okno: "🪟", // okno
