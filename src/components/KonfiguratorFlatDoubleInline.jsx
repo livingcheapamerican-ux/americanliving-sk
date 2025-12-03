@@ -541,6 +541,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <motion.label 
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={(e) => { if (montazHolodomu !== "ano") triggerAnimation("montaz", e.currentTarget); }}
                 className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${montazHolodomu === "ano" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
               >
                 <div className="flex items-center gap-3">
