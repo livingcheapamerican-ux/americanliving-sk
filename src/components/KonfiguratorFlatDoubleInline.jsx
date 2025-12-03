@@ -70,7 +70,21 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     pripojkaSiete: 1501,
     inziniering: 2592,
     projektA0: 3500,
-    interierFinis: { ziadne: 0, drevo: 16400, sadrokarton: 19475 }
+    interierFinis: { ziadne: 0, drevo: 16400, sadrokarton: 19475 },
+    // Nové položky zo starej stránky
+    vonkajsiaFasada: { standard: 0, suchana: 12841 },
+    povrchokaOkien: 3100,
+    vnutornePodlahy: 3351,
+    podlahovVykurovanie: 5525,
+    pergola: 1845,
+    interieroveDvere: 180,
+    tonovaneSkla: 1300,
+    doprava: 0,
+    revizna: 1000,
+    predlzenieDlzky: 0, // individuálne nacenenie
+    stresneOkno: 0, // individuálne nacenenie
+    bocneOknoFixne: 0, // individuálne nacenenie
+    bocneOknoVyklopne: 0 // individuálne nacenenie
   };
 
   // Výpočet celkovej ceny
