@@ -650,6 +650,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <motion.label 
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={(e) => { if (izolaciaNavysenie !== "zvysena") triggerAnimation("izolacia", e.currentTarget); }}
                 className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${izolaciaNavysenie === "zvysena" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
               >
                 <div className="flex items-center gap-3">
@@ -665,6 +666,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <motion.label 
                 whileHover={{ x: 4, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
+                onClick={(e) => { if (izolaciaNavysenie !== "premium") triggerAnimation("izolacia", e.currentTarget); }}
                 className={`relative flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all overflow-hidden ${izolaciaNavysenie === "premium" ? "border-green-500 bg-green-50 shadow-md ring-2 ring-green-200" : "border-green-400 bg-green-50/50 hover:bg-green-100"}`}
               >
                 {izolaciaNavysenie === "premium" && (
