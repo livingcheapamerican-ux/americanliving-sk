@@ -50,7 +50,7 @@ export default function FlyingAnimation({
       const timer = setTimeout(() => {
         setIsFlying(false);
         if (onComplete) onComplete();
-      }, 7000);
+      }, 2400);
       
       return () => clearTimeout(timer);
     }
@@ -86,7 +86,7 @@ export default function FlyingAnimation({
             scale: 0 
           }}
           transition={{ 
-            duration: 6.3,
+            duration: 2.1,
             ease: "easeInOut",
           }}
           className="pointer-events-none text-3xl"
@@ -121,7 +121,7 @@ export function useFlyingAnimation() {
     // Odstrániť animáciu po dokončení
     setTimeout(() => {
       setAnimations(prev => prev.filter(a => a.id !== id));
-    }, 8000);
+    }, 2700);
   };
 
   return { animations, triggerAnimation };
