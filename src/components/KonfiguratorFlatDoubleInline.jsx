@@ -589,8 +589,9 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             <div>
               <Label htmlFor="povrch-okien" className="cursor-pointer flex items-center gap-2">
                 <Square className="w-4 h-4 text-gray-600" />
-                Povrch okien Antracit
+                Laminácia okien - antracit
               </Label>
+              <p className="text-sm text-gray-500">(možná je aj laminácia v iných farbách)</p>
             </div>
           </div>
           <span className="font-semibold text-green-600">+ 3 100 €</span>
