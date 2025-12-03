@@ -172,6 +172,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         {/* Montáž holodomu */}
         <div className="mb-6">
           <Label className="text-base font-semibold mb-3 block">Montáž holodomu</Label>
+          <p className="text-sm text-red-600 mb-3">Montážne práce (dodatočne sa účtuje ubytovanie montážnej brigády 3–4 osoby)</p>
           <RadioGroup value={montazHolodomu} onValueChange={setMontazHolodomu} className="space-y-2">
             <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
               <div className="flex items-center gap-3">
