@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { 
   Send, AlertTriangle, CheckCircle, Calculator, RotateCcw,
   Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
-  Zap, ShowerHead, Flame, Cable
+  Zap, ShowerHead, Flame, Cable, Paintbrush, Square, Bath, ChefHat, DoorOpen, ArrowUp
 } from "lucide-react";
 
 export default function KonfiguratorFlatDoubleInline({ dom }) {
