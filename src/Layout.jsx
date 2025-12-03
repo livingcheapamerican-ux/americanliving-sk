@@ -106,22 +106,22 @@ export default function Layout({ children }) {
       {/* Header */}
       <header 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? 'bg-white shadow-lg py-1' : 'bg-white/95 backdrop-blur-md py-1 sm:py-2'
+          scrolled ? 'bg-white shadow-lg py-0.5' : 'bg-white/95 backdrop-blur-md py-0.5 sm:py-1'
         }`}
       >
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-2 sm:px-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-3">
               <Link to={createPageUrl("Domov")} className="group">
                 <img 
                   src={LOGO_URL} 
                   alt="American Living" 
-                  className="h-10 sm:h-12 md:h-16 lg:h-20 w-auto transition-transform group-hover:scale-105"
+                  className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto transition-transform group-hover:scale-105"
                 />
               </Link>
-              
-              <div className="hidden md:flex flex-col items-center gap-0.5">
-                <span className="text-[10px] text-gray-600 font-medium whitespace-nowrap">Powered by</span>
+
+              <div className="hidden md:flex flex-col items-center gap-0">
+                <span className="text-[8px] text-gray-600 font-medium whitespace-nowrap">Powered by</span>
                 <a 
                   href="https://konfiga.eu" 
                   target="_blank" 
@@ -131,18 +131,18 @@ export default function Layout({ children }) {
                   <img 
                     src={KONFIGA_LOGO_URL} 
                     alt="Konfiga.eu - AI CRM" 
-                    className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto"
+                    className="h-6 sm:h-8 md:h-9 lg:h-10 w-auto"
                   />
                 </a>
               </div>
             </div>
 
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-0.5">
               {navItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  className={`px-2.5 py-1 rounded-md text-sm font-medium transition-all ${
                     isActive(item.path)
                       ? 'bg-primary text-white'
                       : 'text-gray-700 hover:bg-gray-100'
@@ -153,22 +153,22 @@ export default function Layout({ children }) {
               ))}
             </nav>
 
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-2">
               {isSuperAdmin && (
                 <>
                   <Link to={createPageUrl("AdminAnalyzaDomov")}>
-                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80" title="AI Analýza domov">
-                      <Brain className="w-5 h-5" />
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8" title="AI Analýza domov">
+                      <Brain className="w-4 h-4" />
                     </Button>
                   </Link>
                   <Link to={createPageUrl("AdminSpravaDomov")}>
-                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80" title="Správa domov">
-                      <Image className="w-5 h-5" />
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8" title="Správa domov">
+                      <Image className="w-4 h-4" />
                     </Button>
                   </Link>
                   <Link to={createPageUrl("AdminUploadFotiekDomov")}>
-                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80" title="Upload fotiek domov">
-                      <Upload className="w-5 h-5" />
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8" title="Upload fotiek domov">
+                      <Upload className="w-4 h-4" />
                     </Button>
                   </Link>
                 </>
@@ -176,23 +176,23 @@ export default function Layout({ children }) {
               {isAdmin && (
                 <>
                   <Link to={createPageUrl("AdminDokumenty")}>
-                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80" title="Správa dokumentov">
-                      <FileText className="w-5 h-5" />
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8" title="Správa dokumentov">
+                      <FileText className="w-4 h-4" />
                     </Button>
                   </Link>
                   <Link to={createPageUrl("AdminGoogleDrive")}>
-                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80" title="Správa Google Drive">
-                      <Settings className="w-5 h-5" />
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8" title="Správa Google Drive">
+                      <Settings className="w-4 h-4" />
                     </Button>
                   </Link>
                 </>
               )}
-              <a href="tel:+421905138124" className="text-primary font-semibold text-sm">
+              <a href="tel:+421905138124" className="text-primary font-semibold text-xs">
                 +421 905 138 124
               </a>
               <Link to={createPageUrl("Kontakt")}>
-                <Button className="bg-secondary hover:bg-secondary/90 text-white font-semibold">
-                  Kontaktujte nás
+                <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-white font-semibold text-xs h-7 px-3">
+                  Kontakt
                 </Button>
               </Link>
             </div>
@@ -308,7 +308,7 @@ export default function Layout({ children }) {
         </div>
       </header>
 
-      <main className="pt-14 sm:pt-16 md:pt-20 lg:pt-24">
+      <main className="pt-10 sm:pt-12 md:pt-14 lg:pt-16">
         {children}
       </main>
 
