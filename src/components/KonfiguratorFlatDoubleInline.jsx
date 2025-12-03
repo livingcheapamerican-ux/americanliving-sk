@@ -145,6 +145,59 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
 
   const formatPrice = (price) => price.toLocaleString('sk-SK') + " €";
 
+  // Generovanie súhrnu vybraných položiek
+  const selectedItems = useMemo(() => {
+    const items = [];
+    
+    // Základná cena
+    items.push({ name: "Základná cena sady (svojpomocná montáž)", price: BASE_PRICE });
+    
+    // Hrubá stavba
+    if (montazHolodomu === "ano") items.push({ name: "Montáž hrubej stavby", price: CENY.montaz.ano });
+    if (izolaciaNavysenie === "zvysena") items.push({ name: "Zvýšená izolácia (200/250mm)", price: CENY.izolacia.zvysena });
+    if (izolaciaNavysenie === "premium") items.push({ name: "Premium izolácia A0 (250/300mm)", price: CENY.izolacia.premium });
+    if (zaklady === "skrutky") items.push({ name: "Zemné skrutky / Pätky", price: CENY.zaklady.skrutky });
+    if (zaklady === "doska") items.push({ name: "Základová doska", price: CENY.zaklady.doska });
+    if (zaklady === "pasove") items.push({ name: "Pásové základy", price: CENY.zaklady.pasove });
+    
+    // Holodom
+    if (elektroinstalacia) items.push({ name: "Elektrická inštalácia", price: CENY.elektroinstalacia });
+    if (vodaKanalizacia) items.push({ name: "Rozvody vody a kanalizácie", price: CENY.vodaKanalizacia });
+    if (sanitaKomplet) items.push({ name: "Sanita komplet", price: CENY.sanitaKomplet });
+    if (bojler) items.push({ name: "Elektrický bojler", price: CENY.bojler });
+    if (tepelneCerpadlo) items.push({ name: "Tepelné čerpadlo / Klimatizácia", price: CENY.tepelneCerpadlo });
+    if (rekuperacia) items.push({ name: "Rekuperácia", price: CENY.rekuperacia });
+    if (pripojkaSiete) items.push({ name: "Pripojenie na siete", price: CENY.pripojkaSiete });
+    if (vstupneDvere === "kovove") items.push({ name: "Kovové vstupné dvere", price: CENY.dvere.kovove });
+    if (vstupneDvere === "plastove") items.push({ name: "Plastovo-kovové dvere", price: CENY.dvere.plastove });
+    if (stresneOkno > 0) items.push({ name: `Strešné okno (${stresneOkno}×)`, price: stresneOkno * CENY.stresneOkno });
+    if (bocneOknoFixne > 0) items.push({ name: `Bočné okno fixné (${bocneOknoFixne}×)`, price: bocneOknoFixne * CENY.bocneOknoFixne });
+    if (bocneOknoVyklopne90 > 0) items.push({ name: `Bočné okno 90×205 (${bocneOknoVyklopne90}×)`, price: bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90 });
+    if (bocneOknoVyklopne55 > 0) items.push({ name: `Bočné okno 55×90 (${bocneOknoVyklopne55}×)`, price: bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55 });
+    if (povrchokaOkien) items.push({ name: "Laminácia okien - antracit", price: CENY.povrchokaOkien });
+    if (tonovaneSkla) items.push({ name: "Tónované sklá (Solar)", price: CENY.tonovaneSkla });
+    
+    // Dom na kľúč
+    if (vonkajsiaFasada === "suchana") items.push({ name: "Škúchaná fasáda", price: CENY.vonkajsiaFasada.suchana });
+    if (interierFinis === "drevo") items.push({ name: "Interiér - obloženie drevom", price: CENY.interierFinis.drevo });
+    if (interierFinis === "sadrokarton") items.push({ name: "Interiér - sádrokartón", price: CENY.interierFinis.sadrokarton });
+    if (vnutornePodlahy) items.push({ name: "Vnútorné podlahy - laminát", price: CENY.vnutornePodlahy });
+    if (podlahovVykurovanie) items.push({ name: "Podlahové vykurovanie", price: CENY.podlahovVykurovanie });
+    if (interieroveDvere > 0) items.push({ name: `Interiérové dvere (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere });
+    if (pergola) items.push({ name: "Dekoratívna pergola", price: CENY.pergola });
+    
+    // Dokumentácia
+    if (inziniering) items.push({ name: "Inžiniering stavebného povolenia", price: CENY.inziniering });
+    if (projektA0) items.push({ name: "Projektant a certifikácia A0", price: CENY.projektA0 });
+    if (revizna) items.push({ name: "Revízna dokumentácia", price: CENY.revizna });
+    
+    return items;
+  }, [montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
+      sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
+      tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
+      interieroveDvere, pergola, inziniering, projektA0, revizna]);
+
   const handleReset = () => {
     setMontazHolodomu("nie");
     setVstupneDvere("ziadne");
