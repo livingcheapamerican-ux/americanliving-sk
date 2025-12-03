@@ -340,8 +340,18 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     </motion.div>
   );
 
+  // Handler pre animácie
+  const handleSelectionWithAnimation = (type, value, setter, element) => {
+    setter(value);
+    if (element) {
+      triggerAnimation(type, element.currentTarget || element);
+    }
+  };
+
   return (
     <div className="mt-8 relative">
+      {/* Flying animations container */}
+      <FlyingAnimationContainer animations={animations} />
       {/* Floating Price Bar - pravá strana */}
       <div 
         className="hidden xl:block fixed w-80 z-40"
