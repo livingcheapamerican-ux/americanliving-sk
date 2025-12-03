@@ -776,7 +776,11 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 <p className="text-red-600">Vonkajšie pripojenie sa vykonáva na základe samostatnej dohody.</p>
               </div>
             </div>
-            <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
+            <motion.label 
+              whileHover={{ x: 4 }}
+              whileTap={{ scale: 0.98 }}
+              className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${elektroinstalacia ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
+            >
               <div className="flex items-center gap-3">
                 <Checkbox 
                   id="elektro" 
@@ -789,9 +793,18 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                   <p className="text-sm text-gray-500">Rozvody, rozvádzač, zásuvky</p>
                 </div>
               </div>
-              <span className="font-bold text-green-600">+ 7 400 €</span>
-            </label>
-          </div>
+              <div className="flex items-center gap-2">
+                <AnimatePresence>
+                  {elektroinstalacia && (
+                    <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                      <CheckCircle className="w-5 h-5 text-green-500" />
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+                <span className="font-bold text-green-600">+ 7 400 €</span>
+              </div>
+            </motion.label>
+            </motion.div>
 
           {/* Voda a kanalizácia */}
           <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
