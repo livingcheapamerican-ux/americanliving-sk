@@ -446,7 +446,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <OptionCheckbox
             id="dokumentaciaProjekt"
             label="Projektová dokumentácia pre A0"
-            priceBezDPH={4878}
+            priceSDPH={CENY.dokumentaciaProjekt}
             checked={config.dokumentaciaProjekt}
             onChange={(checked) => updateConfig('dokumentaciaProjekt', checked)}
             isA0={true}
@@ -454,7 +454,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <OptionCheckbox
             id="inziniering"
             label="Inžiniering (stavebné povolenie)"
-            priceBezDPH={1626}
+            priceSDPH={CENY.inziniering}
             checked={config.inziniering}
             onChange={(checked) => updateConfig('inziniering', checked)}
           />
