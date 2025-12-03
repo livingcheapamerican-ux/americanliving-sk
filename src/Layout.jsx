@@ -106,7 +106,7 @@ export default function Layout({ children }) {
       {/* Header */}
       <header 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? 'bg-white shadow-lg py-2' : 'bg-white/95 backdrop-blur-md py-3'
+          scrolled ? 'bg-white shadow-lg py-1' : 'bg-white/95 backdrop-blur-md py-1 sm:py-2'
         }`}
       >
         <div className="container mx-auto px-4">
@@ -116,7 +116,7 @@ export default function Layout({ children }) {
                 <img 
                   src={LOGO_URL} 
                   alt="American Living" 
-                  className="h-28 sm:h-32 md:h-36 lg:h-40 w-auto transition-transform group-hover:scale-105"
+                  className="h-16 sm:h-24 md:h-32 lg:h-40 w-auto transition-transform group-hover:scale-105"
                 />
               </Link>
               
@@ -308,7 +308,7 @@ export default function Layout({ children }) {
         </div>
       </header>
 
-      <main className="pt-36 sm:pt-40 md:pt-44 lg:pt-52">
+      <main className="pt-20 sm:pt-28 md:pt-36 lg:pt-44">
         {children}
       </main>
 
