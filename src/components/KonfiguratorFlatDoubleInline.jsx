@@ -175,9 +175,9 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     );
   };
 
-  // Komponenta pre radio položku
-  const OptionRadio = ({ name, value, label, priceBezDPH, selected, onChange, isA0 }) => {
-    const priceSDPH = Math.round(priceBezDPH * DPH_RATE * 100) / 100;
+  // Komponenta pre radio položku - priceSDPH je cena S DPH (ako je v cenníku)
+  const OptionRadio = ({ name, value, label, priceSDPH, selected, onChange, isA0 }) => {
+    const priceBezDPH = Math.round(priceSDPH / DPH_RATE * 100) / 100;
     return (
       <div className={`flex items-center justify-between p-3 rounded-lg border ${isA0 ? 'bg-green-50 border-l-4 border-l-green-500' : 'bg-white'} ${selected ? 'ring-2 ring-blue-500' : ''}`}>
         <div className="flex items-center gap-3">
@@ -194,7 +194,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             {isA0 && <Leaf className="inline w-4 h-4 ml-2 text-green-600" />}
           </Label>
         </div>
-        {priceBezDPH > 0 ? (
+        {priceSDPH > 0 ? (
           <div className="text-right">
             <div className="font-semibold text-green-600">+{formatPrice(priceBezDPH)} <span className="text-xs font-normal">(bez DPH)</span></div>
             <div className="text-sm text-gray-500">+{formatPrice(priceSDPH)} <span className="text-xs">(s DPH)</span></div>
