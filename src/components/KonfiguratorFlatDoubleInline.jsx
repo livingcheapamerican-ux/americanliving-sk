@@ -198,6 +198,44 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
       interieroveDvere, pergola, inziniering, projektA0, revizna]);
 
+  // Draggable panel state
+  const [panelPosition, setPanelPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragRef = useRef(null);
+  const dragStartRef = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isDragging) return;
+      const deltaX = e.clientX - dragStartRef.current.x;
+      const deltaY = e.clientY - dragStartRef.current.y;
+      setPanelPosition(prev => ({
+        x: prev.x + deltaX,
+        y: prev.y + deltaY
+      }));
+      dragStartRef.current = { x: e.clientX, y: e.clientY };
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]);
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    dragStartRef.current = { x: e.clientX, y: e.clientY };
+  };
+
   const handleReset = () => {
     setMontazHolodomu("nie");
     setVstupneDvere("ziadne");
