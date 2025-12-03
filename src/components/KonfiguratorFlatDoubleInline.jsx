@@ -155,6 +155,19 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     setInziniering(false);
     setProjektA0(false);
     setInterierFinis("ziadne");
+    setVonkajsiaFasada("standard");
+    setPovrchokaOkien(false);
+    setVnutornePodlahy(false);
+    setPodlahovVykurovanie(false);
+    setPergola(false);
+    setInterieroveDvere(0);
+    setTonovaneSkla(false);
+    setDoprava(false);
+    setRevizna(false);
+    setPredlzenieDlzky(0);
+    setStresneOkno(0);
+    setBocneOknoFixne(0);
+    setBocneOknoVyklopne(0);
   };
 
   return (
