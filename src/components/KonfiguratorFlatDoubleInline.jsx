@@ -1442,7 +1442,10 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <Maximize className="w-5 h-5 text-emerald-600" />
               Doplnky exteriéru
             </Label>
-            <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all">
+            <label 
+              onClick={(e) => { if (!pergola) triggerAnimation("pergola", e.currentTarget); }}
+              className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
+            >
               <div className="flex items-center gap-3">
                 <Checkbox 
                   id="pergola" 
