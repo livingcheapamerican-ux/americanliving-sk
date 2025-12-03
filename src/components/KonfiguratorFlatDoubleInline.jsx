@@ -752,9 +752,14 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         <div className="p-6 space-y-6 bg-gradient-to-b from-blue-50/50 to-white">
 
           {/* Elektroinštalácia */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+          <motion.div 
+            className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+            whileHover={{ scale: 1.005 }}
+          >
             <Label className="text-lg font-bold text-gray-800 mb-3 block flex items-center gap-2">
-              <Zap className="w-5 h-5 text-yellow-500" />
+              <motion.div animate={{ scale: elektroinstalacia ? [1, 1.3, 1] : 1 }} transition={{ duration: 0.3 }}>
+                <Zap className={`w-5 h-5 ${elektroinstalacia ? "text-yellow-500" : "text-yellow-400"}`} />
+              </motion.div>
               Elektroinštalácia
             </Label>
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4 text-sm">
