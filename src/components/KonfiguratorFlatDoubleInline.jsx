@@ -730,12 +730,18 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           </div>
 
         </div>
-      </Card>
+        </Card>
+        </motion.div>
 
-      {/* ═══════════════════════════════════════════════════════════════════════
+        {/* ═══════════════════════════════════════════════════════════════════════
           FÁZA 2: HOLODOM (Montáž, Inštalácie, Okná/Dvere)
           ═══════════════════════════════════════════════════════════════════════ */}
-      <Card className="overflow-hidden border-0 shadow-xl ring-1 ring-blue-200/50">
+        <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        >
+        <Card className="overflow-hidden border-0 shadow-xl ring-1 ring-blue-200/50 hover:ring-2 hover:ring-blue-300/70 transition-all duration-300">
         <SectionHeader 
           icon={Hammer} 
           title="Holodom" 
