@@ -75,44 +75,43 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     doprava: 2699.85            // z HTML: 2 699,85 € (s DPH)
   };
 
-  // Výpočet ceny
+  // Výpočet ceny - ceny v CENY sú S DPH, počítame total s DPH a potom bez DPH
   const { totalBezDPH, totalSDPH } = useMemo(() => {
-    let total = BASE_PRICE_BEZ_DPH;
+    let totalSDPHCalc = BASE_PRICE_BEZ_DPH * DPH_RATE; // Základná cena s DPH
     
-    if (config.montaz) total += 12091;
-    total += CENY.vstupneDvere[config.vstupneDvere] || 0;
-    total += CENY.zaklady[config.zaklady] || 0;
+    if (config.montaz) totalSDPHCalc += CENY.montaz;
+    totalSDPHCalc += CENY.vstupneDvere[config.vstupneDvere] || 0;
+    totalSDPHCalc += CENY.zaklady[config.zaklady] || 0;
     
     if (config.zaklady === "piloty") {
-      if (config.pilotyVyrovnanie) total += 2016;
-      if (config.pilotyMontaz) total += 1440;
-      if (config.pilotyDopravaZeriav) total += 720;
+      if (config.pilotyVyrovnanie) totalSDPHCalc += CENY.pilotyVyrovnanie;
+      if (config.pilotyMontaz) totalSDPHCalc += CENY.pilotyMontaz;
+      if (config.pilotyDopravaZeriav) totalSDPHCalc += CENY.pilotyDopravaZeriav;
     }
     
-    if (config.izolacia === "steny250") total += 4878;
-    if (config.izolacia === "steny300") total += 6097;
+    totalSDPHCalc += CENY.izolacia[config.izolacia] || 0;
     
-    if (config.elektroinstalacia) total += 6000;
-    if (config.voda) total += 1520;
-    if (config.pisoarWc) total += 456;
-    if (config.umyvadloSprcha) total += 760;
-    if (config.bojler80l) total += 320;
-    if (config.podlahovka) total += 4200;
-    if (config.rekuperacia) total += 2195;
-    if (config.klimatizacia) total += 2032;
-    if (config.interierDrevo) total += 9756;
-    if (config.interierSadrokarton) total += 8130;
-    if (config.exterierDrevo) total += 5691;
-    if (config.oknaAntracit) total += 1463;
-    if (config.podlahyLaminat) total += 3252;
-    if (config.kuchynskaLinka) total += 4065;
-    if (config.dokumentaciaProjekt) total += 4878;
-    if (config.inziniering) total += 1626;
-    if (config.doprava) total += 2195;
+    if (config.elektroinstalacia) totalSDPHCalc += CENY.elektroinstalacia;
+    if (config.voda) totalSDPHCalc += CENY.voda;
+    if (config.pisoarWc) totalSDPHCalc += CENY.pisoarWc;
+    if (config.umyvadloSprcha) totalSDPHCalc += CENY.umyvadloSprcha;
+    if (config.bojler80l) totalSDPHCalc += CENY.bojler80l;
+    if (config.podlahovka) totalSDPHCalc += CENY.podlahovka;
+    if (config.rekuperacia) totalSDPHCalc += CENY.rekuperacia;
+    if (config.klimatizacia) totalSDPHCalc += CENY.klimatizacia;
+    if (config.interierDrevo) totalSDPHCalc += CENY.interierDrevo;
+    if (config.interierSadrokarton) totalSDPHCalc += CENY.interierSadrokarton;
+    if (config.exterierDrevo) totalSDPHCalc += CENY.exterierDrevo;
+    if (config.oknaAntracit) totalSDPHCalc += CENY.oknaAntracit;
+    if (config.podlahyLaminat) totalSDPHCalc += CENY.podlahyLaminat;
+    if (config.kuchynskaLinka) totalSDPHCalc += CENY.kuchynskaLinka;
+    if (config.dokumentaciaProjekt) totalSDPHCalc += CENY.dokumentaciaProjekt;
+    if (config.inziniering) totalSDPHCalc += CENY.inziniering;
+    if (config.doprava) totalSDPHCalc += CENY.doprava;
     
     return {
-      totalBezDPH: total,
-      totalSDPH: Math.round(total * DPH_RATE * 100) / 100
+      totalBezDPH: Math.round(totalSDPHCalc / DPH_RATE * 100) / 100,
+      totalSDPH: Math.round(totalSDPHCalc * 100) / 100
     };
   }, [config]);
 
