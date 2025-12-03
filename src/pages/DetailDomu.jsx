@@ -1029,7 +1029,7 @@ export default function DetailDomu() {
           >
             {zoomLevel === 1 && lightboxImages.length > 1 ? (
               <div 
-                className="flex items-center h-full"
+                className="flex items-center h-full absolute left-0"
                 style={{
                   transform: `translateX(calc(-${lightboxIndex * 100}vw + ${swipeOffset}px))`,
                   transition: swipeStart ? 'none' : 'transform 0.3s ease-out',
