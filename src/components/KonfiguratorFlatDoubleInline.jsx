@@ -263,6 +263,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 <div>
                   <Label htmlFor="izolacia-standard" className="cursor-pointer">Štandard</Label>
                   <p className="text-sm text-gray-500">Steny 150mm, Strecha 200mm</p>
+                  <p className="text-xs text-amber-600">Celoročná izolácia pre účely rekreačnej stavby</p>
                 </div>
               </div>
               <span className="text-gray-500">+ 0 €</span>
@@ -273,6 +274,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 <div>
                   <Label htmlFor="izolacia-zvysena" className="cursor-pointer">Zvýšená</Label>
                   <p className="text-sm text-gray-500">Steny 200mm, Strecha 250mm</p>
+                  <p className="text-xs text-amber-600">Celoročná izolácia pre účely rekreačnej stavby</p>
                 </div>
               </div>
               <span className="font-semibold text-green-600">+ 5 799 €</span>
@@ -286,6 +288,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     <Badge className="bg-green-600">Odporúčané pre A0</Badge>
                   </Label>
                   <p className="text-sm text-gray-500">Steny 250mm, Strecha 300mm</p>
+                  <p className="text-xs text-blue-600 font-medium">Potrebná položka pre status rodinného domu</p>
                 </div>
               </div>
               <span className="font-semibold text-green-600">+ 11 600 €</span>
