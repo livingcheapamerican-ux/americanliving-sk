@@ -1488,7 +1488,10 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               Projektová dokumentácia
             </Label>
             <div className="space-y-3">
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-purple-300 hover:bg-purple-50/50 cursor-pointer transition-all">
+              <label 
+                onClick={(e) => { if (!inziniering) triggerAnimation("inziniering", e.currentTarget); }}
+                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-purple-300 hover:bg-purple-50/50 cursor-pointer transition-all"
+              >
                 <div className="flex items-center gap-3">
                   <Checkbox 
                     id="inziniering" 
@@ -1503,7 +1506,10 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 </div>
                 <span className="font-bold text-green-600">+ 2 592 €</span>
               </label>
-              <label className="flex items-center justify-between p-4 border-2 border-green-400 rounded-xl bg-green-50 hover:bg-green-100 cursor-pointer transition-all">
+              <label 
+                onClick={(e) => { if (!projektA0) triggerAnimation("projektant", e.currentTarget); }}
+                className="flex items-center justify-between p-4 border-2 border-green-400 rounded-xl bg-green-50 hover:bg-green-100 cursor-pointer transition-all"
+              >
                 <div className="flex items-center gap-3">
                   <Checkbox 
                     id="projekt" 
