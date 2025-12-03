@@ -646,24 +646,26 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         </div>
 
         {/* Podlahové vykurovanie */}
-        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
-          <div className="flex items-center gap-3">
-            <Checkbox 
-              id="podlahove-vykurovanie" 
-              checked={podlahovVykurovanie} 
-              onCheckedChange={setPodlahovVykurovanie}
-              className="data-[state=checked]:bg-pink-600"
-            />
-            <div>
+        <div className="p-4 border rounded-lg hover:bg-gray-50 mb-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Checkbox 
+                id="podlahove-vykurovanie" 
+                checked={podlahovVykurovanie} 
+                onCheckedChange={setPodlahovVykurovanie}
+                className="data-[state=checked]:bg-pink-600"
+              />
               <Label htmlFor="podlahove-vykurovanie" className="cursor-pointer flex items-center gap-2">
                 <Flame className="w-4 h-4 text-orange-500" />
                 Elektrické podlahové vykurovanie s WiFi termostatom
               </Label>
-              <p className="text-xs text-gray-500 mt-1">Wi-Fi termostat do každej izby (8-9 ks)</p>
-              <p className="text-xs text-gray-400">Cena zahŕňa komplet: Vykurovacia fólia 1m a 0,5m, Vodič, LDPE 0.2 parozábranná fólia, izolácia pod vykurovacou fóliou XPS 500-700, Konektory, Uzemňovacia sieťka, Termostaty, Práca + Doprava</p>
             </div>
+            <span className="font-semibold text-green-600 whitespace-nowrap">+ 5 525 €</span>
           </div>
-          <span className="font-semibold text-green-600">+ 5 525 €</span>
+          <div className="ml-9 mt-2 p-3 bg-gray-50 rounded-lg text-xs text-gray-600 space-y-1">
+            <p className="font-medium text-gray-700">Wi-Fi termostat do každej izby (8-9 ks)</p>
+            <p>Cena zahŕňa komplet: Vykurovacia fólia 1m a 0,5m, Vodič, LDPE 0.2 parozábranná fólia, izolácia pod vykurovacou fóliou XPS 500-700, Konektory, Uzemňovacia sieťka, Termostaty, Práca + Doprava</p>
+          </div>
         </div>
 
         {/* Interiérové dvere */}
