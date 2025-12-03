@@ -181,6 +181,62 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
 
   const formatPrice = (price) => price.toLocaleString('sk-SK') + " €";
 
+  // Reset funkcia
+  const handleReset = () => {
+    setMontazHolodomu(defaultConfig.montazHolodomu);
+    setCenaHolodomu(defaultConfig.cenaHolodomu);
+    setVstupneDvere(defaultConfig.vstupneDvere);
+    setIzolaciaNavysenie(defaultConfig.izolaciaNavysenie);
+    setElektroinstalacia(defaultConfig.elektroinstalacia);
+    setVodaKanalizacia(defaultConfig.vodaKanalizacia);
+    setSanitaKomplet(defaultConfig.sanitaKomplet);
+    setBojler(defaultConfig.bojler);
+    setTepelneCerpadlo(defaultConfig.tepelneCerpadlo);
+    setRekuperacia(defaultConfig.rekuperacia);
+    setZaklady(defaultConfig.zaklady);
+    setPripojkaSiete(defaultConfig.pripojkaSiete);
+    setInziniering(defaultConfig.inziniering);
+    setProjektA0(defaultConfig.projektA0);
+    setDodatkovaIzolacia(defaultConfig.dodatkovaIzolacia);
+    setInterierHviezd(defaultConfig.interierHviezd);
+    setVonkajsiaKrytina(defaultConfig.vonkajsiaKrytina);
+    setPorchStilAntracit(defaultConfig.porchStilAntracit);
+    setDoplnokVybavenie(defaultConfig.doplnokVybavenie);
+    setInteriorPodlahy(defaultConfig.interiorPodlahy);
+    setElektrickePodlaha(defaultConfig.elektrickePodlaha);
+    setPredlzenieDomy(defaultConfig.predlzenieDomy);
+    setDekorativnaPergola(defaultConfig.dekorativnaPergola);
+    setInterierovoOkno(defaultConfig.interierovoOkno);
+    setRohoveOkno(defaultConfig.rohoveOkno);
+    setBocneOknoFixed(defaultConfig.bocneOknoFixed);
+    setBocneOknoPripojenie(defaultConfig.bocneOknoPripojenie);
+    setFrancuzskeAkroSokol(defaultConfig.francuzskeAkroSokol);
+    setDoprava(defaultConfig.doprava);
+    setDokumentaciaStavba(defaultConfig.dokumentaciaStavba);
+  };
+
+  // Aktívne výbery pre preview
+  const activeFeatures = useMemo(() => {
+    const features = [];
+    if (montazHolodomu === "ano") features.push({ label: "Montáž", icon: "🔧" });
+    if (vstupneDvere !== "ziadne") features.push({ label: vstupneDvere === "kovove" ? "Kovové dvere" : "Plastové dvere", icon: "🚪" });
+    if (izolaciaNavysenie === "zvysena") features.push({ label: "Zvýšená izolácia", icon: "🧱" });
+    if (izolaciaNavysenie === "premium") features.push({ label: "Premium izolácia A0", icon: "🏆" });
+    if (elektroinstalacia) features.push({ label: "Elektroinštalácia", icon: "⚡" });
+    if (vodaKanalizacia) features.push({ label: "Voda + kanalizácia", icon: "🚿" });
+    if (tepelneCerpadlo) features.push({ label: "Tepelné čerpadlo", icon: "♨️" });
+    if (rekuperacia) features.push({ label: "Rekuperácia", icon: "💨" });
+    if (zaklady !== "bez") features.push({ label: zaklady === "skrutky" ? "Pätky" : zaklady === "doska" ? "Základová doska" : "Pásové základy", icon: "🏗️" });
+    if (projektA0) features.push({ label: "Certifikát A0", icon: "📜" });
+    if (dekorativnaPergola) features.push({ label: "Pergola", icon: "🏡" });
+    if (predlzenieDomy !== "bez") features.push({ label: `Predĺženie ${predlzenieDomy.replace('l', '').replace('m', '')}m`, icon: "📏" });
+    if (porchStilAntracit) features.push({ label: "Antracit okná", icon: "🪟" });
+    if (francuzskeAkroSokol) features.push({ label: "Francúzske okno", icon: "🚪" });
+    return features;
+  }, [montazHolodomu, vstupneDvere, izolaciaNavysenie, elektroinstalacia, vodaKanalizacia, 
+      tepelneCerpadlo, rekuperacia, zaklady, projektA0, dekorativnaPergola, predlzenieDomy,
+      porchStilAntracit, francuzskeAkroSokol]);
+
   // Komponenta pre výber s obrázkami
   const ImageOption = ({ selected, onClick, label, price, image, disabled }) => (
     <div 
