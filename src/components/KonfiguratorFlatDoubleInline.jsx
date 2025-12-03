@@ -919,13 +919,22 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             </motion.div>
 
           {/* Vykurovanie a vetranie */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
+          <motion.div 
+            className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+            whileHover={{ scale: 1.005 }}
+          >
             <Label className="text-lg font-bold text-gray-800 mb-4 block flex items-center gap-2">
-              <ThermometerSun className="w-5 h-5 text-red-500" />
+              <motion.div animate={{ scale: (tepelneCerpadlo || rekuperacia) ? [1, 1.2, 1] : 1 }} transition={{ duration: 0.3 }}>
+                <ThermometerSun className="w-5 h-5 text-red-500" />
+              </motion.div>
               Vykurovanie a vetranie
             </Label>
             <div className="space-y-3">
-              <label className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${projektA0 && !tepelneCerpadlo ? 'border-amber-400 bg-amber-50' : 'border-green-300 bg-green-50/50 hover:bg-green-100'}`}>
+              <motion.label 
+                whileHover={{ x: 4, scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+                className={`relative flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all overflow-hidden ${tepelneCerpadlo ? 'border-green-500 bg-green-50 shadow-md ring-2 ring-green-200' : projektA0 && !tepelneCerpadlo ? 'border-amber-400 bg-amber-50' : 'border-green-300 bg-green-50/50 hover:bg-green-100'}`}
+              >
                 <div className="flex items-center gap-3">
                   <Checkbox 
                     id="cerpadlo" 
@@ -936,14 +945,30 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-gray-800">Tepelné čerpadlo / Klimatizácia</span>
-                      <Badge className="bg-green-600 text-xs">Odporúčané pre A0</Badge>
+                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-xs">
+                        <Sparkles className="w-3 h-3 mr-1" />
+                        Odporúčané pre A0
+                      </Badge>
                     </div>
                     <p className="text-sm text-gray-500">1x vonkajšia + 5x vnútorná jednotka</p>
                   </div>
                 </div>
-                <span className="font-bold text-green-600">+ 5 535 €</span>
-              </label>
-              <label className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${projektA0 && !rekuperacia ? 'border-amber-400 bg-amber-50' : 'border-green-300 bg-green-50/50 hover:bg-green-100'}`}>
+                <div className="flex items-center gap-2">
+                  <AnimatePresence>
+                    {tepelneCerpadlo && (
+                      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                  <span className="font-bold text-green-600">+ 5 535 €</span>
+                </div>
+              </motion.label>
+              <motion.label 
+                whileHover={{ x: 4, scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+                className={`relative flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all overflow-hidden ${rekuperacia ? 'border-green-500 bg-green-50 shadow-md ring-2 ring-green-200' : projektA0 && !rekuperacia ? 'border-amber-400 bg-amber-50' : 'border-green-300 bg-green-50/50 hover:bg-green-100'}`}
+              >
                 <div className="flex items-center gap-3">
                   <Checkbox 
                     id="rekuperacia" 
@@ -954,15 +979,27 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-gray-800">Rekuperácia</span>
-                      <Badge className="bg-green-600 text-xs">Odporúčané pre A0</Badge>
+                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-xs">
+                        <Sparkles className="w-3 h-3 mr-1" />
+                        Odporúčané pre A0
+                      </Badge>
                     </div>
                     <p className="text-sm text-gray-500">5ks lokálnych jednotiek</p>
                   </div>
                 </div>
-                <span className="font-bold text-green-600">+ 2 700 €</span>
-              </label>
+                <div className="flex items-center gap-2">
+                  <AnimatePresence>
+                    {rekuperacia && (
+                      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                  <span className="font-bold text-green-600">+ 2 700 €</span>
+                </div>
+              </motion.label>
             </div>
-          </div>
+          </motion.div>
 
           {/* Pripojenie na siete */}
           <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
