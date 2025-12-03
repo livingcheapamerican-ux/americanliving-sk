@@ -144,9 +144,9 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
 
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
-  // Komponenta pre checkbox položku
-  const OptionCheckbox = ({ id, label, priceBezDPH, checked, onChange, isA0, disabled, description }) => {
-    const priceSDPH = Math.round(priceBezDPH * DPH_RATE * 100) / 100;
+  // Komponenta pre checkbox položku - priceSDPH je cena S DPH (ako je v cenníku)
+  const OptionCheckbox = ({ id, label, priceSDPH, checked, onChange, isA0, disabled, description }) => {
+    const priceBezDPH = Math.round(priceSDPH / DPH_RATE * 100) / 100;
     return (
       <div className={`flex items-start justify-between p-3 rounded-lg border ${isA0 ? 'bg-green-50 border-l-4 border-l-green-500' : 'bg-white'} ${disabled ? 'opacity-50' : ''}`}>
         <div className="flex items-start gap-3 flex-1">
@@ -165,7 +165,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             {description && <p className="text-xs text-gray-500 mt-1">{description}</p>}
           </div>
         </div>
-        {priceBezDPH > 0 && (
+        {priceSDPH > 0 && (
           <div className="text-right ml-4">
             <div className="font-semibold text-green-600">+{formatPrice(priceBezDPH)} <span className="text-xs font-normal">(bez DPH)</span></div>
             <div className="text-sm text-gray-500">+{formatPrice(priceSDPH)} <span className="text-xs">(s DPH)</span></div>
