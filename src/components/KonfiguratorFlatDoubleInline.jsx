@@ -1346,7 +1346,10 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               Podlahy a podlahové vykurovanie
             </Label>
             <div className="space-y-4">
-              <div className="border-2 border-gray-200 rounded-xl p-4 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all">
+              <div 
+                onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); }}
+                className="border-2 border-gray-200 rounded-xl p-4 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all"
+              >
                 <label className="flex items-center justify-between cursor-pointer">
                   <div className="flex items-center gap-3">
                     <Checkbox 
@@ -1369,7 +1372,10 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 </div>
               </div>
 
-              <div className="border-2 border-gray-200 rounded-xl p-4 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all">
+              <div 
+                onClick={(e) => { if (!podlahovVykurovanie) triggerAnimation("podlahovVykurovanie", e.currentTarget); }}
+                className="border-2 border-gray-200 rounded-xl p-4 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all"
+              >
                 <label className="flex items-center justify-between cursor-pointer">
                   <div className="flex items-center gap-3">
                     <Checkbox 
