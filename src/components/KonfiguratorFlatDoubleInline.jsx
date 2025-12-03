@@ -343,22 +343,6 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <h3 className="text-lg font-semibold text-gray-800">Technológie a Inštalácie</h3>
         </div>
 
-        {/* Info box o inštaláciách */}
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6 text-sm">
-          <p className="text-gray-800 mb-2">Montáž vodovodného a kanalizačného systému zahŕňa všetky potrebné materiály a realizáciu týchto prác:</p>
-          <ul className="text-gray-700 space-y-1 list-disc list-inside mb-3">
-            <li>montáž vodovodných potrubí podľa základného projektu</li>
-            <li>montáž ventilov, záslepiek a pod.</li>
-            <li>montáž kanalizačných potrubí podľa základného projektu</li>
-            <li>kontrola tesnosti systému pod tlakom</li>
-          </ul>
-          <div className="space-y-1 pt-2 border-t border-gray-300">
-            <p className="text-red-600 font-medium">Protokoly na uvedenie budovy do prevádzky sa poskytujú za príplatok.</p>
-            <p className="text-red-600">Montáž sanitárnych a elektrických zariadení môže byť vykonaná za príplatok, pričom všetky potrebné komponenty dodáva klient.</p>
-            <p className="text-red-600 font-medium">Vonkajšie pripojenie sa vykonáva na základe samostatnej dohody.</p>
-          </div>
-        </div>
-
         <div className="space-y-3">
           {/* Elektroinštalácia */}
           <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
