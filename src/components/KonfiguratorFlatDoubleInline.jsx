@@ -305,7 +305,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             name="zaklady"
             value="bez"
             label="Bez základov"
-            priceBezDPH={0}
+            priceSDPH={0}
             selected={config.zaklady === "bez"}
             onChange={(v) => updateConfig('zaklady', v)}
           />
@@ -313,7 +313,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             name="zaklady"
             value="piloty"
             label="Pilóty alebo pätky"
-            priceBezDPH={6128}
+            priceSDPH={CENY.zaklady.piloty}
             selected={config.zaklady === "piloty"}
             onChange={(v) => updateConfig('zaklady', v)}
           />
@@ -321,7 +321,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             name="zaklady"
             value="pasove"
             label="Pásové základy"
-            priceBezDPH={17840}
+            priceSDPH={CENY.zaklady.pasove}
             selected={config.zaklady === "pasove"}
             onChange={(v) => updateConfig('zaklady', v)}
           />
@@ -329,7 +329,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             name="zaklady"
             value="doska"
             label="Základová doska"
-            priceBezDPH={22940}
+            priceSDPH={CENY.zaklady.doska}
             selected={config.zaklady === "doska"}
             onChange={(v) => updateConfig('zaklady', v)}
           />
@@ -341,21 +341,21 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             <OptionCheckbox
               id="pilotyVyrovnanie"
               label="Vyrovnanie terénu"
-              priceBezDPH={2016}
+              priceSDPH={CENY.pilotyVyrovnanie}
               checked={config.pilotyVyrovnanie}
               onChange={(checked) => updateConfig('pilotyVyrovnanie', checked)}
             />
             <OptionCheckbox
               id="pilotyMontaz"
               label="Montáž pilót"
-              priceBezDPH={1440}
+              priceSDPH={CENY.pilotyMontaz}
               checked={config.pilotyMontaz}
               onChange={(checked) => updateConfig('pilotyMontaz', checked)}
             />
             <OptionCheckbox
               id="pilotyDopravaZeriav"
               label="Doprava a žeriav"
-              priceBezDPH={720}
+              priceSDPH={CENY.pilotyDopravaZeriav}
               checked={config.pilotyDopravaZeriav}
               onChange={(checked) => updateConfig('pilotyDopravaZeriav', checked)}
             />
