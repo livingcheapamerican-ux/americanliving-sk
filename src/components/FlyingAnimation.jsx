@@ -121,7 +121,7 @@ export function useFlyingAnimation() {
     // Odstrániť animáciu po dokončení
     setTimeout(() => {
       setAnimations(prev => prev.filter(a => a.id !== id));
-    }, 1000);
+    }, 8000);
   };
 
   return { animations, triggerAnimation };
