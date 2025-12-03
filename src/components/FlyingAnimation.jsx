@@ -50,7 +50,7 @@ export default function FlyingAnimation({
       const timer = setTimeout(() => {
         setIsFlying(false);
         if (onComplete) onComplete();
-      }, 800);
+      }, 7000);
       
       return () => clearTimeout(timer);
     }
