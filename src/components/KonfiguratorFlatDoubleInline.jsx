@@ -432,31 +432,6 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         />
         <div className="p-6 space-y-6 bg-gradient-to-b from-blue-50/50 to-white">
 
-          {/* Montáž holodomu */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-            <Label className="text-lg font-bold text-gray-800 mb-3 block flex items-center gap-2">
-              <Wrench className="w-5 h-5 text-blue-600" />
-              Montáž holodomu
-            </Label>
-            <p className="text-sm text-red-600 mb-4">Montážne práce (dodatočne sa účtuje ubytovanie montážnej brigády 3–4 osoby)</p>
-            <RadioGroup value={montazHolodomu} onValueChange={setMontazHolodomu} className="space-y-3">
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
-                <div className="flex items-center gap-3">
-                  <RadioGroupItem value="nie" id="montaz-nie" />
-                  <span className="font-semibold text-gray-800">Nie (Iba dodanie sady)</span>
-                </div>
-                <span className="text-gray-400 font-medium">+ 0 €</span>
-              </label>
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
-                <div className="flex items-center gap-3">
-                  <RadioGroupItem value="ano" id="montaz-ano" />
-                  <span className="font-semibold text-gray-800">Áno (Montáž holodomu)</span>
-                </div>
-                <span className="font-bold text-green-600">+ 17 970 €</span>
-              </label>
-            </RadioGroup>
-          </div>
-
           {/* Elektroinštalácia */}
           <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
             <Label className="text-lg font-bold text-gray-800 mb-3 block flex items-center gap-2">
