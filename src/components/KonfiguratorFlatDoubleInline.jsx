@@ -482,7 +482,12 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
       {/* ═══════════════════════════════════════════════════════════════════════
           FÁZA 1: HRUBÁ STAVBA (Konštrukcia, Základy)
           ═══════════════════════════════════════════════════════════════════════ */}
-      <Card className="overflow-hidden border-0 shadow-xl ring-1 ring-amber-200/50">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+      <Card className="overflow-hidden border-0 shadow-xl ring-1 ring-amber-200/50 hover:ring-2 hover:ring-amber-300/70 transition-all duration-300">
         <SectionHeader 
           icon={Package} 
           title="Hrubá stavba" 
