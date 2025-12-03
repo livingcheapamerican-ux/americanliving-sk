@@ -1211,4 +1211,4 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         </div>
       </div>
     );
-  }
+}
