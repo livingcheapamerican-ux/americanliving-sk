@@ -449,31 +449,19 @@ export default function Domov() {
       )}
 
       {/* Proces realizácie */}
-      <section className="py-6 sm:py-16 bg-white">
+      <section className="py-4 sm:py-10 bg-white">
         <div className="container mx-auto px-2 sm:px-4">
-          <div className="text-center mb-4 sm:mb-10">
-              <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1.5">
-                Proces realizácie
-              </h2>
-            <p className="text-xs sm:text-base text-gray-700 max-w-3xl mx-auto">
-              Komplexné služby od A po Z
-            </p>
+          <div className="text-center mb-2 sm:mb-4">
+              <h2 className="text-base sm:text-2xl font-bold text-gray-900">Proces realizácie</h2>
             </div>
 
-            <div className="max-w-7xl mx-auto grid grid-cols-4 lg:grid-cols-8 gap-1 sm:gap-2">
+            <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-1 sm:gap-2">
             {proces.map((krok, index) => (
-              <div key={index}>
-                <Card className="p-1 sm:p-2 h-full hover:shadow-lg transition-shadow bg-white border border-gray-100">
-                  <div className="flex items-center gap-0.5 sm:gap-1 mb-0.5">
-                    <span className="text-[9px] sm:text-sm font-bold text-primary/40">{krok.cislo}</span>
-                    <div className="w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-br from-primary to-blue-600 rounded sm:rounded-md flex items-center justify-center shadow">
-                      <krok.icon className="w-2 h-2 sm:w-3 sm:h-3 text-white" />
-                    </div>
-                  </div>
-                  <h3 className="text-[8px] sm:text-xs font-bold text-gray-900 leading-tight">{krok.nazov}</h3>
-                  <p className="text-[7px] sm:text-[10px] text-gray-600 leading-tight hidden sm:block mt-0.5">{krok.popis}</p>
-                  </Card>
-                  </div>
+              <div key={index} className="flex items-center gap-1 bg-gray-50 border border-gray-200 rounded px-1.5 py-1 sm:px-3 sm:py-1.5">
+                <span className="text-[8px] sm:text-xs font-bold text-primary/50">{krok.cislo}</span>
+                <krok.icon className="w-2.5 h-2.5 sm:w-4 sm:h-4 text-primary" />
+                <span className="text-[8px] sm:text-xs font-medium text-gray-800">{krok.nazov}</span>
+              </div>
                   ))}
                   </div>
         </div>
