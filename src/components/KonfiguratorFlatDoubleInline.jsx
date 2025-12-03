@@ -201,7 +201,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
       {/* Základná cena info */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
         <p className="text-blue-900">
-          Základná cena <strong>{formatPrice(BASE_PRICE)} s DPH</strong> zahŕňa holodom/sadu na svojpomocnú montáž.
+          Základná cena <strong>{formatPrice(BASE_PRICE)}</strong> zahŕňa holodom/sadu na svojpomocnú montáž. <span className="text-sm">(Všetky ceny sú s DPH)</span>
         </p>
         <p className="text-sm text-blue-700 mt-2">
           Zastavaná plocha 142m² | Úžitková plocha 99m² | Terasa 40m²
@@ -695,7 +695,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               onChange={(e) => setInterieroveDvere(parseInt(e.target.value) || 0)}
               className="w-16 text-center"
             />
-            <span className="font-semibold text-green-600">× 180 €</span>
+            <span className="font-semibold text-green-600">× 180 € <span className="text-xs text-gray-500">s DPH</span></span>
           </div>
         </div>
 
@@ -762,7 +762,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               onChange={(e) => setStresneOkno(parseInt(e.target.value) || 0)}
               className="w-16 text-center"
             />
-            <span className="font-semibold text-green-600">× 760 €</span>
+            <span className="font-semibold text-green-600">× 760 € <span className="text-xs text-gray-500">s DPH</span></span>
           </div>
         </div>
 
@@ -784,7 +784,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               onChange={(e) => setBocneOknoFixne(parseInt(e.target.value) || 0)}
               className="w-16 text-center"
             />
-            <span className="font-semibold text-green-600">× 501 €</span>
+            <span className="font-semibold text-green-600">× 501 € <span className="text-xs text-gray-500">s DPH</span></span>
           </div>
         </div>
 
@@ -806,7 +806,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               onChange={(e) => setBocneOknoVyklopne90(parseInt(e.target.value) || 0)}
               className="w-16 text-center"
             />
-            <span className="font-semibold text-green-600">× 540 €</span>
+            <span className="font-semibold text-green-600">× 540 € <span className="text-xs text-gray-500">s DPH</span></span>
           </div>
         </div>
 
@@ -828,7 +828,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               onChange={(e) => setBocneOknoVyklopne55(parseInt(e.target.value) || 0)}
               className="w-16 text-center"
             />
-            <span className="font-semibold text-green-600">× 225 €</span>
+            <span className="font-semibold text-green-600">× 225 € <span className="text-xs text-gray-500">s DPH</span></span>
           </div>
         </div>
       </div>
