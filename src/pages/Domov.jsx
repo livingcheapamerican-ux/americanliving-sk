@@ -247,7 +247,6 @@ export default function Domov() {
                 </Button>
               </Link>
             </div>
-          </motion.div>
           </div>
 
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex gap-2">
@@ -502,7 +501,7 @@ export default function Domov() {
                 </Button>
               </Link>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>
