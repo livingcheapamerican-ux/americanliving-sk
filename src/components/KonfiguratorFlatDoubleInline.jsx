@@ -293,11 +293,26 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
   return (
     <div className="mt-8 relative">
       {/* Floating Price Bar - pravá strana */}
-      <div className="hidden xl:block fixed right-4 top-56 w-80 z-40">
+      <div 
+        className="hidden xl:block fixed w-80 z-40"
+        style={{ 
+          right: `${16 - panelPosition.x}px`, 
+          top: `${224 + panelPosition.y}px` 
+        }}
+      >
         <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
-          <div className="p-4 border-b border-slate-700/50">
-            <p className="text-green-400 text-xs font-semibold uppercase tracking-wider mb-1">Vaša konfigurácia</p>
-            <h3 className="text-lg font-bold text-white">Flat Double 142m²</h3>
+          <div 
+            className="p-4 border-b border-slate-700/50 cursor-move select-none hover:bg-slate-700/30 transition-colors"
+            onMouseDown={handleMouseDown}
+            ref={dragRef}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-green-400 text-xs font-semibold uppercase tracking-wider mb-1">Vaša konfigurácia</p>
+                <h3 className="text-lg font-bold text-white">Flat Double 142m²</h3>
+              </div>
+              <div className="text-slate-500 text-xs">⋮⋮</div>
+            </div>
           </div>
 
           {/* Súhrn položiek */}
