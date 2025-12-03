@@ -11,10 +11,9 @@ import {
   Send, AlertTriangle, CheckCircle, Calculator, RotateCcw,
   Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
   Zap, ShowerHead, Flame, Cable, Paintbrush, Home, Truck, Sun, DoorOpen,
-  Scaling, Maximize, Square, FileCheck, Box
+  Scaling, Maximize, Square, FileCheck
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import House3DPreview from "./House3DPreview";
 
 export default function KonfiguratorFlatDoubleInline({ dom }) {
   // Základná cena
