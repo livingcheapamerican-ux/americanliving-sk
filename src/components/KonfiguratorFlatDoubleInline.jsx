@@ -53,7 +53,8 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
   const [predlzenieDlzky, setPredlzenieDlzky] = useState(0);
   const [stresneOkno, setStresneOkno] = useState(0);
   const [bocneOknoFixne, setBocneOknoFixne] = useState(0);
-  const [bocneOknoVyklopne, setBocneOknoVyklopne] = useState(0);
+  const [bocneOknoVyklopne90, setBocneOknoVyklopne90] = useState(0);
+  const [bocneOknoVyklopne55, setBocneOknoVyklopne55] = useState(0);
 
   // Cenník (z pôvodného konfigurátora)
   const CENY = {
