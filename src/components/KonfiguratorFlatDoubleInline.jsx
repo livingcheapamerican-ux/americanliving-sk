@@ -199,121 +199,10 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     </div>
   );
 
-  // Zoznam vybraných položiek pre sumár
-  const vybranePolozky = useMemo(() => {
-    const polozky = [];
-
-    // Základná cena sady
-    polozky.push({ nazov: "Základná cena sady (svojpomocná montáž)", cena: BASE_PRICE });
-
-    if (montazHolodomu === "ano") polozky.push({ nazov: "Montáž hrubej stavby", cena: CENY.montaz.ano });
-    if (vstupneDvere === "kovove") polozky.push({ nazov: "Kovové dvere s 2 zámkami", cena: CENY.dvere.kovove });
-    if (vstupneDvere === "plastove") polozky.push({ nazov: "Plastovo-kovové dvere", cena: CENY.dvere.plastove });
-    if (izolaciaNavysenie === "zvysena") polozky.push({ nazov: "Zvýšená izolácia (200/250mm)", cena: CENY.izolacia.zvysena });
-    if (izolaciaNavysenie === "premium") polozky.push({ nazov: "Premium izolácia A0 (250/300mm)", cena: CENY.izolacia.premium });
-    if (elektroinstalacia) polozky.push({ nazov: "Elektroinštalácia", cena: CENY.elektroinstalacia });
-    if (vodaKanalizacia) polozky.push({ nazov: "Rozvody vody a kanalizácie", cena: CENY.vodaKanalizacia });
-    if (sanitaKomplet) polozky.push({ nazov: "Sanita komplet", cena: CENY.sanitaKomplet });
-    if (bojler) polozky.push({ nazov: "Elektrický bojler", cena: CENY.bojler });
-    if (tepelneCerpadlo) polozky.push({ nazov: "Tepelné čerpadlo / Klimatizácia", cena: CENY.tepelneCerpadlo });
-    if (rekuperacia) polozky.push({ nazov: "Rekuperácia", cena: CENY.rekuperacia });
-    if (zaklady === "skrutky") polozky.push({ nazov: "Zemné skrutky / Pätky", cena: CENY.zaklady.skrutky });
-    if (zaklady === "doska") polozky.push({ nazov: "Základová doska", cena: CENY.zaklady.doska });
-    if (zaklady === "pasove") polozky.push({ nazov: "Pásové základy", cena: CENY.zaklady.pasove });
-    if (pripojkaSiete) polozky.push({ nazov: "Pripojenie na siete", cena: CENY.pripojkaSiete });
-    if (inziniering) polozky.push({ nazov: "Inžiniering stavebného povolenia", cena: CENY.inziniering });
-    if (projektA0) polozky.push({ nazov: "Projektant + Energetická certifikácia A0", cena: CENY.projektA0 });
-    if (interierFinis === "drevo") polozky.push({ nazov: "Interiér - obloženie drevom", cena: CENY.interierFinis.drevo });
-    if (interierFinis === "sadrokarton") polozky.push({ nazov: "Interiér - sádrokartón", cena: CENY.interierFinis.sadrokarton });
-    if (vonkajsiaFasada === "suchana") polozky.push({ nazov: "Škúchaná fasáda", cena: CENY.vonkajsiaFasada.suchana });
-    if (povrchokaOkien) polozky.push({ nazov: "Laminácia okien - antracit", cena: CENY.povrchokaOkien });
-    if (vnutornePodlahy) polozky.push({ nazov: "Vnútorné podlahy - laminát", cena: CENY.vnutornePodlahy });
-    if (podlahovVykurovanie) polozky.push({ nazov: "Elektrické podlahové vykurovanie", cena: CENY.podlahovVykurovanie });
-    if (pergola) polozky.push({ nazov: "Dekoratívna pergola", cena: CENY.pergola });
-    if (interieroveDvere > 0) polozky.push({ nazov: `Interiérové dvere (${interieroveDvere}ks)`, cena: interieroveDvere * CENY.interieroveDvere });
-    if (tonovaneSkla) polozky.push({ nazov: "Tónované sklá (Solar)", cena: CENY.tonovaneSkla });
-    if (revizna) polozky.push({ nazov: "Revízna dokumentácia", cena: CENY.revizna });
-    if (stresneOkno > 0) polozky.push({ nazov: `Strešné okno (${stresneOkno}ks)`, cena: stresneOkno * CENY.stresneOkno });
-    if (bocneOknoFixne > 0) polozky.push({ nazov: `Bočné okno fixné (${bocneOknoFixne}ks)`, cena: bocneOknoFixne * CENY.bocneOknoFixne });
-    if (bocneOknoVyklopne90 > 0) polozky.push({ nazov: `Bočné okno výklopné 90x205 (${bocneOknoVyklopne90}ks)`, cena: bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90 });
-    if (bocneOknoVyklopne55 > 0) polozky.push({ nazov: `Bočné okno výklopné 55x90 (${bocneOknoVyklopne55}ks)`, cena: bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55 });
-
-    return polozky;
-  }, [montazHolodomu, vstupneDvere, izolaciaNavysenie, elektroinstalacia, 
-      vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia,
-      zaklady, pripojkaSiete, inziniering, projektA0, interierFinis,
-      vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, podlahovVykurovanie,
-      pergola, interieroveDvere, tonovaneSkla, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55]);
-
   return (
-    <div className="mt-8">
-      <div className="flex gap-6">
-        {/* Floating Sidebar - ľavá strana */}
-        <div className="hidden xl:block w-80 flex-shrink-0">
-          <div className="sticky top-24">
-            <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-blue-500/30">
-              <div className="relative">
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
-
-                <div className="p-5">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                      <Calculator className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-blue-400 text-xs font-semibold uppercase tracking-wider">Konfigurátor</p>
-                      <h3 className="text-lg font-bold text-white">Flat Double 142m²</h3>
-                    </div>
-                  </div>
-
-                  {/* Celková cena */}
-                  <div className="p-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-xl mb-4">
-                    <p className="text-green-300 text-xs font-medium mb-1">Celková cena s DPH</p>
-                    <p className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
-                      {formatPrice(totalPrice)}
-                    </p>
-                  </div>
-
-                  {/* Sumár položiek */}
-                  <div className="space-y-1 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
-                    <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2">Vybrané položky:</p>
-                    {vybranePolozky.map((polozka, index) => (
-                      <div key={index} className="flex justify-between items-start py-1.5 border-b border-slate-700/50 last:border-0">
-                        <span className="text-slate-300 text-xs leading-tight pr-2">{polozka.nazov}</span>
-                        <span className="text-green-400 text-xs font-semibold whitespace-nowrap">{polozka.cena.toLocaleString('sk-SK')} €</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Tlačidlá */}
-                  <div className="mt-4 pt-4 border-t border-slate-700 space-y-2">
-                    <Link to={`${createPageUrl("Kontakt")}?dom=Flat%20Double%20142m²&cena=${totalPrice}`} className="block">
-                      <Button size="sm" className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold">
-                        <Send className="mr-2 w-4 h-4" />
-                        Mám záujem
-                      </Button>
-                    </Link>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={handleReset}
-                      className="w-full border-slate-600 text-slate-300 hover:bg-red-500/20 hover:border-red-500/50 hover:text-red-300"
-                    >
-                      <RotateCcw className="w-4 h-4 mr-2" />
-                      Resetovať
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-
-        {/* Hlavný obsah konfigurátora */}
-        <div className="flex-1 space-y-6">
-          {/* Hlavička konfigurátora */}
-          <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-blue-500/30">
+    <div className="mt-8 space-y-6">
+      {/* Hlavička konfigurátora */}
+      <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-blue-500/30">
         <div className="relative">
           {/* Dekoratívny gradient na vrchu */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
@@ -1229,8 +1118,6 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           </div>
         </div>
       </Card>
-          </div>
-        </div>
-      </div>
-    );
+    </div>
+  );
 }
