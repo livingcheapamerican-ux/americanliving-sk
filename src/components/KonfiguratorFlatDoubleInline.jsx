@@ -145,51 +145,61 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
 
   const formatPrice = (price) => price.toLocaleString('sk-SK') + " €";
 
+  // Detekcia dosiahnutých úrovní
+  const dosiahnuteUrovne = useMemo(() => {
+    const hrubaStavba = montazHolodomu === "ano" || izolaciaNavysenie !== "standard" || zaklady !== "bez";
+    const holodom = hrubaStavba && (elektroinstalacia || vodaKanalizacia || tepelneCerpadlo || rekuperacia);
+    const domNaKluc = holodom && (interierFinis !== "ziadne" || vnutornePodlahy || vonkajsiaFasada === "suchana");
+    
+    return { hrubaStavba, holodom, domNaKluc };
+  }, [montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
+      tepelneCerpadlo, rekuperacia, interierFinis, vnutornePodlahy, vonkajsiaFasada]);
+
   // Generovanie súhrnu vybraných položiek
   const selectedItems = useMemo(() => {
     const items = [];
     
     // Základná cena
-    items.push({ name: "Základná cena sady (svojpomocná montáž)", price: BASE_PRICE });
+    items.push({ name: "Základná cena sady (svojpomocná montáž)", price: BASE_PRICE, section: "base" });
     
     // Hrubá stavba
-    if (montazHolodomu === "ano") items.push({ name: "Montáž hrubej stavby", price: CENY.montaz.ano });
-    if (izolaciaNavysenie === "zvysena") items.push({ name: "Zvýšená izolácia (200/250mm)", price: CENY.izolacia.zvysena });
-    if (izolaciaNavysenie === "premium") items.push({ name: "Premium izolácia A0 (250/300mm)", price: CENY.izolacia.premium });
-    if (zaklady === "skrutky") items.push({ name: "Zemné skrutky / Pätky", price: CENY.zaklady.skrutky });
-    if (zaklady === "doska") items.push({ name: "Základová doska", price: CENY.zaklady.doska });
-    if (zaklady === "pasove") items.push({ name: "Pásové základy", price: CENY.zaklady.pasove });
+    if (montazHolodomu === "ano") items.push({ name: "Montáž hrubej stavby", price: CENY.montaz.ano, section: "hruba" });
+    if (izolaciaNavysenie === "zvysena") items.push({ name: "Zvýšená izolácia (200/250mm)", price: CENY.izolacia.zvysena, section: "hruba" });
+    if (izolaciaNavysenie === "premium") items.push({ name: "Premium izolácia A0 (250/300mm)", price: CENY.izolacia.premium, section: "hruba" });
+    if (zaklady === "skrutky") items.push({ name: "Zemné skrutky / Pätky", price: CENY.zaklady.skrutky, section: "hruba" });
+    if (zaklady === "doska") items.push({ name: "Základová doska", price: CENY.zaklady.doska, section: "hruba" });
+    if (zaklady === "pasove") items.push({ name: "Pásové základy", price: CENY.zaklady.pasove, section: "hruba" });
     
     // Holodom
-    if (elektroinstalacia) items.push({ name: "Elektrická inštalácia", price: CENY.elektroinstalacia });
-    if (vodaKanalizacia) items.push({ name: "Rozvody vody a kanalizácie", price: CENY.vodaKanalizacia });
-    if (sanitaKomplet) items.push({ name: "Sanita komplet", price: CENY.sanitaKomplet });
-    if (bojler) items.push({ name: "Elektrický bojler", price: CENY.bojler });
-    if (tepelneCerpadlo) items.push({ name: "Tepelné čerpadlo / Klimatizácia", price: CENY.tepelneCerpadlo });
-    if (rekuperacia) items.push({ name: "Rekuperácia", price: CENY.rekuperacia });
-    if (pripojkaSiete) items.push({ name: "Pripojenie na siete", price: CENY.pripojkaSiete });
-    if (vstupneDvere === "kovove") items.push({ name: "Kovové vstupné dvere", price: CENY.dvere.kovove });
-    if (vstupneDvere === "plastove") items.push({ name: "Plastovo-kovové dvere", price: CENY.dvere.plastove });
-    if (stresneOkno > 0) items.push({ name: `Strešné okno (${stresneOkno}×)`, price: stresneOkno * CENY.stresneOkno });
-    if (bocneOknoFixne > 0) items.push({ name: `Bočné okno fixné (${bocneOknoFixne}×)`, price: bocneOknoFixne * CENY.bocneOknoFixne });
-    if (bocneOknoVyklopne90 > 0) items.push({ name: `Bočné okno 90×205 (${bocneOknoVyklopne90}×)`, price: bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90 });
-    if (bocneOknoVyklopne55 > 0) items.push({ name: `Bočné okno 55×90 (${bocneOknoVyklopne55}×)`, price: bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55 });
-    if (povrchokaOkien) items.push({ name: "Laminácia okien - antracit", price: CENY.povrchokaOkien });
-    if (tonovaneSkla) items.push({ name: "Tónované sklá (Solar)", price: CENY.tonovaneSkla });
+    if (elektroinstalacia) items.push({ name: "Elektrická inštalácia", price: CENY.elektroinstalacia, section: "holodom" });
+    if (vodaKanalizacia) items.push({ name: "Rozvody vody a kanalizácie", price: CENY.vodaKanalizacia, section: "holodom" });
+    if (sanitaKomplet) items.push({ name: "Sanita komplet", price: CENY.sanitaKomplet, section: "holodom" });
+    if (bojler) items.push({ name: "Elektrický bojler", price: CENY.bojler, section: "holodom" });
+    if (tepelneCerpadlo) items.push({ name: "Tepelné čerpadlo / Klimatizácia", price: CENY.tepelneCerpadlo, section: "holodom" });
+    if (rekuperacia) items.push({ name: "Rekuperácia", price: CENY.rekuperacia, section: "holodom" });
+    if (pripojkaSiete) items.push({ name: "Pripojenie na siete", price: CENY.pripojkaSiete, section: "holodom" });
+    if (vstupneDvere === "kovove") items.push({ name: "Kovové vstupné dvere", price: CENY.dvere.kovove, section: "holodom" });
+    if (vstupneDvere === "plastove") items.push({ name: "Plastovo-kovové dvere", price: CENY.dvere.plastove, section: "holodom" });
+    if (stresneOkno > 0) items.push({ name: `Strešné okno (${stresneOkno}×)`, price: stresneOkno * CENY.stresneOkno, section: "holodom" });
+    if (bocneOknoFixne > 0) items.push({ name: `Bočné okno fixné (${bocneOknoFixne}×)`, price: bocneOknoFixne * CENY.bocneOknoFixne, section: "holodom" });
+    if (bocneOknoVyklopne90 > 0) items.push({ name: `Bočné okno 90×205 (${bocneOknoVyklopne90}×)`, price: bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90, section: "holodom" });
+    if (bocneOknoVyklopne55 > 0) items.push({ name: `Bočné okno 55×90 (${bocneOknoVyklopne55}×)`, price: bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55, section: "holodom" });
+    if (povrchokaOkien) items.push({ name: "Laminácia okien - antracit", price: CENY.povrchokaOkien, section: "holodom" });
+    if (tonovaneSkla) items.push({ name: "Tónované sklá (Solar)", price: CENY.tonovaneSkla, section: "holodom" });
     
     // Dom na kľúč
-    if (vonkajsiaFasada === "suchana") items.push({ name: "Škúchaná fasáda", price: CENY.vonkajsiaFasada.suchana });
-    if (interierFinis === "drevo") items.push({ name: "Interiér - obloženie drevom", price: CENY.interierFinis.drevo });
-    if (interierFinis === "sadrokarton") items.push({ name: "Interiér - sádrokartón", price: CENY.interierFinis.sadrokarton });
-    if (vnutornePodlahy) items.push({ name: "Vnútorné podlahy - laminát", price: CENY.vnutornePodlahy });
-    if (podlahovVykurovanie) items.push({ name: "Podlahové vykurovanie", price: CENY.podlahovVykurovanie });
-    if (interieroveDvere > 0) items.push({ name: `Interiérové dvere (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere });
-    if (pergola) items.push({ name: "Dekoratívna pergola", price: CENY.pergola });
+    if (vonkajsiaFasada === "suchana") items.push({ name: "Škúchaná fasáda", price: CENY.vonkajsiaFasada.suchana, section: "kluc" });
+    if (interierFinis === "drevo") items.push({ name: "Interiér - obloženie drevom", price: CENY.interierFinis.drevo, section: "kluc" });
+    if (interierFinis === "sadrokarton") items.push({ name: "Interiér - sádrokartón", price: CENY.interierFinis.sadrokarton, section: "kluc" });
+    if (vnutornePodlahy) items.push({ name: "Vnútorné podlahy - laminát", price: CENY.vnutornePodlahy, section: "kluc" });
+    if (podlahovVykurovanie) items.push({ name: "Podlahové vykurovanie", price: CENY.podlahovVykurovanie, section: "kluc" });
+    if (interieroveDvere > 0) items.push({ name: `Interiérové dvere (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere, section: "kluc" });
+    if (pergola) items.push({ name: "Dekoratívna pergola", price: CENY.pergola, section: "kluc" });
     
     // Dokumentácia
-    if (inziniering) items.push({ name: "Inžiniering stavebného povolenia", price: CENY.inziniering });
-    if (projektA0) items.push({ name: "Projektant a certifikácia A0", price: CENY.projektA0 });
-    if (revizna) items.push({ name: "Revízna dokumentácia", price: CENY.revizna });
+    if (inziniering) items.push({ name: "Inžiniering stavebného povolenia", price: CENY.inziniering, section: "docs" });
+    if (projektA0) items.push({ name: "Projektant a certifikácia A0", price: CENY.projektA0, section: "docs" });
+    if (revizna) items.push({ name: "Revízna dokumentácia", price: CENY.revizna, section: "docs" });
     
     return items;
   }, [montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
