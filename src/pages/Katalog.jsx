@@ -177,75 +177,74 @@ export default function Katalog() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="bg-red-900 py-20">
+      <section className="bg-red-900 py-6 sm:py-12">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="max-w-3xl">
 
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-4 text-white">
               Katalóg domov
             </h1>
-            <p className="text-xl text-white font-medium">
-              Vyberte si zo širokej ponuky modulárnych a mobilných domov od overených výrobcov.
-              Každý dom je pripravený na kolaudáciu.
+            <p className="text-sm sm:text-lg text-white font-medium">
+              Modulárne a mobilné domy od overených výrobcov.
             </p>
           </motion.div>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
         {/* Tabs pre kategórie */}
-        <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-8">
-          <TabsList className={`grid w-full max-w-xl mx-auto h-12 ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
-            <TabsTrigger value="vsetky" className="text-base">Všetky ({verejneDomy.length})</TabsTrigger>
-            <TabsTrigger value="rodinne_domy" className="text-base">Rodinné domy ({rodinneDomy.length})</TabsTrigger>
-            <TabsTrigger value="mobilne_domy" className="text-base">Mobilné domy ({mobilneDomy.length})</TabsTrigger>
+        <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-4 sm:mb-6">
+          <TabsList className={`grid w-full max-w-xl mx-auto h-8 sm:h-10 ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
+            <TabsTrigger value="vsetky" className="text-xs sm:text-sm">Všetky ({verejneDomy.length})</TabsTrigger>
+            <TabsTrigger value="rodinne_domy" className="text-xs sm:text-sm">Rodinné ({rodinneDomy.length})</TabsTrigger>
+            <TabsTrigger value="mobilne_domy" className="text-xs sm:text-sm">Mobilné ({mobilneDomy.length})</TabsTrigger>
             {canManage && (
-              <TabsTrigger value="skryte" className="text-base">Skryté domy ({skryteDomy.length})</TabsTrigger>
+              <TabsTrigger value="skryte" className="text-xs sm:text-sm">Skryté ({skryteDomy.length})</TabsTrigger>
             )}
           </TabsList>
         </Tabs>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
           {/* Filters Sidebar */}
           <motion.aside
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="lg:w-80 flex-shrink-0">
+            className="lg:w-72 flex-shrink-0">
 
-            <Card className="p-6 sticky top-24 shadow-lg">
-              <div className="flex items-center gap-2 mb-6">
-                <Filter className="w-5 h-5 text-primary" />
-                <h2 className="text-xl font-bold text-primary">Filtre</h2>
+            <Card className="p-3 sm:p-4 sticky top-16 shadow-lg">
+              <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                <Filter className="w-4 h-4 text-primary" />
+                <h2 className="text-base sm:text-lg font-bold text-primary">Filtre</h2>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-3 sm:space-y-4">
                 {/* Vyhľadávanie */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Hľadať podľa názvu
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Hľadať
                   </label>
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
                     <Input
-                      placeholder="Napr. Lyon, London..."
+                      placeholder="Názov..."
                       value={hladanie}
                       onChange={(e) => setHladanie(e.target.value)}
-                      className="pl-10" />
+                      className="pl-7 h-8 text-sm" />
 
                   </div>
                 </div>
 
                 {/* Zoradenie */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    <ArrowUpDown className="w-4 h-4 inline mr-1" />
-                    Zoradiť podľa
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    <ArrowUpDown className="w-3 h-3 inline mr-1" />
+                    Zoradiť
                   </label>
                   <Select value={zoradenie} onValueChange={setZoradenie}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-8 text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -264,12 +263,10 @@ export default function Katalog() {
 
                 {/* Výrobca */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Výrobca
-                  </label>
-                  <div className="space-y-2">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Výrobca</label>
+                  <div className="space-y-1">
                     {vyrobcovia.map((v) => (
-                      <div key={v} className="flex items-center gap-2">
+                      <div key={v} className="flex items-center gap-1.5">
                         <Checkbox
                           id={`vyrobca-${v}`}
                           checked={vyrobcaFilter.includes(v)}
@@ -280,9 +277,9 @@ export default function Katalog() {
                               setVyrobcaFilter(vyrobcaFilter.filter((x) => x !== v));
                             }
                           }}
-                          className="data-[state=checked]:bg-black data-[state=checked]:border-black"
+                          className="data-[state=checked]:bg-black data-[state=checked]:border-black h-3.5 w-3.5"
                         />
-                        <label htmlFor={`vyrobca-${v}`} className="text-sm cursor-pointer">{v}</label>
+                        <label htmlFor={`vyrobca-${v}`} className="text-xs cursor-pointer">{v}</label>
                       </div>
                     ))}
                   </div>
@@ -290,16 +287,14 @@ export default function Katalog() {
 
                 {/* Typ domu */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Typ domu
-                  </label>
-                  <div className="space-y-2">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Typ</label>
+                  <div className="space-y-1">
                     {[
-                      { value: "modularny", label: "Modulárny dom" },
-                      { value: "montovany", label: "Montovaný dom" },
-                      { value: "mobilny", label: "Mobilný dom" }
+                      { value: "modularny", label: "Modulárny" },
+                      { value: "montovany", label: "Montovaný" },
+                      { value: "mobilny", label: "Mobilný" }
                     ].map((typ) => (
-                      <div key={typ.value} className="flex items-center gap-2">
+                      <div key={typ.value} className="flex items-center gap-1.5">
                         <Checkbox
                           id={`typ-${typ.value}`}
                           checked={typFilter.includes(typ.value)}
@@ -310,9 +305,9 @@ export default function Katalog() {
                               setTypFilter(typFilter.filter((x) => x !== typ.value));
                             }
                           }}
-                          className="data-[state=checked]:bg-black data-[state=checked]:border-black"
+                          className="data-[state=checked]:bg-black data-[state=checked]:border-black h-3.5 w-3.5"
                         />
-                        <label htmlFor={`typ-${typ.value}`} className="text-sm cursor-pointer">{typ.label}</label>
+                        <label htmlFor={`typ-${typ.value}`} className="text-xs cursor-pointer">{typ.label}</label>
                       </div>
                     ))}
                   </div>
@@ -320,7 +315,7 @@ export default function Katalog() {
 
                 {/* Cenové rozpätie */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
                     Cena: {cenoveRozpatie[0].toLocaleString('sk-SK')} - {cenoveRozpatie[1].toLocaleString('sk-SK')} €
                   </label>
                   <Slider
@@ -329,18 +324,15 @@ export default function Katalog() {
                     step={5000}
                     value={cenoveRozpatie}
                     onValueChange={setCenoveRozpatie}
-                    className="mt-4" />
-
+                    className="mt-2" />
                 </div>
 
                 {/* Počet izieb */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Počet izieb
-                  </label>
-                  <div className="flex flex-wrap gap-2">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Izby</label>
+                  <div className="flex flex-wrap gap-1.5">
                     {[...new Set(domy.filter(d => d.pocet_izieb).map(d => d.pocet_izieb))].sort((a, b) => a - b).map((izby) => (
-                      <div key={izby} className="flex items-center gap-1">
+                      <div key={izby} className="flex items-center gap-0.5">
                         <Checkbox
                           id={`izby-${izby}`}
                           checked={pocetIziebFilter.includes(izby)}
@@ -351,9 +343,9 @@ export default function Katalog() {
                               setPocetIziebFilter(pocetIziebFilter.filter((x) => x !== izby));
                             }
                           }}
-                          className="data-[state=checked]:bg-black data-[state=checked]:border-black"
+                          className="data-[state=checked]:bg-black data-[state=checked]:border-black h-3.5 w-3.5"
                         />
-                        <label htmlFor={`izby-${izby}`} className="text-sm cursor-pointer">{izby}</label>
+                        <label htmlFor={`izby-${izby}`} className="text-xs cursor-pointer">{izby}</label>
                       </div>
                     ))}
                   </div>
@@ -361,8 +353,8 @@ export default function Katalog() {
 
                 {/* Zastavaná plocha */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Zastavaná plocha: {plocharozsah[0]} - {plocharozsah[1]} m²
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Zast. plocha: {plocharozsah[0]}-{plocharozsah[1]} m²
                   </label>
                   <Slider
                     min={0}
@@ -370,13 +362,13 @@ export default function Katalog() {
                     step={5}
                     value={plocharozsah}
                     onValueChange={setPlocharozsah}
-                    className="mt-4" />
+                    className="mt-2" />
                 </div>
 
                 {/* Úžitková plocha */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Úžitková plocha: {uzitkovaRozsah[0]} - {uzitkovaRozsah[1]} m²
+                <div className="hidden sm:block">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Úžitk. plocha: {uzitkovaRozsah[0]}-{uzitkovaRozsah[1]} m²
                   </label>
                   <Slider
                     min={0}
@@ -384,13 +376,14 @@ export default function Katalog() {
                     step={5}
                     value={uzitkovaRozsah}
                     onValueChange={setUzitkovaRozsah}
-                    className="mt-4" />
+                    className="mt-2" />
                 </div>
 
                 {/* Reset */}
                 <Button
                   variant="outline"
-                  className="w-full"
+                  size="sm"
+                  className="w-full text-xs h-7"
                   onClick={() => {
                     setKategoriaFilter("vsetky");
                     setVyrobcaFilter([]);
@@ -402,15 +395,14 @@ export default function Katalog() {
                     setPocetIziebFilter([]);
                     setZoradenie("poradie");
                   }}>
-
-                  Resetovať filtre
+                  Reset
                 </Button>
               </div>
 
               {/* Stats */}
-              <div className="mt-8 pt-6 border-t">
-                <p className="text-sm text-gray-600">
-                  Zobrazuje sa <span className="font-bold text-primary">{zoradeneDomy.length}</span> z {verejneDomy.length} domov
+              <div className="mt-3 pt-3 border-t">
+                <p className="text-xs text-gray-600">
+                  <span className="font-bold text-primary">{zoradeneDomy.length}</span> z {verejneDomy.length} domov
                 </p>
               </div>
             </Card>
