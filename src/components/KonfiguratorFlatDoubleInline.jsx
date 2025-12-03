@@ -137,13 +137,36 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         </p>
       </div>
 
-      {/* Sekcia 1: Konštrukcia a Obálka */}
+      {/* Sekcia 1: Konštrukcia */}
       <div className="border rounded-lg p-5 mb-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
             <Wrench className="w-4 h-4 text-red-600" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-800">Konštrukcia a Obálka</h3>
+          <h3 className="text-lg font-semibold text-gray-800">Konštrukcia</h3>
+        </div>
+
+        {/* Komplet pre montáž - info box */}
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6 text-sm">
+          <p className="font-semibold text-gray-800 mb-2">Komplekt pre montáž:</p>
+          <ul className="text-gray-700 space-y-1 list-disc list-inside">
+            <li>drevená konštrukcia domu, hobľovaný hranol sušený v komore, rôzneho prierezu</li>
+            <li>vonkajšie steny, falcovaný plech 0,45 mm (výroba Slovensko, Kórea, Poľsko) a smreková/ihličnatá doska hrúbky 20 mm. Po dohode je možná zmena typu fasádneho obkladu</li>
+            <li>strecha, falcovaný plech 0,45 mm (výroba Slovensko, Kórea, Poľsko)</li>
+            <li>okná s dvojkomorovým izolačným sklom (tri sklá), päťkomorový PVC profil 70 mm (biely)</li>
+            <li>dvere s dvojkomorovým izolačným sklom (tri sklá), päťkomorový PVC profil 70 mm (biely)</li>
+            <li>hydroizolačná membrána Strotex 1300 (alebo ekvivalent)</li>
+            <li>tepelná izolácia (150(250) mm – steny a strecha; 200(250) mm – podlaha), nehorľavé, tepelnoizolačné, hydrofobizované, zvuk pohlcujúce bazaltové dosky alebo rolky IZOVAT s hustotou minimálne 30 kg/m3 (alebo ekvivalent)</li>
+            <li>parozábranová fólia Strotex AL90 (alebo ekvivalent)</li>
+            <li>hrubá podlaha z OSB dosiek 22 mm</li>
+            <li>materiály vnútorných priečok a povrchových úprav nie sú zahrnuté v domekomplete</li>
+          </ul>
+          <div className="mt-3 pt-3 border-t border-gray-300 space-y-1">
+            <p className="text-gray-700">Schodisko nie je súčasťou základnej ponuky.</p>
+            <p className="text-gray-700">Farba na vonkajšiu fasádu je poskytovaná objednávateľom.</p>
+            <p className="text-gray-700">Cena maľovania fasády nie je súčasťou základnej ponuky.</p>
+            <p className="text-red-600 font-medium">Maľovanie sa účtuje dodatočne na základe skutočne natretej plochy, v sume 4,5 € za m².</p>
+          </div>
         </div>
 
         {/* Montáž holodomu */}
