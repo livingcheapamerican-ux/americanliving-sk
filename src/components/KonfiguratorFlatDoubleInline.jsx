@@ -10,8 +10,10 @@ import { Label } from "@/components/ui/label";
 import { 
   Send, AlertTriangle, CheckCircle, Calculator, RotateCcw,
   Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
-  Zap, ShowerHead, Flame, Cable, Paintbrush
+  Zap, ShowerHead, Flame, Cable, Paintbrush, Home, Truck, Sun, DoorOpen,
+  Scaling, Maximize, Square, FileCheck
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export default function KonfiguratorFlatDoubleInline({ dom }) {
   // Základná cena
