@@ -391,7 +391,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             name="izolacia"
             value="standard"
             label="Štandardná izolácia (zahrnuté v cene)"
-            priceBezDPH={0}
+            priceSDPH={0}
             selected={config.izolacia === "standard"}
             onChange={(v) => updateConfig('izolacia', v)}
           />
@@ -399,7 +399,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             name="izolacia"
             value="steny250"
             label="Izolácia stien 250mm (spĺňa A0)"
-            priceBezDPH={4878}
+            priceSDPH={CENY.izolacia.steny250}
             selected={config.izolacia === "steny250"}
             onChange={(v) => updateConfig('izolacia', v)}
             isA0={true}
@@ -408,7 +408,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             name="izolacia"
             value="steny300"
             label="Izolácia stien 300mm (spĺňa A0+)"
-            priceBezDPH={6097}
+            priceSDPH={CENY.izolacia.steny300}
             selected={config.izolacia === "steny300"}
             onChange={(v) => updateConfig('izolacia', v)}
             isA0={true}
