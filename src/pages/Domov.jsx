@@ -210,25 +210,21 @@ export default function Domov() {
         )}
         
         {heroImages.map((img, index) => (
-          <motion.div
+          <div
             key={index}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: index === currentSlide ? 1 : 0 }}
-            transition={{ duration: 1 }}
-            className="absolute inset-0"
-            style={{ zIndex: index === currentSlide ? 1 : 0 }}
+            className="absolute inset-0 transition-opacity duration-700"
+            style={{ 
+              zIndex: index === currentSlide ? 1 : 0,
+              opacity: index === currentSlide ? 1 : 0 
+            }}
           >
-            <img src={img} alt={`Modulárny dom ${index + 1}`} className="w-full h-full object-cover" />
+            <img src={img} alt={`Modulárny dom ${index + 1}`} className="w-full h-full object-cover" loading="lazy" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent" />
-          </motion.div>
+          </div>
         ))}
 
         <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="max-w-2xl text-white"
-          >
+          <div className="max-w-2xl text-white">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 leading-tight drop-shadow-lg">
               Cenovo dostupný rodinný dom
             </h1>
@@ -270,15 +266,10 @@ export default function Domov() {
       {/* Komplexné služby - S OBRÁZKAMI */}
       <section className="py-10 sm:py-16 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
         <div className="container mx-auto px-3 sm:px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-6 sm:mb-10"
-          >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-white">
-              Všetko na jednom mieste
-            </h2>
+          <div className="text-center mb-6 sm:mb-10">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-white">
+                Všetko na jednom mieste
+              </h2>
             <p className="text-sm sm:text-base text-gray-200 max-w-3xl mx-auto mb-4">
               Poskytujeme <strong className="text-yellow-300">komplexné služby</strong> - 
               od realitnej kancelárie cez finančné poradenstvo až po stavebnú realizáciu.
@@ -297,18 +288,12 @@ export default function Domov() {
                 <span>Finančné služby</span>
               </div>
             </div>
-          </motion.div>
+            </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-6xl mx-auto mb-6 sm:mb-10">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-6xl mx-auto mb-6 sm:mb-10">
             {sluzby.map((sluzba, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.03 }}
-              >
-                <Card className="group overflow-hidden h-full hover:shadow-2xl transition-all hover:-translate-y-1 cursor-pointer bg-white">
+              <div key={index}>
+                <Card className="group overflow-hidden h-full hover:shadow-2xl transition-shadow cursor-pointer bg-white">
                   <div className="relative h-28 sm:h-36 overflow-hidden">
                     <img 
                       src={sluzba.image} 
@@ -328,17 +313,12 @@ export default function Domov() {
                     </h3>
                     <p className="text-[10px] sm:text-xs text-gray-600 font-medium hidden sm:block">{sluzba.popis}</p>
                   </div>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+                  </Card>
+                  </div>
+                  ))}
+                  </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
+                  <div className="text-center">
             <p className="text-xl text-gray-200 mb-6">
               <strong className="text-white">Vy nemusíte vybavovať nič.</strong> Postaráme sa o celý proces od A po Z.
             </p>
@@ -346,56 +326,40 @@ export default function Domov() {
               <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white font-semibold px-8 shadow-xl">
                 Začať projekt
                 <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
-          </motion.div>
+                </Button>
+                </Link>
+                </div>
         </div>
       </section>
 
       {/* Prečo American Living */}
       <section className="py-10 sm:py-16 bg-gradient-to-br from-blue-50 to-white">
         <div className="container mx-auto px-3 sm:px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-6 sm:mb-10"
-          >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
-              Prečo American Living?
-            </h2>
+          <div className="text-center mb-6 sm:mb-10">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
+                Prečo American Living?
+              </h2>
             <p className="text-sm sm:text-base text-gray-700 max-w-3xl mx-auto">
               Značka kvality od overených dodávateľov s rokmi skúseností
             </p>
-          </motion.div>
+            </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-10">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-10">
             {vyhody.map((vyhoda, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <Card className="p-3 sm:p-5 text-center h-full hover:shadow-xl transition-all hover:-translate-y-1 bg-white border border-gray-100">
+              <div key={index}>
+                <Card className="p-3 sm:p-5 text-center h-full hover:shadow-xl transition-shadow bg-white border border-gray-100">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center mx-auto mb-2 sm:mb-3 shadow-lg">
                     <vyhoda.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
                   <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-1">{vyhoda.title}</h3>
                   <p className="text-[10px] sm:text-xs text-gray-700 leading-relaxed hidden sm:block">{vyhoda.description}</p>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+                  </Card>
+                  </div>
+                  ))}
+                  </div>
 
-          {/* Varovanie */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-5xl mx-auto"
-          >
+                  {/* Varovanie */}
+                  <div className="max-w-5xl mx-auto">
             <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-400 p-8 shadow-lg">
               <div className="flex gap-4">
                 <Shield className="w-12 h-12 text-yellow-600 flex-shrink-0" />
@@ -415,9 +379,9 @@ export default function Domov() {
                     ✓ Naše domy spĺňajú všetky potrebné normy a sú pripravené na kolaudáciu ako plnohodnotné rodinné domy.
                   </p>
                 </div>
-              </div>
-            </Card>
-          </motion.div>
+                </div>
+                </Card>
+                </div>
         </div>
       </section>
 
@@ -425,31 +389,20 @@ export default function Domov() {
       {domy.length > 0 && (
         <section className="py-10 sm:py-16 bg-gradient-to-br from-gray-100 to-gray-50">
           <div className="container mx-auto px-3 sm:px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-6 sm:mb-10"
-            >
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                Naša ponuka
-              </h2>
+            <div className="text-center mb-6 sm:mb-10">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                  Naša ponuka
+                </h2>
               <p className="text-sm sm:text-base text-gray-700">
                 Drevodom, ktorý nemusí vyzerať ako drevodom
               </p>
-            </motion.div>
+              </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 mb-6 sm:mb-10">
-              {domy.map((dom, index) => (
-                <motion.div
-                  key={dom.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
-                    <Card className="group overflow-hidden hover:shadow-2xl transition-all hover:-translate-y-1 bg-white border border-gray-200">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 mb-6 sm:mb-10">
+                {domy.map((dom, index) => (
+                  <div key={dom.id}>
+                    <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
+                      <Card className="group overflow-hidden hover:shadow-2xl transition-shadow bg-white border border-gray-200">
                       <div className="relative h-32 sm:h-48 overflow-hidden">
                         <img
                           src={dom.hlavny_obrazok}
@@ -478,10 +431,10 @@ export default function Domov() {
                         </div>
                       </div>
                     </Card>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
+                    </Link>
+                    </div>
+                    ))}
+                    </div>
 
             <div className="text-center">
               <Link to={createPageUrl("Katalog")}>
@@ -498,15 +451,10 @@ export default function Domov() {
       {/* Proces realizácie */}
       <section className="py-10 sm:py-16 bg-white">
         <div className="container mx-auto px-3 sm:px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-6 sm:mb-10"
-          >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-              Proces realizácie
-            </h2>
+          <div className="text-center mb-6 sm:mb-10">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                Proces realizácie
+              </h2>
             <p className="text-sm sm:text-base text-gray-700 max-w-3xl mx-auto">
               Komplexné služby od A po Z
             </p>
