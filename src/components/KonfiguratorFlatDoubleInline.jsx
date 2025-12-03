@@ -831,7 +831,11 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               </div>
             </div>
             <div className="space-y-3">
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
+              <motion.label 
+                whileHover={{ x: 4 }}
+                whileTap={{ scale: 0.98 }}
+                className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${vodaKanalizacia ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
+              >
                 <div className="flex items-center gap-3">
                   <Checkbox 
                     id="voda" 
@@ -844,9 +848,22 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     <p className="text-sm text-gray-500">Príprava pre sanitárne zariadenia</p>
                   </div>
                 </div>
-                <span className="font-bold text-green-600">+ 2 380 €</span>
-              </label>
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
+                <div className="flex items-center gap-2">
+                  <AnimatePresence>
+                    {vodaKanalizacia && (
+                      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                  <span className="font-bold text-green-600">+ 2 380 €</span>
+                </div>
+              </motion.label>
+              <motion.label 
+                whileHover={{ x: 4 }}
+                whileTap={{ scale: 0.98 }}
+                className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${sanitaKomplet ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
+              >
                 <div className="flex items-center gap-3">
                   <Checkbox 
                     id="sanita" 
@@ -859,9 +876,22 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     <p className="text-sm text-gray-500">Sprchový kút, umývadlo, WC misa</p>
                   </div>
                 </div>
-                <span className="font-bold text-green-600">+ 1 169 €</span>
-              </label>
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
+                <div className="flex items-center gap-2">
+                  <AnimatePresence>
+                    {sanitaKomplet && (
+                      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                  <span className="font-bold text-green-600">+ 1 169 €</span>
+                </div>
+              </motion.label>
+              <motion.label 
+                whileHover={{ x: 4 }}
+                whileTap={{ scale: 0.98 }}
+                className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${bojler ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
+              >
                 <div className="flex items-center gap-3">
                   <Checkbox 
                     id="bojler" 
@@ -874,10 +904,19 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     <p className="text-sm text-gray-500">Ohrev teplej úžitkovej vody</p>
                   </div>
                 </div>
-                <span className="font-bold text-green-600">+ 246 €</span>
-              </label>
+                <div className="flex items-center gap-2">
+                  <AnimatePresence>
+                    {bojler && (
+                      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                  <span className="font-bold text-green-600">+ 246 €</span>
+                </div>
+              </motion.label>
             </div>
-          </div>
+            </motion.div>
 
           {/* Vykurovanie a vetranie */}
           <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
