@@ -805,6 +805,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             <motion.label 
               whileHover={{ x: 4 }}
               whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); }}
               className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${elektroinstalacia ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
             >
               <div className="flex items-center gap-3">
