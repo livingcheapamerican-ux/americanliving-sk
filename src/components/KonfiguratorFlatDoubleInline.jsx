@@ -1079,32 +1079,42 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
       {/* ═══════════════════════════════════════════════════════════════════════
           FINÁLNY CENOVÝ SÚHRN
           ═══════════════════════════════════════════════════════════════════════ */}
-      <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-        <div className="p-6 md:p-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <div>
-              <h3 className="text-2xl font-bold text-white mb-2">Flat double, 142m²</h3>
-              <p className="text-slate-400">Vaša vlastná konfigurácia</p>
-              {projektA0 && !a0Odporucania && (
-                <Badge className="bg-green-500 text-white mt-3 text-sm py-1 px-3">✓ Spĺňa normu A0</Badge>
-              )}
-            </div>
-            <div className="text-right">
-              <p className="text-slate-400 mb-1">Celková odhadovaná cena</p>
-              <p className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
-                {formatPrice(totalPrice)}
-              </p>
-              <p className="text-slate-500 text-sm mt-1">s DPH</p>
-            </div>
+      <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
+        <div className="relative">
+          {/* Dekoratívny gradient */}
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-10 right-10 w-40 h-40 bg-green-400 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-10 left-10 w-32 h-32 bg-emerald-400 rounded-full blur-3xl"></div>
           </div>
           
-          <div className="mt-8 pt-6 border-t border-slate-700 flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to={`${createPageUrl("Kontakt")}?dom=Flat%20Double%20142m²&cena=${totalPrice}`}>
-              <Button size="lg" className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold text-lg px-10 py-6 w-full sm:w-auto shadow-xl shadow-green-500/25">
-                <Send className="mr-2 w-5 h-5" />
-                Mám záujem o túto konfiguráciu
-              </Button>
-            </Link>
+          <div className="relative p-8 md:p-10">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+              <div>
+                <p className="text-green-400 text-sm font-semibold uppercase tracking-wider mb-2">Vaša konfigurácia</p>
+                <h3 className="text-3xl font-bold text-white mb-2">Flat Double 142m²</h3>
+                <p className="text-slate-400">Kompletná cenová kalkulácia</p>
+                {projektA0 && !a0Odporucania && (
+                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white mt-4 text-sm py-1.5 px-4 shadow-lg shadow-green-500/30">✓ Spĺňa normu A0</Badge>
+                )}
+              </div>
+              <div className="text-right p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl border border-green-500/20">
+                <p className="text-slate-400 mb-2 text-sm">Celková odhadovaná cena</p>
+                <p className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
+                  {formatPrice(totalPrice)}
+                </p>
+                <p className="text-slate-500 text-sm mt-2">vrátane DPH</p>
+              </div>
+            </div>
+            
+            <div className="mt-10 pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to={`${createPageUrl("Kontakt")}?dom=Flat%20Double%20142m²&cena=${totalPrice}`}>
+                <Button size="lg" className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-lg px-12 py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40">
+                  <Send className="mr-3 w-6 h-6" />
+                  Mám záujem o túto konfiguráciu
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </Card>
