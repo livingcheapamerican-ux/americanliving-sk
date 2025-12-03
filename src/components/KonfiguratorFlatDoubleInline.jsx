@@ -113,11 +113,6 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     setInziniering(false);
     setProjektA0(false);
     setInterierFinis("ziadne");
-    setPodlaha("ziadne");
-    setObkladKupelna(false);
-    setKuchynskaLinka(false);
-    setVnutorneDvere(false);
-    setSchodisko(false);
   };
 
   return (
