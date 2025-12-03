@@ -22,7 +22,7 @@ const FLYING_ITEMS = {
   fasadaStandard: "🏠", // domček antracit
   fasadaSuchana: "🏢", // budova s bielou fasádou
   drevo: "🪵", // drevené dosky
-  sadrokarton: "📋", // sadrokartón
+  sadrokarton: "⬜", // biely štvorec - sadrokartón
   podlaha: "🪵", // lamely
   podlahovVykurovanie: "🔌", // rohože
   interieroveDvere: "🚪", // dvere
