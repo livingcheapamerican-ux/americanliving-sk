@@ -701,7 +701,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               />
               <div>
                 <Label htmlFor="vnutorne-podlahy" className="cursor-pointer">
-                  Vnútorné podlahy - laminát
+                  Vnútorné podlahy - laminát - cena je za základný typ
                 </Label>
                 <p className="text-sm text-gray-500">Môže sa líšiť podľa výberu zákazníka</p>
               </div>
