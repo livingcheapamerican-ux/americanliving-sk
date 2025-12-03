@@ -1077,14 +1077,20 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                   </div>
                   <span className="text-gray-400">+ 0 €</span>
                 </label>
-                <label className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
+                <label 
+                  onClick={(e) => { if (vstupneDvere !== "kovove") triggerAnimation("dvereKovove", e.currentTarget); }}
+                  className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
+                >
                   <div className="flex items-center gap-3">
                     <RadioGroupItem value="kovove" id="dvere-kovove" />
                     <span className="text-gray-800">Kovové dvere s 2 zámkami</span>
                   </div>
                   <span className="font-bold text-green-600">+ 720 €</span>
                 </label>
-                <label className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
+                <label 
+                  onClick={(e) => { if (vstupneDvere !== "plastove") triggerAnimation("dverePlastove", e.currentTarget); }}
+                  className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
+                >
                   <div className="flex items-center gap-3">
                     <RadioGroupItem value="plastove" id="dvere-plastove" />
                     <span className="text-gray-800">Plastovo-kovové dvere</span>
