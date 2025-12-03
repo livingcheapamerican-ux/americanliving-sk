@@ -619,6 +619,17 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         {/* Interiér finiš */}
         <div className="mb-6">
           <Label className="text-base font-semibold mb-3 block">Interiér finiš - úpravy stien, montáž priečky</Label>
+
+          {/* Poznámka k interiéru */}
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4 text-sm text-gray-700">
+            <p className="mb-2">Montáž priečok podľa základného projektu, montáž izolačného materiálu a obklad všetkých stien drevom.</p>
+            <p className="mb-2">Do ceny sú zahrnuté montážne práce a všetok potrebný materiál na ich vykonanie: drevený hranol, izolačný materiál s hrúbkou 100 mm, parozábranová membrána, tatranský profil s hrúbkou 8–12 mm.</p>
+            <p className="mb-2">Maľovanie stien a maliarske materiály nie sú zahrnuté v cene.</p>
+            <p className="mb-2">Farbu zabezpečuje klient.</p>
+            <p className="text-red-600 font-medium mb-2">Maľovanie sa účtuje zvlášť na základe skutočne namaľovanej plochy, sadzbou 4,5 € za meter štvorcový.</p>
+            <p>Akákoľvek zmena typu povrchovej úpravy (napríklad montáž sadrokartónu, kladenie obkladov a pod.) sa rieši samostatne.</p>
+          </div>
+
           <RadioGroup value={interierFinis} onValueChange={setInterierFinis} className="space-y-2">
             <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
               <div className="flex items-center gap-3">
