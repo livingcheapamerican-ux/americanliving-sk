@@ -1104,7 +1104,10 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             <div className="space-y-3 pt-4 border-t">
               <p className="text-sm font-medium text-gray-600 mb-2">Doplnkové okná</p>
               <div className="grid gap-3">
-                <div className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg">
+                <div 
+                  className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg"
+                  onClick={(e) => { if (stresneOkno === 0) triggerAnimation("okno", e.currentTarget); }}
+                >
                   <div className="flex items-center gap-3">
                     <Square className="w-4 h-4 text-blue-500" />
                     <span className="text-gray-800">Strešné okno</span>
@@ -1114,13 +1117,20 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                       type="number" 
                       min="0" 
                       value={stresneOkno} 
-                      onChange={(e) => setStresneOkno(parseInt(e.target.value) || 0)}
+                      onChange={(e) => { 
+                        const newVal = parseInt(e.target.value) || 0;
+                        if (newVal > stresneOkno) triggerAnimation("okno", e.target);
+                        setStresneOkno(newVal);
+                      }}
                       className="w-16 text-center h-9"
                     />
                     <span className="font-bold text-green-600 whitespace-nowrap">× 760 €</span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg">
+                <div 
+                  className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg"
+                  onClick={(e) => { if (bocneOknoFixne === 0) triggerAnimation("okno", e.currentTarget); }}
+                >
                   <div className="flex items-center gap-3">
                     <Square className="w-4 h-4 text-blue-500" />
                     <span className="text-gray-800">Bočné okno (Fixné) 90x205cm</span>
@@ -1130,13 +1140,20 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                       type="number" 
                       min="0" 
                       value={bocneOknoFixne} 
-                      onChange={(e) => setBocneOknoFixne(parseInt(e.target.value) || 0)}
+                      onChange={(e) => {
+                        const newVal = parseInt(e.target.value) || 0;
+                        if (newVal > bocneOknoFixne) triggerAnimation("okno", e.target);
+                        setBocneOknoFixne(newVal);
+                      }}
                       className="w-16 text-center h-9"
                     />
                     <span className="font-bold text-green-600 whitespace-nowrap">× 501 €</span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg">
+                <div 
+                  className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg"
+                  onClick={(e) => { if (bocneOknoVyklopne90 === 0) triggerAnimation("okno", e.currentTarget); }}
+                >
                   <div className="flex items-center gap-3">
                     <Square className="w-4 h-4 text-blue-500" />
                     <span className="text-gray-800">Bočné okno (Výklopno-sklopné) 90x205cm</span>
@@ -1146,13 +1163,20 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                       type="number" 
                       min="0" 
                       value={bocneOknoVyklopne90} 
-                      onChange={(e) => setBocneOknoVyklopne90(parseInt(e.target.value) || 0)}
+                      onChange={(e) => {
+                        const newVal = parseInt(e.target.value) || 0;
+                        if (newVal > bocneOknoVyklopne90) triggerAnimation("okno", e.target);
+                        setBocneOknoVyklopne90(newVal);
+                      }}
                       className="w-16 text-center h-9"
                     />
                     <span className="font-bold text-green-600 whitespace-nowrap">× 540 €</span>
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg">
+                <div 
+                  className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg"
+                  onClick={(e) => { if (bocneOknoVyklopne55 === 0) triggerAnimation("okno", e.currentTarget); }}
+                >
                   <div className="flex items-center gap-3">
                     <Square className="w-4 h-4 text-blue-500" />
                     <span className="text-gray-800">Bočné okno (Výklopno-sklopné) 55x90cm</span>
@@ -1162,7 +1186,11 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                       type="number" 
                       min="0" 
                       value={bocneOknoVyklopne55} 
-                      onChange={(e) => setBocneOknoVyklopne55(parseInt(e.target.value) || 0)}
+                      onChange={(e) => {
+                        const newVal = parseInt(e.target.value) || 0;
+                        if (newVal > bocneOknoVyklopne55) triggerAnimation("okno", e.target);
+                        setBocneOknoVyklopne55(newVal);
+                      }}
                       className="w-16 text-center h-9"
                     />
                     <span className="font-bold text-green-600 whitespace-nowrap">× 225 €</span>
