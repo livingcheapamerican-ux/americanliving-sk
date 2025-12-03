@@ -83,9 +83,10 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     doprava: 0,
     revizna: 1000,
     predlzenieDlzky: 0, // individuálne nacenenie
-    stresneOkno: 0, // individuálne nacenenie
-    bocneOknoFixne: 0, // individuálne nacenenie
-    bocneOknoVyklopne: 0 // individuálne nacenenie
+    stresneOkno: 760,
+    bocneOknoFixne: 501,
+    bocneOknoVyklopne90: 540,
+    bocneOknoVyklopne55: 225
   };
 
   // Výpočet celkovej ceny
