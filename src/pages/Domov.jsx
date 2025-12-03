@@ -197,7 +197,7 @@ export default function Domov() {
       )}
 
       {/* Hero Section */}
-      <section className="relative h-[75vh] min-h-[450px] overflow-hidden">
+      <section className="relative h-[55vh] sm:h-[75vh] min-h-[320px] sm:min-h-[450px] overflow-hidden">
         {/* Admin toggle button */}
         {isAdmin && (
           <button
@@ -225,24 +225,24 @@ export default function Domov() {
 
         <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
           <div className="max-w-2xl text-white">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 leading-tight drop-shadow-lg">
+            <h1 className="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-4 leading-tight drop-shadow-lg">
               Cenovo dostupný rodinný dom
             </h1>
-            <p className="text-lg sm:text-xl mb-3 sm:mb-4 font-bold text-yellow-300 drop-shadow-lg">
+            <p className="text-sm sm:text-xl mb-2 sm:mb-4 font-bold text-yellow-300 drop-shadow-lg">
               Za cenu priamo od výrobcu! Bez navýšenia!
             </p>
-            <p className="text-sm sm:text-base md:text-lg mb-4 sm:mb-6 text-gray-100 leading-relaxed drop-shadow-md">
+            <p className="text-xs sm:text-base md:text-lg mb-3 sm:mb-6 text-gray-100 leading-relaxed drop-shadow-md">
               Všetko, čo potrebujete, máte presne tu! Naši kolegovia sa postarajú o kompletné vybavenie.
             </p>
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-3">
               <Link to={createPageUrl("Katalog")}>
-                <Button size="default" className="bg-secondary hover:bg-secondary/90 text-white font-semibold text-sm sm:text-base px-5 sm:px-6 py-2 sm:py-3 w-full sm:w-auto shadow-xl">
+                <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-white font-semibold text-xs sm:text-base px-3 sm:px-6 py-1.5 sm:py-3 w-full sm:w-auto shadow-xl">
                   Zobraziť ponuku
-                  <ArrowRight className="ml-2 w-4 h-4" />
+                  <ArrowRight className="ml-1.5 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </Link>
               <Link to={createPageUrl("Kontakt")}>
-                <Button size="default" variant="outline" className="bg-white/10 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-primary font-semibold text-sm sm:text-base px-5 sm:px-6 py-2 sm:py-3 w-full sm:w-auto shadow-xl">
+                <Button size="sm" variant="outline" className="bg-white/10 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-primary font-semibold text-xs sm:text-base px-3 sm:px-6 py-1.5 sm:py-3 w-full sm:w-auto shadow-xl">
                   Konzultácia
                 </Button>
               </Link>
@@ -264,51 +264,51 @@ export default function Domov() {
       </section>
 
       {/* Komplexné služby - S OBRÁZKAMI */}
-      <section className="py-10 sm:py-16 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-        <div className="container mx-auto px-3 sm:px-4">
-          <div className="text-center mb-6 sm:mb-10">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-white">
+      <section className="py-6 sm:py-16 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+        <div className="container mx-auto px-2 sm:px-4">
+          <div className="text-center mb-4 sm:mb-10">
+              <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 text-white">
                 Všetko na jednom mieste
               </h2>
-            <p className="text-sm sm:text-base text-gray-200 max-w-3xl mx-auto mb-4">
+            <p className="text-xs sm:text-base text-gray-200 max-w-3xl mx-auto mb-3">
               Poskytujeme <strong className="text-yellow-300">komplexné služby</strong> - 
               od realitnej kancelárie cez finančné poradenstvo až po stavebnú realizáciu.
             </p>
-            <div className="flex flex-wrap justify-center gap-2 text-xs sm:text-sm font-semibold">
-              <div className="flex items-center gap-1.5 bg-primary px-3 py-1.5 rounded-full text-white shadow-lg">
-                <Building className="w-3.5 h-3.5" />
+            <div className="flex flex-wrap justify-center gap-1 sm:gap-2 text-[10px] sm:text-sm font-semibold">
+              <div className="flex items-center gap-1 bg-primary px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-white shadow-lg">
+                <Building className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
                 <span>Stavebná firma</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-secondary px-3 py-1.5 rounded-full text-white shadow-lg">
-                <Building2 className="w-3.5 h-3.5" />
+              <div className="flex items-center gap-1 bg-secondary px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-white shadow-lg">
+                <Building2 className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
                 <span>Realitná kancelária</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-accent px-3 py-1.5 rounded-full text-white shadow-lg">
-                <Landmark className="w-3.5 h-3.5" />
+              <div className="flex items-center gap-1 bg-accent px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-white shadow-lg">
+                <Landmark className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
                 <span>Finančné služby</span>
               </div>
             </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-6xl mx-auto mb-6 sm:mb-10">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 max-w-6xl mx-auto mb-4 sm:mb-10">
             {sluzby.map((sluzba, index) => (
               <div key={index}>
                 <Card className="group overflow-hidden h-full hover:shadow-2xl transition-shadow cursor-pointer bg-white">
-                  <div className="relative h-28 sm:h-36 overflow-hidden">
+                  <div className="relative h-20 sm:h-36 overflow-hidden">
                     <img 
                       src={sluzba.image} 
                       alt={sluzba.nazov}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                    <div className="absolute bottom-2 left-2">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-lg flex items-center justify-center shadow-lg">
-                        <sluzba.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                    <div className="absolute bottom-1.5 left-1.5 sm:bottom-2 sm:left-2">
+                      <div className="w-6 h-6 sm:w-10 sm:h-10 bg-white rounded-md sm:rounded-lg flex items-center justify-center shadow-lg">
+                        <sluzba.icon className="w-3 h-3 sm:w-5 sm:h-5 text-primary" />
                       </div>
                     </div>
                   </div>
-                  <div className="p-2 sm:p-3">
-                    <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-0.5 group-hover:text-primary transition-colors line-clamp-2">
+                  <div className="p-1.5 sm:p-3">
+                    <h3 className="text-[10px] sm:text-sm font-bold text-gray-900 mb-0.5 group-hover:text-primary transition-colors line-clamp-2">
                       {sluzba.nazov}
                     </h3>
                     <p className="text-[10px] sm:text-xs text-gray-600 font-medium hidden sm:block">{sluzba.popis}</p>
@@ -319,13 +319,13 @@ export default function Domov() {
                   </div>
 
                   <div className="text-center">
-            <p className="text-xl text-gray-200 mb-6">
+            <p className="text-sm sm:text-xl text-gray-200 mb-4 sm:mb-6">
               <strong className="text-white">Vy nemusíte vybavovať nič.</strong> Postaráme sa o celý proces od A po Z.
             </p>
             <Link to={createPageUrl("Kontakt")}>
-              <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white font-semibold px-8 shadow-xl">
+              <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-white font-semibold px-4 sm:px-8 text-xs sm:text-base shadow-xl">
                 Začať projekt
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="ml-1.5 sm:ml-2 w-3.5 h-3.5 sm:w-5 sm:h-5" />
                 </Button>
                 </Link>
                 </div>
@@ -333,25 +333,25 @@ export default function Domov() {
       </section>
 
       {/* Prečo American Living */}
-      <section className="py-10 sm:py-16 bg-gradient-to-br from-blue-50 to-white">
-        <div className="container mx-auto px-3 sm:px-4">
-          <div className="text-center mb-6 sm:mb-10">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
+      <section className="py-6 sm:py-16 bg-gradient-to-br from-blue-50 to-white">
+        <div className="container mx-auto px-2 sm:px-4">
+          <div className="text-center mb-4 sm:mb-10">
+              <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1.5 sm:mb-3">
                 Prečo American Living?
               </h2>
-            <p className="text-sm sm:text-base text-gray-700 max-w-3xl mx-auto">
+            <p className="text-xs sm:text-base text-gray-700 max-w-3xl mx-auto">
               Značka kvality od overených dodávateľov s rokmi skúseností
             </p>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-10">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-10">
             {vyhody.map((vyhoda, index) => (
               <div key={index}>
-                <Card className="p-3 sm:p-5 text-center h-full hover:shadow-xl transition-shadow bg-white border border-gray-100">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center mx-auto mb-2 sm:mb-3 shadow-lg">
-                    <vyhoda.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                <Card className="p-2 sm:p-5 text-center h-full hover:shadow-xl transition-shadow bg-white border border-gray-100">
+                  <div className="w-7 h-7 sm:w-12 sm:h-12 bg-gradient-to-br from-primary to-blue-600 rounded-md sm:rounded-lg flex items-center justify-center mx-auto mb-1.5 sm:mb-3 shadow-lg">
+                    <vyhoda.icon className="w-3.5 h-3.5 sm:w-6 sm:h-6 text-white" />
                   </div>
-                  <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-1">{vyhoda.title}</h3>
+                  <h3 className="text-[10px] sm:text-sm font-bold text-gray-900 mb-0.5 sm:mb-1">{vyhoda.title}</h3>
                   <p className="text-[10px] sm:text-xs text-gray-700 leading-relaxed hidden sm:block">{vyhoda.description}</p>
                   </Card>
                   </div>
@@ -387,47 +387,47 @@ export default function Domov() {
 
       {/* Naša ponuka */}
       {domy.length > 0 && (
-        <section className="py-10 sm:py-16 bg-gradient-to-br from-gray-100 to-gray-50">
-          <div className="container mx-auto px-3 sm:px-4">
-            <div className="text-center mb-6 sm:mb-10">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+        <section className="py-6 sm:py-16 bg-gradient-to-br from-gray-100 to-gray-50">
+          <div className="container mx-auto px-2 sm:px-4">
+            <div className="text-center mb-4 sm:mb-10">
+                <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1.5">
                   Naša ponuka
                 </h2>
-              <p className="text-sm sm:text-base text-gray-700">
+              <p className="text-xs sm:text-base text-gray-700">
                 Drevodom, ktorý nemusí vyzerať ako drevodom
               </p>
               </div>
 
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 mb-6 sm:mb-10">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-5 mb-4 sm:mb-10">
                 {domy.map((dom, index) => (
                   <div key={dom.id}>
                     <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
                       <Card className="group overflow-hidden hover:shadow-2xl transition-shadow bg-white border border-gray-200">
-                      <div className="relative h-32 sm:h-48 overflow-hidden">
+                      <div className="relative h-24 sm:h-48 overflow-hidden">
                         <img
                           src={dom.hlavny_obrazok}
                           alt={dom.nazov}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         {dom.celorocny && (
-                          <div className="absolute top-2 left-2 bg-accent text-white px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold shadow-lg">
+                          <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 bg-accent text-white px-1.5 py-0.5 sm:px-2 rounded-full text-[8px] sm:text-xs font-semibold shadow-lg">
                             ✔ CELOROČNÝ
                           </div>
                         )}
                       </div>
-                      <div className="p-2 sm:p-4">
-                        <div className="text-[10px] sm:text-xs text-gray-600 mb-0.5 font-semibold">{dom.vyrobca}</div>
-                        <h3 className="text-sm sm:text-lg font-bold text-gray-900 mb-1 sm:mb-2 group-hover:text-secondary transition-colors line-clamp-1">
+                      <div className="p-1.5 sm:p-4">
+                        <div className="text-[8px] sm:text-xs text-gray-600 mb-0.5 font-semibold">{dom.vyrobca}</div>
+                        <h3 className="text-xs sm:text-lg font-bold text-gray-900 mb-0.5 sm:mb-2 group-hover:text-secondary transition-colors line-clamp-1">
                           {dom.nazov}
                         </h3>
-                        <div className="flex items-center justify-between pt-2 border-t border-gray-200">
+                        <div className="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-gray-200">
                           <div>
-                            <p className="text-[10px] sm:text-xs text-gray-600 font-semibold">Od</p>
-                            <p className="text-sm sm:text-xl font-bold text-primary">
+                            <p className="text-[8px] sm:text-xs text-gray-600 font-semibold">Od</p>
+                            <p className="text-xs sm:text-xl font-bold text-primary">
                               {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                             </p>
                           </div>
-                          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-primary group-hover:text-secondary transition-colors" />
+                          <ChevronRight className="w-3 h-3 sm:w-5 sm:h-5 text-primary group-hover:text-secondary transition-colors" />
                         </div>
                       </div>
                     </Card>
@@ -438,9 +438,9 @@ export default function Domov() {
 
             <div className="text-center">
               <Link to={createPageUrl("Katalog")}>
-                <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-semibold px-8 shadow-xl">
+                <Button size="sm" className="bg-primary hover:bg-primary/90 text-white font-semibold px-4 sm:px-8 text-xs sm:text-base shadow-xl">
                   Zobraziť celý katalóg
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight className="ml-1.5 sm:ml-2 w-3.5 h-3.5 sm:w-5 sm:h-5" />
                 </Button>
               </Link>
             </div>
@@ -449,26 +449,26 @@ export default function Domov() {
       )}
 
       {/* Proces realizácie */}
-      <section className="py-10 sm:py-16 bg-white">
-        <div className="container mx-auto px-3 sm:px-4">
-          <div className="text-center mb-6 sm:mb-10">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+      <section className="py-6 sm:py-16 bg-white">
+        <div className="container mx-auto px-2 sm:px-4">
+          <div className="text-center mb-4 sm:mb-10">
+              <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1.5">
                 Proces realizácie
               </h2>
-            <p className="text-sm sm:text-base text-gray-700 max-w-3xl mx-auto">
+            <p className="text-xs sm:text-base text-gray-700 max-w-3xl mx-auto">
               Komplexné služby od A po Z
             </p>
             </div>
 
-            <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
+            <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-1.5 sm:gap-4">
             {proces.map((krok, index) => (
               <div key={index}>
-                <Card className="p-2 sm:p-4 h-full hover:shadow-xl transition-shadow bg-white border border-gray-100">
-                  <div className="text-2xl sm:text-3xl font-bold text-primary/20 mb-1 sm:mb-2">{krok.cislo}</div>
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center mb-2 shadow-lg">
-                    <krok.icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                <Card className="p-1.5 sm:p-4 h-full hover:shadow-xl transition-shadow bg-white border border-gray-100">
+                  <div className="text-lg sm:text-3xl font-bold text-primary/20 mb-0.5 sm:mb-2">{krok.cislo}</div>
+                  <div className="w-6 h-6 sm:w-10 sm:h-10 bg-gradient-to-br from-primary to-blue-600 rounded-md sm:rounded-lg flex items-center justify-center mb-1.5 sm:mb-2 shadow-lg">
+                    <krok.icon className="w-3 h-3 sm:w-5 sm:h-5 text-white" />
                   </div>
-                  <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-0.5">{krok.nazov}</h3>
+                  <h3 className="text-[10px] sm:text-sm font-bold text-gray-900 mb-0.5">{krok.nazov}</h3>
                   <p className="text-[10px] sm:text-xs text-gray-700 hidden sm:block">{krok.popis}</p>
                   </Card>
                   </div>
@@ -478,27 +478,27 @@ export default function Domov() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-10 sm:py-16 bg-gradient-to-br from-gray-950 via-gray-900 to-black relative overflow-hidden">
+      <section className="py-6 sm:py-16 bg-gradient-to-br from-gray-950 via-gray-900 to-black relative overflow-hidden">
         <div className="absolute inset-0 bg-black/40"></div>
-        <div className="container mx-auto px-3 sm:px-4 relative z-10">
+        <div className="container mx-auto px-2 sm:px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+            <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
               Pripravení na vlastný dom?
             </h2>
-            <p className="text-sm sm:text-base mb-4 sm:mb-6 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+            <p className="text-xs sm:text-base mb-3 sm:mb-6 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
               Kontaktujte nás a nájdeme riešenie pre vás
             </p>
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-3 justify-center">
               <Link to={createPageUrl("Katalog")}>
-                <Button size="default" className="bg-white text-primary hover:bg-gray-100 font-semibold px-5 sm:px-6 w-full sm:w-auto shadow-xl text-sm sm:text-base">
+                <Button size="sm" className="bg-white text-primary hover:bg-gray-100 font-semibold px-3 sm:px-6 w-full sm:w-auto shadow-xl text-xs sm:text-base">
                   Zobraziť ponuku
-                  <ArrowRight className="ml-2 w-4 h-4" />
+                  <ArrowRight className="ml-1.5 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </Link>
               <Link to={createPageUrl("Kontakt")}>
-                <Button size="default" variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary font-semibold px-5 sm:px-6 w-full sm:w-auto shadow-xl text-sm sm:text-base">
+                <Button size="sm" variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary font-semibold px-3 sm:px-6 w-full sm:w-auto shadow-xl text-xs sm:text-base">
                   Kontakt
-                  <Phone className="ml-2 w-4 h-4" />
+                  <Phone className="ml-1.5 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </Link>
             </div>
