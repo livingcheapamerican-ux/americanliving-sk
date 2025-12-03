@@ -525,64 +525,64 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
 
           {/* Montáž hrubej stavby */}
           <motion.div 
-            className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+            className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
             whileHover={{ scale: 1.005 }}
           >
-            <Label className="text-lg font-bold text-gray-800 mb-3 block flex items-center gap-2">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
               <motion.div
                 animate={{ rotate: montazHolodomu === "ano" ? [0, 10, -10, 0] : 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <Wrench className="w-5 h-5 text-amber-600" />
+                <Wrench className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
               </motion.div>
               Montáž hrubej stavby
             </Label>
-            <p className="text-sm text-red-600 mb-4">Montážne práce (dodatočne sa účtuje ubytovanie montážnej brigády 3–4 osoby)</p>
-            <RadioGroup value={montazHolodomu} onValueChange={setMontazHolodomu} className="space-y-3">
+            <p className="text-xs sm:text-sm text-red-600 mb-3 sm:mb-4">Montážne práce (dodatočne sa účtuje ubytovanie montážnej brigády 3–4 osoby)</p>
+            <RadioGroup value={montazHolodomu} onValueChange={setMontazHolodomu} className="space-y-2 sm:space-y-3">
               <motion.label 
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
-                className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${montazHolodomu === "nie" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
+                className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${montazHolodomu === "nie" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <RadioGroupItem value="nie" id="montaz-nie" />
-                  <span className="font-semibold text-gray-800">Nie (Iba dodanie sady)</span>
+                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Nie (Iba dodanie sady)</span>
                 </div>
-                <span className="text-gray-400 font-medium">+ 0 €</span>
+                <span className="text-gray-400 font-medium text-xs sm:text-base">+ 0 €</span>
               </motion.label>
               <motion.label 
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={(e) => { if (montazHolodomu !== "ano") triggerAnimation("montaz", e.currentTarget); }}
-                className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${montazHolodomu === "ano" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
+                className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${montazHolodomu === "ano" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <RadioGroupItem value="ano" id="montaz-ano" />
-                  <span className="font-semibold text-gray-800">Áno (Montáž hrubej stavby)</span>
+                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Áno (Montáž hrubej stavby)</span>
                 </div>
                 <AnimatePresence>
                   {montazHolodomu === "ano" && (
                     <motion.span
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="mr-2"
+                      className="mr-1 sm:mr-2"
                     >
-                      <CheckCircle className="w-5 h-5 text-green-500" />
+                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                     </motion.span>
                   )}
                 </AnimatePresence>
-                <span className="font-bold text-green-600">+ 17 970 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 17 970 €</span>
               </motion.label>
             </RadioGroup>
           </motion.div>
           
           {/* Komplet pre montáž - info box */}
-          <div className="bg-white border border-amber-200 rounded-xl p-5 shadow-sm">
-            <p className="font-bold text-amber-900 mb-3 flex items-center gap-2">
-              <Package className="w-5 h-5" />
+          <div className="bg-white border border-amber-200 rounded-lg sm:rounded-xl p-3 sm:p-5 shadow-sm">
+            <p className="font-bold text-amber-900 mb-2 sm:mb-3 flex items-center gap-2 text-sm sm:text-base">
+              <Package className="w-4 h-4 sm:w-5 sm:h-5" />
               Komplekt pre montáž zahŕňa:
             </p>
-            <ul className="text-gray-700 space-y-2 text-sm">
+            <ul className="text-gray-700 space-y-1 sm:space-y-2 text-xs sm:text-sm">
               <li className="flex items-start gap-2">
                 <span className="text-amber-500 mt-1">•</span>
                 <span>drevená konštrukcia domu, hobľovaný hranol sušený v komore, rôzneho prierezu</span>
@@ -634,52 +634,52 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
 
           {/* Hrúbka izolácie */}
           <motion.div 
-            className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+            className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
             whileHover={{ scale: 1.005 }}
           >
-            <Label className="text-lg font-bold text-gray-800 mb-4 block flex items-center gap-2">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
               <motion.div animate={{ scale: izolaciaNavysenie === "premium" ? [1, 1.2, 1] : 1 }} transition={{ duration: 0.3 }}>
-                <ThermometerSun className="w-5 h-5 text-amber-600" />
+                <ThermometerSun className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
               </motion.div>
               Hrúbka izolácie
             </Label>
-            <RadioGroup value={izolaciaNavysenie} onValueChange={setIzolaciaNavysenie} className="space-y-3">
+            <RadioGroup value={izolaciaNavysenie} onValueChange={setIzolaciaNavysenie} className="space-y-2 sm:space-y-3">
               <motion.label 
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
-                className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${izolaciaNavysenie === "standard" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
+                className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${izolaciaNavysenie === "standard" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <RadioGroupItem value="standard" id="izolacia-standard" />
                   <div>
-                    <span className="font-semibold text-gray-800">Štandard</span>
-                    <p className="text-sm text-gray-500">Steny 150mm, Strecha 200mm</p>
-                    <p className="text-xs text-amber-600">Celoročná izolácia pre účely rekreačnej stavby</p>
+                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Štandard</span>
+                    <p className="text-[10px] sm:text-sm text-gray-500">Steny 150mm, Strecha 200mm</p>
+                    <p className="text-[10px] sm:text-xs text-amber-600 hidden sm:block">Celoročná izolácia pre účely rekreačnej stavby</p>
                   </div>
                 </div>
-                <span className="text-gray-400 font-medium">+ 0 €</span>
+                <span className="text-gray-400 font-medium text-xs sm:text-base">+ 0 €</span>
               </motion.label>
               <motion.label 
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={(e) => { if (izolaciaNavysenie !== "zvysena") triggerAnimation("izolacia", e.currentTarget); }}
-                className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${izolaciaNavysenie === "zvysena" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
+                className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${izolaciaNavysenie === "zvysena" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <RadioGroupItem value="zvysena" id="izolacia-zvysena" />
                   <div>
-                    <span className="font-semibold text-gray-800">Zvýšená</span>
-                    <p className="text-sm text-gray-500">Steny 200mm, Strecha 250mm</p>
-                    <p className="text-xs text-amber-600">Celoročná izolácia pre účely rekreačnej stavby</p>
+                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Zvýšená</span>
+                    <p className="text-[10px] sm:text-sm text-gray-500">Steny 200mm, Strecha 250mm</p>
+                    <p className="text-[10px] sm:text-xs text-amber-600 hidden sm:block">Celoročná izolácia pre účely rekreačnej stavby</p>
                   </div>
                 </div>
-                <span className="font-bold text-green-600">+ 5 799 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 5 799 €</span>
               </motion.label>
               <motion.label 
                 whileHover={{ x: 4, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={(e) => { if (izolaciaNavysenie !== "premium") triggerAnimation("izolacia", e.currentTarget); }}
-                className={`relative flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all overflow-hidden ${izolaciaNavysenie === "premium" ? "border-green-500 bg-green-50 shadow-md ring-2 ring-green-200" : "border-green-400 bg-green-50/50 hover:bg-green-100"}`}
+                className={`relative flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all overflow-hidden ${izolaciaNavysenie === "premium" ? "border-green-500 bg-green-50 shadow-md ring-2 ring-green-200" : "border-green-400 bg-green-50/50 hover:bg-green-100"}`}
               >
                 {izolaciaNavysenie === "premium" && (
                   <motion.div 
@@ -687,37 +687,37 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     initial={{ scale: 0, rotate: -45 }}
                     animate={{ scale: 1, rotate: 0 }}
                   >
-                    <div className="bg-green-500 text-white text-[10px] font-bold px-8 py-0.5 transform rotate-45 translate-x-6 -translate-y-1">
+                    <div className="bg-green-500 text-white text-[8px] sm:text-[10px] font-bold px-6 sm:px-8 py-0.5 transform rotate-45 translate-x-4 sm:translate-x-6 -translate-y-1">
                       ✓
                     </div>
                   </motion.div>
                 )}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <RadioGroupItem value="premium" id="izolacia-premium" />
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-gray-800">Premium / A0</span>
-                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-xs animate-pulse">
-                        <Sparkles className="w-3 h-3 mr-1" />
-                        Odporúčané pre A0
+                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                      <span className="font-semibold text-gray-800 text-xs sm:text-base">Premium / A0</span>
+                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] sm:text-xs animate-pulse">
+                        <Sparkles className="w-2 h-2 sm:w-3 sm:h-3 mr-0.5 sm:mr-1" />
+                        A0
                       </Badge>
                     </div>
-                    <p className="text-sm text-gray-500">Steny 250mm, Strecha 300mm</p>
-                    <p className="text-xs text-green-700 font-medium">Potrebná položka pre status rodinného domu</p>
+                    <p className="text-[10px] sm:text-sm text-gray-500">Steny 250mm, Strecha 300mm</p>
+                    <p className="text-[10px] sm:text-xs text-green-700 font-medium hidden sm:block">Potrebná položka pre status rodinného domu</p>
                   </div>
                 </div>
-                <span className="font-bold text-green-600">+ 11 600 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 11 600 €</span>
               </motion.label>
             </RadioGroup>
           </motion.div>
 
           {/* Typ základov */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-            <Label className="text-lg font-bold text-gray-800 mb-3 block flex items-center gap-2">
-              <Landmark className="w-5 h-5 text-amber-600" />
+          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
+              <Landmark className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
               Typ základov
             </Label>
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4 text-sm text-amber-900">
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-2 sm:p-4 mb-3 sm:mb-4 text-xs sm:text-sm text-amber-900">
               <p className="font-semibold mb-2">Základ:</p>
               <ul className="space-y-1 list-disc list-inside">
                 <li>môže byť realizovaný vo forme vrutových kovových stĺpov, betónových stĺpikov alebo betónovej dosky</li>
@@ -726,43 +726,43 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 <li>cena prípravných prác na pozemku nie je zahrnutá v cene montáže základu</li>
               </ul>
             </div>
-            <RadioGroup value={zaklady} onValueChange={setZaklady} className="space-y-3">
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all">
-                <div className="flex items-center gap-3">
+            <RadioGroup value={zaklady} onValueChange={setZaklady} className="space-y-2 sm:space-y-3">
+              <label className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <RadioGroupItem value="bez" id="zaklady-bez" />
-                  <span className="font-semibold text-gray-800">Bez základov (zabezpečuje klient)</span>
+                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Bez základov</span>
                 </div>
-                <span className="text-gray-400 font-medium">+ 0 €</span>
+                <span className="text-gray-400 font-medium text-xs sm:text-base">+ 0 €</span>
               </label>
               <label 
                 onClick={(e) => { if (zaklady !== "skrutky") triggerAnimation("skrutky", e.currentTarget); }}
-                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all"
+                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <RadioGroupItem value="skrutky" id="zaklady-skrutky" />
-                  <span className="font-semibold text-gray-800">Zemné skrutky / Pätky</span>
+                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Zemné skrutky / Pätky</span>
                 </div>
-                <span className="font-bold text-green-600">+ 8 140 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 8 140 €</span>
               </label>
               <label 
                 onClick={(e) => { if (zaklady !== "doska") triggerAnimation("beton", e.currentTarget); }}
-                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all"
+                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <RadioGroupItem value="doska" id="zaklady-doska" />
-                  <span className="font-semibold text-gray-800">Základová doska</span>
+                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Základová doska</span>
                 </div>
-                <span className="font-bold text-green-600">+ 17 946 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 17 946 €</span>
               </label>
               <label 
                 onClick={(e) => { if (zaklady !== "pasove") triggerAnimation("beton", e.currentTarget); }}
-                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all"
+                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <RadioGroupItem value="pasove" id="zaklady-pasove" />
-                  <span className="font-semibold text-gray-800">Pásové základy</span>
+                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Pásové základy</span>
                 </div>
-                <span className="font-bold text-green-600">+ 21 079 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 21 079 €</span>
               </label>
             </RadioGroup>
           </div>
