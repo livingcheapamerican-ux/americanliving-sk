@@ -1490,12 +1490,18 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           </div>
 
         </div>
-      </Card>
+        </Card>
+        </motion.div>
 
-      {/* ═══════════════════════════════════════════════════════════════════════
+        {/* ═══════════════════════════════════════════════════════════════════════
           FINÁLNY CENOVÝ SÚHRN
           ═══════════════════════════════════════════════════════════════════════ */}
-      <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
+        <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        >
+        <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
         <div className="relative">
           {/* Dekoratívny gradient */}
           <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
