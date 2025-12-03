@@ -1304,43 +1304,43 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-emerald-50/50 to-white">
 
           {/* Vonkajšia fasáda */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-            <Label className="text-lg font-bold text-gray-800 mb-3 block flex items-center gap-2">
-              <Paintbrush className="w-5 h-5 text-emerald-600" />
+          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
+              <Paintbrush className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
               Vonkajšia fasáda
             </Label>
-            <p className="text-sm text-gray-500 mb-4">Drevo / Falcovaný plech anthracit - podľa modelu domu - bez príplatku</p>
-            <RadioGroup value={vonkajsiaFasada} onValueChange={setVonkajsiaFasada} className="space-y-3">
+            <p className="text-[10px] sm:text-sm text-gray-500 mb-3 sm:mb-4 hidden sm:block">Drevo / Falcovaný plech anthracit - podľa modelu domu - bez príplatku</p>
+            <RadioGroup value={vonkajsiaFasada} onValueChange={setVonkajsiaFasada} className="space-y-2 sm:space-y-3">
               <label 
                 onClick={(e) => { if (vonkajsiaFasada !== "standard") triggerAnimation("fasadaStandard", e.currentTarget); }}
-                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
+                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <RadioGroupItem value="standard" id="fasada-standard" />
-                  <span className="font-semibold text-gray-800">Štandard (Drevo / Falcovaný plech)</span>
+                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Štandard (Drevo/Plech)</span>
                 </div>
-                <span className="text-gray-400 font-medium">+ 0 €</span>
+                <span className="text-gray-400 font-medium text-xs sm:text-base">+ 0 €</span>
               </label>
               <label 
                 onClick={(e) => { if (vonkajsiaFasada !== "suchana") triggerAnimation("fasadaSuchana", e.currentTarget); }}
-                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
+                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <RadioGroupItem value="suchana" id="fasada-suchana" />
-                  <span className="font-semibold text-gray-800">Škúchaná fasáda - individuálne nacenenie</span>
+                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Škúchaná fasáda</span>
                 </div>
-                <span className="font-bold text-green-600">+ 12 841 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 12 841 €</span>
               </label>
             </RadioGroup>
           </div>
 
           {/* Interiér finiš */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-            <Label className="text-lg font-bold text-gray-800 mb-3 block flex items-center gap-2">
-              <Home className="w-5 h-5 text-emerald-600" />
-              Interiér finiš - úpravy stien, montáž priečky
+          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
+              <Home className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
+              Interiér finiš
             </Label>
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4 text-sm text-gray-700">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-2 sm:p-4 mb-3 sm:mb-4 text-xs sm:text-sm text-gray-700 hidden sm:block">
               <p className="mb-2">Montáž priečok podľa základného projektu, montáž izolačného materiálu a obklad všetkých stien drevom.</p>
               <p className="mb-2">Do ceny sú zahrnuté montážne práce a všetok potrebný materiál na ich vykonanie: drevený hranol, izolačný materiál s hrúbkou 100 mm, parozábranová membrána, tatranský profil s hrúbkou 8–12 mm.</p>
               <p className="mb-2">Maľovanie stien a maliarske materiály nie sú zahrnuté v cene.</p>
@@ -1348,53 +1348,53 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <p className="text-red-600 font-medium mb-2">Maľovanie sa účtuje zvlášť na základe skutočne namaľovanej plochy, sadzbou 4,5 € za meter štvorcový.</p>
               <p>Akákoľvek zmena typu povrchovej úpravy (napríklad montáž sadrokartónu, kladenie obkladov a pod.) sa rieši samostatne.</p>
             </div>
-            <RadioGroup value={interierFinis} onValueChange={setInterierFinis} className="space-y-3">
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all">
-                <div className="flex items-center gap-3">
+            <RadioGroup value={interierFinis} onValueChange={setInterierFinis} className="space-y-2 sm:space-y-3">
+              <label className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <RadioGroupItem value="ziadne" id="interier-ziadne" />
                   <div>
-                    <span className="font-semibold text-gray-800">Nie</span>
-                    <p className="text-sm text-gray-500">Dom zostane v štádiu hrubej stavby</p>
+                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Nie</span>
+                    <p className="text-[10px] sm:text-sm text-gray-500 hidden sm:block">Hrubá stavba</p>
                   </div>
                 </div>
-                <span className="text-gray-400 font-medium">+ 0 €</span>
+                <span className="text-gray-400 font-medium text-xs sm:text-base">+ 0 €</span>
               </label>
               <label 
                 onClick={(e) => { if (interierFinis !== "drevo") triggerAnimation("drevo", e.currentTarget); }}
-                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
+                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <RadioGroupItem value="drevo" id="interier-drevo" />
-                  <span className="font-semibold text-gray-800">Obloženie drevom 12mm</span>
+                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Obloženie drevom</span>
                 </div>
-                <span className="font-bold text-green-600">+ 16 400 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 16 400 €</span>
               </label>
               <label 
                 onClick={(e) => { if (interierFinis !== "sadrokarton") triggerAnimation("sadrokarton", e.currentTarget); }}
-                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
+                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <RadioGroupItem value="sadrokarton" id="interier-sadrokarton" />
-                  <span className="font-semibold text-gray-800">Sádrokartón</span>
+                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Sádrokartón</span>
                 </div>
-                <span className="font-bold text-green-600">+ 19 475 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 19 475 €</span>
               </label>
             </RadioGroup>
-          </div>
+            </div>
 
           {/* Podlahy a vykurovanie */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-            <Label className="text-lg font-bold text-gray-800 mb-4 block flex items-center gap-2">
-              <Square className="w-5 h-5 text-emerald-600" />
-              Podlahy a podlahové vykurovanie
+          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
+              <Square className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
+              Podlahy a vykurovanie
             </Label>
-            <div className="space-y-4">
+            <div className="space-y-2 sm:space-y-4">
               <div 
                 onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); }}
-                className="border-2 border-gray-200 rounded-xl p-4 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all"
+                className="border-2 border-gray-200 rounded-lg sm:rounded-xl p-2.5 sm:p-4 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all"
               >
                 <label className="flex items-center justify-between cursor-pointer">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <Checkbox 
                       id="vnutorne-podlahy" 
                       checked={vnutornePodlahy} 
@@ -1402,25 +1402,19 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                       className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
                     />
                     <div>
-                      <span className="font-semibold text-gray-800">Vnútorné podlahy - laminát - cena je za základný typ</span>
-                      <p className="text-sm text-gray-500">Môže sa líšiť podľa výberu zákazníka</p>
+                      <span className="font-semibold text-gray-800 text-xs sm:text-base">Vnútorné podlahy - laminát</span>
                     </div>
                   </div>
-                  <span className="font-bold text-green-600 whitespace-nowrap">+ 3 351 €</span>
+                  <span className="font-bold text-green-600 whitespace-nowrap text-xs sm:text-base">+ 3 351 €</span>
                 </label>
-                <div className="mt-3 p-3 bg-gray-50 rounded-lg text-xs text-gray-600 space-y-1">
-                  <p className="text-red-600 font-medium">Vnútorné podlahy, montáž laminátu s cenou do 10 € za meter štvorcový na celej podlahovej ploche domu:</p>
-                  <p className="text-red-600">- podlahová krytina môže byť dodaná objednávateľom; v takom prípade sa z cenovej ponuky odpočíta suma rovná ploche podlahy vynásobenej 10 €</p>
-                  <p className="text-red-600">- orientačná cena pokládky: laminát od 10 €/m², dlažba od 25 €/m²</p>
-                </div>
               </div>
 
               <div 
                 onClick={(e) => { if (!podlahovVykurovanie) triggerAnimation("podlahovVykurovanie", e.currentTarget); }}
-                className="border-2 border-gray-200 rounded-xl p-4 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all"
+                className="border-2 border-gray-200 rounded-lg sm:rounded-xl p-2.5 sm:p-4 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all"
               >
                 <label className="flex items-center justify-between cursor-pointer">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <Checkbox 
                       id="podlahove-vykurovanie" 
                       checked={podlahovVykurovanie} 
@@ -1428,36 +1422,32 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                       className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
                     />
                     <div>
-                      <span className="font-semibold text-gray-800 flex items-center gap-2">
-                        <Flame className="w-4 h-4 text-orange-500" />
-                        Elektrické podlahové vykurovanie s WiFi termostatom
+                      <span className="font-semibold text-gray-800 text-xs sm:text-base flex items-center gap-1 sm:gap-2">
+                        <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500" />
+                        Podlahové vykurovanie
                       </span>
                     </div>
                   </div>
-                  <span className="font-bold text-green-600 whitespace-nowrap">+ 5 525 €</span>
+                  <span className="font-bold text-green-600 whitespace-nowrap text-xs sm:text-base">+ 5 525 €</span>
                 </label>
-                <div className="mt-3 p-3 bg-gray-50 rounded-lg text-xs text-gray-600 space-y-1">
-                  <p className="font-medium text-gray-700">Wi-Fi termostat do každej izby (8-9 ks)</p>
-                  <p>Cena zahŕňa komplet: Vykurovacia fólia 1m a 0,5m, Vodič, LDPE 0.2 parozábranná fólia, izolácia pod vykurovacou fóliou XPS 500-700, Konektory, Uzemňovacia sieťka, Termostaty, Práca + Doprava</p>
-                </div>
               </div>
             </div>
           </div>
 
           {/* Interiérové dvere */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-            <Label className="text-lg font-bold text-gray-800 mb-4 block flex items-center gap-2">
-              <DoorOpen className="w-5 h-5 text-emerald-600" />
+          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
+              <DoorOpen className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
               Interiérové dvere
             </Label>
             <div 
-              className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl"
+              className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl"
               onClick={(e) => { if (interieroveDvere === 0) triggerAnimation("interieroveDvere", e.currentTarget); }}
             >
               <div>
-                <span className="font-semibold text-gray-800">Interiérové dvere, cena za 1 kus od</span>
+                <span className="font-semibold text-gray-800 text-xs sm:text-base">Interiérové dvere</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <Input 
                   type="number" 
                   min="0" 
@@ -1467,38 +1457,33 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     if (newVal > interieroveDvere) triggerAnimation("interieroveDvere", e.target);
                     setInterieroveDvere(newVal);
                   }}
-                  className="w-16 text-center"
+                  className="w-12 sm:w-16 text-center h-7 sm:h-9 text-xs sm:text-base"
                 />
-                <span className="font-bold text-green-600">× 250 € <span className="text-xs text-gray-500">s DPH</span></span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">× 250 €</span>
               </div>
-            </div>
-            <div className="mt-3 p-3 bg-gray-50 rounded-lg text-xs text-gray-600 space-y-1">
-              <p className="text-gray-700 font-medium">Interiérové dvere, сena jednej sady od 190 eur.</p>
-              <p className="text-gray-600">- dvere môžu byť zabezpečené zákazníkom</p>
-              <p className="text-gray-600">- cena za inštaláciu jedných dverí od 60 €</p>
             </div>
           </div>
 
           {/* Doplnky */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-            <Label className="text-lg font-bold text-gray-800 mb-4 block flex items-center gap-2">
-              <Maximize className="w-5 h-5 text-emerald-600" />
+          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
+              <Maximize className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
               Doplnky exteriéru
             </Label>
             <label 
               onClick={(e) => { if (!pergola) triggerAnimation("pergola", e.currentTarget); }}
-              className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
+              className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <Checkbox 
                   id="pergola" 
                   checked={pergola} 
                   onCheckedChange={setPergola}
                   className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
                 />
-                <span className="font-semibold text-gray-800">Dekoratívna pergola na konektory</span>
+                <span className="font-semibold text-gray-800 text-xs sm:text-base">Dekoratívna pergola</span>
               </div>
-              <span className="font-bold text-green-600">+ 1 845 €</span>
+              <span className="font-bold text-green-600 text-xs sm:text-base">+ 1 845 €</span>
             </label>
           </div>
 
@@ -1525,17 +1510,17 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-purple-50/50 to-white">
 
           {/* Dokumentácia */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-            <Label className="text-lg font-bold text-gray-800 mb-4 block flex items-center gap-2">
-              <FileText className="w-5 h-5 text-purple-600" />
+          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
+              <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
               Projektová dokumentácia
             </Label>
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               <label 
                 onClick={(e) => { if (!inziniering) triggerAnimation("inziniering", e.currentTarget); }}
-                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-purple-300 hover:bg-purple-50/50 cursor-pointer transition-all"
+                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-purple-300 hover:bg-purple-50/50 cursor-pointer transition-all"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <Checkbox 
                     id="inziniering" 
                     checked={inziniering} 
@@ -1543,17 +1528,16 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     className="data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
                   />
                   <div>
-                    <span className="font-semibold text-gray-800">Inžiniering stavebného povolenia</span>
-                    <p className="text-sm text-gray-500">Vybavenie všetkých povolení</p>
+                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Inžiniering stav. povolenia</span>
                   </div>
                 </div>
-                <span className="font-bold text-green-600">+ 2 592 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 2 592 €</span>
               </label>
               <label 
                 onClick={(e) => { if (!projektA0) triggerAnimation("projektant", e.currentTarget); }}
-                className="flex items-center justify-between p-4 border-2 border-green-400 rounded-xl bg-green-50 hover:bg-green-100 cursor-pointer transition-all"
+                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-green-400 rounded-lg sm:rounded-xl bg-green-50 hover:bg-green-100 cursor-pointer transition-all"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <Checkbox 
                     id="projekt" 
                     checked={projektA0} 
@@ -1561,17 +1545,16 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
                   />
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-gray-800">Projektant a Energetická certifikácia</span>
-                      <Badge className="bg-green-600">A0</Badge>
+                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                      <span className="font-semibold text-gray-800 text-xs sm:text-base">Projektant + certifikácia</span>
+                      <Badge className="bg-green-600 text-[8px] sm:text-xs">A0</Badge>
                     </div>
-                    <p className="text-sm text-gray-500">Kompletná projektová dokumentácia + certifikát A0</p>
                   </div>
                 </div>
-                <span className="font-bold text-green-600">+ 3 500 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 3 500 €</span>
               </label>
-              <label className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-purple-300 hover:bg-purple-50/50 cursor-pointer transition-all">
-                <div className="flex items-center gap-3">
+              <label className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-purple-300 hover:bg-purple-50/50 cursor-pointer transition-all">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <Checkbox 
                     id="revizna" 
                     checked={revizna} 
@@ -1579,27 +1562,27 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     className="data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
                   />
                   <div>
-                    <span className="font-semibold text-gray-800">Kompletná revízna dokumentácia k stavbe</span>
+                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Revízna dokumentácia</span>
                   </div>
                 </div>
-                <span className="font-bold text-green-600">+ 1 000 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 1 000 €</span>
               </label>
             </div>
           </div>
 
           {/* A0 Upozornenie */}
           {a0Odporucania && (
-            <div className="p-5 bg-amber-50 border-2 border-amber-300 rounded-xl">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div className="p-3 sm:p-5 bg-amber-50 border-2 border-amber-300 rounded-lg sm:rounded-xl">
+              <div className="flex items-start gap-2 sm:gap-3">
+                <AlertTriangle className="w-4 h-4 sm:w-6 sm:h-6 text-amber-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-bold text-amber-800 mb-2">
-                    Pre splnenie normy A0 odporúčame doplniť:
+                  <p className="font-bold text-amber-800 mb-1 sm:mb-2 text-xs sm:text-base">
+                    Pre A0 odporúčame:
                   </p>
-                  <ul className="space-y-1">
+                  <ul className="space-y-0.5 sm:space-y-1">
                     {a0Odporucania.map((item, index) => (
-                      <li key={index} className="text-amber-700 flex items-center gap-2">
-                        <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+                      <li key={index} className="text-amber-700 flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm">
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-amber-500 rounded-full"></span>
                         {item}
                       </li>
                     ))}
@@ -1611,36 +1594,36 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
 
           {/* A0 Splnené */}
           {projektA0 && !a0Odporucania && (
-            <div className="p-5 bg-green-50 border-2 border-green-300 rounded-xl">
-              <div className="flex items-center gap-3">
-                <CheckCircle className="w-6 h-6 text-green-600" />
-                <p className="font-bold text-green-800">
-                  Výborne! Vaša konfigurácia spĺňa požiadavky pre energetickú triedu A0.
+            <div className="p-3 sm:p-5 bg-green-50 border-2 border-green-300 rounded-lg sm:rounded-xl">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <CheckCircle className="w-4 h-4 sm:w-6 sm:h-6 text-green-600" />
+                <p className="font-bold text-green-800 text-xs sm:text-base">
+                  Konfigurácia spĺňa A0!
                 </p>
               </div>
             </div>
           )}
 
           {/* Doprava */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-            <Label className="text-lg font-bold text-gray-800 mb-4 block flex items-center gap-2">
-              <Truck className="w-5 h-5 text-purple-600" />
+          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
+              <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
               Doprava
             </Label>
             <label 
               onClick={(e) => { if (!doprava) triggerAnimation("doprava", e.currentTarget); }}
-              className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-purple-300 hover:bg-purple-50/50 cursor-pointer transition-all"
+              className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-purple-300 hover:bg-purple-50/50 cursor-pointer transition-all"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <Checkbox 
                   id="doprava" 
                   checked={doprava} 
                   onCheckedChange={setDoprava}
                   className="data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
                 />
-                <span className="font-semibold text-gray-800">Doprava</span>
+                <span className="font-semibold text-gray-800 text-xs sm:text-base">Doprava</span>
               </div>
-              <span className="text-gray-400 font-medium">+ 0 €</span>
+              <span className="text-gray-400 font-medium text-xs sm:text-base">+ 0 €</span>
             </label>
           </div>
 
@@ -1659,42 +1642,41 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
         <div className="relative">
           {/* Dekoratívny gradient */}
-          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
+          <div className="absolute top-0 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-10 right-10 w-40 h-40 bg-green-400 rounded-full blur-3xl"></div>
             <div className="absolute bottom-10 left-10 w-32 h-32 bg-emerald-400 rounded-full blur-3xl"></div>
           </div>
-          
-          <div className="relative p-8 md:p-10">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+
+          <div className="relative p-4 sm:p-8 md:p-10">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-8">
               <div>
-                <p className="text-green-400 text-sm font-semibold uppercase tracking-wider mb-2">Vaša konfigurácia</p>
-                <h3 className="text-3xl font-bold text-white mb-2">Flat Double 142m²</h3>
-                <p className="text-slate-400">Kompletná cenová kalkulácia</p>
+                <p className="text-green-400 text-[10px] sm:text-sm font-semibold uppercase tracking-wider mb-1 sm:mb-2">Vaša konfigurácia</p>
+                <h3 className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">Flat Double 142m²</h3>
+                <p className="text-slate-400 text-xs sm:text-base">Kompletná cenová kalkulácia</p>
                 {projektA0 && !a0Odporucania && (
-                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white mt-4 text-sm py-1.5 px-4 shadow-lg shadow-green-500/30">✓ Spĺňa normu A0</Badge>
+                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white mt-2 sm:mt-4 text-[10px] sm:text-sm py-1 sm:py-1.5 px-2 sm:px-4 shadow-lg shadow-green-500/30">✓ Spĺňa A0</Badge>
                 )}
               </div>
-              <div className="text-right p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl border border-green-500/20">
-                <p className="text-slate-400 mb-2 text-sm">Celková odhadovaná cena</p>
-                <p className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
+              <div className="text-right p-3 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl sm:rounded-2xl border border-green-500/20">
+                <p className="text-slate-400 mb-1 sm:mb-2 text-[10px] sm:text-sm">Celková cena s DPH</p>
+                <p className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
                   {formatPrice(totalPrice)}
                 </p>
-                <p className="text-slate-500 text-sm mt-2">vrátane DPH</p>
               </div>
             </div>
-            
-            <div className="mt-10 pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row gap-4 justify-center">
+
+            <div className="mt-6 sm:mt-10 pt-4 sm:pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <Link to={`${createPageUrl("Kontakt")}?dom=Flat%20Double%20142m²&cena=${totalPrice}`}>
-                <Button size="lg" className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-lg px-12 py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40">
-                  <Send className="mr-3 w-6 h-6" />
-                  Mám záujem o túto konfiguráciu
+                <Button size="lg" className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40">
+                  <Send className="mr-2 sm:mr-3 w-4 h-4 sm:w-6 sm:h-6" />
+                  Mám záujem
                 </Button>
               </Link>
             </div>
           </div>
         </div>
-      </Card>
+        </Card>
       </motion.div>
       </div>
     </div>
