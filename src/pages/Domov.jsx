@@ -185,7 +185,7 @@ export default function Domov() {
   ];
 
   return (
-    <div className="min-h-screen -mt-14 sm:-mt-16 md:-mt-20 lg:-mt-24">
+    <div className="min-h-screen -mt-12 sm:-mt-14 md:-mt-18 lg:-mt-22">
       {/* Admin Settings Panel */}
       {isAdmin && showSettings && (
         <div className="container mx-auto px-4 py-8">
@@ -197,7 +197,7 @@ export default function Domov() {
       )}
 
       {/* Hero Section */}
-      <section className="relative h-[90vh] min-h-[600px] overflow-hidden">
+      <section className="relative h-[75vh] min-h-[450px] overflow-hidden">
         {/* Admin toggle button */}
         {isAdmin && (
           <button
@@ -229,32 +229,30 @@ export default function Domov() {
             animate={{ opacity: 1, y: 0 }}
             className="max-w-2xl text-white"
           >
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight drop-shadow-lg">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 leading-tight drop-shadow-lg">
               Cenovo dostupný rodinný dom
             </h1>
-            <p className="text-2xl mb-6 font-bold text-yellow-300 drop-shadow-lg">
+            <p className="text-lg sm:text-xl mb-3 sm:mb-4 font-bold text-yellow-300 drop-shadow-lg">
               Za cenu priamo od výrobcu! Bez navýšenia!
             </p>
-            <p className="text-xl mb-8 text-gray-100 leading-relaxed drop-shadow-md">
-              Už nemusíte hľadať ďalej – všetko, čo potrebujete, máte presne tu! 
-              Vyberte si najbližšiu kanceláriu a naši kolegovia sa postarajú o kompletné 
-              vybavenie všetkého, čo ste si na stránke pozreli.
+            <p className="text-sm sm:text-base md:text-lg mb-4 sm:mb-6 text-gray-100 leading-relaxed drop-shadow-md">
+              Všetko, čo potrebujete, máte presne tu! Naši kolegovia sa postarajú o kompletné vybavenie.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <Link to={createPageUrl("Katalog")}>
-                <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white font-semibold text-lg px-8 py-6 w-full sm:w-auto shadow-xl">
+                <Button size="default" className="bg-secondary hover:bg-secondary/90 text-white font-semibold text-sm sm:text-base px-5 sm:px-6 py-2 sm:py-3 w-full sm:w-auto shadow-xl">
                   Zobraziť ponuku
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
               <Link to={createPageUrl("Kontakt")}>
-                <Button size="lg" variant="outline" className="bg-white/10 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-primary font-semibold text-lg px-8 py-6 w-full sm:w-auto shadow-xl">
-                  Nezáväzná konzultácia
+                <Button size="default" variant="outline" className="bg-white/10 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-primary font-semibold text-sm sm:text-base px-5 sm:px-6 py-2 sm:py-3 w-full sm:w-auto shadow-xl">
+                  Konzultácia
                 </Button>
               </Link>
             </div>
           </motion.div>
-        </div>
+          </div>
 
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex gap-2">
           {heroImages.map((_, index) => (
@@ -270,65 +268,65 @@ export default function Domov() {
       </section>
 
       {/* Komplexné služby - S OBRÁZKAMI */}
-      <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-        <div className="container mx-auto px-4">
+      <section className="py-10 sm:py-16 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+        <div className="container mx-auto px-3 sm:px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-6 sm:mb-10"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-white">
               Všetko na jednom mieste
             </h2>
-            <p className="text-xl text-gray-200 max-w-3xl mx-auto mb-6">
-              Nie sme len stavebná firma. Poskytujeme <strong className="text-yellow-300">komplexné služby</strong> - 
+            <p className="text-sm sm:text-base text-gray-200 max-w-3xl mx-auto mb-4">
+              Poskytujeme <strong className="text-yellow-300">komplexné služby</strong> - 
               od realitnej kancelárie cez finančné poradenstvo až po stavebnú realizáciu.
             </p>
-            <div className="flex flex-wrap justify-center gap-4 text-lg font-semibold">
-              <div className="flex items-center gap-2 bg-primary px-5 py-2 rounded-full text-white shadow-lg">
-                <Building className="w-5 h-5" />
+            <div className="flex flex-wrap justify-center gap-2 text-xs sm:text-sm font-semibold">
+              <div className="flex items-center gap-1.5 bg-primary px-3 py-1.5 rounded-full text-white shadow-lg">
+                <Building className="w-3.5 h-3.5" />
                 <span>Stavebná firma</span>
               </div>
-              <div className="flex items-center gap-2 bg-secondary px-5 py-2 rounded-full text-white shadow-lg">
-                <Building2 className="w-5 h-5" />
+              <div className="flex items-center gap-1.5 bg-secondary px-3 py-1.5 rounded-full text-white shadow-lg">
+                <Building2 className="w-3.5 h-3.5" />
                 <span>Realitná kancelária</span>
               </div>
-              <div className="flex items-center gap-2 bg-accent px-5 py-2 rounded-full text-white shadow-lg">
-                <Landmark className="w-5 h-5" />
+              <div className="flex items-center gap-1.5 bg-accent px-3 py-1.5 rounded-full text-white shadow-lg">
+                <Landmark className="w-3.5 h-3.5" />
                 <span>Finančné služby</span>
               </div>
             </div>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-6xl mx-auto mb-6 sm:mb-10">
             {sluzby.map((sluzba, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ delay: index * 0.03 }}
               >
-                <Card className="group overflow-hidden h-full hover:shadow-2xl transition-all hover:-translate-y-2 cursor-pointer bg-white">
-                  <div className="relative h-48 overflow-hidden">
+                <Card className="group overflow-hidden h-full hover:shadow-2xl transition-all hover:-translate-y-1 cursor-pointer bg-white">
+                  <div className="relative h-28 sm:h-36 overflow-hidden">
                     <img 
                       src={sluzba.image} 
                       alt={sluzba.nazov}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                    <div className="absolute bottom-4 left-4">
-                      <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center mb-2 shadow-lg">
-                        <sluzba.icon className="w-6 h-6 text-primary" />
+                    <div className="absolute bottom-2 left-2">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-lg flex items-center justify-center shadow-lg">
+                        <sluzba.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                       </div>
                     </div>
                   </div>
-                  <div className="p-5">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">
+                  <div className="p-2 sm:p-3">
+                    <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-0.5 group-hover:text-primary transition-colors line-clamp-2">
                       {sluzba.nazov}
                     </h3>
-                    <p className="text-sm text-gray-600 font-medium">{sluzba.popis}</p>
+                    <p className="text-[10px] sm:text-xs text-gray-600 font-medium hidden sm:block">{sluzba.popis}</p>
                   </div>
                 </Card>
               </motion.div>
@@ -355,37 +353,37 @@ export default function Domov() {
       </section>
 
       {/* Prečo American Living */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-white">
-        <div className="container mx-auto px-4">
+      <section className="py-10 sm:py-16 bg-gradient-to-br from-blue-50 to-white">
+        <div className="container mx-auto px-3 sm:px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-6 sm:mb-10"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Prečo si vybrať American Living?
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
+              Prečo American Living?
             </h2>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              American Living je značka kvality a naše domy sú len od overených dodávateľov, ktorí majú svoju históriu a rokmi overené skúsenosti
+            <p className="text-sm sm:text-base text-gray-700 max-w-3xl mx-auto">
+              Značka kvality od overených dodávateľov s rokmi skúseností
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-10">
             {vyhody.map((vyhoda, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.05 }}
               >
-                <Card className="p-8 text-center h-full hover:shadow-xl transition-all hover:-translate-y-2 bg-white border-2 border-gray-100">
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                    <vyhoda.icon className="w-8 h-8 text-white" />
+                <Card className="p-3 sm:p-5 text-center h-full hover:shadow-xl transition-all hover:-translate-y-1 bg-white border border-gray-100">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center mx-auto mb-2 sm:mb-3 shadow-lg">
+                    <vyhoda.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{vyhoda.title}</h3>
-                  <p className="text-gray-700 leading-relaxed">{vyhoda.description}</p>
+                  <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-1">{vyhoda.title}</h3>
+                  <p className="text-[10px] sm:text-xs text-gray-700 leading-relaxed hidden sm:block">{vyhoda.description}</p>
                 </Card>
               </motion.div>
             ))}
@@ -425,58 +423,58 @@ export default function Domov() {
 
       {/* Naša ponuka */}
       {domy.length > 0 && (
-        <section className="py-20 bg-gradient-to-br from-gray-100 to-gray-50">
-          <div className="container mx-auto px-4">
+        <section className="py-10 sm:py-16 bg-gradient-to-br from-gray-100 to-gray-50">
+          <div className="container mx-auto px-3 sm:px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-6 sm:mb-10"
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">
                 Naša ponuka
               </h2>
-              <p className="text-xl text-gray-700">
+              <p className="text-sm sm:text-base text-gray-700">
                 Drevodom, ktorý nemusí vyzerať ako drevodom
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5 mb-6 sm:mb-10">
               {domy.map((dom, index) => (
                 <motion.div
                   key={dom.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.05 }}
                 >
                   <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
-                    <Card className="group overflow-hidden hover:shadow-2xl transition-all hover:-translate-y-2 bg-white border-2 border-gray-200">
-                      <div className="relative h-64 overflow-hidden">
+                    <Card className="group overflow-hidden hover:shadow-2xl transition-all hover:-translate-y-1 bg-white border border-gray-200">
+                      <div className="relative h-32 sm:h-48 overflow-hidden">
                         <img
                           src={dom.hlavny_obrazok}
                           alt={dom.nazov}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         {dom.celorocny && (
-                          <div className="absolute top-4 left-4 bg-accent text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+                          <div className="absolute top-2 left-2 bg-accent text-white px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold shadow-lg">
                             ✔ CELOROČNÝ
                           </div>
                         )}
                       </div>
-                      <div className="p-6">
-                        <div className="text-sm text-gray-600 mb-2 font-semibold">{dom.vyrobca}</div>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-secondary transition-colors">
+                      <div className="p-2 sm:p-4">
+                        <div className="text-[10px] sm:text-xs text-gray-600 mb-0.5 font-semibold">{dom.vyrobca}</div>
+                        <h3 className="text-sm sm:text-lg font-bold text-gray-900 mb-1 sm:mb-2 group-hover:text-secondary transition-colors line-clamp-1">
                           {dom.nazov}
                         </h3>
-                        <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                        <div className="flex items-center justify-between pt-2 border-t border-gray-200">
                           <div>
-                            <p className="text-sm text-gray-600 font-semibold">Od</p>
-                            <p className="text-2xl font-bold text-primary">
+                            <p className="text-[10px] sm:text-xs text-gray-600 font-semibold">Od</p>
+                            <p className="text-sm sm:text-xl font-bold text-primary">
                               {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                             </p>
                           </div>
-                          <ChevronRight className="w-6 h-6 text-primary group-hover:text-secondary transition-colors" />
+                          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-primary group-hover:text-secondary transition-colors" />
                         </div>
                       </div>
                     </Card>
@@ -498,38 +496,38 @@ export default function Domov() {
       )}
 
       {/* Proces realizácie */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+      <section className="py-10 sm:py-16 bg-white">
+        <div className="container mx-auto px-3 sm:px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-6 sm:mb-10"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">
               Proces realizácie
             </h2>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              Komplexné služby od A po Z - postaráme sa o všetko
+            <p className="text-sm sm:text-base text-gray-700 max-w-3xl mx-auto">
+              Komplexné služby od A po Z
             </p>
           </motion.div>
 
-          <div className="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
             {proces.map((krok, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ delay: index * 0.03 }}
               >
-                <Card className="p-6 h-full hover:shadow-xl transition-all hover:-translate-y-1 bg-white border-2 border-gray-100">
-                  <div className="text-5xl font-bold text-primary/20 mb-4">{krok.cislo}</div>
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center mb-4 shadow-lg">
-                    <krok.icon className="w-6 h-6 text-white" />
+                <Card className="p-2 sm:p-4 h-full hover:shadow-xl transition-all hover:-translate-y-1 bg-white border border-gray-100">
+                  <div className="text-2xl sm:text-3xl font-bold text-primary/20 mb-1 sm:mb-2">{krok.cislo}</div>
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center mb-2 shadow-lg">
+                    <krok.icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{krok.nazov}</h3>
-                  <p className="text-sm text-gray-700">{krok.popis}</p>
+                  <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-0.5">{krok.nazov}</h3>
+                  <p className="text-[10px] sm:text-xs text-gray-700 hidden sm:block">{krok.popis}</p>
                 </Card>
               </motion.div>
             ))}
@@ -538,32 +536,32 @@ export default function Domov() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-950 via-gray-900 to-black relative overflow-hidden">
+      <section className="py-10 sm:py-16 bg-gradient-to-br from-gray-950 via-gray-900 to-black relative overflow-hidden">
         <div className="absolute inset-0 bg-black/40"></div>
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container mx-auto px-3 sm:px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="max-w-4xl mx-auto text-center"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
               Pripravení na vlastný dom?
             </h2>
-            <p className="text-xl mb-8 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-              Kontaktujte nás a spoločne nájdeme ideálne riešenie pre vás
+            <p className="text-sm sm:text-base mb-4 sm:mb-6 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+              Kontaktujte nás a nájdeme riešenie pre vás
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
               <Link to={createPageUrl("Katalog")}>
-                <Button size="lg" className="bg-white text-primary hover:bg-gray-100 font-semibold px-8 w-full sm:w-auto shadow-xl text-lg">
+                <Button size="default" className="bg-white text-primary hover:bg-gray-100 font-semibold px-5 sm:px-6 w-full sm:w-auto shadow-xl text-sm sm:text-base">
                   Zobraziť ponuku
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
               <Link to={createPageUrl("Kontakt")}>
-                <Button size="lg" variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary font-semibold px-8 w-full sm:w-auto shadow-xl text-lg">
-                  Kontaktovať nás
-                  <Phone className="ml-2 w-5 h-5" />
+                <Button size="default" variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary font-semibold px-5 sm:px-6 w-full sm:w-auto shadow-xl text-sm sm:text-base">
+                  Kontakt
+                  <Phone className="ml-2 w-4 h-4" />
                 </Button>
               </Link>
             </div>
