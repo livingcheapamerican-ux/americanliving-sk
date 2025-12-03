@@ -109,11 +109,22 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     if (projektA0) total += CENY.projektA0;
     
     total += CENY.interierFinis[interierFinis];
+    total += CENY.vonkajsiaFasada[vonkajsiaFasada];
+    if (povrchokaOkien) total += CENY.povrchokaOkien;
+    if (vnutornePodlahy) total += CENY.vnutornePodlahy;
+    if (podlahovVykurovanie) total += CENY.podlahovVykurovanie;
+    if (pergola) total += CENY.pergola;
+    total += interieroveDvere * CENY.interieroveDvere;
+    if (tonovaneSkla) total += CENY.tonovaneSkla;
+    if (doprava) total += CENY.doprava;
+    if (revizna) total += CENY.revizna;
     
     return total;
   }, [montazHolodomu, vstupneDvere, izolaciaNavysenie, elektroinstalacia, 
       vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia,
-      zaklady, pripojkaSiete, inziniering, projektA0, interierFinis]);
+      zaklady, pripojkaSiete, inziniering, projektA0, interierFinis,
+      vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, podlahovVykurovanie,
+      pergola, interieroveDvere, tonovaneSkla, doprava, revizna]);
 
   // Kontrola A0 odporúčaní
   const a0Odporucania = useMemo(() => {
