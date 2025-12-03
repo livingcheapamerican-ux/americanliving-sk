@@ -440,12 +440,23 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 {formatPrice(totalPrice)}
               </span>
             </div>
-            <Link to={`${createPageUrl("Kontakt")}?dom=Flat%20Double%20142m²&cena=${totalPrice}`}>
-              <Button size="sm" className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg">
-                <Send className="mr-2 w-4 h-4" />
-                Mám záujem
+            <div className="space-y-2">
+              <Link to={`${createPageUrl("Kontakt")}?dom=Flat%20Double%20142m²&cena=${totalPrice}`}>
+                <Button size="sm" className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg">
+                  <Send className="mr-2 w-4 h-4" />
+                  Mám záujem
+                </Button>
+              </Link>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={handleReset}
+                className="w-full border-slate-600 text-slate-400 hover:bg-red-500/20 hover:border-red-500/50 hover:text-red-300 transition-all"
+              >
+                <RotateCcw className="mr-2 w-3 h-3" />
+                Resetovať
               </Button>
-            </Link>
+            </div>
           </div>
         </Card>
       </div>
