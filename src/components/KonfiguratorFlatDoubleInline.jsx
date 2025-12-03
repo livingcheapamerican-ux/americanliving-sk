@@ -427,7 +427,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <div className="border-t my-4"></div>
 
           {/* Tepelné čerpadlo */}
-          <div className={`flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 ${projektA0 && !tepelneCerpadlo ? 'border-amber-400 bg-amber-50' : ''}`}>
+          <div className={`flex items-center justify-between p-4 border-2 rounded-lg hover:bg-green-50 ${projektA0 && !tepelneCerpadlo ? 'border-amber-400 bg-amber-50' : 'border-green-400 bg-green-50/30'}`}>
             <div className="flex items-center gap-3">
               <Checkbox 
                 id="cerpadlo" 
@@ -439,7 +439,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 <Label htmlFor="cerpadlo" className="cursor-pointer flex items-center gap-2">
                   <ThermometerSun className="w-4 h-4 text-red-500" />
                   Tepelné čerpadlo / Klimatizácia
-                  {projektA0 && <Badge className="bg-green-600 text-xs">Pre A0</Badge>}
+                  <Badge className="bg-green-600 text-xs">Pre A0</Badge>
                 </Label>
                 <p className="text-sm text-gray-500">1x vonkajšia + 5x vnútorná jednotka</p>
               </div>
@@ -448,7 +448,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           </div>
 
           {/* Rekuperácia */}
-          <div className={`flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 ${projektA0 && !rekuperacia ? 'border-amber-400 bg-amber-50' : ''}`}>
+          <div className={`flex items-center justify-between p-4 border-2 rounded-lg hover:bg-green-50 ${projektA0 && !rekuperacia ? 'border-amber-400 bg-amber-50' : 'border-green-400 bg-green-50/30'}`}>
             <div className="flex items-center gap-3">
               <Checkbox 
                 id="rekuperacia" 
@@ -460,7 +460,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 <Label htmlFor="rekuperacia" className="cursor-pointer flex items-center gap-2">
                   <Wind className="w-4 h-4 text-teal-500" />
                   Rekuperácia
-                  {projektA0 && <Badge className="bg-green-600 text-xs">Pre A0</Badge>}
+                  <Badge className="bg-green-600 text-xs">Pre A0</Badge>
                 </Label>
                 <p className="text-sm text-gray-500">5ks lokálnych jednotiek</p>
               </div>
