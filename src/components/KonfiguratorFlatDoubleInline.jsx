@@ -791,16 +791,16 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
 
           {/* Elektroinštalácia */}
           <motion.div 
-            className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+            className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
             whileHover={{ scale: 1.005 }}
           >
-            <Label className="text-lg font-bold text-gray-800 mb-3 block flex items-center gap-2">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
               <motion.div animate={{ scale: elektroinstalacia ? [1, 1.3, 1] : 1 }} transition={{ duration: 0.3 }}>
-                <Zap className={`w-5 h-5 ${elektroinstalacia ? "text-yellow-500" : "text-yellow-400"}`} />
+                <Zap className={`w-4 h-4 sm:w-5 sm:h-5 ${elektroinstalacia ? "text-yellow-500" : "text-yellow-400"}`} />
               </motion.div>
               Elektroinštalácia
             </Label>
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4 text-sm">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2 sm:p-4 mb-3 sm:mb-4 text-xs sm:text-sm hidden sm:block">
               <p className="text-yellow-900 font-medium mb-2">Základná elektroinštalácia podľa projektu zahŕňa všetky potrebné materiály a vykonanie týchto prác:</p>
               <ul className="text-yellow-800 space-y-1 list-disc list-inside mb-3">
                 <li>montáž elektrických káblov</li>
@@ -818,9 +818,9 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               whileHover={{ x: 4 }}
               whileTap={{ scale: 0.98 }}
               onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); }}
-              className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${elektroinstalacia ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
+              className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${elektroinstalacia ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <Checkbox 
                   id="elektro" 
                   checked={elektroinstalacia} 
@@ -828,35 +828,35 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                   className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                 />
                 <div>
-                  <span className="font-semibold text-gray-800">Elektrická inštalácia</span>
-                  <p className="text-sm text-gray-500">Rozvody, rozvádzač, zásuvky</p>
+                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Elektrická inštalácia</span>
+                  <p className="text-[10px] sm:text-sm text-gray-500">Rozvody, rozvádzač, zásuvky</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 <AnimatePresence>
                   {elektroinstalacia && (
                     <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                      <CheckCircle className="w-5 h-5 text-green-500" />
+                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                     </motion.span>
                   )}
                 </AnimatePresence>
-                <span className="font-bold text-green-600">+ 7 400 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 7 400 €</span>
               </div>
             </motion.label>
             </motion.div>
 
           {/* Voda a kanalizácia */}
           <motion.div 
-            className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+            className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
             whileHover={{ scale: 1.005 }}
           >
-            <Label className="text-lg font-bold text-gray-800 mb-3 block flex items-center gap-2">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
               <motion.div animate={{ y: vodaKanalizacia ? [0, -3, 0] : 0 }} transition={{ duration: 0.3, repeat: vodaKanalizacia ? 2 : 0 }}>
-                <Droplets className="w-5 h-5 text-blue-500" />
+                <Droplets className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
               </motion.div>
               Voda a kanalizácia
             </Label>
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 text-sm">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-2 sm:p-4 mb-3 sm:mb-4 text-xs sm:text-sm hidden sm:block">
               <p className="text-blue-900 font-medium mb-2">Montáž vodovodného a kanalizačného systému zahŕňa všetky potrebné materiály a realizáciu týchto prác:</p>
               <ul className="text-blue-800 space-y-1 list-disc list-inside mb-3">
                 <li>montáž vodovodných potrubí podľa základného projektu</li>
@@ -869,14 +869,14 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 <p className="text-red-600">Montáž sanitárnych a elektrických zariadení môže byť vykonaná za príplatok.</p>
               </div>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               <motion.label 
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); }}
-                className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${vodaKanalizacia ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
+                className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${vodaKanalizacia ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <Checkbox 
                     id="voda" 
                     checked={vodaKanalizacia} 
@@ -884,28 +884,28 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                   />
                   <div>
-                    <span className="font-semibold text-gray-800">Rozvody vody a kanalizácie</span>
-                    <p className="text-sm text-gray-500">Príprava pre sanitárne zariadenia</p>
+                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Rozvody vody a kanalizácie</span>
+                    <p className="text-[10px] sm:text-sm text-gray-500">Príprava pre sanitárne zariadenia</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <AnimatePresence>
                     {vodaKanalizacia && (
                       <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                        <CheckCircle className="w-5 h-5 text-green-500" />
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                       </motion.span>
                     )}
                   </AnimatePresence>
-                  <span className="font-bold text-green-600">+ 2 380 €</span>
+                  <span className="font-bold text-green-600 text-xs sm:text-base">+ 2 380 €</span>
                 </div>
               </motion.label>
               <motion.label 
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); }}
-                className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${sanitaKomplet ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
+                className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${sanitaKomplet ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <Checkbox 
                     id="sanita" 
                     checked={sanitaKomplet} 
@@ -913,28 +913,28 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                   />
                   <div>
-                    <span className="font-semibold text-gray-800">Sanita komplet</span>
-                    <p className="text-sm text-gray-500">Sprchový kút, umývadlo, WC misa</p>
+                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Sanita komplet</span>
+                    <p className="text-[10px] sm:text-sm text-gray-500">Sprchový kút, umývadlo, WC</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <AnimatePresence>
                     {sanitaKomplet && (
                       <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                        <CheckCircle className="w-5 h-5 text-green-500" />
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                       </motion.span>
                     )}
                   </AnimatePresence>
-                  <span className="font-bold text-green-600">+ 1 169 €</span>
+                  <span className="font-bold text-green-600 text-xs sm:text-base">+ 1 169 €</span>
                 </div>
               </motion.label>
               <motion.label 
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); }}
-                className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${bojler ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
+                className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${bojler ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <Checkbox 
                     id="bojler" 
                     checked={bojler} 
@@ -942,19 +942,19 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                   />
                   <div>
-                    <span className="font-semibold text-gray-800">Elektrický bojler</span>
-                    <p className="text-sm text-gray-500">Ohrev teplej úžitkovej vody</p>
+                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Elektrický bojler</span>
+                    <p className="text-[10px] sm:text-sm text-gray-500">Ohrev teplej úžitkovej vody</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <AnimatePresence>
                     {bojler && (
                       <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                        <CheckCircle className="w-5 h-5 text-green-500" />
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                       </motion.span>
                     )}
                   </AnimatePresence>
-                  <span className="font-bold text-green-600">+ 246 €</span>
+                  <span className="font-bold text-green-600 text-xs sm:text-base">+ 246 €</span>
                 </div>
               </motion.label>
             </div>
@@ -962,23 +962,23 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
 
           {/* Vykurovanie a vetranie */}
           <motion.div 
-            className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+            className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
             whileHover={{ scale: 1.005 }}
           >
-            <Label className="text-lg font-bold text-gray-800 mb-4 block flex items-center gap-2">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
               <motion.div animate={{ scale: (tepelneCerpadlo || rekuperacia) ? [1, 1.2, 1] : 1 }} transition={{ duration: 0.3 }}>
-                <ThermometerSun className="w-5 h-5 text-red-500" />
+                <ThermometerSun className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
               </motion.div>
               Vykurovanie a vetranie
             </Label>
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               <motion.label 
                 whileHover={{ x: 4, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={(e) => { if (!tepelneCerpadlo) triggerAnimation("klimatizacia", e.currentTarget); }}
-                className={`relative flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all overflow-hidden ${tepelneCerpadlo ? 'border-green-500 bg-green-50 shadow-md ring-2 ring-green-200' : projektA0 && !tepelneCerpadlo ? 'border-amber-400 bg-amber-50' : 'border-green-300 bg-green-50/50 hover:bg-green-100'}`}
+                className={`relative flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all overflow-hidden ${tepelneCerpadlo ? 'border-green-500 bg-green-50 shadow-md ring-2 ring-green-200' : projektA0 && !tepelneCerpadlo ? 'border-amber-400 bg-amber-50' : 'border-green-300 bg-green-50/50 hover:bg-green-100'}`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <Checkbox 
                     id="cerpadlo" 
                     checked={tepelneCerpadlo} 
@@ -986,34 +986,34 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
                   />
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-gray-800">Tepelné čerpadlo / Klimatizácia</span>
-                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-xs">
-                        <Sparkles className="w-3 h-3 mr-1" />
-                        Odporúčané pre A0
+                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                      <span className="font-semibold text-gray-800 text-xs sm:text-base">Tepelné čerpadlo</span>
+                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] sm:text-xs">
+                        <Sparkles className="w-2 h-2 sm:w-3 sm:h-3 mr-0.5 sm:mr-1" />
+                        A0
                       </Badge>
                     </div>
-                    <p className="text-sm text-gray-500">1x vonkajšia + 5x vnútorná jednotka</p>
+                    <p className="text-[10px] sm:text-sm text-gray-500">1x vonk. + 5x vnút. jednotka</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <AnimatePresence>
                     {tepelneCerpadlo && (
                       <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                        <CheckCircle className="w-5 h-5 text-green-500" />
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                       </motion.span>
                     )}
                   </AnimatePresence>
-                  <span className="font-bold text-green-600">+ 5 535 €</span>
+                  <span className="font-bold text-green-600 text-xs sm:text-base">+ 5 535 €</span>
                 </div>
               </motion.label>
               <motion.label 
                 whileHover={{ x: 4, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={(e) => { if (!rekuperacia) triggerAnimation("rekuperacia", e.currentTarget); }}
-                className={`relative flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all overflow-hidden ${rekuperacia ? 'border-green-500 bg-green-50 shadow-md ring-2 ring-green-200' : projektA0 && !rekuperacia ? 'border-amber-400 bg-amber-50' : 'border-green-300 bg-green-50/50 hover:bg-green-100'}`}
+                className={`relative flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all overflow-hidden ${rekuperacia ? 'border-green-500 bg-green-50 shadow-md ring-2 ring-green-200' : projektA0 && !rekuperacia ? 'border-amber-400 bg-amber-50' : 'border-green-300 bg-green-50/50 hover:bg-green-100'}`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <Checkbox 
                     id="rekuperacia" 
                     checked={rekuperacia} 
@@ -1021,41 +1021,41 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
                   />
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-gray-800">Rekuperácia</span>
-                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-xs">
-                        <Sparkles className="w-3 h-3 mr-1" />
-                        Odporúčané pre A0
+                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                      <span className="font-semibold text-gray-800 text-xs sm:text-base">Rekuperácia</span>
+                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] sm:text-xs">
+                        <Sparkles className="w-2 h-2 sm:w-3 sm:h-3 mr-0.5 sm:mr-1" />
+                        A0
                       </Badge>
                     </div>
-                    <p className="text-sm text-gray-500">5ks lokálnych jednotiek</p>
+                    <p className="text-[10px] sm:text-sm text-gray-500">5ks lokálnych jednotiek</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <AnimatePresence>
                     {rekuperacia && (
                       <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                        <CheckCircle className="w-5 h-5 text-green-500" />
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                       </motion.span>
                     )}
                   </AnimatePresence>
-                  <span className="font-bold text-green-600">+ 2 700 €</span>
+                  <span className="font-bold text-green-600 text-xs sm:text-base">+ 2 700 €</span>
                 </div>
               </motion.label>
             </div>
           </motion.div>
 
           {/* Pripojenie na siete */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-            <Label className="text-lg font-bold text-gray-800 mb-4 block flex items-center gap-2">
-              <Cable className="w-5 h-5 text-gray-600" />
+          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
+              <Cable className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
               Pripojenie na siete
             </Label>
             <label 
               onClick={(e) => { if (!pripojkaSiete) triggerAnimation("siete", e.currentTarget); }}
-              className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
+              className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <Checkbox 
                   id="pripojky" 
                   checked={pripojkaSiete} 
@@ -1063,61 +1063,61 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                   className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                 />
                 <div>
-                  <span className="font-semibold text-gray-800">Pripojenie na inžinierske siete</span>
-                  <p className="text-sm text-gray-500">Elektrika, voda, kanalizácia (do 10m)</p>
+                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Pripojenie na siete</span>
+                  <p className="text-[10px] sm:text-sm text-gray-500">Elektrika, voda, kanalizácia</p>
                 </div>
               </div>
-              <span className="font-bold text-green-600">+ 1 501 €</span>
+              <span className="font-bold text-green-600 text-xs sm:text-base">+ 1 501 €</span>
             </label>
           </div>
 
           {/* Úpravy okien a dverí */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
-            <Label className="text-lg font-bold text-gray-800 mb-4 block flex items-center gap-2">
-              <Square className="w-5 h-5 text-blue-600" />
+          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
+            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
+              <Square className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
               Okná a vstupné dvere
             </Label>
             
             {/* Vstupné dvere */}
-            <div className="mb-4">
-              <p className="text-sm font-medium text-gray-600 mb-3">Vstupné dvere</p>
-              <RadioGroup value={vstupneDvere} onValueChange={setVstupneDvere} className="space-y-2">
-                <label className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
-                  <div className="flex items-center gap-3">
+            <div className="mb-3 sm:mb-4">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 mb-2 sm:mb-3">Vstupné dvere</p>
+              <RadioGroup value={vstupneDvere} onValueChange={setVstupneDvere} className="space-y-1.5 sm:space-y-2">
+                <label className="flex items-center justify-between p-2 sm:p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <RadioGroupItem value="ziadne" id="dvere-ziadne" />
-                    <span className="text-gray-800">Žiadne / Štandard v sade</span>
+                    <span className="text-gray-800 text-xs sm:text-base">Štandard v sade</span>
                   </div>
-                  <span className="text-gray-400">+ 0 €</span>
+                  <span className="text-gray-400 text-xs sm:text-base">+ 0 €</span>
                 </label>
                 <label 
                   onClick={(e) => { if (vstupneDvere !== "kovove") triggerAnimation("dvereKovove", e.currentTarget); }}
-                  className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
+                  className="flex items-center justify-between p-2 sm:p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <RadioGroupItem value="kovove" id="dvere-kovove" />
-                    <span className="text-gray-800">Kovové dvere s 2 zámkami</span>
+                    <span className="text-gray-800 text-xs sm:text-base">Kovové dvere</span>
                   </div>
-                  <span className="font-bold text-green-600">+ 720 €</span>
+                  <span className="font-bold text-green-600 text-xs sm:text-base">+ 720 €</span>
                 </label>
                 <label 
                   onClick={(e) => { if (vstupneDvere !== "plastove") triggerAnimation("dverePlastove", e.currentTarget); }}
-                  className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
+                  className="flex items-center justify-between p-2 sm:p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <RadioGroupItem value="plastove" id="dvere-plastove" />
-                    <span className="text-gray-800">Plastovo-kovové dvere</span>
+                    <span className="text-gray-800 text-xs sm:text-base">Plastovo-kovové</span>
                   </div>
-                  <span className="font-bold text-green-600">+ 660 €</span>
+                  <span className="font-bold text-green-600 text-xs sm:text-base">+ 660 €</span>
                 </label>
               </RadioGroup>
             </div>
 
             {/* Rozšírenia okien */}
-            <div className="space-y-3 pt-4 border-t">
-              <p className="text-sm font-medium text-gray-600 mb-2">Doplnkové okná</p>
-              <div className="grid gap-3">
+            <div className="space-y-2 sm:space-y-3 pt-3 sm:pt-4 border-t">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1.5 sm:mb-2">Doplnkové okná</p>
+              <div className="grid gap-2 sm:gap-3">
                 <div 
-                  className={`flex items-center justify-between p-3 border-2 rounded-lg cursor-pointer transition-all ${stresneOkno > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
+                  className={`flex items-center justify-between p-2 sm:p-3 border-2 rounded-lg cursor-pointer transition-all ${stresneOkno > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
                   onClick={(e) => { 
                     if (stresneOkno === 0) {
                       triggerAnimation("okno", e.currentTarget);
@@ -1127,11 +1127,11 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     }
                   }}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <Checkbox checked={stresneOkno > 0} className="data-[state=checked]:bg-blue-600" />
-                    <span className="text-gray-800">Strešné okno</span>
+                    <span className="text-gray-800 text-xs sm:text-base">Strešné okno</span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2">
                     <Input 
                       type="number" 
                       min="0" 
@@ -1142,13 +1142,13 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                         if (newVal > stresneOkno) triggerAnimation("okno", e.target);
                         setStresneOkno(newVal);
                       }}
-                      className="w-16 text-center h-9"
+                      className="w-12 sm:w-16 text-center h-7 sm:h-9 text-xs sm:text-base"
                     />
-                    <span className="font-bold text-green-600 whitespace-nowrap">× 760 €</span>
+                    <span className="font-bold text-green-600 whitespace-nowrap text-xs sm:text-base">× 760 €</span>
                   </div>
                 </div>
                 <div 
-                  className={`flex items-center justify-between p-3 border-2 rounded-lg cursor-pointer transition-all ${bocneOknoFixne > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
+                  className={`flex items-center justify-between p-2 sm:p-3 border-2 rounded-lg cursor-pointer transition-all ${bocneOknoFixne > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
                   onClick={(e) => { 
                     if (bocneOknoFixne === 0) {
                       triggerAnimation("okno", e.currentTarget);
@@ -1158,11 +1158,11 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     }
                   }}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <Checkbox checked={bocneOknoFixne > 0} className="data-[state=checked]:bg-blue-600" />
-                    <span className="text-gray-800">Bočné okno (Fixné) 90x205cm</span>
+                    <span className="text-gray-800 text-xs sm:text-base">Bočné fixné 90×205</span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2">
                     <Input 
                       type="number" 
                       min="0" 
@@ -1173,13 +1173,13 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                         if (newVal > bocneOknoFixne) triggerAnimation("okno", e.target);
                         setBocneOknoFixne(newVal);
                       }}
-                      className="w-16 text-center h-9"
+                      className="w-12 sm:w-16 text-center h-7 sm:h-9 text-xs sm:text-base"
                     />
-                    <span className="font-bold text-green-600 whitespace-nowrap">× 501 €</span>
+                    <span className="font-bold text-green-600 whitespace-nowrap text-xs sm:text-base">× 501 €</span>
                   </div>
                 </div>
                 <div 
-                  className={`flex items-center justify-between p-3 border-2 rounded-lg cursor-pointer transition-all ${bocneOknoVyklopne90 > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
+                  className={`flex items-center justify-between p-2 sm:p-3 border-2 rounded-lg cursor-pointer transition-all ${bocneOknoVyklopne90 > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
                   onClick={(e) => { 
                     if (bocneOknoVyklopne90 === 0) {
                       triggerAnimation("okno", e.currentTarget);
@@ -1189,11 +1189,11 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     }
                   }}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <Checkbox checked={bocneOknoVyklopne90 > 0} className="data-[state=checked]:bg-blue-600" />
-                    <span className="text-gray-800">Bočné okno (Výklopno-sklopné) 90x205cm</span>
+                    <span className="text-gray-800 text-xs sm:text-base">Bočné výkl. 90×205</span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2">
                     <Input 
                       type="number" 
                       min="0" 
@@ -1204,13 +1204,13 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                         if (newVal > bocneOknoVyklopne90) triggerAnimation("okno", e.target);
                         setBocneOknoVyklopne90(newVal);
                       }}
-                      className="w-16 text-center h-9"
+                      className="w-12 sm:w-16 text-center h-7 sm:h-9 text-xs sm:text-base"
                     />
-                    <span className="font-bold text-green-600 whitespace-nowrap">× 540 €</span>
+                    <span className="font-bold text-green-600 whitespace-nowrap text-xs sm:text-base">× 540 €</span>
                   </div>
                 </div>
                 <div 
-                  className={`flex items-center justify-between p-3 border-2 rounded-lg cursor-pointer transition-all ${bocneOknoVyklopne55 > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
+                  className={`flex items-center justify-between p-2 sm:p-3 border-2 rounded-lg cursor-pointer transition-all ${bocneOknoVyklopne55 > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
                   onClick={(e) => { 
                     if (bocneOknoVyklopne55 === 0) {
                       triggerAnimation("okno", e.currentTarget);
@@ -1220,11 +1220,11 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     }
                   }}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <Checkbox checked={bocneOknoVyklopne55 > 0} className="data-[state=checked]:bg-blue-600" />
-                    <span className="text-gray-800">Bočné okno (Výklopno-sklopné) 55x90cm</span>
+                    <span className="text-gray-800 text-xs sm:text-base">Bočné výkl. 55×90</span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2">
                     <Input 
                       type="number" 
                       min="0" 
@@ -1235,22 +1235,22 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                         if (newVal > bocneOknoVyklopne55) triggerAnimation("okno", e.target);
                         setBocneOknoVyklopne55(newVal);
                       }}
-                      className="w-16 text-center h-9"
+                      className="w-12 sm:w-16 text-center h-7 sm:h-9 text-xs sm:text-base"
                     />
-                    <span className="font-bold text-green-600 whitespace-nowrap">× 225 €</span>
+                    <span className="font-bold text-green-600 whitespace-nowrap text-xs sm:text-base">× 225 €</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Laminácia a tónované sklá */}
-            <div className="space-y-3 pt-4 border-t mt-4">
-              <p className="text-sm font-medium text-gray-600 mb-2">Úpravy okien</p>
+            <div className="space-y-2 sm:space-y-3 pt-3 sm:pt-4 border-t mt-3 sm:mt-4">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1.5 sm:mb-2">Úpravy okien</p>
               <label 
                 onClick={(e) => { if (!povrchokaOkien) triggerAnimation("oknoAntracit", e.currentTarget); }}
-                className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
+                className="flex items-center justify-between p-2 sm:p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <Checkbox 
                     id="povrch-okien" 
                     checked={povrchokaOkien} 
@@ -1258,29 +1258,28 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                     className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                   />
                   <div>
-                    <span className="text-gray-800">Laminácia okien - antracit</span>
-                    <p className="text-xs text-gray-500">(možná je aj laminácia v iných farbách)</p>
+                    <span className="text-gray-800 text-xs sm:text-base">Laminácia - antracit</span>
                   </div>
                 </div>
-                <span className="font-bold text-green-600">+ 3 100 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 3 100 €</span>
               </label>
               <label 
                 onClick={(e) => { if (!tonovaneSkla) triggerAnimation("oknoTonovane", e.currentTarget); }}
-                className="flex items-center justify-between p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
+                className="flex items-center justify-between p-2 sm:p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <Checkbox 
                     id="tonovane-skla" 
                     checked={tonovaneSkla} 
                     onCheckedChange={setTonovaneSkla}
                     className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                   />
-                  <span className="text-gray-800">Tónované sklá (Solar)</span>
+                  <span className="text-gray-800 text-xs sm:text-base">Tónované sklá (Solar)</span>
                 </div>
-                <span className="font-bold text-green-600">+ 1 300 €</span>
+                <span className="font-bold text-green-600 text-xs sm:text-base">+ 1 300 €</span>
               </label>
             </div>
-          </div>
+            </div>
 
         </div>
         </Card>
