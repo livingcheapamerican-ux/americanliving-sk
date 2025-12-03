@@ -799,19 +799,6 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           <strong>Poznámka:</strong> Tieto položky vyžadujú individuálne nacenenie. Kontaktujte nás pre presnú cenu.
         </div>
 
-        {/* Predĺženie dĺžky domu */}
-        <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
-          <div className="flex items-center gap-3">
-            <Scaling className="w-4 h-4 text-indigo-600" />
-            <div>
-              <Label className="cursor-pointer">
-                Predĺženie dĺžky domu, v násobkoch 1,2m
-              </Label>
-            </div>
-          </div>
-          <span className="text-gray-500 italic">individuálne nacenenie</span>
-        </div>
-
         {/* Strešné okno */}
         <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 mb-3">
           <div className="flex items-center gap-3">
