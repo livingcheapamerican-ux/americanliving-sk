@@ -484,7 +484,10 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
               <div className="flex items-center gap-3">
                 <RadioGroupItem value="ziadne" id="interier-ziadne" />
-                <Label htmlFor="interier-ziadne" className="cursor-pointer">Nie</Label>
+                <div>
+                  <Label htmlFor="interier-ziadne" className="cursor-pointer">Nie</Label>
+                  <p className="text-sm text-gray-500">Dom zostane v štádiu hrubej stavby</p>
+                </div>
               </div>
               <span className="text-gray-500">+ 0 €</span>
             </div>
