@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
-  Send, AlertTriangle, CheckCircle, Calculator
+  Send, AlertTriangle, CheckCircle, Calculator, RotateCcw, Eye
 } from "lucide-react";
 
 export default function KonfiguratorFlatDoubleInline({ dom }) {
