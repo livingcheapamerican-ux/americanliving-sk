@@ -327,12 +327,59 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
 
           {/* Súhrn položiek */}
           <div className="max-h-64 overflow-y-auto p-3 space-y-1">
-            {selectedItems.map((item, index) => (
-              <div key={index} className={`flex justify-between items-center py-1.5 px-2 rounded text-xs ${index === 0 ? 'bg-blue-500/20 border border-blue-500/30' : 'hover:bg-slate-700/50'}`}>
-                <span className={`${index === 0 ? 'text-blue-300 font-semibold' : 'text-slate-400'} flex-1 pr-2`}>{item.name}</span>
-                <span className={`${index === 0 ? 'text-blue-300' : 'text-green-400'} font-semibold whitespace-nowrap`}>{formatPrice(item.price)}</span>
-              </div>
-            ))}
+            {selectedItems.map((item, index) => {
+              const isBase = item.section === "base";
+              const prevItem = selectedItems[index - 1];
+              const showHrubaDivider = item.section === "hruba" && (!prevItem || prevItem.section === "base");
+              const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
+              const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
+              const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
+              
+              return (
+                <React.Fragment key={index}>
+                  {showHrubaDivider && dosiahnuteUrovne.hrubaStavba && (
+                    <div className="py-2">
+                      <div className="border-t-2 border-amber-500/50 my-1"></div>
+                      <div className="flex items-center gap-2 px-2">
+                        <Package className="w-3 h-3 text-amber-400" />
+                        <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Hrubá stavba</span>
+                      </div>
+                    </div>
+                  )}
+                  {showHolodomDivider && dosiahnuteUrovne.holodom && (
+                    <div className="py-2">
+                      <div className="border-t-2 border-blue-500/50 my-1"></div>
+                      <div className="flex items-center gap-2 px-2">
+                        <Hammer className="w-3 h-3 text-blue-400" />
+                        <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">Holodom</span>
+                      </div>
+                    </div>
+                  )}
+                  {showKlucDivider && dosiahnuteUrovne.domNaKluc && (
+                    <div className="py-2">
+                      <div className="border-t-2 border-emerald-500/50 my-1"></div>
+                      <div className="flex items-center gap-2 px-2">
+                        <Key className="w-3 h-3 text-emerald-400" />
+                        <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Dom na kľúč</span>
+                      </div>
+                    </div>
+                  )}
+                  {showDocsDivider && (
+                    <div className="py-2">
+                      <div className="border-t-2 border-purple-500/50 my-1"></div>
+                      <div className="flex items-center gap-2 px-2">
+                        <FileText className="w-3 h-3 text-purple-400" />
+                        <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider">Dokumentácia</span>
+                      </div>
+                    </div>
+                  )}
+                  <div className={`flex justify-between items-center py-1.5 px-2 rounded text-xs ${isBase ? 'bg-blue-500/20 border border-blue-500/30' : 'hover:bg-slate-700/50'}`}>
+                    <span className={`${isBase ? 'text-blue-300 font-semibold' : 'text-slate-400'} flex-1 pr-2`}>{item.name}</span>
+                    <span className={`${isBase ? 'text-blue-300' : 'text-green-400'} font-semibold whitespace-nowrap`}>{formatPrice(item.price)}</span>
+                  </div>
+                </React.Fragment>
+              );
+            })}
           </div>
 
           {/* Celková cena */}
