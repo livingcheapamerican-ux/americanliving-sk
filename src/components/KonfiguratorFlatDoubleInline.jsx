@@ -1357,12 +1357,18 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           </div>
 
         </div>
-      </Card>
+        </Card>
+        </motion.div>
 
-      {/* ═══════════════════════════════════════════════════════════════════════
+        {/* ═══════════════════════════════════════════════════════════════════════
           FÁZA 4: DOKUMENTÁCIA A DOPRAVA
           ═══════════════════════════════════════════════════════════════════════ */}
-      <Card className="overflow-hidden border-0 shadow-xl ring-1 ring-purple-200/50">
+        <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        >
+        <Card className="overflow-hidden border-0 shadow-xl ring-1 ring-purple-200/50 hover:ring-2 hover:ring-purple-300/70 transition-all duration-300">
         <SectionHeader 
           icon={FileText} 
           title="Dokumentácia a služby" 
