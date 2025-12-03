@@ -238,7 +238,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
       {/* ═══════════════════════════════════════════════════════════════════════
           FÁZA 1: HRUBÁ STAVBA (Konštrukcia, Základy)
           ═══════════════════════════════════════════════════════════════════════ */}
-      <Card className="overflow-hidden border-0 shadow-lg">
+      <Card className="overflow-hidden border-0 shadow-xl ring-1 ring-amber-200/50">
         <SectionHeader 
           icon={Package} 
           title="Hrubá stavba" 
