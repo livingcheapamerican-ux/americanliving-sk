@@ -253,7 +253,44 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
   );
 
   return (
-    <div className="mt-8 space-y-6">
+    <div className="mt-8 relative">
+      {/* Floating Price Bar - pravá strana */}
+      <div className="hidden xl:block fixed right-4 top-56 w-80 z-40">
+        <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
+          <div className="p-4 border-b border-slate-700/50">
+            <p className="text-green-400 text-xs font-semibold uppercase tracking-wider mb-1">Vaša konfigurácia</p>
+            <h3 className="text-lg font-bold text-white">Flat Double 142m²</h3>
+          </div>
+
+          {/* Súhrn položiek */}
+          <div className="max-h-64 overflow-y-auto p-3 space-y-1">
+            {selectedItems.map((item, index) => (
+              <div key={index} className={`flex justify-between items-center py-1.5 px-2 rounded text-xs ${index === 0 ? 'bg-blue-500/20 border border-blue-500/30' : 'hover:bg-slate-700/50'}`}>
+                <span className={`${index === 0 ? 'text-blue-300 font-semibold' : 'text-slate-400'} flex-1 pr-2`}>{item.name}</span>
+                <span className={`${index === 0 ? 'text-blue-300' : 'text-green-400'} font-semibold whitespace-nowrap`}>{formatPrice(item.price)}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Celková cena */}
+          <div className="p-4 bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-t border-green-500/20">
+            <div className="flex justify-between items-center mb-3">
+              <span className="text-slate-400 text-sm">Celkom s DPH</span>
+              <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+                {formatPrice(totalPrice)}
+              </span>
+            </div>
+            <Link to={`${createPageUrl("Kontakt")}?dom=Flat%20Double%20142m²&cena=${totalPrice}`}>
+              <Button size="sm" className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg">
+                <Send className="mr-2 w-4 h-4" />
+                Mám záujem
+              </Button>
+            </Link>
+          </div>
+        </Card>
+      </div>
+
+      <div className="space-y-6 xl:mr-88">
       {/* Hlavička konfigurátora */}
       <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-blue-500/30">
         <div className="relative">
