@@ -428,7 +428,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
       {/* ═══════════════════════════════════════════════════════════════════════
           FÁZA 2: HOLODOM (Montáž, Inštalácie, Okná/Dvere)
           ═══════════════════════════════════════════════════════════════════════ */}
-      <Card className="overflow-hidden border-0 shadow-lg">
+      <Card className="overflow-hidden border-0 shadow-xl ring-1 ring-blue-200/50">
         <SectionHeader 
           icon={Hammer} 
           title="Holodom" 
