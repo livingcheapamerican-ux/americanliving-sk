@@ -11,8 +11,9 @@ import {
   Send, AlertTriangle, CheckCircle, Calculator, RotateCcw,
   Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
   Zap, ShowerHead, Flame, Cable, Paintbrush, Home, Truck, Sun, DoorOpen,
-  Maximize, Square, FileCheck, Package, Hammer, Key
+  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 
 export default function KonfiguratorFlatDoubleInline({ dom }) {
