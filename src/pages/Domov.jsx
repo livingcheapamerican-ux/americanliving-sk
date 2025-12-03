@@ -460,7 +460,7 @@ export default function Domov() {
             </p>
             </div>
 
-            <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-1.5 sm:gap-4">
+            <div className="max-w-7xl mx-auto grid grid-cols-4 lg:grid-cols-8 gap-1.5 sm:gap-4">
             {proces.map((krok, index) => (
               <div key={index}>
                 <Card className="p-1.5 sm:p-4 h-full hover:shadow-xl transition-shadow bg-white border border-gray-100">
