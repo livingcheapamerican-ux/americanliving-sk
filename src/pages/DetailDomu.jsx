@@ -474,6 +474,11 @@ export default function DetailDomu() {
               />
             )}
 
+            {/* Fáza 2: Holodom - pod Fázou 1 */}
+            {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
+              <KonfiguratorFaza2Holodom />
+            )}
+
             {/* Pôdorysy */}
             {dom.podorysy && dom.podorysy.length > 0 && (
               <Card className="p-6">
