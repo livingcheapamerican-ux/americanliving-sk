@@ -949,82 +949,80 @@ export default function DetailDomu() {
 
               {/* Informačné panely z konfigurátora - len pre Prosto House Flat Double */}
               {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
-                <div className="space-y-3 mt-4">
+                <div className="grid grid-cols-2 gap-3 mt-4">
                   {/* Komplet pre montáž */}
                   <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
-                    <div className="flex items-center gap-2 p-4 text-sm font-semibold text-amber-900 border-b border-amber-200">
-                      <Package className="w-4 h-4" />
+                    <div className="flex items-center gap-2 p-3 text-xs font-semibold text-amber-900 border-b border-amber-200">
+                      <Package className="w-3 h-3" />
                       Komplet pre montáž
                     </div>
-                    <div className="px-4 pb-4 text-xs text-amber-800 space-y-1.5 pt-3">
-                      <p>• drevená konštrukcia domu, hobľovaný hranol</p>
-                      <p>• vonkajšie steny, falcovaný plech 0,45 mm</p>
-                      <p>• strecha, falcovaný plech 0,45 mm</p>
-                      <p>• okná s dvojkomorovým izolačným sklom</p>
-                      <p>• dvere s dvojkomorovým izolačným sklom</p>
+                    <div className="px-3 pb-3 text-[10px] text-amber-800 space-y-1 pt-2">
+                      <p>• drevená konštrukcia, hobľovaný hranol</p>
+                      <p>• vonkajšie steny, falcovaný plech 0,45mm</p>
+                      <p>• strecha, falcovaný plech 0,45mm</p>
+                      <p>• okná s dvojkomorovým sklom</p>
+                      <p>• dvere s dvojkomorovým sklom</p>
                       <p>• hydroizolačná membrána Strotex 1300</p>
                       <p>• tepelná izolácia (150-250mm)</p>
                       <p>• parozábranová fólia Strotex AL90</p>
-                      <p>• hrubá podlaha z OSB dosiek 22 mm</p>
-                      <p className="text-red-600 font-medium mt-2">Maľovanie: 4,5 €/m²</p>
+                      <p>• hrubá podlaha z OSB 22mm</p>
+                      <p className="text-red-600 font-medium mt-1">Maľovanie: 4,5 €/m²</p>
                     </div>
                   </Card>
 
                   {/* Elektroinštalácia */}
                   <Card className="overflow-hidden border border-yellow-200 bg-yellow-50/50">
-                    <div className="flex items-center gap-2 p-4 text-sm font-semibold text-yellow-900 border-b border-yellow-200">
-                      <Zap className="w-4 h-4" />
-                      Elektroinštalácia info
+                    <div className="flex items-center gap-2 p-3 text-xs font-semibold text-yellow-900 border-b border-yellow-200">
+                      <Zap className="w-3 h-3" />
+                      Elektroinštalácia
                     </div>
-                    <div className="px-4 pb-4 text-xs text-yellow-800 space-y-1.5 pt-3">
+                    <div className="px-3 pb-3 text-[10px] text-yellow-800 space-y-1 pt-2">
                       <p>• montáž elektrických káblov</p>
                       <p>• inštalácia rozvádzača s ističmi</p>
                       <p>• uloženie chráničky pre vonkajší kábel</p>
                       <p>• montáž inštalačných krabíc</p>
-                      <p className="text-red-600 font-medium mt-2">Nezahŕňa: bleskozvod, revízne doklady, montáž zásuviek/svietidiel</p>
+                      <p className="text-red-600 font-medium mt-1">Nezahŕňa: bleskozvod, revízne doklady, montáž zásuviek/svietidiel</p>
                     </div>
                   </Card>
 
                   {/* Voda a kanalizácia */}
                   <Card className="overflow-hidden border border-blue-200 bg-blue-50/50">
-                    <div className="flex items-center gap-2 p-4 text-sm font-semibold text-blue-900 border-b border-blue-200">
-                      <Droplets className="w-4 h-4" />
-                      Voda a kanalizácia info
+                    <div className="flex items-center gap-2 p-3 text-xs font-semibold text-blue-900 border-b border-blue-200">
+                      <Droplets className="w-3 h-3" />
+                      Voda a kanalizácia
                     </div>
-                    <div className="px-4 pb-4 text-xs text-blue-800 space-y-1.5 pt-3">
+                    <div className="px-3 pb-3 text-[10px] text-blue-800 space-y-1 pt-2">
                       <p>• montáž vodovodných potrubí</p>
                       <p>• montáž ventilov, záslepiek</p>
                       <p>• montáž kanalizačných potrubí</p>
                       <p>• kontrola tesnosti pod tlakom</p>
-                      <p className="text-red-600 font-medium mt-2">Protokoly a sanitárne zariadenia za príplatok</p>
+                      <p className="text-red-600 font-medium mt-1">Protokoly a sanitárne zariadenia za príplatok</p>
                     </div>
                   </Card>
 
                   {/* Základy */}
                   <Card className="overflow-hidden border border-orange-200 bg-orange-50/50">
-                    <div className="flex items-center gap-2 p-4 text-sm font-semibold text-orange-900 border-b border-orange-200">
-                      <Landmark className="w-4 h-4" />
-                      Základy info
+                    <div className="flex items-center gap-2 p-3 text-xs font-semibold text-orange-900 border-b border-orange-200">
+                      <Landmark className="w-3 h-3" />
+                      Základy
                     </div>
-                    <div className="px-4 pb-4 text-xs text-orange-800 space-y-1.5 pt-3">
+                    <div className="px-3 pb-3 text-[10px] text-orange-800 space-y-1 pt-2">
                       <p>• vrutové stĺpy, betónové stĺpiky alebo doska</p>
                       <p>• uvedená minimálna cena za rovný terén</p>
                       <p>• konečná cena po geodetickej analýze</p>
-                      <p className="text-red-600 font-medium mt-2">Prípravné práce nie sú v cene</p>
+                      <p className="text-red-600 font-medium mt-1">Prípravné práce nie sú v cene</p>
                     </div>
                   </Card>
 
                   {/* Interiér */}
-                  <Card className="overflow-hidden border border-emerald-200 bg-emerald-50/50">
-                    <div className="flex items-center gap-2 p-4 text-sm font-semibold text-emerald-900 border-b border-emerald-200">
-                      <Home className="w-4 h-4" />
-                      Interiér finiš info
+                  <Card className="overflow-hidden border border-emerald-200 bg-emerald-50/50 col-span-2">
+                    <div className="flex items-center gap-2 p-3 text-xs font-semibold text-emerald-900 border-b border-emerald-200">
+                      <Home className="w-3 h-3" />
+                      Interiér finiš
                     </div>
-                    <div className="px-4 pb-4 text-xs text-emerald-800 space-y-1.5 pt-3">
-                      <p>• montáž priečok podľa projektu</p>
-                      <p>• izolácia 100 mm + parozábrana</p>
-                      <p>• tatranský profil 8-12 mm</p>
-                      <p className="text-red-600 font-medium mt-2">Maľovanie: 4,5 €/m², farbu dodáva klient</p>
+                    <div className="px-3 pb-3 text-[10px] text-emerald-800 space-y-1 pt-2">
+                      <p>• montáž priečok podľa projektu • izolácia 100mm + parozábrana • tatranský profil 8-12mm</p>
+                      <p className="text-red-600 font-medium">Maľovanie: 4,5 €/m², farbu dodáva klient</p>
                     </div>
                   </Card>
                 </div>
