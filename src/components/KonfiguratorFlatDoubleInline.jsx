@@ -882,19 +882,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               </motion.div>
               Voda a kanalizácia
             </Label>
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-2 sm:p-4 mb-3 sm:mb-4 text-xs sm:text-sm hidden sm:block">
-              <p className="text-blue-900 font-medium mb-2">Montáž vodovodného a kanalizačného systému zahŕňa všetky potrebné materiály a realizáciu týchto prác:</p>
-              <ul className="text-blue-800 space-y-1 list-disc list-inside mb-3">
-                <li>montáž vodovodných potrubí podľa základného projektu</li>
-                <li>montáž ventilov, záslepiek a pod.</li>
-                <li>montáž kanalizačných potrubí podľa základného projektu</li>
-                <li>kontrola tesnosti systému pod tlakom</li>
-              </ul>
-              <div className="space-y-1 pt-3 border-t border-blue-300">
-                <p className="text-red-600 font-medium">Protokoly na uvedenie budovy do prevádzky sa poskytujú za príplatok.</p>
-                <p className="text-red-600">Montáž sanitárnych a elektrických zariadení môže byť vykonaná za príplatok.</p>
-              </div>
-            </div>
+
             <div className="space-y-2 sm:space-y-3">
               <motion.label 
                 whileHover={{ x: 4 }}
