@@ -51,6 +51,7 @@ export default function Katalog() {
   const [zoradenie, setZoradenie] = useState(initialFilters.zoradenie);
   const [vybraneNaSrovnanie, setVybraneNaSrovnanie] = useState([]);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [dizajnFilter, setDizajnFilter] = useState("murovka"); // "murovka" alebo "drevo"
 
   const queryClient = useQueryClient();
 
