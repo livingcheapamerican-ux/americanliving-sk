@@ -358,7 +358,7 @@ export default function KonfiguratorFlatDoubleInline({
           </div>
 
           {/* Súhrn položiek */}
-          <div className="px-2 py-1 max-h-[40vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
+          <div className="px-3 py-2 max-h-[50vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
             {selectedItems.map((item, index) => {
               const isBase = item.section === "base";
               const prevItem = selectedItems[index - 1];
@@ -370,44 +370,44 @@ export default function KonfiguratorFlatDoubleInline({
               return (
                 <React.Fragment key={index}>
                   {showHrubaDivider && (
-                    <div className="py-1">
-                      <div className="border-t border-amber-500/50"></div>
-                      <div className="flex items-center gap-1.5 px-1 pt-1">
-                        <Package className="w-2.5 h-2.5 text-amber-400" />
-                        <span className="text-[9px] font-bold text-amber-400 uppercase tracking-wider">Hrubá stavba</span>
+                    <div className="py-2">
+                      <div className="border-t-2 border-amber-500/50"></div>
+                      <div className="flex items-center gap-2 px-2 pt-2">
+                        <Package className="w-4 h-4 text-amber-400" />
+                        <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">Hrubá stavba</span>
                       </div>
                     </div>
                   )}
                   {showHolodomDivider && (
-                    <div className="py-1">
-                      <div className="border-t border-blue-500/50"></div>
-                      <div className="flex items-center gap-1.5 px-1 pt-1">
-                        <Hammer className="w-2.5 h-2.5 text-blue-400" />
-                        <span className="text-[9px] font-bold text-blue-400 uppercase tracking-wider">Holodom</span>
+                    <div className="py-2">
+                      <div className="border-t-2 border-blue-500/50"></div>
+                      <div className="flex items-center gap-2 px-2 pt-2">
+                        <Hammer className="w-4 h-4 text-blue-400" />
+                        <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">Holodom</span>
                       </div>
                     </div>
                   )}
                   {showKlucDivider && (
-                    <div className="py-1">
-                      <div className="border-t border-emerald-500/50"></div>
-                      <div className="flex items-center gap-1.5 px-1 pt-1">
-                        <Key className="w-2.5 h-2.5 text-emerald-400" />
-                        <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">Dom na kľúč</span>
+                    <div className="py-2">
+                      <div className="border-t-2 border-emerald-500/50"></div>
+                      <div className="flex items-center gap-2 px-2 pt-2">
+                        <Key className="w-4 h-4 text-emerald-400" />
+                        <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Dom na kľúč</span>
                       </div>
                     </div>
                   )}
                   {showDocsDivider && (
-                    <div className="py-1">
-                      <div className="border-t border-purple-500/50"></div>
-                      <div className="flex items-center gap-1.5 px-1 pt-1">
-                        <FileText className="w-2.5 h-2.5 text-purple-400" />
-                        <span className="text-[9px] font-bold text-purple-400 uppercase tracking-wider">Dokumentácia</span>
+                    <div className="py-2">
+                      <div className="border-t-2 border-purple-500/50"></div>
+                      <div className="flex items-center gap-2 px-2 pt-2">
+                        <FileText className="w-4 h-4 text-purple-400" />
+                        <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">Dokumentácia</span>
                       </div>
                     </div>
                   )}
-                  <div className={`flex justify-between items-center py-0.5 px-1.5 rounded text-[11px] ${isBase ? 'bg-blue-500/20 border border-blue-500/30 my-0.5' : item.selected ? 'hover:bg-slate-700/50' : 'opacity-50'}`}>
-                    <span className={`${isBase ? 'text-blue-300 font-semibold' : item.selected ? 'text-slate-400' : 'text-slate-500 line-through'} flex-1 pr-2`}>{item.name}</span>
-                    <span className={`${isBase ? 'text-blue-300' : item.selected ? 'text-green-400' : 'text-slate-500'} font-semibold whitespace-nowrap`}>
+                  <div className={`flex justify-between items-center py-1.5 px-2 rounded text-sm ${isBase ? 'bg-blue-500/20 border border-blue-500/30 my-1' : item.selected ? 'hover:bg-slate-700/50' : 'opacity-50'}`}>
+                    <span className={`${isBase ? 'text-blue-300 font-bold text-base' : item.selected ? 'text-slate-300 font-medium' : 'text-slate-500 line-through'} flex-1 pr-3`}>{item.name}</span>
+                    <span className={`${isBase ? 'text-blue-300 text-base' : item.selected ? 'text-green-400' : 'text-slate-500'} font-bold whitespace-nowrap`}>
                       {item.selected ? formatPrice(item.price) : 'NIE'}
                     </span>
                   </div>
