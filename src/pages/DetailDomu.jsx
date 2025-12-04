@@ -944,6 +944,27 @@ export default function DetailDomu() {
                   +421 905 138 124
                 </Button>
               </a>
+
+              {/* Možnosti využitia - pod telefónne číslo */}
+              {!isJAKModules && (
+                <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200 mt-4">
+                  <h3 className="text-lg font-bold text-primary mb-4">✔ Možnosti využitia:</h3>
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2 text-sm">
+                      <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                      <span>Rodinný dom s možnosťou kolaudácie</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                      <span>Možnosť energetického certifikátu A0</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-sm">
+                      <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                      <span>Rekreačná budova (chata/záhradný domček)</span>
+                    </li>
+                  </ul>
+                </Card>
+              )}
             </div>
           </motion.div>
         </div>
