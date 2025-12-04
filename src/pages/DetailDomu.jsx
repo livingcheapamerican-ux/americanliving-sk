@@ -36,6 +36,36 @@ export default function DetailDomu() {
   const [montazHolodomu, setMontazHolodomu] = useState("nie");
   const [izolaciaNavysenie, setIzolaciaNavysenie] = useState("standard");
   const [zaklady, setZaklady] = useState("bez");
+  
+  // Zdieľaný stav pre Fázu 2 - Holodom
+  const [vstupneDvere, setVstupneDvere] = useState("ziadne");
+  const [elektroinstalacia, setElektroinstalacia] = useState(false);
+  const [vodaKanalizacia, setVodaKanalizacia] = useState(false);
+  const [sanitaKomplet, setSanitaKomplet] = useState(false);
+  const [bojler, setBojler] = useState(false);
+  const [tepelneCerpadlo, setTepelneCerpadlo] = useState(false);
+  const [rekuperacia, setRekuperacia] = useState(false);
+  const [pripojkaSiete, setPripojkaSiete] = useState(false);
+  const [stresneOkno, setStresneOkno] = useState(0);
+  const [bocneOknoFixne, setBocneOknoFixne] = useState(0);
+  const [bocneOknoVyklopne90, setBocneOknoVyklopne90] = useState(0);
+  const [bocneOknoVyklopne55, setBocneOknoVyklopne55] = useState(0);
+  const [povrchokaOkien, setPovrchokaOkien] = useState(false);
+  const [tonovaneSkla, setTonovaneSkla] = useState(false);
+  
+  // Zdieľaný stav pre Fázu 3 - Dom na kľúč
+  const [vonkajsiaFasada, setVonkajsiaFasada] = useState("standard");
+  const [interierFinis, setInterierFinis] = useState("ziadne");
+  const [vnutornePodlahy, setVnutornePodlahy] = useState(false);
+  const [podlahovVykurovanie, setPodlahovVykurovanie] = useState(false);
+  const [interieroveDvere, setInterieroveDvere] = useState(0);
+  const [pergola, setPergola] = useState(false);
+  
+  // Zdieľaný stav pre Fázu 4 - Dokumentácia
+  const [inziniering, setInziniering] = useState(false);
+  const [projektA0, setProjektA0] = useState(false);
+  const [revizna, setRevizna] = useState(true);
+  const [doprava, setDoprava] = useState(false);
   const [panPosition, setPanPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
