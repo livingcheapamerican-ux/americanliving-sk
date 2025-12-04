@@ -213,59 +213,23 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
       interieroveDvere, pergola, inziniering, projektA0, revizna]);
 
-  // Draggable panel state
-  const [panelPosition, setPanelPosition] = useState({ x: 0, y: 0 });
-  const [panelWidth, setPanelWidth] = useState(320);
-  const [isDragging, setIsDragging] = useState(false);
-  const [isResizing, setIsResizing] = useState(false);
+  // Fixed panel reference
   const dragRef = useRef(null);
-  const dragStartRef = useRef({ x: 0, y: 0 });
-  const resizeStartRef = useRef({ x: 0, width: 320 });
+  const interierFinisRef = useRef(null);
+  const [panelWidth, setPanelWidth] = useState(null);
 
+  // Get width of Interiér finiš panel
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (isDragging) {
-        const deltaX = e.clientX - dragStartRef.current.x;
-        const deltaY = e.clientY - dragStartRef.current.y;
-        setPanelPosition(prev => ({
-          x: prev.x + deltaX,
-          y: prev.y + deltaY
-        }));
-        dragStartRef.current = { x: e.clientX, y: e.clientY };
-      }
-      if (isResizing) {
-        const deltaX = e.clientX - resizeStartRef.current.x;
-        const newWidth = Math.max(250, Math.min(600, resizeStartRef.current.width + deltaX));
-        setPanelWidth(newWidth);
+    const updateWidth = () => {
+      const interierPanel = document.getElementById('interier-finis-panel');
+      if (interierPanel) {
+        setPanelWidth(interierPanel.offsetWidth);
       }
     };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-      setIsResizing(false);
-    };
-
-    if (isDragging || isResizing) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    }
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging, isResizing]);
-
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    dragStartRef.current = { x: e.clientX, y: e.clientY };
-  };
-
-  const handleResizeMouseDown = (e) => {
-    e.stopPropagation();
-    setIsResizing(true);
-    resizeStartRef.current = { x: e.clientX, width: panelWidth };
-  };
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
 
   const handleReset = () => {
     setMontazHolodomu("nie");
