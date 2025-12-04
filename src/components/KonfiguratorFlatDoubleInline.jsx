@@ -771,146 +771,124 @@ export default function KonfiguratorFlatDoubleInline({
           color="from-emerald-600 to-teal-600"
           step="3"
         />
-        <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-emerald-50/50 to-white">
+        <div className="p-3 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
+          {/* Dlaždice - Grid layout */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+            
+            {/* Vonkajšia fasáda - Štandard */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setVonkajsiaFasada("standard")}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                vonkajsiaFasada === "standard" 
+                  ? "bg-emerald-100 border-2 border-emerald-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-emerald-300 hover:shadow-md"
+              }`}
+            >
+              <Paintbrush className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${vonkajsiaFasada === "standard" ? "text-emerald-600" : "text-gray-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Fasáda štd.</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Drevo/Plech</span>
+              <span className="text-gray-400 font-medium text-xs mt-2">+ 0 €</span>
+              {vonkajsiaFasada === "standard" && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-emerald-600" />}
+            </motion.div>
 
-          {/* Vonkajšia fasáda */}
-          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
-              <Paintbrush className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-600" />
-              Vonkajšia fasáda
-            </Label>
-            <p className="text-[10px] sm:text-sm text-gray-500 mb-3 sm:mb-4 hidden sm:block">Drevo / Falcovaný plech anthracit - podľa modelu domu - bez príplatku</p>
-            <RadioGroup value={vonkajsiaFasada} onValueChange={setVonkajsiaFasada} className="space-y-2 sm:space-y-3">
-              <label 
-                onClick={(e) => { if (vonkajsiaFasada !== "standard") triggerAnimation("fasadaStandard", e.currentTarget); }}
-                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="standard" id="fasada-standard" />
-                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Štandard (Drevo/Plech)</span>
-                </div>
-                <span className="text-gray-400 font-medium text-xs sm:text-base">+ 0 €</span>
-              </label>
-              <label 
-                onClick={(e) => { if (vonkajsiaFasada !== "suchana") triggerAnimation("fasadaSuchana", e.currentTarget); }}
-                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="suchana" id="fasada-suchana" />
-                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Škúchaná fasáda</span>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 12 841 €</span>
-              </label>
-            </RadioGroup>
+            {/* Vonkajšia fasáda - Škúchaná */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (vonkajsiaFasada !== "suchana") triggerAnimation("fasadaSuchana", e.currentTarget); setVonkajsiaFasada("suchana"); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                vonkajsiaFasada === "suchana" 
+                  ? "bg-emerald-100 border-2 border-emerald-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-emerald-300 hover:shadow-md"
+              }`}
+            >
+              <Paintbrush className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${vonkajsiaFasada === "suchana" ? "text-emerald-600" : "text-orange-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Škúchaná</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Fasáda</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 12 841 €</span>
+              {vonkajsiaFasada === "suchana" && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-emerald-600" />}
+            </motion.div>
+
+            {/* Vnútorné podlahy */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); setVnutornePodlahy(!vnutornePodlahy); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                vnutornePodlahy 
+                  ? "bg-emerald-100 border-2 border-emerald-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-emerald-300 hover:shadow-md"
+              }`}
+            >
+              <Square className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${vnutornePodlahy ? "text-emerald-600" : "text-amber-500"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Podlahy</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Laminát</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 3 351 €</span>
+              {vnutornePodlahy && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-emerald-600" />}
+            </motion.div>
+
+            {/* Podlahové vykurovanie */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!podlahovVykurovanie) triggerAnimation("podlahovVykurovanie", e.currentTarget); setPodlahovVykurovanie(!podlahovVykurovanie); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                podlahovVykurovanie 
+                  ? "bg-orange-100 border-2 border-orange-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-orange-300 hover:shadow-md"
+              }`}
+            >
+              <Flame className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${podlahovVykurovanie ? "text-orange-600" : "text-orange-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Podl. kúrenie</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">WiFi termostat</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 5 525 €</span>
+              {podlahovVykurovanie && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-orange-600" />}
+            </motion.div>
+
+            {/* Pergola */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!pergola) triggerAnimation("pergola", e.currentTarget); setPergola(!pergola); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                pergola 
+                  ? "bg-emerald-100 border-2 border-emerald-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-emerald-300 hover:shadow-md"
+              }`}
+            >
+              <Maximize className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${pergola ? "text-emerald-600" : "text-teal-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Pergola</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Dekoratívna</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 1 845 €</span>
+              {pergola && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-emerald-600" />}
+            </motion.div>
+
           </div>
 
-
-
-          {/* Podlahy a vykurovanie */}
-          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <Square className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-600" />
-              Podlahy a vykurovanie
-            </Label>
-            <div className="space-y-2 sm:space-y-4">
-              <div 
-                onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); }}
-                className="border-2 border-gray-200 rounded-lg sm:rounded-xl p-2.5 sm:p-4 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all"
-              >
-                <label className="flex items-center justify-between cursor-pointer">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <Checkbox 
-                      id="vnutorne-podlahy" 
-                      checked={vnutornePodlahy} 
-                      onCheckedChange={setVnutornePodlahy}
-                      className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
-                    />
-                    <div>
-                      <span className="font-semibold text-gray-800 text-xs sm:text-base">Vnútorné podlahy - laminát</span>
-                    </div>
-                  </div>
-                  <span className="font-bold text-green-600 whitespace-nowrap text-xs sm:text-base">+ 3 351 €</span>
-                </label>
+          {/* Interiérové dvere - počet */}
+          <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <DoorOpen className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-600" />
+                <div>
+                  <span className="font-semibold text-gray-800 text-xs sm:text-sm">Interiérové dvere</span>
+                  <span className="text-green-600 font-bold text-xs ml-2">× 250 €</span>
+                </div>
               </div>
-
-              <div 
-                onClick={(e) => { if (!podlahovVykurovanie) triggerAnimation("podlahovVykurovanie", e.currentTarget); }}
-                className="border-2 border-gray-200 rounded-lg sm:rounded-xl p-2.5 sm:p-4 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all"
-              >
-                <label className="flex items-center justify-between cursor-pointer">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <Checkbox 
-                      id="podlahove-vykurovanie" 
-                      checked={podlahovVykurovanie} 
-                      onCheckedChange={setPodlahovVykurovanie}
-                      className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
-                    />
-                    <div>
-                      <span className="font-semibold text-gray-800 text-xs sm:text-base flex items-center gap-1 sm:gap-2">
-                        <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500" />
-                        Elektrické podlahové vykurovanie s WiFi termostatom
-                      </span>
-                      <p className="text-[10px] sm:text-xs text-gray-500 mt-1">Wi-Fi termostat do každej izby (8-9 ks)</p>
-                      <p className="text-[9px] sm:text-[10px] text-gray-400 mt-0.5">Cena zahŕňa prácu na komplet: Vykurovacia fólia 1m a 0,5m, Vodič, LDPE 0.2 parozábranná fólia, izolácia pod vykurovacou fóliou XPS 500-700, Konektory, Uzemňovacia sieťka, Termostaty, Práca + Doprava</p>
-                    </div>
-                  </div>
-                  <span className="font-bold text-green-600 whitespace-nowrap text-xs sm:text-base">+ 5 525 €</span>
-                </label>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setInterieroveDvere(Math.max(0, interieroveDvere - 1))}
+                  className="w-8 h-8 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-lg"
+                >−</button>
+                <span className="w-8 text-center font-bold text-lg">{interieroveDvere}</span>
+                <button 
+                  onClick={() => setInterieroveDvere(interieroveDvere + 1)}
+                  className="w-8 h-8 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg"
+                >+</button>
               </div>
             </div>
-          </div>
-
-          {/* Interiérové dvere */}
-          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <DoorOpen className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-600" />
-              Interiérové dvere
-            </Label>
-            <div 
-              className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl"
-              onClick={(e) => { if (interieroveDvere === 0) triggerAnimation("interieroveDvere", e.currentTarget); }}
-            >
-              <div>
-                <span className="font-semibold text-gray-800 text-xs sm:text-base">Interiérové dvere</span>
-              </div>
-              <div className="flex items-center gap-1 sm:gap-2">
-                <Input 
-                  type="number" 
-                  min="0" 
-                  value={interieroveDvere} 
-                  onChange={(e) => {
-                    const newVal = parseInt(e.target.value) || 0;
-                    if (newVal > interieroveDvere) triggerAnimation("interieroveDvere", e.target);
-                    setInterieroveDvere(newVal);
-                  }}
-                  className="w-12 sm:w-16 text-center h-7 sm:h-9 text-xs sm:text-base"
-                />
-                <span className="font-bold text-green-600 text-xs sm:text-base">× 250 €</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Doplnky */}
-          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <Maximize className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-600" />
-              Doplnky exteriéru
-            </Label>
-            <label 
-              onClick={(e) => { if (!pergola) triggerAnimation("pergola", e.currentTarget); }}
-              className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
-            >
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Checkbox 
-                  id="pergola" 
-                  checked={pergola} 
-                  onCheckedChange={setPergola}
-                  className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
-                />
-                <span className="font-semibold text-gray-800 text-xs sm:text-base">Dekoratívna pergola</span>
-              </div>
-              <span className="font-bold text-green-600 text-xs sm:text-base">+ 1 845 €</span>
-            </label>
           </div>
 
         </div>
