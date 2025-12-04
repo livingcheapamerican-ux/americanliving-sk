@@ -14,8 +14,7 @@ import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
 import FloatingPrice from "../components/FloatingPrice";
 import DomGalerieManager from "../components/admin/DomGalerieManager";
 import KonfiguratorFlatDoubleInline from "../components/KonfiguratorFlatDoubleInline";
-import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
-import KonfiguratorFaza2Holodom from "@/components/KonfiguratorFaza2Holodom";
+
 
 export default function DetailDomu() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -463,22 +462,7 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Fáza 1: Hrubá stavba - pod galériou */}
-            {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
-              <KonfiguratorFaza1HrubaStavba 
-                montazHolodomu="nie"
-                setMontazHolodomu={() => {}}
-                izolaciaNavysenie="standard"
-                setIzolaciaNavysenie={() => {}}
-                zaklady="bez"
-                setZaklady={() => {}}
-              />
-            )}
 
-            {/* Fáza 2: Holodom - pod Fázou 1 */}
-            {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
-              <KonfiguratorFaza2Holodom />
-            )}
 
             {/* Pôdorysy */}
             {dom.podorysy && dom.podorysy.length > 0 && (
