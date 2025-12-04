@@ -173,6 +173,10 @@ export default function KonfiguratorFlatDoubleInline({
     items.push({ name: zakladyLabel, price: zakladyPrice, section: "hruba", selected: zaklady !== "bez" });
     
     // Holodom
+    const interierLabel = interierFinis === "drevo" ? "Interiér - obloženie drevom" : interierFinis === "sadrokarton" ? "Interiér - sádrokartón" : "Interiér finiš";
+    const interierPrice = interierFinis === "drevo" ? CENY.interierFinis.drevo : interierFinis === "sadrokarton" ? CENY.interierFinis.sadrokarton : 0;
+    items.push({ name: interierLabel, price: interierPrice, section: "holodom", selected: interierFinis !== "ziadne" });
+
     items.push({ name: "Elektrická inštalácia", price: elektroinstalacia ? CENY.elektroinstalacia : 0, section: "holodom", selected: elektroinstalacia });
     items.push({ name: "Rozvody vody a kanalizácie", price: vodaKanalizacia ? CENY.vodaKanalizacia : 0, section: "holodom", selected: vodaKanalizacia });
     items.push({ name: "Sanita komplet", price: sanitaKomplet ? CENY.sanitaKomplet : 0, section: "holodom", selected: sanitaKomplet });
