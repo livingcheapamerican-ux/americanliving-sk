@@ -756,15 +756,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
               <Landmark className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
               Typ základov
             </Label>
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-2 sm:p-4 mb-3 sm:mb-4 text-xs sm:text-sm text-amber-900">
-              <p className="font-semibold mb-2">Základ:</p>
-              <ul className="space-y-1 list-disc list-inside">
-                <li>môže byť realizovaný vo forme vrutových kovových stĺpov, betónových stĺpikov alebo betónovej dosky</li>
-                <li>uvedená je minimálne možná cena základu za rovnom teréne</li>
-                <li>konečná cena základu sa vypočíta samostatne po obdržaní výsledkov geodetickej analýzy pozemku (v prípade potreby) a po zhodnotení potrebných prác s ohľadom na terén pozemku</li>
-                <li>cena prípravných prác na pozemku nie je zahrnutá v cene montáže základu</li>
-              </ul>
-            </div>
+
             <RadioGroup value={zaklady} onValueChange={setZaklady} className="space-y-2 sm:space-y-3">
               <label className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all">
                 <div className="flex items-center gap-2 sm:gap-3">
