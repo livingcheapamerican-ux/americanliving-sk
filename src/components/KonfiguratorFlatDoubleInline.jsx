@@ -346,7 +346,7 @@ export default function KonfiguratorFlatDoubleInline({
   // Ak zobrazujeme iba sumár (pre ľavý stĺpec)
   if (showOnlySummary) {
     return (
-      <div className="mt-4">
+      <div className="mt-4 sticky top-20 z-40">
         <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
           <div className="p-4 border-b border-slate-700/50">
             <div className="flex items-center justify-between">
@@ -358,7 +358,7 @@ export default function KonfiguratorFlatDoubleInline({
           </div>
 
           {/* Súhrn položiek */}
-          <div className="px-3 py-2 max-h-[50vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-slate-800">
+          <div className="px-3 py-2">
             {selectedItems.map((item, index) => {
               const isBase = item.section === "base";
               const prevItem = selectedItems[index - 1];
