@@ -354,10 +354,9 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
       <FlyingAnimationContainer animations={animations} />
       {/* Floating Price Bar - pravá strana */}
       <div 
-        className="hidden xl:block fixed w-80 z-40"
+        className="hidden xl:block sticky w-80 z-40 float-right"
         style={{ 
-          right: `${16 - panelPosition.x}px`, 
-          top: `${224 + panelPosition.y}px` 
+          top: '100px'
         }}
       >
         <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
