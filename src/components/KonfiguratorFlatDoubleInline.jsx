@@ -541,229 +541,189 @@ export default function KonfiguratorFlatDoubleInline({
           {/* Dlaždice - Grid layout */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
             
-            {/* Interiér finiš - 3 možnosti ako dlaždice */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={interierFinis === "ziadne"}
               onClick={() => setInterierFinis("ziadne")}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                interierFinis === "ziadne" 
-                  ? "bg-blue-100 border-2 border-blue-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-blue-300 hover:shadow-md"
-              }`}
-            >
-              <Home className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${interierFinis === "ziadne" ? "text-blue-600" : "text-gray-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Bez interiéru</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Hrubá stavba</span>
-              <span className="text-gray-400 font-medium text-xs mt-2">+ 0 €</span>
-              {interierFinis === "ziadne" && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-blue-600" />}
-            </motion.div>
+              icon={Home}
+              iconColor="text-gray-400"
+              iconSelectedColor="text-blue-600"
+              title="Bez interiéru"
+              subtitle="Hrubá stavba"
+              price="+ 0 €"
+              isPriced={false}
+              tooltip="Interiér zostane v stave hrubej stavby bez obkladov a omietok."
+            />
 
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={interierFinis === "drevo"}
               onClick={(e) => { if (interierFinis !== "drevo") triggerAnimation("drevo", e.currentTarget); setInterierFinis("drevo"); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                interierFinis === "drevo" 
-                  ? "bg-blue-100 border-2 border-blue-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-blue-300 hover:shadow-md"
-              }`}
-            >
-              <Home className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${interierFinis === "drevo" ? "text-blue-600" : "text-amber-600"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Drevo</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Obloženie</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 16 400 €</span>
-              {interierFinis === "drevo" && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-blue-600" />}
-            </motion.div>
+              icon={Home}
+              iconColor="text-amber-600"
+              iconSelectedColor="text-blue-600"
+              title="Drevo"
+              subtitle="Obloženie"
+              price="+ 16 400 €"
+              isPriced={true}
+              tooltip="Drevené obloženie stien a stropov. Prírodný vzhľad a tepelná pohoda."
+            />
 
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={interierFinis === "sadrokarton"}
               onClick={(e) => { if (interierFinis !== "sadrokarton") triggerAnimation("sadrokarton", e.currentTarget); setInterierFinis("sadrokarton"); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                interierFinis === "sadrokarton" 
-                  ? "bg-blue-100 border-2 border-blue-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-blue-300 hover:shadow-md"
-              }`}
-            >
-              <Home className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${interierFinis === "sadrokarton" ? "text-blue-600" : "text-gray-500"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Sadrokartón</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Omietka</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 19 475 €</span>
-              {interierFinis === "sadrokarton" && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-blue-600" />}
-            </motion.div>
+              icon={Home}
+              iconColor="text-gray-500"
+              iconSelectedColor="text-blue-600"
+              title="Sadrokartón"
+              subtitle="Omietka"
+              price="+ 19 475 €"
+              isPriced={true}
+              tooltip="Sadrokartónové steny s hladkou omietkou. Klasický vzhľad interiéru."
+            />
 
-            {/* Elektroinštalácia */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={elektroinstalacia}
               onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); setElektroinstalacia(!elektroinstalacia); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                elektroinstalacia 
-                  ? "bg-yellow-100 border-2 border-yellow-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-yellow-300 hover:shadow-md"
-              }`}
-            >
-              <Zap className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${elektroinstalacia ? "text-yellow-600" : "text-yellow-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Elektro</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Rozvody</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 7 400 €</span>
-              {elektroinstalacia && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-yellow-600" />}
-            </motion.div>
+              icon={Zap}
+              iconColor="text-yellow-400"
+              iconSelectedColor="text-yellow-600"
+              title="Elektro"
+              subtitle="Rozvody"
+              price="+ 7 400 €"
+              isPriced={true}
+              selectedBg="bg-yellow-100"
+              selectedBorder="border-yellow-500"
+              selectedRing="ring-yellow-300"
+              hoverBorder="hover:border-yellow-300"
+              tooltip="Elektrické rozvody, rozvádzač, zásuvky a príprava pre osvetlenie."
+            />
 
-            {/* Voda a kanalizácia */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={vodaKanalizacia}
               onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); setVodaKanalizacia(!vodaKanalizacia); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                vodaKanalizacia 
-                  ? "bg-blue-100 border-2 border-blue-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-blue-300 hover:shadow-md"
-              }`}
-            >
-              <Droplets className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${vodaKanalizacia ? "text-blue-600" : "text-blue-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Voda</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Rozvody</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 2 380 €</span>
-              {vodaKanalizacia && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-blue-600" />}
-            </motion.div>
+              icon={Droplets}
+              iconColor="text-blue-400"
+              iconSelectedColor="text-blue-600"
+              title="Voda"
+              subtitle="Rozvody"
+              price="+ 2 380 €"
+              isPriced={true}
+              tooltip="Rozvody studenej a teplej vody, kanalizačné potrubia."
+            />
 
-            {/* Sanita */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={sanitaKomplet}
               onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); setSanitaKomplet(!sanitaKomplet); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                sanitaKomplet 
-                  ? "bg-blue-100 border-2 border-blue-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-blue-300 hover:shadow-md"
-              }`}
-            >
-              <ShowerHead className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${sanitaKomplet ? "text-blue-600" : "text-blue-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Sanita</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Komplet</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 1 169 €</span>
-              {sanitaKomplet && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-blue-600" />}
-            </motion.div>
+              icon={ShowerHead}
+              iconColor="text-blue-400"
+              iconSelectedColor="text-blue-600"
+              title="Sanita"
+              subtitle="Komplet"
+              price="+ 1 169 €"
+              isPriced={true}
+              tooltip="Kompletná sanita: sprchový kút, umývadlo a WC."
+            />
 
-            {/* Bojler */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={bojler}
               onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                bojler 
-                  ? "bg-orange-100 border-2 border-orange-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-orange-300 hover:shadow-md"
-              }`}
-            >
-              <Flame className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${bojler ? "text-orange-600" : "text-orange-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Bojler</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Elektrický</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 246 €</span>
-              {bojler && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-orange-600" />}
-            </motion.div>
+              icon={Flame}
+              iconColor="text-orange-400"
+              iconSelectedColor="text-orange-600"
+              title="Bojler"
+              subtitle="Elektrický"
+              price="+ 246 €"
+              isPriced={true}
+              selectedBg="bg-orange-100"
+              selectedBorder="border-orange-500"
+              selectedRing="ring-orange-300"
+              hoverBorder="hover:border-orange-300"
+              tooltip="Elektrický bojler na ohrev pitnej vody."
+            />
 
-            {/* Tepelné čerpadlo - A0 */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={tepelneCerpadlo}
               onClick={(e) => { if (!tepelneCerpadlo) triggerAnimation("klimatizacia", e.currentTarget); setTepelneCerpadlo(!tepelneCerpadlo); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                tepelneCerpadlo 
-                  ? "bg-green-100 border-2 border-green-500 shadow-lg ring-2 ring-green-200" 
-                  : projektA0 && !tepelneCerpadlo 
-                    ? "bg-amber-50 border-2 border-amber-400" 
-                    : "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
-              }`}
-            >
-              <Badge className="absolute top-1 left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] px-1.5">
-                <Sparkles className="w-2 h-2 mr-0.5" />A0
-              </Badge>
-              <ThermometerSun className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${tepelneCerpadlo ? "text-green-600" : "text-red-500"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Tep. čerpadlo</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">5 jednotiek</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 5 535 €</span>
-              {tepelneCerpadlo && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-green-600" />}
-            </motion.div>
+              icon={ThermometerSun}
+              iconColor="text-red-500"
+              iconSelectedColor="text-green-600"
+              title="Tep. čerpadlo"
+              subtitle="5 jednotiek"
+              price="+ 5 535 €"
+              isPriced={true}
+              isA0={true}
+              selectedBg="bg-green-100"
+              selectedBorder="border-green-500"
+              selectedRing="ring-green-300"
+              tooltip="Tepelné čerpadlo vzduch-vzduch: 1× vonkajšia + 5× vnútorná jednotka. Potrebné pre A0."
+            />
 
-            {/* Rekuperácia - A0 */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={rekuperacia}
               onClick={(e) => { if (!rekuperacia) triggerAnimation("rekuperacia", e.currentTarget); setRekuperacia(!rekuperacia); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                rekuperacia 
-                  ? "bg-green-100 border-2 border-green-500 shadow-lg ring-2 ring-green-200" 
-                  : projektA0 && !rekuperacia 
-                    ? "bg-amber-50 border-2 border-amber-400" 
-                    : "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
-              }`}
-            >
-              <Badge className="absolute top-1 left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] px-1.5">
-                <Sparkles className="w-2 h-2 mr-0.5" />A0
-              </Badge>
-              <Wind className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${rekuperacia ? "text-green-600" : "text-cyan-500"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Rekuperácia</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">5 jednotiek</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 2 700 €</span>
-              {rekuperacia && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-green-600" />}
-            </motion.div>
+              icon={Wind}
+              iconColor="text-cyan-500"
+              iconSelectedColor="text-green-600"
+              title="Rekuperácia"
+              subtitle="5 jednotiek"
+              price="+ 2 700 €"
+              isPriced={true}
+              isA0={true}
+              selectedBg="bg-green-100"
+              selectedBorder="border-green-500"
+              selectedRing="ring-green-300"
+              tooltip="5 kusov lokálnych rekuperačných jednotiek pre riadené vetranie. Potrebné pre A0."
+            />
 
-            {/* Pripojenie na siete */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={pripojkaSiete}
               onClick={(e) => { if (!pripojkaSiete) triggerAnimation("siete", e.currentTarget); setPripojkaSiete(!pripojkaSiete); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                pripojkaSiete 
-                  ? "bg-gray-200 border-2 border-gray-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-gray-400 hover:shadow-md"
-              }`}
-            >
-              <Cable className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${pripojkaSiete ? "text-gray-700" : "text-gray-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Siete</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Pripojenie</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 1 501 €</span>
-              {pripojkaSiete && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-gray-600" />}
-            </motion.div>
+              icon={Cable}
+              iconColor="text-gray-400"
+              iconSelectedColor="text-gray-700"
+              title="Siete"
+              subtitle="Pripojenie"
+              price="+ 1 501 €"
+              isPriced={true}
+              selectedBg="bg-gray-200"
+              selectedBorder="border-gray-500"
+              selectedRing="ring-gray-300"
+              hoverBorder="hover:border-gray-400"
+              tooltip="Pripojenie na inžinierske siete: elektrika, voda, kanalizácia."
+            />
 
-            {/* Laminácia okien */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={povrchokaOkien}
               onClick={(e) => { if (!povrchokaOkien) triggerAnimation("oknoAntracit", e.currentTarget); setPovrchokaOkien(!povrchokaOkien); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                povrchokaOkien 
-                  ? "bg-slate-200 border-2 border-slate-600 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-slate-400 hover:shadow-md"
-              }`}
-            >
-              <Square className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${povrchokaOkien ? "text-slate-700" : "text-slate-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Laminácia</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Antracit</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 3 100 €</span>
-              {povrchokaOkien && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-slate-600" />}
-            </motion.div>
+              icon={Square}
+              iconColor="text-slate-400"
+              iconSelectedColor="text-slate-700"
+              title="Laminácia"
+              subtitle="Antracit"
+              price="+ 3 100 €"
+              isPriced={true}
+              selectedBg="bg-slate-200"
+              selectedBorder="border-slate-600"
+              selectedRing="ring-slate-300"
+              hoverBorder="hover:border-slate-400"
+              tooltip="Antracitová laminácia všetkých okien a dverí pre moderný vzhľad."
+            />
 
-            {/* Tónované sklá */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={tonovaneSkla}
               onClick={(e) => { if (!tonovaneSkla) triggerAnimation("oknoTonovane", e.currentTarget); setTonovaneSkla(!tonovaneSkla); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                tonovaneSkla 
-                  ? "bg-amber-100 border-2 border-amber-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
-              }`}
-            >
-              <Sun className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${tonovaneSkla ? "text-amber-600" : "text-amber-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Tónované</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Solar sklá</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 1 300 €</span>
-              {tonovaneSkla && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-amber-600" />}
-            </motion.div>
+              icon={Sun}
+              iconColor="text-amber-400"
+              iconSelectedColor="text-amber-600"
+              title="Tónované"
+              subtitle="Solar sklá"
+              price="+ 1 300 €"
+              isPriced={true}
+              selectedBg="bg-amber-100"
+              selectedBorder="border-amber-500"
+              selectedRing="ring-amber-300"
+              hoverBorder="hover:border-amber-300"
+              tooltip="Tónované sklá s ochranou proti slnku. Znižujú prehrievanie interiéru."
+            />
 
           </div>
 
