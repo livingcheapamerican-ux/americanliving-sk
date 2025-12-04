@@ -81,10 +81,14 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
-            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 w-48 sm:w-56 p-2 bg-gray-900 text-white text-[10px] sm:text-xs rounded-lg shadow-xl pointer-events-none"
+            className="fixed z-[9999] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)'
+            }}
           >
             {tooltip}
-            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
           </motion.div>
         )}
       </AnimatePresence>
