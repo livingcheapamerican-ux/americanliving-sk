@@ -911,82 +911,98 @@ export default function KonfiguratorFlatDoubleInline({
           color="from-purple-600 to-violet-600"
           step="4"
         />
-        <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-purple-50/50 to-white">
+        <div className="p-3 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
+          {/* Dlaždice - Grid layout */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+            
+            {/* Inžiniering */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!inziniering) triggerAnimation("inziniering", e.currentTarget); setInziniering(!inziniering); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                inziniering 
+                  ? "bg-purple-100 border-2 border-purple-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-purple-300 hover:shadow-md"
+              }`}
+            >
+              <FileText className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${inziniering ? "text-purple-600" : "text-purple-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Inžiniering</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Stav. povolenie</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 2 592 €</span>
+              {inziniering && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-purple-600" />}
+            </motion.div>
 
-          {/* Dokumentácia */}
-          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <FileText className="w-8 h-8 sm:w-10 sm:h-10 text-purple-600" />
-              Projektová dokumentácia
-            </Label>
-            <div className="space-y-2 sm:space-y-3">
-              <label 
-                onClick={(e) => { if (!inziniering) triggerAnimation("inziniering", e.currentTarget); }}
-                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-purple-300 hover:bg-purple-50/50 cursor-pointer transition-all"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <Checkbox 
-                    id="inziniering" 
-                    checked={inziniering} 
-                    onCheckedChange={setInziniering}
-                    className="data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
-                  />
-                  <div>
-                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Inžiniering stav. povolenia</span>
-                  </div>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 2 592 €</span>
-              </label>
-              <label 
-                onClick={(e) => { if (!projektA0) triggerAnimation("projektant", e.currentTarget); }}
-                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-green-400 rounded-lg sm:rounded-xl bg-green-50 hover:bg-green-100 cursor-pointer transition-all"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <Checkbox 
-                    id="projekt" 
-                    checked={projektA0} 
-                    onCheckedChange={setProjektA0}
-                    className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
-                  />
-                  <div>
-                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
-                      <span className="font-semibold text-gray-800 text-xs sm:text-base">Projektant + certifikácia</span>
-                      <Badge className="bg-green-600 text-[8px] sm:text-xs">A0</Badge>
-                    </div>
-                  </div>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 3 500 €</span>
-              </label>
-              <label className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-purple-300 hover:bg-purple-50/50 cursor-pointer transition-all">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <Checkbox 
-                    id="revizna" 
-                    checked={revizna} 
-                    onCheckedChange={setRevizna}
-                    className="data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
-                  />
-                  <div>
-                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Revízna dokumentácia</span>
-                  </div>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 1 000 €</span>
-              </label>
-            </div>
+            {/* Projektant + A0 */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!projektA0) triggerAnimation("projektant", e.currentTarget); setProjektA0(!projektA0); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                projektA0 
+                  ? "bg-green-100 border-2 border-green-500 shadow-lg ring-2 ring-green-200" 
+                  : "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
+              }`}
+            >
+              <Badge className="absolute top-1 left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] px-1.5">
+                <Sparkles className="w-2 h-2 mr-0.5" />A0
+              </Badge>
+              <FileCheck className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${projektA0 ? "text-green-600" : "text-green-500"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Projektant</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">+ Certifikácia</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 3 500 €</span>
+              {projektA0 && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-green-600" />}
+            </motion.div>
+
+            {/* Revízna dokumentácia */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setRevizna(!revizna)}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                revizna 
+                  ? "bg-purple-100 border-2 border-purple-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-purple-300 hover:shadow-md"
+              }`}
+            >
+              <FileText className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${revizna ? "text-purple-600" : "text-gray-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Revízie</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Dokumentácia</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 1 000 €</span>
+              {revizna && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-purple-600" />}
+            </motion.div>
+
+            {/* Doprava */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!doprava) triggerAnimation("doprava", e.currentTarget); setDoprava(!doprava); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                doprava 
+                  ? "bg-purple-100 border-2 border-purple-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-purple-300 hover:shadow-md"
+              }`}
+            >
+              <Truck className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${doprava ? "text-purple-600" : "text-purple-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Doprava</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Transport</span>
+              <span className="text-gray-400 font-medium text-xs mt-2">+ 0 €</span>
+              {doprava && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-purple-600" />}
+            </motion.div>
+
           </div>
 
           {/* A0 Upozornenie */}
           {a0Odporucania && (
-            <div className="p-3 sm:p-5 bg-amber-50 border-2 border-amber-300 rounded-lg sm:rounded-xl">
+            <div className="mt-4 p-3 sm:p-4 bg-amber-50 border-2 border-amber-300 rounded-xl">
               <div className="flex items-start gap-2 sm:gap-3">
-                <AlertTriangle className="w-4 h-4 sm:w-6 sm:h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-bold text-amber-800 mb-1 sm:mb-2 text-xs sm:text-base">
-                    Pre A0 odporúčame:
-                  </p>
-                  <ul className="space-y-0.5 sm:space-y-1">
+                  <p className="font-bold text-amber-800 mb-1 text-xs sm:text-sm">Pre A0 odporúčame:</p>
+                  <ul className="space-y-0.5">
                     {a0Odporucania.map((item, index) => (
-                      <li key={index} className="text-amber-700 flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm">
-                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-amber-500 rounded-full"></span>
+                      <li key={index} className="text-amber-700 flex items-center gap-1 text-[10px] sm:text-xs">
+                        <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
                         {item}
                       </li>
                     ))}
@@ -998,38 +1014,13 @@ export default function KonfiguratorFlatDoubleInline({
 
           {/* A0 Splnené */}
           {projektA0 && !a0Odporucania && (
-            <div className="p-3 sm:p-5 bg-green-50 border-2 border-green-300 rounded-lg sm:rounded-xl">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <CheckCircle className="w-4 h-4 sm:w-6 sm:h-6 text-green-600" />
-                <p className="font-bold text-green-800 text-xs sm:text-base">
-                  Konfigurácia spĺňa A0!
-                </p>
+            <div className="mt-4 p-3 sm:p-4 bg-green-50 border-2 border-green-300 rounded-xl">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+                <p className="font-bold text-green-800 text-xs sm:text-sm">Konfigurácia spĺňa A0!</p>
               </div>
             </div>
           )}
-
-          {/* Doprava */}
-          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <Truck className="w-8 h-8 sm:w-10 sm:h-10 text-purple-600" />
-              Doprava
-            </Label>
-            <label 
-              onClick={(e) => { if (!doprava) triggerAnimation("doprava", e.currentTarget); }}
-              className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-purple-300 hover:bg-purple-50/50 cursor-pointer transition-all"
-            >
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Checkbox 
-                  id="doprava" 
-                  checked={doprava} 
-                  onCheckedChange={setDoprava}
-                  className="data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
-                />
-                <span className="font-semibold text-gray-800 text-xs sm:text-base">Doprava</span>
-              </div>
-              <span className="text-gray-400 font-medium text-xs sm:text-base">+ 0 €</span>
-            </label>
-          </div>
 
         </div>
         </Card>
