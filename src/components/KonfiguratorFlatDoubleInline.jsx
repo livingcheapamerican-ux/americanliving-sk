@@ -535,7 +535,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                 animate={{ rotate: montazHolodomu === "ano" ? [0, 10, -10, 0] : 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <Wrench className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
+                <Wrench className="w-8 h-8 sm:w-10 sm:h-10 text-amber-600" />
               </motion.div>
               Montáž hrubej stavby
             </Label>
@@ -587,7 +587,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           >
             <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
               <motion.div animate={{ scale: izolaciaNavysenie === "premium" ? [1, 1.2, 1] : 1 }} transition={{ duration: 0.3 }}>
-                <ThermometerSun className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
+                <ThermometerSun className="w-8 h-8 sm:w-10 sm:h-10 text-amber-600" />
               </motion.div>
               Hrúbka izolácie
             </Label>
@@ -662,7 +662,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           {/* Typ základov */}
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
             <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
-              <Landmark className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
+              <Landmark className="w-8 h-8 sm:w-10 sm:h-10 text-amber-600" />
               Typ základov
             </Label>
 
@@ -736,7 +736,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           >
             <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
               <motion.div animate={{ scale: elektroinstalacia ? [1, 1.3, 1] : 1 }} transition={{ duration: 0.3 }}>
-                <Zap className={`w-4 h-4 sm:w-5 sm:h-5 ${elektroinstalacia ? "text-yellow-500" : "text-yellow-400"}`} />
+                <Zap className={`w-8 h-8 sm:w-10 sm:h-10 ${elektroinstalacia ? "text-yellow-500" : "text-yellow-400"}`} />
               </motion.div>
               Elektroinštalácia
             </Label>
@@ -779,7 +779,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           >
             <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
               <motion.div animate={{ y: vodaKanalizacia ? [0, -3, 0] : 0 }} transition={{ duration: 0.3, repeat: vodaKanalizacia ? 2 : 0 }}>
-                <Droplets className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
+                <Droplets className="w-8 h-8 sm:w-10 sm:h-10 text-blue-500" />
               </motion.div>
               Voda a kanalizácia
             </Label>
@@ -882,7 +882,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           >
             <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
               <motion.div animate={{ scale: (tepelneCerpadlo || rekuperacia) ? [1, 1.2, 1] : 1 }} transition={{ duration: 0.3 }}>
-                <ThermometerSun className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
+                <ThermometerSun className="w-8 h-8 sm:w-10 sm:h-10 text-red-500" />
               </motion.div>
               Vykurovanie a vetranie
             </Label>
@@ -963,7 +963,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           {/* Pripojenie na siete */}
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
             <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <Cable className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+              <Cable className="w-8 h-8 sm:w-10 sm:h-10 text-gray-600" />
               Pripojenie na siete
             </Label>
             <label 
@@ -989,7 +989,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           {/* Úpravy okien a dverí */}
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
             <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <Square className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+              <Square className="w-8 h-8 sm:w-10 sm:h-10 text-blue-600" />
               Okná a vstupné dvere
             </Label>
             
@@ -1221,7 +1221,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           {/* Vonkajšia fasáda */}
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
             <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
-              <Paintbrush className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
+              <Paintbrush className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-600" />
               Vonkajšia fasáda
             </Label>
             <p className="text-[10px] sm:text-sm text-gray-500 mb-3 sm:mb-4 hidden sm:block">Drevo / Falcovaný plech anthracit - podľa modelu domu - bez príplatku</p>
@@ -1252,7 +1252,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           {/* Interiér finiš */}
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
             <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
-              <Home className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
+              <Home className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-600" />
               Interiér finiš
             </Label>
 
@@ -1293,7 +1293,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           {/* Podlahy a vykurovanie */}
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
             <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <Square className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
+              <Square className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-600" />
               Podlahy a vykurovanie
             </Label>
             <div className="space-y-2 sm:space-y-4">
@@ -1345,7 +1345,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           {/* Interiérové dvere */}
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
             <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <DoorOpen className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
+              <DoorOpen className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-600" />
               Interiérové dvere
             </Label>
             <div 
@@ -1375,7 +1375,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           {/* Doplnky */}
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
             <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <Maximize className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
+              <Maximize className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-600" />
               Doplnky exteriéru
             </Label>
             <label 
@@ -1420,7 +1420,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           {/* Dokumentácia */}
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
             <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
+              <FileText className="w-8 h-8 sm:w-10 sm:h-10 text-purple-600" />
               Projektová dokumentácia
             </Label>
             <div className="space-y-2 sm:space-y-3">
@@ -1515,7 +1515,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           {/* Doprava */}
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
             <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
+              <Truck className="w-8 h-8 sm:w-10 sm:h-10 text-purple-600" />
               Doprava
             </Label>
             <label 
