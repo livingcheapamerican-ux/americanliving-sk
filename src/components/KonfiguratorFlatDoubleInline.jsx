@@ -352,11 +352,11 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     <div className="mt-8 relative">
       {/* Flying animations container */}
       <FlyingAnimationContainer animations={animations} />
-      {/* Floating Price Bar - pravá strana */}
+      {/* Floating Price Bar - pod Interiér finiš panel */}
       <div 
-        className="hidden xl:block sticky w-80 z-40 float-right"
+        className="sticky z-40 w-full"
         style={{ 
-          top: '100px'
+          top: '80px'
         }}
       >
         <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
