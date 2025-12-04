@@ -52,7 +52,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
   const [interieroveDvere, setInterieroveDvere] = useState(0);
   const [tonovaneSkla, setTonovaneSkla] = useState(false);
   const [doprava, setDoprava] = useState(false);
-  const [revizna, setRevizna] = useState(true);
+  const [revizna, setRevizna] = useState(true); // Predvolene zapnutá
   
   // Rozšírenia
   const [stresneOkno, setStresneOkno] = useState(0);
@@ -274,7 +274,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     setInterieroveDvere(0);
     setTonovaneSkla(false);
     setDoprava(false);
-    setRevizna(false);
+    setRevizna(true); // Ponechať zapnutú aj po resete
     setStresneOkno(0);
     setBocneOknoFixne(0);
     setBocneOknoVyklopne90(0);
@@ -1644,8 +1644,10 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
       </motion.div>
       </div>
 
-      {/* Pravá strana - Informačné panely (len desktop) */}
-      <div className="hidden xl:block space-y-4 sticky top-20 h-fit">
+      </div>
+
+      {/* Informačné panely pod konfigurátom */}
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Komplet pre montáž */}
         <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
           <details className="group">
@@ -1738,7 +1740,6 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             </div>
           </details>
         </Card>
-      </div>
       </div>
     </div>
   );
