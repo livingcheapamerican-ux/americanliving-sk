@@ -475,16 +475,16 @@ export default function Katalog() {
             }
 
             {isLoading ?
-            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-6">
                 {[...Array(6)].map((_, i) =>
-              <Card key={i} className="h-96 animate-pulse bg-gray-200" />
+              <Card key={i} className="h-48 sm:h-96 animate-pulse bg-gray-200" />
               )}
               </div> :
             zoradeneDomy.length > 0 ?
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+              className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-6">
 
                 {zoradeneDomy.map((dom, index) => {
                 const jeVybrany = vybraneNaSrovnanie.find((d) => d.id === dom.id);
