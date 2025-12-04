@@ -22,6 +22,30 @@ export default function KonfiguratorFlatDoubleInline({
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
+  vstupneDvere, setVstupneDvere,
+  elektroinstalacia, setElektroinstalacia,
+  vodaKanalizacia, setVodaKanalizacia,
+  sanitaKomplet, setSanitaKomplet,
+  bojler, setBojler,
+  tepelneCerpadlo, setTepelneCerpadlo,
+  rekuperacia, setRekuperacia,
+  pripojkaSiete, setPripojkaSiete,
+  stresneOkno, setStresneOkno,
+  bocneOknoFixne, setBocneOknoFixne,
+  bocneOknoVyklopne90, setBocneOknoVyklopne90,
+  bocneOknoVyklopne55, setBocneOknoVyklopne55,
+  povrchokaOkien, setPovrchokaOkien,
+  tonovaneSkla, setTonovaneSkla,
+  vonkajsiaFasada, setVonkajsiaFasada,
+  interierFinis, setInterierFinis,
+  vnutornePodlahy, setVnutornePodlahy,
+  podlahovVykurovanie, setPodlahovVykurovanie,
+  interieroveDvere, setInterieroveDvere,
+  pergola, setPergola,
+  inziniering, setInziniering,
+  projektA0, setProjektA0,
+  revizna, setRevizna,
+  doprava, setDoprava,
   showOnlySummary = false
 }) {
   // Základná cena
@@ -29,39 +53,6 @@ export default function KonfiguratorFlatDoubleInline({
 
   // Flying animation hook
   const { animations, triggerAnimation } = useFlyingAnimation();
-
-  // State pre všetky voľby
-  const [vstupneDvere, setVstupneDvere] = useState("ziadne");
-  
-  const [elektroinstalacia, setElektroinstalacia] = useState(false);
-  const [vodaKanalizacia, setVodaKanalizacia] = useState(false);
-  const [sanitaKomplet, setSanitaKomplet] = useState(false);
-  const [bojler, setBojler] = useState(false);
-  const [tepelneCerpadlo, setTepelneCerpadlo] = useState(false);
-  const [rekuperacia, setRekuperacia] = useState(false);
-  
-  const [pripojkaSiete, setPripojkaSiete] = useState(false);
-  
-  const [inziniering, setInziniering] = useState(false);
-  const [projektA0, setProjektA0] = useState(false);
-  
-  // Interiér a dokončenie
-  const [interierFinis, setInterierFinis] = useState("ziadne");
-  const [vonkajsiaFasada, setVonkajsiaFasada] = useState("standard");
-  const [povrchokaOkien, setPovrchokaOkien] = useState(false);
-  const [vnutornePodlahy, setVnutornePodlahy] = useState(false);
-  const [podlahovVykurovanie, setPodlahovVykurovanie] = useState(false);
-  const [pergola, setPergola] = useState(false);
-  const [interieroveDvere, setInterieroveDvere] = useState(0);
-  const [tonovaneSkla, setTonovaneSkla] = useState(false);
-  const [doprava, setDoprava] = useState(false);
-  const [revizna, setRevizna] = useState(true); // Predvolene zapnutá
-  
-  // Rozšírenia
-  const [stresneOkno, setStresneOkno] = useState(0);
-  const [bocneOknoFixne, setBocneOknoFixne] = useState(0);
-  const [bocneOknoVyklopne90, setBocneOknoVyklopne90] = useState(0);
-  const [bocneOknoVyklopne55, setBocneOknoVyklopne55] = useState(0);
 
   // Cenník
   const CENY = {
