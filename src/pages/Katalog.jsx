@@ -412,6 +412,35 @@ export default function Katalog() {
 
           {/* Domy Grid */}
           <div className="flex-grow">
+            {/* Dizajn filter */}
+            <Card className="p-3 mb-4 bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200">
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                  <span>Zobraziť domy v dizajne:</span>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant={dizajnFilter === "murovka" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setDizajnFilter("murovka")}
+                    className={dizajnFilter === "murovka" ? "bg-orange-600 hover:bg-orange-700" : ""}
+                  >
+                    <Building2 className="w-4 h-4 mr-2" />
+                    Murovka
+                  </Button>
+                  <Button
+                    variant={dizajnFilter === "drevo" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setDizajnFilter("drevo")}
+                    className={dizajnFilter === "drevo" ? "bg-amber-600 hover:bg-amber-700" : ""}
+                  >
+                    <TreePine className="w-4 h-4 mr-2" />
+                    Drevený motív
+                  </Button>
+                </div>
+              </div>
+            </Card>
+
             {/* Srovnání panel */}
             {vybraneNaSrovnanie.length > 0 &&
             <Card className="p-4 mb-6 bg-blue-50 border-2 border-primary">
