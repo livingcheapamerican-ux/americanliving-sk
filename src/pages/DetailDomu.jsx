@@ -14,6 +14,7 @@ import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
 import FloatingPrice from "../components/FloatingPrice";
 import DomGalerieManager from "../components/admin/DomGalerieManager";
 import KonfiguratorFlatDoubleInline from "../components/KonfiguratorFlatDoubleInline";
+import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
 
 export default function DetailDomu() {
   const urlParams = new URLSearchParams(window.location.search);
