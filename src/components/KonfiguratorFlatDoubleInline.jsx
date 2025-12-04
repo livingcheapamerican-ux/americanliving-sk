@@ -1642,6 +1642,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         </Card>
       </motion.div>
       </div>
+      </div>
     </div>
   );
 }
