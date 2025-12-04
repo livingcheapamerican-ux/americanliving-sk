@@ -668,14 +668,14 @@ export default function DetailDomu() {
 
             {/* Popis */}
                             {dom.popis && (
-                              <Card className="p-6">
-                                <h3 className="text-lg font-bold text-primary mb-4">{isProstoHouse ? "Popis montovaného domu vo verzii rekreačnej stavby" : "Popis modulového domu"}</h3>
-                                <div className="text-gray-700 leading-relaxed whitespace-pre-line">
+                              <Card className="p-4">
+                                <h3 className="text-base font-bold text-primary mb-2">{isProstoHouse ? "Popis montovaného domu vo verzii rekreačnej stavby" : "Popis modulového domu"}</h3>
+                                <div className="text-gray-700 text-sm leading-snug">
                                   {dom.popis}
                                 </div>
                                 {isProstoHouse && (
-                                  <div className="mt-4 pt-4 border-t border-gray-200">
-                                    <p className="text-gray-700">
+                                  <div className="mt-2 pt-2 border-t border-gray-200">
+                                    <p className="text-gray-700 text-sm">
                                       <strong>Životnosť:</strong> Navrhnutá na viac ako 80 rokov pri pravidelnej údržbe a správnej inštalácii
                                     </p>
                                   </div>
