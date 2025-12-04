@@ -1069,8 +1069,10 @@ export default function KonfiguratorFlatDoubleInline({
                     <div>
                       <span className="font-semibold text-gray-800 text-xs sm:text-base flex items-center gap-1 sm:gap-2">
                         <Flame className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500" />
-                        Podlahové vykurovanie
+                        Elektrické podlahové vykurovanie s WiFi termostatom
                       </span>
+                      <p className="text-[10px] sm:text-xs text-gray-500 mt-1">Wi-Fi termostat do každej izby (8-9 ks)</p>
+                      <p className="text-[9px] sm:text-[10px] text-gray-400 mt-0.5">Cena zahŕňa prácu na komplet: Vykurovacia fólia 1m a 0,5m, Vodič, LDPE 0.2 parozábranná fólia, izolácia pod vykurovacou fóliou XPS 500-700, Konektory, Uzemňovacia sieťka, Termostaty, Práca + Doprava</p>
                     </div>
                   </div>
                   <span className="font-bold text-green-600 whitespace-nowrap text-xs sm:text-base">+ 5 525 €</span>
