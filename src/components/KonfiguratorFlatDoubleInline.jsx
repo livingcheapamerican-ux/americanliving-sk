@@ -1649,16 +1649,72 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
           </div>
 
           <div className="relative p-4 sm:p-8 md:p-10">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-8">
-              <div>
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-8">
+              <div className="flex-1">
                 <p className="text-green-400 text-[10px] sm:text-sm font-semibold uppercase tracking-wider mb-1 sm:mb-2">Vaša konfigurácia</p>
                 <h3 className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">Flat Double 142m²</h3>
-                <p className="text-slate-400 text-xs sm:text-base">Kompletná cenová kalkulácia</p>
+                <p className="text-slate-400 text-xs sm:text-base mb-4">Kompletná cenová kalkulácia</p>
                 {projektA0 && !a0Odporucania && (
-                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white mt-2 sm:mt-4 text-[10px] sm:text-sm py-1 sm:py-1.5 px-2 sm:px-4 shadow-lg shadow-green-500/30">✓ Spĺňa A0</Badge>
+                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] sm:text-sm py-1 sm:py-1.5 px-2 sm:px-4 shadow-lg shadow-green-500/30">✓ Spĺňa A0</Badge>
                 )}
+                
+                {/* Zoznam vybraných položiek */}
+                <div className="mt-4 sm:mt-6 bg-slate-800/50 rounded-xl p-3 sm:p-4 border border-slate-700/50 max-h-[300px] overflow-y-auto">
+                  <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">Vybrané položky</p>
+                  <div className="space-y-1">
+                    {selectedItems.map((item, index) => {
+                      const isBase = item.section === "base";
+                      const prevItem = selectedItems[index - 1];
+                      const showHrubaDivider = item.section === "hruba" && (!prevItem || prevItem.section === "base");
+                      const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
+                      const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
+                      const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
+                      
+                      return (
+                        <React.Fragment key={index}>
+                          {showHrubaDivider && dosiahnuteUrovne.hrubaStavba && (
+                            <div className="py-1.5">
+                              <div className="flex items-center gap-2">
+                                <Package className="w-3 h-3 text-amber-400" />
+                                <span className="text-[10px] sm:text-xs font-bold text-amber-400 uppercase tracking-wider">Hrubá stavba</span>
+                              </div>
+                            </div>
+                          )}
+                          {showHolodomDivider && dosiahnuteUrovne.holodom && (
+                            <div className="py-1.5">
+                              <div className="flex items-center gap-2">
+                                <Hammer className="w-3 h-3 text-blue-400" />
+                                <span className="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-wider">Holodom</span>
+                              </div>
+                            </div>
+                          )}
+                          {showKlucDivider && dosiahnuteUrovne.domNaKluc && (
+                            <div className="py-1.5">
+                              <div className="flex items-center gap-2">
+                                <Key className="w-3 h-3 text-emerald-400" />
+                                <span className="text-[10px] sm:text-xs font-bold text-emerald-400 uppercase tracking-wider">Dom na kľúč</span>
+                              </div>
+                            </div>
+                          )}
+                          {showDocsDivider && (
+                            <div className="py-1.5">
+                              <div className="flex items-center gap-2">
+                                <FileText className="w-3 h-3 text-purple-400" />
+                                <span className="text-[10px] sm:text-xs font-bold text-purple-400 uppercase tracking-wider">Dokumentácia</span>
+                              </div>
+                            </div>
+                          )}
+                          <div className={`flex justify-between items-center py-1 px-2 rounded text-[11px] sm:text-sm ${isBase ? 'bg-blue-500/20 border border-blue-500/30' : 'hover:bg-slate-700/30'}`}>
+                            <span className={`${isBase ? 'text-blue-300 font-semibold' : 'text-slate-300'} flex-1 pr-2`}>{item.name}</span>
+                            <span className={`${isBase ? 'text-blue-300' : 'text-green-400'} font-semibold whitespace-nowrap`}>{formatPrice(item.price)}</span>
+                          </div>
+                        </React.Fragment>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
-              <div className="text-right p-3 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl sm:rounded-2xl border border-green-500/20">
+              <div className="text-right p-3 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl sm:rounded-2xl border border-green-500/20 lg:min-w-[280px]">
                 <p className="text-slate-400 mb-1 sm:mb-2 text-[10px] sm:text-sm">Celková cena s DPH</p>
                 <p className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
                   {formatPrice(totalPrice)}
