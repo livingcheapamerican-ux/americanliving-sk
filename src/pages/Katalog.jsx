@@ -413,28 +413,26 @@ export default function Katalog() {
           {/* Domy Grid */}
           <div className="flex-grow">
             {/* Dizajn filter */}
-            <Card className="p-4 mb-6 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-2 text-base font-semibold text-gray-800">
+            <Card className="p-2 sm:p-4 mb-4 sm:mb-6 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
+                <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-base font-semibold text-gray-800">
                   <span>🏠 Zobraziť domy v dizajne:</span>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex gap-2 sm:gap-3">
                   <Button
                     variant={dizajnFilter === "murovka" ? "default" : "outline"}
-                    size="lg"
                     onClick={() => setDizajnFilter("murovka")}
-                    className={`px-6 py-3 text-base font-semibold ${dizajnFilter === "murovka" ? "bg-orange-600 hover:bg-orange-700" : "border-2"}`}
+                    className={`px-3 py-1.5 sm:px-6 sm:py-3 text-xs sm:text-base font-semibold ${dizajnFilter === "murovka" ? "bg-orange-600 hover:bg-orange-700" : "border-2"}`}
                   >
-                    <Building2 className="w-5 h-5 mr-2" />
+                    <Building2 className="w-3.5 h-3.5 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
                     Murovka
                   </Button>
                   <Button
                     variant={dizajnFilter === "drevo" ? "default" : "outline"}
-                    size="lg"
                     onClick={() => setDizajnFilter("drevo")}
-                    className={`px-6 py-3 text-base font-semibold ${dizajnFilter === "drevo" ? "bg-amber-600 hover:bg-amber-700" : "border-2"}`}
+                    className={`px-3 py-1.5 sm:px-6 sm:py-3 text-xs sm:text-base font-semibold ${dizajnFilter === "drevo" ? "bg-amber-600 hover:bg-amber-700" : "border-2"}`}
                   >
-                    <TreePine className="w-5 h-5 mr-2" />
+                    <TreePine className="w-3.5 h-3.5 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
                     Drevený motív
                   </Button>
                 </div>
