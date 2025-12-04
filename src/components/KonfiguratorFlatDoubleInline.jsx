@@ -1740,7 +1740,6 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         </Card>
       </div>
       </div>
-      </div>
     </div>
   );
 }
