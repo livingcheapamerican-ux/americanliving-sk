@@ -502,7 +502,7 @@ export default function Katalog() {
                           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
                             {dom.hlavny_obrazok ? (
                               <img
-                                src={dom.hlavny_obrazok}
+                                src={dizajnFilter === "drevo" && dom.zakladna_konfiguracia_obrazok ? dom.zakladna_konfiguracia_obrazok : dom.hlavny_obrazok}
                                 alt={dom.nazov}
                                 className="w-full h-full object-contain bg-gray-100 group-hover:scale-105 transition-all duration-500" />
                             ) : (
