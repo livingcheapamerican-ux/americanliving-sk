@@ -163,170 +163,126 @@ export default function KonfiguratorFaza1HrubaStavba({
           {/* Dlaždice - Grid layout */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
             
-            {/* Montáž - Nie */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={montazHolodomu === "nie"}
               onClick={() => setMontazHolodomu("nie")}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                montazHolodomu === "nie" 
-                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
-                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
-              }`}
-            >
-              <Wrench className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${montazHolodomu === "nie" ? "text-amber-600" : "text-gray-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Bez montáže</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Iba sada</span>
-              <span className="text-gray-400 font-medium text-xs mt-2">+ 0 €</span>
-              {montazHolodomu === "nie" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
-            </motion.div>
+              icon={Wrench}
+              iconColor="text-gray-400"
+              iconSelectedColor="text-amber-600"
+              title="Bez montáže"
+              subtitle="Iba sada"
+              price="+ 0 €"
+              isPriced={false}
+              tooltip="Dodanie stavebnej sady bez montážnych prác. Montáž si zabezpečíte svojpomocne."
+            />
 
-            {/* Montáž - Áno */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={montazHolodomu === "ano"}
               onClick={(e) => { if (montazHolodomu !== "ano") triggerAnimation?.("montaz", e.currentTarget); setMontazHolodomu("ano"); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                montazHolodomu === "ano" 
-                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
-                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
-              }`}
-            >
-              <Wrench className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${montazHolodomu === "ano" ? "text-amber-600" : "text-amber-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">S montážou</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Hrubá stavba</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 17 970 €</span>
-              {montazHolodomu === "ano" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
-            </motion.div>
+              icon={Wrench}
+              iconColor="text-amber-400"
+              iconSelectedColor="text-amber-600"
+              title="S montážou"
+              subtitle="Hrubá stavba"
+              price="+ 17 970 €"
+              isPriced={true}
+              tooltip="Kompletná montáž hrubej stavby vrátane konštrukcie, strechy a okien. Ubytovanie brigády sa účtuje zvlášť."
+            />
 
-            {/* Izolácia - Štandard */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={izolaciaNavysenie === "standard"}
               onClick={() => setIzolaciaNavysenie("standard")}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                izolaciaNavysenie === "standard" 
-                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
-                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
-              }`}
-            >
-              <ThermometerSun className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${izolaciaNavysenie === "standard" ? "text-amber-600" : "text-gray-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Izolácia štd.</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">150/200mm</span>
-              <span className="text-gray-400 font-medium text-xs mt-2">+ 0 €</span>
-              {izolaciaNavysenie === "standard" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
-            </motion.div>
+              icon={ThermometerSun}
+              iconColor="text-gray-400"
+              iconSelectedColor="text-amber-600"
+              title="Izolácia štd."
+              subtitle="150/200mm"
+              price="+ 0 €"
+              isPriced={false}
+              tooltip="Štandardná izolácia stien 150mm a strechy 200mm. Vhodné pre rekreačné stavby."
+            />
 
-            {/* Izolácia - Zvýšená */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={izolaciaNavysenie === "zvysena"}
               onClick={(e) => { if (izolaciaNavysenie !== "zvysena") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("zvysena"); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                izolaciaNavysenie === "zvysena" 
-                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
-                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
-              }`}
-            >
-              <ThermometerSun className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${izolaciaNavysenie === "zvysena" ? "text-amber-600" : "text-orange-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Izolácia +</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">200/250mm</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 5 799 €</span>
-              {izolaciaNavysenie === "zvysena" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
-            </motion.div>
+              icon={ThermometerSun}
+              iconColor="text-orange-400"
+              iconSelectedColor="text-amber-600"
+              title="Izolácia +"
+              subtitle="200/250mm"
+              price="+ 5 799 €"
+              isPriced={true}
+              tooltip="Zvýšená izolácia stien 200mm a strechy 250mm. Lepšia tepelná ochrana pre celoročné využitie."
+            />
 
-            {/* Izolácia - Premium A0 */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={izolaciaNavysenie === "premium"}
               onClick={(e) => { if (izolaciaNavysenie !== "premium") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("premium"); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                izolaciaNavysenie === "premium" 
-                  ? "bg-green-100 border-2 border-green-500 shadow-xl ring-2 ring-green-300" 
-                  : "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
-              }`}
-            >
-              <Badge className="absolute top-1 left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] px-1.5">
-                <Sparkles className="w-2 h-2 mr-0.5" />A0
-              </Badge>
-              <ThermometerSun className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${izolaciaNavysenie === "premium" ? "text-green-600" : "text-green-500"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Premium</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">250/300mm</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 11 600 €</span>
-              {izolaciaNavysenie === "premium" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-green-600" />}
-            </motion.div>
+              icon={ThermometerSun}
+              iconColor="text-green-500"
+              iconSelectedColor="text-green-600"
+              title="Premium"
+              subtitle="250/300mm"
+              price="+ 11 600 €"
+              isPriced={true}
+              isA0={true}
+              selectedBg="bg-green-100"
+              selectedBorder="border-green-500"
+              selectedRing="ring-green-300"
+              tooltip="Premium izolácia pre energetický certifikát A0. Steny 250mm, strecha 300mm. Potrebné pre status rodinného domu."
+            />
 
-            {/* Základy - Bez */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={zaklady === "bez"}
               onClick={() => setZaklady("bez")}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                zaklady === "bez" 
-                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
-                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
-              }`}
-            >
-              <Landmark className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${zaklady === "bez" ? "text-amber-600" : "text-gray-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Bez základov</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Vlastné</span>
-              <span className="text-gray-400 font-medium text-xs mt-2">+ 0 €</span>
-              {zaklady === "bez" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
-            </motion.div>
+              icon={Landmark}
+              iconColor="text-gray-400"
+              iconSelectedColor="text-amber-600"
+              title="Bez základov"
+              subtitle="Vlastné"
+              price="+ 0 €"
+              isPriced={false}
+              tooltip="Základy si zabezpečíte svojpomocne alebo cez vlastného dodávateľa."
+            />
 
-            {/* Základy - Skrutky */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={zaklady === "skrutky"}
               onClick={(e) => { if (zaklady !== "skrutky") triggerAnimation?.("skrutky", e.currentTarget); setZaklady("skrutky"); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                zaklady === "skrutky" 
-                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
-                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
-              }`}
-            >
-              <Landmark className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${zaklady === "skrutky" ? "text-amber-600" : "text-amber-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Skrutky</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Zemné pätky</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 8 140 €</span>
-              {zaklady === "skrutky" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
-            </motion.div>
+              icon={Landmark}
+              iconColor="text-amber-400"
+              iconSelectedColor="text-amber-600"
+              title="Skrutky"
+              subtitle="Zemné pätky"
+              price="+ 8 140 €"
+              isPriced={true}
+              tooltip="Zemné skrutky alebo betónové pätky. Rýchla a ekonomická voľba pre rovný terén."
+            />
 
-            {/* Základy - Doska */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={zaklady === "doska"}
               onClick={(e) => { if (zaklady !== "doska") triggerAnimation?.("beton", e.currentTarget); setZaklady("doska"); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                zaklady === "doska" 
-                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
-                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
-              }`}
-            >
-              <Landmark className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${zaklady === "doska" ? "text-amber-600" : "text-orange-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Doska</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Základová</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 17 946 €</span>
-              {zaklady === "doska" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
-            </motion.div>
+              icon={Landmark}
+              iconColor="text-orange-400"
+              iconSelectedColor="text-amber-600"
+              title="Doska"
+              subtitle="Základová"
+              price="+ 17 946 €"
+              isPriced={true}
+              tooltip="Železobetónová základová doska. Stabilné riešenie vhodné pre väčšinu typov terénu."
+            />
 
-            {/* Základy - Pásové */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={zaklady === "pasove"}
               onClick={(e) => { if (zaklady !== "pasove") triggerAnimation?.("beton", e.currentTarget); setZaklady("pasove"); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                zaklady === "pasove" 
-                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
-                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
-              }`}
-            >
-              <Landmark className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${zaklady === "pasove" ? "text-amber-600" : "text-orange-500"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Pásové</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Základy</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 21 079 €</span>
-              {zaklady === "pasove" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
-            </motion.div>
+              icon={Landmark}
+              iconColor="text-orange-500"
+              iconSelectedColor="text-amber-600"
+              title="Pásové"
+              subtitle="Základy"
+              price="+ 21 079 €"
+              isPriced={true}
+              tooltip="Klasické pásové základy. Najrobustnejšie riešenie pre náročnejšie podmienky."
+            />
 
           </div>
         </div>
