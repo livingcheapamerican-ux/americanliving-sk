@@ -17,7 +17,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
 
-export default function KonfiguratorFlatDoubleInline({ dom }) {
+export default function KonfiguratorFlatDoubleInline({ 
+  dom,
+  montazHolodomu, setMontazHolodomu,
+  izolaciaNavysenie, setIzolaciaNavysenie,
+  zaklady, setZaklady
+}) {
   // Základná cena
   const BASE_PRICE = 59900;
 
@@ -25,9 +30,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
   const { animations, triggerAnimation } = useFlyingAnimation();
 
   // State pre všetky voľby
-  const [montazHolodomu, setMontazHolodomu] = useState("nie");
   const [vstupneDvere, setVstupneDvere] = useState("ziadne");
-  const [izolaciaNavysenie, setIzolaciaNavysenie] = useState("standard");
   
   const [elektroinstalacia, setElektroinstalacia] = useState(false);
   const [vodaKanalizacia, setVodaKanalizacia] = useState(false);
@@ -36,7 +39,6 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
   const [tepelneCerpadlo, setTepelneCerpadlo] = useState(false);
   const [rekuperacia, setRekuperacia] = useState(false);
   
-  const [zaklady, setZaklady] = useState("bez");
   const [pripojkaSiete, setPripojkaSiete] = useState(false);
   
   const [inziniering, setInziniering] = useState(false);
@@ -232,16 +234,16 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
   }, []);
 
   const handleReset = () => {
-    setMontazHolodomu("nie");
+    setMontazHolodomu?.("nie");
     setVstupneDvere("ziadne");
-    setIzolaciaNavysenie("standard");
+    setIzolaciaNavysenie?.("standard");
     setElektroinstalacia(false);
     setVodaKanalizacia(false);
     setSanitaKomplet(false);
     setBojler(false);
     setTepelneCerpadlo(false);
     setRekuperacia(false);
-    setZaklady("bez");
+    setZaklady?.("bez");
     setPripojkaSiete(false);
     setInziniering(false);
     setProjektA0(false);
