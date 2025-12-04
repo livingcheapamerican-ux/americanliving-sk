@@ -1015,7 +1015,7 @@ export default function DetailDomu() {
                   </Card>
 
                   {/* Interiér */}
-                  <Card className="overflow-hidden border border-emerald-200 bg-emerald-50/50 col-span-2">
+                  <Card id="interier-finis-panel" className="overflow-hidden border border-emerald-200 bg-emerald-50/50 col-span-2">
                     <div className="flex items-center gap-2 p-3 text-sm font-semibold text-emerald-900 border-b border-emerald-200">
                       <Home className="w-4 h-4" />
                       Interiér finiš
