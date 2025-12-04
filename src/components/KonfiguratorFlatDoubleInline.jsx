@@ -462,515 +462,294 @@ export default function KonfiguratorFlatDoubleInline({
           color="from-blue-600 to-indigo-600"
           step="2"
         />
-        <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-blue-50/50 to-white">
-
-          {/* Interiér finiš - presunuté na prvé miesto */}
-          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
-              <Home className="w-8 h-8 sm:w-10 sm:h-10 text-blue-600" />
-              Interiér finiš
-            </Label>
-
-            <RadioGroup value={interierFinis} onValueChange={setInterierFinis} className="space-y-2 sm:space-y-3">
-              <label className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="ziadne" id="interier-ziadne-holodom" />
-                  <div>
-                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Nie</span>
-                    <p className="text-[10px] sm:text-sm text-gray-500 hidden sm:block">Hrubá stavba</p>
-                  </div>
-                </div>
-                <span className="text-gray-400 font-medium text-xs sm:text-base">+ 0 €</span>
-              </label>
-              <label 
-                onClick={(e) => { if (interierFinis !== "drevo") triggerAnimation("drevo", e.currentTarget); }}
-                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="drevo" id="interier-drevo-holodom" />
-                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Obloženie drevom</span>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 16 400 €</span>
-              </label>
-              <label 
-                onClick={(e) => { if (interierFinis !== "sadrokarton") triggerAnimation("sadrokarton", e.currentTarget); }}
-                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="sadrokarton" id="interier-sadrokarton-holodom" />
-                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Sádrokartón</span>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 19 475 €</span>
-              </label>
-            </RadioGroup>
-          </div>
-
-          {/* Elektroinštalácia */}
-          <motion.div 
-            className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
-            whileHover={{ scale: 1.005 }}
-          >
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
-              <motion.div animate={{ scale: elektroinstalacia ? [1, 1.3, 1] : 1 }} transition={{ duration: 0.3 }}>
-                <Zap className={`w-8 h-8 sm:w-10 sm:h-10 ${elektroinstalacia ? "text-yellow-500" : "text-yellow-400"}`} />
-              </motion.div>
-              Elektroinštalácia
-            </Label>
-
-            <motion.label 
-              whileHover={{ x: 4 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); }}
-              className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${elektroinstalacia ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
-            >
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Checkbox 
-                  id="elektro" 
-                  checked={elektroinstalacia} 
-                  onCheckedChange={setElektroinstalacia}
-                  className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
-                />
-                <div>
-                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Elektrická inštalácia</span>
-                  <p className="text-[10px] sm:text-sm text-gray-500">Rozvody, rozvádzač, zásuvky</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-1 sm:gap-2">
-                <AnimatePresence>
-                  {elektroinstalacia && (
-                    <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 7 400 €</span>
-              </div>
-            </motion.label>
-            </motion.div>
-
-          {/* Voda a kanalizácia */}
-          <motion.div 
-            className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
-            whileHover={{ scale: 1.005 }}
-          >
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
-              <motion.div animate={{ y: vodaKanalizacia ? [0, -3, 0] : 0 }} transition={{ duration: 0.3, repeat: vodaKanalizacia ? 2 : 0 }}>
-                <Droplets className="w-8 h-8 sm:w-10 sm:h-10 text-blue-500" />
-              </motion.div>
-              Voda a kanalizácia
-            </Label>
-
-            <div className="space-y-2 sm:space-y-3">
-              <motion.label 
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); }}
-                className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${vodaKanalizacia ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <Checkbox 
-                    id="voda" 
-                    checked={vodaKanalizacia} 
-                    onCheckedChange={setVodaKanalizacia}
-                    className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
-                  />
-                  <div>
-                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Rozvody vody a kanalizácie</span>
-                    <p className="text-[10px] sm:text-sm text-gray-500">Príprava pre sanitárne zariadenia</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1 sm:gap-2">
-                  <AnimatePresence>
-                    {vodaKanalizacia && (
-                      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                  <span className="font-bold text-green-600 text-xs sm:text-base">+ 2 380 €</span>
-                </div>
-              </motion.label>
-              <motion.label 
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); }}
-                className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${sanitaKomplet ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <Checkbox 
-                    id="sanita" 
-                    checked={sanitaKomplet} 
-                    onCheckedChange={setSanitaKomplet}
-                    className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
-                  />
-                  <div>
-                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Sanita komplet</span>
-                    <p className="text-[10px] sm:text-sm text-gray-500">Sprchový kút, umývadlo, WC</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1 sm:gap-2">
-                  <AnimatePresence>
-                    {sanitaKomplet && (
-                      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                  <span className="font-bold text-green-600 text-xs sm:text-base">+ 1 169 €</span>
-                </div>
-              </motion.label>
-              <motion.label 
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); }}
-                className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${bojler ? "border-blue-400 bg-blue-50/70 shadow-sm" : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"}`}
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <Checkbox 
-                    id="bojler" 
-                    checked={bojler} 
-                    onCheckedChange={setBojler}
-                    className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
-                  />
-                  <div>
-                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Elektrický bojler</span>
-                    <p className="text-[10px] sm:text-sm text-gray-500">Ohrev pitnej vody</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1 sm:gap-2">
-                  <AnimatePresence>
-                    {bojler && (
-                      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                  <span className="font-bold text-green-600 text-xs sm:text-base">+ 246 €</span>
-                </div>
-              </motion.label>
-            </div>
-            </motion.div>
-
-          {/* Vykurovanie a vetranie */}
-          <motion.div 
-            className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
-            whileHover={{ scale: 1.005 }}
-          >
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <motion.div animate={{ scale: (tepelneCerpadlo || rekuperacia) ? [1, 1.2, 1] : 1 }} transition={{ duration: 0.3 }}>
-                <ThermometerSun className="w-8 h-8 sm:w-10 sm:h-10 text-red-500" />
-              </motion.div>
-              Vykurovanie a vetranie
-            </Label>
-            <div className="space-y-2 sm:space-y-3">
-              <motion.label 
-                whileHover={{ x: 4, scale: 1.01 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={(e) => { if (!tepelneCerpadlo) triggerAnimation("klimatizacia", e.currentTarget); }}
-                className={`relative flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all overflow-hidden ${tepelneCerpadlo ? 'border-green-500 bg-green-50 shadow-md ring-2 ring-green-200' : projektA0 && !tepelneCerpadlo ? 'border-amber-400 bg-amber-50' : 'border-green-300 bg-green-50/50 hover:bg-green-100'}`}
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <Checkbox 
-                    id="cerpadlo" 
-                    checked={tepelneCerpadlo} 
-                    onCheckedChange={setTepelneCerpadlo}
-                    className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
-                  />
-                  <div>
-                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
-                      <span className="font-semibold text-gray-800 text-xs sm:text-base">Tepelné čerpadlo</span>
-                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] sm:text-xs">
-                        <Sparkles className="w-2 h-2 sm:w-3 sm:h-3 mr-0.5 sm:mr-1" />
-                        A0
-                      </Badge>
-                    </div>
-                    <p className="text-[10px] sm:text-sm text-gray-500">1x vonk. + 5x vnút. jednotka</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1 sm:gap-2">
-                  <AnimatePresence>
-                    {tepelneCerpadlo && (
-                      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                  <span className="font-bold text-green-600 text-xs sm:text-base">+ 5 535 €</span>
-                </div>
-              </motion.label>
-              <motion.label 
-                whileHover={{ x: 4, scale: 1.01 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={(e) => { if (!rekuperacia) triggerAnimation("rekuperacia", e.currentTarget); }}
-                className={`relative flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all overflow-hidden ${rekuperacia ? 'border-green-500 bg-green-50 shadow-md ring-2 ring-green-200' : projektA0 && !rekuperacia ? 'border-amber-400 bg-amber-50' : 'border-green-300 bg-green-50/50 hover:bg-green-100'}`}
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <Checkbox 
-                    id="rekuperacia" 
-                    checked={rekuperacia} 
-                    onCheckedChange={setRekuperacia}
-                    className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
-                  />
-                  <div>
-                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
-                      <span className="font-semibold text-gray-800 text-xs sm:text-base">Rekuperácia</span>
-                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] sm:text-xs">
-                        <Sparkles className="w-2 h-2 sm:w-3 sm:h-3 mr-0.5 sm:mr-1" />
-                        A0
-                      </Badge>
-                    </div>
-                    <p className="text-[10px] sm:text-sm text-gray-500">5ks lokálnych jednotiek</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1 sm:gap-2">
-                  <AnimatePresence>
-                    {rekuperacia && (
-                      <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                  <span className="font-bold text-green-600 text-xs sm:text-base">+ 2 700 €</span>
-                </div>
-              </motion.label>
-            </div>
-          </motion.div>
-
-          {/* Pripojenie na siete */}
-          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <Cable className="w-8 h-8 sm:w-10 sm:h-10 text-gray-600" />
-              Pripojenie na siete
-            </Label>
-            <label 
-              onClick={(e) => { if (!pripojkaSiete) triggerAnimation("siete", e.currentTarget); }}
-              className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
-            >
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Checkbox 
-                  id="pripojky" 
-                  checked={pripojkaSiete} 
-                  onCheckedChange={setPripojkaSiete}
-                  className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
-                />
-                <div>
-                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Pripojenie na siete</span>
-                  <p className="text-[10px] sm:text-sm text-gray-500">Elektrika, voda, kanalizácia</p>
-                </div>
-              </div>
-              <span className="font-bold text-green-600 text-xs sm:text-base">+ 1 501 €</span>
-            </label>
-          </div>
-
-          {/* Úpravy okien a dverí */}
-          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <Square className="w-8 h-8 sm:w-10 sm:h-10 text-blue-600" />
-              Okná a vstupné dvere
-            </Label>
+        <div className="p-3 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
+          {/* Dlaždice - Grid layout */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
             
-            {/* Vstupné dvere */}
-            <div className="mb-3 sm:mb-4">
-              <p className="text-xs sm:text-sm font-medium text-gray-600 mb-2 sm:mb-3">Vstupné dvere</p>
-              <RadioGroup value={vstupneDvere} onValueChange={setVstupneDvere} className="space-y-1.5 sm:space-y-2">
-                <label className="flex items-center justify-between p-2 sm:p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <RadioGroupItem value="ziadne" id="dvere-ziadne" />
-                    <span className="text-gray-800 text-xs sm:text-base">Štandard v sade</span>
-                  </div>
-                  <span className="text-gray-400 text-xs sm:text-base">+ 0 €</span>
-                </label>
-                <label 
-                  onClick={(e) => { if (vstupneDvere !== "kovove") triggerAnimation("dvereKovove", e.currentTarget); }}
-                  className="flex items-center justify-between p-2 sm:p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
+            {/* Interiér finiš - 3 možnosti ako dlaždice */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setInterierFinis("ziadne")}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                interierFinis === "ziadne" 
+                  ? "bg-blue-100 border-2 border-blue-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-blue-300 hover:shadow-md"
+              }`}
+            >
+              <Home className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${interierFinis === "ziadne" ? "text-blue-600" : "text-gray-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Bez interiéru</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Hrubá stavba</span>
+              <span className="text-gray-400 font-medium text-xs mt-2">+ 0 €</span>
+              {interierFinis === "ziadne" && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-blue-600" />}
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (interierFinis !== "drevo") triggerAnimation("drevo", e.currentTarget); setInterierFinis("drevo"); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                interierFinis === "drevo" 
+                  ? "bg-blue-100 border-2 border-blue-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-blue-300 hover:shadow-md"
+              }`}
+            >
+              <Home className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${interierFinis === "drevo" ? "text-blue-600" : "text-amber-600"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Drevo</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Obloženie</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 16 400 €</span>
+              {interierFinis === "drevo" && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-blue-600" />}
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (interierFinis !== "sadrokarton") triggerAnimation("sadrokarton", e.currentTarget); setInterierFinis("sadrokarton"); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                interierFinis === "sadrokarton" 
+                  ? "bg-blue-100 border-2 border-blue-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-blue-300 hover:shadow-md"
+              }`}
+            >
+              <Home className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${interierFinis === "sadrokarton" ? "text-blue-600" : "text-gray-500"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Sadrokartón</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Omietka</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 19 475 €</span>
+              {interierFinis === "sadrokarton" && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-blue-600" />}
+            </motion.div>
+
+            {/* Elektroinštalácia */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); setElektroinstalacia(!elektroinstalacia); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                elektroinstalacia 
+                  ? "bg-yellow-100 border-2 border-yellow-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-yellow-300 hover:shadow-md"
+              }`}
+            >
+              <Zap className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${elektroinstalacia ? "text-yellow-600" : "text-yellow-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Elektro</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Rozvody</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 7 400 €</span>
+              {elektroinstalacia && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-yellow-600" />}
+            </motion.div>
+
+            {/* Voda a kanalizácia */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); setVodaKanalizacia(!vodaKanalizacia); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                vodaKanalizacia 
+                  ? "bg-blue-100 border-2 border-blue-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-blue-300 hover:shadow-md"
+              }`}
+            >
+              <Droplets className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${vodaKanalizacia ? "text-blue-600" : "text-blue-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Voda</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Rozvody</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 2 380 €</span>
+              {vodaKanalizacia && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-blue-600" />}
+            </motion.div>
+
+            {/* Sanita */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); setSanitaKomplet(!sanitaKomplet); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                sanitaKomplet 
+                  ? "bg-blue-100 border-2 border-blue-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-blue-300 hover:shadow-md"
+              }`}
+            >
+              <ShowerHead className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${sanitaKomplet ? "text-blue-600" : "text-blue-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Sanita</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Komplet</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 1 169 €</span>
+              {sanitaKomplet && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-blue-600" />}
+            </motion.div>
+
+            {/* Bojler */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                bojler 
+                  ? "bg-orange-100 border-2 border-orange-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-orange-300 hover:shadow-md"
+              }`}
+            >
+              <Flame className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${bojler ? "text-orange-600" : "text-orange-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Bojler</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Elektrický</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 246 €</span>
+              {bojler && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-orange-600" />}
+            </motion.div>
+
+            {/* Tepelné čerpadlo - A0 */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!tepelneCerpadlo) triggerAnimation("klimatizacia", e.currentTarget); setTepelneCerpadlo(!tepelneCerpadlo); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                tepelneCerpadlo 
+                  ? "bg-green-100 border-2 border-green-500 shadow-lg ring-2 ring-green-200" 
+                  : projektA0 && !tepelneCerpadlo 
+                    ? "bg-amber-50 border-2 border-amber-400" 
+                    : "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
+              }`}
+            >
+              <Badge className="absolute top-1 left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] px-1.5">
+                <Sparkles className="w-2 h-2 mr-0.5" />A0
+              </Badge>
+              <ThermometerSun className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${tepelneCerpadlo ? "text-green-600" : "text-red-500"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Tep. čerpadlo</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">5 jednotiek</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 5 535 €</span>
+              {tepelneCerpadlo && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-green-600" />}
+            </motion.div>
+
+            {/* Rekuperácia - A0 */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!rekuperacia) triggerAnimation("rekuperacia", e.currentTarget); setRekuperacia(!rekuperacia); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                rekuperacia 
+                  ? "bg-green-100 border-2 border-green-500 shadow-lg ring-2 ring-green-200" 
+                  : projektA0 && !rekuperacia 
+                    ? "bg-amber-50 border-2 border-amber-400" 
+                    : "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
+              }`}
+            >
+              <Badge className="absolute top-1 left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] px-1.5">
+                <Sparkles className="w-2 h-2 mr-0.5" />A0
+              </Badge>
+              <Wind className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${rekuperacia ? "text-green-600" : "text-cyan-500"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Rekuperácia</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">5 jednotiek</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 2 700 €</span>
+              {rekuperacia && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-green-600" />}
+            </motion.div>
+
+            {/* Pripojenie na siete */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!pripojkaSiete) triggerAnimation("siete", e.currentTarget); setPripojkaSiete(!pripojkaSiete); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                pripojkaSiete 
+                  ? "bg-gray-200 border-2 border-gray-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-gray-400 hover:shadow-md"
+              }`}
+            >
+              <Cable className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${pripojkaSiete ? "text-gray-700" : "text-gray-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Siete</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Pripojenie</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 1 501 €</span>
+              {pripojkaSiete && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-gray-600" />}
+            </motion.div>
+
+            {/* Laminácia okien */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!povrchokaOkien) triggerAnimation("oknoAntracit", e.currentTarget); setPovrchokaOkien(!povrchokaOkien); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                povrchokaOkien 
+                  ? "bg-slate-200 border-2 border-slate-600 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-slate-400 hover:shadow-md"
+              }`}
+            >
+              <Square className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${povrchokaOkien ? "text-slate-700" : "text-slate-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Laminácia</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Antracit</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 3 100 €</span>
+              {povrchokaOkien && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-slate-600" />}
+            </motion.div>
+
+            {/* Tónované sklá */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (!tonovaneSkla) triggerAnimation("oknoTonovane", e.currentTarget); setTonovaneSkla(!tonovaneSkla); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                tonovaneSkla 
+                  ? "bg-amber-100 border-2 border-amber-500 shadow-lg" 
+                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
+              }`}
+            >
+              <Sun className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${tonovaneSkla ? "text-amber-600" : "text-amber-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Tónované</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Solar sklá</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 1 300 €</span>
+              {tonovaneSkla && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-amber-600" />}
+            </motion.div>
+
+          </div>
+
+          {/* Sekcia s počtami - Dvere a Okná */}
+          <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
+            <p className="text-xs sm:text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+              <DoorOpen className="w-4 h-4 text-blue-600" />
+              Vstupné dvere
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { value: "ziadne", label: "Štandard", price: "0 €" },
+                { value: "kovove", label: "Kovové", price: "+ 720 €" },
+                { value: "plastove", label: "Plastové", price: "+ 660 €" }
+              ].map((opt) => (
+                <motion.div
+                  key={opt.value}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setVstupneDvere(opt.value)}
+                  className={`p-2 sm:p-3 rounded-lg cursor-pointer text-center transition-all ${
+                    vstupneDvere === opt.value 
+                      ? "bg-blue-100 border-2 border-blue-500" 
+                      : "bg-gray-50 border-2 border-gray-200 hover:border-blue-300"
+                  }`}
                 >
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <RadioGroupItem value="kovove" id="dvere-kovove" />
-                    <span className="text-gray-800 text-xs sm:text-base">Kovové dvere</span>
-                  </div>
-                  <span className="font-bold text-green-600 text-xs sm:text-base">+ 720 €</span>
-                </label>
-                <label 
-                  onClick={(e) => { if (vstupneDvere !== "plastove") triggerAnimation("dverePlastove", e.currentTarget); }}
-                  className="flex items-center justify-between p-2 sm:p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
-                >
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <RadioGroupItem value="plastove" id="dvere-plastove" />
-                    <span className="text-gray-800 text-xs sm:text-base">Plastovo-kovové</span>
-                  </div>
-                  <span className="font-bold text-green-600 text-xs sm:text-base">+ 660 €</span>
-                </label>
-              </RadioGroup>
+                  <span className="font-medium text-gray-800 text-xs sm:text-sm block">{opt.label}</span>
+                  <span className={`text-[10px] sm:text-xs ${opt.value === "ziadne" ? "text-gray-400" : "text-green-600 font-bold"}`}>{opt.price}</span>
+                </motion.div>
+              ))}
             </div>
 
-            {/* Rozšírenia okien */}
-            <div className="space-y-2 sm:space-y-3 pt-3 sm:pt-4 border-t">
-              <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1.5 sm:mb-2">Doplnkové okná</p>
-              <div className="grid gap-2 sm:gap-3">
-                <div 
-                  className={`flex items-center justify-between p-2 sm:p-3 border-2 rounded-lg cursor-pointer transition-all ${stresneOkno > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
-                  onClick={(e) => { 
-                    if (stresneOkno === 0) {
-                      triggerAnimation("okno", e.currentTarget);
-                      setStresneOkno(1);
-                    } else {
-                      setStresneOkno(0);
-                    }
-                  }}
-                >
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <Checkbox checked={stresneOkno > 0} className="data-[state=checked]:bg-blue-600" />
-                    <span className="text-gray-800 text-xs sm:text-base">Strešné okno</span>
+            <p className="text-xs sm:text-sm font-bold text-gray-700 mt-4 mb-3 flex items-center gap-2">
+              <Square className="w-4 h-4 text-blue-600" />
+              Doplnkové okná
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {[
+                { state: stresneOkno, setter: setStresneOkno, label: "Strešné", price: "760 €" },
+                { state: bocneOknoFixne, setter: setBocneOknoFixne, label: "Fixné 90×205", price: "501 €" },
+                { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: "Výkl. 90×205", price: "540 €" },
+                { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: "Výkl. 55×90", price: "225 €" }
+              ].map((opt, idx) => (
+                <div key={idx} className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
+                  <span className="font-medium text-gray-800 text-[10px] sm:text-xs block mb-1">{opt.label}</span>
+                  <div className="flex items-center justify-center gap-1">
+                    <button 
+                      onClick={() => opt.setter(Math.max(0, opt.state - 1))}
+                      className="w-6 h-6 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm"
+                    >−</button>
+                    <span className="w-6 text-center font-bold text-sm">{opt.state}</span>
+                    <button 
+                      onClick={() => opt.setter(opt.state + 1)}
+                      className="w-6 h-6 rounded bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm"
+                    >+</button>
                   </div>
-                  <div className="flex items-center gap-1 sm:gap-2">
-                    <Input 
-                      type="number" 
-                      min="0" 
-                      value={stresneOkno} 
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={(e) => { 
-                        const newVal = parseInt(e.target.value) || 0;
-                        if (newVal > stresneOkno) triggerAnimation("okno", e.target);
-                        setStresneOkno(newVal);
-                      }}
-                      className="w-12 sm:w-16 text-center h-7 sm:h-9 text-xs sm:text-base"
-                    />
-                    <span className="font-bold text-green-600 whitespace-nowrap text-xs sm:text-base">× 760 €</span>
-                  </div>
+                  <span className="text-green-600 font-bold text-[10px] block mt-1 text-center">× {opt.price}</span>
                 </div>
-                <div 
-                  className={`flex items-center justify-between p-2 sm:p-3 border-2 rounded-lg cursor-pointer transition-all ${bocneOknoFixne > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
-                  onClick={(e) => { 
-                    if (bocneOknoFixne === 0) {
-                      triggerAnimation("okno", e.currentTarget);
-                      setBocneOknoFixne(1);
-                    } else {
-                      setBocneOknoFixne(0);
-                    }
-                  }}
-                >
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <Checkbox checked={bocneOknoFixne > 0} className="data-[state=checked]:bg-blue-600" />
-                    <span className="text-gray-800 text-xs sm:text-base">Bočné fixné 90×205</span>
-                  </div>
-                  <div className="flex items-center gap-1 sm:gap-2">
-                    <Input 
-                      type="number" 
-                      min="0" 
-                      value={bocneOknoFixne} 
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={(e) => {
-                        const newVal = parseInt(e.target.value) || 0;
-                        if (newVal > bocneOknoFixne) triggerAnimation("okno", e.target);
-                        setBocneOknoFixne(newVal);
-                      }}
-                      className="w-12 sm:w-16 text-center h-7 sm:h-9 text-xs sm:text-base"
-                    />
-                    <span className="font-bold text-green-600 whitespace-nowrap text-xs sm:text-base">× 501 €</span>
-                  </div>
-                </div>
-                <div 
-                  className={`flex items-center justify-between p-2 sm:p-3 border-2 rounded-lg cursor-pointer transition-all ${bocneOknoVyklopne90 > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
-                  onClick={(e) => { 
-                    if (bocneOknoVyklopne90 === 0) {
-                      triggerAnimation("okno", e.currentTarget);
-                      setBocneOknoVyklopne90(1);
-                    } else {
-                      setBocneOknoVyklopne90(0);
-                    }
-                  }}
-                >
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <Checkbox checked={bocneOknoVyklopne90 > 0} className="data-[state=checked]:bg-blue-600" />
-                    <span className="text-gray-800 text-xs sm:text-base">Bočné výkl. 90×205</span>
-                  </div>
-                  <div className="flex items-center gap-1 sm:gap-2">
-                    <Input 
-                      type="number" 
-                      min="0" 
-                      value={bocneOknoVyklopne90} 
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={(e) => {
-                        const newVal = parseInt(e.target.value) || 0;
-                        if (newVal > bocneOknoVyklopne90) triggerAnimation("okno", e.target);
-                        setBocneOknoVyklopne90(newVal);
-                      }}
-                      className="w-12 sm:w-16 text-center h-7 sm:h-9 text-xs sm:text-base"
-                    />
-                    <span className="font-bold text-green-600 whitespace-nowrap text-xs sm:text-base">× 540 €</span>
-                  </div>
-                </div>
-                <div 
-                  className={`flex items-center justify-between p-2 sm:p-3 border-2 rounded-lg cursor-pointer transition-all ${bocneOknoVyklopne55 > 0 ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
-                  onClick={(e) => { 
-                    if (bocneOknoVyklopne55 === 0) {
-                      triggerAnimation("okno", e.currentTarget);
-                      setBocneOknoVyklopne55(1);
-                    } else {
-                      setBocneOknoVyklopne55(0);
-                    }
-                  }}
-                >
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <Checkbox checked={bocneOknoVyklopne55 > 0} className="data-[state=checked]:bg-blue-600" />
-                    <span className="text-gray-800 text-xs sm:text-base">Bočné výkl. 55×90</span>
-                  </div>
-                  <div className="flex items-center gap-1 sm:gap-2">
-                    <Input 
-                      type="number" 
-                      min="0" 
-                      value={bocneOknoVyklopne55} 
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={(e) => {
-                        const newVal = parseInt(e.target.value) || 0;
-                        if (newVal > bocneOknoVyklopne55) triggerAnimation("okno", e.target);
-                        setBocneOknoVyklopne55(newVal);
-                      }}
-                      className="w-12 sm:w-16 text-center h-7 sm:h-9 text-xs sm:text-base"
-                    />
-                    <span className="font-bold text-green-600 whitespace-nowrap text-xs sm:text-base">× 225 €</span>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
-
-            {/* Laminácia a tónované sklá */}
-            <div className="space-y-2 sm:space-y-3 pt-3 sm:pt-4 border-t mt-3 sm:mt-4">
-              <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1.5 sm:mb-2">Úpravy okien</p>
-              <label 
-                onClick={(e) => { if (!povrchokaOkien) triggerAnimation("oknoAntracit", e.currentTarget); }}
-                className="flex items-center justify-between p-2 sm:p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <Checkbox 
-                    id="povrch-okien" 
-                    checked={povrchokaOkien} 
-                    onCheckedChange={setPovrchokaOkien}
-                    className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
-                  />
-                  <div>
-                    <span className="text-gray-800 text-xs sm:text-base">Laminácia - antracit</span>
-                  </div>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 3 100 €</span>
-              </label>
-              <label 
-                onClick={(e) => { if (!tonovaneSkla) triggerAnimation("oknoTonovane", e.currentTarget); }}
-                className="flex items-center justify-between p-2 sm:p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer transition-all"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <Checkbox 
-                    id="tonovane-skla" 
-                    checked={tonovaneSkla} 
-                    onCheckedChange={setTonovaneSkla}
-                    className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
-                  />
-                  <span className="text-gray-800 text-xs sm:text-base">Tónované sklá (Solar)</span>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 1 300 €</span>
-              </label>
-            </div>
-            </div>
+          </div>
 
         </div>
         </Card>
