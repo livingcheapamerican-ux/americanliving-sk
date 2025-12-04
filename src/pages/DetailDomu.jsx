@@ -1025,6 +1025,11 @@ export default function DetailDomu() {
                       <p className="text-red-600 font-medium">Maľovanie: 4,5 €/m², farbu dodáva klient</p>
                     </div>
                   </Card>
+
+                  {/* Inline konfigurátor - floating panel pod Interiér finiš */}
+                  <div className="col-span-2">
+                    <KonfiguratorFlatDoubleInline dom={dom} />
+                  </div>
                 </div>
               )}
             </div>
