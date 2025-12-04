@@ -472,14 +472,27 @@ export default function DetailDomu() {
 
             {/* Fáza 1: Hrubá stavba - pod galériou */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
-              <KonfiguratorFaza1HrubaStavba 
-                montazHolodomu={montazHolodomu}
-                setMontazHolodomu={setMontazHolodomu}
-                izolaciaNavysenie={izolaciaNavysenie}
-                setIzolaciaNavysenie={setIzolaciaNavysenie}
-                zaklady={zaklady}
-                setZaklady={setZaklady}
-              />
+              <>
+                <KonfiguratorFaza1HrubaStavba 
+                  montazHolodomu={montazHolodomu}
+                  setMontazHolodomu={setMontazHolodomu}
+                  izolaciaNavysenie={izolaciaNavysenie}
+                  setIzolaciaNavysenie={setIzolaciaNavysenie}
+                  zaklady={zaklady}
+                  setZaklady={setZaklady}
+                />
+                {/* Sumárny floating panel */}
+                <KonfiguratorFlatDoubleInline 
+                  dom={dom}
+                  montazHolodomu={montazHolodomu}
+                  setMontazHolodomu={setMontazHolodomu}
+                  izolaciaNavysenie={izolaciaNavysenie}
+                  setIzolaciaNavysenie={setIzolaciaNavysenie}
+                  zaklady={zaklady}
+                  setZaklady={setZaklady}
+                  showOnlySummary={true}
+                />
+              </>
             )}
 
             {/* Pôdorysy */}
@@ -1044,7 +1057,7 @@ export default function DetailDomu() {
                     </div>
                   </Card>
 
-                  {/* Inline konfigurátor - floating panel pod Interiér finiš */}
+                  {/* Inline konfigurátor - fázy 2-4 */}
                   <div className="col-span-2">
                     <KonfiguratorFlatDoubleInline 
                       dom={dom}
@@ -1054,6 +1067,7 @@ export default function DetailDomu() {
                       setIzolaciaNavysenie={setIzolaciaNavysenie}
                       zaklady={zaklady}
                       setZaklady={setZaklady}
+                      showOnlySummary={false}
                     />
                   </div>
                 </div>

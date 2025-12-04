@@ -21,7 +21,8 @@ export default function KonfiguratorFlatDoubleInline({
   dom,
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
-  zaklady, setZaklady
+  zaklady, setZaklady,
+  showOnlySummary = false
 }) {
   // Základná cena
   const BASE_PRICE = 59900;
@@ -342,18 +343,10 @@ export default function KonfiguratorFlatDoubleInline({
     }
   };
 
-  return (
-    <div className="mt-8 relative">
-      {/* Flying animations container */}
-      <FlyingAnimationContainer animations={animations} />
-      {/* Floating Price Bar - fixed position below Interiér finiš panel */}
-      <div 
-        className="mt-4"
-        style={{ 
-          width: panelWidth ? `${panelWidth}px` : '100%'
-        }}
-        ref={dragRef}
-      >
+  // Ak zobrazujeme iba sumár (pre ľavý stĺpec)
+  if (showOnlySummary) {
+    return (
+      <div className="mt-4">
         <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
           <div className="p-4 border-b border-slate-700/50">
             <div className="flex items-center justify-between">
@@ -376,7 +369,7 @@ export default function KonfiguratorFlatDoubleInline({
               
               return (
                 <React.Fragment key={index}>
-                  {showHrubaDivider && dosiahnuteUrovne.hrubaStavba && (
+                  {showHrubaDivider && (
                     <div className="py-1">
                       <div className="border-t border-amber-500/50"></div>
                       <div className="flex items-center gap-1.5 px-1 pt-1">
@@ -385,7 +378,7 @@ export default function KonfiguratorFlatDoubleInline({
                       </div>
                     </div>
                   )}
-                  {showHolodomDivider && dosiahnuteUrovne.holodom && (
+                  {showHolodomDivider && (
                     <div className="py-1">
                       <div className="border-t border-blue-500/50"></div>
                       <div className="flex items-center gap-1.5 px-1 pt-1">
@@ -394,7 +387,7 @@ export default function KonfiguratorFlatDoubleInline({
                       </div>
                     </div>
                   )}
-                  {showKlucDivider && dosiahnuteUrovne.domNaKluc && (
+                  {showKlucDivider && (
                     <div className="py-1">
                       <div className="border-t border-emerald-500/50"></div>
                       <div className="flex items-center gap-1.5 px-1 pt-1">
@@ -412,9 +405,11 @@ export default function KonfiguratorFlatDoubleInline({
                       </div>
                     </div>
                   )}
-                  <div className={`flex justify-between items-center py-0.5 px-1.5 rounded text-[11px] ${isBase ? 'bg-blue-500/20 border border-blue-500/30 my-0.5' : 'hover:bg-slate-700/50'}`}>
-                    <span className={`${isBase ? 'text-blue-300 font-semibold' : 'text-slate-400'} flex-1 pr-2`}>{item.name}</span>
-                    <span className={`${isBase ? 'text-blue-300' : 'text-green-400'} font-semibold whitespace-nowrap`}>{formatPrice(item.price)}</span>
+                  <div className={`flex justify-between items-center py-0.5 px-1.5 rounded text-[11px] ${isBase ? 'bg-blue-500/20 border border-blue-500/30 my-0.5' : item.selected ? 'hover:bg-slate-700/50' : 'opacity-50'}`}>
+                    <span className={`${isBase ? 'text-blue-300 font-semibold' : item.selected ? 'text-slate-400' : 'text-slate-500 line-through'} flex-1 pr-2`}>{item.name}</span>
+                    <span className={`${isBase ? 'text-blue-300' : item.selected ? 'text-green-400' : 'text-slate-500'} font-semibold whitespace-nowrap`}>
+                      {item.selected ? formatPrice(item.price) : 'NIE'}
+                    </span>
                   </div>
                 </React.Fragment>
               );
@@ -447,9 +442,15 @@ export default function KonfiguratorFlatDoubleInline({
               </Button>
             </div>
           </div>
-
         </Card>
       </div>
+    );
+  }
+
+  return (
+    <div className="mt-8 relative">
+      {/* Flying animations container */}
+      <FlyingAnimationContainer animations={animations} />
 
       <div>
       <div className="space-y-6">
@@ -1397,9 +1398,11 @@ export default function KonfiguratorFlatDoubleInline({
                               </div>
                             </div>
                           )}
-                          <div className={`flex justify-between items-center py-1 px-2 rounded text-[11px] sm:text-sm ${isBase ? 'bg-blue-500/20 border border-blue-500/30' : 'hover:bg-slate-700/30'}`}>
-                            <span className={`${isBase ? 'text-blue-300 font-semibold' : 'text-slate-300'} flex-1 pr-2`}>{item.name}</span>
-                            <span className={`${isBase ? 'text-blue-300' : 'text-green-400'} font-semibold whitespace-nowrap`}>{formatPrice(item.price)}</span>
+                          <div className={`flex justify-between items-center py-1 px-2 rounded text-[11px] sm:text-sm ${isBase ? 'bg-blue-500/20 border border-blue-500/30' : item.selected ? 'hover:bg-slate-700/30' : 'opacity-50'}`}>
+                            <span className={`${isBase ? 'text-blue-300 font-semibold' : item.selected ? 'text-slate-300' : 'text-slate-500 line-through'} flex-1 pr-2`}>{item.name}</span>
+                            <span className={`${isBase ? 'text-blue-300' : item.selected ? 'text-green-400' : 'text-slate-500'} font-semibold whitespace-nowrap`}>
+                              {item.selected ? formatPrice(item.price) : 'NIE'}
+                            </span>
                           </div>
                         </React.Fragment>
                       );
