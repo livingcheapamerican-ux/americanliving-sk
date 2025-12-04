@@ -858,7 +858,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
                   />
                   <div>
                     <span className="font-semibold text-gray-800 text-xs sm:text-base">Elektrický bojler</span>
-                    <p className="text-[10px] sm:text-sm text-gray-500">Ohrev teplej úžitkovej vody</p>
+                    <p className="text-[10px] sm:text-sm text-gray-500">Ohrev pitnej vody</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 sm:gap-2">
