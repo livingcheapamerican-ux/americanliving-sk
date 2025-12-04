@@ -202,7 +202,7 @@ export default function KonfiguratorFlatDoubleInline({
     items.push({ name: interierLabel, price: interierPrice, section: "kluc", selected: interierFinis !== "ziadne" });
     
     items.push({ name: "Vnútorné podlahy - laminát", price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
-    items.push({ name: "Podlahové vykurovanie", price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
+    items.push({ name: "Elektrické podlahové vykurovanie s WiFi termostatom", price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
     items.push({ name: `Interiérové dvere (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere, section: "kluc", selected: interieroveDvere > 0 });
     items.push({ name: "Dekoratívna pergola", price: pergola ? CENY.pergola : 0, section: "kluc", selected: pergola });
     
