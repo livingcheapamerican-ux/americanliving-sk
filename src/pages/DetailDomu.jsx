@@ -31,6 +31,11 @@ export default function DetailDomu() {
   const [lightboxImages, setLightboxImages] = useState([]);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [zoomLevel, setZoomLevel] = useState(1);
+  
+  // Zdieľaný stav pre Fázu 1 - Hrubá stavba
+  const [montazHolodomu, setMontazHolodomu] = useState("nie");
+  const [izolaciaNavysenie, setIzolaciaNavysenie] = useState("standard");
+  const [zaklady, setZaklady] = useState("bez");
   const [panPosition, setPanPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -467,7 +472,14 @@ export default function DetailDomu() {
 
             {/* Fáza 1: Hrubá stavba - pod galériou */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
-              <KonfiguratorFaza1HrubaStavba />
+              <KonfiguratorFaza1HrubaStavba 
+                montazHolodomu={montazHolodomu}
+                setMontazHolodomu={setMontazHolodomu}
+                izolaciaNavysenie={izolaciaNavysenie}
+                setIzolaciaNavysenie={setIzolaciaNavysenie}
+                zaklady={zaklady}
+                setZaklady={setZaklady}
+              />
             )}
 
             {/* Pôdorysy */}
@@ -1034,7 +1046,15 @@ export default function DetailDomu() {
 
                   {/* Inline konfigurátor - floating panel pod Interiér finiš */}
                   <div className="col-span-2">
-                    <KonfiguratorFlatDoubleInline dom={dom} />
+                    <KonfiguratorFlatDoubleInline 
+                      dom={dom}
+                      montazHolodomu={montazHolodomu}
+                      setMontazHolodomu={setMontazHolodomu}
+                      izolaciaNavysenie={izolaciaNavysenie}
+                      setIzolaciaNavysenie={setIzolaciaNavysenie}
+                      zaklady={zaklady}
+                      setZaklady={setZaklady}
+                    />
                   </div>
                 </div>
               )}
