@@ -322,10 +322,10 @@ export default function DetailDomu() {
               onClick={() => openLightbox(allImages, selectedImage)}
             >
               <img
-                src={allImages[selectedImage]}
-                alt={`${dom.nazov} - obrázok ${selectedImage + 1}`}
-                className="w-full h-full object-cover"
-              />
+                  src={allImages[selectedImage]}
+                  alt={`${dom.nazov} - obrázok ${selectedImage + 1}`}
+                  className="w-full h-full object-contain bg-gray-100"
+                />
               <div className="absolute top-4 left-4 space-y-2">
                 {dom.celorocny && (
                   <Badge className="bg-accent text-white px-4 py-2">✔ CELOROČNÝ</Badge>
