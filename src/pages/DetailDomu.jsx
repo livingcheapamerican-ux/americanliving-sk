@@ -911,7 +911,7 @@ export default function DetailDomu() {
             )}
 
             {/* CTA Buttons */}
-            <div className="space-y-3 sticky top-24">
+            <div className="space-y-3">
 
               <Link to={createPageUrl("Kontakt")}>
                 <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-lg py-6">
