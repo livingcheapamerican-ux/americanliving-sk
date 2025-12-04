@@ -526,33 +526,33 @@ export default function Katalog() {
                             <button
                             onClick={() => toggleSrovnanie(dom)}
                             disabled={!jeVybrany && vybraneNaSrovnanie.length >= 3}
-                            className={`p-2 rounded-full transition-all ${
+                            className={`p-1 sm:p-2 rounded-full transition-all ${
                             jeVybrany ?
                             'bg-primary text-white' :
                             'bg-white/90 text-primary hover:bg-primary hover:text-white'} ${
                             !jeVybrany && vybraneNaSrovnanie.length >= 3 ? 'opacity-50 cursor-not-allowed' : ''}`}>
 
-                              <Plus className={`w-5 h-5 transition-transform ${jeVybrany ? 'rotate-45' : ''}`} />
+                              <Plus className={`w-3 h-3 sm:w-5 sm:h-5 transition-transform ${jeVybrany ? 'rotate-45' : ''}`} />
                             </button>
                             {canManage && (
                               <button
                                 onClick={(e) => handleToggleVerejny(dom, e)}
                                 disabled={toggleVerejnyMutation.isPending}
                                 title={dom.verejny !== false ? 'Skryť pre verejnosť' : 'Zobraziť pre verejnosť'}
-                                className={`p-2 rounded-full transition-all disabled:opacity-50 ${
+                                className={`p-1 sm:p-2 rounded-full transition-all disabled:opacity-50 ${
                                   dom.verejny !== false 
                                     ? 'bg-green-600 text-white hover:bg-green-700' 
                                     : 'bg-gray-600 text-white hover:bg-gray-700'
                                 }`}>
-                                {dom.verejny !== false ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+                                {dom.verejny !== false ? <Eye className="w-3 h-3 sm:w-5 sm:h-5" /> : <EyeOff className="w-3 h-3 sm:w-5 sm:h-5" />}
                               </button>
                             )}
                             {canManage && (
                               <button
                                 onClick={(e) => handleDeleteDom(dom, e)}
                                 disabled={deleteDomMutation.isPending}
-                                className="p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-all disabled:opacity-50">
-                                <Trash2 className="w-5 h-5" />
+                                className="p-1 sm:p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-all disabled:opacity-50">
+                                <Trash2 className="w-3 h-3 sm:w-5 sm:h-5" />
                               </button>
                             )}
                           </div>
