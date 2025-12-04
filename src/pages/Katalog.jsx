@@ -567,35 +567,35 @@ export default function Katalog() {
 
                           {/* Základné parametre */}
                           <div className="grid grid-cols-2 gap-1 sm:gap-2 mb-2 sm:mb-4 text-[10px] sm:text-sm">
-                            <div className="flex items-center gap-2 text-gray-600">
-                              <Home className="w-4 h-4 flex-shrink-0 text-primary" />
+                            <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
+                              <Home className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-primary" />
                               <div className="flex flex-col min-w-0">
-                                <span className="text-xs text-gray-500">Výrobca</span>
-                                <span className="font-semibold text-primary text-xs">{dom.vyrobca}</span>
+                                <span className="hidden sm:block text-xs text-gray-500">Výrobca</span>
+                                <span className="font-semibold text-primary text-[9px] sm:text-xs truncate">{dom.vyrobca}</span>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2 text-gray-600">
+                            <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
                               {dom.typ_domu === 'montovany' ? (
-                                                                    <Hammer className="w-4 h-4 flex-shrink-0 text-orange-600" />
+                                                                    <Hammer className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-orange-600" />
                                                                   ) : dom.typ_domu === 'mobilny' ? (
-                                                                    <Caravan className="w-4 h-4 flex-shrink-0 text-teal-600" />
+                                                                    <Caravan className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-teal-600" />
                                                                   ) : (
-                                                                    <LayoutGrid className="w-4 h-4 flex-shrink-0 text-amber-500" />
+                                                                    <LayoutGrid className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-amber-500" />
                                                                   )}
                               <div className="flex flex-col min-w-0">
-                                <span className="text-xs text-gray-500">Typ domu</span>
-                                <span className="font-semibold text-primary text-xs">{dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom'}</span>
+                                <span className="hidden sm:block text-xs text-gray-500">Typ domu</span>
+                                <span className="font-semibold text-primary text-[9px] sm:text-xs truncate">{dom.typ_domu === 'modularny' ? 'Modulárny' : dom.typ_domu === 'montovany' ? 'Montovaný' : 'Mobilný'}</span>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2 text-gray-600">
-                              <div className="w-4 h-3 border-2 border-primary rounded-sm flex-shrink-0" />
+                            <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
+                              <div className="w-2.5 h-2 sm:w-4 sm:h-3 border sm:border-2 border-primary rounded-sm flex-shrink-0" />
                               <div className="flex flex-col min-w-0">
-                                <span className="text-xs text-gray-500">Zastavaná plocha</span>
-                                <span className="font-semibold text-primary text-xs">{dom.zastavana_plocha} m²</span>
+                                <span className="hidden sm:block text-xs text-gray-500">Zastavaná plocha</span>
+                                <span className="font-semibold text-primary text-[9px] sm:text-xs">{dom.zastavana_plocha} m²</span>
                               </div>
                             </div>
                             {dom.uzitkova_plocha && (
-                              <div className="flex items-center gap-2 text-gray-600">
+                              <div className="hidden sm:flex items-center gap-2 text-gray-600">
                                 <Square className="w-4 h-4 flex-shrink-0 text-purple-500" />
                                 <div className="flex flex-col min-w-0">
                                   <span className="text-xs text-gray-500">Úžitková plocha</span>
@@ -604,16 +604,16 @@ export default function Katalog() {
                               </div>
                             )}
                             {dom.pocet_izieb && (
-                              <div className="flex items-center gap-2 text-gray-600">
-                                <Grid3x3 className="w-4 h-4 flex-shrink-0 text-blue-500" />
+                              <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
+                                <Grid3x3 className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-blue-500" />
                                 <div className="flex flex-col min-w-0">
-                                  <span className="text-xs text-gray-500">Počet izieb</span>
-                                  <span className="font-semibold text-primary text-xs">{dom.pocet_izieb}</span>
+                                  <span className="hidden sm:block text-xs text-gray-500">Počet izieb</span>
+                                  <span className="font-semibold text-primary text-[9px] sm:text-xs">{dom.pocet_izieb} izby</span>
                                 </div>
                               </div>
                             )}
                             {dom.energeticky_certifikat && (
-                              <div className="flex items-center gap-2 text-gray-600 col-span-2">
+                              <div className="hidden sm:flex items-center gap-2 text-gray-600 col-span-2">
                                 <Zap className="w-4 h-4 flex-shrink-0 text-green-600" />
                                 <div className="flex flex-col min-w-0">
                                   <span className="text-xs text-gray-500">Energetická trieda</span>
@@ -621,7 +621,7 @@ export default function Katalog() {
                                 </div>
                               </div>
                             )}
-                          </div>
+                            </div>
                           
                           <div className="flex items-center justify-between pt-4 border-t">
                             <div>
