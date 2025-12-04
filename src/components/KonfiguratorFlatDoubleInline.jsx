@@ -669,61 +669,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
             </RadioGroup>
           </motion.div>
           
-          {/* Komplet pre montáž - info box */}
-          <div className="bg-white border border-amber-200 rounded-lg sm:rounded-xl p-3 sm:p-5 shadow-sm">
-            <p className="font-bold text-amber-900 mb-2 sm:mb-3 flex items-center gap-2 text-sm sm:text-base">
-              <Package className="w-4 h-4 sm:w-5 sm:h-5" />
-              Komplekt pre montáž zahŕňa:
-            </p>
-            <ul className="text-gray-700 space-y-1 sm:space-y-2 text-xs sm:text-sm">
-              <li className="flex items-start gap-2">
-                <span className="text-amber-500 mt-1">•</span>
-                <span>drevená konštrukcia domu, hobľovaný hranol sušený v komore, rôzneho prierezu</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-amber-500 mt-1">•</span>
-                <span>vonkajšie steny, falcovaný plech 0,45 mm (výroba Slovensko, Kórea, Poľsko) a smreková/ihličnatá doska hrúbky 20 mm. Po dohode je možná zmena typu fasádneho obkladu</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-amber-500 mt-1">•</span>
-                <span>strecha, falcovaný plech 0,45 mm (výroba Slovensko, Kórea, Poľsko)</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-amber-500 mt-1">•</span>
-                <span>okná s dvojkomorovým izolačným sklom (tri sklá), päťkomorový PVC profil 70 mm (biely)</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-amber-500 mt-1">•</span>
-                <span>dvere s dvojkomorovým izolačným sklom (tri sklá), päťkomorový PVC profil 70 mm (biely)</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-amber-500 mt-1">•</span>
-                <span>hydroizolačná membrána Strotex 1300 (alebo ekvivalent)</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-amber-500 mt-1">•</span>
-                <span>tepelná izolácia (150(250) mm – steny a strecha; 200(250) mm – podlaha), nehorľavé, tepelnoizolačné, hydrofobizované, zvuk pohlcujúce bazaltové dosky alebo rolky IZOVAT s hustotou minimálne 30 kg/m3 (alebo ekvivalent)</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-amber-500 mt-1">•</span>
-                <span>parozábranová fólia Strotex AL90 (alebo ekvivalent)</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-amber-500 mt-1">•</span>
-                <span>hrubá podlaha z OSB dosiek 22 mm</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-amber-500 mt-1">•</span>
-                <span>materiály vnútorných priečok a povrchových úprav nie sú zahrnuté v domekomplete</span>
-              </li>
-            </ul>
-            <div className="mt-4 pt-4 border-t border-amber-200 space-y-1 text-sm">
-              <p className="text-gray-600">Schodisko nie je súčasťou základnej ponuky.</p>
-              <p className="text-gray-600">Farba na vonkajšiu fasádu je poskytovaná objednávateľom.</p>
-              <p className="text-gray-600">Cena maľovania fasády nie je súčasťou základnej ponuky.</p>
-              <p className="text-red-600 font-medium">Maľovanie sa účtuje dodatočne na základe skutočne natretej plochy, v sume 4,5 € za m².</p>
-            </div>
-          </div>
+
 
           {/* Hrúbka izolácie */}
           <motion.div 
