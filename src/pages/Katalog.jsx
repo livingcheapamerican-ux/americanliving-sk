@@ -17,6 +17,15 @@ import { motion } from "framer-motion";
 export default function Katalog() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [imageToggle, setImageToggle] = useState(false);
+
+  // Striedanie obrázkov každé 2 sekundy
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setImageToggle(prev => !prev);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
   
   // Funkcia na parsovanie URL parametrov
   const getInitialFilters = () => {
