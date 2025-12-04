@@ -462,6 +462,18 @@ export default function DetailDomu() {
               </Card>
             )}
 
+            {/* Fáza 1: Hrubá stavba - pod galériou */}
+            {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
+              <KonfiguratorFaza1HrubaStavba 
+                montazHolodomu="nie"
+                setMontazHolodomu={() => {}}
+                izolaciaNavysenie="standard"
+                setIzolaciaNavysenie={() => {}}
+                zaklady="bez"
+                setZaklady={() => {}}
+              />
+            )}
+
             {/* Pôdorysy */}
             {dom.podorysy && dom.podorysy.length > 0 && (
               <Card className="p-6">
