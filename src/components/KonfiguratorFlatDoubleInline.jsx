@@ -360,17 +360,12 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         }}
       >
         <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
-          <div 
-            className="p-4 border-b border-slate-700/50 cursor-move select-none hover:bg-slate-700/30 transition-colors"
-            onMouseDown={handleMouseDown}
-            ref={dragRef}
-          >
+          <div className="p-4 border-b border-slate-700/50">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-green-400 text-xs font-semibold uppercase tracking-wider mb-1">Vaša konfigurácia</p>
                 <h3 className="text-lg font-bold text-white">Flat Double 142m²</h3>
               </div>
-              <div className="text-slate-500 text-xs">⋮⋮</div>
             </div>
           </div>
 
