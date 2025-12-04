@@ -952,11 +952,11 @@ export default function DetailDomu() {
                 <div className="grid grid-cols-2 gap-3 mt-4">
                   {/* Komplet pre montáž */}
                   <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
-                    <div className="flex items-center gap-2 p-3 text-xs font-semibold text-amber-900 border-b border-amber-200">
-                      <Package className="w-3 h-3" />
+                    <div className="flex items-center gap-2 p-3 text-sm font-semibold text-amber-900 border-b border-amber-200">
+                      <Package className="w-4 h-4" />
                       Komplet pre montáž
                     </div>
-                    <div className="px-3 pb-3 text-[10px] text-amber-800 space-y-1 pt-2">
+                    <div className="px-3 pb-3 text-sm text-amber-800 space-y-1 pt-2">
                       <p>• drevená konštrukcia, hobľovaný hranol</p>
                       <p>• vonkajšie steny, falcovaný plech 0,45mm</p>
                       <p>• strecha, falcovaný plech 0,45mm</p>
@@ -972,11 +972,11 @@ export default function DetailDomu() {
 
                   {/* Elektroinštalácia */}
                   <Card className="overflow-hidden border border-yellow-200 bg-yellow-50/50">
-                    <div className="flex items-center gap-2 p-3 text-xs font-semibold text-yellow-900 border-b border-yellow-200">
-                      <Zap className="w-3 h-3" />
+                    <div className="flex items-center gap-2 p-3 text-sm font-semibold text-yellow-900 border-b border-yellow-200">
+                      <Zap className="w-4 h-4" />
                       Elektroinštalácia
                     </div>
-                    <div className="px-3 pb-3 text-[10px] text-yellow-800 space-y-1 pt-2">
+                    <div className="px-3 pb-3 text-sm text-yellow-800 space-y-1 pt-2">
                       <p>• montáž elektrických káblov</p>
                       <p>• inštalácia rozvádzača s ističmi</p>
                       <p>• uloženie chráničky pre vonkajší kábel</p>
@@ -987,11 +987,11 @@ export default function DetailDomu() {
 
                   {/* Voda a kanalizácia */}
                   <Card className="overflow-hidden border border-blue-200 bg-blue-50/50">
-                    <div className="flex items-center gap-2 p-3 text-xs font-semibold text-blue-900 border-b border-blue-200">
-                      <Droplets className="w-3 h-3" />
+                    <div className="flex items-center gap-2 p-3 text-sm font-semibold text-blue-900 border-b border-blue-200">
+                      <Droplets className="w-4 h-4" />
                       Voda a kanalizácia
                     </div>
-                    <div className="px-3 pb-3 text-[10px] text-blue-800 space-y-1 pt-2">
+                    <div className="px-3 pb-3 text-sm text-blue-800 space-y-1 pt-2">
                       <p>• montáž vodovodných potrubí</p>
                       <p>• montáž ventilov, záslepiek</p>
                       <p>• montáž kanalizačných potrubí</p>
@@ -1002,11 +1002,11 @@ export default function DetailDomu() {
 
                   {/* Základy */}
                   <Card className="overflow-hidden border border-orange-200 bg-orange-50/50">
-                    <div className="flex items-center gap-2 p-3 text-xs font-semibold text-orange-900 border-b border-orange-200">
-                      <Landmark className="w-3 h-3" />
+                    <div className="flex items-center gap-2 p-3 text-sm font-semibold text-orange-900 border-b border-orange-200">
+                      <Landmark className="w-4 h-4" />
                       Základy
                     </div>
-                    <div className="px-3 pb-3 text-[10px] text-orange-800 space-y-1 pt-2">
+                    <div className="px-3 pb-3 text-sm text-orange-800 space-y-1 pt-2">
                       <p>• vrutové stĺpy, betónové stĺpiky alebo doska</p>
                       <p>• uvedená minimálna cena za rovný terén</p>
                       <p>• konečná cena po geodetickej analýze</p>
@@ -1016,11 +1016,11 @@ export default function DetailDomu() {
 
                   {/* Interiér */}
                   <Card className="overflow-hidden border border-emerald-200 bg-emerald-50/50 col-span-2">
-                    <div className="flex items-center gap-2 p-3 text-xs font-semibold text-emerald-900 border-b border-emerald-200">
-                      <Home className="w-3 h-3" />
+                    <div className="flex items-center gap-2 p-3 text-sm font-semibold text-emerald-900 border-b border-emerald-200">
+                      <Home className="w-4 h-4" />
                       Interiér finiš
                     </div>
-                    <div className="px-3 pb-3 text-[10px] text-emerald-800 space-y-1 pt-2">
+                    <div className="px-3 pb-3 text-sm text-emerald-800 space-y-1 pt-2">
                       <p>• montáž priečok podľa projektu • izolácia 100mm + parozábrana • tatranský profil 8-12mm</p>
                       <p className="text-red-600 font-medium">Maľovanie: 4,5 €/m², farbu dodáva klient</p>
                     </div>
