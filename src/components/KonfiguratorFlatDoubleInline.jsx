@@ -200,11 +200,7 @@ export default function KonfiguratorFlatDoubleInline({
     const fasadaLabel = vonkajsiaFasada === "suchana" ? "Škúchaná fasáda" : "Vonkajšia fasáda (štandard)";
     const fasadaPrice = vonkajsiaFasada === "suchana" ? CENY.vonkajsiaFasada.suchana : 0;
     items.push({ name: fasadaLabel, price: fasadaPrice, section: "kluc", selected: vonkajsiaFasada !== "standard" });
-    
-    const interierLabel = interierFinis === "drevo" ? "Interiér - obloženie drevom" : interierFinis === "sadrokarton" ? "Interiér - sádrokartón" : "Interiér finiš";
-    const interierPrice = interierFinis === "drevo" ? CENY.interierFinis.drevo : interierFinis === "sadrokarton" ? CENY.interierFinis.sadrokarton : 0;
-    items.push({ name: interierLabel, price: interierPrice, section: "holodom", selected: interierFinis !== "ziadne" });
-    
+
     items.push({ name: "Vnútorné podlahy - laminát", price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
     items.push({ name: "Elektrické podlahové vykurovanie s WiFi termostatom", price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
     items.push({ name: `Interiérové dvere (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere, section: "kluc", selected: interieroveDvere > 0 });
