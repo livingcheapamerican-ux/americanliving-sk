@@ -461,7 +461,7 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         </Card>
       </div>
 
-      <div className="xl:mr-[340px]">
+      <div>
       <div className="space-y-6">
       {/* Hlavička konfigurátora */}
       <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-blue-500/30">
