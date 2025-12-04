@@ -810,95 +810,90 @@ export default function KonfiguratorFlatDoubleInline({
           {/* Dlaždice - Grid layout */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
             
-            {/* Vonkajšia fasáda - Štandard */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={vonkajsiaFasada === "standard"}
               onClick={() => setVonkajsiaFasada("standard")}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                vonkajsiaFasada === "standard" 
-                  ? "bg-emerald-100 border-2 border-emerald-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-emerald-300 hover:shadow-md"
-              }`}
-            >
-              <Paintbrush className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${vonkajsiaFasada === "standard" ? "text-emerald-600" : "text-gray-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Fasáda štd.</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Drevo/Plech</span>
-              <span className="text-gray-400 font-medium text-xs mt-2">+ 0 €</span>
-              {vonkajsiaFasada === "standard" && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-emerald-600" />}
-            </motion.div>
+              icon={Paintbrush}
+              iconColor="text-gray-400"
+              iconSelectedColor="text-emerald-600"
+              title="Fasáda štd."
+              subtitle="Drevo/Plech"
+              price="+ 0 €"
+              isPriced={false}
+              selectedBg="bg-emerald-100"
+              selectedBorder="border-emerald-500"
+              selectedRing="ring-emerald-300"
+              hoverBorder="hover:border-emerald-300"
+              tooltip="Štandardná fasáda z dreva alebo falcovaného plechu podľa modelu."
+            />
 
-            {/* Vonkajšia fasáda - Škúchaná */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={vonkajsiaFasada === "suchana"}
               onClick={(e) => { if (vonkajsiaFasada !== "suchana") triggerAnimation("fasadaSuchana", e.currentTarget); setVonkajsiaFasada("suchana"); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                vonkajsiaFasada === "suchana" 
-                  ? "bg-emerald-100 border-2 border-emerald-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-emerald-300 hover:shadow-md"
-              }`}
-            >
-              <Paintbrush className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${vonkajsiaFasada === "suchana" ? "text-emerald-600" : "text-orange-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Škúchaná</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Fasáda</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 12 841 €</span>
-              {vonkajsiaFasada === "suchana" && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-emerald-600" />}
-            </motion.div>
+              icon={Paintbrush}
+              iconColor="text-orange-400"
+              iconSelectedColor="text-emerald-600"
+              title="Škúchaná"
+              subtitle="Fasáda"
+              price="+ 12 841 €"
+              isPriced={true}
+              selectedBg="bg-emerald-100"
+              selectedBorder="border-emerald-500"
+              selectedRing="ring-emerald-300"
+              hoverBorder="hover:border-emerald-300"
+              tooltip="Škúchaná omietková fasáda pre tradičný vzhľad rodinného domu."
+            />
 
-            {/* Vnútorné podlahy */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={vnutornePodlahy}
               onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); setVnutornePodlahy(!vnutornePodlahy); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                vnutornePodlahy 
-                  ? "bg-emerald-100 border-2 border-emerald-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-emerald-300 hover:shadow-md"
-              }`}
-            >
-              <Square className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${vnutornePodlahy ? "text-emerald-600" : "text-amber-500"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Podlahy</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Laminát</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 3 351 €</span>
-              {vnutornePodlahy && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-emerald-600" />}
-            </motion.div>
+              icon={Square}
+              iconColor="text-amber-500"
+              iconSelectedColor="text-emerald-600"
+              title="Podlahy"
+              subtitle="Laminát"
+              price="+ 3 351 €"
+              isPriced={true}
+              selectedBg="bg-emerald-100"
+              selectedBorder="border-emerald-500"
+              selectedRing="ring-emerald-300"
+              hoverBorder="hover:border-emerald-300"
+              tooltip="Laminátové podlahy vo všetkých obytných miestnostiach."
+            />
 
-            {/* Podlahové vykurovanie */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={podlahovVykurovanie}
               onClick={(e) => { if (!podlahovVykurovanie) triggerAnimation("podlahovVykurovanie", e.currentTarget); setPodlahovVykurovanie(!podlahovVykurovanie); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                podlahovVykurovanie 
-                  ? "bg-orange-100 border-2 border-orange-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-orange-300 hover:shadow-md"
-              }`}
-            >
-              <Flame className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${podlahovVykurovanie ? "text-orange-600" : "text-orange-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Podl. kúrenie</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">WiFi termostat</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 5 525 €</span>
-              {podlahovVykurovanie && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-orange-600" />}
-            </motion.div>
+              icon={Flame}
+              iconColor="text-orange-400"
+              iconSelectedColor="text-orange-600"
+              title="Podl. kúrenie"
+              subtitle="WiFi termostat"
+              price="+ 5 525 €"
+              isPriced={true}
+              selectedBg="bg-orange-100"
+              selectedBorder="border-orange-500"
+              selectedRing="ring-orange-300"
+              hoverBorder="hover:border-orange-300"
+              tooltip="Elektrické podlahové vykurovanie s WiFi termostatom v každej izbe (8-9 ks). Zahŕňa fóliu, izoláciu a inštaláciu."
+            />
 
-            {/* Pergola */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={pergola}
               onClick={(e) => { if (!pergola) triggerAnimation("pergola", e.currentTarget); setPergola(!pergola); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                pergola 
-                  ? "bg-emerald-100 border-2 border-emerald-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-emerald-300 hover:shadow-md"
-              }`}
-            >
-              <Maximize className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${pergola ? "text-emerald-600" : "text-teal-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Pergola</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Dekoratívna</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 1 845 €</span>
-              {pergola && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-emerald-600" />}
-            </motion.div>
+              icon={Maximize}
+              iconColor="text-teal-400"
+              iconSelectedColor="text-emerald-600"
+              title="Pergola"
+              subtitle="Dekoratívna"
+              price="+ 1 845 €"
+              isPriced={true}
+              selectedBg="bg-emerald-100"
+              selectedBorder="border-emerald-500"
+              selectedRing="ring-emerald-300"
+              hoverBorder="hover:border-emerald-300"
+              tooltip="Dekoratívna drevená pergola pri vstupe alebo terase."
+            />
 
           </div>
 
