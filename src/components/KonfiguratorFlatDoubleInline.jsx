@@ -8,14 +8,89 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { 
-  Send, AlertTriangle, CheckCircle, Calculator, RotateCcw,
+  Send, AlertTriangle, Check, Calculator, RotateCcw,
   Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
   Zap, ShowerHead, Flame, Cable, Paintbrush, Home, Truck, Sun, DoorOpen,
-  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles
+  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
+
+// Dlaždica s tooltip a veľkou fajkou
+const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [hoverTimer, setHoverTimer] = useState(null);
+
+  const handleMouseEnter = () => {
+    const timer = setTimeout(() => setShowTooltip(true), 2000);
+    setHoverTimer(timer);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimer) clearTimeout(hoverTimer);
+    setShowTooltip(false);
+  };
+
+  return (
+    <motion.div
+      whileHover={{ scale: 1.02, y: -2 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+        selected 
+          ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
+          : isA0 
+            ? "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
+            : `bg-white border-2 border-gray-200 ${hoverBorder} hover:shadow-md`
+      }`}
+    >
+      {isA0 && (
+        <Badge className="absolute top-1 left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] px-1.5 z-10">
+          <Sparkles className="w-2 h-2 mr-0.5" />A0
+        </Badge>
+      )}
+      
+      {/* Veľká zelená fajka cez celú dlaždicu */}
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+          >
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-green-500/90 flex items-center justify-center shadow-lg">
+              <Check className="w-10 h-10 sm:w-14 sm:h-14 text-white stroke-[3]" />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <Icon className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
+      <span className={`font-semibold text-gray-800 text-xs sm:text-sm ${selected ? "opacity-30" : ""}`}>{title}</span>
+      <span className={`text-[10px] sm:text-xs text-gray-500 mt-1 ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
+      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-xs mt-2 ${selected ? "opacity-30" : ""}`}>{price}</span>
+
+      {/* Tooltip */}
+      <AnimatePresence>
+        {showTooltip && tooltip && (
+          <motion.div
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 5 }}
+            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 w-48 sm:w-56 p-2 bg-gray-900 text-white text-[10px] sm:text-xs rounded-lg shadow-xl pointer-events-none"
+          >
+            {tooltip}
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
 
 export default function KonfiguratorFlatDoubleInline({ 
   dom,
