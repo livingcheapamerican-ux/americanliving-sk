@@ -1025,46 +1025,7 @@ export default function KonfiguratorFlatDoubleInline({
             </RadioGroup>
           </div>
 
-          {/* Interiér finiš */}
-          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
-              <Home className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-600" />
-              Interiér finiš
-            </Label>
 
-            <RadioGroup value={interierFinis} onValueChange={setInterierFinis} className="space-y-2 sm:space-y-3">
-              <label className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="ziadne" id="interier-ziadne" />
-                  <div>
-                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Nie</span>
-                    <p className="text-[10px] sm:text-sm text-gray-500 hidden sm:block">Hrubá stavba</p>
-                  </div>
-                </div>
-                <span className="text-gray-400 font-medium text-xs sm:text-base">+ 0 €</span>
-              </label>
-              <label 
-                onClick={(e) => { if (interierFinis !== "drevo") triggerAnimation("drevo", e.currentTarget); }}
-                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="drevo" id="interier-drevo" />
-                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Obloženie drevom</span>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 16 400 €</span>
-              </label>
-              <label 
-                onClick={(e) => { if (interierFinis !== "sadrokarton") triggerAnimation("sadrokarton", e.currentTarget); }}
-                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-emerald-300 hover:bg-emerald-50/50 cursor-pointer transition-all"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="sadrokarton" id="interier-sadrokarton" />
-                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Sádrokartón</span>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 19 475 €</span>
-              </label>
-            </RadioGroup>
-            </div>
 
           {/* Podlahy a vykurovanie */}
           <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
