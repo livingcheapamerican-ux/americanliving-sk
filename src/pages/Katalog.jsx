@@ -472,13 +472,7 @@ export default function Katalog() {
                           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
                             {dom.hlavny_obrazok ? (
                               <img
-                                src={
-                                  (dom.vyrobca === "Prosto House" || dom.vyrobca === "Ticab house") && 
-                                  dom.zakladna_konfiguracia_obrazok && 
-                                  imageToggle 
-                                    ? dom.zakladna_konfiguracia_obrazok 
-                                    : dom.hlavny_obrazok
-                                }
+                                src={dom.hlavny_obrazok}
                                 alt={dom.nazov}
                                 className="w-full h-full object-contain bg-gray-100 group-hover:scale-105 transition-all duration-500" />
                             ) : (
