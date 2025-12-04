@@ -352,8 +352,17 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
     <div className="mt-8 relative">
       {/* Flying animations container */}
       <FlyingAnimationContainer animations={animations} />
-      {/* Floating Price Bar */}
-      <div className="w-full z-40">
+      {/* Floating Price Bar - draggable */}
+      <div 
+        className="fixed z-50 cursor-move"
+        style={{ 
+          left: panelPosition.x,
+          top: panelPosition.y,
+          width: '320px'
+        }}
+        onMouseDown={handleMouseDown}
+        ref={dragRef}
+      >
         <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
           <div className="p-4 border-b border-slate-700/50">
             <div className="flex items-center justify-between">
