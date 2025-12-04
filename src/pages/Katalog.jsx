@@ -558,15 +558,15 @@ export default function Katalog() {
                           </div>
                         </div>
                         
-                        <div className="p-5">
+                        <div className="p-2 sm:p-5">
                           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-                            <h3 className="text-xl font-bold text-primary mb-3 group-hover:text-secondary transition-colors">
+                            <h3 className="text-xs sm:text-xl font-bold text-primary mb-1 sm:mb-3 group-hover:text-secondary transition-colors line-clamp-1">
                               {dom.nazov}
                             </h3>
                           </Link>
 
                           {/* Základné parametre */}
-                          <div className="grid grid-cols-2 gap-2 mb-4 text-sm">
+                          <div className="grid grid-cols-2 gap-1 sm:gap-2 mb-2 sm:mb-4 text-[10px] sm:text-sm">
                             <div className="flex items-center gap-2 text-gray-600">
                               <Home className="w-4 h-4 flex-shrink-0 text-primary" />
                               <div className="flex flex-col min-w-0">
