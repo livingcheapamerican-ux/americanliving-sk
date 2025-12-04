@@ -946,6 +946,104 @@ export default function DetailDomu() {
                   </ul>
                 </Card>
               )}
+
+              {/* Informačné panely z konfigurátora - len pre Prosto House Flat Double */}
+              {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
+                <div className="space-y-3 mt-4">
+                  {/* Komplet pre montáž */}
+                  <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
+                    <details className="group">
+                      <summary className="flex items-center gap-2 cursor-pointer p-4 text-sm font-semibold text-amber-900 hover:bg-amber-100/50">
+                        <Package className="w-4 h-4" />
+                        Komplet pre montáž
+                        <span className="ml-auto text-amber-500 group-open:rotate-180 transition-transform">▼</span>
+                      </summary>
+                      <div className="px-4 pb-4 text-xs text-amber-800 space-y-1.5 border-t border-amber-200 pt-3">
+                        <p>• drevená konštrukcia domu, hobľovaný hranol</p>
+                        <p>• vonkajšie steny, falcovaný plech 0,45 mm</p>
+                        <p>• strecha, falcovaný plech 0,45 mm</p>
+                        <p>• okná s dvojkomorovým izolačným sklom</p>
+                        <p>• dvere s dvojkomorovým izolačným sklom</p>
+                        <p>• hydroizolačná membrána Strotex 1300</p>
+                        <p>• tepelná izolácia (150-250mm)</p>
+                        <p>• parozábranová fólia Strotex AL90</p>
+                        <p>• hrubá podlaha z OSB dosiek 22 mm</p>
+                        <p className="text-red-600 font-medium mt-2">Maľovanie: 4,5 €/m²</p>
+                      </div>
+                    </details>
+                  </Card>
+
+                  {/* Elektroinštalácia */}
+                  <Card className="overflow-hidden border border-yellow-200 bg-yellow-50/50">
+                    <details className="group">
+                      <summary className="flex items-center gap-2 cursor-pointer p-4 text-sm font-semibold text-yellow-900 hover:bg-yellow-100/50">
+                        <Zap className="w-4 h-4" />
+                        Elektroinštalácia info
+                        <span className="ml-auto text-yellow-500 group-open:rotate-180 transition-transform">▼</span>
+                      </summary>
+                      <div className="px-4 pb-4 text-xs text-yellow-800 space-y-1.5 border-t border-yellow-200 pt-3">
+                        <p>• montáž elektrických káblov</p>
+                        <p>• inštalácia rozvádzača s ističmi</p>
+                        <p>• uloženie chráničky pre vonkajší kábel</p>
+                        <p>• montáž inštalačných krabíc</p>
+                        <p className="text-red-600 font-medium mt-2">Nezahŕňa: bleskozvod, revízne doklady, montáž zásuviek/svietidiel</p>
+                      </div>
+                    </details>
+                  </Card>
+
+                  {/* Voda a kanalizácia */}
+                  <Card className="overflow-hidden border border-blue-200 bg-blue-50/50">
+                    <details className="group">
+                      <summary className="flex items-center gap-2 cursor-pointer p-4 text-sm font-semibold text-blue-900 hover:bg-blue-100/50">
+                        <Droplets className="w-4 h-4" />
+                        Voda a kanalizácia info
+                        <span className="ml-auto text-blue-500 group-open:rotate-180 transition-transform">▼</span>
+                      </summary>
+                      <div className="px-4 pb-4 text-xs text-blue-800 space-y-1.5 border-t border-blue-200 pt-3">
+                        <p>• montáž vodovodných potrubí</p>
+                        <p>• montáž ventilov, záslepiek</p>
+                        <p>• montáž kanalizačných potrubí</p>
+                        <p>• kontrola tesnosti pod tlakom</p>
+                        <p className="text-red-600 font-medium mt-2">Protokoly a sanitárne zariadenia za príplatok</p>
+                      </div>
+                    </details>
+                  </Card>
+
+                  {/* Základy */}
+                  <Card className="overflow-hidden border border-orange-200 bg-orange-50/50">
+                    <details className="group">
+                      <summary className="flex items-center gap-2 cursor-pointer p-4 text-sm font-semibold text-orange-900 hover:bg-orange-100/50">
+                        <Landmark className="w-4 h-4" />
+                        Základy info
+                        <span className="ml-auto text-orange-500 group-open:rotate-180 transition-transform">▼</span>
+                      </summary>
+                      <div className="px-4 pb-4 text-xs text-orange-800 space-y-1.5 border-t border-orange-200 pt-3">
+                        <p>• vrutové stĺpy, betónové stĺpiky alebo doska</p>
+                        <p>• uvedená minimálna cena za rovný terén</p>
+                        <p>• konečná cena po geodetickej analýze</p>
+                        <p className="text-red-600 font-medium mt-2">Prípravné práce nie sú v cene</p>
+                      </div>
+                    </details>
+                  </Card>
+
+                  {/* Interiér */}
+                  <Card className="overflow-hidden border border-emerald-200 bg-emerald-50/50">
+                    <details className="group">
+                      <summary className="flex items-center gap-2 cursor-pointer p-4 text-sm font-semibold text-emerald-900 hover:bg-emerald-100/50">
+                        <Home className="w-4 h-4" />
+                        Interiér finiš info
+                        <span className="ml-auto text-emerald-500 group-open:rotate-180 transition-transform">▼</span>
+                      </summary>
+                      <div className="px-4 pb-4 text-xs text-emerald-800 space-y-1.5 border-t border-emerald-200 pt-3">
+                        <p>• montáž priečok podľa projektu</p>
+                        <p>• izolácia 100 mm + parozábrana</p>
+                        <p>• tatranský profil 8-12 mm</p>
+                        <p className="text-red-600 font-medium mt-2">Maľovanie: 4,5 €/m², farbu dodáva klient</p>
+                      </div>
+                    </details>
+                  </Card>
+                </div>
+              )}
             </div>
           </motion.div>
         </div>
