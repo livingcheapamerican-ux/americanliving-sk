@@ -510,19 +510,19 @@ export default function Katalog() {
                             )}
 
                           </Link>
-                          <div className="absolute top-4 left-4 space-y-2">
+                          <div className="absolute top-1 left-1 sm:top-4 sm:left-4 space-y-1 sm:space-y-2">
                             {dom.celorocny &&
-                          <div className="bg-accent text-white px-3 py-1 rounded-full text-xs font-semibold">
+                          <div className="bg-accent text-white px-1.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[8px] sm:text-xs font-semibold">
                                 ✔ CELOROČNÝ
                               </div>
                           }
                             {dom.energeticky_certifikat &&
-                          <div className="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                          <div className="bg-green-600 text-white px-1.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[8px] sm:text-xs font-semibold">
                                 ✔ CERTIFIKÁT A0
                               </div>
                           }
                           </div>
-                          <div className="absolute top-4 right-4 flex gap-2">
+                          <div className="absolute top-1 right-1 sm:top-4 sm:right-4 flex gap-1 sm:gap-2">
                             <button
                             onClick={() => toggleSrovnanie(dom)}
                             disabled={!jeVybrany && vybraneNaSrovnanie.length >= 3}
