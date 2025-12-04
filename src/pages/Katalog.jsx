@@ -495,8 +495,8 @@ export default function Katalog() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}>
 
-                      <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
-                        <div className="relative h-56 overflow-hidden">
+                      <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 bg-white ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
+                        <div className="relative h-28 sm:h-56 overflow-hidden">
                           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
                             {dom.hlavny_obrazok ? (
                               <img
