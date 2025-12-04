@@ -454,48 +454,6 @@ export default function KonfiguratorFlatDoubleInline({
 
       <div>
       <div className="space-y-6">
-      {/* Hlavička konfigurátora */}
-      <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-blue-500/30">
-        <div className="relative">
-          {/* Dekoratívny gradient na vrchu */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
-          
-          <div className="p-4 sm:p-6 md:p-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/30 animate-pulse">
-                  <Calculator className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-                </div>
-                <div>
-                  <p className="text-blue-400 text-[10px] sm:text-sm font-semibold uppercase tracking-wider mb-0.5 sm:mb-1">Interaktívny konfigurátor</p>
-                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">Flat Double 142m²</h2>
-                  <p className="text-slate-400 text-xs sm:text-base mt-0.5 sm:mt-1">142m² zastavaná | 99m² úžitková | 40m² terasa</p>
-                </div>
-              </div>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={handleReset}
-                className="border-slate-600 text-slate-300 hover:bg-red-500/20 hover:border-red-500/50 hover:text-red-300 transition-all"
-              >
-                <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                <span className="text-xs sm:text-sm">Resetovať</span>
-              </Button>
-            </div>
-
-            {/* Základná cena */}
-            <div className="mt-4 sm:mt-6 p-3 sm:p-5 bg-gradient-to-r from-blue-500/20 via-indigo-500/20 to-purple-500/20 border border-blue-400/30 rounded-xl sm:rounded-2xl backdrop-blur">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
-                <div>
-                  <p className="text-blue-300 font-semibold text-sm sm:text-lg">Základná cena sady</p>
-                  <p className="text-slate-400 text-xs sm:text-sm">na svojpomocnú montáž • s DPH</p>
-                </div>
-                <div className="text-2xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">{formatPrice(BASE_PRICE)}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Card>
 
         {/* ═══════════════════════════════════════════════════════════════════════
           FÁZA 2: HOLODOM (Montáž, Inštalácie, Okná/Dvere)
