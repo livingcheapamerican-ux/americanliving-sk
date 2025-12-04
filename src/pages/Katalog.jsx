@@ -23,7 +23,7 @@ export default function Katalog() {
   useEffect(() => {
     const interval = setInterval(() => {
       setImageToggle(prev => !prev);
-    }, 2000);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
   
