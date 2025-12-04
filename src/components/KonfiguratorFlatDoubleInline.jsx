@@ -945,80 +945,73 @@ export default function KonfiguratorFlatDoubleInline({
           {/* Dlaždice - Grid layout */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
             
-            {/* Inžiniering */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={inziniering}
               onClick={(e) => { if (!inziniering) triggerAnimation("inziniering", e.currentTarget); setInziniering(!inziniering); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                inziniering 
-                  ? "bg-purple-100 border-2 border-purple-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-purple-300 hover:shadow-md"
-              }`}
-            >
-              <FileText className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${inziniering ? "text-purple-600" : "text-purple-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Inžiniering</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Stav. povolenie</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 2 592 €</span>
-              {inziniering && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-purple-600" />}
-            </motion.div>
+              icon={FileText}
+              iconColor="text-purple-400"
+              iconSelectedColor="text-purple-600"
+              title="Inžiniering"
+              subtitle="Stav. povolenie"
+              price="+ 2 592 €"
+              isPriced={true}
+              selectedBg="bg-purple-100"
+              selectedBorder="border-purple-500"
+              selectedRing="ring-purple-300"
+              hoverBorder="hover:border-purple-300"
+              tooltip="Vybavenie stavebného povolenia vrátane všetkých potrebných dokumentov."
+            />
 
-            {/* Projektant + A0 */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={projektA0}
               onClick={(e) => { if (!projektA0) triggerAnimation("projektant", e.currentTarget); setProjektA0(!projektA0); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                projektA0 
-                  ? "bg-green-100 border-2 border-green-500 shadow-lg ring-2 ring-green-200" 
-                  : "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
-              }`}
-            >
-              <Badge className="absolute top-1 left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] px-1.5">
-                <Sparkles className="w-2 h-2 mr-0.5" />A0
-              </Badge>
-              <FileCheck className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${projektA0 ? "text-green-600" : "text-green-500"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Projektant</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">+ Certifikácia</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 3 500 €</span>
-              {projektA0 && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-green-600" />}
-            </motion.div>
+              icon={FileCheck}
+              iconColor="text-green-500"
+              iconSelectedColor="text-green-600"
+              title="Projektant"
+              subtitle="+ Certifikácia"
+              price="+ 3 500 €"
+              isPriced={true}
+              isA0={true}
+              selectedBg="bg-green-100"
+              selectedBorder="border-green-500"
+              selectedRing="ring-green-300"
+              tooltip="Projektová dokumentácia a certifikácia pre energetickú triedu A0."
+            />
 
-            {/* Revízna dokumentácia */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={revizna}
               onClick={() => setRevizna(!revizna)}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                revizna 
-                  ? "bg-purple-100 border-2 border-purple-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-purple-300 hover:shadow-md"
-              }`}
-            >
-              <FileText className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${revizna ? "text-purple-600" : "text-gray-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Revízie</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Dokumentácia</span>
-              <span className="font-bold text-green-600 text-xs mt-2">+ 1 000 €</span>
-              {revizna && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-purple-600" />}
-            </motion.div>
+              icon={FileText}
+              iconColor="text-gray-400"
+              iconSelectedColor="text-purple-600"
+              title="Revízie"
+              subtitle="Dokumentácia"
+              price="+ 1 000 €"
+              isPriced={true}
+              selectedBg="bg-purple-100"
+              selectedBorder="border-purple-500"
+              selectedRing="ring-purple-300"
+              hoverBorder="hover:border-purple-300"
+              tooltip="Revízne správy elektroinštalácie, plynu a ďalších systémov."
+            />
 
-            {/* Doprava */}
-            <motion.div
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+            <Tile
+              selected={doprava}
               onClick={(e) => { if (!doprava) triggerAnimation("doprava", e.currentTarget); setDoprava(!doprava); }}
-              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-                doprava 
-                  ? "bg-purple-100 border-2 border-purple-500 shadow-lg" 
-                  : "bg-white border-2 border-gray-200 hover:border-purple-300 hover:shadow-md"
-              }`}
-            >
-              <Truck className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${doprava ? "text-purple-600" : "text-purple-400"}`} />
-              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Doprava</span>
-              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Transport</span>
-              <span className="text-gray-400 font-medium text-xs mt-2">+ 0 €</span>
-              {doprava && <CheckCircle className="absolute top-2 right-2 w-4 h-4 text-purple-600" />}
-            </motion.div>
+              icon={Truck}
+              iconColor="text-purple-400"
+              iconSelectedColor="text-purple-600"
+              title="Doprava"
+              subtitle="Transport"
+              price="+ 0 €"
+              isPriced={false}
+              selectedBg="bg-purple-100"
+              selectedBorder="border-purple-500"
+              selectedRing="ring-purple-300"
+              hoverBorder="hover:border-purple-300"
+              tooltip="Transport stavebného materiálu na miesto stavby."
+            />
 
           </div>
 
