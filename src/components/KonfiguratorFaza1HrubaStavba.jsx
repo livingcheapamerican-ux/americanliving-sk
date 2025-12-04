@@ -81,188 +81,179 @@ export default function KonfiguratorFaza1HrubaStavba({
           color="from-amber-600 to-orange-600"
           step="1"
         />
-        <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-amber-50/50 to-white">
+        <div className="p-3 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
+          {/* Upozornenie na montáž */}
+          <p className="text-[10px] sm:text-xs text-red-600 mb-3 text-center">* Pri montáži sa dodatočne účtuje ubytovanie montážnej brigády (3–4 osoby)</p>
+          
+          {/* Dlaždice - Grid layout */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+            
+            {/* Montáž - Nie */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setMontazHolodomu("nie")}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                montazHolodomu === "nie" 
+                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
+                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
+              }`}
+            >
+              <Wrench className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${montazHolodomu === "nie" ? "text-amber-600" : "text-gray-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Bez montáže</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Iba sada</span>
+              <span className="text-gray-400 font-medium text-xs mt-2">+ 0 €</span>
+              {montazHolodomu === "nie" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
+            </motion.div>
 
-          {/* Montáž hrubej stavby */}
-          <motion.div 
-            className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
-            whileHover={{ scale: 1.005 }}
-          >
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
-              <motion.div
-                animate={{ rotate: montazHolodomu === "ano" ? [0, 10, -10, 0] : 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Wrench className="w-8 h-8 sm:w-10 sm:h-10 text-amber-600" />
-              </motion.div>
-              Montáž hrubej stavby
-            </Label>
-            <p className="text-xs sm:text-sm text-red-600 mb-3 sm:mb-4">Montážne práce (dodatočne sa účtuje ubytovanie montážnej brigády 3–4 osoby)</p>
-            <RadioGroup value={montazHolodomu} onValueChange={setMontazHolodomu} className="space-y-2 sm:space-y-3">
-              <motion.label 
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.98 }}
-                className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${montazHolodomu === "nie" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="nie" id="montaz-nie" />
-                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Nie (Iba dodanie sady)</span>
-                </div>
-                <span className="text-gray-400 font-medium text-xs sm:text-base">+ 0 €</span>
-              </motion.label>
-              <motion.label 
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={(e) => { if (montazHolodomu !== "ano") triggerAnimation?.("montaz", e.currentTarget); }}
-                className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${montazHolodomu === "ano" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="ano" id="montaz-ano" />
-                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Áno (Montáž hrubej stavby)</span>
-                </div>
-                <AnimatePresence>
-                  {montazHolodomu === "ano" && (
-                    <motion.span
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="mr-1 sm:mr-2"
-                    >
-                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 17 970 €</span>
-              </motion.label>
-            </RadioGroup>
-          </motion.div>
+            {/* Montáž - Áno */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (montazHolodomu !== "ano") triggerAnimation?.("montaz", e.currentTarget); setMontazHolodomu("ano"); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                montazHolodomu === "ano" 
+                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
+                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
+              }`}
+            >
+              <Wrench className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${montazHolodomu === "ano" ? "text-amber-600" : "text-amber-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">S montážou</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Hrubá stavba</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 17 970 €</span>
+              {montazHolodomu === "ano" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
+            </motion.div>
 
-          {/* Hrúbka izolácie */}
-          <motion.div 
-            className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
-            whileHover={{ scale: 1.005 }}
-          >
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 block flex items-center gap-2">
-              <motion.div animate={{ scale: izolaciaNavysenie === "premium" ? [1, 1.2, 1] : 1 }} transition={{ duration: 0.3 }}>
-                <ThermometerSun className="w-8 h-8 sm:w-10 sm:h-10 text-amber-600" />
-              </motion.div>
-              Hrúbka izolácie
-            </Label>
-            <RadioGroup value={izolaciaNavysenie} onValueChange={setIzolaciaNavysenie} className="space-y-2 sm:space-y-3">
-              <motion.label 
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.98 }}
-                className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${izolaciaNavysenie === "standard" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="standard" id="izolacia-standard" />
-                  <div>
-                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Štandard</span>
-                    <p className="text-[10px] sm:text-sm text-gray-500">Steny 150mm, Strecha 200mm</p>
-                    <p className="text-[10px] sm:text-xs text-amber-600 hidden sm:block">Celoročná izolácia pre účely rekreačnej stavby</p>
-                  </div>
-                </div>
-                <span className="text-gray-400 font-medium text-xs sm:text-base">+ 0 €</span>
-              </motion.label>
-              <motion.label 
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={(e) => { if (izolaciaNavysenie !== "zvysena") triggerAnimation?.("izolacia", e.currentTarget); }}
-                className={`flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all ${izolaciaNavysenie === "zvysena" ? "border-amber-400 bg-amber-50/70 shadow-sm" : "border-gray-200 hover:border-amber-300 hover:bg-amber-50/50"}`}
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="zvysena" id="izolacia-zvysena" />
-                  <div>
-                    <span className="font-semibold text-gray-800 text-xs sm:text-base">Zvýšená</span>
-                    <p className="text-[10px] sm:text-sm text-gray-500">Steny 200mm, Strecha 250mm</p>
-                    <p className="text-[10px] sm:text-xs text-amber-600 hidden sm:block">Celoročná izolácia pre účely rekreačnej stavby</p>
-                  </div>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 5 799 €</span>
-              </motion.label>
-              <motion.label 
-                whileHover={{ x: 4, scale: 1.01 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={(e) => { if (izolaciaNavysenie !== "premium") triggerAnimation?.("izolacia", e.currentTarget); }}
-                className={`relative flex items-center justify-between p-2.5 sm:p-4 border-2 rounded-lg sm:rounded-xl cursor-pointer transition-all overflow-hidden ${izolaciaNavysenie === "premium" ? "border-green-500 bg-green-50 shadow-md ring-2 ring-green-200" : "border-green-400 bg-green-50/50 hover:bg-green-100"}`}
-              >
-                {izolaciaNavysenie === "premium" && (
-                  <motion.div 
-                    className="absolute top-0 right-0"
-                    initial={{ scale: 0, rotate: -45 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                  >
-                    <div className="bg-green-500 text-white text-[8px] sm:text-[10px] font-bold px-6 sm:px-8 py-0.5 transform rotate-45 translate-x-4 sm:translate-x-6 -translate-y-1">
-                      ✓
-                    </div>
-                  </motion.div>
-                )}
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="premium" id="izolacia-premium" />
-                  <div>
-                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
-                      <span className="font-semibold text-gray-800 text-xs sm:text-base">Premium / A0</span>
-                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] sm:text-xs animate-pulse">
-                        <Sparkles className="w-2 h-2 sm:w-3 sm:h-3 mr-0.5 sm:mr-1" />
-                        A0
-                      </Badge>
-                    </div>
-                    <p className="text-[10px] sm:text-sm text-gray-500">Steny 250mm, Strecha 300mm</p>
-                    <p className="text-[10px] sm:text-xs text-green-700 font-medium hidden sm:block">Potrebná položka pre status rodinného domu</p>
-                  </div>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 11 600 €</span>
-              </motion.label>
-            </RadioGroup>
-          </motion.div>
+            {/* Izolácia - Štandard */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setIzolaciaNavysenie("standard")}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                izolaciaNavysenie === "standard" 
+                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
+                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
+              }`}
+            >
+              <ThermometerSun className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${izolaciaNavysenie === "standard" ? "text-amber-600" : "text-gray-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Izolácia štd.</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">150/200mm</span>
+              <span className="text-gray-400 font-medium text-xs mt-2">+ 0 €</span>
+              {izolaciaNavysenie === "standard" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
+            </motion.div>
 
-          {/* Typ základov */}
-          <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-5 border border-gray-200 shadow-sm">
-            <Label className="text-sm sm:text-lg font-bold text-gray-800 mb-2 sm:mb-3 block flex items-center gap-2">
-              <Landmark className="w-8 h-8 sm:w-10 sm:h-10 text-amber-600" />
-              Typ základov
-            </Label>
+            {/* Izolácia - Zvýšená */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (izolaciaNavysenie !== "zvysena") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("zvysena"); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                izolaciaNavysenie === "zvysena" 
+                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
+                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
+              }`}
+            >
+              <ThermometerSun className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${izolaciaNavysenie === "zvysena" ? "text-amber-600" : "text-orange-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Izolácia +</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">200/250mm</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 5 799 €</span>
+              {izolaciaNavysenie === "zvysena" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
+            </motion.div>
 
-            <RadioGroup value={zaklady} onValueChange={setZaklady} className="space-y-2 sm:space-y-3">
-              <label className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="bez" id="zaklady-bez" />
-                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Bez základov</span>
-                </div>
-                <span className="text-gray-400 font-medium text-xs sm:text-base">+ 0 €</span>
-              </label>
-              <label 
-                onClick={(e) => { if (zaklady !== "skrutky") triggerAnimation?.("skrutky", e.currentTarget); }}
-                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="skrutky" id="zaklady-skrutky" />
-                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Zemné skrutky / Pätky</span>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 8 140 €</span>
-              </label>
-              <label 
-                onClick={(e) => { if (zaklady !== "doska") triggerAnimation?.("beton", e.currentTarget); }}
-                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="doska" id="zaklady-doska" />
-                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Základová doska</span>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 17 946 €</span>
-              </label>
-              <label 
-                onClick={(e) => { if (zaklady !== "pasove") triggerAnimation?.("beton", e.currentTarget); }}
-                className="flex items-center justify-between p-2.5 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-amber-300 hover:bg-amber-50/50 cursor-pointer transition-all"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <RadioGroupItem value="pasove" id="zaklady-pasove" />
-                  <span className="font-semibold text-gray-800 text-xs sm:text-base">Pásové základy</span>
-                </div>
-                <span className="font-bold text-green-600 text-xs sm:text-base">+ 21 079 €</span>
-              </label>
-            </RadioGroup>
+            {/* Izolácia - Premium A0 */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (izolaciaNavysenie !== "premium") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("premium"); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                izolaciaNavysenie === "premium" 
+                  ? "bg-green-100 border-2 border-green-500 shadow-xl ring-2 ring-green-300" 
+                  : "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
+              }`}
+            >
+              <Badge className="absolute top-1 left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] px-1.5">
+                <Sparkles className="w-2 h-2 mr-0.5" />A0
+              </Badge>
+              <ThermometerSun className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${izolaciaNavysenie === "premium" ? "text-green-600" : "text-green-500"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Premium</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">250/300mm</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 11 600 €</span>
+              {izolaciaNavysenie === "premium" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-green-600" />}
+            </motion.div>
+
+            {/* Základy - Bez */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setZaklady("bez")}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                zaklady === "bez" 
+                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
+                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
+              }`}
+            >
+              <Landmark className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${zaklady === "bez" ? "text-amber-600" : "text-gray-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Bez základov</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Vlastné</span>
+              <span className="text-gray-400 font-medium text-xs mt-2">+ 0 €</span>
+              {zaklady === "bez" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
+            </motion.div>
+
+            {/* Základy - Skrutky */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (zaklady !== "skrutky") triggerAnimation?.("skrutky", e.currentTarget); setZaklady("skrutky"); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                zaklady === "skrutky" 
+                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
+                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
+              }`}
+            >
+              <Landmark className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${zaklady === "skrutky" ? "text-amber-600" : "text-amber-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Skrutky</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Zemné pätky</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 8 140 €</span>
+              {zaklady === "skrutky" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
+            </motion.div>
+
+            {/* Základy - Doska */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (zaklady !== "doska") triggerAnimation?.("beton", e.currentTarget); setZaklady("doska"); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                zaklady === "doska" 
+                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
+                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
+              }`}
+            >
+              <Landmark className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${zaklady === "doska" ? "text-amber-600" : "text-orange-400"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Doska</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Základová</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 17 946 €</span>
+              {zaklady === "doska" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
+            </motion.div>
+
+            {/* Základy - Pásové */}
+            <motion.div
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={(e) => { if (zaklady !== "pasove") triggerAnimation?.("beton", e.currentTarget); setZaklady("pasove"); }}
+              className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+                zaklady === "pasove" 
+                  ? "bg-amber-100 border-2 border-amber-500 shadow-xl ring-2 ring-amber-300" 
+                  : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
+              }`}
+            >
+              <Landmark className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${zaklady === "pasove" ? "text-amber-600" : "text-orange-500"}`} />
+              <span className="font-semibold text-gray-800 text-xs sm:text-sm">Pásové</span>
+              <span className="text-[10px] sm:text-xs text-gray-500 mt-1">Základy</span>
+              <span className="font-bold text-green-600 text-xs mt-2">+ 21 079 €</span>
+              {zaklady === "pasove" && <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-amber-600" />}
+            </motion.div>
+
           </div>
-
         </div>
       </Card>
     </motion.div>
