@@ -462,7 +462,8 @@ export default function KonfiguratorFlatDoubleInline({ dom }) {
         </Card>
       </div>
 
-      <div className="space-y-6 xl:mr-88">
+      <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-6">
+      <div className="space-y-6">
       {/* Hlavička konfigurátora */}
       <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-blue-500/30">
         <div className="relative">
