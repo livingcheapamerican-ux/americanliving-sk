@@ -214,7 +214,7 @@ export default function KonfiguratorFaza1HrubaStavba({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
             {/* Montáž - skupina */}
-            <div className="col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-3 border-3 border-dashed border-amber-400 rounded-xl bg-amber-50/30 shadow-sm">
+            <div className="col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-3 border-4 border-amber-500 rounded-xl bg-amber-50/50 shadow-md">
               <p className="col-span-2 text-[10px] sm:text-xs font-bold text-amber-700 -mb-1 flex items-center gap-1">
                 <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
                 {t('assembly')} ({t('selectOne')})
@@ -247,7 +247,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             </div>
 
             {/* Izolácia - skupina */}
-            <div className="col-span-2 sm:col-span-3 lg:col-span-2 grid grid-cols-3 gap-2 sm:gap-3 p-3 border-3 border-dashed border-cyan-400 rounded-xl bg-cyan-50/30 shadow-sm">
+            <div className="col-span-2 sm:col-span-3 lg:col-span-2 grid grid-cols-3 gap-2 sm:gap-3 p-3 border-4 border-cyan-500 rounded-xl bg-cyan-50/50 shadow-md">
               <p className="col-span-3 text-[10px] sm:text-xs font-bold text-cyan-700 -mb-1 flex items-center gap-1">
                 <span className="w-2 h-2 bg-cyan-500 rounded-full"></span>
                 {t('insulation')} ({t('selectOne')})
@@ -297,7 +297,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             </div>
 
             {/* Základy - skupina */}
-            <div className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-3 border-3 border-dashed border-orange-400 rounded-xl bg-orange-50/30 shadow-sm">
+            <div className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-3 border-4 border-orange-500 rounded-xl bg-orange-50/50 shadow-md">
               <p className="col-span-2 sm:col-span-4 text-[10px] sm:text-xs font-bold text-orange-700 -mb-1 flex items-center gap-1">
                 <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
                 {t('foundations')} ({t('selectOne')})
