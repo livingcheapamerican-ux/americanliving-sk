@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
+import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
 
 // Dlaždica s tooltip a veľkou fajkou
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
@@ -524,6 +525,7 @@ export default function KonfiguratorFjord({
     );
   }
 
+  const showHruba = !showOnlyPhase || showOnlyPhase === "hruba";
   const showHolodom = !showOnlyPhase || showOnlyPhase === "holodom";
   const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
@@ -534,6 +536,18 @@ export default function KonfiguratorFjord({
 
       <div>
         <div className="space-y-6">
+
+          {showHruba && (
+            <KonfiguratorFaza1HrubaStavba 
+              montazHolodomu={montazHolodomu}
+              setMontazHolodomu={setMontazHolodomu}
+              izolaciaNavysenie={izolaciaNavysenie}
+              setIzolaciaNavysenie={setIzolaciaNavysenie}
+              zaklady={zaklady}
+              setZaklady={setZaklady}
+              triggerAnimation={triggerAnimation}
+            />
+          )}
 
           {showHolodom && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
