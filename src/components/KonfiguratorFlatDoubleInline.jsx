@@ -467,11 +467,11 @@ export default function KonfiguratorFlatDoubleInline({
                 return (
                   <div>
                     <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-100 via-white to-slate-50 ring-2 ring-green-500/30">
-            <div className="p-3 border-b border-slate-200">
+            <div className="p-3 border-b-2 border-slate-300 bg-slate-50">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-green-800 text-xs font-semibold uppercase tracking-wider mb-0.5">{t('yourConfiguration')}</p>
-                  <h3 className="text-base font-bold text-slate-900">Flat Double 142m²</h3>
+                  <p className="text-green-900 text-xs font-bold uppercase tracking-wider mb-0.5">{t('yourConfiguration')}</p>
+                  <h3 className="text-base font-black text-gray-900">Flat Double 142m²</h3>
                 </div>
               </div>
             </div>
@@ -504,43 +504,43 @@ export default function KonfiguratorFlatDoubleInline({
                   <React.Fragment key={index}>
                     {showHrubaDivider && (
                       <div className="py-0.5">
-                                    <div className="border-t border-amber-300"></div>
+                                    <div className="border-t-2 border-amber-400"></div>
                                     <div className="flex items-center gap-1.5 px-1 pt-0.5">
-                                      <Package className="w-3.5 h-3.5 text-amber-700" />
-                                      <span className="text-xs font-bold text-amber-900 uppercase tracking-wider">{t('roughConstruction')}</span>
+                                      <Package className="w-3.5 h-3.5 text-amber-800" />
+                                      <span className="text-xs font-bold text-amber-950 uppercase tracking-wider">{t('roughConstruction')}</span>
                                     </div>
                                   </div>
                     )}
                     {showHolodomDivider && (
                       <div className="py-0.5">
-                                    <div className="border-t border-blue-300"></div>
+                                    <div className="border-t-2 border-blue-400"></div>
                                     <div className="flex items-center gap-1.5 px-1 pt-0.5">
-                                      <Hammer className="w-3.5 h-3.5 text-blue-700" />
-                                      <span className="text-xs font-bold text-blue-900 uppercase tracking-wider">{t('holodomLabel')}</span>
+                                      <Hammer className="w-3.5 h-3.5 text-blue-800" />
+                                      <span className="text-xs font-bold text-blue-950 uppercase tracking-wider">{t('holodomLabel')}</span>
                                     </div>
                                   </div>
                     )}
                     {showKlucDivider && (
                       <div className="py-0.5">
-                                    <div className="border-t border-emerald-300"></div>
+                                    <div className="border-t-2 border-emerald-400"></div>
                                     <div className="flex items-center gap-1.5 px-1 pt-0.5">
-                                      <Key className="w-3.5 h-3.5 text-emerald-700" />
-                                      <span className="text-xs font-bold text-emerald-900 uppercase tracking-wider">{t('turnkeyLabel')}</span>
+                                      <Key className="w-3.5 h-3.5 text-emerald-800" />
+                                      <span className="text-xs font-bold text-emerald-950 uppercase tracking-wider">{t('turnkeyLabel')}</span>
                                     </div>
                                   </div>
                     )}
                     {showDocsDivider && (
                       <div className="py-0.5">
-                                    <div className="border-t border-purple-300"></div>
+                                    <div className="border-t-2 border-purple-400"></div>
                                     <div className="flex items-center gap-1.5 px-1 pt-0.5">
-                                      <FileText className="w-3.5 h-3.5 text-purple-700" />
-                                      <span className="text-xs font-bold text-purple-900 uppercase tracking-wider">{t('documentationLabel')}</span>
+                                      <FileText className="w-3.5 h-3.5 text-purple-800" />
+                                      <span className="text-xs font-bold text-purple-950 uppercase tracking-wider">{t('documentationLabel')}</span>
                                     </div>
                                   </div>
                     )}
-                    <div className={`flex justify-between items-center py-1 px-1.5 rounded ${isBase ? 'bg-blue-50 my-0.5' : item.selected ? 'hover:bg-slate-50' : 'opacity-40'}`}>
-                          <span className={`${isBase ? 'text-blue-900 font-bold text-base' : item.selected ? 'text-slate-900 font-medium text-sm' : 'text-slate-400 line-through text-sm'} flex-1 pr-1 truncate`}>{item.name}</span>
-                          <span className={`${isBase ? 'text-blue-900 text-base' : item.selected ? 'text-green-800 text-sm' : 'text-slate-400 text-sm'} font-bold whitespace-nowrap`}>
+                    <div className={`flex justify-between items-center py-1 px-1.5 rounded ${isBase ? 'bg-blue-100 my-0.5' : item.selected ? 'hover:bg-slate-100' : 'opacity-40'}`}>
+                          <span className={`${isBase ? 'text-blue-950 font-bold text-base' : item.selected ? 'text-gray-900 font-medium text-sm' : 'text-gray-500 line-through text-sm'} flex-1 pr-1 truncate`}>{item.name}</span>
+                          <span className={`${isBase ? 'text-blue-950 text-base' : item.selected ? 'text-green-900 text-sm' : 'text-gray-500 text-sm'} font-bold whitespace-nowrap`}>
                             {item.selected ? formatPrice(item.price) : '—'}
                           </span>
                         </div>
@@ -550,10 +550,10 @@ export default function KonfiguratorFlatDoubleInline({
             </div>
 
             {/* Celková cena */}
-            <div className="p-3 bg-gradient-to-br from-green-50 to-emerald-50 border-t border-green-200">
+            <div className="p-3 bg-gradient-to-br from-green-100 to-emerald-100 border-t-2 border-green-300">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-slate-800 text-sm font-semibold">{t('totalWithVATLabel')}</span>
-                <span className="text-2xl font-black text-green-800">
+                <span className="text-gray-900 text-sm font-bold">{t('totalWithVATLabel')}</span>
+                <span className="text-2xl font-black text-green-900">
                   {formatPrice(totalPrice)}
                 </span>
               </div>
@@ -706,6 +706,65 @@ export default function KonfiguratorFlatDoubleInline({
 
             <Tile
               selected={bojler}
+              onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }}
+              icon={Flame}
+              iconColor="text-orange-400"
+              iconSelectedColor="text-orange-600"
+              title={t('boiler')}
+              subtitle={t('boilerElectric')}
+              price="+ 246 €"
+              isPriced={true}
+              selectedBg="bg-orange-100"
+              selectedBorder="border-orange-500"
+              selectedRing="ring-orange-300"
+              hoverBorder="hover:border-orange-300"
+              tooltip={t('boiler')}
+            />
+            </div>
+
+            {/* Klimatizácia a vetranie - A0 skupina */}
+            <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-3 border-4 border-green-500 rounded-xl bg-green-50/50 shadow-md">
+              <p className="col-span-2 text-xs font-bold text-green-800 -mb-1 flex items-center gap-1">
+                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                {t('heatPump')} & {t('recuperation')} (A0)
+              </p>
+            <Tile
+              selected={tepelneCerpadlo}
+              onClick={(e) => { if (!tepelneCerpadlo) triggerAnimation("klimatizacia", e.currentTarget); setTepelneCerpadlo(!tepelneCerpadlo); }}
+              icon={ThermometerSun}
+              iconColor="text-red-500"
+              iconSelectedColor="text-green-600"
+              title={t('heatPump')}
+              subtitle={t('units5')}
+              price="+ 5 535 €"
+              isPriced={true}
+              isA0={true}
+              selectedBg="bg-green-100"
+              selectedBorder="border-green-500"
+              selectedRing="ring-green-300"
+              tooltip={t('heatPumpFull')}
+            />
+
+            <Tile
+              selected={rekuperacia}
+              onClick={(e) => { if (!rekuperacia) triggerAnimation("rekuperacia", e.currentTarget); setRekuperacia(!rekuperacia); }}
+              icon={Wind}
+              iconColor="text-cyan-500"
+              iconSelectedColor="text-green-600"
+              title={t('recuperation')}
+              subtitle={t('units5')}
+              price="+ 2 700 €"
+              isPriced={true}
+              isA0={true}
+              selectedBg="bg-green-100"
+              selectedBorder="border-green-500"
+              selectedRing="ring-green-300"
+              tooltip={t('recuperation')}
+            />
+            </div>
+
+            <Tile
+              selected={pripojkaSiete}
               onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }}
               icon={Flame}
               iconColor="text-orange-400"

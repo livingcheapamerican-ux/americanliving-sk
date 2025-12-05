@@ -1132,7 +1132,7 @@ export default function DetailDomu() {
 
             {/* Floating Konfigurátor Súhrn - len pre Prosto House Flat Double - hned pod zakladnu konfiguraciu */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
-              <div className="lg:sticky lg:top-20 z-10 max-h-[calc(100vh-100px)] overflow-y-auto">
+              <div className="lg:sticky lg:top-24 z-10 self-start">
                 <KonfiguratorFlatDoubleInline 
                   dom={dom}
                   montazHolodomu={montazHolodomu}
