@@ -77,6 +77,7 @@ export default function DetailDomu() {
   const [lastTouchDistance, setLastTouchDistance] = useState(null);
   const [swipeStart, setSwipeStart] = useState(null);
   const [swipeOffset, setSwipeOffset] = useState(0);
+  const [wizardKey, setWizardKey] = useState(0);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -409,6 +410,37 @@ export default function DetailDomu() {
     }
   };
 
+  const handleKonfiguratorReset = () => {
+    setMontazHolodomu("nie");
+    setVstupneDvere("ziadne");
+    setIzolaciaNavysenie("standard");
+    setElektroinstalacia(false);
+    setVodaKanalizacia(false);
+    setSanitaKomplet(false);
+    setBojler(false);
+    setTepelneCerpadlo(false);
+    setRekuperacia(false);
+    setZaklady("bez");
+    setPripojkaSiete(false);
+    setInziniering(false);
+    setProjektA0(false);
+    setInterierFinis("ziadne");
+    setVonkajsiaFasada("");
+    setPovrchokaOkien(false);
+    setVnutornePodlahy(false);
+    setPodlahovVykurovanie(false);
+    setPergola(false);
+    setInterieroveDvere(0);
+    setTonovaneSkla(false);
+    setDoprava(false);
+    setRevizna(true);
+    setStresneOkno(0);
+    setBocneOknoFixne(0);
+    setBocneOknoVyklopne90(0);
+    setBocneOknoVyklopne55(0);
+    setWizardKey(prev => prev + 1);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Back Button */}
@@ -598,6 +630,7 @@ export default function DetailDomu() {
             {/* Konfigurátor - Wizard krok po kroku pre Flat Double */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
               <KonfiguratorWizard 
+                key={wizardKey}
                 dom={dom}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
@@ -659,6 +692,7 @@ export default function DetailDomu() {
             {/* Konfigurátor pre Fjord - tiež s Wizard výberom typu */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
               <KonfiguratorWizard 
+                key={wizardKey}
                 dom={dom}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
@@ -1286,6 +1320,7 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlatDoubleInline 
                   dom={dom}
+                  onReset={handleKonfiguratorReset}
                   montazHolodomu={montazHolodomu}
                   setMontazHolodomu={setMontazHolodomu}
                   izolaciaNavysenie={izolaciaNavysenie}
