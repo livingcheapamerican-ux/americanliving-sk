@@ -234,7 +234,8 @@ export default function Domov() {
               <img 
                 src={LOGO_URL} 
                 alt="American Living" 
-                className="h-40 sm:h-64 md:h-80 lg:h-96 w-auto drop-shadow-2xl"
+                className="h-40 sm:h-64 md:h-80 lg:h-96 w-auto drop-shadow-2xl rounded-full"
+                style={{ mixBlendMode: 'multiply' }}
               />
             </div>
             <h1 className="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-4 leading-tight drop-shadow-lg">
@@ -352,7 +353,8 @@ export default function Domov() {
                 <img 
                   src={LOGO_URL} 
                   alt="American Living" 
-                  className="h-40 sm:h-64 md:h-80 w-auto"
+                  className="h-40 sm:h-64 md:h-80 w-auto rounded-full"
+                  style={{ mixBlendMode: 'multiply' }}
                 />
               </div>
               <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1.5 sm:mb-3">
@@ -412,7 +414,8 @@ export default function Domov() {
                   <img 
                     src={LOGO_URL} 
                     alt="American Living" 
-                    className="h-32 sm:h-48 md:h-64 w-auto"
+                    className="h-32 sm:h-48 md:h-64 w-auto rounded-full"
+                    style={{ mixBlendMode: 'multiply' }}
                   />
                 </div>
                 <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1.5">
@@ -499,13 +502,11 @@ export default function Domov() {
           <div className="max-w-4xl mx-auto text-center">
             {/* Logo */}
             <div className="flex justify-center mb-8 sm:mb-10">
-              <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-2xl">
-                <img 
-                  src={LOGO_URL} 
-                  alt="American Living" 
-                  className="h-40 sm:h-56 md:h-72 w-auto"
-                />
-              </div>
+              <img 
+                src={LOGO_URL} 
+                alt="American Living" 
+                className="h-40 sm:h-56 md:h-72 w-auto rounded-full bg-white p-4 shadow-2xl"
+              />
             </div>
             <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
               {t('readyForOwnHouse')}
