@@ -10,6 +10,7 @@ import {
   Home, Image, Trash2, Upload, AlertCircle, Loader2, X, Star, StarOff, Eye, Grid3x3, Search
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import DomGalerieManager from "../components/admin/DomGalerieManager";
 
 export default function AdminSpravaDomov() {
   const [selectedDom, setSelectedDom] = useState(null);
@@ -276,124 +277,17 @@ export default function AdminSpravaDomov() {
                   </DialogHeader>
 
                   <div className="space-y-6 mt-4">
-                    {/* Nahrať nové fotky */}
-                    <Card className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50">
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="font-semibold text-gray-800">Nahrať nové fotky</h3>
-                        <Input
-                          type="file"
-                          accept="image/*"
-                          multiple
-                          onChange={handleNahratFotky}
-                          disabled={uploadingImages}
-                          className="hidden"
-                          id="upload-images"
-                        />
-                        <Button
-                          onClick={() => document.getElementById('upload-images')?.click()}
-                          disabled={uploadingImages}
-                          className="bg-blue-600 hover:bg-blue-700"
-                        >
-                          {uploadingImages ? (
-                            <>
-                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                              Nahrávam...
-                            </>
-                          ) : (
-                            <>
-                              <Upload className="w-4 h-4 mr-2" />
-                              Nahrať fotky
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                    </Card>
-
-                    {/* Aktuálna hlavná fotka */}
-                    <div>
-                      <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                        <Star className="w-5 h-5 text-yellow-500" />
-                        Hlavná fotka
-                      </h3>
-                      <Card className="p-4">
-                        {selectedDom.hlavny_obrazok ? (
-                          <div className="relative group">
-                            <img
-                              src={selectedDom.hlavny_obrazok}
-                              alt="Hlavná fotka"
-                              className="w-full h-64 object-cover rounded-lg cursor-pointer"
-                              onClick={() => setImagePreview(selectedDom.hlavny_obrazok)}
-                            />
-                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
-                              <Button
-                                size="sm"
-                                variant="secondary"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setImagePreview(selectedDom.hlavny_obrazok);
-                                }}
-                              >
-                                <Eye className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-                            <Home className="w-16 h-16 text-gray-300" />
-                          </div>
-                        )}
-                      </Card>
-                    </div>
-
-                    {/* Galéria domu */}
-                    <div>
-                      <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                        <Grid3x3 className="w-5 h-5 text-blue-600" />
-                        Galéria domu ({selectedDom.galeria?.length || 0} fotiek)
-                      </h3>
-                      {selectedDom.galeria && selectedDom.galeria.length > 0 ? (
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                          {selectedDom.galeria.map((url, idx) => (
-                            <Card key={idx} className="p-2 group relative">
-                              <img
-                                src={url}
-                                alt={`Galéria ${idx + 1}`}
-                                className="w-full h-40 object-cover rounded cursor-pointer"
-                                onClick={() => setImagePreview(url)}
-                              />
-                              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center gap-2">
-                                <Button
-                                  size="sm"
-                                  variant="secondary"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setImagePreview(url);
-                                  }}
-                                >
-                                  <Eye className="w-4 h-4" />
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="destructive"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleOdstranZGalerie(url);
-                                  }}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            </Card>
-                          ))}
-                        </div>
-                      ) : (
-                        <Card className="p-8 text-center">
-                          <p className="text-gray-500">Žiadne fotky v galérii</p>
-                        </Card>
-                      )}
-                    </div>
-
-                    {/* Dostupné fotky z úložiska */}
+                    {/* Galérie Manager */}
+                    <DomGalerieManager 
+                      dom={selectedDom} 
+                      onUpdate={() => {
+                        queryClient.invalidateQueries({ queryKey: ['domy-admin'] });
+                        // Refresh selected dom
+                        const updatedDom = domy.find(d => d.id === selectedDom.id);
+                        if (updatedDom) setSelectedDom(updatedDom);
+                      }} 
+                    />
+                    {/* Rýchle akcie - Dostupné fotky z úložiska */}
                     <div>
                       <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                         <Image className="w-5 h-5 text-purple-600" />
