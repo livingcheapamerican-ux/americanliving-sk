@@ -169,7 +169,9 @@ export default function KonfiguratorFlatDoubleInline({
   projektA0, setProjektA0,
   revizna, setRevizna,
   doprava, setDoprava,
-  showOnlySummary = false
+  showOnlySummary = false,
+  showOnlyPhase = null, // "holodom", "kluc", "docs" alebo null pre všetky
+  typStavby = ""
 }) {
   // Základná cena
   const BASE_PRICE = 59900;
