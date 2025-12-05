@@ -2374,6 +2374,10 @@ const translations = {
     description: "Opis",
     specification: "Specifikacija",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Sastavite svoju cjenovnu ponudu za vašu kuću",
+    noHiddenFees: "Bez skrivenih troškova",
+    
     // Building type selection
     selectBuildingType: "Odaberite tip zgrade",
     recreationalHouse: "Rekreacijska zgrada",
@@ -2942,6 +2946,10 @@ const translations = {
     ceilingHeight: "Ύψος οροφής",
     description: "Περιγραφή",
     specification: "Προδιαγραφές",
+    
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Δημιουργήστε την προσφορά τιμής για το σπίτι σας",
+    noHiddenFees: "Χωρίς κρυφές χρεώσεις",
     
     // Building type selection
     selectBuildingType: "Επιλέξτε τύπο κτιρίου",
@@ -3675,6 +3683,10 @@ const translations = {
     description: "Description",
     specification: "Specification",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Create your price offer for your house",
+    noHiddenFees: "No hidden fees",
+    
     // Building type selection
     selectBuildingType: "Select building type",
     recreationalHouse: "Recreational building",
@@ -4156,6 +4168,10 @@ const translations = {
     description: "Leírás",
     specification: "Specifikáció",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Állítsa össze árajánlatát házához",
+    noHiddenFees: "Rejtett költségek nélkül",
+    
     // Building type selection
     selectBuildingType: "Válassza ki az épület típusát",
     recreationalHouse: "Rekreációs épület",
@@ -4602,6 +4618,10 @@ const translations = {
     description: "Opis",
     specification: "Specyfikacja",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Stwórz swoją ofertę cenową dla domu",
+    noHiddenFees: "Bez ukrytych opłat",
+    
     // Building type selection
     selectBuildingType: "Wybierz typ budynku",
     recreationalHouse: "Budynek rekreacyjny",
@@ -5047,6 +5067,10 @@ const translations = {
     ceilingHeight: "Висота стелі",
     description: "Опис",
     specification: "Специфікація",
+    
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Складіть свою цінову пропозицію для вашого дому",
+    noHiddenFees: "Без прихованих платежів",
     
     // Building type selection
     selectBuildingType: "Виберіть тип будівлі",
