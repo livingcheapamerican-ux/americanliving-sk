@@ -272,8 +272,8 @@ export default function KonfiguratorNord({
     
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
-    const izolaciaLabel = izolaciaNavysenie === "premium" ? t('insulationPremium') + " (250/300mm)" : izolaciaNavysenie === "zvysena" ? t('insulationEnhanced') + " (200/250mm)" : t('insulationStd');
-    const izolaciaPrice = izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
+    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Izolácia 300mm" : izolaciaNavysenie === "premium" ? t('insulationPremium') + " (250mm)" : izolaciaNavysenie === "zvysena" ? t('insulationEnhanced') + " (200mm)" : t('insulationStd');
+    const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
     items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" });
     
     const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? t('foundationsScrews') : t('foundationsLabel');
