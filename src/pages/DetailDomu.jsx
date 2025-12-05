@@ -881,16 +881,16 @@ export default function DetailDomu() {
                     {t('assemblyKit')}
                   </div>
                   <div className="px-3 pb-3 text-sm text-amber-800 space-y-1 pt-2">
-                    <p>• drevená konštrukcia, hobľovaný hranol</p>
-                    <p>• vonkajšie steny, falcovaný plech 0,45mm</p>
-                    <p>• strecha, falcovaný plech 0,45mm</p>
-                    <p>• okná s dvojkomorovým sklom</p>
-                    <p>• dvere s dvojkomorovým sklom</p>
-                    <p>• hydroizolačná membrána Strotex 1300</p>
-                    <p>• tepelná izolácia (150-250mm)</p>
-                    <p>• parozábranová fólia Strotex AL90</p>
-                    <p>• hrubá podlaha z OSB 22mm</p>
-                    <p className="text-red-600 font-medium mt-1">Maľovanie: 4,5 €/m²</p>
+                    <p>• {t('panelAssemblyWoodConstruction')}</p>
+                    <p>• {t('panelAssemblyExteriorWalls')}</p>
+                    <p>• {t('panelAssemblyRoof')}</p>
+                    <p>• {t('panelAssemblyWindowsDouble')}</p>
+                    <p>• {t('panelAssemblyDoorsDouble')}</p>
+                    <p>• {t('panelAssemblyMembrane')}</p>
+                    <p>• {t('panelAssemblyInsulation')}</p>
+                    <p>• {t('panelAssemblyVaporBarrier')}</p>
+                    <p>• {t('panelAssemblyFloor')}</p>
+                    <p className="text-red-600 font-medium mt-1">{t('panelAssemblyPainting')}</p>
                   </div>
                 </Card>
 
@@ -901,11 +901,11 @@ export default function DetailDomu() {
                     {t('electricalInstallation')}
                   </div>
                   <div className="px-3 pb-3 text-sm text-yellow-800 space-y-1 pt-2">
-                    <p>• montáž elektrických káblov</p>
-                    <p>• inštalácia rozvádzača s ističmi</p>
-                    <p>• uloženie chráničky pre vonkajší kábel</p>
-                    <p>• montáž inštalačných krabíc</p>
-                    <p className="text-red-600 font-medium mt-1">Nezahŕňa: bleskozvod, revízne doklady, montáž zásuviek/svietidiel</p>
+                    <p>• {t('panelElectricalCables')}</p>
+                    <p>• {t('panelElectricalPanel')}</p>
+                    <p>• {t('panelElectricalConduit')}</p>
+                    <p>• {t('panelElectricalBoxes')}</p>
+                    <p className="text-red-600 font-medium mt-1">{t('panelElectricalNotIncluded')}</p>
                   </div>
                 </Card>
 
@@ -916,11 +916,11 @@ export default function DetailDomu() {
                     {t('waterAndSewage')}
                   </div>
                   <div className="px-3 pb-3 text-sm text-blue-800 space-y-1 pt-2">
-                    <p>• montáž vodovodných potrubí</p>
-                    <p>• montáž ventilov, záslepiek</p>
-                    <p>• montáž kanalizačných potrubí</p>
-                    <p>• kontrola tesnosti pod tlakom</p>
-                    <p className="text-red-600 font-medium mt-1">Protokoly a sanitárne zariadenia za príplatok</p>
+                    <p>• {t('panelWaterPipes')}</p>
+                    <p>• {t('panelWaterValves')}</p>
+                    <p>• {t('panelWaterSewagePipes')}</p>
+                    <p>• {t('panelWaterPressureTest')}</p>
+                    <p className="text-red-600 font-medium mt-1">{t('panelWaterProtocols')}</p>
                   </div>
                 </Card>
 
@@ -931,10 +931,10 @@ export default function DetailDomu() {
                     {t('foundationsPanel')}
                   </div>
                   <div className="px-3 pb-3 text-sm text-orange-800 space-y-1 pt-2">
-                    <p>• vrutové stĺpy, betónové stĺpiky alebo doska</p>
-                    <p>• uvedená minimálna cena za rovný terén</p>
-                    <p>• konečná cena po geodetickej analýze</p>
-                    <p className="text-red-600 font-medium mt-1">Prípravné práce nie sú v cene</p>
+                    <p>• {t('panelFoundationScrews')}</p>
+                    <p>• {t('panelFoundationMinPrice')}</p>
+                    <p>• {t('panelFoundationFinalPrice')}</p>
+                    <p className="text-red-600 font-medium mt-1">{t('panelFoundationPrepWork')}</p>
                   </div>
                 </Card>
 
@@ -945,8 +945,8 @@ export default function DetailDomu() {
                     {t('interiorFinishPanel')}
                   </div>
                   <div className="px-3 pb-3 text-sm text-emerald-800 space-y-1 pt-2">
-                    <p>• montáž priečok podľa projektu • izolácia 100mm + parozábrana • tatranský profil 8-12mm</p>
-                    <p className="text-red-600 font-medium">Maľovanie: 4,5 €/m², farbu dodáva klient</p>
+                    <p>• {t('panelInteriorPartitions')}</p>
+                    <p className="text-red-600 font-medium">{t('panelInteriorPainting')}</p>
                   </div>
                 </Card>
               </div>
