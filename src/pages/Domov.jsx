@@ -19,7 +19,7 @@ const DEFAULT_HERO_IMAGES = [
   "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80"
 ];
 
-const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/a3057b759_image.png";
+const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/376b4bd9f_okruhlelogo.png";
 
 export default function Domov() {
   const [currentSlide, setCurrentSlide] = useState(0);
