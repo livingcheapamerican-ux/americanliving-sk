@@ -25,15 +25,19 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const tileRef = useRef(null);
 
+  const updateTooltipPosition = () => {
+    if (tileRef.current) {
+      const rect = tileRef.current.getBoundingClientRect();
+      setTooltipPosition({
+        top: rect.bottom + 10,
+        left: rect.left + rect.width / 2
+      });
+    }
+  };
+
   const handleMouseEnter = () => {
     const timer = setTimeout(() => {
-      if (tileRef.current) {
-        const rect = tileRef.current.getBoundingClientRect();
-        setTooltipPosition({
-          top: rect.bottom + 10,
-          left: rect.left + rect.width / 2
-        });
-      }
+      updateTooltipPosition();
       setShowTooltip(true);
     }, 2000);
     setHoverTimer(timer);
@@ -43,6 +47,15 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
     if (hoverTimer) clearTimeout(hoverTimer);
     setShowTooltip(false);
   };
+
+  // Update position on scroll
+  React.useEffect(() => {
+    if (showTooltip) {
+      const handleScroll = () => updateTooltipPosition();
+      window.addEventListener('scroll', handleScroll, true);
+      return () => window.removeEventListener('scroll', handleScroll, true);
+    }
+  }, [showTooltip]);
 
   return (
     <motion.div
