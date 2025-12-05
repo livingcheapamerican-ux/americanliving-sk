@@ -186,7 +186,7 @@ export default function KonfiguratorFlatDoubleInline({
   const CENY = {
     montaz: { nie: 0, ano: 17970 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 5799, premium: 11600 },
+    izolacia: { standard: 0, zvysena: 5799, premium: 11600, ultra: 18000 },
     elektroinstalacia: 7400,
     vodaKanalizacia: 2380,
     sanitaKomplet: 1169,
@@ -216,10 +216,15 @@ export default function KonfiguratorFlatDoubleInline({
   // Výpočet celkovej ceny
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
-    
+
     total += CENY.montaz[montazHolodomu];
     total += CENY.dvere[vstupneDvere];
-    total += CENY.izolacia[izolaciaNavysenie];
+
+    if (izolaciaNavysenie === "ultra") {
+      total += CENY.izolacia.ultra;
+    } else {
+      total += CENY.izolacia[izolaciaNavysenie] || 0;
+    }
     
     if (elektroinstalacia) total += CENY.elektroinstalacia;
     if (vodaKanalizacia) total += CENY.vodaKanalizacia;
@@ -292,8 +297,8 @@ export default function KonfiguratorFlatDoubleInline({
     // Hrubá stavba
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
-    const izolaciaLabel = izolaciaNavysenie === "premium" ? t('insulationPremium') + " (250/300mm)" : izolaciaNavysenie === "zvysena" ? t('insulationEnhanced') + " (200/250mm)" : t('insulationStd');
-    const izolaciaPrice = izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
+    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Éxtra izolácia (300mm)" : izolaciaNavysenie === "premium" ? t('insulationPremium') + " (250/300mm)" : izolaciaNavysenie === "zvysena" ? t('insulationEnhanced') + " (200/250mm)" : t('insulationStd');
+    const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
     items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" });
     
     const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? t('foundationsScrews') : t('foundationsLabel');

@@ -248,8 +248,8 @@ export default function KonfiguratorFaza1HrubaStavba({
             </div>
 
             {/* Izolácia - skupina */}
-            <div className={`col-span-2 sm:col-span-3 lg:col-span-2 grid ${useNordPrices ? 'grid-cols-4' : 'grid-cols-3'} gap-2 sm:gap-3 p-4 border-[5px] border-cyan-600 rounded-2xl bg-cyan-100/70 shadow-xl`}>
-              <p className={`${useNordPrices ? 'col-span-4' : 'col-span-3'} text-[10px] sm:text-xs font-bold text-cyan-700 -mb-1 flex items-center gap-1`}>
+            <div className="col-span-2 sm:col-span-3 lg:col-span-2 grid grid-cols-4 gap-2 sm:gap-3 p-4 border-[5px] border-cyan-600 rounded-2xl bg-cyan-100/70 shadow-xl">
+              <p className="col-span-4 text-[10px] sm:text-xs font-bold text-cyan-700 -mb-1 flex items-center gap-1">
                 <span className="w-5 h-5 sm:w-6 sm:h-6 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
                 {t('insulation')} ({t('selectOne')})
               </p>
@@ -296,24 +296,22 @@ export default function KonfiguratorFaza1HrubaStavba({
                 tooltip={t('insulationPremiumDesc')}
               />
 
-              {useNordPrices && (
-                <Tile
-                  selected={izolaciaNavysenie === "ultra"}
-                  onClick={(e) => { if (izolaciaNavysenie !== "ultra") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("ultra"); }}
-                  icon={ThermometerSun}
-                  iconColor="text-green-600"
-                  iconSelectedColor="text-green-700"
-                  title="300mm"
-                  subtitle="300mm"
-                  price="+ 12 000 €"
-                  isPriced={true}
-                  isA0={true}
-                  selectedBg="bg-green-100"
-                  selectedBorder="border-green-500"
-                  selectedRing="ring-green-300"
-                  tooltip="Ultra premium izolácia 300mm"
-                />
-              )}
+              <Tile
+                selected={izolaciaNavysenie === "ultra"}
+                onClick={(e) => { if (izolaciaNavysenie !== "ultra") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("ultra"); }}
+                icon={ThermometerSun}
+                iconColor="text-green-600"
+                iconSelectedColor="text-green-700"
+                title="Éxtra izolácia"
+                subtitle="300mm"
+                price={useNordPrices ? "+ 12 000 €" : "+ 18 000 €"}
+                isPriced={true}
+                isA0={true}
+                selectedBg="bg-green-100"
+                selectedBorder="border-green-500"
+                selectedRing="ring-green-300"
+                tooltip="Maximálna izolácia 300mm pre extra energetickú efektívnosť"
+              />
             </div>
 
             {/* Základy - skupina */}
