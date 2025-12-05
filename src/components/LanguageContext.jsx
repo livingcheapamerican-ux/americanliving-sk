@@ -807,6 +807,7 @@ const translations = {
     sendMessage: "Envoyer le message",
     thankYou: "Merci pour votre message!",
     messageSuccess: "Votre message a été envoyé avec succès. Nous vous contacterons dès que possible, généralement dans les 24 heures.",
+  },
   
   sr: {
     // Navigation
@@ -947,6 +948,7 @@ const translations = {
     sendMessage: "Пошаљи поруку",
     thankYou: "Хвала на поруци!",
     messageSuccess: "Ваша порука је успешно послата. Контактираћемо вас што пре, обично у року од 24 сата.",
+  },
   
   hr: {
     // Navigation
@@ -1087,6 +1089,7 @@ const translations = {
     sendMessage: "Pošalji poruku",
     thankYou: "Hvala na poruci!",
     messageSuccess: "Vaša poruka je uspješno poslana. Kontaktirat ćemo vas što prije, obično u roku od 24 sata.",
+  },
   
   el: {
     // Navigation
@@ -1227,6 +1230,7 @@ const translations = {
     sendMessage: "Αποστολή μηνύματος",
     thankYou: "Ευχαριστούμε για το μήνυμά σας!",
     messageSuccess: "Το μήνυμά σας εστάλη με επιτυχία. Θα επικοινωνήσουμε μαζί σας το συντομότερο δυνατό, συνήθως εντός 24 ωρών.",
+  },
   
   en: {
     // Navigation
