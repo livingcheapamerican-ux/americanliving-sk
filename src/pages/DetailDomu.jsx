@@ -16,6 +16,7 @@ import DomGalerieManager from "../components/admin/DomGalerieManager";
 import KonfiguratorFlatDoubleInline from "../components/KonfiguratorFlatDoubleInline";
 import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
 import KonfiguratorWizard from "../components/KonfiguratorWizard";
+import KonfiguratorFjord from "../components/KonfiguratorFjord";
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
 
@@ -1278,9 +1279,10 @@ export default function DetailDomu() {
                   doprava={doprava}
                   setDoprava={setDoprava}
                   showOnlySummary={true}
-                />
-              </div>
-            )}
+                  />
+                  )}
+                  </div>
+                  )}
 
             {/* CTA Buttons */}
             <div className="space-y-3">
