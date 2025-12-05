@@ -11,6 +11,9 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import DomGalerieManager from "../components/admin/DomGalerieManager";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { ArrowLeft } from "lucide-react";
 
 export default function AdminSpravaDomov() {
   const [selectedDom, setSelectedDom] = useState(null);
@@ -189,6 +192,12 @@ export default function AdminSpravaDomov() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           {/* Header */}
           <div className="mb-8">
+            <Link to={createPageUrl("Katalog")}>
+              <Button variant="ghost" className="mb-4 text-gray-600 hover:text-primary">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Späť do katalógu
+              </Button>
+            </Link>
             <div className="flex items-center gap-3 mb-3">
               <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                 <Home className="w-6 h-6 text-white" />
