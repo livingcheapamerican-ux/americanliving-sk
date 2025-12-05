@@ -75,7 +75,7 @@ const StepTypStavby = ({ typStavby, setTypStavby, onNext }) => {
             transition={{ delay: 0.4, duration: 0.5 }}
             className="text-xl sm:text-2xl font-bold text-white mb-2"
           >
-            Poskladajte si cenovú ponuku na váš dom
+            {t('createYourPriceOffer')}
           </motion.h3>
           <motion.p
             initial={{ opacity: 0 }}
