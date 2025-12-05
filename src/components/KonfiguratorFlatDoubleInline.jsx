@@ -820,9 +820,9 @@ export default function KonfiguratorFlatDoubleInline({
                 tooltip={t('tintedGlass')}
               />
 
-              </div>
+          </div>
 
-              {/* Sekcia s počtami - Dvere a Okná */}
+          {/* Sekcia s počtami - Dvere a Okná */}
           <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
             <p className="text-xs sm:text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
               <DoorOpen className="w-4 h-4 text-blue-600" />
