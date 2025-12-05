@@ -618,7 +618,7 @@ export default function KonfiguratorFlatDoubleInline({
             {/* Interiér finiš - skupina */}
             <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-2 sm:gap-3 p-4 border-[5px] border-blue-600 rounded-2xl bg-blue-100/70 shadow-xl">
               <p className="col-span-3 text-[10px] sm:text-xs font-bold text-blue-700 -mb-1 flex items-center gap-1">
-                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">1</span>
                 {t('interiorFinish')} ({t('selectOne')})
               </p>
               <Tile
@@ -664,7 +664,7 @@ export default function KonfiguratorFlatDoubleInline({
             {/* Inštalácie - skupina */}
             <div className="col-span-2 sm:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] border-yellow-500 rounded-2xl bg-yellow-100/70 shadow-xl">
               <p className="col-span-2 text-[10px] sm:text-xs font-bold text-yellow-800 -mb-1 flex items-center gap-1">
-                <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
                 {t('electrical')} & {t('water')}
               </p>
               <Tile
@@ -731,7 +731,7 @@ export default function KonfiguratorFlatDoubleInline({
               {/* Klimatizácia a vetranie - A0 skupina */}
               <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] border-green-600 rounded-2xl bg-green-100/70 shadow-xl">
                 <p className="col-span-2 text-xs font-bold text-green-800 -mb-1 flex items-center gap-1">
-                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  <span className="w-5 h-5 sm:w-6 sm:h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">3</span>
                   {t('heatPump')} & {t('recuperation')} (A0)
                 </p>
                 <Tile
@@ -908,7 +908,7 @@ export default function KonfiguratorFlatDoubleInline({
             {/* Fasáda - skupina */}
             <div className={`col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] rounded-2xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
               <p className={`col-span-2 text-[10px] sm:text-xs font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
-                <span className={`w-2 h-2 rounded-full ${!vonkajsiaFasada ? 'bg-red-500' : 'bg-emerald-500'}`}></span>
+                <span className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
                 {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
               </p>
               <Tile
