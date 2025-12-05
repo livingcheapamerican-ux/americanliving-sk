@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload } from "lucide-react";
+import { AVAILABLE_LANGUAGES } from "./components/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
@@ -50,7 +51,7 @@ function LayoutContent({ children }) {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { t } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -113,6 +114,26 @@ function LayoutContent({ children }) {
         }`}
       >
         <div className="container mx-auto px-2 sm:px-4">
+          {/* Language Flags Bar */}
+          <div className="border-b border-gray-200 py-1">
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              {AVAILABLE_LANGUAGES.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => setLanguage(lang.code)}
+                  className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all ${
+                    language === lang.code
+                      ? 'bg-primary text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <span className="text-sm">{lang.flag}</span>
+                  <span>{lang.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="flex items-center justify-between">
             <div className="flex-1 flex items-center justify-start lg:justify-start gap-2 sm:gap-3">
               <Link to={createPageUrl("Domov")} className="group">
@@ -195,7 +216,6 @@ function LayoutContent({ children }) {
                   </Link>
                 </>
               )}
-              <LanguageSelector variant="ghost" />
               <a href="tel:+421905138124" className="text-primary font-semibold text-sm lg:text-base xl:text-lg">
                 +421 905 138 124
               </a>
