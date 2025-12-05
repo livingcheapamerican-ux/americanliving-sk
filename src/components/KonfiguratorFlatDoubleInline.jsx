@@ -17,6 +17,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
+import KonfiguratorContactModal from "./KonfiguratorContactModal";
 
 // Dlaždica s tooltip a veľkou fajkou
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
@@ -328,6 +329,7 @@ export default function KonfiguratorFlatDoubleInline({
   const dragRef = useRef(null);
   const interierFinisRef = useRef(null);
   const [panelWidth, setPanelWidth] = useState(null);
+  const [showContactModal, setShowContactModal] = useState(false);
 
   // Get width of Interiér finiš panel
   useEffect(() => {
@@ -521,12 +523,14 @@ export default function KonfiguratorFlatDoubleInline({
               </span>
             </div>
             <div className="space-y-2">
-              <Link to={`${createPageUrl("Kontakt")}?dom=Flat%20Double%20142m²&cena=${totalPrice}`}>
-                <Button size="sm" className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg">
+                <Button 
+                  size="sm" 
+                  onClick={() => setShowContactModal(true)}
+                  className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg"
+                >
                   <Send className="mr-2 w-4 h-4" />
                   Mám záujem
                 </Button>
-              </Link>
               <Button 
                 size="sm" 
                 variant="outline" 
@@ -1181,13 +1185,25 @@ export default function KonfiguratorFlatDoubleInline({
             </div>
 
             <div className="mt-6 sm:mt-10 pt-4 sm:pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <Link to={`${createPageUrl("Kontakt")}?dom=Flat%20Double%20142m²&cena=${totalPrice}`}>
-                <Button size="lg" className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40">
-                  <Send className="mr-2 sm:mr-3 w-4 h-4 sm:w-6 sm:h-6" />
-                  Mám záujem
-                </Button>
-              </Link>
+              <Button 
+                size="lg" 
+                onClick={() => setShowContactModal(true)}
+                className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
+              >
+                <Send className="mr-2 sm:mr-3 w-4 h-4 sm:w-6 sm:h-6" />
+                Mám záujem o túto konfiguráciu
+              </Button>
             </div>
+
+            {/* Contact Modal */}
+            <KonfiguratorContactModal
+              isOpen={showContactModal}
+              onClose={() => setShowContactModal(false)}
+              dom={dom}
+              totalPrice={totalPrice}
+              selectedItems={selectedItems}
+              vonkajsiaFasada={vonkajsiaFasada}
+            />
           </div>
         </div>
         </Card>
