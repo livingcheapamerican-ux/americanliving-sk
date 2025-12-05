@@ -20,10 +20,25 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
   const updateTooltipPosition = () => {
     if (tileRef.current) {
       const rect = tileRef.current.getBoundingClientRect();
-      setTooltipPosition({
-        top: rect.bottom + 10,
-        left: rect.left + rect.width / 2
-      });
+      const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
+      const tooltipHeight = 80; // approximate
+      
+      // Position tooltip closer to center of screen
+      let top, left;
+      
+      // Vertical: prefer center, but stay near tile
+      const centerY = viewportHeight / 2;
+      if (rect.bottom < centerY) {
+        top = rect.bottom + 10;
+      } else {
+        top = Math.max(rect.top - tooltipHeight - 10, 60);
+      }
+      
+      // Horizontal: center of viewport
+      left = viewportWidth / 2;
+      
+      setTooltipPosition({ top, left });
     }
   };
 
@@ -31,6 +46,8 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
     const timer = setTimeout(() => {
       updateTooltipPosition();
       setShowTooltip(true);
+      // Auto-hide after 3 seconds on mobile
+      setTimeout(() => setShowTooltip(false), 3000);
     }, 2000);
     setHoverTimer(timer);
   };
