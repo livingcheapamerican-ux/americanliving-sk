@@ -181,12 +181,12 @@ export default function KonfiguratorFlatDoubleInline({
   const { animations, triggerAnimation } = useFlyingAnimation();
   const { t } = useLanguage();
 
-  // Cenník
+  // Cenník - aktualizovaný podľa cenníka z obrázkov
   const CENY = {
     montaz: { nie: 0, ano: 17970 },
-    dvere: { ziadne: 0, kovove: 720, plastove: 660 },
+    dvere: { ziadne: 0, kovove: 1990, plastove: 810 },
     izolacia: { standard: 0, zvysena: 5799, premium: 11600 },
-    elektroinstalacia: 7400,
+    elektroinstalacia: 4100,
     vodaKanalizacia: 2380,
     sanitaKomplet: 1169,
     bojler: 246,
@@ -194,20 +194,21 @@ export default function KonfiguratorFlatDoubleInline({
     rekuperacia: 2700,
     zaklady: { bez: 0, skrutky: 8140, doska: 17946, pasove: 21079 },
     pripojkaSiete: 1501,
-    inziniering: 2592,
-    projektA0: 3500,
+    inziniering: 3000,
+    projektA0: 1400,
+    energetickyCertifikat: 1200,
     interierFinis: { ziadne: 0, drevo: 16400, sadrokarton: 19475 },
     vonkajsiaFasada: { standard: 0, suchana: 12841 },
     povrchokaOkien: 3100,
-    vnutornePodlahy: 3351,
-    podlahovVykurovanie: 5525,
-    pergola: 1845,
+    vnutornePodlahy: 3500,
+    podlahovVykurovanie: 5190,
+    pergola: 1200,
     interieroveDvere: 250,
     tonovaneSkla: 1300,
     doprava: 0,
-    revizna: 1000,
+    revizna: 12200,
     stresneOkno: 760,
-    bocneOknoFixne: 501,
+    bocneOknoFixne: 12450,
     bocneOknoVyklopne90: 540,
     bocneOknoVyklopne55: 225
   };
@@ -675,7 +676,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-yellow-600"
                 title={t('electrical')}
                 subtitle={t('wiring')}
-                price="+ 7 400 €"
+                price="+ 4 100 €"
                 isPriced={true}
                 selectedBg="bg-yellow-100"
                 selectedBorder="border-yellow-500"
@@ -831,8 +832,8 @@ export default function KonfiguratorFlatDoubleInline({
             <div className="grid grid-cols-3 gap-2">
               {[
                 { value: "ziadne", label: t('doorStandard'), price: "0 €" },
-                { value: "kovove", label: t('doorMetal'), price: "+ 720 €" },
-                { value: "plastove", label: t('doorPlastic'), price: "+ 660 €" }
+                { value: "kovove", label: t('doorMetal'), price: "+ 1 990 €" },
+                { value: "plastove", label: t('doorPlastic'), price: "+ 810 €" }
               ].map((opt) => (
                 <motion.div
                   key={opt.value}
@@ -858,7 +859,7 @@ export default function KonfiguratorFlatDoubleInline({
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {[
                   { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: "760 €" },
-                  { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: "501 €" },
+                  { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: "12 450 €" },
                   { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: "540 €" },
                   { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: "225 €" }
                 ].map((opt, idx) => (
@@ -954,7 +955,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-emerald-600"
               title={t('floors')}
               subtitle={t('floorsLaminate')}
-              price="+ 3 351 €"
+              price="+ 3 500 €"
               isPriced={true}
               selectedBg="bg-emerald-100"
               selectedBorder="border-emerald-500"
@@ -971,7 +972,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-orange-600"
               title={t('floorHeating')}
               subtitle={t('wifiThermostat')}
-              price="+ 5 525 €"
+              price="+ 5 190 €"
               isPriced={true}
               selectedBg="bg-orange-100"
               selectedBorder="border-orange-500"
@@ -988,7 +989,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-emerald-600"
               title={t('pergola')}
               subtitle={t('pergolaDecorative')}
-              price="+ 1 845 €"
+              price="+ 1 200 €"
               isPriced={true}
               selectedBg="bg-emerald-100"
               selectedBorder="border-emerald-500"
@@ -1055,7 +1056,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-purple-600"
               title={t('engineering')}
               subtitle={t('buildingPermit')}
-              price="+ 2 592 €"
+              price="+ 3 000 €"
               isPriced={true}
               selectedBg="bg-purple-100"
               selectedBorder="border-purple-500"
@@ -1072,7 +1073,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-green-600"
               title={t('projectA0')}
               subtitle={t('certification')}
-              price="+ 3 500 €"
+              price="+ 2 600 €"
               isPriced={true}
               isA0={true}
               selectedBg="bg-green-100"
@@ -1089,7 +1090,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-purple-600"
               title={t('revision')}
               subtitle={t('documentation')}
-              price="+ 1 000 €"
+              price="+ 12 200 €"
               isPriced={true}
               selectedBg="bg-purple-100"
               selectedBorder="border-purple-500"
