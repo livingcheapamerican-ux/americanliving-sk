@@ -16,9 +16,11 @@ import DomGalerieManager from "../components/admin/DomGalerieManager";
 import KonfiguratorFlatDoubleInline from "../components/KonfiguratorFlatDoubleInline";
 import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
 import KonfiguratorWizard from "../components/KonfiguratorWizard";
+import { useLanguage } from "../components/LanguageContext";
 
 
 export default function DetailDomu() {
+  const { t } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const domId = urlParams.get('id');
   const domSlug = urlParams.get('slug');
@@ -150,7 +152,7 @@ export default function DetailDomu() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Načítavam detail domu...</p>
+          <p className="text-gray-600">{t('loading')}</p>
         </div>
       </div>
     );
@@ -161,12 +163,12 @@ export default function DetailDomu() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card className="p-12 text-center max-w-md">
           <Home className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-700 mb-2">Dom sa nenašiel</h2>
-          <p className="text-gray-500 mb-6">Požadovaný dom neexistuje.</p>
+          <h2 className="text-2xl font-bold text-gray-700 mb-2">{t('noHousesFound')}</h2>
+          <p className="text-gray-500 mb-6">{t('tryChangingFilters')}</p>
           <Link to={createPageUrl("Katalog")}>
             <Button className="bg-primary hover:bg-primary/90">
               <ArrowLeft className="mr-2 w-4 h-4" />
-              Späť do katalógu
+              {t('backToCatalog')}
             </Button>
           </Link>
         </Card>
@@ -323,7 +325,7 @@ export default function DetailDomu() {
           <Link to={returnUrl}>
             <Button variant="ghost" className="text-primary hover:text-primary/80">
               <ArrowLeft className="mr-2 w-4 h-4" />
-              Späť do katalógu
+              {t('backToCatalog')}
             </Button>
           </Link>
           {canManage && (
@@ -333,7 +335,7 @@ export default function DetailDomu() {
               className={showAdminPanel ? "bg-blue-600 hover:bg-blue-700" : ""}
             >
               <Edit className="w-4 h-4 mr-2" />
-              {showAdminPanel ? "Zavrieť správu" : "Správa galérií"}
+              {showAdminPanel ? t('close') : t('galleries')}
             </Button>
           )}
         </div>
@@ -366,15 +368,15 @@ export default function DetailDomu() {
                 />
               <div className="absolute top-4 left-4 space-y-2">
                 {dom.celorocny && (
-                  <Badge className="bg-accent text-white px-4 py-2">✔ CELOROČNÝ</Badge>
+                  <Badge className="bg-accent text-white px-4 py-2">✔ {t('yearRound')}</Badge>
                 )}
                 {dom.energeticky_certifikat && (
-                  <Badge className="bg-green-600 text-white px-4 py-2">✔ CERTIFIKÁT A0</Badge>
+                  <Badge className="bg-green-600 text-white px-4 py-2">✔ {t('certificateA0')}</Badge>
                 )}
               </div>
               <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-all flex items-center justify-center">
                 <span className="text-white opacity-0 hover:opacity-100 text-sm font-medium bg-black/50 px-3 py-1 rounded-full">
-                  Zobraziť galériu
+                  {t('clickToShow')} {t('galleries')}
                 </span>
               </div>
             </div>
@@ -405,7 +407,7 @@ export default function DetailDomu() {
             {/* 2D a 3D Pôdorysy - hneď pod titulnou fotkou */}
             {(dom.podorys_2d || dom.podorys_3d) && (
               <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">Pôdorysy</h3>
+                <h3 className="text-lg font-bold text-primary mb-4">{t('floorPlans')}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {dom.podorys_2d && (
                     <div>
@@ -446,7 +448,7 @@ export default function DetailDomu() {
               <Card className="p-6">
                 <h3 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
                   <Layers className="w-5 h-5" />
-                  Galérie
+                  {t('galleries')}
                 </h3>
                 <div className="space-y-4">
                   {dom.galerie.filter(g => g.fotky && g.fotky.length > 0).map((galeria, index) => (
@@ -462,11 +464,11 @@ export default function DetailDomu() {
                             {GALERIA_TYPY_LABELS[galeria.typ] || galeria.typ}
                           </span>
                           <Badge className="bg-gray-100 text-gray-600 text-xs">
-                            {galeria.fotky.length} fotiek
+                            {galeria.fotky.length} {t('photos')}
                           </Badge>
                         </div>
                         <p className="text-xs text-gray-400 group-hover:text-primary transition-colors">
-                          Kliknite pre zobrazenie →
+                          {t('clickToShow')} →
                         </p>
                       </div>
                       
@@ -585,7 +587,7 @@ export default function DetailDomu() {
             {/* YouTube Video */}
             {dom.youtube_url && (
               <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">Video prezentácia</h3>
+                <h3 className="text-lg font-bold text-primary mb-4">{t('videoPresentation')}</h3>
                 <div className="aspect-video rounded-lg overflow-hidden">
                   <iframe
                     src={dom.youtube_url}
@@ -600,24 +602,24 @@ export default function DetailDomu() {
             {/* Rozmery - presunute z pravej strany */}
             {dom.rozmery && (
               <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">Vonkajšie rozmery</h3>
+                <h3 className="text-lg font-bold text-primary mb-4">{t('outerDimensions')}</h3>
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Šírka</p>
+                    <p className="text-sm text-gray-500 mb-1">{t('width')}</p>
                     <p className="text-2xl font-bold text-primary">{dom.rozmery.sirka} m</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Dĺžka</p>
+                    <p className="text-sm text-gray-500 mb-1">{t('length')}</p>
                     <p className="text-2xl font-bold text-primary">{dom.rozmery.dlzka} m</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Výška</p>
+                    <p className="text-sm text-gray-500 mb-1">{t('height')}</p>
                     <p className="text-2xl font-bold text-primary">{dom.rozmery.vyska} m</p>
                   </div>
                 </div>
                 {dom.vyska_stropu && (
                   <p className="text-sm text-gray-600 mt-4 text-center">
-                    Výška stropu: <span className="font-semibold">{dom.vyska_stropu}</span>
+                    {t('ceilingHeight')}: <span className="font-semibold">{dom.vyska_stropu}</span>
                   </p>
                 )}
               </Card>
@@ -626,7 +628,7 @@ export default function DetailDomu() {
             {/* Popis - presunute z pravej strany */}
             {dom.popis && (
               <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">{isProstoHouse ? "Popis montovaného domu vo verzii rekreačnej stavby" : "Popis modulového domu"}</h3>
+                <h3 className="text-lg font-bold text-primary mb-4">{t('description')}</h3>
                 <div className="text-gray-700 leading-tight whitespace-pre-line">
                   {dom.popis}
                 </div>
@@ -643,7 +645,7 @@ export default function DetailDomu() {
             {/* Obrázok základnej konfigurácie - pre Ticabhouse - presunute z pravej strany */}
             {isTicabhouse && dom.zakladna_konfiguracia_obrazok && (
               <Card className="p-6 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
-                <h3 className="text-lg font-bold text-primary mb-4">📸 Základná konfigurácia</h3>
+                <h3 className="text-lg font-bold text-primary mb-4">📸 {t('basicConfiguration')}</h3>
                 <div className="rounded-lg overflow-hidden shadow-lg">
                   <img 
                     src={dom.zakladna_konfiguracia_obrazok} 
@@ -652,7 +654,7 @@ export default function DetailDomu() {
                   />
                 </div>
                 <p className="text-sm text-blue-800 mt-3 text-center font-medium">
-                  Takto vyzerá dom v základnej konfigurácii
+                  {t('basicConfigDesc')}
                 </p>
               </Card>
             )}
@@ -792,7 +794,7 @@ export default function DetailDomu() {
             {/* Špecifikácia - presunute z pravej strany */}
             {dom.specifikacia && (
               <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">Špecifikácia</h3>
+                <h3 className="text-lg font-bold text-primary mb-4">{t('specification')}</h3>
                 <div className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
                   {dom.specifikacia}
                 </div>
@@ -962,18 +964,18 @@ export default function DetailDomu() {
                   {dom.vyrobca}
                 </Badge>
                 <Badge className="bg-gray-100 text-gray-700 px-3 py-1">
-                  {dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom'}
+                  {dom.typ_domu === 'modularny' ? t('modular') : dom.typ_domu === 'montovany' ? t('prefab') : t('mobile')}
                 </Badge>
               </div>
               <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
                 {dom.nazov}
               </h1>
               <div className="flex items-baseline gap-2">
-                <span className="text-sm text-gray-500">{isTicabhouse ? "Cena základnej konfigurácie" : "Cena od"}</span>
+                <span className="text-sm text-gray-500">{isTicabhouse ? t('basicConfigPrice') : t('priceFromLabel')}</span>
                 <span className="text-4xl font-bold text-primary">
                   {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                 </span>
-                <span className="text-sm text-gray-500">s DPH</span>
+                <span className="text-sm text-gray-500">{t('withVAT')}</span>
               </div>
               {isProstoHouse ? (
                 <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2">
@@ -1005,12 +1007,12 @@ export default function DetailDomu() {
 
             {/* Parametre */}
             <Card className="p-6 bg-gradient-to-br from-blue-50 to-white">
-              <h3 className="text-lg font-bold text-primary mb-4">Základné parametre</h3>
+              <h3 className="text-lg font-bold text-primary mb-4">{t('basicParameters')}</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-3">
                   <Home className="w-6 h-6 text-primary" />
                   <div>
-                    <p className="text-sm text-gray-500">Výrobca</p>
+                    <p className="text-sm text-gray-500">{t('manufacturer')}</p>
                     <p className="text-xl font-bold text-primary">{dom.vyrobca}</p>
                   </div>
                 </div>
@@ -1023,9 +1025,9 @@ export default function DetailDomu() {
                                               <Boxes className="w-6 h-6 text-accent" />
                                             )}
                     <div>
-                      <p className="text-sm text-gray-500">Typ domu</p>
+                      <p className="text-sm text-gray-500">{t('houseType')}</p>
                       <p className="text-xl font-bold text-primary">
-                        {dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom'}
+                        {dom.typ_domu === 'modularny' ? t('modular') : dom.typ_domu === 'montovany' ? t('prefab') : t('mobile')}
                       </p>
                     </div>
                   </div>
@@ -1033,7 +1035,7 @@ export default function DetailDomu() {
                   <div className="flex items-center gap-3">
                     <Grid2x2 className="w-6 h-6 text-primary" />
                     <div>
-                      <p className="text-sm text-gray-500">Počet izieb</p>
+                      <p className="text-sm text-gray-500">{t('rooms')}</p>
                       <p className="text-xl font-bold text-primary">{dom.pocet_izieb}</p>
                     </div>
                   </div>
@@ -1041,7 +1043,7 @@ export default function DetailDomu() {
                 <div className="flex items-center gap-3">
                     <div className="w-6 h-4 border-2 border-primary rounded-sm" />
                     <div>
-                      <p className="text-sm text-gray-500">Zastavaná plocha</p>
+                      <p className="text-sm text-gray-500">{t('builtArea')}</p>
                     <p className="text-xl font-bold text-primary">{dom.zastavana_plocha} m²</p>
                   </div>
                 </div>
@@ -1049,7 +1051,7 @@ export default function DetailDomu() {
                   <div className="flex items-center gap-3">
                     <Maximize2 className="w-6 h-6 text-accent" />
                     <div>
-                      <p className="text-sm text-gray-500">Úžitková plocha</p>
+                      <p className="text-sm text-gray-500">{t('usableArea')}</p>
                       <p className="text-xl font-bold text-primary">{dom.uzitkova_plocha} m²</p>
                     </div>
                   </div>
@@ -1058,10 +1060,10 @@ export default function DetailDomu() {
                   <div className="flex items-center gap-3">
                     <Zap className="w-6 h-6 text-green-600" />
                     <div>
-                      <p className="text-sm text-gray-500">Energetická trieda</p>
+                      <p className="text-sm text-gray-500">{t('energyClass')}</p>
                       <p className="text-xl font-bold text-primary">A0</p>
                       {isTicabhouse && (
-                        <p className="text-xs text-gray-500 mt-1">príplatková možnosť</p>
+                        <p className="text-xs text-gray-500 mt-1">{t('a0CertificateOption')}</p>
                       )}
                     </div>
                   </div>
@@ -1089,19 +1091,19 @@ export default function DetailDomu() {
             {/* Možnosti využitia - pre Prosto House */}
             {isProstoHouse && (
               <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
-                <h3 className="text-lg font-bold text-primary mb-4">✔ Možnosti využitia:</h3>
+                <h3 className="text-lg font-bold text-primary mb-4">✔ {t('usageOptions')}</h3>
                 <ul className="space-y-2">
                   <li className="flex items-start gap-2 text-sm">
                     <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Rodinný dom s možnosťou kolaudácie</span>
+                    <span>{t('familyHouseOption')}</span>
                   </li>
                   <li className="flex items-start gap-2 text-sm">
                     <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Možnosť energetického certifikátu A0</span>
+                    <span>{t('a0CertificateOption')}</span>
                   </li>
                   <li className="flex items-start gap-2 text-sm">
                     <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Rekreačná budova (chata/záhradný domček)</span>
+                    <span>{t('recreationalOption')}</span>
                   </li>
                 </ul>
               </Card>
@@ -1177,7 +1179,7 @@ export default function DetailDomu() {
               <Link to={createPageUrl("Kontakt")}>
                 <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-lg py-6">
                   <Mail className="mr-2 w-5 h-5" />
-                  Kontaktovať nás
+                  {t('contactUsButton')}
                 </Button>
               </Link>
               <a href="tel:+421905138124">

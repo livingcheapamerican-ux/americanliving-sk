@@ -262,21 +262,21 @@ export default function ONas() {
             className="max-w-3xl mx-auto text-center"
           >
             <h2 className="text-4xl font-bold mb-6">
-              Pripravení na vlastný dom?
+              {t('readyForOwnHouse')}
             </h2>
             <p className="text-xl mb-8 text-white">
-              Kontaktujte nás a spoločne nájdeme ideálne riešenie pre vás
+              {t('contactUsAndFindIdeal')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to={createPageUrl("Katalog")}>
                 <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white font-semibold px-8 w-full sm:w-auto">
-                  Zobraziť ponuku
+                  {t('showOffer')}
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
               <Link to={createPageUrl("Kontakt")}>
                 <Button size="lg" variant="outline" className="bg-white/10 border-2 border-white text-white hover:bg-white hover:text-primary font-semibold px-8 w-full sm:w-auto">
-                  Kontaktovať nás
+                  {t('contactUsButton')}
                 </Button>
               </Link>
             </div>
