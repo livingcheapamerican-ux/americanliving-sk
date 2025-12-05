@@ -105,48 +105,45 @@ export default function DetailDomu() {
   // SEO Meta tags
   useEffect(() => {
     if (dom) {
-      const metaTitle = dom.meta_title || `${dom.nazov} - ${dom.vyrobca} | ${dom.zastavana_plocha}m² | American Living`;
-      const metaDescription = dom.meta_description || `${dom.nazov} od ${dom.vyrobca} - ${dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom'} s plochou ${dom.zastavana_plocha}m²${dom.pocet_izieb ? `, ${dom.pocet_izieb} izby` : ''}. Cena od ${dom.zakladna_cena?.toLocaleString('sk-SK')}€. Energetická trieda A0.`;
+      const houseType = dom.typ_domu === 'modularny' ? t('modular') : dom.typ_domu === 'montovany' ? t('prefab') : t('mobile');
+      const metaTitle = dom.meta_title || `${dom.nazov} - ${dom.vyrobca} | ${dom.zastavana_plocha}m²${dom.pocet_izieb ? ` | ${dom.pocet_izieb} ${t('roomsLabel')}` : ''} | American Living`;
+      const metaDescription = dom.meta_description || `${dom.nazov} od ${dom.vyrobca} - ${houseType} s plochou ${dom.zastavana_plocha}m²${dom.uzitkova_plocha ? `, úžitková ${dom.uzitkova_plocha}m²` : ''}. ${t('priceFromLabel')} ${dom.zakladna_cena?.toLocaleString('sk-SK')}€ ${t('withVAT')}.${dom.energeticky_certifikat ? ` ${t('energyClass')} A0.` : ''}${dom.celorocny ? ` ${t('yearRound')}.` : ''}`;
+      const currentUrl = window.location.href;
       
       document.title = metaTitle;
       
-      let metaDesc = document.querySelector('meta[name="description"]');
-      if (!metaDesc) {
-        metaDesc = document.createElement('meta');
-        metaDesc.name = 'description';
-        document.head.appendChild(metaDesc);
-      }
-      metaDesc.content = metaDescription;
+      // Helper function to set meta tag
+      const setMetaTag = (selector, attribute, attributeValue, content) => {
+        let tag = document.querySelector(selector);
+        if (!tag) {
+          tag = document.createElement('meta');
+          tag.setAttribute(attribute, attributeValue);
+          document.head.appendChild(tag);
+        }
+        tag.content = content;
+      };
 
+      // Basic meta tags
+      setMetaTag('meta[name="description"]', 'name', 'description', metaDescription);
+      
       // Open Graph tags
-      let ogTitle = document.querySelector('meta[property="og:title"]');
-      if (!ogTitle) {
-        ogTitle = document.createElement('meta');
-        ogTitle.setAttribute('property', 'og:title');
-        document.head.appendChild(ogTitle);
-      }
-      ogTitle.content = metaTitle;
-
-      let ogDesc = document.querySelector('meta[property="og:description"]');
-      if (!ogDesc) {
-        ogDesc = document.createElement('meta');
-        ogDesc.setAttribute('property', 'og:description');
-        document.head.appendChild(ogDesc);
-      }
-      ogDesc.content = metaDescription;
-
-      let ogImage = document.querySelector('meta[property="og:image"]');
-      if (!ogImage) {
-        ogImage = document.createElement('meta');
-        ogImage.setAttribute('property', 'og:image');
-        document.head.appendChild(ogImage);
-      }
-      ogImage.content = dom.hlavny_obrazok;
+      setMetaTag('meta[property="og:title"]', 'property', 'og:title', metaTitle);
+      setMetaTag('meta[property="og:description"]', 'property', 'og:description', metaDescription);
+      setMetaTag('meta[property="og:image"]', 'property', 'og:image', dom.hlavny_obrazok);
+      setMetaTag('meta[property="og:url"]', 'property', 'og:url', currentUrl);
+      setMetaTag('meta[property="og:type"]', 'property', 'og:type', 'website');
+      setMetaTag('meta[property="og:site_name"]', 'property', 'og:site_name', 'American Living');
+      
+      // Twitter Card tags
+      setMetaTag('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary_large_image');
+      setMetaTag('meta[name="twitter:title"]', 'name', 'twitter:title', metaTitle);
+      setMetaTag('meta[name="twitter:description"]', 'name', 'twitter:description', metaDescription);
+      setMetaTag('meta[name="twitter:image"]', 'name', 'twitter:image', dom.hlavny_obrazok);
 
       // Set initial calculatedPrice to base price
       setCalculatedPrice(dom.zakladna_cena || 0);
     }
-  }, [dom]);
+  }, [dom, t]);
 
   if (isLoading) {
     return (
