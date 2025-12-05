@@ -455,6 +455,16 @@ export default function KonfiguratorFlatDoubleInline({
             </div>
           </div>
 
+        {/* Contact Modal for summary view */}
+        <KonfiguratorContactModal
+          isOpen={showContactModal}
+          onClose={() => setShowContactModal(false)}
+          dom={dom}
+          totalPrice={totalPrice}
+          selectedItems={selectedItems}
+          vonkajsiaFasada={vonkajsiaFasada}
+        />
+
           {/* Súhrn položiek */}
           <div className="px-3 py-2">
             {selectedItems.map((item, index) => {
@@ -542,10 +552,10 @@ export default function KonfiguratorFlatDoubleInline({
               </Button>
             </div>
           </div>
-        </Card>
-      </div>
-    );
-  }
+          </Card>
+          </div>
+          );
+          }
 
   return (
     <div className="mt-8 relative">
