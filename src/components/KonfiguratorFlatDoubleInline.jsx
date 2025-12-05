@@ -538,9 +538,9 @@ export default function KonfiguratorFlatDoubleInline({
                                     </div>
                                   </div>
                     )}
-                    <div className={`flex justify-between items-center py-1 px-2 rounded ${isBase ? 'bg-blue-200 my-0.5' : item.selected ? 'bg-slate-50 hover:bg-slate-100' : 'opacity-40'}`}>
-                          <span className={`${isBase ? 'text-blue-950 font-extrabold text-base' : item.selected ? 'text-gray-800 font-bold text-sm' : 'text-gray-400 line-through text-sm'} flex-1 pr-1 truncate`}>{item.name}</span>
-                          <span className={`${isBase ? 'text-blue-950 text-base' : item.selected ? 'text-green-700 text-sm' : 'text-gray-400 text-sm'} font-extrabold whitespace-nowrap`}>
+                    <div className={`flex justify-between items-center py-1 px-2 rounded ${isBase ? 'bg-blue-200 my-0.5' : item.selected ? 'bg-slate-50 hover:bg-slate-100' : ''}`}>
+                          <span className={`${isBase ? 'text-blue-950 font-extrabold text-base' : item.selected ? 'text-gray-800 font-bold text-sm' : 'text-gray-600 line-through text-sm'} flex-1 pr-1 truncate`}>{item.name}</span>
+                          <span className={`${isBase ? 'text-blue-950 text-base' : item.selected ? 'text-green-700 text-sm' : 'text-gray-600 text-sm'} font-extrabold whitespace-nowrap`}>
                             {item.selected ? formatPrice(item.price) : '—'}
                           </span>
                         </div>
