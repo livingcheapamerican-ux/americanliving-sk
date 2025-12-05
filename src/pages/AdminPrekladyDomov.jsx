@@ -151,7 +151,7 @@ ${text}`,
     );
   }
 
-  const domyWithoutTranslations = domy.filter(dom => dom.popis && !dom.popis_en);
+  const domyWithoutTranslations = domy.filter(dom => dom.popis && (!dom.popis_de || !dom.popis_fr || !dom.popis_sr || !dom.popis_hr || !dom.popis_el));
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
