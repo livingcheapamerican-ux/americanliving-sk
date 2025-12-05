@@ -503,44 +503,44 @@ export default function KonfiguratorFlatDoubleInline({
                 return (
                   <React.Fragment key={index}>
                     {showHrubaDivider && (
-                      <div className="py-0">
+                      <div className="py-0.5">
                                     <div className="border-t border-amber-400"></div>
                                     <div className="flex items-center gap-1 px-1">
-                                      <Package className="w-2.5 h-2.5 text-amber-800" />
-                                      <span className="text-[10px] font-bold text-amber-950 uppercase">{t('roughConstruction')}</span>
+                                      <Package className="w-3 h-3 text-amber-800" />
+                                      <span className="text-xs font-bold text-amber-950 uppercase">{t('roughConstruction')}</span>
                                     </div>
                                   </div>
                     )}
                     {showHolodomDivider && (
-                      <div className="py-0">
+                      <div className="py-0.5">
                                     <div className="border-t border-blue-400"></div>
                                     <div className="flex items-center gap-1 px-1">
-                                      <Hammer className="w-2.5 h-2.5 text-blue-800" />
-                                      <span className="text-[10px] font-bold text-blue-950 uppercase">{t('holodomLabel')}</span>
+                                      <Hammer className="w-3 h-3 text-blue-800" />
+                                      <span className="text-xs font-bold text-blue-950 uppercase">{t('holodomLabel')}</span>
                                     </div>
                                   </div>
                     )}
                     {showKlucDivider && (
-                      <div className="py-0">
+                      <div className="py-0.5">
                                     <div className="border-t border-emerald-400"></div>
                                     <div className="flex items-center gap-1 px-1">
-                                      <Key className="w-2.5 h-2.5 text-emerald-800" />
-                                      <span className="text-[10px] font-bold text-emerald-950 uppercase">{t('turnkeyLabel')}</span>
+                                      <Key className="w-3 h-3 text-emerald-800" />
+                                      <span className="text-xs font-bold text-emerald-950 uppercase">{t('turnkeyLabel')}</span>
                                     </div>
                                   </div>
                     )}
                     {showDocsDivider && (
-                      <div className="py-0">
+                      <div className="py-0.5">
                                     <div className="border-t border-purple-400"></div>
                                     <div className="flex items-center gap-1 px-1">
-                                      <FileText className="w-2.5 h-2.5 text-purple-800" />
-                                      <span className="text-[10px] font-bold text-purple-950 uppercase">{t('documentationLabel')}</span>
+                                      <FileText className="w-3 h-3 text-purple-800" />
+                                      <span className="text-xs font-bold text-purple-950 uppercase">{t('documentationLabel')}</span>
                                     </div>
                                   </div>
                     )}
-                    <div className={`flex justify-between items-center py-0.5 px-1.5 rounded ${isBase ? 'bg-blue-200 my-0.5' : item.selected ? 'bg-slate-50 hover:bg-slate-100' : 'opacity-40'}`}>
-                          <span className={`${isBase ? 'text-blue-950 font-extrabold text-sm' : item.selected ? 'text-gray-900 font-semibold text-xs' : 'text-gray-500 line-through text-xs'} flex-1 pr-1 truncate`}>{item.name}</span>
-                          <span className={`${isBase ? 'text-blue-950 text-sm' : item.selected ? 'text-green-800 text-xs' : 'text-gray-500 text-xs'} font-extrabold whitespace-nowrap`}>
+                    <div className={`flex justify-between items-center py-1 px-2 rounded ${isBase ? 'bg-blue-200 my-0.5' : item.selected ? 'bg-slate-50 hover:bg-slate-100' : 'opacity-40'}`}>
+                          <span className={`${isBase ? 'text-blue-950 font-extrabold text-base' : item.selected ? 'text-gray-900 font-semibold text-sm' : 'text-gray-500 line-through text-sm'} flex-1 pr-1 truncate`}>{item.name}</span>
+                          <span className={`${isBase ? 'text-blue-950 text-base' : item.selected ? 'text-green-800 text-sm' : 'text-gray-500 text-sm'} font-extrabold whitespace-nowrap`}>
                             {item.selected ? formatPrice(item.price) : '—'}
                           </span>
                         </div>
