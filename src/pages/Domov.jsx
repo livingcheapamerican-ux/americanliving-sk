@@ -230,11 +230,11 @@ export default function Domov() {
         <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
           <div className="max-w-2xl text-white">
             {/* Logo v hero sekcii */}
-            <div className="mb-3 sm:mb-6">
+            <div className="mb-4 sm:mb-8">
               <img 
                 src={LOGO_URL} 
                 alt="American Living" 
-                className="h-12 sm:h-20 md:h-24 lg:h-28 w-auto drop-shadow-2xl"
+                className="h-20 sm:h-32 md:h-40 lg:h-48 w-auto drop-shadow-2xl"
               />
             </div>
             <h1 className="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-4 leading-tight drop-shadow-lg">
@@ -348,11 +348,11 @@ export default function Domov() {
         <div className="container mx-auto px-2 sm:px-4">
           <div className="text-center mb-4 sm:mb-10">
               {/* Logo */}
-              <div className="flex justify-center mb-3 sm:mb-6">
+              <div className="flex justify-center mb-4 sm:mb-8">
                 <img 
                   src={LOGO_URL} 
                   alt="American Living" 
-                  className="h-14 sm:h-20 md:h-24 w-auto"
+                  className="h-20 sm:h-32 md:h-40 w-auto"
                 />
               </div>
               <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1.5 sm:mb-3">
@@ -408,11 +408,11 @@ export default function Domov() {
           <div className="container mx-auto px-2 sm:px-4">
             <div className="text-center mb-4 sm:mb-10">
                 {/* Logo */}
-                <div className="flex justify-center mb-2 sm:mb-4">
+                <div className="flex justify-center mb-3 sm:mb-6">
                   <img 
                     src={LOGO_URL} 
                     alt="American Living" 
-                    className="h-10 sm:h-14 md:h-16 w-auto opacity-80"
+                    className="h-16 sm:h-24 md:h-32 w-auto"
                   />
                 </div>
                 <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1.5">
@@ -498,12 +498,12 @@ export default function Domov() {
         <div className="container mx-auto px-2 sm:px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             {/* Logo */}
-            <div className="flex justify-center mb-4 sm:mb-6">
-              <div className="bg-white p-3 sm:p-4 rounded-xl shadow-2xl">
+            <div className="flex justify-center mb-6 sm:mb-8">
+              <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-2xl">
                 <img 
                   src={LOGO_URL} 
                   alt="American Living" 
-                  className="h-12 sm:h-16 md:h-20 w-auto"
+                  className="h-20 sm:h-28 md:h-36 w-auto"
                 />
               </div>
             </div>
