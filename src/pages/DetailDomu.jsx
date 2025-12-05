@@ -17,6 +17,7 @@ import KonfiguratorFlatDoubleInline from "../components/KonfiguratorFlatDoubleIn
 import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
 import KonfiguratorWizard from "../components/KonfiguratorWizard";
 import KonfiguratorFjord from "../components/KonfiguratorFjord";
+import KonfiguratorNord from "../components/KonfiguratorNord";
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
 
@@ -752,7 +753,7 @@ export default function DetailDomu() {
               />
             )}
 
-            {/* Konfigurátor pre Nord - rovnaké ceny ako Fjord */}
+            {/* Konfigurátor pre Nord - vlastné ceny */}
             {isProstoHouse && dom.nazov?.includes("Nord") && (
               <KonfiguratorWizard 
                 key={wizardKey}
@@ -811,7 +812,7 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-                useFjordPrices={true}
+                useNordPrices={true}
               />
             )}
 
