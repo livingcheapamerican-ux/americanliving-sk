@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,8 +9,10 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Phone, Mail, Clock, Send, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { useLanguage } from "../components/LanguageContext";
 
 export default function Kontakt() {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     meno: "",
     email: "",
@@ -43,23 +44,23 @@ export default function Kontakt() {
   const kontaktInfo = [
     {
       icon: Phone,
-      nazov: "Telefón",
-      hodnota: "+421 905 138 124", // Updated phone number
-      link: "tel:+421905138124", // Updated phone link
-      popis: "Po-Pia 8:00 - 17:00"
+      nazov: t('phone'),
+      hodnota: "+421 905 138 124",
+      link: "tel:+421905138124",
+      popis: `${t('monFri')} 8:00 - 17:00`
     },
     {
       icon: Mail,
-      nazov: "Email",
+      nazov: t('email'),
       hodnota: "info@americanliving.sk",
       link: "mailto:info@americanliving.sk",
-      popis: "Odpovieme do 24 hodín"
+      popis: t('weWillRespond')
     },
     {
       icon: Clock,
-      nazov: "Otváracie hodiny",
-      hodnota: "Po-Pia: 8:00 - 17:00",
-      popis: "Víkend: Po dohode"
+      nazov: t('openingHours'),
+      hodnota: `${t('monFri')}: 8:00 - 17:00`,
+      popis: t('weekend')
     }
   ];
 
@@ -74,11 +75,10 @@ export default function Kontakt() {
             className="max-w-3xl"
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Kontaktujte nás
+              {t('contactUsTitle')}
             </h1>
             <p className="text-xl text-blue-100">
-              Radi vám poradíme, zodpovieme otázky a pripravíme nezáväznú ponuku. 
-              Postaráme sa o všetko od výberu pozemku až po kolaudáciu.
+              {t('contactUsSubtitle')}
             </p>
           </motion.div>
         </div>
@@ -93,13 +93,13 @@ export default function Kontakt() {
           >
             <Card className="p-8 shadow-xl">
               {!submitted ? (
-                <>
-                  <h2 className="text-2xl font-bold text-primary mb-6">
-                    Napíšte nám
-                  </h2>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                      <Label htmlFor="meno">Meno a priezvisko *</Label>
+                  <>
+                    <h2 className="text-2xl font-bold text-primary mb-6">
+                      {t('writeUs')}
+                    </h2>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div>
+                        <Label htmlFor="meno">{t('name')} *</Label>
                       <Input
                         id="meno"
                         required
@@ -111,7 +111,7 @@ export default function Kontakt() {
                     </div>
 
                     <div>
-                      <Label htmlFor="email">Email *</Label>
+                      <Label htmlFor="email">{t('email')} *</Label>
                       <Input
                         id="email"
                         type="email"
@@ -124,7 +124,7 @@ export default function Kontakt() {
                     </div>
 
                     <div>
-                      <Label htmlFor="telefon">Telefón *</Label>
+                      <Label htmlFor="telefon">{t('phone')} *</Label>
                       <Input
                         id="telefon"
                         required
@@ -136,7 +136,7 @@ export default function Kontakt() {
                     </div>
 
                     <div>
-                      <Label htmlFor="typ">Typ dopytu</Label>
+                      <Label htmlFor="typ">{t('inquiryType')}</Label>
                       <Select 
                         value={formData.typ_dopytu} 
                         onValueChange={(value) => setFormData({ ...formData, typ_dopytu: value })}
@@ -145,16 +145,16 @@ export default function Kontakt() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="vseobecny">Všeobecný dopyt</SelectItem>
-                          <SelectItem value="cenova_ponuka">Cenová ponuka</SelectItem>
-                          <SelectItem value="financovanie">Financovanie</SelectItem>
-                          <SelectItem value="pozemok">Hľadám pozemok</SelectItem>
+                          <SelectItem value="vseobecny">{t('generalInquiry')}</SelectItem>
+                          <SelectItem value="cenova_ponuka">{t('priceOffer')}</SelectItem>
+                          <SelectItem value="financovanie">{t('financing')}</SelectItem>
+                          <SelectItem value="pozemok">{t('lookingForLand')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
                     <div>
-                      <Label htmlFor="poznamka">Vaša správa *</Label>
+                      <Label htmlFor="poznamka">{t('message')} *</Label>
                       <Textarea
                         id="poznamka"
                         required
@@ -167,40 +167,39 @@ export default function Kontakt() {
                     </div>
 
                     <Button
-                      type="submit"
-                      size="lg"
-                      className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold"
-                      disabled={createDopytMutation.isPending}
+                        type="submit"
+                        size="lg"
+                        className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold"
+                        disabled={createDopytMutation.isPending}
+                      >
+                        {createDopytMutation.isPending ? (
+                          t('sending')
+                        ) : (
+                          <>
+                            {t('sendMessage')}
+                            <Send className="ml-2 w-5 h-5" />
+                          </>
+                        )}
+                      </Button>
+                    </form>
+                    </>
+                    ) : (
+                    <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center py-12"
                     >
-                      {createDopytMutation.isPending ? (
-                        "Odosiela sa..."
-                      ) : (
-                        <>
-                          Odoslať správu
-                          <Send className="ml-2 w-5 h-5" />
-                        </>
-                      )}
-                    </Button>
-                  </form>
-                </>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-12"
-                >
-                  <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <CheckCircle className="w-10 h-10 text-green-600" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-primary mb-4">
-                    Ďakujeme za vašu správu!
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Vaša správa bola úspešne odoslaná. Ozveme sa vám čo najskôr, 
-                    zvyčajne do 24 hodín.
-                  </p>
-                </motion.div>
-              )}
+                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle className="w-10 h-10 text-green-600" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-primary mb-4">
+                      {t('thankYou')}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      {t('messageSuccess')}
+                    </p>
+                    </motion.div>
+                    )}
             </Card>
           </motion.div>
 
@@ -212,7 +211,7 @@ export default function Kontakt() {
           >
             <div>
               <h2 className="text-2xl font-bold text-primary mb-6">
-                Kontaktné informácie
+                {t('contactInfo')}
               </h2>
               <div className="space-y-4">
                 {kontaktInfo.map((info, index) => (
@@ -290,10 +289,10 @@ export default function Kontakt() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold text-primary mb-6">
-              Potrebujete rýchlu odpoveď?
+              {t('needQuickAnswer')}
             </h2>
             <p className="text-lg text-gray-600 mb-8">
-              Zavolajte nám priamo alebo napíšte email. Radi zodpovieme všetky vaše otázky.
+              {t('callOrEmail')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="tel:+421905138124"> {/* Updated phone link */}
