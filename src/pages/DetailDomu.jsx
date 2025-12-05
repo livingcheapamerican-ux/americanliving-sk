@@ -801,9 +801,10 @@ export default function DetailDomu() {
             {dom.specifikacia && (
               <Card className="p-6">
                 <h3 className="text-lg font-bold text-primary mb-4">{t('specification')}</h3>
-                <div className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
-                  {dom.specifikacia}
-                </div>
+                <TranslatedDescription 
+                  text={dom.specifikacia}
+                  className="text-gray-700 text-sm leading-relaxed whitespace-pre-line"
+                />
               </Card>
             )}
 
