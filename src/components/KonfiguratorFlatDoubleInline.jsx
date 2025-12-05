@@ -659,53 +659,59 @@ export default function KonfiguratorFlatDoubleInline({
                 isPriced={true}
                 tooltip={t('interiorDrywall')}
               />
-              </div>
+            </div>
 
-            <Tile
-              selected={elektroinstalacia}
-              onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); setElektroinstalacia(!elektroinstalacia); }}
-              icon={Zap}
-              iconColor="text-yellow-400"
-              iconSelectedColor="text-yellow-600"
-              title={t('electrical')}
-              subtitle={t('wiring')}
-              price="+ 7 400 €"
-              isPriced={true}
-              selectedBg="bg-yellow-100"
-              selectedBorder="border-yellow-500"
-              selectedRing="ring-yellow-300"
-              hoverBorder="hover:border-yellow-300"
-              tooltip={t('electricalFull')}
-            />
+            {/* Inštalácie - skupina */}
+            <div className="col-span-2 sm:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-3 border-4 border-yellow-400 rounded-xl bg-yellow-50/50 shadow-md">
+              <p className="col-span-2 text-[10px] sm:text-xs font-bold text-yellow-800 -mb-1 flex items-center gap-1">
+                <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                {t('electrical')} & {t('water')}
+              </p>
+              <Tile
+                selected={elektroinstalacia}
+                onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); setElektroinstalacia(!elektroinstalacia); }}
+                icon={Zap}
+                iconColor="text-yellow-500"
+                iconSelectedColor="text-yellow-600"
+                title={t('electrical')}
+                subtitle={t('wiring')}
+                price="+ 7 400 €"
+                isPriced={true}
+                selectedBg="bg-yellow-100"
+                selectedBorder="border-yellow-500"
+                selectedRing="ring-yellow-300"
+                hoverBorder="hover:border-yellow-300"
+                tooltip={t('electricalFull')}
+              />
 
-            <Tile
-              selected={vodaKanalizacia}
-              onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); setVodaKanalizacia(!vodaKanalizacia); }}
-              icon={Droplets}
-              iconColor="text-blue-400"
-              iconSelectedColor="text-blue-600"
-              title={t('water')}
-              subtitle={t('wiring')}
-              price="+ 2 380 €"
-              isPriced={true}
-              tooltip={t('waterFull')}
-            />
+              <Tile
+                selected={vodaKanalizacia}
+                onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); setVodaKanalizacia(!vodaKanalizacia); }}
+                icon={Droplets}
+                iconColor="text-blue-400"
+                iconSelectedColor="text-blue-600"
+                title={t('water')}
+                subtitle={t('wiring')}
+                price="+ 2 380 €"
+                isPriced={true}
+                tooltip={t('waterFull')}
+              />
 
-            <Tile
-              selected={sanitaKomplet}
-              onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); setSanitaKomplet(!sanitaKomplet); }}
-              icon={ShowerHead}
-              iconColor="text-blue-400"
-              iconSelectedColor="text-blue-600"
-              title={t('sanitary')}
-              subtitle={t('complete')}
-              price="+ 1 169 €"
-              isPriced={true}
-              tooltip={t('sanitaryFull')}
-            />
+              <Tile
+                selected={sanitaKomplet}
+                onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); setSanitaKomplet(!sanitaKomplet); }}
+                icon={ShowerHead}
+                iconColor="text-blue-400"
+                iconSelectedColor="text-blue-600"
+                title={t('sanitary')}
+                subtitle={t('complete')}
+                price="+ 1 169 €"
+                isPriced={true}
+                tooltip={t('sanitaryFull')}
+              />
 
-            <Tile
-              selected={bojler}
+              <Tile
+                selected={bojler}
               onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }}
               icon={Flame}
               iconColor="text-orange-400"
@@ -762,57 +768,6 @@ export default function KonfiguratorFlatDoubleInline({
               tooltip={t('recuperation')}
             />
             </div>
-
-            <Tile
-              selected={pripojkaSiete}
-              onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }}
-              icon={Flame}
-              iconColor="text-orange-400"
-              iconSelectedColor="text-orange-600"
-              title={t('boiler')}
-              subtitle={t('boilerElectric')}
-              price="+ 246 €"
-              isPriced={true}
-              selectedBg="bg-orange-100"
-              selectedBorder="border-orange-500"
-              selectedRing="ring-orange-300"
-              hoverBorder="hover:border-orange-300"
-              tooltip={t('boiler')}
-            />
-
-            <Tile
-              selected={tepelneCerpadlo}
-              onClick={(e) => { if (!tepelneCerpadlo) triggerAnimation("klimatizacia", e.currentTarget); setTepelneCerpadlo(!tepelneCerpadlo); }}
-              icon={ThermometerSun}
-              iconColor="text-red-500"
-              iconSelectedColor="text-green-600"
-              title={t('heatPump')}
-              subtitle={t('units5')}
-              price="+ 5 535 €"
-              isPriced={true}
-              isA0={true}
-              selectedBg="bg-green-100"
-              selectedBorder="border-green-500"
-              selectedRing="ring-green-300"
-              tooltip={t('heatPumpFull')}
-            />
-
-            <Tile
-              selected={rekuperacia}
-              onClick={(e) => { if (!rekuperacia) triggerAnimation("rekuperacia", e.currentTarget); setRekuperacia(!rekuperacia); }}
-              icon={Wind}
-              iconColor="text-cyan-500"
-              iconSelectedColor="text-green-600"
-              title={t('recuperation')}
-              subtitle={t('units5')}
-              price="+ 2 700 €"
-              isPriced={true}
-              isA0={true}
-              selectedBg="bg-green-100"
-              selectedBorder="border-green-500"
-              selectedRing="ring-green-300"
-              tooltip={t('recuperation')}
-            />
 
             <Tile
               selected={pripojkaSiete}
