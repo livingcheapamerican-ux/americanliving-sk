@@ -1,0 +1,264 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useMutation } from "@tanstack/react-query";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Send, CheckCircle, Package, Hammer, Key, FileText, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+
+export default function KonfiguratorContactModal({ 
+  isOpen, 
+  onClose, 
+  dom,
+  totalPrice,
+  selectedItems,
+  vonkajsiaFasada
+}) {
+  const [formData, setFormData] = useState({
+    meno: "",
+    email: "",
+    telefon: "",
+    poznamka: ""
+  });
+  const [submitted, setSubmitted] = useState(false);
+
+  const formatPrice = (price) => price?.toLocaleString('sk-SK') + " €";
+
+  // Vyber správny obrázok podľa fasády
+  const getHouseImage = () => {
+    if (vonkajsiaFasada === "suchana") {
+      return dom?.hlavny_obrazok;
+    } else {
+      return dom?.zakladna_konfiguracia_obrazok || dom?.hlavny_obrazok;
+    }
+  };
+
+  const createDopytMutation = useMutation({
+    mutationFn: (data) => base44.entities.Dopyt.create(data),
+    onSuccess: () => {
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({ meno: "", email: "", telefon: "", poznamka: "" });
+        onClose();
+      }, 3000);
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Vytvor súhrn konfigurácie
+    const konfiguracnySuhrn = selectedItems
+      ?.filter(item => item.selected && item.price > 0)
+      .map(item => `${item.name}: ${formatPrice(item.price)}`)
+      .join('\n');
+
+    createDopytMutation.mutate({
+      ...formData,
+      typ_dopytu: "konfigurator",
+      dom_id: dom?.id,
+      konfiguracny_kod: `Flat Double 142m² - ${formatPrice(totalPrice)}`,
+      poznamka: `${formData.poznamka}\n\n--- KONFIGURÁCIA ---\n${konfiguracnySuhrn}\n\nCELKOM: ${formatPrice(totalPrice)}`
+    });
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
+        {!submitted ? (
+          <div className="flex flex-col lg:flex-row">
+            {/* Ľavá strana - Obrázok a súhrn */}
+            <div className="lg:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-6 text-white">
+              <DialogHeader className="mb-4">
+                <DialogTitle className="text-xl sm:text-2xl font-bold text-white">
+                  Vaša konfigurácia
+                </DialogTitle>
+              </DialogHeader>
+
+              {/* Obrázok domu */}
+              <div className="relative rounded-xl overflow-hidden mb-4 bg-white">
+                <img 
+                  src={getHouseImage()} 
+                  alt={dom?.nazov || "Flat Double"} 
+                  className="w-full h-40 sm:h-48 object-contain"
+                />
+                <div className="absolute top-2 left-2">
+                  <Badge className={`${vonkajsiaFasada === "suchana" ? "bg-orange-500" : "bg-amber-600"} text-white text-xs`}>
+                    {vonkajsiaFasada === "suchana" ? "Škúchaná fasáda" : "Drevený obklad"}
+                  </Badge>
+                </div>
+              </div>
+
+              <h3 className="text-lg font-bold mb-3">Flat Double 142m²</h3>
+
+              {/* Súhrn položiek */}
+              <div className="bg-slate-800/50 rounded-xl p-3 border border-slate-700/50 max-h-[200px] sm:max-h-[250px] overflow-y-auto text-sm">
+                {selectedItems?.map((item, index) => {
+                  const isBase = item.section === "base";
+                  const prevItem = selectedItems[index - 1];
+                  const showHrubaDivider = item.section === "hruba" && (!prevItem || prevItem.section === "base");
+                  const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
+                  const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
+                  const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
+                  
+                  if (!item.selected && !isBase) return null;
+                  
+                  return (
+                    <React.Fragment key={index}>
+                      {showHrubaDivider && (
+                        <div className="flex items-center gap-2 py-1 mt-2">
+                          <Package className="w-3 h-3 text-amber-400" />
+                          <span className="text-[10px] font-bold text-amber-400 uppercase">Hrubá stavba</span>
+                        </div>
+                      )}
+                      {showHolodomDivider && (
+                        <div className="flex items-center gap-2 py-1 mt-2">
+                          <Hammer className="w-3 h-3 text-blue-400" />
+                          <span className="text-[10px] font-bold text-blue-400 uppercase">Holodom</span>
+                        </div>
+                      )}
+                      {showKlucDivider && (
+                        <div className="flex items-center gap-2 py-1 mt-2">
+                          <Key className="w-3 h-3 text-emerald-400" />
+                          <span className="text-[10px] font-bold text-emerald-400 uppercase">Dom na kľúč</span>
+                        </div>
+                      )}
+                      {showDocsDivider && (
+                        <div className="flex items-center gap-2 py-1 mt-2">
+                          <FileText className="w-3 h-3 text-purple-400" />
+                          <span className="text-[10px] font-bold text-purple-400 uppercase">Dokumentácia</span>
+                        </div>
+                      )}
+                      {item.selected && (
+                        <div className={`flex justify-between items-center py-1 px-2 rounded text-xs ${isBase ? 'bg-blue-500/20 border border-blue-500/30 my-1' : ''}`}>
+                          <span className={`${isBase ? 'text-blue-300 font-semibold' : 'text-slate-300'} flex-1 pr-2 truncate`}>{item.name}</span>
+                          <span className={`${isBase ? 'text-blue-300' : 'text-green-400'} font-semibold whitespace-nowrap`}>
+                            {formatPrice(item.price)}
+                          </span>
+                        </div>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+
+              {/* Celková cena */}
+              <div className="mt-4 p-3 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30">
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-300 text-sm">Celkom s DPH</span>
+                  <span className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+                    {formatPrice(totalPrice)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Pravá strana - Formulár */}
+            <div className="lg:w-1/2 p-4 sm:p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">
+                Kontaktné údaje
+              </h3>
+              <p className="text-gray-600 text-sm mb-6">
+                Vyplňte formulár a my vás budeme kontaktovať s podrobnou ponukou.
+              </p>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <Label htmlFor="meno">Meno a priezvisko *</Label>
+                  <Input
+                    id="meno"
+                    required
+                    value={formData.meno}
+                    onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
+                    placeholder="Ján Novák"
+                    className="mt-1"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="email">Email *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="jan.novak@email.sk"
+                    className="mt-1"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="telefon">Telefón *</Label>
+                  <Input
+                    id="telefon"
+                    required
+                    value={formData.telefon}
+                    onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
+                    placeholder="+421 900 123 456"
+                    className="mt-1"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="poznamka">Poznámka (voliteľné)</Label>
+                  <Textarea
+                    id="poznamka"
+                    value={formData.poznamka}
+                    onChange={(e) => setFormData({ ...formData, poznamka: e.target.value })}
+                    placeholder="Máte otázky alebo špeciálne požiadavky?"
+                    rows={3}
+                    className="mt-1"
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold"
+                  disabled={createDopytMutation.isPending}
+                >
+                  {createDopytMutation.isPending ? (
+                    "Odosiela sa..."
+                  ) : (
+                    <>
+                      <Send className="mr-2 w-5 h-5" />
+                      Odoslať dopyt
+                    </>
+                  )}
+                </Button>
+              </form>
+            </div>
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center py-12 px-6"
+          >
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-10 h-10 text-green-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">
+              Ďakujeme za váš záujem!
+            </h3>
+            <p className="text-gray-600 leading-relaxed">
+              Vaša konfigurácia bola úspešne odoslaná. Ozveme sa vám čo najskôr, 
+              zvyčajne do 24 hodín.
+            </p>
+          </motion.div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
