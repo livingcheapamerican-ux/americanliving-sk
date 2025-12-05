@@ -320,9 +320,9 @@ export default function KonfiguratorFlatDoubleInline({
     items.push({ name: "Tónované sklá (Solar)", price: tonovaneSkla ? CENY.tonovaneSkla : 0, section: "holodom", selected: tonovaneSkla });
     
     // Dom na kľúč
-    const fasadaLabel = vonkajsiaFasada === "suchana" ? "Škúchaná fasáda" : "Vonkajšia fasáda (štandard)";
+    const fasadaLabel = vonkajsiaFasada === "suchana" ? "Škúchaná fasáda" : vonkajsiaFasada === "standard" ? "Fasáda Drevo/Plech" : "Fasáda (nevybraná)";
     const fasadaPrice = vonkajsiaFasada === "suchana" ? CENY.vonkajsiaFasada.suchana : 0;
-    items.push({ name: fasadaLabel, price: fasadaPrice, section: "kluc", selected: vonkajsiaFasada !== "standard" });
+    items.push({ name: fasadaLabel, price: fasadaPrice, section: "kluc", selected: !!vonkajsiaFasada });
 
     items.push({ name: "Vnútorné podlahy - laminát", price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
     items.push({ name: "Elektrické podlahové vykurovanie s WiFi termostatom", price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
@@ -880,16 +880,18 @@ export default function KonfiguratorFlatDoubleInline({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
             {/* Fasáda - skupina */}
-            <div className="col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-2 border-2 border-dashed border-gray-400 rounded-xl bg-gray-50/50">
-              <p className="col-span-2 text-[10px] sm:text-xs font-semibold text-gray-600 -mb-1">Fasáda (vyberte jednu)</p>
+            <div className={`col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-2 border-2 rounded-xl ${!vonkajsiaFasada ? 'border-red-400 bg-red-50/50 border-dashed' : 'border-dashed border-gray-400 bg-gray-50/50'}`}>
+              <p className={`col-span-2 text-[10px] sm:text-xs font-semibold -mb-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-gray-600'}`}>
+                Fasáda (vyberte jednu) {!vonkajsiaFasada && <span className="text-red-500">*povinné</span>}
+              </p>
               <Tile
                 selected={vonkajsiaFasada === "standard"}
                 onClick={() => setVonkajsiaFasada("standard")}
                 icon={Paintbrush}
-                iconColor="text-gray-400"
+                iconColor="text-amber-500"
                 iconSelectedColor="text-emerald-600"
-                title="Fasáda štd."
-                subtitle="Drevo/Plech"
+                title="Drevo/Plech"
+                subtitle="Štandardná"
                 price="+ 0 €"
                 isPriced={false}
                 selectedBg="bg-emerald-100"
