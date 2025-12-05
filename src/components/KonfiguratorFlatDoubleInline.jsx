@@ -580,6 +580,11 @@ export default function KonfiguratorFlatDoubleInline({
           );
           }
 
+  // Určenie, ktoré sekcie zobraziť
+  const showHolodom = !showOnlyPhase || showOnlyPhase === "holodom";
+  const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
+  const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
+
   return (
     <div className="mt-8 relative">
       {/* Flying animations container */}
@@ -591,7 +596,7 @@ export default function KonfiguratorFlatDoubleInline({
         {/* ═══════════════════════════════════════════════════════════════════════
           FÁZA 2: HOLODOM (Montáž, Inštalácie, Okná/Dvere)
           ═══════════════════════════════════════════════════════════════════════ */}
-        <motion.div
+        {showHolodom && <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
@@ -1124,12 +1129,12 @@ export default function KonfiguratorFlatDoubleInline({
 
         </div>
         </Card>
-        </motion.div>
+        </motion.div>}
 
         {/* ═══════════════════════════════════════════════════════════════════════
           FINÁLNY CENOVÝ SÚHRN
           ═══════════════════════════════════════════════════════════════════════ */}
-        <motion.div
+        {!showOnlyPhase && <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.4 }}
@@ -1246,9 +1251,9 @@ export default function KonfiguratorFlatDoubleInline({
           </div>
         </div>
         </Card>
-      </motion.div>
-      </div>
-      </div>
-    </div>
-  );
-}
+        </motion.div>}
+        </div>
+        </div>
+        </div>
+        );
+        }
