@@ -60,7 +60,7 @@ const StepTypStavby = ({ typStavby, setTypStavby, onNext }) => {
             </li>
             <li className="flex items-center gap-2">
               <Check className="w-4 h-4 text-amber-500" />
-              Štandardná izolácia 150/200mm
+              Celoročná izolácia 150/200mm
             </li>
             <li className="flex items-center gap-2">
               <Check className="w-4 h-4 text-amber-500" />
@@ -73,7 +73,7 @@ const StepTypStavby = ({ typStavby, setTypStavby, onNext }) => {
           </ul>
           <div className="mt-4 pt-4 border-t border-amber-200">
             <p className="text-xs text-gray-500">
-              Vhodné pre víkendové bývanie a rekreáciu
+              Spĺňa parametre rekreačnej stavby
             </p>
           </div>
         </motion.div>
