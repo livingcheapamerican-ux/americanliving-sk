@@ -39,7 +39,12 @@ export default function AdminPrekladyDomov() {
       en: 'English',
       hu: 'Hungarian', 
       pl: 'Polish',
-      uk: 'Ukrainian'
+      uk: 'Ukrainian',
+      de: 'German',
+      fr: 'French',
+      sr: 'Serbian',
+      hr: 'Croatian',
+      el: 'Greek'
     };
 
     const result = await base44.integrations.Core.InvokeLLM({
@@ -64,8 +69,8 @@ ${text}`,
     setProgress(0);
     setLogs([]);
     
-    const languages = ['en', 'hu', 'pl', 'uk'];
-    const domyToTranslate = domy.filter(dom => dom.popis && !dom.popis_en);
+    const languages = ['en', 'hu', 'pl', 'uk', 'de', 'fr', 'sr', 'hr', 'el'];
+    const domyToTranslate = domy.filter(dom => dom.popis && (!dom.popis_de || !dom.popis_fr || !dom.popis_sr || !dom.popis_hr || !dom.popis_el));
     
     addLog(`Začínam preklad ${domyToTranslate.length} domov...`, "info");
 
@@ -129,7 +134,7 @@ ${text}`,
   };
 
   const getTranslationStatus = (dom) => {
-    const fields = ['popis_en', 'popis_hu', 'popis_pl', 'popis_uk'];
+    const fields = ['popis_en', 'popis_hu', 'popis_pl', 'popis_uk', 'popis_de', 'popis_fr', 'popis_sr', 'popis_hr', 'popis_el'];
     const filled = fields.filter(f => dom[f]).length;
     return { filled, total: fields.length };
   };
@@ -183,7 +188,7 @@ ${text}`,
             <div>
               <h3 className="font-bold text-lg">Spustiť preklad</h3>
               <p className="text-sm text-gray-500">
-                Preloží popisy a špecifikácie do EN, HU, PL, UK
+                Preloží popisy a špecifikácie do EN, HU, PL, UK, DE, FR, SR, HR, EL
               </p>
             </div>
             <Button 
