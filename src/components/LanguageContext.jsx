@@ -478,6 +478,271 @@ const translations = {
     callOrEmail: "Zavolajte nám priamo alebo napíšte email. Radi zodpovieme všetky vaše otázky.",
   },
   
+  de: {
+    // Navigation
+    home: "Startseite",
+    catalog: "Hauskatalog",
+    gallery: "Realisierungsgalerie",
+    configurator: "Konfigurator",
+    about: "Über uns",
+    contact: "Kontakt",
+    
+    // Common
+    price: "Preis",
+    priceFrom: "Preis ab",
+    withVAT: "inkl. MwSt.",
+    total: "Gesamt",
+    totalWithVAT: "Gesamt inkl. MwSt.",
+    reset: "Zurücksetzen",
+    interested: "Ich bin interessiert",
+    interestedInConfig: "Ich bin an dieser Konfiguration interessiert",
+    back: "Zurück",
+    backToCatalog: "Zurück zum Katalog",
+    close: "Schließen",
+    save: "Speichern",
+    cancel: "Abbrechen",
+    send: "Senden",
+    loading: "Laden...",
+    
+    // House types
+    modular: "Modulhaus",
+    prefab: "Fertighaus",
+    mobile: "Mobilhaus",
+    yearRound: "GANZJÄHRIG",
+    certificateA0: "ZERTIFIKAT A0",
+    
+    // Parameters
+    manufacturer: "Hersteller",
+    houseType: "Haustyp",
+    rooms: "Anzahl der Zimmer",
+    builtArea: "Bebaute Fläche",
+    usableArea: "Nutzfläche",
+    energyClass: "Energieklasse",
+    
+    // Contact
+    contactUs: "Kontaktieren Sie uns",
+    writeUs: "Schreiben Sie uns",
+    name: "Vollständiger Name",
+    email: "E-Mail",
+    phone: "Telefon",
+    message: "Ihre Nachricht",
+    sendMessage: "Nachricht senden",
+    thankYou: "Vielen Dank für Ihre Nachricht!",
+    messageSuccess: "Ihre Nachricht wurde erfolgreich gesendet. Wir werden uns so schnell wie möglich bei Ihnen melden, normalerweise innerhalb von 24 Stunden.",
+  },
+  
+  fr: {
+    // Navigation
+    home: "Accueil",
+    catalog: "Catalogue de maisons",
+    gallery: "Galerie de réalisations",
+    configurator: "Configurateur",
+    about: "À propos",
+    contact: "Contact",
+    
+    // Common
+    price: "Prix",
+    priceFrom: "Prix à partir de",
+    withVAT: "TVA incluse",
+    total: "Total",
+    totalWithVAT: "Total TTC",
+    reset: "Réinitialiser",
+    interested: "Je suis intéressé",
+    interestedInConfig: "Je suis intéressé par cette configuration",
+    back: "Retour",
+    backToCatalog: "Retour au catalogue",
+    close: "Fermer",
+    save: "Enregistrer",
+    cancel: "Annuler",
+    send: "Envoyer",
+    loading: "Chargement...",
+    
+    // House types
+    modular: "Maison modulaire",
+    prefab: "Maison préfabriquée",
+    mobile: "Maison mobile",
+    yearRound: "TOUTE L'ANNÉE",
+    certificateA0: "CERTIFICAT A0",
+    
+    // Parameters
+    manufacturer: "Fabricant",
+    houseType: "Type de maison",
+    rooms: "Nombre de pièces",
+    builtArea: "Surface bâtie",
+    usableArea: "Surface utile",
+    energyClass: "Classe énergétique",
+    
+    // Contact
+    contactUs: "Contactez-nous",
+    writeUs: "Écrivez-nous",
+    name: "Nom complet",
+    email: "E-mail",
+    phone: "Téléphone",
+    message: "Votre message",
+    sendMessage: "Envoyer le message",
+    thankYou: "Merci pour votre message!",
+    messageSuccess: "Votre message a été envoyé avec succès. Nous vous contacterons dès que possible, généralement dans les 24 heures.",
+  },
+  
+  sr: {
+    // Navigation
+    home: "Почетна",
+    catalog: "Каталог кућа",
+    gallery: "Галерија реализација",
+    configurator: "Конфигуратор",
+    about: "О нама",
+    contact: "Контакт",
+    
+    // Common
+    price: "Цена",
+    priceFrom: "Цена од",
+    withVAT: "са ПДВ-ом",
+    total: "Укупно",
+    totalWithVAT: "Укупно са ПДВ-ом",
+    reset: "Ресетуј",
+    interested: "Заинтересован сам",
+    interestedInConfig: "Заинтересован сам за ову конфигурацију",
+    back: "Назад",
+    backToCatalog: "Назад на каталог",
+    close: "Затвори",
+    save: "Сачувај",
+    cancel: "Откажи",
+    send: "Пошаљи",
+    loading: "Учитавање...",
+    
+    // House types
+    modular: "Модуларна кућа",
+    prefab: "Монтажна кућа",
+    mobile: "Мобилна кућа",
+    yearRound: "ЦЕЛОГОДИШЊЕ",
+    certificateA0: "СЕРТИФИКАТ A0",
+    
+    // Parameters
+    manufacturer: "Произвођач",
+    houseType: "Тип куће",
+    rooms: "Број соба",
+    builtArea: "Изграђена површина",
+    usableArea: "Корисна површина",
+    energyClass: "Енергетска класа",
+    
+    // Contact
+    contactUs: "Контактирајте нас",
+    writeUs: "Напишите нам",
+    name: "Пуно име",
+    email: "Е-пошта",
+    phone: "Телефон",
+    message: "Ваша порука",
+    sendMessage: "Пошаљи поруку",
+    thankYou: "Хвала на поруци!",
+    messageSuccess: "Ваша порука је успешно послата. Контактираћемо вас што пре, обично у року од 24 сата.",
+  },
+  
+  hr: {
+    // Navigation
+    home: "Početna",
+    catalog: "Katalog kuća",
+    gallery: "Galerija realizacija",
+    configurator: "Konfigurator",
+    about: "O nama",
+    contact: "Kontakt",
+    
+    // Common
+    price: "Cijena",
+    priceFrom: "Cijena od",
+    withVAT: "s PDV-om",
+    total: "Ukupno",
+    totalWithVAT: "Ukupno s PDV-om",
+    reset: "Resetiraj",
+    interested: "Zainteresiran sam",
+    interestedInConfig: "Zainteresiran sam za ovu konfiguraciju",
+    back: "Natrag",
+    backToCatalog: "Natrag na katalog",
+    close: "Zatvori",
+    save: "Spremi",
+    cancel: "Otkaži",
+    send: "Pošalji",
+    loading: "Učitavanje...",
+    
+    // House types
+    modular: "Modularna kuća",
+    prefab: "Montažna kuća",
+    mobile: "Mobilna kuća",
+    yearRound: "CJELOGODIŠNJE",
+    certificateA0: "CERTIFIKAT A0",
+    
+    // Parameters
+    manufacturer: "Proizvođač",
+    houseType: "Tip kuće",
+    rooms: "Broj soba",
+    builtArea: "Izgrađena površina",
+    usableArea: "Korisna površina",
+    energyClass: "Energetska klasa",
+    
+    // Contact
+    contactUs: "Kontaktirajte nas",
+    writeUs: "Napišite nam",
+    name: "Puno ime",
+    email: "E-mail",
+    phone: "Telefon",
+    message: "Vaša poruka",
+    sendMessage: "Pošalji poruku",
+    thankYou: "Hvala na poruci!",
+    messageSuccess: "Vaša poruka je uspješno poslana. Kontaktirat ćemo vas što prije, obično u roku od 24 sata.",
+  },
+  
+  el: {
+    // Navigation
+    home: "Αρχική",
+    catalog: "Κατάλογος σπιτιών",
+    gallery: "Γκαλερί υλοποιήσεων",
+    configurator: "Διαμορφωτής",
+    about: "Σχετικά με εμάς",
+    contact: "Επικοινωνία",
+    
+    // Common
+    price: "Τιμή",
+    priceFrom: "Τιμή από",
+    withVAT: "με ΦΠΑ",
+    total: "Σύνολο",
+    totalWithVAT: "Σύνολο με ΦΠΑ",
+    reset: "Επαναφορά",
+    interested: "Ενδιαφέρομαι",
+    interestedInConfig: "Ενδιαφέρομαι για αυτή τη διαμόρφωση",
+    back: "Πίσω",
+    backToCatalog: "Επιστροφή στον κατάλογο",
+    close: "Κλείσιμο",
+    save: "Αποθήκευση",
+    cancel: "Ακύρωση",
+    send: "Αποστολή",
+    loading: "Φόρτωση...",
+    
+    // House types
+    modular: "Προκατασκευασμένο σπίτι",
+    prefab: "Συναρμολογούμενο σπίτι",
+    mobile: "Κινητό σπίτι",
+    yearRound: "ΟΛΌΧΡΟΝΟ",
+    certificateA0: "ΠΙΣΤΟΠΟΙΗΤΙΚΌ A0",
+    
+    // Parameters
+    manufacturer: "Κατασκευαστής",
+    houseType: "Τύπος σπιτιού",
+    rooms: "Αριθμός δωματίων",
+    builtArea: "Δομημένη επιφάνεια",
+    usableArea: "Χρήσιμη επιφάνεια",
+    energyClass: "Ενεργειακή κλάση",
+    
+    // Contact
+    contactUs: "Επικοινωνήστε μαζί μας",
+    writeUs: "Γράψτε μας",
+    name: "Πλήρες όνομα",
+    email: "E-mail",
+    phone: "Τηλέφωνο",
+    message: "Το μήνυμά σας",
+    sendMessage: "Αποστολή μηνύματος",
+    thankYou: "Ευχαριστούμε για το μήνυμά σας!",
+    messageSuccess: "Το μήνυμά σας εστάλη με επιτυχία. Θα επικοινωνήσουμε μαζί σας το συντομότερο δυνατό, συνήθως εντός 24 ωρών.",
+  },
+  
   en: {
     // Navigation
     home: "Home",
