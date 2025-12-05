@@ -467,11 +467,11 @@ export default function KonfiguratorFlatDoubleInline({
       return (
         <div>
           <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
-            <div className="p-3 border-b border-slate-700/50">
+            <div className="p-3 border-b border-slate-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-green-400 text-[10px] font-semibold uppercase tracking-wider mb-0.5">{t('yourConfiguration')}</p>
-                  <h3 className="text-base font-bold text-white">Flat Double 142m²</h3>
+                  <p className="text-green-600 text-[10px] font-semibold uppercase tracking-wider mb-0.5">{t('yourConfiguration')}</p>
+                  <h3 className="text-base font-bold text-slate-800">Flat Double 142m²</h3>
                 </div>
               </div>
             </div>
@@ -504,56 +504,56 @@ export default function KonfiguratorFlatDoubleInline({
                   <React.Fragment key={index}>
                     {showHrubaDivider && (
                       <div className="py-1">
-                            <div className="border-t border-amber-500/50"></div>
-                            <div className="flex items-center gap-1.5 px-1 pt-1">
-                              <Package className="w-3 h-3 text-amber-400" />
-                              <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">{t('roughConstruction')}</span>
-                            </div>
-                          </div>
+                                    <div className="border-t border-amber-400"></div>
+                                    <div className="flex items-center gap-1.5 px-1 pt-1">
+                                      <Package className="w-3 h-3 text-amber-600" />
+                                      <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider">{t('roughConstruction')}</span>
+                                    </div>
+                                  </div>
                     )}
                     {showHolodomDivider && (
                       <div className="py-1">
-                            <div className="border-t border-blue-500/50"></div>
-                            <div className="flex items-center gap-1.5 px-1 pt-1">
-                              <Hammer className="w-3 h-3 text-blue-400" />
-                              <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">{t('holodomLabel')}</span>
-                            </div>
-                          </div>
+                                    <div className="border-t border-blue-400"></div>
+                                    <div className="flex items-center gap-1.5 px-1 pt-1">
+                                      <Hammer className="w-3 h-3 text-blue-600" />
+                                      <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider">{t('holodomLabel')}</span>
+                                    </div>
+                                  </div>
                     )}
                     {showKlucDivider && (
                       <div className="py-1">
-                            <div className="border-t border-emerald-500/50"></div>
-                            <div className="flex items-center gap-1.5 px-1 pt-1">
-                              <Key className="w-3 h-3 text-emerald-400" />
-                              <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">{t('turnkeyLabel')}</span>
-                            </div>
-                          </div>
+                                    <div className="border-t border-emerald-400"></div>
+                                    <div className="flex items-center gap-1.5 px-1 pt-1">
+                                      <Key className="w-3 h-3 text-emerald-600" />
+                                      <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">{t('turnkeyLabel')}</span>
+                                    </div>
+                                  </div>
                     )}
                     {showDocsDivider && (
                       <div className="py-1">
-                            <div className="border-t border-purple-500/50"></div>
-                            <div className="flex items-center gap-1.5 px-1 pt-1">
-                              <FileText className="w-3 h-3 text-purple-400" />
-                              <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider">{t('documentationLabel')}</span>
-                            </div>
-                          </div>
+                                    <div className="border-t border-purple-400"></div>
+                                    <div className="flex items-center gap-1.5 px-1 pt-1">
+                                      <FileText className="w-3 h-3 text-purple-600" />
+                                      <span className="text-[10px] font-bold text-purple-700 uppercase tracking-wider">{t('documentationLabel')}</span>
+                                    </div>
+                                  </div>
                     )}
-                    <div className={`flex justify-between items-center py-1 px-1.5 rounded text-xs ${isBase ? 'bg-blue-500/20 border border-blue-500/30 my-0.5' : item.selected ? 'hover:bg-slate-700/50' : 'opacity-40'}`}>
-                      <span className={`${isBase ? 'text-blue-300 font-bold text-sm' : item.selected ? 'text-slate-300 font-medium' : 'text-slate-500 line-through'} flex-1 pr-2 truncate`}>{item.name}</span>
-                      <span className={`${isBase ? 'text-blue-300 text-sm' : item.selected ? 'text-green-400' : 'text-slate-500'} font-bold whitespace-nowrap`}>
-                        {item.selected ? formatPrice(item.price) : '—'}
-                      </span>
-                    </div>
+                    <div className={`flex justify-between items-center py-1 px-1.5 rounded text-xs ${isBase ? 'bg-blue-100 border border-blue-300 my-0.5' : item.selected ? 'hover:bg-slate-100' : 'opacity-40'}`}>
+                          <span className={`${isBase ? 'text-blue-700 font-bold text-sm' : item.selected ? 'text-slate-700 font-medium' : 'text-slate-400 line-through'} flex-1 pr-2 truncate`}>{item.name}</span>
+                          <span className={`${isBase ? 'text-blue-700 text-sm' : item.selected ? 'text-green-600' : 'text-slate-400'} font-bold whitespace-nowrap`}>
+                            {item.selected ? formatPrice(item.price) : '—'}
+                          </span>
+                        </div>
                   </React.Fragment>
                 );
               })}
             </div>
 
             {/* Celková cena */}
-            <div className="p-3 bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-t border-green-500/20">
+            <div className="p-3 bg-gradient-to-br from-green-100 to-emerald-50 border-t border-green-300">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-slate-400 text-xs">{t('totalWithVATLabel')}</span>
-                <span className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+                <span className="text-slate-600 text-xs">{t('totalWithVATLabel')}</span>
+                <span className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">
                   {formatPrice(totalPrice)}
                 </span>
               </div>
@@ -567,11 +567,11 @@ export default function KonfiguratorFlatDoubleInline({
                     {t('interested')}
                   </Button>
                 <Button 
-                  size="sm" 
-                  variant="outline" 
-                  onClick={handleReset}
-                  className="w-full border-slate-600 text-slate-400 hover:bg-red-500/20 hover:border-red-500/50 hover:text-red-300 transition-all text-xs h-7"
-                >
+                    size="sm" 
+                    variant="outline" 
+                    onClick={handleReset}
+                    className="w-full border-slate-300 text-slate-500 hover:bg-red-50 hover:border-red-400 hover:text-red-600 transition-all text-xs h-7"
+                  >
                   <RotateCcw className="mr-1.5 w-3 h-3" />
                   {t('reset')}
                 </Button>
