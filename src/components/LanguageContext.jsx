@@ -17,7 +17,7 @@ const translations = {
     total: "Celkom",
     totalWithVAT: "Celkom s DPH",
     reset: "Resetovať",
-    interested: "Mám záujem",
+    interested: "Ukáž môj dom",
     interestedInConfig: "Mám záujem o túto konfiguráciu",
     back: "Späť",
     backToCatalog: "Späť do katalógu",
