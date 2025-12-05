@@ -491,7 +491,7 @@ export default function KonfiguratorFlatDoubleInline({
           />
 
             {/* Súhrn položiek - všetky položky */}
-            <div className="px-2 py-1">
+            <div className="px-2 py-1 max-h-[50vh] overflow-y-auto">
               {selectedItems.map((item, index) => {
                 const isBase = item.section === "base";
                 const prevItem = selectedItems[index - 1];
