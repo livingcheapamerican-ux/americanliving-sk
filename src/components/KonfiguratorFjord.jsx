@@ -173,9 +173,9 @@ export default function KonfiguratorFjord({
   // Cenník pre Fjord podľa obrázkov
   const CENY = {
     montaz: { nie: 0, ano: 17970 },
-    dvere: { ziadne: 0, kovove: 1990, plastove: 810 },
+    dvere: { ziadne: 0, kovove: 720, plastove: 660 },
     izolacia: { standard: 0, zvysena: 5799, premium: 11600 },
-    elektroinstalacia: 4100,
+    elektroinstalacia: 7400,
     vodaKanalizacia: 2380,
     sanitaKomplet: 1169,
     bojler: 246,
@@ -183,18 +183,18 @@ export default function KonfiguratorFjord({
     rekuperacia: 2700,
     zaklady: { bez: 0, skrutky: 8140, doska: 17946, pasove: 21079 },
     pripojkaSiete: 1501,
-    inziniering: 3000,
-    projektA0: 2600,
+    inziniering: 2592,
+    projektA0: 3500,
     interierFinis: { ziadne: 0, drevo: 16400, sadrokarton: 19475 },
     vonkajsiaFasada: { standard: 0, suchana: 12841 },
     povrchokaOkien: 3100,
-    vnutornePodlahy: 3500,
-    podlahovVykurovanie: 5190,
-    pergola: 1200,
+    vnutornePodlahy: 3351,
+    podlahovVykurovanie: 5525,
+    pergola: 1845,
     interieroveDvere: 250,
     tonovaneSkla: 1300,
     doprava: 0,
-    revizna: 12200,
+    revizna: 1000,
     stresneOkno: 760,
     bocneOknoFixne: 501,
     bocneOknoVyklopne90: 540,
@@ -577,7 +577,7 @@ export default function KonfiguratorFjord({
                         <span className="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
                         {t('electrical')} & {t('water')}
                       </p>
-                      <Tile selected={elektroinstalacia} onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); setElektroinstalacia(!elektroinstalacia); }} icon={Zap} iconColor="text-yellow-500" iconSelectedColor="text-yellow-600" title={t('electrical')} subtitle={t('wiring')} price="+ 4 100 €" isPriced={true} selectedBg="bg-yellow-100" selectedBorder="border-yellow-500" selectedRing="ring-yellow-300" hoverBorder="hover:border-yellow-300" tooltip={t('electricalFull')} />
+                      <Tile selected={elektroinstalacia} onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); setElektroinstalacia(!elektroinstalacia); }} icon={Zap} iconColor="text-yellow-500" iconSelectedColor="text-yellow-600" title={t('electrical')} subtitle={t('wiring')} price="+ 7 400 €" isPriced={true} selectedBg="bg-yellow-100" selectedBorder="border-yellow-500" selectedRing="ring-yellow-300" hoverBorder="hover:border-yellow-300" tooltip={t('electricalFull')} />
                       <Tile selected={vodaKanalizacia} onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); setVodaKanalizacia(!vodaKanalizacia); }} icon={Droplets} iconColor="text-blue-400" iconSelectedColor="text-blue-600" title={t('water')} subtitle={t('wiring')} price="+ 2 380 €" isPriced={true} tooltip={t('waterFull')} />
                       <Tile selected={sanitaKomplet} onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); setSanitaKomplet(!sanitaKomplet); }} icon={ShowerHead} iconColor="text-blue-400" iconSelectedColor="text-blue-600" title={t('sanitary')} subtitle={t('complete')} price="+ 1 169 €" isPriced={true} tooltip={t('sanitaryFull')} />
                       <Tile selected={bojler} onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }} icon={Flame} iconColor="text-orange-400" iconSelectedColor="text-orange-600" title={t('boiler')} subtitle={t('boilerElectric')} price="+ 246 €" isPriced={true} selectedBg="bg-orange-100" selectedBorder="border-orange-500" selectedRing="ring-orange-300" hoverBorder="hover:border-orange-300" tooltip={t('boiler')} />
@@ -605,8 +605,8 @@ export default function KonfiguratorFjord({
                     <div className="grid grid-cols-3 gap-2">
                       {[
                         { value: "ziadne", label: t('doorStandard'), price: "0 €" },
-                        { value: "kovove", label: t('doorMetal'), price: "+ 1 990 €" },
-                        { value: "plastove", label: t('doorPlastic'), price: "+ 810 €" }
+                        { value: "kovove", label: t('doorMetal'), price: "+ 720 €" },
+                        { value: "plastove", label: t('doorPlastic'), price: "+ 660 €" }
                       ].map((opt) => (
                         <motion.div key={opt.value} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setVstupneDvere(opt.value)} className={`p-2 sm:p-3 rounded-lg cursor-pointer text-center transition-all ${vstupneDvere === opt.value ? "bg-blue-100 border-2 border-blue-500" : "bg-gray-50 border-2 border-gray-200 hover:border-blue-300"}`}>
                           <span className="font-medium text-gray-800 text-xs sm:text-sm block">{opt.label}</span>
@@ -658,9 +658,9 @@ export default function KonfiguratorFjord({
                       <Tile selected={vonkajsiaFasada === "suchana"} onClick={(e) => { if (vonkajsiaFasada !== "suchana") triggerAnimation("fasadaSuchana", e.currentTarget); setVonkajsiaFasada("suchana"); }} icon={Paintbrush} iconColor="text-orange-400" iconSelectedColor="text-emerald-600" title={t('facadeStucco')} subtitle={t('whitePlaster')} price="+ 12 841 €" isPriced={true} selectedBg="bg-emerald-100" selectedBorder="border-emerald-500" selectedRing="ring-emerald-300" hoverBorder="hover:border-emerald-300" tooltip={t('facadeStucco')} />
                     </div>
 
-                    <Tile selected={vnutornePodlahy} onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); setVnutornePodlahy(!vnutornePodlahy); }} icon={Square} iconColor="text-amber-500" iconSelectedColor="text-emerald-600" title={t('floors')} subtitle={t('floorsLaminate')} price="+ 3 500 €" isPriced={true} selectedBg="bg-emerald-100" selectedBorder="border-emerald-500" selectedRing="ring-emerald-300" hoverBorder="hover:border-emerald-300" tooltip={t('floors')} />
-                    <Tile selected={podlahovVykurovanie} onClick={(e) => { if (!podlahovVykurovanie) triggerAnimation("podlahovVykurovanie", e.currentTarget); setPodlahovVykurovanie(!podlahovVykurovanie); }} icon={Flame} iconColor="text-orange-400" iconSelectedColor="text-orange-600" title={t('floorHeating')} subtitle={t('wifiThermostat')} price="+ 5 190 €" isPriced={true} selectedBg="bg-orange-100" selectedBorder="border-orange-500" selectedRing="ring-orange-300" hoverBorder="hover:border-orange-300" tooltip={t('floorHeatingFull')} />
-                    <Tile selected={pergola} onClick={(e) => { if (!pergola) triggerAnimation("pergola", e.currentTarget); setPergola(!pergola); }} icon={Maximize} iconColor="text-teal-400" iconSelectedColor="text-emerald-600" title={t('pergola')} subtitle={t('pergolaDecorative')} price="+ 1 200 €" isPriced={true} selectedBg="bg-emerald-100" selectedBorder="border-emerald-500" selectedRing="ring-emerald-300" hoverBorder="hover:border-emerald-300" tooltip={t('pergola')} />
+                    <Tile selected={vnutornePodlahy} onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); setVnutornePodlahy(!vnutornePodlahy); }} icon={Square} iconColor="text-amber-500" iconSelectedColor="text-emerald-600" title={t('floors')} subtitle={t('floorsLaminate')} price="+ 3 351 €" isPriced={true} selectedBg="bg-emerald-100" selectedBorder="border-emerald-500" selectedRing="ring-emerald-300" hoverBorder="hover:border-emerald-300" tooltip={t('floors')} />
+                    <Tile selected={podlahovVykurovanie} onClick={(e) => { if (!podlahovVykurovanie) triggerAnimation("podlahovVykurovanie", e.currentTarget); setPodlahovVykurovanie(!podlahovVykurovanie); }} icon={Flame} iconColor="text-orange-400" iconSelectedColor="text-orange-600" title={t('floorHeating')} subtitle={t('wifiThermostat')} price="+ 5 525 €" isPriced={true} selectedBg="bg-orange-100" selectedBorder="border-orange-500" selectedRing="ring-orange-300" hoverBorder="hover:border-orange-300" tooltip={t('floorHeatingFull')} />
+                    <Tile selected={pergola} onClick={(e) => { if (!pergola) triggerAnimation("pergola", e.currentTarget); setPergola(!pergola); }} icon={Maximize} iconColor="text-teal-400" iconSelectedColor="text-emerald-600" title={t('pergola')} subtitle={t('pergolaDecorative')} price="+ 1 845 €" isPriced={true} selectedBg="bg-emerald-100" selectedBorder="border-emerald-500" selectedRing="ring-emerald-300" hoverBorder="hover:border-emerald-300" tooltip={t('pergola')} />
                   </div>
 
                   <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
@@ -690,9 +690,9 @@ export default function KonfiguratorFjord({
                 <SectionHeader icon={FileText} title={t('phase4')} subtitle={t('phase4Subtitle')} color="from-purple-600 to-violet-600" step="4" />
                 <div className="p-3 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-                    <Tile selected={inziniering} onClick={(e) => { if (!inziniering) triggerAnimation("inziniering", e.currentTarget); setInziniering(!inziniering); }} icon={FileText} iconColor="text-purple-400" iconSelectedColor="text-purple-600" title={t('engineering')} subtitle={t('buildingPermit')} price="+ 3 000 €" isPriced={true} selectedBg="bg-purple-100" selectedBorder="border-purple-500" selectedRing="ring-purple-300" hoverBorder="hover:border-purple-300" tooltip={t('engineeringFull')} />
-                    <Tile selected={projektA0} onClick={(e) => { if (!projektA0) triggerAnimation("projektant", e.currentTarget); setProjektA0(!projektA0); }} icon={FileCheck} iconColor="text-green-500" iconSelectedColor="text-green-600" title={t('projectA0')} subtitle={t('certification')} price="+ 2 600 €" isPriced={true} isA0={true} selectedBg="bg-green-100" selectedBorder="border-green-500" selectedRing="ring-green-300" tooltip={t('projectA0Full')} />
-                    <Tile selected={revizna} onClick={() => setRevizna(!revizna)} icon={FileText} iconColor="text-gray-400" iconSelectedColor="text-purple-600" title={t('revision')} subtitle={t('documentation')} price="+ 12 200 €" isPriced={true} selectedBg="bg-purple-100" selectedBorder="border-purple-500" selectedRing="ring-purple-300" hoverBorder="hover:border-purple-300" tooltip={t('revisionFull')} />
+                    <Tile selected={inziniering} onClick={(e) => { if (!inziniering) triggerAnimation("inziniering", e.currentTarget); setInziniering(!inziniering); }} icon={FileText} iconColor="text-purple-400" iconSelectedColor="text-purple-600" title={t('engineering')} subtitle={t('buildingPermit')} price="+ 2 592 €" isPriced={true} selectedBg="bg-purple-100" selectedBorder="border-purple-500" selectedRing="ring-purple-300" hoverBorder="hover:border-purple-300" tooltip={t('engineeringFull')} />
+                    <Tile selected={projektA0} onClick={(e) => { if (!projektA0) triggerAnimation("projektant", e.currentTarget); setProjektA0(!projektA0); }} icon={FileCheck} iconColor="text-green-500" iconSelectedColor="text-green-600" title={t('projectA0')} subtitle={t('certification')} price="+ 3 500 €" isPriced={true} isA0={true} selectedBg="bg-green-100" selectedBorder="border-green-500" selectedRing="ring-green-300" tooltip={t('projectA0Full')} />
+                    <Tile selected={revizna} onClick={() => setRevizna(!revizna)} icon={FileText} iconColor="text-gray-400" iconSelectedColor="text-purple-600" title={t('revision')} subtitle={t('documentation')} price="+ 1 000 €" isPriced={true} selectedBg="bg-purple-100" selectedBorder="border-purple-500" selectedRing="ring-purple-300" hoverBorder="hover:border-purple-300" tooltip={t('revisionFull')} />
                     <Tile selected={doprava} onClick={(e) => { if (!doprava) triggerAnimation("doprava", e.currentTarget); setDoprava(!doprava); }} icon={Truck} iconColor="text-purple-400" iconSelectedColor="text-purple-600" title={t('transport')} subtitle={t('transportFull')} price="+ 0 €" isPriced={false} selectedBg="bg-purple-100" selectedBorder="border-purple-500" selectedRing="ring-purple-300" hoverBorder="hover:border-purple-300" tooltip={t('transport')} />
                   </div>
 
