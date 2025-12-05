@@ -2718,6 +2718,8 @@ const translations = {
     // Konfigurátor Wizard
     createYourPriceOffer: "Sastavite svoju cjenovnu ponudu za vašu kuću",
     noHiddenFees: "Bez skrivenih troškova",
+    newBadge: "NOVO",
+    viewHousesInDifferentColors: "Pogledajte kuće u različitim bojama fasade",
     
     // DetailDomu specific
     twoD: "2D",
@@ -3584,6 +3586,8 @@ const translations = {
     // Konfigurátor Wizard
     createYourPriceOffer: "Create your price offer for your house",
     noHiddenFees: "No hidden fees",
+    newBadge: "NEW",
+    viewHousesInDifferentColors: "View houses in different facade colors",
     
     // DetailDomu specific
     twoD: "2D",
@@ -4069,6 +4073,8 @@ const translations = {
     // Konfigurátor Wizard
     createYourPriceOffer: "Állítsa össze árajánlatát házához",
     noHiddenFees: "Rejtett költségek nélkül",
+    newBadge: "ÚJ",
+    viewHousesInDifferentColors: "Tekintse meg a házakat különböző homlokzatszínekben",
     
     // DetailDomu specific
     twoD: "2D",
@@ -4519,6 +4525,8 @@ const translations = {
     // Konfigurátor Wizard
     createYourPriceOffer: "Stwórz swoją ofertę cenową dla domu",
     noHiddenFees: "Bez ukrytych opłat",
+    newBadge: "NOWE",
+    viewHousesInDifferentColors: "Zobacz domy w różnych kolorach elewacji",
     
     // DetailDomu specific
     twoD: "2D",
@@ -4969,6 +4977,8 @@ const translations = {
     // Konfigurátor Wizard
     createYourPriceOffer: "Складіть свою цінову пропозицію для вашого дому",
     noHiddenFees: "Без прихованих платежів",
+    newBadge: "НОВЕ",
+    viewHousesInDifferentColors: "Переглянути будинки в різних кольорах фасаду",
     
     // DetailDomu specific
     twoD: "2D",
