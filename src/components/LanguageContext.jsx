@@ -228,6 +228,21 @@ const translations = {
     insulationStd: "Izolácia (štandard)",
     foundationsLabel: "Základy",
     
+    // Detail panels
+    assemblyKit: "Komplet pre montáž",
+    electricalInstallation: "Elektroinštalácia",
+    waterAndSewage: "Voda a kanalizácia",
+    foundationsPanel: "Základy",
+    interiorFinishPanel: "Interiér finiš",
+    descriptionTitle: "Popis",
+    
+    // Summary panel labels
+    roughConstruction: "Hrubá stavba",
+    holodomLabel: "Holodom",
+    turnkeyLabel: "Dom na kľúč",
+    documentationLabel: "Dokumentácia",
+    totalWithVATLabel: "Celkom s DPH",
+    
     // Contact
     contactUs: "Kontaktujte nás",
     writeUs: "Napíšte nám",
