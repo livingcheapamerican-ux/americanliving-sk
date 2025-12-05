@@ -460,11 +460,8 @@ export default function KonfiguratorFlatDoubleInline({
 
   // Ak zobrazujeme iba sumár (pre ľavý stĺpec)
     if (showOnlySummary) {
-      // Filtrovať len vybrané položky
-      const onlySelectedItems = selectedItems.filter(item => item.selected);
-
       return (
-        <div className="mt-4">
+        <div>
           <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
             <div className="p-3 border-b border-slate-700/50">
               <div className="flex items-center justify-between">
@@ -485,15 +482,15 @@ export default function KonfiguratorFlatDoubleInline({
             vonkajsiaFasada={vonkajsiaFasada}
           />
 
-            {/* Súhrn položiek - len vybrané */}
+            {/* Súhrn položiek - všetky položky */}
             <div className="px-2 py-1.5">
-              {onlySelectedItems.map((item, index) => {
+              {selectedItems.map((item, index) => {
                 const isBase = item.section === "base";
-                const prevItem = onlySelectedItems[index - 1];
+                const prevItem = selectedItems[index - 1];
                 const showHrubaDivider = item.section === "hruba" && (!prevItem || prevItem.section === "base");
-                const showHolodomDivider = item.section === "holodom" && prevItem?.section !== "holodom";
-                const showKlucDivider = item.section === "kluc" && prevItem?.section !== "kluc";
-                const showDocsDivider = item.section === "docs" && prevItem?.section !== "docs";
+                const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
+                const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
+                const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
 
                 return (
                   <React.Fragment key={index}>
@@ -533,10 +530,10 @@ export default function KonfiguratorFlatDoubleInline({
                         </div>
                       </div>
                     )}
-                    <div className={`flex justify-between items-center py-1 px-1.5 rounded text-xs ${isBase ? 'bg-blue-500/20 border border-blue-500/30 my-0.5' : 'hover:bg-slate-700/50'}`}>
-                      <span className={`${isBase ? 'text-blue-300 font-bold text-sm' : 'text-slate-300 font-medium'} flex-1 pr-2 truncate`}>{item.name}</span>
-                      <span className={`${isBase ? 'text-blue-300 text-sm' : 'text-green-400'} font-bold whitespace-nowrap`}>
-                        {formatPrice(item.price)}
+                    <div className={`flex justify-between items-center py-1 px-1.5 rounded text-xs ${isBase ? 'bg-blue-500/20 border border-blue-500/30 my-0.5' : item.selected ? 'hover:bg-slate-700/50' : 'opacity-40'}`}>
+                      <span className={`${isBase ? 'text-blue-300 font-bold text-sm' : item.selected ? 'text-slate-300 font-medium' : 'text-slate-500 line-through'} flex-1 pr-2 truncate`}>{item.name}</span>
+                      <span className={`${isBase ? 'text-blue-300 text-sm' : item.selected ? 'text-green-400' : 'text-slate-500'} font-bold whitespace-nowrap`}>
+                        {item.selected ? formatPrice(item.price) : '—'}
                       </span>
                     </div>
                   </React.Fragment>
