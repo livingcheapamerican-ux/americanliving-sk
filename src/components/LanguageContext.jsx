@@ -2393,6 +2393,8 @@ const translations = {
     // Konfigurátor Wizard
     createYourPriceOffer: "Sastavite svoju cjenovnu ponudu za vašu kuću",
     noHiddenFees: "Bez skrivenih troškova",
+    newBadge: "NOVO",
+    viewHousesInDifferentColors: "Pogledajte kuće u različitim bojama fasade",
     
     // Building type selection
     selectBuildingType: "Odaberite tip zgrade",
@@ -2968,6 +2970,8 @@ const translations = {
     // Konfigurátor Wizard
     createYourPriceOffer: "Δημιουργήστε την προσφορά τιμής για το σπίτι σας",
     noHiddenFees: "Χωρίς κρυφές χρεώσεις",
+    newBadge: "ΝΕΟ",
+    viewHousesInDifferentColors: "Δείτε σπίτια σε διάφορα χρώματα πρόσοψης",
     
     // Building type selection
     selectBuildingType: "Επιλέξτε τύπο κτιρίου",
