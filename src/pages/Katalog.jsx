@@ -414,32 +414,78 @@ export default function Katalog() {
 
           {/* Domy Grid */}
           <div className="flex-grow">
-            {/* Dizajn filter */}
-            <Card className="p-2 sm:p-4 mb-4 sm:mb-6 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
-                <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-base font-semibold text-gray-800">
-                  <span>🏠 {t('showInDesign')}</span>
+            {/* Dizajn filter - Vylepšený dizajn */}
+            <div className="relative mb-4 sm:mb-6">
+              {/* Animovaný gradient pozadie */}
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 rounded-2xl opacity-90 blur-sm animate-pulse"></div>
+              
+              <Card className="relative p-4 sm:p-6 bg-gradient-to-br from-orange-50 via-white to-red-50 border-4 border-orange-400 shadow-2xl">
+                {/* Dekoratívne prvky */}
+                <div className="absolute top-0 left-0 w-20 h-20 bg-yellow-300 rounded-full blur-3xl opacity-30 animate-pulse"></div>
+                <div className="absolute bottom-0 right-0 w-24 h-24 bg-red-300 rounded-full blur-3xl opacity-30 animate-pulse" style={{ animationDelay: '1s' }}></div>
+                
+                <div className="relative flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+                  {/* Ľavá časť - Text s ikonou */}
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <motion.div 
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="flex-shrink-0 w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg"
+                    >
+                      <span className="text-xl sm:text-3xl">🎨</span>
+                    </motion.div>
+                    <div>
+                      <p className="text-xs sm:text-base font-bold text-gray-900 flex items-center gap-1">
+                        <span className="bg-red-600 text-white px-2 py-0.5 rounded-full text-[10px] sm:text-xs animate-pulse">NOVÉ</span>
+                        {t('showInDesign')}
+                      </p>
+                      <p className="text-[10px] sm:text-sm text-gray-600 font-medium">Prezrite si domy v rôznych farbách fasády</p>
+                    </div>
+                  </div>
+                  
+                  {/* Pravá časť - Tlačidlá */}
+                  <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex-1 sm:flex-initial"
+                    >
+                      <Button
+                        variant={dizajnFilter === "murovka" ? "default" : "outline"}
+                        onClick={() => setDizajnFilter("murovka")}
+                        className={`w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 text-xs sm:text-lg font-bold shadow-lg transition-all ${
+                          dizajnFilter === "murovka" 
+                            ? "bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white border-0 ring-4 ring-orange-300" 
+                            : "border-3 border-orange-500 hover:bg-orange-100 text-gray-800"
+                        }`}
+                      >
+                        <Building2 className="w-4 h-4 sm:w-6 sm:h-6 mr-1 sm:mr-2" />
+                        {t('brickDesign')}
+                      </Button>
+                    </motion.div>
+                    
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex-1 sm:flex-initial"
+                    >
+                      <Button
+                        variant={dizajnFilter === "drevo" ? "default" : "outline"}
+                        onClick={() => setDizajnFilter("drevo")}
+                        className={`w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 text-xs sm:text-lg font-bold shadow-lg transition-all ${
+                          dizajnFilter === "drevo" 
+                            ? "bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 text-white border-0 ring-4 ring-amber-300" 
+                            : "border-3 border-amber-500 hover:bg-amber-100 text-gray-800"
+                        }`}
+                      >
+                        <TreePine className="w-4 h-4 sm:w-6 sm:h-6 mr-1 sm:mr-2" />
+                        {t('woodDesign')}
+                      </Button>
+                    </motion.div>
+                  </div>
                 </div>
-                <div className="flex gap-2 sm:gap-3">
-                  <Button
-                    variant={dizajnFilter === "murovka" ? "default" : "outline"}
-                    onClick={() => setDizajnFilter("murovka")}
-                    className={`px-3 py-1.5 sm:px-6 sm:py-3 text-xs sm:text-base font-semibold ${dizajnFilter === "murovka" ? "bg-orange-600 hover:bg-orange-700" : "border-2"}`}
-                  >
-                    <Building2 className="w-3.5 h-3.5 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                    {t('brickDesign')}
-                  </Button>
-                  <Button
-                    variant={dizajnFilter === "drevo" ? "default" : "outline"}
-                    onClick={() => setDizajnFilter("drevo")}
-                    className={`px-3 py-1.5 sm:px-6 sm:py-3 text-xs sm:text-base font-semibold ${dizajnFilter === "drevo" ? "bg-amber-600 hover:bg-amber-700" : "border-2"}`}
-                  >
-                    <TreePine className="w-3.5 h-3.5 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                    {t('woodDesign')}
-                  </Button>
-                </div>
-              </div>
-            </Card>
+              </Card>
+            </div>
 
             {/* Srovnání panel */}
             {vybraneNaSrovnanie.length > 0 &&
