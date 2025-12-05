@@ -136,7 +136,8 @@ export default function KonfiguratorFaza1HrubaStavba({
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
-  triggerAnimation
+  triggerAnimation,
+  useNordPrices = false
 }) {
   const { t } = useLanguage();
   
@@ -240,15 +241,15 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('assemblyYes')}
                 subtitle={t('phase1')}
-                price="+ 17 970 €"
+                price={useNordPrices ? "+ 14 850 €" : "+ 17 970 €"}
                 isPriced={true}
                 tooltip={t('assemblyNote')}
               />
             </div>
 
             {/* Izolácia - skupina */}
-            <div className="col-span-2 sm:col-span-3 lg:col-span-2 grid grid-cols-3 gap-2 sm:gap-3 p-4 border-[5px] border-cyan-600 rounded-2xl bg-cyan-100/70 shadow-xl">
-              <p className="col-span-3 text-[10px] sm:text-xs font-bold text-cyan-700 -mb-1 flex items-center gap-1">
+            <div className={`col-span-2 sm:col-span-3 lg:col-span-2 grid ${useNordPrices ? 'grid-cols-4' : 'grid-cols-3'} gap-2 sm:gap-3 p-4 border-[5px] border-cyan-600 rounded-2xl bg-cyan-100/70 shadow-xl`}>
+              <p className={`${useNordPrices ? 'col-span-4' : 'col-span-3'} text-[10px] sm:text-xs font-bold text-cyan-700 -mb-1 flex items-center gap-1`}>
                 <span className="w-5 h-5 sm:w-6 sm:h-6 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
                 {t('insulation')} ({t('selectOne')})
               </p>
@@ -271,9 +272,9 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={ThermometerSun}
                 iconColor="text-orange-400"
                 iconSelectedColor="text-amber-600"
-                title={t('insulationEnhanced')}
-                subtitle={t('insulationEnhancedDesc')}
-                price="+ 5 799 €"
+                title={useNordPrices ? "200mm" : t('insulationEnhanced')}
+                subtitle={useNordPrices ? "200mm" : t('insulationEnhancedDesc')}
+                price={useNordPrices ? "+ 3 200 €" : "+ 5 799 €"}
                 isPriced={true}
                 tooltip={t('insulationEnhancedDesc')}
               />
@@ -284,9 +285,9 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={ThermometerSun}
                 iconColor="text-green-500"
                 iconSelectedColor="text-green-600"
-                title={t('insulationPremium')}
-                subtitle={t('insulationPremiumDesc')}
-                price="+ 11 600 €"
+                title={useNordPrices ? "250mm" : t('insulationPremium')}
+                subtitle={useNordPrices ? "250mm" : t('insulationPremiumDesc')}
+                price={useNordPrices ? "+ 6 400 €" : "+ 11 600 €"}
                 isPriced={true}
                 isA0={true}
                 selectedBg="bg-green-100"
@@ -294,6 +295,25 @@ export default function KonfiguratorFaza1HrubaStavba({
                 selectedRing="ring-green-300"
                 tooltip={t('insulationPremiumDesc')}
               />
+
+              {useNordPrices && (
+                <Tile
+                  selected={izolaciaNavysenie === "ultra"}
+                  onClick={(e) => { if (izolaciaNavysenie !== "ultra") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("ultra"); }}
+                  icon={ThermometerSun}
+                  iconColor="text-green-600"
+                  iconSelectedColor="text-green-700"
+                  title="300mm"
+                  subtitle="300mm"
+                  price="+ 12 000 €"
+                  isPriced={true}
+                  isA0={true}
+                  selectedBg="bg-green-100"
+                  selectedBorder="border-green-500"
+                  selectedRing="ring-green-300"
+                  tooltip="Ultra premium izolácia 300mm"
+                />
+              )}
             </div>
 
             {/* Základy - skupina */}
@@ -323,7 +343,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsScrews')}
                 subtitle={t('groundFootings')}
-                price="+ 8 140 €"
+                price={useNordPrices ? "+ 7 656 €" : "+ 8 140 €"}
                 isPriced={true}
                 tooltip={t('foundationsScrews')}
               />
@@ -336,7 +356,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsSlab')}
                 subtitle={t('foundationSlab')}
-                price="+ 17 946 €"
+                price={useNordPrices ? "+ 12 461 €" : "+ 17 946 €"}
                 isPriced={true}
                 tooltip={t('foundationsSlab')}
               />
@@ -349,7 +369,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsStrip')}
                 subtitle={t('stripFound')}
-                price="+ 21 079 €"
+                price={useNordPrices ? "+ 8 967 €" : "+ 21 079 €"}
                 isPriced={true}
                 tooltip={t('foundationsStrip')}
               />

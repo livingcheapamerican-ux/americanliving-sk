@@ -442,6 +442,7 @@ export default function KonfiguratorWizard({
               setIzolaciaNavysenie={setIzolaciaNavysenie}
               zaklady={zaklady}
               setZaklady={setZaklady}
+              useNordPrices={useNordPrices}
             />
           </div>
         );
