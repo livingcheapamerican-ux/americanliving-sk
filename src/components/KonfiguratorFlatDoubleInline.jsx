@@ -614,8 +614,11 @@ export default function KonfiguratorFlatDoubleInline({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
             {/* Interiér finiš - skupina */}
-            <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-2 sm:gap-3 p-2 border-2 border-dashed border-gray-400 rounded-xl bg-gray-50/50">
-              <p className="col-span-3 text-[10px] sm:text-xs font-semibold text-gray-600 -mb-1">Interiér finiš (vyberte jednu)</p>
+            <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-2 sm:gap-3 p-3 border-3 border-dashed border-blue-400 rounded-xl bg-blue-50/30 shadow-sm">
+              <p className="col-span-3 text-[10px] sm:text-xs font-bold text-blue-700 -mb-1 flex items-center gap-1">
+                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                Interiér finiš (vyberte jednu)
+              </p>
               <Tile
                 selected={interierFinis === "ziadne"}
                 onClick={() => setInterierFinis("ziadne")}
@@ -887,9 +890,10 @@ export default function KonfiguratorFlatDoubleInline({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
             {/* Fasáda - skupina */}
-            <div className={`col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-2 border-2 rounded-xl ${!vonkajsiaFasada ? 'border-red-400 bg-red-50/50 border-dashed' : 'border-dashed border-gray-400 bg-gray-50/50'}`}>
-              <p className={`col-span-2 text-[10px] sm:text-xs font-semibold -mb-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-gray-600'}`}>
-                Fasáda (vyberte jednu) {!vonkajsiaFasada && <span className="text-red-500">*povinné</span>}
+            <div className={`col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-3 border-3 rounded-xl shadow-sm ${!vonkajsiaFasada ? 'border-red-500 bg-red-50/50 border-dashed animate-pulse' : 'border-dashed border-emerald-400 bg-emerald-50/30'}`}>
+              <p className={`col-span-2 text-[10px] sm:text-xs font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
+                <span className={`w-2 h-2 rounded-full ${!vonkajsiaFasada ? 'bg-red-500' : 'bg-emerald-500'}`}></span>
+                Fasáda (vyberte jednu) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*povinné</span>}
               </p>
               <Tile
                 selected={vonkajsiaFasada === "standard"}
