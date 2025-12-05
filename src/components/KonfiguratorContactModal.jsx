@@ -21,7 +21,11 @@ export default function KonfiguratorContactModal({
   dom,
   totalPrice,
   selectedItems,
-  vonkajsiaFasada
+  vonkajsiaFasada,
+  izolaciaNavysenie,
+  tepelneCerpadlo,
+  rekuperacia,
+  projektA0
 }) {
   const [formData, setFormData] = useState({
     meno: "",
@@ -32,6 +36,15 @@ export default function KonfiguratorContactModal({
   const [submitted, setSubmitted] = useState(false);
 
   const formatPrice = (price) => price?.toLocaleString('sk-SK') + " €";
+
+  // Kontrola A0 statusu
+  const isA0Ready = projektA0 && izolaciaNavysenie === "premium" && tepelneCerpadlo && rekuperacia;
+  const a0Missing = [];
+  if (projektA0) {
+    if (izolaciaNavysenie !== "premium") a0Missing.push("Premium izolácia (250/300mm)");
+    if (!tepelneCerpadlo) a0Missing.push("Tepelné čerpadlo");
+    if (!rekuperacia) a0Missing.push("Rekuperácia");
+  }
 
   // Vyber správny obrázok podľa fasády
   const getHouseImage = () => {
@@ -152,8 +165,39 @@ export default function KonfiguratorContactModal({
                 })}
               </div>
 
+              {/* A0 / Rekreačná stavba status */}
+              <div className={`mt-3 p-3 rounded-xl border ${isA0Ready ? 'bg-green-500/20 border-green-500/30' : projektA0 && a0Missing.length > 0 ? 'bg-amber-500/20 border-amber-500/30' : 'bg-blue-500/20 border-blue-500/30'}`}>
+                {isA0Ready ? (
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-green-400" />
+                    <div>
+                      <p className="text-green-400 font-bold text-sm">✓ Spĺňa podmienky A0</p>
+                      <p className="text-green-300/80 text-xs">Rodinný dom s energetickým certifikátom</p>
+                    </div>
+                  </div>
+                ) : projektA0 && a0Missing.length > 0 ? (
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sparkles className="w-4 h-4 text-amber-400" />
+                      <p className="text-amber-400 font-bold text-sm">Pre A0 chýba:</p>
+                    </div>
+                    <ul className="text-amber-300/80 text-xs space-y-0.5 ml-6">
+                      {a0Missing.map((item, i) => <li key={i}>• {item}</li>)}
+                    </ul>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Package className="w-5 h-5 text-blue-400" />
+                    <div>
+                      <p className="text-blue-400 font-bold text-sm">Rekreačná stavba</p>
+                      <p className="text-blue-300/80 text-xs">Chata / záhradný domček</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Celková cena */}
-              <div className="mt-4 p-3 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30">
+              <div className="mt-3 p-3 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30">
                 <div className="flex justify-between items-center">
                   <span className="text-slate-300 text-sm">Celkom s DPH</span>
                   <span className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">

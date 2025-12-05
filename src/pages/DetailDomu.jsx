@@ -1140,7 +1140,7 @@ export default function DetailDomu() {
 
               {/* Floating Konfigurátor Súhrn - len pre Prosto House Flat Double */}
               {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
-                <div className="sticky top-20 z-30 mt-4">
+                <div className="mt-4">
                   <KonfiguratorFlatDoubleInline 
                     dom={dom}
                     montazHolodomu={montazHolodomu}
