@@ -639,6 +639,11 @@ export default function DetailDomu() {
                   textHu={dom.popis_hu}
                   textPl={dom.popis_pl}
                   textUk={dom.popis_uk}
+                  textDe={dom.popis_de}
+                  textFr={dom.popis_fr}
+                  textSr={dom.popis_sr}
+                  textHr={dom.popis_hr}
+                  textEl={dom.popis_el}
                   className="text-gray-700 leading-relaxed whitespace-pre-line"
                 />
                 {isProstoHouse && (
@@ -810,6 +815,11 @@ export default function DetailDomu() {
                   textHu={dom.specifikacia_hu}
                   textPl={dom.specifikacia_pl}
                   textUk={dom.specifikacia_uk}
+                  textDe={dom.specifikacia_de}
+                  textFr={dom.specifikacia_fr}
+                  textSr={dom.specifikacia_sr}
+                  textHr={dom.specifikacia_hr}
+                  textEl={dom.specifikacia_el}
                   className="text-gray-700 text-sm leading-relaxed whitespace-pre-line"
                 />
               </Card>

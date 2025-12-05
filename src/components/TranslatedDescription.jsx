@@ -43,9 +43,13 @@ export default function TranslatedDescription({
     }
   };
 
+  const translatedText = getTranslation();
+  
+  if (!translatedText) return null;
+
   return (
     <div className={className}>
-      {getTranslation()}
+      {translatedText}
     </div>
   );
 }
