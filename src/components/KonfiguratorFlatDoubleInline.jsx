@@ -1182,7 +1182,7 @@ export default function KonfiguratorFlatDoubleInline({
                             <div className="py-1.5">
                               <div className="flex items-center gap-2">
                                 <Package className="w-3 h-3 text-amber-400" />
-                                <span className="text-[10px] sm:text-xs font-bold text-amber-400 uppercase tracking-wider">Hrubá stavba</span>
+                                <span className="text-[10px] sm:text-xs font-bold text-amber-400 uppercase tracking-wider">{t('roughConstruction')}</span>
                               </div>
                             </div>
                           )}
@@ -1190,7 +1190,7 @@ export default function KonfiguratorFlatDoubleInline({
                             <div className="py-1.5">
                               <div className="flex items-center gap-2">
                                 <Hammer className="w-3 h-3 text-blue-400" />
-                                <span className="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-wider">Holodom</span>
+                                <span className="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-wider">{t('holodomLabel')}</span>
                               </div>
                             </div>
                           )}
@@ -1198,7 +1198,7 @@ export default function KonfiguratorFlatDoubleInline({
                             <div className="py-1.5">
                               <div className="flex items-center gap-2">
                                 <Key className="w-3 h-3 text-emerald-400" />
-                                <span className="text-[10px] sm:text-xs font-bold text-emerald-400 uppercase tracking-wider">Dom na kľúč</span>
+                                <span className="text-[10px] sm:text-xs font-bold text-emerald-400 uppercase tracking-wider">{t('turnkeyLabel')}</span>
                               </div>
                             </div>
                           )}
@@ -1206,7 +1206,7 @@ export default function KonfiguratorFlatDoubleInline({
                             <div className="py-1.5">
                               <div className="flex items-center gap-2">
                                 <FileText className="w-3 h-3 text-purple-400" />
-                                <span className="text-[10px] sm:text-xs font-bold text-purple-400 uppercase tracking-wider">Dokumentácia</span>
+                                <span className="text-[10px] sm:text-xs font-bold text-purple-400 uppercase tracking-wider">{t('documentationLabel')}</span>
                               </div>
                             </div>
                           )}
