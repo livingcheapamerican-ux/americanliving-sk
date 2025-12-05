@@ -738,50 +738,7 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Rozmery */}
-            {dom.rozmery && (
-              <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">Vonkajšie rozmery</h3>
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div>
-                    <p className="text-sm text-gray-500 mb-1">Šírka</p>
-                    <p className="text-2xl font-bold text-primary">{dom.rozmery.sirka} m</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 mb-1">Dĺžka</p>
-                    <p className="text-2xl font-bold text-primary">{dom.rozmery.dlzka} m</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 mb-1">Výška</p>
-                    <p className="text-2xl font-bold text-primary">{dom.rozmery.vyska} m</p>
-                  </div>
-                </div>
-                {dom.vyska_stropu && (
-                  <p className="text-sm text-gray-600 mt-4 text-center">
-                    Výška stropu: <span className="font-semibold">{dom.vyska_stropu}</span>
-                  </p>
-                )}
-              </Card>
-            )}
-
-            {/* Popis */}
-                            {dom.popis && (
-                              <Card className="p-6">
-                                <h3 className="text-lg font-bold text-primary mb-4">{isProstoHouse ? "Popis montovaného domu vo verzii rekreačnej stavby" : "Popis modulového domu"}</h3>
-                                <div className="text-gray-700 leading-tight whitespace-pre-line">
-                                  {dom.popis}
-                                </div>
-                                {isProstoHouse && (
-                                  <div className="mt-4 pt-4 border-t border-gray-200">
-                                    <p className="text-gray-700">
-                                      <strong>Životnosť:</strong> Navrhnutá na viac ako 80 rokov pri pravidelnej údržbe a správnej inštalácii
-                                    </p>
-                                  </div>
-                                )}
-                              </Card>
-                            )}
-
-            {/* Floating Konfigurátor Súhrn - len pre Prosto House Flat Double - PRESUNUTE VYSSSIE */}
+            {/* Floating Konfigurátor Súhrn - len pre Prosto House Flat Double - hned pod zakladnu konfiguraciu */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
               <div className="lg:sticky lg:top-20 z-10">
                 <KonfiguratorFlatDoubleInline 
@@ -844,6 +801,49 @@ export default function DetailDomu() {
                 />
               </div>
             )}
+
+            {/* Rozmery */}
+            {dom.rozmery && (
+              <Card className="p-6">
+                <h3 className="text-lg font-bold text-primary mb-4">Vonkajšie rozmery</h3>
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Šírka</p>
+                    <p className="text-2xl font-bold text-primary">{dom.rozmery.sirka} m</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Dĺžka</p>
+                    <p className="text-2xl font-bold text-primary">{dom.rozmery.dlzka} m</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Výška</p>
+                    <p className="text-2xl font-bold text-primary">{dom.rozmery.vyska} m</p>
+                  </div>
+                </div>
+                {dom.vyska_stropu && (
+                  <p className="text-sm text-gray-600 mt-4 text-center">
+                    Výška stropu: <span className="font-semibold">{dom.vyska_stropu}</span>
+                  </p>
+                )}
+              </Card>
+            )}
+
+            {/* Popis */}
+                            {dom.popis && (
+                              <Card className="p-6">
+                                <h3 className="text-lg font-bold text-primary mb-4">{isProstoHouse ? "Popis montovaného domu vo verzii rekreačnej stavby" : "Popis modulového domu"}</h3>
+                                <div className="text-gray-700 leading-tight whitespace-pre-line">
+                                  {dom.popis}
+                                </div>
+                                {isProstoHouse && (
+                                  <div className="mt-4 pt-4 border-t border-gray-200">
+                                    <p className="text-gray-700">
+                                      <strong>Životnosť:</strong> Navrhnutá na viac ako 80 rokov pri pravidelnej údržbe a správnej inštalácii
+                                    </p>
+                                  </div>
+                                )}
+                              </Card>
+                            )}
 
             {/* Obrázok základnej konfigurácie - pre Ticabhouse */}
             {isTicabhouse && dom.zakladna_konfiguracia_obrazok && (
