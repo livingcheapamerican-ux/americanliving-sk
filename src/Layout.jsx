@@ -121,13 +121,13 @@ function LayoutContent({ children }) {
                 <button
                   key={lang.code}
                   onClick={() => setLanguage(lang.code)}
-                  className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all ${
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                     language === lang.code
                       ? 'bg-primary text-white shadow-md'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  <span className="text-sm">{lang.flag}</span>
+                  <span className="text-2xl">{lang.flag}</span>
                   <span>{lang.name}</span>
                 </button>
               ))}
