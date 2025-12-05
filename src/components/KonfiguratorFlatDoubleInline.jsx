@@ -97,26 +97,26 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         </Badge>
       )}
       
-      {/* Veľká zelená fajka cez celú dlaždicu */}
+      {/* Malá fajka v rohu */}
       <AnimatePresence>
         {selected && (
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+            className="absolute top-1 right-1 sm:top-2 sm:right-2 z-20 pointer-events-none"
           >
-            <div className="w-10 h-10 sm:w-20 sm:h-20 rounded-full bg-green-500/90 flex items-center justify-center shadow-lg">
-              <Check className="w-6 h-6 sm:w-14 sm:h-14 text-white stroke-[3]" />
+            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
+              <Check className="w-3 h-3 sm:w-4 sm:h-4 text-white stroke-[3]" />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <Icon className={`w-5 h-5 sm:w-10 sm:h-10 mb-1 sm:mb-2 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
-      <span className={`font-semibold text-gray-800 text-[10px] sm:text-sm leading-tight ${selected ? "opacity-30" : ""}`}>{title}</span>
-      <span className={`text-[8px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1 leading-tight ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
-      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2 ${selected ? "opacity-30" : ""}`}>{price}</span>
+      <Icon className={`w-5 h-5 sm:w-10 sm:h-10 mb-1 sm:mb-2 ${selected ? iconSelectedColor : iconColor}`} />
+      <span className={`font-semibold text-gray-800 text-[10px] sm:text-sm leading-tight`}>{title}</span>
+      <span className={`text-[8px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1 leading-tight`}>{subtitle}</span>
+      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>{price}</span>
 
       {/* Tooltip - rendered via portal */}
       {showTooltip && tooltip && ReactDOM.createPortal(
