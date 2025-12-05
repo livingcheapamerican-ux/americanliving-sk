@@ -93,10 +93,10 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 5 }}
-          className="fixed z-[9999] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
+          className="fixed z-[9999] max-w-[90vw] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
           style={{
-            top: tooltipPosition.top,
-            left: tooltipPosition.left,
+            top: Math.max(10, tooltipPosition.top),
+            left: Math.min(Math.max(tooltipPosition.left, 140), window.innerWidth - 140),
             transform: 'translate(-50%, -100%)'
           }}
         >
@@ -557,45 +557,49 @@ export default function KonfiguratorFlatDoubleInline({
         <div className="p-3 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
           {/* Dlaždice - Grid layout */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-            
-            <Tile
-              selected={interierFinis === "ziadne"}
-              onClick={() => setInterierFinis("ziadne")}
-              icon={Home}
-              iconColor="text-gray-400"
-              iconSelectedColor="text-blue-600"
-              title="Bez interiéru"
-              subtitle="Hrubá stavba"
-              price="+ 0 €"
-              isPriced={false}
-              tooltip="Interiér zostane v stave hrubej stavby bez obkladov a omietok."
-            />
 
-            <Tile
-              selected={interierFinis === "drevo"}
-              onClick={(e) => { if (interierFinis !== "drevo") triggerAnimation("drevo", e.currentTarget); setInterierFinis("drevo"); }}
-              icon={Home}
-              iconColor="text-amber-600"
-              iconSelectedColor="text-blue-600"
-              title="Drevo"
-              subtitle="Obloženie"
-              price="+ 16 400 €"
-              isPriced={true}
-              tooltip="Drevené obloženie stien a stropov. Prírodný vzhľad a tepelná pohoda."
-            />
+            {/* Interiér finiš - skupina */}
+            <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-2 sm:gap-3 p-2 border-2 border-dashed border-gray-400 rounded-xl bg-gray-50/50">
+              <p className="col-span-3 text-[10px] sm:text-xs font-semibold text-gray-600 -mb-1">Interiér finiš (vyberte jednu)</p>
+              <Tile
+                selected={interierFinis === "ziadne"}
+                onClick={() => setInterierFinis("ziadne")}
+                icon={Home}
+                iconColor="text-gray-400"
+                iconSelectedColor="text-blue-600"
+                title="Bez interiéru"
+                subtitle="Hrubá stavba"
+                price="+ 0 €"
+                isPriced={false}
+                tooltip="Interiér zostane v stave hrubej stavby bez obkladov a omietok."
+              />
 
-            <Tile
-              selected={interierFinis === "sadrokarton"}
-              onClick={(e) => { if (interierFinis !== "sadrokarton") triggerAnimation("sadrokarton", e.currentTarget); setInterierFinis("sadrokarton"); }}
-              icon={Home}
-              iconColor="text-gray-500"
-              iconSelectedColor="text-blue-600"
-              title="Sadrokartón"
-              subtitle="Omietka"
-              price="+ 19 475 €"
-              isPriced={true}
-              tooltip="Sadrokartónové steny s hladkou omietkou. Klasický vzhľad interiéru."
-            />
+              <Tile
+                selected={interierFinis === "drevo"}
+                onClick={(e) => { if (interierFinis !== "drevo") triggerAnimation("drevo", e.currentTarget); setInterierFinis("drevo"); }}
+                icon={Home}
+                iconColor="text-amber-600"
+                iconSelectedColor="text-blue-600"
+                title="Drevo"
+                subtitle="Obloženie"
+                price="+ 16 400 €"
+                isPriced={true}
+                tooltip="Drevené obloženie stien a stropov. Prírodný vzhľad a tepelná pohoda."
+              />
+
+              <Tile
+                selected={interierFinis === "sadrokarton"}
+                onClick={(e) => { if (interierFinis !== "sadrokarton") triggerAnimation("sadrokarton", e.currentTarget); setInterierFinis("sadrokarton"); }}
+                icon={Home}
+                iconColor="text-gray-500"
+                iconSelectedColor="text-blue-600"
+                title="Sadrokartón"
+                subtitle="Omietka"
+                price="+ 19 475 €"
+                isPriced={true}
+                tooltip="Sadrokartónové steny s hladkou omietkou. Klasický vzhľad interiéru."
+              />
+            </div>
 
             <Tile
               selected={elektroinstalacia}
@@ -826,40 +830,44 @@ export default function KonfiguratorFlatDoubleInline({
         <div className="p-3 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
           {/* Dlaždice - Grid layout */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-            
-            <Tile
-              selected={vonkajsiaFasada === "standard"}
-              onClick={() => setVonkajsiaFasada("standard")}
-              icon={Paintbrush}
-              iconColor="text-gray-400"
-              iconSelectedColor="text-emerald-600"
-              title="Fasáda štd."
-              subtitle="Drevo/Plech"
-              price="+ 0 €"
-              isPriced={false}
-              selectedBg="bg-emerald-100"
-              selectedBorder="border-emerald-500"
-              selectedRing="ring-emerald-300"
-              hoverBorder="hover:border-emerald-300"
-              tooltip="Štandardná fasáda z dreva alebo falcovaného plechu podľa modelu."
-            />
 
-            <Tile
-              selected={vonkajsiaFasada === "suchana"}
-              onClick={(e) => { if (vonkajsiaFasada !== "suchana") triggerAnimation("fasadaSuchana", e.currentTarget); setVonkajsiaFasada("suchana"); }}
-              icon={Paintbrush}
-              iconColor="text-orange-400"
-              iconSelectedColor="text-emerald-600"
-              title="Škúchaná"
-              subtitle="Fasáda"
-              price="+ 12 841 €"
-              isPriced={true}
-              selectedBg="bg-emerald-100"
-              selectedBorder="border-emerald-500"
-              selectedRing="ring-emerald-300"
-              hoverBorder="hover:border-emerald-300"
-              tooltip="Škúchaná omietková fasáda pre tradičný vzhľad rodinného domu."
-            />
+            {/* Fasáda - skupina */}
+            <div className="col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-2 border-2 border-dashed border-gray-400 rounded-xl bg-gray-50/50">
+              <p className="col-span-2 text-[10px] sm:text-xs font-semibold text-gray-600 -mb-1">Fasáda (vyberte jednu)</p>
+              <Tile
+                selected={vonkajsiaFasada === "standard"}
+                onClick={() => setVonkajsiaFasada("standard")}
+                icon={Paintbrush}
+                iconColor="text-gray-400"
+                iconSelectedColor="text-emerald-600"
+                title="Fasáda štd."
+                subtitle="Drevo/Plech"
+                price="+ 0 €"
+                isPriced={false}
+                selectedBg="bg-emerald-100"
+                selectedBorder="border-emerald-500"
+                selectedRing="ring-emerald-300"
+                hoverBorder="hover:border-emerald-300"
+                tooltip="Štandardná fasáda z dreva alebo falcovaného plechu podľa modelu."
+              />
+
+              <Tile
+                selected={vonkajsiaFasada === "suchana"}
+                onClick={(e) => { if (vonkajsiaFasada !== "suchana") triggerAnimation("fasadaSuchana", e.currentTarget); setVonkajsiaFasada("suchana"); }}
+                icon={Paintbrush}
+                iconColor="text-orange-400"
+                iconSelectedColor="text-emerald-600"
+                title="Škúchaná"
+                subtitle="Fasáda"
+                price="+ 12 841 €"
+                isPriced={true}
+                selectedBg="bg-emerald-100"
+                selectedBorder="border-emerald-500"
+                selectedRing="ring-emerald-300"
+                hoverBorder="hover:border-emerald-300"
+                tooltip="Škúchaná omietková fasáda pre tradičný vzhľad rodinného domu."
+              />
+            </div>
 
             <Tile
               selected={vnutornePodlahy}

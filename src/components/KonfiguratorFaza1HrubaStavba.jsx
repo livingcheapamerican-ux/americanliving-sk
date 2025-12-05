@@ -85,10 +85,10 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 5 }}
-          className="fixed z-[9999] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
+          className="fixed z-[9999] max-w-[90vw] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
           style={{
-            top: tooltipPosition.top,
-            left: tooltipPosition.left,
+            top: Math.max(10, tooltipPosition.top),
+            left: Math.min(Math.max(tooltipPosition.left, 140), window.innerWidth - 140),
             transform: 'translate(-50%, -100%)'
           }}
         >
@@ -179,127 +179,139 @@ export default function KonfiguratorFaza1HrubaStavba({
           
           {/* Dlaždice - Grid layout */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-            
-            <Tile
-              selected={montazHolodomu === "nie"}
-              onClick={() => setMontazHolodomu("nie")}
-              icon={Wrench}
-              iconColor="text-gray-400"
-              iconSelectedColor="text-amber-600"
-              title="Bez montáže"
-              subtitle="Iba sada"
-              price="+ 0 €"
-              isPriced={false}
-              tooltip="Dodanie stavebnej sady bez montážnych prác. Montáž si zabezpečíte svojpomocne."
-            />
 
-            <Tile
-              selected={montazHolodomu === "ano"}
-              onClick={(e) => { if (montazHolodomu !== "ano") triggerAnimation?.("montaz", e.currentTarget); setMontazHolodomu("ano"); }}
-              icon={Wrench}
-              iconColor="text-amber-400"
-              iconSelectedColor="text-amber-600"
-              title="S montážou"
-              subtitle="Hrubá stavba"
-              price="+ 17 970 €"
-              isPriced={true}
-              tooltip="Kompletná montáž hrubej stavby vrátane konštrukcie, strechy a okien. Ubytovanie brigády sa účtuje zvlášť."
-            />
+            {/* Montáž - skupina */}
+            <div className="col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-2 border-2 border-dashed border-gray-400 rounded-xl bg-gray-50/50">
+              <p className="col-span-2 text-[10px] sm:text-xs font-semibold text-gray-600 -mb-1">Montáž (vyberte jednu)</p>
+              <Tile
+                selected={montazHolodomu === "nie"}
+                onClick={() => setMontazHolodomu("nie")}
+                icon={Wrench}
+                iconColor="text-gray-400"
+                iconSelectedColor="text-amber-600"
+                title="Bez montáže"
+                subtitle="Iba sada"
+                price="+ 0 €"
+                isPriced={false}
+                tooltip="Dodanie stavebnej sady bez montážnych prác. Montáž si zabezpečíte svojpomocne."
+              />
 
-            <Tile
-              selected={izolaciaNavysenie === "standard"}
-              onClick={() => setIzolaciaNavysenie("standard")}
-              icon={ThermometerSun}
-              iconColor="text-gray-400"
-              iconSelectedColor="text-amber-600"
-              title="Izolácia štd."
-              subtitle="150/200mm"
-              price="+ 0 €"
-              isPriced={false}
-              tooltip="Štandardná izolácia stien 150mm a strechy 200mm. Vhodné pre rekreačné stavby."
-            />
+              <Tile
+                selected={montazHolodomu === "ano"}
+                onClick={(e) => { if (montazHolodomu !== "ano") triggerAnimation?.("montaz", e.currentTarget); setMontazHolodomu("ano"); }}
+                icon={Wrench}
+                iconColor="text-amber-400"
+                iconSelectedColor="text-amber-600"
+                title="S montážou"
+                subtitle="Hrubá stavba"
+                price="+ 17 970 €"
+                isPriced={true}
+                tooltip="Kompletná montáž hrubej stavby vrátane konštrukcie, strechy a okien. Ubytovanie brigády sa účtuje zvlášť."
+              />
+            </div>
 
-            <Tile
-              selected={izolaciaNavysenie === "zvysena"}
-              onClick={(e) => { if (izolaciaNavysenie !== "zvysena") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("zvysena"); }}
-              icon={ThermometerSun}
-              iconColor="text-orange-400"
-              iconSelectedColor="text-amber-600"
-              title="Izolácia +"
-              subtitle="200/250mm"
-              price="+ 5 799 €"
-              isPriced={true}
-              tooltip="Zvýšená izolácia stien 200mm a strechy 250mm. Lepšia tepelná ochrana pre celoročné využitie."
-            />
+            {/* Izolácia - skupina */}
+            <div className="col-span-2 sm:col-span-3 lg:col-span-2 grid grid-cols-3 gap-2 sm:gap-3 p-2 border-2 border-dashed border-gray-400 rounded-xl bg-gray-50/50">
+              <p className="col-span-3 text-[10px] sm:text-xs font-semibold text-gray-600 -mb-1">Izolácia (vyberte jednu)</p>
+              <Tile
+                selected={izolaciaNavysenie === "standard"}
+                onClick={() => setIzolaciaNavysenie("standard")}
+                icon={ThermometerSun}
+                iconColor="text-gray-400"
+                iconSelectedColor="text-amber-600"
+                title="Izolácia štd."
+                subtitle="150/200mm"
+                price="+ 0 €"
+                isPriced={false}
+                tooltip="Štandardná izolácia stien 150mm a strechy 200mm. Vhodné pre rekreačné stavby."
+              />
 
-            <Tile
-              selected={izolaciaNavysenie === "premium"}
-              onClick={(e) => { if (izolaciaNavysenie !== "premium") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("premium"); }}
-              icon={ThermometerSun}
-              iconColor="text-green-500"
-              iconSelectedColor="text-green-600"
-              title="Premium"
-              subtitle="250/300mm"
-              price="+ 11 600 €"
-              isPriced={true}
-              isA0={true}
-              selectedBg="bg-green-100"
-              selectedBorder="border-green-500"
-              selectedRing="ring-green-300"
-              tooltip="Premium izolácia pre energetický certifikát A0. Steny 250mm, strecha 300mm. Potrebné pre status rodinného domu."
-            />
+              <Tile
+                selected={izolaciaNavysenie === "zvysena"}
+                onClick={(e) => { if (izolaciaNavysenie !== "zvysena") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("zvysena"); }}
+                icon={ThermometerSun}
+                iconColor="text-orange-400"
+                iconSelectedColor="text-amber-600"
+                title="Izolácia +"
+                subtitle="200/250mm"
+                price="+ 5 799 €"
+                isPriced={true}
+                tooltip="Zvýšená izolácia stien 200mm a strechy 250mm. Lepšia tepelná ochrana pre celoročné využitie."
+              />
 
-            <Tile
-              selected={zaklady === "bez"}
-              onClick={() => setZaklady("bez")}
-              icon={Landmark}
-              iconColor="text-gray-400"
-              iconSelectedColor="text-amber-600"
-              title="Bez základov"
-              subtitle="Vlastné"
-              price="+ 0 €"
-              isPriced={false}
-              tooltip="Základy si zabezpečíte svojpomocne alebo cez vlastného dodávateľa."
-            />
+              <Tile
+                selected={izolaciaNavysenie === "premium"}
+                onClick={(e) => { if (izolaciaNavysenie !== "premium") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("premium"); }}
+                icon={ThermometerSun}
+                iconColor="text-green-500"
+                iconSelectedColor="text-green-600"
+                title="Premium"
+                subtitle="250/300mm"
+                price="+ 11 600 €"
+                isPriced={true}
+                isA0={true}
+                selectedBg="bg-green-100"
+                selectedBorder="border-green-500"
+                selectedRing="ring-green-300"
+                tooltip="Premium izolácia pre energetický certifikát A0. Steny 250mm, strecha 300mm. Potrebné pre status rodinného domu."
+              />
+            </div>
 
-            <Tile
-              selected={zaklady === "skrutky"}
-              onClick={(e) => { if (zaklady !== "skrutky") triggerAnimation?.("skrutky", e.currentTarget); setZaklady("skrutky"); }}
-              icon={Landmark}
-              iconColor="text-amber-400"
-              iconSelectedColor="text-amber-600"
-              title="Skrutky"
-              subtitle="Zemné pätky"
-              price="+ 8 140 €"
-              isPriced={true}
-              tooltip="Zemné skrutky alebo betónové pätky. Rýchla a ekonomická voľba pre rovný terén."
-            />
+            {/* Základy - skupina */}
+            <div className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-2 border-2 border-dashed border-gray-400 rounded-xl bg-gray-50/50">
+              <p className="col-span-2 sm:col-span-4 text-[10px] sm:text-xs font-semibold text-gray-600 -mb-1">Základy (vyberte jednu)</p>
+              <Tile
+                selected={zaklady === "bez"}
+                onClick={() => setZaklady("bez")}
+                icon={Landmark}
+                iconColor="text-gray-400"
+                iconSelectedColor="text-amber-600"
+                title="Bez základov"
+                subtitle="Vlastné"
+                price="+ 0 €"
+                isPriced={false}
+                tooltip="Základy si zabezpečíte svojpomocne alebo cez vlastného dodávateľa."
+              />
 
-            <Tile
-              selected={zaklady === "doska"}
-              onClick={(e) => { if (zaklady !== "doska") triggerAnimation?.("beton", e.currentTarget); setZaklady("doska"); }}
-              icon={Landmark}
-              iconColor="text-orange-400"
-              iconSelectedColor="text-amber-600"
-              title="Doska"
-              subtitle="Základová"
-              price="+ 17 946 €"
-              isPriced={true}
-              tooltip="Železobetónová základová doska. Stabilné riešenie vhodné pre väčšinu typov terénu."
-            />
+              <Tile
+                selected={zaklady === "skrutky"}
+                onClick={(e) => { if (zaklady !== "skrutky") triggerAnimation?.("skrutky", e.currentTarget); setZaklady("skrutky"); }}
+                icon={Landmark}
+                iconColor="text-amber-400"
+                iconSelectedColor="text-amber-600"
+                title="Skrutky"
+                subtitle="Zemné pätky"
+                price="+ 8 140 €"
+                isPriced={true}
+                tooltip="Zemné skrutky alebo betónové pätky. Rýchla a ekonomická voľba pre rovný terén."
+              />
 
-            <Tile
-              selected={zaklady === "pasove"}
-              onClick={(e) => { if (zaklady !== "pasove") triggerAnimation?.("beton", e.currentTarget); setZaklady("pasove"); }}
-              icon={Landmark}
-              iconColor="text-orange-500"
-              iconSelectedColor="text-amber-600"
-              title="Pásové"
-              subtitle="Základy"
-              price="+ 21 079 €"
-              isPriced={true}
-              tooltip="Klasické pásové základy. Najrobustnejšie riešenie pre náročnejšie podmienky."
-            />
+              <Tile
+                selected={zaklady === "doska"}
+                onClick={(e) => { if (zaklady !== "doska") triggerAnimation?.("beton", e.currentTarget); setZaklady("doska"); }}
+                icon={Landmark}
+                iconColor="text-orange-400"
+                iconSelectedColor="text-amber-600"
+                title="Doska"
+                subtitle="Základová"
+                price="+ 17 946 €"
+                isPriced={true}
+                tooltip="Železobetónová základová doska. Stabilné riešenie vhodné pre väčšinu typov terénu."
+              />
+
+              <Tile
+                selected={zaklady === "pasove"}
+                onClick={(e) => { if (zaklady !== "pasove") triggerAnimation?.("beton", e.currentTarget); setZaklady("pasove"); }}
+                icon={Landmark}
+                iconColor="text-orange-500"
+                iconSelectedColor="text-amber-600"
+                title="Pásové"
+                subtitle="Základy"
+                price="+ 21 079 €"
+                isPriced={true}
+                tooltip="Klasické pásové základy. Najrobustnejšie riešenie pre náročnejšie podmienky."
+              />
+            </div>
 
           </div>
         </div>
