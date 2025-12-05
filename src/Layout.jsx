@@ -114,17 +114,17 @@ function LayoutContent({ children }) {
       >
         <div className="container mx-auto px-2 sm:px-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex-1 flex items-center justify-start lg:justify-start gap-2 sm:gap-3">
               <Link to={createPageUrl("Domov")} className="group">
                 <img 
                   src={LOGO_URL} 
                   alt="American Living" 
-                  className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto transition-transform group-hover:scale-105"
+                  className="h-8 sm:h-10 md:h-12 lg:h-16 xl:h-20 w-auto transition-transform group-hover:scale-105"
                 />
               </Link>
 
               <div className="hidden md:flex flex-col items-center gap-0">
-                <span className="text-[8px] text-gray-600 font-medium whitespace-nowrap">Powered by</span>
+                <span className="text-[8px] lg:text-[10px] text-gray-600 font-medium whitespace-nowrap">Powered by</span>
                 <a 
                   href="https://konfiga.eu" 
                   target="_blank" 
@@ -134,18 +134,18 @@ function LayoutContent({ children }) {
                   <img 
                     src={KONFIGA_LOGO_URL} 
                     alt="Konfiga.eu - AI CRM" 
-                    className="h-6 sm:h-8 md:h-9 lg:h-10 w-auto"
+                    className="h-6 sm:h-8 md:h-9 lg:h-12 xl:h-14 w-auto"
                   />
                 </a>
               </div>
             </div>
 
-            <nav className="hidden lg:flex items-center gap-0.5">
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
               {navItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`px-2.5 py-1 rounded-md text-sm font-medium transition-all ${
+                  className={`px-3 xl:px-4 py-1.5 xl:py-2 rounded-md text-sm lg:text-base xl:text-lg font-medium transition-all ${
                     isActive(item.path)
                       ? 'bg-primary text-white'
                       : 'text-gray-700 hover:bg-gray-100'
@@ -156,46 +156,51 @@ function LayoutContent({ children }) {
               ))}
             </nav>
 
-            <div className="hidden lg:flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-2 xl:gap-3">
               {isSuperAdmin && (
                 <>
                   <Link to={createPageUrl("AdminAnalyzaDomov")}>
-                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8" title="AI Analýza domov">
-                      <Brain className="w-4 h-4" />
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8 lg:h-10 lg:w-10" title="AI Analýza domov">
+                      <Brain className="w-4 h-4 lg:w-5 lg:h-5" />
                     </Button>
                   </Link>
                   <Link to={createPageUrl("AdminSpravaDomov")}>
-                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8" title="Správa domov">
-                      <Image className="w-4 h-4" />
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8 lg:h-10 lg:w-10" title="Správa domov">
+                      <Image className="w-4 h-4 lg:w-5 lg:h-5" />
                     </Button>
                   </Link>
                   <Link to={createPageUrl("AdminUploadFotiekDomov")}>
-                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8" title="Upload fotiek domov">
-                      <Upload className="w-4 h-4" />
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8 lg:h-10 lg:w-10" title="Upload fotiek domov">
+                      <Upload className="w-4 h-4 lg:w-5 lg:h-5" />
                     </Button>
                   </Link>
-                </>
-              )}
+                  <Link to={createPageUrl("AdminPrekladyDomov")}>
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8 lg:h-10 lg:w-10" title="Preklady domov">
+                      <FileText className="w-4 h-4 lg:w-5 lg:h-5" />
+                    </Button>
+                  </Link>
+                  </>
+                  )}
               {isAdmin && (
                 <>
                   <Link to={createPageUrl("AdminDokumenty")}>
-                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8" title="Správa dokumentov">
-                      <FileText className="w-4 h-4" />
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8 lg:h-10 lg:w-10" title="Správa dokumentov">
+                      <FileText className="w-4 h-4 lg:w-5 lg:h-5" />
                     </Button>
                   </Link>
                   <Link to={createPageUrl("AdminGoogleDrive")}>
-                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8" title="Správa Google Drive">
-                      <Settings className="w-4 h-4" />
+                    <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-8 w-8 lg:h-10 lg:w-10" title="Správa Google Drive">
+                      <Settings className="w-4 h-4 lg:w-5 lg:h-5" />
                     </Button>
                   </Link>
                 </>
               )}
               <LanguageSelector variant="ghost" />
-              <a href="tel:+421905138124" className="text-primary font-semibold text-xs">
+              <a href="tel:+421905138124" className="text-primary font-semibold text-sm lg:text-base xl:text-lg">
                 +421 905 138 124
               </a>
               <Link to={createPageUrl("Kontakt")}>
-                <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-white font-semibold text-xs h-7 px-3">
+                <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-white font-semibold text-sm lg:text-base h-8 lg:h-10 px-4 lg:px-6">
                   {t('contact')}
                 </Button>
               </Link>
@@ -271,8 +276,16 @@ function LayoutContent({ children }) {
                     <Image className="w-5 h-5" />
                     Upload fotiek domov
                   </Link>
-                </>
-              )}
+                  <Link
+                    to={createPageUrl("AdminPrekladyDomov")}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                  >
+                    <FileText className="w-5 h-5" />
+                    Preklady domov
+                  </Link>
+                  </>
+                  )}
               {isAdmin && (
                 <>
                   <Link
