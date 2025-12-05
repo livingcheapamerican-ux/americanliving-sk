@@ -436,10 +436,10 @@ export default function Katalog() {
                     </motion.div>
                     <div>
                       <p className="text-xs sm:text-base font-bold text-gray-900 flex items-center gap-1">
-                        <span className="bg-red-600 text-white px-2 py-0.5 rounded-full text-[10px] sm:text-xs animate-pulse">NOVÉ</span>
+                        <span className="bg-red-600 text-white px-2 py-0.5 rounded-full text-[10px] sm:text-xs animate-pulse">{t('newBadge')}</span>
                         {t('showInDesign')}
                       </p>
-                      <p className="text-[10px] sm:text-sm text-gray-600 font-medium">Prezrite si domy v rôznych farbách fasády</p>
+                      <p className="text-[10px] sm:text-sm text-gray-600 font-medium">{t('viewHousesInDifferentColors')}</p>
                     </div>
                   </div>
                   

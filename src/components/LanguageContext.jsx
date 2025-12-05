@@ -199,6 +199,8 @@ const translations = {
     // Konfigurátor Wizard
     createYourPriceOffer: "Poskladajte si cenovú ponuku na váš dom",
     noHiddenFees: "bez skrytých poplatkov",
+    newBadge: "NOVÉ",
+    viewHousesInDifferentColors: "Prezrite si domy v rôznych farbách fasády",
     
     // DetailDomu specific
     twoD: "2D",
@@ -1570,6 +1572,8 @@ const translations = {
     // Konfigurátor Wizard
     createYourPriceOffer: "Créez votre offre de prix pour votre maison",
     noHiddenFees: "Sans frais cachés",
+    newBadge: "NOUVEAU",
+    viewHousesInDifferentColors: "Consultez les maisons dans différentes couleurs de façade",
     
     // DetailDomu specific
     twoD: "2D",
@@ -2139,6 +2143,8 @@ const translations = {
     // Konfigurátor Wizard
     createYourPriceOffer: "Саставите своју ценовну понуду за вашу кућу",
     noHiddenFees: "Без скривених трошкова",
+    newBadge: "НОВО",
+    viewHousesInDifferentColors: "Погледајте куће у различитим бојама фасаде",
     
     // DetailDomu specific
     twoD: "2D",
