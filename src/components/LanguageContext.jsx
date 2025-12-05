@@ -1004,6 +1004,12 @@ const translations = {
     basePriceIncludesRecreational: "Grundpreis umfasst komplette Standardausstattung für Freizeitgebäude. Option zur Aufrüstung auf Familienhaus mit A0-Zertifikat im Konfigurator.",
     gl24ModularHouse: "Modulhaus aus GL24-Leimholz – Kombination aus Eleganz, Komfort und Innovation.",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Erstellen Sie Ihr Preisangebot für Ihr Haus",
+    noHiddenFees: "Ohne versteckte Gebühren",
+    newBadge: "NEU",
+    viewHousesInDifferentColors: "Sehen Sie sich Häuser in verschiedenen Fassadenfarben an",
+    
     // DetailDomu specific
     twoD: "2D",
     threeD: "3D",
