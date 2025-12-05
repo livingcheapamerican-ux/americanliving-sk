@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
+import { useLanguage } from "../components/LanguageContext";
 
 const DEFAULT_HERO_IMAGES = [
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80",
@@ -21,6 +22,7 @@ const DEFAULT_HERO_IMAGES = [
 export default function Domov() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
+  const { t } = useLanguage();
   
   const { data: domy = [] } = useQuery({
     queryKey: ['domy-popularne'],
@@ -62,73 +64,73 @@ export default function Domov() {
   const vyhody = [
     {
       icon: Euro,
-      title: "Cena priamo od výrobcu",
-      description: "Bez navýšenia! Cenovo dostupný rodinný dom za najlepšie ceny."
+      title: t('priceDirectFromManufacturer'),
+      description: t('priceDirectDesc')
     },
     {
       icon: Clock,
-      title: "Rýchla výstavba",
-      description: "Váš dom môže byť hotový za pár mesiacov. Modulárna konštrukcia šetrí čas."
+      title: t('fastConstruction'),
+      description: t('fastConstructionDesc')
     },
     {
       icon: Zap,
-      title: "Nízkoenergetický A0",
-      description: "Možnosť energetického certifikátu A0. Nízke náklady na vykurovanie."
+      title: t('lowEnergy'),
+      description: t('lowEnergyDesc')
     },
     {
       icon: Shield,
-      title: "S kolaudáciou",
-      description: "Všetko od projektu po kolaudáciu. Žiadne starosti s úradmi."
+      title: t('withApproval'),
+      description: t('withApprovalDesc')
     }
   ];
 
   const sluzby = [
     { 
       icon: Building2, 
-      nazov: "Predaj vašej nehnuteľnosti",
-      popis: "Realitná kancelária",
+      nazov: t('sellYourProperty'),
+      popis: t('realEstateAgency'),
       image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=500&q=80"
     },
     { 
       icon: Home, 
-      nazov: "Výber a nákup pozemku",
-      popis: "Nájdeme ideálny pozemok",
+      nazov: t('selectAndBuyLand'),
+      popis: t('findIdealLand'),
       image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&q=80"
     },
     { 
       icon: TrendingUp, 
-      nazov: "Vybavenie hypotéky",
-      popis: "Finančné služby",
+      nazov: t('mortgageArrangement'),
+      popis: t('financialServices'),
       image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&q=80"
     },
     { 
       icon: FileText, 
-      nazov: "Projektová dokumentácia",
-      popis: "Kompletný projekt",
+      nazov: t('projectDocumentation'),
+      popis: t('completeProject'),
       image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=500&q=80"
     },
     { 
       icon: Shield, 
-      nazov: "Stavebné povolenie",
-      popis: "Vybavíme za vás",
+      nazov: t('buildingPermitService'),
+      popis: t('weArrangeForYou'),
       image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=500&q=80"
     },
     { 
       icon: Hammer, 
-      nazov: "Výstavba domu",
-      popis: "Stavebná firma",
+      nazov: t('houseConstruction'),
+      popis: t('constructionCompany'),
       image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=500&q=80"
     },
     { 
       icon: Zap, 
-      nazov: "Napojenie na inžinierske siete",
-      popis: "Kompletné pripojenie",
+      nazov: t('utilityConnection'),
+      popis: t('completeConnection'),
       image: "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=500&q=80"
     },
     { 
       icon: Key, 
-      nazov: "Kolaudácia",
-      popis: "Od A po Z",
+      nazov: t('finalApproval'),
+      popis: t('fromAToZ'),
       image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=500&q=80"
     }
   ];
@@ -136,50 +138,50 @@ export default function Domov() {
   const proces = [
     { 
       cislo: "01", 
-      nazov: "Predaj nehnuteľnosti", 
-      popis: "Pomôžeme predať vašu súčasnú nehnuteľnosť",
+      nazov: t('sellYourProperty'), 
+      popis: t('helpSellProperty'),
       icon: Building2
     },
     { 
       cislo: "02", 
-      nazov: "Výber pozemku", 
-      popis: "Nájdeme vám vhodný pozemok z našej ponuky",
+      nazov: t('selectAndBuyLand'), 
+      popis: t('findSuitableLand'),
       icon: Home
     },
     { 
       cislo: "03", 
-      nazov: "Financovanie", 
-      popis: "Vyberieme najvhodnejší hypotekárny úver",
+      nazov: t('financing'), 
+      popis: t('selectBestMortgage'),
       icon: Euro
     },
     { 
       cislo: "04", 
-      nazov: "Projektová dokumentácia", 
-      popis: "Pripravíme kompletnú projektovú dokumentáciu",
+      nazov: t('projectDocumentation'), 
+      popis: t('prepareCompleteDoc'),
       icon: FileText
     },
     { 
       cislo: "05", 
-      nazov: "Stavebné povolenie", 
-      popis: "Zabezpečíme stavebné povolenie a úradné potvrdenia",
+      nazov: t('buildingPermitService'), 
+      popis: t('ensureBuildingPermit'),
       icon: Shield
     },
     { 
       cislo: "06", 
-      nazov: "Výstavba domu", 
-      popis: "Postavíme váš modulárny dom",
+      nazov: t('houseConstruction'), 
+      popis: t('buildYourModularHouse'),
       icon: Hammer
     },
     { 
       cislo: "07", 
-      nazov: "Napojenie na siete", 
-      popis: "Napojíme ho na všetky inžinierske siete",
+      nazov: t('utilityConnection'), 
+      popis: t('connectToUtilities'),
       icon: Zap
     },
     { 
       cislo: "08", 
-      nazov: "Kolaudácia", 
-      popis: "Zabezpečíme kolaudáciu a odovzdáme kľúče",
+      nazov: t('finalApproval'), 
+      popis: t('ensureApprovalKeys'),
       icon: Key
     }
   ];
@@ -226,24 +228,24 @@ export default function Domov() {
         <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
           <div className="max-w-2xl text-white">
             <h1 className="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-4 leading-tight drop-shadow-lg">
-              Cenovo dostupný rodinný dom
+              {t('affordableFamilyHouse')}
             </h1>
             <p className="text-sm sm:text-xl mb-2 sm:mb-4 font-bold text-yellow-300 drop-shadow-lg">
-              Za cenu priamo od výrobcu! Bez navýšenia!
+              {t('directFromManufacturer')}
             </p>
             <p className="text-xs sm:text-base md:text-lg mb-3 sm:mb-6 text-gray-100 leading-relaxed drop-shadow-md">
-              Všetko, čo potrebujete, máte presne tu! Naši kolegovia sa postarajú o kompletné vybavenie.
+              {t('everythingYouNeed')}
             </p>
             <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-3">
               <Link to={createPageUrl("Katalog")}>
                 <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-white font-semibold text-xs sm:text-base px-3 sm:px-6 py-1.5 sm:py-3 w-full sm:w-auto shadow-xl">
-                  Zobraziť ponuku
+                  {t('showOffer')}
                   <ArrowRight className="ml-1.5 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </Link>
               <Link to={createPageUrl("Kontakt")}>
                 <Button size="sm" variant="outline" className="bg-white/10 backdrop-blur-sm border-2 border-white text-white hover:bg-white hover:text-primary font-semibold text-xs sm:text-base px-3 sm:px-6 py-1.5 sm:py-3 w-full sm:w-auto shadow-xl">
-                  Konzultácia
+                  {t('consultation')}
                 </Button>
               </Link>
             </div>
@@ -268,24 +270,23 @@ export default function Domov() {
         <div className="container mx-auto px-2 sm:px-4">
           <div className="text-center mb-4 sm:mb-10">
               <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 text-white">
-                Všetko na jednom mieste
+                {t('allInOnePlace')}
               </h2>
             <p className="text-xs sm:text-base text-gray-200 max-w-3xl mx-auto mb-3">
-              Poskytujeme <strong className="text-yellow-300">komplexné služby</strong> - 
-              od realitnej kancelárie cez finančné poradenstvo až po stavebnú realizáciu.
+              {t('comprehensiveServicesDesc')}
             </p>
             <div className="flex flex-wrap justify-center gap-1 sm:gap-2 text-[10px] sm:text-sm font-semibold">
               <div className="flex items-center gap-1 bg-primary px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-white shadow-lg">
                 <Building className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
-                <span>Stavebná firma</span>
+                <span>{t('constructionCompany')}</span>
               </div>
               <div className="flex items-center gap-1 bg-secondary px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-white shadow-lg">
                 <Building2 className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
-                <span>Realitná kancelária</span>
+                <span>{t('realEstateAgency')}</span>
               </div>
               <div className="flex items-center gap-1 bg-accent px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-white shadow-lg">
                 <Landmark className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
-                <span>Finančné služby</span>
+                <span>{t('financialServices')}</span>
               </div>
             </div>
             </div>
@@ -320,11 +321,11 @@ export default function Domov() {
 
                   <div className="text-center">
             <p className="text-sm sm:text-xl text-gray-200 mb-4 sm:mb-6">
-              <strong className="text-white">Vy nemusíte vybavovať nič.</strong> Postaráme sa o celý proces od A po Z.
+              <strong className="text-white">{t('youDontHaveToArrange')}</strong> {t('weHandleEverything')}
             </p>
             <Link to={createPageUrl("Kontakt")}>
               <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-white font-semibold px-4 sm:px-8 text-xs sm:text-base shadow-xl">
-                Začať projekt
+                {t('startProject')}
                 <ArrowRight className="ml-1.5 sm:ml-2 w-3.5 h-3.5 sm:w-5 sm:h-5" />
                 </Button>
                 </Link>
@@ -337,10 +338,10 @@ export default function Domov() {
         <div className="container mx-auto px-2 sm:px-4">
           <div className="text-center mb-4 sm:mb-10">
               <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1.5 sm:mb-3">
-                Prečo American Living?
+                {t('whyAmericanLiving')}
               </h2>
             <p className="text-xs sm:text-base text-gray-700 max-w-3xl mx-auto">
-              Značka kvality od overených dodávateľov s rokmi skúseností
+              {t('qualityBrand')}
             </p>
             </div>
 
@@ -365,18 +366,16 @@ export default function Domov() {
                 <Shield className="w-12 h-12 text-yellow-600 flex-shrink-0" />
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                    Pozor na zavádzajúce reklamy!
+                    {t('misleadingAdsWarning')}
                   </h3>
                   <p className="text-gray-800 mb-3 leading-relaxed font-medium">
-                    Zabudnite na zavádzajúce reklamy, ktoré sľubujú domy za nereálne ceny. 
-                    U nás máte vždy jasne stanovenú konečnú cenu – <strong className="text-gray-900">žiadne skryté poplatky ani prekvapenia</strong>.
+                    {t('misleadingAdsDesc1')}
                   </p>
                   <p className="text-gray-800 mb-3 leading-relaxed font-medium">
-                    V mnohých prípadoch sú modulárne domy v inzerátoch za nízke ceny použiteľné len ako záhradné chaty, 
-                    ktoré nepotrebujú kolaudáciu, stavebné povolenie ani energetický certifikát A0.
+                    {t('misleadingAdsDesc2')}
                   </p>
                   <p className="text-gray-900 font-bold text-lg">
-                    ✓ Naše domy spĺňajú všetky potrebné normy a sú pripravené na kolaudáciu ako plnohodnotné rodinné domy.
+                    ✓ {t('ourHousesMeetStandards')}
                   </p>
                 </div>
                 </div>
@@ -391,10 +390,10 @@ export default function Domov() {
           <div className="container mx-auto px-2 sm:px-4">
             <div className="text-center mb-4 sm:mb-10">
                 <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1.5">
-                  Naša ponuka
+                  {t('ourOffer')}
                 </h2>
               <p className="text-xs sm:text-base text-gray-700">
-                Drevodom, ktorý nemusí vyzerať ako drevodom
+                {t('woodHouseNotLookWood')}
               </p>
               </div>
 
@@ -439,7 +438,7 @@ export default function Domov() {
             <div className="text-center">
               <Link to={createPageUrl("Katalog")}>
                 <Button size="sm" className="bg-primary hover:bg-primary/90 text-white font-semibold px-4 sm:px-8 text-xs sm:text-base shadow-xl">
-                  Zobraziť celý katalóg
+                  {t('showFullCatalog')}
                   <ArrowRight className="ml-1.5 sm:ml-2 w-3.5 h-3.5 sm:w-5 sm:h-5" />
                 </Button>
               </Link>
@@ -452,7 +451,7 @@ export default function Domov() {
       <section className="py-4 sm:py-10 bg-white">
         <div className="container mx-auto px-2 sm:px-4">
           <div className="text-center mb-2 sm:mb-4">
-              <h2 className="text-base sm:text-2xl font-bold text-gray-900">Proces realizácie</h2>
+              <h2 className="text-base sm:text-2xl font-bold text-gray-900">{t('implementationProcess')}</h2>
             </div>
 
             <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-1 sm:gap-2">
@@ -473,21 +472,21 @@ export default function Domov() {
         <div className="container mx-auto px-2 sm:px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-              Pripravení na vlastný dom?
+              {t('readyForOwnHouse')}
             </h2>
             <p className="text-xs sm:text-base mb-3 sm:mb-6 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-              Kontaktujte nás a nájdeme riešenie pre vás
+              {t('contactUsAndFind')}
             </p>
             <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-3 justify-center">
               <Link to={createPageUrl("Katalog")}>
                 <Button size="sm" className="bg-white text-primary hover:bg-gray-100 font-semibold px-3 sm:px-6 w-full sm:w-auto shadow-xl text-xs sm:text-base">
-                  Zobraziť ponuku
+                  {t('showOffer')}
                   <ArrowRight className="ml-1.5 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </Link>
               <Link to={createPageUrl("Kontakt")}>
                 <Button size="sm" variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary font-semibold px-3 sm:px-6 w-full sm:w-auto shadow-xl text-xs sm:text-base">
-                  Kontakt
+                  {t('contact')}
                   <Phone className="ml-1.5 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </Link>
