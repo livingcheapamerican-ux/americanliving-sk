@@ -174,8 +174,8 @@ export default function KonfiguratorFlatDoubleInline({
   showOnlyPhase = null, // "holodom", "kluc", "docs" alebo null pre všetky
   typStavby = ""
 }) {
-  // Základná cena
-  const BASE_PRICE = 59900;
+  // Základná cena - dynamická z objektu domu
+  const BASE_PRICE = dom?.zakladna_cena || 59900;
 
   // Flying animation hook
   const { animations, triggerAnimation } = useFlyingAnimation();
@@ -471,7 +471,7 @@ export default function KonfiguratorFlatDoubleInline({
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-green-900 text-xs font-bold uppercase tracking-wider mb-0.5">{t('yourConfiguration')}</p>
-                  <h3 className="text-base font-black text-gray-900">Flat Double 142m²</h3>
+                  <h3 className="text-base font-black text-gray-900">{dom?.nazov || 'Flat Double 142m²'}</h3>
                 </div>
               </div>
             </div>
@@ -1172,7 +1172,7 @@ export default function KonfiguratorFlatDoubleInline({
               <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-8">
                 <div className="flex-1">
                   <p className="text-green-400 text-[10px] sm:text-sm font-semibold uppercase tracking-wider mb-1 sm:mb-2">{t('yourConfiguration')}</p>
-                  <h3 className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">Flat Double 142m²</h3>
+                  <h3 className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">{dom?.nazov || 'Flat Double 142m²'}</h3>
                   <p className="text-slate-400 text-xs sm:text-base mb-4">{t('completeCalculation')}</p>
                   {projektA0 && !a0Odporucania && (
                     <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] sm:text-sm py-1 sm:py-1.5 px-2 sm:px-4 shadow-lg shadow-green-500/30">✓ {t('meetsA0')}</Badge>

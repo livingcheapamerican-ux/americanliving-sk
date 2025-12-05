@@ -1137,8 +1137,8 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Informačné panely - len pre Prosto House Flat Double - PRESUNUTÉ NA PRAVÚ STRANU */}
-            {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
+            {/* Informačné panely - pre všetky Prosto House domy - PRESUNUTÉ NA PRAVÚ STRANU */}
+            {isProstoHouse && (
               <div className="grid grid-cols-2 gap-3">
                 {/* Komplet pre montáž */}
                 <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
@@ -1218,8 +1218,8 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Floating Konfigurátor Súhrn - len pre Prosto House Flat Double - hned pod zakladnu konfiguraciu */}
-            {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
+            {/* Floating Konfigurátor Súhrn - pre všetky Prosto House domy - hned pod zakladnu konfiguraciu */}
+            {isProstoHouse && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlatDoubleInline 
                   dom={dom}
