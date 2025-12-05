@@ -3029,7 +3029,7 @@ const translations = {
     sending: "Надсилання...",
     needQuickAnswer: "Потрібна швидка відповідь?",
     callOrEmail: "Зателефонуйте безпосередньо або напишіть email. Ми з радістю відповімо на всі ваші питання.",
-  }
+  },
 };
 
 const LanguageContext = createContext();
