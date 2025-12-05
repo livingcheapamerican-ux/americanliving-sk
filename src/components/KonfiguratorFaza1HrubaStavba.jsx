@@ -22,7 +22,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       if (tileRef.current) {
         const rect = tileRef.current.getBoundingClientRect();
         setTooltipPosition({
-          top: rect.top - 10,
+          top: rect.bottom + 10,
           left: rect.left + rect.width / 2
         });
       }
@@ -82,18 +82,18 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       {/* Tooltip - rendered via portal */}
       {showTooltip && tooltip && ReactDOM.createPortal(
         <motion.div
-          initial={{ opacity: 0, y: 5 }}
+          initial={{ opacity: 0, y: -5 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 5 }}
-          className="fixed z-[9999] max-w-[90vw] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
+          exit={{ opacity: 0, y: -5 }}
+          className="fixed z-[9999] max-w-[85vw] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
           style={{
-            top: Math.max(10, tooltipPosition.top),
-            left: Math.min(Math.max(tooltipPosition.left, 140), window.innerWidth - 140),
-            transform: 'translate(-50%, -100%)'
+            top: tooltipPosition.top,
+            left: Math.min(Math.max(tooltipPosition.left, 135), window.innerWidth - 135),
+            transform: 'translateX(-50%)'
           }}
         >
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900" />
           {tooltip}
-          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
         </motion.div>,
         document.body
       )}
