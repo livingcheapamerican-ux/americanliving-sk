@@ -9,6 +9,7 @@ import {
   Check, Wrench, ThermometerSun, Landmark, Package, Sparkles
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "./LanguageContext";
 
 // Dlaždica s tooltip a veľkou fajkou
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-amber-100", selectedBorder = "border-amber-500", selectedRing = "ring-amber-300" }) => {
@@ -137,6 +138,8 @@ export default function KonfiguratorFaza1HrubaStavba({
   zaklady, setZaklady,
   triggerAnimation
 }) {
+  const { t } = useLanguage();
+  
   // Sekcia Header komponenta s animáciou
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
     <motion.div 
@@ -170,7 +173,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             transition={{ delay: 0.2, type: "spring" }}
             className="inline-flex items-center justify-center px-2 sm:px-3 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider"
           >
-            Fáza {step}
+            {t('phase')} {step}
           </motion.span>
         </div>
         <h3 className="text-lg sm:text-2xl font-bold text-white tracking-tight">{title}</h3>
@@ -190,7 +193,7 @@ export default function KonfiguratorFaza1HrubaStavba({
         <div className="flex items-start gap-3">
           <Sparkles className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-green-800 font-medium">
-            Pokiaľ si chcete poskladať rodinný dom s energetickým certifikátom A0 a možnosťou nahlásenia trvalého pobytu, je nutné vybrať všetky zelené položky s označením A0
+            {t('a0Recommendation')}
           </p>
         </div>
       </div>
@@ -198,14 +201,14 @@ export default function KonfiguratorFaza1HrubaStavba({
       <Card className="overflow-hidden border-0 shadow-xl ring-1 ring-amber-200/50 hover:ring-2 hover:ring-amber-300/70 transition-all duration-300">
         <SectionHeader 
           icon={Package} 
-          title="Hrubá stavba" 
-          subtitle="Konštrukcia domu a základy"
+          title={t('phase1')} 
+          subtitle={t('phase1Subtitle')}
           color="from-amber-600 to-orange-600"
           step="1"
         />
         <div className="p-3 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
           {/* Upozornenie na montáž */}
-          <p className="text-[10px] sm:text-xs text-red-600 mb-3 text-center">* Pri montáži sa dodatočne účtuje ubytovanie montážnej brigády (3–4 osoby)</p>
+          <p className="text-[10px] sm:text-xs text-red-600 mb-3 text-center">{t('assemblyNote')}</p>
           
           {/* Dlaždice - Grid layout */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
@@ -214,7 +217,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             <div className="col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-3 border-3 border-dashed border-amber-400 rounded-xl bg-amber-50/30 shadow-sm">
               <p className="col-span-2 text-[10px] sm:text-xs font-bold text-amber-700 -mb-1 flex items-center gap-1">
                 <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
-                Montáž (vyberte jednu)
+                {t('assembly')} ({t('selectOne')})
               </p>
               <Tile
                 selected={montazHolodomu === "nie"}
@@ -222,11 +225,11 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={Wrench}
                 iconColor="text-gray-400"
                 iconSelectedColor="text-amber-600"
-                title="Bez montáže"
-                subtitle="Iba sada"
+                title={t('assemblyNo')}
+                subtitle={t('onlyKit')}
                 price="+ 0 €"
                 isPriced={false}
-                tooltip="Dodanie stavebnej sady bez montážnych prác. Montáž si zabezpečíte svojpomocne."
+                tooltip={t('assemblyNote')}
               />
 
               <Tile
@@ -235,11 +238,11 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={Wrench}
                 iconColor="text-amber-400"
                 iconSelectedColor="text-amber-600"
-                title="S montážou"
-                subtitle="Hrubá stavba"
+                title={t('assemblyYes')}
+                subtitle={t('phase1')}
                 price="+ 17 970 €"
                 isPriced={true}
-                tooltip="Kompletná montáž hrubej stavby vrátane konštrukcie, strechy a okien. Ubytovanie brigády sa účtuje zvlášť."
+                tooltip={t('assemblyNote')}
               />
             </div>
 
@@ -247,7 +250,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             <div className="col-span-2 sm:col-span-3 lg:col-span-2 grid grid-cols-3 gap-2 sm:gap-3 p-3 border-3 border-dashed border-cyan-400 rounded-xl bg-cyan-50/30 shadow-sm">
               <p className="col-span-3 text-[10px] sm:text-xs font-bold text-cyan-700 -mb-1 flex items-center gap-1">
                 <span className="w-2 h-2 bg-cyan-500 rounded-full"></span>
-                Izolácia (vyberte jednu)
+                {t('insulation')} ({t('selectOne')})
               </p>
               <Tile
                 selected={izolaciaNavysenie === "standard"}
@@ -255,11 +258,11 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={ThermometerSun}
                 iconColor="text-gray-400"
                 iconSelectedColor="text-amber-600"
-                title="Izolácia štd."
+                title={t('insulationStandard')}
                 subtitle="150/200mm"
                 price="+ 0 €"
                 isPriced={false}
-                tooltip="Štandardná izolácia stien 150mm a strechy 200mm. Vhodné pre rekreačné stavby."
+                tooltip={t('insulationStandardDesc')}
               />
 
               <Tile
@@ -268,11 +271,11 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={ThermometerSun}
                 iconColor="text-orange-400"
                 iconSelectedColor="text-amber-600"
-                title="Izolácia +"
-                subtitle="200/250mm"
+                title={t('insulationEnhanced')}
+                subtitle={t('insulationEnhancedDesc')}
                 price="+ 5 799 €"
                 isPriced={true}
-                tooltip="Zvýšená izolácia stien 200mm a strechy 250mm. Lepšia tepelná ochrana pre celoročné využitie."
+                tooltip={t('insulationEnhancedDesc')}
               />
 
               <Tile
@@ -281,15 +284,15 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={ThermometerSun}
                 iconColor="text-green-500"
                 iconSelectedColor="text-green-600"
-                title="Premium"
-                subtitle="250/300mm"
+                title={t('insulationPremium')}
+                subtitle={t('insulationPremiumDesc')}
                 price="+ 11 600 €"
                 isPriced={true}
                 isA0={true}
                 selectedBg="bg-green-100"
                 selectedBorder="border-green-500"
                 selectedRing="ring-green-300"
-                tooltip="Premium izolácia pre energetický certifikát A0. Steny 250mm, strecha 300mm. Potrebné pre status rodinného domu."
+                tooltip={t('insulationPremiumDesc')}
               />
             </div>
 
@@ -297,7 +300,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             <div className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-3 border-3 border-dashed border-orange-400 rounded-xl bg-orange-50/30 shadow-sm">
               <p className="col-span-2 sm:col-span-4 text-[10px] sm:text-xs font-bold text-orange-700 -mb-1 flex items-center gap-1">
                 <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-                Základy (vyberte jednu)
+                {t('foundations')} ({t('selectOne')})
               </p>
               <Tile
                 selected={zaklady === "bez"}
@@ -305,11 +308,11 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={Landmark}
                 iconColor="text-gray-400"
                 iconSelectedColor="text-amber-600"
-                title="Bez základov"
-                subtitle="Vlastné"
+                title={t('foundationsNone')}
+                subtitle={t('own')}
                 price="+ 0 €"
                 isPriced={false}
-                tooltip="Základy si zabezpečíte svojpomocne alebo cez vlastného dodávateľa."
+                tooltip={t('foundationsNone')}
               />
 
               <Tile
@@ -318,11 +321,11 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={Landmark}
                 iconColor="text-amber-400"
                 iconSelectedColor="text-amber-600"
-                title="Skrutky"
-                subtitle="Zemné pätky"
+                title={t('foundationsScrews')}
+                subtitle={t('groundFootings')}
                 price="+ 8 140 €"
                 isPriced={true}
-                tooltip="Zemné skrutky alebo betónové pätky. Rýchla a ekonomická voľba pre rovný terén."
+                tooltip={t('foundationsScrews')}
               />
 
               <Tile
@@ -331,11 +334,11 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={Landmark}
                 iconColor="text-orange-400"
                 iconSelectedColor="text-amber-600"
-                title="Doska"
-                subtitle="Základová"
+                title={t('foundationsSlab')}
+                subtitle={t('foundationSlab')}
                 price="+ 17 946 €"
                 isPriced={true}
-                tooltip="Železobetónová základová doska. Stabilné riešenie vhodné pre väčšinu typov terénu."
+                tooltip={t('foundationsSlab')}
               />
 
               <Tile
@@ -344,11 +347,11 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={Landmark}
                 iconColor="text-orange-500"
                 iconSelectedColor="text-amber-600"
-                title="Pásové"
-                subtitle="Základy"
+                title={t('foundationsStrip')}
+                subtitle={t('stripFound')}
                 price="+ 21 079 €"
                 isPriced={true}
-                tooltip="Klasické pásové základy. Najrobustnejšie riešenie pre náročnejšie podmienky."
+                tooltip={t('foundationsStrip')}
               />
             </div>
 
