@@ -656,9 +656,9 @@ export default function DetailDomu() {
               />
             )}
 
-            {/* Konfigurátor pre Fjord */}
+            {/* Konfigurátor pre Fjord - tiež s Wizard výberom typu */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
-              <KonfiguratorFjord 
+              <KonfiguratorWizard 
                 dom={dom}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
@@ -714,6 +714,7 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
+                useFjordPrices={true}
               />
             )}
 

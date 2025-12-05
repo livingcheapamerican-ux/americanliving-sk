@@ -11,6 +11,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
 import KonfiguratorFlatDoubleInline from "./KonfiguratorFlatDoubleInline";
+import KonfiguratorFjord from "./KonfiguratorFjord";
 import { useLanguage } from "./LanguageContext";
 
 // Krok 0: Výber typu stavby
