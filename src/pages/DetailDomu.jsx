@@ -109,6 +109,7 @@ export default function DetailDomu() {
       const metaTitle = dom.meta_title || `${dom.nazov} - ${dom.vyrobca} | ${dom.zastavana_plocha}m²${dom.pocet_izieb ? ` | ${dom.pocet_izieb} ${t('roomsLabel')}` : ''} | American Living`;
       const metaDescription = dom.meta_description || `${dom.nazov} od ${dom.vyrobca} - ${houseType} s plochou ${dom.zastavana_plocha}m²${dom.uzitkova_plocha ? `, úžitková ${dom.uzitkova_plocha}m²` : ''}. ${t('priceFromLabel')} ${dom.zakladna_cena?.toLocaleString('sk-SK')}€ ${t('withVAT')}.${dom.energeticky_certifikat ? ` ${t('energyClass')} A0.` : ''}${dom.celorocny ? ` ${t('yearRound')}.` : ''}`;
       const currentUrl = window.location.href;
+      const canonicalUrl = `${window.location.origin}${window.location.pathname}${dom.slug ? `?slug=${dom.slug}` : `?id=${dom.id}`}`;
       
       document.title = metaTitle;
       
@@ -123,14 +124,25 @@ export default function DetailDomu() {
         tag.content = content;
       };
 
+      // Canonical URL
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement('link');
+        canonicalLink.rel = 'canonical';
+        document.head.appendChild(canonicalLink);
+      }
+      canonicalLink.href = canonicalUrl;
+
       // Basic meta tags
       setMetaTag('meta[name="description"]', 'name', 'description', metaDescription);
+      setMetaTag('meta[name="robots"]', 'name', 'robots', 'index, follow');
+      setMetaTag('meta[name="googlebot"]', 'name', 'googlebot', 'index, follow');
       
       // Open Graph tags
       setMetaTag('meta[property="og:title"]', 'property', 'og:title', metaTitle);
       setMetaTag('meta[property="og:description"]', 'property', 'og:description', metaDescription);
       setMetaTag('meta[property="og:image"]', 'property', 'og:image', dom.hlavny_obrazok);
-      setMetaTag('meta[property="og:url"]', 'property', 'og:url', currentUrl);
+      setMetaTag('meta[property="og:url"]', 'property', 'og:url', canonicalUrl);
       setMetaTag('meta[property="og:type"]', 'property', 'og:type', 'website');
       setMetaTag('meta[property="og:site_name"]', 'property', 'og:site_name', 'American Living');
       
@@ -139,10 +151,88 @@ export default function DetailDomu() {
       setMetaTag('meta[name="twitter:title"]', 'name', 'twitter:title', metaTitle);
       setMetaTag('meta[name="twitter:description"]', 'name', 'twitter:description', metaDescription);
       setMetaTag('meta[name="twitter:image"]', 'name', 'twitter:image', dom.hlavny_obrazok);
+      setMetaTag('meta[name="twitter:url"]', 'name', 'twitter:url', canonicalUrl);
+
+      // Schema.org structured data
+      const schemaData = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": dom.nazov,
+        "description": metaDescription,
+        "image": [dom.hlavny_obrazok, ...(dom.galeria || [])].filter(Boolean),
+        "brand": {
+          "@type": "Brand",
+          "name": dom.vyrobca
+        },
+        "manufacturer": {
+          "@type": "Organization",
+          "name": dom.vyrobca
+        },
+        "offers": {
+          "@type": "Offer",
+          "url": canonicalUrl,
+          "priceCurrency": "EUR",
+          "price": dom.zakladna_cena,
+          "priceValidUntil": new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
+          "availability": "https://schema.org/InStock",
+          "seller": {
+            "@type": "Organization",
+            "name": "American Living"
+          }
+        },
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "Zastavaná plocha",
+            "value": `${dom.zastavana_plocha} m²`
+          },
+          dom.uzitkova_plocha && {
+            "@type": "PropertyValue",
+            "name": "Úžitková plocha",
+            "value": `${dom.uzitkova_plocha} m²`
+          },
+          dom.pocet_izieb && {
+            "@type": "PropertyValue",
+            "name": "Počet izieb",
+            "value": dom.pocet_izieb
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Typ domu",
+            "value": houseType
+          },
+          dom.energeticky_certifikat && {
+            "@type": "PropertyValue",
+            "name": "Energetická trieda",
+            "value": "A0"
+          },
+          dom.celorocny && {
+            "@type": "PropertyValue",
+            "name": "Celoročný",
+            "value": "Áno"
+          }
+        ].filter(Boolean)
+      };
+
+      let schemaScript = document.querySelector('script[type="application/ld+json"]');
+      if (!schemaScript) {
+        schemaScript = document.createElement('script');
+        schemaScript.type = 'application/ld+json';
+        document.head.appendChild(schemaScript);
+      }
+      schemaScript.textContent = JSON.stringify(schemaData);
 
       // Set initial calculatedPrice to base price
       setCalculatedPrice(dom.zakladna_cena || 0);
     }
+
+    // Cleanup function
+    return () => {
+      const canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (canonicalLink) canonicalLink.remove();
+      const schemaScript = document.querySelector('script[type="application/ld+json"]');
+      if (schemaScript) schemaScript.remove();
+    };
   }, [dom, t]);
 
   if (isLoading) {
