@@ -453,16 +453,22 @@ export default function DetailDomu() {
               {t('backToCatalog')}
             </Button>
           </Link>
-          {canManage && (
-            <Button
-              onClick={() => setShowAdminPanel(!showAdminPanel)}
-              variant={showAdminPanel ? "default" : "outline"}
-              className={showAdminPanel ? "bg-blue-600 hover:bg-blue-700" : ""}
-            >
-              <Edit className="w-4 h-4 mr-2" />
-              {showAdminPanel ? t('close') : t('galleries')}
-            </Button>
-          )}
+          <div className="flex items-center gap-3">
+            {/* Debug info */}
+            <div className="text-xs text-gray-500">
+              Role: {user?.role || 'none'} | Super: {user?.super_admin ? 'yes' : 'no'} | Can: {canManage ? 'yes' : 'no'}
+            </div>
+            {canManage && (
+              <Button
+                onClick={() => setShowAdminPanel(!showAdminPanel)}
+                variant={showAdminPanel ? "default" : "outline"}
+                className={showAdminPanel ? "bg-blue-600 hover:bg-blue-700" : ""}
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                {showAdminPanel ? t('close') : t('galleries')}
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 
