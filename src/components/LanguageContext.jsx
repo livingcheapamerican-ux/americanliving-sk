@@ -49,7 +49,7 @@ const translations = {
     phase2: "Holodom",
     phase2Subtitle: "Montáž konštrukcie a technické inštalácie",
     phase3: "Dom na kľúč",
-    phase3Subtitle: "Interiérové úpravy a dokončovacie práce",
+    phase3Subtitle: "Interiérové a exteriérové úpravy a dokončovacie práce",
     phase4: "Dokumentácia a služby",
     phase4Subtitle: "Projektová dokumentácia, povolenia a doprava",
     
@@ -121,7 +121,7 @@ const translations = {
     fixedWindow: "Fixné",
     tiltWindow: "Výkl.",
     
-    facade: "Fasáda",
+    facade: "Vonkajšia fasáda",
     facadeWoodMetal: "Drevo/Plech",
     facadeStandard: "Štandardná",
     facadeStucco: "Škúchaná",
