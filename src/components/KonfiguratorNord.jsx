@@ -310,7 +310,6 @@ export default function KonfiguratorNord({
     items.push({ name: t('floors') + " - " + t('floorsLaminate'), price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
     items.push({ name: t('floorHeatingFull'), price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
     items.push({ name: `${t('interiorDoors')} (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere, section: "kluc", selected: interieroveDvere > 0 });
-    items.push({ name: t('pergola'), price: pergola ? CENY.pergola : 0, section: "kluc", selected: pergola });
     
     items.push({ name: t('engineeringFull'), price: inziniering ? CENY.inziniering : 0, section: "docs", selected: inziniering });
     items.push({ name: t('projectA0Full'), price: projektA0 ? CENY.projektA0 : 0, section: "docs", selected: projektA0 });
@@ -322,7 +321,7 @@ export default function KonfiguratorNord({
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
-      interieroveDvere, pergola, inziniering, projektA0, revizna, doprava, t, BASE_PRICE]);
+      interieroveDvere, inziniering, projektA0, revizna, doprava, t, BASE_PRICE]);
 
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
@@ -665,7 +664,6 @@ export default function KonfiguratorNord({
 
                     <Tile selected={vnutornePodlahy} onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); setVnutornePodlahy(!vnutornePodlahy); }} icon={Square} iconColor="text-amber-500" iconSelectedColor="text-emerald-600" title={t('floors')} subtitle={t('floorsLaminate')} price="+ 1 940 €" isPriced={true} selectedBg="bg-emerald-100" selectedBorder="border-emerald-500" selectedRing="ring-emerald-300" hoverBorder="hover:border-emerald-300" tooltip={t('floors')} />
                     <Tile selected={podlahovVykurovanie} onClick={(e) => { if (!podlahovVykurovanie) triggerAnimation("podlahovVykurovanie", e.currentTarget); setPodlahovVykurovanie(!podlahovVykurovanie); }} icon={Flame} iconColor="text-orange-400" iconSelectedColor="text-orange-600" title={t('floorHeating')} subtitle={t('wifiThermostat')} price="+ 5 344 €" isPriced={true} selectedBg="bg-orange-100" selectedBorder="border-orange-500" selectedRing="ring-orange-300" hoverBorder="hover:border-orange-300" tooltip={t('floorHeatingFull')} />
-                    <Tile selected={pergola} onClick={(e) => { if (!pergola) triggerAnimation("pergola", e.currentTarget); setPergola(!pergola); }} icon={Maximize} iconColor="text-teal-400" iconSelectedColor="text-emerald-600" title={t('pergola')} subtitle={t('pergolaDecorative')} price="+ 1 845 €" isPriced={true} selectedBg="bg-emerald-100" selectedBorder="border-emerald-500" selectedRing="ring-emerald-300" hoverBorder="hover:border-emerald-300" tooltip={t('pergola')} />
                   </div>
 
                   <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
