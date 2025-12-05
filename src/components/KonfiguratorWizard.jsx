@@ -19,6 +19,81 @@ const StepTypStavby = ({ typStavby, setTypStavby, onNext }) => {
   
   return (
     <div className="space-y-6">
+      {/* Animovaný banner */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-6 shadow-xl"
+      >
+        {/* Animované pozadie */}
+        <div className="absolute inset-0 opacity-20">
+          <motion.div
+            animate={{ 
+              scale: [1, 1.2, 1],
+              rotate: [0, 180, 360]
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute -top-10 -right-10 w-40 h-40 bg-white rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{ 
+              scale: [1.2, 1, 1.2],
+              rotate: [360, 180, 0]
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            className="absolute -bottom-10 -left-10 w-32 h-32 bg-white rounded-full blur-3xl"
+          />
+        </div>
+        
+        {/* Obsah */}
+        <div className="relative text-center">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5, type: "spring" }}
+            className="flex items-center justify-center gap-3 mb-2"
+          >
+            <motion.span
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+              className="text-3xl"
+            >
+              🏠
+            </motion.span>
+            <motion.span
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="text-3xl"
+            >
+              ✨
+            </motion.span>
+          </motion.div>
+          <motion.h3
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="text-xl sm:text-2xl font-bold text-white mb-2"
+          >
+            Poskladajte si cenovú ponuku na váš dom
+          </motion.h3>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="text-white/90 text-sm sm:text-base font-medium flex items-center justify-center gap-2"
+          >
+            <motion.span
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 1, repeat: Infinity, repeatDelay: 2 }}
+            >
+              ✓
+            </motion.span>
+            bez skrytých poplatkov
+          </motion.p>
+        </div>
+      </motion.div>
+
       <div className="text-center mb-8">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
           {t('buildingTypeQuestion')}
