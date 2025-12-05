@@ -405,7 +405,6 @@ export default function KonfiguratorWizard({
             doprava={doprava}
             setDoprava={setDoprava}
             showOnlySummary={false}
-            showOnlyPhase={currentStep === 2 ? "holodom" : currentStep === 3 ? "kluc" : "docs"}
             typStavby={typStavby}
           />
         );
