@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import ReactDOM from "react-dom";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -13,9 +14,20 @@ import { motion, AnimatePresence } from "framer-motion";
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-amber-100", selectedBorder = "border-amber-500", selectedRing = "ring-amber-300" }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [hoverTimer, setHoverTimer] = useState(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const tileRef = useRef(null);
 
   const handleMouseEnter = () => {
-    const timer = setTimeout(() => setShowTooltip(true), 2000);
+    const timer = setTimeout(() => {
+      if (tileRef.current) {
+        const rect = tileRef.current.getBoundingClientRect();
+        setTooltipPosition({
+          top: rect.top - 10,
+          left: rect.left + rect.width / 2
+        });
+      }
+      setShowTooltip(true);
+    }, 2000);
     setHoverTimer(timer);
   };
 
@@ -26,6 +38,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
 
   return (
     <motion.div
+      ref={tileRef}
       whileHover={{ scale: 1.02, y: -2 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
@@ -66,24 +79,24 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       <span className={`text-[10px] sm:text-xs text-gray-500 mt-1 ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
       <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-xs mt-2 ${selected ? "opacity-30" : ""}`}>{price}</span>
 
-      {/* Tooltip */}
-      <AnimatePresence>
-        {showTooltip && tooltip && (
-          <motion.div
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 5 }}
-            className="fixed z-[9999] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
-            style={{
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)'
-            }}
-          >
-            {tooltip}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Tooltip - rendered via portal */}
+      {showTooltip && tooltip && ReactDOM.createPortal(
+        <motion.div
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 5 }}
+          className="fixed z-[9999] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
+          style={{
+            top: tooltipPosition.top,
+            left: tooltipPosition.left,
+            transform: 'translate(-50%, -100%)'
+          }}
+        >
+          {tooltip}
+          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+        </motion.div>,
+        document.body
+      )}
     </motion.div>
   );
 };
