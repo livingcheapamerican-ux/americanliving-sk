@@ -631,7 +631,7 @@ export default function DetailDomu() {
             {/* Popis - presunute z pravej strany */}
             {dom.popis && (
               <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">{t('description')}</h3>
+                <h3 className="text-lg font-bold text-primary mb-4">{t('descriptionTitle')}</h3>
                 <div className="text-gray-700 leading-tight whitespace-pre-line">
                   {dom.popis}
                 </div>
@@ -878,7 +878,7 @@ export default function DetailDomu() {
                 <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
                   <div className="flex items-center gap-2 p-3 text-sm font-semibold text-amber-900 border-b border-amber-200">
                     <Package className="w-4 h-4" />
-                    Komplet pre montáž
+                    {t('assemblyKit')}
                   </div>
                   <div className="px-3 pb-3 text-sm text-amber-800 space-y-1 pt-2">
                     <p>• drevená konštrukcia, hobľovaný hranol</p>
@@ -898,7 +898,7 @@ export default function DetailDomu() {
                 <Card className="overflow-hidden border border-yellow-200 bg-yellow-50/50">
                   <div className="flex items-center gap-2 p-3 text-sm font-semibold text-yellow-900 border-b border-yellow-200">
                     <Zap className="w-4 h-4" />
-                    Elektroinštalácia
+                    {t('electricalInstallation')}
                   </div>
                   <div className="px-3 pb-3 text-sm text-yellow-800 space-y-1 pt-2">
                     <p>• montáž elektrických káblov</p>
@@ -913,7 +913,7 @@ export default function DetailDomu() {
                 <Card className="overflow-hidden border border-blue-200 bg-blue-50/50">
                   <div className="flex items-center gap-2 p-3 text-sm font-semibold text-blue-900 border-b border-blue-200">
                     <Droplets className="w-4 h-4" />
-                    Voda a kanalizácia
+                    {t('waterAndSewage')}
                   </div>
                   <div className="px-3 pb-3 text-sm text-blue-800 space-y-1 pt-2">
                     <p>• montáž vodovodných potrubí</p>
@@ -928,7 +928,7 @@ export default function DetailDomu() {
                 <Card className="overflow-hidden border border-orange-200 bg-orange-50/50">
                   <div className="flex items-center gap-2 p-3 text-sm font-semibold text-orange-900 border-b border-orange-200">
                     <Landmark className="w-4 h-4" />
-                    Základy
+                    {t('foundationsPanel')}
                   </div>
                   <div className="px-3 pb-3 text-sm text-orange-800 space-y-1 pt-2">
                     <p>• vrutové stĺpy, betónové stĺpiky alebo doska</p>
@@ -942,7 +942,7 @@ export default function DetailDomu() {
                 <Card id="interier-finis-panel" className="overflow-hidden border border-emerald-200 bg-emerald-50/50 col-span-2">
                   <div className="flex items-center gap-2 p-3 text-sm font-semibold text-emerald-900 border-b border-emerald-200">
                     <Home className="w-4 h-4" />
-                    Interiér finiš
+                    {t('interiorFinishPanel')}
                   </div>
                   <div className="px-3 pb-3 text-sm text-emerald-800 space-y-1 pt-2">
                     <p>• montáž priečok podľa projektu • izolácia 100mm + parozábrana • tatranský profil 8-12mm</p>

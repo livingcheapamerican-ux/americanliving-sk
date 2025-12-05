@@ -504,39 +504,39 @@ export default function KonfiguratorFlatDoubleInline({
                   <React.Fragment key={index}>
                     {showHrubaDivider && (
                       <div className="py-1">
-                        <div className="border-t border-amber-500/50"></div>
-                        <div className="flex items-center gap-1.5 px-1 pt-1">
-                          <Package className="w-3 h-3 text-amber-400" />
-                          <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Hrubá stavba</span>
-                        </div>
-                      </div>
+                            <div className="border-t border-amber-500/50"></div>
+                            <div className="flex items-center gap-1.5 px-1 pt-1">
+                              <Package className="w-3 h-3 text-amber-400" />
+                              <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">{t('roughConstruction')}</span>
+                            </div>
+                          </div>
                     )}
                     {showHolodomDivider && (
                       <div className="py-1">
-                        <div className="border-t border-blue-500/50"></div>
-                        <div className="flex items-center gap-1.5 px-1 pt-1">
-                          <Hammer className="w-3 h-3 text-blue-400" />
-                          <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">Holodom</span>
-                        </div>
-                      </div>
+                            <div className="border-t border-blue-500/50"></div>
+                            <div className="flex items-center gap-1.5 px-1 pt-1">
+                              <Hammer className="w-3 h-3 text-blue-400" />
+                              <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">{t('holodomLabel')}</span>
+                            </div>
+                          </div>
                     )}
                     {showKlucDivider && (
                       <div className="py-1">
-                        <div className="border-t border-emerald-500/50"></div>
-                        <div className="flex items-center gap-1.5 px-1 pt-1">
-                          <Key className="w-3 h-3 text-emerald-400" />
-                          <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Dom na kľúč</span>
-                        </div>
-                      </div>
+                            <div className="border-t border-emerald-500/50"></div>
+                            <div className="flex items-center gap-1.5 px-1 pt-1">
+                              <Key className="w-3 h-3 text-emerald-400" />
+                              <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">{t('turnkeyLabel')}</span>
+                            </div>
+                          </div>
                     )}
                     {showDocsDivider && (
                       <div className="py-1">
-                        <div className="border-t border-purple-500/50"></div>
-                        <div className="flex items-center gap-1.5 px-1 pt-1">
-                          <FileText className="w-3 h-3 text-purple-400" />
-                          <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider">Dokumentácia</span>
-                        </div>
-                      </div>
+                            <div className="border-t border-purple-500/50"></div>
+                            <div className="flex items-center gap-1.5 px-1 pt-1">
+                              <FileText className="w-3 h-3 text-purple-400" />
+                              <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider">{t('documentationLabel')}</span>
+                            </div>
+                          </div>
                     )}
                     <div className={`flex justify-between items-center py-1 px-1.5 rounded text-xs ${isBase ? 'bg-blue-500/20 border border-blue-500/30 my-0.5' : item.selected ? 'hover:bg-slate-700/50' : 'opacity-40'}`}>
                       <span className={`${isBase ? 'text-blue-300 font-bold text-sm' : item.selected ? 'text-slate-300 font-medium' : 'text-slate-500 line-through'} flex-1 pr-2 truncate`}>{item.name}</span>
@@ -552,7 +552,7 @@ export default function KonfiguratorFlatDoubleInline({
             {/* Celková cena */}
             <div className="p-3 bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-t border-green-500/20">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-slate-400 text-xs">{t('totalWithVAT')}</span>
+                <span className="text-slate-400 text-xs">{t('totalWithVATLabel')}</span>
                 <span className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
                   {formatPrice(totalPrice)}
                 </span>

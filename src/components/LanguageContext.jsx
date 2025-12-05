@@ -655,6 +655,21 @@ const translations = {
     insulationStd: "Insulation (standard)",
     foundationsLabel: "Foundations",
     
+    // Detail panels
+    assemblyKit: "Assembly kit",
+    electricalInstallation: "Electrical installation",
+    waterAndSewage: "Water and sewage",
+    foundationsPanel: "Foundations",
+    interiorFinishPanel: "Interior finish",
+    descriptionTitle: "Description",
+    
+    // Summary panel labels
+    roughConstruction: "Rough construction",
+    holodomLabel: "Shell house",
+    turnkeyLabel: "Turnkey house",
+    documentationLabel: "Documentation",
+    totalWithVATLabel: "Total with VAT",
+    
     // Contact
     contactUs: "Contact us",
     writeUs: "Write to us",
@@ -1082,6 +1097,21 @@ const translations = {
     insulationStd: "Szigetelés (standard)",
     foundationsLabel: "Alapok",
     
+    // Detail panels
+    assemblyKit: "Összeszerelő készlet",
+    electricalInstallation: "Elektromos telepítés",
+    waterAndSewage: "Víz és csatorna",
+    foundationsPanel: "Alapok",
+    interiorFinishPanel: "Belső kivitelezés",
+    descriptionTitle: "Leírás",
+    
+    // Summary panel labels
+    roughConstruction: "Szerkezetkész",
+    holodomLabel: "Héjház",
+    turnkeyLabel: "Kulcsrakész ház",
+    documentationLabel: "Dokumentáció",
+    totalWithVATLabel: "Összesen ÁFÁ-val",
+    
     // Contact
     contactUs: "Kapcsolatfelvétel",
     writeUs: "Írjon nekünk",
@@ -1474,6 +1504,21 @@ const translations = {
     insulationStd: "Izolacja (standard)",
     foundationsLabel: "Fundamenty",
     
+    // Detail panels
+    assemblyKit: "Zestaw montażowy",
+    electricalInstallation: "Instalacja elektryczna",
+    waterAndSewage: "Woda i kanalizacja",
+    foundationsPanel: "Fundamenty",
+    interiorFinishPanel: "Wykończenie wnętrz",
+    descriptionTitle: "Opis",
+    
+    // Summary panel labels
+    roughConstruction: "Stan surowy",
+    holodomLabel: "Dom szkieletowy",
+    turnkeyLabel: "Pod klucz",
+    documentationLabel: "Dokumentacja",
+    totalWithVATLabel: "Razem z VAT",
+    
     // Contact
     contactUs: "Skontaktuj się z nami",
     writeUs: "Napisz do nas",
@@ -1865,6 +1910,21 @@ const translations = {
     shellAssembly: "Монтаж каркасу",
     insulationStd: "Ізоляція (стандарт)",
     foundationsLabel: "Фундамент",
+    
+    // Detail panels
+    assemblyKit: "Комплект для монтажу",
+    electricalInstallation: "Електроінсталяція",
+    waterAndSewage: "Вода та каналізація",
+    foundationsPanel: "Фундамент",
+    interiorFinishPanel: "Внутрішнє оздоблення",
+    descriptionTitle: "Опис",
+    
+    // Summary panel labels
+    roughConstruction: "Чорнова будівля",
+    holodomLabel: "Каркасний дім",
+    turnkeyLabel: "Під ключ",
+    documentationLabel: "Документація",
+    totalWithVATLabel: "Всього з ПДВ",
     
     // Contact
     contactUs: "Зв'яжіться з нами",
