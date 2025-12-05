@@ -617,7 +617,7 @@ export default function DetailDomu() {
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-6"
+            className="space-y-6 lg:self-start"
           >
             {/* Hlavička */}
             <div>
@@ -1140,7 +1140,7 @@ export default function DetailDomu() {
 
               {/* Floating Konfigurátor Súhrn - len pre Prosto House Flat Double */}
               {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
-                <div className="sticky top-16 mt-4">
+                <div className="lg:sticky lg:top-20 mt-4 self-start">
                   <KonfiguratorFlatDoubleInline 
                     dom={dom}
                     montazHolodomu={montazHolodomu}
