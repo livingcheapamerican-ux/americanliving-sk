@@ -470,8 +470,8 @@ export default function KonfiguratorFlatDoubleInline({
             <div className="p-3 border-b border-slate-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-green-600 text-[10px] font-semibold uppercase tracking-wider mb-0.5">{t('yourConfiguration')}</p>
-                  <h3 className="text-base font-bold text-slate-800">Flat Double 142m²</h3>
+                  <p className="text-green-700 text-xs font-semibold uppercase tracking-wider mb-0.5">{t('yourConfiguration')}</p>
+                  <h3 className="text-lg font-bold text-slate-900">Flat Double 142m²</h3>
                 </div>
               </div>
             </div>
@@ -506,8 +506,8 @@ export default function KonfiguratorFlatDoubleInline({
                       <div className="py-1">
                                     <div className="border-t border-amber-400"></div>
                                     <div className="flex items-center gap-1.5 px-1 pt-1">
-                                      <Package className="w-3 h-3 text-amber-600" />
-                                      <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider">{t('roughConstruction')}</span>
+                                      <Package className="w-4 h-4 text-amber-700" />
+                                      <span className="text-xs font-bold text-amber-800 uppercase tracking-wider">{t('roughConstruction')}</span>
                                     </div>
                                   </div>
                     )}
@@ -515,8 +515,8 @@ export default function KonfiguratorFlatDoubleInline({
                       <div className="py-1">
                                     <div className="border-t border-blue-400"></div>
                                     <div className="flex items-center gap-1.5 px-1 pt-1">
-                                      <Hammer className="w-3 h-3 text-blue-600" />
-                                      <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider">{t('holodomLabel')}</span>
+                                      <Hammer className="w-4 h-4 text-blue-700" />
+                                      <span className="text-xs font-bold text-blue-800 uppercase tracking-wider">{t('holodomLabel')}</span>
                                     </div>
                                   </div>
                     )}
@@ -524,8 +524,8 @@ export default function KonfiguratorFlatDoubleInline({
                       <div className="py-1">
                                     <div className="border-t border-emerald-400"></div>
                                     <div className="flex items-center gap-1.5 px-1 pt-1">
-                                      <Key className="w-3 h-3 text-emerald-600" />
-                                      <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">{t('turnkeyLabel')}</span>
+                                      <Key className="w-4 h-4 text-emerald-700" />
+                                      <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">{t('turnkeyLabel')}</span>
                                     </div>
                                   </div>
                     )}
@@ -533,14 +533,14 @@ export default function KonfiguratorFlatDoubleInline({
                       <div className="py-1">
                                     <div className="border-t border-purple-400"></div>
                                     <div className="flex items-center gap-1.5 px-1 pt-1">
-                                      <FileText className="w-3 h-3 text-purple-600" />
-                                      <span className="text-[10px] font-bold text-purple-700 uppercase tracking-wider">{t('documentationLabel')}</span>
+                                      <FileText className="w-4 h-4 text-purple-700" />
+                                      <span className="text-xs font-bold text-purple-800 uppercase tracking-wider">{t('documentationLabel')}</span>
                                     </div>
                                   </div>
                     )}
-                    <div className={`flex justify-between items-center py-1 px-1.5 rounded text-xs ${isBase ? 'bg-blue-100 border border-blue-300 my-0.5' : item.selected ? 'hover:bg-slate-100' : 'opacity-40'}`}>
-                          <span className={`${isBase ? 'text-blue-700 font-bold text-sm' : item.selected ? 'text-slate-700 font-medium' : 'text-slate-400 line-through'} flex-1 pr-2 truncate`}>{item.name}</span>
-                          <span className={`${isBase ? 'text-blue-700 text-sm' : item.selected ? 'text-green-600' : 'text-slate-400'} font-bold whitespace-nowrap`}>
+                    <div className={`flex justify-between items-center py-1.5 px-2 rounded text-sm ${isBase ? 'bg-blue-100 border border-blue-300 my-0.5' : item.selected ? 'hover:bg-slate-100' : 'opacity-40'}`}>
+                          <span className={`${isBase ? 'text-blue-800 font-bold text-base' : item.selected ? 'text-slate-800 font-medium' : 'text-slate-500 line-through'} flex-1 pr-2 truncate`}>{item.name}</span>
+                          <span className={`${isBase ? 'text-blue-800 text-base' : item.selected ? 'text-green-700' : 'text-slate-500'} font-bold whitespace-nowrap`}>
                             {item.selected ? formatPrice(item.price) : '—'}
                           </span>
                         </div>
@@ -550,10 +550,10 @@ export default function KonfiguratorFlatDoubleInline({
             </div>
 
             {/* Celková cena */}
-            <div className="p-3 bg-gradient-to-br from-green-100 to-emerald-50 border-t border-green-300">
+            <div className="p-4 bg-gradient-to-br from-green-100 to-emerald-50 border-t border-green-300">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-slate-600 text-xs">{t('totalWithVATLabel')}</span>
-                <span className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">
+                <span className="text-slate-700 text-sm font-medium">{t('totalWithVATLabel')}</span>
+                <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-700 to-emerald-700">
                   {formatPrice(totalPrice)}
                 </span>
               </div>
@@ -570,7 +570,7 @@ export default function KonfiguratorFlatDoubleInline({
                     size="sm" 
                     variant="outline" 
                     onClick={handleReset}
-                    className="w-full border-slate-300 text-slate-500 hover:bg-red-50 hover:border-red-400 hover:text-red-600 transition-all text-xs h-7"
+                    className="w-full border-slate-300 text-slate-600 hover:bg-red-50 hover:border-red-400 hover:text-red-600 transition-all text-sm h-8"
                   >
                   <RotateCcw className="mr-1.5 w-3 h-3" />
                   {t('reset')}
