@@ -632,6 +632,22 @@ export default function KonfiguratorFlatDoubleInline({
       <div className="space-y-6">
 
         {/* ═══════════════════════════════════════════════════════════════════════
+          FÁZA 1: HRUBÁ STAVBA
+          ═══════════════════════════════════════════════════════════════════════ */}
+        {showHruba && (
+          <KonfiguratorFaza1HrubaStavba 
+            montazHolodomu={montazHolodomu}
+            setMontazHolodomu={setMontazHolodomu}
+            izolaciaNavysenie={izolaciaNavysenie}
+            setIzolaciaNavysenie={setIzolaciaNavysenie}
+            zaklady={zaklady}
+            setZaklady={setZaklady}
+            triggerAnimation={triggerAnimation}
+            useFlat15Prices={isFlat15}
+          />
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════════════
           FÁZA 2: HOLODOM (Montáž, Inštalácie, Okná/Dvere)
           ═══════════════════════════════════════════════════════════════════════ */}
         {showHolodom && <motion.div
