@@ -538,9 +538,9 @@ export default function KonfiguratorFlatDoubleInline({
                                     </div>
                                   </div>
                     )}
-                    <div className={`flex justify-between items-center py-1 px-1.5 rounded ${isBase ? 'bg-blue-100 my-0.5' : item.selected ? 'hover:bg-slate-100' : 'opacity-40'}`}>
-                          <span className={`${isBase ? 'text-blue-950 font-bold text-base' : item.selected ? 'text-gray-900 font-medium text-sm' : 'text-gray-500 line-through text-sm'} flex-1 pr-1 truncate`}>{item.name}</span>
-                          <span className={`${isBase ? 'text-blue-950 text-base' : item.selected ? 'text-green-900 text-sm' : 'text-gray-500 text-sm'} font-bold whitespace-nowrap`}>
+                    <div className={`flex justify-between items-center py-1.5 px-2 rounded-lg ${isBase ? 'bg-blue-200 my-1' : item.selected ? 'bg-slate-50 hover:bg-slate-100' : 'opacity-40'}`}>
+                          <span className={`${isBase ? 'text-blue-950 font-extrabold text-lg' : item.selected ? 'text-gray-900 font-semibold text-base' : 'text-gray-500 line-through text-base'} flex-1 pr-1 truncate`}>{item.name}</span>
+                          <span className={`${isBase ? 'text-blue-950 text-lg' : item.selected ? 'text-green-800 text-base' : 'text-gray-500 text-base'} font-extrabold whitespace-nowrap`}>
                             {item.selected ? formatPrice(item.price) : '—'}
                           </span>
                         </div>
@@ -616,7 +616,7 @@ export default function KonfiguratorFlatDoubleInline({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
             {/* Interiér finiš - skupina */}
-            <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-2 sm:gap-3 p-3 border-4 border-blue-500 rounded-xl bg-blue-50/50 shadow-md">
+            <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-2 sm:gap-3 p-4 border-[5px] border-blue-600 rounded-2xl bg-blue-100/70 shadow-xl">
               <p className="col-span-3 text-[10px] sm:text-xs font-bold text-blue-700 -mb-1 flex items-center gap-1">
                 <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
                 {t('interiorFinish')} ({t('selectOne')})
@@ -662,7 +662,7 @@ export default function KonfiguratorFlatDoubleInline({
             </div>
 
             {/* Inštalácie - skupina */}
-            <div className="col-span-2 sm:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-3 border-4 border-yellow-400 rounded-xl bg-yellow-50/50 shadow-md">
+            <div className="col-span-2 sm:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] border-yellow-500 rounded-2xl bg-yellow-100/70 shadow-xl">
               <p className="col-span-2 text-[10px] sm:text-xs font-bold text-yellow-800 -mb-1 flex items-center gap-1">
                 <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
                 {t('electrical')} & {t('water')}
@@ -729,7 +729,7 @@ export default function KonfiguratorFlatDoubleInline({
               </div>
 
               {/* Klimatizácia a vetranie - A0 skupina */}
-              <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-3 border-4 border-green-500 rounded-xl bg-green-50/50 shadow-md">
+              <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] border-green-600 rounded-2xl bg-green-100/70 shadow-xl">
                 <p className="col-span-2 text-xs font-bold text-green-800 -mb-1 flex items-center gap-1">
                   <span className="w-2 h-2 bg-green-500 rounded-full"></span>
                   {t('heatPump')} & {t('recuperation')} (A0)
@@ -906,7 +906,7 @@ export default function KonfiguratorFlatDoubleInline({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
             {/* Fasáda - skupina */}
-            <div className={`col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-3 border-4 rounded-xl shadow-md ${!vonkajsiaFasada ? 'border-red-500 bg-red-50/50 animate-pulse' : 'border-emerald-500 bg-emerald-50/50'}`}>
+            <div className={`col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] rounded-2xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
               <p className={`col-span-2 text-[10px] sm:text-xs font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
                 <span className={`w-2 h-2 rounded-full ${!vonkajsiaFasada ? 'bg-red-500' : 'bg-emerald-500'}`}></span>
                 {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
