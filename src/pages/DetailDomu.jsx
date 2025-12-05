@@ -987,28 +987,31 @@ export default function DetailDomu() {
               {isProstoHouse ? (
                 <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2">
                   <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-amber-800">
-                    <strong>Základná cena je za samotnú konštrukciu bez montážnych prác.</strong> Cenu montáže si môžete vypočítať v konfigurátore.
-                  </p>
+                  <TranslatedDescription
+                    text="Základná cena je za samotnú konštrukciu bez montážnych prác. Cenu montáže si môžete vypočítať v konfigurátore."
+                    className="text-sm text-amber-800"
+                  />
                 </div>
               ) : (isTicabhouse) ? (
                 <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="text-sm text-blue-800 mb-2">
-                    <strong>Modulárna konštrukcia domu – flexibilné riešenie pre vaše bývanie.</strong>
-                  </p>
-                  <p className="text-sm text-blue-700">
-                    Základná cena zahŕňa kompletnú štandardnú výbavu pre <strong>rekreačnú stavbu</strong>. 
-                    Možnosť upgradu na <strong>Rodinný dom s certifikátom A0</strong> v konfigurátore.
-                  </p>
+                  <TranslatedDescription
+                    text="Modulárna konštrukcia domu – flexibilné riešenie pre vaše bývanie."
+                    className="text-sm text-blue-800 mb-2 font-semibold"
+                  />
+                  <TranslatedDescription
+                    text="Základná cena zahŕňa kompletnú štandardnú výbavu pre rekreačnú stavbu. Možnosť upgradu na Rodinný dom s certifikátom A0 v konfigurátore."
+                    className="text-sm text-blue-700"
+                  />
                 </div>
               ) : isJAKModules ? (
                 <div className="mt-3 bg-green-50 border border-green-200 rounded-lg p-3">
-                  <p className="text-sm text-green-800">
-                    <strong>Modulárny dom z drewna klejonego GL24</strong> – spojenie elegancie, pohodlia a inovácií.
-                  </p>
+                  <TranslatedDescription
+                    text="Modulárny dom z drewna klejonego GL24 – spojenie elegancie, pohodlia a inovácií."
+                    className="text-sm text-green-800 font-semibold"
+                  />
                 </div>
               ) : (
-                <p className="text-sm text-gray-500 mt-2">- cena základného modelu</p>
+                <p className="text-sm text-gray-500 mt-2">- {t('priceFromLabel')}</p>
               )}
             </div>
 
