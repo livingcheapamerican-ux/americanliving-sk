@@ -182,8 +182,39 @@ export default function KonfiguratorFlatDoubleInline({
   const { animations, triggerAnimation } = useFlyingAnimation();
   const { t } = useLanguage();
 
-  // Cenník
-  const CENY = {
+  // Detekcia či je Flat 1,5
+  const isFlat15 = dom?.nazov?.includes("Flat 1,5");
+
+  // Cenník - dynamický podľa typu domu
+  const CENY = isFlat15 ? {
+    montaz: { nie: 0, ano: 12870 },
+    dvere: { ziadne: 0, kovove: 720, plastove: 660 },
+    izolacia: { standard: 0, zvysena: 4950, premium: 9899 },
+    elektroinstalacia: 6320,
+    vodaKanalizacia: 2030,
+    sanitaKomplet: 1169,
+    bojler: 246,
+    tepelneCerpadlo: 5535,
+    rekuperacia: 2700,
+    zaklady: { bez: 0, skrutky: 6946, doska: 15315, pasove: 17995 },
+    pripojkaSiete: 1501,
+    inziniering: 2592,
+    projektA0: 3500,
+    interierFinis: { ziadne: 0, drevo: 16400, sadrokarton: 19475 },
+    vonkajsiaFasada: { standard: 0, suchana: 12841 },
+    povrchokaOkien: 3100,
+    vnutornePodlahy: 3351,
+    podlahovVykurovanie: 5525,
+    pergola: 1845,
+    interieroveDvere: 250,
+    tonovaneSkla: 1300,
+    doprava: 0,
+    revizna: 1000,
+    stresneOkno: 760,
+    bocneOknoFixne: 501,
+    bocneOknoVyklopne90: 540,
+    bocneOknoVyklopne55: 225
+  } : {
     montaz: { nie: 0, ano: 17970 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
     izolacia: { standard: 0, zvysena: 5799, premium: 11600 },
@@ -680,7 +711,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-yellow-600"
                 title={t('electrical')}
                 subtitle={t('wiring')}
-                price="+ 7 400 €"
+                price={isFlat15 ? "+ 6 320 €" : "+ 7 400 €"}
                 isPriced={true}
                 selectedBg="bg-yellow-100"
                 selectedBorder="border-yellow-500"
@@ -697,7 +728,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-blue-600"
                 title={t('water')}
                 subtitle={t('wiring')}
-                price="+ 2 380 €"
+                price={isFlat15 ? "+ 2 030 €" : "+ 2 380 €"}
                 isPriced={true}
                 tooltip={t('waterFull')}
               />
