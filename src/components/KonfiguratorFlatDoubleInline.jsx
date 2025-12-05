@@ -712,117 +712,117 @@ export default function KonfiguratorFlatDoubleInline({
 
               <Tile
                 selected={bojler}
-              onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }}
-              icon={Flame}
-              iconColor="text-orange-400"
-              iconSelectedColor="text-orange-600"
-              title={t('boiler')}
-              subtitle={t('boilerElectric')}
-              price="+ 246 €"
-              isPriced={true}
-              selectedBg="bg-orange-100"
-              selectedBorder="border-orange-500"
-              selectedRing="ring-orange-300"
-              hoverBorder="hover:border-orange-300"
-              tooltip={t('boiler')}
-            />
-            </div>
+                onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }}
+                icon={Flame}
+                iconColor="text-orange-400"
+                iconSelectedColor="text-orange-600"
+                title={t('boiler')}
+                subtitle={t('boilerElectric')}
+                price="+ 246 €"
+                isPriced={true}
+                selectedBg="bg-orange-100"
+                selectedBorder="border-orange-500"
+                selectedRing="ring-orange-300"
+                hoverBorder="hover:border-orange-300"
+                tooltip={t('boiler')}
+              />
+              </div>
 
-            {/* Klimatizácia a vetranie - A0 skupina */}
-            <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-3 border-4 border-green-500 rounded-xl bg-green-50/50 shadow-md">
-              <p className="col-span-2 text-xs font-bold text-green-800 -mb-1 flex items-center gap-1">
-                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                {t('heatPump')} & {t('recuperation')} (A0)
-              </p>
-            <Tile
-              selected={tepelneCerpadlo}
-              onClick={(e) => { if (!tepelneCerpadlo) triggerAnimation("klimatizacia", e.currentTarget); setTepelneCerpadlo(!tepelneCerpadlo); }}
-              icon={ThermometerSun}
-              iconColor="text-red-500"
-              iconSelectedColor="text-green-600"
-              title={t('heatPump')}
-              subtitle={t('units5')}
-              price="+ 5 535 €"
-              isPriced={true}
-              isA0={true}
-              selectedBg="bg-green-100"
-              selectedBorder="border-green-500"
-              selectedRing="ring-green-300"
-              tooltip={t('heatPumpFull')}
-            />
+              {/* Klimatizácia a vetranie - A0 skupina */}
+              <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-3 border-4 border-green-500 rounded-xl bg-green-50/50 shadow-md">
+                <p className="col-span-2 text-xs font-bold text-green-800 -mb-1 flex items-center gap-1">
+                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  {t('heatPump')} & {t('recuperation')} (A0)
+                </p>
+                <Tile
+                  selected={tepelneCerpadlo}
+                  onClick={(e) => { if (!tepelneCerpadlo) triggerAnimation("klimatizacia", e.currentTarget); setTepelneCerpadlo(!tepelneCerpadlo); }}
+                  icon={ThermometerSun}
+                  iconColor="text-red-500"
+                  iconSelectedColor="text-green-600"
+                  title={t('heatPump')}
+                  subtitle={t('units5')}
+                  price="+ 5 535 €"
+                  isPriced={true}
+                  isA0={true}
+                  selectedBg="bg-green-100"
+                  selectedBorder="border-green-500"
+                  selectedRing="ring-green-300"
+                  tooltip={t('heatPumpFull')}
+                />
 
-            <Tile
-              selected={rekuperacia}
-              onClick={(e) => { if (!rekuperacia) triggerAnimation("rekuperacia", e.currentTarget); setRekuperacia(!rekuperacia); }}
-              icon={Wind}
-              iconColor="text-cyan-500"
-              iconSelectedColor="text-green-600"
-              title={t('recuperation')}
-              subtitle={t('units5')}
-              price="+ 2 700 €"
-              isPriced={true}
-              isA0={true}
-              selectedBg="bg-green-100"
-              selectedBorder="border-green-500"
-              selectedRing="ring-green-300"
-              tooltip={t('recuperation')}
-            />
-            </div>
+                <Tile
+                  selected={rekuperacia}
+                  onClick={(e) => { if (!rekuperacia) triggerAnimation("rekuperacia", e.currentTarget); setRekuperacia(!rekuperacia); }}
+                  icon={Wind}
+                  iconColor="text-cyan-500"
+                  iconSelectedColor="text-green-600"
+                  title={t('recuperation')}
+                  subtitle={t('units5')}
+                  price="+ 2 700 €"
+                  isPriced={true}
+                  isA0={true}
+                  selectedBg="bg-green-100"
+                  selectedBorder="border-green-500"
+                  selectedRing="ring-green-300"
+                  tooltip={t('recuperation')}
+                />
+              </div>
 
-            <Tile
-              selected={pripojkaSiete}
-              onClick={(e) => { if (!pripojkaSiete) triggerAnimation("siete", e.currentTarget); setPripojkaSiete(!pripojkaSiete); }}
-              icon={Cable}
-              iconColor="text-gray-400"
-              iconSelectedColor="text-gray-700"
-              title={t('gridConnection')}
-              subtitle={t('connection')}
-              price="+ 1 501 €"
-              isPriced={true}
-              selectedBg="bg-gray-200"
-              selectedBorder="border-gray-500"
-              selectedRing="ring-gray-300"
-              hoverBorder="hover:border-gray-400"
-              tooltip={t('gridConnectionFull')}
-            />
+              <Tile
+                selected={pripojkaSiete}
+                onClick={(e) => { if (!pripojkaSiete) triggerAnimation("siete", e.currentTarget); setPripojkaSiete(!pripojkaSiete); }}
+                icon={Cable}
+                iconColor="text-gray-400"
+                iconSelectedColor="text-gray-700"
+                title={t('gridConnection')}
+                subtitle={t('connection')}
+                price="+ 1 501 €"
+                isPriced={true}
+                selectedBg="bg-gray-200"
+                selectedBorder="border-gray-500"
+                selectedRing="ring-gray-300"
+                hoverBorder="hover:border-gray-400"
+                tooltip={t('gridConnectionFull')}
+              />
 
-            <Tile
-              selected={povrchokaOkien}
-              onClick={(e) => { if (!povrchokaOkien) triggerAnimation("oknoAntracit", e.currentTarget); setPovrchokaOkien(!povrchokaOkien); }}
-              icon={Square}
-              iconColor="text-slate-400"
-              iconSelectedColor="text-slate-700"
-              title={t('lamination')}
-              subtitle={t('laminationAnthracite')}
-              price="+ 3 100 €"
-              isPriced={true}
-              selectedBg="bg-slate-200"
-              selectedBorder="border-slate-600"
-              selectedRing="ring-slate-300"
-              hoverBorder="hover:border-slate-400"
-              tooltip={t('lamination')}
-            />
+              <Tile
+                selected={povrchokaOkien}
+                onClick={(e) => { if (!povrchokaOkien) triggerAnimation("oknoAntracit", e.currentTarget); setPovrchokaOkien(!povrchokaOkien); }}
+                icon={Square}
+                iconColor="text-slate-400"
+                iconSelectedColor="text-slate-700"
+                title={t('lamination')}
+                subtitle={t('laminationAnthracite')}
+                price="+ 3 100 €"
+                isPriced={true}
+                selectedBg="bg-slate-200"
+                selectedBorder="border-slate-600"
+                selectedRing="ring-slate-300"
+                hoverBorder="hover:border-slate-400"
+                tooltip={t('lamination')}
+              />
 
-            <Tile
-              selected={tonovaneSkla}
-              onClick={(e) => { if (!tonovaneSkla) triggerAnimation("oknoTonovane", e.currentTarget); setTonovaneSkla(!tonovaneSkla); }}
-              icon={Sun}
-              iconColor="text-amber-400"
-              iconSelectedColor="text-amber-600"
-              title={t('tintedGlass')}
-              subtitle={t('solarGlass')}
-              price="+ 1 300 €"
-              isPriced={true}
-              selectedBg="bg-amber-100"
-              selectedBorder="border-amber-500"
-              selectedRing="ring-amber-300"
-              hoverBorder="hover:border-amber-300"
-              tooltip={t('tintedGlass')}
-            />
+              <Tile
+                selected={tonovaneSkla}
+                onClick={(e) => { if (!tonovaneSkla) triggerAnimation("oknoTonovane", e.currentTarget); setTonovaneSkla(!tonovaneSkla); }}
+                icon={Sun}
+                iconColor="text-amber-400"
+                iconSelectedColor="text-amber-600"
+                title={t('tintedGlass')}
+                subtitle={t('solarGlass')}
+                price="+ 1 300 €"
+                isPriced={true}
+                selectedBg="bg-amber-100"
+                selectedBorder="border-amber-500"
+                selectedRing="ring-amber-300"
+                hoverBorder="hover:border-amber-300"
+                tooltip={t('tintedGlass')}
+              />
 
-          </div>
+              </div>
 
-          {/* Sekcia s počtami - Dvere a Okná */}
+              {/* Sekcia s počtami - Dvere a Okná */}
           <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
             <p className="text-xs sm:text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
               <DoorOpen className="w-4 h-4 text-blue-600" />
