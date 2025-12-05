@@ -10,6 +10,8 @@ import Chatbot from "./components/Chatbot";
 import AIAsistent from "./components/AIAsistent";
 import ChristmasEffects from "./components/ChristmasEffects";
 import { Snowflake as SnowflakeIcon } from "lucide-react";
+import { LanguageProvider, useLanguage } from "./components/LanguageContext";
+import LanguageSelector from "./components/LanguageSelector";
 
 // Wrapper pre vianočné efekty s lokálnym uložením
 function ChristmasEffectsWrapper() {
@@ -44,10 +46,11 @@ function ChristmasEffectsWrapper() {
   );
 }
 
-export default function Layout({ children }) {
+function LayoutContent({ children }) {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -63,12 +66,12 @@ export default function Layout({ children }) {
   }, []);
 
   const navItems = [
-    { name: "Domov", path: createPageUrl("Domov"), icon: Home },
-    { name: "Katalóg domov", path: createPageUrl("Katalog"), icon: Grid3x3 },
-    { name: "Galéria realizácií", path: createPageUrl("GaleriaRealizacii"), icon: Home },
-    { name: "Konfigurátor", path: createPageUrl("InteraktivnyKonfigurator"), icon: Settings },
-    { name: "O nás", path: createPageUrl("ONas"), icon: Info },
-    { name: "Kontakt", path: createPageUrl("Kontakt"), icon: Phone },
+    { name: t('home'), path: createPageUrl("Domov"), icon: Home },
+    { name: t('catalog'), path: createPageUrl("Katalog"), icon: Grid3x3 },
+    { name: t('gallery'), path: createPageUrl("GaleriaRealizacii"), icon: Home },
+    { name: t('configurator'), path: createPageUrl("InteraktivnyKonfigurator"), icon: Settings },
+    { name: t('about'), path: createPageUrl("ONas"), icon: Info },
+    { name: t('contact'), path: createPageUrl("Kontakt"), icon: Phone },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -187,12 +190,13 @@ export default function Layout({ children }) {
                   </Link>
                 </>
               )}
+              <LanguageSelector variant="ghost" />
               <a href="tel:+421905138124" className="text-primary font-semibold text-xs">
                 +421 905 138 124
               </a>
               <Link to={createPageUrl("Kontakt")}>
                 <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-white font-semibold text-xs h-7 px-3">
-                  Kontakt
+                  {t('contact')}
                 </Button>
               </Link>
             </div>
@@ -290,6 +294,9 @@ export default function Layout({ children }) {
                 </>
               )}
               <div className="pt-4 space-y-2">
+                <div className="flex justify-center py-2">
+                  <LanguageSelector />
+                </div>
                 <a
                   href="tel:+421905138124"
                   className="flex items-center justify-center gap-2 text-primary font-semibold py-3"
@@ -299,12 +306,12 @@ export default function Layout({ children }) {
                 </a>
                 <Link to={createPageUrl("Kontakt")} onClick={() => setMobileMenuOpen(false)}>
                   <Button className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold">
-                    Kontaktujte nás
+                    {t('contactUs')}
                   </Button>
                 </Link>
               </div>
-            </nav>
-          )}
+              </nav>
+              )}
         </div>
       </header>
 
@@ -333,7 +340,7 @@ export default function Layout({ children }) {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4 text-white">Navigácia</h4>
+              <h4 className="font-semibold mb-4 text-white">{t('navigation')}</h4>
               <ul className="space-y-2 text-sm">
                 {navItems.map((item) => (
                   <li key={item.path}>
@@ -346,7 +353,7 @@ export default function Layout({ children }) {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4 text-white">Kontakt</h4>
+              <h4 className="font-semibold mb-4 text-white">{t('contact')}</h4>
               <ul className="space-y-2 text-sm text-gray-300">
                 <li className="flex items-center gap-2">
                   <Phone className="w-4 h-4" />
@@ -360,7 +367,7 @@ export default function Layout({ children }) {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4 text-white">Powered by AI</h4>
+              <h4 className="font-semibold mb-4 text-white">{t('poweredByAI')}</h4>
               <div className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 p-4 rounded-xl border border-cyan-500/20">
                 <a href="https://konfiga.eu" target="_blank" rel="noopener noreferrer" className="block">
                   <img 
@@ -377,8 +384,8 @@ export default function Layout({ children }) {
           </div>
           
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-300">
-            <p>&copy; {new Date().getFullYear()} American Living. Všetky práva vyhradené.</p>
-            <p className="mt-2">Vyrobených viac ako 700 domov od roku 2008</p>
+            <p>&copy; {new Date().getFullYear()} American Living. {t('allRightsReserved')}.</p>
+            <p className="mt-2">{t('builtHouses')}</p>
           </div>
         </div>
       </footer>
@@ -386,6 +393,14 @@ export default function Layout({ children }) {
       <ChristmasEffectsWrapper />
               {/* <Chatbot /> */}
               {/* <AIAsistent /> */}
-    </div>
-  );
-}
+      </div>
+      );
+      }
+
+      export default function Layout({ children }) {
+      return (
+      <LanguageProvider>
+      <LayoutContent>{children}</LayoutContent>
+      </LanguageProvider>
+      );
+      }
