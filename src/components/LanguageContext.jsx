@@ -196,6 +196,10 @@ const translations = {
     basePriceIncludesRecreational: "Základná cena zahŕňa kompletnú štandardnú výbavu pre rekreačnú stavbu. Možnosť upgradu na Rodinný dom s certifikátom A0 v konfigurátore.",
     gl24ModularHouse: "Modulárny dom z drewna klejoného GL24 – spojenie elegancie, pohodlia a inovácií.",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Poskladajte si cenovú ponuku na váš dom",
+    noHiddenFees: "bez skrytých poplatkov",
+    
     // DetailDomu specific
     twoD: "2D",
     threeD: "3D",
