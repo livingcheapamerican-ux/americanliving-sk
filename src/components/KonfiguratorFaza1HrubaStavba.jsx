@@ -44,7 +44,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+      className={`relative p-2 sm:p-4 rounded-lg sm:rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
         selected 
           ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
           : isA0 
@@ -53,8 +53,8 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       }`}
     >
       {isA0 && (
-        <Badge className="absolute top-1 left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[8px] px-1.5 z-10">
-          <Sparkles className="w-2 h-2 mr-0.5" />A0
+        <Badge className="absolute top-0.5 left-0.5 sm:top-1 sm:left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[6px] sm:text-[8px] px-1 sm:px-1.5 z-10">
+          <Sparkles className="w-1.5 h-1.5 sm:w-2 sm:h-2 mr-0.5" />A0
         </Badge>
       )}
       
@@ -67,17 +67,17 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
             exit={{ scale: 0, opacity: 0 }}
             className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
           >
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-green-500/90 flex items-center justify-center shadow-lg">
-              <Check className="w-10 h-10 sm:w-14 sm:h-14 text-white stroke-[3]" />
+            <div className="w-10 h-10 sm:w-20 sm:h-20 rounded-full bg-green-500/90 flex items-center justify-center shadow-lg">
+              <Check className="w-6 h-6 sm:w-14 sm:h-14 text-white stroke-[3]" />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <Icon className={`w-8 h-8 sm:w-10 sm:h-10 mb-2 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
-      <span className={`font-semibold text-gray-800 text-xs sm:text-sm ${selected ? "opacity-30" : ""}`}>{title}</span>
-      <span className={`text-[10px] sm:text-xs text-gray-500 mt-1 ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
-      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-xs mt-2 ${selected ? "opacity-30" : ""}`}>{price}</span>
+      <Icon className={`w-5 h-5 sm:w-10 sm:h-10 mb-1 sm:mb-2 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
+      <span className={`font-semibold text-gray-800 text-[10px] sm:text-sm leading-tight ${selected ? "opacity-30" : ""}`}>{title}</span>
+      <span className={`text-[8px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1 leading-tight ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
+      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2 ${selected ? "opacity-30" : ""}`}>{price}</span>
 
       {/* Tooltip - rendered via portal */}
       {showTooltip && tooltip && ReactDOM.createPortal(
