@@ -236,6 +236,9 @@ const translations = {
     interiorFinishPanel: "Interiér finiš",
     descriptionTitle: "Popis",
     
+    // Panel content details - kept in Slovak as these are technical specifications
+    // that should remain in original language for accuracy
+    
     // Summary panel labels
     roughConstruction: "Hrubá stavba",
     holodomLabel: "Holodom",
@@ -677,6 +680,8 @@ const translations = {
     foundationsPanel: "Foundations",
     interiorFinishPanel: "Interior finish",
     descriptionTitle: "Description",
+    
+    // Panel content details - kept in Slovak as these are technical specifications
     
     // Summary panel labels
     roughConstruction: "Rough construction",
@@ -1120,6 +1125,8 @@ const translations = {
     interiorFinishPanel: "Belső kivitelezés",
     descriptionTitle: "Leírás",
     
+    // Panel content details - kept in Slovak as these are technical specifications
+    
     // Summary panel labels
     roughConstruction: "Szerkezetkész",
     holodomLabel: "Héjház",
@@ -1527,6 +1534,8 @@ const translations = {
     interiorFinishPanel: "Wykończenie wnętrz",
     descriptionTitle: "Opis",
     
+    // Panel content details - kept in Slovak as these are technical specifications
+    
     // Summary panel labels
     roughConstruction: "Stan surowy",
     holodomLabel: "Dom szkieletowy",
@@ -1933,6 +1942,8 @@ const translations = {
     foundationsPanel: "Фундамент",
     interiorFinishPanel: "Внутрішнє оздоблення",
     descriptionTitle: "Опис",
+    
+    // Panel content details - kept in Slovak as these are technical specifications
     
     // Summary panel labels
     roughConstruction: "Чорнова будівля",
