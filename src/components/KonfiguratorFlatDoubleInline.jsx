@@ -864,12 +864,12 @@ export default function KonfiguratorFlatDoubleInline({
 
         </div>
         </Card>
-        </motion.div>
+        </motion.div>}
 
         {/* ═══════════════════════════════════════════════════════════════════════
           FÁZA 3: DOM NA KĽÚČ (Interiér, Podlahy, Fasáda, Dokončenie)
           ═══════════════════════════════════════════════════════════════════════ */}
-        <motion.div
+        {showKluc && <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
@@ -1005,12 +1005,12 @@ export default function KonfiguratorFlatDoubleInline({
 
         </div>
         </Card>
-        </motion.div>
+        </motion.div>}
 
         {/* ═══════════════════════════════════════════════════════════════════════
           FÁZA 4: DOKUMENTÁCIA A DOPRAVA
           ═══════════════════════════════════════════════════════════════════════ */}
-        <motion.div
+        {showDocs && <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
