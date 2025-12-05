@@ -31,19 +31,12 @@ const StepTypStavby = ({ typStavby, setTypStavby, onNext }) => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => setTypStavby("rekreacna")}
-          className={`relative p-6 rounded-2xl cursor-pointer transition-all border-3 ${
+          className={`relative p-6 rounded-2xl cursor-pointer transition-all ${
             typStavby === "rekreacna"
-              ? "bg-amber-50 border-amber-500 shadow-xl ring-4 ring-amber-200"
-              : "bg-white border-gray-200 hover:border-amber-300 hover:shadow-lg"
+              ? "bg-amber-50 border-4 border-amber-500 shadow-xl"
+              : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-lg"
           }`}
         >
-          {typStavby === "rekreacna" && (
-              <div className="absolute top-4 right-4">
-                <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center shadow-lg">
-                  <Check className="w-4 h-4 text-white" />
-                </div>
-              </div>
-            )}
           <div className="flex items-center gap-4 mb-4">
             <div className="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center">
               <TreePine className="w-8 h-8 text-amber-600" />
@@ -83,23 +76,16 @@ const StepTypStavby = ({ typStavby, setTypStavby, onNext }) => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => setTypStavby("rodinny_dom")}
-          className={`relative p-6 rounded-2xl cursor-pointer transition-all border-3 ${
+          className={`relative p-6 rounded-2xl cursor-pointer transition-all ${
             typStavby === "rodinny_dom"
-              ? "bg-green-50 border-green-500 shadow-xl ring-4 ring-green-200"
-              : "bg-white border-gray-200 hover:border-green-300 hover:shadow-lg"
+              ? "bg-green-50 border-4 border-green-500 shadow-xl"
+              : "bg-white border-2 border-gray-200 hover:border-green-300 hover:shadow-lg"
           }`}
         >
           <Badge className="absolute top-4 left-4 bg-gradient-to-r from-green-500 to-emerald-600">
             <Sparkles className="w-3 h-3 mr-1" />
             Odporúčané
           </Badge>
-          {typStavby === "rodinny_dom" && (
-              <div className="absolute top-4 right-4">
-                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-                  <Check className="w-4 h-4 text-white" />
-                </div>
-              </div>
-            )}
           <div className="flex items-center gap-4 mb-4 mt-6">
             <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center">
               <Building2 className="w-8 h-8 text-green-600" />
