@@ -640,6 +640,332 @@ export default function DetailDomu() {
               </Card>
             )}
 
+            {/* Obrázok základnej konfigurácie - pre Ticabhouse - presunute z pravej strany */}
+            {isTicabhouse && dom.zakladna_konfiguracia_obrazok && (
+              <Card className="p-6 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+                <h3 className="text-lg font-bold text-primary mb-4">📸 Základná konfigurácia</h3>
+                <div className="rounded-lg overflow-hidden shadow-lg">
+                  <img 
+                    src={dom.zakladna_konfiguracia_obrazok} 
+                    alt={`${dom.nazov} - základná konfigurácia`}
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+                <p className="text-sm text-blue-800 mt-3 text-center font-medium">
+                  Takto vyzerá dom v základnej konfigurácii
+                </p>
+              </Card>
+            )}
+
+            {/* Štandardná výbava pre Ticabhouse - presunute z pravej strany */}
+            {isTicabhouse && (
+              <div className="space-y-6">
+                <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
+                  <h3 className="text-lg font-bold text-primary mb-4">✔ Štandardná výbava (zahrnutá v cene)</h3>
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Konštrukcia a izolácia:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Rám zo suchého reziva ošetreného bio-roztokom</li>
+                      <li>Izolácia stien 85mm-350mm (bazaltová vlna) podľa typu stavby (rodinný dom en. tr. A0 / rekreačná stavba)</li>
+                      <li>Izolácia podlahy a stropu 200mm stlačených na 150mm</li>
+                      <li>Konštrukcia certifikovaná na prepravu po celej EÚ</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Okná a dvere:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Dvojkomorové kovoplastové okná, energeticky úsporné</li>
+                      <li>Kovoplastové vchodové dvere</li>
+                      <li>Interiérové dvere MDF</li>
+                      <li>Francúzske balkónové okná (pri vybraných modeloch)</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Exteriér:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Fasáda: Škandinávskeho smrekovca / Thermowood / Vinylové panely / Kompozitné panely</li>
+                      <li>Strešná krytina: Kovová škridla / Falcované panely / Vlnitý plech</li>
+                      <li>Sviečtená debnenie strechy z OSB dosiek hrúbky 15 mm</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Interiér:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Obloženie stien: Prírodné drevo / Laminátové panely / Sadrokartón s tapetami</li>
+                      <li>Podlahy: Polo-komerčný laminát</li>
+                      <li>Malované stropy zo sadrokartónu</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Kúpeľňa (podľa modelu):</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Malovaný sadrokartónový strop</li>
+                      <li>Obklady na stenách</li>
+                      <li>Umývadlo (vybrané modely)</li>
+                      <li>Geberit WC</li>
+                      <li>Grohe sprcha</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Kuchyňa (podľa modelu):</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Kuchynský nábytok zahrnutý v cene (vybrané modely)</li>
+                      <li>Obklad za kuchynskou linkou (vybrané modely)</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Technológie a inštalácie:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Elektrické rozvody, LED osvetlenie</li>
+                      <li>Bojler 80l (vybrané modely)</li>
+                      <li>Zásuvka a výstuženie v stene pre montáž klimatizácie</li>
+                      <li>Podlahové kúrenie (vybrané modely - v obytných priestoroch a kúpeľni)</li>
+                      <li>Vodoinštalácia, prípojky pre kuchyňu a práčku</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">Terasa (podľa modelu):</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Zabudovaná terasa (vybrané modely)</li>
+                      <li>Príplatkové terasy k dispozícii pre všetky modely</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-green-300">
+                  <h4 className="font-bold text-red-700 mb-3 flex items-center gap-2">
+                    <AlertCircle className="w-5 h-5" />
+                    DÔLEŽITÉ - Cena základného modelu bez nastavenia v konfigurátore nezahŕňa:
+                  </h4>
+                  <ul className="list-disc list-inside text-gray-700 space-y-2 text-sm ml-2">
+                    <li><strong>Dodanie a transport</strong> - možnosť objednať v konfigurátore</li>
+                    <li><strong>Základy</strong> - jednomodulové domy nevyžadujú "tehlové" základy</li>
+                    <li><strong>Vonkajšie komunikácie</strong> (prípojky vody, elektriky, kanalizácie)</li>
+                    <li><strong>Autožeriav pre výkladku</strong> - potrebný na umiestnenie domu na pozemok</li>
+                  </ul>
+                  <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <p className="text-sm text-blue-800">
+                      <strong>Výhoda modulárnej konštrukcie:</strong> Dom prichádza plne dokončený na nákladnom aute. 
+                      Pomocou žeriavu sa vyloží, namontuje na základy, pripojí na siete a môžete sa nasťahovať! 
+                      Ideálne pre rodiny aj seniorov hľadajúcich dom mimo mesta.
+                    </p>
+                  </div>
+                </div>
+                </Card>
+              </div>
+            )}
+
+            {/* Štandardná výbava pre JAK Modules - presunute z pravej strany */}
+            {isJAKModules && (
+              <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
+                <h3 className="text-lg font-bold text-primary mb-4">✔ Hlavné vlastnosti</h3>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Konštrukcia z lepeného dreva GL24h – niezrównaná wytrzymałość a stabilita</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Doskonalá izolačná schopnosť U ≤ 0,16 W/(m²·K)</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Ekologické materiály - steny z platní Fermacell®, izolácia Steico®</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Rychlý čas realizácie - produkcia 60 dní, montáž 2 dni</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Kompletná dokumentácia na ohlásenie v cene</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Moderná a funkčná architektúra odolná voči extrémnym podmienkam</span>
+                  </div>
+                </div>
+              </Card>
+            )}
+
+            {/* Špecifikácia - presunute z pravej strany */}
+            {dom.specifikacia && (
+              <Card className="p-6">
+                <h3 className="text-lg font-bold text-primary mb-4">Špecifikácia</h3>
+                <div className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
+                  {dom.specifikacia}
+                </div>
+              </Card>
+            )}
+
+            {/* Čo obsahuje cena pre JAK Modules - presunute z pravej strany */}
+            {isJAKModules && (
+              <Card className="p-6 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+                <h3 className="text-lg font-bold text-primary mb-4">💰 Čo obsahuje cena?</h3>
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">✔ Konštrukcia:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Certifikované borovicové lepené drevo GL24h</li>
+                      <li>Oceľové profily 100x60x5mm a 60x40x4mm</li>
+                      <li>Izolačná schopnosť U ≤ 0,16 W/(m²·K)</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">✔ Izolácia:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>PUR pena 12 cm (Uw=0,15W/m²K)</li>
+                      <li>Minerálna vlna najvyššej kvality</li>
+                      <li>Ekologické materiály Steico®</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">✔ Vykurovanie a klimatizácia:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Klimatizácia ROTENSO s tepelným čerpadlom</li>
+                      <li>Funkcia ohrevu do -25°C</li>
+                      <li>Infračervené ohrievače</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">✔ Okná a dvere:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>PVC okná s 6-komorovou konštrukciou</li>
+                      <li>Moderné dvere v antracitovej farbe</li>
+                      <li>Vynikajúca tepelná izolácia</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">✔ Vybavenie:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Kompletná kúpeľňa s kvalitným vybavením</li>
+                      <li>Kuchynská linka na mieru</li>
+                      <li>Vinylové panely Kronostep SPC</li>
+                      <li>Komplexná elektrická inštalácia (3-fázová)</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">✔ Fasáda a strecha:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Antracitový alebo biely plech na drážku</li>
+                      <li>Možnosť výberu typu fasády</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">✔ Ďalšie:</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>Kompletná dokumentácia na ohlásenie</li>
+                      <li>Rýchla montáž (2 dni)</li>
+                      <li>Produkcia 60 dní</li>
+                    </ul>
+                  </div>
+                </div>
+              </Card>
+            )}
+
+            {/* Možnosti využitia - presunute z pravej strany */}
+            {!isJAKModules && (
+              <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
+                <h3 className="text-lg font-bold text-primary mb-4">✔ Možnosti využitia:</h3>
+                <ul className="space-y-2">
+                  <li className="flex items-start gap-2 text-sm">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Rodinný dom s možnosťou kolaudácie</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Možnosť energetického certifikátu A0</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>Rekreačná budova (chata/záhradný domček)</span>
+                  </li>
+                </ul>
+              </Card>
+            )}
+
+            {/* Informačné panely - len pre Prosto House Flat Double - presunute z pravej strany */}
+            {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
+              <div className="grid grid-cols-2 gap-3">
+                {/* Komplet pre montáž */}
+                <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
+                  <div className="flex items-center gap-2 p-3 text-sm font-semibold text-amber-900 border-b border-amber-200">
+                    <Package className="w-4 h-4" />
+                    Komplet pre montáž
+                  </div>
+                  <div className="px-3 pb-3 text-sm text-amber-800 space-y-1 pt-2">
+                    <p>• drevená konštrukcia, hobľovaný hranol</p>
+                    <p>• vonkajšie steny, falcovaný plech 0,45mm</p>
+                    <p>• strecha, falcovaný plech 0,45mm</p>
+                    <p>• okná s dvojkomorovým sklom</p>
+                    <p>• dvere s dvojkomorovým sklom</p>
+                    <p>• hydroizolačná membrána Strotex 1300</p>
+                    <p>• tepelná izolácia (150-250mm)</p>
+                    <p>• parozábranová fólia Strotex AL90</p>
+                    <p>• hrubá podlaha z OSB 22mm</p>
+                    <p className="text-red-600 font-medium mt-1">Maľovanie: 4,5 €/m²</p>
+                  </div>
+                </Card>
+
+                {/* Elektroinštalácia */}
+                <Card className="overflow-hidden border border-yellow-200 bg-yellow-50/50">
+                  <div className="flex items-center gap-2 p-3 text-sm font-semibold text-yellow-900 border-b border-yellow-200">
+                    <Zap className="w-4 h-4" />
+                    Elektroinštalácia
+                  </div>
+                  <div className="px-3 pb-3 text-sm text-yellow-800 space-y-1 pt-2">
+                    <p>• montáž elektrických káblov</p>
+                    <p>• inštalácia rozvádzača s ističmi</p>
+                    <p>• uloženie chráničky pre vonkajší kábel</p>
+                    <p>• montáž inštalačných krabíc</p>
+                    <p className="text-red-600 font-medium mt-1">Nezahŕňa: bleskozvod, revízne doklady, montáž zásuviek/svietidiel</p>
+                  </div>
+                </Card>
+
+                {/* Voda a kanalizácia */}
+                <Card className="overflow-hidden border border-blue-200 bg-blue-50/50">
+                  <div className="flex items-center gap-2 p-3 text-sm font-semibold text-blue-900 border-b border-blue-200">
+                    <Droplets className="w-4 h-4" />
+                    Voda a kanalizácia
+                  </div>
+                  <div className="px-3 pb-3 text-sm text-blue-800 space-y-1 pt-2">
+                    <p>• montáž vodovodných potrubí</p>
+                    <p>• montáž ventilov, záslepiek</p>
+                    <p>• montáž kanalizačných potrubí</p>
+                    <p>• kontrola tesnosti pod tlakom</p>
+                    <p className="text-red-600 font-medium mt-1">Protokoly a sanitárne zariadenia za príplatok</p>
+                  </div>
+                </Card>
+
+                {/* Základy */}
+                <Card className="overflow-hidden border border-orange-200 bg-orange-50/50">
+                  <div className="flex items-center gap-2 p-3 text-sm font-semibold text-orange-900 border-b border-orange-200">
+                    <Landmark className="w-4 h-4" />
+                    Základy
+                  </div>
+                  <div className="px-3 pb-3 text-sm text-orange-800 space-y-1 pt-2">
+                    <p>• vrutové stĺpy, betónové stĺpiky alebo doska</p>
+                    <p>• uvedená minimálna cena za rovný terén</p>
+                    <p>• konečná cena po geodetickej analýze</p>
+                    <p className="text-red-600 font-medium mt-1">Prípravné práce nie sú v cene</p>
+                  </div>
+                </Card>
+
+                {/* Interiér */}
+                <Card id="interier-finis-panel" className="overflow-hidden border border-emerald-200 bg-emerald-50/50 col-span-2">
+                  <div className="flex items-center gap-2 p-3 text-sm font-semibold text-emerald-900 border-b border-emerald-200">
+                    <Home className="w-4 h-4" />
+                    Interiér finiš
+                  </div>
+                  <div className="px-3 pb-3 text-sm text-emerald-800 space-y-1 pt-2">
+                    <p>• montáž priečok podľa projektu • izolácia 100mm + parozábrana • tatranský profil 8-12mm</p>
+                    <p className="text-red-600 font-medium">Maľovanie: 4,5 €/m², farbu dodáva klient</p>
+                  </div>
+                </Card>
+              </div>
+            )}
+
           </motion.div>
 
           {/* Pravý stĺpec - Informácie */}
