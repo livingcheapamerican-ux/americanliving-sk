@@ -18,6 +18,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
+import { useLanguage } from "./LanguageContext";
 
 // Dlaždica s tooltip a veľkou fajkou
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
@@ -178,6 +179,7 @@ export default function KonfiguratorFlatDoubleInline({
 
   // Flying animation hook
   const { animations, triggerAnimation } = useFlyingAnimation();
+  const { t } = useLanguage();
 
   // Cenník
   const CENY = {
@@ -428,7 +430,7 @@ export default function KonfiguratorFlatDoubleInline({
             transition={{ delay: 0.2, type: "spring" }}
             className="inline-flex items-center justify-center px-2 sm:px-3 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider"
           >
-            Fáza {step}
+            {t('phase')} {step}
           </motion.span>
         </div>
         <h3 className="text-lg sm:text-2xl font-bold text-white tracking-tight">{title}</h3>
@@ -468,7 +470,7 @@ export default function KonfiguratorFlatDoubleInline({
             <div className="p-3 border-b border-slate-700/50">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-green-400 text-[10px] font-semibold uppercase tracking-wider mb-0.5">Vaša konfigurácia</p>
+                  <p className="text-green-400 text-[10px] font-semibold uppercase tracking-wider mb-0.5">{t('yourConfiguration')}</p>
                   <h3 className="text-base font-bold text-white">Flat Double 142m²</h3>
                 </div>
               </div>
@@ -550,7 +552,7 @@ export default function KonfiguratorFlatDoubleInline({
             {/* Celková cena */}
             <div className="p-3 bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-t border-green-500/20">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-slate-400 text-xs">Celkom s DPH</span>
+                <span className="text-slate-400 text-xs">{t('totalWithVAT')}</span>
                 <span className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
                   {formatPrice(totalPrice)}
                 </span>
@@ -562,7 +564,7 @@ export default function KonfiguratorFlatDoubleInline({
                     className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg text-xs h-8"
                   >
                     <Send className="mr-1.5 w-3.5 h-3.5" />
-                    Mám záujem
+                    {t('interested')}
                   </Button>
                 <Button 
                   size="sm" 
@@ -571,7 +573,7 @@ export default function KonfiguratorFlatDoubleInline({
                   className="w-full border-slate-600 text-slate-400 hover:bg-red-500/20 hover:border-red-500/50 hover:text-red-300 transition-all text-xs h-7"
                 >
                   <RotateCcw className="mr-1.5 w-3 h-3" />
-                  Resetovať
+                  {t('reset')}
                 </Button>
               </div>
             </div>
@@ -604,8 +606,8 @@ export default function KonfiguratorFlatDoubleInline({
         <Card className="overflow-hidden border-0 shadow-xl ring-1 ring-blue-200/50 hover:ring-2 hover:ring-blue-300/70 transition-all duration-300">
         <SectionHeader 
           icon={Hammer} 
-          title="Holodom" 
-          subtitle="Montáž konštrukcie a technické inštalácie"
+          title={t('phase2')} 
+          subtitle={t('phase2Subtitle')}
           color="from-blue-600 to-indigo-600"
           step="2"
         />
@@ -617,7 +619,7 @@ export default function KonfiguratorFlatDoubleInline({
             <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-2 sm:gap-3 p-3 border-3 border-dashed border-blue-400 rounded-xl bg-blue-50/30 shadow-sm">
               <p className="col-span-3 text-[10px] sm:text-xs font-bold text-blue-700 -mb-1 flex items-center gap-1">
                 <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                Interiér finiš (vyberte jednu)
+                {t('interiorFinish')} ({t('selectOne')})
               </p>
               <Tile
                 selected={interierFinis === "ziadne"}
@@ -625,11 +627,11 @@ export default function KonfiguratorFlatDoubleInline({
                 icon={Home}
                 iconColor="text-gray-400"
                 iconSelectedColor="text-blue-600"
-                title="Bez interiéru"
-                subtitle="Hrubá stavba"
+                title={t('interiorNone')}
+                subtitle={t('shellConstruction')}
                 price="+ 0 €"
                 isPriced={false}
-                tooltip="Interiér zostane v stave hrubej stavby bez obkladov a omietok."
+                tooltip={t('interiorNone')}
               />
 
               <Tile
@@ -638,11 +640,11 @@ export default function KonfiguratorFlatDoubleInline({
                 icon={Home}
                 iconColor="text-amber-600"
                 iconSelectedColor="text-blue-600"
-                title="Drevo"
-                subtitle="Obloženie"
+                title={t('interiorWood')}
+                subtitle={t('woodCladding')}
                 price="+ 16 400 €"
                 isPriced={true}
-                tooltip="Drevené obloženie stien a stropov. Prírodný vzhľad a tepelná pohoda."
+                tooltip={t('interiorWood')}
               />
 
               <Tile
@@ -651,13 +653,13 @@ export default function KonfiguratorFlatDoubleInline({
                 icon={Home}
                 iconColor="text-gray-500"
                 iconSelectedColor="text-blue-600"
-                title="Sadrokartón"
-                subtitle="Omietka"
+                title={t('interiorDrywall')}
+                subtitle={t('plaster')}
                 price="+ 19 475 €"
                 isPriced={true}
-                tooltip="Sadrokartónové steny s hladkou omietkou. Klasický vzhľad interiéru."
+                tooltip={t('interiorDrywall')}
               />
-            </div>
+              </div>
 
             <Tile
               selected={elektroinstalacia}
@@ -665,15 +667,15 @@ export default function KonfiguratorFlatDoubleInline({
               icon={Zap}
               iconColor="text-yellow-400"
               iconSelectedColor="text-yellow-600"
-              title="Elektro"
-              subtitle="Rozvody"
+              title={t('electrical')}
+              subtitle={t('wiring')}
               price="+ 7 400 €"
               isPriced={true}
               selectedBg="bg-yellow-100"
               selectedBorder="border-yellow-500"
               selectedRing="ring-yellow-300"
               hoverBorder="hover:border-yellow-300"
-              tooltip="Elektrické rozvody, rozvádzač, zásuvky a príprava pre osvetlenie."
+              tooltip={t('electricalFull')}
             />
 
             <Tile
@@ -682,11 +684,11 @@ export default function KonfiguratorFlatDoubleInline({
               icon={Droplets}
               iconColor="text-blue-400"
               iconSelectedColor="text-blue-600"
-              title="Voda"
-              subtitle="Rozvody"
+              title={t('water')}
+              subtitle={t('wiring')}
               price="+ 2 380 €"
               isPriced={true}
-              tooltip="Rozvody studenej a teplej vody, kanalizačné potrubia."
+              tooltip={t('waterFull')}
             />
 
             <Tile
@@ -695,11 +697,11 @@ export default function KonfiguratorFlatDoubleInline({
               icon={ShowerHead}
               iconColor="text-blue-400"
               iconSelectedColor="text-blue-600"
-              title="Sanita"
-              subtitle="Komplet"
+              title={t('sanitary')}
+              subtitle={t('complete')}
               price="+ 1 169 €"
               isPriced={true}
-              tooltip="Kompletná sanita: sprchový kút, umývadlo a WC."
+              tooltip={t('sanitaryFull')}
             />
 
             <Tile
@@ -708,15 +710,15 @@ export default function KonfiguratorFlatDoubleInline({
               icon={Flame}
               iconColor="text-orange-400"
               iconSelectedColor="text-orange-600"
-              title="Bojler"
-              subtitle="Elektrický"
+              title={t('boiler')}
+              subtitle={t('boilerElectric')}
               price="+ 246 €"
               isPriced={true}
               selectedBg="bg-orange-100"
               selectedBorder="border-orange-500"
               selectedRing="ring-orange-300"
               hoverBorder="hover:border-orange-300"
-              tooltip="Elektrický bojler na ohrev pitnej vody."
+              tooltip={t('boiler')}
             />
 
             <Tile
@@ -725,15 +727,15 @@ export default function KonfiguratorFlatDoubleInline({
               icon={ThermometerSun}
               iconColor="text-red-500"
               iconSelectedColor="text-green-600"
-              title="Tep. čerpadlo"
-              subtitle="5 jednotiek"
+              title={t('heatPump')}
+              subtitle={t('units5')}
               price="+ 5 535 €"
               isPriced={true}
               isA0={true}
               selectedBg="bg-green-100"
               selectedBorder="border-green-500"
               selectedRing="ring-green-300"
-              tooltip="Tepelné čerpadlo vzduch-vzduch: 1× vonkajšia + 5× vnútorná jednotka. Potrebné pre A0."
+              tooltip={t('heatPumpFull')}
             />
 
             <Tile
@@ -742,15 +744,15 @@ export default function KonfiguratorFlatDoubleInline({
               icon={Wind}
               iconColor="text-cyan-500"
               iconSelectedColor="text-green-600"
-              title="Rekuperácia"
-              subtitle="5 jednotiek"
+              title={t('recuperation')}
+              subtitle={t('units5')}
               price="+ 2 700 €"
               isPriced={true}
               isA0={true}
               selectedBg="bg-green-100"
               selectedBorder="border-green-500"
               selectedRing="ring-green-300"
-              tooltip="5 kusov lokálnych rekuperačných jednotiek pre riadené vetranie. Potrebné pre A0."
+              tooltip={t('recuperation')}
             />
 
             <Tile
@@ -759,15 +761,15 @@ export default function KonfiguratorFlatDoubleInline({
               icon={Cable}
               iconColor="text-gray-400"
               iconSelectedColor="text-gray-700"
-              title="Siete"
-              subtitle="Pripojenie"
+              title={t('gridConnection')}
+              subtitle={t('connection')}
               price="+ 1 501 €"
               isPriced={true}
               selectedBg="bg-gray-200"
               selectedBorder="border-gray-500"
               selectedRing="ring-gray-300"
               hoverBorder="hover:border-gray-400"
-              tooltip="Pripojenie na inžinierske siete: elektrika, voda, kanalizácia."
+              tooltip={t('gridConnectionFull')}
             />
 
             <Tile
@@ -776,15 +778,15 @@ export default function KonfiguratorFlatDoubleInline({
               icon={Square}
               iconColor="text-slate-400"
               iconSelectedColor="text-slate-700"
-              title="Laminácia"
-              subtitle="Antracit"
+              title={t('lamination')}
+              subtitle={t('laminationAnthracite')}
               price="+ 3 100 €"
               isPriced={true}
               selectedBg="bg-slate-200"
               selectedBorder="border-slate-600"
               selectedRing="ring-slate-300"
               hoverBorder="hover:border-slate-400"
-              tooltip="Antracitová laminácia všetkých okien a dverí pre moderný vzhľad."
+              tooltip={t('lamination')}
             />
 
             <Tile
@@ -793,15 +795,15 @@ export default function KonfiguratorFlatDoubleInline({
               icon={Sun}
               iconColor="text-amber-400"
               iconSelectedColor="text-amber-600"
-              title="Tónované"
-              subtitle="Solar sklá"
+              title={t('tintedGlass')}
+              subtitle={t('solarGlass')}
               price="+ 1 300 €"
               isPriced={true}
               selectedBg="bg-amber-100"
               selectedBorder="border-amber-500"
               selectedRing="ring-amber-300"
               hoverBorder="hover:border-amber-300"
-              tooltip="Tónované sklá s ochranou proti slnku. Znižujú prehrievanie interiéru."
+              tooltip={t('tintedGlass')}
             />
 
           </div>
@@ -810,13 +812,13 @@ export default function KonfiguratorFlatDoubleInline({
           <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
             <p className="text-xs sm:text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
               <DoorOpen className="w-4 h-4 text-blue-600" />
-              Vstupné dvere
+              {t('entryDoor')}
             </p>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { value: "ziadne", label: "Štandard", price: "0 €" },
-                { value: "kovove", label: "Kovové", price: "+ 720 €" },
-                { value: "plastove", label: "Plastové", price: "+ 660 €" }
+                { value: "ziadne", label: t('doorStandard'), price: "0 €" },
+                { value: "kovove", label: t('doorMetal'), price: "+ 720 €" },
+                { value: "plastove", label: t('doorPlastic'), price: "+ 660 €" }
               ].map((opt) => (
                 <motion.div
                   key={opt.value}
@@ -836,16 +838,16 @@ export default function KonfiguratorFlatDoubleInline({
             </div>
 
             <p className="text-xs sm:text-sm font-bold text-gray-700 mt-4 mb-3 flex items-center gap-2">
-              <Square className="w-4 h-4 text-blue-600" />
-              Doplnkové okná
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {[
-                { state: stresneOkno, setter: setStresneOkno, label: "Strešné", price: "760 €" },
-                { state: bocneOknoFixne, setter: setBocneOknoFixne, label: "Fixné 90×205", price: "501 €" },
-                { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: "Výkl. 90×205", price: "540 €" },
-                { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: "Výkl. 55×90", price: "225 €" }
-              ].map((opt, idx) => (
+                <Square className="w-4 h-4 text-blue-600" />
+                {t('additionalWindows')}
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: "760 €" },
+                  { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: "501 €" },
+                  { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: "540 €" },
+                  { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: "225 €" }
+                ].map((opt, idx) => (
                 <div key={idx} className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
                   <span className="font-medium text-gray-800 text-[10px] sm:text-xs block mb-1">{opt.label}</span>
                   <div className="flex items-center justify-center gap-1">
@@ -880,8 +882,8 @@ export default function KonfiguratorFlatDoubleInline({
         <Card className="overflow-hidden border-0 shadow-xl ring-1 ring-emerald-200/50 hover:ring-2 hover:ring-emerald-300/70 transition-all duration-300">
         <SectionHeader 
           icon={Key} 
-          title="Dom na kľúč" 
-          subtitle="Interiérové úpravy a dokončovacie práce"
+          title={t('phase3')} 
+          subtitle={t('phase3Subtitle')}
           color="from-emerald-600 to-teal-600"
           step="3"
         />
@@ -893,7 +895,7 @@ export default function KonfiguratorFlatDoubleInline({
             <div className={`col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-3 border-3 rounded-xl shadow-sm ${!vonkajsiaFasada ? 'border-red-500 bg-red-50/50 border-dashed animate-pulse' : 'border-dashed border-emerald-400 bg-emerald-50/30'}`}>
               <p className={`col-span-2 text-[10px] sm:text-xs font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
                 <span className={`w-2 h-2 rounded-full ${!vonkajsiaFasada ? 'bg-red-500' : 'bg-emerald-500'}`}></span>
-                Fasáda (vyberte jednu) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*povinné</span>}
+                {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
               </p>
               <Tile
                 selected={vonkajsiaFasada === "standard"}
@@ -901,15 +903,15 @@ export default function KonfiguratorFlatDoubleInline({
                 icon={Paintbrush}
                 iconColor="text-amber-500"
                 iconSelectedColor="text-emerald-600"
-                title="Drevo/Plech"
-                subtitle="Štandardná"
+                title={t('facadeWoodMetal')}
+                subtitle={t('facadeStandard')}
                 price="+ 0 €"
                 isPriced={false}
                 selectedBg="bg-emerald-100"
                 selectedBorder="border-emerald-500"
                 selectedRing="ring-emerald-300"
                 hoverBorder="hover:border-emerald-300"
-                tooltip="Štandardná fasáda z dreva alebo falcovaného plechu podľa modelu."
+                tooltip={t('facadeWoodMetal')}
               />
 
               <Tile
@@ -918,15 +920,15 @@ export default function KonfiguratorFlatDoubleInline({
                 icon={Paintbrush}
                 iconColor="text-orange-400"
                 iconSelectedColor="text-emerald-600"
-                title="Škúchaná"
-                subtitle="Biela omietka"
+                title={t('facadeStucco')}
+                subtitle={t('whitePlaster')}
                 price="+ 12 841 €"
                 isPriced={true}
                 selectedBg="bg-emerald-100"
                 selectedBorder="border-emerald-500"
                 selectedRing="ring-emerald-300"
                 hoverBorder="hover:border-emerald-300"
-                tooltip="Škúchaná omietková fasáda v bielej farbe pre tradičný vzhľad rodinného domu."
+                tooltip={t('facadeStucco')}
               />
             </div>
 
@@ -936,15 +938,15 @@ export default function KonfiguratorFlatDoubleInline({
               icon={Square}
               iconColor="text-amber-500"
               iconSelectedColor="text-emerald-600"
-              title="Podlahy"
-              subtitle="Laminát"
+              title={t('floors')}
+              subtitle={t('floorsLaminate')}
               price="+ 3 351 €"
               isPriced={true}
               selectedBg="bg-emerald-100"
               selectedBorder="border-emerald-500"
               selectedRing="ring-emerald-300"
               hoverBorder="hover:border-emerald-300"
-              tooltip="Laminátové podlahy vo všetkých obytných miestnostiach."
+              tooltip={t('floors')}
             />
 
             <Tile
@@ -953,15 +955,15 @@ export default function KonfiguratorFlatDoubleInline({
               icon={Flame}
               iconColor="text-orange-400"
               iconSelectedColor="text-orange-600"
-              title="Podl. kúrenie"
-              subtitle="WiFi termostat"
+              title={t('floorHeating')}
+              subtitle={t('wifiThermostat')}
               price="+ 5 525 €"
               isPriced={true}
               selectedBg="bg-orange-100"
               selectedBorder="border-orange-500"
               selectedRing="ring-orange-300"
               hoverBorder="hover:border-orange-300"
-              tooltip="Elektrické podlahové vykurovanie s WiFi termostatom v každej izbe (8-9 ks). Zahŕňa fóliu, izoláciu a inštaláciu."
+              tooltip={t('floorHeatingFull')}
             />
 
             <Tile
@@ -970,15 +972,15 @@ export default function KonfiguratorFlatDoubleInline({
               icon={Maximize}
               iconColor="text-teal-400"
               iconSelectedColor="text-emerald-600"
-              title="Pergola"
-              subtitle="Dekoratívna"
+              title={t('pergola')}
+              subtitle={t('pergolaDecorative')}
               price="+ 1 845 €"
               isPriced={true}
               selectedBg="bg-emerald-100"
               selectedBorder="border-emerald-500"
               selectedRing="ring-emerald-300"
               hoverBorder="hover:border-emerald-300"
-              tooltip="Dekoratívna drevená pergola pri vstupe alebo terase."
+              tooltip={t('pergola')}
             />
 
           </div>
@@ -989,7 +991,7 @@ export default function KonfiguratorFlatDoubleInline({
               <div className="flex items-center gap-2">
                 <DoorOpen className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-600" />
                 <div>
-                  <span className="font-semibold text-gray-800 text-xs sm:text-sm">Interiérové dvere</span>
+                  <span className="font-semibold text-gray-800 text-xs sm:text-sm">{t('interiorDoors')}</span>
                   <span className="text-green-600 font-bold text-xs ml-2">× 250 €</span>
                 </div>
               </div>
@@ -1022,8 +1024,8 @@ export default function KonfiguratorFlatDoubleInline({
         <Card className="overflow-hidden border-0 shadow-xl ring-1 ring-purple-200/50 hover:ring-2 hover:ring-purple-300/70 transition-all duration-300">
         <SectionHeader 
           icon={FileText} 
-          title="Dokumentácia a služby" 
-          subtitle="Projektová dokumentácia, povolenia a doprava"
+          title={t('phase4')} 
+          subtitle={t('phase4Subtitle')}
           color="from-purple-600 to-violet-600"
           step="4"
         />
@@ -1037,15 +1039,15 @@ export default function KonfiguratorFlatDoubleInline({
               icon={FileText}
               iconColor="text-purple-400"
               iconSelectedColor="text-purple-600"
-              title="Inžiniering"
-              subtitle="Stav. povolenie"
+              title={t('engineering')}
+              subtitle={t('buildingPermit')}
               price="+ 2 592 €"
               isPriced={true}
               selectedBg="bg-purple-100"
               selectedBorder="border-purple-500"
               selectedRing="ring-purple-300"
               hoverBorder="hover:border-purple-300"
-              tooltip="Vybavenie stavebného povolenia vrátane všetkých potrebných dokumentov."
+              tooltip={t('engineeringFull')}
             />
 
             <Tile
@@ -1054,15 +1056,15 @@ export default function KonfiguratorFlatDoubleInline({
               icon={FileCheck}
               iconColor="text-green-500"
               iconSelectedColor="text-green-600"
-              title="Projektant"
-              subtitle="+ Certifikácia"
+              title={t('projectA0')}
+              subtitle={t('certification')}
               price="+ 3 500 €"
               isPriced={true}
               isA0={true}
               selectedBg="bg-green-100"
               selectedBorder="border-green-500"
               selectedRing="ring-green-300"
-              tooltip="Projektová dokumentácia a certifikácia pre energetickú triedu A0."
+              tooltip={t('projectA0Full')}
             />
 
             <Tile
@@ -1071,15 +1073,15 @@ export default function KonfiguratorFlatDoubleInline({
               icon={FileText}
               iconColor="text-gray-400"
               iconSelectedColor="text-purple-600"
-              title="Revízie"
-              subtitle="Dokumentácia"
+              title={t('revision')}
+              subtitle={t('documentation')}
               price="+ 1 000 €"
               isPriced={true}
               selectedBg="bg-purple-100"
               selectedBorder="border-purple-500"
               selectedRing="ring-purple-300"
               hoverBorder="hover:border-purple-300"
-              tooltip="Revízne správy elektroinštalácie, plynu a ďalších systémov."
+              tooltip={t('revisionFull')}
             />
 
             <Tile
@@ -1088,15 +1090,15 @@ export default function KonfiguratorFlatDoubleInline({
               icon={Truck}
               iconColor="text-purple-400"
               iconSelectedColor="text-purple-600"
-              title="Doprava"
-              subtitle="Transport"
+              title={t('transport')}
+              subtitle={t('transportFull')}
               price="+ 0 €"
               isPriced={false}
               selectedBg="bg-purple-100"
               selectedBorder="border-purple-500"
               selectedRing="ring-purple-300"
               hoverBorder="hover:border-purple-300"
-              tooltip="Transport stavebného materiálu na miesto stavby."
+              tooltip={t('transport')}
             />
 
           </div>
@@ -1107,7 +1109,7 @@ export default function KonfiguratorFlatDoubleInline({
               <div className="flex items-start gap-2 sm:gap-3">
                 <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-bold text-amber-800 mb-1 text-xs sm:text-sm">Pre A0 odporúčame:</p>
+                  <p className="font-bold text-amber-800 mb-1 text-xs sm:text-sm">{t('a0Recommendations')}</p>
                   <ul className="space-y-0.5">
                     {a0Odporucania.map((item, index) => (
                       <li key={index} className="text-amber-700 flex items-center gap-1 text-[10px] sm:text-xs">
@@ -1126,7 +1128,7 @@ export default function KonfiguratorFlatDoubleInline({
             <div className="mt-4 p-3 sm:p-4 bg-green-50 border-2 border-green-300 rounded-xl">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-                <p className="font-bold text-green-800 text-xs sm:text-sm">Konfigurácia spĺňa A0!</p>
+                <p className="font-bold text-green-800 text-xs sm:text-sm">{t('configMeetsA0')}</p>
               </div>
             </div>
           )}
@@ -1153,18 +1155,18 @@ export default function KonfiguratorFlatDoubleInline({
           </div>
 
           <div className="relative p-4 sm:p-8 md:p-10">
-            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-8">
-              <div className="flex-1">
-                <p className="text-green-400 text-[10px] sm:text-sm font-semibold uppercase tracking-wider mb-1 sm:mb-2">Vaša konfigurácia</p>
-                <h3 className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">Flat Double 142m²</h3>
-                <p className="text-slate-400 text-xs sm:text-base mb-4">Kompletná cenová kalkulácia</p>
-                {projektA0 && !a0Odporucania && (
-                  <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] sm:text-sm py-1 sm:py-1.5 px-2 sm:px-4 shadow-lg shadow-green-500/30">✓ Spĺňa A0</Badge>
-                )}
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-8">
+                <div className="flex-1">
+                  <p className="text-green-400 text-[10px] sm:text-sm font-semibold uppercase tracking-wider mb-1 sm:mb-2">{t('yourConfiguration')}</p>
+                  <h3 className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">Flat Double 142m²</h3>
+                  <p className="text-slate-400 text-xs sm:text-base mb-4">{t('completeCalculation')}</p>
+                  {projektA0 && !a0Odporucania && (
+                    <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] sm:text-sm py-1 sm:py-1.5 px-2 sm:px-4 shadow-lg shadow-green-500/30">✓ {t('meetsA0')}</Badge>
+                  )}
                 
                 {/* Zoznam vybraných položiek */}
                 <div className="mt-4 sm:mt-6 bg-slate-800/50 rounded-xl p-3 sm:p-4 border border-slate-700/50 max-h-[300px] overflow-y-auto">
-                  <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">Vybrané položky</p>
+                  <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">{t('selectedItems')}</p>
                   <div className="space-y-1">
                     {selectedItems.map((item, index) => {
                       const isBase = item.section === "base";
@@ -1221,7 +1223,7 @@ export default function KonfiguratorFlatDoubleInline({
                 </div>
               </div>
               <div className="text-right p-3 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl sm:rounded-2xl border border-green-500/20 lg:min-w-[280px]">
-                <p className="text-slate-400 mb-1 sm:mb-2 text-[10px] sm:text-sm">Celková cena s DPH</p>
+                <p className="text-slate-400 mb-1 sm:mb-2 text-[10px] sm:text-sm">{t('totalWithVAT')}</p>
                 <p className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
                   {formatPrice(totalPrice)}
                 </p>
@@ -1235,7 +1237,7 @@ export default function KonfiguratorFlatDoubleInline({
                 className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
               >
                 <Send className="mr-2 sm:mr-3 w-4 h-4 sm:w-6 sm:h-6" />
-                Mám záujem o túto konfiguráciu
+                {t('interestedInConfig')}
               </Button>
             </div>
 
