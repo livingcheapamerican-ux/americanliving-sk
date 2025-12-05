@@ -12,8 +12,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Send, CheckCircle, Package, Hammer, Key, FileText, Sparkles } from "lucide-react";
+import { Send, CheckCircle, Package, Hammer, Key, FileText, Sparkles, FileDown, Mail } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 export default function KonfiguratorContactModal({ 
   isOpen, 
@@ -35,6 +36,7 @@ export default function KonfiguratorContactModal({
     poznamka: ""
   });
   const [submitted, setSubmitted] = useState(false);
+  const [generatingPDF, setGeneratingPDF] = useState(false);
 
   const formatPrice = (price) => price?.toLocaleString('sk-SK') + " €";
 
@@ -84,6 +86,60 @@ export default function KonfiguratorContactModal({
       konfiguracny_kod: `Flat Double 142m² - ${formatPrice(totalPrice)}`,
       poznamka: `Lokalita: ${formData.obec}\n\n${formData.poznamka}\n\n--- KONFIGURÁCIA ---\n${konfiguracnySuhrn}\n\nCELKOM: ${formatPrice(totalPrice)}`
     });
+  };
+
+  const handleDownloadPDF = async () => {
+    setGeneratingPDF(true);
+    try {
+      const response = await base44.functions.invoke('generateConfigurationPDF', {
+        domId: dom.id,
+        configuration: { vonkajsiaFasada, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0 },
+        totalPrice,
+        selectedItems,
+        sendEmail: false
+      });
+
+      const blob = new Blob([new Uint8Array(response.data)], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `konfig_${dom.nazov.replace(/\s+/g, '_')}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+      
+      toast.success('PDF stiahnuté');
+    } catch (error) {
+      toast.error('Chyba pri generovaní PDF: ' + error.message);
+    } finally {
+      setGeneratingPDF(false);
+    }
+  };
+
+  const handleEmailPDF = async () => {
+    if (!formData.email) {
+      toast.error('Vyplňte email');
+      return;
+    }
+    
+    setGeneratingPDF(true);
+    try {
+      await base44.functions.invoke('generateConfigurationPDF', {
+        domId: dom.id,
+        configuration: { vonkajsiaFasada, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0 },
+        totalPrice,
+        selectedItems,
+        sendEmail: true,
+        recipientEmail: formData.email
+      });
+      
+      toast.success('PDF odoslané na email');
+    } catch (error) {
+      toast.error('Chyba pri odosielaní: ' + error.message);
+    } finally {
+      setGeneratingPDF(false);
+    }
   };
 
   return (
@@ -277,6 +333,32 @@ export default function KonfiguratorContactModal({
                     rows={3}
                     className="mt-1"
                   />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleDownloadPDF}
+                    disabled={generatingPDF}
+                    className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50"
+                  >
+                    <FileDown className="mr-2 w-4 h-4" />
+                    Stiahnuť PDF
+                  </Button>
+
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleEmailPDF}
+                    disabled={generatingPDF || !formData.email}
+                    className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50"
+                  >
+                    <Mail className="mr-2 w-4 h-4" />
+                    Email PDF
+                  </Button>
                 </div>
 
                 <Button
