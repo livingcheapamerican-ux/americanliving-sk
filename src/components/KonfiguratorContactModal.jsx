@@ -31,6 +31,7 @@ export default function KonfiguratorContactModal({
     meno: "",
     email: "",
     telefon: "",
+    obec: "",
     poznamka: ""
   });
   const [submitted, setSubmitted] = useState(false);
@@ -61,7 +62,7 @@ export default function KonfiguratorContactModal({
       setSubmitted(true);
       setTimeout(() => {
         setSubmitted(false);
-        setFormData({ meno: "", email: "", telefon: "", poznamka: "" });
+        setFormData({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
         onClose();
       }, 3000);
     },
@@ -81,7 +82,7 @@ export default function KonfiguratorContactModal({
       typ_dopytu: "konfigurator",
       dom_id: dom?.id,
       konfiguracny_kod: `Flat Double 142m² - ${formatPrice(totalPrice)}`,
-      poznamka: `${formData.poznamka}\n\n--- KONFIGURÁCIA ---\n${konfiguracnySuhrn}\n\nCELKOM: ${formatPrice(totalPrice)}`
+      poznamka: `Lokalita: ${formData.obec}\n\n${formData.poznamka}\n\n--- KONFIGURÁCIA ---\n${konfiguracnySuhrn}\n\nCELKOM: ${formatPrice(totalPrice)}`
     });
   };
 
@@ -250,6 +251,18 @@ export default function KonfiguratorContactModal({
                     value={formData.telefon}
                     onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
                     placeholder="+421 900 123 456"
+                    className="mt-1"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="obec">Obec / Mesto (kde bude dom stáť) *</Label>
+                  <Input
+                    id="obec"
+                    required
+                    value={formData.obec}
+                    onChange={(e) => setFormData({ ...formData, obec: e.target.value })}
+                    placeholder="napr. Bratislava, Košice..."
                     className="mt-1"
                   />
                 </div>
