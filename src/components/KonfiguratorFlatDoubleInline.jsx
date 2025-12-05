@@ -616,7 +616,7 @@ export default function KonfiguratorFlatDoubleInline({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
             {/* Interiér finiš - skupina */}
-            <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-2 sm:gap-3 p-3 border-3 border-dashed border-blue-400 rounded-xl bg-blue-50/30 shadow-sm">
+            <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-2 sm:gap-3 p-3 border-4 border-blue-500 rounded-xl bg-blue-50/50 shadow-md">
               <p className="col-span-3 text-[10px] sm:text-xs font-bold text-blue-700 -mb-1 flex items-center gap-1">
                 <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
                 {t('interiorFinish')} ({t('selectOne')})
@@ -892,7 +892,7 @@ export default function KonfiguratorFlatDoubleInline({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
             {/* Fasáda - skupina */}
-            <div className={`col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-3 border-3 rounded-xl shadow-sm ${!vonkajsiaFasada ? 'border-red-500 bg-red-50/50 border-dashed animate-pulse' : 'border-dashed border-emerald-400 bg-emerald-50/30'}`}>
+            <div className={`col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-3 border-4 rounded-xl shadow-md ${!vonkajsiaFasada ? 'border-red-500 bg-red-50/50 animate-pulse' : 'border-emerald-500 bg-emerald-50/50'}`}>
               <p className={`col-span-2 text-[10px] sm:text-xs font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
                 <span className={`w-2 h-2 rounded-full ${!vonkajsiaFasada ? 'bg-red-500' : 'bg-emerald-500'}`}></span>
                 {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
