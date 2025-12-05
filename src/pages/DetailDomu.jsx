@@ -185,11 +185,14 @@ export default function DetailDomu() {
   const isJAKModules = dom.vyrobca === "JAK Modules";
 
   // Typy galérií pre zobrazenie
-  const GALERIA_TYPY_LABELS = {
-    "exterier_drevo_plech": "🏠 Exteriér - Drevo/Plech",
-    "exterier_murovka": "🏡 Exteriér - Murovka",
-    "interier_drevo": "🪵 Interiér - Drevo",
-    "interier_sadrokarton": "🏢 Interiér - Sadrokartón"
+  const getGaleriaLabel = (typ) => {
+    const labels = {
+      "exterier_drevo_plech": `🏠 ${t('exteriorWoodMetal')}`,
+      "exterier_murovka": `🏡 ${t('exteriorBrick')}`,
+      "interier_drevo": `🪵 ${t('interiorWoodGallery')}`,
+      "interier_sadrokarton": `🏢 ${t('interiorDrywallGallery')}`
+    };
+    return labels[typ] || typ;
   };
 
   const openLightbox = (images, startIndex = 0) => {
@@ -411,7 +414,7 @@ export default function DetailDomu() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {dom.podorys_2d && (
                     <div>
-                      <p className="text-sm font-semibold text-gray-700 mb-2">2D Pôdorys</p>
+                      <p className="text-sm font-semibold text-gray-700 mb-2">{t('twoD')} {t('floorPlan')}</p>
                       <div 
                         className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
                         onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), 0)}
@@ -426,7 +429,7 @@ export default function DetailDomu() {
                   )}
                   {dom.podorys_3d && (
                     <div>
-                      <p className="text-sm font-semibold text-gray-700 mb-2">3D Pôdorys</p>
+                      <p className="text-sm font-semibold text-gray-700 mb-2">{t('threeD')} {t('floorPlan')}</p>
                       <div 
                         className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
                         onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), dom.podorys_2d ? 1 : 0)}
@@ -461,7 +464,7 @@ export default function DetailDomu() {
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
                           <span className="text-lg font-semibold text-gray-800">
-                            {GALERIA_TYPY_LABELS[galeria.typ] || galeria.typ}
+                            {getGaleriaLabel(galeria.typ)}
                           </span>
                           <Badge className="bg-gray-100 text-gray-600 text-xs">
                             {galeria.fotky.length} {t('photos')}
@@ -1074,16 +1077,16 @@ export default function DetailDomu() {
             {/* Obrázok základnej konfigurácie - pre Prosto House - hneď pod parametre */}
             {isProstoHouse && dom.zakladna_konfiguracia_obrazok && (
               <Card className="p-6 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
-                <h3 className="text-lg font-bold text-primary mb-4">📸 Základná konfigurácia</h3>
+                <h3 className="text-lg font-bold text-primary mb-4">📸 {t('basicConfiguration')}</h3>
                 <div className="rounded-lg overflow-hidden shadow-lg">
                   <img 
                     src={dom.zakladna_konfiguracia_obrazok} 
-                    alt={`${dom.nazov} - základná konfigurácia`}
+                    alt={`${dom.nazov} - ${t('basicConfiguration')}`}
                     className="w-full h-auto object-cover"
                   />
                 </div>
                 <p className="text-sm text-blue-800 mt-3 text-center font-medium">
-                  Takto vyzerá dom v základnej konfigurácii
+                  {t('basicConfigDesc')}
                 </p>
               </Card>
             )}

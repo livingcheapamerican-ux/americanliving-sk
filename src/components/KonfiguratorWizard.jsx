@@ -11,17 +11,20 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
 import KonfiguratorFlatDoubleInline from "./KonfiguratorFlatDoubleInline";
+import { useLanguage } from "./LanguageContext";
 
 // Krok 0: Výber typu stavby
 const StepTypStavby = ({ typStavby, setTypStavby, onNext }) => {
+  const { t } = useLanguage();
+  
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-          Aký typ stavby plánujete?
+          {t('buildingTypeQuestion')}
         </h2>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Vyberte si, či chcete rekreačnú stavbu (chata, záhradný domček) alebo rodinný dom s energetickým certifikátom A0 a možnosťou trvalého pobytu.
+          {t('buildingTypeDesc')}
         </p>
       </div>
 
@@ -42,31 +45,31 @@ const StepTypStavby = ({ typStavby, setTypStavby, onNext }) => {
               <TreePine className="w-8 h-8 text-amber-600" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-gray-900">Rekreačná stavba</h3>
-              <p className="text-amber-600 font-semibold">Ekonomická voľba</p>
+              <h3 className="text-xl font-bold text-gray-900">{t('recreationalBuilding')}</h3>
+              <p className="text-amber-600 font-semibold">{t('economicChoice')}</p>
             </div>
           </div>
           <ul className="space-y-2 text-sm text-gray-700">
             <li className="flex items-center gap-2">
               <Check className="w-4 h-4 text-amber-500" />
-              Chata, záhradný domček
+              {t('cottage')}
             </li>
             <li className="flex items-center gap-2">
               <Check className="w-4 h-4 text-amber-500" />
-              Celoročná izolácia 150/200mm
+              {t('yearRoundInsulation')}
             </li>
             <li className="flex items-center gap-2">
               <Check className="w-4 h-4 text-amber-500" />
-              Bez energetického certifikátu
+              {t('noEnergyCertificate')}
             </li>
             <li className="flex items-center gap-2">
               <Check className="w-4 h-4 text-amber-500" />
-              Nižšia cena
+              {t('lowerPrice')}
             </li>
           </ul>
           <div className="mt-4 pt-4 border-t border-amber-200">
             <p className="text-xs text-gray-500">
-              Spĺňa parametre rekreačnej stavby
+              {t('meetsRecreationalParams')}
             </p>
           </div>
         </motion.div>
@@ -84,38 +87,38 @@ const StepTypStavby = ({ typStavby, setTypStavby, onNext }) => {
         >
           <Badge className="absolute top-4 left-4 bg-gradient-to-r from-green-500 to-emerald-600">
             <Sparkles className="w-3 h-3 mr-1" />
-            Odporúčané
+            {t('recommended')}
           </Badge>
           <div className="flex items-center gap-4 mb-4 mt-6">
             <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center">
               <Building2 className="w-8 h-8 text-green-600" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-gray-900">Rodinný dom A0</h3>
-              <p className="text-green-600 font-semibold">Celoročné bývanie</p>
+              <h3 className="text-xl font-bold text-gray-900">{t('familyHouseA0')}</h3>
+              <p className="text-green-600 font-semibold">{t('yearRoundLiving')}</p>
             </div>
           </div>
           <ul className="space-y-2 text-sm text-gray-700">
             <li className="flex items-center gap-2">
               <Check className="w-4 h-4 text-green-500" />
-              Energetický certifikát A0
+              {t('energyCertificateA0')}
             </li>
             <li className="flex items-center gap-2">
               <Check className="w-4 h-4 text-green-500" />
-              Premium izolácia 250/300mm
+              {t('premiumInsulation250300')}
             </li>
             <li className="flex items-center gap-2">
               <Check className="w-4 h-4 text-green-500" />
-              Tepelné čerpadlo + Rekuperácia
+              {t('heatPumpRecuperation')}
             </li>
             <li className="flex items-center gap-2">
               <Check className="w-4 h-4 text-green-500" />
-              Možnosť trvalého pobytu
+              {t('permanentResidencePossibility')}
             </li>
           </ul>
           <div className="mt-4 pt-4 border-t border-green-200">
             <p className="text-xs text-gray-500">
-              Spĺňa všetky normy pre rodinný dom
+              {t('meetsAllStandardsFamilyHouse')}
             </p>
           </div>
         </motion.div>
@@ -132,13 +135,13 @@ const StepTypStavby = ({ typStavby, setTypStavby, onNext }) => {
               : "bg-gray-300"
           }`}
         >
-          Pokračovať
+          {t('continue')}
           <ChevronRight className="ml-2 w-5 h-5" />
         </Button>
       </div>
-    </div>
-  );
-};
+      </div>
+      );
+      };
 
 // Indikátor krokov
 const StepIndicator = ({ currentStep, totalSteps, steps, typStavby }) => {
@@ -221,6 +224,7 @@ export default function KonfiguratorWizard({
 }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [typStavby, setTypStavby] = useState("");
+  const { t } = useLanguage();
 
   // Keď sa zmení typ stavby, nastaviť predvolené hodnoty
   const handleTypStavbyChange = (typ) => {
@@ -242,11 +246,11 @@ export default function KonfiguratorWizard({
   };
 
   const steps = [
-    { label: "Typ stavby", icon: Home },
-    { label: "Hrubá stavba", icon: Package },
-    { label: "Holodom", icon: Hammer },
-    { label: "Na kľúč", icon: Key },
-    { label: "Dokumenty", icon: FileText },
+    { label: t('selectBuildingType'), icon: Home },
+    { label: t('phase1'), icon: Package },
+    { label: t('phase2'), icon: Hammer },
+    { label: t('phase3'), icon: Key },
+    { label: t('documentation'), icon: FileText },
   ];
 
   // Validácia krokov
@@ -313,8 +317,8 @@ export default function KonfiguratorWizard({
                 <Info className={`w-5 h-5 ${typStavby === "rodinny_dom" ? "text-green-600" : "text-amber-600"}`} />
                 <p className={`text-sm font-medium ${typStavby === "rodinny_dom" ? "text-green-800" : "text-amber-800"}`}>
                   {typStavby === "rodinny_dom" 
-                    ? "Pre rodinný dom A0 je automaticky vybraná premium izolácia. Môžete ju zmeniť, ale neodporúčame to."
-                    : "Pre rekreačnú stavbu je nastavená štandardná izolácia. Môžete si vybrať vyššiu úroveň."
+                    ? t('a0Recommendation')
+                    : t('meetsRecreationalParams')
                   }
                 </p>
               </div>
@@ -541,7 +545,7 @@ export default function KonfiguratorWizard({
             )}
             <div>
               <p className="text-white font-bold">
-                {typStavby === "rodinny_dom" ? "Rodinný dom A0" : "Rekreačná stavba"}
+                {typStavby === "rodinny_dom" ? t('familyHouseA0') : t('recreationalBuilding')}
               </p>
               <p className="text-white/80 text-xs">
                 Flat Double 142m²
@@ -551,13 +555,13 @@ export default function KonfiguratorWizard({
           {typStavby === "rodinny_dom" && missingA0Items.length === 0 && (
             <Badge className="bg-white text-green-600">
               <CheckCircle className="w-4 h-4 mr-1" />
-              Spĺňa A0
+              {t('meetsA0Short')}
             </Badge>
           )}
           {typStavby === "rodinny_dom" && missingA0Items.length > 0 && (
             <Badge className="bg-red-500 text-white">
               <AlertTriangle className="w-4 h-4 mr-1" />
-              Chýba {missingA0Items.length} položiek
+              {t('missing')} {missingA0Items.length} {t('items')}
             </Badge>
           )}
         </div>
@@ -595,15 +599,15 @@ export default function KonfiguratorWizard({
             className="px-6"
           >
             <ChevronLeft className="mr-2 w-4 h-4" />
-            Späť
+            {t('back')}
           </Button>
 
           {/* Validačná správa */}
           {!isStepValid && (
             <div className="flex items-center gap-2 text-red-600 text-sm">
               <AlertTriangle className="w-4 h-4" />
-              {currentStep === 2 && "Vyberte interiér finiš"}
-              {currentStep === 3 && "Vyberte typ fasády"}
+              {currentStep === 2 && t('interiorFinish')}
+              {currentStep === 3 && t('facadeRequired')}
             </div>
           )}
 
@@ -619,13 +623,13 @@ export default function KonfiguratorWizard({
                   : "bg-gray-300"
               }`}
             >
-              Ďalší krok
+              {t('nextStep')}
               <ChevronRight className="ml-2 w-4 h-4" />
             </Button>
           ) : (
             <div className="text-green-600 font-semibold flex items-center gap-2">
               <CheckCircle className="w-5 h-5" />
-              Konfigurácia dokončená
+              {t('configurationComplete')}
             </div>
           )}
         </div>
