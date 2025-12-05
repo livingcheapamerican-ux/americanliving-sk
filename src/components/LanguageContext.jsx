@@ -105,10 +105,10 @@ const translations = {
     gridConnectionFull: "Pripojenie na siete",
     connection: "Pripojenie",
     
-    lamination: "Laminácia",
+    lamination: "Laminácia farby okien",
     laminationAnthracite: "Antracit",
     
-    tintedGlass: "Tónované",
+    tintedGlass: "Tónované sklá",
     solarGlass: "Solar sklá",
     
     entryDoor: "Vstupné dvere",
