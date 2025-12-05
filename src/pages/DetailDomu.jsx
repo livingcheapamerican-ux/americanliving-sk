@@ -864,26 +864,7 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Možnosti využitia - presunute z pravej strany */}
-            {!isJAKModules && (
-              <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
-                <h3 className="text-lg font-bold text-primary mb-4">✔ Možnosti využitia:</h3>
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Rodinný dom s možnosťou kolaudácie</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Možnosť energetického certifikátu A0</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Rekreačná budova (chata/záhradný domček)</span>
-                  </li>
-                </ul>
-              </Card>
-            )}
+
 
             {/* Informačné panely - len pre Prosto House Flat Double - presunute z pravej strany */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
