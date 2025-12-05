@@ -902,14 +902,14 @@ export default function KonfiguratorFlatDoubleInline({
                 iconColor="text-orange-400"
                 iconSelectedColor="text-emerald-600"
                 title="Škúchaná"
-                subtitle="Fasáda"
+                subtitle="Biela omietka"
                 price="+ 12 841 €"
                 isPriced={true}
                 selectedBg="bg-emerald-100"
                 selectedBorder="border-emerald-500"
                 selectedRing="ring-emerald-300"
                 hoverBorder="hover:border-emerald-300"
-                tooltip="Škúchaná omietková fasáda pre tradičný vzhľad rodinného domu."
+                tooltip="Škúchaná omietková fasáda v bielej farbe pre tradičný vzhľad rodinného domu."
               />
             </div>
 
