@@ -89,7 +89,7 @@ const StepTypStavby = ({ typStavby, setTypStavby, onNext }) => {
             >
               ✓
             </motion.span>
-            bez skrytých poplatkov
+            {t('noHiddenFees')}
           </motion.p>
         </div>
       </motion.div>
