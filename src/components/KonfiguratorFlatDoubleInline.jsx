@@ -189,31 +189,31 @@ export default function KonfiguratorFlatDoubleInline({
   const CENY = isFlat15 ? {
     montaz: { nie: 0, ano: 13470 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 4400, premium: 7790 },
+    izolacia: { standard: 0, zvysena: 4400, premium: 8799 },
     elektroinstalacia: 5200,
     vodaKanalizacia: 2100,
     sanitaKomplet: 1169,
     bojler: 246,
-    tepelneCerpadlo: 4286,
+    tepelneCerpadlo: 4428,
     rekuperacia: 2200,
     zaklady: { bez: 0, skrutky: 6348, doska: 11909, pasove: 11860 },
     pripojkaSiete: 1501,
     inziniering: 2592,
     projektA0: 3500,
-    interierFinis: { ziadne: 0, drevo: 9000, sadrokarton: 11545 },
+    interierFinis: { ziadne: 0, drevo: 12700, sadrokarton: 14545 },
     vonkajsiaFasada: { standard: 0, suchana: 10385 },
-    povrchokaOkien: 3400,
-    vnutornePodlahy: 4050,
-    podlahovVykurovanie: 3816,
+    povrchokaOkien: 2400,
+    vnutornePodlahy: 2640,
+    podlahovVykurovanie: 4316,
     pergola: 1250,
     interieroveDvere: 180,
-    tonovaneSkla: 880,
+    tonovaneSkla: 840,
     doprava: 0,
-    revizna: 1501,
+    revizna: 501,
     stresneOkno: 760,
     bocneOknoFixne: 500,
     bocneOknoVyklopne90: 540,
-    bocneOknoVyklopne55: 290
+    bocneOknoVyklopne55: 225
   } : {
     montaz: { nie: 0, ano: 17970 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
@@ -678,7 +678,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-blue-600"
                 title={t('interiorWood')}
                 subtitle={t('woodCladding')}
-                price={isFlat15 ? "+ 9 000 €" : "+ 16 400 €"}
+                price={isFlat15 ? "+ 12 700 €" : "+ 16 400 €"}
                 isPriced={true}
                 tooltip={t('interiorWood')}
               />
@@ -691,7 +691,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-blue-600"
                 title={t('interiorDrywall')}
                 subtitle={t('plaster')}
-                price={isFlat15 ? "+ 11 545 €" : "+ 19 475 €"}
+                price={isFlat15 ? "+ 14 545 €" : "+ 19 475 €"}
                 isPriced={true}
                 tooltip={t('interiorDrywall')}
               />
@@ -778,7 +778,7 @@ export default function KonfiguratorFlatDoubleInline({
                   iconSelectedColor="text-green-600"
                   title={t('heatPump')}
                   subtitle={t('units5')}
-                  price={isFlat15 ? "+ 4 286 €" : "+ 5 535 €"}
+                  price={isFlat15 ? "+ 4 428 €" : "+ 5 535 €"}
                   isPriced={true}
                   isA0={true}
                   selectedBg="bg-green-100"
@@ -830,7 +830,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-slate-700"
                 title={t('lamination')}
                 subtitle={t('laminationAnthracite')}
-                price={isFlat15 ? "+ 3 400 €" : "+ 3 100 €"}
+                price={isFlat15 ? "+ 2 400 €" : "+ 3 100 €"}
                 isPriced={true}
                 selectedBg="bg-slate-200"
                 selectedBorder="border-slate-600"
@@ -847,7 +847,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-amber-600"
                 title={t('tintedGlass')}
                 subtitle={t('solarGlass')}
-                price={isFlat15 ? "+ 880 €" : "+ 1 300 €"}
+                price={isFlat15 ? "+ 840 €" : "+ 1 300 €"}
                 isPriced={true}
                 selectedBg="bg-amber-100"
                 selectedBorder="border-amber-500"
@@ -896,7 +896,7 @@ export default function KonfiguratorFlatDoubleInline({
                   { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: isFlat15 ? "760 €" : "760 €" },
                   { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: isFlat15 ? "500 €" : "501 €" },
                   { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: isFlat15 ? "540 €" : "540 €" },
-                  { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: isFlat15 ? "290 €" : "225 €" }
+                  { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: isFlat15 ? "225 €" : "225 €" }
                 ].map((opt, idx) => (
                 <div key={idx} className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
                   <span className="font-medium text-gray-800 text-[10px] sm:text-xs block mb-1">{opt.label}</span>
@@ -990,7 +990,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-emerald-600"
               title={t('floors')}
               subtitle={t('floorsLaminate')}
-              price={isFlat15 ? "+ 4 050 €" : "+ 3 351 €"}
+              price={isFlat15 ? "+ 2 640 €" : "+ 3 351 €"}
               isPriced={true}
               selectedBg="bg-emerald-100"
               selectedBorder="border-emerald-500"
@@ -1007,7 +1007,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-orange-600"
               title={t('floorHeating')}
               subtitle={t('wifiThermostat')}
-              price={isFlat15 ? "+ 3 816 €" : "+ 5 525 €"}
+              price={isFlat15 ? "+ 4 316 €" : "+ 5 525 €"}
               isPriced={true}
               selectedBg="bg-orange-100"
               selectedBorder="border-orange-500"
@@ -1125,7 +1125,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-purple-600"
               title={t('revision')}
               subtitle={t('documentation')}
-              price={isFlat15 ? "+ 1 501 €" : "+ 1 000 €"}
+              price={isFlat15 ? "+ 501 €" : "+ 1 000 €"}
               isPriced={true}
               selectedBg="bg-purple-100"
               selectedBorder="border-purple-500"
