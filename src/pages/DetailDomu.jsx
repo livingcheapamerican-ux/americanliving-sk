@@ -17,6 +17,7 @@ import KonfiguratorFlatDoubleInline from "../components/KonfiguratorFlatDoubleIn
 import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
 import KonfiguratorWizard from "../components/KonfiguratorWizard";
 import { useLanguage } from "../components/LanguageContext";
+import TranslatedDescription from "../components/TranslatedDescription";
 
 
 export default function DetailDomu() {
