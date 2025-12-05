@@ -1563,6 +1563,10 @@ const translations = {
     basePriceIncludesRecreational: "Le prix de base comprend l'équipement standard complet pour bâtiment de loisirs. Option de mise à niveau vers Maison familiale avec certificat A0 dans le configurateur.",
     gl24ModularHouse: "Maison modulaire en bois lamellé-collé GL24 – combinaison d'élégance, de confort et d'innovation.",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Créez votre offre de prix pour votre maison",
+    noHiddenFees: "Sans frais cachés",
+    
     // DetailDomu specific
     twoD: "2D",
     threeD: "3D",
@@ -2127,6 +2131,10 @@ const translations = {
     modularConstruction: "Изградња модуларне куће – флексибилно решење за ваше становање.",
     basePriceIncludesRecreational: "Основна цена укључује комплетну стандардну опрему за рекреативну зграду. Опција надоградње на Породичну кућу са А0 сертификатом у конфигуратору.",
     gl24ModularHouse: "Модуларна кућа од лепљеног дрвета GL24 – комбинација елеганције, удобности и иновације.",
+    
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Саставите своју ценовну понуду за вашу кућу",
+    noHiddenFees: "Без скривених трошкова",
     
     // DetailDomu specific
     twoD: "2D",
@@ -2693,6 +2701,10 @@ const translations = {
     basePriceIncludesRecreational: "Osnovna cijena uključuje kompletnu standardnu opremu za rekreacijsku zgradu. Opcija nadogradnje na Obiteljsku kuću s A0 certifikatom u konfiguratoru.",
     gl24ModularHouse: "Modularna kuća od lijepljenog drva GL24 – kombinacija elegancije, udobnosti i inovacije.",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Sastavite svoju cjenovnu ponudu za vašu kuću",
+    noHiddenFees: "Bez skrivenih troškova",
+    
     // DetailDomu specific
     twoD: "2D",
     threeD: "3D",
@@ -3258,6 +3270,10 @@ const translations = {
     basePriceIncludesRecreational: "Η βασική τιμή περιλαμβάνει πλήρη στάνταρ εξοπλισμό για ψυχαγωγικό κτίριο. Επιλογή αναβάθμισης σε Οικογενειακή κατοικία με πιστοποιητικό A0 στον διαμορφωτή.",
     gl24ModularHouse: "Αρθρωτό σπίτι από κολλητό ξύλο GL24 – συνδυασμός κομψότητας, άνεσης και καινοτομίας.",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Δημιουργήστε την προσφορά τιμής για το σπίτι σας",
+    noHiddenFees: "Χωρίς κρυφές χρεώσεις",
+    
     // DetailDomu specific
     twoD: "2D",
     threeD: "3D",
@@ -3546,6 +3562,10 @@ const translations = {
     modularConstruction: "Modular house construction – flexible solution for your living.",
     basePriceIncludesRecreational: "Base price includes complete standard equipment for recreational building. Option to upgrade to Family house with A0 certificate in configurator.",
     gl24ModularHouse: "Modular house from GL24 glued wood – combination of elegance, comfort and innovation.",
+    
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Create your price offer for your house",
+    noHiddenFees: "No hidden fees",
     
     // DetailDomu specific
     twoD: "2D",
@@ -4024,6 +4044,10 @@ const translations = {
     basePriceIncludesRecreational: "Az alapár tartalmazza a teljes standard felszerelést rekreációs épülethez. Lehetőség van A0 tanúsítvánnyal rendelkező családi házra való frissítésre a konfigurátorban.",
     gl24ModularHouse: "Moduláris ház GL24 ragasztott fából – az elegancia, kényelem és innováció kombinációja.",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Állítsa össze árajánlatát házához",
+    noHiddenFees: "Rejtett költségek nélkül",
+    
     // DetailDomu specific
     twoD: "2D",
     threeD: "3D",
@@ -4466,6 +4490,10 @@ const translations = {
     basePriceIncludesRecreational: "Cena podstawowa obejmuje kompletne standardowe wyposażenie dla budynku rekreacyjnego. Możliwość modernizacji do Domu rodzinnego z certyfikatem A0 w konfiguratorze.",
     gl24ModularHouse: "Dom modułowy z klejonego drewna GL24 – połączenie elegancji, komfortu i innowacji.",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Stwórz swoją ofertę cenową dla domu",
+    noHiddenFees: "Bez ukrytych opłat",
+    
     // DetailDomu specific
     twoD: "2D",
     threeD: "3D",
@@ -4907,6 +4935,10 @@ const translations = {
     modularConstruction: "Будівництво модульного будинку – гнучке рішення для вашого життя.",
     basePriceIncludesRecreational: "Базова ціна включає повне стандартне обладнання для рекреаційної будівлі. Можливість оновлення до Сімейного будинку з сертифікатом A0 в конфігураторі.",
     gl24ModularHouse: "Модульний будинок з клеєної деревини GL24 – поєднання елегантності, комфорту та інновацій.",
+    
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Складіть свою цінову пропозицію для вашого дому",
+    noHiddenFees: "Без прихованих платежів",
     
     // DetailDomu specific
     twoD: "2D",
