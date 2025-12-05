@@ -196,7 +196,7 @@ export default function KonfiguratorFjord({
     doprava: 0,
     revizna: 12200,
     stresneOkno: 760,
-    bocneOknoFixne: 12450,
+    bocneOknoFixne: 501,
     bocneOknoVyklopne90: 540,
     bocneOknoVyklopne55: 225
   };
@@ -622,7 +622,7 @@ export default function KonfiguratorFjord({
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                       {[
                         { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: "760 €" },
-                        { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: "12 450 €" },
+                        { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: "501 €" },
                         { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: "540 €" },
                         { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: "225 €" }
                       ].map((opt, idx) => (
