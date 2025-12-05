@@ -634,15 +634,18 @@ export default function DetailDomu() {
               <Card className="p-6">
                 <h3 className="text-lg font-bold text-primary mb-4">{t('descriptionTitle')}</h3>
                 <TranslatedDescription 
-                  text={dom.popis} 
+                  text={dom.popis}
+                  textEn={dom.popis_en}
+                  textHu={dom.popis_hu}
+                  textPl={dom.popis_pl}
+                  textUk={dom.popis_uk}
                   className="text-gray-700 leading-tight whitespace-pre-line"
                 />
                 {isProstoHouse && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
-                    <TranslatedDescription 
-                      text="Životnosť: Navrhnutá na viac ako 80 rokov pri pravidelnej údržbe a správnej inštalácii"
-                      className="text-gray-700"
-                    />
+                    <p className="text-gray-700">
+                      <strong>{t('lifespan')}:</strong> {t('lifespanDesc')}
+                    </p>
                   </div>
                 )}
               </Card>
@@ -803,6 +806,10 @@ export default function DetailDomu() {
                 <h3 className="text-lg font-bold text-primary mb-4">{t('specification')}</h3>
                 <TranslatedDescription 
                   text={dom.specifikacia}
+                  textEn={dom.specifikacia_en}
+                  textHu={dom.specifikacia_hu}
+                  textPl={dom.specifikacia_pl}
+                  textUk={dom.specifikacia_uk}
                   className="text-gray-700 text-sm leading-relaxed whitespace-pre-line"
                 />
               </Card>
@@ -987,28 +994,24 @@ export default function DetailDomu() {
               {isProstoHouse ? (
                 <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2">
                   <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                  <TranslatedDescription
-                    text="Základná cena je za samotnú konštrukciu bez montážnych prác. Cenu montáže si môžete vypočítať v konfigurátore."
-                    className="text-sm text-amber-800"
-                  />
+                  <p className="text-sm text-amber-800">
+                    <strong>{t('basePriceNote')}</strong> {t('basePriceNoteDesc')}
+                  </p>
                 </div>
               ) : (isTicabhouse) ? (
                 <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <TranslatedDescription
-                    text="Modulárna konštrukcia domu – flexibilné riešenie pre vaše bývanie."
-                    className="text-sm text-blue-800 mb-2 font-semibold"
-                  />
-                  <TranslatedDescription
-                    text="Základná cena zahŕňa kompletnú štandardnú výbavu pre rekreačnú stavbu. Možnosť upgradu na Rodinný dom s certifikátom A0 v konfigurátore."
-                    className="text-sm text-blue-700"
-                  />
+                  <p className="text-sm text-blue-800 mb-2">
+                    <strong>{t('modularConstruction')}</strong>
+                  </p>
+                  <p className="text-sm text-blue-700">
+                    {t('basePriceIncludesRecreational')}
+                  </p>
                 </div>
               ) : isJAKModules ? (
                 <div className="mt-3 bg-green-50 border border-green-200 rounded-lg p-3">
-                  <TranslatedDescription
-                    text="Modulárny dom z drewna klejonego GL24 – spojenie elegancie, pohodlia a inovácií."
-                    className="text-sm text-green-800 font-semibold"
-                  />
+                  <p className="text-sm text-green-800">
+                    <strong>{t('gl24ModularHouse')}</strong>
+                  </p>
                 </div>
               ) : (
                 <p className="text-sm text-gray-500 mt-2">- {t('priceFromLabel')}</p>

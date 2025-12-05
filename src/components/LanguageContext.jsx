@@ -188,6 +188,13 @@ const translations = {
     cannotComplete: "Bez výberu fasády nie je možné dokončiť konfiguráciu a odoslať dopyt.",
     clickToShow: "Kliknite pre zobrazenie",
     photos: "fotiek",
+    lifespan: "Životnosť",
+    lifespanDesc: "Navrhnutá na viac ako 80 rokov pri pravidelnej údržbe a správnej inštalácii",
+    basePriceNote: "Základná cena je za samotnú konštrukciu bez montážnych prác.",
+    basePriceNoteDesc: "Cenu montáže si môžete vypočítať v konfigurátore.",
+    modularConstruction: "Modulárna konštrukcia domu – flexibilné riešenie pre vaše bývanie.",
+    basePriceIncludesRecreational: "Základná cena zahŕňa kompletnú štandardnú výbavu pre rekreačnú stavbu. Možnosť upgradu na Rodinný dom s certifikátom A0 v konfigurátore.",
+    gl24ModularHouse: "Modulárny dom z drewna klejoného GL24 – spojenie elegancie, pohodlia a inovácií.",
     
     // DetailDomu specific
     twoD: "2D",
@@ -658,6 +665,13 @@ const translations = {
     cannotComplete: "Without selecting a facade, you cannot complete the configuration and submit an inquiry.",
     clickToShow: "Click to show",
     photos: "photos",
+    lifespan: "Lifespan",
+    lifespanDesc: "Designed for more than 80 years with regular maintenance and proper installation",
+    basePriceNote: "The base price is for the construction only without assembly work.",
+    basePriceNoteDesc: "You can calculate the assembly price in the configurator.",
+    modularConstruction: "Modular house construction – flexible solution for your living.",
+    basePriceIncludesRecreational: "Base price includes complete standard equipment for recreational building. Option to upgrade to Family house with A0 certificate in configurator.",
+    gl24ModularHouse: "Modular house from GL24 glued wood – combination of elegance, comfort and innovation.",
     
     // DetailDomu specific
     twoD: "2D",
@@ -1128,6 +1142,13 @@ const translations = {
     cannotComplete: "Homlokzat kiválasztása nélkül nem tudja befejezni a konfigurációt és elküldeni az érdeklődést.",
     clickToShow: "Kattintson a megjelenítéshez",
     photos: "fotó",
+    lifespan: "Élettartam",
+    lifespanDesc: "Több mint 80 évre tervezve rendszeres karbantartás és helyes telepítés mellett",
+    basePriceNote: "Az alapár csak a konstrukcióra vonatkozik szerelési munkák nélkül.",
+    basePriceNoteDesc: "A szerelés árát a konfigurátorban kiszámíthatja.",
+    modularConstruction: "Moduláris ház építés – rugalmas megoldás az Ön otthonához.",
+    basePriceIncludesRecreational: "Az alapár tartalmazza a teljes standard felszerelést rekreációs épülethez. Lehetőség van A0 tanúsítvánnyal rendelkező családi házra való frissítésre a konfigurátorban.",
+    gl24ModularHouse: "Moduláris ház GL24 ragasztott fából – az elegancia, kényelem és innováció kombinációja.",
     
     // DetailDomu specific
     twoD: "2D",
@@ -1563,6 +1584,13 @@ const translations = {
     cannotComplete: "Bez wyboru elewacji nie można zakończyć konfiguracji i wysłać zapytania.",
     clickToShow: "Kliknij, aby wyświetlić",
     photos: "zdjęć",
+    lifespan: "Żywotność",
+    lifespanDesc: "Zaprojektowany na ponad 80 lat przy regularnej konserwacji i właściwej instalacji",
+    basePriceNote: "Cena podstawowa dotyczy tylko konstrukcji bez prac montażowych.",
+    basePriceNoteDesc: "Cenę montażu można obliczyć w konfiguratorze.",
+    modularConstruction: "Budowa domu modułowego – elastyczne rozwiązanie dla Twojego mieszkania.",
+    basePriceIncludesRecreational: "Cena podstawowa obejmuje kompletne standardowe wyposażenie dla budynku rekreacyjnego. Możliwość modernizacji do Domu rodzinnego z certyfikatem A0 w konfiguratorze.",
+    gl24ModularHouse: "Dom modułowy z klejonego drewna GL24 – połączenie elegancji, komfortu i innowacji.",
     
     // DetailDomu specific
     twoD: "2D",
@@ -1998,6 +2026,13 @@ const translations = {
     cannotComplete: "Без вибору фасаду неможливо завершити конфігурацію та надіслати запит.",
     clickToShow: "Натисніть для показу",
     photos: "фото",
+    lifespan: "Термін служби",
+    lifespanDesc: "Розроблено більш ніж на 80 років при регулярному обслуговуванні та правильному монтажі",
+    basePriceNote: "Базова ціна стосується лише конструкції без монтажних робіт.",
+    basePriceNoteDesc: "Ви можете розрахувати ціну монтажу в конфігураторі.",
+    modularConstruction: "Будівництво модульного будинку – гнучке рішення для вашого життя.",
+    basePriceIncludesRecreational: "Базова ціна включає повне стандартне обладнання для рекреаційної будівлі. Можливість оновлення до Сімейного будинку з сертифікатом A0 в конфігураторі.",
+    gl24ModularHouse: "Модульний будинок з клеєної деревини GL24 – поєднання елегантності, комфорту та інновацій.",
     
     // DetailDomu specific
     twoD: "2D",
