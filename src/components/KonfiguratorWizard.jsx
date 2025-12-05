@@ -38,12 +38,12 @@ const StepTypStavby = ({ typStavby, setTypStavby, onNext }) => {
           }`}
         >
           {typStavby === "rekreacna" && (
-            <div className="absolute top-4 right-4">
-              <div className="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center">
-                <Check className="w-5 h-5 text-white" />
+              <div className="absolute top-4 right-4">
+                <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center shadow-lg">
+                  <Check className="w-4 h-4 text-white" />
+                </div>
               </div>
-            </div>
-          )}
+            )}
           <div className="flex items-center gap-4 mb-4">
             <div className="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center">
               <TreePine className="w-8 h-8 text-amber-600" />
@@ -94,12 +94,12 @@ const StepTypStavby = ({ typStavby, setTypStavby, onNext }) => {
             Odporúčané
           </Badge>
           {typStavby === "rodinny_dom" && (
-            <div className="absolute top-4 right-4">
-              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                <Check className="w-5 h-5 text-white" />
+              <div className="absolute top-4 right-4">
+                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                  <Check className="w-4 h-4 text-white" />
+                </div>
               </div>
-            </div>
-          )}
+            )}
           <div className="flex items-center gap-4 mb-4 mt-6">
             <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center">
               <Building2 className="w-8 h-8 text-green-600" />
