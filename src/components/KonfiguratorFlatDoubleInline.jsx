@@ -202,6 +202,7 @@ export default function KonfiguratorFlatDoubleInline({
     povrchokaOkien: 3100,
     vnutornePodlahy: 3351,
     podlahovVykurovanie: 5525,
+    pergola: 1845,
     interieroveDvere: 250,
     tonovaneSkla: 1300,
     doprava: 0,
@@ -238,6 +239,7 @@ export default function KonfiguratorFlatDoubleInline({
     if (povrchokaOkien) total += CENY.povrchokaOkien;
     if (vnutornePodlahy) total += CENY.vnutornePodlahy;
     if (podlahovVykurovanie) total += CENY.podlahovVykurovanie;
+    if (pergola) total += CENY.pergola;
     total += interieroveDvere * CENY.interieroveDvere;
     if (tonovaneSkla) total += CENY.tonovaneSkla;
     if (doprava) total += CENY.doprava;
@@ -330,6 +332,7 @@ export default function KonfiguratorFlatDoubleInline({
     items.push({ name: t('floors') + " - " + t('floorsLaminate'), price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
     items.push({ name: t('floorHeatingFull'), price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
     items.push({ name: `${t('interiorDoors')} (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere, section: "kluc", selected: interieroveDvere > 0 });
+    items.push({ name: t('pergola'), price: pergola ? CENY.pergola : 0, section: "kluc", selected: pergola });
     
     // Dokumentácia
     items.push({ name: t('engineeringFull'), price: inziniering ? CENY.inziniering : 0, section: "docs", selected: inziniering });
@@ -342,7 +345,7 @@ export default function KonfiguratorFlatDoubleInline({
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
-      interieroveDvere, inziniering, projektA0, revizna, doprava, t]);
+      interieroveDvere, pergola, inziniering, projektA0, revizna, doprava, t]);
 
   // Fixed panel reference
   const dragRef = useRef(null);
@@ -981,6 +984,23 @@ export default function KonfiguratorFlatDoubleInline({
               hoverBorder="hover:border-orange-300"
               tooltip={t('floorHeatingFull')}
             />
+
+            <Tile
+              selected={pergola}
+              onClick={(e) => { if (!pergola) triggerAnimation("pergola", e.currentTarget); setPergola(!pergola); }}
+              icon={Maximize}
+              iconColor="text-teal-400"
+              iconSelectedColor="text-emerald-600"
+              title={t('pergola')}
+              subtitle={t('pergolaDecorative')}
+              price="+ 1 845 €"
+              isPriced={true}
+              selectedBg="bg-emerald-100"
+              selectedBorder="border-emerald-500"
+              selectedRing="ring-emerald-300"
+              hoverBorder="hover:border-emerald-300"
+              tooltip={t('pergola')}
+              />
 
               </div>
 
