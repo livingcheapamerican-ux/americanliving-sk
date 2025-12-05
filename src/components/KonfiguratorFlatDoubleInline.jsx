@@ -464,9 +464,9 @@ export default function KonfiguratorFlatDoubleInline({
 
   // Ak zobrazujeme iba sumár (pre ľavý stĺpec)
     if (showOnlySummary) {
-      return (
-        <div>
-          <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
+                return (
+                  <div>
+                    <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-100 via-white to-slate-50 ring-2 ring-green-500/30">
             <div className="p-3 border-b border-slate-200">
               <div className="flex items-center justify-between">
                 <div>
@@ -1145,9 +1145,9 @@ export default function KonfiguratorFlatDoubleInline({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.4 }}
         >
-        <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
-        <div className="relative">
-          {/* Dekoratívny gradient */}
+        <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-100 via-white to-slate-50 ring-2 ring-green-500/30">
+                      <div className="relative">
+                        {/* Dekoratívny gradient */}
           <div className="absolute top-0 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-10 right-10 w-40 h-40 bg-green-400 rounded-full blur-3xl"></div>
