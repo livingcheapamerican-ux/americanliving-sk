@@ -500,9 +500,10 @@ export default function DetailDomu() {
 
 
 
-            {/* Fáza 1: Hrubá stavba - pod galériou */}
+            {/* Konfigurátor - všetky fázy pod galériou */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
               <>
+                {/* Fáza 1: Hrubá stavba */}
                 <KonfiguratorFaza1HrubaStavba 
                   montazHolodomu={montazHolodomu}
                   setMontazHolodomu={setMontazHolodomu}
@@ -511,7 +512,7 @@ export default function DetailDomu() {
                   zaklady={zaklady}
                   setZaklady={setZaklady}
                 />
-                {/* Sumárny floating panel */}
+                {/* Fázy 2, 3, 4 */}
                 <KonfiguratorFlatDoubleInline 
                   dom={dom}
                   montazHolodomu={montazHolodomu}
@@ -568,7 +569,7 @@ export default function DetailDomu() {
                   setRevizna={setRevizna}
                   doprava={doprava}
                   setDoprava={setDoprava}
-                  showOnlySummary={true}
+                  showOnlySummary={false}
                 />
               </>
             )}
