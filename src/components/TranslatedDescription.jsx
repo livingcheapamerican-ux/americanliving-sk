@@ -6,7 +6,12 @@ export default function TranslatedDescription({
   textEn, 
   textHu, 
   textPl, 
-  textUk, 
+  textUk,
+  textDe,
+  textFr,
+  textSr,
+  textHr,
+  textEl,
   className = "" 
 }) {
   const { language } = useLanguage();
@@ -23,6 +28,16 @@ export default function TranslatedDescription({
         return textPl || text;
       case 'uk':
         return textUk || text;
+      case 'de':
+        return textDe || text;
+      case 'fr':
+        return textFr || text;
+      case 'sr':
+        return textSr || text;
+      case 'hr':
+        return textHr || text;
+      case 'el':
+        return textEl || text;
       default:
         return text;
     }

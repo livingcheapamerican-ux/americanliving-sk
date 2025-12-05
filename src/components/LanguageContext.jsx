@@ -2319,4 +2319,9 @@ export const AVAILABLE_LANGUAGES = [
   { code: 'hu', name: 'Magyar', flag: '🇭🇺' },
   { code: 'pl', name: 'Polski', flag: '🇵🇱' },
   { code: 'uk', name: 'Українська', flag: '🇺🇦' },
+  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+  { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  { code: 'sr', name: 'Српски', flag: '🇷🇸' },
+  { code: 'hr', name: 'Hrvatski', flag: '🇭🇷' },
+  { code: 'el', name: 'Ελληνικά', flag: '🇬🇷' },
 ];
