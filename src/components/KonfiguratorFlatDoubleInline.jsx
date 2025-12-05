@@ -603,7 +603,7 @@ export default function KonfiguratorFlatDoubleInline({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
         >
-        <Card className="overflow-hidden border-0 shadow-lg">
+        <Card className="overflow-hidden border-2 border-blue-300 shadow-lg">
         <SectionHeader 
           icon={Hammer} 
           title={t('phase2')} 
