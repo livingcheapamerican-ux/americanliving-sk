@@ -374,6 +374,38 @@ export default function KonfiguratorWizard({
     }
   };
 
+  const handleFullReset = () => {
+    setCurrentStep(0);
+    setTypStavby("");
+    setMontazHolodomu?.("nie");
+    setVstupneDvere("ziadne");
+    setIzolaciaNavysenie?.("standard");
+    setElektroinstalacia(false);
+    setVodaKanalizacia(false);
+    setSanitaKomplet(false);
+    setBojler(false);
+    setTepelneCerpadlo(false);
+    setRekuperacia(false);
+    setZaklady?.("bez");
+    setPripojkaSiete(false);
+    setInziniering(false);
+    setProjektA0(false);
+    setInterierFinis("ziadne");
+    setVonkajsiaFasada("");
+    setPovrchokaOkien(false);
+    setVnutornePodlahy(false);
+    setPodlahovVykurovanie(false);
+    setPergola(false);
+    setInterieroveDvere(0);
+    setTonovaneSkla(false);
+    setDoprava(false);
+    setRevizna(true);
+    setStresneOkno(0);
+    setBocneOknoFixne(0);
+    setBocneOknoVyklopne90(0);
+    setBocneOknoVyklopne55(0);
+  };
+
   // Renderovanie aktuálneho kroku
   const renderCurrentStep = () => {
     switch (currentStep) {
@@ -415,6 +447,7 @@ export default function KonfiguratorWizard({
         return useFjordPrices ? (
           <KonfiguratorFjord
             dom={dom}
+            onReset={handleFullReset}
             montazHolodomu={montazHolodomu}
             setMontazHolodomu={setMontazHolodomu}
             izolaciaNavysenie={izolaciaNavysenie}
@@ -539,6 +572,7 @@ export default function KonfiguratorWizard({
         return useFjordPrices ? (
           <KonfiguratorFjord
             dom={dom}
+            onReset={handleFullReset}
             montazHolodomu={montazHolodomu}
             setMontazHolodomu={setMontazHolodomu}
             izolaciaNavysenie={izolaciaNavysenie}
@@ -663,6 +697,7 @@ export default function KonfiguratorWizard({
         return useFjordPrices ? (
           <KonfiguratorFjord
             dom={dom}
+            onReset={handleFullReset}
             montazHolodomu={montazHolodomu}
             setMontazHolodomu={setMontazHolodomu}
             izolaciaNavysenie={izolaciaNavysenie}

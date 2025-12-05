@@ -143,6 +143,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
 
 export default function KonfiguratorFlatDoubleInline({ 
   dom,
+  onReset,
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
@@ -366,33 +367,37 @@ export default function KonfiguratorFlatDoubleInline({
   }, []);
 
   const handleReset = () => {
-    setMontazHolodomu?.("nie");
-    setVstupneDvere("ziadne");
-    setIzolaciaNavysenie?.("standard");
-    setElektroinstalacia(false);
-    setVodaKanalizacia(false);
-    setSanitaKomplet(false);
-    setBojler(false);
-    setTepelneCerpadlo(false);
-    setRekuperacia(false);
-    setZaklady?.("bez");
-    setPripojkaSiete(false);
-    setInziniering(false);
-    setProjektA0(false);
-    setInterierFinis("ziadne");
-    setVonkajsiaFasada("standard");
-    setPovrchokaOkien(false);
-    setVnutornePodlahy(false);
-    setPodlahovVykurovanie(false);
-    setPergola(false);
-    setInterieroveDvere(0);
-    setTonovaneSkla(false);
-    setDoprava(false);
-    setRevizna(true); // Ponechať zapnutú aj po resete
-    setStresneOkno(0);
-    setBocneOknoFixne(0);
-    setBocneOknoVyklopne90(0);
-    setBocneOknoVyklopne55(0);
+    if (onReset) {
+      onReset();
+    } else {
+      setMontazHolodomu?.("nie");
+      setVstupneDvere("ziadne");
+      setIzolaciaNavysenie?.("standard");
+      setElektroinstalacia(false);
+      setVodaKanalizacia(false);
+      setSanitaKomplet(false);
+      setBojler(false);
+      setTepelneCerpadlo(false);
+      setRekuperacia(false);
+      setZaklady?.("bez");
+      setPripojkaSiete(false);
+      setInziniering(false);
+      setProjektA0(false);
+      setInterierFinis("ziadne");
+      setVonkajsiaFasada("standard");
+      setPovrchokaOkien(false);
+      setVnutornePodlahy(false);
+      setPodlahovVykurovanie(false);
+      setPergola(false);
+      setInterieroveDvere(0);
+      setTonovaneSkla(false);
+      setDoprava(false);
+      setRevizna(true);
+      setStresneOkno(0);
+      setBocneOknoFixne(0);
+      setBocneOknoVyklopne90(0);
+      setBocneOknoVyklopne55(0);
+    }
   };
 
   // Sekcia Header komponenta s animáciou
