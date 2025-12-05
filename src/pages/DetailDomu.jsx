@@ -632,14 +632,14 @@ export default function DetailDomu() {
             {/* Popis - presunute z pravej strany */}
             {dom.popis && (
               <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">{t('descriptionTitle')}</h3>
+                <h3 className="text-lg font-bold text-red-600 mb-4">{t('descriptionTitle')}</h3>
                 <TranslatedDescription 
                   text={dom.popis}
                   textEn={dom.popis_en}
                   textHu={dom.popis_hu}
                   textPl={dom.popis_pl}
                   textUk={dom.popis_uk}
-                  className="text-gray-700 leading-tight whitespace-pre-line"
+                  className="text-gray-700 leading-relaxed whitespace-pre-line"
                 />
                 {isProstoHouse && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
