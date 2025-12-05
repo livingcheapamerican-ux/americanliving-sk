@@ -509,6 +509,7 @@ export default function KonfiguratorWizard({
         ) : (
           <KonfiguratorFlatDoubleInline
             dom={dom}
+            onReset={handleFullReset}
             montazHolodomu={montazHolodomu}
             setMontazHolodomu={setMontazHolodomu}
             izolaciaNavysenie={izolaciaNavysenie}
