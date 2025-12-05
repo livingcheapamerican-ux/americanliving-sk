@@ -459,116 +459,119 @@ export default function KonfiguratorFlatDoubleInline({
   };
 
   // Ak zobrazujeme iba sumár (pre ľavý stĺpec)
-  if (showOnlySummary) {
-    return (
-      <div className="mt-4 sticky top-20 z-40">
-        <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
-          <div className="p-4 border-b border-slate-700/50">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-green-400 text-xs font-semibold uppercase tracking-wider mb-1">Vaša konfigurácia</p>
-                <h3 className="text-lg font-bold text-white">Flat Double 142m²</h3>
+    if (showOnlySummary) {
+      // Filtrovať len vybrané položky
+      const onlySelectedItems = selectedItems.filter(item => item.selected);
+
+      return (
+        <div className="mt-4">
+          <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-2 ring-green-500/30">
+            <div className="p-3 border-b border-slate-700/50">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-green-400 text-[10px] font-semibold uppercase tracking-wider mb-0.5">Vaša konfigurácia</p>
+                  <h3 className="text-base font-bold text-white">Flat Double 142m²</h3>
+                </div>
               </div>
             </div>
-          </div>
 
-        {/* Contact Modal for summary view */}
-        <KonfiguratorContactModal
-          isOpen={showContactModal}
-          onClose={() => setShowContactModal(false)}
-          dom={dom}
-          totalPrice={totalPrice}
-          selectedItems={selectedItems}
-          vonkajsiaFasada={vonkajsiaFasada}
-        />
+          {/* Contact Modal for summary view */}
+          <KonfiguratorContactModal
+            isOpen={showContactModal}
+            onClose={() => setShowContactModal(false)}
+            dom={dom}
+            totalPrice={totalPrice}
+            selectedItems={selectedItems}
+            vonkajsiaFasada={vonkajsiaFasada}
+          />
 
-          {/* Súhrn položiek */}
-          <div className="px-3 py-2">
-            {selectedItems.map((item, index) => {
-              const isBase = item.section === "base";
-              const prevItem = selectedItems[index - 1];
-              const showHrubaDivider = item.section === "hruba" && (!prevItem || prevItem.section === "base");
-              const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
-              const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
-              const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
-              
-              return (
-                <React.Fragment key={index}>
-                  {showHrubaDivider && (
-                    <div className="py-2">
-                      <div className="border-t-2 border-amber-500/50"></div>
-                      <div className="flex items-center gap-2 px-2 pt-2">
-                        <Package className="w-4 h-4 text-amber-400" />
-                        <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">Hrubá stavba</span>
-                      </div>
-                    </div>
-                  )}
-                  {showHolodomDivider && (
-                    <div className="py-2">
-                      <div className="border-t-2 border-blue-500/50"></div>
-                      <div className="flex items-center gap-2 px-2 pt-2">
-                        <Hammer className="w-4 h-4 text-blue-400" />
-                        <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">Holodom</span>
-                      </div>
-                    </div>
-                  )}
-                  {showKlucDivider && (
-                    <div className="py-2">
-                      <div className="border-t-2 border-emerald-500/50"></div>
-                      <div className="flex items-center gap-2 px-2 pt-2">
-                        <Key className="w-4 h-4 text-emerald-400" />
-                        <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Dom na kľúč</span>
-                      </div>
-                    </div>
-                  )}
-                  {showDocsDivider && (
-                    <div className="py-2">
-                      <div className="border-t-2 border-purple-500/50"></div>
-                      <div className="flex items-center gap-2 px-2 pt-2">
-                        <FileText className="w-4 h-4 text-purple-400" />
-                        <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">Dokumentácia</span>
-                      </div>
-                    </div>
-                  )}
-                  <div className={`flex justify-between items-center py-1.5 px-2 rounded text-sm ${isBase ? 'bg-blue-500/20 border border-blue-500/30 my-1' : item.selected ? 'hover:bg-slate-700/50' : 'opacity-50'}`}>
-                    <span className={`${isBase ? 'text-blue-300 font-bold text-base' : item.selected ? 'text-slate-300 font-medium' : 'text-slate-500 line-through'} flex-1 pr-3`}>{item.name}</span>
-                    <span className={`${isBase ? 'text-blue-300 text-base' : item.selected ? 'text-green-400' : 'text-slate-500'} font-bold whitespace-nowrap`}>
-                      {item.selected ? formatPrice(item.price) : 'NIE'}
-                    </span>
-                  </div>
-                </React.Fragment>
-              );
-            })}
-          </div>
+            {/* Súhrn položiek - len vybrané */}
+            <div className="px-2 py-1.5">
+              {onlySelectedItems.map((item, index) => {
+                const isBase = item.section === "base";
+                const prevItem = onlySelectedItems[index - 1];
+                const showHrubaDivider = item.section === "hruba" && (!prevItem || prevItem.section === "base");
+                const showHolodomDivider = item.section === "holodom" && prevItem?.section !== "holodom";
+                const showKlucDivider = item.section === "kluc" && prevItem?.section !== "kluc";
+                const showDocsDivider = item.section === "docs" && prevItem?.section !== "docs";
 
-          {/* Celková cena */}
-          <div className="p-4 bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-t border-green-500/20">
-            <div className="flex justify-between items-center mb-3">
-              <span className="text-slate-400 text-sm">Celkom s DPH</span>
-              <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
-                {formatPrice(totalPrice)}
-              </span>
+                return (
+                  <React.Fragment key={index}>
+                    {showHrubaDivider && (
+                      <div className="py-1">
+                        <div className="border-t border-amber-500/50"></div>
+                        <div className="flex items-center gap-1.5 px-1 pt-1">
+                          <Package className="w-3 h-3 text-amber-400" />
+                          <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Hrubá stavba</span>
+                        </div>
+                      </div>
+                    )}
+                    {showHolodomDivider && (
+                      <div className="py-1">
+                        <div className="border-t border-blue-500/50"></div>
+                        <div className="flex items-center gap-1.5 px-1 pt-1">
+                          <Hammer className="w-3 h-3 text-blue-400" />
+                          <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">Holodom</span>
+                        </div>
+                      </div>
+                    )}
+                    {showKlucDivider && (
+                      <div className="py-1">
+                        <div className="border-t border-emerald-500/50"></div>
+                        <div className="flex items-center gap-1.5 px-1 pt-1">
+                          <Key className="w-3 h-3 text-emerald-400" />
+                          <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Dom na kľúč</span>
+                        </div>
+                      </div>
+                    )}
+                    {showDocsDivider && (
+                      <div className="py-1">
+                        <div className="border-t border-purple-500/50"></div>
+                        <div className="flex items-center gap-1.5 px-1 pt-1">
+                          <FileText className="w-3 h-3 text-purple-400" />
+                          <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider">Dokumentácia</span>
+                        </div>
+                      </div>
+                    )}
+                    <div className={`flex justify-between items-center py-1 px-1.5 rounded text-xs ${isBase ? 'bg-blue-500/20 border border-blue-500/30 my-0.5' : 'hover:bg-slate-700/50'}`}>
+                      <span className={`${isBase ? 'text-blue-300 font-bold text-sm' : 'text-slate-300 font-medium'} flex-1 pr-2 truncate`}>{item.name}</span>
+                      <span className={`${isBase ? 'text-blue-300 text-sm' : 'text-green-400'} font-bold whitespace-nowrap`}>
+                        {formatPrice(item.price)}
+                      </span>
+                    </div>
+                  </React.Fragment>
+                );
+              })}
             </div>
-            <div className="space-y-2">
+
+            {/* Celková cena */}
+            <div className="p-3 bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-t border-green-500/20">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-slate-400 text-xs">Celkom s DPH</span>
+                <span className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+                  {formatPrice(totalPrice)}
+                </span>
+              </div>
+              <div className="space-y-1.5">
+                  <Button 
+                    size="sm" 
+                    onClick={() => setShowContactModal(true)}
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg text-xs h-8"
+                  >
+                    <Send className="mr-1.5 w-3.5 h-3.5" />
+                    Mám záujem
+                  </Button>
                 <Button 
                   size="sm" 
-                  onClick={() => setShowContactModal(true)}
-                  className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg"
+                  variant="outline" 
+                  onClick={handleReset}
+                  className="w-full border-slate-600 text-slate-400 hover:bg-red-500/20 hover:border-red-500/50 hover:text-red-300 transition-all text-xs h-7"
                 >
-                  <Send className="mr-2 w-4 h-4" />
-                  Mám záujem
+                  <RotateCcw className="mr-1.5 w-3 h-3" />
+                  Resetovať
                 </Button>
-              <Button 
-                size="sm" 
-                variant="outline" 
-                onClick={handleReset}
-                className="w-full border-slate-600 text-slate-400 hover:bg-red-500/20 hover:border-red-500/50 hover:text-red-300 transition-all"
-              >
-                <RotateCcw className="mr-2 w-3 h-3" />
-                Resetovať
-              </Button>
+              </div>
             </div>
-          </div>
           </Card>
           </div>
           );

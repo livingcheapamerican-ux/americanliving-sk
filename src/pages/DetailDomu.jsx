@@ -1057,6 +1057,70 @@ export default function DetailDomu() {
                 </Card>
               )}
 
+              {/* Floating Konfigurátor Súhrn - len pre Prosto House Flat Double */}
+              {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
+                <div className="sticky top-20 z-30">
+                  <KonfiguratorFlatDoubleInline 
+                    dom={dom}
+                    montazHolodomu={montazHolodomu}
+                    setMontazHolodomu={setMontazHolodomu}
+                    izolaciaNavysenie={izolaciaNavysenie}
+                    setIzolaciaNavysenie={setIzolaciaNavysenie}
+                    zaklady={zaklady}
+                    setZaklady={setZaklady}
+                    vstupneDvere={vstupneDvere}
+                    setVstupneDvere={setVstupneDvere}
+                    elektroinstalacia={elektroinstalacia}
+                    setElektroinstalacia={setElektroinstalacia}
+                    vodaKanalizacia={vodaKanalizacia}
+                    setVodaKanalizacia={setVodaKanalizacia}
+                    sanitaKomplet={sanitaKomplet}
+                    setSanitaKomplet={setSanitaKomplet}
+                    bojler={bojler}
+                    setBojler={setBojler}
+                    tepelneCerpadlo={tepelneCerpadlo}
+                    setTepelneCerpadlo={setTepelneCerpadlo}
+                    rekuperacia={rekuperacia}
+                    setRekuperacia={setRekuperacia}
+                    pripojkaSiete={pripojkaSiete}
+                    setPripojkaSiete={setPripojkaSiete}
+                    stresneOkno={stresneOkno}
+                    setStresneOkno={setStresneOkno}
+                    bocneOknoFixne={bocneOknoFixne}
+                    setBocneOknoFixne={setBocneOknoFixne}
+                    bocneOknoVyklopne90={bocneOknoVyklopne90}
+                    setBocneOknoVyklopne90={setBocneOknoVyklopne90}
+                    bocneOknoVyklopne55={bocneOknoVyklopne55}
+                    setBocneOknoVyklopne55={setBocneOknoVyklopne55}
+                    povrchokaOkien={povrchokaOkien}
+                    setPovrchokaOkien={setPovrchokaOkien}
+                    tonovaneSkla={tonovaneSkla}
+                    setTonovaneSkla={setTonovaneSkla}
+                    vonkajsiaFasada={vonkajsiaFasada}
+                    setVonkajsiaFasada={setVonkajsiaFasada}
+                    interierFinis={interierFinis}
+                    setInterierFinis={setInterierFinis}
+                    vnutornePodlahy={vnutornePodlahy}
+                    setVnutornePodlahy={setVnutornePodlahy}
+                    podlahovVykurovanie={podlahovVykurovanie}
+                    setPodlahovVykurovanie={setPodlahovVykurovanie}
+                    interieroveDvere={interieroveDvere}
+                    setInterieroveDvere={setInterieroveDvere}
+                    pergola={pergola}
+                    setPergola={setPergola}
+                    inziniering={inziniering}
+                    setInziniering={setInziniering}
+                    projektA0={projektA0}
+                    setProjektA0={setProjektA0}
+                    revizna={revizna}
+                    setRevizna={setRevizna}
+                    doprava={doprava}
+                    setDoprava={setDoprava}
+                    showOnlySummary={true}
+                  />
+                </div>
+              )}
+
               {/* Informačné panely - len pre Prosto House Flat Double */}
               {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
                 <div className="grid grid-cols-2 gap-3 mt-4">
