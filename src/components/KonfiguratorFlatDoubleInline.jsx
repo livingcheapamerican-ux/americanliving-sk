@@ -480,6 +480,10 @@ export default function KonfiguratorFlatDoubleInline({
             totalPrice={totalPrice}
             selectedItems={selectedItems}
             vonkajsiaFasada={vonkajsiaFasada}
+            izolaciaNavysenie={izolaciaNavysenie}
+            tepelneCerpadlo={tepelneCerpadlo}
+            rekuperacia={rekuperacia}
+            projektA0={projektA0}
           />
 
             {/* Súhrn položiek - všetky položky */}
@@ -1230,6 +1234,10 @@ export default function KonfiguratorFlatDoubleInline({
               totalPrice={totalPrice}
               selectedItems={selectedItems}
               vonkajsiaFasada={vonkajsiaFasada}
+              izolaciaNavysenie={izolaciaNavysenie}
+              tepelneCerpadlo={tepelneCerpadlo}
+              rekuperacia={rekuperacia}
+              projektA0={projektA0}
             />
           </div>
         </div>
