@@ -5,14 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Languages, Play, CheckCircle, AlertCircle, Loader2, Home } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Languages, Play, CheckCircle, AlertCircle, Loader2, Home, Sparkles } from "lucide-react";
 import { toast } from "sonner";
+import AIDescriptionGenerator from "../components/admin/AIDescriptionGenerator";
 
 export default function AdminPrekladyDomov() {
   const [isTranslating, setIsTranslating] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentDom, setCurrentDom] = useState("");
   const [logs, setLogs] = useState([]);
+  const [selectedDom, setSelectedDom] = useState(null);
+  const [activeTab, setActiveTab] = useState("translate");
   
   const queryClient = useQueryClient();
 
@@ -155,19 +159,33 @@ ${text}`,
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
           <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
             <Languages className="w-7 h-7 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Preklady popisov domov</h1>
-            <p className="text-gray-500">Automatický preklad pomocou AI do všetkých jazykov</p>
+            <h1 className="text-3xl font-bold text-gray-900">Preklady a AI generovanie popisov</h1>
+            <p className="text-gray-500">Automatický preklad a AI generovanie popisov domov</p>
           </div>
         </div>
 
-        {/* Štatistiky */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="translate">
+              <Languages className="w-4 h-4 mr-2" />
+              Hromadný preklad
+            </TabsTrigger>
+            <TabsTrigger value="ai-generate">
+              <Sparkles className="w-4 h-4 mr-2" />
+              AI Generovanie
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="translate" className="space-y-6 mt-6">
+
+            {/* Štatistiky */}
+            <div className="grid grid-cols-3 gap-4 mb-6">
           <Card className="p-4 text-center">
             <p className="text-3xl font-bold text-blue-600">{domy.length}</p>
             <p className="text-sm text-gray-500">Celkom domov</p>
@@ -182,8 +200,8 @@ ${text}`,
           </Card>
         </div>
 
-        {/* Akcia */}
-        <Card className="p-6 mb-6">
+            {/* Akcia */}
+            <Card className="p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-bold text-lg">Spustiť preklad</h3>
@@ -221,8 +239,8 @@ ${text}`,
           )}
         </Card>
 
-        {/* Logy */}
-        {logs.length > 0 && (
+            {/* Logy */}
+            {logs.length > 0 && (
           <Card className="p-4 mb-6">
             <h4 className="font-semibold mb-3">Priebeh</h4>
             <div className="max-h-64 overflow-y-auto space-y-1 text-sm font-mono bg-gray-900 text-gray-100 p-3 rounded-lg">
@@ -239,8 +257,8 @@ ${text}`,
           </Card>
         )}
 
-        {/* Zoznam domov */}
-        <Card className="p-6">
+            {/* Zoznam domov */}
+            <Card className="p-6">
           <h3 className="font-bold text-lg mb-4">Stav prekladov</h3>
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
@@ -283,7 +301,50 @@ ${text}`,
               })}
             </div>
           )}
-        </Card>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="ai-generate" className="space-y-4 mt-6">
+            {/* Výber domu */}
+            <Card className="p-6">
+              <h3 className="font-bold text-lg mb-4">Vyber dom pre AI generovanie popisu</h3>
+              <div className="grid gap-3">
+                {domy.map(dom => (
+                  <button
+                    key={dom.id}
+                    onClick={() => setSelectedDom(dom)}
+                    className={`p-4 rounded-lg border-2 text-left transition-all ${
+                      selectedDom?.id === dom.id
+                        ? 'bg-purple-50 border-purple-500'
+                        : 'bg-white border-gray-200 hover:border-purple-300'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold">{dom.nazov}</p>
+                        <p className="text-sm text-gray-500">{dom.vyrobca} • {dom.zastavana_plocha}m²</p>
+                      </div>
+                      {selectedDom?.id === dom.id && (
+                        <CheckCircle className="w-5 h-5 text-purple-600" />
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </Card>
+
+            {/* AI Generator */}
+            {selectedDom && (
+              <AIDescriptionGenerator 
+                dom={selectedDom}
+                onDescriptionGenerated={() => {
+                  queryClient.invalidateQueries({ queryKey: ['domy-preklady'] });
+                  toast.success('Popis bol vygenerovaný a uložený');
+                }}
+              />
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
