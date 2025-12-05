@@ -13,10 +13,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Square, LayoutGrid, Trash2, Eye, EyeOff, Grid3x3, Zap, Hammer, Caravan, Building2, TreePine } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { useLanguage } from "../components/LanguageContext";
 
 export default function Katalog() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   
   // Funkcia na parsovanie URL parametrov
@@ -187,10 +189,10 @@ export default function Katalog() {
             className="max-w-3xl">
 
             <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-4 text-white">
-              Katalóg domov
+              {t('houseCatalog')}
             </h1>
             <p className="text-sm sm:text-lg text-white font-medium">
-              Modulárne a mobilné domy od overených výrobcov.
+              {t('modularAndMobileHouses')}
             </p>
           </motion.div>
         </div>
@@ -200,11 +202,11 @@ export default function Katalog() {
         {/* Tabs pre kategórie */}
         <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-4 sm:mb-6">
           <TabsList className={`grid w-full max-w-xl mx-auto h-8 sm:h-10 ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
-            <TabsTrigger value="vsetky" className="text-xs sm:text-sm">Všetky ({verejneDomy.length})</TabsTrigger>
-            <TabsTrigger value="rodinne_domy" className="text-xs sm:text-sm">Rodinné ({rodinneDomy.length})</TabsTrigger>
-            <TabsTrigger value="mobilne_domy" className="text-xs sm:text-sm">Mobilné ({mobilneDomy.length})</TabsTrigger>
+            <TabsTrigger value="vsetky" className="text-xs sm:text-sm">{t('all')} ({verejneDomy.length})</TabsTrigger>
+            <TabsTrigger value="rodinne_domy" className="text-xs sm:text-sm">{t('familyHouses')} ({rodinneDomy.length})</TabsTrigger>
+            <TabsTrigger value="mobilne_domy" className="text-xs sm:text-sm">{t('mobileHouses')} ({mobilneDomy.length})</TabsTrigger>
             {canManage && (
-              <TabsTrigger value="skryte" className="text-xs sm:text-sm">Skryté ({skryteDomy.length})</TabsTrigger>
+              <TabsTrigger value="skryte" className="text-xs sm:text-sm">{t('hidden')} ({skryteDomy.length})</TabsTrigger>
             )}
           </TabsList>
         </Tabs>
@@ -219,19 +221,19 @@ export default function Katalog() {
             <Card className="p-3 sm:p-4 sticky top-16 shadow-lg">
               <div className="flex items-center gap-2 mb-3 sm:mb-4">
                 <Filter className="w-4 h-4 text-primary" />
-                <h2 className="text-base sm:text-lg font-bold text-primary">Filtre</h2>
+                <h2 className="text-base sm:text-lg font-bold text-primary">{t('filters')}</h2>
               </div>
 
               <div className="space-y-3 sm:space-y-4">
                 {/* Vyhľadávanie */}
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Hľadať
+                    {t('search')}
                   </label>
                   <div className="relative">
                     <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
                     <Input
-                      placeholder="Názov..."
+                      placeholder={t('namePlaceholder')}
                       value={hladanie}
                       onChange={(e) => setHladanie(e.target.value)}
                       className="pl-7 h-8 text-sm" />
@@ -243,29 +245,29 @@ export default function Katalog() {
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">
                     <ArrowUpDown className="w-3 h-3 inline mr-1" />
-                    Zoradiť
+                    {t('sortBy')}
                   </label>
                   <Select value={zoradenie} onValueChange={setZoradenie}>
                     <SelectTrigger className="h-8 text-sm">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="poradie">Predvolené</SelectItem>
-                      <SelectItem value="cena_vzostupne">Cena: Najlacnejšie</SelectItem>
-                      <SelectItem value="cena_zostupne">Cena: Najdrahšie</SelectItem>
-                      <SelectItem value="plocha_vzostupne">Zastavaná plocha: Najmenšie</SelectItem>
-                      <SelectItem value="plocha_zostupne">Zastavaná plocha: Najväčšie</SelectItem>
-                      <SelectItem value="uzitkova_vzostupne">Úžitková plocha: Najmenšie</SelectItem>
-                      <SelectItem value="uzitkova_zostupne">Úžitková plocha: Najväčšie</SelectItem>
-                      <SelectItem value="nazov_az">Názov: A-Z</SelectItem>
-                      <SelectItem value="nazov_za">Názov: Z-A</SelectItem>
+                      <SelectItem value="poradie">{t('default')}</SelectItem>
+                      <SelectItem value="cena_vzostupne">{t('priceCheapest')}</SelectItem>
+                      <SelectItem value="cena_zostupne">{t('priceExpensive')}</SelectItem>
+                      <SelectItem value="plocha_vzostupne">{t('areaSmallest')}</SelectItem>
+                      <SelectItem value="plocha_zostupne">{t('areaLargest')}</SelectItem>
+                      <SelectItem value="uzitkova_vzostupne">{t('usableAreaSmallest')}</SelectItem>
+                      <SelectItem value="uzitkova_zostupne">{t('usableAreaLargest')}</SelectItem>
+                      <SelectItem value="nazov_az">{t('nameAZ')}</SelectItem>
+                      <SelectItem value="nazov_za">{t('nameZA')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {/* Výrobca */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Výrobca</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manufacturer')}</label>
                   <div className="space-y-1">
                     {vyrobcovia.map((v) => (
                       <div key={v} className="flex items-center gap-1.5">
@@ -289,12 +291,12 @@ export default function Katalog() {
 
                 {/* Typ domu */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Typ</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('type')}</label>
                   <div className="space-y-1">
                     {[
-                      { value: "modularny", label: "Modulárny" },
-                      { value: "montovany", label: "Montovaný" },
-                      { value: "mobilny", label: "Mobilný" }
+                      { value: "modularny", label: t('modularType') },
+                      { value: "montovany", label: t('prefabType') },
+                      { value: "mobilny", label: t('mobileType') }
                     ].map((typ) => (
                       <div key={typ.value} className="flex items-center gap-1.5">
                         <Checkbox
@@ -318,7 +320,7 @@ export default function Katalog() {
                 {/* Cenové rozpätie */}
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Cena: {cenoveRozpatie[0].toLocaleString('sk-SK')} - {cenoveRozpatie[1].toLocaleString('sk-SK')} €
+                    {t('priceRange')}: {cenoveRozpatie[0].toLocaleString('sk-SK')} - {cenoveRozpatie[1].toLocaleString('sk-SK')} €
                   </label>
                   <Slider
                     min={0}
@@ -331,7 +333,7 @@ export default function Katalog() {
 
                 {/* Počet izieb */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Izby</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('roomsFilter')}</label>
                   <div className="flex flex-wrap gap-1.5">
                     {[...new Set(domy.filter(d => d.pocet_izieb).map(d => d.pocet_izieb))].sort((a, b) => a - b).map((izby) => (
                       <div key={izby} className="flex items-center gap-0.5">
@@ -356,7 +358,7 @@ export default function Katalog() {
                 {/* Zastavaná plocha */}
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Zast. plocha: {plocharozsah[0]}-{plocharozsah[1]} m²
+                    {t('builtAreaFilter')}: {plocharozsah[0]}-{plocharozsah[1]} m²
                   </label>
                   <Slider
                     min={0}
@@ -370,7 +372,7 @@ export default function Katalog() {
                 {/* Úžitková plocha */}
                 <div className="hidden sm:block">
                   <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Úžitk. plocha: {uzitkovaRozsah[0]}-{uzitkovaRozsah[1]} m²
+                    {t('usableAreaFilter')}: {uzitkovaRozsah[0]}-{uzitkovaRozsah[1]} m²
                   </label>
                   <Slider
                     min={0}
@@ -404,7 +406,7 @@ export default function Katalog() {
               {/* Stats */}
               <div className="mt-3 pt-3 border-t">
                 <p className="text-xs text-gray-600">
-                  <span className="font-bold text-primary">{zoradeneDomy.length}</span> z {verejneDomy.length} domov
+                  <span className="font-bold text-primary">{zoradeneDomy.length}</span> {t('outOf')} {verejneDomy.length} {t('houses')}
                 </p>
               </div>
             </Card>
@@ -416,7 +418,7 @@ export default function Katalog() {
             <Card className="p-2 sm:p-4 mb-4 sm:mb-6 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
                 <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-base font-semibold text-gray-800">
-                  <span>🏠 Zobraziť domy v dizajne:</span>
+                  <span>🏠 {t('showInDesign')}</span>
                 </div>
                 <div className="flex gap-2 sm:gap-3">
                   <Button
@@ -425,7 +427,7 @@ export default function Katalog() {
                     className={`px-3 py-1.5 sm:px-6 sm:py-3 text-xs sm:text-base font-semibold ${dizajnFilter === "murovka" ? "bg-orange-600 hover:bg-orange-700" : "border-2"}`}
                   >
                     <Building2 className="w-3.5 h-3.5 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                    Murovka
+                    {t('brickDesign')}
                   </Button>
                   <Button
                     variant={dizajnFilter === "drevo" ? "default" : "outline"}
@@ -433,7 +435,7 @@ export default function Katalog() {
                     className={`px-3 py-1.5 sm:px-6 sm:py-3 text-xs sm:text-base font-semibold ${dizajnFilter === "drevo" ? "bg-amber-600 hover:bg-amber-700" : "border-2"}`}
                   >
                     <TreePine className="w-3.5 h-3.5 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-                    Drevený motív
+                    {t('woodDesign')}
                   </Button>
                 </div>
               </div>
@@ -446,20 +448,20 @@ export default function Katalog() {
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-5 h-5 text-primary" />
                     <span className="font-semibold text-primary">
-                      Vybrané na porovnanie: {vybraneNaSrovnanie.length}/3
+                      {t('selectedForComparison')}: {vybraneNaSrovnanie.length}/3
                     </span>
                   </div>
                   <div className="flex gap-2">
                     {vybraneNaSrovnanie.length >= 2 &&
                   <Link to={`${createPageUrl("SrovnaniDomu")}?ids=${vybraneNaSrovnanie.map((d) => d.id).join(',')}`}>
                         <Button className="bg-secondary hover:bg-secondary/90">
-                          Porovnať domy
+                          {t('compareHouses')}
                           <ArrowRight className="ml-2 w-4 h-4" />
                         </Button>
                       </Link>
                   }
                     <Button variant="outline" onClick={() => setVybraneNaSrovnanie([])}>
-                      Zrušiť výber
+                      {t('cancelSelection')}
                     </Button>
                   </div>
                 </div>
@@ -570,7 +572,7 @@ export default function Katalog() {
                             <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
                               <Home className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-primary" />
                               <div className="flex flex-col min-w-0">
-                                <span className="hidden sm:block text-xs text-gray-500">Výrobca</span>
+                                <span className="hidden sm:block text-xs text-gray-500">{t('manufacturer')}</span>
                                 <span className="font-semibold text-primary text-[9px] sm:text-xs truncate">{dom.vyrobca}</span>
                               </div>
                             </div>
@@ -583,14 +585,14 @@ export default function Katalog() {
                                                                     <LayoutGrid className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-amber-500" />
                                                                   )}
                               <div className="flex flex-col min-w-0">
-                                <span className="hidden sm:block text-xs text-gray-500">Typ domu</span>
-                                <span className="font-semibold text-primary text-[9px] sm:text-xs truncate">{dom.typ_domu === 'modularny' ? 'Modulárny' : dom.typ_domu === 'montovany' ? 'Montovaný' : 'Mobilný'}</span>
+                                <span className="hidden sm:block text-xs text-gray-500">{t('houseType')}</span>
+                                <span className="font-semibold text-primary text-[9px] sm:text-xs truncate">{dom.typ_domu === 'modularny' ? t('modularType') : dom.typ_domu === 'montovany' ? t('prefabType') : t('mobileType')}</span>
                               </div>
                             </div>
                             <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
                               <div className="w-2.5 h-2 sm:w-4 sm:h-3 border sm:border-2 border-primary rounded-sm flex-shrink-0" />
                               <div className="flex flex-col min-w-0">
-                                <span className="hidden sm:block text-xs text-gray-500">Zastavaná plocha</span>
+                                <span className="hidden sm:block text-xs text-gray-500">{t('builtArea')}</span>
                                 <span className="font-semibold text-primary text-[9px] sm:text-xs">{dom.zastavana_plocha} m²</span>
                               </div>
                             </div>
@@ -598,7 +600,7 @@ export default function Katalog() {
                               <div className="hidden sm:flex items-center gap-2 text-gray-600">
                                 <Square className="w-4 h-4 flex-shrink-0 text-purple-500" />
                                 <div className="flex flex-col min-w-0">
-                                  <span className="text-xs text-gray-500">Úžitková plocha</span>
+                                  <span className="text-xs text-gray-500">{t('usableArea')}</span>
                                   <span className="font-semibold text-primary text-xs">{dom.uzitkova_plocha} m²</span>
                                 </div>
                               </div>
@@ -607,8 +609,8 @@ export default function Katalog() {
                               <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
                                 <Grid3x3 className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-blue-500" />
                                 <div className="flex flex-col min-w-0">
-                                  <span className="hidden sm:block text-xs text-gray-500">Počet izieb</span>
-                                  <span className="font-semibold text-primary text-[9px] sm:text-xs">{dom.pocet_izieb} izby</span>
+                                  <span className="hidden sm:block text-xs text-gray-500">{t('rooms')}</span>
+                                  <span className="font-semibold text-primary text-[9px] sm:text-xs">{dom.pocet_izieb} {t('roomsLabel')}</span>
                                 </div>
                               </div>
                             )}
@@ -616,8 +618,8 @@ export default function Katalog() {
                               <div className="hidden sm:flex items-center gap-2 text-gray-600 col-span-2">
                                 <Zap className="w-4 h-4 flex-shrink-0 text-green-600" />
                                 <div className="flex flex-col min-w-0">
-                                  <span className="text-xs text-gray-500">Energetická trieda</span>
-                                  <span className="font-semibold text-green-600 text-xs">A0 <span className="text-gray-400 font-normal">príplatková možnosť</span></span>
+                                  <span className="text-xs text-gray-500">{t('energyClass')}</span>
+                                  <span className="font-semibold text-green-600 text-xs">A0 <span className="text-gray-400 font-normal">{t('a0CertificateOption')}</span></span>
                                 </div>
                               </div>
                             )}
@@ -625,14 +627,14 @@ export default function Katalog() {
                           
                           <div className="flex items-center justify-between pt-2 sm:pt-4 border-t">
                             <div>
-                              <p className="hidden sm:block text-xs text-gray-500 mb-1">{dom.vyrobca === "Ticab house" ? "Cena základnej konfigurácie" : "Cena od"}</p>
+                              <p className="hidden sm:block text-xs text-gray-500 mb-1">{dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : t('priceFromLabel')}</p>
                               <p className="text-sm sm:text-xl font-bold text-primary">
                                 {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                               </p>
                             </div>
                             <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
                               <Button size="sm" className="bg-primary hover:bg-primary/90 group-hover:bg-secondary text-[10px] sm:text-sm px-2 sm:px-3 h-6 sm:h-8">
-                                Detail
+                                {t('detail')}
                                 <ArrowRight className="ml-0.5 sm:ml-1 w-3 h-3 sm:w-4 sm:h-4" />
                               </Button>
                             </Link>
@@ -647,10 +649,10 @@ export default function Katalog() {
             <Card className="p-12 text-center">
                 <Home className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-gray-700 mb-2">
-                  Nenašli sa žiadne domy
+                  {t('noHousesFound')}
                 </h3>
                 <p className="text-gray-500 mb-6">
-                  Skúste zmeniť filtre alebo ich resetovať
+                  {t('tryChangingFilters')}
                 </p>
                 <Button
                 onClick={() => {
@@ -665,7 +667,7 @@ export default function Katalog() {
                   setZoradenie("poradie");
                 }}>
 
-                  Resetovať filtre
+                  {t('resetFilters')}
                 </Button>
               </Card>
             }

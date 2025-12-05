@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -6,54 +5,57 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Heart, Target, Award, Users, ArrowRight, Shield, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { useLanguage } from "../components/LanguageContext";
 
 export default function ONas() {
+  const { t } = useLanguage();
+  
   const hodnoty = [
     {
       icon: Award,
-      nazov: "Kvalita a overení výrobcovia",
-      popis: "Spolupracujeme len s overenými výrobcami modulárnych domov"
+      nazov: t('qualityAndVerified'),
+      popis: t('qualityAndVerifiedDesc')
     },
     {
       icon: Shield,
-      nazov: "Transparentnosť",
-      popis: "Jasné ceny bez skrytých poplatkov. Žiadne prekvapenia."
+      nazov: t('transparency'),
+      popis: t('transparencyDesc')
     },
     {
       icon: Target,
-      nazov: "Komplexné služby",
-      popis: "Od výberu pozemku až po kolaudáciu. Postaráme sa o všetko."
+      nazov: t('comprehensiveServicesValue'),
+      popis: t('comprehensiveServicesValueDesc')
     },
     {
       icon: Heart,
-      nazov: "Spokojnosť klientov",
-      popis: "Vaša spokojnosť je našou prioritou. Viac ako 700 realizovaných domov."
+      nazov: t('clientSatisfaction'),
+      popis: t('clientSatisfactionDesc')
     }
   ];
 
   const statistiky = [
-    { cislo: "700+", popis: "Realizovaných domov", icon: "🏠" },
-    { cislo: "2008", popis: "Rok založenia", icon: "📅" },
-    { cislo: "4", popis: "Overení výrobcovia", icon: "🏭" },
-    { cislo: "100%", popis: "S kolaudáciou", icon: "✅" }
+    { cislo: "700+", popis: t('completedHouses'), icon: "🏠" },
+    { cislo: "2008", popis: t('yearFounded'), icon: "📅" },
+    { cislo: "4", popis: t('verifiedManufacturers'), icon: "🏭" },
+    { cislo: "100%", popis: t('withFinalApproval'), icon: "✅" }
   ];
 
   const vyrobcovia = [
     {
       nazov: "JAK Modules",
-      popis: "Špecialista na modulárne domy s možnosťou rýchlej výstavby"
+      popis: t('jakModulesDesc')
     },
     {
       nazov: "Ticab House",
-      popis: "Výrobca kvalitných modulárnych domov s moderným dizajnom"
+      popis: t('ticabHouseDesc')
     },
     {
       nazov: "Prosto House",
-      popis: "Jednoduché a funkčné riešenia pre moderné bývanie"
+      popis: t('prostoHouseDesc')
     },
     {
       nazov: "Domki z Gór",
-      popis: "Poľský výrobca drevodomov s tradíciou kvality"
+      popis: t('domkiZGorDesc')
     }
   ];
 
@@ -68,14 +70,13 @@ export default function ONas() {
             className="max-w-3xl"
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              O nás
+              {t('aboutUs')}
             </h1>
             <p className="text-xl text-white mb-6 font-semibold">
-              Distribútor a realizátor stavby modulárnych domov
+              {t('distributorAndBuilder')}
             </p>
             <p className="text-lg text-gray-100">
-              Vyrobených viac ako 700 domov od roku 2008. Sme tu pre vás s poctivým prístupom, 
-              kde sa môžete spoľahnúť na transparentnosť a korektnosť.
+              {t('builtMoreThan700')}
             </p>
           </motion.div>
         </div>
@@ -114,10 +115,10 @@ export default function ONas() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-bold text-primary mb-4">
-              Prečo si vybrať American Living?
+              {t('whyChooseUs')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              American Living je značka kvality a naše domy sú len od overených dodávateľov, ktorí majú svoju históriu a rokmi overené skúsenosti
+              {t('qualityBrandDesc')}
             </p>
           </motion.div>
 
@@ -130,12 +131,10 @@ export default function ONas() {
             >
               <Card className="p-8">
                 <h3 className="text-2xl font-bold text-primary mb-4">
-                  Zabudnite na zavádzajúce reklamy
+                  {t('forgetMisleadingAds')}
                 </h3>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  Zabudnite na zavádzajúce reklamy, ktoré sľubujú domy za nereálne ceny. 
-                  U nás máte vždy <strong>jasne stanovenú konečnú cenu – žiadne skryté poplatky ani prekvapenia</strong>. 
-                  Sme tu pre vás s poctivým prístupom, kde sa môžete spoľahnúť na transparentnosť a korektnosť.
+                  {t('forgetMisleadingAdsDesc')}
                 </p>
               </Card>
             </motion.div>
@@ -148,18 +147,16 @@ export default function ONas() {
             >
               <Card className="p-8 bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-300">
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Zodpovednosť za stavbu modulárneho domu
+                  {t('responsibilityForConstruction')}
                 </h3>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  Mnohé spoločnosti predávajú modulárne domy bez upozornenia na legislatívne povinnosti, 
-                  čo môže viesť k problémom pri bývaní, pri kolaudácii a pripojení na inžinierske siete.
+                  {t('responsibilityDesc1')}
                 </p>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  Často sa stane, že pri najlacnejšej verzii domu zistíte až neskôr, že vám chýbajú dôležité komponenty, 
-                  ktoré sú potrebné pre získanie stavebného povolenia a energetického certifikátu A0.
+                  {t('responsibilityDesc2')}
                 </p>
                 <p className="text-gray-900 font-semibold">
-                  ⚠️ Ak nebudete mať modulárny dom správne skolaudovaný, môže byť považovaný za čiernu stavbu!
+                  ⚠️ {t('blackConstructionWarning')}
                 </p>
               </Card>
             </motion.div>
@@ -172,24 +169,24 @@ export default function ONas() {
             >
               <Card className="p-8 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300">
                 <h3 className="text-2xl font-bold text-green-900 mb-6">
-                  ✓ Naše domy spĺňajú všetky potrebné normy
+                  ✓ {t('ourHousesMeetAllStandards')}
                 </h3>
                 <ul className="space-y-3">
                   <li className="flex items-start gap-3">
                     <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Pripravené na kolaudáciu ako plnohodnotné rodinné domy</span>
+                    <span className="text-gray-700">{t('readyForApproval')}</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Všetky potrebné stavebné povolenia a dokumentácia</span>
+                    <span className="text-gray-700">{t('allNecessaryPermits')}</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Možnosť energetického certifikátu A0</span>
+                    <span className="text-gray-700">{t('a0CertificatePossibility')}</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Pripojenie na všetky inžinierske siete</span>
+                    <span className="text-gray-700">{t('connectionToUtilities')}</span>
                   </li>
                 </ul>
               </Card>
