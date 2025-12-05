@@ -216,7 +216,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             {/* Montáž - skupina */}
             <div className="col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] border-amber-600 rounded-2xl bg-amber-100/70 shadow-xl">
               <p className="col-span-2 text-[10px] sm:text-xs font-bold text-amber-700 -mb-1 flex items-center gap-1">
-                <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-amber-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">1</span>
                 {t('assembly')} ({t('selectOne')})
               </p>
               <Tile
@@ -249,7 +249,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             {/* Izolácia - skupina */}
             <div className="col-span-2 sm:col-span-3 lg:col-span-2 grid grid-cols-3 gap-2 sm:gap-3 p-4 border-[5px] border-cyan-600 rounded-2xl bg-cyan-100/70 shadow-xl">
               <p className="col-span-3 text-[10px] sm:text-xs font-bold text-cyan-700 -mb-1 flex items-center gap-1">
-                <span className="w-2 h-2 bg-cyan-500 rounded-full"></span>
+                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
                 {t('insulation')} ({t('selectOne')})
               </p>
               <Tile
@@ -299,7 +299,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             {/* Základy - skupina */}
             <div className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-4 border-[5px] border-orange-600 rounded-2xl bg-orange-100/70 shadow-xl">
               <p className="col-span-2 sm:col-span-4 text-[10px] sm:text-xs font-bold text-orange-700 -mb-1 flex items-center gap-1">
-                <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-orange-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">3</span>
                 {t('foundations')} ({t('selectOne')})
               </p>
               <Tile
