@@ -634,8 +634,8 @@ export default function DetailDomu() {
 
 
 
-            {/* Konfigurátor - Wizard krok po kroku pre Flat Double */}
-            {isProstoHouse && dom.nazov?.includes("Flat Double") && dom.zastavana_plocha === 142 && (
+            {/* Konfigurátor - Wizard krok po kroku pre Flat Double a Flat 1,5 */}
+            {isProstoHouse && (dom.nazov?.includes("Flat Double") || dom.nazov?.includes("Flat 1,5")) && (
               <KonfiguratorWizard 
                 key={wizardKey}
                 dom={dom}
