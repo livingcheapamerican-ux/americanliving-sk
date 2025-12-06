@@ -18,6 +18,7 @@ import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaSt
 import KonfiguratorWizard from "../components/KonfiguratorWizard";
 import KonfiguratorFjord from "../components/KonfiguratorFjord";
 import KonfiguratorNord from "../components/KonfiguratorNord";
+import KonfiguratorProstoHouse from "../components/KonfiguratorProstoHouse";
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
 
@@ -1642,10 +1643,10 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Floating panel pre ostatné Flat domy (nie Nord, nie Fjord, nie Flat 1,5) */}
-            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && (
+            {/* Floating panel pre ostatné Prosto House domy (nie Nord, nie Fjord, nie Flat 1,5, nie Flat Double) */}
+            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorFlatDoubleInline 
+                <KonfiguratorProstoHouse 
                   dom={dom}
                   onReset={handleKonfiguratorReset}
                   montazHolodomu={montazHolodomu}
