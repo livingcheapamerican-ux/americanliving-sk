@@ -196,16 +196,16 @@ export default function KonfiguratorFlatDoubleInline({
     bojler: 246,
     tepelneCerpadlo: 4428,
     rekuperacia: 2200,
-    zaklady: { bez: 0, skrutky: 6348, doska: 11909, pasove: 11860 },
+    zaklady: { bez: 0, skrutky: 6189, doska: 11909, pasove: 11860 },
     pripojkaSiete: 1501,
     inziniering: 2592,
     projektA0: 3500,
     interierFinis: { ziadne: 0, drevo: 12700, sadrokarton: 14545 },
-    vonkajsiaFasada: { standard: 0, suchana: 10385 },
+    vonkajsiaFasada: { standard: 0, suchana: 10395 },
     povrchokaOkien: 2400,
-    vnutornePodlahy: 2640,
+    vnutornePodlahy: 2840,
     podlahovVykurovanie: 4316,
-    pergola: 1250,
+    pergola: 1845,
     interieroveDvere: 180,
     tonovaneSkla: 840,
     doprava: 0,
@@ -988,7 +988,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-emerald-600"
                 title={t('facadeStucco')}
                 subtitle={t('whitePlaster')}
-                price={isFlat15 ? "+ 10 385 €" : "+ 12 841 €"}
+                price={isFlat15 ? "+ 10 395 €" : "+ 12 841 €"}
                 isPriced={true}
                 selectedBg="bg-emerald-100"
                 selectedBorder="border-emerald-500"
@@ -1006,7 +1006,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-emerald-600"
               title={t('floors')}
               subtitle={t('floorsLaminate')}
-              price={isFlat15 ? "+ 2 640 €" : "+ 3 351 €"}
+              price={isFlat15 ? "+ 2 840 €" : "+ 3 351 €"}
               isPriced={true}
               selectedBg="bg-emerald-100"
               selectedBorder="border-emerald-500"
@@ -1040,7 +1040,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-emerald-600"
               title={t('pergola')}
               subtitle={t('pergolaDecorative')}
-              price={isFlat15 ? "+ 1 250 €" : "+ 1 845 €"}
+              price={isFlat15 ? "+ 1 845 €" : "+ 1 845 €"}
               isPriced={true}
               selectedBg="bg-emerald-100"
               selectedBorder="border-emerald-500"
