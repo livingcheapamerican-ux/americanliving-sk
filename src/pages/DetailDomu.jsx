@@ -1577,8 +1577,8 @@ export default function DetailDomu() {
                     setDoprava={setDoprava}
                     showOnlySummary={true}
                   />
-                ) : dom.nazov?.includes("Fjord") ? (
-                  <KonfiguratorFjord
+                ) : (
+                  <KonfiguratorFlatDoubleInline
                     dom={dom}
                     onReset={handleKonfiguratorReset}
                     montazHolodomu={montazHolodomu}
