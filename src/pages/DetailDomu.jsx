@@ -13,9 +13,8 @@ import PriceCalculator from "../components/PriceCalculator";
 import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
 import FloatingPrice from "../components/FloatingPrice";
 import DomGalerieManager from "../components/admin/DomGalerieManager";
-import KonfiguratorFlatDoubleInline from "../components/KonfiguratorFlatDoubleInline";
-import KonfiguratorFlatDouble from "../components/KonfiguratorFlatDouble";
 import KonfiguratorFlat15 from "../components/KonfiguratorFlat15";
+import KonfiguratorFlatDouble from "../components/KonfiguratorFlatDouble";
 import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
 import KonfiguratorWizard from "../components/KonfiguratorWizard";
 import KonfiguratorFjord from "../components/KonfiguratorFjord";
@@ -639,9 +638,10 @@ export default function DetailDomu() {
 
             {/* Wizard pre Flat 1,5 - ľavá strana */}
             {isProstoHouse && (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) && (
-              <KonfiguratorWizard
+              <KonfiguratorFlat15
                 key={wizardKey}
                 dom={dom}
+                onReset={handleKonfiguratorReset}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
                 izolaciaNavysenie={izolaciaNavysenie}
@@ -696,13 +696,12 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-                useFlat15Prices={true}
               />
             )}
 
             {/* Konfigurátor - Wizard krok po kroku pre Flat Double (ale nie Flat 1,5) */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
-              <KonfiguratorWizard 
+              <KonfiguratorFlatDouble 
                 key={wizardKey}
                 dom={dom}
                 montazHolodomu={montazHolodomu}
@@ -764,7 +763,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Fjord - tiež s Wizard výberom typu */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
-              <KonfiguratorWizard 
+              <KonfiguratorFjord 
                 key={wizardKey}
                 dom={dom}
                 montazHolodomu={montazHolodomu}
@@ -821,15 +820,15 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-                useFjordPrices={true}
               />
             )}
 
             {/* Konfigurátor pre ostatné Prosto House domy (nie Nord, nie Fjord, nie Flat 1,5, nie Flat Double) */}
             {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && (
-              <KonfiguratorWizard
+              <KonfiguratorProstoHouse
                 key={wizardKey}
                 dom={dom}
+                onReset={handleKonfiguratorReset}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
                 izolaciaNavysenie={izolaciaNavysenie}
@@ -886,13 +885,12 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-                useProstoHousePrices={true}
               />
             )}
 
             {/* Konfigurátor pre Nord - vlastné ceny */}
             {isProstoHouse && dom.nazov?.includes("Nord") && (
-              <KonfiguratorWizard 
+              <KonfiguratorNord 
                 key={wizardKey}
                 dom={dom}
                 montazHolodomu={montazHolodomu}
@@ -949,7 +947,6 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-                useNordPrices={true}
               />
             )}
 
@@ -1578,8 +1575,8 @@ export default function DetailDomu() {
                 setDoprava={setDoprava}
                 showOnlySummary={true}
                 />
-              </div>
-            )}
+                </div>
+                )}
 
             {/* Floating panel pre Nord */}
             {isProstoHouse && dom.nazov?.includes("Nord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && (

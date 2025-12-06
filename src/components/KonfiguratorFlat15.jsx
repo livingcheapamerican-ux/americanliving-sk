@@ -36,7 +36,6 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       const tooltipHeight = 80;
       
       let top, left;
-      
       const centerY = viewportHeight / 2;
       if (rect.bottom < centerY) {
         top = rect.bottom + 10;
@@ -45,7 +44,6 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       }
       
       left = viewportWidth / 2;
-      
       setTooltipPosition({ top, left });
     }
   };
@@ -169,12 +167,12 @@ export default function KonfiguratorFlat15({
   showOnlyPhase = null,
   typStavby = ""
 }) {
-  const BASE_PRICE = dom?.zakladna_cena || 0;
+  const BASE_PRICE = dom?.zakladna_cena || 59900;
 
   const { animations, triggerAnimation } = useFlyingAnimation();
   const { t } = useLanguage();
 
-  // FLAT 1,5 CENNÍK - FIXNÉ CENY
+  // FLAT 1,5 CENNÍK - FIXNÉ CENY (105m²)
   const CENY = {
     montaz: { nie: 0, ano: 13470 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
@@ -275,7 +273,6 @@ export default function KonfiguratorFlat15({
     const items = [];
     
     items.push({ name: t('basePriceKit'), price: BASE_PRICE, section: "base", selected: true });
-    
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
     const izolaciaLabel = izolaciaNavysenie === "premium" ? t('insulationPremium') + " (250/300mm)" : izolaciaNavysenie === "zvysena" ? t('insulationEnhanced') + " (200/250mm)" : t('insulationStd');

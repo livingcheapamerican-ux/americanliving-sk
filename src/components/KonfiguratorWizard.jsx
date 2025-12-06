@@ -10,7 +10,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba.jsx";
-import KonfiguratorFlatDoubleInline from "../components/KonfiguratorFlatDoubleInline";
+import KonfiguratorFlat15 from "../components/KonfiguratorFlat15";
+import KonfiguratorFlatDouble from "../components/KonfiguratorFlatDouble";
 import KonfiguratorFjord from "../components/KonfiguratorFjord";
 import KonfiguratorNord from "../components/KonfiguratorNord";
 import KonfiguratorProstoHouse from "../components/KonfiguratorProstoHouse";
@@ -274,6 +275,7 @@ export default function KonfiguratorWizard({
     useFjordPrices = false,
     useNordPrices = false,
     useFlat15Prices = false,
+    useFlatDoublePrices = false,
     useProstoHousePrices = false,
     // Všetky props pre konfigurátor
   montazHolodomu, setMontazHolodomu,
@@ -457,7 +459,7 @@ export default function KonfiguratorWizard({
         );
       case 2:
         return useFlat15Prices ? (
-          <KonfiguratorFlatDoubleInline
+          <KonfiguratorFlat15
             dom={dom}
             onReset={handleFullReset}
             montazHolodomu={montazHolodomu}
@@ -517,7 +519,68 @@ export default function KonfiguratorWizard({
             showOnlySummary={false}
             showOnlyPhase="holodom"
             typStavby={typStavby}
-            useFlat15Prices={true}
+          />
+        ) : useFlatDoublePrices ? (
+          <KonfiguratorFlatDouble
+            dom={dom}
+            onReset={handleFullReset}
+            montazHolodomu={montazHolodomu}
+            setMontazHolodomu={setMontazHolodomu}
+            izolaciaNavysenie={izolaciaNavysenie}
+            setIzolaciaNavysenie={setIzolaciaNavysenie}
+            zaklady={zaklady}
+            setZaklady={setZaklady}
+            vstupneDvere={vstupneDvere}
+            setVstupneDvere={setVstupneDvere}
+            elektroinstalacia={elektroinstalacia}
+            setElektroinstalacia={setElektroinstalacia}
+            vodaKanalizacia={vodaKanalizacia}
+            setVodaKanalizacia={setVodaKanalizacia}
+            sanitaKomplet={sanitaKomplet}
+            setSanitaKomplet={setSanitaKomplet}
+            bojler={bojler}
+            setBojler={setBojler}
+            tepelneCerpadlo={tepelneCerpadlo}
+            setTepelneCerpadlo={setTepelneCerpadlo}
+            rekuperacia={rekuperacia}
+            setRekuperacia={setRekuperacia}
+            pripojkaSiete={pripojkaSiete}
+            setPripojkaSiete={setPripojkaSiete}
+            stresneOkno={stresneOkno}
+            setStresneOkno={setStresneOkno}
+            bocneOknoFixne={bocneOknoFixne}
+            setBocneOknoFixne={setBocneOknoFixne}
+            bocneOknoVyklopne90={bocneOknoVyklopne90}
+            setBocneOknoVyklopne90={setBocneOknoVyklopne90}
+            bocneOknoVyklopne55={bocneOknoVyklopne55}
+            setBocneOknoVyklopne55={setBocneOknoVyklopne55}
+            povrchokaOkien={povrchokaOkien}
+            setPovrchokaOkien={setPovrchokaOkien}
+            tonovaneSkla={tonovaneSkla}
+            setTonovaneSkla={setTonovaneSkla}
+            vonkajsiaFasada={vonkajsiaFasada}
+            setVonkajsiaFasada={setVonkajsiaFasada}
+            interierFinis={interierFinis}
+            setInterierFinis={setInterierFinis}
+            vnutornePodlahy={vnutornePodlahy}
+            setVnutornePodlahy={setVnutornePodlahy}
+            podlahovVykurovanie={podlahovVykurovanie}
+            setPodlahovVykurovanie={setPodlahovVykurovanie}
+            interieroveDvere={interieroveDvere}
+            setInterieroveDvere={setInterieroveDvere}
+            pergola={pergola}
+            setPergola={setPergola}
+            inziniering={inziniering}
+            setInziniering={setInziniering}
+            projektA0={projektA0}
+            setProjektA0={setProjektA0}
+            revizna={revizna}
+            setRevizna={setRevizna}
+            doprava={doprava}
+            setDoprava={setDoprava}
+            showOnlySummary={false}
+            showOnlyPhase="holodom"
+            typStavby={typStavby}
           />
         ) : useNordPrices ? (
           <KonfiguratorNord
@@ -705,6 +768,68 @@ export default function KonfiguratorWizard({
             showOnlyPhase="holodom"
             typStavby={typStavby}
           />
+        ) : (
+          <KonfiguratorFlatDouble
+            dom={dom}
+            onReset={handleFullReset}
+            montazHolodomu={montazHolodomu}
+            setMontazHolodomu={setMontazHolodomu}
+            izolaciaNavysenie={izolaciaNavysenie}
+            setIzolaciaNavysenie={setIzolaciaNavysenie}
+            zaklady={zaklady}
+            setZaklady={setZaklady}
+            vstupneDvere={vstupneDvere}
+            setVstupneDvere={setVstupneDvere}
+            elektroinstalacia={elektroinstalacia}
+            setElektroinstalacia={setElektroinstalacia}
+            vodaKanalizacia={vodaKanalizacia}
+            setVodaKanalizacia={setVodaKanalizacia}
+            sanitaKomplet={sanitaKomplet}
+            setSanitaKomplet={setSanitaKomplet}
+            bojler={bojler}
+            setBojler={setBojler}
+            tepelneCerpadlo={tepelneCerpadlo}
+            setTepelneCerpadlo={setTepelneCerpadlo}
+            rekuperacia={rekuperacia}
+            setRekuperacia={setRekuperacia}
+            pripojkaSiete={pripojkaSiete}
+            setPripojkaSiete={setPripojkaSiete}
+            stresneOkno={stresneOkno}
+            setStresneOkno={setStresneOkno}
+            bocneOknoFixne={bocneOknoFixne}
+            setBocneOknoFixne={setBocneOknoFixne}
+            bocneOknoVyklopne90={bocneOknoVyklopne90}
+            setBocneOknoVyklopne90={setBocneOknoVyklopne90}
+            bocneOknoVyklopne55={bocneOknoVyklopne55}
+            setBocneOknoVyklopne55={setBocneOknoVyklopne55}
+            povrchokaOkien={povrchokaOkien}
+            setPovrchokaOkien={setPovrchokaOkien}
+            tonovaneSkla={tonovaneSkla}
+            setTonovaneSkla={setTonovaneSkla}
+            vonkajsiaFasada={vonkajsiaFasada}
+            setVonkajsiaFasada={setVonkajsiaFasada}
+            interierFinis={interierFinis}
+            setInterierFinis={setInterierFinis}
+            vnutornePodlahy={vnutornePodlahy}
+            setVnutornePodlahy={setVnutornePodlahy}
+            podlahovVykurovanie={podlahovVykurovanie}
+            setPodlahovVykurovanie={setPodlahovVykurovanie}
+            interieroveDvere={interieroveDvere}
+            setInterieroveDvere={setInterieroveDvere}
+            pergola={pergola}
+            setPergola={setPergola}
+            inziniering={inziniering}
+            setInziniering={setInziniering}
+            projektA0={projektA0}
+            setProjektA0={setProjektA0}
+            revizna={revizna}
+            setRevizna={setRevizna}
+            doprava={doprava}
+            setDoprava={setDoprava}
+            showOnlySummary={false}
+            showOnlyPhase="holodom"
+            typStavby={typStavby}
+          />
         );
       case 3:
         return useProstoHousePrices ? (
@@ -830,7 +955,68 @@ export default function KonfiguratorWizard({
             showOnlySummary={false}
             showOnlyPhase="kluc"
             typStavby={typStavby}
-            useFlat15Prices={true}
+          />
+        ) : useFlatDoublePrices ? (
+          <KonfiguratorFlatDouble
+            dom={dom}
+            onReset={handleFullReset}
+            montazHolodomu={montazHolodomu}
+            setMontazHolodomu={setMontazHolodomu}
+            izolaciaNavysenie={izolaciaNavysenie}
+            setIzolaciaNavysenie={setIzolaciaNavysenie}
+            zaklady={zaklady}
+            setZaklady={setZaklady}
+            vstupneDvere={vstupneDvere}
+            setVstupneDvere={setVstupneDvere}
+            elektroinstalacia={elektroinstalacia}
+            setElektroinstalacia={setElektroinstalacia}
+            vodaKanalizacia={vodaKanalizacia}
+            setVodaKanalizacia={setVodaKanalizacia}
+            sanitaKomplet={sanitaKomplet}
+            setSanitaKomplet={setSanitaKomplet}
+            bojler={bojler}
+            setBojler={setBojler}
+            tepelneCerpadlo={tepelneCerpadlo}
+            setTepelneCerpadlo={setTepelneCerpadlo}
+            rekuperacia={rekuperacia}
+            setRekuperacia={setRekuperacia}
+            pripojkaSiete={pripojkaSiete}
+            setPripojkaSiete={setPripojkaSiete}
+            stresneOkno={stresneOkno}
+            setStresneOkno={setStresneOkno}
+            bocneOknoFixne={bocneOknoFixne}
+            setBocneOknoFixne={setBocneOknoFixne}
+            bocneOknoVyklopne90={bocneOknoVyklopne90}
+            setBocneOknoVyklopne90={setBocneOknoVyklopne90}
+            bocneOknoVyklopne55={bocneOknoVyklopne55}
+            setBocneOknoVyklopne55={setBocneOknoVyklopne55}
+            povrchokaOkien={povrchokaOkien}
+            setPovrchokaOkien={setPovrchokaOkien}
+            tonovaneSkla={tonovaneSkla}
+            setTonovaneSkla={setTonovaneSkla}
+            vonkajsiaFasada={vonkajsiaFasada}
+            setVonkajsiaFasada={setVonkajsiaFasada}
+            interierFinis={interierFinis}
+            setInterierFinis={setInterierFinis}
+            vnutornePodlahy={vnutornePodlahy}
+            setVnutornePodlahy={setVnutornePodlahy}
+            podlahovVykurovanie={podlahovVykurovanie}
+            setPodlahovVykurovanie={setPodlahovVykurovanie}
+            interieroveDvere={interieroveDvere}
+            setInterieroveDvere={setInterieroveDvere}
+            pergola={pergola}
+            setPergola={setPergola}
+            inziniering={inziniering}
+            setInziniering={setInziniering}
+            projektA0={projektA0}
+            setProjektA0={setProjektA0}
+            revizna={revizna}
+            setRevizna={setRevizna}
+            doprava={doprava}
+            setDoprava={setDoprava}
+            showOnlySummary={false}
+            showOnlyPhase="kluc"
+            typStavby={typStavby}
           />
         ) : useNordPrices ? (
           <KonfiguratorNord
@@ -1143,7 +1329,68 @@ export default function KonfiguratorWizard({
             showOnlySummary={false}
             showOnlyPhase="docs"
             typStavby={typStavby}
-            useFlat15Prices={true}
+          />
+        ) : useFlatDoublePrices ? (
+          <KonfiguratorFlatDouble
+            dom={dom}
+            onReset={handleFullReset}
+            montazHolodomu={montazHolodomu}
+            setMontazHolodomu={setMontazHolodomu}
+            izolaciaNavysenie={izolaciaNavysenie}
+            setIzolaciaNavysenie={setIzolaciaNavysenie}
+            zaklady={zaklady}
+            setZaklady={setZaklady}
+            vstupneDvere={vstupneDvere}
+            setVstupneDvere={setVstupneDvere}
+            elektroinstalacia={elektroinstalacia}
+            setElektroinstalacia={setElektroinstalacia}
+            vodaKanalizacia={vodaKanalizacia}
+            setVodaKanalizacia={setVodaKanalizacia}
+            sanitaKomplet={sanitaKomplet}
+            setSanitaKomplet={setSanitaKomplet}
+            bojler={bojler}
+            setBojler={setBojler}
+            tepelneCerpadlo={tepelneCerpadlo}
+            setTepelneCerpadlo={setTepelneCerpadlo}
+            rekuperacia={rekuperacia}
+            setRekuperacia={setRekuperacia}
+            pripojkaSiete={pripojkaSiete}
+            setPripojkaSiete={setPripojkaSiete}
+            stresneOkno={stresneOkno}
+            setStresneOkno={setStresneOkno}
+            bocneOknoFixne={bocneOknoFixne}
+            setBocneOknoFixne={setBocneOknoFixne}
+            bocneOknoVyklopne90={bocneOknoVyklopne90}
+            setBocneOknoVyklopne90={setBocneOknoVyklopne90}
+            bocneOknoVyklopne55={bocneOknoVyklopne55}
+            setBocneOknoVyklopne55={setBocneOknoVyklopne55}
+            povrchokaOkien={povrchokaOkien}
+            setPovrchokaOkien={setPovrchokaOkien}
+            tonovaneSkla={tonovaneSkla}
+            setTonovaneSkla={setTonovaneSkla}
+            vonkajsiaFasada={vonkajsiaFasada}
+            setVonkajsiaFasada={setVonkajsiaFasada}
+            interierFinis={interierFinis}
+            setInterierFinis={setInterierFinis}
+            vnutornePodlahy={vnutornePodlahy}
+            setVnutornePodlahy={setVnutornePodlahy}
+            podlahovVykurovanie={podlahovVykurovanie}
+            setPodlahovVykurovanie={setPodlahovVykurovanie}
+            interieroveDvere={interieroveDvere}
+            setInterieroveDvere={setInterieroveDvere}
+            pergola={pergola}
+            setPergola={setPergola}
+            inziniering={inziniering}
+            setInziniering={setInziniering}
+            projektA0={projektA0}
+            setProjektA0={setProjektA0}
+            revizna={revizna}
+            setRevizna={setRevizna}
+            doprava={doprava}
+            setDoprava={setDoprava}
+            showOnlySummary={false}
+            showOnlyPhase="docs"
+            typStavby={typStavby}
           />
         ) : useNordPrices ? (
           <KonfiguratorNord
@@ -1393,8 +1640,8 @@ export default function KonfiguratorWizard({
             showOnlyPhase="docs"
             typStavby={typStavby}
           />
-        ) : (
-          <KonfiguratorFlatDoubleInline
+        ) : useProstoHousePrices ? (
+          <KonfiguratorProstoHouse
             dom={dom}
             onReset={handleFullReset}
             montazHolodomu={montazHolodomu}
@@ -1455,8 +1702,69 @@ export default function KonfiguratorWizard({
             showOnlyPhase="docs"
             typStavby={typStavby}
           />
-        );
-      default:
+        ) : (
+          <KonfiguratorFlatDouble
+            dom={dom}
+            onReset={handleFullReset}
+            montazHolodomu={montazHolodomu}
+            setMontazHolodomu={setMontazHolodomu}
+            izolaciaNavysenie={izolaciaNavysenie}
+            setIzolaciaNavysenie={setIzolaciaNavysenie}
+            zaklady={zaklady}
+            setZaklady={setZaklady}
+            vstupneDvere={vstupneDvere}
+            setVstupneDvere={setVstupneDvere}
+            elektroinstalacia={elektroinstalacia}
+            setElektroinstalacia={setElektroinstalacia}
+            vodaKanalizacia={vodaKanalizacia}
+            setVodaKanalizacia={setVodaKanalizacia}
+            sanitaKomplet={sanitaKomplet}
+            setSanitaKomplet={setSanitaKomplet}
+            bojler={bojler}
+            setBojler={setBojler}
+            tepelneCerpadlo={tepelneCerpadlo}
+            setTepelneCerpadlo={setTepelneCerpadlo}
+            rekuperacia={rekuperacia}
+            setRekuperacia={setRekuperacia}
+            pripojkaSiete={pripojkaSiete}
+            setPripojkaSiete={setPripojkaSiete}
+            stresneOkno={stresneOkno}
+            setStresneOkno={setStresneOkno}
+            bocneOknoFixne={bocneOknoFixne}
+            setBocneOknoFixne={setBocneOknoFixne}
+            bocneOknoVyklopne90={bocneOknoVyklopne90}
+            setBocneOknoVyklopne90={setBocneOknoVyklopne90}
+            bocneOknoVyklopne55={bocneOknoVyklopne55}
+            setBocneOknoVyklopne55={setBocneOknoVyklopne55}
+            povrchokaOkien={povrchokaOkien}
+            setPovrchokaOkien={setPovrchokaOkien}
+            tonovaneSkla={tonovaneSkla}
+            setTonovaneSkla={setTonovaneSkla}
+            vonkajsiaFasada={vonkajsiaFasada}
+            setVonkajsiaFasada={setVonkajsiaFasada}
+            interierFinis={interierFinis}
+            setInterierFinis={setInterierFinis}
+            vnutornePodlahy={vnutornePodlahy}
+            setVnutornePodlahy={setVnutornePodlahy}
+            podlahovVykurovanie={podlahovVykurovanie}
+            setPodlahovVykurovanie={setPodlahovVykurovanie}
+            interieroveDvere={interieroveDvere}
+            setInterieroveDvere={setInterieroveDvere}
+            pergola={pergola}
+            setPergola={setPergola}
+            inziniering={inziniering}
+            setInziniering={setInziniering}
+            projektA0={projektA0}
+            setProjektA0={setProjektA0}
+            revizna={revizna}
+            setRevizna={setRevizna}
+            doprava={doprava}
+            setDoprava={setDoprava}
+            showOnlySummary={false}
+            showOnlyPhase="docs"
+            typStavby={typStavby}
+          />
+        ) : useNordPrices ? (
         return null;
     }
   };
