@@ -187,24 +187,24 @@ function LayoutContent({ children }) {
             </nav>
 
             <div className="hidden sm:flex items-center gap-1 sm:gap-2">
-            {/* Desktop - Language Flags */}
-            <div className="hidden lg:flex items-center gap-2 flex-wrap mr-2">
-              {AVAILABLE_LANGUAGES.map((lang) => (
-                <button
-                  key={lang.code}
-                  onClick={() => setLanguage(lang.code)}
-                  className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all ${
-                    language === lang.code
-                      ? 'bg-primary text-white shadow-md'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  <span className="text-lg">{lang.flag}</span>
-                  <span>{lang.name}</span>
-                </button>
-              ))}
+              {/* Desktop - Language Flags */}
+              <div className="hidden lg:flex items-center gap-1 flex-nowrap mr-2">
+                {AVAILABLE_LANGUAGES.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => setLanguage(lang.code)}
+                    className={`flex items-center justify-center w-8 h-8 rounded-md text-xl transition-all ${
+                      language === lang.code
+                        ? 'bg-primary ring-2 ring-primary shadow-md scale-110'
+                        : 'bg-gray-100 hover:bg-gray-200 hover:scale-105'
+                    }`}
+                    title={lang.name}
+                  >
+                    <span>{lang.flag}</span>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
           <div className="hidden lg:flex items-center gap-1 xl:gap-2">
             {isSuperAdmin && (
