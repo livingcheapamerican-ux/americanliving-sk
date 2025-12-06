@@ -178,8 +178,8 @@ export default function KonfiguratorFjord({
     izolacia: { standard: 0, zvysena: 5799, premium: 11200 },
     elektroinstalacia: 7799,
     vodaKanalizacia: 3649,
-    sanitaKomplet: 0,
-    bojler: 0,
+    sanitaKomplet: 1500,
+    bojler: 800,
     tepelneCerpadlo: 7749,
     rekuperacia: 3600,
     zaklady: { bez: 0, skrutky: 8140, doska: 12000, pasove: 21079 },
@@ -576,13 +576,15 @@ export default function KonfiguratorFjord({
                       <Tile selected={interierFinis === "sadrokarton"} onClick={(e) => { if (interierFinis !== "sadrokarton") triggerAnimation("sadrokarton", e.currentTarget); setInterierFinis("sadrokarton"); }} icon={Home} iconColor="text-gray-500" iconSelectedColor="text-blue-600" title={t('interiorDrywall')} subtitle={t('plaster')} price="+ 21 075 €" isPriced={true} tooltip={t('interiorDrywall')} />
                     </div>
 
-                    <div className="col-span-2 sm:col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-yellow-500 rounded-xl bg-yellow-100/70 shadow-xl">
-                      <p className="col-span-2 text-[9px] sm:text-[10px] font-bold text-yellow-800 -mb-1 flex items-center gap-1">
+                    <div className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-yellow-500 rounded-xl bg-yellow-100/70 shadow-xl">
+                      <p className="col-span-2 sm:col-span-4 text-[9px] sm:text-[10px] font-bold text-yellow-800 -mb-1 flex items-center gap-1">
                         <span className="w-4 h-4 sm:w-5 sm:h-5 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">2</span>
                         {t('electrical')} & {t('water')}
                       </p>
                       <Tile selected={elektroinstalacia} onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); setElektroinstalacia(!elektroinstalacia); }} icon={Zap} iconColor="text-yellow-500" iconSelectedColor="text-yellow-600" title={t('electrical')} subtitle={t('wiring')} price="+ 7 799 €" isPriced={true} selectedBg="bg-yellow-100" selectedBorder="border-yellow-500" selectedRing="ring-yellow-300" hoverBorder="hover:border-yellow-300" tooltip={t('electricalFull')} />
                       <Tile selected={vodaKanalizacia} onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); setVodaKanalizacia(!vodaKanalizacia); }} icon={Droplets} iconColor="text-blue-400" iconSelectedColor="text-blue-600" title={t('water')} subtitle="Rozvody + kanalizácia" price="+ 3 649 €" isPriced={true} tooltip={t('waterFull')} />
+                      <Tile selected={sanitaKomplet} onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); setSanitaKomplet(!sanitaKomplet); }} icon={ShowerHead} iconColor="text-cyan-400" iconSelectedColor="text-cyan-600" title={t('sanitaryFull')} subtitle="Komplet" price="+ 1 500 €" isPriced={true} selectedBg="bg-cyan-100" selectedBorder="border-cyan-500" selectedRing="ring-cyan-300" hoverBorder="hover:border-cyan-300" tooltip={t('sanitaryFull')} />
+                      <Tile selected={bojler} onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }} icon={Flame} iconColor="text-orange-400" iconSelectedColor="text-orange-600" title={t('boiler')} subtitle="80L" price="+ 800 €" isPriced={true} selectedBg="bg-orange-100" selectedBorder="border-orange-500" selectedRing="ring-orange-300" hoverBorder="hover:border-orange-300" tooltip={t('boiler')} />
                     </div>
 
                     <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-green-600 rounded-xl bg-green-100/70 shadow-xl">
