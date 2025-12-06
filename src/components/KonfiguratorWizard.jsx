@@ -444,6 +444,7 @@ export default function KonfiguratorWizard({
               zaklady={zaklady}
               setZaklady={setZaklady}
               useNordPrices={useNordPrices}
+              useFlat15Prices={useFlat15Prices}
             />
           </div>
         );
