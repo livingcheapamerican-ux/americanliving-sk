@@ -12,7 +12,7 @@ import {
   Send, AlertTriangle, Check, Calculator, RotateCcw,
   Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
   Zap, ShowerHead, Flame, Cable, Paintbrush, Home, Truck, Sun, DoorOpen,
-  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle
+  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, TreePine
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -270,6 +270,7 @@ export default function KonfiguratorFlatDoubleInline({
     if (vnutornePodlahy) total += CENY.vnutornePodlahy;
     if (podlahovVykurovanie) total += CENY.podlahovVykurovanie;
     total += interieroveDvere * CENY.interieroveDvere;
+    if (pergola) total += CENY.pergola;
     if (tonovaneSkla) total += CENY.tonovaneSkla;
     if (doprava) total += CENY.doprava;
     if (revizna) total += CENY.revizna;
@@ -361,6 +362,7 @@ export default function KonfiguratorFlatDoubleInline({
     items.push({ name: t('floors') + " - " + t('floorsLaminate'), price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
     items.push({ name: t('floorHeatingFull'), price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
     items.push({ name: `${t('interiorDoors')} (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere, section: "kluc", selected: interieroveDvere > 0 });
+    items.push({ name: t('pergola'), price: pergola ? CENY.pergola : 0, section: "kluc", selected: pergola });
     
     // Dokumentácia
     items.push({ name: t('engineeringFull'), price: inziniering ? CENY.inziniering : 0, section: "docs", selected: inziniering });
@@ -1027,6 +1029,23 @@ export default function KonfiguratorFlatDoubleInline({
               selectedRing="ring-orange-300"
               hoverBorder="hover:border-orange-300"
               tooltip={t('floorHeatingFull')}
+            />
+
+            <Tile
+              selected={pergola}
+              onClick={(e) => { if (!pergola) triggerAnimation("pergola", e.currentTarget); setPergola(!pergola); }}
+              icon={TreePine}
+              iconColor="text-green-500"
+              iconSelectedColor="text-emerald-600"
+              title={t('pergola')}
+              subtitle={t('terrace')}
+              price="+ 1 845 €"
+              isPriced={true}
+              selectedBg="bg-emerald-100"
+              selectedBorder="border-emerald-500"
+              selectedRing="ring-emerald-300"
+              hoverBorder="hover:border-emerald-300"
+              tooltip={t('pergola')}
             />
 
               </div>
