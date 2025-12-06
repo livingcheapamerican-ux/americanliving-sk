@@ -175,7 +175,7 @@ export default function KonfiguratorFjord({
   const CENY = {
     montaz: { nie: 0, ano: 17700 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 11200, premium: 11200 },
+    izolacia: { standard: 0, zvysena: 5799, premium: 11200 },
     elektroinstalacia: 7799,
     vodaKanalizacia: 3649,
     sanitaKomplet: 0,
@@ -189,7 +189,7 @@ export default function KonfiguratorFjord({
     interierFinis: { ziadne: 0, drevo: 16400, sadrokarton: 21075 },
     vonkajsiaFasada: { standard: 0, suchana: 12213 },
     povrchokaOkien: 3400,
-    vnutornePodlahy: 6200,
+    vnutornePodlahy: 4200,
     podlahovVykurovanie: 6101,
     pergola: 1845,
     interieroveDvere: 180,
@@ -660,7 +660,7 @@ export default function KonfiguratorFjord({
                       <Tile selected={vonkajsiaFasada === "suchana"} onClick={(e) => { if (vonkajsiaFasada !== "suchana") triggerAnimation("fasadaSuchana", e.currentTarget); setVonkajsiaFasada("suchana"); }} icon={Paintbrush} iconColor="text-orange-400" iconSelectedColor="text-emerald-600" title={t('facadeStucco')} subtitle={t('whitePlaster')} price="+ 12 213 €" isPriced={true} selectedBg="bg-emerald-100" selectedBorder="border-emerald-500" selectedRing="ring-emerald-300" hoverBorder="hover:border-emerald-300" tooltip={t('facadeStucco')} />
                     </div>
 
-                    <Tile selected={vnutornePodlahy} onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); setVnutornePodlahy(!vnutornePodlahy); }} icon={Square} iconColor="text-amber-500" iconSelectedColor="text-emerald-600" title={t('floors')} subtitle={t('floorsLaminate')} price="+ 6 200 €" isPriced={true} selectedBg="bg-emerald-100" selectedBorder="border-emerald-500" selectedRing="ring-emerald-300" hoverBorder="hover:border-emerald-300" tooltip={t('floors')} />
+                    <Tile selected={vnutornePodlahy} onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); setVnutornePodlahy(!vnutornePodlahy); }} icon={Square} iconColor="text-amber-500" iconSelectedColor="text-emerald-600" title={t('floors')} subtitle={t('floorsLaminate')} price="+ 4 200 €" isPriced={true} selectedBg="bg-emerald-100" selectedBorder="border-emerald-500" selectedRing="ring-emerald-300" hoverBorder="hover:border-emerald-300" tooltip={t('floors')} />
                     <Tile selected={podlahovVykurovanie} onClick={(e) => { if (!podlahovVykurovanie) triggerAnimation("podlahovVykurovanie", e.currentTarget); setPodlahovVykurovanie(!podlahovVykurovanie); }} icon={Flame} iconColor="text-orange-400" iconSelectedColor="text-orange-600" title={t('floorHeating')} subtitle={t('wifiThermostat')} price="+ 6 101 €" isPriced={true} selectedBg="bg-orange-100" selectedBorder="border-orange-500" selectedRing="ring-orange-300" hoverBorder="hover:border-orange-300" tooltip={t('floorHeatingFull')} />
                   </div>
 
