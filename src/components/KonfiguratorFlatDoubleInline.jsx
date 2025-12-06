@@ -215,12 +215,12 @@ export default function KonfiguratorFlatDoubleInline({
     bocneOknoVyklopne55: 225
   } : {
     montaz: { nie: 0, ano: 9225 },
-    dvere: { ziadne: 0, kovove: 720, plastove: 560 },
+    dvere: { ziadne: 0, kovove: 720, plastove: 660 },
     izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 },
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
-    bojler: 248,
+    bojler: 246,
     tepelneCerpadlo: 3321,
     rekuperacia: 1600,
     zaklady: { bez: 0, skrutky: 4751, doska: 9633, pasove: 11823 },
@@ -769,7 +769,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-orange-600"
               title={t('boiler')}
               subtitle={t('boilerElectric')}
-              price={useFlat15Prices ? "+ 246 €" : "+ 248 €"}
+              price="+ 246 €"
               isPriced={true}
                 selectedBg="bg-orange-100"
                 selectedBorder="border-orange-500"
@@ -883,7 +883,7 @@ export default function KonfiguratorFlatDoubleInline({
               {[
                 { value: "ziadne", label: t('doorStandard'), price: "0 €" },
                 { value: "kovove", label: t('doorMetal'), price: "+ 720 €" },
-                { value: "plastove", label: t('doorPlastic'), price: useFlat15Prices ? "+ 660 €" : "+ 560 €" }
+                { value: "plastove", label: t('doorPlastic'), price: "+ 660 €" }
               ].map((opt) => (
                 <motion.div
                   key={opt.value}
