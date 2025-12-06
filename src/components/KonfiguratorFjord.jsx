@@ -178,8 +178,8 @@ export default function KonfiguratorFjord({
     izolacia: { standard: 0, zvysena: 5799, premium: 11200 },
     elektroinstalacia: 7799,
     vodaKanalizacia: 3649,
-    sanitaKomplet: 1500,
-    bojler: 800,
+    sanitaKomplet: 1169,
+    bojler: 246,
     tepelneCerpadlo: 7749,
     rekuperacia: 3600,
     zaklady: { bez: 0, skrutky: 8140, doska: 12000, pasove: 21079 },
@@ -583,8 +583,8 @@ export default function KonfiguratorFjord({
                       </p>
                       <Tile selected={elektroinstalacia} onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); setElektroinstalacia(!elektroinstalacia); }} icon={Zap} iconColor="text-yellow-500" iconSelectedColor="text-yellow-600" title={t('electrical')} subtitle={t('wiring')} price="+ 7 799 €" isPriced={true} selectedBg="bg-yellow-100" selectedBorder="border-yellow-500" selectedRing="ring-yellow-300" hoverBorder="hover:border-yellow-300" tooltip={t('electricalFull')} />
                       <Tile selected={vodaKanalizacia} onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); setVodaKanalizacia(!vodaKanalizacia); }} icon={Droplets} iconColor="text-blue-400" iconSelectedColor="text-blue-600" title={t('water')} subtitle="Rozvody + kanalizácia" price="+ 3 649 €" isPriced={true} tooltip={t('waterFull')} />
-                      <Tile selected={sanitaKomplet} onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); setSanitaKomplet(!sanitaKomplet); }} icon={ShowerHead} iconColor="text-cyan-400" iconSelectedColor="text-cyan-600" title={t('sanitaryFull')} subtitle="Komplet" price="+ 1 500 €" isPriced={true} selectedBg="bg-cyan-100" selectedBorder="border-cyan-500" selectedRing="ring-cyan-300" hoverBorder="hover:border-cyan-300" tooltip={t('sanitaryFull')} />
-                      <Tile selected={bojler} onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }} icon={Flame} iconColor="text-orange-400" iconSelectedColor="text-orange-600" title={t('boiler')} subtitle="80L" price="+ 800 €" isPriced={true} selectedBg="bg-orange-100" selectedBorder="border-orange-500" selectedRing="ring-orange-300" hoverBorder="hover:border-orange-300" tooltip={t('boiler')} />
+                      <Tile selected={sanitaKomplet} onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); setSanitaKomplet(!sanitaKomplet); }} icon={ShowerHead} iconColor="text-cyan-400" iconSelectedColor="text-cyan-600" title={t('sanitaryFull')} subtitle="Komplet" price="+ 1 169 €" isPriced={true} selectedBg="bg-cyan-100" selectedBorder="border-cyan-500" selectedRing="ring-cyan-300" hoverBorder="hover:border-cyan-300" tooltip={t('sanitaryFull')} />
+                      <Tile selected={bojler} onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }} icon={Flame} iconColor="text-orange-400" iconSelectedColor="text-orange-600" title={t('boiler')} subtitle="80L" price="+ 246 €" isPriced={true} selectedBg="bg-orange-100" selectedBorder="border-orange-500" selectedRing="ring-orange-300" hoverBorder="hover:border-orange-300" tooltip={t('boiler')} />
                     </div>
 
                     <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-green-600 rounded-xl bg-green-100/70 shadow-xl">
