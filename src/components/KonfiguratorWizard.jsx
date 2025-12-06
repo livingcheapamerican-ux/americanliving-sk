@@ -273,6 +273,7 @@ export default function KonfiguratorWizard({
     useFjordPrices = false,
     useNordPrices = false,
     useFlat15Prices = false,
+    useProstoHousePrices = false,
     // Všetky props pre konfigurátor
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
