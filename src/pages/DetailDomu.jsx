@@ -1436,26 +1436,47 @@ export default function DetailDomu() {
 
             {/* Informačné panely - pre všetky Prosto House domy - PRESUNUTÉ NA PRAVÚ STRANU */}
             {isProstoHouse && (
-              <div className="grid grid-cols-2 gap-2">
-                {/* Komplet pre montáž */}
-                <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
-                  <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-amber-900 border-b border-amber-200">
-                    <Package className="w-3 h-3 sm:w-4 sm:h-4" />
-                    {t('assemblyKit')}
+              <div className="space-y-2">
+                {/* Informácia o základnej cene */}
+                <Card className="overflow-hidden border border-blue-200 bg-blue-50/50">
+                  <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-blue-900 border-b border-blue-200">
+                    <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                    Dôležité informácie o cene
                   </div>
-                  <div className="px-2 pb-2 text-xs text-amber-800 space-y-0.5 pt-1.5">
-                    <p>• {t('panelAssemblyWoodConstruction')}</p>
-                    <p>• {t('panelAssemblyExteriorWalls')}</p>
-                    <p>• {t('panelAssemblyRoof')}</p>
-                    <p>• {t('panelAssemblyWindowsDouble')}</p>
-                    <p>• {t('panelAssemblyDoorsDouble')}</p>
-                    <p>• {t('panelAssemblyMembrane')}</p>
-                    <p>• {t('panelAssemblyInsulation')}</p>
-                    <p>• {t('panelAssemblyVaporBarrier')}</p>
-                    <p>• {t('panelAssemblyFloor')}</p>
-                    <p className="text-red-600 font-medium mt-1">{t('panelAssemblyPainting')}</p>
+                  <div className="px-2 pb-2 pt-1.5">
+                    <p className="text-xs text-blue-900 font-semibold mb-1">
+                      Základná cena je za samotnú konštrukciu bez montážnych prác. Cenu montáže si môžete vypočítať v konfigurátore.
+                    </p>
+                    <p className="text-xs text-blue-800 mt-2">
+                      <strong>Cena schodiska nie je zahrnutá v základnej ponuke.</strong>
+                    </p>
+                    <p className="text-xs text-blue-800 mt-1">
+                      <strong>Farbu na natieranie vonkajších fasád zabezpečuje objednávateľ.</strong>
+                    </p>
+                    <p className="text-xs text-blue-800 mt-1">
+                      <strong>Cena natierania fasády nie je zahrnutá v základnej ponuke,</strong> určuje sa dodatočne podľa skutočne natretej plochy.
+                    </p>
                   </div>
                 </Card>
+
+                <div className="grid grid-cols-2 gap-2">
+                  {/* Komplet pre montáž */}
+                  <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
+                    <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-amber-900 border-b border-amber-200">
+                      <Package className="w-3 h-3 sm:w-4 sm:h-4" />
+                      {t('assemblyKit')}
+                    </div>
+                    <div className="px-2 pb-2 text-xs text-amber-800 space-y-0.5 pt-1.5">
+                      <p>• drevený rám domu</p>
+                      <p>• vonkajšia fasáda (falzplech a drevený obklad)</p>
+                      <p>• okná</p>
+                      <p>• dvere</p>
+                      <p>• hydroizolačná fólia</p>
+                      <p>• tepelná izolácia, 200 mm steny, 250 mm strecha</p>
+                      <p>• parozábrana</p>
+                      <p>• hrubá podlaha z OSB dosiek</p>
+                    </div>
+                  </Card>
 
                 {/* Elektroinštalácia */}
                 <Card className="overflow-hidden border border-yellow-200 bg-yellow-50/50">
