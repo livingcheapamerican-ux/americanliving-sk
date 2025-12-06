@@ -9,10 +9,10 @@ import {
   Info
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
-import KonfiguratorFlatDoubleInline from "./KonfiguratorFlatDoubleInline";
-import KonfiguratorFjord from "./KonfiguratorFjord";
-import KonfiguratorNord from "./KonfiguratorNord";
+import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
+import KonfiguratorFlatDoubleInline from "../components/KonfiguratorFlatDoubleInline";
+import KonfiguratorFjord from "../components/KonfiguratorFjord";
+import KonfiguratorNord from "../components/KonfiguratorNord";
 import { useLanguage } from "./LanguageContext";
 
 // Krok 0: Výber typu stavby
