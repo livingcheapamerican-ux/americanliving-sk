@@ -279,6 +279,7 @@ export default function KonfiguratorWizard({
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
+  predlzenie, setPredlzenie,
   vstupneDvere, setVstupneDvere,
   elektroinstalacia, setElektroinstalacia,
   vodaKanalizacia, setVodaKanalizacia,
@@ -409,6 +410,7 @@ export default function KonfiguratorWizard({
     setBocneOknoFixne(0);
     setBocneOknoVyklopne90(0);
     setBocneOknoVyklopne55(0);
+    setPredlzenie?.(0);
   };
 
   // Renderovanie aktuálneho kroku
@@ -445,8 +447,11 @@ export default function KonfiguratorWizard({
               setIzolaciaNavysenie={setIzolaciaNavysenie}
               zaklady={zaklady}
               setZaklady={setZaklady}
+              predlzenie={predlzenie}
+              setPredlzenie={setPredlzenie}
               useNordPrices={useNordPrices}
               useFlat15Prices={useFlat15Prices}
+              useProstoHousePrices={useProstoHousePrices}
             />
           </div>
         );
