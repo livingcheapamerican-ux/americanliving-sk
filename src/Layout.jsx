@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload } from "lucide-react";
+import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload, ChevronDown } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { AVAILABLE_LANGUAGES } from "./components/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
@@ -109,14 +110,44 @@ function LayoutContent({ children }) {
 
       {/* Header */}
       <header 
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? 'bg-white shadow-lg py-0.5' : 'bg-white/95 backdrop-blur-md py-0.5 sm:py-1'
-        }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white shadow-md py-0`}
       >
         <div className="container mx-auto px-2 sm:px-4">
-          {/* Language Flags Bar */}
-          <div className="border-b border-gray-200 py-1">
-            <div className="flex items-center justify-center gap-3 flex-wrap">
+          {/* Language Flags Bar - Mobile Dropdown, Desktop Full */}
+          <div className="border-b border-gray-200 py-0.5 sm:py-1">
+            {/* Mobile - Dropdown */}
+            <div className="sm:hidden flex items-center justify-center">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition-all">
+                    <span className="text-xl">{AVAILABLE_LANGUAGES.find(l => l.code === language)?.flag}</span>
+                    <span className="text-xs font-medium">{AVAILABLE_LANGUAGES.find(l => l.code === language)?.name}</span>
+                    <ChevronDown className="w-3 h-3" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-48 p-1">
+                  <div className="grid gap-1">
+                    {AVAILABLE_LANGUAGES.map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => setLanguage(lang.code)}
+                        className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all text-left ${
+                          language === lang.code
+                            ? 'bg-primary text-white'
+                            : 'hover:bg-gray-100'
+                        }`}
+                      >
+                        <span className="text-xl">{lang.flag}</span>
+                        <span>{lang.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            {/* Desktop - Full Flags */}
+            <div className="hidden sm:flex items-center justify-center gap-3 flex-wrap">
               {AVAILABLE_LANGUAGES.map((lang) => (
                 <button
                   key={lang.code}
@@ -134,7 +165,7 @@ function LayoutContent({ children }) {
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between py-1 sm:py-0">
             <div className="flex-1 flex items-center justify-start lg:justify-start gap-2 sm:gap-3">
               <Link to={createPageUrl("Domov")} className="group">
                 <img 
