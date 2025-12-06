@@ -516,7 +516,7 @@ export default function DetailDomu() {
 
             {/* Miniatúry */}
             {allImages.length > 1 && (
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-4 gap-2">
                 {allImages.map((img, index) => (
                   <button
                     key={index}
@@ -539,12 +539,12 @@ export default function DetailDomu() {
 
             {/* 2D a 3D Pôdorysy - hneď pod titulnou fotkou */}
             {(dom.podorys_2d || dom.podorys_3d) && (
-              <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">{t('floorPlans')}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card className="p-3 sm:p-4">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('floorPlans')}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
                   {dom.podorys_2d && (
                     <div>
-                      <p className="text-sm font-semibold text-gray-700 mb-2">{t('twoD')} {t('floorPlan')}</p>
+                      <p className="text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">{t('twoD')} {t('floorPlan')}</p>
                       <div 
                         className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
                         onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), 0)}
@@ -559,7 +559,7 @@ export default function DetailDomu() {
                   )}
                   {dom.podorys_3d && (
                     <div>
-                      <p className="text-sm font-semibold text-gray-700 mb-2">{t('threeD')} {t('floorPlan')}</p>
+                      <p className="text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">{t('threeD')} {t('floorPlan')}</p>
                       <div 
                         className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
                         onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), dom.podorys_2d ? 1 : 0)}
@@ -578,39 +578,39 @@ export default function DetailDomu() {
 
             {/* Pomenované galérie - zobrazovať len ak majú aspoň jednu galériu s fotkami */}
             {dom.galerie && dom.galerie.length > 0 && dom.galerie.some(g => g.fotky && g.fotky.length > 0) && (
-              <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
-                  <Layers className="w-5 h-5" />
+              <Card className="p-3 sm:p-4">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3 flex items-center gap-2">
+                  <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
                   {t('galleries')}
                 </h3>
-                <div className="space-y-4">
+                <div className="space-y-2 sm:space-y-3">
                   {dom.galerie.filter(g => g.fotky && g.fotky.length > 0).map((galeria, index) => (
                     <div 
                       key={index}
-                      className="border rounded-xl p-4 hover:border-primary hover:shadow-md transition-all cursor-pointer group"
+                      className="border rounded-lg p-2 sm:p-3 hover:border-primary hover:shadow-md transition-all cursor-pointer group"
                       onClick={() => openLightbox(galeria.fotky, 0)}
                     >
                       {/* Header s typom */}
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg font-semibold text-gray-800">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs sm:text-sm font-semibold text-gray-800">
                             {getGaleriaLabel(galeria.typ)}
                           </span>
-                          <Badge className="bg-gray-100 text-gray-600 text-xs">
+                          <Badge className="bg-gray-100 text-gray-600 text-[10px] sm:text-xs px-1.5 py-0.5">
                             {galeria.fotky.length} {t('photos')}
                           </Badge>
                         </div>
-                        <p className="text-xs text-gray-400 group-hover:text-primary transition-colors">
+                        <p className="text-[10px] sm:text-xs text-gray-400 group-hover:text-primary transition-colors">
                           {t('clickToShow')} →
                         </p>
                       </div>
                       
                       {/* Náhľady fotiek */}
-                      <div className="flex gap-2 flex-wrap">
+                      <div className="flex gap-1.5 sm:gap-2 flex-wrap">
                         {galeria.fotky.slice(0, 6).map((foto, fotoIndex) => (
                           <div 
                             key={fotoIndex} 
-                            className="w-16 h-16 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0 relative"
+                            className="w-12 h-12 sm:w-14 sm:h-14 rounded-md overflow-hidden border border-gray-200 flex-shrink-0 relative"
                           >
                             <img
                               src={foto}
@@ -620,7 +620,7 @@ export default function DetailDomu() {
                             {/* Overlay pre posledný ak je viac */}
                             {fotoIndex === 5 && galeria.fotky.length > 6 && (
                               <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">
+                                <span className="text-white font-bold text-xs">
                                   +{galeria.fotky.length - 6}
                                 </span>
                               </div>
@@ -954,11 +954,11 @@ export default function DetailDomu() {
 
             {/* Pôdorysy */}
             {dom.podorysy && dom.podorysy.length > 0 && (
-              <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">
+              <Card className="p-3 sm:p-4">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">
                   {dom.podorysy.length > 1 ? 'Pôdorysy' : 'Pôdorys'}
                 </h3>
-                <div className="space-y-4">
+                <div className="space-y-2 sm:space-y-3">
                   {dom.podorysy.map((podorysUrl, index) => (
                     <div key={index} className="rounded-lg overflow-hidden bg-gray-50">
                       <img
@@ -974,8 +974,8 @@ export default function DetailDomu() {
 
             {/* YouTube Video */}
             {dom.youtube_url && (
-              <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">{t('videoPresentation')}</h3>
+              <Card className="p-3 sm:p-4">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('videoPresentation')}</h3>
                 <div className="aspect-video rounded-lg overflow-hidden">
                   <iframe
                     src={dom.youtube_url}
@@ -989,24 +989,24 @@ export default function DetailDomu() {
 
             {/* Rozmery - presunute z pravej strany */}
             {dom.rozmery && (
-              <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">{t('outerDimensions')}</h3>
-                <div className="grid grid-cols-3 gap-4 text-center">
+              <Card className="p-3 sm:p-4">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('outerDimensions')}</h3>
+                <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">{t('width')}</p>
-                    <p className="text-2xl font-bold text-primary">{dom.rozmery.sirka} m</p>
+                    <p className="text-xs text-gray-500 mb-1">{t('width')}</p>
+                    <p className="text-base sm:text-lg font-bold text-primary">{dom.rozmery.sirka} m</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">{t('length')}</p>
-                    <p className="text-2xl font-bold text-primary">{dom.rozmery.dlzka} m</p>
+                    <p className="text-xs text-gray-500 mb-1">{t('length')}</p>
+                    <p className="text-base sm:text-lg font-bold text-primary">{dom.rozmery.dlzka} m</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">{t('height')}</p>
-                    <p className="text-2xl font-bold text-primary">{dom.rozmery.vyska} m</p>
+                    <p className="text-xs text-gray-500 mb-1">{t('height')}</p>
+                    <p className="text-base sm:text-lg font-bold text-primary">{dom.rozmery.vyska} m</p>
                   </div>
                 </div>
                 {dom.vyska_stropu && (
-                  <p className="text-sm text-gray-600 mt-4 text-center">
+                  <p className="text-xs sm:text-sm text-gray-600 mt-2 sm:mt-3 text-center">
                     {t('ceilingHeight')}: <span className="font-semibold">{dom.vyska_stropu}</span>
                   </p>
                 )}
@@ -1015,8 +1015,8 @@ export default function DetailDomu() {
 
             {/* Popis - presunute z pravej strany */}
             {dom.popis && (
-              <Card className="p-6">
-                <h3 className="text-lg font-bold text-red-600 mb-4">{t('descriptionTitle')}</h3>
+              <Card className="p-3 sm:p-4">
+                <h3 className="text-sm sm:text-base font-bold text-red-600 mb-2 sm:mb-3">{t('descriptionTitle')}</h3>
                 <TranslatedDescription 
                   text={dom.popis}
                   textEn={dom.popis_en}
@@ -1028,11 +1028,11 @@ export default function DetailDomu() {
                   textSr={dom.popis_sr}
                   textHr={dom.popis_hr}
                   textEl={dom.popis_el}
-                  className="text-gray-700 leading-relaxed whitespace-pre-line"
+                  className="text-xs sm:text-sm text-gray-700 leading-relaxed whitespace-pre-line"
                 />
                 {isProstoHouse && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <p className="text-gray-700">
+                  <div className="mt-3 pt-3 border-t border-gray-200">
+                    <p className="text-xs sm:text-sm text-gray-700">
                       <strong>{t('lifespan')}:</strong> {t('lifespanDesc')}
                     </p>
                   </div>
@@ -1042,8 +1042,8 @@ export default function DetailDomu() {
 
             {/* Obrázok základnej konfigurácie - pre Ticabhouse - presunute z pravej strany */}
             {isTicabhouse && dom.zakladna_konfiguracia_obrazok && (
-              <Card className="p-6 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
-                <h3 className="text-lg font-bold text-primary mb-4">📸 {t('basicConfiguration')}</h3>
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">📸 {t('basicConfiguration')}</h3>
                 <div className="rounded-lg overflow-hidden shadow-lg">
                   <img 
                     src={dom.zakladna_konfiguracia_obrazok} 
@@ -1059,13 +1059,13 @@ export default function DetailDomu() {
 
             {/* Štandardná výbava pre Ticabhouse - presunute z pravej strany */}
             {isTicabhouse && (
-              <div className="space-y-6">
-                <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
-                  <h3 className="text-lg font-bold text-primary mb-4">✔ {t('standardEquipment')}</h3>
-                <div className="space-y-3 text-sm">
+              <div className="space-y-3 sm:space-y-4">
+                <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
+                  <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">✔ {t('standardEquipment')}</h3>
+                <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
                   <div>
-                    <p className="font-semibold text-gray-800 mb-1">{t('constructionAndInsulation')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                    <p className="font-semibold text-gray-800 mb-1 text-xs sm:text-sm">{t('constructionAndInsulation')}</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-0.5 ml-2 text-xs sm:text-sm">
                       <li>{t('frameFromDryTimber')}</li>
                       <li>{t('wallInsulation8535')}</li>
                       <li>{t('floorRoofInsulation200')}</li>
@@ -1133,19 +1133,19 @@ export default function DetailDomu() {
                   </div>
                 </div>
 
-                <div className="mt-6 pt-6 border-t border-green-300">
-                  <h4 className="font-bold text-red-700 mb-3 flex items-center gap-2">
-                    <AlertCircle className="w-5 h-5" />
+                <div className="mt-4 pt-4 border-t border-green-300">
+                  <h4 className="font-bold text-red-700 mb-2 flex items-center gap-2 text-xs sm:text-sm">
+                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                     {t('importantBasePriceExcludes')}
                   </h4>
-                  <ul className="list-disc list-inside text-gray-700 space-y-2 text-sm ml-2">
+                  <ul className="list-disc list-inside text-gray-700 space-y-1 text-xs sm:text-sm ml-2">
                     <li><strong>{t('deliveryTransport')}</strong> - {t('orderInConfigurator')}</li>
                     <li><strong>{t('foundationsNote')}</strong> - {t('singleModuleNoFoundations')}</li>
                     <li><strong>{t('externalConnections')}</strong> {t('waterElectricSewage')}</li>
                     <li><strong>{t('craneTruck')}</strong> - {t('requiredForPlacement')}</li>
                   </ul>
-                  <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                    <p className="text-sm text-blue-800">
+                  <div className="mt-3 p-2 sm:p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <p className="text-xs sm:text-sm text-blue-800">
                       <strong>{t('modularAdvantage')}</strong> {t('modularAdvantageDesc')}
                     </p>
                   </div>
@@ -1156,11 +1156,11 @@ export default function DetailDomu() {
 
             {/* Štandardná výbava pre JAK Modules - presunute z pravej strany */}
             {isJAKModules && (
-              <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
-                <h3 className="text-lg font-bold text-primary mb-4">✔ {t('mainFeatures')}</h3>
-                <div className="space-y-3 text-sm">
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">✔ {t('mainFeatures')}</h3>
+                <div className="space-y-2 text-xs sm:text-sm">
                   <div className="flex items-start gap-2">
-                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
                     <span>{t('gl24Strength')}</span>
                   </div>
                   <div className="flex items-start gap-2">
@@ -1189,8 +1189,8 @@ export default function DetailDomu() {
 
             {/* Špecifikácia - presunute z pravej strany */}
             {dom.specifikacia && (
-              <Card className="p-6">
-                <h3 className="text-lg font-bold text-primary mb-4">{t('specification')}</h3>
+              <Card className="p-3 sm:p-4">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('specification')}</h3>
                 <TranslatedDescription 
                   text={dom.specifikacia}
                   textEn={dom.specifikacia_en}
@@ -1209,12 +1209,12 @@ export default function DetailDomu() {
 
             {/* Čo obsahuje cena pre JAK Modules - presunute z pravej strany */}
             {isJAKModules && (
-              <Card className="p-6 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
-                <h3 className="text-lg font-bold text-primary mb-4">💰 {t('whatIncludesPrice')}</h3>
-                <div className="space-y-3 text-sm">
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">💰 {t('whatIncludesPrice')}</h3>
+                <div className="space-y-2 text-xs sm:text-sm">
                   <div>
-                    <p className="font-semibold text-gray-800 mb-2">✔ {t('constructionLabel')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                    <p className="font-semibold text-gray-800 mb-1 text-xs sm:text-sm">✔ {t('constructionLabel')}</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-0.5 ml-2 text-xs sm:text-sm">
                       <li>{t('certifiedPineGl24')}</li>
                       <li>{t('steelProfiles')}</li>
                       <li>{t('insulationCapacity')}</li>
@@ -1285,11 +1285,11 @@ export default function DetailDomu() {
           >
             {/* Hlavička */}
             <div>
-              <div className="flex items-center gap-3 mb-3">
-                <Badge className="bg-primary/10 text-primary border border-primary/20 px-3 py-1">
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <Badge className="bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 text-xs">
                   {dom.vyrobca}
                 </Badge>
-                <Badge className="bg-gray-100 text-gray-700 px-3 py-1">
+                <Badge className="bg-gray-100 text-gray-700 px-2 py-0.5 text-xs">
                   {dom.typ_domu === 'modularny' ? t('modular') : dom.typ_domu === 'montovany' ? t('prefab') : t('mobile')}
                 </Badge>
               </div>
@@ -1304,29 +1304,29 @@ export default function DetailDomu() {
                 <span className="text-xs sm:text-sm text-gray-500">{t('withVAT')}</span>
               </div>
               {isProstoHouse ? (
-                <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2">
-                  <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-amber-800">
+                <div className="mt-2 bg-amber-50 border border-amber-200 rounded-lg p-2 flex items-start gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <p className="text-xs sm:text-sm text-amber-800">
                     <strong>{t('basePriceNote')}</strong> {t('basePriceNoteDesc')}
                   </p>
                 </div>
               ) : (isTicabhouse) ? (
-                <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="text-sm text-blue-800 mb-2">
+                <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-2">
+                  <p className="text-xs sm:text-sm text-blue-800 mb-1">
                     <strong>{t('modularConstruction')}</strong>
                   </p>
-                  <p className="text-sm text-blue-700">
+                  <p className="text-xs sm:text-sm text-blue-700">
                     {t('basePriceIncludesRecreational')}
                   </p>
                 </div>
               ) : isJAKModules ? (
-                <div className="mt-3 bg-green-50 border border-green-200 rounded-lg p-3">
-                  <p className="text-sm text-green-800">
+                <div className="mt-2 bg-green-50 border border-green-200 rounded-lg p-2">
+                  <p className="text-xs sm:text-sm text-green-800">
                     <strong>{t('gl24ModularHouse')}</strong>
                   </p>
                 </div>
               ) : (
-                <p className="text-sm text-gray-500 mt-2">- {t('priceFromLabel')}</p>
+                <p className="text-xs sm:text-sm text-gray-500 mt-2">- {t('priceFromLabel')}</p>
               )}
             </div>
 
@@ -1398,8 +1398,8 @@ export default function DetailDomu() {
 
             {/* Obrázok základnej konfigurácie - pre Prosto House - hneď pod parametre */}
             {isProstoHouse && dom.zakladna_konfiguracia_obrazok && (
-              <Card className="p-6 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
-                <h3 className="text-lg font-bold text-primary mb-4">📸 {t('basicConfiguration')}</h3>
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">📸 {t('basicConfiguration')}</h3>
                 <div className="rounded-lg overflow-hidden shadow-lg">
                   <img 
                     src={dom.zakladna_konfiguracia_obrazok} 
@@ -1415,11 +1415,11 @@ export default function DetailDomu() {
 
             {/* Možnosti využitia - pre Prosto House */}
             {isProstoHouse && (
-              <Card className="p-6 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
-                <h3 className="text-lg font-bold text-primary mb-4">✔ {t('usageOptions')}</h3>
-                <ul className="space-y-2">
-                  <li className="flex items-start gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">✔ {t('usageOptions')}</h3>
+                <ul className="space-y-1.5 sm:space-y-2">
+                  <li className="flex items-start gap-2 text-xs sm:text-sm">
+                    <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
                     <span>{t('familyHouseOption')}</span>
                   </li>
                   <li className="flex items-start gap-2 text-sm">
@@ -1436,14 +1436,14 @@ export default function DetailDomu() {
 
             {/* Informačné panely - pre všetky Prosto House domy - PRESUNUTÉ NA PRAVÚ STRANU */}
             {isProstoHouse && (
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 {/* Komplet pre montáž */}
                 <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
-                  <div className="flex items-center gap-2 p-3 text-sm font-semibold text-amber-900 border-b border-amber-200">
-                    <Package className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-amber-900 border-b border-amber-200">
+                    <Package className="w-3 h-3 sm:w-4 sm:h-4" />
                     {t('assemblyKit')}
                   </div>
-                  <div className="px-3 pb-3 text-sm text-amber-800 space-y-1 pt-2">
+                  <div className="px-2 pb-2 text-xs text-amber-800 space-y-0.5 pt-1.5">
                     <p>• {t('panelAssemblyWoodConstruction')}</p>
                     <p>• {t('panelAssemblyExteriorWalls')}</p>
                     <p>• {t('panelAssemblyRoof')}</p>
@@ -1459,11 +1459,11 @@ export default function DetailDomu() {
 
                 {/* Elektroinštalácia */}
                 <Card className="overflow-hidden border border-yellow-200 bg-yellow-50/50">
-                  <div className="flex items-center gap-2 p-3 text-sm font-semibold text-yellow-900 border-b border-yellow-200">
-                    <Zap className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-yellow-900 border-b border-yellow-200">
+                    <Zap className="w-3 h-3 sm:w-4 sm:h-4" />
                     {t('electricalInstallation')}
                   </div>
-                  <div className="px-3 pb-3 text-sm text-yellow-800 space-y-1 pt-2">
+                  <div className="px-2 pb-2 text-xs text-yellow-800 space-y-0.5 pt-1.5">
                     <p>• {t('panelElectricalCables')}</p>
                     <p>• {t('panelElectricalPanel')}</p>
                     <p>• {t('panelElectricalConduit')}</p>
@@ -1474,11 +1474,11 @@ export default function DetailDomu() {
 
                 {/* Voda a kanalizácia */}
                 <Card className="overflow-hidden border border-blue-200 bg-blue-50/50">
-                  <div className="flex items-center gap-2 p-3 text-sm font-semibold text-blue-900 border-b border-blue-200">
-                    <Droplets className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-blue-900 border-b border-blue-200">
+                    <Droplets className="w-3 h-3 sm:w-4 sm:h-4" />
                     {t('waterAndSewage')}
                   </div>
-                  <div className="px-3 pb-3 text-sm text-blue-800 space-y-1 pt-2">
+                  <div className="px-2 pb-2 text-xs text-blue-800 space-y-0.5 pt-1.5">
                     <p>• {t('panelWaterPipes')}</p>
                     <p>• {t('panelWaterValves')}</p>
                     <p>• {t('panelWaterSewagePipes')}</p>
@@ -1489,11 +1489,11 @@ export default function DetailDomu() {
 
                 {/* Základy */}
                 <Card className="overflow-hidden border border-orange-200 bg-orange-50/50">
-                  <div className="flex items-center gap-2 p-3 text-sm font-semibold text-orange-900 border-b border-orange-200">
-                    <Landmark className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-orange-900 border-b border-orange-200">
+                    <Landmark className="w-3 h-3 sm:w-4 sm:h-4" />
                     {t('foundationsPanel')}
                   </div>
-                  <div className="px-3 pb-3 text-sm text-orange-800 space-y-1 pt-2">
+                  <div className="px-2 pb-2 text-xs text-orange-800 space-y-0.5 pt-1.5">
                     <p>• {t('panelFoundationScrews')}</p>
                     <p>• {t('panelFoundationMinPrice')}</p>
                     <p>• {t('panelFoundationFinalPrice')}</p>
@@ -1503,11 +1503,11 @@ export default function DetailDomu() {
 
                 {/* Interiér */}
                 <Card id="interier-finis-panel" className="overflow-hidden border border-emerald-200 bg-emerald-50/50 col-span-2">
-                  <div className="flex items-center gap-2 p-3 text-sm font-semibold text-emerald-900 border-b border-emerald-200">
-                    <Home className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-emerald-900 border-b border-emerald-200">
+                    <Home className="w-3 h-3 sm:w-4 sm:h-4" />
                     {t('interiorFinishPanel')}
                   </div>
-                  <div className="px-3 pb-3 text-sm text-emerald-800 space-y-1 pt-2">
+                  <div className="px-2 pb-2 text-xs text-emerald-800 space-y-0.5 pt-1.5">
                     <p>• {t('panelInteriorPartitions')}</p>
                     <p className="text-red-600 font-medium">{t('panelInteriorPainting')}</p>
                   </div>
