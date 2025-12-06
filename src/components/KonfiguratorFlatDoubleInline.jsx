@@ -1057,7 +1057,7 @@ export default function KonfiguratorFlatDoubleInline({
                 <DoorOpen className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-600" />
                 <div>
                   <span className="font-semibold text-gray-800 text-xs sm:text-sm">{t('interiorDoors')}</span>
-                  <span className="text-green-600 font-bold text-xs ml-2">× {useFlat15Prices ? "180 €" : "250 €"}</span>
+                  <span className="text-green-600 font-bold text-xs ml-2">× {CENY.interieroveDvere} €</span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
