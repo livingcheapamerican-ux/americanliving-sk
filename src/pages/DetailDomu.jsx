@@ -1515,9 +1515,9 @@ export default function DetailDomu() {
                     showOnlySummary={true}
                   />
                 ) : (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) ? (
-                  <KonfiguratorFlatDoubleInline
+                  <KonfiguratorWizard
+                    key={wizardKey}
                     dom={dom}
-                    onReset={handleKonfiguratorReset}
                     montazHolodomu={montazHolodomu}
                     setMontazHolodomu={setMontazHolodomu}
                     izolaciaNavysenie={izolaciaNavysenie}
@@ -1572,7 +1572,6 @@ export default function DetailDomu() {
                     setRevizna={setRevizna}
                     doprava={doprava}
                     setDoprava={setDoprava}
-                    showOnlySummary={false}
                     useFlat15Prices={true}
                   />
                 ) : dom.nazov?.includes("Fjord") ? (
