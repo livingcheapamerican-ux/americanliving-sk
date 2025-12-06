@@ -707,7 +707,7 @@ export default function KonfiguratorWizard({
             typStavby={typStavby}
           />
         ) : (
-          <KonfiguratorFlatDoubleInline
+          <KonfiguratorProstoHouse
             dom={dom}
             onReset={handleFullReset}
             montazHolodomu={montazHolodomu}
@@ -895,7 +895,7 @@ export default function KonfiguratorWizard({
             typStavby={typStavby}
           />
         ) : useFlat15Prices ? (
-          <KonfiguratorFlatDoubleInline
+          <KonfiguratorFlat15
             dom={dom}
             onReset={handleFullReset}
             montazHolodomu={montazHolodomu}
@@ -1143,7 +1143,7 @@ export default function KonfiguratorWizard({
             typStavby={typStavby}
           />
         ) : (
-          <KonfiguratorFlatDoubleInline
+          <KonfiguratorProstoHouse
             dom={dom}
             onReset={handleFullReset}
             montazHolodomu={montazHolodomu}

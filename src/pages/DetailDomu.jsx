@@ -1521,7 +1521,6 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlat15
                   dom={dom}
-                  onReset={handleKonfiguratorReset}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
                 izolaciaNavysenie={izolaciaNavysenie}
@@ -1586,7 +1585,6 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorNord
                   dom={dom}
-                  onReset={handleKonfiguratorReset}
                   montazHolodomu={montazHolodomu}
                   setMontazHolodomu={setMontazHolodomu}
                   izolaciaNavysenie={izolaciaNavysenie}
@@ -1651,7 +1649,6 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFjord
                   dom={dom}
-                  onReset={handleKonfiguratorReset}
                   montazHolodomu={montazHolodomu}
                   setMontazHolodomu={setMontazHolodomu}
                   izolaciaNavysenie={izolaciaNavysenie}
@@ -1716,7 +1713,6 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlatDouble 
                   dom={dom}
-                  onReset={handleKonfiguratorReset}
                   montazHolodomu={montazHolodomu}
                   setMontazHolodomu={setMontazHolodomu}
                   izolaciaNavysenie={izolaciaNavysenie}
@@ -1781,7 +1777,6 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorProstoHouse 
                   dom={dom}
-                  onReset={handleKonfiguratorReset}
                   montazHolodomu={montazHolodomu}
                   setMontazHolodomu={setMontazHolodomu}
                   izolaciaNavysenie={izolaciaNavysenie}
