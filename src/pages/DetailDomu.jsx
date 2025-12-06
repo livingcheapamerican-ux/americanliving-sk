@@ -702,9 +702,10 @@ export default function DetailDomu() {
 
             {/* Konfigurátor - Wizard krok po kroku pre Flat Double (ale nie Flat 1,5) */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
-              <KonfiguratorFlatDouble 
+              <KonfiguratorWizard 
                 key={wizardKey}
                 dom={dom}
+                useFlatDoublePrices={true}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
                 izolaciaNavysenie={izolaciaNavysenie}
@@ -759,7 +760,6 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-                showOnlySummary={false}
               />
             )}
 
