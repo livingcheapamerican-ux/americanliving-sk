@@ -696,6 +696,7 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
+                showOnlySummary={false}
               />
             )}
 
@@ -758,6 +759,7 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
+                showOnlySummary={false}
               />
             )}
 
@@ -885,6 +887,7 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
+                showOnlySummary={false}
               />
             )}
 
@@ -1579,7 +1582,7 @@ export default function DetailDomu() {
                 )}
 
             {/* Floating panel pre Nord */}
-            {isProstoHouse && dom.nazov?.includes("Nord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && (
+            {isProstoHouse && dom.nazov?.includes("Nord") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorNord
                   dom={dom}
@@ -1644,7 +1647,7 @@ export default function DetailDomu() {
             )}
 
             {/* Floating panel pre Fjord */}
-            {isProstoHouse && dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && (
+            {isProstoHouse && dom.nazov?.includes("Fjord") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFjord
                   dom={dom}
