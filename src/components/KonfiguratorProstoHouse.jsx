@@ -78,7 +78,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative p-2 sm:p-4 rounded-lg sm:rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+      className={`relative p-1.5 sm:p-2.5 rounded-md sm:rounded-lg cursor-pointer transition-all flex flex-col items-center text-center ${
         selected 
           ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
           : isA0 
@@ -107,10 +107,10 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         )}
       </AnimatePresence>
 
-      <Icon className={`w-5 h-5 sm:w-10 sm:h-10 mb-1 sm:mb-2 ${selected ? iconSelectedColor : iconColor}`} />
-      <span className={`font-semibold text-gray-800 text-[10px] sm:text-sm leading-tight`}>{title}</span>
-      <span className={`text-[8px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1 leading-tight`}>{subtitle}</span>
-      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>{price}</span>
+      <Icon className={`w-4 h-4 sm:w-6 sm:h-6 mb-0.5 sm:mb-1 ${selected ? iconSelectedColor : iconColor}`} />
+      <span className={`font-semibold text-gray-800 text-[9px] sm:text-xs leading-tight`}>{title}</span>
+      <span className={`text-[7px] sm:text-[10px] text-gray-500 mt-0.5 leading-tight`}>{subtitle}</span>
+      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[8px] sm:text-[10px] mt-0.5 sm:mt-1`}>{price}</span>
 
       {showTooltip && tooltip && ReactDOM.createPortal(
         <motion.div
@@ -785,12 +785,12 @@ export default function KonfiguratorProstoHouse({
 
                 </div>
 
-                <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
-                  <p className="text-xs sm:text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
-                    <DoorOpen className="w-4 h-4 text-blue-600" />
+                <div className="mt-2 sm:mt-3 p-2 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
+                  <p className="text-[10px] sm:text-xs font-bold text-gray-700 mb-2 flex items-center gap-1.5">
+                    <DoorOpen className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
                     {t('entryDoor')}
                   </p>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-3 gap-1.5">
                     {[
                       { value: "ziadne", label: t('doorStandard'), price: "0 €" },
                       { value: "kovove", label: t('doorMetal'), price: "+ 720 €" },
@@ -813,11 +813,11 @@ export default function KonfiguratorProstoHouse({
                     ))}
                   </div>
 
-                  <p className="text-xs sm:text-sm font-bold text-gray-700 mt-4 mb-3 flex items-center gap-2">
-                    <Square className="w-4 h-4 text-blue-600" />
+                  <p className="text-[10px] sm:text-xs font-bold text-gray-700 mt-3 mb-2 flex items-center gap-1.5">
+                    <Square className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
                     {t('additionalWindows')}
                   </p>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                     {[
                       { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: "760 €" },
                       { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: "500 €" },
@@ -863,9 +863,9 @@ export default function KonfiguratorProstoHouse({
               <div className="p-3 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
-                  <div className={`col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] rounded-2xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
-                    <p className={`col-span-2 text-[10px] sm:text-xs font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
-                      <span className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
+                  <div className={`col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] rounded-xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
+                    <p className={`col-span-2 text-[9px] sm:text-[10px] font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
+                      <span className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
                       {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
                     </p>
                     <Tile
@@ -939,24 +939,24 @@ export default function KonfiguratorProstoHouse({
 
                 </div>
 
-                <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
+                <div className="mt-2 sm:mt-3 p-2 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <DoorOpen className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-600" />
+                    <div className="flex items-center gap-1.5">
+                      <DoorOpen className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
                       <div>
-                        <span className="font-semibold text-gray-800 text-xs sm:text-sm">{t('interiorDoors')}</span>
-                        <span className="text-green-600 font-bold text-xs ml-2">× 180 €</span>
+                        <span className="font-semibold text-gray-800 text-[10px] sm:text-xs">{t('interiorDoors')}</span>
+                        <span className="text-green-600 font-bold text-[10px] ml-1.5">× 180 €</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
                       <button 
                         onClick={() => setInterieroveDvere(Math.max(0, interieroveDvere - 1))}
-                        className="w-8 h-8 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-lg"
+                        className="w-6 h-6 sm:w-7 sm:h-7 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm"
                       >−</button>
-                      <span className="w-8 text-center font-bold text-lg">{interieroveDvere}</span>
+                      <span className="w-6 text-center font-bold text-sm">{interieroveDvere}</span>
                       <button 
                         onClick={() => setInterieroveDvere(interieroveDvere + 1)}
-                        className="w-8 h-8 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg"
+                        className="w-6 h-6 sm:w-7 sm:h-7 rounded bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm"
                       >+</button>
                     </div>
                   </div>
