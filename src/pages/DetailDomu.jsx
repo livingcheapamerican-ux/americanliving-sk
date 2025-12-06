@@ -1716,7 +1716,7 @@ export default function DetailDomu() {
             {/* Floating panel pre Flat Double */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorFlatDoubleInline 
+                <KonfiguratorProstoHouse 
                   dom={dom}
                   onReset={handleKonfiguratorReset}
                   montazHolodomu={montazHolodomu}
@@ -1725,6 +1725,8 @@ export default function DetailDomu() {
                   setIzolaciaNavysenie={setIzolaciaNavysenie}
                   zaklady={zaklady}
                   setZaklady={setZaklady}
+                  predlzenie={predlzenie}
+                  setPredlzenie={setPredlzenie}
                   vstupneDvere={vstupneDvere}
                   setVstupneDvere={setVstupneDvere}
                   elektroinstalacia={elektroinstalacia}
@@ -1774,7 +1776,6 @@ export default function DetailDomu() {
                   doprava={doprava}
                   setDoprava={setDoprava}
                   showOnlySummary={true}
-                  useFlat15Prices={false}
                 />
               </div>
             )}
