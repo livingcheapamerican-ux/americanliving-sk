@@ -192,7 +192,7 @@ export default function KonfiguratorFlatDoubleInline({
     elektroinstalacia: 5200,
     vodaKanalizacia: 2100,
     sanitaKomplet: 1169,
-    bojler: 246,
+    bojler: 264,
     tepelneCerpadlo: 4428,
     rekuperacia: 2200,
     zaklady: { bez: 0, skrutky: 6189, doska: 11909, pasove: 11860 },
@@ -220,7 +220,7 @@ export default function KonfiguratorFlatDoubleInline({
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
-    bojler: 246,
+    bojler: 264,
     tepelneCerpadlo: 3321,
     rekuperacia: 1600,
     zaklady: { bez: 0, skrutky: 4751, doska: 9633, pasove: 11823 },
@@ -769,7 +769,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-orange-600"
               title={t('boiler')}
               subtitle={t('boilerElectric')}
-              price="+ 246 €"
+              price="+ 264 €"
               isPriced={true}
                 selectedBg="bg-orange-100"
                 selectedBorder="border-orange-500"
