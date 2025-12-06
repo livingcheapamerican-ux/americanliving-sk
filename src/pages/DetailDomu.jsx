@@ -43,6 +43,7 @@ export default function DetailDomu() {
   const [montazHolodomu, setMontazHolodomu] = useState("nie");
   const [izolaciaNavysenie, setIzolaciaNavysenie] = useState("standard");
   const [zaklady, setZaklady] = useState("bez");
+  const [predlzenie, setPredlzenie] = useState(0);
   
   // Zdieľaný stav pre Fázu 2 - Holodom
   const [vstupneDvere, setVstupneDvere] = useState("ziadne");
@@ -440,6 +441,7 @@ export default function DetailDomu() {
     setBocneOknoFixne(0);
     setBocneOknoVyklopne90(0);
     setBocneOknoVyklopne55(0);
+    setPredlzenie(0);
     setWizardKey(prev => prev + 1);
   };
 
@@ -707,6 +709,8 @@ export default function DetailDomu() {
                 setIzolaciaNavysenie={setIzolaciaNavysenie}
                 zaklady={zaklady}
                 setZaklady={setZaklady}
+                predlzenie={predlzenie}
+                setPredlzenie={setPredlzenie}
                 vstupneDvere={vstupneDvere}
                 setVstupneDvere={setVstupneDvere}
                 elektroinstalacia={elektroinstalacia}
@@ -832,6 +836,8 @@ export default function DetailDomu() {
                 setIzolaciaNavysenie={setIzolaciaNavysenie}
                 zaklady={zaklady}
                 setZaklady={setZaklady}
+                predlzenie={predlzenie}
+                setPredlzenie={setPredlzenie}
                 vstupneDvere={vstupneDvere}
                 setVstupneDvere={setVstupneDvere}
                 elektroinstalacia={elektroinstalacia}
@@ -1706,6 +1712,71 @@ export default function DetailDomu() {
               </div>
             )}
 
+            {/* Floating panel pre Flat Double */}
+            {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+                <KonfiguratorFlatDoubleInline 
+                  dom={dom}
+                  onReset={handleKonfiguratorReset}
+                  montazHolodomu={montazHolodomu}
+                  setMontazHolodomu={setMontazHolodomu}
+                  izolaciaNavysenie={izolaciaNavysenie}
+                  setIzolaciaNavysenie={setIzolaciaNavysenie}
+                  zaklady={zaklady}
+                  setZaklady={setZaklady}
+                  vstupneDvere={vstupneDvere}
+                  setVstupneDvere={setVstupneDvere}
+                  elektroinstalacia={elektroinstalacia}
+                  setElektroinstalacia={setElektroinstalacia}
+                  vodaKanalizacia={vodaKanalizacia}
+                  setVodaKanalizacia={setVodaKanalizacia}
+                  sanitaKomplet={sanitaKomplet}
+                  setSanitaKomplet={setSanitaKomplet}
+                  bojler={bojler}
+                  setBojler={setBojler}
+                  tepelneCerpadlo={tepelneCerpadlo}
+                  setTepelneCerpadlo={setTepelneCerpadlo}
+                  rekuperacia={rekuperacia}
+                  setRekuperacia={setRekuperacia}
+                  pripojkaSiete={pripojkaSiete}
+                  setPripojkaSiete={setPripojkaSiete}
+                  stresneOkno={stresneOkno}
+                  setStresneOkno={setStresneOkno}
+                  bocneOknoFixne={bocneOknoFixne}
+                  setBocneOknoFixne={setBocneOknoFixne}
+                  bocneOknoVyklopne90={bocneOknoVyklopne90}
+                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
+                  bocneOknoVyklopne55={bocneOknoVyklopne55}
+                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
+                  povrchokaOkien={povrchokaOkien}
+                  setPovrchokaOkien={setPovrchokaOkien}
+                  tonovaneSkla={tonovaneSkla}
+                  setTonovaneSkla={setTonovaneSkla}
+                  vonkajsiaFasada={vonkajsiaFasada}
+                  setVonkajsiaFasada={setVonkajsiaFasada}
+                  interierFinis={interierFinis}
+                  setInterierFinis={setInterierFinis}
+                  vnutornePodlahy={vnutornePodlahy}
+                  setVnutornePodlahy={setVnutornePodlahy}
+                  podlahovVykurovanie={podlahovVykurovanie}
+                  setPodlahovVykurovanie={setPodlahovVykurovanie}
+                  interieroveDvere={interieroveDvere}
+                  setInterieroveDvere={setInterieroveDvere}
+                  pergola={pergola}
+                  setPergola={setPergola}
+                  inziniering={inziniering}
+                  setInziniering={setInziniering}
+                  projektA0={projektA0}
+                  setProjektA0={setProjektA0}
+                  revizna={revizna}
+                  setRevizna={setRevizna}
+                  doprava={doprava}
+                  setDoprava={setDoprava}
+                  showOnlySummary={true}
+                />
+              </div>
+            )}
+
             {/* Floating panel pre ostatné Prosto House domy (nie Nord, nie Fjord, nie Flat 1,5, nie Flat Double) */}
             {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
@@ -1718,6 +1789,8 @@ export default function DetailDomu() {
                   setIzolaciaNavysenie={setIzolaciaNavysenie}
                   zaklady={zaklady}
                   setZaklady={setZaklady}
+                  predlzenie={predlzenie}
+                  setPredlzenie={setPredlzenie}
                   vstupneDvere={vstupneDvere}
                   setVstupneDvere={setVstupneDvere}
                   elektroinstalacia={elektroinstalacia}
