@@ -242,7 +242,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('assemblyYes')}
                 subtitle={t('phase1')}
-                price={useFlat15Prices ? "+ 13 470 €" : useNordPrices ? "+ 14 850 €" : "+ 17 970 €"}
+                price={useFlat15Prices ? "+ 0 €" : useNordPrices ? "+ 14 850 €" : "+ 17 970 €"}
                 isPriced={true}
                 tooltip={t('assemblyNote')}
               />
@@ -275,7 +275,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={useFlat15Prices ? "200/250mm" : useNordPrices ? "200mm" : t('insulationEnhanced')}
                 subtitle={useFlat15Prices ? "200/250mm" : useNordPrices ? "200mm" : t('insulationEnhancedDesc')}
-                price={useFlat15Prices ? "+ 4 400 €" : useNordPrices ? "+ 3 200 €" : "+ 5 799 €"}
+                price={useFlat15Prices ? "+ 0 €" : useNordPrices ? "+ 3 200 €" : "+ 5 799 €"}
                 isPriced={true}
                 tooltip={t('insulationEnhancedDesc')}
               />
@@ -288,7 +288,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-green-600"
                 title={useFlat15Prices ? "250/300mm" : useNordPrices ? "250mm" : t('insulationPremium')}
                 subtitle={useFlat15Prices ? "250/300mm" : useNordPrices ? "250mm" : t('insulationPremiumDesc')}
-                price={useFlat15Prices ? "+ 8 799 €" : useNordPrices ? "+ 6 400 €" : "+ 11 600 €"}
+                price={useFlat15Prices ? "+ 0 €" : useNordPrices ? "+ 6 400 €" : "+ 11 600 €"}
                 isPriced={true}
                 isA0={true}
                 selectedBg="bg-green-100"
@@ -344,7 +344,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsScrews')}
                 subtitle={t('groundFootings')}
-                price={useFlat15Prices ? "+ 6 189 €" : useNordPrices ? "+ 7 656 €" : "+ 8 140 €"}
+                price={useFlat15Prices ? "+ 0 €" : useNordPrices ? "+ 7 656 €" : "+ 8 140 €"}
                 isPriced={true}
                 tooltip={t('foundationsScrews')}
               />
@@ -357,7 +357,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsSlab')}
                 subtitle={t('foundationSlab')}
-                price={useFlat15Prices ? "+ 11 909 €" : useNordPrices ? "+ 12 461 €" : "+ 17 946 €"}
+                price={useFlat15Prices ? "+ 0 €" : useNordPrices ? "+ 12 461 €" : "+ 17 946 €"}
                 isPriced={true}
                 tooltip={t('foundationsSlab')}
               />
@@ -370,7 +370,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsStrip')}
                 subtitle={t('stripFound')}
-                price={useFlat15Prices ? "+ 11 860 €" : useNordPrices ? "+ 8 967 €" : "+ 21 079 €"}
+                price={useFlat15Prices ? "+ 0 €" : useNordPrices ? "+ 8 967 €" : "+ 21 079 €"}
                 isPriced={true}
                 tooltip={t('foundationsStrip')}
               />
