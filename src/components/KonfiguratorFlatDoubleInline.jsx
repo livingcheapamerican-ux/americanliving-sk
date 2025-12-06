@@ -237,7 +237,7 @@ export default function KonfiguratorFlatDoubleInline({
     tonovaneSkla: 1197,
     doprava: 0,
     revizna: 1000,
-    stresneOkno: 1300,
+    stresneOkno: 1760,
     bocneOknoFixne: 855,
     bocneOknoVyklopne90: 924,
     bocneOknoVyklopne55: 385
