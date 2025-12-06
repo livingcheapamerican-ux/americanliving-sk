@@ -259,7 +259,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('assemblyYes')}
                 subtitle={t('phase1')}
-                price={useProstoHousePrices ? `+ ${PROSTO_CENY.montaz.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.montaz.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 14 850 €" : "+ 17 970 €"}
+                price={useProstoHousePrices ? `+ ${PROSTO_CENY.montaz.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.montaz.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 14 850 €" : "+ 17 700 €"}
                 isPriced={true}
                 tooltip={t('assemblyNote')}
               />
@@ -409,7 +409,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsSlab')}
                 subtitle={t('foundationSlab')}
-                price={useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 12 461 €" : "+ 17 946 €"}
+                price={useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 12 461 €" : "+ 12 000 €"}
                 isPriced={true}
                 tooltip={t('foundationsSlab')}
               />
