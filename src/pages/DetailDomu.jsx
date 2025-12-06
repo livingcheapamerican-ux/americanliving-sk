@@ -450,26 +450,24 @@ export default function DetailDomu() {
     <div className="min-h-screen bg-gray-50">
       {/* Back Button */}
       <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between">
           <Link to={returnUrl}>
-            <Button variant="ghost" className="text-primary hover:text-primary/80">
-              <ArrowLeft className="mr-2 w-4 h-4" />
-              {t('backToCatalog')}
+            <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 text-xs sm:text-sm h-7 sm:h-9">
+              <ArrowLeft className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">{t('backToCatalog')}</span>
+              <span className="sm:hidden">{t('back')}</span>
             </Button>
           </Link>
-          <div className="flex items-center gap-3">
-            {/* Debug info */}
-            <div className="text-xs text-gray-500">
-              Role: {user?.role || 'none'} | Super: {user?.super_admin ? 'yes' : 'no'} | Can: {canManage ? 'yes' : 'no'}
-            </div>
+          <div className="flex items-center gap-2">
             {canManage && (
               <Button
                 onClick={() => setShowAdminPanel(!showAdminPanel)}
                 variant={showAdminPanel ? "default" : "outline"}
-                className={showAdminPanel ? "bg-blue-600 hover:bg-blue-700" : ""}
+                size="sm"
+                className={`h-7 sm:h-9 text-xs ${showAdminPanel ? "bg-blue-600 hover:bg-blue-700" : ""}`}
               >
-                <Edit className="w-4 h-4 mr-2" />
-                {showAdminPanel ? t('close') : t('galleries')}
+                <Edit className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
+                <span className="hidden sm:inline">{showAdminPanel ? t('close') : t('galleries')}</span>
               </Button>
             )}
           </div>
@@ -483,8 +481,8 @@ export default function DetailDomu() {
         </div>
       )}
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-2 gap-8">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6">
+        <div className="grid lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Ľavý stĺpec - Galéria */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -1295,15 +1293,15 @@ export default function DetailDomu() {
                   {dom.typ_domu === 'modularny' ? t('modular') : dom.typ_domu === 'montovany' ? t('prefab') : t('mobile')}
                 </Badge>
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2 sm:mb-3">
                 {dom.nazov}
               </h1>
-              <div className="flex items-baseline gap-2">
-                <span className="text-sm text-gray-500">{isTicabhouse ? t('basicConfigPrice') : t('priceFromLabel')}</span>
-                <span className="text-4xl font-bold text-primary">
+              <div className="flex items-baseline gap-1 sm:gap-2 flex-wrap">
+                <span className="text-xs sm:text-sm text-gray-500">{isTicabhouse ? t('basicConfigPrice') : t('priceFromLabel')}</span>
+                <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">
                   {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                 </span>
-                <span className="text-sm text-gray-500">{t('withVAT')}</span>
+                <span className="text-xs sm:text-sm text-gray-500">{t('withVAT')}</span>
               </div>
               {isProstoHouse ? (
                 <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2">
@@ -1333,62 +1331,62 @@ export default function DetailDomu() {
             </div>
 
             {/* Parametre */}
-            <Card className="p-6 bg-gradient-to-br from-blue-50 to-white">
-              <h3 className="text-lg font-bold text-primary mb-4">{t('basicParameters')}</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-3">
-                  <Home className="w-6 h-6 text-primary" />
+            <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white">
+              <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('basicParameters')}</h3>
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                <div className="flex items-center gap-2">
+                  <Home className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                   <div>
-                    <p className="text-sm text-gray-500">{t('manufacturer')}</p>
-                    <p className="text-xl font-bold text-primary">{dom.vyrobca}</p>
+                    <p className="text-xs text-gray-500">{t('manufacturer')}</p>
+                    <p className="text-sm sm:text-base font-bold text-primary">{dom.vyrobca}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                     {dom.typ_domu === 'montovany' ? (
-                                              <Hammer className="w-6 h-6 text-orange-600" />
+                                              <Hammer className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
                                             ) : dom.typ_domu === 'mobilny' ? (
-                                              <Caravan className="w-6 h-6 text-teal-600" />
+                                              <Caravan className="w-4 h-4 sm:w-5 sm:h-5 text-teal-600" />
                                             ) : (
-                                              <Boxes className="w-6 h-6 text-accent" />
+                                              <Boxes className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                                             )}
                     <div>
-                      <p className="text-sm text-gray-500">{t('houseType')}</p>
-                      <p className="text-xl font-bold text-primary">
+                      <p className="text-xs text-gray-500">{t('houseType')}</p>
+                      <p className="text-sm sm:text-base font-bold text-primary">
                         {dom.typ_domu === 'modularny' ? t('modular') : dom.typ_domu === 'montovany' ? t('prefab') : t('mobile')}
                       </p>
                     </div>
                   </div>
                 {dom.pocet_izieb && (
-                  <div className="flex items-center gap-3">
-                    <Grid2x2 className="w-6 h-6 text-primary" />
+                  <div className="flex items-center gap-2">
+                    <Grid2x2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                     <div>
-                      <p className="text-sm text-gray-500">{t('rooms')}</p>
-                      <p className="text-xl font-bold text-primary">{dom.pocet_izieb}</p>
+                      <p className="text-xs text-gray-500">{t('rooms')}</p>
+                      <p className="text-sm sm:text-base font-bold text-primary">{dom.pocet_izieb}</p>
                     </div>
                   </div>
                 )}
-                <div className="flex items-center gap-3">
-                    <div className="w-6 h-4 border-2 border-primary rounded-sm" />
+                <div className="flex items-center gap-2">
+                    <div className="w-5 h-3 sm:w-6 sm:h-4 border-2 border-primary rounded-sm" />
                     <div>
-                      <p className="text-sm text-gray-500">{t('builtArea')}</p>
-                    <p className="text-xl font-bold text-primary">{dom.zastavana_plocha} m²</p>
+                      <p className="text-xs text-gray-500">{t('builtArea')}</p>
+                    <p className="text-sm sm:text-base font-bold text-primary">{dom.zastavana_plocha} m²</p>
                   </div>
                 </div>
                 {dom.uzitkova_plocha && (
-                  <div className="flex items-center gap-3">
-                    <Maximize2 className="w-6 h-6 text-accent" />
+                  <div className="flex items-center gap-2">
+                    <Maximize2 className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                     <div>
-                      <p className="text-sm text-gray-500">{t('usableArea')}</p>
-                      <p className="text-xl font-bold text-primary">{dom.uzitkova_plocha} m²</p>
+                      <p className="text-xs text-gray-500">{t('usableArea')}</p>
+                      <p className="text-sm sm:text-base font-bold text-primary">{dom.uzitkova_plocha} m²</p>
                     </div>
                   </div>
                 )}
                 {dom.energeticky_certifikat && (
-                  <div className="flex items-center gap-3">
-                    <Zap className="w-6 h-6 text-green-600" />
+                  <div className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
                     <div>
-                      <p className="text-sm text-gray-500">{t('energyClass')}</p>
-                      <p className="text-xl font-bold text-primary">A0</p>
+                      <p className="text-xs text-gray-500">{t('energyClass')}</p>
+                      <p className="text-sm sm:text-base font-bold text-primary">A0</p>
                       {isTicabhouse && (
                         <p className="text-xs text-gray-500 mt-1">{t('a0CertificateOption')}</p>
                       )}
@@ -1906,17 +1904,17 @@ export default function DetailDomu() {
             )}
 
             {/* CTA Buttons */}
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
 
               <Link to={createPageUrl("Kontakt")}>
-                <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-lg py-6">
-                  <Mail className="mr-2 w-5 h-5" />
+                <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-sm sm:text-base py-4 sm:py-5">
+                  <Mail className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
                   {t('contactUsButton')}
                 </Button>
               </Link>
               <a href="tel:+421905138124">
-                <Button size="lg" variant="outline" className="w-full border-2 border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold text-lg py-6">
-                  <Phone className="mr-2 w-5 h-5" />
+                <Button size="lg" variant="outline" className="w-full border-2 border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold text-sm sm:text-base py-4 sm:py-5">
+                  <Phone className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
                   +421 905 138 124
                 </Button>
               </a>
