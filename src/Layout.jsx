@@ -112,16 +112,14 @@ function LayoutContent({ children }) {
       <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white shadow-md py-0`}
       >
-        <div className="container mx-auto px-2 sm:px-4">
-          {/* Language Flags Bar - Mobile Dropdown, Desktop Full */}
-          <div className="border-b border-gray-200 py-0.5 sm:py-1">
-            {/* Mobile - Dropdown */}
-            <div className="sm:hidden flex items-center justify-center">
+        <div className="container mx-auto px-2 sm:px-4 py-1">
+          <div className="flex items-center justify-between gap-2">
+            {/* Mobile - Language Dropdown */}
+            <div className="sm:hidden">
               <Popover>
                 <PopoverTrigger asChild>
-                  <button className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition-all">
-                    <span className="text-xl">{AVAILABLE_LANGUAGES.find(l => l.code === language)?.flag}</span>
-                    <span className="text-xs font-medium">{AVAILABLE_LANGUAGES.find(l => l.code === language)?.name}</span>
+                  <button className="flex items-center gap-1 px-2 py-1 rounded-md bg-primary text-white hover:bg-primary/90 transition-all">
+                    <span className="text-lg">{AVAILABLE_LANGUAGES.find(l => l.code === language)?.flag}</span>
                     <ChevronDown className="w-3 h-3" />
                   </button>
                 </PopoverTrigger>
@@ -146,32 +144,12 @@ function LayoutContent({ children }) {
               </Popover>
             </div>
 
-            {/* Desktop - Full Flags */}
-            <div className="hidden sm:flex items-center justify-center gap-3 flex-wrap">
-              {AVAILABLE_LANGUAGES.map((lang) => (
-                <button
-                  key={lang.code}
-                  onClick={() => setLanguage(lang.code)}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
-                    language === lang.code
-                      ? 'bg-primary text-white shadow-md'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  <span className="text-2xl">{lang.flag}</span>
-                  <span>{lang.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between py-1 sm:py-0">
-            <div className="flex-1 flex items-center justify-start lg:justify-start gap-2 sm:gap-3">
+            <div className="flex-1 flex items-center justify-center sm:justify-start gap-2 sm:gap-3">
               <Link to={createPageUrl("Domov")} className="group">
                 <img 
                   src={LOGO_URL} 
                   alt="American Living" 
-                  className="h-8 sm:h-10 md:h-12 lg:h-16 xl:h-20 w-auto transition-transform group-hover:scale-105"
+                  className="h-7 sm:h-10 md:h-12 lg:h-16 xl:h-20 w-auto transition-transform group-hover:scale-105"
                 />
               </Link>
 
@@ -208,7 +186,27 @@ function LayoutContent({ children }) {
               ))}
             </nav>
 
-            <div className="hidden lg:flex items-center gap-2 xl:gap-3">
+            <div className="hidden sm:flex items-center gap-1 sm:gap-2">
+            {/* Desktop - Language Flags */}
+            <div className="hidden lg:flex items-center gap-2 flex-wrap mr-2">
+              {AVAILABLE_LANGUAGES.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => setLanguage(lang.code)}
+                  className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium transition-all ${
+                    language === lang.code
+                      ? 'bg-primary text-white shadow-md'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  <span className="text-lg">{lang.flag}</span>
+                  <span>{lang.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="hidden lg:flex items-center gap-2 xl:gap-3">
               {isSuperAdmin && (
                 <>
                   <Link to={createPageUrl("AdminAnalyzaDomov")}>
