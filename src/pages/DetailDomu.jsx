@@ -14,6 +14,7 @@ import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
 import FloatingPrice from "../components/FloatingPrice";
 import DomGalerieManager from "../components/admin/DomGalerieManager";
 import KonfiguratorFlatDoubleInline from "../components/KonfiguratorFlatDoubleInline";
+import KonfiguratorFlatDouble from "../components/KonfiguratorFlatDouble";
 import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
 import KonfiguratorWizard from "../components/KonfiguratorWizard";
 import KonfiguratorFjord from "../components/KonfiguratorFjord";
@@ -1713,7 +1714,7 @@ export default function DetailDomu() {
             {/* Floating panel pre Flat Double */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorFlatDoubleInline 
+                <KonfiguratorFlatDouble 
                   dom={dom}
                   onReset={handleKonfiguratorReset}
                   montazHolodomu={montazHolodomu}
@@ -1771,7 +1772,6 @@ export default function DetailDomu() {
                   doprava={doprava}
                   setDoprava={setDoprava}
                   showOnlySummary={true}
-                  useFlat15Prices={false}
                 />
               </div>
             )}
