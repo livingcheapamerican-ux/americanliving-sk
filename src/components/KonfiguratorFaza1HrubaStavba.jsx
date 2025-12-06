@@ -136,9 +136,11 @@ export default function KonfiguratorFaza1HrubaStavba({
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
+  predlzenie, setPredlzenie,
   triggerAnimation,
   useNordPrices = false,
-  useFlat15Prices = false
+  useFlat15Prices = false,
+  useProstoHousePrices = false
 }) {
   // Ceny pre Flat 1,5
   const FLAT15_CENY = {
@@ -146,6 +148,15 @@ export default function KonfiguratorFaza1HrubaStavba({
     izolacia: { zvysena: 4400, premium: 8799 },
     zaklady: { skrutky: 6189, doska: 11909, pasove: 11860 }
   };
+
+  // Ceny pre Prosto House
+  const PROSTO_CENY = {
+    montaz: 9225,
+    predlzenie: { 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
+    izolacia: { zvysena: 2700, premium: 5400, ultra: 10125 },
+    zaklady: { skrutky: 4751, doska: 9633, pasove: 11823 }
+  };
+  
   const { t } = useLanguage();
   
   // Sekcia Header komponenta s animáciou
@@ -248,11 +259,47 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('assemblyYes')}
                 subtitle={t('phase1')}
-                price={useFlat15Prices ? `+ ${FLAT15_CENY.montaz.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 14 850 €" : "+ 17 970 €"}
+                price={useProstoHousePrices ? `+ ${PROSTO_CENY.montaz.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.montaz.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 14 850 €" : "+ 17 970 €"}
                 isPriced={true}
                 tooltip={t('assemblyNote')}
               />
-            </div>
+              </div>
+
+              {/* Predĺženie domu - len pre Prosto House */}
+              {useProstoHousePrices && setPredlzenie && (
+              <div className="col-span-2 sm:col-span-3 lg:col-span-4 p-4 border-[5px] border-indigo-600 rounded-2xl bg-indigo-100/70 shadow-xl">
+                <p className="text-xs font-bold text-indigo-700 mb-3 flex items-center gap-1">
+                  <span className="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xs font-extrabold">+</span>
+                  Predĺženie dĺžky domu (v násobkoch 1,2m)
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                  {[
+                    { value: 0, label: "Bez predĺženia", price: "0 €" },
+                    { value: 1.2, label: "+1,2 m", price: "+ 6 600 €" },
+                    { value: 2.4, label: "+2,4 m", price: "+ 13 200 €" },
+                    { value: 3.6, label: "+3,6 m", price: "+ 19 800 €" },
+                    { value: 4.8, label: "+4,8 m", price: "+ 26 400 €" }
+                  ].map((opt) => (
+                    <motion.div
+                      key={opt.value}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setPredlzenie(opt.value)}
+                      className={`p-3 rounded-lg cursor-pointer text-center transition-all ${
+                        predlzenie === opt.value 
+                          ? "bg-indigo-200 border-2 border-indigo-600 shadow-lg" 
+                          : "bg-white border-2 border-gray-200 hover:border-indigo-300"
+                      }`}
+                    >
+                      <Maximize className={`w-5 h-5 mx-auto mb-1 ${predlzenie === opt.value ? "text-indigo-600" : "text-gray-400"}`} />
+                      <span className="font-medium text-gray-800 text-xs block">{opt.label}</span>
+                      <span className={`text-xs ${opt.value === 0 ? "text-gray-400" : "text-green-600 font-bold"}`}>{opt.price}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+              )}
+              </div>
 
             {/* Izolácia - skupina */}
             <div className={`col-span-2 sm:col-span-3 lg:col-span-2 grid ${useNordPrices ? 'grid-cols-4' : 'grid-cols-3'} gap-2 sm:gap-3 p-4 border-[5px] border-cyan-600 rounded-2xl bg-cyan-100/70 shadow-xl`}>
@@ -279,9 +326,9 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={ThermometerSun}
                 iconColor="text-orange-400"
                 iconSelectedColor="text-amber-600"
-                title={useFlat15Prices ? "200/250mm" : useNordPrices ? "200mm" : t('insulationEnhanced')}
-                subtitle={useFlat15Prices ? "200/250mm" : useNordPrices ? "200mm" : t('insulationEnhancedDesc')}
-                price={useFlat15Prices ? `+ ${FLAT15_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 3 200 €" : "+ 5 799 €"}
+                title={useProstoHousePrices ? "200mm" : useFlat15Prices ? "200/250mm" : useNordPrices ? "200mm" : t('insulationEnhanced')}
+                subtitle={useProstoHousePrices ? "200mm" : useFlat15Prices ? "200/250mm" : useNordPrices ? "200mm" : t('insulationEnhancedDesc')}
+                price={useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 3 200 €" : "+ 5 799 €"}
                 isPriced={true}
                 tooltip={t('insulationEnhancedDesc')}
               />
@@ -292,9 +339,9 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={ThermometerSun}
                 iconColor="text-green-500"
                 iconSelectedColor="text-green-600"
-                title={useFlat15Prices ? "250/300mm" : useNordPrices ? "250mm" : t('insulationPremium')}
-                subtitle={useFlat15Prices ? "250/300mm" : useNordPrices ? "250mm" : t('insulationPremiumDesc')}
-                price={useFlat15Prices ? `+ ${FLAT15_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 6 400 €" : "+ 11 600 €"}
+                title={useProstoHousePrices ? "250mm" : useFlat15Prices ? "250/300mm" : useNordPrices ? "250mm" : t('insulationPremium')}
+                subtitle={useProstoHousePrices ? "250mm" : useFlat15Prices ? "250/300mm" : useNordPrices ? "250mm" : t('insulationPremiumDesc')}
+                price={useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 6 400 €" : "+ 11 600 €"}
                 isPriced={true}
                 isA0={true}
                 selectedBg="bg-green-100"
@@ -303,16 +350,16 @@ export default function KonfiguratorFaza1HrubaStavba({
                 tooltip={t('insulationPremiumDesc')}
               />
 
-              {useNordPrices && (
+              {(useNordPrices || useProstoHousePrices) && (
                 <Tile
                   selected={izolaciaNavysenie === "ultra"}
                   onClick={(e) => { if (izolaciaNavysenie !== "ultra") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("ultra"); }}
                   icon={ThermometerSun}
                   iconColor="text-green-600"
                   iconSelectedColor="text-green-700"
-                  title="Éxtra izolácia"
+                  title={useProstoHousePrices ? "300mm" : "Éxtra izolácia"}
                   subtitle="300mm"
-                  price="+ 12 000 €"
+                  price={useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : "+ 12 000 €"}
                   isPriced={true}
                   isA0={true}
                   selectedBg="bg-green-100"
@@ -321,7 +368,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                   tooltip="Maximálna izolácia 300mm pre extra energetickú efektívnosť"
                 />
               )}
-            </div>
+              </div>
 
             {/* Základy - skupina */}
             <div className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-4 border-[5px] border-orange-600 rounded-2xl bg-orange-100/70 shadow-xl">
@@ -348,9 +395,9 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={Landmark}
                 iconColor="text-amber-400"
                 iconSelectedColor="text-amber-600"
-                title={useFlat15Prices ? "Pilóty/Pätky" : t('foundationsScrews')}
+                title={useProstoHousePrices || useFlat15Prices ? "Pilóty/Pätky" : t('foundationsScrews')}
                 subtitle={t('groundFootings')}
-                price={useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 7 656 €" : "+ 8 140 €"}
+                price={useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 7 656 €" : "+ 8 140 €"}
                 isPriced={true}
                 tooltip={t('foundationsScrews')}
               />
@@ -363,7 +410,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsSlab')}
                 subtitle={t('foundationSlab')}
-                price={useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 12 461 €" : "+ 17 946 €"}
+                price={useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 12 461 €" : "+ 17 946 €"}
                 isPriced={true}
                 tooltip={t('foundationsSlab')}
               />
@@ -376,11 +423,11 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsStrip')}
                 subtitle={t('stripFound')}
-                price={useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 8 967 €" : "+ 21 079 €"}
+                price={useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 8 967 €" : "+ 21 079 €"}
                 isPriced={true}
                 tooltip={t('foundationsStrip')}
               />
-            </div>
+              </div>
 
           </div>
         </div>
