@@ -495,6 +495,7 @@ export default function KonfiguratorWizard({
               useNordPrices={useNordPrices}
               useFlat15Prices={useFlat15Prices}
               useProstoHousePrices={useProstoHousePrices}
+              useFjordPrices={useFjordPrices}
             />
           </div>
         );
