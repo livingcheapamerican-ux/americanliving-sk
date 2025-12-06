@@ -763,11 +763,12 @@ export default function DetailDomu() {
               />
             )}
 
-            {/* Konfigurátor pre Fjord - tiež s Wizard výberom typu */}
+            {/* Konfigurátor pre Fjord - Wizard výber typu */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
-              <KonfiguratorFjord 
+              <KonfiguratorWizard 
                 key={wizardKey}
                 dom={dom}
+                useFjordPrices={true}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
                 izolaciaNavysenie={izolaciaNavysenie}
@@ -1644,69 +1645,7 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Floating panel pre Fjord */}
-            {isProstoHouse && dom.nazov?.includes("Fjord") && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorFjord
-                  dom={dom}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
-                  setIzolaciaNavysenie={setIzolaciaNavysenie}
-                  zaklady={zaklady}
-                  setZaklady={setZaklady}
-                  vstupneDvere={vstupneDvere}
-                  setVstupneDvere={setVstupneDvere}
-                  elektroinstalacia={elektroinstalacia}
-                  setElektroinstalacia={setElektroinstalacia}
-                  vodaKanalizacia={vodaKanalizacia}
-                  setVodaKanalizacia={setVodaKanalizacia}
-                  sanitaKomplet={sanitaKomplet}
-                  setSanitaKomplet={setSanitaKomplet}
-                  bojler={bojler}
-                  setBojler={setBojler}
-                  tepelneCerpadlo={tepelneCerpadlo}
-                  setTepelneCerpadlo={setTepelneCerpadlo}
-                  rekuperacia={rekuperacia}
-                  setRekuperacia={setRekuperacia}
-                  pripojkaSiete={pripojkaSiete}
-                  setPripojkaSiete={setPripojkaSiete}
-                  stresneOkno={stresneOkno}
-                  setStresneOkno={setStresneOkno}
-                  bocneOknoFixne={bocneOknoFixne}
-                  setBocneOknoFixne={setBocneOknoFixne}
-                  bocneOknoVyklopne90={bocneOknoVyklopne90}
-                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                  bocneOknoVyklopne55={bocneOknoVyklopne55}
-                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                  povrchokaOkien={povrchokaOkien}
-                  setPovrchokaOkien={setPovrchokaOkien}
-                  tonovaneSkla={tonovaneSkla}
-                  setTonovaneSkla={setTonovaneSkla}
-                  vonkajsiaFasada={vonkajsiaFasada}
-                  setVonkajsiaFasada={setVonkajsiaFasada}
-                  interierFinis={interierFinis}
-                  setInterierFinis={setInterierFinis}
-                  vnutornePodlahy={vnutornePodlahy}
-                  setVnutornePodlahy={setVnutornePodlahy}
-                  podlahovVykurovanie={podlahovVykurovanie}
-                  setPodlahovVykurovanie={setPodlahovVykurovanie}
-                  interieroveDvere={interieroveDvere}
-                  setInterieroveDvere={setInterieroveDvere}
-                  pergola={pergola}
-                  setPergola={setPergola}
-                  inziniering={inziniering}
-                  setInziniering={setInziniering}
-                  projektA0={projektA0}
-                  setProjektA0={setProjektA0}
-                  revizna={revizna}
-                  setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                  showOnlySummary={true}
-                />
-              </div>
-            )}
+
 
             {/* Floating panel pre Flat Double */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
