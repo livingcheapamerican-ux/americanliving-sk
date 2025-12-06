@@ -165,7 +165,7 @@ export default function KonfiguratorFaza1HrubaStavba({
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className={`relative flex items-center gap-2 sm:gap-4 p-3 sm:p-5 bg-gradient-to-r ${color} overflow-hidden`}
+      className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${color} overflow-hidden`}
     >
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl"></div>
@@ -180,23 +180,23 @@ export default function KonfiguratorFaza1HrubaStavba({
       
       <motion.div 
         whileHover={{ scale: 1.1, rotate: 5 }}
-        className="relative flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 bg-white/25 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-white/20"
+        className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white/25 backdrop-blur-sm rounded-lg sm:rounded-xl shadow-lg border border-white/20"
       >
-        <Icon className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
+        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
       </motion.div>
       <div className="relative flex-1">
-        <div className="flex items-center gap-2 sm:gap-3 mb-0.5 sm:mb-1">
+        <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
           <motion.span 
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring" }}
-            className="inline-flex items-center justify-center px-2 sm:px-3 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider"
+            className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[9px] sm:text-xs font-bold uppercase tracking-wider"
           >
             {t('phase')} {step}
           </motion.span>
         </div>
-        <h3 className="text-lg sm:text-2xl font-bold text-white tracking-tight">{title}</h3>
-        {subtitle && <p className="text-white/80 text-xs sm:text-sm mt-0.5 sm:mt-1">{subtitle}</p>}
+        <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight">{title}</h3>
+        {subtitle && <p className="text-white/80 text-[10px] sm:text-xs mt-0.5">{subtitle}</p>}
       </div>
     </motion.div>
   );
