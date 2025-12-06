@@ -344,7 +344,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsScrews')}
                 subtitle={t('groundFootings')}
-                price={useFlat15Prices ? "+ 6 348 €" : useNordPrices ? "+ 7 656 €" : "+ 8 140 €"}
+                price={useFlat15Prices ? "+ 6 189 €" : useNordPrices ? "+ 7 656 €" : "+ 8 140 €"}
                 isPriced={true}
                 tooltip={t('foundationsScrews')}
               />
