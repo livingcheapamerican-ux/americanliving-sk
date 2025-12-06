@@ -184,6 +184,14 @@ export default function KonfiguratorFlatDoubleInline({
 
   // Detekcia či je Flat 1,5
   const isFlat15 = dom?.nazov?.includes("1,5") || dom?.nazov?.includes("1.5");
+  
+  // Debug console log
+  console.log("DEBUG Flat 1,5 detekcia:", {
+    nazov: dom?.nazov,
+    isFlat15: isFlat15,
+    obsahuje15: dom?.nazov?.includes("1,5"),
+    obsahuje15bodka: dom?.nazov?.includes("1.5")
+  });
 
   // Cenník - dynamický podľa typu domu
   const CENY = isFlat15 ? {
