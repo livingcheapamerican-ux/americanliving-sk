@@ -202,7 +202,7 @@ export default function KonfiguratorFlatDoubleInline({
     interierFinis: { ziadne: 0, drevo: 12700, sadrokarton: 14545 },
     vonkajsiaFasada: { standard: 0, suchana: 10395 },
     povrchokaOkien: 2400,
-    vnutornePodlahy: 2840,
+    vnutornePodlahy: 2640,
     podlahovVykurovanie: 4316,
     pergola: 1845,
     interieroveDvere: 180,
@@ -1003,7 +1003,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-emerald-600"
               title={t('floors')}
               subtitle={t('floorsLaminate')}
-              price={useFlat15Prices ? "+ 2 840 €" : "+ 3 351 €"}
+              price={useFlat15Prices ? "+ 2 640 €" : "+ 3 351 €"}
               isPriced={true}
               selectedBg="bg-emerald-100"
               selectedBorder="border-emerald-500"
