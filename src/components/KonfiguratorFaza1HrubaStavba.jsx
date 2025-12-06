@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { 
-  Check, Wrench, ThermometerSun, Landmark, Package, Sparkles
+  Check, Wrench, ThermometerSun, Landmark, Package, Sparkles, Maximize
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "./LanguageContext";
@@ -263,10 +263,10 @@ export default function KonfiguratorFaza1HrubaStavba({
                 isPriced={true}
                 tooltip={t('assemblyNote')}
               />
-              </div>
+            </div>
 
-              {/* Predĺženie domu - len pre Prosto House */}
-              {useProstoHousePrices && setPredlzenie && (
+            {/* Predĺženie domu - len pre Prosto House */}
+            {useProstoHousePrices && setPredlzenie && (
               <div className="col-span-2 sm:col-span-3 lg:col-span-4 p-4 border-[5px] border-indigo-600 rounded-2xl bg-indigo-100/70 shadow-xl">
                 <p className="text-xs font-bold text-indigo-700 mb-3 flex items-center gap-1">
                   <span className="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xs font-extrabold">+</span>
@@ -298,11 +298,10 @@ export default function KonfiguratorFaza1HrubaStavba({
                   ))}
                 </div>
               </div>
-              )}
-              </div>
+            )}
 
             {/* Izolácia - skupina */}
-            <div className={`col-span-2 sm:col-span-3 lg:col-span-2 grid ${useNordPrices ? 'grid-cols-4' : 'grid-cols-3'} gap-2 sm:gap-3 p-4 border-[5px] border-cyan-600 rounded-2xl bg-cyan-100/70 shadow-xl`}>
+            <div className={`col-span-2 sm:col-span-3 lg:col-span-2 grid ${useNordPrices || useProstoHousePrices ? 'grid-cols-4' : 'grid-cols-3'} gap-2 sm:gap-3 p-4 border-[5px] border-cyan-600 rounded-2xl bg-cyan-100/70 shadow-xl`}>
               <p className={`${useNordPrices ? 'col-span-4' : 'col-span-3'} text-[10px] sm:text-xs font-bold text-cyan-700 -mb-1 flex items-center gap-1`}>
                 <span className="w-5 h-5 sm:w-6 sm:h-6 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
                 {t('insulation')} ({t('selectOne')})
@@ -368,7 +367,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                   tooltip="Maximálna izolácia 300mm pre extra energetickú efektívnosť"
                 />
               )}
-              </div>
+            </div>
 
             {/* Základy - skupina */}
             <div className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-4 border-[5px] border-orange-600 rounded-2xl bg-orange-100/70 shadow-xl">
@@ -427,7 +426,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 isPriced={true}
                 tooltip={t('foundationsStrip')}
               />
-              </div>
+            </div>
 
           </div>
         </div>
