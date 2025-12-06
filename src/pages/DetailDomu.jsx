@@ -703,6 +703,7 @@ export default function DetailDomu() {
               <KonfiguratorWizard 
                 key={wizardKey}
                 dom={dom}
+                useProstoHousePrices={true}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
                 izolaciaNavysenie={izolaciaNavysenie}
