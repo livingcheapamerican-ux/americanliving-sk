@@ -1506,7 +1506,7 @@ export default function DetailDomu() {
                     setRevizna={setRevizna}
                     doprava={doprava}
                     setDoprava={setDoprava}
-                    showOnlySummary={true}
+                    showOnlySummary={false}
                     useFlat15Prices={true}
                   />
                 ) : dom.nazov?.includes("Fjord") ? (
