@@ -217,7 +217,7 @@ export default function KonfiguratorFlatDoubleInline({
     montaz: { nie: 0, ano: 17970 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
     izolacia: { standard: 0, zvysena: 5799, premium: 11600 },
-    elektroinstalacia: 7800,
+    elektroinstalacia: 7400,
     vodaKanalizacia: 2380,
     sanitaKomplet: 1169,
     bojler: 246,
@@ -726,7 +726,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-yellow-600"
                 title={t('electrical')}
                 subtitle={t('wiring')}
-                price={useFlat15Prices ? "+ 5 200 €" : "+ 7 800 €"}
+                price={useFlat15Prices ? "+ 5 200 €" : "+ 7 400 €"}
                 isPriced={true}
                 selectedBg="bg-yellow-100"
                 selectedBorder="border-yellow-500"
