@@ -1514,9 +1514,10 @@ export default function DetailDomu() {
                     setDoprava={setDoprava}
                     showOnlySummary={true}
                   />
-                ) : (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) ? (
-                  <KonfiguratorWizard
-                    key={wizardKey}
+                ) : dom.nazov?.includes("Fjord") ? (
+                  <KonfiguratorFjord
+                    dom={dom}
+                    onReset={handleKonfiguratorReset}
                     dom={dom}
                     montazHolodomu={montazHolodomu}
                     setMontazHolodomu={setMontazHolodomu}
@@ -1574,7 +1575,7 @@ export default function DetailDomu() {
                     setDoprava={setDoprava}
                     useFlat15Prices={true}
                   />
-                ) : dom.nazov?.includes("Fjord") ? (
+                ) : (
                   <KonfiguratorFjord
                     dom={dom}
                     onReset={handleKonfiguratorReset}
