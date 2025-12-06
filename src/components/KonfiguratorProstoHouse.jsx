@@ -177,12 +177,12 @@ export default function KonfiguratorProstoHouse({
   const CENY = {
     montaz: { nie: 0, ano: 9225 },
     predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
-    dvere: { ziadne: 0, kovove: 720, plastove: 560 },
+    dvere: { ziadne: 0, kovove: 720, plastove: 660 },
     izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 },
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
-    bojler: 244,
+    bojler: 264,
     tepelneCerpadlo: 3321,
     rekuperacia: 1600,
     zaklady: { bez: 0, skrutky: 4751, doska: 9633, pasove: 11823 },
@@ -190,7 +190,7 @@ export default function KonfiguratorProstoHouse({
     inziniering: 2592,
     projektA0: 3500,
     interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 9430 },
-    vonkajsiaFasada: { standard: 0, suchana: 4371 },
+    vonkajsiaFasada: { standard: 0, suchana: 6371 },
     povrchokaOkien: 1450,
     vnutornePodlahy: 1750,
     podlahovVykurovanie: 3960,
@@ -682,7 +682,7 @@ export default function KonfiguratorProstoHouse({
                       iconSelectedColor="text-orange-600"
                       title={t('boiler')}
                       subtitle={t('boilerElectric')}
-                      price="+ 244 €"
+                      price="+ 264 €"
                       isPriced={true}
                       selectedBg="bg-orange-100"
                       selectedBorder="border-orange-500"
@@ -794,7 +794,7 @@ export default function KonfiguratorProstoHouse({
                     {[
                       { value: "ziadne", label: t('doorStandard'), price: "0 €" },
                       { value: "kovove", label: t('doorMetal'), price: "+ 720 €" },
-                      { value: "plastove", label: t('doorPlastic'), price: "+ 560 €" }
+                      { value: "plastove", label: t('doorPlastic'), price: "+ 660 €" }
                     ].map((opt) => (
                       <motion.div
                         key={opt.value}
@@ -893,7 +893,7 @@ export default function KonfiguratorProstoHouse({
                       iconSelectedColor="text-emerald-600"
                       title={t('facadeStucco')}
                       subtitle={t('whitePlaster')}
-                      price="+ 4 371 €"
+                      price="+ 6 371 €"
                       isPriced={true}
                       selectedBg="bg-emerald-100"
                       selectedBorder="border-emerald-500"
