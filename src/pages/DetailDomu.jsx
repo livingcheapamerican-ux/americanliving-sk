@@ -1773,6 +1773,7 @@ export default function DetailDomu() {
                   doprava={doprava}
                   setDoprava={setDoprava}
                   showOnlySummary={true}
+                  useFlat15Prices={false}
                 />
               </div>
             )}
