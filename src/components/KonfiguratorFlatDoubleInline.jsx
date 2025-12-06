@@ -693,7 +693,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-blue-600"
                 title={t('interiorWood')}
                 subtitle={t('woodCladding')}
-                price={useFlat15Prices ? "+ 12 700 €" : "+ 8 200 €"}
+                price={useFlat15Prices ? "+ 12 700 €" : "+ 16 400 €"}
                 isPriced={true}
                 tooltip={t('interiorWood')}
               />
@@ -706,7 +706,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-blue-600"
                 title={t('interiorDrywall')}
                 subtitle={t('plaster')}
-                price={useFlat15Prices ? "+ 14 545 €" : "+ 9 430 €"}
+                price={useFlat15Prices ? "+ 14 545 €" : "+ 19 475 €"}
                 isPriced={true}
                 tooltip={t('interiorDrywall')}
               />
@@ -726,7 +726,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-yellow-600"
                 title={t('electrical')}
                 subtitle={t('wiring')}
-                price={useFlat15Prices ? "+ 5 200 €" : "+ 3 900 €"}
+                price={useFlat15Prices ? "+ 5 200 €" : "+ 7 800 €"}
                 isPriced={true}
                 selectedBg="bg-yellow-100"
                 selectedBorder="border-yellow-500"
@@ -743,7 +743,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-blue-600"
                 title={t('water')}
                 subtitle={t('wiring')}
-                price={useFlat15Prices ? "+ 2 100 €" : "+ 1 150 €"}
+                price={useFlat15Prices ? "+ 2 100 €" : "+ 2 380 €"}
                 isPriced={true}
                 tooltip={t('waterFull')}
               />
@@ -762,21 +762,21 @@ export default function KonfiguratorFlatDoubleInline({
               />
 
               <Tile
-              selected={bojler}
-              onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }}
-              icon={Flame}
-              iconColor="text-orange-400"
-              iconSelectedColor="text-orange-600"
-              title={t('boiler')}
-              subtitle={t('boilerElectric')}
-              price="+ 264 €"
-              isPriced={true}
-                selectedBg="bg-orange-100"
-                selectedBorder="border-orange-500"
-                selectedRing="ring-orange-300"
-                hoverBorder="hover:border-orange-300"
-                tooltip={t('boiler')}
-              />
+                selected={bojler}
+                onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }}
+                icon={Flame}
+                iconColor="text-orange-400"
+                iconSelectedColor="text-orange-600"
+                title={t('boiler')}
+                subtitle={t('boilerElectric')}
+                price={useFlat15Prices ? "+ 264 €" : "+ 246 €"}
+                isPriced={true}
+                  selectedBg="bg-orange-100"
+                  selectedBorder="border-orange-500"
+                  selectedRing="ring-orange-300"
+                  hoverBorder="hover:border-orange-300"
+                  tooltip={t('boiler')}
+                />
               </div>
 
               {/* Klimatizácia a vetranie - A0 skupina */}
@@ -793,7 +793,7 @@ export default function KonfiguratorFlatDoubleInline({
                   iconSelectedColor="text-green-600"
                   title={t('heatPump')}
                   subtitle={t('units5')}
-                  price={useFlat15Prices ? "+ 4 428 €" : "+ 3 321 €"}
+                  price={useFlat15Prices ? "+ 4 428 €" : "+ 5 535 €"}
                   isPriced={true}
                   isA0={true}
                   selectedBg="bg-green-100"
@@ -810,7 +810,7 @@ export default function KonfiguratorFlatDoubleInline({
                   iconSelectedColor="text-green-600"
                   title={t('recuperation')}
                   subtitle={t('units5')}
-                  price={useFlat15Prices ? "+ 2 200 €" : "+ 1 600 €"}
+                  price={useFlat15Prices ? "+ 2 200 €" : "+ 2 700 €"}
                   isPriced={true}
                   isA0={true}
                   selectedBg="bg-green-100"
@@ -845,7 +845,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-slate-700"
                 title={t('lamination')}
                 subtitle={t('laminationAnthracite')}
-                price={useFlat15Prices ? "+ 2 400 €" : "+ 1 450 €"}
+                price={useFlat15Prices ? "+ 2 400 €" : "+ 3 100 €"}
                 isPriced={true}
                 selectedBg="bg-slate-200"
                 selectedBorder="border-slate-600"
@@ -862,7 +862,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-amber-600"
                 title={t('tintedGlass')}
                 subtitle={t('solarGlass')}
-                price={useFlat15Prices ? "+ 840 €" : "+ 700 €"}
+                price={useFlat15Prices ? "+ 840 €" : "+ 1 300 €"}
                 isPriced={true}
                 selectedBg="bg-amber-100"
                 selectedBorder="border-amber-500"
@@ -908,10 +908,10 @@ export default function KonfiguratorFlatDoubleInline({
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {[
-                  { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: "760 €" },
-                  { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: "500 €" },
-                  { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: "540 €" },
-                  { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: "225 €" }
+                  { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: useFlat15Prices ? "760 €" : "760 €" },
+                  { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: useFlat15Prices ? "501 €" : "501 €" },
+                  { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: useFlat15Prices ? "540 €" : "540 €" },
+                  { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: useFlat15Prices ? "225 €" : "325 €" }
                 ].map((opt, idx) => (
                 <div key={idx} className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
                   <span className="font-medium text-gray-800 text-[10px] sm:text-xs block mb-1">{opt.label}</span>
@@ -987,7 +987,7 @@ export default function KonfiguratorFlatDoubleInline({
                 iconSelectedColor="text-emerald-600"
                 title={t('facadeStucco')}
                 subtitle={t('whitePlaster')}
-                price={useFlat15Prices ? "+ 10 385 €" : "+ 6 371 €"}
+                price={useFlat15Prices ? "+ 10 385 €" : "+ 12 841 €"}
                 isPriced={true}
                 selectedBg="bg-emerald-100"
                 selectedBorder="border-emerald-500"
@@ -1005,7 +1005,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-emerald-600"
               title={t('floors')}
               subtitle={t('floorsLaminate')}
-              price={useFlat15Prices ? "+ 2 640 €" : "+ 1 750 €"}
+              price={useFlat15Prices ? "+ 2 640 €" : "+ 3 351 €"}
               isPriced={true}
               selectedBg="bg-emerald-100"
               selectedBorder="border-emerald-500"
@@ -1022,7 +1022,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-orange-600"
               title={t('floorHeating')}
               subtitle={t('wifiThermostat')}
-              price={useFlat15Prices ? "+ 4 316 €" : "+ 3 960 €"}
+              price={useFlat15Prices ? "+ 4 316 €" : "+ 5 525 €"}
               isPriced={true}
               selectedBg="bg-orange-100"
               selectedBorder="border-orange-500"
@@ -1039,7 +1039,7 @@ export default function KonfiguratorFlatDoubleInline({
               iconSelectedColor="text-emerald-600"
               title={t('pergola')}
               subtitle={t('terrace')}
-              price="+ 1 845 €"
+              price={useFlat15Prices ? "+ 1 845 €" : "+ 1 845 €"}
               isPriced={true}
               selectedBg="bg-emerald-100"
               selectedBorder="border-emerald-500"
@@ -1057,7 +1057,7 @@ export default function KonfiguratorFlatDoubleInline({
                 <DoorOpen className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-600" />
                 <div>
                   <span className="font-semibold text-gray-800 text-xs sm:text-sm">{t('interiorDoors')}</span>
-                  <span className="text-green-600 font-bold text-xs ml-2">× {CENY.interieroveDvere} €</span>
+                  <span className="text-green-600 font-bold text-xs ml-2">× 180 €</span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
