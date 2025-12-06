@@ -144,6 +144,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
 export default function KonfiguratorFlatDoubleInline({ 
   dom,
   onReset,
+  useFlat15Prices = false,
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
@@ -183,7 +184,35 @@ export default function KonfiguratorFlatDoubleInline({
   const { t } = useLanguage();
 
   // Cenník - dynamický podľa typu domu
-  const CENY = {
+  const CENY = useFlat15Prices ? {
+    montaz: { nie: 0, ano: 13470 },
+    dvere: { ziadne: 0, kovove: 720, plastove: 660 },
+    izolacia: { standard: 0, zvysena: 4400, premium: 8799 },
+    elektroinstalacia: 5200,
+    vodaKanalizacia: 2100,
+    sanitaKomplet: 1169,
+    bojler: 246,
+    tepelneCerpadlo: 4428,
+    rekuperacia: 2200,
+    zaklady: { bez: 0, skrutky: 6189, doska: 11909, pasove: 11860 },
+    pripojkaSiete: 1501,
+    inziniering: 2592,
+    projektA0: 3500,
+    interierFinis: { ziadne: 0, drevo: 12700, sadrokarton: 14545 },
+    vonkajsiaFasada: { standard: 0, suchana: 10395 },
+    povrchokaOkien: 2400,
+    vnutornePodlahy: 2840,
+    podlahovVykurovanie: 4316,
+    pergola: 1845,
+    interieroveDvere: 180,
+    tonovaneSkla: 840,
+    doprava: 0,
+    revizna: 501,
+    stresneOkno: 760,
+    bocneOknoFixne: 500,
+    bocneOknoVyklopne90: 540,
+    bocneOknoVyklopne55: 225
+  } : {
     montaz: { nie: 0, ano: 17970 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
     izolacia: { standard: 0, zvysena: 5799, premium: 11600 },
@@ -613,7 +642,7 @@ export default function KonfiguratorFlatDoubleInline({
             zaklady={zaklady}
             setZaklady={setZaklady}
             triggerAnimation={triggerAnimation}
-            useFlat15Prices={isFlat15}
+            useFlat15Prices={useFlat15Prices}
           />
         )}
 
