@@ -619,6 +619,7 @@ export default function KonfiguratorFlatDoubleInline({
           }
 
   // Určenie, ktoré sekcie zobraziť
+  const showHruba = !showOnlyPhase || showOnlyPhase === "hruba";
   const showHolodom = !showOnlyPhase || showOnlyPhase === "holodom";
   const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
