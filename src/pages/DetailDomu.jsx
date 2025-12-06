@@ -1756,9 +1756,14 @@ export default function DetailDomu() {
                   doprava={doprava}
                   setDoprava={setDoprava}
                   showOnlySummary={true}
-                  useFlat15Prices={true}
                   />
-                ) : dom.nazov?.includes("Fjord") ? (
+                  )}
+                  </div>
+                  )}
+
+                  {/* Floating panel pre Fjord */}
+                  {isProstoHouse && dom.nazov?.includes("Fjord") && (
+                  <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                   <KonfiguratorFjord
                     dom={dom}
                     onReset={handleKonfiguratorReset}
