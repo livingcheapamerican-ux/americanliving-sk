@@ -1451,8 +1451,8 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Floating Konfigurátor Súhrn - pre všetky Prosto House domy - hned pod zakladnu konfiguraciu */}
-            {isProstoHouse && (
+            {/* Floating Konfigurátor Súhrn - pre všetky Prosto House domy okrem Flat 1,5 */}
+            {isProstoHouse && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 {dom.nazov?.includes("Nord") ? (
                   <KonfiguratorNord
