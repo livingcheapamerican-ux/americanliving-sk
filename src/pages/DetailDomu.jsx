@@ -1534,6 +1534,7 @@ export default function DetailDomu() {
                   </div>
                 </Card>
               </div>
+              </div>
             )}
 
             {/* Floating panel s cenami pre Flat 1,5 - pravá strana */}
