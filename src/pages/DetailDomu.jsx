@@ -1051,7 +1051,7 @@ export default function DetailDomu() {
                     className="w-full h-auto object-cover"
                   />
                 </div>
-                <p className="text-sm text-blue-800 mt-3 text-center font-medium">
+                <p className="text-xs sm:text-sm text-blue-800 mt-2 text-center font-medium">
                   {t('basicConfigDesc')}
                 </p>
               </Card>
