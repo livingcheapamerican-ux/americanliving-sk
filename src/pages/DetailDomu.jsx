@@ -1310,61 +1310,61 @@ export default function DetailDomu() {
                     <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="text-xs sm:text-sm text-amber-900 font-semibold mb-1">
-                        Základná cena je za samotnú konštrukciu bez montážnych prác.
+                        {t('basePriceNote')}
                       </p>
                       <p className="text-xs sm:text-sm text-amber-800">
-                        Cenu montáže si môžete vypočítať v konfigurátore.
+                        {t('basePriceNoteDesc')}
                       </p>
                     </div>
                   </div>
                   
                   <div className="mt-3 pt-3 border-t border-amber-300">
-                    <p className="text-xs sm:text-sm font-bold text-amber-900 mb-2">Montážna sada domu:</p>
+                    <p className="text-xs sm:text-sm font-bold text-amber-900 mb-2">{t('assemblyKitTitle')}</p>
                     <ul className="space-y-1 text-xs sm:text-sm text-amber-800">
                       <li className="flex items-start gap-2">
                         <span className="text-amber-600 mt-0.5">•</span>
-                        <span>drevený rám domu</span>
+                        <span>{t('assemblyKitWoodenFrame')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-amber-600 mt-0.5">•</span>
-                        <span>vonkajšia fasáda (falzplech a drevený obklad)</span>
+                        <span>{t('assemblyKitExteriorFacade')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-amber-600 mt-0.5">•</span>
-                        <span>okná</span>
+                        <span>{t('assemblyKitWindows')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-amber-600 mt-0.5">•</span>
-                        <span>dvere</span>
+                        <span>{t('assemblyKitDoors')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-amber-600 mt-0.5">•</span>
-                        <span>hydroizolačná fólia</span>
+                        <span>{t('assemblyKitHydroFoil')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-amber-600 mt-0.5">•</span>
-                        <span>tepelná izolácia, 200 mm steny, 250 mm strecha</span>
+                        <span>{t('assemblyKitInsulation')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-amber-600 mt-0.5">•</span>
-                        <span>parozábrana</span>
+                        <span>{t('assemblyKitVaporBarrier')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-amber-600 mt-0.5">•</span>
-                        <span>hrubá podlaha z OSB dosiek</span>
+                        <span>{t('assemblyKitRoughFloor')}</span>
                       </li>
                     </ul>
                   </div>
                   
                   <div className="mt-3 pt-3 border-t border-amber-300 space-y-1.5">
                     <p className="text-xs sm:text-sm text-red-700 font-medium">
-                      Cena schodiska nie je zahrnutá v základnej ponuke.
+                      {t('assemblyKitStairsNotIncluded')}
                     </p>
                     <p className="text-xs sm:text-sm text-amber-800">
-                      Farbu na natieranie vonkajších fasád zabezpečuje objednávateľ.
+                      {t('assemblyKitPaintClient')}
                     </p>
                     <p className="text-xs sm:text-sm text-amber-800">
-                      Cena natierania fasády nie je zahrnutá v základnej ponuke, určuje sa dodatočne podľa skutočne natretej plochy.
+                      {t('assemblyKitPaintingNotIncluded')}
                     </p>
                   </div>
                 </div>
