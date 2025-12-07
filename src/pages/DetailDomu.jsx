@@ -708,6 +708,8 @@ export default function DetailDomu() {
               />
             )}
 
+
+
             {/* Konfigurátor - Wizard krok po kroku pre Flat Double (ale nie Flat 1,5) */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
               <KonfiguratorWizard 
@@ -838,7 +840,70 @@ export default function DetailDomu() {
               />
             )}
 
-
+            {/* Konfigurátor pre Nord - vlastné ceny */}
+            {isProstoHouse && dom.nazov?.includes("Nord") && (
+              <KonfiguratorWizard
+                key={wizardKey}
+                dom={dom}
+                useNordPrices={true}
+                typStavby={typStavby}
+                setTypStavby={setTypStavby}
+                montazHolodomu={montazHolodomu}
+                setMontazHolodomu={setMontazHolodomu}
+                izolaciaNavysenie={izolaciaNavysenie}
+                setIzolaciaNavysenie={setIzolaciaNavysenie}
+                zaklady={zaklady}
+                setZaklady={setZaklady}
+                vstupneDvere={vstupneDvere}
+                setVstupneDvere={setVstupneDvere}
+                elektroinstalacia={elektroinstalacia}
+                setElektroinstalacia={setElektroinstalacia}
+                vodaKanalizacia={vodaKanalizacia}
+                setVodaKanalizacia={setVodaKanalizacia}
+                sanitaKomplet={sanitaKomplet}
+                setSanitaKomplet={setSanitaKomplet}
+                bojler={bojler}
+                setBojler={setBojler}
+                tepelneCerpadlo={tepelneCerpadlo}
+                setTepelneCerpadlo={setTepelneCerpadlo}
+                rekuperacia={rekuperacia}
+                setRekuperacia={setRekuperacia}
+                pripojkaSiete={pripojkaSiete}
+                setPripojkaSiete={setPripojkaSiete}
+                stresneOkno={stresneOkno}
+                setStresneOkno={setStresneOkno}
+                bocneOknoFixne={bocneOknoFixne}
+                setBocneOknoFixne={setBocneOknoFixne}
+                bocneOknoVyklopne90={bocneOknoVyklopne90}
+                setBocneOknoVyklopne90={setBocneOknoVyklopne90}
+                bocneOknoVyklopne55={bocneOknoVyklopne55}
+                setBocneOknoVyklopne55={setBocneOknoVyklopne55}
+                povrchokaOkien={povrchokaOkien}
+                setPovrchokaOkien={setPovrchokaOkien}
+                tonovaneSkla={tonovaneSkla}
+                setTonovaneSkla={setTonovaneSkla}
+                vonkajsiaFasada={vonkajsiaFasada}
+                setVonkajsiaFasada={setVonkajsiaFasada}
+                interierFinis={interierFinis}
+                setInterierFinis={setInterierFinis}
+                vnutornePodlahy={vnutornePodlahy}
+                setVnutornePodlahy={setVnutornePodlahy}
+                podlahovVykurovanie={podlahovVykurovanie}
+                setPodlahovVykurovanie={setPodlahovVykurovanie}
+                interieroveDvere={interieroveDvere}
+                setInterieroveDvere={setInterieroveDvere}
+                pergola={pergola}
+                setPergola={setPergola}
+                inziniering={inziniering}
+                setInziniering={setInziniering}
+                projektA0={projektA0}
+                setProjektA0={setProjektA0}
+                revizna={revizna}
+                setRevizna={setRevizna}
+                doprava={doprava}
+                setDoprava={setDoprava}
+              />
+            )}
 
             {/* Konfigurátor pre Flat 72 - Wizard */}
             {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
@@ -970,73 +1035,6 @@ export default function DetailDomu() {
               />
             )}
 
-            {/* Konfigurátor pre Nord - vlastné ceny */}
-            {isProstoHouse && dom.nazov?.includes("Nord") && (
-              <KonfiguratorWizard
-                key={wizardKey}
-                dom={dom}
-                useNordPrices={true}
-                typStavby={typStavby}
-                setTypStavby={setTypStavby}
-                montazHolodomu={montazHolodomu}
-                setMontazHolodomu={setMontazHolodomu}
-                izolaciaNavysenie={izolaciaNavysenie}
-                setIzolaciaNavysenie={setIzolaciaNavysenie}
-                zaklady={zaklady}
-                setZaklady={setZaklady}
-                vstupneDvere={vstupneDvere}
-                setVstupneDvere={setVstupneDvere}
-                elektroinstalacia={elektroinstalacia}
-                setElektroinstalacia={setElektroinstalacia}
-                vodaKanalizacia={vodaKanalizacia}
-                setVodaKanalizacia={setVodaKanalizacia}
-                sanitaKomplet={sanitaKomplet}
-                setSanitaKomplet={setSanitaKomplet}
-                bojler={bojler}
-                setBojler={setBojler}
-                tepelneCerpadlo={tepelneCerpadlo}
-                setTepelneCerpadlo={setTepelneCerpadlo}
-                rekuperacia={rekuperacia}
-                setRekuperacia={setRekuperacia}
-                pripojkaSiete={pripojkaSiete}
-                setPripojkaSiete={setPripojkaSiete}
-                stresneOkno={stresneOkno}
-                setStresneOkno={setStresneOkno}
-                bocneOknoFixne={bocneOknoFixne}
-                setBocneOknoFixne={setBocneOknoFixne}
-                bocneOknoVyklopne90={bocneOknoVyklopne90}
-                setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                bocneOknoVyklopne55={bocneOknoVyklopne55}
-                setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                povrchokaOkien={povrchokaOkien}
-                setPovrchokaOkien={setPovrchokaOkien}
-                tonovaneSkla={tonovaneSkla}
-                setTonovaneSkla={setTonovaneSkla}
-                vonkajsiaFasada={vonkajsiaFasada}
-                setVonkajsiaFasada={setVonkajsiaFasada}
-                interierFinis={interierFinis}
-                setInterierFinis={setInterierFinis}
-                vnutornePodlahy={vnutornePodlahy}
-                setVnutornePodlahy={setVnutornePodlahy}
-                podlahovVykurovanie={podlahovVykurovanie}
-                setPodlahovVykurovanie={setPodlahovVykurovanie}
-                interieroveDvere={interieroveDvere}
-                setInterieroveDvere={setInterieroveDvere}
-                pergola={pergola}
-                setPergola={setPergola}
-                inziniering={inziniering}
-                setInziniering={setInziniering}
-                projektA0={projektA0}
-                setProjektA0={setProjektA0}
-                revizna={revizna}
-                setRevizna={setRevizna}
-                doprava={doprava}
-                setDoprava={setDoprava}
-              />
-            )}
-
-            {/* Pôdorysy */}
-
             {/* Pôdorysy */}
             {dom.podorysy && dom.podorysy.length > 0 && (
               <Card className="p-3 sm:p-4">
@@ -1127,7 +1125,7 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Konfigurátor pre Barn Double - Wizard - PO POPISE */}
+            {/* Konfigurátor pre Barn - Wizard - PO POPISE */}
             {isProstoHouse && dom.nazov?.includes("Barn") && (
               <KonfiguratorWizard
                 key={wizardKey}
@@ -1923,78 +1921,13 @@ export default function DetailDomu() {
               </div>
             )}
 
+
+
             {/* Floating panel pre Fjord */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFjord
                   dom={dom}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
-                  setIzolaciaNavysenie={setIzolaciaNavysenie}
-                  zaklady={zaklady}
-                  setZaklady={setZaklady}
-                  vstupneDvere={vstupneDvere}
-                  setVstupneDvere={setVstupneDvere}
-                  elektroinstalacia={elektroinstalacia}
-                  setElektroinstalacia={setElektroinstalacia}
-                  vodaKanalizacia={vodaKanalizacia}
-                  setVodaKanalizacia={setVodaKanalizacia}
-                  sanitaKomplet={sanitaKomplet}
-                  setSanitaKomplet={setSanitaKomplet}
-                  bojler={bojler}
-                  setBojler={setBojler}
-                  tepelneCerpadlo={tepelneCerpadlo}
-                  setTepelneCerpadlo={setTepelneCerpadlo}
-                  rekuperacia={rekuperacia}
-                  setRekuperacia={setRekuperacia}
-                  pripojkaSiete={pripojkaSiete}
-                  setPripojkaSiete={setPripojkaSiete}
-                  stresneOkno={stresneOkno}
-                  setStresneOkno={setStresneOkno}
-                  bocneOknoFixne={bocneOknoFixne}
-                  setBocneOknoFixne={setBocneOknoFixne}
-                  bocneOknoVyklopne90={bocneOknoVyklopne90}
-                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                  bocneOknoVyklopne55={bocneOknoVyklopne55}
-                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                  povrchokaOkien={povrchokaOkien}
-                  setPovrchokaOkien={setPovrchokaOkien}
-                  tonovaneSkla={tonovaneSkla}
-                  setTonovaneSkla={setTonovaneSkla}
-                  vonkajsiaFasada={vonkajsiaFasada}
-                  setVonkajsiaFasada={setVonkajsiaFasada}
-                  interierFinis={interierFinis}
-                  setInterierFinis={setInterierFinis}
-                  vnutornePodlahy={vnutornePodlahy}
-                  setVnutornePodlahy={setVnutornePodlahy}
-                  podlahovVykurovanie={podlahovVykurovanie}
-                  setPodlahovVykurovanie={setPodlahovVykurovanie}
-                  interieroveDvere={interieroveDvere}
-                  setInterieroveDvere={setInterieroveDvere}
-                  pergola={pergola}
-                  setPergola={setPergola}
-                  inziniering={inziniering}
-                  setInziniering={setInziniering}
-                  projektA0={projektA0}
-                  setProjektA0={setProjektA0}
-                  revizna={revizna}
-                  setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                  showOnlySummary={true}
-                />
-              </div>
-            )}
-
-            {/* Floating panel pre Flat Double */}
-            {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorFlatDouble 
-                  dom={dom}
-                  onReset={handleKonfiguratorReset}
-                  typStavby={typStavby}
-                  setTypStavby={setTypStavby}
                   montazHolodomu={montazHolodomu}
                   setMontazHolodomu={setMontazHolodomu}
                   izolaciaNavysenie={izolaciaNavysenie}
@@ -2123,239 +2056,71 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* CTA Buttons */}
-            <div className="space-y-2 sm:space-y-3">
-
-              <Link to={createPageUrl("Kontakt")}>
-                <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-sm sm:text-base py-4 sm:py-5">
-                  <Mail className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
-                  {t('contactUsButton')}
-                </Button>
-              </Link>
-              <a href="tel:+421905138124">
-                <Button size="lg" variant="outline" className="w-full border-2 border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold text-sm sm:text-base py-4 sm:py-5">
-                  <Phone className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
-                  +421 905 138 124
-                </Button>
-              </a>
-
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Floating Price Display - len ak nie je JAK Modules */}
-      {!isJAKModules && <FloatingPrice price={calculatedPrice} isVisible={showCalculator} />}
-
-      {/* Lightbox */}
-      {lightboxOpen && (
-        <div 
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
-          onClick={closeLightbox}
-        >
-          {/* Close button */}
-          <button 
-            className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
-            onClick={closeLightbox}
-          >
-            <X className="w-8 h-8" />
-          </button>
-
-          {/* Zoom controls */}
-          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 z-10 bg-black/50 rounded-full px-4 py-2">
-            <button 
-              onClick={(e) => { e.stopPropagation(); handleZoomOut(); }}
-              disabled={zoomLevel <= 1}
-              className="text-white hover:text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed p-1"
-              title="Oddialiť"
-            >
-              <ZoomOut className="w-6 h-6" />
-            </button>
-            <span className="text-white text-sm min-w-[60px] text-center">{Math.round(zoomLevel * 100)}%</span>
-            <button 
-              onClick={(e) => { e.stopPropagation(); handleZoomIn(); }}
-              disabled={zoomLevel >= 4}
-              className="text-white hover:text-gray-300 disabled:opacity-40 disabled:cursor-not-allowed p-1"
-              title="Priblížiť"
-            >
-              <ZoomIn className="w-6 h-6" />
-            </button>
-            {zoomLevel > 1 && (
-              <button 
-                onClick={(e) => { e.stopPropagation(); setZoomLevel(1); setPanPosition({ x: 0, y: 0 }); }}
-                className="text-white hover:text-gray-300 p-1 ml-2"
-                title="Reset"
-              >
-                <RotateCcw className="w-5 h-5" />
-              </button>
-            )}
-          </div>
-
-          {/* Navigation */}
-          {lightboxImages.length > 1 && (
-            <>
-              <button 
-                className="absolute left-4 text-white hover:text-gray-300 z-10 p-2"
-                onClick={(e) => { e.stopPropagation(); prevImage(); }}
-              >
-                <ChevronLeft className="w-10 h-10" />
-              </button>
-              <button 
-                className="absolute right-4 text-white hover:text-gray-300 z-10 p-2"
-                onClick={(e) => { e.stopPropagation(); nextImage(); }}
-              >
-                <ChevronRight className="w-10 h-10" />
-              </button>
-            </>
-          )}
-
-          {/* Image */}
-          <div 
-            className="w-full h-full flex items-center justify-center overflow-hidden touch-none relative"
-            onClick={(e) => e.stopPropagation()}
-            onWheel={handleWheel}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onTouchStart={handleMouseDown}
-            onTouchMove={handleMouseMove}
-            onTouchEnd={handleMouseUp}
-          >
-            {zoomLevel === 1 && lightboxImages.length > 1 ? (
-              <div 
-                className="flex items-center h-full absolute left-0"
-                style={{
-                  transform: `translateX(calc(-${lightboxIndex * 100}vw + ${swipeOffset}px))`,
-                  transition: swipeStart ? 'none' : 'transform 0.3s ease-out',
-                  width: `${lightboxImages.length * 100}vw`,
-                }}
-              >
-                {lightboxImages.map((img, idx) => (
-                  <div key={idx} className="w-screen h-full flex items-center justify-center flex-shrink-0">
-                    <img
-                      src={img}
-                      alt={`Fotka ${idx + 1}`}
-                      className="select-none max-w-[90vw] max-h-[80vh] object-contain"
-                      onContextMenu={(e) => e.preventDefault()}
-                      draggable={false}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (!swipeStart && Math.abs(swipeOffset) < 10) handleZoomIn();
-                      }}
-                    />
-                  </div>
-                ))}
+            {/* Floating panel pre Flat Double */}
+            {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+                <KonfiguratorFlatDouble 
+                  dom={dom}
+                  onReset={handleKonfiguratorReset}
+                  typStavby={typStavby}
+                  setTypStavby={setTypStavby}
+                  montazHolodomu={montazHolodomu}
+                  setMontazHolodomu={setMontazHolodomu}
+                  izolaciaNavysenie={izolaciaNavysenie}
+                  setIzolaciaNavysenie={setIzolaciaNavysenie}
+                  zaklady={zaklady}
+                  setZaklady={setZaklady}
+                  vstupneDvere={vstupneDvere}
+                  setVstupneDvere={setVstupneDvere}
+                  elektroinstalacia={elektroinstalacia}
+                  setElektroinstalacia={setElektroinstalacia}
+                  vodaKanalizacia={vodaKanalizacia}
+                  setVodaKanalizacia={setVodaKanalizacia}
+                  sanitaKomplet={sanitaKomplet}
+                  setSanitaKomplet={setSanitaKomplet}
+                  bojler={bojler}
+                  setBojler={setBojler}
+                  tepelneCerpadlo={tepelneCerpadlo}
+                  setTepelneCerpadlo={setTepelneCerpadlo}
+                  rekuperacia={rekuperacia}
+                  setRekuperacia={setRekuperacia}
+                  pripojkaSiete={pripojkaSiete}
+                  setPripojkaSiete={setPripojkaSiete}
+                  stresneOkno={stresneOkno}
+                  setStresneOkno={setStresneOkno}
+                  bocneOknoFixne={bocneOknoFixne}
+                  setBocneOknoFixne={setBocneOknoFixne}
+                  bocneOknoVyklopne90={bocneOknoVyklopne90}
+                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
+                  bocneOknoVyklopne55={bocneOknoVyklopne55}
+                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
+                  povrchokaOkien={povrchokaOkien}
+                  setPovrchokaOkien={setPovrchokaOkien}
+                  tonovaneSkla={tonovaneSkla}
+                  setTonovaneSkla={setTonovaneSkla}
+                  vonkajsiaFasada={vonkajsiaFasada}
+                  setVonkajsiaFasada={setVonkajsiaFasada}
+                  interierFinis={interierFinis}
+                  setInterierFinis={setInterierFinis}
+                  vnutornePodlahy={vnutornePodlahy}
+                  setVnutornePodlahy={setVnutornePodlahy}
+                  podlahovVykurovanie={podlahovVykurovanie}
+                  setPodlahovVykurovanie={setPodlahovVykurovanie}
+                  interieroveDvere={interieroveDvere}
+                  setInterieroveDvere={setInterieroveDvere}
+                  pergola={pergola}
+                  setPergola={setPergola}
+                  inziniering={inziniering}
+                  setInziniering={setInziniering}
+                  projektA0={projektA0}
+                  setProjektA0={setProjektA0}
+                  revizna={revizna}
+                  setRevizna={setRevizna}
+                  doprava={doprava}
+                  setDoprava={setDoprava}
+                  showOnlySummary={true}
+                />
               </div>
-            ) : (
-              <img
-                src={lightboxImages[lightboxIndex]}
-                alt={`Fotka ${lightboxIndex + 1}`}
-                className={`select-none ${zoomLevel > 1 ? 'cursor-grab' : 'cursor-zoom-in'} ${isDragging ? 'cursor-grabbing' : ''}`}
-                style={{
-                  maxWidth: zoomLevel === 1 ? '90vw' : 'none',
-                  maxHeight: zoomLevel === 1 ? '80vh' : 'none',
-                  transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
-                  transformOrigin: 'center center',
-                  transition: isDragging ? 'none' : 'transform 0.2s ease-out',
-                }}
-                onContextMenu={(e) => e.preventDefault()}
-                draggable={false}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (zoomLevel === 1) handleZoomIn();
-                }}
-              />
-            )}
-          </div>
-
-          {/* Counter and zoom hint */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-sm text-center">
-            <div>{lightboxIndex + 1} / {lightboxImages.length}</div>
-            {zoomLevel === 1 && <div className="text-xs text-gray-400 mt-1">Kliknite alebo použite koliesko myši pre zoom</div>}
-            {zoomLevel > 1 && <div className="text-xs text-gray-400 mt-1">Ťahajte pre posun obrázka</div>}
-          </div>
-
-          {/* Thumbnails */}
-          {lightboxImages.length > 1 && (
-            <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex gap-2 max-w-[80vw] overflow-x-auto p-2">
-              {lightboxImages.map((img, idx) => (
-                <button
-                  key={idx}
-                  onClick={(e) => { e.stopPropagation(); setLightboxIndex(idx); setZoomLevel(1); setPanPosition({ x: 0, y: 0 }); }}
-                  className={`flex-shrink-0 w-16 h-12 rounded overflow-hidden border-2 transition-all ${
-                    idx === lightboxIndex ? 'border-white' : 'border-transparent opacity-60 hover:opacity-100'
-                  }`}
-                >
-                  <img src={img} alt="" className="w-full h-full object-cover" onContextMenu={(e) => e.preventDefault()} draggable={false} />
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-                typStavby={typStavby}
-                setTypStavby={setTypStavby}
-                montazHolodomu={montazHolodomu}
-                setMontazHolodomu={setMontazHolodomu}
-                izolaciaNavysenie={izolaciaNavysenie}
-                setIzolaciaNavysenie={setIzolaciaNavysenie}
-                zaklady={zaklady}
-                setZaklady={setZaklady}
-                predlzenie={predlzenie}
-                setPredlzenie={setPredlzenie}
-                vstupneDvere={vstupneDvere}
-                setVstupneDvere={setVstupneDvere}
-                elektroinstalacia={elektroinstalacia}
-                setElektroinstalacia={setElektroinstalacia}
-                vodaKanalizacia={vodaKanalizacia}
-                setVodaKanalizacia={setVodaKanalizacia}
-                sanitaKomplet={sanitaKomplet}
-                setSanitaKomplet={setSanitaKomplet}
-                bojler={bojler}
-                setBojler={setBojler}
-                tepelneCerpadlo={tepelneCerpadlo}
-                setTepelneCerpadlo={setTepelneCerpadlo}
-                rekuperacia={rekuperacia}
-                setRekuperacia={setRekuperacia}
-                pripojkaSiete={pripojkaSiete}
-                setPripojkaSiete={setPripojkaSiete}
-                stresneOkno={stresneOkno}
-                setStresneOkno={setStresneOkno}
-                bocneOknoFixne={bocneOknoFixne}
-                setBocneOknoFixne={setBocneOknoFixne}
-                bocneOknoVyklopne90={bocneOknoVyklopne90}
-                setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                bocneOknoVyklopne55={bocneOknoVyklopne55}
-                setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                povrchokaOkien={povrchokaOkien}
-                setPovrchokaOkien={setPovrchokaOkien}
-                tonovaneSkla={tonovaneSkla}
-                setTonovaneSkla={setTonovaneSkla}
-                vonkajsiaFasada={vonkajsiaFasada}
-                setVonkajsiaFasada={setVonkajsiaFasada}
-                interierFinis={interierFinis}
-                setInterierFinis={setInterierFinis}
-                vnutornePodlahy={vnutornePodlahy}
-                setVnutornePodlahy={setVnutornePodlahy}
-                podlahovVykurovanie={podlahovVykurovanie}
-                setPodlahovVykurovanie={setPodlahovVykurovanie}
-                interieroveDvere={interieroveDvere}
-                setInterieroveDvere={setInterieroveDvere}
-                pergola={pergola}
-                setPergola={setPergola}
-                inziniering={inziniering}
-                setInziniering={setInziniering}
-                projektA0={projektA0}
-                setProjektA0={setProjektA0}
-                revizna={revizna}
-                setRevizna={setRevizna}
-                doprava={doprava}
-                setDoprava={setDoprava}
-              />
             )}
 
             {/* Floating panel pre A-Frame */}
