@@ -141,8 +141,9 @@ export default function KonfiguratorFaza1HrubaStavba({
   useNordPrices = false,
   useFlat15Prices = false,
   useFlatDoublePrices = false,
-  useProstoHousePrices = false
-}) {
+  useProstoHousePrices = false,
+  useFlat72Prices = false
+  }) {
   // Ceny pre Flat 1,5
   const FLAT15_CENY = {
     montaz: 13470,
@@ -155,6 +156,13 @@ export default function KonfiguratorFaza1HrubaStavba({
     montaz: 17970,
     izolacia: { zvysena: 5799, premium: 11600 },
     zaklady: { skrutky: 8140, doska: 17946, pasove: 21079 }
+  };
+
+  // Ceny pre Flat 72
+  const FLAT72_CENY = {
+    montaz: 17925,
+    izolacia: { zvysena: 2950, premium: 5900, ultra: 11063 },
+    zaklady: { skrutky: 4428, doska: 11849, pasove: 11184 }
   };
 
   // Ceny pre Prosto House
@@ -309,8 +317,8 @@ export default function KonfiguratorFaza1HrubaStavba({
             )}
 
             {/* Izolácia - skupina */}
-            <div className={`col-span-2 sm:col-span-3 lg:col-span-2 grid ${useNordPrices || useProstoHousePrices ? 'grid-cols-4' : 'grid-cols-3'} gap-2 sm:gap-3 p-4 border-[5px] border-cyan-600 rounded-2xl bg-cyan-100/70 shadow-xl`}>
-              <p className={`${useNordPrices ? 'col-span-4' : 'col-span-3'} text-[10px] sm:text-xs font-bold text-cyan-700 -mb-1 flex items-center gap-1`}>
+            <div className={`col-span-2 sm:col-span-3 lg:col-span-2 grid ${useNordPrices || useProstoHousePrices || useFlat72Prices ? 'grid-cols-4' : 'grid-cols-3'} gap-2 sm:gap-3 p-4 border-[5px] border-cyan-600 rounded-2xl bg-cyan-100/70 shadow-xl`}>
+              <p className={`${useNordPrices || useFlat72Prices ? 'col-span-4' : 'col-span-3'} text-[10px] sm:text-xs font-bold text-cyan-700 -mb-1 flex items-center gap-1`}>
                 <span className="w-5 h-5 sm:w-6 sm:h-6 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
                 {t('insulation')} ({t('selectOne')})
               </p>
@@ -333,9 +341,9 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={ThermometerSun}
                 iconColor="text-orange-400"
                 iconSelectedColor="text-amber-600"
-                title={useProstoHousePrices ? "200mm" : useFlatDoublePrices ? "200/250mm" : useFlat15Prices ? "200/250mm" : useNordPrices ? "200mm" : t('insulationEnhanced')}
-                subtitle={useProstoHousePrices ? "200mm" : useFlatDoublePrices ? "200/250mm" : useFlat15Prices ? "200/250mm" : useNordPrices ? "200mm" : t('insulationEnhancedDesc')}
-                price={useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 3 200 €" : "+ 5 799 €"}
+                title={useFlat72Prices ? "200mm" : useProstoHousePrices ? "200mm" : useFlatDoublePrices ? "200/250mm" : useFlat15Prices ? "200/250mm" : useNordPrices ? "200mm" : t('insulationEnhanced')}
+                subtitle={useFlat72Prices ? "200mm" : useProstoHousePrices ? "200mm" : useFlatDoublePrices ? "200/250mm" : useFlat15Prices ? "200/250mm" : useNordPrices ? "200mm" : t('insulationEnhancedDesc')}
+                price={useFlat72Prices ? `+ ${FLAT72_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 3 200 €" : "+ 5 799 €"}
                 isPriced={true}
                 tooltip={t('insulationEnhancedDesc')}
               />
@@ -346,9 +354,9 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={ThermometerSun}
                 iconColor="text-green-500"
                 iconSelectedColor="text-green-600"
-                title={useProstoHousePrices ? "250mm" : useFlatDoublePrices ? "250/300mm" : useFlat15Prices ? "250/300mm" : useNordPrices ? "250mm" : t('insulationPremium')}
-                subtitle={useProstoHousePrices ? "250mm" : useFlatDoublePrices ? "250/300mm" : useFlat15Prices ? "250/300mm" : useNordPrices ? "250mm" : t('insulationPremiumDesc')}
-                price={useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 6 400 €" : "+ 11 200 €"}
+                title={useFlat72Prices ? "250mm" : useProstoHousePrices ? "250mm" : useFlatDoublePrices ? "250/300mm" : useFlat15Prices ? "250/300mm" : useNordPrices ? "250mm" : t('insulationPremium')}
+                subtitle={useFlat72Prices ? "250mm" : useProstoHousePrices ? "250mm" : useFlatDoublePrices ? "250/300mm" : useFlat15Prices ? "250/300mm" : useNordPrices ? "250mm" : t('insulationPremiumDesc')}
+                price={useFlat72Prices ? `+ ${FLAT72_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 6 400 €" : "+ 11 200 €"}
                 isPriced={true}
                 isA0={true}
                 selectedBg="bg-green-100"
@@ -357,16 +365,16 @@ export default function KonfiguratorFaza1HrubaStavba({
                 tooltip={t('insulationPremiumDesc')}
               />
 
-              {(useNordPrices || useProstoHousePrices) && (
+              {(useNordPrices || useProstoHousePrices || useFlat72Prices) && (
                 <Tile
                   selected={izolaciaNavysenie === "ultra"}
                   onClick={(e) => { if (izolaciaNavysenie !== "ultra") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("ultra"); }}
                   icon={ThermometerSun}
                   iconColor="text-green-600"
                   iconSelectedColor="text-green-700"
-                  title={useProstoHousePrices ? "300mm" : "Éxtra izolácia"}
+                  title={useFlat72Prices ? "300mm" : useProstoHousePrices ? "300mm" : "Éxtra izolácia"}
                   subtitle="300mm"
-                  price={useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : "+ 12 000 €"}
+                  price={useFlat72Prices ? `+ ${FLAT72_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : "+ 12 000 €"}
                   isPriced={true}
                   isA0={true}
                   selectedBg="bg-green-100"
@@ -402,9 +410,9 @@ export default function KonfiguratorFaza1HrubaStavba({
                 icon={Landmark}
                 iconColor="text-amber-400"
                 iconSelectedColor="text-amber-600"
-                title={useProstoHousePrices || useFlat15Prices || useFlatDoublePrices ? "Pilóty/Pätky" : t('foundationsScrews')}
+                title={useFlat72Prices || useProstoHousePrices || useFlat15Prices || useFlatDoublePrices ? "Pilóty/Pätky" : t('foundationsScrews')}
                 subtitle={t('groundFootings')}
-                price={useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 7 656 €" : "+ 8 140 €"}
+                price={useFlat72Prices ? `+ ${FLAT72_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 7 656 €" : "+ 8 140 €"}
                 isPriced={true}
                 tooltip={t('foundationsScrews')}
               />
@@ -417,7 +425,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsSlab')}
                 subtitle={t('foundationSlab')}
-                price={useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 12 461 €" : "+ 12 000 €"}
+                price={useFlat72Prices ? `+ ${FLAT72_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 12 461 €" : "+ 12 000 €"}
                 isPriced={true}
                 tooltip={t('foundationsSlab')}
               />
@@ -430,7 +438,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsStrip')}
                 subtitle={t('stripFound')}
-                price={useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 8 967 €" : "+ 21 079 €"}
+                price={useFlat72Prices ? `+ ${FLAT72_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 8 967 €" : "+ 21 079 €"}
                 isPriced={true}
                 tooltip={t('foundationsStrip')}
               />
