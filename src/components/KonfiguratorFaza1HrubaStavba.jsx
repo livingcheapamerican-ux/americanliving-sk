@@ -22,22 +22,20 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
     if (tileRef.current) {
       const rect = tileRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-      const viewportWidth = window.innerWidth;
+      const tooltipWidth = 256; // w-64 = 16rem = 256px
       const tooltipHeight = 80; // approximate
       
-      // Position tooltip closer to center of screen
-      let top, left;
+      // Horizontal: center over the tile, but keep within viewport
+      const tileCenter = rect.left + rect.width / 2;
+      const left = Math.min(Math.max(tileCenter, tooltipWidth / 2 + 10), window.innerWidth - tooltipWidth / 2 - 10);
       
-      // Vertical: prefer center, but stay near tile
-      const centerY = viewportHeight / 2;
-      if (rect.bottom < centerY) {
+      // Vertical: below tile if space available, otherwise above
+      let top;
+      if (rect.bottom + tooltipHeight + 20 < viewportHeight) {
         top = rect.bottom + 10;
       } else {
-        top = Math.max(rect.top - tooltipHeight - 10, 60);
+        top = Math.max(rect.top - tooltipHeight - 10, 10);
       }
-      
-      // Horizontal: center of viewport
-      left = viewportWidth / 2;
       
       setTooltipPosition({ top, left });
     }
@@ -118,12 +116,11 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
           exit={{ opacity: 0, y: -5 }}
           className="fixed z-[9999] max-w-[85vw] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
           style={{
-            top: tooltipPosition.top,
-            left: Math.min(Math.max(tooltipPosition.left, 135), window.innerWidth - 135),
+            top: tooltipPosition.top + 'px',
+            left: tooltipPosition.left + 'px',
             transform: 'translateX(-50%)'
           }}
         >
-          <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900" />
           {tooltip}
         </motion.div>,
         document.body
