@@ -829,8 +829,17 @@ export default function DetailDomu() {
 
 
 
+            {/* Konfigurátor pre Flat 72 - NOVÝ */}
+            {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
+              <div className="p-6 bg-yellow-100 border-4 border-yellow-500 rounded-lg">
+                <h2 className="text-2xl font-bold text-yellow-900 mb-4">🚧 Konfigurátor pre Flat 72 sa pripravuje</h2>
+                <p className="text-yellow-800">Dom "{dom.nazov}" bol detegovaný. Konfigurátor bude čoskoro dostupný.</p>
+                <p className="text-sm text-yellow-700 mt-2">ID domu: {dom.id}</p>
+              </div>
+            )}
+
             {/* Konfigurátor pre ostatné Prosto House domy */}
-            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && (
+            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && (
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
@@ -1839,8 +1848,19 @@ export default function DetailDomu() {
 
 
 
+            {/* Floating panel pre Flat 72 - NOVÝ */}
+            {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+                <Card className="p-6 bg-green-100 border-4 border-green-500">
+                  <h3 className="text-xl font-bold text-green-900 mb-3">✅ Floating panel funguje</h3>
+                  <p className="text-green-800">Dom "{dom.nazov}" je správne detegovaný.</p>
+                  <p className="text-2xl font-bold text-primary mt-4">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</p>
+                </Card>
+              </div>
+            )}
+
             {/* Floating panel pre ostatné Prosto House domy */}
-            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && (
+            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorProstoHouse 
                   dom={dom}
