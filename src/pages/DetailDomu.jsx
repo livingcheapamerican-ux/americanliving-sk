@@ -637,7 +637,7 @@ export default function DetailDomu() {
             )}
 
             {/* Konfigurátor pre Flat 72 - ľavá strana */}
-            {isProstoHouse && (dom.nazov?.includes("Flat 72") || dom.nazov?.includes("Flat 7,2")) && (
+            {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
               <KonfiguratorFlat72
                 dom={dom}
                 montazHolodomu={montazHolodomu}
@@ -891,7 +891,7 @@ export default function DetailDomu() {
 
 
             {/* Konfigurátor pre ostatné Prosto House domy (nie Nord, nie Fjord, nie Flat 1,5, nie Flat Double, nie Flat 72) */}
-            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat 72") && !dom.nazov?.includes("Flat 7,2") && (
+            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && (
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
@@ -1641,7 +1641,7 @@ export default function DetailDomu() {
             )}
 
             {/* Floating panel pre Flat 72 - pravá strana */}
-            {isProstoHouse && (dom.nazov?.includes("Flat 72") || dom.nazov?.includes("Flat 7,2")) && (
+            {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlat72
                   dom={dom}
@@ -1965,7 +1965,7 @@ export default function DetailDomu() {
 
 
             {/* Floating panel pre ostatné Prosto House domy (nie Nord, nie Fjord, nie Flat 1,5, nie Flat Double, nie Flat 72) */}
-            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat 72") && !dom.nazov?.includes("Flat 7,2") && (
+            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorProstoHouse 
                   dom={dom}
