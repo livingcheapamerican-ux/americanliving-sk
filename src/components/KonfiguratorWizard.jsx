@@ -354,13 +354,13 @@ export default function KonfiguratorWizard({
       case 2:
         return interierFinis !== "ziadne";
       case 3:
-        return !!vonkajsiaFasada;
+        return useAFramePrices ? true : !!vonkajsiaFasada;
       case 4:
         return true;
       default:
         return true;
     }
-  }, [currentStep, typStavby, interierFinis, vonkajsiaFasada]);
+  }, [currentStep, typStavby, interierFinis, vonkajsiaFasada, useAFramePrices]);
 
   const missingA0Items = useMemo(() => {
     if (typStavby !== "rodinny_dom") return [];
@@ -601,7 +601,7 @@ export default function KonfiguratorWizard({
             <div className="flex items-center gap-2 text-red-600 text-sm">
               <AlertTriangle className="w-4 h-4" />
               {currentStep === 2 && t('interiorFinish')}
-              {currentStep === 3 && t('facadeRequired')}
+              {currentStep === 3 && !useAFramePrices && t('facadeRequired')}
             </div>
           )}
 
