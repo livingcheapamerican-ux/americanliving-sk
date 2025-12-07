@@ -10,15 +10,19 @@ Deno.serve(async (req) => {
     }
 
     const llmResponse = await base44.integrations.Core.InvokeLLM({
-      prompt: `Analyzuj tieto obrázky starého cenového konfiguratora PROSTO HOUSE a extrahuj VŠETKY sprievodné texty, popisky a informácie ku každej položke. 
+      prompt: `Analyzuj tieto obrázky starého cenového konfiguratora PROSTO HOUSE a extrahuj VÝHRADNE textové informácie, popisky a vysvetlenia.
 
 Potrebujem presný text, ktorý je zobrazený pri každej položke:
 - Názov položky (hlavný nadpis) - napr. "Montáž holodomu", "Tepelné čerpadlo", "Izolácia"
-- Podnadpis/krátky popis - napr. "150/200mm", "5 jednotiek", "hrubá stavba"
+- Podnadpis/krátky popis - napr. "150/200mm", "5 jednotiek", "hrubá stavba"  
 - Dlhší popisný text (ak existuje pod obrázkom alebo vedľa) - vysvetlenie čo zahŕňa
 - Akékoľvek poznámky, upozornenia alebo ďalšie informácie - hvezdičkové texty, dôležité info
 
-IGNORUJ všetky ceny - zaujímajú ma len textové informácie, popisky a vysvetlenia.
+KRITICKY DÔLEŽITÉ:
+❌ NIKDY NEEXTRAHUJ CENY, SUMY ANI CENOVÉ INFORMÁCIE
+❌ Aj keby boli ceny spomenuté v texte, vynechaj ich úplne
+❌ Nepíš výrazy ako "€", "euro", číselné sumy, "cena", "od", "+", atď.
+✅ Zameraj sa výhradne na popisné texty, technické informácie a vysvetlenia
 
 Výstup musí byť v slovenčine a mal by obsahovať všetky položky, ktoré vidíš na obrázkoch.
 Extrahuj aj tie najmenšie detaily a poznámky pod čiarou.`,
