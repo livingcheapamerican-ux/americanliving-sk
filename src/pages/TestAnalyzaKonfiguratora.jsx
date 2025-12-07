@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Upload, X, CheckCircle } from "lucide-react";
+import { Loader2, Upload, X, CheckCircle, ImageIcon } from "lucide-react";
 
 export default function TestAnalyzaKonfiguratora() {
   const [loading, setLoading] = useState(false);
@@ -14,17 +14,24 @@ export default function TestAnalyzaKonfiguratora() {
   const [uploadingFiles, setUploadingFiles] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [implementing, setImplementing] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const fileInputRef = useRef(null);
 
-  const handleFileUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length === 0) return;
+  const handleFileUpload = async (files) => {
+    if (!files || files.length === 0) return;
 
     setUploadingFiles(true);
+    setUploadProgress(0);
     try {
       const uploadedUrls = [];
-      for (const file of files) {
+      const totalFiles = files.length;
+      
+      for (let i = 0; i < totalFiles; i++) {
+        const file = files[i];
         const { file_url } = await base44.integrations.Core.UploadFile({ file });
         uploadedUrls.push(file_url);
+        setUploadProgress(Math.round(((i + 1) / totalFiles) * 100));
       }
       setImageUrls([...imageUrls, ...uploadedUrls]);
     } catch (error) {
@@ -32,6 +39,27 @@ export default function TestAnalyzaKonfiguratora() {
       alert('Chyba pri nahrávaní súborov');
     }
     setUploadingFiles(false);
+    setUploadProgress(0);
+  };
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFileUpload(Array.from(e.dataTransfer.files));
+    }
   };
 
   const handleAnalyze = async () => {
@@ -99,30 +127,75 @@ export default function TestAnalyzaKonfiguratora() {
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-2">Nahrať obrázky konfiguratora</label>
+            
+            {/* Drag & Drop zona */}
+            <div
+              onDragEnter={handleDrag}
+              onDragLeave={handleDrag}
+              onDragOver={handleDrag}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+              className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all ${
+                dragActive 
+                  ? 'border-primary bg-primary/5' 
+                  : 'border-gray-300 hover:border-primary hover:bg-gray-50'
+              } ${uploadingFiles || loading ? 'opacity-50 pointer-events-none' : ''}`}
+            >
+              <ImageIcon className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+              <p className="text-sm font-medium text-gray-700 mb-1">
+                Kliknite alebo pretiahnite obrázky sem
+              </p>
+              <p className="text-xs text-gray-500">
+                Podporované formáty: PNG, JPG, JPEG
+              </p>
+            </div>
+            
             <Input
+              ref={fileInputRef}
               type="file"
               accept="image/*"
               multiple
-              onChange={handleFileUpload}
+              onChange={(e) => handleFileUpload(Array.from(e.target.files))}
               disabled={uploadingFiles || loading}
-              className="mb-2"
+              className="hidden"
             />
-            {uploadingFiles && <p className="text-sm text-gray-500">Nahrávam súbory...</p>}
+            
+            {uploadingFiles && (
+              <div className="mt-2">
+                <div className="flex items-center justify-between text-sm mb-1">
+                  <span className="text-gray-600">Nahrávam súbory...</span>
+                  <span className="font-medium">{uploadProgress}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-primary h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           {imageUrls.length > 0 && (
             <div className="space-y-2">
               <p className="text-sm font-medium">Nahrané obrázky ({imageUrls.length}):</p>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 {imageUrls.map((url, index) => (
                   <div key={index} className="relative group">
-                    <img src={url} alt={`Obrázok ${index + 1}`} className="w-full h-32 object-cover rounded" />
+                    <img 
+                      src={url} 
+                      alt={`Obrázok ${index + 1}`} 
+                      className="w-full h-40 object-cover rounded-lg border-2 border-gray-200 group-hover:border-primary transition-all" 
+                    />
                     <button
                       onClick={() => removeImage(index)}
-                      className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg hover:bg-red-600"
                     >
                       <X className="w-4 h-4" />
                     </button>
+                    <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                      #{index + 1}
+                    </div>
                   </div>
                 ))}
               </div>
