@@ -124,7 +124,7 @@ const translations = {
     facade: "Vonkajšia fasáda",
     facadeWoodMetal: "Drevo/Plech",
     facadeStandard: "Štandardná",
-    facadeStucco: "Škúchaná",
+    facadeStucco: "Šúchaná",
     whitePlaster: "Biela omietka",
     
     floors: "Podlahy",
