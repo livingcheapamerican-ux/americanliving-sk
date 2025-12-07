@@ -320,18 +320,18 @@ export default function KonfiguratorWizard({
 
   // Keď sa zmení typ stavby, nastaviť predvolené hodnoty
   const handleTypStavbyChange = (typ) => {
-    setTypStavby(typ);
+    if (setTypStavby) setTypStavby(typ);
     
     if (typ === "rodinny_dom") {
-      setIzolaciaNavysenie("premium");
-      setTepelneCerpadlo(true);
-      setRekuperacia(true);
-      setProjektA0(true);
+      if (setIzolaciaNavysenie) setIzolaciaNavysenie("premium");
+      if (setTepelneCerpadlo) setTepelneCerpadlo(true);
+      if (setRekuperacia) setRekuperacia(true);
+      if (setProjektA0) setProjektA0(true);
     } else {
-      setIzolaciaNavysenie("standard");
-      setTepelneCerpadlo(false);
-      setRekuperacia(false);
-      setProjektA0(false);
+      if (setIzolaciaNavysenie) setIzolaciaNavysenie("standard");
+      if (setTepelneCerpadlo) setTepelneCerpadlo(false);
+      if (setRekuperacia) setRekuperacia(false);
+      if (setProjektA0) setProjektA0(false);
     }
   };
 
@@ -384,34 +384,34 @@ export default function KonfiguratorWizard({
 
   const handleFullReset = () => {
     setCurrentStep(0);
-    setTypStavby("");
+    if (setTypStavby) setTypStavby("");
     setMontazHolodomu?.("nie");
-    setVstupneDvere("ziadne");
+    if (setVstupneDvere) setVstupneDvere("ziadne");
     setIzolaciaNavysenie?.("standard");
-    setElektroinstalacia(false);
-    setVodaKanalizacia(false);
-    setSanitaKomplet(false);
-    setBojler(false);
-    setTepelneCerpadlo(false);
-    setRekuperacia(false);
+    if (setElektroinstalacia) setElektroinstalacia(false);
+    if (setVodaKanalizacia) setVodaKanalizacia(false);
+    if (setSanitaKomplet) setSanitaKomplet(false);
+    if (setBojler) setBojler(false);
+    if (setTepelneCerpadlo) setTepelneCerpadlo(false);
+    if (setRekuperacia) setRekuperacia(false);
     setZaklady?.("bez");
-    setPripojkaSiete(false);
-    setInziniering(false);
-    setProjektA0(false);
-    setInterierFinis("ziadne");
-    setVonkajsiaFasada("");
-    setPovrchokaOkien(false);
-    setVnutornePodlahy(false);
-    setPodlahovVykurovanie(false);
-    setPergola(false);
-    setInterieroveDvere(0);
-    setTonovaneSkla(false);
-    setDoprava(false);
-    setRevizna(true);
-    setStresneOkno(0);
-    setBocneOknoFixne(0);
-    setBocneOknoVyklopne90(0);
-    setBocneOknoVyklopne55(0);
+    if (setPripojkaSiete) setPripojkaSiete(false);
+    if (setInziniering) setInziniering(false);
+    if (setProjektA0) setProjektA0(false);
+    if (setInterierFinis) setInterierFinis("ziadne");
+    if (setVonkajsiaFasada) setVonkajsiaFasada("");
+    if (setPovrchokaOkien) setPovrchokaOkien(false);
+    if (setVnutornePodlahy) setVnutornePodlahy(false);
+    if (setPodlahovVykurovanie) setPodlahovVykurovanie(false);
+    if (setPergola) setPergola(false);
+    if (setInterieroveDvere) setInterieroveDvere(0);
+    if (setTonovaneSkla) setTonovaneSkla(false);
+    if (setDoprava) setDoprava(false);
+    if (setRevizna) setRevizna(true);
+    if (setStresneOkno) setStresneOkno(0);
+    if (setBocneOknoFixne) setBocneOknoFixne(0);
+    if (setBocneOknoVyklopne90) setBocneOknoVyklopne90(0);
+    if (setBocneOknoVyklopne55) setBocneOknoVyklopne55(0);
     setPredlzenie?.(0);
   };
 
