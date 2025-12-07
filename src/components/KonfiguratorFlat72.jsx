@@ -32,22 +32,20 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
     if (tileRef.current) {
       const rect = tileRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-      const viewportWidth = window.innerWidth;
+      const tooltipWidth = 256; // w-64 = 16rem = 256px
       const tooltipHeight = 80; // approximate
       
-      // Position tooltip closer to center of screen
-      let top, left;
+      // Horizontal: center over the tile, but keep within viewport
+      const tileCenter = rect.left + rect.width / 2;
+      const left = Math.min(Math.max(tileCenter, tooltipWidth / 2 + 10), window.innerWidth - tooltipWidth / 2 - 10);
       
-      // Vertical: prefer center, but stay near tile
-      const centerY = viewportHeight / 2;
-      if (rect.bottom < centerY) {
+      // Vertical: below tile if space available, otherwise above
+      let top;
+      if (rect.bottom + tooltipHeight + 20 < viewportHeight) {
         top = rect.bottom + 10;
       } else {
-        top = Math.max(rect.top - tooltipHeight - 10, 60);
+        top = Math.max(rect.top - tooltipHeight - 10, 10);
       }
-      
-      // Horizontal: center of viewport
-      left = viewportWidth / 2;
       
       setTooltipPosition({ top, left });
     }
