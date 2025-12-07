@@ -777,6 +777,8 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useFjordPrices={true}
+                typStavby={typStavby}
+                setTypStavby={setTypStavby}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
                 izolaciaNavysenie={izolaciaNavysenie}
