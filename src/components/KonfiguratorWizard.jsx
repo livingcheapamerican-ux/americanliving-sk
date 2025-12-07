@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba.jsx";
 import KonfiguratorFlat15 from "../components/KonfiguratorFlat15";
 import KonfiguratorFlatDouble from "../components/KonfiguratorFlatDouble";
+import KonfiguratorFlat72 from "../components/KonfiguratorFlat72";
 import KonfiguratorFjord from "../components/KonfiguratorFjord";
 import KonfiguratorNord from "../components/KonfiguratorNord";
 import KonfiguratorProstoHouse from "../components/KonfiguratorProstoHouse";
