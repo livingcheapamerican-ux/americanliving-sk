@@ -310,13 +310,12 @@ export default function KonfiguratorWizard({
   doprava, setDoprava
 }) {
   const [currentStep, setCurrentStep] = useState(0);
-  const [typStavby, setTypStavby] = useState("");
   const { t } = useLanguage();
 
   // Vždy začať od kroku 0 pri mount
   React.useEffect(() => {
     setCurrentStep(0);
-    setTypStavby("");
+    if (setTypStavby) setTypStavby("");
   }, []);
 
   // Keď sa zmení typ stavby, nastaviť predvolené hodnoty
