@@ -126,12 +126,11 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
           exit={{ opacity: 0, y: -5 }}
           className="fixed z-[9999] max-w-[85vw] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
           style={{
-            top: tooltipPosition.top,
-            left: Math.min(Math.max(tooltipPosition.left, 135), window.innerWidth - 135),
+            top: tooltipPosition.top + 'px',
+            left: tooltipPosition.left + 'px',
             transform: 'translateX(-50%)'
           }}
         >
-          <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900" />
           {tooltip}
         </motion.div>,
         document.body
