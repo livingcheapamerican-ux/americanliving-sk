@@ -614,6 +614,7 @@ export default function KonfiguratorFlatDouble({
             setZaklady={setZaklady}
             triggerAnimation={triggerAnimation}
             useFlat15Prices={false}
+            useFlatDoublePrices={true}
           />
         )}
 
