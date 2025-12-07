@@ -2046,7 +2046,7 @@ export default function DetailDomu() {
 
             {/* Floating panel pre A-Frame */}
             {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame") || dom.nazov?.includes("Barn")) && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '400px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '600px' }}>
                 <KonfiguratorAFrame
                   dom={dom}
                   onReset={handleKonfiguratorReset}
