@@ -310,6 +310,12 @@ export default function KonfiguratorWizard({
   const [typStavby, setTypStavby] = useState("");
   const { t } = useLanguage();
 
+  // Vždy začať od kroku 0 pri mount
+  React.useEffect(() => {
+    setCurrentStep(0);
+    setTypStavby("");
+  }, []);
+
   // Keď sa zmení typ stavby, nastaviť predvolené hodnoty
   const handleTypStavbyChange = (typ) => {
     setTypStavby(typ);
