@@ -276,7 +276,9 @@ export default function KonfiguratorWizard({
   useNordPrices = false,
   useFlat15Prices = false,
   useFlatDoublePrices = false,
+  useFlat72Prices = false,
   useProstoHousePrices = false,
+  typStavby, setTypStavby,
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
@@ -418,6 +420,7 @@ export default function KonfiguratorWizard({
     const commonProps = {
       dom,
       onReset: handleFullReset,
+      typStavby, setTypStavby,
       montazHolodomu, setMontazHolodomu,
       izolaciaNavysenie, setIzolaciaNavysenie,
       zaklady, setZaklady,
@@ -447,14 +450,15 @@ export default function KonfiguratorWizard({
       revizna, setRevizna,
       doprava, setDoprava,
       showOnlySummary: false,
-      showOnlyPhase: phase,
-      typStavby
+      showOnlyPhase: phase
     };
 
     if (useFlat15Prices) {
       return <KonfiguratorFlat15 {...commonProps} />;
     } else if (useFlatDoublePrices) {
       return <KonfiguratorFlatDouble {...commonProps} />;
+    } else if (useFlat72Prices) {
+      return <KonfiguratorFlat72 {...commonProps} />;
     } else if (useNordPrices) {
       return <KonfiguratorNord {...commonProps} />;
     } else if (useFjordPrices) {
@@ -501,6 +505,7 @@ export default function KonfiguratorWizard({
               useNordPrices={useNordPrices}
               useFlat15Prices={useFlat15Prices}
               useFlatDoublePrices={useFlatDoublePrices}
+              useFlat72Prices={useFlat72Prices}
               useProstoHousePrices={useProstoHousePrices}
               useFjordPrices={useFjordPrices}
             />
