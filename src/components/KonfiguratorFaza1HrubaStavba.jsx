@@ -272,7 +272,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('assemblyYes')}
                 subtitle={t('phase1')}
-                price={useProstoHousePrices ? `+ ${PROSTO_CENY.montaz.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.montaz.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.montaz.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 14 850 €" : "+ 17 700 €"}
+                price={useFlat72Prices ? `+ ${FLAT72_CENY.montaz.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.montaz.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.montaz.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.montaz.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 14 850 €" : "+ 17 700 €"}
                 isPriced={true}
                 tooltip={t('assemblyNote')}
               />
