@@ -173,8 +173,7 @@ export default function KonfiguratorFlat72({
   revizna, setRevizna,
   doprava, setDoprava,
   showOnlySummary = false,
-  showOnlyPhase = null,
-  typStavby = ""
+  showOnlyPhase = null
 }) {
   // Základná cena - dynamická z objektu domu
   const BASE_PRICE = dom?.zakladna_cena || 49900;
