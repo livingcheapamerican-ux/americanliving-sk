@@ -185,16 +185,16 @@ export default function KonfiguratorFlatDouble({
 
   // FLAT DOUBLE CENNÍK - FIXNÉ CENY (142m²)
   const CENY = {
-    montaz: { nie: 0, ano: 17700 },
+    montaz: { nie: 0, ano: 17970 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 5799, premium: 11200 },
+    izolacia: { standard: 0, zvysena: 5799, premium: 11600 },
     elektroinstalacia: 7400,
     vodaKanalizacia: 2380,
     sanitaKomplet: 1169,
     bojler: 246,
     tepelneCerpadlo: 5535,
     rekuperacia: 2700,
-    zaklady: { bez: 0, skrutky: 8140, doska: 12000, pasove: 21079 },
+    zaklady: { bez: 0, skrutky: 8140, doska: 17946, pasove: 21079 },
     pripojkaSiete: 1501,
     inziniering: 2592,
     projektA0: 3500,
