@@ -500,6 +500,7 @@ export default function KonfiguratorWizard({
               setPredlzenie={setPredlzenie}
               useNordPrices={useNordPrices}
               useFlat15Prices={useFlat15Prices}
+              useFlatDoublePrices={useFlatDoublePrices}
               useProstoHousePrices={useProstoHousePrices}
               useFjordPrices={useFjordPrices}
             />
