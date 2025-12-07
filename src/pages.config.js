@@ -20,6 +20,7 @@ import Konfigurator3D from './pages/Konfigurator3D';
 import AdminUploadFotiekDomov from './pages/AdminUploadFotiekDomov';
 import KonfiguratorFlatDouble from './pages/KonfiguratorFlatDouble';
 import AdminPrekladyDomov from './pages/AdminPrekladyDomov';
+import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import __Layout from './Layout.jsx';
 
 
@@ -46,6 +47,7 @@ export const PAGES = {
     "AdminUploadFotiekDomov": AdminUploadFotiekDomov,
     "KonfiguratorFlatDouble": KonfiguratorFlatDouble,
     "AdminPrekladyDomov": AdminPrekladyDomov,
+    "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
 }
 
 export const pagesConfig = {
