@@ -2297,7 +2297,6 @@ export default function DetailDomu() {
     </div>
   );
 }
-                key={wizardKey}
                 dom={dom}
                 useBarn48Prices={true}
                 typStavby={typStavby}
