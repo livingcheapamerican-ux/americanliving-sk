@@ -44,6 +44,7 @@ export default function DetailDomu() {
   const [zoomLevel, setZoomLevel] = useState(1);
   
   // Zdieľaný stav pre Fázu 1 - Hrubá stavba
+  const [typStavby, setTypStavby] = useState("");
   const [montazHolodomu, setMontazHolodomu] = useState("nie");
   const [izolaciaNavysenie, setIzolaciaNavysenie] = useState("standard");
   const [zaklady, setZaklady] = useState("bez");
@@ -418,6 +419,7 @@ export default function DetailDomu() {
   };
 
   const handleKonfiguratorReset = () => {
+    setTypStavby("");
     setMontazHolodomu("nie");
     setVstupneDvere("ziadne");
     setIzolaciaNavysenie("standard");
@@ -830,10 +832,14 @@ export default function DetailDomu() {
 
 
 
-            {/* Konfigurátor pre Flat 72 */}
+            {/* Konfigurátor pre Flat 72 - Wizard */}
             {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
-              <KonfiguratorFlat72
+              <KonfiguratorWizard
+                key={wizardKey}
                 dom={dom}
+                useFlat72Prices={true}
+                typStavby={typStavby}
+                setTypStavby={setTypStavby}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
                 izolaciaNavysenie={izolaciaNavysenie}
@@ -1906,6 +1912,9 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlat72
                   dom={dom}
+                  onReset={handleKonfiguratorReset}
+                  typStavby={typStavby}
+                  setTypStavby={setTypStavby}
                   montazHolodomu={montazHolodomu}
                   setMontazHolodomu={setMontazHolodomu}
                   izolaciaNavysenie={izolaciaNavysenie}
