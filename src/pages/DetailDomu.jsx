@@ -2297,8 +2297,6 @@ export default function DetailDomu() {
     </div>
   );
 }
-                dom={dom}
-                useBarn48Prices={true}
                 typStavby={typStavby}
                 setTypStavby={setTypStavby}
                 montazHolodomu={montazHolodomu}
