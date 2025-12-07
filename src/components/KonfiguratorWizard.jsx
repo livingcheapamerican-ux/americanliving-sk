@@ -16,6 +16,7 @@ import KonfiguratorFlat72 from "../components/KonfiguratorFlat72";
 import KonfiguratorFjord from "../components/KonfiguratorFjord";
 import KonfiguratorNord from "../components/KonfiguratorNord";
 import KonfiguratorProstoHouse from "../components/KonfiguratorProstoHouse";
+import KonfiguratorAFrame from "../components/KonfiguratorAFrame";
 import { useLanguage } from "./LanguageContext";
 
 // Krok 0: Výber typu stavby
@@ -279,6 +280,7 @@ export default function KonfiguratorWizard({
   useFlatDoublePrices = false,
   useFlat72Prices = false,
   useProstoHousePrices = false,
+  useAFramePrices = false,
   typStavby, setTypStavby,
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
@@ -453,7 +455,9 @@ export default function KonfiguratorWizard({
       showOnlyPhase: phase
     };
 
-    if (useFlat15Prices) {
+    if (useAFramePrices) {
+      return <KonfiguratorAFrame {...commonProps} />;
+    } else if (useFlat15Prices) {
       return <KonfiguratorFlat15 {...commonProps} />;
     } else if (useFlatDoublePrices) {
       return <KonfiguratorFlatDouble {...commonProps} />;
@@ -508,6 +512,7 @@ export default function KonfiguratorWizard({
               useFlat72Prices={useFlat72Prices}
               useProstoHousePrices={useProstoHousePrices}
               useFjordPrices={useFjordPrices}
+              useAFramePrices={useAFramePrices}
             />
           </div>
         );
