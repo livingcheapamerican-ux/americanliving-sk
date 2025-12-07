@@ -142,7 +142,6 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
 export default function KonfiguratorFlat72({ 
   dom,
   onReset,
-  typDomu, setTypDomu,
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
@@ -370,7 +369,6 @@ export default function KonfiguratorFlat72({
     if (onReset) {
       onReset();
     } else {
-      setTypDomu?.("");
       setMontazHolodomu?.("nie");
       setVstupneDvere("ziadne");
       setIzolaciaNavysenie?.("standard");
@@ -470,38 +468,6 @@ export default function KonfiguratorFlat72({
 
   // Ak zobrazujeme iba sumár (pre pravý stĺpec - floating panel)
     if (showOnlySummary) {
-                // Výber typu domu
-                if (!typDomu) {
-                  return (
-                    <div className="max-w-4xl mx-auto">
-                      <Card className="p-8 shadow-2xl">
-                        <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
-                          Vyberte typ domu
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                          {[
-                            { value: "hruba", label: "Hrubá stavba", icon: Package, desc: "Základná konštrukcia" },
-                            { value: "holodom", label: "Holodom", icon: Hammer, desc: "S inštaláciami" },
-                            { value: "kluc", label: "Dom na kľúč", icon: Key, desc: "Kompletne dokončený" }
-                          ].map((typ) => (
-                            <motion.div
-                              key={typ.value}
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={() => setTypDomu(typ.value)}
-                              className="cursor-pointer p-6 bg-gradient-to-br from-blue-50 to-white border-2 border-gray-200 hover:border-blue-500 rounded-xl transition-all shadow-md hover:shadow-xl"
-                            >
-                              <typ.icon className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-                              <h3 className="text-xl font-bold text-center mb-2 text-gray-900">{typ.label}</h3>
-                              <p className="text-sm text-center text-gray-600">{typ.desc}</p>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </Card>
-                    </div>
-                  );
-                }
-
                 return (
                   <div>
                     <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-100 via-white to-slate-50 ring-2 ring-green-500/30">
