@@ -1917,6 +1917,9 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlatDouble 
                   dom={dom}
+                  onReset={handleKonfiguratorReset}
+                  typStavby={typStavby}
+                  setTypStavby={setTypStavby}
                   montazHolodomu={montazHolodomu}
                   setMontazHolodomu={setMontazHolodomu}
                   izolaciaNavysenie={izolaciaNavysenie}
