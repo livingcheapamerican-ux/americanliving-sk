@@ -15,7 +15,7 @@ import FloatingPrice from "../components/FloatingPrice";
 import DomGalerieManager from "../components/admin/DomGalerieManager";
 import KonfiguratorFlat15 from "../components/KonfiguratorFlat15";
 import KonfiguratorFlatDouble from "../components/KonfiguratorFlatDouble";
-import KonfiguratorFlat72 from "../components/KonfiguratorFlat72";
+
 import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
 import KonfiguratorWizard from "../components/KonfiguratorWizard";
 import KonfiguratorFjord from "../components/KonfiguratorFjord";
@@ -824,72 +824,10 @@ export default function DetailDomu() {
               />
             )}
 
-            {/* Konfigurátor pre Flat 7,2 */}
-            {isProstoHouse && (dom.nazov?.includes("Flat 7,2") || dom.nazov?.includes("Flat 72")) && (
-              <KonfiguratorFlat72
-                dom={dom}
-                onReset={handleKonfiguratorReset}
-                montazHolodomu={montazHolodomu}
-                setMontazHolodomu={setMontazHolodomu}
-                izolaciaNavysenie={izolaciaNavysenie}
-                setIzolaciaNavysenie={setIzolaciaNavysenie}
-                zaklady={zaklady}
-                setZaklady={setZaklady}
-                predlzenie={predlzenie}
-                setPredlzenie={setPredlzenie}
-                vstupneDvere={vstupneDvere}
-                setVstupneDvere={setVstupneDvere}
-                elektroinstalacia={elektroinstalacia}
-                setElektroinstalacia={setElektroinstalacia}
-                vodaKanalizacia={vodaKanalizacia}
-                setVodaKanalizacia={setVodaKanalizacia}
-                sanitaKomplet={sanitaKomplet}
-                setSanitaKomplet={setSanitaKomplet}
-                bojler={bojler}
-                setBojler={setBojler}
-                tepelneCerpadlo={tepelneCerpadlo}
-                setTepelneCerpadlo={setTepelneCerpadlo}
-                rekuperacia={rekuperacia}
-                setRekuperacia={setRekuperacia}
-                pripojkaSiete={pripojkaSiete}
-                setPripojkaSiete={setPripojkaSiete}
-                stresneOkno={stresneOkno}
-                setStresneOkno={setStresneOkno}
-                bocneOknoFixne={bocneOknoFixne}
-                setBocneOknoFixne={setBocneOknoFixne}
-                bocneOknoVyklopne90={bocneOknoVyklopne90}
-                setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                bocneOknoVyklopne55={bocneOknoVyklopne55}
-                setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                povrchokaOkien={povrchokaOkien}
-                setPovrchokaOkien={setPovrchokaOkien}
-                tonovaneSkla={tonovaneSkla}
-                setTonovaneSkla={setTonovaneSkla}
-                vonkajsiaFasada={vonkajsiaFasada}
-                setVonkajsiaFasada={setVonkajsiaFasada}
-                interierFinis={interierFinis}
-                setInterierFinis={setInterierFinis}
-                vnutornePodlahy={vnutornePodlahy}
-                setVnutornePodlahy={setVnutornePodlahy}
-                podlahovVykurovanie={podlahovVykurovanie}
-                setPodlahovVykurovanie={setPodlahovVykurovanie}
-                interieroveDvere={interieroveDvere}
-                setInterieroveDvere={setInterieroveDvere}
-                pergola={pergola}
-                setPergola={setPergola}
-                inziniering={inziniering}
-                setInziniering={setInziniering}
-                projektA0={projektA0}
-                setProjektA0={setProjektA0}
-                revizna={revizna}
-                setRevizna={setRevizna}
-                doprava={doprava}
-                setDoprava={setDoprava}
-              />
-            )}
 
-            {/* Konfigurátor pre ostatné Prosto House domy (nie Nord, nie Fjord, nie Flat 1,5, nie Flat Double, nie Flat 7,2) */}
-            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat 7,2") && !dom.nazov?.includes("Flat 72") && (
+
+            {/* Konfigurátor pre ostatné Prosto House domy (nie Nord, nie Fjord, nie Flat 1,5, nie Flat Double) */}
+            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && (
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
@@ -1894,74 +1832,10 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Floating panel pre Flat 7,2 */}
-            {isProstoHouse && (dom.nazov?.includes("Flat 7,2") || dom.nazov?.includes("Flat 72")) && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorFlat72
-                  dom={dom}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
-                  setIzolaciaNavysenie={setIzolaciaNavysenie}
-                  zaklady={zaklady}
-                  setZaklady={setZaklady}
-                  predlzenie={predlzenie}
-                  setPredlzenie={setPredlzenie}
-                  vstupneDvere={vstupneDvere}
-                  setVstupneDvere={setVstupneDvere}
-                  elektroinstalacia={elektroinstalacia}
-                  setElektroinstalacia={setElektroinstalacia}
-                  vodaKanalizacia={vodaKanalizacia}
-                  setVodaKanalizacia={setVodaKanalizacia}
-                  sanitaKomplet={sanitaKomplet}
-                  setSanitaKomplet={setSanitaKomplet}
-                  bojler={bojler}
-                  setBojler={setBojler}
-                  tepelneCerpadlo={tepelneCerpadlo}
-                  setTepelneCerpadlo={setTepelneCerpadlo}
-                  rekuperacia={rekuperacia}
-                  setRekuperacia={setRekuperacia}
-                  pripojkaSiete={pripojkaSiete}
-                  setPripojkaSiete={setPripojkaSiete}
-                  stresneOkno={stresneOkno}
-                  setStresneOkno={setStresneOkno}
-                  bocneOknoFixne={bocneOknoFixne}
-                  setBocneOknoFixne={setBocneOknoFixne}
-                  bocneOknoVyklopne90={bocneOknoVyklopne90}
-                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                  bocneOknoVyklopne55={bocneOknoVyklopne55}
-                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                  povrchokaOkien={povrchokaOkien}
-                  setPovrchokaOkien={setPovrchokaOkien}
-                  tonovaneSkla={tonovaneSkla}
-                  setTonovaneSkla={setTonovaneSkla}
-                  vonkajsiaFasada={vonkajsiaFasada}
-                  setVonkajsiaFasada={setVonkajsiaFasada}
-                  interierFinis={interierFinis}
-                  setInterierFinis={setInterierFinis}
-                  vnutornePodlahy={vnutornePodlahy}
-                  setVnutornePodlahy={setVnutornePodlahy}
-                  podlahovVykurovanie={podlahovVykurovanie}
-                  setPodlahovVykurovanie={setPodlahovVykurovanie}
-                  interieroveDvere={interieroveDvere}
-                  setInterieroveDvere={setInterieroveDvere}
-                  pergola={pergola}
-                  setPergola={setPergola}
-                  inziniering={inziniering}
-                  setInziniering={setInziniering}
-                  projektA0={projektA0}
-                  setProjektA0={setProjektA0}
-                  revizna={revizna}
-                  setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                  showOnlySummary={true}
-                />
-              </div>
-            )}
 
-            {/* Floating panel pre ostatné Prosto House domy (nie Nord, nie Fjord, nie Flat 1,5, nie Flat Double, nie Flat 7,2) */}
-            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat 7,2") && !dom.nazov?.includes("Flat 72") && (
+
+            {/* Floating panel pre ostatné Prosto House domy (nie Nord, nie Fjord, nie Flat 1,5, nie Flat Double) */}
+            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorProstoHouse 
                   dom={dom}
