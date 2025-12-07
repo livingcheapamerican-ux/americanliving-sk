@@ -152,9 +152,9 @@ export default function KonfiguratorFaza1HrubaStavba({
 
   // Ceny pre Flat Double
   const FLATDOUBLE_CENY = {
-    montaz: 17970,
-    izolacia: { zvysena: 5799, premium: 11600 },
-    zaklady: { skrutky: 8140, doska: 17946, pasove: 21079 }
+    montaz: 17700,
+    izolacia: { zvysena: 5799, premium: 11200 },
+    zaklady: { skrutky: 8140, doska: 12000, pasove: 21079 }
   };
 
   // Ceny pre Prosto House
