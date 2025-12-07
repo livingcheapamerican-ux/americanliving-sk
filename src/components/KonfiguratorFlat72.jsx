@@ -20,6 +20,7 @@ import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation"
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
+import TypStavbySelector from "./TypStavbySelector";
 
 // Dlaždica s tooltip a malou fajkou v rohu
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
@@ -142,6 +143,8 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
 export default function KonfiguratorFlat72({ 
   dom,
   onReset,
+  typStavby = "",
+  setTypStavby,
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
@@ -369,6 +372,7 @@ export default function KonfiguratorFlat72({
     if (onReset) {
       onReset();
     } else {
+      setTypStavby?.("");
       setMontazHolodomu?.("nie");
       setVstupneDvere("ziadne");
       setIzolaciaNavysenie?.("standard");
@@ -591,6 +595,26 @@ export default function KonfiguratorFlat72({
   const showHolodom = !showOnlyPhase || showOnlyPhase === "holodom";
   const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
+
+  // Ak nie je vybraný typ stavby, zobraz selector
+  if (!typStavby && setTypStavby) {
+    return (
+      <TypStavbySelector
+        typStavby={typStavby}
+        setTypStavby={(typ) => {
+          setTypStavby(typ);
+          // Automatické nastavenie pre rodinný dom A0
+          if (typ === "rodinny_a0") {
+            setIzolaciaNavysenie?.("premium");
+            setTepelneCerpadlo(true);
+            setRekuperacia(true);
+            setProjektA0(true);
+          }
+        }}
+        onContinue={() => {}}
+      />
+    );
+  }
 
   return (
     <div className="mt-8 relative">
