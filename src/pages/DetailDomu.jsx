@@ -899,7 +899,7 @@ export default function DetailDomu() {
             )}
 
             {/* Konfigurátor pre ostatné Prosto House domy */}
-            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && (
+            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && !dom.nazov?.includes("Barn") && (
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
@@ -1117,7 +1117,7 @@ export default function DetailDomu() {
             )}
 
             {/* Konfigurátor pre A-Frame - Wizard - PO POPISE */}
-            {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && (
+            {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame") || dom.nazov?.includes("Barn")) && (
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
@@ -2043,7 +2043,7 @@ export default function DetailDomu() {
             )}
 
             {/* Floating panel pre A-Frame */}
-            {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && (
+            {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame") || dom.nazov?.includes("Barn")) && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorAFrame
                   dom={dom}
@@ -2112,7 +2112,7 @@ export default function DetailDomu() {
             )}
 
             {/* Floating panel pre ostatné Prosto House domy */}
-            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && (
+            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && !dom.nazov?.includes("Barn") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorProstoHouse 
                   dom={dom}
