@@ -1092,23 +1092,25 @@ export default function DetailDomu() {
             {/* Popis - presunute z pravej strany */}
             {dom.popis && (
               <Card className="p-2 sm:p-3">
-                <h3 className="text-sm font-bold text-red-600 mb-1">{t('descriptionTitle')}</h3>
-                <TranslatedDescription 
-                  text={dom.popis}
-                  textEn={dom.popis_en}
-                  textHu={dom.popis_hu}
-                  textPl={dom.popis_pl}
-                  textUk={dom.popis_uk}
-                  textDe={dom.popis_de}
-                  textFr={dom.popis_fr}
-                  textSr={dom.popis_sr}
-                  textHr={dom.popis_hr}
-                  textEl={dom.popis_el}
-                  className="text-[11px] sm:text-xs text-gray-700 leading-[1.15] space-y-0"
-                />
+                <h3 className="text-sm font-bold text-red-600 mb-1.5">{t('descriptionTitle')}</h3>
+                <div className="text-[11px] sm:text-xs text-gray-700 leading-[1.35] space-y-1.5">
+                  <TranslatedDescription 
+                    text={dom.popis}
+                    textEn={dom.popis_en}
+                    textHu={dom.popis_hu}
+                    textPl={dom.popis_pl}
+                    textUk={dom.popis_uk}
+                    textDe={dom.popis_de}
+                    textFr={dom.popis_fr}
+                    textSr={dom.popis_sr}
+                    textHr={dom.popis_hr}
+                    textEl={dom.popis_el}
+                    className="whitespace-pre-line"
+                  />
+                </div>
                 {isProstoHouse && (
-                  <div className="mt-3 pt-3 border-t border-gray-200">
-                    <p className="text-xs sm:text-sm text-gray-700">
+                  <div className="mt-2 pt-2 border-t border-gray-200">
+                    <p className="text-[11px] sm:text-xs text-gray-700">
                       <strong>{t('lifespan')}:</strong> {t('lifespanDesc')}
                     </p>
                   </div>
