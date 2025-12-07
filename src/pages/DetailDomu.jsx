@@ -21,6 +21,7 @@ import KonfiguratorWizard from "../components/KonfiguratorWizard";
 import KonfiguratorFjord from "../components/KonfiguratorFjord";
 import KonfiguratorNord from "../components/KonfiguratorNord";
 import KonfiguratorProstoHouse from "../components/KonfiguratorProstoHouse";
+import KonfiguratorFlat72 from "../components/KonfiguratorFlat72";
 
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
@@ -829,13 +830,65 @@ export default function DetailDomu() {
 
 
 
-            {/* Konfigurátor pre Flat 72 - NOVÝ */}
+            {/* Konfigurátor pre Flat 72 */}
             {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
-              <div className="p-6 bg-yellow-100 border-4 border-yellow-500 rounded-lg">
-                <h2 className="text-2xl font-bold text-yellow-900 mb-4">🚧 Konfigurátor pre Flat 72 sa pripravuje</h2>
-                <p className="text-yellow-800">Dom "{dom.nazov}" bol detegovaný. Konfigurátor bude čoskoro dostupný.</p>
-                <p className="text-sm text-yellow-700 mt-2">ID domu: {dom.id}</p>
-              </div>
+              <KonfiguratorFlat72
+                dom={dom}
+                montazHolodomu={montazHolodomu}
+                setMontazHolodomu={setMontazHolodomu}
+                izolaciaNavysenie={izolaciaNavysenie}
+                setIzolaciaNavysenie={setIzolaciaNavysenie}
+                zaklady={zaklady}
+                setZaklady={setZaklady}
+                vstupneDvere={vstupneDvere}
+                setVstupneDvere={setVstupneDvere}
+                elektroinstalacia={elektroinstalacia}
+                setElektroinstalacia={setElektroinstalacia}
+                vodaKanalizacia={vodaKanalizacia}
+                setVodaKanalizacia={setVodaKanalizacia}
+                sanitaKomplet={sanitaKomplet}
+                setSanitaKomplet={setSanitaKomplet}
+                bojler={bojler}
+                setBojler={setBojler}
+                tepelneCerpadlo={tepelneCerpadlo}
+                setTepelneCerpadlo={setTepelneCerpadlo}
+                rekuperacia={rekuperacia}
+                setRekuperacia={setRekuperacia}
+                pripojkaSiete={pripojkaSiete}
+                setPripojkaSiete={setPripojkaSiete}
+                stresneOkno={stresneOkno}
+                setStresneOkno={setStresneOkno}
+                bocneOknoFixne={bocneOknoFixne}
+                setBocneOknoFixne={setBocneOknoFixne}
+                bocneOknoVyklopne90={bocneOknoVyklopne90}
+                setBocneOknoVyklopne90={setBocneOknoVyklopne90}
+                bocneOknoVyklopne55={bocneOknoVyklopne55}
+                setBocneOknoVyklopne55={setBocneOknoVyklopne55}
+                povrchokaOkien={povrchokaOkien}
+                setPovrchokaOkien={setPovrchokaOkien}
+                tonovaneSkla={tonovaneSkla}
+                setTonovaneSkla={setTonovaneSkla}
+                vonkajsiaFasada={vonkajsiaFasada}
+                setVonkajsiaFasada={setVonkajsiaFasada}
+                interierFinis={interierFinis}
+                setInterierFinis={setInterierFinis}
+                vnutornePodlahy={vnutornePodlahy}
+                setVnutornePodlahy={setVnutornePodlahy}
+                podlahovVykurovanie={podlahovVykurovanie}
+                setPodlahovVykurovanie={setPodlahovVykurovanie}
+                interieroveDvere={interieroveDvere}
+                setInterieroveDvere={setInterieroveDvere}
+                pergola={pergola}
+                setPergola={setPergola}
+                inziniering={inziniering}
+                setInziniering={setInziniering}
+                projektA0={projektA0}
+                setProjektA0={setProjektA0}
+                revizna={revizna}
+                setRevizna={setRevizna}
+                doprava={doprava}
+                setDoprava={setDoprava}
+              />
             )}
 
             {/* Konfigurátor pre ostatné Prosto House domy */}
@@ -1848,14 +1901,67 @@ export default function DetailDomu() {
 
 
 
-            {/* Floating panel pre Flat 72 - NOVÝ */}
+            {/* Floating panel pre Flat 72 */}
             {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <Card className="p-6 bg-green-100 border-4 border-green-500">
-                  <h3 className="text-xl font-bold text-green-900 mb-3">✅ Floating panel funguje</h3>
-                  <p className="text-green-800">Dom "{dom.nazov}" je správne detegovaný.</p>
-                  <p className="text-2xl font-bold text-primary mt-4">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</p>
-                </Card>
+                <KonfiguratorFlat72
+                  dom={dom}
+                  montazHolodomu={montazHolodomu}
+                  setMontazHolodomu={setMontazHolodomu}
+                  izolaciaNavysenie={izolaciaNavysenie}
+                  setIzolaciaNavysenie={setIzolaciaNavysenie}
+                  zaklady={zaklady}
+                  setZaklady={setZaklady}
+                  vstupneDvere={vstupneDvere}
+                  setVstupneDvere={setVstupneDvere}
+                  elektroinstalacia={elektroinstalacia}
+                  setElektroinstalacia={setElektroinstalacia}
+                  vodaKanalizacia={vodaKanalizacia}
+                  setVodaKanalizacia={setVodaKanalizacia}
+                  sanitaKomplet={sanitaKomplet}
+                  setSanitaKomplet={setSanitaKomplet}
+                  bojler={bojler}
+                  setBojler={setBojler}
+                  tepelneCerpadlo={tepelneCerpadlo}
+                  setTepelneCerpadlo={setTepelneCerpadlo}
+                  rekuperacia={rekuperacia}
+                  setRekuperacia={setRekuperacia}
+                  pripojkaSiete={pripojkaSiete}
+                  setPripojkaSiete={setPripojkaSiete}
+                  stresneOkno={stresneOkno}
+                  setStresneOkno={setStresneOkno}
+                  bocneOknoFixne={bocneOknoFixne}
+                  setBocneOknoFixne={setBocneOknoFixne}
+                  bocneOknoVyklopne90={bocneOknoVyklopne90}
+                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
+                  bocneOknoVyklopne55={bocneOknoVyklopne55}
+                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
+                  povrchokaOkien={povrchokaOkien}
+                  setPovrchokaOkien={setPovrchokaOkien}
+                  tonovaneSkla={tonovaneSkla}
+                  setTonovaneSkla={setTonovaneSkla}
+                  vonkajsiaFasada={vonkajsiaFasada}
+                  setVonkajsiaFasada={setVonkajsiaFasada}
+                  interierFinis={interierFinis}
+                  setInterierFinis={setInterierFinis}
+                  vnutornePodlahy={vnutornePodlahy}
+                  setVnutornePodlahy={setVnutornePodlahy}
+                  podlahovVykurovanie={podlahovVykurovanie}
+                  setPodlahovVykurovanie={setPodlahovVykurovanie}
+                  interieroveDvere={interieroveDvere}
+                  setInterieroveDvere={setInterieroveDvere}
+                  pergola={pergola}
+                  setPergola={setPergola}
+                  inziniering={inziniering}
+                  setInziniering={setInziniering}
+                  projektA0={projektA0}
+                  setProjektA0={setProjektA0}
+                  revizna={revizna}
+                  setRevizna={setRevizna}
+                  doprava={doprava}
+                  setDoprava={setDoprava}
+                  showOnlySummary={true}
+                />
               </div>
             )}
 
