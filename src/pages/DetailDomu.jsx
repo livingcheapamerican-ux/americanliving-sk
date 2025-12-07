@@ -636,10 +636,10 @@ export default function DetailDomu() {
 
             {/* Wizard pre Flat 1,5 - ľavá strana */}
             {isProstoHouse && (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) && (
-              <KonfiguratorFlat15
+              <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
-                onReset={handleKonfiguratorReset}
+                useFlat15Prices={true}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
                 izolaciaNavysenie={izolaciaNavysenie}
@@ -694,7 +694,6 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-                showOnlySummary={false}
               />
             )}
 
@@ -826,10 +825,10 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre ostatné Prosto House domy (nie Nord, nie Fjord, nie Flat 1,5, nie Flat Double) */}
             {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && (
-              <KonfiguratorProstoHouse
+              <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
-                onReset={handleKonfiguratorReset}
+                useProstoHousePrices={true}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
                 izolaciaNavysenie={izolaciaNavysenie}
@@ -886,15 +885,15 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-                showOnlySummary={false}
               />
             )}
 
             {/* Konfigurátor pre Nord - vlastné ceny */}
             {isProstoHouse && dom.nazov?.includes("Nord") && (
-              <KonfiguratorNord 
+              <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
+                useNordPrices={true}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
                 izolaciaNavysenie={izolaciaNavysenie}
