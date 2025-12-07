@@ -2,6 +2,8 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { useQuery } from "@tanstack/react-query";
+import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -173,6 +175,19 @@ export default function KonfiguratorProstoHouse({
 
   const { animations, triggerAnimation } = useFlyingAnimation();
   const { t } = useLanguage();
+
+  // Načítanie dynamických textov pre tooltips
+  const { data: konfiguratorTexts } = useQuery({
+    queryKey: ['konfigurator-texts-prosto'],
+    queryFn: () => base44.entities.KonfiguratorText.filter({ vyrobca: 'Prosto House' }),
+    initialData: []
+  });
+
+  const getTooltip = (polozkaId, defaultText) => {
+    if (!konfiguratorTexts || konfiguratorTexts.length === 0) return defaultText;
+    const text = konfiguratorTexts.find(t => t.polozka_id === polozkaId);
+    return text?.tooltip || defaultText;
+  };
 
   // Cenník - Prosto House ceny
   const CENY = {
