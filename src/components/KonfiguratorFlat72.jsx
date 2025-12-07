@@ -170,32 +170,32 @@ export default function KonfiguratorFlat72({
   const { animations, triggerAnimation } = useFlyingAnimation();
   const { t } = useLanguage();
 
-  // FLAT 72 CENNÍK - PRESNÉ CENY Z OBRÁZKOV (Prosto House štandard s predĺžením)
+  // FLAT 72 CENNÍK - PRESNÉ CENY Z OBRÁZKOV
   const CENY = {
-    montaz: { nie: 0, ano: 9225 },
-    dvere: { ziadne: 0, kovove: 720, plastove: 860 },
+    montaz: { nie: 0, ano: 7925 },
+    dvere: { ziadne: 0, kovove: 720, plastove: 460 },
     predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
-    izolacia: { standard: 0, "250mm": 2700, "300mm": 5400, ultra: 10125 },
+    izolacia: { standard: 0, "200mm": 2950, "250mm": 5900, "300mm": 11063 },
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
-    bojler: 264,
+    bojler: 246,
     tepelneCerpadlo: 3321,
     rekuperacia: 1600,
-    zaklady: { bez: 0, skrutky: 4751, doska: 9633, pasove: 11823 },
+    zaklady: { bez: 0, skrutky: 4428, doska: 11849, pasove: 11184 },
     pripojkaSiete: 1501,
     inziniering: 2592,
     projektA0: 3500,
-    interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 9430 },
-    vonkajsiaFasada: { standard: 0, suchana: 6371 },
-    povrchokaOkien: 1450,
-    vnutornePodlahy: 1750,
+    interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 8815 },
+    vonkajsiaFasada: { standard: 0, suchana: 8499 },
+    povrchokaOkien: 1550,
+    vnutornePodlahy: 1680,
     podlahovVykurovanie: 3960,
     pergola: 972,
     interieroveDvere: 180,
-    tonovaneSkla: 700,
+    tonovaneSkla: 680,
     doprava: 0,
-    revizna: 1000,
+    revizna: 500,
     stresneOkno: 760,
     bocneOknoFixne: 500,
     bocneOknoVyklopne90: 540,
@@ -251,7 +251,7 @@ export default function KonfiguratorFlat72({
     if (!projektA0) return null;
     
     const chybajuce = [];
-    if (izolaciaNavysenie !== "ultra") chybajuce.push("Premium izolácia (300mm steny, strecha)");
+    if (izolaciaNavysenie !== "300mm") chybajuce.push("Premium izolácia (300mm steny, strecha)");
     if (!tepelneCerpadlo) chybajuce.push("Tepelné čerpadlo / Klimatizácia");
     if (!rekuperacia) chybajuce.push("Rekuperácia");
     
@@ -278,7 +278,7 @@ export default function KonfiguratorFlat72({
     
     if (predlzenie > 0) items.push({ name: `Predĺženie domu +${predlzenie}m`, price: CENY.predlzenie[predlzenie] || 0, section: "hruba", selected: true });
     
-    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Izolácia 300mm" : izolaciaNavysenie === "300mm" ? "Izolácia 300mm" : izolaciaNavysenie === "250mm" ? "Izolácia 250mm" : t('insulationStd');
+    const izolaciaLabel = izolaciaNavysenie === "300mm" ? "Izolácia 300mm" : izolaciaNavysenie === "250mm" ? "Izolácia 250mm" : izolaciaNavysenie === "200mm" ? "Izolácia 200mm" : t('insulationStd');
     const izolaciaPrice = CENY.izolacia[izolaciaNavysenie] || 0;
     items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" });
     
@@ -631,8 +631,8 @@ export default function KonfiguratorFlat72({
                     </div>
 
                     {/* Izolácia */}
-                    <div className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-3 gap-2 sm:gap-3 p-4 border-[5px] border-cyan-600 rounded-2xl bg-cyan-100/70 shadow-xl">
-                      <p className="col-span-3 text-[10px] sm:text-xs font-bold text-cyan-700 -mb-1 flex items-center gap-1">
+                    <div className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-4 gap-2 sm:gap-3 p-4 border-[5px] border-cyan-600 rounded-2xl bg-cyan-100/70 shadow-xl">
+                      <p className="col-span-4 text-[10px] sm:text-xs font-bold text-cyan-700 -mb-1 flex items-center gap-1">
                         <span className="w-5 h-5 sm:w-6 sm:h-6 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
                         {t('insulation')} ({t('selectOne')})
                       </p>
@@ -649,13 +649,25 @@ export default function KonfiguratorFlat72({
                       />
 
                       <Tile
+                        selected={izolaciaNavysenie === "200mm"}
+                        onClick={(e) => { if (izolaciaNavysenie !== "200mm") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("200mm"); }}
+                        icon={ThermometerSun}
+                        iconColor="text-orange-400"
+                        iconSelectedColor="text-amber-600"
+                        title="200mm"
+                        subtitle="Steny/Strecha"
+                        price={`+ ${CENY.izolacia["200mm"].toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                      />
+
+                      <Tile
                         selected={izolaciaNavysenie === "250mm"}
                         onClick={(e) => { if (izolaciaNavysenie !== "250mm") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("250mm"); }}
                         icon={ThermometerSun}
-                        iconColor="text-orange-400"
+                        iconColor="text-green-500"
                         iconSelectedColor="text-green-600"
                         title="250mm"
-                        subtitle="250mm"
+                        subtitle="Steny/Strecha"
                         price={`+ ${CENY.izolacia["250mm"].toLocaleString('sk-SK')} €`}
                         isPriced={true}
                         isA0={true}
@@ -668,27 +680,11 @@ export default function KonfiguratorFlat72({
                         selected={izolaciaNavysenie === "300mm"}
                         onClick={(e) => { if (izolaciaNavysenie !== "300mm") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("300mm"); }}
                         icon={ThermometerSun}
-                        iconColor="text-green-500"
-                        iconSelectedColor="text-green-600"
-                        title="300mm"
-                        subtitle="300mm"
-                        price={`+ ${CENY.izolacia["300mm"].toLocaleString('sk-SK')} €`}
-                        isPriced={true}
-                        isA0={true}
-                        selectedBg="bg-green-100"
-                        selectedBorder="border-green-500"
-                        selectedRing="ring-green-300"
-                      />
-
-                      <Tile
-                        selected={izolaciaNavysenie === "ultra"}
-                        onClick={(e) => { if (izolaciaNavysenie !== "ultra") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("ultra"); }}
-                        icon={ThermometerSun}
                         iconColor="text-green-600"
                         iconSelectedColor="text-green-700"
-                        title="Éxtra 300mm"
-                        subtitle="Ultra izolácia"
-                        price={`+ ${CENY.izolacia.ultra.toLocaleString('sk-SK')} €`}
+                        title="300mm"
+                        subtitle="Steny/Strecha"
+                        price={`+ ${CENY.izolacia["300mm"].toLocaleString('sk-SK')} €`}
                         isPriced={true}
                         isA0={true}
                         selectedBg="bg-green-100"
