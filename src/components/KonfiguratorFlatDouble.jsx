@@ -664,7 +664,7 @@ export default function KonfiguratorFlatDouble({
                 iconSelectedColor="text-blue-600"
                 title={t('interiorWood')}
                 subtitle={t('woodCladding')}
-                price="+ 16 400 €"
+                price={`+ ${CENY.interierFinis.drevo.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('interiorWood')}
               />
@@ -677,7 +677,7 @@ export default function KonfiguratorFlatDouble({
                 iconSelectedColor="text-blue-600"
                 title={t('interiorDrywall')}
                 subtitle={t('plaster')}
-                price="+ 19 475 €"
+                price={`+ ${CENY.interierFinis.sadrokarton.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('interiorDrywall')}
               />
@@ -697,7 +697,7 @@ export default function KonfiguratorFlatDouble({
                 iconSelectedColor="text-yellow-600"
                 title={t('electrical')}
                 subtitle={t('wiring')}
-                price="+ 7 400 €"
+                price={`+ ${CENY.elektroinstalacia.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 selectedBg="bg-yellow-100"
                 selectedBorder="border-yellow-500"
@@ -714,7 +714,7 @@ export default function KonfiguratorFlatDouble({
                 iconSelectedColor="text-blue-600"
                 title={t('water')}
                 subtitle={t('wiring')}
-                price="+ 2 380 €"
+                price={`+ ${CENY.vodaKanalizacia.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('waterFull')}
               />
@@ -727,7 +727,7 @@ export default function KonfiguratorFlatDouble({
               iconSelectedColor="text-blue-600"
               title={t('sanitary')}
               subtitle={t('complete')}
-              price="+ 1 169 €"
+              price={`+ ${CENY.sanitaKomplet.toLocaleString('sk-SK')} €`}
               isPriced={true}
               tooltip={t('sanitaryFull')}
               />
@@ -740,7 +740,7 @@ export default function KonfiguratorFlatDouble({
                 iconSelectedColor="text-orange-600"
                 title={t('boiler')}
                 subtitle={t('boilerElectric')}
-                price="+ 246 €"
+                price={`+ ${CENY.bojler.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                   selectedBg="bg-orange-100"
                   selectedBorder="border-orange-500"
@@ -764,7 +764,7 @@ export default function KonfiguratorFlatDouble({
                   iconSelectedColor="text-green-600"
                   title={t('heatPump')}
                   subtitle={t('units5')}
-                  price="+ 5 535 €"
+                  price={`+ ${CENY.tepelneCerpadlo.toLocaleString('sk-SK')} €`}
                   isPriced={true}
                   isA0={true}
                   selectedBg="bg-green-100"
@@ -781,7 +781,7 @@ export default function KonfiguratorFlatDouble({
                   iconSelectedColor="text-green-600"
                   title={t('recuperation')}
                   subtitle={t('units5')}
-                  price="+ 2 700 €"
+                  price={`+ ${CENY.rekuperacia.toLocaleString('sk-SK')} €`}
                   isPriced={true}
                   isA0={true}
                   selectedBg="bg-green-100"
@@ -799,7 +799,7 @@ export default function KonfiguratorFlatDouble({
                 iconSelectedColor="text-gray-700"
                 title={t('gridConnection')}
                 subtitle={t('connection')}
-                price="+ 1 501 €"
+                price={`+ ${CENY.pripojkaSiete.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 selectedBg="bg-gray-200"
                 selectedBorder="border-gray-500"
@@ -816,7 +816,7 @@ export default function KonfiguratorFlatDouble({
                 iconSelectedColor="text-slate-700"
                 title={t('lamination')}
                 subtitle={t('laminationAnthracite')}
-                price="+ 3 100 €"
+                price={`+ ${CENY.povrchokaOkien.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 selectedBg="bg-slate-200"
                 selectedBorder="border-slate-600"
@@ -833,7 +833,7 @@ export default function KonfiguratorFlatDouble({
                 iconSelectedColor="text-amber-600"
                 title={t('tintedGlass')}
                 subtitle={t('solarGlass')}
-                price="+ 1 300 €"
+                price={`+ ${CENY.tonovaneSkla.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 selectedBg="bg-amber-100"
                 selectedBorder="border-amber-500"
@@ -853,8 +853,8 @@ export default function KonfiguratorFlatDouble({
             <div className="grid grid-cols-3 gap-2">
               {[
                 { value: "ziadne", label: t('doorStandard'), price: "0 €" },
-                { value: "kovove", label: t('doorMetal'), price: "+ 720 €" },
-                { value: "plastove", label: t('doorPlastic'), price: "+ 660 €" }
+                { value: "kovove", label: t('doorMetal'), price: `+ ${CENY.dvere.kovove.toLocaleString('sk-SK')} €` },
+                { value: "plastove", label: t('doorPlastic'), price: `+ ${CENY.dvere.plastove.toLocaleString('sk-SK')} €` }
               ].map((opt) => (
                 <motion.div
                   key={opt.value}
@@ -879,10 +879,10 @@ export default function KonfiguratorFlatDouble({
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {[
-                  { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: "760 €" },
-                  { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: "501 €" },
-                  { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: "540 €" },
-                  { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: "325 €" }
+                  { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: `${CENY.stresneOkno.toLocaleString('sk-SK')} €` },
+                  { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: `${CENY.bocneOknoFixne.toLocaleString('sk-SK')} €` },
+                  { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: `${CENY.bocneOknoVyklopne90.toLocaleString('sk-SK')} €` },
+                  { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: `${CENY.bocneOknoVyklopne55.toLocaleString('sk-SK')} €` }
                 ].map((opt, idx) => (
                 <div key={idx} className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
                   <span className="font-medium text-gray-800 text-[10px] sm:text-xs block mb-1">{opt.label}</span>
@@ -958,7 +958,7 @@ export default function KonfiguratorFlatDouble({
                 iconSelectedColor="text-emerald-600"
                 title={t('facadeStucco')}
                 subtitle={t('whitePlaster')}
-                price="+ 12 841 €"
+                price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 selectedBg="bg-emerald-100"
                 selectedBorder="border-emerald-500"
@@ -976,7 +976,7 @@ export default function KonfiguratorFlatDouble({
               iconSelectedColor="text-emerald-600"
               title={t('floors')}
               subtitle={t('floorsLaminate')}
-              price="+ 3 351 €"
+              price={`+ ${CENY.vnutornePodlahy.toLocaleString('sk-SK')} €`}
               isPriced={true}
               selectedBg="bg-emerald-100"
               selectedBorder="border-emerald-500"
@@ -993,7 +993,7 @@ export default function KonfiguratorFlatDouble({
               iconSelectedColor="text-orange-600"
               title={t('floorHeating')}
               subtitle={t('wifiThermostat')}
-              price="+ 5 525 €"
+              price={`+ ${CENY.podlahovVykurovanie.toLocaleString('sk-SK')} €`}
               isPriced={true}
               selectedBg="bg-orange-100"
               selectedBorder="border-orange-500"
@@ -1010,7 +1010,7 @@ export default function KonfiguratorFlatDouble({
               iconSelectedColor="text-emerald-600"
               title={t('pergola')}
               subtitle={t('terrace')}
-              price="+ 1 845 €"
+              price={`+ ${CENY.pergola.toLocaleString('sk-SK')} €`}
               isPriced={true}
               selectedBg="bg-emerald-100"
               selectedBorder="border-emerald-500"
@@ -1028,7 +1028,7 @@ export default function KonfiguratorFlatDouble({
                 <DoorOpen className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-600" />
                 <div>
                   <span className="font-semibold text-gray-800 text-xs sm:text-sm">{t('interiorDoors')}</span>
-                  <span className="text-green-600 font-bold text-xs ml-2">× 180 €</span>
+                  <span className="text-green-600 font-bold text-xs ml-2">× {CENY.interieroveDvere.toLocaleString('sk-SK')} €</span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -1077,7 +1077,7 @@ export default function KonfiguratorFlatDouble({
               iconSelectedColor="text-purple-600"
               title={t('engineering')}
               subtitle={t('buildingPermit')}
-              price="+ 2 592 €"
+              price={`+ ${CENY.inziniering.toLocaleString('sk-SK')} €`}
               isPriced={true}
               selectedBg="bg-purple-100"
               selectedBorder="border-purple-500"
@@ -1094,7 +1094,7 @@ export default function KonfiguratorFlatDouble({
               iconSelectedColor="text-green-600"
               title={t('projectA0')}
               subtitle={t('certification')}
-              price="+ 3 500 €"
+              price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`}
               isPriced={true}
               isA0={true}
               selectedBg="bg-green-100"
@@ -1111,7 +1111,7 @@ export default function KonfiguratorFlatDouble({
               iconSelectedColor="text-purple-600"
               title={t('revision')}
               subtitle={t('documentation')}
-              price="+ 1 000 €"
+              price={`+ ${CENY.revizna.toLocaleString('sk-SK')} €`}
               isPriced={true}
               selectedBg="bg-purple-100"
               selectedBorder="border-purple-500"
