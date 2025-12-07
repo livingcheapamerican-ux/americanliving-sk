@@ -165,7 +165,7 @@ export default function KonfiguratorFlat72({
   showOnlyPhase = null,
   typStavby = ""
 }) {
-  const BASE_PRICE = dom?.zakladna_cena || 29900;
+  const BASE_PRICE = dom?.zakladna_cena || 31700;
 
   const { animations, triggerAnimation } = useFlyingAnimation();
   const { t } = useLanguage();
