@@ -136,6 +136,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
 export default function KonfiguratorProstoHouse({ 
   dom,
   onReset,
+  dynamicTexts = null,
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,

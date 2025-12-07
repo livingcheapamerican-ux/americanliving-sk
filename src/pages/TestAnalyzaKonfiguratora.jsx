@@ -108,13 +108,18 @@ export default function TestAnalyzaKonfiguratora() {
     try {
       const itemsToImplement = result.items.filter((_, index) => selectedItems.includes(index));
       
-      // Tu môžeš pridať backend funkciu na implementáciu
-      console.log('Implementujem tieto položky:', itemsToImplement);
+      const response = await base44.functions.invoke('implementujKonfiguratorTexty', {
+        items: itemsToImplement,
+        vyrobca: 'Prosto House'
+      });
       
-      alert(`Úspešne označených ${selectedItems.length} položiek na implementáciu do Prosto House konfigurátorov`);
+      if (response.data.success) {
+        alert(`Úspešne implementovaných ${response.data.count} textov do Prosto House konfigurátorov`);
+        setSelectedItems([]);
+      }
     } catch (error) {
       console.error(error);
-      alert('Chyba pri implementácii');
+      alert('Chyba pri implementácii: ' + error.message);
     }
     setImplementing(false);
   };
