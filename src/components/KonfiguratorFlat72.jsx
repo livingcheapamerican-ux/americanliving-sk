@@ -185,7 +185,7 @@ export default function KonfiguratorFlat72({
 
   // FLAT 72 CENNÍK - FIXNÉ CENY (72m²) - extrahované z obrázkov
   const CENY = {
-    montaz: { nie: 0, ano: 17925 },
+    montaz: { nie: 0, ano: 7925 },
     dvere: { ziadne: 0, kovove: 720, plastove: 460 },
     izolacia: { standard: 0, zvysena: 2950, premium: 5900, ultra: 11063 },
     elektroinstalacia: 3900,

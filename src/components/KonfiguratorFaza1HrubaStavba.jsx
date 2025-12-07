@@ -160,7 +160,7 @@ export default function KonfiguratorFaza1HrubaStavba({
 
   // Ceny pre Flat 72
   const FLAT72_CENY = {
-    montaz: 17925,
+    montaz: 7925,
     izolacia: { zvysena: 2950, premium: 5900, ultra: 11063 },
     zaklady: { skrutky: 4428, doska: 11849, pasove: 11184 }
   };
