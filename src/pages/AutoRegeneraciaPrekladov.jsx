@@ -67,7 +67,16 @@ export default function AutoRegeneraciaPrekladov() {
                 Regenerujem preklady pre všetky Prosto House domy...
               </p>
               <p className="text-sm text-gray-600 mt-2">
-                Tento proces môže trvať niekoľko minút. Prosím, počkajte.
+                Celkovo {domyPredRegenraciou?.length || '...'} domov na spracovanie
+              </p>
+              <div className="mt-4 flex items-center justify-center gap-2">
+                <RefreshCw className="w-4 h-4 text-blue-600 animate-spin" />
+                <span className="text-sm font-mono text-gray-600">
+                  {Math.floor(elapsedTime / 60)}:{String(elapsedTime % 60).padStart(2, '0')} min
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mt-6">
+                Približne 10-30 sekúnd na dom. Proces beží na pozadí.
               </p>
             </div>
           )}
