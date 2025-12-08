@@ -167,6 +167,18 @@ export default function AutoRegeneraciaPrekladov() {
                   ✅ Preklady boli úspešne aktualizované. Všetky Prosto House domy majú teraz kompletné preklady v nemčine, francúzštine, srbčine, chorvátčine a gréčtine.
                 </p>
               </div>
+
+              <div className="mt-4 flex justify-center">
+                <Button
+                  onClick={() => window.location.reload()}
+                  variant="outline"
+                  size="lg"
+                  className="font-semibold"
+                >
+                  <RefreshCw className="mr-2 w-4 h-4" />
+                  Spustiť znova
+                </Button>
+              </div>
             </motion.div>
           )}
         </Card>
