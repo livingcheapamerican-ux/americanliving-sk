@@ -20,7 +20,6 @@ import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation"
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
-import KonfiguratorFaza0Sluzby from "./KonfiguratorFaza0Sluzby";
 
 // Dlaždica s tooltip a veľkou fajkou
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
@@ -623,20 +622,6 @@ export default function KonfiguratorFlatDouble({
       <div>
       <div className="space-y-6">
 
-        {!showOnlyPhase && (
-          <KonfiguratorFaza0Sluzby
-            predajNehnutelnosti={predajNehnutelnosti}
-            setPredajNehnutelnosti={setPredajNehnutelnosti}
-            hladaniePozemku={hladaniePozemku}
-            setHladaniePozemku={setHladaniePozemku}
-            financneSluzby={financneSluzby}
-            setFinancneSluzby={setFinancneSluzby}
-          />
-        )}
-
-        {/* ═══════════════════════════════════════════════════════════════════════
-          FÁZA 1: HRUBÁ STAVBA
-          ═══════════════════════════════════════════════════════════════════════ */}
         {showHruba && (
           <KonfiguratorFaza1HrubaStavba 
             montazHolodomu={montazHolodomu}
@@ -665,7 +650,7 @@ export default function KonfiguratorFlatDouble({
           title={t('phase2')} 
           subtitle={t('phase2Subtitle')}
           color="from-blue-600 to-indigo-600"
-          step="3"
+          step="2"
         />
         <div className="p-3 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
           {/* Dlaždice - Grid layout */}
@@ -955,7 +940,7 @@ export default function KonfiguratorFlatDouble({
           title={t('phase3')} 
           subtitle={t('phase3Subtitle')}
           color="from-emerald-600 to-teal-600"
-          step="4"
+          step="3"
         />
         <div className="p-3 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
           {/* Dlaždice - Grid layout */}
@@ -1097,7 +1082,7 @@ export default function KonfiguratorFlatDouble({
           title={t('phase4')} 
           subtitle={t('phase4Subtitle')}
           color="from-purple-600 to-violet-600"
-          step="5"
+          step="4"
         />
         <div className="p-3 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
           {/* Dlaždice - Grid layout */}

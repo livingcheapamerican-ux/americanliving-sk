@@ -1,11 +1,17 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Home, CheckCircle, TreePine, Sparkles } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Home, CheckCircle, TreePine, Sparkles, Building2, MapPin, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "./LanguageContext";
 
-export default function TypStavbySelector({ typStavby, setTypStavby, onContinue }) {
+export default function TypStavbySelector({ 
+  typStavby, setTypStavby, onContinue,
+  predajNehnutelnosti, setPredajNehnutelnosti,
+  hladaniePozemku, setHladaniePozemku,
+  financneSluzby, setFinancneSluzby
+}) {
   const { t } = useLanguage();
 
   return (
@@ -162,19 +168,85 @@ export default function TypStavbySelector({ typStavby, setTypStavby, onContinue 
           </motion.div>
         </div>
 
-        {/* Continue button */}
+        {/* Doplnkové služby */}
         {typStavby && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mt-8"
+            className="mt-8"
           >
-            <button
-              onClick={onContinue}
-              className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold px-12 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all"
-            >
-              Pokračovať
-            </button>
+            <Card className="p-6 border-2 border-cyan-300 shadow-lg bg-gradient-to-b from-cyan-50/50 to-white">
+              <div className="flex items-center gap-3 mb-4">
+                <Building2 className="w-6 h-6 text-cyan-600" />
+                <h4 className="text-lg font-bold text-gray-800">{t('additionalServices')}</h4>
+              </div>
+              <p className="text-sm text-gray-600 mb-4">Vyberte si doplnkové služby (voliteľné):</p>
+              
+              <div className="space-y-3">
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  onClick={() => setPredajNehnutelnosti?.(!predajNehnutelnosti)}
+                  className={`p-4 rounded-lg cursor-pointer transition-all border-2 ${
+                    predajNehnutelnosti 
+                      ? 'bg-blue-100 border-blue-500 shadow-md' 
+                      : 'bg-white border-gray-200 hover:border-blue-300'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <Checkbox checked={predajNehnutelnosti} className="mt-1" />
+                    <div>
+                      <p className="font-semibold text-gray-800">{t('sellPreviousProperty')}</p>
+                      <p className="text-xs text-gray-600 mt-1">{t('sellPreviousPropertyDesc')}</p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  onClick={() => setHladaniePozemku?.(!hladaniePozemku)}
+                  className={`p-4 rounded-lg cursor-pointer transition-all border-2 ${
+                    hladaniePozemku 
+                      ? 'bg-green-100 border-green-500 shadow-md' 
+                      : 'bg-white border-gray-200 hover:border-green-300'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <Checkbox checked={hladaniePozemku} className="mt-1" />
+                    <div>
+                      <p className="font-semibold text-gray-800">{t('wantLandForHouse')}</p>
+                      <p className="text-xs text-gray-600 mt-1">{t('wantLandForHouseDesc')}</p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  onClick={() => setFinancneSluzby?.(!financneSluzby)}
+                  className={`p-4 rounded-lg cursor-pointer transition-all border-2 ${
+                    financneSluzby 
+                      ? 'bg-amber-100 border-amber-500 shadow-md' 
+                      : 'bg-white border-gray-200 hover:border-amber-300'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <Checkbox checked={financneSluzby} className="mt-1" />
+                    <div>
+                      <p className="font-semibold text-gray-800">{t('financialServicesLoans')}</p>
+                      <p className="text-xs text-gray-600 mt-1">{t('financialServicesLoansDesc')}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </Card>
+
+            <div className="text-center mt-6">
+              <button
+                onClick={onContinue}
+                className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold px-12 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all"
+              >
+                Pokračovať
+              </button>
+            </div>
           </motion.div>
         )}
       </div>
