@@ -561,6 +561,40 @@ export default function KonfiguratorBarnDouble({
                 step="2"
               />
               <div className="p-3 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
+
+                {/* Predĺženie domu */}
+                <div className="mb-4 p-4 border-[5px] border-indigo-600 rounded-2xl bg-indigo-100/70 shadow-xl">
+                  <p className="text-xs font-bold text-indigo-700 mb-3 flex items-center gap-1">
+                    <span className="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xs font-extrabold">+</span>
+                    Predĺženie dĺžky domu (v násobkoch 1,2m)
+                  </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                    {[
+                      { value: 0, label: "Bez predĺženia", price: "0 €" },
+                      { value: 1.2, label: "+1,2 m", price: `+ ${CENY.predlzenie[1.2].toLocaleString('sk-SK')} €` },
+                      { value: 2.4, label: "+2,4 m", price: `+ ${CENY.predlzenie[2.4].toLocaleString('sk-SK')} €` },
+                      { value: 3.6, label: "+3,6 m", price: `+ ${CENY.predlzenie[3.6].toLocaleString('sk-SK')} €` },
+                      { value: 4.8, label: "+4,8 m", price: `+ ${CENY.predlzenie[4.8].toLocaleString('sk-SK')} €` }
+                    ].map((opt) => (
+                      <motion.div
+                        key={opt.value}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setPredlzenie(opt.value)}
+                        className={`p-3 rounded-lg cursor-pointer text-center transition-all ${
+                          predlzenie === opt.value 
+                            ? "bg-indigo-200 border-2 border-indigo-600 shadow-lg" 
+                            : "bg-white border-2 border-gray-200 hover:border-indigo-300"
+                        }`}
+                      >
+                        <Maximize className={`w-5 h-5 mx-auto mb-1 ${predlzenie === opt.value ? "text-indigo-600" : "text-gray-400"}`} />
+                        <span className="font-medium text-gray-800 text-xs block">{opt.label}</span>
+                        <span className={`text-xs ${opt.value === 0 ? "text-gray-400" : "text-green-600 font-bold"}`}>{opt.price}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
                   <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-blue-600 rounded-xl bg-blue-100/70 shadow-xl">
