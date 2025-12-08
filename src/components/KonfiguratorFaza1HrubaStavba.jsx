@@ -73,7 +73,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative p-2 sm:p-4 rounded-lg sm:rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+      className={`relative p-1 sm:p-4 rounded-md sm:rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
         selected 
           ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
           : isA0 
@@ -103,10 +103,10 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         )}
       </AnimatePresence>
 
-      <Icon className={`w-5 h-5 sm:w-10 sm:h-10 mb-1 sm:mb-2 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
-      <span className={`font-semibold text-gray-800 text-[10px] sm:text-sm leading-tight ${selected ? "opacity-30" : ""}`}>{title}</span>
-      <span className={`text-[8px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1 leading-tight ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
-      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2 ${selected ? "opacity-30" : ""}`}>{price}</span>
+      <Icon className={`w-3 h-3 sm:w-10 sm:h-10 mb-0.5 sm:mb-2 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
+      <span className={`font-semibold text-gray-800 text-[8px] sm:text-sm leading-tight ${selected ? "opacity-30" : ""}`}>{title}</span>
+      <span className={`text-[7px] sm:text-xs text-gray-500 mt-0.5 leading-tight ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
+      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[7px] sm:text-xs mt-0.5 sm:mt-2 ${selected ? "opacity-30" : ""}`}>{price}</span>
 
       {/* Tooltip - rendered via portal */}
       {showTooltip && tooltip && ReactDOM.createPortal(
@@ -209,12 +209,12 @@ export default function KonfiguratorFaza1HrubaStavba({
   
   // Sekcia Header komponenta s animáciou
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
-    <motion.div 
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${color} overflow-hidden`}
-    >
+  <motion.div 
+    initial={{ opacity: 0, y: -10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.4 }}
+    className={`relative flex items-center gap-1 sm:gap-3 p-1.5 sm:p-3 bg-gradient-to-r ${color} overflow-hidden`}
+  >
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-1/2 w-24 h-24 bg-white rounded-full blur-2xl"></div>
@@ -228,23 +228,23 @@ export default function KonfiguratorFaza1HrubaStavba({
       
       <motion.div 
         whileHover={{ scale: 1.1, rotate: 5 }}
-        className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white/25 backdrop-blur-sm rounded-lg sm:rounded-xl shadow-lg border border-white/20"
+        className="relative flex items-center justify-center w-6 h-6 sm:w-10 sm:h-10 bg-white/25 backdrop-blur-sm rounded-md sm:rounded-xl shadow-lg border border-white/20 flex-shrink-0"
       >
-        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+        <Icon className="w-3 h-3 sm:w-5 sm:h-5 text-white" />
       </motion.div>
-      <div className="relative flex-1">
-        <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
+      <div className="relative flex-1 min-w-0">
+        <div className="flex items-center gap-1 sm:gap-2 mb-0.5">
           <motion.span 
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring" }}
-            className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[9px] sm:text-xs font-bold uppercase tracking-wider"
+            className="inline-flex items-center justify-center px-1 sm:px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[8px] sm:text-xs font-bold uppercase tracking-wider"
           >
             {t('phase')} {step}
           </motion.span>
         </div>
-        <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight">{title}</h3>
-        {subtitle && <p className="text-white/80 text-[10px] sm:text-xs mt-0.5">{subtitle}</p>}
+        <h3 className="text-xs sm:text-lg font-bold text-white tracking-tight truncate">{title}</h3>
+        {subtitle && <p className="text-white/80 text-[9px] sm:text-xs mt-0.5 truncate">{subtitle}</p>}
       </div>
     </motion.div>
   );
@@ -254,12 +254,13 @@ export default function KonfiguratorFaza1HrubaStavba({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
+      className="w-full max-w-full overflow-hidden"
     >
       {/* Odporúčací text pre A0 */}
-      <div className="mb-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl">
-        <div className="flex items-start gap-3">
-          <Sparkles className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-green-800 font-medium">
+      <div className="mb-2 sm:mb-4 p-2 sm:p-4 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-lg sm:rounded-xl">
+        <div className="flex items-start gap-1.5 sm:gap-3">
+          <Sparkles className="w-3 h-3 sm:w-5 sm:h-5 text-green-600 flex-shrink-0 mt-0.5" />
+          <p className="text-[9px] sm:text-sm text-green-800 font-medium">
             {t('a0Recommendation')}
           </p>
         </div>
@@ -273,17 +274,17 @@ export default function KonfiguratorFaza1HrubaStavba({
           color="from-amber-600 to-orange-600"
           step="1"
         />
-        <div className="p-3 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
+        <div className="p-1.5 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
           {/* Upozornenie na montáž */}
-          <p className="text-[10px] sm:text-xs text-red-600 mb-3 text-center">{t('assemblyNote')}</p>
-          
+          <p className="text-[9px] sm:text-xs text-red-600 mb-2 sm:mb-3 text-center">{t('assemblyNote')}</p>
+
           {/* Dlaždice - Grid layout */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
 
             {/* Montáž - skupina */}
-            <div className="col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] border-amber-600 rounded-2xl bg-amber-100/70 shadow-xl">
-              <p className="col-span-2 text-[10px] sm:text-xs font-bold text-amber-700 -mb-1 flex items-center gap-1">
-                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-amber-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">1</span>
+            <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-3 p-1.5 sm:p-4 border-[2px] sm:border-[5px] border-amber-600 rounded-lg sm:rounded-2xl bg-amber-100/70 shadow-xl">
+              <p className="col-span-2 text-[8px] sm:text-xs font-bold text-amber-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
+                <span className="w-3.5 h-3.5 sm:w-6 sm:h-6 bg-amber-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-xs font-extrabold">1</span>
                 {t('assembly')} ({t('selectOne')})
               </p>
               <Tile
@@ -315,12 +316,12 @@ export default function KonfiguratorFaza1HrubaStavba({
 
             {/* Predĺženie domu - len pre Prosto House, A-Frame a Barn 48 */}
             {(useProstoHousePrices || useAFramePrices || useBarn48Prices) && setPredlzenie && (
-              <div className="col-span-2 sm:col-span-3 lg:col-span-4 p-4 border-[5px] border-indigo-600 rounded-2xl bg-indigo-100/70 shadow-xl">
-                <p className="text-xs font-bold text-indigo-700 mb-3 flex items-center gap-1">
-                  <span className="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xs font-extrabold">+</span>
-                  Predĺženie dĺžky domu (v násobkoch 1,2m)
+              <div className="col-span-1 sm:col-span-3 lg:col-span-4 p-1.5 sm:p-4 border-[2px] sm:border-[5px] border-indigo-600 rounded-lg sm:rounded-2xl bg-indigo-100/70 shadow-xl">
+                <p className="text-[9px] sm:text-xs font-bold text-indigo-700 mb-2 sm:mb-3 flex items-center gap-0.5 sm:gap-1">
+                  <span className="w-4 h-4 sm:w-6 sm:h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-xs font-extrabold">+</span>
+                  <span className="text-[8px] sm:text-xs">Predĺženie dĺžky domu (v násobkoch 1,2m)</span>
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-1 sm:gap-2">
                   {[
                     { value: 0, label: "Bez predĺženia", price: "0 €" },
                     { value: 1.2, label: "+1,2 m", price: useBarn48Prices ? `+ ${BARN48_CENY.predlzenie[1.2].toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.predlzenie[1.2].toLocaleString('sk-SK')} €` : "+ 6 600 €" },
@@ -333,15 +334,15 @@ export default function KonfiguratorFaza1HrubaStavba({
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setPredlzenie(opt.value)}
-                      className={`p-3 rounded-lg cursor-pointer text-center transition-all ${
+                      className={`p-1.5 sm:p-3 rounded-md sm:rounded-lg cursor-pointer text-center transition-all ${
                         predlzenie === opt.value 
                           ? "bg-indigo-200 border-2 border-indigo-600 shadow-lg" 
                           : "bg-white border-2 border-gray-200 hover:border-indigo-300"
                       }`}
                     >
-                      <Maximize className={`w-5 h-5 mx-auto mb-1 ${predlzenie === opt.value ? "text-indigo-600" : "text-gray-400"}`} />
-                      <span className="font-medium text-gray-800 text-xs block">{opt.label}</span>
-                      <span className={`text-xs ${opt.value === 0 ? "text-gray-400" : "text-green-600 font-bold"}`}>{opt.price}</span>
+                      <Maximize className={`w-3 h-3 sm:w-5 sm:h-5 mx-auto mb-0.5 sm:mb-1 ${predlzenie === opt.value ? "text-indigo-600" : "text-gray-400"}`} />
+                      <span className="font-medium text-gray-800 text-[8px] sm:text-xs block">{opt.label}</span>
+                      <span className={`text-[8px] sm:text-xs ${opt.value === 0 ? "text-gray-400" : "text-green-600 font-bold"}`}>{opt.price}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -349,9 +350,9 @@ export default function KonfiguratorFaza1HrubaStavba({
             )}
 
             {/* Izolácia - skupina */}
-            <div className={`col-span-2 sm:col-span-3 lg:col-span-2 grid ${useNordPrices || useProstoHousePrices || useFlat72Prices ? 'grid-cols-4' : 'grid-cols-3'} gap-2 sm:gap-3 p-4 border-[5px] border-cyan-600 rounded-2xl bg-cyan-100/70 shadow-xl`}>
-              <p className={`${useNordPrices || useFlat72Prices ? 'col-span-4' : 'col-span-3'} text-[10px] sm:text-xs font-bold text-cyan-700 -mb-1 flex items-center gap-1`}>
-                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
+            <div className={`col-span-1 sm:col-span-3 lg:col-span-2 grid ${useNordPrices || useProstoHousePrices || useFlat72Prices ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3'} gap-1 sm:gap-3 p-1.5 sm:p-4 border-[2px] sm:border-[5px] border-cyan-600 rounded-lg sm:rounded-2xl bg-cyan-100/70 shadow-xl`}>
+              <p className={`${useNordPrices || useFlat72Prices ? 'col-span-2 sm:col-span-4' : 'col-span-2 sm:col-span-3'} text-[8px] sm:text-xs font-bold text-cyan-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1`}>
+                <span className="w-3.5 h-3.5 sm:w-6 sm:h-6 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-xs font-extrabold">2</span>
                 {t('insulation')} ({t('selectOne')})
               </p>
               <Tile
@@ -418,9 +419,9 @@ export default function KonfiguratorFaza1HrubaStavba({
             </div>
 
             {/* Základy - skupina */}
-            <div className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-4 border-[5px] border-orange-600 rounded-2xl bg-orange-100/70 shadow-xl">
-              <p className="col-span-2 sm:col-span-4 text-[10px] sm:text-xs font-bold text-orange-700 -mb-1 flex items-center gap-1">
-                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-orange-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">3</span>
+            <div className="col-span-1 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-3 p-1.5 sm:p-4 border-[2px] sm:border-[5px] border-orange-600 rounded-lg sm:rounded-2xl bg-orange-100/70 shadow-xl">
+              <p className="col-span-2 sm:col-span-4 text-[8px] sm:text-xs font-bold text-orange-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
+                <span className="w-3.5 h-3.5 sm:w-6 sm:h-6 bg-orange-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-xs font-extrabold">3</span>
                 {t('foundations')} ({t('selectOne')})
               </p>
               <Tile
