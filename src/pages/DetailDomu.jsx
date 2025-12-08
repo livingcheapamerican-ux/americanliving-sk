@@ -1769,43 +1769,19 @@ export default function DetailDomu() {
                   
                   {/* Špecifický obsah pre každý dom z popis */}
                   {dom.popis && (
-                    <div className="mb-4 space-y-1.5 text-xs sm:text-sm text-gray-700">
-                      {dom.popis.split('\n').filter(line => line.trim()).map((line, index) => {
-                        const trimmedLine = line.trim();
-                        let icon = CheckCircle;
-                        let iconColor = "text-green-600";
-                        
-                        if (trimmedLine.toLowerCase().includes('plocha') || trimmedLine.toLowerCase().includes('rozmer')) {
-                          icon = Maximize2;
-                          iconColor = "text-blue-600";
-                        } else if (trimmedLine.toLowerCase().includes('terasa')) {
-                          icon = Landmark;
-                          iconColor = "text-teal-600";
-                        } else if (trimmedLine.toLowerCase().includes('izb') || trimmedLine.toLowerCase().includes('modul')) {
-                          icon = Grid2x2;
-                          iconColor = "text-purple-600";
-                        } else if (trimmedLine.toLowerCase().includes('nábytok') || trimmedLine.toLowerCase().includes('kuchyn')) {
-                          icon = Home;
-                          iconColor = "text-amber-600";
-                        } else if (trimmedLine.toLowerCase().includes('okn') || trimmedLine.toLowerCase().includes('dver')) {
-                          icon = Package;
-                          iconColor = "text-indigo-600";
-                        } else if (trimmedLine.toLowerCase().includes('elektr') || trimmedLine.toLowerCase().includes('inštalác')) {
-                          icon = Zap;
-                          iconColor = "text-yellow-600";
-                        } else if (trimmedLine.toLowerCase().includes('vod') || trimmedLine.toLowerCase().includes('kanalizác')) {
-                          icon = Droplets;
-                          iconColor = "text-blue-500";
-                        }
-                        
-                        const IconComponent = icon;
-                        return (
-                          <div key={index} className="flex items-start gap-2">
-                            <IconComponent className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${iconColor} flex-shrink-0 mt-0.5`} />
-                            <span className="leading-relaxed">{trimmedLine}</span>
-                          </div>
-                        );
-                      })}
+                    <div className="mb-4 text-xs sm:text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+                      <TranslatedDescription 
+                        text={dom.popis}
+                        textEn={dom.popis_en}
+                        textHu={dom.popis_hu}
+                        textPl={dom.popis_pl}
+                        textUk={dom.popis_uk}
+                        textDe={dom.popis_de}
+                        textFr={dom.popis_fr}
+                        textSr={dom.popis_sr}
+                        textHr={dom.popis_hr}
+                        textEl={dom.popis_el}
+                      />
                     </div>
                   )}
 
