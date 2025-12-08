@@ -19,6 +19,7 @@ import KonfiguratorProstoHouse from "../components/KonfiguratorProstoHouse";
 import KonfiguratorAFrame from "../components/KonfiguratorAFrame";
 import KonfiguratorBarn48 from "../components/KonfiguratorBarn48";
 import KonfiguratorBarnDouble from "../components/KonfiguratorBarnDouble";
+import KonfiguratorFlatSmall from "../components/KonfiguratorFlatSmall";
 import { useLanguage } from "./LanguageContext";
 
 // Krok 0: Výber typu stavby
@@ -275,16 +276,17 @@ const StepIndicator = ({ currentStep, totalSteps, steps, typStavby }) => {
 
 // Hlavný komponent
 export default function KonfiguratorWizard({
-  dom,
-  useFjordPrices = false,
-  useNordPrices = false,
-  useFlat15Prices = false,
-  useFlatDoublePrices = false,
-  useFlat72Prices = false,
-  useProstoHousePrices = false,
-  useAFramePrices = false,
-  useBarn48Prices = false,
-  useBarnDoublePrices = false,
+        dom,
+        useFjordPrices = false,
+        useNordPrices = false,
+        useFlat15Prices = false,
+        useFlatDoublePrices = false,
+        useFlat72Prices = false,
+        useProstoHousePrices = false,
+        useAFramePrices = false,
+        useBarn48Prices = false,
+        useBarnDoublePrices = false,
+        useFlatSmallPrices = false,
   typStavby, setTypStavby,
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
@@ -459,7 +461,9 @@ export default function KonfiguratorWizard({
       showOnlyPhase: phase
     };
 
-    if (useAFramePrices) {
+    if (useFlatSmallPrices) {
+      return <KonfiguratorFlatSmall {...commonProps} />;
+    } else if (useAFramePrices) {
       return <KonfiguratorAFrame {...commonProps} />;
     } else if (useBarnDoublePrices) {
       return <KonfiguratorBarnDouble {...commonProps} />;
