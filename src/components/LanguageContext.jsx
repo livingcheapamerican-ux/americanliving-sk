@@ -558,6 +558,17 @@ const translations = {
     usableArea: "Nutzfläche",
     energyClass: "Energieklasse",
     
+    // Configurator phases
+    phase: "Phase",
+    additionalServices: "Zusätzliche Dienstleistungen",
+    additionalServicesSubtitle: "Wählen Sie die benötigten Dienstleistungen",
+    sellPreviousProperty: "Verkauf der vorherigen Immobilie",
+    sellPreviousPropertyDesc: "Unsere besten Immobilienexperten kümmern sich um Sie.",
+    wantLandForHouse: "Ich möchte ein Grundstück für mein Haus",
+    wantLandForHouseDesc: "Wir helfen Ihnen, das ideale Grundstück zu finden.",
+    financialServicesLoans: "Finanzdienstleistungen - Kredite/Versicherungen",
+    financialServicesLoansDesc: "Unsere besten Finanzexperten kümmern sich um Sie und helfen Ihnen nicht nur bei der Finanzierung Ihrer Wohnung, sondern reichen Ihnen auch in schwierigen finanziellen Zeiten die Hand.",
+    
     // Ticab House Standard Equipment
     standardEquipment: "Standardausstattung (im Preis inbegriffen)",
     constructionAndInsulation: "Konstruktion und Isolierung:",
@@ -1206,6 +1217,17 @@ const translations = {
     usableArea: "Surface utile",
     energyClass: "Classe énergétique",
     
+    // Configurator phases
+    phase: "Phase",
+    additionalServices: "Services supplémentaires",
+    additionalServicesSubtitle: "Sélectionnez les services dont vous avez besoin",
+    sellPreviousProperty: "Vente du bien immobilier précédent",
+    sellPreviousPropertyDesc: "Nos meilleurs experts immobiliers s'occuperont de vous.",
+    wantLandForHouse: "Je veux un terrain pour ma maison",
+    wantLandForHouseDesc: "Nous vous aiderons à trouver le terrain idéal.",
+    financialServicesLoans: "Services financiers - crédits/assurances",
+    financialServicesLoansDesc: "Nos meilleurs experts financiers s'occuperont de vous et vous aideront non seulement avec le financement de votre logement, mais vous tendront également la main dans les moments financiers difficiles.",
+    
     // Ticab House texts
     standardEquipment: "Équipement standard (inclus dans le prix)",
     constructionAndInsulation: "Construction et isolation:",
@@ -1804,6 +1826,17 @@ const translations = {
     builtArea: "Изграђена површина",
     usableArea: "Корисна површина",
     energyClass: "Енергетска класа",
+    
+    // Configurator phases
+    phase: "Фаза",
+    additionalServices: "Додатне услуге",
+    additionalServicesSubtitle: "Изаберите услуге које су вам потребне",
+    sellPreviousProperty: "Продаја претходне некретнине",
+    sellPreviousPropertyDesc: "Наши најбољи стручњаци за некретнине ће се побринути за вас.",
+    wantLandForHouse: "Желим парцелу за своју кућу",
+    wantLandForHouseDesc: "Помоћи ћемо вам да пронађете идеалну парцелу.",
+    financialServicesLoans: "Финансијске услуге - кредити/осигурање",
+    financialServicesLoansDesc: "Наши најбољи финансијски стручњаци ће се побринути за вас и помоћи вам не само са финансирањем вашег становања, већ ће пружити руку помоћи и у тешким финансијским тренуцима.",
     
     // Ticab House texts
     standardEquipment: "Стандардна опрема (укључено у цену)",
@@ -2531,6 +2564,17 @@ const translations = {
     familyHouse: "Obiteljska kuća",
     familyHouseDesc: "Cjelogodišnje stanovanje s A0 energetskim certifikatom",
     
+    // Configurator phases
+    phase: "Faza",
+    additionalServices: "Dodatne usluge",
+    additionalServicesSubtitle: "Odaberite usluge koje su vam potrebne",
+    sellPreviousProperty: "Prodaja prethodne nekretnine",
+    sellPreviousPropertyDesc: "Naši najbolji stručnjaci za nekretnine pobrinut će se za vas.",
+    wantLandForHouse: "Želim parcelu za svoju kuću",
+    wantLandForHouseDesc: "Pomoći ćemo vam pronaći idealnu parcelu.",
+    financialServicesLoans: "Financijske usluge - krediti/osiguranje",
+    financialServicesLoansDesc: "Naši najbolji financijski stručnjaci pobrinut će se za vas i pomoći vam ne samo s financiranjem vašeg stanovanja, već i pružiti ruku pomoći u teškim financijskim trenucima.",
+    
     // Footer
     allRightsReserved: "Sva prava pridržana",
     builtHouses: "Više od 700 kuća izgrađeno od 2008.",
@@ -3017,6 +3061,17 @@ const translations = {
     builtArea: "Δομημένη επιφάνεια",
     usableArea: "Χρήσιμη επιφάνεια",
     energyClass: "Ενεργειακή κλάση",
+    
+    // Configurator phases
+    phase: "Φάση",
+    additionalServices: "Πρόσθετες υπηρεσίες",
+    additionalServicesSubtitle: "Επιλέξτε τις υπηρεσίες που χρειάζεστε",
+    sellPreviousProperty: "Πώληση προηγούμενου ακινήτου",
+    sellPreviousPropertyDesc: "Οι καλύτεροι ειδικοί μας σε ακίνητα θα φροντίσουν για εσάς.",
+    wantLandForHouse: "Θέλω οικόπεδο για το σπίτι μου",
+    wantLandForHouseDesc: "Θα σας βοηθήσουμε να βρείτε το ιδανικό οικόπεδο.",
+    financialServicesLoans: "Χρηματοοικονομικές υπηρεσίες - δάνεια/ασφάλειες",
+    financialServicesLoansDesc: "Οι καλύτεροι χρηματοοικονομικοί ειδικοί μας θα φροντίσουν για εσάς και θα σας βοηθήσουν όχι μόνο με τη χρηματοδότηση της κατοικίας σας, αλλά θα σας προσφέρουν βοήθεια και σε δύσκολες οικονομικές στιγμές.",
     
     // Ticab House texts
     standardEquipment: "Τυπικός εξοπλισμός (περιλαμβάνεται στην τιμή)",
@@ -3623,6 +3678,14 @@ const translations = {
     
     // Configurator phases
     phase: "Phase",
+    additionalServices: "Additional services",
+    additionalServicesSubtitle: "Select the services you need",
+    sellPreviousProperty: "Sale of previous property",
+    sellPreviousPropertyDesc: "Our best real estate experts will take care of you.",
+    wantLandForHouse: "I want land for my house",
+    wantLandForHouseDesc: "We will help you find the ideal plot.",
+    financialServicesLoans: "Financial services - loans/insurance",
+    financialServicesLoansDesc: "Our best financial experts will take care of you and help you not only with financing your housing, but will also lend a helping hand in difficult financial times.",
     phase1: "Shell construction",
     phase1Subtitle: "Construction, insulation and foundations",
     phase2: "Shell house",
@@ -4138,6 +4201,14 @@ const translations = {
     
     // Configurator phases
     phase: "Fázis",
+    additionalServices: "További szolgáltatások",
+    additionalServicesSubtitle: "Válassza ki a szükséges szolgáltatásokat",
+    sellPreviousProperty: "Korábbi ingatlan értékesítése",
+    sellPreviousPropertyDesc: "Legjobb ingatlanszakértőink gondoskodnak Önről.",
+    wantLandForHouse: "Szeretnék telket a házamhoz",
+    wantLandForHouseDesc: "Segítünk megtalálni az ideális telket.",
+    financialServicesLoans: "Pénzügyi szolgáltatások - hitelek/biztosítás",
+    financialServicesLoansDesc: "Legjobb pénzügyi szakembereink gondoskodnak Önről, akik nemcsak a lakásfinanszírozásban segítenek, hanem pénzügyi nehézségek idején is segítő kezet nyújtanak.",
     phase1: "Szerkezetkész",
     phase1Subtitle: "Szerkezet, szigetelés és alapok",
     phase2: "Félkész ház",
@@ -4643,6 +4714,14 @@ const translations = {
     
     // Configurator phases
     phase: "Faza",
+    additionalServices: "Dodatkowe usługi",
+    additionalServicesSubtitle: "Wybierz usługi, których potrzebujesz",
+    sellPreviousProperty: "Sprzedaż poprzedniej nieruchomości",
+    sellPreviousPropertyDesc: "Nasi najlepsi eksperci ds. nieruchomości zajmą się Tobą.",
+    wantLandForHouse: "Chcę działkę pod swój dom",
+    wantLandForHouseDesc: "Pomożemy znaleźć idealną działkę.",
+    financialServicesLoans: "Usługi finansowe - kredyty/ubezpieczenia",
+    financialServicesLoansDesc: "Nasi najlepsi specjaliści finansowi zajmą się Tobą, którzy pomogą nie tylko w finansowaniu mieszkania, ale także wyciągną pomocną dłoń w trudnych chwilach finansowych.",
     phase1: "Stan surowy",
     phase1Subtitle: "Konstrukcja, izolacja i fundamenty",
     phase2: "Dom w stanie surowym",
@@ -5148,6 +5227,14 @@ const translations = {
     
     // Configurator phases
     phase: "Фаза",
+    additionalServices: "Додаткові послуги",
+    additionalServicesSubtitle: "Виберіть послуги, які потрібні",
+    sellPreviousProperty: "Продаж попередньої нерухомості",
+    sellPreviousPropertyDesc: "Вами займуться наші найкращі фахівці з нерухомості.",
+    wantLandForHouse: "Хочу ділянку під свій будинок",
+    wantLandForHouseDesc: "Допоможемо знайти ідеальну ділянку.",
+    financialServicesLoans: "Фінансові послуги - кредити/страхування",
+    financialServicesLoansDesc: "Вами займуться наші найкращі фінансисти, які допоможуть не тільки з фінансуванням вашого житла, а й допоможуть у важкі фінансові часи.",
     phase1: "Каркас",
     phase1Subtitle: "Конструкція, ізоляція та фундамент",
     phase2: "Будинок під оздоблення",
