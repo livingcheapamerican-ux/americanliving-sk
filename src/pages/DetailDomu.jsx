@@ -977,6 +977,8 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useProstoHousePrices={true}
+                typStavby={typStavby}
+                setTypStavby={setTypStavby}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
                 izolaciaNavysenie={izolaciaNavysenie}
