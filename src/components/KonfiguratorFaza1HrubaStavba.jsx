@@ -200,9 +200,9 @@ export default function KonfiguratorFaza1HrubaStavba({
 
   // Ceny pre Flat Small
   const FLATSMALL_CENY = {
-    montaz: 17700,
-    izolacia: { zvysena: 5799, premium: 11200, ultra: 5250 },
-    zaklady: { skrutky: 8140, doska: 12000, pasove: 21079 }
+    montaz: 4874,
+    izolacia: { zvysena: 1397, premium: 2800, ultra: 5250 },
+    zaklady: { skrutky: 2808, doska: 5950, pasove: 6319 }
   };
 
   const { t } = useLanguage();
