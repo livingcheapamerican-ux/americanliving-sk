@@ -24,6 +24,8 @@ import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import RegenerujPreklady from './pages/RegenerujPreklady';
 import RegenerujPrekladyDeFrSrHrEl from './pages/RegenerujPrekladyDeFrSrHrEl';
 import AutoRegeneraciaPrekladov from './pages/AutoRegeneraciaPrekladov';
+import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
+import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
 import __Layout from './Layout.jsx';
 
 
@@ -54,6 +56,8 @@ export const PAGES = {
     "RegenerujPreklady": RegenerujPreklady,
     "RegenerujPrekladyDeFrSrHrEl": RegenerujPrekladyDeFrSrHrEl,
     "AutoRegeneraciaPrekladov": AutoRegeneraciaPrekladov,
+    "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
+    "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
 }
 
 export const pagesConfig = {
