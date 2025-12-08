@@ -22,6 +22,7 @@ import KonfiguratorFlatDouble from './pages/KonfiguratorFlatDouble';
 import AdminPrekladyDomov from './pages/AdminPrekladyDomov';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import RegenerujPreklady from './pages/RegenerujPreklady';
+import RegenerujPrekladyDeFrSrHrEl from './pages/RegenerujPrekladyDeFrSrHrEl';
 import __Layout from './Layout.jsx';
 
 
@@ -50,6 +51,7 @@ export const PAGES = {
     "AdminPrekladyDomov": AdminPrekladyDomov,
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "RegenerujPreklady": RegenerujPreklady,
+    "RegenerujPrekladyDeFrSrHrEl": RegenerujPrekladyDeFrSrHrEl,
 }
 
 export const pagesConfig = {
