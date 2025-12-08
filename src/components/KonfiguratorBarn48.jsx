@@ -7,7 +7,7 @@ import {
   Send, AlertTriangle, Check, RotateCcw,
   Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
   Zap, ShowerHead, Flame, Cable, Paintbrush, Home, Truck, Sun, DoorOpen,
-  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, TreePine
+  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, TreePine, Building2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
@@ -274,6 +274,10 @@ export default function KonfiguratorBarn48({
     
     items.push({ name: t('basePriceKit'), price: BASE_PRICE, section: "base", selected: true });
     
+    if (predajNehnutelnosti) items.push({ name: t('sellPreviousProperty'), price: 0, section: "services", selected: true });
+    if (hladaniePozemku) items.push({ name: t('wantLandForHouse'), price: 0, section: "services", selected: true });
+    if (financneSluzby) items.push({ name: t('financialServicesLoans'), price: 0, section: "services", selected: true });
+    
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
     if (predlzenie > 0) {
@@ -323,7 +327,8 @@ export default function KonfiguratorBarn48({
     items.push({ name: t('transport'), price: doprava ? CENY.doprava : 0, section: "docs", selected: doprava });
     
     return items;
-  }, [montazHolodomu, predlzenie, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
+  }, [predajNehnutelnosti, hladaniePozemku, financneSluzby,
+      montazHolodomu, predlzenie, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
@@ -450,13 +455,23 @@ export default function KonfiguratorBarn48({
             {selectedItems.map((item, index) => {
               const isBase = item.section === "base";
               const prevItem = selectedItems[index - 1];
-              const showHrubaDivider = item.section === "hruba" && (!prevItem || prevItem.section === "base");
+              const showServicesDivider = item.section === "services" && (!prevItem || prevItem.section === "base");
+              const showHrubaDivider = item.section === "hruba" && (prevItem?.section !== "hruba" && prevItem?.section !== "services");
               const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
               const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
               const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
 
               return (
                 <React.Fragment key={index}>
+                  {showServicesDivider && (
+                    <div className="py-0.5">
+                      <div className="border-t border-cyan-400"></div>
+                      <div className="flex items-center gap-1 px-1">
+                        <Building2 className="w-3 h-3 text-cyan-800" />
+                        <span className="text-xs font-bold text-cyan-950 uppercase">{t('additionalServices')}</span>
+                      </div>
+                    </div>
+                  )}
                   {showHrubaDivider && (
                     <div className="py-0.5">
                       <div className="border-t border-amber-400"></div>
