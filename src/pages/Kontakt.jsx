@@ -249,11 +249,11 @@ export default function Kontakt() {
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>{t('sellYourProperty')}</span>
+                  <span>{t('sellProperty')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>{t('selectAndBuyLand')}</span>
+                  <span>{t('landSelection')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
@@ -265,7 +265,7 @@ export default function Kontakt() {
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>{t('buildingPermitService')}</span>
+                  <span>{t('buildingPermit')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
