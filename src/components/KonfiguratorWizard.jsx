@@ -21,6 +21,7 @@ import KonfiguratorBarn48 from "../components/KonfiguratorBarn48";
 import KonfiguratorBarnDouble from "../components/KonfiguratorBarnDouble";
 import KonfiguratorFlatSmall from "../components/KonfiguratorFlatSmall";
 import { useLanguage } from "./LanguageContext";
+import TypStavbySelector from "./TypStavbySelector";
 
 // Krok 0: Výber typu stavby
 const StepTypStavby = ({ typStavby, setTypStavby, onNext }) => {
@@ -497,10 +498,16 @@ export default function KonfiguratorWizard({
     switch (currentStep) {
       case 0:
         return (
-          <StepTypStavby 
+          <TypStavbySelector
             typStavby={typStavby} 
             setTypStavby={handleTypStavbyChange}
-            onNext={handleNext}
+            predajNehnutelnosti={predajNehnutelnosti}
+            setPredajNehnutelnosti={setPredajNehnutelnosti}
+            hladaniePozemku={hladaniePozemku}
+            setHladaniePozemku={setHladaniePozemku}
+            financneSluzby={financneSluzby}
+            setFinancneSluzby={setFinancneSluzby}
+            onContinue={handleNext}
           />
         );
       case 1:
