@@ -26,6 +26,7 @@ import RegenerujPrekladyDeFrSrHrEl from './pages/RegenerujPrekladyDeFrSrHrEl';
 import AutoRegeneraciaPrekladov from './pages/AutoRegeneraciaPrekladov';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
+import SEODashboard from './pages/SEODashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -58,6 +59,7 @@ export const PAGES = {
     "AutoRegeneraciaPrekladov": AutoRegeneraciaPrekladov,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
+    "SEODashboard": SEODashboard,
 }
 
 export const pagesConfig = {
