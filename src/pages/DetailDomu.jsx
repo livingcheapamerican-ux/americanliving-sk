@@ -1457,28 +1457,7 @@ export default function DetailDomu() {
               />
             )}
 
-            {/* Obrázok základnej konfigurácie - pre Ticabhouse - presunute z pravej strany */}
-            {isTicabhouse && dom.zakladna_konfiguracia_obrazok && (
-              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
-                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">📸 {t('basicConfiguration')}</h3>
-                <div className="rounded-lg overflow-hidden shadow-lg">
-                  <img 
-                    src={dom.zakladna_konfiguracia_obrazok} 
-                    alt={`${dom.nazov} - základná konfigurácia`}
-                    className="w-full h-auto object-cover"
-                  />
-                </div>
-                <p className="text-xs sm:text-sm text-blue-800 mt-2 text-center font-medium">
-                  {t('basicConfigDesc')}
-                </p>
-              </Card>
-            )}
 
-            {/* Štandardná výbava pre Ticabhouse - presunute z pravej strany */}
-            {isTicabhouse && (
-              <div className="space-y-3 sm:space-y-4">
-                <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
-                  <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">✔ {t('standardEquipment')}</h3>
                 <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
                   <div>
                     <p className="font-semibold text-gray-800 mb-1 text-xs sm:text-sm">{t('constructionAndInsulation')}</p>
@@ -1869,6 +1848,120 @@ export default function DetailDomu() {
                 )}
               </div>
             </Card>
+
+            {/* Obrázok základnej konfigurácie - pre Ticabhouse */}
+            {isTicabhouse && dom.zakladna_konfiguracia_obrazok && (
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">📸 {t('basicConfiguration')}</h3>
+                <div className="rounded-lg overflow-hidden shadow-lg">
+                  <img 
+                    src={dom.zakladna_konfiguracia_obrazok} 
+                    alt={`${dom.nazov} - základná konfigurácia`}
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+                <p className="text-xs sm:text-sm text-blue-800 mt-2 text-center font-medium">
+                  {t('basicConfigDesc')}
+                </p>
+              </Card>
+            )}
+
+            {/* Štandardná výbava pre Ticabhouse */}
+            {isTicabhouse && (
+              <div className="space-y-3 sm:space-y-4">
+                <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
+                  <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">✔ {t('standardEquipment')}</h3>
+                <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1 text-xs sm:text-sm">{t('constructionAndInsulation')}</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-0.5 ml-2 text-xs sm:text-sm">
+                      <li>{t('frameFromDryTimber')}</li>
+                      <li>{t('wallInsulation')}</li>
+                      <li>{t('floorRoofInsulation')}</li>
+                      <li>{t('euCertifiedConstruction')}</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">{t('windowsAndDoors')}</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>{t('doubleGlazedPvcWindows')}</li>
+                      <li>{t('pvcEntryDoors')}</li>
+                      <li>{t('mdfInteriorDoors')}</li>
+                      <li>{t('frenchBalconyWindows')}</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">{t('exterior')}</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>{t('facadeOptions')}</li>
+                      <li>{t('roofCovering')}</li>
+                      <li>{t('roofBoarding')}</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">{t('interior')}</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>{t('wallCladding')}</li>
+                      <li>{t('floorsCommercial')}</li>
+                      <li>{t('paintedGypsum')}</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">{t('bathroomByModel')}</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>{t('paintedCeilingBath')}</li>
+                      <li>{t('wallTiles')}</li>
+                      <li>{t('washbasin')}</li>
+                      <li>{t('geberitWc')}</li>
+                      <li>{t('groheShower')}</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">{t('kitchenByModel')}</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>{t('customKitchen')}</li>
+                      <li>{t('kitchenBacksplash')}</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">{t('techInstallations')}</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>{t('electricalWiring')}</li>
+                      <li>{t('boiler80l')}</li>
+                      <li>{t('acOutletReinforcement')}</li>
+                      <li>{t('underfloorHeating')}</li>
+                      <li>{t('waterInstallation')}</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-1">{t('terraceByModel')}</p>
+                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
+                      <li>{t('builtInTerrace')}</li>
+                      <li>{t('optionalTerraces')}</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-green-300">
+                  <h4 className="font-bold text-red-700 mb-2 flex items-center gap-2 text-xs sm:text-sm">
+                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                    {t('importantBasePriceExcludes')}
+                  </h4>
+                  <ul className="list-disc list-inside text-gray-700 space-y-1 text-xs sm:text-sm ml-2">
+                    <li><strong>{t('deliveryTransport')}</strong> - {t('orderInConfigurator')}</li>
+                    <li><strong>{t('foundations')}</strong> - {t('singleModuleNoFoundations')}</li>
+                    <li><strong>{t('externalConnections')}</strong> {t('waterElectricSewage')}</li>
+                    <li><strong>{t('craneTruck')}</strong> - {t('requiredForPlacement')}</li>
+                  </ul>
+                  <div className="mt-3 p-2 sm:p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <p className="text-xs sm:text-sm text-blue-800">
+                      <strong>{t('modularAdvantage')}</strong> {t('modularAdvantageDesc')}
+                    </p>
+                  </div>
+                </div>
+                </Card>
+              </div>
+            )}
 
             {/* Obrázok základnej konfigurácie - pre Prosto House - hneď pod parametre */}
             {isProstoHouse && dom.zakladna_konfiguracia_obrazok && (
