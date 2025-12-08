@@ -1777,7 +1777,10 @@ export default function DetailDomu() {
             {isTicabhouse && (
               <div className="space-y-3 sm:space-y-4">
                 <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
-                  <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">✔ {t('standardEquipment')}</h3>
+                  <h3 className="text-sm sm:text-base font-bold text-primary mb-2">✔ Základná konfigurácia domu (zahrnutá v cene)</h3>
+                  <p className="text-xs sm:text-sm text-gray-700 mb-3 leading-relaxed">
+                    Je vždy vyhovujúci pre status rekrečnej stavby na celoročné bývanie. Pokiaľ chcete z domu urobiť rodinný dom na (trvalé bývanie, nahlásenie trvalého pobytu, možnosť hypotekárneho úveru, energetického certifikátu A0 a stavebné povolenie v obytnej štvrti) musíte zmeniť parametre domu v konfigurátore nižšie.
+                  </p>
                 <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
                   <div>
                     <p className="font-semibold text-gray-800 mb-1 text-xs sm:text-sm">{t('constructionAndInsulation')}</p>
