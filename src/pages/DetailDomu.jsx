@@ -47,6 +47,11 @@ export default function DetailDomu() {
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [zoomLevel, setZoomLevel] = useState(1);
   
+  // Zdieľaný stav pre Fázu 0 - Služby
+  const [predajNehnutelnosti, setPredajNehnutelnosti] = useState(false);
+  const [hladaniePozemku, setHladaniePozemku] = useState(false);
+  const [financneSluzby, setFinancneSluzby] = useState(false);
+  
   // Zdieľaný stav pre Fázu 1 - Hrubá stavba
   const [typStavby, setTypStavby] = useState("");
   const [montazHolodomu, setMontazHolodomu] = useState("nie");
@@ -423,6 +428,9 @@ export default function DetailDomu() {
   };
 
   const handleKonfiguratorReset = () => {
+    setPredajNehnutelnosti(false);
+    setHladaniePozemku(false);
+    setFinancneSluzby(false);
     setTypStavby("");
     setMontazHolodomu("nie");
     setVstupneDvere("ziadne");
@@ -651,6 +659,12 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useFlat15Prices={true}
+                predajNehnutelnosti={predajNehnutelnosti}
+                setPredajNehnutelnosti={setPredajNehnutelnosti}
+                hladaniePozemku={hladaniePozemku}
+                setHladaniePozemku={setHladaniePozemku}
+                financneSluzby={financneSluzby}
+                setFinancneSluzby={setFinancneSluzby}
                 typStavby={typStavby}
                 setTypStavby={setTypStavby}
                 montazHolodomu={montazHolodomu}
@@ -718,6 +732,12 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useFlatDoublePrices={true}
+                predajNehnutelnosti={predajNehnutelnosti}
+                setPredajNehnutelnosti={setPredajNehnutelnosti}
+                hladaniePozemku={hladaniePozemku}
+                setHladaniePozemku={setHladaniePozemku}
+                financneSluzby={financneSluzby}
+                setFinancneSluzby={setFinancneSluzby}
                 typStavby={typStavby}
                 setTypStavby={setTypStavby}
                 montazHolodomu={montazHolodomu}
@@ -848,6 +868,12 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useNordPrices={true}
+                predajNehnutelnosti={predajNehnutelnosti}
+                setPredajNehnutelnosti={setPredajNehnutelnosti}
+                hladaniePozemku={hladaniePozemku}
+                setHladaniePozemku={setHladaniePozemku}
+                financneSluzby={financneSluzby}
+                setFinancneSluzby={setFinancneSluzby}
                 typStavby={typStavby}
                 setTypStavby={setTypStavby}
                 montazHolodomu={montazHolodomu}
@@ -913,6 +939,12 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useFlat72Prices={true}
+                predajNehnutelnosti={predajNehnutelnosti}
+                setPredajNehnutelnosti={setPredajNehnutelnosti}
+                hladaniePozemku={hladaniePozemku}
+                setHladaniePozemku={setHladaniePozemku}
+                financneSluzby={financneSluzby}
+                setFinancneSluzby={setFinancneSluzby}
                 typStavby={typStavby}
                 setTypStavby={setTypStavby}
                 montazHolodomu={montazHolodomu}
@@ -978,6 +1010,12 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useProstoHousePrices={true}
+                predajNehnutelnosti={predajNehnutelnosti}
+                setPredajNehnutelnosti={setPredajNehnutelnosti}
+                hladaniePozemku={hladaniePozemku}
+                setHladaniePozemku={setHladaniePozemku}
+                financneSluzby={financneSluzby}
+                setFinancneSluzby={setFinancneSluzby}
                 typStavby={typStavby}
                 setTypStavby={setTypStavby}
                 montazHolodomu={montazHolodomu}
@@ -1135,6 +1173,12 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useBarnDoublePrices={true}
+                predajNehnutelnosti={predajNehnutelnosti}
+                setPredajNehnutelnosti={setPredajNehnutelnosti}
+                hladaniePozemku={hladaniePozemku}
+                setHladaniePozemku={setHladaniePozemku}
+                financneSluzby={financneSluzby}
+                setFinancneSluzby={setFinancneSluzby}
                 typStavby={typStavby}
                 setTypStavby={setTypStavby}
                 montazHolodomu={montazHolodomu}
@@ -1202,6 +1246,12 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useBarn48Prices={true}
+                predajNehnutelnosti={predajNehnutelnosti}
+                setPredajNehnutelnosti={setPredajNehnutelnosti}
+                hladaniePozemku={hladaniePozemku}
+                setHladaniePozemku={setHladaniePozemku}
+                financneSluzby={financneSluzby}
+                setFinancneSluzby={setFinancneSluzby}
                 typStavby={typStavby}
                 setTypStavby={setTypStavby}
                 montazHolodomu={montazHolodomu}
@@ -1269,6 +1319,12 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useFlatSmallPrices={true}
+                predajNehnutelnosti={predajNehnutelnosti}
+                setPredajNehnutelnosti={setPredajNehnutelnosti}
+                hladaniePozemku={hladaniePozemku}
+                setHladaniePozemku={setHladaniePozemku}
+                financneSluzby={financneSluzby}
+                setFinancneSluzby={setFinancneSluzby}
                 typStavby={typStavby}
                 setTypStavby={setTypStavby}
                 montazHolodomu={montazHolodomu}
@@ -1334,6 +1390,12 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useAFramePrices={true}
+                predajNehnutelnosti={predajNehnutelnosti}
+                setPredajNehnutelnosti={setPredajNehnutelnosti}
+                hladaniePozemku={hladaniePozemku}
+                setHladaniePozemku={setHladaniePozemku}
+                financneSluzby={financneSluzby}
+                setFinancneSluzby={setFinancneSluzby}
                 typStavby={typStavby}
                 setTypStavby={setTypStavby}
                 montazHolodomu={montazHolodomu}
@@ -1934,6 +1996,12 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlat15
                   dom={dom}
+                predajNehnutelnosti={predajNehnutelnosti}
+                setPredajNehnutelnosti={setPredajNehnutelnosti}
+                hladaniePozemku={hladaniePozemku}
+                setHladaniePozemku={setHladaniePozemku}
+                financneSluzby={financneSluzby}
+                setFinancneSluzby={setFinancneSluzby}
                 montazHolodomu={montazHolodomu}
                 setMontazHolodomu={setMontazHolodomu}
                 izolaciaNavysenie={izolaciaNavysenie}
@@ -1998,6 +2066,12 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorNord
                   dom={dom}
+                  predajNehnutelnosti={predajNehnutelnosti}
+                  setPredajNehnutelnosti={setPredajNehnutelnosti}
+                  hladaniePozemku={hladaniePozemku}
+                  setHladaniePozemku={setHladaniePozemku}
+                  financneSluzby={financneSluzby}
+                  setFinancneSluzby={setFinancneSluzby}
                   montazHolodomu={montazHolodomu}
                   setMontazHolodomu={setMontazHolodomu}
                   izolaciaNavysenie={izolaciaNavysenie}
@@ -2064,6 +2138,12 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFjord
                   dom={dom}
+                  predajNehnutelnosti={predajNehnutelnosti}
+                  setPredajNehnutelnosti={setPredajNehnutelnosti}
+                  hladaniePozemku={hladaniePozemku}
+                  setHladaniePozemku={setHladaniePozemku}
+                  financneSluzby={financneSluzby}
+                  setFinancneSluzby={setFinancneSluzby}
                   montazHolodomu={montazHolodomu}
                   setMontazHolodomu={setMontazHolodomu}
                   izolaciaNavysenie={izolaciaNavysenie}
@@ -2131,6 +2211,12 @@ export default function DetailDomu() {
                 <KonfiguratorFlat72
                   dom={dom}
                   onReset={handleKonfiguratorReset}
+                  predajNehnutelnosti={predajNehnutelnosti}
+                  setPredajNehnutelnosti={setPredajNehnutelnosti}
+                  hladaniePozemku={hladaniePozemku}
+                  setHladaniePozemku={setHladaniePozemku}
+                  financneSluzby={financneSluzby}
+                  setFinancneSluzby={setFinancneSluzby}
                   typStavby={typStavby}
                   setTypStavby={setTypStavby}
                   montazHolodomu={montazHolodomu}
@@ -2198,6 +2284,12 @@ export default function DetailDomu() {
                 <KonfiguratorBarnDouble
                   dom={dom}
                   onReset={handleKonfiguratorReset}
+                  predajNehnutelnosti={predajNehnutelnosti}
+                  setPredajNehnutelnosti={setPredajNehnutelnosti}
+                  hladaniePozemku={hladaniePozemku}
+                  setHladaniePozemku={setHladaniePozemku}
+                  financneSluzby={financneSluzby}
+                  setFinancneSluzby={setFinancneSluzby}
                   typStavby={typStavby}
                   setTypStavby={setTypStavby}
                   montazHolodomu={montazHolodomu}
@@ -2267,6 +2359,12 @@ export default function DetailDomu() {
                 <KonfiguratorBarn48
                   dom={dom}
                   onReset={handleKonfiguratorReset}
+                  predajNehnutelnosti={predajNehnutelnosti}
+                  setPredajNehnutelnosti={setPredajNehnutelnosti}
+                  hladaniePozemku={hladaniePozemku}
+                  setHladaniePozemku={setHladaniePozemku}
+                  financneSluzby={financneSluzby}
+                  setFinancneSluzby={setFinancneSluzby}
                   typStavby={typStavby}
                   setTypStavby={setTypStavby}
                   montazHolodomu={montazHolodomu}
@@ -2336,6 +2434,12 @@ export default function DetailDomu() {
                 <KonfiguratorFlatDouble 
                   dom={dom}
                   onReset={handleKonfiguratorReset}
+                  predajNehnutelnosti={predajNehnutelnosti}
+                  setPredajNehnutelnosti={setPredajNehnutelnosti}
+                  hladaniePozemku={hladaniePozemku}
+                  setHladaniePozemku={setHladaniePozemku}
+                  financneSluzby={financneSluzby}
+                  setFinancneSluzby={setFinancneSluzby}
                   typStavby={typStavby}
                   setTypStavby={setTypStavby}
                   montazHolodomu={montazHolodomu}
@@ -2403,6 +2507,12 @@ export default function DetailDomu() {
                 <KonfiguratorFlatSmall
                   dom={dom}
                   onReset={handleKonfiguratorReset}
+                  predajNehnutelnosti={predajNehnutelnosti}
+                  setPredajNehnutelnosti={setPredajNehnutelnosti}
+                  hladaniePozemku={hladaniePozemku}
+                  setHladaniePozemku={setHladaniePozemku}
+                  financneSluzby={financneSluzby}
+                  setFinancneSluzby={setFinancneSluzby}
                   typStavby={typStavby}
                   setTypStavby={setTypStavby}
                   montazHolodomu={montazHolodomu}
@@ -2470,6 +2580,12 @@ export default function DetailDomu() {
                 <KonfiguratorAFrame
                   dom={dom}
                   onReset={handleKonfiguratorReset}
+                  predajNehnutelnosti={predajNehnutelnosti}
+                  setPredajNehnutelnosti={setPredajNehnutelnosti}
+                  hladaniePozemku={hladaniePozemku}
+                  setHladaniePozemku={setHladaniePozemku}
+                  financneSluzby={financneSluzby}
+                  setFinancneSluzby={setFinancneSluzby}
                   typStavby={typStavby}
                   setTypStavby={setTypStavby}
                   montazHolodomu={montazHolodomu}
@@ -2538,6 +2654,12 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorProstoHouse 
                   dom={dom}
+                  predajNehnutelnosti={predajNehnutelnosti}
+                  setPredajNehnutelnosti={setPredajNehnutelnosti}
+                  hladaniePozemku={hladaniePozemku}
+                  setHladaniePozemku={setHladaniePozemku}
+                  financneSluzby={financneSluzby}
+                  setFinancneSluzby={setFinancneSluzby}
                   montazHolodomu={montazHolodomu}
                   setMontazHolodomu={setMontazHolodomu}
                   izolaciaNavysenie={izolaciaNavysenie}
