@@ -235,7 +235,6 @@ export default function KonfiguratorFlat72({
     if (projektA0) total += CENY.projektA0;
     
     total += CENY.interierFinis[interierFinis] || 0;
-    if (vonkajsiaFasada === "drevo_plech") total += CENY.vonkajsiaFasada.drevo_plech;
     if (vonkajsiaFasada === "suchana") total += CENY.vonkajsiaFasada.suchana;
     if (povrchokaOkien) total += CENY.povrchokaOkien;
     if (vnutornePodlahy) total += CENY.vnutornePodlahy;
@@ -277,7 +276,7 @@ export default function KonfiguratorFlat72({
   const dosiahnuteUrovne = useMemo(() => {
     const hrubaStavba = montazHolodomu === "ano" || izolaciaNavysenie !== "standard" || zaklady !== "bez";
     const holodom = hrubaStavba && (elektroinstalacia || vodaKanalizacia || tepelneCerpadlo || rekuperacia);
-    const domNaKluc = holodom && (interierFinis !== "ziadne" || vnutornePodlahy || vonkajsiaFasada === "suchana" || vonkajsiaFasada === "drevo_plech");
+    const domNaKluc = holodom && (interierFinis !== "ziadne" || vnutornePodlahy || vonkajsiaFasada === "suchana" || vonkajsiaFasada === "standard");
     
     return { hrubaStavba, holodom, domNaKluc };
   }, [montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
@@ -326,8 +325,8 @@ export default function KonfiguratorFlat72({
     items.push({ name: t('tintedGlass') + " (Solar)", price: tonovaneSkla ? CENY.tonovaneSkla : 0, section: "holodom", selected: tonovaneSkla });
     
     // Dom na kľúč
-    const fasadaLabel = vonkajsiaFasada === "suchana" ? t('facadeStucco') : vonkajsiaFasada === "drevo_plech" ? "Drevo/Falcovaný plech" : vonkajsiaFasada === "standard" ? t('facadeWoodMetal') : t('facade');
-    const fasadaPrice = vonkajsiaFasada === "suchana" ? CENY.vonkajsiaFasada.suchana : vonkajsiaFasada === "drevo_plech" ? CENY.vonkajsiaFasada.drevo_plech : 0;
+    const fasadaLabel = vonkajsiaFasada === "suchana" ? t('facadeStucco') : vonkajsiaFasada === "standard" ? t('facadeWoodMetal') : t('facade');
+    const fasadaPrice = vonkajsiaFasada === "suchana" ? CENY.vonkajsiaFasada.suchana : 0;
     items.push({ name: fasadaLabel, price: fasadaPrice, section: "kluc", selected: !!vonkajsiaFasada });
 
     items.push({ name: t('floors') + " - " + t('floorsLaminate'), price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
@@ -952,8 +951,8 @@ export default function KonfiguratorFlat72({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
             {/* Fasáda - skupina */}
-            <div className={`col-span-2 sm:col-span-3 grid grid-cols-3 gap-2 sm:gap-3 p-4 border-[5px] rounded-2xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
-              <p className={`col-span-3 text-[10px] sm:text-xs font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
+            <div className={`col-span-2 sm:col-span-3 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] rounded-2xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
+              <p className={`col-span-2 text-[10px] sm:text-xs font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
                 <span className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
                 {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
               </p>
@@ -972,23 +971,6 @@ export default function KonfiguratorFlat72({
                 selectedRing="ring-emerald-300"
                 hoverBorder="hover:border-emerald-300"
                 tooltip={t('facadeWoodMetal')}
-              />
-
-              <Tile
-                selected={vonkajsiaFasada === "drevo_plech"}
-                onClick={(e) => { if (vonkajsiaFasada !== "drevo_plech") triggerAnimation("fasadaDrevo", e.currentTarget); setVonkajsiaFasada("drevo_plech"); }}
-                icon={Paintbrush}
-                iconColor="text-amber-600"
-                iconSelectedColor="text-emerald-600"
-                title="Drevo/Falcovaný plech"
-                subtitle="Podľa modelu domu"
-                price={`+ ${CENY.vonkajsiaFasada.drevo_plech.toLocaleString('sk-SK')} €`}
-                isPriced={true}
-                selectedBg="bg-emerald-100"
-                selectedBorder="border-emerald-500"
-                selectedRing="ring-emerald-300"
-                hoverBorder="hover:border-emerald-300"
-                tooltip="Drevo alebo falcovaný plech podľa modelu domu"
               />
 
               <Tile
