@@ -44,6 +44,14 @@ const translations = {
     
     // Configurator phases
     phase: "Fáza",
+    additionalServices: "Dodatočné služby",
+    additionalServicesSubtitle: "Vyberte si služby, ktoré potrebujete",
+    sellPreviousProperty: "Predaj predošlej nehnuteľnosti",
+    sellPreviousPropertyDesc: "Budú sa Vám venovať naši najlepší odborníci v realitách.",
+    wantLandForHouse: "Chcem pozemok pod svoj dom",
+    wantLandForHouseDesc: "Pomôžeme Vám nájsť ideálny pozemok.",
+    financialServicesLoans: "Finančné služby - úvery/poistky",
+    financialServicesLoansDesc: "Budú sa Vám venovať naši najlepší finančníci, ktorí Vám pomôžu nie len s financovaním vášho bývania, ale pomocnú ruku vám podajú aj v ťažkých chvíľach s financiami.",
     phase1: "Hrubá stavba",
     phase1Subtitle: "Konštrukcia, izolácia a základy",
     phase2: "Holodom",
