@@ -54,7 +54,7 @@ export default function Domov() {
     ? heroSettings.hero_images 
     : DEFAULT_HERO_IMAGES;
   
-  const heroInterval = heroSettings?.hero_interval || 5000;
+  const heroInterval = heroSettings?.hero_interval || 1500;
 
   useEffect(() => {
     const interval = setInterval(() => {
