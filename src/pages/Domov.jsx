@@ -206,10 +206,10 @@ export default function Domov() {
         {isAdmin && (
           <button
             onClick={() => setShowSettings(!showSettings)}
-            className="absolute top-4 right-4 z-30 bg-white/90 hover:bg-white p-2 rounded-lg shadow-lg transition-all"
+            className="absolute top-24 right-4 z-[60] bg-white/90 hover:bg-white p-3 rounded-lg shadow-xl transition-all border-2 border-purple-500"
             title="Nastavenia hero sekcie"
           >
-            <Settings className={`w-5 h-5 ${showSettings ? 'text-purple-600' : 'text-gray-600'}`} />
+            <Settings className={`w-6 h-6 ${showSettings ? 'text-purple-600' : 'text-gray-600'}`} />
           </button>
         )}
         
