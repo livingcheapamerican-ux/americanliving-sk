@@ -85,9 +85,9 @@ export default function KonfiguratorFaza0Sluzby({
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring" }}
             className="inline-flex items-center justify-center px-2 sm:px-3 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider"
-          >
-            {t('phase')} 0
-          </motion.span>
+            >
+            FÁZA 0
+            </motion.span>
         </div>
         <h3 className="text-lg sm:text-2xl font-bold text-white tracking-tight">{t('additionalServices')}</h3>
         <p className="text-white/80 text-xs sm:text-sm mt-0.5 sm:mt-1">{t('additionalServicesSubtitle')}</p>
