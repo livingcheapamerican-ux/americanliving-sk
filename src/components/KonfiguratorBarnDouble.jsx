@@ -135,6 +135,7 @@ export default function KonfiguratorBarnDouble({
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
+  predlzenie, setPredlzenie,
   vstupneDvere, setVstupneDvere,
   elektroinstalacia, setElektroinstalacia,
   vodaKanalizacia, setVodaKanalizacia,
@@ -167,9 +168,10 @@ export default function KonfiguratorBarnDouble({
   const { animations, triggerAnimation } = useFlyingAnimation();
   const { t } = useLanguage();
 
-  // BARN DOUBLE CENNÍK - FIXNÉ CENY (extrahované z webu)
+  // BARN DOUBLE CENNÍK - FIXNÉ CENY (extrahované z priložených obrázkov)
   const CENY = {
     montaz: { nie: 0, ano: 9225 },
+    predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19801, 4.8: 26401 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
     izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 },
     elektroinstalacia: 3900,
@@ -182,15 +184,15 @@ export default function KonfiguratorBarnDouble({
     pripojkaSiete: 1501,
     inziniering: 2592,
     projektA0: 3500,
-    interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 8815 },
-    vonkajsiaFasada: { standard: 0, suchana: 8612 },
-    povrchokaOkien: 1580,
-    vnutornePodlahy: 1680,
-    podlahovVykurovanie: 5630,
+    interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 9450 },
+    vonkajsiaFasada: { standard: 0, suchana: 6976 },
+    povrchokaOkien: 1450,
+    vnutornePodlahy: 1750,
+    podlahovVykurovanie: 3960,
     interieroveDvere: 180,
-    tonovaneSkla: 750,
+    tonovaneSkla: 700,
     doprava: 0,
-    revizna: 500,
+    revizna: 1000,
     stresneOkno: 760,
     bocneOknoFixne: 500,
     bocneOknoVyklopne90: 540,
@@ -201,6 +203,7 @@ export default function KonfiguratorBarnDouble({
     let total = BASE_PRICE;
 
     total += CENY.montaz[montazHolodomu];
+    total += CENY.predlzenie[predlzenie] || 0;
     total += CENY.dvere[vstupneDvere];
     total += CENY.izolacia[izolaciaNavysenie];
     
@@ -233,7 +236,7 @@ export default function KonfiguratorBarnDouble({
     total += bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55;
     
     return total;
-  }, [montazHolodomu, vstupneDvere, izolaciaNavysenie, elektroinstalacia, vodaKanalizacia, 
+  }, [montazHolodomu, predlzenie, vstupneDvere, izolaciaNavysenie, elektroinstalacia, vodaKanalizacia, 
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, zaklady, pripojkaSiete, 
       inziniering, projektA0, interierFinis, vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, 
       podlahovVykurovanie, interieroveDvere, tonovaneSkla, doprava, revizna,
@@ -267,6 +270,10 @@ export default function KonfiguratorBarnDouble({
     items.push({ name: t('basePriceKit'), price: BASE_PRICE, section: "base", selected: true });
     
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
+    
+    if (predlzenie > 0) {
+      items.push({ name: `Predĺženie domu +${predlzenie}m`, price: CENY.predlzenie[predlzenie] || 0, section: "hruba", selected: true });
+    }
     
     const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Izolácia 300mm" : izolaciaNavysenie === "premium" ? t('insulationPremium') + " (250mm)" : izolaciaNavysenie === "zvysena" ? t('insulationEnhanced') + " (200mm)" : t('insulationStd');
     const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
@@ -311,7 +318,7 @@ export default function KonfiguratorBarnDouble({
     items.push({ name: t('transport'), price: doprava ? CENY.doprava : 0, section: "docs", selected: doprava });
     
     return items;
-  }, [montazHolodomu, vstupneDvere, izolaciaNavysenie, elektroinstalacia, vodaKanalizacia, 
+  }, [montazHolodomu, predlzenie, vstupneDvere, izolaciaNavysenie, elektroinstalacia, vodaKanalizacia, 
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, zaklady, pripojkaSiete, 
       inziniering, projektA0, interierFinis, vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, 
       podlahovVykurovanie, interieroveDvere, tonovaneSkla, doprava, revizna,
@@ -350,6 +357,7 @@ export default function KonfiguratorBarnDouble({
       setBocneOknoFixne(0);
       setBocneOknoVyklopne90(0);
       setBocneOknoVyklopne55(0);
+      setPredlzenie?.(0);
     }
   };
 
@@ -530,6 +538,8 @@ export default function KonfiguratorBarnDouble({
               setIzolaciaNavysenie={setIzolaciaNavysenie}
               zaklady={zaklady}
               setZaklady={setZaklady}
+              predlzenie={predlzenie}
+              setPredlzenie={setPredlzenie}
               triggerAnimation={triggerAnimation}
               useBarnDoublePrices={true}
             />

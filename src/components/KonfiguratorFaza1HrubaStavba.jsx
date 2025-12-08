@@ -184,6 +184,7 @@ export default function KonfiguratorFaza1HrubaStavba({
   // Ceny pre Barn Double
   const BARNDOUBLE_CENY = {
     montaz: 9225,
+    predlzenie: { 1.2: 6600, 2.4: 13200, 3.6: 19801, 4.8: 26401 },
     izolacia: { zvysena: 2700, premium: 5400, ultra: 10125 },
     zaklady: { skrutky: 4751, doska: 9633, pasove: 11823 }
   };
