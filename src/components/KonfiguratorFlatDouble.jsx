@@ -12,7 +12,7 @@ import {
   Send, AlertTriangle, Check, Calculator, RotateCcw,
   Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
   Zap, ShowerHead, Flame, Cable, Paintbrush, Home, Truck, Sun, DoorOpen,
-  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, TreePine
+  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, TreePine, Building2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,7 @@ import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation"
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
+import KonfiguratorFaza0Sluzby from "./KonfiguratorFaza0Sluzby";
 
 // Dlaždica s tooltip a veľkou fajkou
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
@@ -145,6 +146,9 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
 export default function KonfiguratorFlatDouble({ 
   dom,
   onReset,
+  predajNehnutelnosti, setPredajNehnutelnosti,
+  hladaniePozemku, setHladaniePozemku,
+  financneSluzby, setFinancneSluzby,
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
@@ -290,6 +294,10 @@ export default function KonfiguratorFlatDouble({
     // Základná cena
     items.push({ name: t('basePriceKit'), price: BASE_PRICE, section: "base", selected: true });
     
+    if (predajNehnutelnosti) items.push({ name: t('sellPreviousProperty'), price: 0, section: "services", selected: true });
+    if (hladaniePozemku) items.push({ name: t('wantLandForHouse'), price: 0, section: "services", selected: true });
+    if (financneSluzby) items.push({ name: t('financialServicesLoans'), price: 0, section: "services", selected: true });
+    
     // Hrubá stavba
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
@@ -342,7 +350,8 @@ export default function KonfiguratorFlatDouble({
     items.push({ name: t('transport'), price: doprava ? CENY.doprava : 0, section: "docs", selected: doprava });
     
     return items;
-  }, [montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
+  }, [predajNehnutelnosti, hladaniePozemku, financneSluzby,
+      montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
@@ -371,6 +380,9 @@ export default function KonfiguratorFlatDouble({
     if (onReset) {
       onReset();
     } else {
+      setPredajNehnutelnosti?.(false);
+      setHladaniePozemku?.(false);
+      setFinancneSluzby?.(false);
       setMontazHolodomu?.("nie");
       setVstupneDvere("ziadne");
       setIzolaciaNavysenie?.("standard");
@@ -500,13 +512,23 @@ export default function KonfiguratorFlatDouble({
               {selectedItems.map((item, index) => {
                 const isBase = item.section === "base";
                 const prevItem = selectedItems[index - 1];
-                const showHrubaDivider = item.section === "hruba" && (!prevItem || prevItem.section === "base");
+                const showServicesDivider = item.section === "services" && (!prevItem || prevItem.section === "base");
+                const showHrubaDivider = item.section === "hruba" && (prevItem?.section !== "hruba" && prevItem?.section !== "services");
                 const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
                 const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
                 const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
 
                 return (
                   <React.Fragment key={index}>
+                    {showServicesDivider && (
+                      <div className="py-0.5">
+                        <div className="border-t border-cyan-400"></div>
+                        <div className="flex items-center gap-1 px-1">
+                          <Building2 className="w-3 h-3 text-cyan-800" />
+                          <span className="text-xs font-bold text-cyan-950 uppercase">{t('additionalServices')}</span>
+                        </div>
+                      </div>
+                    )}
                     {showHrubaDivider && (
                       <div className="py-0.5">
                                 <div className="border-t border-amber-400"></div>
@@ -600,6 +622,15 @@ export default function KonfiguratorFlatDouble({
 
       <div>
       <div className="space-y-6">
+
+        <KonfiguratorFaza0Sluzby
+          predajNehnutelnosti={predajNehnutelnosti}
+          setPredajNehnutelnosti={setPredajNehnutelnosti}
+          hladaniePozemku={hladaniePozemku}
+          setHladaniePozemku={setHladaniePozemku}
+          financneSluzby={financneSluzby}
+          setFinancneSluzby={setFinancneSluzby}
+        />
 
         {/* ═══════════════════════════════════════════════════════════════════════
           FÁZA 1: HRUBÁ STAVBA
@@ -1208,13 +1239,22 @@ export default function KonfiguratorFlatDouble({
                     {selectedItems.map((item, index) => {
                       const isBase = item.section === "base";
                       const prevItem = selectedItems[index - 1];
-                      const showHrubaDivider = item.section === "hruba" && (!prevItem || prevItem.section === "base");
+                      const showServicesDivider = item.section === "services" && (!prevItem || prevItem.section === "base");
+                      const showHrubaDivider = item.section === "hruba" && (prevItem?.section !== "hruba" && prevItem?.section !== "services");
                       const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
                       const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
                       const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
                       
                       return (
                         <React.Fragment key={index}>
+                          {showServicesDivider && (
+                            <div className="py-1.5">
+                              <div className="flex items-center gap-2">
+                                <Building2 className="w-3 h-3 text-cyan-400" />
+                                <span className="text-[10px] sm:text-xs font-bold text-cyan-400 uppercase tracking-wider">{t('additionalServices')}</span>
+                              </div>
+                            </div>
+                          )}
                           {showHrubaDivider && dosiahnuteUrovne.hrubaStavba && (
                             <div className="py-1.5">
                               <div className="flex items-center gap-2">
