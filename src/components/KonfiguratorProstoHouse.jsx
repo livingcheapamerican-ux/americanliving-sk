@@ -80,7 +80,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative p-1.5 sm:p-2.5 rounded-md sm:rounded-lg cursor-pointer transition-all flex flex-col items-center text-center ${
+      className={`relative p-1 sm:p-2.5 rounded-md sm:rounded-lg cursor-pointer transition-all flex flex-col items-center text-center ${
         selected 
           ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
           : isA0 
@@ -109,10 +109,10 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         )}
       </AnimatePresence>
 
-      <Icon className={`w-4 h-4 sm:w-6 sm:h-6 mb-0.5 sm:mb-1 ${selected ? iconSelectedColor : iconColor}`} />
-      <span className={`font-semibold text-gray-800 text-[9px] sm:text-xs leading-tight`}>{title}</span>
-      <span className={`text-[7px] sm:text-[10px] text-gray-500 mt-0.5 leading-tight`}>{subtitle}</span>
-      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[8px] sm:text-[10px] mt-0.5 sm:mt-1`}>{price}</span>
+      <Icon className={`w-3 h-3 sm:w-6 sm:h-6 mb-0.5 sm:mb-1 ${selected ? iconSelectedColor : iconColor}`} />
+      <span className={`font-semibold text-gray-800 text-[8px] sm:text-xs leading-tight`}>{title}</span>
+      <span className={`text-[6px] sm:text-[10px] text-gray-500 mt-0.5 leading-tight`}>{subtitle}</span>
+      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[7px] sm:text-[10px] mt-0.5 sm:mt-1`}>{price}</span>
 
       {showTooltip && tooltip && ReactDOM.createPortal(
         <motion.div
@@ -615,12 +615,12 @@ export default function KonfiguratorProstoHouse({
                 color="from-blue-600 to-indigo-600"
                 step="2"
               />
-              <div className="p-3 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+              <div className="p-2 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
 
-                  <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-blue-600 rounded-xl bg-blue-100/70 shadow-xl">
-                    <p className="col-span-3 text-[9px] sm:text-[10px] font-bold text-blue-700 -mb-1 flex items-center gap-1">
-                      <span className="w-4 h-4 sm:w-5 sm:h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">1</span>
+                  <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-blue-600 rounded-lg sm:rounded-xl bg-blue-100/70 shadow-xl">
+                    <p className="col-span-3 text-[8px] sm:text-[10px] font-bold text-blue-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
+                      <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">1</span>
                       {t('interiorFinish')} ({t('selectOne')})
                     </p>
                     <Tile
@@ -663,9 +663,9 @@ export default function KonfiguratorProstoHouse({
                     />
                   </div>
 
-                  <div className="col-span-2 sm:col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-yellow-500 rounded-xl bg-yellow-100/70 shadow-xl">
-                    <p className="col-span-2 text-[9px] sm:text-[10px] font-bold text-yellow-800 -mb-1 flex items-center gap-1">
-                      <span className="w-4 h-4 sm:w-5 sm:h-5 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">2</span>
+                  <div className="col-span-2 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-yellow-500 rounded-lg sm:rounded-xl bg-yellow-100/70 shadow-xl">
+                    <p className="col-span-2 text-[8px] sm:text-[10px] font-bold text-yellow-800 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
+                      <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">2</span>
                       {t('electrical')} & {t('water')}
                     </p>
                     <Tile
@@ -729,9 +729,9 @@ export default function KonfiguratorProstoHouse({
                     />
                   </div>
 
-                  <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-green-600 rounded-xl bg-green-100/70 shadow-xl">
-                    <p className="col-span-2 text-[10px] sm:text-xs font-bold text-green-800 -mb-1 flex items-center gap-1">
-                      <span className="w-4 h-4 sm:w-5 sm:h-5 bg-green-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">3</span>
+                  <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-green-600 rounded-lg sm:rounded-xl bg-green-100/70 shadow-xl">
+                    <p className="col-span-2 text-[8px] sm:text-xs font-bold text-green-800 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
+                      <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-green-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">3</span>
                       {t('heatPump')} & {t('recuperation')} (A0)
                     </p>
                     <Tile
@@ -822,12 +822,12 @@ export default function KonfiguratorProstoHouse({
 
                 </div>
 
-                <div className="mt-2 sm:mt-3 p-2 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
-                  <p className="text-[10px] sm:text-xs font-bold text-gray-700 mb-2 flex items-center gap-1.5">
-                    <DoorOpen className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
+                <div className="mt-2 sm:mt-3 p-1.5 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
+                  <p className="text-[8px] sm:text-xs font-bold text-gray-700 mb-1.5 sm:mb-2 flex items-center gap-1">
+                    <DoorOpen className="w-2.5 h-2.5 sm:w-4 sm:h-4 text-blue-600" />
                     {t('entryDoor')}
                   </p>
-                  <div className="grid grid-cols-3 gap-1.5">
+                  <div className="grid grid-cols-3 gap-1 sm:gap-1.5">
                     {[
                       { value: "ziadne", label: t('doorStandard'), price: "0 €" },
                       { value: "kovove", label: t('doorMetal'), price: "+ 720 €" },
@@ -838,43 +838,43 @@ export default function KonfiguratorProstoHouse({
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => setVstupneDvere(opt.value)}
-                        className={`p-2 sm:p-3 rounded-lg cursor-pointer text-center transition-all ${
+                        className={`p-1.5 sm:p-3 rounded-md sm:rounded-lg cursor-pointer text-center transition-all ${
                           vstupneDvere === opt.value 
                             ? "bg-blue-100 border-2 border-blue-500" 
                             : "bg-gray-50 border-2 border-gray-200 hover:border-blue-300"
                         }`}
                       >
-                        <span className="font-medium text-gray-800 text-xs sm:text-sm block">{opt.label}</span>
-                        <span className={`text-[10px] sm:text-xs ${opt.value === "ziadne" ? "text-gray-400" : "text-green-600 font-bold"}`}>{opt.price}</span>
+                        <span className="font-medium text-gray-800 text-[9px] sm:text-sm block">{opt.label}</span>
+                        <span className={`text-[8px] sm:text-xs ${opt.value === "ziadne" ? "text-gray-400" : "text-green-600 font-bold"}`}>{opt.price}</span>
                       </motion.div>
                     ))}
                   </div>
 
-                  <p className="text-[10px] sm:text-xs font-bold text-gray-700 mt-3 mb-2 flex items-center gap-1.5">
-                    <Square className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
+                  <p className="text-[8px] sm:text-xs font-bold text-gray-700 mt-2 sm:mt-3 mb-1.5 sm:mb-2 flex items-center gap-1">
+                    <Square className="w-2.5 h-2.5 sm:w-4 sm:h-4 text-blue-600" />
                     {t('additionalWindows')}
                   </p>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-1.5">
                     {[
                       { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: "760 €" },
                       { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: "500 €" },
                       { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: "540 €" },
                       { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: "225 €" }
                     ].map((opt, idx) => (
-                      <div key={idx} className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
-                        <span className="font-medium text-gray-800 text-[10px] sm:text-xs block mb-1">{opt.label}</span>
-                        <div className="flex items-center justify-center gap-1">
+                      <div key={idx} className={`p-1.5 sm:p-3 rounded-md sm:rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
+                        <span className="font-medium text-gray-800 text-[8px] sm:text-xs block mb-0.5 sm:mb-1 leading-tight">{opt.label}</span>
+                        <div className="flex items-center justify-center gap-0.5 sm:gap-1">
                           <button 
                             onClick={() => opt.setter(Math.max(0, opt.state - 1))}
-                            className="w-6 h-6 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm"
+                            className="w-5 h-5 sm:w-6 sm:h-6 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-xs sm:text-sm"
                           >−</button>
-                          <span className="w-6 text-center font-bold text-sm">{opt.state}</span>
+                          <span className="w-4 sm:w-6 text-center font-bold text-xs sm:text-sm">{opt.state}</span>
                           <button 
                             onClick={() => opt.setter(opt.state + 1)}
-                            className="w-6 h-6 rounded bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm"
+                            className="w-5 h-5 sm:w-6 sm:h-6 rounded bg-blue-500 hover:bg-blue-600 text-white font-bold text-xs sm:text-sm"
                           >+</button>
                         </div>
-                        <span className="text-green-600 font-bold text-[10px] block mt-1 text-center">× {opt.price}</span>
+                        <span className="text-green-600 font-bold text-[8px] sm:text-[10px] block mt-0.5 sm:mt-1 text-center">× {opt.price}</span>
                       </div>
                     ))}
                   </div>
@@ -897,12 +897,12 @@ export default function KonfiguratorProstoHouse({
                 color="from-emerald-600 to-teal-600"
                 step="3"
               />
-              <div className="p-3 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+              <div className="p-2 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
 
-                  <div className={`col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] rounded-xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
-                    <p className={`col-span-2 text-[9px] sm:text-[10px] font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
-                      <span className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
+                  <div className={`col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] rounded-lg sm:rounded-xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
+                    <p className={`col-span-2 text-[8px] sm:text-[10px] font-bold -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
+                      <span className={`w-3.5 h-3.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
                       {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
                     </p>
                     <Tile
@@ -976,24 +976,24 @@ export default function KonfiguratorProstoHouse({
 
                 </div>
 
-                <div className="mt-2 sm:mt-3 p-2 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
+                <div className="mt-2 sm:mt-3 p-1.5 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
-                      <DoorOpen className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
+                    <div className="flex items-center gap-1">
+                      <DoorOpen className="w-3 h-3 sm:w-5 sm:h-5 text-emerald-600" />
                       <div>
-                        <span className="font-semibold text-gray-800 text-[10px] sm:text-xs">{t('interiorDoors')}</span>
-                        <span className="text-green-600 font-bold text-[10px] ml-1.5">× 180 €</span>
+                        <span className="font-semibold text-gray-800 text-[8px] sm:text-xs">{t('interiorDoors')}</span>
+                        <span className="text-green-600 font-bold text-[8px] sm:text-[10px] ml-1">× 180 €</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1">
                       <button 
                         onClick={() => setInterieroveDvere(Math.max(0, interieroveDvere - 1))}
-                        className="w-6 h-6 sm:w-7 sm:h-7 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm"
+                        className="w-5 h-5 sm:w-7 sm:h-7 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-xs sm:text-sm"
                       >−</button>
-                      <span className="w-6 text-center font-bold text-sm">{interieroveDvere}</span>
+                      <span className="w-4 sm:w-6 text-center font-bold text-xs sm:text-sm">{interieroveDvere}</span>
                       <button 
                         onClick={() => setInterieroveDvere(interieroveDvere + 1)}
-                        className="w-6 h-6 sm:w-7 sm:h-7 rounded bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm"
+                        className="w-5 h-5 sm:w-7 sm:h-7 rounded bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm"
                       >+</button>
                     </div>
                   </div>
@@ -1016,8 +1016,8 @@ export default function KonfiguratorProstoHouse({
                 color="from-purple-600 to-violet-600"
                 step="4"
               />
-              <div className="p-3 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+              <div className="p-2 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
                   
                   <Tile
                     selected={inziniering}
@@ -1090,11 +1090,11 @@ export default function KonfiguratorProstoHouse({
                 </div>
 
                 {a0Odporucania && (
-                  <div className="mt-4 p-3 sm:p-4 bg-amber-50 border-2 border-amber-300 rounded-xl">
-                    <div className="flex items-start gap-2 sm:gap-3">
-                      <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div className="mt-2 sm:mt-4 p-2 sm:p-4 bg-amber-50 border-2 border-amber-300 rounded-lg sm:rounded-xl">
+                    <div className="flex items-start gap-1.5 sm:gap-3">
+                      <AlertTriangle className="w-3 h-3 sm:w-5 sm:h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-bold text-amber-800 mb-1 text-xs sm:text-sm">{t('a0Recommendations')}</p>
+                        <p className="font-bold text-amber-800 mb-1 text-[9px] sm:text-sm">{t('a0Recommendations')}</p>
                         <ul className="space-y-0.5">
                           {a0Odporucania.map((item, index) => (
                             <li key={index} className="text-amber-700 flex items-center gap-1 text-[10px] sm:text-xs">
@@ -1109,10 +1109,10 @@ export default function KonfiguratorProstoHouse({
                 )}
 
                 {projektA0 && !a0Odporucania && (
-                  <div className="mt-4 p-3 sm:p-4 bg-green-50 border-2 border-green-300 rounded-xl">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-                      <p className="font-bold text-green-800 text-xs sm:text-sm">{t('configMeetsA0')}</p>
+                  <div className="mt-2 sm:mt-4 p-2 sm:p-4 bg-green-50 border-2 border-green-300 rounded-lg sm:rounded-xl">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <CheckCircle className="w-3 h-3 sm:w-5 sm:h-5 text-green-600" />
+                      <p className="font-bold text-green-800 text-[9px] sm:text-sm">{t('configMeetsA0')}</p>
                     </div>
                   </div>
                 )}
@@ -1134,18 +1134,18 @@ export default function KonfiguratorProstoHouse({
                   <div className="absolute bottom-10 left-10 w-32 h-32 bg-emerald-400 rounded-full blur-3xl"></div>
                 </div>
 
-                <div className="relative p-4 sm:p-8 md:p-10">
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-8">
+                <div className="relative p-3 sm:p-8 md:p-10">
+                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 sm:gap-8">
                     <div className="flex-1">
-                      <p className="text-green-400 text-[10px] sm:text-sm font-semibold uppercase tracking-wider mb-1 sm:mb-2">{t('yourConfiguration')}</p>
-                      <h3 className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">{dom?.nazov || 'Prosto House'}</h3>
-                      <p className="text-slate-400 text-xs sm:text-base mb-4">{t('completeCalculation')}</p>
+                      <p className="text-green-400 text-[9px] sm:text-sm font-semibold uppercase tracking-wider mb-1 sm:mb-2">{t('yourConfiguration')}</p>
+                      <h3 className="text-base sm:text-3xl font-bold text-white mb-1 sm:mb-2">{dom?.nazov || 'Prosto House'}</h3>
+                      <p className="text-slate-400 text-[10px] sm:text-base mb-3 sm:mb-4">{t('completeCalculation')}</p>
                       {projektA0 && !a0Odporucania && (
                         <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] sm:text-sm py-1 sm:py-1.5 px-2 sm:px-4 shadow-lg shadow-green-500/30">✓ {t('meetsA0')}</Badge>
                       )}
                     
-                      <div className="mt-4 sm:mt-6 bg-slate-800/50 rounded-xl p-3 sm:p-4 border border-slate-700/50 max-h-[300px] overflow-y-auto">
-                        <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">{t('selectedItems')}</p>
+                      <div className="mt-3 sm:mt-6 bg-slate-800/50 rounded-lg sm:rounded-xl p-2 sm:p-4 border border-slate-700/50 max-h-[250px] sm:max-h-[300px] overflow-y-auto">
+                        <p className="text-slate-400 text-[9px] sm:text-xs font-semibold uppercase tracking-wider mb-2 sm:mb-3">{t('selectedItems')}</p>
                         <div className="space-y-1">
                           {selectedItems.map((item, index) => {
                             const isBase = item.section === "base";
@@ -1210,21 +1210,21 @@ export default function KonfiguratorProstoHouse({
                         </div>
                       </div>
                     </div>
-                    <div className="text-right p-3 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl sm:rounded-2xl border border-green-500/20 lg:min-w-[280px]">
-                      <p className="text-slate-400 mb-1 sm:mb-2 text-[10px] sm:text-sm">{t('totalWithVAT')}</p>
-                      <p className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
+                    <div className="text-right p-2 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-lg sm:rounded-2xl border border-green-500/20 lg:min-w-[280px]">
+                      <p className="text-slate-400 mb-1 sm:mb-2 text-[9px] sm:text-sm">{t('totalWithVAT')}</p>
+                      <p className="text-2xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
                         {formatPrice(totalPrice)}
                       </p>
                     </div>
                   </div>
 
-                  <div className="mt-6 sm:mt-10 pt-4 sm:pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                  <div className="mt-4 sm:mt-10 pt-3 sm:pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center">
                     <Button 
                       size="lg" 
                       onClick={() => setShowContactModal(true)}
-                      className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
+                      className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-xs sm:text-lg px-4 sm:px-12 py-3 sm:py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
                     >
-                      <Send className="mr-2 sm:mr-3 w-4 h-4 sm:w-6 sm:h-6" />
+                      <Send className="mr-1.5 sm:mr-3 w-3.5 h-3.5 sm:w-6 sm:h-6" />
                       {t('interestedInConfig')}
                     </Button>
                   </div>
