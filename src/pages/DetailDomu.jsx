@@ -1726,6 +1726,15 @@ export default function DetailDomu() {
                     </div>
                   </div>
                 )}
+                {dom.terasa_plocha && (
+                  <div className="flex items-center gap-2">
+                    <Landmark className="w-4 h-4 sm:w-5 sm:h-5 text-teal-600" />
+                    <div>
+                      <p className="text-xs text-gray-500">Terasa</p>
+                      <p className="text-sm sm:text-base font-bold text-primary">{dom.terasa_plocha} m²</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </Card>
 
