@@ -2071,6 +2071,8 @@ export default function DetailDomu() {
                   setIzolaciaNavysenie={setIzolaciaNavysenie}
                   zaklady={zaklady}
                   setZaklady={setZaklady}
+                  predlzenie={predlzenie}
+                  setPredlzenie={setPredlzenie}
                   vstupneDvere={vstupneDvere}
                   setVstupneDvere={setVstupneDvere}
                   elektroinstalacia={elektroinstalacia}
