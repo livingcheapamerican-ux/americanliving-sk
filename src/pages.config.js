@@ -27,6 +27,7 @@ import AutoRegeneraciaPrekladov from './pages/AutoRegeneraciaPrekladov';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
 import SEODashboard from './pages/SEODashboard';
+import AdminUpdateTicabHouse from './pages/AdminUpdateTicabHouse';
 import __Layout from './Layout.jsx';
 
 
@@ -60,6 +61,7 @@ export const PAGES = {
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
     "SEODashboard": SEODashboard,
+    "AdminUpdateTicabHouse": AdminUpdateTicabHouse,
 }
 
 export const pagesConfig = {
