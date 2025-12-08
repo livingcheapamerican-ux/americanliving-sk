@@ -200,18 +200,19 @@ export default function Domov() {
         </div>
       )}
 
+      {/* Admin toggle button - FIXED POSITION */}
+      {isAdmin && (
+        <button
+          onClick={() => setShowSettings(!showSettings)}
+          className="fixed top-24 right-4 z-[100] bg-purple-600 hover:bg-purple-700 p-4 rounded-xl shadow-2xl transition-all border-4 border-white"
+          title="Nastavenia hero sekcie"
+        >
+          <Settings className="w-8 h-8 text-white" />
+        </button>
+      )}
+
       {/* Hero Section */}
       <section className="relative h-[55vh] sm:h-[75vh] min-h-[320px] sm:min-h-[450px] overflow-hidden">
-        {/* Admin toggle button */}
-        {isAdmin && (
-          <button
-            onClick={() => setShowSettings(!showSettings)}
-            className="absolute top-24 right-4 z-[60] bg-white/90 hover:bg-white p-3 rounded-lg shadow-xl transition-all border-2 border-purple-500"
-            title="Nastavenia hero sekcie"
-          >
-            <Settings className={`w-6 h-6 ${showSettings ? 'text-purple-600' : 'text-gray-600'}`} />
-          </button>
-        )}
         
         {heroImages.map((img, index) => (
           <div
