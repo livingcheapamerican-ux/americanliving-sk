@@ -169,16 +169,16 @@ export default function KonfiguratorFlatSmall({
 
   // FLAT SMALL CENNÍK - FIXNÉ CENY (extrahované z obrázkov - december 2025)
   const CENY = {
-    montaz: { nie: 0, ano: 4874 },
+    montaz: { nie: 0, ano: 17700 },
     dvere: { ziadne: 0, kovove: 720, plastove: 460 },
-    izolacia: { standard: 0, zvysena: 1397, premium: 2800, ultra: 5250 },
+    izolacia: { standard: 0, zvysena: 5799, premium: 11200, ultra: 5250 },
     elektroinstalacia: 2300,
     vodaKanalizacia: 980,
     sanitaKomplet: 1169,
     bojler: 246,
     tepelneCerpadlo: 2723,
     rekuperacia: 138,
-    zaklady: { bez: 0, skrutky: 2808, doska: 5950, pasove: 6319 },
+    zaklady: { bez: 0, skrutky: 8140, doska: 12000, pasove: 21079 },
     pripojkaSiete: 1501,
     inziniering: 2592,
     projektA0: 3500,
