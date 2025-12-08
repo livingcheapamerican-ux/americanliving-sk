@@ -70,7 +70,6 @@ function LayoutContent({ children }) {
   const navItems = [
     { name: t('home'), path: createPageUrl("Domov"), icon: Home },
     { name: t('catalog'), path: createPageUrl("Katalog"), icon: Grid3x3 },
-    { name: t('gallery'), path: createPageUrl("GaleriaRealizacii"), icon: Home },
     { name: t('configurator'), path: createPageUrl("InteraktivnyKonfigurator"), icon: Settings },
     { name: t('about'), path: createPageUrl("ONas"), icon: Info },
     { name: t('contact'), path: createPageUrl("Kontakt"), icon: Phone },
