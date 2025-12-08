@@ -187,7 +187,9 @@ export default function TypStavbySelector({
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <Checkbox checked={predajNehnutelnosti} onCheckedChange={() => {}} className="mt-1" />
+                    <div className="pointer-events-none">
+                      <Checkbox checked={predajNehnutelnosti} className="mt-1" />
+                    </div>
                     <div>
                       <p className="font-semibold text-gray-800">{t('sellPreviousProperty')}</p>
                       <p className="text-xs text-gray-600 mt-1">{t('sellPreviousPropertyDesc')}</p>
@@ -205,7 +207,9 @@ export default function TypStavbySelector({
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <Checkbox checked={hladaniePozemku} onCheckedChange={() => {}} className="mt-1" />
+                    <div className="pointer-events-none">
+                      <Checkbox checked={hladaniePozemku} className="mt-1" />
+                    </div>
                     <div>
                       <p className="font-semibold text-gray-800">{t('wantLandForHouse')}</p>
                       <p className="text-xs text-gray-600 mt-1">{t('wantLandForHouseDesc')}</p>
@@ -223,7 +227,9 @@ export default function TypStavbySelector({
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <Checkbox checked={financneSluzby} onCheckedChange={() => {}} className="mt-1" />
+                    <div className="pointer-events-none">
+                      <Checkbox checked={financneSluzby} className="mt-1" />
+                    </div>
                     <div>
                       <p className="font-semibold text-gray-800">{t('financialServicesLoans')}</p>
                       <p className="text-xs text-gray-600 mt-1">{t('financialServicesLoansDesc')}</p>
