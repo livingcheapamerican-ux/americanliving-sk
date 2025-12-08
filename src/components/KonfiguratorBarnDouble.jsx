@@ -306,7 +306,9 @@ export default function KonfiguratorBarnDouble({
     items.push({ name: t('lamination') + " - " + t('laminationAnthracite'), price: povrchokaOkien ? CENY.povrchokaOkien : 0, section: "holodom", selected: povrchokaOkien });
     items.push({ name: t('tintedGlass') + " (Solar)", price: tonovaneSkla ? CENY.tonovaneSkla : 0, section: "holodom", selected: tonovaneSkla });
     
-    items.push({ name: "Fasáda - Drevo/Plech", price: 0, section: "kluc", selected: true });
+    const fasadaLabel = vonkajsiaFasada === "suchana" ? "Suchá fasáda - Individuálne" : "Fasáda - Drevo/Plech";
+    const fasadaPrice = vonkajsiaFasada === "suchana" ? CENY.vonkajsiaFasada.suchana : 0;
+    items.push({ name: fasadaLabel, price: fasadaPrice, section: "kluc", selected: true });
 
     items.push({ name: t('floors') + " - " + t('floorsLaminate'), price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
     items.push({ name: t('floorHeatingFull'), price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
@@ -843,18 +845,44 @@ export default function KonfiguratorBarnDouble({
               <div className="p-3 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
-                  <div className="col-span-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-emerald-600 rounded-xl bg-emerald-100/70 shadow-xl">
-                    <p className="text-[9px] sm:text-[10px] font-bold text-emerald-700 mb-2 flex items-center gap-1">
+                  <div className="col-span-2 sm:col-span-3 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-emerald-600 rounded-xl bg-emerald-100/70 shadow-xl">
+                    <p className="col-span-2 text-[9px] sm:text-[10px] font-bold text-emerald-700 -mb-1 flex items-center gap-1">
                       <span className="w-4 h-4 sm:w-5 sm:h-5 bg-emerald-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">1</span>
-                      {t('facade')} - Štandardná
+                      {t('facade')} ({t('selectOne')})
                     </p>
-                    <div className="flex items-center gap-2 p-2 sm:p-3 bg-white rounded-lg border-2 border-emerald-500">
-                      <Paintbrush className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
-                      <div>
-                        <p className="font-semibold text-gray-800 text-xs sm:text-sm">Drevo / Falcovaný plech</p>
-                        <p className="text-[10px] sm:text-xs text-gray-500">Súčasť základnej ceny</p>
-                      </div>
-                    </div>
+                    <Tile
+                      selected={vonkajsiaFasada === "standard"}
+                      onClick={() => setVonkajsiaFasada("standard")}
+                      icon={Home}
+                      iconColor="text-emerald-600"
+                      iconSelectedColor="text-emerald-700"
+                      title="Drevo / Plech"
+                      subtitle={t('standard')}
+                      price="+ 0 €"
+                      isPriced={false}
+                      selectedBg="bg-emerald-100"
+                      selectedBorder="border-emerald-500"
+                      selectedRing="ring-emerald-300"
+                      hoverBorder="hover:border-emerald-300"
+                      tooltip="Štandardná fasáda z dreveného obkladu a falcovaného plechu"
+                    />
+
+                    <Tile
+                      selected={vonkajsiaFasada === "suchana"}
+                      onClick={(e) => { if (vonkajsiaFasada !== "suchana") triggerAnimation("fasada", e.currentTarget); setVonkajsiaFasada("suchana"); }}
+                      icon={Paintbrush}
+                      iconColor="text-blue-500"
+                      iconSelectedColor="text-emerald-700"
+                      title="Suchá fasáda"
+                      subtitle="Individuálne"
+                      price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`}
+                      isPriced={true}
+                      selectedBg="bg-emerald-100"
+                      selectedBorder="border-emerald-500"
+                      selectedRing="ring-emerald-300"
+                      hoverBorder="hover:border-emerald-300"
+                      tooltip="Suchá fasáda - individuálne nacenenie"
+                    />
                   </div>
 
                   <Tile
