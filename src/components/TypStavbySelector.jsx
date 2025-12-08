@@ -29,19 +29,19 @@ export default function TypStavbySelector({
               <Sparkles className="w-6 h-6" />
             </div>
             <h2 className="text-3xl font-bold mb-2">
-              Poskladajte si cenovú ponuku na váš dom
+              {t('createYourPriceOffer')}
             </h2>
             <div className="flex items-center justify-center gap-2 text-purple-100">
               <CheckCircle className="w-4 h-4" />
-              <span className="text-sm">bez skrytých poplatkov</span>
+              <span className="text-sm">{t('noHiddenFees')}</span>
             </div>
           </div>
 
           <h3 className="text-2xl font-bold text-gray-800 mb-3">
-            Aký typ stavby plánujete?
+            {t('buildingTypeQuestion')}
           </h3>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Vyberte si, či chcete rekreačnú stavbu (chata, záhradný domček) alebo rodinný dom s energetickým certifikátom A0 a možnosťou trvalého pobytu.
+            {t('buildingTypeDesc')}
           </p>
         </motion.div>
 
@@ -67,10 +67,10 @@ export default function TypStavbySelector({
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-gray-800 mb-1">
-                    Rekreačná stavba
+                    {t('recreationalBuilding')}
                   </h4>
                   <Badge className="bg-amber-500 text-white text-xs">
-                    Ekonomická voľba
+                    {t('economicChoice')}
                   </Badge>
                 </div>
               </div>
@@ -78,25 +78,25 @@ export default function TypStavbySelector({
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                  <span>Chata, záhradný domček</span>
+                  <span>{t('cottage')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                  <span>Celoročná izolácia 150/200mm</span>
+                  <span>{t('yearRoundInsulation')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                  <span>Bez energetického certifikátu</span>
+                  <span>{t('noEnergyCertificate')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                  <span>Nižšia cena</span>
+                  <span>{t('lowerPrice')}</span>
                 </li>
               </ul>
 
               <div className="mt-6 pt-4 border-t border-amber-200">
                 <p className="text-xs text-gray-500 italic">
-                  Spĺňa parametre rekreačnej stavby
+                  {t('meetsRecreationalParams')}
                 </p>
               </div>
             </Card>
@@ -122,10 +122,10 @@ export default function TypStavbySelector({
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-gray-800 mb-1">
-                    Rodinný dom A0
+                    {t('familyHouseA0')}
                   </h4>
                   <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs">
-                    ⚡ Odporúčané
+                    ⚡ {t('recommended')}
                   </Badge>
                 </div>
               </div>
@@ -133,29 +133,29 @@ export default function TypStavbySelector({
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span>Celoročné bývanie</span>
+                  <span>{t('yearRoundLiving')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span>Energetický certifikát A0</span>
+                  <span>{t('energyCertificateA0')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span>Premium izolácia 250/300mm</span>
+                  <span>{t('premiumInsulation250300')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span>Tepelné čerpadlo + Rekuperácia</span>
+                  <span>{t('heatPumpRecuperation')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                  <span>Možnosť trvalého pobytu</span>
+                  <span>{t('permanentResidencePossibility')}</span>
                 </li>
               </ul>
 
               <div className="mt-6 pt-4 border-t border-green-200">
                 <p className="text-xs text-gray-500 italic">
-                  Spĺňa všetky normy pre rodinný dom
+                  {t('meetsAllStandardsFamilyHouse')}
                 </p>
               </div>
             </Card>
@@ -174,7 +174,7 @@ export default function TypStavbySelector({
                 <Building2 className="w-6 h-6 text-cyan-600" />
                 <h4 className="text-lg font-bold text-gray-800">{t('additionalServices')}</h4>
               </div>
-              <p className="text-sm text-gray-600 mb-4">Vyberte si doplnkové služby (voliteľné):</p>
+              <p className="text-sm text-gray-600 mb-4">{t('selectAdditionalServices')}</p>
               
               <div className="space-y-3">
                 <motion.div
@@ -250,7 +250,7 @@ export default function TypStavbySelector({
                 onClick={onContinue}
                 className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold px-12 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all"
               >
-                Pokračovať
+                {t('continue')}
               </button>
             </div>
           </motion.div>

@@ -2404,6 +2404,17 @@ const translations = {
     usableArea: "Korisna površina",
     energyClass: "Energetska klasa",
     
+    // Configurator phases
+    phase: "Faza",
+    additionalServices: "Dodatne usluge",
+    additionalServicesSubtitle: "Odaberite usluge koje trebate",
+    sellPreviousProperty: "Prodaja prethodne nekretnine",
+    sellPreviousPropertyDesc: "Posvetit će vam se naši najbolji stručnjaci za nekretnine.",
+    wantLandForHouse: "Želim zemljište za svoju kuću",
+    wantLandForHouseDesc: "Pomoći ćemo vam pronaći idealno zemljište.",
+    financialServicesLoans: "Financijske usluge - krediti/osiguranje",
+    financialServicesLoansDesc: "Posvetit će vam se naši najbolji financijski stručnjaci koji će vam pomoći ne samo s financiranjem vašeg stanovanja, već i pružiti ruku pomoći u teškim trenucima s financijama.",
+    
     // Ticab House texts
     standardEquipment: "Standardna oprema (uključeno u cijenu)",
     constructionAndInsulation: "Konstrukcija i izolacija:",
