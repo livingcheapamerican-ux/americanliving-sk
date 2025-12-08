@@ -1138,34 +1138,7 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Popis - presunute z pravej strany */}
-            {dom.popis && (
-              <Card className="p-2 sm:p-3">
-                <h3 className="text-sm font-bold text-red-600 mb-1.5">{t('descriptionTitle')}</h3>
-                <div className="text-[11px] sm:text-xs text-gray-700 leading-[1.35] space-y-1.5">
-                  <TranslatedDescription 
-                    text={dom.popis}
-                    textEn={dom.popis_en}
-                    textHu={dom.popis_hu}
-                    textPl={dom.popis_pl}
-                    textUk={dom.popis_uk}
-                    textDe={dom.popis_de}
-                    textFr={dom.popis_fr}
-                    textSr={dom.popis_sr}
-                    textHr={dom.popis_hr}
-                    textEl={dom.popis_el}
-                    className="whitespace-pre-line"
-                  />
-                </div>
-                {isProstoHouse && (
-                  <div className="mt-2 pt-2 border-t border-gray-200">
-                    <p className="text-[11px] sm:text-xs text-gray-700">
-                      <strong>{t('lifespan')}:</strong> {t('lifespanDesc')}
-                    </p>
-                  </div>
-                )}
-              </Card>
-            )}
+
 
             {/* Konfigurátor pre Barn Double - Wizard - PO POPISE */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && dom.nazov?.toLowerCase().includes("double") && (
@@ -1781,76 +1754,24 @@ export default function DetailDomu() {
                   <p className="text-xs sm:text-sm text-gray-700 mb-3 leading-relaxed">
                     Je vždy vyhovujúci pre status rekrečnej stavby na celoročné bývanie. Pokiaľ chcete z domu urobiť rodinný dom na (trvalé bývanie, nahlásenie trvalého pobytu, možnosť hypotekárneho úveru, energetického certifikátu A0 a stavebné povolenie v obytnej štvrti) musíte zmeniť parametre domu v konfigurátore nižšie.
                   </p>
-                <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-1 text-xs sm:text-sm">{t('constructionAndInsulation')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-0.5 ml-2 text-xs sm:text-sm">
-                      <li>{t('frameFromDryTimber')}</li>
-                      <li>{t('wallInsulation')}</li>
-                      <li>{t('floorRoofInsulation')}</li>
-                      <li>{t('euCertifiedConstruction')}</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-1">{t('windowsAndDoors')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
-                      <li>{t('doubleGlazedPvcWindows')}</li>
-                      <li>{t('pvcEntryDoors')}</li>
-                      <li>{t('mdfInteriorDoors')}</li>
-                      <li>{t('frenchBalconyWindows')}</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-1">{t('exterior')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
-                      <li>{t('facadeOptions')}</li>
-                      <li>{t('roofCovering')}</li>
-                      <li>{t('roofBoarding')}</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-1">{t('interior')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
-                      <li>{t('wallCladding')}</li>
-                      <li>{t('floorsCommercial')}</li>
-                      <li>{t('paintedGypsum')}</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-1">{t('bathroomByModel')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
-                      <li>{t('paintedCeilingBath')}</li>
-                      <li>{t('wallTiles')}</li>
-                      <li>{t('washbasin')}</li>
-                      <li>{t('geberitWc')}</li>
-                      <li>{t('groheShower')}</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-1">{t('kitchenByModel')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
-                      <li>{t('customKitchen')}</li>
-                      <li>{t('kitchenBacksplash')}</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-1">{t('techInstallations')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
-                      <li>{t('electricalWiring')}</li>
-                      <li>{t('boiler80l')}</li>
-                      <li>{t('acOutletReinforcement')}</li>
-                      <li>{t('underfloorHeating')}</li>
-                      <li>{t('waterInstallation')}</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-1">{t('terraceByModel')}</p>
-                    <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2">
-                      <li>{t('builtInTerrace')}</li>
-                      <li>{t('optionalTerraces')}</li>
-                    </ul>
-                  </div>
-                </div>
+                  
+                  {/* Špecifický obsah pre každý dom z popis */}
+                  {dom.popis && (
+                    <div className="mb-4 text-xs sm:text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+                      <TranslatedDescription 
+                        text={dom.popis}
+                        textEn={dom.popis_en}
+                        textHu={dom.popis_hu}
+                        textPl={dom.popis_pl}
+                        textUk={dom.popis_uk}
+                        textDe={dom.popis_de}
+                        textFr={dom.popis_fr}
+                        textSr={dom.popis_sr}
+                        textHr={dom.popis_hr}
+                        textEl={dom.popis_el}
+                      />
+                    </div>
+                  )}
 
                 <div className="mt-4 pt-4 border-t border-green-300">
                   <h4 className="font-bold text-red-700 mb-2 flex items-center gap-2 text-xs sm:text-sm">
