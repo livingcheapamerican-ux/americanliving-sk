@@ -185,7 +185,7 @@ export default function KonfiguratorBarnDouble({
     inziniering: 2592,
     projektA0: 3500,
     interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 9450 },
-    vonkajsiaFasada: { standard: 0, suchana: 6976 },
+    vonkajsiaFasada: { standard: 0, suchana: 3716 },
     povrchokaOkien: 1450,
     vnutornePodlahy: 1750,
     podlahovVykurovanie: 3960,
