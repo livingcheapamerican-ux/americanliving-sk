@@ -22,7 +22,6 @@ import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation"
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
-import KonfiguratorFaza0Sluzby from "./KonfiguratorFaza0Sluzby";
 
 // Dlaždica s tooltip a veľkou fajkou
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
@@ -350,7 +349,8 @@ export default function KonfiguratorProstoHouse({
     items.push({ name: t('transport'), price: doprava ? CENY.doprava : 0, section: "docs", selected: doprava });
     
     return items;
-  }, [montazHolodomu, predlzenie, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
+  }, [predajNehnutelnosti, hladaniePozemku, financneSluzby,
+      montazHolodomu, predlzenie, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
@@ -586,15 +586,6 @@ export default function KonfiguratorProstoHouse({
 
       <div>
         <div className="space-y-6">
-
-          <KonfiguratorFaza0Sluzby
-            predajNehnutelnosti={predajNehnutelnosti}
-            setPredajNehnutelnosti={setPredajNehnutelnosti}
-            hladaniePozemku={hladaniePozemku}
-            setHladaniePozemku={setHladaniePozemku}
-            financneSluzby={financneSluzby}
-            setFinancneSluzby={setFinancneSluzby}
-          />
 
           {showHruba && (
             <KonfiguratorFaza1HrubaStavba 
