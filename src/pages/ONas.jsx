@@ -62,20 +62,21 @@ export default function ONas() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="relative bg-gradient-to-r from-primary to-blue-700 text-white py-20 overflow-hidden">
+      <section className="relative bg-gradient-to-r from-red-600 to-red-800 text-white py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-black/20"></div>
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="max-w-3xl"
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">
               {t('aboutUs')}
             </h1>
-            <p className="text-xl text-white mb-6 font-semibold">
+            <p className="text-xl text-white mb-6 font-bold drop-shadow-md">
               {t('distributorAndBuilder')}
             </p>
-            <p className="text-lg text-gray-100">
+            <p className="text-lg text-white font-medium drop-shadow-md">
               {t('builtMoreThan700')}
             </p>
           </motion.div>
