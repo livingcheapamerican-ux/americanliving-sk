@@ -287,6 +287,9 @@ export default function KonfiguratorWizard({
         useBarn48Prices = false,
         useBarnDoublePrices = false,
         useFlatSmallPrices = false,
+  predajNehnutelnosti, setPredajNehnutelnosti,
+  hladaniePozemku, setHladaniePozemku,
+  financneSluzby, setFinancneSluzby,
   typStavby, setTypStavby,
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
@@ -393,6 +396,9 @@ export default function KonfiguratorWizard({
   const handleFullReset = () => {
     setCurrentStep(0);
     if (setTypStavby) setTypStavby("");
+    if (setPredajNehnutelnosti) setPredajNehnutelnosti(false);
+    if (setHladaniePozemku) setHladaniePozemku(false);
+    if (setFinancneSluzby) setFinancneSluzby(false);
     setMontazHolodomu?.("nie");
     if (setVstupneDvere) setVstupneDvere("ziadne");
     setIzolaciaNavysenie?.("standard");
@@ -428,6 +434,9 @@ export default function KonfiguratorWizard({
     const commonProps = {
       dom,
       onReset: handleFullReset,
+      predajNehnutelnosti, setPredajNehnutelnosti,
+      hladaniePozemku, setHladaniePozemku,
+      financneSluzby, setFinancneSluzby,
       typStavby, setTypStavby,
       montazHolodomu, setMontazHolodomu,
       izolaciaNavysenie, setIzolaciaNavysenie,
