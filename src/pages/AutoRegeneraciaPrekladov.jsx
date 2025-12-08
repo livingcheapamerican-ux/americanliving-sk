@@ -1,17 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, AlertCircle, Loader2, Languages } from "lucide-react";
+import { CheckCircle, AlertCircle, Loader2, Languages, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 export default function AutoRegeneraciaPrekladov() {
   const [loading, setLoading] = useState(true);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
+  const [startTime, setStartTime] = useState(null);
+  const [elapsedTime, setElapsedTime] = useState(0);
+
+  const { data: domyPredRegenraciou } = useQuery({
+    queryKey: ['prosto-domy-pred'],
+    queryFn: () => base44.entities.Dom.filter({ vyrobca: "Prosto House" }),
+    enabled: loading
+  });
 
   useEffect(() => {
     const runRegeneration = async () => {
+      setStartTime(Date.now());
       try {
         const response = await base44.functions.invoke('regenerujPrekladyDeFrSrHrEl', {});
         setResults(response.data);
@@ -24,6 +35,16 @@ export default function AutoRegeneraciaPrekladov() {
 
     runRegeneration();
   }, []);
+
+  useEffect(() => {
+    if (!loading || !startTime) return;
+    
+    const interval = setInterval(() => {
+      setElapsedTime(Math.floor((Date.now() - startTime) / 1000));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [loading, startTime]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-6">
