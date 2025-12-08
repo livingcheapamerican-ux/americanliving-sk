@@ -130,6 +130,9 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
 export default function KonfiguratorBarnDouble({ 
   dom,
   onReset,
+  predajNehnutelnosti, setPredajNehnutelnosti,
+  hladaniePozemku, setHladaniePozemku,
+  financneSluzby, setFinancneSluzby,
   typStavby = "",
   setTypStavby,
   montazHolodomu, setMontazHolodomu,

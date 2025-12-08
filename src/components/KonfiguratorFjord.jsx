@@ -136,6 +136,9 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
 export default function KonfiguratorFjord({ 
   dom,
   onReset,
+  predajNehnutelnosti, setPredajNehnutelnosti,
+  hladaniePozemku, setHladaniePozemku,
+  financneSluzby, setFinancneSluzby,
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
