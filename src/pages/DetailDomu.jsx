@@ -70,7 +70,7 @@ export default function DetailDomu() {
   const [tonovaneSkla, setTonovaneSkla] = useState(false);
   
   // Zdieľaný stav pre Fázu 3 - Dom na kľúč
-  const [vonkajsiaFasada, setVonkajsiaFasada] = useState("");
+  const [vonkajsiaFasada, setVonkajsiaFasada] = useState("standard");
   const [interierFinis, setInterierFinis] = useState("ziadne");
   const [vnutornePodlahy, setVnutornePodlahy] = useState(false);
   const [podlahovVykurovanie, setPodlahovVykurovanie] = useState(false);
@@ -437,7 +437,7 @@ export default function DetailDomu() {
     setInziniering(false);
     setProjektA0(false);
     setInterierFinis("ziadne");
-    setVonkajsiaFasada("");
+    setVonkajsiaFasada("standard");
     setPovrchokaOkien(false);
     setVnutornePodlahy(false);
     setPodlahovVykurovanie(false);

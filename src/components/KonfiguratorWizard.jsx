@@ -403,7 +403,7 @@ export default function KonfiguratorWizard({
     if (setInziniering) setInziniering(false);
     if (setProjektA0) setProjektA0(false);
     if (setInterierFinis) setInterierFinis("ziadne");
-    if (setVonkajsiaFasada) setVonkajsiaFasada("");
+    if (setVonkajsiaFasada) setVonkajsiaFasada("standard");
     if (setPovrchokaOkien) setPovrchokaOkien(false);
     if (setVnutornePodlahy) setVnutornePodlahy(false);
     if (setPodlahovVykurovanie) setPodlahovVykurovanie(false);
