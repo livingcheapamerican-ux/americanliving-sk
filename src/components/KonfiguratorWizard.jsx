@@ -385,12 +385,26 @@ export default function KonfiguratorWizard({
   const handleNext = () => {
     if (currentStep < steps.length - 1 && isStepValid) {
       setCurrentStep(currentStep + 1);
+      // Scroll na začiatok konfigurátorov na mobile
+      setTimeout(() => {
+        const isMobile = window.innerWidth < 640;
+        if (isMobile) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 100);
     }
   };
 
   const handleBack = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
+      // Scroll na začiatok konfigurátorov na mobile
+      setTimeout(() => {
+        const isMobile = window.innerWidth < 640;
+        if (isMobile) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 100);
     }
   };
 
