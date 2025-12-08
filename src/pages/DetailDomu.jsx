@@ -464,7 +464,7 @@ export default function DetailDomu() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden max-w-full">
       {/* Back Button */}
       <div className="bg-white border-b">
         <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between">
@@ -498,13 +498,13 @@ export default function DetailDomu() {
         </div>
       )}
 
-      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6">
-        <div className="grid lg:grid-cols-2 gap-4 sm:gap-6">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6 max-w-full overflow-hidden">
+        <div className="grid lg:grid-cols-2 gap-4 sm:gap-6 w-full max-w-full overflow-hidden">
           {/* Ľavý stĺpec - Galéria */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-4"
+            className="space-y-4 w-full max-w-full overflow-hidden"
           >
             {/* Hlavný obrázok */}
             <div 
@@ -533,12 +533,12 @@ export default function DetailDomu() {
 
             {/* Miniatúry */}
             {allImages.length > 1 && (
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5 sm:gap-2 w-full">
                 {allImages.map((img, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`aspect-video rounded-lg overflow-hidden border-2 transition-all ${
+                    className={`aspect-video rounded-md sm:rounded-lg overflow-hidden border-2 transition-all w-full ${
                       selectedImage === index
                         ? 'border-primary shadow-lg scale-105'
                         : 'border-gray-200 hover:border-primary/50'
@@ -595,7 +595,7 @@ export default function DetailDomu() {
 
             {/* Pomenované galérie - zobrazovať len ak majú aspoň jednu galériu s fotkami */}
             {dom.galerie && dom.galerie.length > 0 && dom.galerie.some(g => g.fotky && g.fotky.length > 0) && (
-              <Card className="p-3 sm:p-4">
+              <Card className="p-3 sm:p-4 w-full max-w-full overflow-hidden">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3 flex items-center gap-2">
                   <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
                   {t('galleries')}
@@ -623,11 +623,11 @@ export default function DetailDomu() {
                       </div>
                       
                       {/* Náhľady fotiek */}
-                      <div className="flex gap-1.5 sm:gap-2 flex-wrap">
+                      <div className="flex gap-1 sm:gap-2 flex-wrap w-full overflow-x-auto">
                         {galeria.fotky.slice(0, 6).map((foto, fotoIndex) => (
                           <div 
                             key={fotoIndex} 
-                            className="w-12 h-12 sm:w-14 sm:h-14 rounded-md overflow-hidden border border-gray-200 flex-shrink-0 relative"
+                            className="w-10 h-10 sm:w-14 sm:h-14 rounded-md overflow-hidden border border-gray-200 flex-shrink-0 relative"
                           >
                             <img
                               src={foto}
@@ -1698,7 +1698,7 @@ export default function DetailDomu() {
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-6 lg:self-start"
+            className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden"
           >
             {/* Hlavička */}
             <div>
@@ -1910,7 +1910,7 @@ export default function DetailDomu() {
 
             {/* Informačné panely - pre všetky Prosto House domy - PRESUNUTÉ NA PRAVÚ STRANU */}
             {isProstoHouse && (
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-full overflow-hidden">
                 {/* Komplet pre montáž */}
                 <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
                   <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-amber-900 border-b border-amber-200">
@@ -1976,7 +1976,7 @@ export default function DetailDomu() {
                 </Card>
 
                 {/* Interiér */}
-                <Card id="interier-finis-panel" className="overflow-hidden border border-emerald-200 bg-emerald-50/50 col-span-2">
+                <Card id="interier-finis-panel" className="overflow-hidden border border-emerald-200 bg-emerald-50/50 col-span-1 sm:col-span-2">
                   <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-emerald-900 border-b border-emerald-200">
                     <Home className="w-3 h-3 sm:w-4 sm:h-4" />
                     {t('interiorFinishPanel')}
