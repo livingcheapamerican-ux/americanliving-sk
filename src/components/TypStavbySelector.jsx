@@ -2,7 +2,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Home, CheckCircle, TreePine, Sparkles, Building2, MapPin, TrendingUp } from "lucide-react";
+import { Home, CheckCircle, TreePine, Sparkles, Building2, MapPin, TrendingUp, Square, CheckSquare } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "./LanguageContext";
 
@@ -187,9 +187,11 @@ export default function TypStavbySelector({
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="pointer-events-none">
-                      <Checkbox checked={predajNehnutelnosti} className="mt-1" />
-                    </div>
+                    {predajNehnutelnosti ? (
+                      <CheckSquare className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                    ) : (
+                      <Square className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                    )}
                     <div>
                       <p className="font-semibold text-gray-800">{t('sellPreviousProperty')}</p>
                       <p className="text-xs text-gray-600 mt-1">{t('sellPreviousPropertyDesc')}</p>
@@ -207,9 +209,11 @@ export default function TypStavbySelector({
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="pointer-events-none">
-                      <Checkbox checked={hladaniePozemku} className="mt-1" />
-                    </div>
+                    {hladaniePozemku ? (
+                      <CheckSquare className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    ) : (
+                      <Square className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                    )}
                     <div>
                       <p className="font-semibold text-gray-800">{t('wantLandForHouse')}</p>
                       <p className="text-xs text-gray-600 mt-1">{t('wantLandForHouseDesc')}</p>
@@ -227,9 +231,11 @@ export default function TypStavbySelector({
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="pointer-events-none">
-                      <Checkbox checked={financneSluzby} className="mt-1" />
-                    </div>
+                    {financneSluzby ? (
+                      <CheckSquare className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                    ) : (
+                      <Square className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                    )}
                     <div>
                       <p className="font-semibold text-gray-800">{t('financialServicesLoans')}</p>
                       <p className="text-xs text-gray-600 mt-1">{t('financialServicesLoansDesc')}</p>
