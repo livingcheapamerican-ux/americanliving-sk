@@ -179,7 +179,7 @@ export default function Katalog() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden max-w-full">
       {/* Header */}
       <section className="bg-red-900 py-6 sm:py-12">
         <div className="container mx-auto px-4">
@@ -198,7 +198,7 @@ export default function Katalog() {
         </div>
       </section>
 
-      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
+      <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-8 max-w-full overflow-hidden">
         {/* Tabs pre kategórie */}
         <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-4 sm:mb-6">
           <TabsList className={`grid w-full max-w-xl mx-auto h-8 sm:h-10 ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
@@ -211,14 +211,14 @@ export default function Katalog() {
           </TabsList>
         </Tabs>
 
-        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+        <div className="flex flex-col lg:flex-row gap-3 sm:gap-6 w-full max-w-full overflow-hidden">
           {/* Filters Sidebar */}
           <motion.aside
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             className="lg:w-72 flex-shrink-0">
 
-            <Card className="p-3 sm:p-4 sticky top-16 shadow-lg">
+            <Card className="p-2 sm:p-4 sticky top-16 shadow-lg max-w-full overflow-hidden">
               <div className="flex items-center gap-2 mb-3 sm:mb-4">
                 <Filter className="w-4 h-4 text-primary" />
                 <h2 className="text-base sm:text-lg font-bold text-primary">{t('filters')}</h2>
@@ -413,7 +413,7 @@ export default function Katalog() {
           </motion.aside>
 
           {/* Domy Grid */}
-          <div className="flex-grow">
+          <div className="flex-grow w-full max-w-full overflow-hidden">
             {/* Dizajn filter - Vylepšený dizajn */}
             <div className="relative mb-4 sm:mb-6">
               {/* Animovaný gradient pozadie */}
@@ -532,7 +532,7 @@ export default function Katalog() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-6">
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-6 w-full max-w-full">
 
                 {zoradeneDomy.map((dom, index) => {
                 const jeVybrany = vybraneNaSrovnanie.find((d) => d.id === dom.id);

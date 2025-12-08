@@ -15,8 +15,8 @@ export default function TypStavbySelector({
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-[70vh] flex items-center justify-center px-4">
-      <div className="max-w-4xl w-full">
+    <div className="min-h-[70vh] flex items-center justify-center px-2 sm:px-4 w-full max-w-full overflow-hidden">
+      <div className="max-w-4xl w-full overflow-hidden">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -46,7 +46,7 @@ export default function TypStavbySelector({
         </motion.div>
 
         {/* Karty */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6">
           {/* Rekreačná stavba */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
