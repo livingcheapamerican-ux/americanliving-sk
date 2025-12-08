@@ -546,14 +546,16 @@ export default function KonfiguratorFlatSmall({
       <div>
         <div className="space-y-6">
 
-          <KonfiguratorFaza0Sluzby
-            predajNehnutelnosti={predajNehnutelnosti}
-            setPredajNehnutelnosti={setPredajNehnutelnosti}
-            hladaniePozemku={hladaniePozemku}
-            setHladaniePozemku={setHladaniePozemku}
-            financneSluzby={financneSluzby}
-            setFinancneSluzby={setFinancneSluzby}
-          />
+          {!showOnlyPhase && (
+            <KonfiguratorFaza0Sluzby
+              predajNehnutelnosti={predajNehnutelnosti}
+              setPredajNehnutelnosti={setPredajNehnutelnosti}
+              hladaniePozemku={hladaniePozemku}
+              setHladaniePozemku={setHladaniePozemku}
+              financneSluzby={financneSluzby}
+              setFinancneSluzby={setFinancneSluzby}
+            />
+          )}
 
           {showHruba && (
             <KonfiguratorFaza1HrubaStavba 
