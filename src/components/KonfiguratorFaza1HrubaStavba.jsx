@@ -200,7 +200,7 @@ export default function KonfiguratorFaza1HrubaStavba({
 
   // Ceny pre Flat Small - skutočné ceny (zhodné s floating panelom)
   const FLATSMALL_CENY = {
-    montaz: 4874,
+    montaz: { nie: 0, ano: 4874 },
     izolacia: { zvysena: 1397, premium: 2800, ultra: 5250 },
     zaklady: { skrutky: 2808, doska: 5950, pasove: 6319 }
   };
