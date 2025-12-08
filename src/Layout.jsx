@@ -261,7 +261,14 @@ function LayoutContent({ children }) {
                 {t('contact')}
               </Button>
             </Link>
-          </div>
+            {isSuperAdmin && (
+              <Link to={createPageUrl("Domov")}>
+                <Button size="sm" className="bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs lg:text-sm h-7 lg:h-8 px-3 lg:px-4 whitespace-nowrap">
+                  <Settings className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                </Button>
+              </Link>
+            )}
+            </div>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
