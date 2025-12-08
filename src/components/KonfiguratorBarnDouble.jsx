@@ -168,7 +168,7 @@ export default function KonfiguratorBarnDouble({
   const { animations, triggerAnimation } = useFlyingAnimation();
   const { t } = useLanguage();
 
-  // BARN DOUBLE CENNÍK - FIXNÉ CENY (extrahované z priložených obrázkov)
+  // BARN DOUBLE CENNÍK - FIXNÉ CENY (extrahované z priložených obrázkov - december 2025)
   const CENY = {
     montaz: { nie: 0, ano: 9225 },
     predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19801, 4.8: 26401 },
