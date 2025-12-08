@@ -227,10 +227,10 @@ export default function ONas() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-bold text-primary mb-4">
-              Naši výrobcovia
+              {t('ourManufacturers')}
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Oficiálny distribútor overených výrobcov modulárnych domov
+              {t('officialDistributorModularPrefab')}
             </p>
           </motion.div>
 
