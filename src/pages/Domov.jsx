@@ -308,7 +308,7 @@ export default function Domov() {
                 <span>{t('financialServices')}</span>
               </div>
             </div>
-            </div>
+            </motion.div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 max-w-6xl mx-auto mb-4 sm:mb-10">
             {sluzby.map((sluzba, index) => (
