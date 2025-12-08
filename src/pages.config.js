@@ -23,6 +23,7 @@ import AdminPrekladyDomov from './pages/AdminPrekladyDomov';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import RegenerujPreklady from './pages/RegenerujPreklady';
 import RegenerujPrekladyDeFrSrHrEl from './pages/RegenerujPrekladyDeFrSrHrEl';
+import AutoRegeneraciaPrekladov from './pages/AutoRegeneraciaPrekladov';
 import __Layout from './Layout.jsx';
 
 
@@ -52,6 +53,7 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "RegenerujPreklady": RegenerujPreklady,
     "RegenerujPrekladyDeFrSrHrEl": RegenerujPrekladyDeFrSrHrEl,
+    "AutoRegeneraciaPrekladov": AutoRegeneraciaPrekladov,
 }
 
 export const pagesConfig = {
