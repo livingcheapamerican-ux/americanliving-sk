@@ -380,7 +380,7 @@ export default function Domov() {
                 <img 
                   src={LOGO_URL} 
                   alt="American Living" 
-                  className="h-40 sm:h-64 md:h-80 w-auto rounded-full shadow-2xl"
+                  className="h-24 sm:h-64 md:h-80 w-auto rounded-full shadow-2xl"
                   style={{ mixBlendMode: 'multiply' }}
                 />
               </motion.div>
@@ -475,7 +475,7 @@ export default function Domov() {
                   <img 
                     src={LOGO_URL} 
                     alt="American Living" 
-                    className="h-32 sm:h-48 md:h-64 w-auto rounded-full shadow-2xl"
+                    className="h-20 sm:h-48 md:h-64 w-auto rounded-full shadow-2xl"
                     style={{ mixBlendMode: 'multiply' }}
                   />
                 </motion.div>
@@ -572,7 +572,7 @@ export default function Domov() {
               <img 
                 src={LOGO_URL} 
                 alt="American Living" 
-                className="h-40 sm:h-56 md:h-72 w-auto rounded-full bg-white p-4 shadow-2xl"
+                className="h-24 sm:h-56 md:h-72 w-auto rounded-full bg-white p-4 shadow-2xl"
               />
             </div>
             <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
