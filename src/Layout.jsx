@@ -15,6 +15,7 @@ import CookieConsentBanner from "./components/CookieConsentBanner";
 import { Snowflake as SnowflakeIcon } from "lucide-react";
 import { LanguageProvider, useLanguage } from "./components/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
+import UserTracking from "./components/UserTracking";
 
 // Wrapper pre vianočné efekty s lokálnym uložením
 function ChristmasEffectsWrapper() {
@@ -486,6 +487,7 @@ function LayoutContent({ children }) {
 
       <ChristmasEffectsWrapper />
       <CookieConsentBanner />
+      <UserTracking />
               {/* <Chatbot /> */}
               {/* <AIAsistent /> */}
       </div>
