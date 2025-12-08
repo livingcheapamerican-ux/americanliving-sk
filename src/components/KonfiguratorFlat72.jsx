@@ -623,7 +623,7 @@ export default function KonfiguratorFlat72({
         setTypStavby={(typ) => {
           setTypStavby(typ);
           // Automatické nastavenie pre rodinný dom A0
-          if (typ === "rodinny_a0") {
+          if (typ === "rodinny_dom") {
             setIzolaciaNavysenie?.("premium");
             setTepelneCerpadlo(true);
             setRekuperacia(true);

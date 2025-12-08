@@ -53,10 +53,7 @@ export default function TypStavbySelector({
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
             whileHover={{ scale: 1.02, y: -4 }}
-            onClick={() => {
-              setTypStavby("rekreacna");
-              setTimeout(() => onContinue?.(), 500);
-            }}
+            onClick={() => setTypStavby("rekreacna")}
             className="cursor-pointer"
           >
             <Card className={`p-6 h-full transition-all border-2 ${
@@ -111,14 +108,11 @@ export default function TypStavbySelector({
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
             whileHover={{ scale: 1.02, y: -4 }}
-            onClick={() => {
-              setTypStavby("rodinny_a0");
-              setTimeout(() => onContinue?.(), 500);
-            }}
+            onClick={() => setTypStavby("rodinny_dom")}
             className="cursor-pointer"
           >
             <Card className={`p-6 h-full transition-all border-2 ${
-              typStavby === "rodinny_a0" 
+              typStavby === "rodinny_dom" 
                 ? "border-green-500 bg-green-50 shadow-xl ring-2 ring-green-300" 
                 : "border-gray-200 hover:border-green-300 hover:shadow-lg"
             }`}>
