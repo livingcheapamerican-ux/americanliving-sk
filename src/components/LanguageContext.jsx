@@ -223,6 +223,8 @@ const translations = {
     noHiddenFees: "bez skrytých poplatkov",
     newBadge: "NOVÉ",
     viewHousesInDifferentColors: "Prezrite si domy v rôznych farbách fasády",
+    selectAdditionalServices: "Vyberte si doplnkové služby (voliteľné):",
+    terrace: "Terasa",
     
     // DetailDomu specific
     twoD: "2D",
@@ -1055,6 +1057,8 @@ const translations = {
     noHiddenFees: "Ohne versteckte Gebühren",
     newBadge: "NEU",
     viewHousesInDifferentColors: "Sehen Sie sich Häuser in verschiedenen Fassadenfarben an",
+    selectAdditionalServices: "Wählen Sie zusätzliche Dienstleistungen (optional):",
+    terrace: "Terrasse",
     
     // DetailDomu specific
     twoD: "2D",
@@ -1652,6 +1656,8 @@ const translations = {
     noHiddenFees: "Sans frais cachés",
     newBadge: "NOUVEAU",
     viewHousesInDifferentColors: "Consultez les maisons dans différentes couleurs de façade",
+    selectAdditionalServices: "Sélectionnez des services supplémentaires (facultatif):",
+    terrace: "Terrasse",
     
     // DetailDomu specific
     twoD: "2D",
@@ -2249,6 +2255,8 @@ const translations = {
     noHiddenFees: "Без скривених трошкова",
     newBadge: "НОВО",
     viewHousesInDifferentColors: "Погледајте куће у различитим бојама фасаде",
+    selectAdditionalServices: "Изаберите додатне услуге (опционо):",
+    terrace: "Тераса",
     
     // DetailDomu specific
     twoD: "2D",
@@ -3107,6 +3115,8 @@ const translations = {
     noHiddenFees: "Χωρίς κρυφές χρεώσεις",
     newBadge: "ΝΕΟ",
     viewHousesInDifferentColors: "Δείτε σπίτια σε διάφορα χρώματα πρόσοψης",
+    selectAdditionalServices: "Επιλέξτε πρόσθετες υπηρεσίες (προαιρετικά):",
+    terrace: "Βεράντα",
     
     // Building type selection
     selectBuildingType: "Επιλέξτε τύπο κτιρίου",
@@ -3773,6 +3783,8 @@ const translations = {
     noHiddenFees: "No hidden fees",
     newBadge: "NEW",
     viewHousesInDifferentColors: "View houses in different facade colors",
+    selectAdditionalServices: "Select additional services (optional):",
+    terrace: "Terrace",
     
     // DetailDomu specific
     twoD: "2D",
@@ -4286,6 +4298,8 @@ const translations = {
     noHiddenFees: "Rejtett költségek nélkül",
     newBadge: "ÚJ",
     viewHousesInDifferentColors: "Tekintse meg a házakat különböző homlokzatszínekben",
+    selectAdditionalServices: "Válasszon további szolgáltatásokat (opcionális):",
+    terrace: "Terasz",
     
     // DetailDomu specific
     twoD: "2D",
@@ -4789,6 +4803,8 @@ const translations = {
     noHiddenFees: "Bez ukrytych opłat",
     newBadge: "NOWE",
     viewHousesInDifferentColors: "Zobacz domy w różnych kolorach elewacji",
+    selectAdditionalServices: "Wybierz dodatkowe usługi (opcjonalne):",
+    terrace: "Taras",
     
     // DetailDomu specific
     twoD: "2D",
@@ -5292,6 +5308,8 @@ const translations = {
     noHiddenFees: "Без прихованих платежів",
     newBadge: "НОВЕ",
     viewHousesInDifferentColors: "Переглянути будинки в різних кольорах фасаду",
+    selectAdditionalServices: "Виберіть додаткові послуги (необов'язково):",
+    terrace: "Тераса",
     
     // DetailDomu specific
     twoD: "2D",
