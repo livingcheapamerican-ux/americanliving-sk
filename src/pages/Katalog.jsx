@@ -532,7 +532,7 @@ export default function Katalog() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-6 w-full max-w-full">
+              className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-6 w-full max-w-full">
 
                 {zoradeneDomy.map((dom, index) => {
                 const jeVybrany = vybraneNaSrovnanie.find((d) => d.id === dom.id);
