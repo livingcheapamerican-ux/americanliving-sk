@@ -417,7 +417,7 @@ function LayoutContent({ children }) {
                 />
               </div>
               <p className="text-gray-300 text-sm leading-relaxed mb-4">
-                Distribútor a realizátor stavby modulárnych domov. 
+                Distribútor a realizátor stavby modulárnych a montovaných domov. 
                 Vyrobených viac ako 700 domov od roku 2008.
               </p>
               <p className="text-gray-300 text-sm">
