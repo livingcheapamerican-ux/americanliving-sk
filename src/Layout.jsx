@@ -485,6 +485,7 @@ function LayoutContent({ children }) {
       </footer>
 
       <ChristmasEffectsWrapper />
+      <CookieConsentBanner />
               {/* <Chatbot /> */}
               {/* <AIAsistent /> */}
       </div>
