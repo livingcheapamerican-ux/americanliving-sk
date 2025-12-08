@@ -278,13 +278,20 @@ export default function Domov() {
       </section>
 
       {/* Komplexné služby - S OBRÁZKAMI */}
-      <section className="py-6 sm:py-16 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-        <div className="container mx-auto px-2 sm:px-4">
-          <div className="text-center mb-4 sm:mb-10">
-              <h2 className="text-lg sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 text-white">
+      <section className="py-6 sm:py-16 bg-gradient-to-br from-gray-950 via-blue-950 to-gray-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent"></div>
+        <div className="container mx-auto px-2 sm:px-4 relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-4 sm:mb-10"
+          >
+              <h2 className="text-lg sm:text-3xl md:text-5xl font-bold mb-2 sm:mb-4 text-white bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-white">
                 {t('allInOnePlace')}
               </h2>
-            <p className="text-xs sm:text-base text-gray-200 max-w-3xl mx-auto mb-3">
+            <p className="text-xs sm:text-base text-gray-300 max-w-3xl mx-auto mb-3">
               {t('comprehensiveServicesDesc')}
             </p>
             <div className="flex flex-wrap justify-center gap-1 sm:gap-2 text-[10px] sm:text-sm font-semibold">
@@ -305,29 +312,35 @@ export default function Domov() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 max-w-6xl mx-auto mb-4 sm:mb-10">
             {sluzby.map((sluzba, index) => (
-              <div key={index}>
-                <Card className="group overflow-hidden h-full hover:shadow-2xl transition-shadow cursor-pointer bg-white">
+              <motion.div 
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Card className="group overflow-hidden h-full hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer bg-white border-2 border-transparent hover:border-blue-500/30 hover:-translate-y-1">
                   <div className="relative h-20 sm:h-36 overflow-hidden">
                     <img 
                       src={sluzba.image} 
                       alt={sluzba.nazov}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent group-hover:from-blue-900/80" />
                     <div className="absolute bottom-1.5 left-1.5 sm:bottom-2 sm:left-2">
-                      <div className="w-6 h-6 sm:w-10 sm:h-10 bg-white rounded-md sm:rounded-lg flex items-center justify-center shadow-lg">
+                      <div className="w-6 h-6 sm:w-10 sm:h-10 bg-gradient-to-br from-white to-blue-50 rounded-md sm:rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                         <sluzba.icon className="w-3 h-3 sm:w-5 sm:h-5 text-primary" />
                       </div>
                     </div>
                   </div>
-                  <div className="p-1.5 sm:p-3">
+                  <div className="p-1.5 sm:p-3 bg-gradient-to-b from-white to-gray-50">
                     <h3 className="text-[10px] sm:text-sm font-bold text-gray-900 mb-0.5 group-hover:text-primary transition-colors line-clamp-2">
                       {sluzba.nazov}
                     </h3>
                     <p className="text-[10px] sm:text-xs text-gray-600 font-medium hidden sm:block">{sluzba.popis}</p>
                   </div>
                   </Card>
-                  </div>
+                  </motion.div>
                   ))}
                   </div>
 
@@ -346,45 +359,79 @@ export default function Domov() {
       </section>
 
       {/* Prečo American Living */}
-      <section className="py-6 sm:py-16 bg-gradient-to-br from-blue-50 to-white">
-        <div className="container mx-auto px-2 sm:px-4">
-          <div className="text-center mb-4 sm:mb-10">
+      <section className="py-6 sm:py-16 bg-gradient-to-br from-blue-50 via-indigo-50 to-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-transparent"></div>
+        <div className="container mx-auto px-2 sm:px-4 relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-4 sm:mb-10"
+          >
               {/* Logo */}
-              <div className="flex justify-center mb-6 sm:mb-10">
+              <motion.div 
+                initial={{ scale: 0.8, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, type: "spring" }}
+                className="flex justify-center mb-6 sm:mb-10"
+              >
                 <img 
                   src={LOGO_URL} 
                   alt="American Living" 
-                  className="h-40 sm:h-64 md:h-80 w-auto rounded-full"
+                  className="h-40 sm:h-64 md:h-80 w-auto rounded-full shadow-2xl"
                   style={{ mixBlendMode: 'multiply' }}
                 />
-              </div>
-              <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1.5 sm:mb-3">
+              </motion.div>
+              <h2 className="text-lg sm:text-3xl md:text-5xl font-bold text-gray-900 mb-1.5 sm:mb-3 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900">
                 {t('whyAmericanLiving')}
               </h2>
             <p className="text-xs sm:text-base text-gray-700 max-w-3xl mx-auto">
               {t('qualityBrand')}
             </p>
-            </div>
+            </motion.div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-10">
             {vyhody.map((vyhoda, index) => (
-              <div key={index}>
-                <Card className="p-2 sm:p-5 text-center h-full hover:shadow-xl transition-shadow bg-white border border-gray-100">
-                  <div className="w-7 h-7 sm:w-12 sm:h-12 bg-gradient-to-br from-primary to-blue-600 rounded-md sm:rounded-lg flex items-center justify-center mx-auto mb-1.5 sm:mb-3 shadow-lg">
+              <motion.div 
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+              >
+                <Card className="p-2 sm:p-5 text-center h-full hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 bg-white border-2 border-transparent hover:border-blue-500/30 group hover:-translate-y-1">
+                  <motion.div 
+                    whileHover={{ rotate: 360, scale: 1.1 }}
+                    transition={{ duration: 0.6 }}
+                    className="w-7 h-7 sm:w-12 sm:h-12 bg-gradient-to-br from-primary via-blue-600 to-indigo-600 rounded-md sm:rounded-lg flex items-center justify-center mx-auto mb-1.5 sm:mb-3 shadow-lg group-hover:shadow-xl group-hover:shadow-blue-500/50"
+                  >
                     <vyhoda.icon className="w-3.5 h-3.5 sm:w-6 sm:h-6 text-white" />
-                  </div>
-                  <h3 className="text-[10px] sm:text-sm font-bold text-gray-900 mb-0.5 sm:mb-1">{vyhoda.title}</h3>
+                  </motion.div>
+                  <h3 className="text-[10px] sm:text-sm font-bold text-gray-900 mb-0.5 sm:mb-1 group-hover:text-primary transition-colors">{vyhoda.title}</h3>
                   <p className="text-[10px] sm:text-xs text-gray-700 leading-relaxed hidden sm:block">{vyhoda.description}</p>
                   </Card>
-                  </div>
+                  </motion.div>
                   ))}
                   </div>
 
                   {/* Varovanie */}
-                  <div className="max-w-5xl mx-auto">
-            <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-400 p-8 shadow-lg">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="max-w-5xl mx-auto"
+                  >
+            <Card className="bg-gradient-to-br from-yellow-50 via-orange-50 to-yellow-50 border-2 border-yellow-400 p-8 shadow-2xl hover:shadow-yellow-400/30 transition-shadow">
               <div className="flex gap-4">
-                <Shield className="w-12 h-12 text-yellow-600 flex-shrink-0" />
+                <motion.div
+                  animate={{ rotate: [0, -10, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                >
+                  <Shield className="w-12 h-12 text-yellow-600 flex-shrink-0" />
+                </motion.div>
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">
                     {t('misleadingAdsWarning')}
@@ -401,37 +448,56 @@ export default function Domov() {
                 </div>
                 </div>
                 </Card>
-                </div>
+                </motion.div>
         </div>
       </section>
 
       {/* Naša ponuka */}
       {domy.length > 0 && (
-        <section className="py-6 sm:py-16 bg-gradient-to-br from-gray-100 to-gray-50">
-          <div className="container mx-auto px-2 sm:px-4">
-            <div className="text-center mb-4 sm:mb-10">
+        <section className="py-6 sm:py-16 bg-gradient-to-br from-gray-100 via-slate-100 to-gray-50 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-100/30 via-transparent to-transparent"></div>
+          <div className="container mx-auto px-2 sm:px-4 relative z-10">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-4 sm:mb-10"
+            >
                 {/* Logo */}
-                <div className="flex justify-center mb-4 sm:mb-8">
+                <motion.div 
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, type: "spring" }}
+                  className="flex justify-center mb-4 sm:mb-8"
+                >
                   <img 
                     src={LOGO_URL} 
                     alt="American Living" 
-                    className="h-32 sm:h-48 md:h-64 w-auto rounded-full"
+                    className="h-32 sm:h-48 md:h-64 w-auto rounded-full shadow-2xl"
                     style={{ mixBlendMode: 'multiply' }}
                   />
-                </div>
-                <h2 className="text-lg sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1.5">
+                </motion.div>
+                <h2 className="text-lg sm:text-3xl md:text-5xl font-bold text-gray-900 mb-1.5 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900">
                   {t('ourOffer')}
                 </h2>
               <p className="text-xs sm:text-base text-gray-700">
                 {t('woodHouseNotLookWood')}
               </p>
-              </div>
+              </motion.div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 sm:gap-4 mb-4 sm:mb-10">
                 {domy.map((dom, index) => (
-                  <div key={dom.id}>
+                  <motion.div 
+                    key={dom.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
                     <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
-                      <Card className="group overflow-hidden hover:shadow-2xl transition-shadow bg-white border border-gray-200">
+                      <Card className="group overflow-hidden hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 bg-white border-2 border-transparent hover:border-blue-500/30 hover:-translate-y-1">
                       <div className="relative h-24 sm:h-36 overflow-hidden">
                         <img
                           src={dom.hlavny_obrazok}
@@ -461,7 +527,7 @@ export default function Domov() {
                       </div>
                     </Card>
                     </Link>
-                    </div>
+                    </motion.div>
                     ))}
                     </div>
 
