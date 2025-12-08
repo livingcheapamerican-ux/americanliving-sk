@@ -527,6 +527,7 @@ export default function KonfiguratorWizard({
               useAFramePrices={useAFramePrices}
               useBarn48Prices={useBarn48Prices}
               useBarnDoublePrices={useBarnDoublePrices}
+              useFlatSmallPrices={useFlatSmallPrices}
             />
           </div>
         );
