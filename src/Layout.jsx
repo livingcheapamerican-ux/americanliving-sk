@@ -11,6 +11,7 @@ import { Toaster } from "sonner";
 import Chatbot from "./components/Chatbot";
 import AIAsistent from "./components/AIAsistent";
 import ChristmasEffects from "./components/ChristmasEffects";
+import CookieConsentBanner from "./components/CookieConsentBanner";
 import { Snowflake as SnowflakeIcon } from "lucide-react";
 import { LanguageProvider, useLanguage } from "./components/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
