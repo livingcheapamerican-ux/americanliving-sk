@@ -589,7 +589,7 @@ export default function KonfiguratorNord({
                   title={t('phase2')} 
                   subtitle={t('phase2Subtitle')}
                   color="from-blue-600 to-indigo-600"
-                  step="2"
+                  step="3"
                 />
                 <div className="p-3 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
@@ -678,7 +678,7 @@ export default function KonfiguratorNord({
           {showKluc && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}>
               <Card className="overflow-hidden border-2 border-emerald-300 shadow-lg">
-                <SectionHeader icon={Key} title={t('phase3')} subtitle={t('phase3Subtitle')} color="from-emerald-600 to-teal-600" step="3" />
+                <SectionHeader icon={Key} title={t('phase3')} subtitle={t('phase3Subtitle')} color="from-emerald-600 to-teal-600" step="4" />
                 <div className="p-3 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
                     <div className={`col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] rounded-2xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
@@ -718,7 +718,7 @@ export default function KonfiguratorNord({
           {showDocs && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }}>
               <Card className="overflow-hidden border-2 border-purple-300 shadow-lg">
-                <SectionHeader icon={FileText} title={t('phase4')} subtitle={t('phase4Subtitle')} color="from-purple-600 to-violet-600" step="4" />
+                <SectionHeader icon={FileText} title={t('phase4')} subtitle={t('phase4Subtitle')} color="from-purple-600 to-violet-600" step="5" />
                 <div className="p-3 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
                     <Tile selected={inziniering} onClick={(e) => { if (!inziniering) triggerAnimation("inziniering", e.currentTarget); setInziniering(!inziniering); }} icon={FileText} iconColor="text-purple-400" iconSelectedColor="text-purple-600" title={t('engineering')} subtitle={t('buildingPermit')} price="+ 2 592 €" isPriced={true} selectedBg="bg-purple-100" selectedBorder="border-purple-500" selectedRing="ring-purple-300" hoverBorder="hover:border-purple-300" tooltip={t('engineeringFull')} />

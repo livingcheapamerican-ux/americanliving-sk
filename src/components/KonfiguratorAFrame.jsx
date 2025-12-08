@@ -598,7 +598,7 @@ export default function KonfiguratorAFrame({
                 title={t('phase2')} 
                 subtitle={t('phase2Subtitle')}
                 color="from-blue-600 to-indigo-600"
-                step="2"
+                step="3"
               />
               <div className="p-3 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
@@ -880,7 +880,7 @@ export default function KonfiguratorAFrame({
                 title={t('phase3')} 
                 subtitle={t('phase3Subtitle')}
                 color="from-emerald-600 to-teal-600"
-                step="3"
+                step="4"
               />
               <div className="p-3 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
@@ -973,7 +973,7 @@ export default function KonfiguratorAFrame({
                 title={t('phase4')} 
                 subtitle={t('phase4Subtitle')}
                 color="from-purple-600 to-violet-600"
-                step="4"
+                step="5"
               />
               <div className="p-3 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">

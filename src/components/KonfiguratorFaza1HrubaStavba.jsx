@@ -271,7 +271,7 @@ export default function KonfiguratorFaza1HrubaStavba({
           title={t('phase1')} 
           subtitle={t('phase1Subtitle')}
           color="from-amber-600 to-orange-600"
-          step="1"
+          step="2"
         />
         <div className="p-3 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
           {/* Upozornenie na montáž */}
