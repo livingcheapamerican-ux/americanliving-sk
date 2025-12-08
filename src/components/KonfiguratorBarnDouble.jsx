@@ -185,7 +185,7 @@ export default function KonfiguratorBarnDouble({
     inziniering: 2592,
     projektA0: 3500,
     interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 9450 },
-    vonkajsiaFasada: { standard: 0, suchana: 3716 },
+    vonkajsiaFasada: { standard: 0, suchana: 6671 },
     povrchokaOkien: 1450,
     vnutornePodlahy: 1750,
     podlahovVykurovanie: 3960,
@@ -306,7 +306,7 @@ export default function KonfiguratorBarnDouble({
     items.push({ name: t('lamination') + " - " + t('laminationAnthracite'), price: povrchokaOkien ? CENY.povrchokaOkien : 0, section: "holodom", selected: povrchokaOkien });
     items.push({ name: t('tintedGlass') + " (Solar)", price: tonovaneSkla ? CENY.tonovaneSkla : 0, section: "holodom", selected: tonovaneSkla });
     
-    const fasadaLabel = vonkajsiaFasada === "suchana" ? "Šúchaná fasáda (biela omietka)" : "Fasáda - Drevo/Plech";
+    const fasadaLabel = vonkajsiaFasada === "suchana" ? "Šúchaná fasáda (biela omietka)" : "Drevo / Falcovaný plech";
     const fasadaPrice = vonkajsiaFasada === "suchana" ? CENY.vonkajsiaFasada.suchana : 0;
     items.push({ name: fasadaLabel, price: fasadaPrice, section: "kluc", selected: true });
 
@@ -856,15 +856,15 @@ export default function KonfiguratorBarnDouble({
                       icon={Home}
                       iconColor="text-emerald-600"
                       iconSelectedColor="text-emerald-700"
-                      title="Drevo / Plech"
-                      subtitle={t('standard')}
+                      title="Drevo / Falcovaný plech"
+                      subtitle="Súčasť základnej ceny"
                       price="+ 0 €"
                       isPriced={false}
                       selectedBg="bg-emerald-100"
                       selectedBorder="border-emerald-500"
                       selectedRing="ring-emerald-300"
                       hoverBorder="hover:border-emerald-300"
-                      tooltip="Štandardná fasáda z dreveného obkladu a falcovaného plechu"
+                      tooltip="Štandardná fasáda z dreveného obkladu a falcovaného plechu - súčasť základnej ceny"
                     />
 
                     <Tile
@@ -881,7 +881,7 @@ export default function KonfiguratorBarnDouble({
                       selectedBorder="border-emerald-500"
                       selectedRing="ring-emerald-300"
                       hoverBorder="hover:border-emerald-300"
-                      tooltip="Šúchaná fasáda - biela omietka (individuálne nacenenie 3716€)"
+                      tooltip="Šúchaná fasáda - biela omietka s DPH (6 671€)"
                     />
                   </div>
 
