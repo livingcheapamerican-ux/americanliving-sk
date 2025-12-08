@@ -177,7 +177,7 @@ export default function KonfiguratorFlatSmall({
     sanitaKomplet: 1169,
     bojler: 246,
     tepelneCerpadlo: 2723,
-    rekuperacia: 138,
+    rekuperacia: 738,
     zaklady: { bez: 0, skrutky: 2808, doska: 5950, pasove: 6319 },
     pripojkaSiete: 1501,
     inziniering: 2592,
