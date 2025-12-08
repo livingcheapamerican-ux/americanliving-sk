@@ -307,7 +307,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('assemblyYes')}
                 subtitle={t('phase1')}
-                price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.montaz.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.montaz.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.montaz.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.montaz.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.montaz.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.montaz.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.montaz.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.montaz.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 14 850 €" : "+ 17 700 €"}
+                price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.montaz.ano.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.montaz.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.montaz.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.montaz.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.montaz.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.montaz.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.montaz.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.montaz.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 14 850 €" : "+ 17 700 €"}
                 isPriced={true}
                 tooltip={t('assemblyNote')}
               />
