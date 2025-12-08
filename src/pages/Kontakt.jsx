@@ -244,39 +244,39 @@ export default function Kontakt() {
 
             {/* Naše služby */}
             <Card className="p-6 bg-gradient-to-br from-blue-50 to-white">
-              <h3 className="font-bold text-primary mb-4">Komplexné služby</h3>
+              <h3 className="font-bold text-primary mb-4">{t('comprehensiveServices')}</h3>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>Predaj vašej nehnuteľnosti</span>
+                  <span>{t('sellProperty')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>Výber a nákup pozemku</span>
+                  <span>{t('landSelection')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>Vybavenie hypotéky</span>
+                  <span>{t('mortgageArrangement')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>Projektová dokumentácia</span>
+                  <span>{t('projectDocumentation')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>Stavebné povolenie</span>
+                  <span>{t('buildingPermit')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>Výstavba domu</span>
+                  <span>{t('houseConstruction')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>Napojenie na inžinierske siete</span>
+                  <span>{t('utilityConnection')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <span>Kolaudácia</span>
+                  <span>{t('finalApproval')}</span>
                 </li>
               </ul>
             </Card>
