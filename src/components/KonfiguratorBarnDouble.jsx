@@ -306,7 +306,7 @@ export default function KonfiguratorBarnDouble({
     items.push({ name: t('lamination') + " - " + t('laminationAnthracite'), price: povrchokaOkien ? CENY.povrchokaOkien : 0, section: "holodom", selected: povrchokaOkien });
     items.push({ name: t('tintedGlass') + " (Solar)", price: tonovaneSkla ? CENY.tonovaneSkla : 0, section: "holodom", selected: tonovaneSkla });
     
-    const fasadaLabel = vonkajsiaFasada === "suchana" ? "Suchá fasáda - Individuálne" : "Fasáda - Drevo/Plech";
+    const fasadaLabel = vonkajsiaFasada === "suchana" ? "Šúchaná fasáda (biela omietka)" : "Fasáda - Drevo/Plech";
     const fasadaPrice = vonkajsiaFasada === "suchana" ? CENY.vonkajsiaFasada.suchana : 0;
     items.push({ name: fasadaLabel, price: fasadaPrice, section: "kluc", selected: true });
 
@@ -873,15 +873,15 @@ export default function KonfiguratorBarnDouble({
                       icon={Paintbrush}
                       iconColor="text-blue-500"
                       iconSelectedColor="text-emerald-700"
-                      title="Suchá fasáda"
-                      subtitle="Individuálne"
+                      title="Šúchaná fasáda"
+                      subtitle="Biela omietka"
                       price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`}
                       isPriced={true}
                       selectedBg="bg-emerald-100"
                       selectedBorder="border-emerald-500"
                       selectedRing="ring-emerald-300"
                       hoverBorder="hover:border-emerald-300"
-                      tooltip="Suchá fasáda - individuálne nacenenie"
+                      tooltip="Šúchaná fasáda - biela omietka (individuálne nacenenie 3716€)"
                     />
                   </div>
 
