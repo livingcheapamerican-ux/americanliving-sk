@@ -413,7 +413,7 @@ export default function KonfiguratorProstoHouse({
     initial={{ opacity: 0, y: -10 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.4 }}
-    className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${color} overflow-hidden`}
+    className={`relative flex items-center gap-1 sm:gap-3 p-1.5 sm:p-3 bg-gradient-to-r ${color} overflow-hidden`}
   >
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl"></div>
@@ -428,23 +428,23 @@ export default function KonfiguratorProstoHouse({
       
       <motion.div 
         whileHover={{ scale: 1.1, rotate: 5 }}
-        className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white/25 backdrop-blur-sm rounded-lg sm:rounded-xl shadow-lg border border-white/20"
+        className="relative flex items-center justify-center w-6 h-6 sm:w-10 sm:h-10 bg-white/25 backdrop-blur-sm rounded-md sm:rounded-xl shadow-lg border border-white/20 flex-shrink-0"
       >
-        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+        <Icon className="w-3 h-3 sm:w-5 sm:h-5 text-white" />
       </motion.div>
-      <div className="relative flex-1">
-        <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
+      <div className="relative flex-1 min-w-0">
+        <div className="flex items-center gap-1 sm:gap-2 mb-0.5">
           <motion.span 
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring" }}
-            className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[9px] sm:text-xs font-bold uppercase tracking-wider"
+            className="inline-flex items-center justify-center px-1 sm:px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[8px] sm:text-xs font-bold uppercase tracking-wider"
           >
             {t('phase')} {step}
           </motion.span>
         </div>
-        <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight">{title}</h3>
-        {subtitle && <p className="text-white/80 text-[10px] sm:text-xs mt-0.5">{subtitle}</p>}
+        <h3 className="text-xs sm:text-lg font-bold text-white tracking-tight truncate">{title}</h3>
+        {subtitle && <p className="text-white/80 text-[9px] sm:text-xs mt-0.5 truncate">{subtitle}</p>}
       </div>
     </motion.div>
   );
@@ -581,11 +581,11 @@ export default function KonfiguratorProstoHouse({
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
 
   return (
-    <div className="mt-8 relative">
+    <div className="mt-4 sm:mt-8 relative overflow-x-hidden">
       <FlyingAnimationContainer animations={animations} />
 
-      <div>
-        <div className="space-y-6">
+      <div className="w-full max-w-full overflow-hidden">
+        <div className="space-y-3 sm:space-y-6">
 
           {showHruba && (
             <KonfiguratorFaza1HrubaStavba 
@@ -615,10 +615,10 @@ export default function KonfiguratorProstoHouse({
                 color="from-blue-600 to-indigo-600"
                 step="2"
               />
-              <div className="p-2 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
+              <div className="p-1.5 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
+                <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
 
-                  <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-blue-600 rounded-lg sm:rounded-xl bg-blue-100/70 shadow-xl">
+                  <div className="col-span-1 sm:col-span-3 grid grid-cols-3 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-blue-600 rounded-lg sm:rounded-xl bg-blue-100/70 shadow-xl">
                     <p className="col-span-3 text-[8px] sm:text-[10px] font-bold text-blue-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
                       <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">1</span>
                       {t('interiorFinish')} ({t('selectOne')})
@@ -663,7 +663,7 @@ export default function KonfiguratorProstoHouse({
                     />
                   </div>
 
-                  <div className="col-span-2 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-yellow-500 rounded-lg sm:rounded-xl bg-yellow-100/70 shadow-xl">
+                  <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-yellow-500 rounded-lg sm:rounded-xl bg-yellow-100/70 shadow-xl">
                     <p className="col-span-2 text-[8px] sm:text-[10px] font-bold text-yellow-800 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
                       <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">2</span>
                       {t('electrical')} & {t('water')}
@@ -729,7 +729,7 @@ export default function KonfiguratorProstoHouse({
                     />
                   </div>
 
-                  <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-green-600 rounded-lg sm:rounded-xl bg-green-100/70 shadow-xl">
+                  <div className="col-span-1 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-green-600 rounded-lg sm:rounded-xl bg-green-100/70 shadow-xl">
                     <p className="col-span-2 text-[8px] sm:text-xs font-bold text-green-800 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
                       <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-green-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">3</span>
                       {t('heatPump')} & {t('recuperation')} (A0)
@@ -897,10 +897,10 @@ export default function KonfiguratorProstoHouse({
                 color="from-emerald-600 to-teal-600"
                 step="3"
               />
-              <div className="p-2 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
+              <div className="p-1.5 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
+                <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
 
-                  <div className={`col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] rounded-lg sm:rounded-xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
+                  <div className={`col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] rounded-lg sm:rounded-xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
                     <p className={`col-span-2 text-[8px] sm:text-[10px] font-bold -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
                       <span className={`w-3.5 h-3.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
                       {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
@@ -1016,8 +1016,8 @@ export default function KonfiguratorProstoHouse({
                 color="from-purple-600 to-violet-600"
                 step="4"
               />
-              <div className="p-2 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
+              <div className="p-1.5 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
+                <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
                   
                   <Tile
                     selected={inziniering}
@@ -1141,7 +1141,7 @@ export default function KonfiguratorProstoHouse({
                       <h3 className="text-base sm:text-3xl font-bold text-white mb-1 sm:mb-2">{dom?.nazov || 'Prosto House'}</h3>
                       <p className="text-slate-400 text-[10px] sm:text-base mb-3 sm:mb-4">{t('completeCalculation')}</p>
                       {projektA0 && !a0Odporucania && (
-                        <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] sm:text-sm py-1 sm:py-1.5 px-2 sm:px-4 shadow-lg shadow-green-500/30">✓ {t('meetsA0')}</Badge>
+                        <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[9px] sm:text-sm py-0.5 sm:py-1.5 px-1.5 sm:px-4 shadow-lg shadow-green-500/30">✓ {t('meetsA0')}</Badge>
                       )}
                     
                       <div className="mt-3 sm:mt-6 bg-slate-800/50 rounded-lg sm:rounded-xl p-2 sm:p-4 border border-slate-700/50 max-h-[250px] sm:max-h-[300px] overflow-y-auto">
