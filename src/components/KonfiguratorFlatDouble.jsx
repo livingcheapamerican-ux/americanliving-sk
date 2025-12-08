@@ -21,6 +21,7 @@ import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
 import KonfiguratorFaza0Sluzby from "./KonfiguratorFaza0Sluzby";
+import KonfiguratorFaza0Sluzby from "./KonfiguratorFaza0Sluzby";
 
 // Dlaždica s tooltip a veľkou fajkou
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {

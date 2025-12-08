@@ -20,6 +20,7 @@ import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation"
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
+import KonfiguratorFaza0Sluzby from "./KonfiguratorFaza0Sluzby";
 import TypStavbySelector from "./TypStavbySelector";
 import KonfiguratorFaza0Sluzby from "./KonfiguratorFaza0Sluzby";
 
