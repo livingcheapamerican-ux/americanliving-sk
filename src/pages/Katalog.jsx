@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Square, LayoutGrid, Trash2, Eye, EyeOff, Grid3x3, Zap, Hammer, Caravan, Building2, TreePine } from "lucide-react";
+import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Square, LayoutGrid, Trash2, Eye, EyeOff, Grid3x3, Zap, Hammer, Caravan, Building2, TreePine, Fence } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { useLanguage } from "../components/LanguageContext";
@@ -666,6 +666,15 @@ export default function Katalog() {
                                 <div className="flex flex-col min-w-0">
                                   <span className="text-xs text-gray-500">{t('energyClass')}</span>
                                   <span className="font-semibold text-green-600 text-xs">A0 <span className="text-gray-400 font-normal">{t('a0CertificateOption')}</span></span>
+                                </div>
+                              </div>
+                            )}
+                            {dom.terasa_plocha && (
+                              <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
+                                <Fence className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-teal-500" />
+                                <div className="flex flex-col min-w-0">
+                                  <span className="hidden sm:block text-xs text-gray-500">Terasa</span>
+                                  <span className="font-semibold text-primary text-[9px] sm:text-xs">{dom.terasa_plocha} m²</span>
                                 </div>
                               </div>
                             )}
