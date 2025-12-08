@@ -318,6 +318,8 @@ const translations = {
     sendMessage: "Odoslať správu",
     thankYou: "Ďakujeme za vašu správu!",
     messageSuccess: "Vaša správa bola úspešne odoslaná. Ozveme sa vám čo najskôr, zvyčajne do 24 hodín.",
+    sellProperty: "Predaj nehnuteľnosti",
+    landSelection: "Výber pozemku",
     
     // House detail
     basicParameters: "Základné parametre",
