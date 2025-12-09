@@ -1767,20 +1767,20 @@ export default function DetailDomu() {
                     Je vždy vyhovujúci pre status rekrečnej stavby na celoročné bývanie. Pokiaľ chcete z domu urobiť rodinný dom na (trvalé bývanie, nahlásenie trvalého pobytu, možnosť hypotekárneho úveru, energetického certifikátu A0 a stavebné povolenie v obytnej štvrti) musíte zmeniť parametre domu v konfigurátore nižšie.
                   </p>
                   
-                  {/* Špecifický obsah pre každý dom z popis */}
-                  {dom.popis && (
+                  {/* Špecifický obsah pre každý dom zo specifikacia */}
+                  {dom.specifikacia && (
                     <div className="mb-4 text-xs sm:text-sm text-gray-700 leading-relaxed whitespace-pre-line">
                       <TranslatedDescription 
-                        text={dom.popis}
-                        textEn={dom.popis_en}
-                        textHu={dom.popis_hu}
-                        textPl={dom.popis_pl}
-                        textUk={dom.popis_uk}
-                        textDe={dom.popis_de}
-                        textFr={dom.popis_fr}
-                        textSr={dom.popis_sr}
-                        textHr={dom.popis_hr}
-                        textEl={dom.popis_el}
+                        text={dom.specifikacia}
+                        textEn={dom.specifikacia_en}
+                        textHu={dom.specifikacia_hu}
+                        textPl={dom.specifikacia_pl}
+                        textUk={dom.specifikacia_uk}
+                        textDe={dom.specifikacia_de}
+                        textFr={dom.specifikacia_fr}
+                        textSr={dom.specifikacia_sr}
+                        textHr={dom.specifikacia_hr}
+                        textEl={dom.specifikacia_el}
                       />
                     </div>
                   )}
