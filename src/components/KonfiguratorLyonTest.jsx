@@ -65,6 +65,23 @@ export default function KonfiguratorLyonTest() {
   const [izolaciaNaVysenie, setIzolaciaNaVysenie] = useState("");
   const [tepelneCerpadlo, setTepelneCerpadlo] = useState(false);
   const [rekuperacia, setRekuperacia] = useState(false);
+  const [stresnaKrytina, setStresnaKrytina] = useState("");
+  const [pergola, setPergola] = useState("");
+  const [terasa, setTerasa] = useState("");
+  const [povrchoveUpravy, setPovrchoveUpravy] = useState("");
+  const [podlahy, setPodlahy] = useState("");
+  const [dvere, setDvere] = useState("");
+  const [vnutornaVymalba, setVnutornaVymalba] = useState(false);
+  const [dlazba, setDlazba] = useState(false);
+  const [kuchynskaLinka, setKuchynskaLinka] = useState(false);
+  const [skrinky, setSkrinky] = useState(false);
+  const [klimatizacia, setKlimatizacia] = useState("");
+  const [rozvodyKureniaVody, setRozvodyKureniaVody] = useState(false);
+  const [podlahovoKurenie, setPodlahovoKurenie] = useState(false);
+  const [bojler, setBojler] = useState(false);
+  const [vodaKanalizacia, setVodaKanalizacia] = useState(false);
+  const [sanitarnaKeramika, setSanitarnaKeramika] = useState(false);
+  const [sprchovyKut, setSprchovyKut] = useState(false);
 
   // Základná cena
   const BASE_PRICE = 73431;
@@ -92,7 +109,60 @@ export default function KonfiguratorLyonTest() {
       "Izolácia navýšenie 200mm steny": 6765
     },
     tepelneCerpadlo: 4033,
-    rekuperacia: 3630
+    rekuperacia: 3630,
+    stresnaKrytina: {
+      "Pozinkovaný plech sivý": 0,
+      "Pozinkovaný plech hnedý": 0,
+      "Pozinkovaný plech antracit": 400,
+      "Škridplech cihlový": 1452,
+      "Škridplech hnedý": 1452,
+      "Škridplech antracit": 1452,
+      "Škridplech sivý": 1452
+    },
+    pergola: {
+      "Bez pergoly": 0,
+      "Pergola 2,5 x 7,68m": 3488,
+      "Pergola 2,5 x 9,88m": 4488,
+      "Pergola 2,5 x 12,08m": 5488
+    },
+    terasa: {
+      "Bez terasy": 0,
+      "Terasa 2,5 x 7,68m": 1936,
+      "Terasa 2,5 x 9,88m": 2486,
+      "Terasa 2,5 x 12,08m": 2937
+    },
+    povrchoveUpravy: {
+      "Bez úprav": 0,
+      "Biele steny + PVC podlahy": 5467,
+      "Biele steny + Designové podlahy": 6919,
+      "Farbené steny + PVC podlahy": 6825,
+      "Farbené steny + Designové podlahy": 8277
+    },
+    podlahy: {
+      "Osb doska": 0,
+      "Aquastel doska": 1000
+    },
+    dvere: {
+      "Bez dverí": 0,
+      "Vchodové dvere antracit": 363,
+      "Vchodové dvere zlatý dub": 363
+    },
+    vnutornaVymalba: 1100,
+    dlazba: 680,
+    kuchynskaLinka: 2200,
+    skrinky: 1650,
+    klimatizacia: {
+      "Bez klimatizácie": 0,
+      "AC 3,5kW Midea": 700,
+      "AC 5,2kW Midea": 900,
+      "AC 6,6kW Midea": 1200
+    },
+    rozvodyKureniaVody: 725,
+    podlahovoKurenie: 2662,
+    bojler: 484,
+    vodaKanalizacia: 846,
+    sanitarnaKeramika: 726,
+    sprchovyKut: 484
   };
 
   // Kalkulácia celkovej ceny
@@ -104,9 +174,29 @@ export default function KonfiguratorLyonTest() {
     if (izolaciaNaVysenie) total += CENY.izolacia[izolaciaNaVysenie] || 0;
     if (tepelneCerpadlo) total += CENY.tepelneCerpadlo;
     if (rekuperacia) total += CENY.rekuperacia;
+    if (stresnaKrytina) total += CENY.stresnaKrytina[stresnaKrytina] || 0;
+    if (pergola) total += CENY.pergola[pergola] || 0;
+    if (terasa) total += CENY.terasa[terasa] || 0;
+    if (povrchoveUpravy) total += CENY.povrchoveUpravy[povrchoveUpravy] || 0;
+    if (podlahy) total += CENY.podlahy[podlahy] || 0;
+    if (dvere) total += CENY.dvere[dvere] || 0;
+    if (vnutornaVymalba) total += CENY.vnutornaVymalba;
+    if (dlazba) total += CENY.dlazba;
+    if (kuchynskaLinka) total += CENY.kuchynskaLinka;
+    if (skrinky) total += CENY.skrinky;
+    if (klimatizacia) total += CENY.klimatizacia[klimatizacia] || 0;
+    if (rozvodyKureniaVody) total += CENY.rozvodyKureniaVody;
+    if (podlahovoKurenie) total += CENY.podlahovoKurenie;
+    if (bojler) total += CENY.bojler;
+    if (vodaKanalizacia) total += CENY.vodaKanalizacia;
+    if (sanitarnaKeramika) total += CENY.sanitarnaKeramika;
+    if (sprchovyKut) total += CENY.sprchovyKut;
     
     return total;
-  }, [vonkajsiaFasada, zaklady, izolaciaNaVysenie, tepelneCerpadlo, rekuperacia]);
+  }, [vonkajsiaFasada, zaklady, izolaciaNaVysenie, tepelneCerpadlo, rekuperacia, stresnaKrytina, 
+      pergola, terasa, povrchoveUpravy, podlahy, dvere, vnutornaVymalba, dlazba, kuchynskaLinka, 
+      skrinky, klimatizacia, rozvodyKureniaVody, podlahovoKurenie, bojler, vodaKanalizacia, 
+      sanitarnaKeramika, sprchovyKut]);
 
   const formatPrice = (price) => price.toLocaleString('sk-SK') + " €";
 
@@ -275,6 +365,115 @@ export default function KonfiguratorLyonTest() {
               isPriced={true}
               isA0Required={true}
             />
+          </div>
+        </Card>
+
+        {/* Stresná krytina */}
+        <Card className="p-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Stresná krytina *</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <Tile selected={stresnaKrytina === "Pozinkovaný plech sivý"} onClick={() => setStresnaKrytina("Pozinkovaný plech sivý")} title="Pozinkovaný plech sivý" subtitle="Štandard" price="+ 0 €" isPriced={false} />
+            <Tile selected={stresnaKrytina === "Pozinkovaný plech hnedý"} onClick={() => setStresnaKrytina("Pozinkovaný plech hnedý")} title="Pozinkovaný plech hnedý" subtitle="Štandard" price="+ 0 €" isPriced={false} />
+            <Tile selected={stresnaKrytina === "Pozinkovaný plech antracit"} onClick={() => setStresnaKrytina("Pozinkovaný plech antracit")} title="Pozinkovaný plech antracit" subtitle="" price="+ 400 €" isPriced={true} />
+            <Tile selected={stresnaKrytina === "Škridplech cihlový"} onClick={() => setStresnaKrytina("Škridplech cihlový")} title="Škridplech cihlový" subtitle="" price="+ 1 452 €" isPriced={true} />
+            <Tile selected={stresnaKrytina === "Škridplech hnedý"} onClick={() => setStresnaKrytina("Škridplech hnedý")} title="Škridplech hnedý" subtitle="" price="+ 1 452 €" isPriced={true} />
+            <Tile selected={stresnaKrytina === "Škridplech antracit"} onClick={() => setStresnaKrytina("Škridplech antracit")} title="Škridplech antracit" subtitle="" price="+ 1 452 €" isPriced={true} />
+            <Tile selected={stresnaKrytina === "Škridplech sivý"} onClick={() => setStresnaKrytina("Škridplech sivý")} title="Škridplech sivý" subtitle="" price="+ 1 452 €" isPriced={true} />
+          </div>
+        </Card>
+
+        {/* Pergola */}
+        <Card className="p-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Pergola</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <Tile selected={pergola === "Bez pergoly"} onClick={() => setPergola("Bez pergoly")} title="Bez pergoly" subtitle="" price="+ 0 €" isPriced={false} />
+            <Tile selected={pergola === "Pergola 2,5 x 7,68m"} onClick={() => setPergola("Pergola 2,5 x 7,68m")} title="Pergola 2,5 x 7,68m" subtitle="" price="+ 3 488 €" isPriced={true} />
+            <Tile selected={pergola === "Pergola 2,5 x 9,88m"} onClick={() => setPergola("Pergola 2,5 x 9,88m")} title="Pergola 2,5 x 9,88m" subtitle="" price="+ 4 488 €" isPriced={true} />
+            <Tile selected={pergola === "Pergola 2,5 x 12,08m"} onClick={() => setPergola("Pergola 2,5 x 12,08m")} title="Pergola 2,5 x 12,08m" subtitle="" price="+ 5 488 €" isPriced={true} />
+          </div>
+        </Card>
+
+        {/* Terasa */}
+        <Card className="p-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Terasa</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <Tile selected={terasa === "Bez terasy"} onClick={() => setTerasa("Bez terasy")} title="Bez terasy" subtitle="" price="+ 0 €" isPriced={false} />
+            <Tile selected={terasa === "Terasa 2,5 x 7,68m"} onClick={() => setTerasa("Terasa 2,5 x 7,68m")} title="Terasa 2,5 x 7,68m" subtitle="" price="+ 1 936 €" isPriced={true} />
+            <Tile selected={terasa === "Terasa 2,5 x 9,88m"} onClick={() => setTerasa("Terasa 2,5 x 9,88m")} title="Terasa 2,5 x 9,88m" subtitle="" price="+ 2 486 €" isPriced={true} />
+            <Tile selected={terasa === "Terasa 2,5 x 12,08m"} onClick={() => setTerasa("Terasa 2,5 x 12,08m")} title="Terasa 2,5 x 12,08m" subtitle="" price="+ 2 937 €" isPriced={true} />
+          </div>
+        </Card>
+
+        {/* Povrchové úpravy */}
+        <Card className="p-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Povrchové úpravy steny a podlahy</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <Tile selected={povrchoveUpravy === "Bez úprav"} onClick={() => setPovrchoveUpravy("Bez úprav")} title="Bez úprav" subtitle="" price="+ 0 €" isPriced={false} />
+            <Tile selected={povrchoveUpravy === "Biele steny + PVC podlahy"} onClick={() => setPovrchoveUpravy("Biele steny + PVC podlahy")} title="Biele steny + PVC" subtitle="" price="+ 5 467 €" isPriced={true} />
+            <Tile selected={povrchoveUpravy === "Biele steny + Designové podlahy"} onClick={() => setPovrchoveUpravy("Biele steny + Designové podlahy")} title="Biele steny + Design" subtitle="" price="+ 6 919 €" isPriced={true} />
+            <Tile selected={povrchoveUpravy === "Farbené steny + PVC podlahy"} onClick={() => setPovrchoveUpravy("Farbené steny + PVC podlahy")} title="Farbené steny + PVC" subtitle="" price="+ 6 825 €" isPriced={true} />
+            <Tile selected={povrchoveUpravy === "Farbené steny + Designové podlahy"} onClick={() => setPovrchoveUpravy("Farbené steny + Designové podlahy")} title="Farbené steny + Design" subtitle="" price="+ 8 277 €" isPriced={true} />
+          </div>
+        </Card>
+
+        {/* Podlahy */}
+        <Card className="p-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Podlahy</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <Tile selected={podlahy === "Osb doska"} onClick={() => setPodlahy("Osb doska")} title="Osb doska" subtitle="Štandard" price="+ 0 €" isPriced={false} />
+            <Tile selected={podlahy === "Aquastel doska"} onClick={() => setPodlahy("Aquastel doska")} title="Aquastel doska" subtitle="" price="+ 1 000 €" isPriced={true} />
+          </div>
+        </Card>
+
+        {/* Dvere */}
+        <Card className="p-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Vchodové dvere</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <Tile selected={dvere === "Bez dverí"} onClick={() => setDvere("Bez dverí")} title="Bez dverí" subtitle="" price="+ 0 €" isPriced={false} />
+            <Tile selected={dvere === "Vchodové dvere antracit"} onClick={() => setDvere("Vchodové dvere antracit")} title="Dvere antracit" subtitle="" price="+ 363 €" isPriced={true} />
+            <Tile selected={dvere === "Vchodové dvere zlatý dub"} onClick={() => setDvere("Vchodové dvere zlatý dub")} title="Dvere zlatý dub" subtitle="" price="+ 363 €" isPriced={true} />
+          </div>
+        </Card>
+
+        {/* Ostatné položky - checkboxy */}
+        <Card className="p-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Ostatné úpravy</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <Tile selected={vnutornaVymalba} onClick={() => setVnutornaVymalba(!vnutornaVymalba)} title="Vnútorná vymaľba" subtitle="" price="+ 1 100 €" isPriced={true} />
+            <Tile selected={dlazba} onClick={() => setDlazba(!dlazba)} title="Dlažba v kúpeľni" subtitle="" price="+ 680 €" isPriced={true} />
+            <Tile selected={kuchynskaLinka} onClick={() => setKuchynskaLinka(!kuchynskaLinka)} title="Kuchynská linka" subtitle="" price="+ 2 200 €" isPriced={true} />
+            <Tile selected={skrinky} onClick={() => setSkrinky(!skrinky)} title="Skrinky do kúpeľne" subtitle="" price="+ 1 650 €" isPriced={true} />
+          </div>
+        </Card>
+
+        {/* Klimatizácia */}
+        <Card className="p-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Klimatizácia</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <Tile selected={klimatizacia === "Bez klimatizácie"} onClick={() => setKlimatizacia("Bez klimatizácie")} title="Bez klimatizácie" subtitle="" price="+ 0 €" isPriced={false} />
+            <Tile selected={klimatizacia === "AC 3,5kW Midea"} onClick={() => setKlimatizacia("AC 3,5kW Midea")} title="AC 3,5kW Midea" subtitle="" price="+ 700 €" isPriced={true} />
+            <Tile selected={klimatizacia === "AC 5,2kW Midea"} onClick={() => setKlimatizacia("AC 5,2kW Midea")} title="AC 5,2kW Midea" subtitle="" price="+ 900 €" isPriced={true} />
+            <Tile selected={klimatizacia === "AC 6,6kW Midea"} onClick={() => setKlimatizacia("AC 6,6kW Midea")} title="AC 6,6kW Midea" subtitle="" price="+ 1 200 €" isPriced={true} />
+          </div>
+        </Card>
+
+        {/* Kúrenie a voda */}
+        <Card className="p-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Kúrenie a voda</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <Tile selected={rozvodyKureniaVody} onClick={() => setRozvodyKureniaVody(!rozvodyKureniaVody)} title="Rozvody kúrenia a vody" subtitle="" price="+ 725 €" isPriced={true} />
+            <Tile selected={podlahovoKurenie} onClick={() => setPodlahovoKurenie(!podlahovoKurenie)} title="Podlahové kúrenie" subtitle="" price="+ 2 662 €" isPriced={true} />
+            <Tile selected={bojler} onClick={() => setBojler(!bojler)} title="Bojler" subtitle="" price="+ 484 €" isPriced={true} />
+            <Tile selected={vodaKanalizacia} onClick={() => setVodaKanalizacia(!vodaKanalizacia)} title="Voda a kanalizácia" subtitle="" price="+ 846 €" isPriced={true} />
+          </div>
+        </Card>
+
+        {/* Sanita */}
+        <Card className="p-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Sanitárne vybavenie</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <Tile selected={sanitarnaKeramika} onClick={() => setSanitarnaKeramika(!sanitarnaKeramika)} title="Sanitárna keramika" subtitle="" price="+ 726 €" isPriced={true} />
+            <Tile selected={sprchovyKut} onClick={() => setSprchovyKut(!sprchovyKut)} title="Sprchový kút" subtitle="" price="+ 484 €" isPriced={true} />
           </div>
         </Card>
 
