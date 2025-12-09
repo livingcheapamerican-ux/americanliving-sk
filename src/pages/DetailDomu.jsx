@@ -2855,8 +2855,9 @@ export default function DetailDomu() {
 
             {/* Sidebar pre Lyon konfigurátor - pod kontakt tlačidlami */}
             {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <LyonSummaryPanelStandalone
+              <div className="space-y-4">
+                <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+                  <LyonSummaryPanelStandalone
                   ucel={lyonUcel}
                   izolaciaStien={lyonIzolaciaStien}
                   izolaciaPodlahy={lyonIzolaciaPodlahy}
@@ -2953,6 +2954,82 @@ export default function DetailDomu() {
                   })()}
                   onSubmit={() => alert("Odoslanie dopytu - funkcia bude implementovaná")}
                 />
+                </div>
+
+                {/* Upozornenie pod sidebarom */}
+                {(() => {
+                  const isA0Complete = (
+                    lyonIzolaciaStien === "250mm" &&
+                    lyonIzolaciaPodlahy === "200mm" &&
+                    lyonIzolaciaStropu === "200mm" &&
+                    lyonTepelneCerpadlo === "ano" &&
+                    lyonRekuperacia === "ano" &&
+                    lyonElektro === "ge" &&
+                    lyonBleskozvod &&
+                    lyonPrepat &&
+                    lyonInziniering &&
+                    lyonProjektACertifikacia
+                  );
+                  
+                  if (lyonUcel === "rodinny" && !isA0Complete) {
+                    return (
+                      <Card className="bg-yellow-50 border-2 border-yellow-400 p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="text-yellow-600 text-2xl">⚠️</div>
+                          <div>
+                            <h4 className="text-yellow-900 font-bold mb-2">Rekreačná stavba</h4>
+                            <p className="text-yellow-800 text-sm mb-3">
+                              Pre skolaudovanie ako rodinný dom musíte vybrať všetky povinné A0 položky označené <span className="text-green-600 font-bold">⚡A0</span> v konfigurátore.
+                            </p>
+                            <div className="text-xs text-yellow-700">
+                              <p className="font-semibold mb-1">Chýbajúce A0 položky:</p>
+                              <ul className="list-disc list-inside space-y-0.5">
+                                {lyonIzolaciaStien !== "250mm" && <li>Izolácia stien 250mm</li>}
+                                {lyonIzolaciaPodlahy !== "200mm" && <li>Izolácia podlahy 200mm</li>}
+                                {lyonIzolaciaStropu !== "200mm" && <li>Izolácia stropu 200mm</li>}
+                                {lyonTepelneCerpadlo !== "ano" && <li>Tepelné čerpadlo</li>}
+                                {lyonRekuperacia !== "ano" && <li>Rekuperácia</li>}
+                                {lyonElektro !== "ge" && <li>GE elektroinštalácia</li>}
+                                {!lyonBleskozvod && <li>Bleskozvod</li>}
+                                {!lyonPrepat && <li>Prepäťová ochrana</li>}
+                                {!lyonInziniering && <li>Inžiniering</li>}
+                                {!lyonProjektACertifikacia && <li>Projekt + Certifikácia A0</li>}
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                    );
+                  } else if (lyonUcel === "rodinny" && isA0Complete) {
+                    return (
+                      <Card className="bg-green-50 border-2 border-green-400 p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="text-green-600 text-2xl">✅</div>
+                          <div>
+                            <h4 className="text-green-900 font-bold mb-1">Rodinný dom A0</h4>
+                            <p className="text-green-800 text-sm">
+                              Vaša konfigurácia zahŕňa všetky potrebné A0 položky. Dom môže byť skolaudovaný ako energeticky efektívny rodinný dom.
+                            </p>
+                          </div>
+                        </div>
+                      </Card>
+                    );
+                  } else {
+                    return (
+                      <Card className="bg-blue-50 border-2 border-blue-400 p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="text-blue-600 text-2xl">ℹ️</div>
+                          <div>
+                            <h4 className="text-blue-900 font-bold mb-1">Rekreačná stavba</h4>
+                            <p className="text-blue-800 text-sm">
+                              Dom je nakonfigurovaný ako rekreačná stavba. Pre rodinný dom s A0 certifikátom vyberte zodpovedajúcu možnosť v konfigurátore.
+                            </p>
+                          </div>
+                        </div>
+                      </Card>
+                    );
+                  }
+                })()}
               </div>
             )}
           </motion.div>
