@@ -28,6 +28,7 @@ import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
 import SEODashboard from './pages/SEODashboard';
 import AdminUpdateTicabHouse from './pages/AdminUpdateTicabHouse';
+import MigraciaObrazkovLyon from './pages/MigraciaObrazkovLyon';
 import __Layout from './Layout.jsx';
 
 
@@ -62,6 +63,7 @@ export const PAGES = {
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
     "SEODashboard": SEODashboard,
     "AdminUpdateTicabHouse": AdminUpdateTicabHouse,
+    "MigraciaObrazkovLyon": MigraciaObrazkovLyon,
 }
 
 export const pagesConfig = {
