@@ -2660,7 +2660,7 @@ export default function DetailDomu() {
             )}
 
             {/* Floating panel pre Lyon (Ticab house) */}
-            {isTicabhouse && dom.nazov?.includes("Lyon") && (
+            {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorLyonTest />
               </div>
