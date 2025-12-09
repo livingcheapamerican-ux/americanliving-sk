@@ -575,7 +575,7 @@ export default function KonfiguratorLyon() {
                   <p className="text-sm font-bold text-red-800 text-center mb-1">💰 PRÍPLATOK</p>
                   <Tile selected={montaz} onClick={() => setMontaz(!montaz)} title="Montáž domu" subtitle="" price="+ 4 806 €" isPriced={true} />
                   <div className="mt-1">
-                    <Tile selected={doprava} onClick={() => setDoprava(!doprava)} title="Doprava" subtitle="" price="+ 8 928 €" isPriced={true} />
+                    <Tile selected={doprava} onClick={() => setDoprava(!doprava)} title="Doprava" subtitle="Doprava všetkých modulov" price="+ 8 928 €" isPriced={true} />
                   </div>
                 </div>
               </div>
