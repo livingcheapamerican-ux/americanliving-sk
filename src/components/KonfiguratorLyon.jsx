@@ -228,7 +228,8 @@ export default function KonfiguratorLyon() {
           top: `${panelPosition.y}px`,
           width: `${panelSize.width}px`,
           height: `${panelSize.height}px`,
-          cursor: isDragging ? 'grabbing' : 'grab'
+          cursor: isDragging ? 'grabbing' : 'grab',
+          position: 'absolute'
         }}
       >
         <Card 
