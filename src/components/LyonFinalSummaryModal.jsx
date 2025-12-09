@@ -59,6 +59,38 @@ export default function LyonFinalSummaryModal({
 
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
+  // Cenník
+  const CENY = {
+    izolacia_stien: { "200mm": 1799.16, "250mm": 1558.17 },
+    izolacia_podlahy: { "200mm": 334.08 },
+    izolacia_stropu: { "200mm": 271.44 },
+    tepelne_cerpadlo: { ano: 2889.27 },
+    rekuperacia: { ano: 1155.36 },
+    podlahove_kurenie: 2253.30,
+    pripravaKrb: 578.55,
+    ochranaKachle: 1279.77,
+    fasada: { omietka: 1580.79, smrekovec: 3349.50, falcovane: 4953.78, thermowood: 6677.25 },
+    strecha: { falcovane: 3227.70 },
+    odkvapy: 1502.49,
+    dvere: { kovove: 278.40 },
+    obklad: { smrek_bez_uzlov: 0, sadrokarton_tapeta: 7855, osb_panel: 5279 },
+    dvere_posuvne: 427.17,
+    elektro: { cz: 460.23, ge: 1583.40 },
+    bleskozvod: 856.08,
+    prepat: 311.46,
+    sprchovyKut: 645.54,
+    vana: 501.12,
+    bateria: 139.20,
+    skrinka: 434.13,
+    strop_kupelna: { sadrokarton: 0 },
+    inziniering: 2773.56,
+    projektACertifikacia: 3745.35,
+    revizia: 1605.15,
+    zaklady: { vruty: 4494.42, patky: 2568.24, pasove: 11825.04 },
+    montaz: 4805.88,
+    doprava: 8927.94
+  };
+
   // Určiť ktorý obrázok zobraziť
   const getDisplayImage = () => {
     // Ak je vybraná šuchaná omietka, zobraz hlavný obrázok
@@ -248,86 +280,212 @@ export default function LyonFinalSummaryModal({
                     <div className="border-t border-slate-700 pt-2">
                       <p className="text-slate-400 text-xs mb-1">IZOLÁCIA</p>
                       <div className="space-y-1 text-xs">
-                        <div className="flex justify-between"><span>Steny</span><span className="text-slate-300">{izolaciaStien}</span></div>
-                        <div className="flex justify-between"><span>Podlaha</span><span className="text-slate-300">{izolaciaPodlahy}</span></div>
-                        <div className="flex justify-between"><span>Strop</span><span className="text-slate-300">{izolaciaStropu}</span></div>
+                        <div className="flex justify-between">
+                          <span>Steny {izolaciaStien}</span>
+                          <span className="text-green-400 font-semibold">
+                            {izolaciaStien === "150mm" ? "v cene" : `+ ${formatPrice(CENY.izolacia_stien[izolaciaStien])}`}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Podlaha {izolaciaPodlahy}</span>
+                          <span className="text-green-400 font-semibold">
+                            {izolaciaPodlahy === "150mm" ? "v cene" : `+ ${formatPrice(CENY.izolacia_podlahy[izolaciaPodlahy])}`}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Strop {izolaciaStropu}</span>
+                          <span className="text-green-400 font-semibold">
+                            {izolaciaStropu === "150mm" ? "v cene" : `+ ${formatPrice(CENY.izolacia_stropu[izolaciaStropu])}`}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
                       <p className="text-slate-400 text-xs mb-1">VYKUROVANIE</p>
-                      <div className="space-y-1 text-xs text-slate-300">
-                        {tepelneCerpadlo === "ano" ? <div>• Tepelné čerpadlo ✓</div> : <div>• Príprava pre konvektory ✓</div>}
-                        {rekuperacia === "ano" && <div>• Rekuperácia ✓</div>}
-                        {podlahovoKurenie && <div>• Podlahové kúrenie ✓</div>}
-                        {pripravaNaKrb && <div>• Príprava na krb ✓</div>}
-                        {ochranaKachle && <div>• Ochrana na kachle ✓</div>}
+                      <div className="space-y-1 text-xs">
+                        {tepelneCerpadlo === "ano" ? (
+                          <div className="flex justify-between">
+                            <span className="text-slate-300">• Tepelné čerpadlo</span>
+                            <span className="text-green-400 font-semibold">+ {formatPrice(CENY.tepelne_cerpadlo.ano)}</span>
+                          </div>
+                        ) : (
+                          <div className="flex justify-between">
+                            <span className="text-slate-300">• Príprava pre konvektory</span>
+                            <span className="text-green-400 font-semibold">v cene</span>
+                          </div>
+                        )}
+                        {rekuperacia === "ano" && (
+                          <div className="flex justify-between">
+                            <span className="text-slate-300">• Rekuperácia</span>
+                            <span className="text-green-400 font-semibold">+ {formatPrice(CENY.rekuperacia.ano)}</span>
+                          </div>
+                        )}
+                        {podlahovoKurenie && (
+                          <div className="flex justify-between">
+                            <span className="text-slate-300">• Podlahové kúrenie</span>
+                            <span className="text-green-400 font-semibold">+ {formatPrice(CENY.podlahove_kurenie)}</span>
+                          </div>
+                        )}
+                        {pripravaNaKrb && (
+                          <div className="flex justify-between">
+                            <span className="text-slate-300">• Príprava na krb</span>
+                            <span className="text-green-400 font-semibold">+ {formatPrice(CENY.pripravaKrb)}</span>
+                          </div>
+                        )}
+                        {ochranaKachle && (
+                          <div className="flex justify-between">
+                            <span className="text-slate-300">• Ochrana na kachle</span>
+                            <span className="text-green-400 font-semibold">+ {formatPrice(CENY.ochranaKachle)}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
                       <p className="text-slate-400 text-xs mb-1">FASÁDA</p>
-                      <div className="text-xs text-slate-300">
-                        • {fasada === "drevo_smrek" ? "Drevo smrek" : 
-                           fasada === "omietka" ? "Šúchaná omietka" : 
-                           fasada === "smrekovec" ? "Smrekovec" :
-                           fasada === "falcovane" ? "Falcované panely" : "Thermowood"} ✓
+                      <div className="flex justify-between text-xs">
+                        <span className="text-slate-300">
+                          • {fasada === "drevo_smrek" ? "Drevo smrek" : 
+                             fasada === "omietka" ? "Šúchaná omietka" : 
+                             fasada === "smrekovec" ? "Smrekovec" :
+                             fasada === "falcovane" ? "Falcované panely" : "Thermowood"}
+                        </span>
+                        <span className="text-green-400 font-semibold">
+                          {fasada === "drevo_smrek" ? "v cene" : `+ ${formatPrice(CENY.fasada[fasada])}`}
+                        </span>
                       </div>
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
                       <p className="text-slate-400 text-xs mb-1">STRECHA</p>
-                      <div className="space-y-1 text-xs text-slate-300">
-                        <div>• {strecha === "korugovan_plech" ? "Korugovaný plech" : "Falcované panely"} ✓</div>
-                        {odkvapy === "ano" && <div>• Odkvapy ✓</div>}
+                      <div className="space-y-1 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">• {strecha === "korugovan_plech" ? "Korugovaný plech" : "Falcované panely"}</span>
+                          <span className="text-green-400 font-semibold">
+                            {strecha === "korugovan_plech" ? "v cene" : `+ ${formatPrice(CENY.strecha.falcovane)}`}
+                          </span>
+                        </div>
+                        {odkvapy === "ano" && (
+                          <div className="flex justify-between">
+                            <span className="text-slate-300">• Odkvapy</span>
+                            <span className="text-green-400 font-semibold">+ {formatPrice(CENY.odkvapy)}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
                       <p className="text-slate-400 text-xs mb-1">OKNÁ A DVERE</p>
-                      <div className="space-y-1 text-xs text-slate-300">
-                        <div>• Okná {okna === "biele" ? "biele" : okna === "antracit" ? "antracit" : "hnedé"} ✓</div>
-                        <div>• {vchodoveDvere === "plastove" ? "Kovovo-plastové" : "Kovové"} dvere ✓</div>
+                      <div className="space-y-1 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">• Okná {okna === "biele" ? "biele" : okna === "antracit" ? "antracit" : "hnedé"}</span>
+                          <span className="text-green-400 font-semibold">v cene</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">• {vchodoveDvere === "plastove" ? "Kovovo-plastové" : "Kovové"} dvere</span>
+                          <span className="text-green-400 font-semibold">
+                            {vchodoveDvere === "plastove" ? "v cene" : `+ ${formatPrice(CENY.dvere.kovove)}`}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
                       <p className="text-slate-400 text-xs mb-1">INTERIÉR</p>
-                      <div className="space-y-1 text-xs text-slate-300">
-                        <div>• {obkladStien === "smrek_8cm" ? "Smrek 8cm" :
+                      <div className="space-y-1 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">
+                            • {obkladStien === "smrek_8cm" ? "Smrek 8cm" :
                                obkladStien === "smrek_bez_uzlov" ? "Smrek bez uzlov 12cm" :
-                               obkladStien === "sadrokarton_tapeta" ? "Sadrokarton + tapeta" : "OSB panel"} ✓</div>
-                        <div>• Laminát ✓</div>
-                        <div>• {interieroveDvere === "kridlove" ? "Krídlové" : "Posuvné"} dvere ✓</div>
+                               obkladStien === "sadrokarton_tapeta" ? "Sadrokarton + tapeta" : "OSB panel"}
+                          </span>
+                          <span className="text-green-400 font-semibold">
+                            {obkladStien === "smrek_8cm" || obkladStien === "smrek_bez_uzlov" ? "v cene" : `+ ${formatPrice(CENY.obklad[obkladStien])}`}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">• Laminát</span>
+                          <span className="text-green-400 font-semibold">v cene</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">• {interieroveDvere === "kridlove" ? "Krídlové" : "Posuvné"} dvere</span>
+                          <span className="text-green-400 font-semibold">
+                            {interieroveDvere === "kridlove" ? "v cene" : `+ ${formatPrice(CENY.dvere_posuvne)}`}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
                       <p className="text-slate-400 text-xs mb-1">ELEKTROINŠTALÁCIA</p>
-                      <div className="space-y-1 text-xs text-slate-300">
-                        <div>• {elektro === "eu" ? "EU štandard" : elektro === "cz" ? "CZ/SK štandard" : "GE štandard"} ✓</div>
-                        {bleskozvod && <div>• Bleskozvod ✓</div>}
-                        {prepat && <div>• Prepäťová ochrana ✓</div>}
+                      <div className="space-y-1 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">• {elektro === "eu" ? "EU štandard" : elektro === "cz" ? "CZ/SK štandard" : "GE štandard"}</span>
+                          <span className="text-green-400 font-semibold">
+                            {elektro === "eu" ? "v cene" : `+ ${formatPrice(CENY.elektro[elektro])}`}
+                          </span>
+                        </div>
+                        {bleskozvod && (
+                          <div className="flex justify-between">
+                            <span className="text-slate-300">• Bleskozvod</span>
+                            <span className="text-green-400 font-semibold">+ {formatPrice(CENY.bleskozvod)}</span>
+                          </div>
+                        )}
+                        {prepat && (
+                          <div className="flex justify-between">
+                            <span className="text-slate-300">• Prepäťová ochrana</span>
+                            <span className="text-green-400 font-semibold">+ {formatPrice(CENY.prepat)}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
                       <p className="text-slate-400 text-xs mb-1">KÚPEĽŇA</p>
-                      <div className="space-y-1 text-xs text-slate-300">
-                        <div>• {sprchovyKut === "standard" ? "Sprcha + WC Geberit" : "Sprcha Radaway"} ✓</div>
-                        <div>• Batéria {bateria === "standard" ? "štandard" : "Grohe"} ✓</div>
-                        <div>• Strop {stropKupelna === "drevo" ? "vzor dreva biely" : "sadrokarton"} ✓</div>
-                        {vana && <div>• Vaňa ✓</div>}
-                        {skrinka && <div>• Skrinka ✓</div>}
+                      <div className="space-y-1 text-xs">
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">• {sprchovyKut === "standard" ? "Sprcha + WC Geberit" : "Sprcha Radaway"}</span>
+                          <span className="text-green-400 font-semibold">
+                            {sprchovyKut === "standard" ? "v cene" : `+ ${formatPrice(CENY.sprchovyKut)}`}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">• Batéria {bateria === "standard" ? "štandard" : "Grohe"}</span>
+                          <span className="text-green-400 font-semibold">
+                            {bateria === "standard" ? "v cene" : `+ ${formatPrice(CENY.bateria)}`}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">• Strop {stropKupelna === "drevo" ? "vzor dreva biely" : "sadrokarton"}</span>
+                          <span className="text-green-400 font-semibold">
+                            {stropKupelna === "drevo" ? "v cene" : `+ ${formatPrice(CENY.strop_kupelna.sadrokarton)}`}
+                          </span>
+                        </div>
+                        {vana && (
+                          <div className="flex justify-between">
+                            <span className="text-slate-300">• Vaňa</span>
+                            <span className="text-green-400 font-semibold">+ {formatPrice(CENY.vana)}</span>
+                          </div>
+                        )}
+                        {skrinka && (
+                          <div className="flex justify-between">
+                            <span className="text-slate-300">• Skrinka</span>
+                            <span className="text-green-400 font-semibold">+ {formatPrice(CENY.skrinka)}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
                     {zaklady !== "bez" && (
                       <div className="border-t border-slate-700 pt-2">
                         <p className="text-slate-400 text-xs mb-1">ZÁKLADY</p>
-                        <div className="text-xs text-slate-300">
-                          • {zaklady === "vruty" ? "Zemné vruty" :
-                             zaklady === "patky" ? "Betónové pätky" : "Pásové betónové"} ✓
+                        <div className="flex justify-between text-xs">
+                          <span className="text-slate-300">
+                            • {zaklady === "vruty" ? "Zemné vruty" :
+                               zaklady === "patky" ? "Betónové pätky" : "Pásové betónové"}
+                          </span>
+                          <span className="text-green-400 font-semibold">+ {formatPrice(CENY.zaklady[zaklady])}</span>
                         </div>
                       </div>
                     )}
@@ -335,10 +493,25 @@ export default function LyonFinalSummaryModal({
                     {(inziniering || projektACertifikacia || revizia) && (
                       <div className="border-t border-slate-700 pt-2">
                         <p className="text-slate-400 text-xs mb-1">SLUŽBY</p>
-                        <div className="space-y-1 text-xs text-slate-300">
-                          {inziniering && <div>• Inžiniering ✓</div>}
-                          {projektACertifikacia && <div>• Projekt + Certifikácia A0 ✓</div>}
-                          {revizia && <div>• Revízna dokumentácia ✓</div>}
+                        <div className="space-y-1 text-xs">
+                          {inziniering && (
+                            <div className="flex justify-between">
+                              <span className="text-slate-300">• Inžiniering</span>
+                              <span className="text-green-400 font-semibold">+ {formatPrice(CENY.inziniering)}</span>
+                            </div>
+                          )}
+                          {projektACertifikacia && (
+                            <div className="flex justify-between">
+                              <span className="text-slate-300">• Projekt + Certifikácia A0</span>
+                              <span className="text-green-400 font-semibold">+ {formatPrice(CENY.projektACertifikacia)}</span>
+                            </div>
+                          )}
+                          {revizia && (
+                            <div className="flex justify-between">
+                              <span className="text-slate-300">• Revízna dokumentácia</span>
+                              <span className="text-green-400 font-semibold">+ {formatPrice(CENY.revizia)}</span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
@@ -346,9 +519,19 @@ export default function LyonFinalSummaryModal({
                     {(montaz || doprava) && (
                       <div className="border-t border-slate-700 pt-2">
                         <p className="text-slate-400 text-xs mb-1">REALIZÁCIA</p>
-                        <div className="space-y-1 text-xs text-slate-300">
-                          {montaz && <div>• Montáž domu ✓</div>}
-                          {doprava && <div>• Doprava modulov ✓</div>}
+                        <div className="space-y-1 text-xs">
+                          {montaz && (
+                            <div className="flex justify-between">
+                              <span className="text-slate-300">• Montáž domu</span>
+                              <span className="text-green-400 font-semibold">+ {formatPrice(CENY.montaz)}</span>
+                            </div>
+                          )}
+                          {doprava && (
+                            <div className="flex justify-between">
+                              <span className="text-slate-300">• Doprava modulov</span>
+                              <span className="text-green-400 font-semibold">+ {formatPrice(CENY.doprava)}</span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
