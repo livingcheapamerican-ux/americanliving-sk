@@ -55,9 +55,15 @@ const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isInc
 export default function KonfiguratorLyon() {
   const BASE_PRICE = 73431;
   
-  // Floating panel position and size
-  const [panelPosition, setPanelPosition] = useState({ x: 0, y: 80 });
-  const [panelSize, setPanelSize] = useState({ width: 320, height: 600 });
+  // Floating panel position and size - load from localStorage if available
+  const [panelPosition, setPanelPosition] = useState(() => {
+    const saved = localStorage.getItem('lyon_panel_position');
+    return saved ? JSON.parse(saved) : { x: 0, y: 80 };
+  });
+  const [panelSize, setPanelSize] = useState(() => {
+    const saved = localStorage.getItem('lyon_panel_size');
+    return saved ? JSON.parse(saved) : { width: 320, height: 600 };
+  });
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
