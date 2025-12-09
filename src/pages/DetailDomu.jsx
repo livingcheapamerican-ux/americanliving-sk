@@ -26,6 +26,7 @@ import KonfiguratorAFrame from "../components/KonfiguratorAFrame";
 import KonfiguratorBarn48 from "../components/KonfiguratorBarn48";
 import KonfiguratorBarnDouble from "../components/KonfiguratorBarnDouble";
 import KonfiguratorFlatSmall from "../components/KonfiguratorFlatSmall";
+import KonfiguratorLyon from "../components/KonfiguratorLyon";
 
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
