@@ -461,6 +461,10 @@ export default function KonfiguratorLyon(props = {}) {
               setBleskozvod(true);
               setPrepat(true);
               setElektro("ge");
+              // Zobrazíme upozornenie o A0 požiadavkách
+              setTimeout(() => {
+                alert("✅ Automaticky boli vybrané povinné A0 položky bez ktorých sa dom nedá skolaudovať ako rodinný dom:\n\n• Izolácia 250/200/200mm\n• Tepelné čerpadlo\n• Rekuperácia\n• GE elektroinštalácia\n• Bleskozvod\n• Prepäťová ochrana\n• Inžiniering\n• Projekt + Certifikácia A0");
+              }, 100);
             }}
             className={`p-3 rounded-lg cursor-pointer transition-all border-2 ${
               ucel === "rodinny" 
@@ -516,6 +520,7 @@ export default function KonfiguratorLyon(props = {}) {
         {/* IZOLÁCIA */}
         <Card className="p-3 bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300 shadow-md">
           <h3 className="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-sm mr-1">1</span>
             🏠 Izolácia
           </h3>
           <div className="space-y-2">
@@ -552,6 +557,7 @@ export default function KonfiguratorLyon(props = {}) {
         {/* VYKUROVANIE */}
         <Card className="p-3 bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-300 shadow-md">
           <h3 className="text-base font-bold text-orange-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-orange-600 text-white text-sm mr-1">2</span>
             🔥 Vykurovanie
           </h3>
           <div className="space-y-2">
@@ -591,6 +597,7 @@ export default function KonfiguratorLyon(props = {}) {
           {/* FASÁDA */}
           <Card className="p-3 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-300 shadow-md">
             <h3 className="text-base font-bold text-purple-900 mb-2 flex items-center gap-2">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-purple-600 text-white text-sm mr-1">3</span>
               🎨 Fasáda
             </h3>
           <div>
@@ -608,6 +615,7 @@ export default function KonfiguratorLyon(props = {}) {
         {/* STRECHA */}
         <Card className="p-3 bg-gradient-to-br from-indigo-50 to-blue-50 border-2 border-indigo-300 shadow-md">
           <h3 className="text-base font-bold text-indigo-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-600 text-white text-sm mr-1">4</span>
             🏠 Strecha
           </h3>
           <div className="space-y-2">
@@ -637,6 +645,7 @@ export default function KonfiguratorLyon(props = {}) {
           {/* OKNÁ A DVERE */}
           <Card className="p-3 bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-cyan-300 shadow-md">
             <h3 className="text-base font-bold text-cyan-900 mb-2 flex items-center gap-2">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-cyan-600 text-white text-sm mr-1">5</span>
               🚪 Okná a dvere
             </h3>
             <div className="space-y-2">
@@ -664,6 +673,7 @@ export default function KonfiguratorLyon(props = {}) {
         {/* INTERIÉR */}
         <Card className="p-3 bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300 shadow-md">
           <h3 className="text-base font-bold text-amber-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-600 text-white text-sm mr-1">6</span>
             🛋️ Interiér
           </h3>
           <div className="space-y-2">
@@ -703,6 +713,7 @@ export default function KonfiguratorLyon(props = {}) {
           {/* ELEKTRO */}
           <Card className="p-3 bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-300 shadow-md">
             <h3 className="text-base font-bold text-yellow-900 mb-2 flex items-center gap-2">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-yellow-600 text-white text-sm mr-1">7</span>
               ⚡ Elektroinštalácia
             </h3>
             <div className="space-y-2">
@@ -730,6 +741,7 @@ export default function KonfiguratorLyon(props = {}) {
         {/* KÚPEĽŇA */}
         <Card className="p-3 bg-gradient-to-br from-teal-50 to-cyan-50 border-2 border-teal-300 shadow-md">
           <h3 className="text-base font-bold text-teal-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-teal-600 text-white text-sm mr-1">8</span>
             🚿 Kúpeľňa
           </h3>
           <div className="space-y-2">
@@ -776,6 +788,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* ZÁKLADY */}
             <Card className="p-3 bg-gradient-to-br from-stone-50 to-gray-50 border-2 border-stone-300 shadow-md">
             <h3 className="text-base font-bold text-stone-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-stone-600 text-white text-sm mr-1">9</span>
             🏗️ Základy
             </h3>
           <div>
@@ -792,6 +805,7 @@ export default function KonfiguratorLyon(props = {}) {
         {/* SLUŽBY */}
         <Card className="p-3 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 shadow-md">
           <h3 className="text-base font-bold text-green-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green-600 text-white text-sm mr-1">10</span>
             <Sparkles className="w-4 h-4 text-green-600" />
             Inžiniering a dokumentácia (A0)
           </h3>
@@ -805,6 +819,7 @@ export default function KonfiguratorLyon(props = {}) {
         {/* REALIZÁCIA */}
         <Card className="p-3 bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-slate-300 shadow-md">
           <h3 className="text-base font-bold text-slate-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-600 text-white text-sm mr-1">11</span>
             🚚 Realizácia
           </h3>
           <div className="space-y-1.5">

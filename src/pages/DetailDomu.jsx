@@ -2887,6 +2887,7 @@ export default function DetailDomu() {
                   zaklady={lyonZaklady}
                   montaz={lyonMontaz}
                   doprava={lyonDoprava}
+                  dom={dom}
                   totalPrice={(() => {
                     const BASE_PRICE = 73431;
                     const CENY = {
