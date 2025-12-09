@@ -55,6 +55,13 @@ const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isInc
 export default function KonfiguratorLyon() {
   const BASE_PRICE = 73431;
   
+  // Floating panel position and size
+  const [panelPosition, setPanelPosition] = useState({ x: 0, y: 80 });
+  const [panelSize, setPanelSize] = useState({ width: 320, height: 600 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  
   // State
   const [ucel, setUcel] = useState("chata");
   const [kolaudacia, setKolaudacia] = useState("bez_a0");
@@ -159,23 +166,98 @@ export default function KonfiguratorLyon() {
 
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
+  // Drag handlers
+  const handleMouseDown = (e) => {
+    if (e.target.closest('.resize-handle')) return;
+    setIsDragging(true);
+    setDragStart({
+      x: e.clientX - panelPosition.x,
+      y: e.clientY - panelPosition.y
+    });
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      setPanelPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+      });
+    }
+    if (isResizing) {
+      const newWidth = Math.max(280, e.clientX - panelPosition.x);
+      const newHeight = Math.max(400, e.clientY - panelPosition.y);
+      setPanelSize({ width: newWidth, height: newHeight });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setIsResizing(false);
+  };
+
+  React.useEffect(() => {
+    if (isDragging || isResizing) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, isResizing, dragStart, panelPosition]);
+
+  const savePosition = () => {
+    localStorage.setItem('lyon_panel_position', JSON.stringify(panelPosition));
+    localStorage.setItem('lyon_panel_size', JSON.stringify(panelSize));
+    alert('Pozícia a veľkosť panelu bola uložená!');
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto flex gap-6">
-      {/* Floating Summary Panel - Ľavá strana */}
-      <div className="hidden xl:block w-80 flex-shrink-0">
-        <div className="sticky top-20">
-          <Card className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl border-2 border-slate-700 overflow-hidden">
+      {/* Floating Summary Panel - Ľavá strana - Draggable & Resizable */}
+      <div 
+        className="hidden xl:block flex-shrink-0 fixed z-50"
+        style={{
+          left: `${panelPosition.x}px`,
+          top: `${panelPosition.y}px`,
+          width: `${panelSize.width}px`,
+          height: `${panelSize.height}px`,
+          cursor: isDragging ? 'grabbing' : 'grab'
+        }}
+      >
+        <Card 
+          className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl border-2 border-slate-700 overflow-hidden h-full relative"
+          onMouseDown={handleMouseDown}
+        >
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 border-b border-slate-700">
-              <h3 className="text-lg font-bold flex items-center gap-2">
-                <Home className="w-5 h-5" />
-                Vaša konfigurácia
-              </h3>
-              <p className="text-xs text-blue-100 mt-1">Lyon 50m²</p>
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 border-b border-slate-700 cursor-grab active:cursor-grabbing">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-bold flex items-center gap-2">
+                    <Home className="w-5 h-5" />
+                    Vaša konfigurácia
+                  </h3>
+                  <p className="text-xs text-blue-100 mt-1">Lyon 50m²</p>
+                </div>
+                <Button 
+                  size="sm" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    savePosition();
+                  }}
+                  className="bg-white/20 hover:bg-white/30 text-white text-xs h-7"
+                >
+                  💾 Uložiť
+                </Button>
+              </div>
             </div>
 
             {/* Scrollable Content */}
-            <div className="max-h-[calc(100vh-300px)] overflow-y-auto p-4 space-y-4">
+            <div 
+              className="overflow-y-auto p-4 space-y-4"
+              style={{ height: `calc(${panelSize.height}px - 180px)` }}
+              onMouseDown={(e) => e.stopPropagation()}
+            >
               {/* Účel */}
               {ucel && (
                 <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
@@ -325,18 +407,32 @@ export default function KonfiguratorLyon() {
             </div>
 
             {/* Total Price */}
-            <div className="border-t-2 border-slate-700 bg-gradient-to-r from-blue-600 to-indigo-600 p-4">
+            <div className="absolute bottom-0 left-0 right-0 border-t-2 border-slate-700 bg-gradient-to-r from-blue-600 to-indigo-600 p-4">
               <p className="text-xs text-blue-100 mb-1">Celková cena s DPH</p>
               <p className="text-2xl font-black text-white">{formatPrice(totalPrice)}</p>
               <div className="mt-3">
-                <Button className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold shadow-lg">
+                <Button 
+                  className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold shadow-lg"
+                  onMouseDown={(e) => e.stopPropagation()}
+                >
                   <Send className="w-4 h-4 mr-2" />
                   Odoslať dopyt
                 </Button>
               </div>
             </div>
+
+            {/* Resize Handle */}
+            <div
+              className="resize-handle absolute bottom-0 right-0 w-6 h-6 cursor-nwse-resize bg-blue-500/50 hover:bg-blue-500 rounded-tl-lg"
+              onMouseDown={(e) => {
+                e.stopPropagation();
+                setIsResizing(true);
+              }}
+              title="Potiahnite pre zmenu veľkosti"
+            >
+              <div className="absolute bottom-1 right-1 w-3 h-3 border-r-2 border-b-2 border-white/70"></div>
+            </div>
           </Card>
-        </div>
       </div>
 
       {/* Main Content - Pravá strana */}
