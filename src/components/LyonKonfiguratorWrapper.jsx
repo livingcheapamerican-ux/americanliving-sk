@@ -144,52 +144,8 @@ export default function LyonKonfiguratorWrapper() {
   };
 
   return (
-    <div className="flex gap-6 flex-col lg:flex-row">
-      {/* Sidebar na ľavej strane - zobrazí sa len na desktop */}
-      <div className="hidden lg:block w-full lg:w-96 flex-shrink-0">
-        <div className="sticky top-24">
-          <LyonSummaryPanel
-            ucel={ucel}
-            izolaciaStien={izolaciaStien}
-            izolaciaPodlahy={izolaciaPodlahy}
-            izolaciaStropu={izolaciaStropu}
-            tepelneCerpadlo={tepelneCerpadlo}
-            rekuperacia={rekuperacia}
-            podlahovoKurenie={podlahovoKurenie}
-            pripravaNaKrb={pripravaNaKrb}
-            ochranaKachle={ochranaKachle}
-            fasada={fasada}
-            strecha={strecha}
-            odkvapy={odkvapy}
-            okna={okna}
-            vchodoveDvere={vchodoveDvere}
-            obkladStien={obkladStien}
-            interieroveDvere={interieroveDvere}
-            elektro={elektro}
-            bleskozvod={bleskozvod}
-            prepat={prepat}
-            sprchovyKut={sprchovyKut}
-            vana={vana}
-            bateria={bateria}
-            skrinka={skrinka}
-            stropKupelna={stropKupelna}
-            inziniering={inziniering}
-            projektACertifikacia={projektACertifikacia}
-            revizia={revizia}
-            zaklady={zaklady}
-            montaz={montaz}
-            doprava={doprava}
-            totalPrice={totalPrice}
-            formatPrice={formatPrice}
-            onSubmit={handleSubmit}
-          />
-        </div>
-      </div>
-
-      {/* Konfigurátor na pravej strane */}
-      <div className="flex-1 min-w-0">
-        <KonfiguratorLyon {...allProps} />
-      </div>
+    <div>
+      <KonfiguratorLyon {...allProps} />
     </div>
   );
 }
