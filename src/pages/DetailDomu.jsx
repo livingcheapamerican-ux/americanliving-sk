@@ -1708,22 +1708,12 @@ export default function DetailDomu() {
                     </div>
                   </div>
                 )}
-                {dom.terasa_plocha && (
+                {dom.terasa_plocha && (!isTicabhouse || !dom.specifikacia || !dom.specifikacia.includes("Terasa: ❌")) && (
                   <div className="flex items-center gap-2">
                     <Landmark className="w-4 h-4 sm:w-5 sm:h-5 text-teal-600" />
                     <div>
                       <p className="text-xs text-gray-500">Terasa</p>
                       <p className="text-sm sm:text-base font-bold text-primary">{dom.terasa_plocha} m²</p>
-                      {isTicabhouse && dom.specifikacia && dom.specifikacia.includes("Terasa: ❌") && (
-                        <Badge className="bg-red-100 text-red-700 text-[9px] sm:text-xs px-1.5 py-0.5 mt-0.5">
-                          Za príplatok
-                        </Badge>
-                      )}
-                      {isTicabhouse && dom.specifikacia && dom.specifikacia.includes("V CENE") && dom.specifikacia.toLowerCase().includes("terasa") && (
-                        <Badge className="bg-green-100 text-green-700 text-[9px] sm:text-xs px-1.5 py-0.5 mt-0.5">
-                          ✓ V cene
-                        </Badge>
-                      )}
                     </div>
                   </div>
                 )}
