@@ -163,7 +163,16 @@ export default function KonfiguratorLyon() {
           <motion.div
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => setUcel("chata")}
+            onClick={() => {
+              setUcel("chata");
+              setKolaudacia("bez_a0");
+              setIzolaciaStien("150mm");
+              setIzolaciaPodlahy("150mm");
+              setIzolaciaStropu("150mm");
+              setTepelneCerpadlo("nie");
+              setRekuperacia("nie");
+              setInziniering(false);
+            }}
             className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${
               ucel === "chata" 
                 ? "bg-green-100 border-green-500 shadow-lg" 
@@ -185,7 +194,16 @@ export default function KonfiguratorLyon() {
           <motion.div
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => setUcel("rodinny")}
+            onClick={() => {
+              setUcel("rodinny");
+              setKolaudacia("s_a0");
+              setIzolaciaStien("250mm");
+              setIzolaciaPodlahy("200mm");
+              setIzolaciaStropu("200mm");
+              setTepelneCerpadlo("ano");
+              setRekuperacia("ano");
+              setInziniering(true);
+            }}
             className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${
               ucel === "rodinny" 
                 ? "bg-green-100 border-green-500 shadow-lg" 
