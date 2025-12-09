@@ -1,6 +1,9 @@
 import React from "react";
 import KonfiguratorLyon, { LyonSummaryPanel } from "./KonfiguratorLyon";
 
+// Export aj sidebar samostatne
+export { LyonSummaryPanel };
+
 export default function LyonKonfiguratorWrapper() {
   const BASE_PRICE = 73431;
   
@@ -143,53 +146,46 @@ export default function LyonKonfiguratorWrapper() {
     doprava, setDoprava,
   };
 
-  return (
-    <div className="flex gap-6 flex-col lg:flex-row">
-      {/* Konfigurátor na ľavej strane */}
-      <div className="flex-1 min-w-0">
-        <KonfiguratorLyon {...allProps} />
+  return {
+    konfigurator: <KonfiguratorLyon {...allProps} />,
+    sidebar: (
+      <div className="sticky top-24">
+        <LyonSummaryPanel
+          ucel={ucel}
+          izolaciaStien={izolaciaStien}
+          izolaciaPodlahy={izolaciaPodlahy}
+          izolaciaStropu={izolaciaStropu}
+          tepelneCerpadlo={tepelneCerpadlo}
+          rekuperacia={rekuperacia}
+          podlahovoKurenie={podlahovoKurenie}
+          pripravaNaKrb={pripravaNaKrb}
+          ochranaKachle={ochranaKachle}
+          fasada={fasada}
+          strecha={strecha}
+          odkvapy={odkvapy}
+          okna={okna}
+          vchodoveDvere={vchodoveDvere}
+          obkladStien={obkladStien}
+          interieroveDvere={interieroveDvere}
+          elektro={elektro}
+          bleskozvod={bleskozvod}
+          prepat={prepat}
+          sprchovyKut={sprchovyKut}
+          vana={vana}
+          bateria={bateria}
+          skrinka={skrinka}
+          stropKupelna={stropKupelna}
+          inziniering={inziniering}
+          projektACertifikacia={projektACertifikacia}
+          revizia={revizia}
+          zaklady={zaklady}
+          montaz={montaz}
+          doprava={doprava}
+          totalPrice={totalPrice}
+          formatPrice={formatPrice}
+          onSubmit={handleSubmit}
+        />
       </div>
-
-      {/* Sidebar na pravej strane - zobrazí sa len na desktop */}
-      <div className="hidden lg:block w-full lg:w-96 flex-shrink-0">
-        <div className="sticky top-24">
-          <LyonSummaryPanel
-            ucel={ucel}
-            izolaciaStien={izolaciaStien}
-            izolaciaPodlahy={izolaciaPodlahy}
-            izolaciaStropu={izolaciaStropu}
-            tepelneCerpadlo={tepelneCerpadlo}
-            rekuperacia={rekuperacia}
-            podlahovoKurenie={podlahovoKurenie}
-            pripravaNaKrb={pripravaNaKrb}
-            ochranaKachle={ochranaKachle}
-            fasada={fasada}
-            strecha={strecha}
-            odkvapy={odkvapy}
-            okna={okna}
-            vchodoveDvere={vchodoveDvere}
-            obkladStien={obkladStien}
-            interieroveDvere={interieroveDvere}
-            elektro={elektro}
-            bleskozvod={bleskozvod}
-            prepat={prepat}
-            sprchovyKut={sprchovyKut}
-            vana={vana}
-            bateria={bateria}
-            skrinka={skrinka}
-            stropKupelna={stropKupelna}
-            inziniering={inziniering}
-            projektACertifikacia={projektACertifikacia}
-            revizia={revizia}
-            zaklady={zaklady}
-            montaz={montaz}
-            doprava={doprava}
-            totalPrice={totalPrice}
-            formatPrice={formatPrice}
-            onSubmit={handleSubmit}
-          />
-        </div>
-      </div>
-    </div>
-  );
+    )
+  };
 }
