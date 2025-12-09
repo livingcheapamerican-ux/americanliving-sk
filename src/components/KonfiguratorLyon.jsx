@@ -160,14 +160,14 @@ export default function KonfiguratorLyon() {
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
   return (
-    <div className="w-full max-w-5xl mx-auto">
-      {/* Účel stavby - rozšírený */}
-      <Card className="p-4 mb-4 bg-gradient-to-r from-gray-50 to-gray-100">
-        <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-          <Home className="w-5 h-5 text-blue-600" />
+    <div className="w-full max-w-7xl mx-auto">
+      {/* Účel stavby - kompaktnejší */}
+      <Card className="p-3 sm:p-4 mb-3 bg-gradient-to-br from-blue-50 via-white to-indigo-50 border-2 border-blue-200 shadow-lg">
+        <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+          <Home className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
           Účel stavby
         </h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* Rekreačná stavba */}
           <motion.div
             whileHover={{ scale: 1.02 }}
@@ -183,20 +183,19 @@ export default function KonfiguratorLyon() {
               setInziniering(false);
               setProjektACertifikacia(false);
             }}
-            className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${
+            className={`p-3 rounded-lg cursor-pointer transition-all border-2 ${
               ucel === "chata" 
-                ? "bg-green-100 border-green-500 shadow-lg" 
+                ? "bg-green-100 border-green-500 shadow-md" 
                 : "bg-white border-gray-300 hover:border-green-400"
             }`}
-          >
-            <h4 className="text-lg font-bold text-gray-900 mb-2">Rekreačná stavba</h4>
-            <p className="text-base text-blue-600 font-semibold mb-2">Ekonomická voľba</p>
-            <ul className="space-y-1 text-[13px] text-gray-600">
+            >
+            <h4 className="text-sm sm:text-base font-bold text-gray-900 mb-1">Rekreačná stavba</h4>
+            <p className="text-xs sm:text-sm text-blue-600 font-semibold mb-1">Ekonomická voľba</p>
+            <ul className="space-y-0.5 text-[11px] sm:text-xs text-gray-600">
               <li>• Chata, záhradný domček</li>
               <li>• Celoročná izolácia 150/200mm</li>
               <li>• Bez energetického certifikátu</li>
               <li>• Nižšia cena</li>
-              <li>• Spĺňa parametre rekreačnej stavby</li>
             </ul>
           </motion.div>
 
@@ -218,23 +217,22 @@ export default function KonfiguratorLyon() {
               setPrepat(true);
               setElektro("ge");
             }}
-            className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${
+            className={`p-3 rounded-lg cursor-pointer transition-all border-2 ${
               ucel === "rodinny" 
-                ? "bg-green-100 border-green-500 shadow-lg" 
+                ? "bg-green-100 border-green-500 shadow-md" 
                 : "bg-white border-gray-300 hover:border-green-400"
             }`}
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <h4 className="text-lg font-bold text-gray-900">Rodinný dom A0</h4>
-              <Badge className="bg-green-600 text-white text-[9px]">⚡ Odporúčané</Badge>
+            >
+            <div className="flex items-center gap-2 mb-1">
+              <h4 className="text-sm sm:text-base font-bold text-gray-900">Rodinný dom A0</h4>
+              <Badge className="bg-green-600 text-white text-[8px] sm:text-[9px]">⚡</Badge>
             </div>
-            <ul className="space-y-1 text-[13px] text-gray-600">
+            <ul className="space-y-0.5 text-[11px] sm:text-xs text-gray-600">
               <li>• Celoročné bývanie</li>
               <li>• Energetický certifikát A0</li>
               <li>• Premium izolácia 250/300mm</li>
               <li>• Tepelné čerpadlo + Rekuperácia</li>
               <li>• Možnosť trvalého pobytu</li>
-              <li>• Spĺňa všetky normy pre rodinný dom</li>
             </ul>
           </motion.div>
         </div>
@@ -242,7 +240,7 @@ export default function KonfiguratorLyon() {
 
       {/* Kolaudácia */}
       {ucel === "rodinny" && (
-        <Card className="p-2 mb-2 bg-green-50 border border-green-300">
+        <Card className="p-2 mb-3 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-300">
           <h3 className="text-xs font-bold text-green-900 mb-2 flex items-center gap-1">
             <Sparkles className="w-4 h-4 text-green-600" />
             Kolaudácia
@@ -265,19 +263,19 @@ export default function KonfiguratorLyon() {
         </Card>
       )}
 
-      {/* Hlavný konfigurátor */}
-      <div className="space-y-3">
-        
+      {/* Hlavný konfigurátor - Grid layout */}
+      <div className="grid lg:grid-cols-2 gap-3 mb-3">
+
         {/* IZOLÁCIA */}
-        <Card className="p-3 border-2 border-blue-400">
-          <h3 className="text-lg font-bold text-blue-900 mb-3 flex items-center gap-2">
+        <Card className="p-3 bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300 shadow-md">
+          <h3 className="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
             🏠 Izolácia
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {/* Steny */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Izolácia stien (vyber jednu možnosť):</p>
-              <div className="grid grid-cols-3 gap-2 border-2 border-blue-300 rounded-lg p-2 bg-blue-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Izolácia stien:</p>
+              <div className="grid grid-cols-3 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={izolaciaStien === "150mm"} onClick={() => setIzolaciaStien("150mm")} title="Steny 150mm" subtitle="Rekreačné" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={izolaciaStien === "200mm"} onClick={() => setIzolaciaStien("200mm")} title="Steny 200mm" subtitle="" price="+ 1 799 €" isPriced={true} />
                 <Tile selected={izolaciaStien === "250mm"} onClick={() => setIzolaciaStien("250mm")} title="Steny 250mm" subtitle="Premium A0" price="+ 1 558 €" isPriced={true} isA0={true} />
@@ -286,8 +284,8 @@ export default function KonfiguratorLyon() {
 
             {/* Podlaha */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Izolácia podlahy (vyber jednu možnosť):</p>
-              <div className="grid grid-cols-2 gap-2 border-2 border-blue-300 rounded-lg p-2 bg-blue-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Izolácia podlahy:</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={izolaciaPodlahy === "150mm"} onClick={() => setIzolaciaPodlahy("150mm")} title="Podlaha 150mm" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={izolaciaPodlahy === "200mm"} onClick={() => setIzolaciaPodlahy("200mm")} title="Podlaha 200mm" subtitle="A0" price="+ 334 €" isPriced={true} isA0={true} />
               </div>
@@ -295,8 +293,8 @@ export default function KonfiguratorLyon() {
 
             {/* Strop */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Izolácia stropu (vyber jednu možnosť):</p>
-              <div className="grid grid-cols-2 gap-2 border-2 border-blue-300 rounded-lg p-2 bg-blue-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Izolácia stropu:</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={izolaciaStropu === "150mm"} onClick={() => setIzolaciaStropu("150mm")} title="Strop 150mm" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={izolaciaStropu === "200mm"} onClick={() => setIzolaciaStropu("200mm")} title="Strop 200mm" subtitle="A0" price="+ 271 €" isPriced={true} isA0={true} />
               </div>
@@ -305,15 +303,15 @@ export default function KonfiguratorLyon() {
         </Card>
 
         {/* VYKUROVANIE */}
-        <Card className="p-3 border-2 border-orange-400">
-          <h3 className="text-lg font-bold text-orange-900 mb-3 flex items-center gap-2">
+        <Card className="p-3 bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-300 shadow-md">
+          <h3 className="text-base font-bold text-orange-900 mb-2 flex items-center gap-2">
             🔥 Vykurovanie
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {/* Tepelné čerpadlo */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Vykurovanie (vyber jednu možnosť):</p>
-              <div className="grid grid-cols-2 gap-2 border-2 border-orange-300 rounded-lg p-2 bg-orange-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Vykurovanie:</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-orange-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={tepelneCerpadlo === "nie"} onClick={() => setTepelneCerpadlo("nie")} title="Príprava" subtitle="Konvektory" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={tepelneCerpadlo === "ano"} onClick={() => setTepelneCerpadlo("ano")} title="Tepelné čerpadlo" subtitle="A0 povinné" price="+ 2 889 €" isPriced={true} isA0={true} />
               </div>
@@ -321,8 +319,8 @@ export default function KonfiguratorLyon() {
 
             {/* Rekuperácia */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Vetranie (vyber jednu možnosť):</p>
-              <div className="grid grid-cols-2 gap-2 border-2 border-orange-300 rounded-lg p-2 bg-orange-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Vetranie:</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-orange-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={rekuperacia === "nie"} onClick={() => setRekuperacia("nie")} title="Bez rekuperácie" subtitle="" price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} />
                 <Tile selected={rekuperacia === "ano"} onClick={() => setRekuperacia("ano")} title="Rekuperácia" subtitle="A0 povinné" price="+ 1 155 €" isPriced={true} isA0={true} />
               </div>
@@ -330,8 +328,8 @@ export default function KonfiguratorLyon() {
 
             {/* Doplnky - checkbox */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Doplnky (môžeš vybrať viac):</p>
-              <div className="space-y-2">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Doplnky:</p>
+              <div className="space-y-1.5">
                 <Tile selected={podlahovoKurenie} onClick={() => setPodlahovoKurenie(!podlahovoKurenie)} title="Podlahové kúrenie" subtitle="" price="+ 2 253 €" isPriced={true} />
                 <Tile selected={pripravaNaKrb} onClick={() => setPripravaNaKrb(!pripravaNaKrb)} title="Príprava na krb" subtitle="" price="+ 579 €" isPriced={true} />
                 <Tile selected={ochranaKachle} onClick={() => setOchranaKachle(!ochranaKachle)} title="Ochrana na kachle" subtitle="" price="+ 1 280 €" isPriced={true} />
@@ -340,14 +338,17 @@ export default function KonfiguratorLyon() {
           </div>
         </Card>
 
-        {/* FASÁDA */}
-        <Card className="p-3 border-2 border-purple-400">
-          <h3 className="text-lg font-bold text-purple-900 mb-3 flex items-center gap-2">
-            🎨 Fasáda
-          </h3>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+          {/* FASÁDA */}
+          <Card className="p-3 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-300 shadow-md">
+            <h3 className="text-base font-bold text-purple-900 mb-2 flex items-center gap-2">
+              🎨 Fasáda
+            </h3>
           <div>
-            <p className="text-xs font-semibold text-gray-700 mb-2">Typ fasády (vyber jednu možnosť):</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 border-2 border-purple-300 rounded-lg p-2 bg-purple-50">
+            <p className="text-[11px] font-semibold text-gray-700 mb-1">Typ fasády:</p>
+            <div className="grid grid-cols-2 gap-1.5 border border-purple-300 rounded-md p-1.5 bg-white/50">
               <Tile selected={fasada === "drevo_smrek"} onClick={() => setFasada("drevo_smrek")} title="Drevo smrek" subtitle="Tmavý/Svetlý" price="0 €" isPriced={false} isIncluded={true} />
               <Tile selected={fasada === "omietka"} onClick={() => setFasada("omietka")} title="Šúchaná omietka" subtitle="Baumit" price="+ 1 581 €" isPriced={true} />
               <Tile selected={fasada === "smrekovec"} onClick={() => setFasada("smrekovec")} title="Smrekovec" subtitle="" price="+ 3 350 €" isPriced={true} />
@@ -358,15 +359,15 @@ export default function KonfiguratorLyon() {
         </Card>
 
         {/* STRECHA */}
-        <Card className="p-3 border-2 border-indigo-400">
-          <h3 className="text-lg font-bold text-indigo-900 mb-3 flex items-center gap-2">
+        <Card className="p-3 bg-gradient-to-br from-indigo-50 to-blue-50 border-2 border-indigo-300 shadow-md">
+          <h3 className="text-base font-bold text-indigo-900 mb-2 flex items-center gap-2">
             🏠 Strecha
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {/* Krytina */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Strešná krytina (vyber jednu možnosť):</p>
-              <div className="grid grid-cols-2 gap-2 border-2 border-indigo-300 rounded-lg p-2 bg-indigo-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Strešná krytina:</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-indigo-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={strecha === "korugovan_plech"} onClick={() => setStrecha("korugovan_plech")} title="Korugovaný plech" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={strecha === "falcovane"} onClick={() => setStrecha("falcovane")} title="Falcované panely" subtitle="" price="+ 3 228 €" isPriced={true} />
               </div>
@@ -374,8 +375,8 @@ export default function KonfiguratorLyon() {
 
             {/* Odkvapy */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Odkvapy (vyber jednu možnosť):</p>
-              <div className="grid grid-cols-2 gap-2 border-2 border-indigo-300 rounded-lg p-2 bg-indigo-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Odkvapy:</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-indigo-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={odkvapy === "nie"} onClick={() => setOdkvapy("nie")} title="Bez odkvapov" subtitle="" price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} />
                 <Tile selected={odkvapy === "ano"} onClick={() => setOdkvapy("ano")} title="Odkvapy" subtitle="Farba strechy" price="+ 1 502 €" isPriced={true} />
               </div>
@@ -383,16 +384,19 @@ export default function KonfiguratorLyon() {
           </div>
         </Card>
 
-        {/* OKNÁ A DVERE */}
-        <Card className="p-3 border-2 border-cyan-400">
-          <h3 className="text-lg font-bold text-cyan-900 mb-3 flex items-center gap-2">
-            🚪 Okná a dvere
-          </h3>
-          <div className="space-y-3">
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+          {/* OKNÁ A DVERE */}
+          <Card className="p-3 bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-cyan-300 shadow-md">
+            <h3 className="text-base font-bold text-cyan-900 mb-2 flex items-center gap-2">
+              🚪 Okná a dvere
+            </h3>
+            <div className="space-y-2">
             {/* Okná */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Farba okien 3-sklo (vyber jednu možnosť):</p>
-              <div className="grid grid-cols-3 gap-2 border-2 border-cyan-300 rounded-lg p-2 bg-cyan-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Farba okien 3-sklo:</p>
+              <div className="grid grid-cols-3 gap-1.5 border border-cyan-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={okna === "biele"} onClick={() => setOkna("biele")} title="Biele" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={okna === "antracit"} onClick={() => setOkna("antracit")} title="Antracit" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={okna === "hnede"} onClick={() => setOkna("hnede")} title="Hnedé" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
@@ -401,8 +405,8 @@ export default function KonfiguratorLyon() {
 
             {/* Vchodové dvere */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Vchodové dvere (vyber jednu možnosť):</p>
-              <div className="grid grid-cols-2 gap-2 border-2 border-cyan-300 rounded-lg p-2 bg-cyan-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Vchodové dvere:</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-cyan-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={vchodoveDvere === "plastove"} onClick={() => setVchodoveDvere("plastove")} title="Kovovo-plastové" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={vchodoveDvere === "kovove"} onClick={() => setVchodoveDvere("kovove")} title="Kovové dvere" subtitle="" price="+ 278 €" isPriced={true} />
               </div>
@@ -411,15 +415,15 @@ export default function KonfiguratorLyon() {
         </Card>
 
         {/* INTERIÉR */}
-        <Card className="p-3 border-2 border-amber-400">
-          <h3 className="text-lg font-bold text-amber-900 mb-3 flex items-center gap-2">
+        <Card className="p-3 bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300 shadow-md">
+          <h3 className="text-base font-bold text-amber-900 mb-2 flex items-center gap-2">
             🛋️ Interiér
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {/* Obklad stien */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Obklad stien (vyber jednu možnosť):</p>
-              <div className="grid grid-cols-2 gap-2 border-2 border-amber-300 rounded-lg p-2 bg-amber-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Obklad stien:</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-amber-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={obkladStien === "smrek_8cm"} onClick={() => setObkladStien("smrek_8cm")} title="Smrek 8cm" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={obkladStien === "smrek_bez_uzlov"} onClick={() => setObkladStien("smrek_bez_uzlov")} title="Smrek bez uzlov 12cm" subtitle="" price="0 €" isPriced={false} />
                 <Tile selected={obkladStien === "sadrokarton_tapeta"} onClick={() => setObkladStien("sadrokarton_tapeta")} title="Sadrokarton+netkaná tapeta+maľovka" subtitle="" price="+ 7 855 €" isPriced={true} />
@@ -429,16 +433,16 @@ export default function KonfiguratorLyon() {
 
             {/* Podlaha - len jedna možnosť */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Podlaha:</p>
-              <div className="border-2 border-amber-300 rounded-lg p-2 bg-amber-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Podlaha:</p>
+              <div className="border border-amber-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={podlaha === "laminat"} onClick={() => setPodlaha("laminat")} title="Laminát" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
               </div>
             </div>
 
             {/* Interiérové dvere */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Interiérové dvere (vyber jednu možnosť):</p>
-              <div className="grid grid-cols-2 gap-2 border-2 border-amber-300 rounded-lg p-2 bg-amber-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Interiérové dvere:</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-amber-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={interieroveDvere === "kridlove"} onClick={() => setInterieroveDvere("kridlove")} title="Krídlové dvere" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={interieroveDvere === "posuvne"} onClick={() => setInterieroveDvere("posuvne")} title="Posuvné dvere" subtitle="" price="+ 427 €" isPriced={true} />
               </div>
@@ -446,16 +450,19 @@ export default function KonfiguratorLyon() {
           </div>
         </Card>
 
-        {/* ELEKTRO */}
-        <Card className="p-3 border-2 border-yellow-400">
-          <h3 className="text-lg font-bold text-yellow-900 mb-3 flex items-center gap-2">
-            ⚡ Elektroinštalácia
-          </h3>
-          <div className="space-y-3">
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+          {/* ELEKTRO */}
+          <Card className="p-3 bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-300 shadow-md">
+            <h3 className="text-base font-bold text-yellow-900 mb-2 flex items-center gap-2">
+              ⚡ Elektroinštalácia
+            </h3>
+            <div className="space-y-2">
             {/* Štandard */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Typ inštalácie (vyber jednu možnosť):</p>
-              <div className="grid grid-cols-3 gap-2 border-2 border-yellow-300 rounded-lg p-2 bg-yellow-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Typ inštalácie:</p>
+              <div className="grid grid-cols-3 gap-1.5 border border-yellow-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={elektro === "eu"} onClick={() => setElektro("eu")} title="EU štandard" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={elektro === "cz"} onClick={() => setElektro("cz")} title="CZ/SK štandard" subtitle="Zásuvky, dodatočné istenie" price="+ 460 €" isPriced={true} />
                 <Tile selected={elektro === "ge"} onClick={() => setElektro("ge")} title="GE štandard" subtitle="" price="+ 1 583 €" isPriced={true} isA0={true} />
@@ -474,15 +481,15 @@ export default function KonfiguratorLyon() {
         </Card>
 
         {/* KÚPEĽŇA */}
-        <Card className="p-3 border-2 border-teal-400">
-          <h3 className="text-lg font-bold text-teal-900 mb-3 flex items-center gap-2">
+        <Card className="p-3 bg-gradient-to-br from-teal-50 to-cyan-50 border-2 border-teal-300 shadow-md">
+          <h3 className="text-base font-bold text-teal-900 mb-2 flex items-center gap-2">
             🚿 Kúpeľňa
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {/* Sprcha */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Sprchový kút (vyber jednu možnosť):</p>
-              <div className="grid grid-cols-2 gap-2 border-2 border-teal-300 rounded-lg p-2 bg-teal-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Sprchový kút:</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={sprchovyKut === "standard"} onClick={() => setSprchovyKut("standard")} title="Sprcha" subtitle="WC Geberit" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={sprchovyKut === "radaway"} onClick={() => setSprchovyKut("radaway")} title="Sprcha Radaway" subtitle="" price="+ 646 €" isPriced={true} />
               </div>
@@ -490,8 +497,8 @@ export default function KonfiguratorLyon() {
 
             {/* Batéria */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Batéria (vyber jednu možnosť):</p>
-              <div className="grid grid-cols-2 gap-2 border-2 border-teal-300 rounded-lg p-2 bg-teal-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Batéria:</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={bateria === "standard"} onClick={() => setBateria("standard")} title="Batéria štandard" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={bateria === "grohe"} onClick={() => setBateria("grohe")} title="Grohe" subtitle="" price="+ 139 €" isPriced={true} />
               </div>
