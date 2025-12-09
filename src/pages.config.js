@@ -33,6 +33,7 @@ import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
 import AdminBlog from './pages/AdminBlog';
 import AdminSEOBlog from './pages/AdminSEOBlog';
+import AdminGenerujObrazkyBlogov from './pages/AdminGenerujObrazkyBlogov';
 import __Layout from './Layout.jsx';
 
 
@@ -72,6 +73,7 @@ export const PAGES = {
     "BlogDetail": BlogDetail,
     "AdminBlog": AdminBlog,
     "AdminSEOBlog": AdminSEOBlog,
+    "AdminGenerujObrazkyBlogov": AdminGenerujObrazkyBlogov,
 }
 
 export const pagesConfig = {
