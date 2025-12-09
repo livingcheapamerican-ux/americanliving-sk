@@ -27,6 +27,7 @@ import KonfiguratorBarn48 from "../components/KonfiguratorBarn48";
 import KonfiguratorBarnDouble from "../components/KonfiguratorBarnDouble";
 import KonfiguratorFlatSmall from "../components/KonfiguratorFlatSmall";
 import LyonKonfiguratorWrapper from "../components/LyonKonfiguratorWrapper";
+import LyonSummaryPanelStandalone from "../components/LyonSummaryPanelStandalone";
 
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
@@ -96,6 +97,39 @@ export default function DetailDomu() {
   const [swipeStart, setSwipeStart] = useState(null);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [wizardKey, setWizardKey] = useState(0);
+
+  // State pre Lyon konfigurátor
+  const [lyonUcel, setLyonUcel] = useState("chata");
+  const [lyonIzolaciaStien, setLyonIzolaciaStien] = useState("150mm");
+  const [lyonIzolaciaPodlahy, setLyonIzolaciaPodlahy] = useState("150mm");
+  const [lyonIzolaciaStropu, setLyonIzolaciaStropu] = useState("150mm");
+  const [lyonTepelneCerpadlo, setLyonTepelneCerpadlo] = useState("nie");
+  const [lyonRekuperacia, setLyonRekuperacia] = useState("nie");
+  const [lyonPodlahovoKurenie, setLyonPodlahovoKurenie] = useState(false);
+  const [lyonPripravaNaKrb, setLyonPripravaNaKrb] = useState(false);
+  const [lyonOchranaKachle, setLyonOchranaKachle] = useState(false);
+  const [lyonFasada, setLyonFasada] = useState("drevo_smrek");
+  const [lyonStrecha, setLyonStrecha] = useState("korugovan_plech");
+  const [lyonOdkvapy, setLyonOdkvapy] = useState("nie");
+  const [lyonOkna, setLyonOkna] = useState("biele");
+  const [lyonVchodoveDvere, setLyonVchodoveDvere] = useState("plastove");
+  const [lyonObkladStien, setLyonObkladStien] = useState("smrek_8cm");
+  const [lyonPodlaha, setLyonPodlaha] = useState("laminat");
+  const [lyonInterieroveDvere, setLyonInterieroveDvere] = useState("kridlove");
+  const [lyonElektro, setLyonElektro] = useState("eu");
+  const [lyonBleskozvod, setLyonBleskozvod] = useState(false);
+  const [lyonPrepat, setLyonPrepat] = useState(false);
+  const [lyonSprchovyKut, setLyonSprchovyKut] = useState("standard");
+  const [lyonVana, setLyonVana] = useState(false);
+  const [lyonBateria, setLyonBateria] = useState("standard");
+  const [lyonSkrinka, setLyonSkrinka] = useState(false);
+  const [lyonStropKupelna, setLyonStropKupelna] = useState("drevo");
+  const [lyonInziniering, setLyonInziniering] = useState(false);
+  const [lyonProjektACertifikacia, setLyonProjektACertifikacia] = useState(false);
+  const [lyonRevizia, setLyonRevizia] = useState(true);
+  const [lyonZaklady, setLyonZaklady] = useState("bez");
+  const [lyonMontaz, setLyonMontaz] = useState(false);
+  const [lyonDoprava, setLyonDoprava] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -1115,7 +1149,70 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Lyon (Ticab house) */}
             {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
-              <LyonKonfiguratorWrapper />
+              <LyonKonfiguratorWrapper
+                ucel={lyonUcel}
+                setUcel={setLyonUcel}
+                izolaciaStien={lyonIzolaciaStien}
+                setIzolaciaStien={setLyonIzolaciaStien}
+                izolaciaPodlahy={lyonIzolaciaPodlahy}
+                setIzolaciaPodlahy={setLyonIzolaciaPodlahy}
+                izolaciaStropu={lyonIzolaciaStropu}
+                setIzolaciaStropu={setLyonIzolaciaStropu}
+                tepelneCerpadlo={lyonTepelneCerpadlo}
+                setTepelneCerpadlo={setLyonTepelneCerpadlo}
+                rekuperacia={lyonRekuperacia}
+                setRekuperacia={setLyonRekuperacia}
+                podlahovoKurenie={lyonPodlahovoKurenie}
+                setPodlahovoKurenie={setLyonPodlahovoKurenie}
+                pripravaNaKrb={lyonPripravaNaKrb}
+                setPripravaNaKrb={setLyonPripravaNaKrb}
+                ochranaKachle={lyonOchranaKachle}
+                setOchranaKachle={setLyonOchranaKachle}
+                fasada={lyonFasada}
+                setFasada={setLyonFasada}
+                strecha={lyonStrecha}
+                setStrecha={setLyonStrecha}
+                odkvapy={lyonOdkvapy}
+                setOdkvapy={setLyonOdkvapy}
+                okna={lyonOkna}
+                setOkna={setLyonOkna}
+                vchodoveDvere={lyonVchodoveDvere}
+                setVchodoveDvere={setLyonVchodoveDvere}
+                obkladStien={lyonObkladStien}
+                setObkladStien={setLyonObkladStien}
+                podlaha={lyonPodlaha}
+                setPodlaha={setLyonPodlaha}
+                interieroveDvere={lyonInterieroveDvere}
+                setInterieroveDvere={setLyonInterieroveDvere}
+                elektro={lyonElektro}
+                setElektro={setLyonElektro}
+                bleskozvod={lyonBleskozvod}
+                setBleskozvod={setLyonBleskozvod}
+                prepat={lyonPrepat}
+                setPrepat={setLyonPrepat}
+                sprchovyKut={lyonSprchovyKut}
+                setSprchovyKut={setLyonSprchovyKut}
+                vana={lyonVana}
+                setVana={setLyonVana}
+                bateria={lyonBateria}
+                setBateria={setLyonBateria}
+                skrinka={lyonSkrinka}
+                setSkrinka={setLyonSkrinka}
+                stropKupelna={lyonStropKupelna}
+                setStropKupelna={setLyonStropKupelna}
+                inziniering={lyonInziniering}
+                setInziniering={setLyonInziniering}
+                projektACertifikacia={lyonProjektACertifikacia}
+                setProjektACertifikacia={setLyonProjektACertifikacia}
+                revizia={lyonRevizia}
+                setRevizia={setLyonRevizia}
+                zaklady={lyonZaklady}
+                setZaklady={setLyonZaklady}
+                montaz={lyonMontaz}
+                setMontaz={setLyonMontaz}
+                doprava={lyonDoprava}
+                setDoprava={setLyonDoprava}
+              />
             )}
 
             {/* Rozmery - presunute z pravej strany */}
@@ -2738,13 +2835,6 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Sidebar pre Lyon konfigurátor - pred kontakt tlačidlami */}
-            {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
-              <div className="lg:sticky lg:top-20 z-10 self-start mb-4" style={{ position: 'sticky', top: '80px' }}>
-                <LyonKonfiguratorWrapper />
-              </div>
-            )}
-
             {/* CTA Buttons */}
             <div className="space-y-2 sm:space-y-3">
 
@@ -2762,6 +2852,108 @@ export default function DetailDomu() {
               </a>
 
             </div>
+
+            {/* Sidebar pre Lyon konfigurátor - pod kontakt tlačidlami */}
+            {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+                <LyonSummaryPanelStandalone
+                  ucel={lyonUcel}
+                  izolaciaStien={lyonIzolaciaStien}
+                  izolaciaPodlahy={lyonIzolaciaPodlahy}
+                  izolaciaStropu={lyonIzolaciaStropu}
+                  tepelneCerpadlo={lyonTepelneCerpadlo}
+                  rekuperacia={lyonRekuperacia}
+                  podlahovoKurenie={lyonPodlahovoKurenie}
+                  pripravaNaKrb={lyonPripravaNaKrb}
+                  ochranaKachle={lyonOchranaKachle}
+                  fasada={lyonFasada}
+                  strecha={lyonStrecha}
+                  odkvapy={lyonOdkvapy}
+                  okna={lyonOkna}
+                  vchodoveDvere={lyonVchodoveDvere}
+                  obkladStien={lyonObkladStien}
+                  interieroveDvere={lyonInterieroveDvere}
+                  elektro={lyonElektro}
+                  bleskozvod={lyonBleskozvod}
+                  prepat={lyonPrepat}
+                  sprchovyKut={lyonSprchovyKut}
+                  vana={lyonVana}
+                  bateria={lyonBateria}
+                  skrinka={lyonSkrinka}
+                  stropKupelna={lyonStropKupelna}
+                  inziniering={lyonInziniering}
+                  projektACertifikacia={lyonProjektACertifikacia}
+                  revizia={lyonRevizia}
+                  zaklady={lyonZaklady}
+                  montaz={lyonMontaz}
+                  doprava={lyonDoprava}
+                  totalPrice={(() => {
+                    const BASE_PRICE = 73431;
+                    const CENY = {
+                      izolacia_stien: { "200mm": 1799.16, "250mm": 1558.17 },
+                      izolacia_podlahy: { "200mm": 334.08 },
+                      izolacia_stropu: { "200mm": 271.44 },
+                      tepelne_cerpadlo: { ano: 2889.27 },
+                      rekuperacia: { ano: 1155.36 },
+                      podlahove_kurenie: 2253.30,
+                      pripravaKrb: 578.55,
+                      ochranaKachle: 1279.77,
+                      fasada: { omietka: 1580.79, smrekovec: 3349.50, falcovane: 4953.78, thermowood: 6677.25 },
+                      strecha: { falcovane: 3227.70 },
+                      odkvapy: 1502.49,
+                      dvere: { kovove: 278.40 },
+                      obklad: { smrek_bez_uzlov: 0, sadrokarton_tapeta: 7855, osb_panel: 5279 },
+                      dvere_posuvne: 427.17,
+                      elektro: { cz: 460.23, ge: 1583.40 },
+                      bleskozvod: 856.08,
+                      prepat: 311.46,
+                      sprchovyKut: 645.54,
+                      vana: 501.12,
+                      bateria: 139.20,
+                      skrinka: 434.13,
+                      strop_kupelna: { sadrokarton: 0 },
+                      inziniering: 2773.56,
+                      projektACertifikacia: 3745.35,
+                      revizia: 1605.15,
+                      zaklady: { vruty: 4494.42, patky: 2568.24, pasove: 11825.04 },
+                      montaz: 4805.88,
+                      doprava: 8927.94
+                    };
+                    let total = BASE_PRICE;
+                    total += CENY.izolacia_stien[lyonIzolaciaStien] || 0;
+                    total += CENY.izolacia_podlahy[lyonIzolaciaPodlahy] || 0;
+                    total += CENY.izolacia_stropu[lyonIzolaciaStropu] || 0;
+                    if (lyonTepelneCerpadlo === "ano") total += CENY.tepelne_cerpadlo.ano;
+                    if (lyonRekuperacia === "ano") total += CENY.rekuperacia.ano;
+                    if (lyonPodlahovoKurenie) total += CENY.podlahove_kurenie;
+                    if (lyonPripravaNaKrb) total += CENY.pripravaKrb;
+                    if (lyonOchranaKachle) total += CENY.ochranaKachle;
+                    total += CENY.fasada[lyonFasada] || 0;
+                    total += CENY.strecha[lyonStrecha] || 0;
+                    if (lyonOdkvapy === "ano") total += CENY.odkvapy;
+                    total += CENY.dvere[lyonVchodoveDvere] || 0;
+                    total += CENY.obklad[lyonObkladStien] || 0;
+                    if (lyonInterieroveDvere === "posuvne") total += CENY.dvere_posuvne;
+                    total += CENY.elektro[lyonElektro] || 0;
+                    if (lyonBleskozvod) total += CENY.bleskozvod;
+                    if (lyonPrepat) total += CENY.prepat;
+                    if (lyonSprchovyKut === "radaway") total += CENY.sprchovyKut;
+                    if (lyonVana) total += CENY.vana;
+                    if (lyonBateria === "grohe") total += CENY.bateria;
+                    if (lyonSkrinka) total += CENY.skrinka;
+                    total += CENY.strop_kupelna[lyonStropKupelna] || 0;
+                    if (lyonInziniering) total += CENY.inziniering;
+                    if (lyonProjektACertifikacia) total += CENY.projektACertifikacia;
+                    if (lyonRevizia) total += CENY.revizia;
+                    total += CENY.zaklady[lyonZaklady] || 0;
+                    if (lyonMontaz) total += CENY.montaz;
+                    if (lyonDoprava) total += CENY.doprava;
+                    return total;
+                  })()}
+                  onSubmit={() => alert("Odoslanie dopytu - funkcia bude implementovaná")}
+                />
+              </div>
+            )}
           </motion.div>
         </div>
       </div>
