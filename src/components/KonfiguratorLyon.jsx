@@ -5,6 +5,193 @@ import { Badge } from "@/components/ui/badge";
 import { Sparkles, Home, Send } from "lucide-react";
 import { motion } from "framer-motion";
 
+// Exportovaný Summary Panel pre použitie v LyonKonfiguratorWrapper
+export function LyonSummaryPanel({ 
+  ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu, 
+  tepelneCerpadlo, rekuperacia, podlahovoKurenie, pripravaNaKrb, ochranaKachle,
+  fasada, strecha, odkvapy, okna, vchodoveDvere, obkladStien, interieroveDvere,
+  elektro, bleskozvod, prepat, sprchovyKut, vana, bateria, skrinka, stropKupelna,
+  inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
+  totalPrice, formatPrice, onSubmit
+}) {
+  return (
+    <Card className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl border-2 border-slate-700 overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 border-b border-slate-700">
+        <div>
+          <h3 className="text-lg font-bold flex items-center gap-2">
+            <Home className="w-5 h-5" />
+            Vaša konfigurácia
+          </h3>
+          <p className="text-xs text-blue-100 mt-1">Lyon 50m²</p>
+        </div>
+      </div>
+
+      {/* Scrollable Content */}
+      <div className="overflow-y-auto p-4 space-y-4 max-h-[calc(100vh-200px)]">
+        {/* Účel */}
+        {ucel && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+            <p className="text-xs font-semibold text-slate-400 mb-1">ÚČEL STAVBY</p>
+            <p className="text-sm font-bold text-white">
+              {ucel === "chata" ? "Rekreačná stavba" : "Rodinný dom A0"}
+            </p>
+          </div>
+        )}
+
+        {/* Izolácia */}
+        {(izolaciaStien !== "150mm" || izolaciaPodlahy !== "150mm" || izolaciaStropu !== "150mm") && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+            <p className="text-xs font-semibold text-slate-400 mb-2">IZOLÁCIA</p>
+            <div className="space-y-1 text-xs">
+              {izolaciaStien !== "150mm" && <p className="text-slate-300">• Steny {izolaciaStien}</p>}
+              {izolaciaPodlahy !== "150mm" && <p className="text-slate-300">• Podlaha {izolaciaPodlahy}</p>}
+              {izolaciaStropu !== "150mm" && <p className="text-slate-300">• Strop {izolaciaStropu}</p>}
+            </div>
+          </div>
+        )}
+
+        {/* Vykurovanie */}
+        {(tepelneCerpadlo === "ano" || rekuperacia === "ano" || podlahovoKurenie || pripravaNaKrb || ochranaKachle) && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+            <p className="text-xs font-semibold text-slate-400 mb-2">VYKUROVANIE</p>
+            <div className="space-y-1 text-xs">
+              {tepelneCerpadlo === "ano" && <p className="text-slate-300">• Tepelné čerpadlo</p>}
+              {rekuperacia === "ano" && <p className="text-slate-300">• Rekuperácia</p>}
+              {podlahovoKurenie && <p className="text-slate-300">• Podlahové kúrenie</p>}
+              {pripravaNaKrb && <p className="text-slate-300">• Príprava na krb</p>}
+              {ochranaKachle && <p className="text-slate-300">• Ochrana na kachle</p>}
+            </div>
+          </div>
+        )}
+
+        {/* Fasáda */}
+        {fasada !== "drevo_smrek" && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+            <p className="text-xs font-semibold text-slate-400 mb-1">FASÁDA</p>
+            <p className="text-sm text-slate-300">
+              {fasada === "omietka" ? "Šúchaná omietka" : 
+               fasada === "smrekovec" ? "Smrekovec" :
+               fasada === "falcovane" ? "Falcované panely" : "Thermowood"}
+            </p>
+          </div>
+        )}
+
+        {/* Strecha */}
+        {(strecha !== "korugovan_plech" || odkvapy === "ano") && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+            <p className="text-xs font-semibold text-slate-400 mb-2">STRECHA</p>
+            <div className="space-y-1 text-xs">
+              {strecha !== "korugovan_plech" && <p className="text-slate-300">• Falcované panely</p>}
+              {odkvapy === "ano" && <p className="text-slate-300">• Odkvapy</p>}
+            </div>
+          </div>
+        )}
+
+        {/* Okná a dvere */}
+        {(okna !== "biele" || vchodoveDvere !== "plastove") && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+            <p className="text-xs font-semibold text-slate-400 mb-2">OKNÁ A DVERE</p>
+            <div className="space-y-1 text-xs">
+              {okna !== "biele" && <p className="text-slate-300">• Okná {okna === "antracit" ? "antracit" : "hnedé"}</p>}
+              {vchodoveDvere !== "plastove" && <p className="text-slate-300">• Kovové dvere</p>}
+            </div>
+          </div>
+        )}
+
+        {/* Interiér */}
+        {(obkladStien !== "smrek_8cm" || interieroveDvere !== "kridlove") && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+            <p className="text-xs font-semibold text-slate-400 mb-2">INTERIÉR</p>
+            <div className="space-y-1 text-xs">
+              {obkladStien !== "smrek_8cm" && (
+                <p className="text-slate-300">
+                  • {obkladStien === "smrek_bez_uzlov" ? "Smrek bez uzlov" :
+                     obkladStien === "sadrokarton_tapeta" ? "Sadrokarton + tapeta" : "OSB panel"}
+                </p>
+              )}
+              {interieroveDvere !== "kridlove" && <p className="text-slate-300">• Posuvné dvere</p>}
+            </div>
+          </div>
+        )}
+
+        {/* Elektro */}
+        {(elektro !== "eu" || bleskozvod || prepat) && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+            <p className="text-xs font-semibold text-slate-400 mb-2">ELEKTROINŠTALÁCIA</p>
+            <div className="space-y-1 text-xs">
+              {elektro === "cz" && <p className="text-slate-300">• CZ/SK štandard</p>}
+              {elektro === "ge" && <p className="text-slate-300 flex items-center gap-1">• GE štandard <span className="text-green-400">⚡A0</span></p>}
+              {bleskozvod && <p className="text-slate-300 flex items-center gap-1">• Bleskozvod <span className="text-green-400">⚡A0</span></p>}
+              {prepat && <p className="text-slate-300 flex items-center gap-1">• Prepäťová ochrana <span className="text-green-400">⚡A0</span></p>}
+            </div>
+          </div>
+        )}
+
+        {/* Kúpeľňa */}
+        {(sprchovyKut !== "standard" || bateria !== "standard" || vana || skrinka || stropKupelna !== "drevo") && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+            <p className="text-xs font-semibold text-slate-400 mb-2">KÚPEĽŇA</p>
+            <div className="space-y-1 text-xs">
+              {sprchovyKut !== "standard" && <p className="text-slate-300">• Sprcha Radaway</p>}
+              {bateria !== "standard" && <p className="text-slate-300">• Batéria Grohe</p>}
+              {stropKupelna !== "drevo" && <p className="text-slate-300">• Sadrokartónový strop</p>}
+              {vana && <p className="text-slate-300">• Vaňa</p>}
+              {skrinka && <p className="text-slate-300">• Skrinka</p>}
+            </div>
+          </div>
+        )}
+
+        {/* Základy */}
+        {zaklady !== "bez" && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+            <p className="text-xs font-semibold text-slate-400 mb-1">ZÁKLADY</p>
+            <p className="text-sm text-slate-300">
+              {zaklady === "vruty" ? "Zemné vruty" :
+               zaklady === "patky" ? "Betónové pätky" : "Pásové betónové"}
+            </p>
+          </div>
+        )}
+
+        {/* Služby */}
+        {(inziniering || projektACertifikacia || revizia) && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+            <p className="text-xs font-semibold text-slate-400 mb-2">SLUŽBY</p>
+            <div className="space-y-1 text-xs">
+              {inziniering && <p className="text-slate-300 flex items-center gap-1">• Inžiniering <span className="text-green-400">⚡A0</span></p>}
+              {projektACertifikacia && <p className="text-slate-300 flex items-center gap-1">• Projekt + Certifikácia <span className="text-green-400">⚡A0</span></p>}
+              {revizia && <p className="text-slate-300">• Revízna dokumentácia</p>}
+            </div>
+          </div>
+        )}
+
+        {/* Realizácia */}
+        {(montaz || doprava) && (
+          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+            <p className="text-xs font-semibold text-slate-400 mb-2">REALIZÁCIA</p>
+            <div className="space-y-1 text-xs">
+              {montaz && <p className="text-slate-300">• Montáž domu</p>}
+              {doprava && <p className="text-slate-300">• Doprava modulov</p>}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Total Price */}
+      <div className="border-t-2 border-slate-700 bg-gradient-to-r from-blue-600 to-indigo-600 p-4">
+        <p className="text-xs text-blue-100 mb-1">Celková cena s DPH</p>
+        <p className="text-2xl font-black text-white">{formatPrice(totalPrice)}</p>
+        <div className="mt-3">
+          <Button onClick={onSubmit} className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold shadow-lg">
+            <Send className="w-4 h-4 mr-2" />
+            Odoslať dopyt
+          </Button>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
 const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isIncluded, hideIncludedMessage }) => {
   return (
     <motion.div
@@ -52,44 +239,119 @@ const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isInc
   );
 };
 
-export default function KonfiguratorLyon() {
+export default function KonfiguratorLyon({ 
+  ucel, setUcel, izolaciaStien, setIzolaciaStien, izolaciaPodlahy, setIzolaciaPodlahy,
+  izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia,
+  podlahovoKurenie, setPodlahovoKurenie, pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle,
+  fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna,
+  vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha,
+  interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod,
+  prepat, setPrepat, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria,
+  skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering,
+  projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady,
+  montaz, setMontaz, doprava, setDoprava
+} = {}) {
   const BASE_PRICE = 73431;
   
-
+  // State - použiť z props ak sú dostupné, inak lokálny state
+  const [ucelLocal, setUcelLocal] = useState("chata");
+  const [kolaudaciaLocal, setKolaudaciaLocal] = useState("bez_a0");
+  const [izolaciaStienLocal, setIzolaciaStienLocal] = useState("150mm");
+  const [izolaciaPodlahyLocal, setIzolaciaPodlahyLocal] = useState("150mm");
+  const [izolaciaStropuLocal, setIzolaciaStropuLocal] = useState("150mm");
+  const [tepelneCerpadloLocal, setTepelneCerpadloLocal] = useState("nie");
+  const [rekuperaciaLocal, setRekuperaciaLocal] = useState("nie");
+  const [podlahovoKurenieLocal, setPodlahovoKurenieLocal] = useState(false);
+  const [pripravaNaKrbLocal, setPripravaNaKrbLocal] = useState(false);
+  const [ochranaKachleLocal, setOchranaKachleLocal] = useState(false);
+  const [fasadaLocal, setFasadaLocal] = useState("drevo_smrek");
+  const [strechaLocal, setStrechaLocal] = useState("korugovan_plech");
+  const [odkvapyLocal, setOdkvapyLocal] = useState("nie");
+  const [oknaLocal, setOknaLocal] = useState("biele");
+  const [vchodoveDvereLocal, setVchodoveDvereLocal] = useState("plastove");
+  const [obkladStienLocal, setObkladStienLocal] = useState("smrek_8cm");
+  const [podlahaLocal, setPodlahaLocal] = useState("laminat");
+  const [interieroveDvereLocal, setInterieroveDvereLocal] = useState("kridlove");
+  const [elektroLocal, setElektroLocal] = useState("eu");
+  const [bleskozvod Local, setBleskozvod Local] = useState(false);
+  const [prepatLocal, setPrepatLocal] = useState(false);
+  const [sprchovyKutLocal, setSprchovyKutLocal] = useState("standard");
+  const [vanaLocal, setVanaLocal] = useState(false);
+  const [bateriaLocal, setBateriaLocal] = useState("standard");
+  const [skrinkaLocal, setSkrinkaLocal] = useState(false);
+  const [stropKupelnaLocal, setStropKupelnaLocal] = useState("drevo");
+  const [inzinieringLocal, setInzinieringLocal] = useState(false);
+  const [projektACertifikaciaLocal, setProjektACertifikaciaLocal] = useState(false);
+  const [reviziaLocal, setReviziaLocal] = useState(true);
+  const [zakladyLocal, setZakladyLocal] = useState("bez");
+  const [montazLocal, setMontazLocal] = useState(false);
+  const [dopravaLocal, setDopravaLocal] = useState(false);
   
-  // State
-  const [ucel, setUcel] = useState("chata");
-  const [kolaudacia, setKolaudacia] = useState("bez_a0");
-  const [izolaciaStien, setIzolaciaStien] = useState("150mm");
-  const [izolaciaPodlahy, setIzolaciaPodlahy] = useState("150mm");
-  const [izolaciaStropu, setIzolaciaStropu] = useState("150mm");
-  const [tepelneCerpadlo, setTepelneCerpadlo] = useState("nie");
-  const [rekuperacia, setRekuperacia] = useState("nie");
-  const [podlahovoKurenie, setPodlahovoKurenie] = useState(false);
-  const [pripravaNaKrb, setPripravaNaKrb] = useState(false);
-  const [ochranaKachle, setOchranaKachle] = useState(false);
-  const [fasada, setFasada] = useState("drevo_smrek");
-  const [strecha, setStrecha] = useState("korugovan_plech");
-  const [odkvapy, setOdkvapy] = useState("nie");
-  const [okna, setOkna] = useState("biele");
-  const [vchodoveDvere, setVchodoveDvere] = useState("plastove");
-  const [obkladStien, setObkladStien] = useState("smrek_8cm");
-  const [podlaha, setPodlaha] = useState("laminat");
-  const [interieroveDvere, setInterieroveDvere] = useState("kridlove");
-  const [elektro, setElektro] = useState("eu");
-  const [bleskozvod, setBleskozvod] = useState(false);
-  const [prepat, setPrepat] = useState(false);
-  const [sprchovyKut, setSprchovyKut] = useState("standard");
-  const [vana, setVana] = useState(false);
-  const [bateria, setBateria] = useState("standard");
-  const [skrinka, setSkrinka] = useState(false);
-  const [stropKupelna, setStropKupelna] = useState("drevo");
-  const [inziniering, setInziniering] = useState(false);
-  const [projektACertifikacia, setProjektACertifikacia] = useState(false);
-  const [revizia, setRevizia] = useState(true);
-  const [zaklady, setZaklady] = useState("bez");
-  const [montaz, setMontaz] = useState(false);
-  const [doprava, setDoprava] = useState(false);
+  // Použiť props ak sú dostupné, inak lokálny state
+  const finalUcel = ucel !== undefined ? ucel : ucelLocal;
+  const finalSetUcel = setUcel || setUcelLocal;
+  const finalKolaudacia = kolaudacia !== undefined ? kolaudacia : kolaudaciaLocal;
+  const finalSetKolaudacia = setKolaudacia || setKolaudaciaLocal;
+  const finalIzolaciaStien = izolaciaStien !== undefined ? izolaciaStien : izolaciaStienLocal;
+  const finalSetIzolaciaStien = setIzolaciaStien || setIzolaciaStienLocal;
+  const finalIzolaciaPodlahy = izolaciaPodlahy !== undefined ? izolaciaPodlahy : izolaciaPodlahyLocal;
+  const finalSetIzolaciaPodlahy = setIzolaciaPodlahy || setIzolaciaPodlahyLocal;
+  const finalIzolaciaStropu = izolaciaStropu !== undefined ? izolaciaStropu : izolaciaStropuLocal;
+  const finalSetIzolaciaStropu = setIzolaciaStropu || setIzolaciaStropuLocal;
+  const finalTepelneCerpadlo = tepelneCerpadlo !== undefined ? tepelneCerpadlo : tepelneCerpadloLocal;
+  const finalSetTepelneCerpadlo = setTepelneCerpadlo || setTepelneCerpadloLocal;
+  const finalRekuperacia = rekuperacia !== undefined ? rekuperacia : rekuperaciaLocal;
+  const finalSetRekuperacia = setRekuperacia || setRekuperaciaLocal;
+  const finalPodlahovoKurenie = podlahovoKurenie !== undefined ? podlahovoKurenie : podlahovoKurenieLocal;
+  const finalSetPodlahovoKurenie = setPodlahovoKurenie || setPodlahovoKurenieLocal;
+  const finalPripravaNaKrb = pripravaNaKrb !== undefined ? pripravaNaKrb : pripravaNaKrbLocal;
+  const finalSetPripravaNaKrb = setPripravaNaKrb || setPripravaNaKrbLocal;
+  const finalOchranaKachle = ochranaKachle !== undefined ? ochranaKachle : ochranaKachleLocal;
+  const finalSetOchranaKachle = setOchranaKachle || setOchranaKachleLocal;
+  const finalFasada = fasada !== undefined ? fasada : fasadaLocal;
+  const finalSetFasada = setFasada || setFasadaLocal;
+  const finalStrecha = strecha !== undefined ? strecha : strechaLocal;
+  const finalSetStrecha = setStrecha || setStrechaLocal;
+  const finalOdkvapy = odkvapy !== undefined ? odkvapy : odkvapyLocal;
+  const finalSetOdkvapy = setOdkvapy || setOdkvapyLocal;
+  const finalOkna = okna !== undefined ? okna : oknaLocal;
+  const finalSetOkna = setOkna || setOknaLocal;
+  const finalVchodoveDvere = vchodoveDvere !== undefined ? vchodoveDvere : vchodoveDvereLocal;
+  const finalSetVchodoveDvere = setVchodoveDvere || setVchodoveDvereLocal;
+  const finalObkladStien = obkladStien !== undefined ? obkladStien : obkladStienLocal;
+  const finalSetObkladStien = setObkladStien || setObkladStienLocal;
+  const finalPodlaha = podlaha !== undefined ? podlaha : podlahaLocal;
+  const finalSetPodlaha = setPodlaha || setPodlahaLocal;
+  const finalInterieroveDvere = interieroveDvere !== undefined ? interieroveDvere : interieroveDvereLocal;
+  const finalSetInterieroveDvere = setInterieroveDvere || setInterieroveDvereLocal;
+  const finalElektro = elektro !== undefined ? elektro : elektroLocal;
+  const finalSetElektro = setElektro || setElektroLocal;
+  const finalBleskozvod = bleskozvod !== undefined ? bleskozvod : bleskozvod Local;
+  const finalSetBleskozvod = setBleskozvod || setBleskozvod Local;
+  const finalPrepat = prepat !== undefined ? prepat : prepatLocal;
+  const finalSetPrepat = setPrepat || setPrepatLocal;
+  const finalSprchovyKut = sprchovyKut !== undefined ? sprchovyKut : sprchovyKutLocal;
+  const finalSetSprchovyKut = setSprchovyKut || setSprchovyKutLocal;
+  const finalVana = vana !== undefined ? vana : vanaLocal;
+  const finalSetVana = setVana || setVanaLocal;
+  const finalBateria = bateria !== undefined ? bateria : bateriaLocal;
+  const finalSetBateria = setBateria || setBateriaLocal;
+  const finalSkrinka = skrinka !== undefined ? skrinka : skrinkaLocal;
+  const finalSetSkrinka = setSkrinka || setSkrinkaLocal;
+  const finalStropKupelna = stropKupelna !== undefined ? stropKupelna : stropKupelnaLocal;
+  const finalSetStropKupelna = setStropKupelna || setStropKupelnaLocal;
+  const finalInziniering = inziniering !== undefined ? inziniering : inzinieringLocal;
+  const finalSetInziniering = setInziniering || setInzinieringLocal;
+  const finalProjektACertifikacia = projektACertifikacia !== undefined ? projektACertifikacia : projektACertifikaciaLocal;
+  const finalSetProjektACertifikacia = setProjektACertifikacia || setProjektACertifikaciaLocal;
+  const finalRevizia = revizia !== undefined ? revizia : reviziaLocal;
+  const finalSetRevizia = setRevizia || setReviziaLocal;
+  const finalZaklady = zaklady !== undefined ? zaklady : zakladyLocal;
+  const finalSetZaklady = setZaklady || setZakladyLocal;
+  const finalMontaz = montaz !== undefined ? montaz : montazLocal;
+  const finalSetMontaz = setMontaz || setMontazLocal;
+  const finalDoprava = doprava !== undefined ? doprava : dopravaLocal;
+  const finalSetDoprava = setDoprava || setDopravaLocal;
 
   const CENY = {
     izolacia_stien: { "200mm": 1799.16, "250mm": 1558.17 },
@@ -122,42 +384,7 @@ export default function KonfiguratorLyon() {
     doprava: 8927.94
   };
 
-  const totalPrice = useMemo(() => {
-    let total = BASE_PRICE;
-    total += CENY.izolacia_stien[izolaciaStien] || 0;
-    total += CENY.izolacia_podlahy[izolaciaPodlahy] || 0;
-    total += CENY.izolacia_stropu[izolaciaStropu] || 0;
-    if (tepelneCerpadlo === "ano") total += CENY.tepelne_cerpadlo.ano;
-    if (rekuperacia === "ano") total += CENY.rekuperacia.ano;
-    if (podlahovoKurenie) total += CENY.podlahove_kurenie;
-    if (pripravaNaKrb) total += CENY.pripravaKrb;
-    if (ochranaKachle) total += CENY.ochranaKachle;
-    total += CENY.fasada[fasada] || 0;
-    total += CENY.strecha[strecha] || 0;
-    if (odkvapy === "ano") total += CENY.odkvapy;
-    total += CENY.dvere[vchodoveDvere] || 0;
-    total += CENY.obklad[obkladStien] || 0;
-    if (interieroveDvere === "posuvne") total += CENY.dvere_posuvne;
-    total += CENY.elektro[elektro] || 0;
-    if (bleskozvod) total += CENY.bleskozvod;
-    if (prepat) total += CENY.prepat;
-    if (sprchovyKut === "radaway") total += CENY.sprchovyKut;
-    if (vana) total += CENY.vana;
-    if (bateria === "grohe") total += CENY.bateria;
-    if (skrinka) total += CENY.skrinka;
-    total += CENY.strop_kupelna[stropKupelna] || 0;
-    if (inziniering) total += CENY.inziniering;
-    if (projektACertifikacia) total += CENY.projektACertifikacia;
-    if (revizia) total += CENY.revizia;
-    total += CENY.zaklady[zaklady] || 0;
-    if (montaz) total += CENY.montaz;
-    if (doprava) total += CENY.doprava;
-    
-    return total;
-  }, [izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia,
-      podlahovoKurenie, pripravaNaKrb, ochranaKachle, fasada, strecha, odkvapy, vchodoveDvere,
-      obkladStien, interieroveDvere, elektro, bleskozvod, prepat, sprchovyKut, vana, bateria,
-      skrinka, stropKupelna, inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava]);
+  // Nič, nepočítame cenu v tomto komponente
 
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
@@ -360,18 +587,18 @@ export default function KonfiguratorLyon() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => {
-              setUcel("chata");
-              setKolaudacia("bez_a0");
-              setIzolaciaStien("150mm");
-              setIzolaciaPodlahy("150mm");
-              setIzolaciaStropu("150mm");
-              setTepelneCerpadlo("nie");
-              setRekuperacia("nie");
-              setInziniering(false);
-              setProjektACertifikacia(false);
+              finalSetUcel("chata");
+              finalSetKolaudacia("bez_a0");
+              finalSetIzolaciaStien("150mm");
+              finalSetIzolaciaPodlahy("150mm");
+              finalSetIzolaciaStropu("150mm");
+              finalSetTepelneCerpadlo("nie");
+              finalSetRekuperacia("nie");
+              finalSetInziniering(false);
+              finalSetProjektACertifikacia(false);
             }}
             className={`p-3 rounded-lg cursor-pointer transition-all border-2 ${
-              ucel === "chata" 
+              finalUcel === "chata" 
                 ? "bg-green-100 border-green-500 shadow-md" 
                 : "bg-white border-gray-300 hover:border-green-400"
             }`}
