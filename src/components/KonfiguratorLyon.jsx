@@ -160,187 +160,10 @@ export default function KonfiguratorLyon() {
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
   return (
-    <div className="w-full max-w-7xl mx-auto flex gap-6">
-      {/* Floating Summary Panel - Ľavá strana */}
-      <div className="hidden xl:block w-80 flex-shrink-0">
-        <div className="sticky top-20">
-          <Card className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl border-2 border-slate-700 overflow-hidden">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 border-b border-slate-700">
-              <h3 className="text-lg font-bold flex items-center gap-2">
-                <Home className="w-5 h-5" />
-                Vaša konfigurácia
-              </h3>
-              <p className="text-xs text-blue-100 mt-1">Lyon 50m²</p>
-            </div>
-
-            {/* Scrollable Content */}
-            <div className="max-h-[calc(100vh-300px)] overflow-y-auto p-4 space-y-4">
-              {/* Účel */}
-              {ucel && (
-                <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-                  <p className="text-xs font-semibold text-slate-400 mb-1">ÚČEL STAVBY</p>
-                  <p className="text-sm font-bold text-white">
-                    {ucel === "chata" ? "Rekreačná stavba" : "Rodinný dom A0"}
-                  </p>
-                </div>
-              )}
-
-              {/* Izolácia */}
-              {(izolaciaStien !== "150mm" || izolaciaPodlahy !== "150mm" || izolaciaStropu !== "150mm") && (
-                <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-                  <p className="text-xs font-semibold text-slate-400 mb-2">IZOLÁCIA</p>
-                  <div className="space-y-1 text-xs">
-                    {izolaciaStien !== "150mm" && <p className="text-slate-300">• Steny {izolaciaStien}</p>}
-                    {izolaciaPodlahy !== "150mm" && <p className="text-slate-300">• Podlaha {izolaciaPodlahy}</p>}
-                    {izolaciaStropu !== "150mm" && <p className="text-slate-300">• Strop {izolaciaStropu}</p>}
-                  </div>
-                </div>
-              )}
-
-              {/* Vykurovanie */}
-              {(tepelneCerpadlo === "ano" || rekuperacia === "ano" || podlahovoKurenie || pripravaNaKrb || ochranaKachle) && (
-                <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-                  <p className="text-xs font-semibold text-slate-400 mb-2">VYKUROVANIE</p>
-                  <div className="space-y-1 text-xs">
-                    {tepelneCerpadlo === "ano" && <p className="text-slate-300">• Tepelné čerpadlo</p>}
-                    {rekuperacia === "ano" && <p className="text-slate-300">• Rekuperácia</p>}
-                    {podlahovoKurenie && <p className="text-slate-300">• Podlahové kúrenie</p>}
-                    {pripravaNaKrb && <p className="text-slate-300">• Príprava na krb</p>}
-                    {ochranaKachle && <p className="text-slate-300">• Ochrana na kachle</p>}
-                  </div>
-                </div>
-              )}
-
-              {/* Fasáda */}
-              {fasada !== "drevo_smrek" && (
-                <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-                  <p className="text-xs font-semibold text-slate-400 mb-1">FASÁDA</p>
-                  <p className="text-sm text-slate-300">
-                    {fasada === "omietka" ? "Šúchaná omietka" : 
-                     fasada === "smrekovec" ? "Smrekovec" :
-                     fasada === "falcovane" ? "Falcované panely" : "Thermowood"}
-                  </p>
-                </div>
-              )}
-
-              {/* Strecha */}
-              {(strecha !== "korugovan_plech" || odkvapy === "ano") && (
-                <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-                  <p className="text-xs font-semibold text-slate-400 mb-2">STRECHA</p>
-                  <div className="space-y-1 text-xs">
-                    {strecha !== "korugovan_plech" && <p className="text-slate-300">• Falcované panely</p>}
-                    {odkvapy === "ano" && <p className="text-slate-300">• Odkvapy</p>}
-                  </div>
-                </div>
-              )}
-
-              {/* Okná a dvere */}
-              {(okna !== "biele" || vchodoveDvere !== "plastove") && (
-                <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-                  <p className="text-xs font-semibold text-slate-400 mb-2">OKNÁ A DVERE</p>
-                  <div className="space-y-1 text-xs">
-                    {okna !== "biele" && <p className="text-slate-300">• Okná {okna === "antracit" ? "antracit" : "hnedé"}</p>}
-                    {vchodoveDvere !== "plastove" && <p className="text-slate-300">• Kovové dvere</p>}
-                  </div>
-                </div>
-              )}
-
-              {/* Interiér */}
-              {(obkladStien !== "smrek_8cm" || interieroveDvere !== "kridlove") && (
-                <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-                  <p className="text-xs font-semibold text-slate-400 mb-2">INTERIÉR</p>
-                  <div className="space-y-1 text-xs">
-                    {obkladStien !== "smrek_8cm" && (
-                      <p className="text-slate-300">
-                        • {obkladStien === "smrek_bez_uzlov" ? "Smrek bez uzlov" :
-                           obkladStien === "sadrokarton_tapeta" ? "Sadrokarton + tapeta" : "OSB panel"}
-                      </p>
-                    )}
-                    {interieroveDvere !== "kridlove" && <p className="text-slate-300">• Posuvné dvere</p>}
-                  </div>
-                </div>
-              )}
-
-              {/* Elektro */}
-              {(elektro !== "eu" || bleskozvod || prepat) && (
-                <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-                  <p className="text-xs font-semibold text-slate-400 mb-2">ELEKTROINŠTALÁCIA</p>
-                  <div className="space-y-1 text-xs">
-                    {elektro === "cz" && <p className="text-slate-300">• CZ/SK štandard</p>}
-                    {elektro === "ge" && <p className="text-slate-300 flex items-center gap-1">• GE štandard <span className="text-green-400">⚡A0</span></p>}
-                    {bleskozvod && <p className="text-slate-300 flex items-center gap-1">• Bleskozvod <span className="text-green-400">⚡A0</span></p>}
-                    {prepat && <p className="text-slate-300 flex items-center gap-1">• Prepäťová ochrana <span className="text-green-400">⚡A0</span></p>}
-                  </div>
-                </div>
-              )}
-
-              {/* Kúpeľňa */}
-              {(sprchovyKut !== "standard" || bateria !== "standard" || vana || skrinka || stropKupelna !== "drevo") && (
-                <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-                  <p className="text-xs font-semibold text-slate-400 mb-2">KÚPEĽŇA</p>
-                  <div className="space-y-1 text-xs">
-                    {sprchovyKut !== "standard" && <p className="text-slate-300">• Sprcha Radaway</p>}
-                    {bateria !== "standard" && <p className="text-slate-300">• Batéria Grohe</p>}
-                    {stropKupelna !== "drevo" && <p className="text-slate-300">• Sadrokartónový strop</p>}
-                    {vana && <p className="text-slate-300">• Vaňa</p>}
-                    {skrinka && <p className="text-slate-300">• Skrinka</p>}
-                  </div>
-                </div>
-              )}
-
-              {/* Základy */}
-              {zaklady !== "bez" && (
-                <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-                  <p className="text-xs font-semibold text-slate-400 mb-1">ZÁKLADY</p>
-                  <p className="text-sm text-slate-300">
-                    {zaklady === "vruty" ? "Zemné vruty" :
-                     zaklady === "patky" ? "Betónové pätky" : "Pásové betónové"}
-                  </p>
-                </div>
-              )}
-
-              {/* Služby */}
-              {(inziniering || projektACertifikacia || revizia) && (
-                <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-                  <p className="text-xs font-semibold text-slate-400 mb-2">SLUŽBY</p>
-                  <div className="space-y-1 text-xs">
-                    {inziniering && <p className="text-slate-300 flex items-center gap-1">• Inžiniering <span className="text-green-400">⚡A0</span></p>}
-                    {projektACertifikacia && <p className="text-slate-300 flex items-center gap-1">• Projekt + Certifikácia <span className="text-green-400">⚡A0</span></p>}
-                    {revizia && <p className="text-slate-300">• Revízna dokumentácia</p>}
-                  </div>
-                </div>
-              )}
-
-              {/* Realizácia */}
-              {(montaz || doprava) && (
-                <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-                  <p className="text-xs font-semibold text-slate-400 mb-2">REALIZÁCIA</p>
-                  <div className="space-y-1 text-xs">
-                    {montaz && <p className="text-slate-300">• Montáž domu</p>}
-                    {doprava && <p className="text-slate-300">• Doprava modulov</p>}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Total Price */}
-            <div className="border-t-2 border-slate-700 bg-gradient-to-r from-blue-600 to-indigo-600 p-4">
-              <p className="text-xs text-blue-100 mb-1">Celková cena s DPH</p>
-              <p className="text-2xl font-black text-white">{formatPrice(totalPrice)}</p>
-              <div className="mt-3">
-                <Button className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold shadow-lg">
-                  <Send className="w-4 h-4 mr-2" />
-                  Odoslať dopyt
-                </Button>
-              </div>
-            </div>
-          </Card>
-        </div>
-      </div>
-
-      {/* Main Content - Pravá strana */}
+    <div className="w-full max-w-7xl mx-auto">
+      {/* Main Content */}
       <div className="flex-1 min-w-0">
+
       {/* Účel stavby - kompaktnejší */}
       <Card className="p-3 sm:p-4 mb-3 bg-gradient-to-br from-blue-50 via-white to-indigo-50 border-2 border-blue-200 shadow-lg">
         <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
@@ -442,6 +265,205 @@ export default function KonfiguratorLyon() {
           </div>
         </Card>
       )}
+
+      {/* Vonkajšie rozmery a základné parametre */}
+      <Card className="p-4 mb-3 bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-slate-300 shadow-md">
+        <h3 className="text-base font-bold text-gray-900 mb-3">📐 Vonkajšie rozmery a základné parametre</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+          <div className="bg-white rounded-lg p-3 border border-slate-200">
+            <p className="text-xs text-gray-500 mb-1">Zastavaná plocha</p>
+            <p className="text-xl font-bold text-slate-900">50 m²</p>
+          </div>
+          <div className="bg-white rounded-lg p-3 border border-slate-200">
+            <p className="text-xs text-gray-500 mb-1">Úžitková plocha</p>
+            <p className="text-xl font-bold text-slate-900">44 m²</p>
+          </div>
+          <div className="bg-white rounded-lg p-3 border border-slate-200">
+            <p className="text-xs text-gray-500 mb-1">Šírka × Dĺžka</p>
+            <p className="text-xl font-bold text-slate-900">7 × 7 m</p>
+          </div>
+          <div className="bg-white rounded-lg p-3 border border-slate-200">
+            <p className="text-xs text-gray-500 mb-1">Výška stropu</p>
+            <p className="text-xl font-bold text-slate-900">2,6 m</p>
+          </div>
+        </div>
+      </Card>
+
+      {/* Vaša konfigurácia - Summary Panel */}
+      <Card className="mb-3 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl border-2 border-slate-700 overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 border-b border-slate-700">
+          <h3 className="text-lg font-bold flex items-center gap-2">
+            <Home className="w-5 h-5" />
+            Vaša konfigurácia
+          </h3>
+          <p className="text-xs text-blue-100 mt-1">Lyon 50m²</p>
+        </div>
+
+        <div className="p-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {/* Účel */}
+            {ucel && (
+              <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                <p className="text-xs font-semibold text-slate-400 mb-1">ÚČEL STAVBY</p>
+                <p className="text-sm font-bold text-white">
+                  {ucel === "chata" ? "Rekreačná stavba" : "Rodinný dom A0"}
+                </p>
+              </div>
+            )}
+
+            {/* Izolácia */}
+            {(izolaciaStien !== "150mm" || izolaciaPodlahy !== "150mm" || izolaciaStropu !== "150mm") && (
+              <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                <p className="text-xs font-semibold text-slate-400 mb-2">IZOLÁCIA</p>
+                <div className="space-y-1 text-xs">
+                  {izolaciaStien !== "150mm" && <p className="text-slate-300">• Steny {izolaciaStien}</p>}
+                  {izolaciaPodlahy !== "150mm" && <p className="text-slate-300">• Podlaha {izolaciaPodlahy}</p>}
+                  {izolaciaStropu !== "150mm" && <p className="text-slate-300">• Strop {izolaciaStropu}</p>}
+                </div>
+              </div>
+            )}
+
+            {/* Vykurovanie */}
+            {(tepelneCerpadlo === "ano" || rekuperacia === "ano" || podlahovoKurenie || pripravaNaKrb || ochranaKachle) && (
+              <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                <p className="text-xs font-semibold text-slate-400 mb-2">VYKUROVANIE</p>
+                <div className="space-y-1 text-xs">
+                  {tepelneCerpadlo === "ano" && <p className="text-slate-300">• Tepelné čerpadlo</p>}
+                  {rekuperacia === "ano" && <p className="text-slate-300">• Rekuperácia</p>}
+                  {podlahovoKurenie && <p className="text-slate-300">• Podlahové kúrenie</p>}
+                  {pripravaNaKrb && <p className="text-slate-300">• Príprava na krb</p>}
+                  {ochranaKachle && <p className="text-slate-300">• Ochrana na kachle</p>}
+                </div>
+              </div>
+            )}
+
+            {/* Fasáda */}
+            {fasada !== "drevo_smrek" && (
+              <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                <p className="text-xs font-semibold text-slate-400 mb-1">FASÁDA</p>
+                <p className="text-sm text-slate-300">
+                  {fasada === "omietka" ? "Šúchaná omietka" : 
+                   fasada === "smrekovec" ? "Smrekovec" :
+                   fasada === "falcovane" ? "Falcované panely" : "Thermowood"}
+                </p>
+              </div>
+            )}
+
+            {/* Strecha */}
+            {(strecha !== "korugovan_plech" || odkvapy === "ano") && (
+              <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                <p className="text-xs font-semibold text-slate-400 mb-2">STRECHA</p>
+                <div className="space-y-1 text-xs">
+                  {strecha !== "korugovan_plech" && <p className="text-slate-300">• Falcované panely</p>}
+                  {odkvapy === "ano" && <p className="text-slate-300">• Odkvapy</p>}
+                </div>
+              </div>
+            )}
+
+            {/* Okná a dvere */}
+            {(okna !== "biele" || vchodoveDvere !== "plastove") && (
+              <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                <p className="text-xs font-semibold text-slate-400 mb-2">OKNÁ A DVERE</p>
+                <div className="space-y-1 text-xs">
+                  {okna !== "biele" && <p className="text-slate-300">• Okná {okna === "antracit" ? "antracit" : "hnedé"}</p>}
+                  {vchodoveDvere !== "plastove" && <p className="text-slate-300">• Kovové dvere</p>}
+                </div>
+              </div>
+            )}
+
+            {/* Interiér */}
+            {(obkladStien !== "smrek_8cm" || interieroveDvere !== "kridlove") && (
+              <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                <p className="text-xs font-semibold text-slate-400 mb-2">INTERIÉR</p>
+                <div className="space-y-1 text-xs">
+                  {obkladStien !== "smrek_8cm" && (
+                    <p className="text-slate-300">
+                      • {obkladStien === "smrek_bez_uzlov" ? "Smrek bez uzlov" :
+                         obkladStien === "sadrokarton_tapeta" ? "Sadrokarton + tapeta" : "OSB panel"}
+                    </p>
+                  )}
+                  {interieroveDvere !== "kridlove" && <p className="text-slate-300">• Posuvné dvere</p>}
+                </div>
+              </div>
+            )}
+
+            {/* Elektro */}
+            {(elektro !== "eu" || bleskozvod || prepat) && (
+              <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                <p className="text-xs font-semibold text-slate-400 mb-2">ELEKTROINŠTALÁCIA</p>
+                <div className="space-y-1 text-xs">
+                  {elektro === "cz" && <p className="text-slate-300">• CZ/SK štandard</p>}
+                  {elektro === "ge" && <p className="text-slate-300 flex items-center gap-1">• GE štandard <span className="text-green-400">⚡A0</span></p>}
+                  {bleskozvod && <p className="text-slate-300 flex items-center gap-1">• Bleskozvod <span className="text-green-400">⚡A0</span></p>}
+                  {prepat && <p className="text-slate-300 flex items-center gap-1">• Prepäťová ochrana <span className="text-green-400">⚡A0</span></p>}
+                </div>
+              </div>
+            )}
+
+            {/* Kúpeľňa */}
+            {(sprchovyKut !== "standard" || bateria !== "standard" || vana || skrinka || stropKupelna !== "drevo") && (
+              <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                <p className="text-xs font-semibold text-slate-400 mb-2">KÚPEĽŇA</p>
+                <div className="space-y-1 text-xs">
+                  {sprchovyKut !== "standard" && <p className="text-slate-300">• Sprcha Radaway</p>}
+                  {bateria !== "standard" && <p className="text-slate-300">• Batéria Grohe</p>}
+                  {stropKupelna !== "drevo" && <p className="text-slate-300">• Sadrokartónový strop</p>}
+                  {vana && <p className="text-slate-300">• Vaňa</p>}
+                  {skrinka && <p className="text-slate-300">• Skrinka</p>}
+                </div>
+              </div>
+            )}
+
+            {/* Základy */}
+            {zaklady !== "bez" && (
+              <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                <p className="text-xs font-semibold text-slate-400 mb-1">ZÁKLADY</p>
+                <p className="text-sm text-slate-300">
+                  {zaklady === "vruty" ? "Zemné vruty" :
+                   zaklady === "patky" ? "Betónové pätky" : "Pásové betónové"}
+                </p>
+              </div>
+            )}
+
+            {/* Služby */}
+            {(inziniering || projektACertifikacia || revizia) && (
+              <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                <p className="text-xs font-semibold text-slate-400 mb-2">SLUŽBY</p>
+                <div className="space-y-1 text-xs">
+                  {inziniering && <p className="text-slate-300 flex items-center gap-1">• Inžiniering <span className="text-green-400">⚡A0</span></p>}
+                  {projektACertifikacia && <p className="text-slate-300 flex items-center gap-1">• Projekt + Certifikácia <span className="text-green-400">⚡A0</span></p>}
+                  {revizia && <p className="text-slate-300">• Revízna dokumentácia</p>}
+                </div>
+              </div>
+            )}
+
+            {/* Realizácia */}
+            {(montaz || doprava) && (
+              <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+                <p className="text-xs font-semibold text-slate-400 mb-2">REALIZÁCIA</p>
+                <div className="space-y-1 text-xs">
+                  {montaz && <p className="text-slate-300">• Montáž domu</p>}
+                  {doprava && <p className="text-slate-300">• Doprava modulov</p>}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Total Price */}
+        <div className="border-t-2 border-slate-700 bg-gradient-to-r from-blue-600 to-indigo-600 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs text-blue-100 mb-1">Celková cena s DPH</p>
+              <p className="text-3xl font-black text-white">{formatPrice(totalPrice)}</p>
+            </div>
+            <Button className="bg-white text-blue-600 hover:bg-blue-50 font-bold shadow-lg">
+              <Send className="w-4 h-4 mr-2" />
+              Odoslať dopyt
+            </Button>
+          </div>
+        </div>
+      </Card>
 
       {/* Hlavný konfigurátor - Grid layout */}
       <div className="grid lg:grid-cols-2 gap-3 mb-3">
@@ -748,22 +770,7 @@ export default function KonfiguratorLyon() {
 
       </div>
 
-      {/* Sticky Footer - modernejší (len pre mobil) */}
-      <div className="xl:hidden sticky bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white p-3 shadow-2xl z-50 mt-4 rounded-t-2xl border-t-4 border-white/20">
-        <div className="flex justify-between items-center gap-3">
-          <div className="flex-1">
-            <p className="text-[10px] text-white/70 mb-0.5">Základ: {formatPrice(BASE_PRICE)} | Doplnky: {formatPrice(totalPrice - BASE_PRICE)}</p>
-            <p className="text-xl sm:text-2xl font-black text-white drop-shadow-lg">
-              {formatPrice(totalPrice)}
-            </p>
-          </div>
-          <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-xl text-xs sm:text-sm h-9 sm:h-10 px-4 sm:px-6 rounded-xl">
-            <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-            Mám záujem
-          </Button>
-        </div>
       </div>
-      </div>
-      </div>
-      );
-      }
+    </div>
+  );
+}
