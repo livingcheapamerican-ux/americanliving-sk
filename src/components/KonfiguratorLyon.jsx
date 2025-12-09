@@ -186,245 +186,245 @@ export default function KonfiguratorLyon() {
         
         <div className="grid grid-cols-2 gap-2">
 
-        {/* ĽAVÝ STĹPEC - V CENE (0 €) */}
-        <div className="space-y-2">
-          <div className="bg-green-100 border border-green-400 rounded-md p-2">
-            <h4 className="text-xs font-bold text-green-800 mb-1 text-center">✅ V CENE ZAHRNUTÉ</h4>
+          {/* ĽAVÝ STĹPEC - REKREAČNÁ STAVBA (V CENE) */}
+          <div className="space-y-2 pr-1">
+            <div className="bg-green-100 border border-green-400 rounded-md p-1.5 sticky top-0 z-20">
+              <h4 className="text-[10px] font-bold text-green-800 text-center">✅ REKREAČNÁ STAVBA</h4>
+              <p className="text-[8px] text-green-700 text-center">Základná konfigurácia</p>
+            </div>
+
+            {/* Izolácia */}
+            <Card className="p-2 bg-green-50/50">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🏠 Izolácia:</p>
+              <Tile selected={izolaciaStien === "150mm"} onClick={() => setIzolaciaStien("150mm")} title="Steny 150mm" subtitle="Rekreačné" price="V CENE" isPriced={false} isIncluded={true} />
+              <div className="mt-1">
+                <Tile selected={izolaciaPodlahy === "150mm"} onClick={() => setIzolaciaPodlahy("150mm")} title="Podlaha 150mm" subtitle="" price="V CENE" isPriced={false} isIncluded={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={izolaciaStropu === "150mm"} onClick={() => setIzolaciaStropu("150mm")} title="Strop 150mm" subtitle="" price="V CENE" isPriced={false} isIncluded={true} />
+              </div>
+            </Card>
+
+            {/* Vykurovanie */}
+            <Card className="p-2 bg-green-50/50">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🔥 Vykurovanie:</p>
+              <Tile selected={tepelneCerpadlo === "nie"} onClick={() => setTepelneCerpadlo("nie")} title="Príprava" subtitle="Konvektory" price="V CENE" isPriced={false} isIncluded={true} />
+              <div className="mt-1">
+                <Tile selected={rekuperacia === "nie"} onClick={() => setRekuperacia("nie")} title="Bez rekuperácie" subtitle="" price="V CENE" isPriced={false} isIncluded={true} />
+              </div>
+            </Card>
+
+            {/* Fasáda */}
+            <Card className="p-2 bg-green-50/50">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🎨 Fasáda:</p>
+              <Tile selected={fasada === "drevo_smrek"} onClick={() => setFasada("drevo_smrek")} title="Drevo smrek" subtitle="Tmavý/Svetlý" price="V CENE" isPriced={false} isIncluded={true} />
+            </Card>
+
+            {/* Strecha */}
+            <Card className="p-2 bg-green-50/50">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🏠 Strecha:</p>
+              <Tile selected={strecha === "korugovan_plech"} onClick={() => setStrecha("korugovan_plech")} title="Korugovaný plech" subtitle="" price="V CENE" isPriced={false} isIncluded={true} />
+              <div className="mt-1">
+                <Tile selected={odkvapy === "nie"} onClick={() => setOdkvapy("nie")} title="Bez odkvapov" subtitle="" price="V CENE" isPriced={false} isIncluded={true} />
+              </div>
+            </Card>
+
+            {/* Okná a dvere */}
+            <Card className="p-2 bg-green-50/50">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🚪 Okná & Dvere:</p>
+              <div className="grid grid-cols-3 gap-1 mb-1">
+                <Tile selected={okna === "biele"} onClick={() => setOkna("biele")} title="Biele" subtitle="" price="V CENE" isPriced={false} isIncluded={true} />
+                <Tile selected={okna === "antracit"} onClick={() => setOkna("antracit")} title="Antracit" subtitle="" price="V CENE" isPriced={false} isIncluded={true} />
+                <Tile selected={okna === "hnede"} onClick={() => setOkna("hnede")} title="Hnedé" subtitle="" price="V CENE" isPriced={false} isIncluded={true} />
+              </div>
+              <Tile selected={vchodoveDvere === "plastove"} onClick={() => setVchodoveDvere("plastove")} title="Kovovo-plastové" subtitle="Vchodové" price="V CENE" isPriced={false} isIncluded={true} />
+            </Card>
+
+            {/* Interiér */}
+            <Card className="p-2 bg-green-50/50">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🛋️ Interiér:</p>
+              <Tile selected={obkladStien === "smrek"} onClick={() => setObkladStien("smrek")} title="Smrek 8/12cm" subtitle="Prírodný" price="V CENE" isPriced={false} isIncluded={true} />
+              <div className="mt-1">
+                <Tile selected={podlaha === "laminat"} onClick={() => setPodlaha("laminat")} title="Laminát" subtitle="" price="V CENE" isPriced={false} isIncluded={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={interieroveDvere === "kridlove"} onClick={() => setInterieroveDvere("kridlove")} title="Krídlové dvere" subtitle="" price="V CENE" isPriced={false} isIncluded={true} />
+              </div>
+            </Card>
+
+            {/* Elektro */}
+            <Card className="p-2 bg-green-50/50">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">⚡ Elektro:</p>
+              <Tile selected={elektro === "eu"} onClick={() => setElektro("eu")} title="EU štandard" subtitle="" price="V CENE" isPriced={false} isIncluded={true} />
+            </Card>
+
+            {/* Kúpeľňa */}
+            <Card className="p-2 bg-green-50/50">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🚿 Kúpeľňa:</p>
+              <Tile selected={sprchovyKut === "standard"} onClick={() => setSprchovyKut("standard")} title="Sprcha" subtitle="WC Geberit" price="V CENE" isPriced={false} isIncluded={true} />
+              <div className="mt-1">
+                <Tile selected={bateria === "standard"} onClick={() => setBateria("standard")} title="Batéria štandard" subtitle="" price="V CENE" isPriced={false} isIncluded={true} />
+              </div>
+            </Card>
+
+            {/* Základy */}
+            <Card className="p-2 bg-green-50/50">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🏗️ Základy:</p>
+              <Tile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} title="Bez základov" subtitle="" price="V CENE" isPriced={false} isIncluded={true} />
+            </Card>
           </div>
 
-          {/* Izolácia štandard */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Izolácia štandard:</p>
-            <Tile selected={izolaciaStien === "150mm"} onClick={() => setIzolaciaStien("150mm")} title="Steny 150mm" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-            <div className="mt-1">
-              <Tile selected={izolaciaPodlahy === "150mm"} onClick={() => setIzolaciaPodlahy("150mm")} title="Podlaha 150mm" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
+          {/* PRAVÝ STĹPEC - RODINNÝ DOM A0 (PRÍPLATKY) */}
+          <div className="space-y-2 pl-1">
+            <div className="bg-red-100 border border-red-400 rounded-md p-1.5 sticky top-0 z-20">
+              <h4 className="text-[10px] font-bold text-red-800 text-center">💰 RODINNÝ DOM A0</h4>
+              <p className="text-[8px] text-red-700 text-center">Príplatky & Upgrady</p>
             </div>
-            <div className="mt-1">
-              <Tile selected={izolaciaStropu === "150mm"} onClick={() => setIzolaciaStropu("150mm")} title="Strop 150mm" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-            </div>
-          </Card>
 
-          {/* Vykurovanie štandard */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Vykurovanie:</p>
-            <Tile selected={tepelneCerpadlo === "nie"} onClick={() => setTepelneCerpadlo("nie")} title="Príprava na kúrenie" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-            <div className="mt-1">
-              <Tile selected={rekuperacia === "nie"} onClick={() => setRekuperacia("nie")} title="Bez rekuperácie" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-            </div>
-          </Card>
+            {/* Izolácia Premium */}
+            <Card className="p-2 bg-green-50 border border-green-300">
+              <p className="text-[10px] font-bold text-green-800 mb-1 flex items-center gap-1">
+                <Sparkles className="w-3 h-3" />🏠 Izolácia Premium:
+              </p>
+              <Tile selected={izolaciaStien === "200mm"} onClick={() => setIzolaciaStien("200mm")} title="Steny 200mm" subtitle="" price="+ 1 799 €" isPriced={true} />
+              <div className="mt-1">
+                <Tile selected={izolaciaStien === "250mm"} onClick={() => setIzolaciaStien("250mm")} title="Steny 250mm" subtitle="Premium A0" price="+ 1 558 €" isPriced={true} isA0={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={izolaciaPodlahy === "200mm"} onClick={() => setIzolaciaPodlahy("200mm")} title="Podlaha 200mm" subtitle="A0" price="+ 334 €" isPriced={true} isA0={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={izolaciaStropu === "200mm"} onClick={() => setIzolaciaStropu("200mm")} title="Strop 200mm" subtitle="A0" price="+ 271 €" isPriced={true} isA0={true} />
+              </div>
+            </Card>
 
-          {/* Fasáda štandard */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Fasáda:</p>
-            <Tile selected={fasada === "drevo_smrek"} onClick={() => setFasada("drevo_smrek")} title="Drevo smrek" subtitle="Tmavý/Svetlý" price="0 €" isPriced={false} isIncluded={true} />
-          </Card>
+            {/* Vykurovanie A0 */}
+            <Card className="p-2 bg-green-50 border border-green-300">
+              <p className="text-[10px] font-bold text-green-800 mb-1 flex items-center gap-1">
+                <Sparkles className="w-3 h-3" />🔥 Vykurovanie A0:
+              </p>
+              <Tile selected={tepelneCerpadlo === "ano"} onClick={() => setTepelneCerpadlo("ano")} title="Tepelné čerpadlo" subtitle="A0 povinné" price="+ 2 889 €" isPriced={true} isA0={true} />
+              <div className="mt-1">
+                <Tile selected={rekuperacia === "ano"} onClick={() => setRekuperacia("ano")} title="Rekuperácia" subtitle="A0 povinné" price="+ 1 155 €" isPriced={true} isA0={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={podlahovoKurenie} onClick={() => setPodlahovoKurenie(!podlahovoKurenie)} title="Podlah. kúrenie" subtitle="" price="+ 2 253 €" isPriced={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={pripravaNaKrb} onClick={() => setPripravaNaKrb(!pripravaNaKrb)} title="Príprava krb" subtitle="" price="+ 579 €" isPriced={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={ochranaKachle} onClick={() => setOchranaKachle(!ochranaKachle)} title="Ochrana kachle" subtitle="" price="+ 1 280 €" isPriced={true} />
+              </div>
+            </Card>
 
-          {/* Strecha štandard */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Strecha:</p>
-            <Tile selected={strecha === "korugovan_plech"} onClick={() => setStrecha("korugovan_plech")} title="Korugovaný plech" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-            <div className="mt-1">
-              <Tile selected={odkvapy === "nie"} onClick={() => setOdkvapy("nie")} title="Bez odkvapov" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-            </div>
-          </Card>
+            {/* Fasáda */}
+            <Card className="p-2">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🎨 Fasáda upgrade:</p>
+              <Tile selected={fasada === "omietka"} onClick={() => setFasada("omietka")} title="Šúchaná omietka" subtitle="Baumit" price="+ 1 581 €" isPriced={true} />
+              <div className="mt-1">
+                <Tile selected={fasada === "smrekovec"} onClick={() => setFasada("smrekovec")} title="Smrekovec" subtitle="" price="+ 3 350 €" isPriced={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={fasada === "falcovane"} onClick={() => setFasada("falcovane")} title="Falcované panely" subtitle="" price="+ 4 954 €" isPriced={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={fasada === "thermowood"} onClick={() => setFasada("thermowood")} title="Thermowood" subtitle="" price="+ 6 677 €" isPriced={true} />
+              </div>
+            </Card>
 
-          {/* Okná a dvere štandard */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Okná (3-sklo):</p>
-            <div className="grid grid-cols-3 gap-1">
-              <Tile selected={okna === "biele"} onClick={() => setOkna("biele")} title="Biele" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-              <Tile selected={okna === "antracit"} onClick={() => setOkna("antracit")} title="Antracit" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-              <Tile selected={okna === "hnede"} onClick={() => setOkna("hnede")} title="Hnedé" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-            </div>
-            <p className="text-[10px] font-bold text-gray-700 mb-1 mt-2">Vchodové dvere:</p>
-            <Tile selected={vchodoveDvere === "plastove"} onClick={() => setVchodoveDvere("plastove")} title="Kovovo-plastové" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-          </Card>
+            {/* Strecha */}
+            <Card className="p-2">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🏠 Strecha upgrade:</p>
+              <Tile selected={strecha === "falcovane"} onClick={() => setStrecha("falcovane")} title="Falcované panely" subtitle="" price="+ 3 228 €" isPriced={true} />
+              <div className="mt-1">
+                <Tile selected={odkvapy === "ano"} onClick={() => setOdkvapy("ano")} title="Odkvapy" subtitle="Farba strechy" price="+ 1 502 €" isPriced={true} />
+              </div>
+            </Card>
 
-          {/* Interiér štandard */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Interiér:</p>
-            <Tile selected={obkladStien === "smrek"} onClick={() => setObkladStien("smrek")} title="Smrek 8/12cm" subtitle="Prírodný" price="0 €" isPriced={false} isIncluded={true} />
-            <div className="mt-1">
-              <Tile selected={podlaha === "laminat"} onClick={() => setPodlaha("laminat")} title="Laminát" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={interieroveDvere === "kridlove"} onClick={() => setInterieroveDvere("kridlove")} title="Krídlové dvere" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-            </div>
-          </Card>
+            {/* Dvere */}
+            <Card className="p-2">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🚪 Vchodové dvere:</p>
+              <Tile selected={vchodoveDvere === "kovove"} onClick={() => setVchodoveDvere("kovove")} title="Kovové dvere" subtitle="" price="+ 278 €" isPriced={true} />
+            </Card>
 
-          {/* Elektro štandard */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Elektroinštalácia:</p>
-            <Tile selected={elektro === "eu"} onClick={() => setElektro("eu")} title="EU štandard" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-          </Card>
+            {/* Interiér */}
+            <Card className="p-2">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🛋️ Interiér upgrade:</p>
+              <Tile selected={obkladStien === "biely"} onClick={() => setObkladStien("biely")} title="Biely náter" subtitle="" price="+ 1 525 €" isPriced={true} />
+              <div className="mt-1">
+                <Tile selected={obkladStien === "osb"} onClick={() => setObkladStien("osb")} title="OSB + Laminát" subtitle="" price="+ 4 593 €" isPriced={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={obkladStien === "sadrokarton"} onClick={() => setObkladStien("sadrokarton")} title="Sadrokartón" subtitle="" price="+ 6 834 €" isPriced={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={interieroveDvere === "posuvne"} onClick={() => setInterieroveDvere("posuvne")} title="Posuvné dvere" subtitle="" price="+ 427 €" isPriced={true} />
+              </div>
+            </Card>
 
-          {/* Kúpeľňa štandard */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Kúpeľňa:</p>
-            <Tile selected={sprchovyKut === "standard"} onClick={() => setSprchovyKut("standard")} title="Sprcha štandard" subtitle="WC Geberit" price="0 €" isPriced={false} isIncluded={true} />
-            <div className="mt-1">
-              <Tile selected={bateria === "standard"} onClick={() => setBateria("standard")} title="Batéria štandard" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-            </div>
-          </Card>
+            {/* Elektro */}
+            <Card className="p-2">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">⚡ Elektro upgrade:</p>
+              <Tile selected={elektro === "cz"} onClick={() => setElektro("cz")} title="CZ/SK" subtitle="" price="+ 460 €" isPriced={true} />
+              <div className="mt-1">
+                <Tile selected={elektro === "ge"} onClick={() => setElektro("ge")} title="GE" subtitle="" price="+ 1 583 €" isPriced={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={bleskozvod} onClick={() => setBleskozvod(!bleskozvod)} title="Bleskozvod" subtitle="" price="+ 856 €" isPriced={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={prepat} onClick={() => setPrepat(!prepat)} title="Prepäť. ochrana" subtitle="" price="+ 311 €" isPriced={true} />
+              </div>
+            </Card>
 
-          {/* Základy štandard */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Základy:</p>
-            <Tile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} title="Bez základov" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-          </Card>
-        </div>
+            {/* Kúpeľňa */}
+            <Card className="p-2">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🚿 Kúpeľňa upgrade:</p>
+              <Tile selected={sprchovyKut === "radaway"} onClick={() => setSprchovyKut("radaway")} title="Sprcha Radaway" subtitle="" price="+ 646 €" isPriced={true} />
+              <div className="mt-1">
+                <Tile selected={vana} onClick={() => setVana(!vana)} title="Vaňa" subtitle="" price="+ 501 €" isPriced={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={bateria === "grohe"} onClick={() => setBateria("grohe")} title="Grohe" subtitle="" price="+ 139 €" isPriced={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={skrinka} onClick={() => setSkrinka(!skrinka)} title="Skrinka" subtitle="" price="+ 434 €" isPriced={true} />
+              </div>
+            </Card>
 
-        {/* PRAVÝ STĹPEC - PRÍPLATKY */}
-        <div className="space-y-2">
-          <div className="bg-red-100 border border-red-400 rounded-md p-2">
-            <h4 className="text-xs font-bold text-red-800 mb-1 text-center">💰 ZA PRÍPLATOK</h4>
+            {/* Služby */}
+            <Card className="p-2 bg-green-50 border border-green-300">
+              <p className="text-[10px] font-bold text-green-800 mb-1 flex items-center gap-1">
+                <Sparkles className="w-3 h-3" />📋 Služby (A0):
+              </p>
+              <Tile selected={inziniering} onClick={() => setInziniering(!inziniering)} title="Inžiniering" subtitle="Povolenie" price="+ 2 774 €" isPriced={true} isA0={true} />
+              <div className="mt-1">
+                <Tile selected={revizia} onClick={() => setRevizia(!revizia)} title="Revízna dok." subtitle="" price="+ 1 605 €" isPriced={true} />
+              </div>
+            </Card>
+
+            {/* Základy */}
+            <Card className="p-2">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🏗️ Základy:</p>
+              <Tile selected={zaklady === "vruty"} onClick={() => setZaklady("vruty")} title="Zemné vruty" subtitle="" price="+ 4 494 €" isPriced={true} />
+              <div className="mt-1">
+                <Tile selected={zaklady === "patky"} onClick={() => setZaklady("patky")} title="Betónové pätky" subtitle="" price="+ 2 568 €" isPriced={true} />
+              </div>
+              <div className="mt-1">
+                <Tile selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} title="Pásové betónové" subtitle="" price="+ 11 825 €" isPriced={true} />
+              </div>
+            </Card>
+
+            {/* Realizácia */}
+            <Card className="p-2">
+              <p className="text-[10px] font-bold text-gray-700 mb-1">🚚 Realizácia:</p>
+              <Tile selected={montaz} onClick={() => setMontaz(!montaz)} title="Montáž domu" subtitle="" price="+ 4 806 €" isPriced={true} />
+              <div className="mt-1">
+                <Tile selected={doprava} onClick={() => setDoprava(!doprava)} title="Doprava" subtitle="" price="+ 8 928 €" isPriced={true} />
+              </div>
+            </Card>
           </div>
-
-          {/* Izolácia upgrade */}
-          <Card className="p-2 bg-green-50">
-            <p className="text-[10px] font-bold text-green-800 mb-1 flex items-center gap-1">
-              <Sparkles className="w-3 h-3" />Izolácia Premium (A0):
-            </p>
-            <Tile selected={izolaciaStien === "200mm"} onClick={() => setIzolaciaStien("200mm")} title="Steny 200mm" subtitle="" price="+ 1 799 €" isPriced={true} />
-            <div className="mt-1">
-              <Tile selected={izolaciaStien === "250mm"} onClick={() => setIzolaciaStien("250mm")} title="Steny 250mm" subtitle="Premium" price="+ 1 558 €" isPriced={true} isA0={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={izolaciaPodlahy === "200mm"} onClick={() => setIzolaciaPodlahy("200mm")} title="Podlaha 200mm" subtitle="" price="+ 334 €" isPriced={true} isA0={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={izolaciaStropu === "200mm"} onClick={() => setIzolaciaStropu("200mm")} title="Strop 200mm" subtitle="" price="+ 271 €" isPriced={true} isA0={true} />
-            </div>
-          </Card>
-
-          {/* Vykurovanie upgrade */}
-          <Card className="p-2 bg-green-50">
-            <p className="text-[10px] font-bold text-green-800 mb-1 flex items-center gap-1">
-              <Sparkles className="w-3 h-3" />Vykurovanie (A0):
-            </p>
-            <Tile selected={tepelneCerpadlo === "ano"} onClick={() => setTepelneCerpadlo("ano")} title="Tepelné čerpadlo" subtitle="Vzduch/vzduch" price="+ 2 889 €" isPriced={true} isA0={true} />
-            <div className="mt-1">
-              <Tile selected={rekuperacia === "ano"} onClick={() => setRekuperacia("ano")} title="Rekuperácia" subtitle="Spät. zisk." price="+ 1 155 €" isPriced={true} isA0={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={podlahovoKurenie} onClick={() => setPodlahovoKurenie(!podlahovoKurenie)} title="Podlah. kúrenie" subtitle="" price="+ 2 253 €" isPriced={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={pripravaNaKrb} onClick={() => setPripravaNaKrb(!pripravaNaKrb)} title="Príprava krb" subtitle="" price="+ 579 €" isPriced={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={ochranaKachle} onClick={() => setOchranaKachle(!ochranaKachle)} title="Ochrana kachle" subtitle="" price="+ 1 280 €" isPriced={true} />
-            </div>
-          </Card>
-
-
-
-          {/* Fasáda upgrade */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Fasáda upgrade:</p>
-            <Tile selected={fasada === "omietka"} onClick={() => setFasada("omietka")} title="Šúchaná omietka" subtitle="Baumit +100mm" price="+ 1 581 €" isPriced={true} />
-            <div className="mt-1">
-              <Tile selected={fasada === "smrekovec"} onClick={() => setFasada("smrekovec")} title="Smrekovec" subtitle="" price="+ 3 350 €" isPriced={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={fasada === "falcovane"} onClick={() => setFasada("falcovane")} title="Falcované panely" subtitle="" price="+ 4 954 €" isPriced={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={fasada === "thermowood"} onClick={() => setFasada("thermowood")} title="Thermowood" subtitle="" price="+ 6 677 €" isPriced={true} />
-            </div>
-          </Card>
-
-          {/* Strecha upgrade */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Strecha upgrade:</p>
-            <Tile selected={strecha === "falcovane"} onClick={() => setStrecha("falcovane")} title="Falcované panely" subtitle="" price="+ 3 228 €" isPriced={true} />
-            <div className="mt-1">
-              <Tile selected={odkvapy === "ano"} onClick={() => setOdkvapy("ano")} title="Odkvapy" subtitle="Vo farbe strechy" price="+ 1 502 €" isPriced={true} />
-            </div>
-          </Card>
-
-          {/* Dvere upgrade */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Vchodové dvere:</p>
-            <Tile selected={vchodoveDvere === "kovove"} onClick={() => setVchodoveDvere("kovove")} title="Kovové dvere" subtitle="" price="+ 278 €" isPriced={true} />
-          </Card>
-
-          {/* Interiér upgrade */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Obklad stien:</p>
-            <Tile selected={obkladStien === "biely"} onClick={() => setObkladStien("biely")} title="Biely náter" subtitle="" price="+ 1 525 €" isPriced={true} />
-            <div className="mt-1">
-              <Tile selected={obkladStien === "osb"} onClick={() => setObkladStien("osb")} title="OSB + Laminát" subtitle="" price="+ 4 593 €" isPriced={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={obkladStien === "sadrokarton"} onClick={() => setObkladStien("sadrokarton")} title="Sadrokartón" subtitle="Tapeta" price="+ 6 834 €" isPriced={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={interieroveDvere === "posuvne"} onClick={() => setInterieroveDvere("posuvne")} title="Posuvné dvere" subtitle="" price="+ 427 €" isPriced={true} />
-            </div>
-          </Card>
-
-          {/* Elektro upgrade */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Elektro upgrade:</p>
-            <Tile selected={elektro === "cz"} onClick={() => setElektro("cz")} title="CZ/SK štandard" subtitle="" price="+ 460 €" isPriced={true} />
-            <div className="mt-1">
-              <Tile selected={elektro === "ge"} onClick={() => setElektro("ge")} title="GE štandard" subtitle="" price="+ 1 583 €" isPriced={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={bleskozvod} onClick={() => setBleskozvod(!bleskozvod)} title="Bleskozvod" subtitle="" price="+ 856 €" isPriced={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={prepat} onClick={() => setPrepat(!prepat)} title="Prepäť. ochrana" subtitle="" price="+ 311 €" isPriced={true} />
-            </div>
-          </Card>
-
-          {/* Kúpeľňa upgrade */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Kúpeľňa upgrade:</p>
-            <Tile selected={sprchovyKut === "radaway"} onClick={() => setSprchovyKut("radaway")} title="Sprcha Radaway" subtitle="" price="+ 646 €" isPriced={true} />
-            <div className="mt-1">
-              <Tile selected={vana} onClick={() => setVana(!vana)} title="Vaňa" subtitle="" price="+ 501 €" isPriced={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={bateria === "grohe"} onClick={() => setBateria("grohe")} title="Grohe batéria" subtitle="" price="+ 139 €" isPriced={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={skrinka} onClick={() => setSkrinka(!skrinka)} title="Skrinka" subtitle="S umývadlom" price="+ 434 €" isPriced={true} />
-            </div>
-          </Card>
-
-          {/* Služby a Zakladanie */}
-          <Card className="p-2 bg-green-50">
-            <p className="text-[10px] font-bold text-green-800 mb-1 flex items-center gap-1">
-              <Sparkles className="w-3 h-3" />Inžiniering (A0):
-            </p>
-            <Tile selected={inziniering} onClick={() => setInziniering(!inziniering)} title="Inžiniering" subtitle="Stav. povolenie" price="+ 2 774 €" isPriced={true} isA0={true} />
-            <div className="mt-1">
-              <Tile selected={revizia} onClick={() => setRevizia(!revizia)} title="Revízna dok." subtitle="" price="+ 1 605 €" isPriced={true} />
-            </div>
-          </Card>
-
-          {/* Základy */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Základy:</p>
-            <Tile selected={zaklady === "vruty"} onClick={() => setZaklady("vruty")} title="Zemné vruty" subtitle="" price="+ 4 494 €" isPriced={true} />
-            <div className="mt-1">
-              <Tile selected={zaklady === "patky"} onClick={() => setZaklady("patky")} title="Betónové pätky" subtitle="" price="+ 2 568 €" isPriced={true} />
-            </div>
-            <div className="mt-1">
-              <Tile selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} title="Pásové betónové" subtitle="" price="+ 11 825 €" isPriced={true} />
-            </div>
-          </Card>
-
-          {/* Realizácia */}
-          <Card className="p-2">
-            <p className="text-[10px] font-bold text-gray-700 mb-1">Realizácia:</p>
-            <Tile selected={montaz} onClick={() => setMontaz(!montaz)} title="Montáž domu" subtitle="" price="+ 4 806 €" isPriced={true} />
-            <div className="mt-1">
-              <Tile selected={doprava} onClick={() => setDoprava(!doprava)} title="Doprava" subtitle="" price="+ 8 928 €" isPriced={true} />
-            </div>
-          </Card>
         </div>
       </div>
 
