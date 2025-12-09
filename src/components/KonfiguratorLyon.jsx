@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sparkles, Home, Send } from "lucide-react";
 import { motion } from "framer-motion";
 
-const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isIncluded }) => {
+const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isIncluded, hideIncludedMessage }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.01 }}
@@ -38,7 +38,7 @@ const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isInc
       <div className="text-center">
         <span className="font-semibold text-gray-800 text-base block leading-tight">{title}</span>
         {subtitle && <span className="text-xs text-gray-500 block mt-0.5">{subtitle}</span>}
-        {price === "0 €" ? (
+        {price === "0 €" && !hideIncludedMessage ? (
           <span className="text-[11px] text-gray-500 block mt-1 italic leading-tight">
             Táto položka je súčasťou základnej konfigurácie domu
           </span>
@@ -314,7 +314,7 @@ export default function KonfiguratorLyon() {
             <div>
               <p className="text-xs font-semibold text-gray-700 mb-2">Vetranie (vyber jednu možnosť):</p>
               <div className="grid grid-cols-2 gap-2 border-2 border-orange-300 rounded-lg p-2 bg-orange-50">
-                <Tile selected={rekuperacia === "nie"} onClick={() => setRekuperacia("nie")} title="Bez rekuperácie" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
+                <Tile selected={rekuperacia === "nie"} onClick={() => setRekuperacia("nie")} title="Bez rekuperácie" subtitle="" price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} />
                 <Tile selected={rekuperacia === "ano"} onClick={() => setRekuperacia("ano")} title="Rekuperácia" subtitle="A0 povinné" price="+ 1 155 €" isPriced={true} isA0={true} />
               </div>
             </div>
@@ -367,7 +367,7 @@ export default function KonfiguratorLyon() {
             <div>
               <p className="text-xs font-semibold text-gray-700 mb-2">Odkvapy (vyber jednu možnosť):</p>
               <div className="grid grid-cols-2 gap-2 border-2 border-indigo-300 rounded-lg p-2 bg-indigo-50">
-                <Tile selected={odkvapy === "nie"} onClick={() => setOdkvapy("nie")} title="Bez odkvapov" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
+                <Tile selected={odkvapy === "nie"} onClick={() => setOdkvapy("nie")} title="Bez odkvapov" subtitle="" price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} />
                 <Tile selected={odkvapy === "ano"} onClick={() => setOdkvapy("ano")} title="Odkvapy" subtitle="Farba strechy" price="+ 1 502 €" isPriced={true} />
               </div>
             </div>
@@ -507,7 +507,7 @@ export default function KonfiguratorLyon() {
           <div>
             <p className="text-xs font-semibold text-gray-700 mb-2">Typ základov (vyber jednu možnosť):</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 border-2 border-stone-300 rounded-lg p-2 bg-stone-50">
-              <Tile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} title="Bez základov" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
+              <Tile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} title="Bez základov" subtitle="" price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} />
               <Tile selected={zaklady === "vruty"} onClick={() => setZaklady("vruty")} title="Zemné vruty" subtitle="" price="+ 4 494 €" isPriced={true} />
               <Tile selected={zaklady === "patky"} onClick={() => setZaklady("patky")} title="Betónové pätky" subtitle="" price="+ 2 568 €" isPriced={true} />
               <Tile selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} title="Pásové betónové" subtitle="" price="+ 11 825 €" isPriced={true} />
