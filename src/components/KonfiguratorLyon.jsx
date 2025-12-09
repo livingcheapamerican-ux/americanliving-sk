@@ -36,9 +36,9 @@ const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isInc
       )}
       
       <div className="text-center">
-        <span className="font-semibold text-gray-800 text-xs block leading-tight">{title}</span>
-        {subtitle && <span className="text-[9px] text-gray-500 block mt-0.5">{subtitle}</span>}
-        <span className={`text-[10px] font-bold block mt-1 ${isPriced ? "text-green-600" : "text-gray-400"}`}>
+        <span className="font-semibold text-gray-800 text-base block leading-tight">{title}</span>
+        {subtitle && <span className="text-xs text-gray-500 block mt-0.5">{subtitle}</span>}
+        <span className={`text-[13px] font-bold block mt-1 ${isPriced ? "text-green-600" : "text-gray-400"}`}>
           {price}
         </span>
       </div>
@@ -154,7 +154,7 @@ export default function KonfiguratorLyon() {
     <div className="w-full max-w-5xl mx-auto">
       {/* Účel stavby - rozšírený */}
       <Card className="p-4 mb-4 bg-gradient-to-r from-gray-50 to-gray-100">
-        <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
           <Home className="w-5 h-5 text-blue-600" />
           Účel stavby
         </h3>
@@ -170,9 +170,9 @@ export default function KonfiguratorLyon() {
                 : "bg-white border-gray-300 hover:border-green-400"
             }`}
           >
-            <h4 className="text-sm font-bold text-gray-900 mb-2">Rekreačná stavba</h4>
-            <p className="text-xs text-blue-600 font-semibold mb-2">Ekonomická voľba</p>
-            <ul className="space-y-1 text-[10px] text-gray-600">
+            <h4 className="text-lg font-bold text-gray-900 mb-2">Rekreačná stavba</h4>
+            <p className="text-base text-blue-600 font-semibold mb-2">Ekonomická voľba</p>
+            <ul className="space-y-1 text-[13px] text-gray-600">
               <li>• Chata, záhradný domček</li>
               <li>• Celoročná izolácia 150/200mm</li>
               <li>• Bez energetického certifikátu</li>
@@ -193,10 +193,10 @@ export default function KonfiguratorLyon() {
             }`}
           >
             <div className="flex items-center gap-2 mb-2">
-              <h4 className="text-sm font-bold text-gray-900">Rodinný dom A0</h4>
+              <h4 className="text-lg font-bold text-gray-900">Rodinný dom A0</h4>
               <Badge className="bg-green-600 text-white text-[9px]">⚡ Odporúčané</Badge>
             </div>
-            <ul className="space-y-1 text-[10px] text-gray-600">
+            <ul className="space-y-1 text-[13px] text-gray-600">
               <li>• Celoročné bývanie</li>
               <li>• Energetický certifikát A0</li>
               <li>• Premium izolácia 250/300mm</li>
@@ -227,7 +227,7 @@ export default function KonfiguratorLyon() {
         
         {/* IZOLÁCIA */}
         <Card className="p-3 border-2 border-blue-400">
-          <h3 className="text-sm font-bold text-blue-900 mb-3 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-blue-900 mb-3 flex items-center gap-2">
             🏠 Izolácia
           </h3>
           <div className="relative">
@@ -270,7 +270,7 @@ export default function KonfiguratorLyon() {
 
         {/* VYKUROVANIE */}
         <Card className="p-3 border-2 border-orange-400">
-          <h3 className="text-sm font-bold text-orange-900 mb-3 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-orange-900 mb-3 flex items-center gap-2">
             🔥 Vykurovanie
           </h3>
           <div className="relative">
@@ -313,7 +313,7 @@ export default function KonfiguratorLyon() {
 
         {/* FASÁDA */}
         <Card className="p-3 border-2 border-purple-400">
-          <h3 className="text-sm font-bold text-purple-900 mb-3 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-purple-900 mb-3 flex items-center gap-2">
             🎨 Fasáda
           </h3>
           <div className="relative">
@@ -348,7 +348,7 @@ export default function KonfiguratorLyon() {
 
         {/* STRECHA */}
         <Card className="p-3 border-2 border-indigo-400">
-          <h3 className="text-sm font-bold text-indigo-900 mb-3 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-indigo-900 mb-3 flex items-center gap-2">
             🏠 Strecha
           </h3>
           <div className="relative">
@@ -380,7 +380,7 @@ export default function KonfiguratorLyon() {
 
         {/* OKNÁ A DVERE */}
         <Card className="p-3 border-2 border-cyan-400">
-          <h3 className="text-sm font-bold text-cyan-900 mb-3 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-cyan-900 mb-3 flex items-center gap-2">
             🚪 Okná a dvere
           </h3>
           <div className="relative">
@@ -390,7 +390,7 @@ export default function KonfiguratorLyon() {
               <div className="space-y-2">
                 <div className="bg-green-100 border-2 border-green-500 rounded-lg p-2">
                   <p className="text-sm font-bold text-green-800 text-center mb-1">✅ V CENE</p>
-                  <p className="text-[9px] text-gray-600 mb-1">Okná (3-sklo):</p>
+                  <p className="text-xs text-gray-600 mb-1">Okná (3-sklo):</p>
                   <div className="grid grid-cols-3 gap-1 mb-2">
                     <Tile selected={okna === "biele"} onClick={() => setOkna("biele")} title="Biele" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                     <Tile selected={okna === "antracit"} onClick={() => setOkna("antracit")} title="Antracit" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
@@ -414,7 +414,7 @@ export default function KonfiguratorLyon() {
 
         {/* INTERIÉR */}
         <Card className="p-3 border-2 border-amber-400">
-          <h3 className="text-sm font-bold text-amber-900 mb-3 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-amber-900 mb-3 flex items-center gap-2">
             🛋️ Interiér
           </h3>
           <div className="relative">
@@ -455,7 +455,7 @@ export default function KonfiguratorLyon() {
 
         {/* ELEKTRO */}
         <Card className="p-3 border-2 border-yellow-400">
-          <h3 className="text-sm font-bold text-yellow-900 mb-3 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-yellow-900 mb-3 flex items-center gap-2">
             ⚡ Elektroinštalácia
           </h3>
           <div className="relative">
@@ -490,7 +490,7 @@ export default function KonfiguratorLyon() {
 
         {/* KÚPEĽŇA */}
         <Card className="p-3 border-2 border-teal-400">
-          <h3 className="text-sm font-bold text-teal-900 mb-3 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-teal-900 mb-3 flex items-center gap-2">
             🚿 Kúpeľňa
           </h3>
           <div className="relative">
@@ -528,7 +528,7 @@ export default function KonfiguratorLyon() {
 
         {/* ZÁKLADY */}
         <Card className="p-3 border-2 border-stone-400">
-          <h3 className="text-sm font-bold text-stone-900 mb-3 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-stone-900 mb-3 flex items-center gap-2">
             🏗️ Základy
           </h3>
           <div className="relative">
@@ -560,7 +560,7 @@ export default function KonfiguratorLyon() {
 
         {/* SLUŽBY */}
         <Card className="p-3 border-2 border-green-400">
-          <h3 className="text-sm font-bold text-green-900 mb-3 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-green-900 mb-3 flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-green-600" />
             Inžiniering a dokumentácia (A0)
           </h3>
@@ -570,7 +570,7 @@ export default function KonfiguratorLyon() {
               {/* Ľavá strana - prázdna alebo info */}
               <div className="space-y-2">
                 <div className="bg-gray-100 border-2 border-gray-300 rounded-lg p-2 flex items-center justify-center min-h-[100px]">
-                  <p className="text-[10px] text-gray-500 text-center">Služby nie sú zahrnuté v základnej cene</p>
+                  <p className="text-[13px] text-gray-500 text-center">Služby nie sú zahrnuté v základnej cene</p>
                 </div>
               </div>
               {/* Pravá strana - PRÍPLATKY */}
@@ -591,7 +591,7 @@ export default function KonfiguratorLyon() {
 
         {/* REALIZÁCIA */}
         <Card className="p-3 border-2 border-slate-400">
-          <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+          <h3 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
             🚚 Realizácia
           </h3>
           <div className="relative">
@@ -600,7 +600,7 @@ export default function KonfiguratorLyon() {
               {/* Ľavá strana - prázdna */}
               <div className="space-y-2">
                 <div className="bg-gray-100 border-2 border-gray-300 rounded-lg p-2 flex items-center justify-center min-h-[100px]">
-                  <p className="text-[10px] text-gray-500 text-center">Realizácia nie je zahrnutá v základnej cene</p>
+                  <p className="text-[13px] text-gray-500 text-center">Realizácia nie je zahrnutá v základnej cene</p>
                 </div>
               </div>
               {/* Pravá strana - PRÍPLATKY */}
