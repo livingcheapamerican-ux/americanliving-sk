@@ -58,11 +58,11 @@ export default function KonfiguratorLyon() {
   // Floating panel position and size - load from localStorage if available
   const [panelPosition, setPanelPosition] = useState(() => {
     const saved = localStorage.getItem('lyon_panel_position');
-    return saved ? JSON.parse(saved) : { x: 180, y: 150 };
+    return saved ? JSON.parse(saved) : { x: 180, y: 100 };
   });
   const [panelSize, setPanelSize] = useState(() => {
     const saved = localStorage.getItem('lyon_panel_size');
-    return saved ? JSON.parse(saved) : { width: 380, height: 680 };
+    return saved ? JSON.parse(saved) : { width: 380, height: 700 };
   });
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
