@@ -2659,6 +2659,13 @@ export default function DetailDomu() {
               </div>
             )}
 
+            {/* Floating panel pre Lyon (Ticab house) */}
+            {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+                <KonfiguratorLyon />
+              </div>
+            )}
+
             {/* Floating panel pre ostatné Prosto House domy */}
             {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("Flat Small") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && !dom.nazov?.includes("Barn") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
