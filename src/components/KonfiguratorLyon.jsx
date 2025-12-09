@@ -216,8 +216,14 @@ export default function KonfiguratorLyon() {
             Kolaudácia
           </h3>
           <div className="grid grid-cols-2 gap-2">
-            <Tile selected={kolaudacia === "bez_a0"} onClick={() => setKolaudacia("bez_a0")} title="Bez kolaudácie A0" subtitle="Bez admin." price="0 €" isPriced={false} />
-            <Tile selected={kolaudacia === "s_a0"} onClick={() => setKolaudacia("s_a0")} title="S kolaudáciou A0" subtitle="Projekt + Certif." price="+ 3 745,35 €" isPriced={true} isA0={true} />
+            <Tile selected={kolaudacia === "bez_a0"} onClick={() => {
+              setKolaudacia("bez_a0");
+              setInziniering(false);
+            }} title="Bez kolaudácie A0" subtitle="Bez admin." price="0 €" isPriced={false} />
+            <Tile selected={kolaudacia === "s_a0"} onClick={() => {
+              setKolaudacia("s_a0");
+              setInziniering(true);
+            }} title="S kolaudáciou A0" subtitle="Projekt + Certif." price="+ 3 745,35 €" isPriced={true} isA0={true} />
           </div>
         </Card>
       )}
