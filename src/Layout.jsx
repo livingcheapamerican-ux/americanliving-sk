@@ -489,8 +489,7 @@ function LayoutContent({ children }) {
       <ChristmasEffectsWrapper />
       <CookieConsentBanner />
       <UserTracking />
-              {/* <Chatbot /> */}
-              {/* <AIAsistent /> */}
+      <Chatbot />
       </div>
       );
       }

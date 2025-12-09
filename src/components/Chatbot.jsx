@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +12,7 @@ export default function Chatbot() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "Dobrý deň! Som AI asistent American Living. Rád vám pomôžem s výberom modulárneho domu. Opýtajte sa ma na čokoľvek! 🏠"
+      content: "Dobrý deň! Som AI asistent American Living. 🏠\n\nMôžem vám pomôcť s:\n• Výberom vhodného domu\n• Otázkami o konfigurátore a položkách\n• Cenami a rozdielmi medzi možnosťami\n• Technickými parametrami (izolácia, vykurovanie...)\n• Rozdielom medzi rekreačnou stavbou a rodinným domom A0\n\nČo vás zaujíma?"
     }
   ]);
   const [input, setInput] = useState("");
@@ -22,7 +21,12 @@ export default function Chatbot() {
 
   const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
-  // Načítaj analyzované dokumenty pre kontext
+  // Načítaj konfiguračné texty a dokumenty pre kontext
+  const { data: konfigTexty = [] } = useQuery({
+    queryKey: ['konfig-texty-chatbot'],
+    queryFn: () => base44.entities.KonfiguratorText.list()
+  });
+
   const { data: dokumenty = [] } = useQuery({
     queryKey: ['dokumenty-chatbot'],
     queryFn: () => base44.entities.Dokument.filter({ 
@@ -49,8 +53,18 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
+      // Priprav kontext z konfiguračných textov
+      const konfigKontext = konfigTexty
+        .map(item => {
+          return `Položka: ${item.nazov} (${item.vyrobca})
+Kategória: ${item.kategoria || 'N/A'}
+Popis: ${item.dlhy_popis || item.podnadpis || 'N/A'}
+Poznámky: ${item.poznamky || 'N/A'}`;
+        })
+        .join('\n---\n');
+
       // Priprav kontext z dokumentov
-      const kontext = dokumenty
+      const dokumentyKontext = dokumenty
         .map(dok => {
           let info = `Dokument: ${dok.nazov} (${dok.vyrobca})\n`;
           if (dok.extrahovaný_obsah) {
@@ -72,6 +86,12 @@ export default function Chatbot() {
         .slice(0, 10)
         .join('\n---\n');
 
+      const kontext = `=== KONFIGURAČNÉ POLOŽKY ===
+${konfigKontext}
+
+=== DOKUMENTY ===
+${dokumentyKontext}`;
+
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `Si profesionálny AI asistent pre firmu American Living, ktorá sa zaoberá distribúciou a realizáciou modulárnych domov.
 
@@ -80,19 +100,27 @@ Kontext spoločnosti:
 - Vyrobených viac ako 700 domov od roku 2008
 - Ponúkame komplexné služby vrátane dovozu, montáže, pripojení
 
-AKTUÁLNE INFORMÁCIE Z DATABÁZY DOKUMENTOV:
+AKTUÁLNE INFORMÁCIE Z DATABÁZY:
 ${kontext}
 
 Tvoja úloha:
 - Odpovedaj profesionálne, priateľsky a v slovenčine
-- Využívaj PRESNE informácie z dokumentov vyššie
-- Pri otázkach o cenách, modeloch uvádzaj konkrétne údaje z databázy
-- Ak nevieš odpoveď, odporúčaj kontakt alebo interaktívny konfigurátor
+- Využívaj PRESNE informácie z konfiguračných položiek a dokumentov vyššie
+- Pri otázkach o cenách, položkách v konfigurátore, vlastnostiach uvádzaj konkrétne údaje
+- Vysvetľuj rozdiel medzi možnosťami (napr. rekreačná stavba vs rodinný dom A0)
+- Pri otázkach o izolácii, vykurovaní, fasáde atď. odkazuj na konkrétne položky
+- Ak nevieš odpoveď, odporúčaj kontakt na +421 905 138 124 alebo email info@americanliving.sk
 - Buď nápomocný a nadšený z modulárneho bývania
+- Pri otázkach o konkrétnych modeloch domov odporúčaj návštevu katalógu
+
+Príklady otázok a správnych odpovedí:
+- "Aký je rozdiel medzi izoláciou 150mm a 250mm?" → Vysvetli technické parametre a cenu z databázy
+- "Čo zahŕňa základná konfigurácia?" → Vymenuj položky ktoré sú v cene
+- "Potrebujem A0 certifikát?" → Vysvetli kedy áno (rodinný dom) a kedy nie (rekreačná stavba)
 
 Otázka zákazníka: ${userMessage}
 
-Odpoveď (max 200 slov, priateľsky tón, využívaj údaje z dokumentov):`,
+Odpoveď (max 250 slov, priateľsky tón, využívaj presné údaje z databázy):`,
         add_context_from_internet: false
       });
 
@@ -233,7 +261,7 @@ Odpoveď (max 200 slov, priateľsky tón, využívaj údaje z dokumentov):`,
                   </Button>
                 </div>
                 <p className="text-xs text-gray-500 text-center mt-2 flex items-center justify-center gap-1">
-                  AI s aktuálnymi vedomosťami z {dokumenty.length} dokumentov
+                  AI asistent s vedomosťami o {konfigTexty.length} položkách konfigurátorov
                 </p>
               </form>
             </Card>
