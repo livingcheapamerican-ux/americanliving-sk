@@ -830,7 +830,6 @@ export default function KonfiguratorLyon(props = {}) {
           </Button>
         </div>
       </div>
-      </div>
     </div>
   );
 }
