@@ -1743,9 +1743,9 @@ export default function DetailDomu() {
                 <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
                   <h3 className="text-sm sm:text-base font-bold text-primary mb-2 flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-                    Základná konfigurácia domu (zahrnutá v cene)
+                    Základná konfigurácia domu
                   </h3>
-                  <p className="text-xs sm:text-sm text-gray-700 mb-3 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-gray-700 mb-4 leading-relaxed">
                     Je vždy vyhovujúci pre status rekrečnej stavby na celoročné bývanie. Pokiaľ chcete z domu urobiť rodinný dom na (trvalé bývanie, nahlásenie trvalého pobytu, možnosť hypotekárneho úveru, energetického certifikátu A0 a stavebné povolenie v obytnej štvrti) musíte zmeniť parametre domu v konfigurátore nižšie.
                   </p>
                   
@@ -1767,23 +1767,110 @@ export default function DetailDomu() {
                     </div>
                   )}
 
-                <div className="mt-4 pt-4 border-t border-green-300">
-                  <h4 className="font-bold text-red-700 mb-2 flex items-center gap-2 text-xs sm:text-sm">
-                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                    {t('importantBasePriceExcludes')}
-                  </h4>
-                  <ul className="list-disc list-inside text-gray-700 space-y-1 text-xs sm:text-sm ml-2">
-                    <li><strong>{t('deliveryTransport')}</strong> - {t('orderInConfigurator')}</li>
-                    <li><strong>{t('foundations')}</strong> - {t('singleModuleNoFoundations')}</li>
-                    <li><strong>{t('externalConnections')}</strong> {t('waterElectricSewage')}</li>
-                    <li><strong>{t('craneTruck')}</strong> - {t('requiredForPlacement')}</li>
-                  </ul>
-                  <div className="mt-3 p-2 sm:p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  {/* 2 stĺpce - V CENE a ZA PRÍPLATOK */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    {/* Ľavý stĺpec - V CENE */}
+                    <div className="bg-green-100 border-2 border-green-400 rounded-lg p-3">
+                      <h4 className="font-bold text-green-800 mb-3 flex items-center gap-2 text-xs sm:text-sm">
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+                        ✅ Zahrnuté v cene
+                      </h4>
+                      <ul className="space-y-1.5 text-xs sm:text-sm text-green-900">
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Rám:</strong> Sušené kalibrované drevo</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Izolácia:</strong> Štandard (150/200 mm)</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Okná:</strong> Dvojkomorové, laminované</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Dvere:</strong> Kovoplastové</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Fasáda:</strong> Škandinavsky smrek</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Strecha:</strong> Vlnitý plech/škridplech</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Interiér:</strong> Drevený obklad</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Elektroinštalácia:</strong> Medené rozvody, LED</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Sanita:</strong> Sprcha, WC, Bojler 80l</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Kúrenie:</strong> Príprava na konvektory</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Klimatizácia:</strong> Príprava</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    {/* Pravý stĺpec - ZA PRÍPLATOK */}
+                    <div className="bg-red-50 border-2 border-red-300 rounded-lg p-3">
+                      <h4 className="font-bold text-red-800 mb-3 flex items-center gap-2 text-xs sm:text-sm">
+                        <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
+                        ❌ Za príplatok
+                      </h4>
+                      <ul className="space-y-1.5 text-xs sm:text-sm text-red-900">
+                        <li className="flex items-start gap-2">
+                          <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Podlahové kúrenie</strong></span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Umývadlo so skrinkou</strong></span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Kuchynská linka</strong></span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Terasa</strong></span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Doprava a montáž</strong></span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Základy</strong></span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Vonkajšie prípojky</strong> (voda, elektrina, kanál)</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                          <span><strong>Žeriav/nákladné auto</strong> na osadenie</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
                     <p className="text-xs sm:text-sm text-blue-800">
                       <strong>{t('modularAdvantage')}</strong> {t('modularAdvantageDesc')}
                     </p>
                   </div>
-                </div>
                 </Card>
               </div>
             )}
