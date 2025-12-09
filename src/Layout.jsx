@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload, ChevronDown, Sparkles, Languages } from "lucide-react";
+import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload, ChevronDown, Sparkles, Languages, FileText as BlogIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { AVAILABLE_LANGUAGES } from "./components/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -73,6 +73,7 @@ function LayoutContent({ children }) {
     { name: t('home'), path: createPageUrl("Domov"), icon: Home },
     { name: t('catalog'), path: createPageUrl("Katalog"), icon: Grid3x3 },
     { name: t('about'), path: createPageUrl("ONas"), icon: Info },
+    { name: "Blog", path: createPageUrl("Blog"), icon: FileText },
     { name: t('contact'), path: createPageUrl("Kontakt"), icon: Phone },
   ];
 
