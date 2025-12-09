@@ -812,7 +812,6 @@ export default function KonfiguratorLyon(props = {}) {
             <Tile selected={doprava} onClick={() => setDoprava(!doprava)} title="Doprava" subtitle="Doprava všetkých modulov" price="+ 8 928 €" isPriced={true} />
           </div>
         </Card>
-
       </div>
 
       {/* Sticky Footer - modernejší (len pre mobil) */}
