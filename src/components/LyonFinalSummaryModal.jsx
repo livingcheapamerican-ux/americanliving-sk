@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useMutation } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { X, Home, CheckCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { X, Home, CheckCircle, Send, FileDown, Mail, Sparkles, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 
 export default function LyonFinalSummaryModal({ 
   isOpen, 
@@ -40,6 +47,16 @@ export default function LyonFinalSummaryModal({
   doprava,
   totalPrice
 }) {
+  const [formData, setFormData] = useState({
+    meno: "",
+    email: "",
+    telefon: "",
+    obec: "",
+    poznamka: ""
+  });
+  const [submitted, setSubmitted] = useState(false);
+  const [generatingPDF, setGeneratingPDF] = useState(false);
+
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
   // Určiť ktorý obrázok zobraziť
@@ -71,6 +88,89 @@ export default function LyonFinalSummaryModal({
   const isA0 = isA0Configuration();
   const actualStatus = ucel === "rodinny" && isA0 ? "Rodinný dom A0" : "Rekreačná stavba";
 
+  // Vytvorenie súhrnu konfigurácie
+  const buildConfigSummary = () => {
+    const lines = [];
+    lines.push(`Účel: ${actualStatus}`);
+    lines.push(`\nIZOLÁCIA:`);
+    lines.push(`- Steny: ${izolaciaStien}`);
+    lines.push(`- Podlaha: ${izolaciaPodlahy}`);
+    lines.push(`- Strop: ${izolaciaStropu}`);
+    
+    if (tepelneCerpadlo === "ano" || rekuperacia === "ano" || podlahovoKurenie || pripravaNaKrb || ochranaKachle) {
+      lines.push(`\nVYKUROVANIE:`);
+      if (tepelneCerpadlo === "ano") lines.push(`- Tepelné čerpadlo`);
+      if (rekuperacia === "ano") lines.push(`- Rekuperácia`);
+      if (podlahovoKurenie) lines.push(`- Podlahové kúrenie`);
+      if (pripravaNaKrb) lines.push(`- Príprava na krb`);
+      if (ochranaKachle) lines.push(`- Ochrana na kachle`);
+    }
+    
+    lines.push(`\nFASÁDA: ${fasada === "drevo_smrek" ? "Drevo smrek" : fasada === "omietka" ? "Šúchaná omietka" : fasada === "smrekovec" ? "Smrekovec" : fasada === "falcovane" ? "Falcované panely" : "Thermowood"}`);
+    lines.push(`STRECHA: ${strecha === "korugovan_plech" ? "Korugovaný plech" : "Falcované panely"}`);
+    if (odkvapy === "ano") lines.push(`- Odkvapy`);
+    
+    lines.push(`\nELEKTRO: ${elektro === "eu" ? "EU štandard" : elektro === "cz" ? "CZ/SK štandard" : "GE štandard (A0)"}`);
+    if (bleskozvod) lines.push(`- Bleskozvod`);
+    if (prepat) lines.push(`- Prepäťová ochrana`);
+    
+    if (inziniering || projektACertifikacia || revizia) {
+      lines.push(`\nSLUŽBY:`);
+      if (inziniering) lines.push(`- Inžiniering`);
+      if (projektACertifikacia) lines.push(`- Projekt + Certifikácia A0`);
+      if (revizia) lines.push(`- Revízna dokumentácia`);
+    }
+    
+    if (zaklady !== "bez") {
+      lines.push(`\nZÁKLADY: ${zaklady === "vruty" ? "Zemné vruty" : zaklady === "patky" ? "Betónové pätky" : "Pásové betónové"}`);
+    }
+    
+    if (montaz || doprava) {
+      lines.push(`\nREALIZÁCIA:`);
+      if (montaz) lines.push(`- Montáž domu`);
+      if (doprava) lines.push(`- Doprava modulov`);
+    }
+    
+    lines.push(`\n\nCELKOVÁ CENA: ${formatPrice(totalPrice)}`);
+    return lines.join('\n');
+  };
+
+  const createDopytMutation = useMutation({
+    mutationFn: (data) => base44.entities.Dopyt.create(data),
+    onSuccess: () => {
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
+        onClose();
+      }, 3000);
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    createDopytMutation.mutate({
+      ...formData,
+      typ_dopytu: "konfigurator",
+      dom_id: dom?.id,
+      konfiguracny_kod: `Lyon 50m² - ${actualStatus} - ${formatPrice(totalPrice)}`,
+      poznamka: `Lokalita: ${formData.obec}\n\n${formData.poznamka}\n\n--- KONFIGURÁCIA ---\n${buildConfigSummary()}`
+    });
+  };
+
+  const handleDownloadPDF = async () => {
+    toast.info('Funkcia PDF bude dostupná čoskoro');
+  };
+
+  const handleEmailPDF = async () => {
+    if (!formData.email) {
+      toast.error('Vyplňte email');
+      return;
+    }
+    toast.info('Funkcia Email PDF bude dostupná čoskoro');
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -90,156 +190,254 @@ export default function LyonFinalSummaryModal({
             onClick={(e) => e.stopPropagation()}
             className="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
           >
-            {/* Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 flex items-center justify-between z-10">
-              <div>
-                <h2 className="text-3xl font-bold flex items-center gap-3">
-                  <Home className="w-8 h-8" />
-                  Váš dom Lyon 50m²
-                </h2>
-                <p className="text-blue-100 mt-1 text-lg">
-                  {actualStatus} {!isA0 && ucel === "rodinny" && "⚠️ (chýbajú A0 položky)"}
-                </p>
-              </div>
-              <button
-                onClick={onClose}
-                className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-all"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-
-            {/* Upozornenie pre neúplnú A0 konfiguráciu */}
-            {ucel === "rodinny" && !isA0 && (
-              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 m-6">
-                <div className="flex items-start gap-3">
-                  <div className="text-yellow-600 text-2xl">⚠️</div>
-                  <div>
-                    <h4 className="text-yellow-900 font-bold mb-1">Neúplná konfigurácia pre rodinný dom</h4>
-                    <p className="text-yellow-800 text-sm">
-                      Aktuálna konfigurácia nezahŕňa všetky potrebné A0 položky pre skolaudovanie ako rodinný dom. 
-                      Dom bude možné použiť len ako rekreačnú stavbu. Pre získanie A0 certifikátu doplňte všetky požadované položky.
-                    </p>
+            {!submitted ? (
+              <div className="flex flex-col lg:flex-row">
+                {/* Ľavá strana - Obrázok a súhrn */}
+                <div className="lg:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 text-white">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-bold">Vaša konfigurácia</h2>
+                    <button
+                      onClick={onClose}
+                      className="lg:hidden w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
                   </div>
+
+                  {/* Obrázok domu */}
+                  <div className="relative rounded-xl overflow-hidden mb-4 bg-white">
+                    <img 
+                      src={getDisplayImage()} 
+                      alt="Lyon 50m²" 
+                      className="w-full h-48 object-contain"
+                    />
+                    <div className="absolute top-2 left-2">
+                      <Badge className={`${fasada === "omietka" ? "bg-orange-500" : "bg-amber-600"} text-white text-xs`}>
+                        {fasada === "omietka" ? "Šúchaná fasáda" : 
+                         fasada === "drevo_smrek" ? "Drevený obklad" :
+                         fasada === "smrekovec" ? "Smrekovec" :
+                         fasada === "falcovane" ? "Falcované panely" : "Thermowood"}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <h3 className="text-xl font-bold mb-3">Lyon 50m²</h3>
+
+                  {/* Upozornenie pre neúplnú A0 */}
+                  {ucel === "rodinny" && !isA0 && (
+                    <div className="bg-yellow-900/30 border border-yellow-700 rounded-lg p-3 mb-3">
+                      <div className="flex items-start gap-2">
+                        <AlertCircle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-yellow-400 font-bold text-sm mb-1">Neúplná A0 konfigurácia</p>
+                          <p className="text-yellow-300/80 text-xs">
+                            Aktuálne je to rekreačná stavba. Pre rodinný dom doplňte všetky A0 položky.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Súhrn konfigurácie */}
+                  <div className="bg-slate-800/50 rounded-xl p-3 border border-slate-700/50 max-h-[280px] overflow-y-auto text-sm space-y-2">
+                    <div className="flex justify-between items-center py-1">
+                      <span className="text-slate-300">Účel stavby</span>
+                      <span className="text-green-400 font-semibold">{actualStatus}</span>
+                    </div>
+                    <div className="border-t border-slate-700 pt-2">
+                      <p className="text-slate-400 text-xs mb-1">IZOLÁCIA</p>
+                      <div className="space-y-1 text-xs">
+                        <div className="flex justify-between"><span>Steny</span><span className="text-slate-300">{izolaciaStien}</span></div>
+                        <div className="flex justify-between"><span>Podlaha</span><span className="text-slate-300">{izolaciaPodlahy}</span></div>
+                        <div className="flex justify-between"><span>Strop</span><span className="text-slate-300">{izolaciaStropu}</span></div>
+                      </div>
+                    </div>
+                    {(tepelneCerpadlo === "ano" || rekuperacia === "ano") && (
+                      <div className="border-t border-slate-700 pt-2">
+                        <p className="text-slate-400 text-xs mb-1">VYKUROVANIE</p>
+                        <div className="space-y-1 text-xs text-slate-300">
+                          {tepelneCerpadlo === "ano" && <div>• Tepelné čerpadlo</div>}
+                          {rekuperacia === "ano" && <div>• Rekuperácia</div>}
+                          {podlahovoKurenie && <div>• Podlahové kúrenie</div>}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Status A0 */}
+                  <div className={`mt-3 p-3 rounded-xl border ${isA0 ? 'bg-green-500/20 border-green-500/30' : 'bg-blue-500/20 border-blue-500/30'}`}>
+                    {isA0 ? (
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-5 h-5 text-green-400" />
+                        <div>
+                          <p className="text-green-400 font-bold text-sm">✓ Spĺňa podmienky A0</p>
+                          <p className="text-green-300/80 text-xs">Rodinný dom s energetickým certifikátom</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <Home className="w-5 h-5 text-blue-400" />
+                        <div>
+                          <p className="text-blue-400 font-bold text-sm">Rekreačná stavba</p>
+                          <p className="text-blue-300/80 text-xs">Chata / záhradný domček</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Celková cena */}
+                  <div className="mt-3 p-3 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30">
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-300 text-sm">Celkom s DPH</span>
+                      <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+                        {formatPrice(totalPrice)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={onClose}
+                    className="hidden lg:block mt-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 mx-auto"
+                  >
+                    <X className="w-5 h-5 mx-auto" />
+                  </button>
+                </div>
+
+                {/* Pravá strana - Formulár */}
+                <div className="lg:w-1/2 p-6">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    Kontaktné údaje
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-6">
+                    Vyplňte formulár a my vás budeme kontaktovať s podrobnou ponukou.
+                  </p>
+
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                      <Label htmlFor="meno">Meno a priezvisko *</Label>
+                      <Input
+                        id="meno"
+                        required
+                        value={formData.meno}
+                        onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
+                        placeholder="Ján Novák"
+                        className="mt-1"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="email">Email *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="jan.novak@email.sk"
+                        className="mt-1"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="telefon">Telefón *</Label>
+                      <Input
+                        id="telefon"
+                        required
+                        value={formData.telefon}
+                        onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
+                        placeholder="+421 900 123 456"
+                        className="mt-1"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="obec">Obec / Mesto (kde bude dom stáť) *</Label>
+                      <Input
+                        id="obec"
+                        required
+                        value={formData.obec}
+                        onChange={(e) => setFormData({ ...formData, obec: e.target.value })}
+                        placeholder="napr. Bratislava, Košice..."
+                        className="mt-1"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="poznamka">Poznámka (voliteľné)</Label>
+                      <Textarea
+                        id="poznamka"
+                        value={formData.poznamka}
+                        onChange={(e) => setFormData({ ...formData, poznamka: e.target.value })}
+                        placeholder="Máte otázky alebo špeciálne požiadavky?"
+                        rows={3}
+                        className="mt-1"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 mb-3">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={handleDownloadPDF}
+                        disabled={generatingPDF}
+                        className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50"
+                      >
+                        <FileDown className="mr-2 w-4 h-4" />
+                        Stiahnuť PDF
+                      </Button>
+
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={handleEmailPDF}
+                        disabled={generatingPDF || !formData.email}
+                        className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50"
+                      >
+                        <Mail className="mr-2 w-4 h-4" />
+                        Email PDF
+                      </Button>
+                    </div>
+
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold"
+                      disabled={createDopytMutation.isPending}
+                    >
+                      {createDopytMutation.isPending ? (
+                        "Odosiela sa..."
+                      ) : (
+                        <>
+                          <Send className="mr-2 w-5 h-5" />
+                          Odoslať dopyt
+                        </>
+                      )}
+                    </Button>
+                  </form>
                 </div>
               </div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center py-12 px-6"
+              >
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle className="w-10 h-10 text-green-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                  Ďakujeme za váš záujem!
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Vaša konfigurácia bola úspešne odoslaná. Ozveme sa vám čo najskôr, 
+                  zvyčajne do 24 hodín.
+                </p>
+              </motion.div>
             )}
 
-            <div className="p-6">
-              {/* Obrázok domu */}
-              <div className="mb-6 rounded-xl overflow-hidden shadow-lg">
-                <img 
-                  src={getDisplayImage()} 
-                  alt="Lyon konfigurácia"
-                  className="w-full h-auto object-cover"
-                />
-                <div className="bg-gray-100 p-3 text-center">
-                  <p className="text-sm text-gray-600">
-                    {fasada === "omietka" ? "Zobrazenie: Šúchaná omietka (titulná fotka)" : "Zobrazenie: Základná konfigurácia"}
-                  </p>
-                </div>
-              </div>
 
-              {/* Celková cena */}
-              <Card className="p-6 mb-6 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300">
-                <div className="text-center">
-                  <p className="text-gray-600 mb-2 text-lg">Celková cena vášho domu s DPH</p>
-                  <p className="text-5xl font-black text-green-600">{formatPrice(totalPrice)}</p>
-                </div>
-              </Card>
-
-              {/* Zoznam vybraných položiek */}
-              <div className="grid md:grid-cols-2 gap-4">
-                {/* Základné info */}
-                <Card className="p-4 bg-blue-50 border border-blue-200">
-                  <h3 className="font-bold text-blue-900 mb-3 flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5" />
-                    Účel stavby
-                  </h3>
-                  <p className="text-gray-800">{actualStatus}</p>
-                </Card>
-
-                {/* Izolácia */}
-                <Card className="p-4 bg-blue-50 border border-blue-200">
-                  <h3 className="font-bold text-blue-900 mb-3">Izolácia</h3>
-                  <ul className="space-y-1 text-sm text-gray-700">
-                    <li>• Steny: {izolaciaStien}</li>
-                    <li>• Podlaha: {izolaciaPodlahy}</li>
-                    <li>• Strop: {izolaciaStropu}</li>
-                  </ul>
-                </Card>
-
-                {/* Vykurovanie */}
-                {(tepelneCerpadlo === "ano" || rekuperacia === "ano" || podlahovoKurenie || pripravaNaKrb || ochranaKachle) && (
-                  <Card className="p-4 bg-orange-50 border border-orange-200">
-                    <h3 className="font-bold text-orange-900 mb-3">Vykurovanie</h3>
-                    <ul className="space-y-1 text-sm text-gray-700">
-                      {tepelneCerpadlo === "ano" && <li>• Tepelné čerpadlo</li>}
-                      {rekuperacia === "ano" && <li>• Rekuperácia</li>}
-                      {podlahovoKurenie && <li>• Podlahové kúrenie</li>}
-                      {pripravaNaKrb && <li>• Príprava na krb</li>}
-                      {ochranaKachle && <li>• Ochrana na kachle</li>}
-                    </ul>
-                  </Card>
-                )}
-
-                {/* Fasáda */}
-                <Card className="p-4 bg-purple-50 border border-purple-200">
-                  <h3 className="font-bold text-purple-900 mb-3">Fasáda</h3>
-                  <p className="text-gray-700">
-                    {fasada === "drevo_smrek" ? "Drevo smrek" :
-                     fasada === "omietka" ? "Šúchaná omietka" :
-                     fasada === "smrekovec" ? "Smrekovec" :
-                     fasada === "falcovane" ? "Falcované panely" : "Thermowood"}
-                  </p>
-                </Card>
-
-                {/* Strecha */}
-                <Card className="p-4 bg-indigo-50 border border-indigo-200">
-                  <h3 className="font-bold text-indigo-900 mb-3">Strecha</h3>
-                  <ul className="space-y-1 text-sm text-gray-700">
-                    <li>• {strecha === "korugovan_plech" ? "Korugovaný plech" : "Falcované panely"}</li>
-                    {odkvapy === "ano" && <li>• Odkvapy</li>}
-                  </ul>
-                </Card>
-
-                {/* Elektro */}
-                <Card className="p-4 bg-yellow-50 border border-yellow-200">
-                  <h3 className="font-bold text-yellow-900 mb-3">Elektroinštalácia</h3>
-                  <ul className="space-y-1 text-sm text-gray-700">
-                    <li>• {elektro === "eu" ? "EU štandard" : elektro === "cz" ? "CZ/SK štandard" : "GE štandard (A0)"}</li>
-                    {bleskozvod && <li>• Bleskozvod</li>}
-                    {prepat && <li>• Prepäťová ochrana</li>}
-                  </ul>
-                </Card>
-
-                {/* Služby */}
-                {(inziniering || projektACertifikacia || revizia) && (
-                  <Card className="p-4 bg-green-50 border border-green-200">
-                    <h3 className="font-bold text-green-900 mb-3">Služby</h3>
-                    <ul className="space-y-1 text-sm text-gray-700">
-                      {inziniering && <li>• Inžiniering</li>}
-                      {projektACertifikacia && <li>• Projekt + Certifikácia A0</li>}
-                      {revizia && <li>• Revízna dokumentácia</li>}
-                    </ul>
-                  </Card>
-                )}
-              </div>
-
-              {/* CTA */}
-              <div className="mt-8 text-center">
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-12 py-6 text-lg"
-                  onClick={() => {
-                    onClose();
-                    // Tu môžete pridať logiku pre odoslanie dopytu
-                  }}
-                >
-                  Mám záujem o tento dom
-                </Button>
-              </div>
-            </div>
           </motion.div>
         </motion.div>
       )}
