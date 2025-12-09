@@ -172,26 +172,26 @@ export default function KonfiguratorLyon() {
 
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
-  // Drag handlers
+  // Drag handlers - using pageX/pageY to track position relative to document
   const handleMouseDown = (e) => {
     if (e.target.closest('.resize-handle')) return;
     setIsDragging(true);
     setDragStart({
-      x: e.clientX - panelPosition.x,
-      y: e.clientY - panelPosition.y
+      x: e.pageX - panelPosition.x,
+      y: e.pageY - panelPosition.y
     });
   };
 
   const handleMouseMove = (e) => {
     if (isDragging) {
       setPanelPosition({
-        x: e.clientX - dragStart.x,
-        y: e.clientY - dragStart.y
+        x: e.pageX - dragStart.x,
+        y: e.pageY - dragStart.y
       });
     }
     if (isResizing) {
-      const newWidth = Math.max(280, e.clientX - panelPosition.x);
-      const newHeight = Math.max(400, e.clientY - panelPosition.y);
+      const newWidth = Math.max(280, e.pageX - panelPosition.x);
+      const newHeight = Math.max(400, e.pageY - panelPosition.y);
       setPanelSize({ width: newWidth, height: newHeight });
     }
   };
