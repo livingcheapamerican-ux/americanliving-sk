@@ -1708,7 +1708,11 @@ export default function DetailDomu() {
                     </div>
                   </div>
                 )}
-                {dom.terasa_plocha && (!isTicabhouse || !dom.specifikacia || !dom.specifikacia.includes("Terasa: ❌")) && (
+                {dom.terasa_plocha && (
+                  !isTicabhouse || 
+                  (dom.popis && (dom.popis.includes("vstavaná") || dom.popis.includes("zabudovaná") || dom.popis.includes("Vstavaná") || dom.popis.includes("Zabudovaná"))) ||
+                  (dom.specifikacia && !dom.specifikacia.includes("Terasa: ❌"))
+                ) && (
                   <div className="flex items-center gap-2">
                     <Landmark className="w-4 h-4 sm:w-5 sm:h-5 text-teal-600" />
                     <div>

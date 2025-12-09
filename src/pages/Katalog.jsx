@@ -669,16 +669,11 @@ export default function Katalog() {
                                 </div>
                               </div>
                             )}
-                            {dom.terasa_plocha && dom.vyrobca !== "Ticab house" && (
-                              <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
-                                <Fence className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-teal-500" />
-                                <div className="flex flex-col min-w-0">
-                                  <span className="hidden sm:block text-xs text-gray-500">Terasa</span>
-                                  <span className="font-semibold text-primary text-[9px] sm:text-xs">{dom.terasa_plocha} m²</span>
-                                </div>
-                              </div>
-                            )}
-                            {dom.terasa_plocha && dom.vyrobca === "Ticab house" && dom.specifikacia && !dom.specifikacia.includes("Terasa: ❌") && (
+                            {dom.terasa_plocha && (
+                              dom.vyrobca !== "Ticab house" || 
+                              (dom.popis && (dom.popis.includes("vstavaná") || dom.popis.includes("zabudovaná") || dom.popis.includes("Vstavaná") || dom.popis.includes("Zabudovaná"))) ||
+                              (dom.specifikacia && !dom.specifikacia.includes("Terasa: ❌"))
+                            ) && (
                               <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
                                 <Fence className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-teal-500" />
                                 <div className="flex flex-col min-w-0">
