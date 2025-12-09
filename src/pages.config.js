@@ -29,6 +29,9 @@ import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
 import SEODashboard from './pages/SEODashboard';
 import AdminUpdateTicabHouse from './pages/AdminUpdateTicabHouse';
 import MigraciaObrazkovLyon from './pages/MigraciaObrazkovLyon';
+import Blog from './pages/Blog';
+import BlogDetail from './pages/BlogDetail';
+import AdminBlog from './pages/AdminBlog';
 import __Layout from './Layout.jsx';
 
 
@@ -64,6 +67,9 @@ export const PAGES = {
     "SEODashboard": SEODashboard,
     "AdminUpdateTicabHouse": AdminUpdateTicabHouse,
     "MigraciaObrazkovLyon": MigraciaObrazkovLyon,
+    "Blog": Blog,
+    "BlogDetail": BlogDetail,
+    "AdminBlog": AdminBlog,
 }
 
 export const pagesConfig = {
