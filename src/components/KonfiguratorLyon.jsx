@@ -153,7 +153,7 @@ export default function KonfiguratorLyon() {
 
   return (
     <div className="w-full max-w-5xl mx-auto">
-      {/* Účel stavby - celá šírka */}
+      {/* Účel stavby */}
       <Card className="p-2 mb-2">
         <h3 className="text-xs font-bold text-gray-900 mb-2 flex items-center gap-1">
           <Home className="w-4 h-4 text-blue-600" />
@@ -179,8 +179,12 @@ export default function KonfiguratorLyon() {
         </Card>
       )}
 
-      {/* 2-stĺpcový layout: V cene | Príplatky */}
-      <div className="grid grid-cols-2 gap-2">
+      {/* Hlavný konfigurátor - oddelený červenou čiarou */}
+      <div className="relative">
+        {/* Červená deliaca čiara */}
+        <div className="absolute top-0 bottom-0 left-1/2 w-0.5 bg-red-500 z-10 transform -translate-x-1/2"></div>
+        
+        <div className="grid grid-cols-2 gap-2">
 
         {/* ĽAVÝ STĹPEC - V CENE (0 €) */}
         <div className="space-y-2">
