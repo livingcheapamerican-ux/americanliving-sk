@@ -263,9 +263,9 @@ export default function KonfiguratorLyon() {
             <div>
               <p className="text-xs font-semibold text-gray-700 mb-2">Izolácia stien (vyber jednu možnosť):</p>
               <div className="grid grid-cols-3 gap-2 border-2 border-blue-300 rounded-lg p-2 bg-blue-50">
-                <Tile selected={izolaciaStien === "150mm"} onClick={() => setIzolaciaStien("150mm")} title="150mm" subtitle="Rekreačné" price="0 €" isPriced={false} isIncluded={true} />
-                <Tile selected={izolaciaStien === "200mm"} onClick={() => setIzolaciaStien("200mm")} title="200mm" subtitle="" price="+ 1 799 €" isPriced={true} />
-                <Tile selected={izolaciaStien === "250mm"} onClick={() => setIzolaciaStien("250mm")} title="250mm" subtitle="A0" price="+ 1 558 €" isPriced={true} isA0={true} />
+                <Tile selected={izolaciaStien === "150mm"} onClick={() => setIzolaciaStien("150mm")} title="Steny 150mm" subtitle="Rekreačné" price="0 €" isPriced={false} isIncluded={true} />
+                <Tile selected={izolaciaStien === "200mm"} onClick={() => setIzolaciaStien("200mm")} title="Steny 200mm" subtitle="" price="+ 1 799 €" isPriced={true} />
+                <Tile selected={izolaciaStien === "250mm"} onClick={() => setIzolaciaStien("250mm")} title="Steny 250mm" subtitle="Premium A0" price="+ 1 558 €" isPriced={true} isA0={true} />
               </div>
             </div>
 
@@ -273,8 +273,8 @@ export default function KonfiguratorLyon() {
             <div>
               <p className="text-xs font-semibold text-gray-700 mb-2">Izolácia podlahy (vyber jednu možnosť):</p>
               <div className="grid grid-cols-2 gap-2 border-2 border-blue-300 rounded-lg p-2 bg-blue-50">
-                <Tile selected={izolaciaPodlahy === "150mm"} onClick={() => setIzolaciaPodlahy("150mm")} title="150mm" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-                <Tile selected={izolaciaPodlahy === "200mm"} onClick={() => setIzolaciaPodlahy("200mm")} title="200mm" subtitle="A0" price="+ 334 €" isPriced={true} isA0={true} />
+                <Tile selected={izolaciaPodlahy === "150mm"} onClick={() => setIzolaciaPodlahy("150mm")} title="Podlaha 150mm" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
+                <Tile selected={izolaciaPodlahy === "200mm"} onClick={() => setIzolaciaPodlahy("200mm")} title="Podlaha 200mm" subtitle="A0" price="+ 334 €" isPriced={true} isA0={true} />
               </div>
             </div>
 
@@ -282,8 +282,8 @@ export default function KonfiguratorLyon() {
             <div>
               <p className="text-xs font-semibold text-gray-700 mb-2">Izolácia stropu (vyber jednu možnosť):</p>
               <div className="grid grid-cols-2 gap-2 border-2 border-blue-300 rounded-lg p-2 bg-blue-50">
-                <Tile selected={izolaciaStropu === "150mm"} onClick={() => setIzolaciaStropu("150mm")} title="150mm" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-                <Tile selected={izolaciaStropu === "200mm"} onClick={() => setIzolaciaStropu("200mm")} title="200mm" subtitle="A0" price="+ 271 €" isPriced={true} isA0={true} />
+                <Tile selected={izolaciaStropu === "150mm"} onClick={() => setIzolaciaStropu("150mm")} title="Strop 150mm" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
+                <Tile selected={izolaciaStropu === "200mm"} onClick={() => setIzolaciaStropu("200mm")} title="Strop 200mm" subtitle="A0" price="+ 271 €" isPriced={true} isA0={true} />
               </div>
             </div>
           </div>
@@ -317,9 +317,9 @@ export default function KonfiguratorLyon() {
             <div>
               <p className="text-xs font-semibold text-gray-700 mb-2">Doplnky (môžeš vybrať viac):</p>
               <div className="space-y-2">
-                <Tile selected={podlahovoKurenie} onClick={() => setPodlahovoKurenie(!podlahovoKurenie)} title="Podlah. kúrenie" subtitle="" price="+ 2 253 €" isPriced={true} />
-                <Tile selected={pripravaNaKrb} onClick={() => setPripravaNaKrb(!pripravaNaKrb)} title="Príprava krb" subtitle="" price="+ 579 €" isPriced={true} />
-                <Tile selected={ochranaKachle} onClick={() => setOchranaKachle(!ochranaKachle)} title="Ochrana kachle" subtitle="" price="+ 1 280 €" isPriced={true} />
+                <Tile selected={podlahovoKurenie} onClick={() => setPodlahovoKurenie(!podlahovoKurenie)} title="Podlahové kúrenie" subtitle="" price="+ 2 253 €" isPriced={true} />
+                <Tile selected={pripravaNaKrb} onClick={() => setPripravaNaKrb(!pripravaNaKrb)} title="Príprava na krb" subtitle="" price="+ 579 €" isPriced={true} />
+                <Tile selected={ochranaKachle} onClick={() => setOchranaKachle(!ochranaKachle)} title="Ochrana na kachle" subtitle="" price="+ 1 280 €" isPriced={true} />
               </div>
             </div>
           </div>
@@ -334,9 +334,9 @@ export default function KonfiguratorLyon() {
             <p className="text-xs font-semibold text-gray-700 mb-2">Typ fasády (vyber jednu možnosť):</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 border-2 border-purple-300 rounded-lg p-2 bg-purple-50">
               <Tile selected={fasada === "drevo_smrek"} onClick={() => setFasada("drevo_smrek")} title="Drevo smrek" subtitle="Tmavý/Svetlý" price="0 €" isPriced={false} isIncluded={true} />
-              <Tile selected={fasada === "omietka"} onClick={() => setFasada("omietka")} title="Omietka" subtitle="Baumit" price="+ 1 581 €" isPriced={true} />
+              <Tile selected={fasada === "omietka"} onClick={() => setFasada("omietka")} title="Šúchaná omietka" subtitle="Baumit" price="+ 1 581 €" isPriced={true} />
               <Tile selected={fasada === "smrekovec"} onClick={() => setFasada("smrekovec")} title="Smrekovec" subtitle="" price="+ 3 350 €" isPriced={true} />
-              <Tile selected={fasada === "falcovane"} onClick={() => setFasada("falcovane")} title="Falcované" subtitle="" price="+ 4 954 €" isPriced={true} />
+              <Tile selected={fasada === "falcovane"} onClick={() => setFasada("falcovane")} title="Falcované panely" subtitle="" price="+ 4 954 €" isPriced={true} />
               <Tile selected={fasada === "thermowood"} onClick={() => setFasada("thermowood")} title="Thermowood" subtitle="" price="+ 6 677 €" isPriced={true} />
             </div>
           </div>
@@ -406,9 +406,9 @@ export default function KonfiguratorLyon() {
               <p className="text-xs font-semibold text-gray-700 mb-2">Obklad stien (vyber jednu možnosť):</p>
               <div className="grid grid-cols-2 gap-2 border-2 border-amber-300 rounded-lg p-2 bg-amber-50">
                 <Tile selected={obkladStien === "smrek_8cm"} onClick={() => setObkladStien("smrek_8cm")} title="Smrek 8cm" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-                <Tile selected={obkladStien === "smrek_bez_uzlov"} onClick={() => setObkladStien("smrek_bez_uzlov")} title="Smrek 12cm" subtitle="Bez uzlov" price="0 €" isPriced={false} />
-                <Tile selected={obkladStien === "sadrokarton_tapeta"} onClick={() => setObkladStien("sadrokarton_tapeta")} title="Sadrokarton" subtitle="Tapeta+maľovka" price="+ 7 855 €" isPriced={true} />
-                <Tile selected={obkladStien === "osb_panel"} onClick={() => setObkladStien("osb_panel")} title="OSB panel" subtitle="Laminátový" price="+ 5 279 €" isPriced={true} />
+                <Tile selected={obkladStien === "smrek_bez_uzlov"} onClick={() => setObkladStien("smrek_bez_uzlov")} title="Smrek bez uzlov 12cm" subtitle="" price="0 €" isPriced={false} />
+                <Tile selected={obkladStien === "sadrokarton_tapeta"} onClick={() => setObkladStien("sadrokarton_tapeta")} title="Sadrokarton+netkaná tapeta+maľovka" subtitle="" price="+ 7 855 €" isPriced={true} />
+                <Tile selected={obkladStien === "osb_panel"} onClick={() => setObkladStien("osb_panel")} title="OSB + laminátový panel" subtitle="" price="+ 5 279 €" isPriced={true} />
               </div>
             </div>
 
@@ -441,7 +441,7 @@ export default function KonfiguratorLyon() {
             <div>
               <p className="text-xs font-semibold text-gray-700 mb-2">Typ inštalácie (vyber jednu možnosť):</p>
               <div className="grid grid-cols-3 gap-2 border-2 border-yellow-300 rounded-lg p-2 bg-yellow-50">
-                <Tile selected={elektro === "eu"} onClick={() => setElektro("eu")} title="EU" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
+                <Tile selected={elektro === "eu"} onClick={() => setElektro("eu")} title="EU štandard" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={elektro === "cz"} onClick={() => setElektro("cz")} title="CZ/SK" subtitle="" price="+ 460 €" isPriced={true} />
                 <Tile selected={elektro === "ge"} onClick={() => setElektro("ge")} title="GE" subtitle="" price="+ 1 583 €" isPriced={true} />
               </div>
@@ -452,7 +452,7 @@ export default function KonfiguratorLyon() {
               <p className="text-xs font-semibold text-gray-700 mb-2">Doplnky (môžeš vybrať viac):</p>
               <div className="space-y-2">
                 <Tile selected={bleskozvod} onClick={() => setBleskozvod(!bleskozvod)} title="Bleskozvod" subtitle="" price="+ 856 €" isPriced={true} />
-                <Tile selected={prepat} onClick={() => setPrepat(!prepat)} title="Prepäť. ochrana" subtitle="" price="+ 311 €" isPriced={true} />
+                <Tile selected={prepat} onClick={() => setPrepat(!prepat)} title="Prepäťová ochrana" subtitle="" price="+ 311 €" isPriced={true} />
               </div>
             </div>
           </div>
@@ -468,7 +468,7 @@ export default function KonfiguratorLyon() {
             <div>
               <p className="text-xs font-semibold text-gray-700 mb-2">Sprchový kút (vyber jednu možnosť):</p>
               <div className="grid grid-cols-2 gap-2 border-2 border-teal-300 rounded-lg p-2 bg-teal-50">
-                <Tile selected={sprchovyKut === "standard"} onClick={() => setSprchovyKut("standard")} title="Sprcha štandard" subtitle="WC Geberit" price="0 €" isPriced={false} isIncluded={true} />
+                <Tile selected={sprchovyKut === "standard"} onClick={() => setSprchovyKut("standard")} title="Sprcha" subtitle="WC Geberit" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={sprchovyKut === "radaway"} onClick={() => setSprchovyKut("radaway")} title="Sprcha Radaway" subtitle="" price="+ 646 €" isPriced={true} />
               </div>
             </div>
@@ -503,8 +503,8 @@ export default function KonfiguratorLyon() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 border-2 border-stone-300 rounded-lg p-2 bg-stone-50">
               <Tile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} title="Bez základov" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
               <Tile selected={zaklady === "vruty"} onClick={() => setZaklady("vruty")} title="Zemné vruty" subtitle="" price="+ 4 494 €" isPriced={true} />
-              <Tile selected={zaklady === "patky"} onClick={() => setZaklady("patky")} title="Bet. pätky" subtitle="" price="+ 2 568 €" isPriced={true} />
-              <Tile selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} title="Pásové bet." subtitle="" price="+ 11 825 €" isPriced={true} />
+              <Tile selected={zaklady === "patky"} onClick={() => setZaklady("patky")} title="Betónové pätky" subtitle="" price="+ 2 568 €" isPriced={true} />
+              <Tile selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} title="Pásové betónové" subtitle="" price="+ 11 825 €" isPriced={true} />
             </div>
           </div>
         </Card>
