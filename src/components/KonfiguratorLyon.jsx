@@ -752,7 +752,7 @@ export default function KonfiguratorLyon() {
       <div className="xl:hidden sticky bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white p-3 shadow-2xl z-50 mt-4 rounded-t-2xl border-t-4 border-white/20">
         <div className="flex justify-between items-center gap-3">
           <div className="flex-1">
-            <p className="text-[10px] text-white/70 mb-0.5">Základ: {formatPrice(BASE_PRICE)} | Doplnky: {formatPrice(totalPrice - BASE_BASE_PRICE)}</p>
+            <p className="text-[10px] text-white/70 mb-0.5">Základ: {formatPrice(BASE_PRICE)} | Doplnky: {formatPrice(totalPrice - BASE_PRICE)}</p>
             <p className="text-xl sm:text-2xl font-black text-white drop-shadow-lg">
               {formatPrice(totalPrice)}
             </p>
