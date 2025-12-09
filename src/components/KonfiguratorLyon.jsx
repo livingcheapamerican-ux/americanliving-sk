@@ -454,8 +454,8 @@ export default function KonfiguratorLyon() {
               <p className="text-xs font-semibold text-gray-700 mb-2">Typ inštalácie (vyber jednu možnosť):</p>
               <div className="grid grid-cols-3 gap-2 border-2 border-yellow-300 rounded-lg p-2 bg-yellow-50">
                 <Tile selected={elektro === "eu"} onClick={() => setElektro("eu")} title="EU štandard" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-                <Tile selected={elektro === "cz"} onClick={() => setElektro("cz")} title="CZ/SK" subtitle="" price="+ 460 €" isPriced={true} />
-                <Tile selected={elektro === "ge"} onClick={() => setElektro("ge")} title="GE" subtitle="" price="+ 1 583 €" isPriced={true} isA0={true} />
+                <Tile selected={elektro === "cz"} onClick={() => setElektro("cz")} title="CZ/SK štandard" subtitle="Zásuvky, dodatočné istenie" price="+ 460 €" isPriced={true} />
+                <Tile selected={elektro === "ge"} onClick={() => setElektro("ge")} title="GE štandard" subtitle="" price="+ 1 583 €" isPriced={true} isA0={true} />
               </div>
             </div>
 
