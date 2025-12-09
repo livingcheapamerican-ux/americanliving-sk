@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Home, Zap, Send } from "lucide-react";
+import { Sparkles, Home, Send } from "lucide-react";
 import { motion } from "framer-motion";
 
 const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isIncluded }) => {
@@ -71,7 +71,6 @@ export default function KonfiguratorLyon() {
   const [elektro, setElektro] = useState("eu");
   const [bleskozvod, setBleskozvod] = useState(false);
   const [prepat, setPrepat] = useState(false);
-  const [kupelna, setKupelna] = useState("standard");
   const [sprchovyKut, setSprchovyKut] = useState("standard");
   const [vana, setVana] = useState(false);
   const [bateria, setBateria] = useState("standard");
@@ -428,8 +427,8 @@ export default function KonfiguratorLyon() {
         </div>
       </div>
 
-      {/* Sticky Footer - kompaktný */}
-      <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-r from-slate-800 to-slate-900 text-white p-2 shadow-2xl z-50 mt-2">
+      {/* Sticky Footer */}
+      <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-r from-slate-800 to-slate-900 text-white p-2 shadow-2xl z-50 mt-2 rounded-t-lg">
         <div className="flex justify-between items-center gap-2">
           <div className="flex-1">
             <p className="text-[9px] text-slate-400">Základ: {formatPrice(BASE_PRICE)} | Doplnky: {formatPrice(totalPrice - BASE_PRICE)}</p>
