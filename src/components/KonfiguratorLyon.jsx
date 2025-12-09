@@ -254,6 +254,9 @@ export default function KonfiguratorLyon() {
               setKolaudacia("s_a0");
               setInziniering(true);
               setProjektACertifikacia(true);
+              setBleskozvod(true);
+              setPrepat(true);
+              setElektro("ge");
             }} title="S kolaudáciou A0" subtitle="Admin proces" price="0 €" isPriced={false} isA0={true} />
           </div>
         </Card>
