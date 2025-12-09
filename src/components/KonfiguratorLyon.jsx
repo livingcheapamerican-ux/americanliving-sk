@@ -405,8 +405,7 @@ export default function KonfiguratorLyon(props = {}) {
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
   return (
-    <div className="w-full">{/* Main Content */}
-
+    <div className="w-full">
       {/* Účel stavby - kompaktnejší */}
       <Card className="p-3 sm:p-4 mb-3 bg-gradient-to-br from-blue-50 via-white to-indigo-50 border-2 border-blue-200 shadow-lg">
         <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
