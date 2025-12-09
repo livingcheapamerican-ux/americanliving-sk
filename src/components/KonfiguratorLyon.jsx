@@ -211,6 +211,9 @@ export default function KonfiguratorLyon() {
               setRekuperacia("ano");
               setInziniering(true);
               setProjektACertifikacia(true);
+              setBleskozvod(true);
+              setPrepat(true);
+              setElektro("ge");
             }}
             className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${
               ucel === "rodinny" 
@@ -449,7 +452,7 @@ export default function KonfiguratorLyon() {
               <div className="grid grid-cols-3 gap-2 border-2 border-yellow-300 rounded-lg p-2 bg-yellow-50">
                 <Tile selected={elektro === "eu"} onClick={() => setElektro("eu")} title="EU štandard" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={elektro === "cz"} onClick={() => setElektro("cz")} title="CZ/SK" subtitle="" price="+ 460 €" isPriced={true} />
-                <Tile selected={elektro === "ge"} onClick={() => setElektro("ge")} title="GE" subtitle="" price="+ 1 583 €" isPriced={true} />
+                <Tile selected={elektro === "ge"} onClick={() => setElektro("ge")} title="GE" subtitle="" price="+ 1 583 €" isPriced={true} isA0={true} />
               </div>
             </div>
 
@@ -457,8 +460,8 @@ export default function KonfiguratorLyon() {
             <div>
               <p className="text-xs font-semibold text-gray-700 mb-2">Doplnky (môžeš vybrať viac):</p>
               <div className="space-y-2">
-                <Tile selected={bleskozvod} onClick={() => setBleskozvod(!bleskozvod)} title="Bleskozvod" subtitle="" price="+ 856 €" isPriced={true} />
-                <Tile selected={prepat} onClick={() => setPrepat(!prepat)} title="Prepäťová ochrana" subtitle="" price="+ 311 €" isPriced={true} />
+                <Tile selected={bleskozvod} onClick={() => setBleskozvod(!bleskozvod)} title="Bleskozvod" subtitle="" price="+ 856 €" isPriced={true} isA0={true} />
+                <Tile selected={prepat} onClick={() => setPrepat(!prepat)} title="Prepäťová ochrana" subtitle="" price="+ 311 €" isPriced={true} isA0={true} />
               </div>
             </div>
           </div>
