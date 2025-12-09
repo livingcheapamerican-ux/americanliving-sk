@@ -32,6 +32,7 @@ import MigraciaObrazkovLyon from './pages/MigraciaObrazkovLyon';
 import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
 import AdminBlog from './pages/AdminBlog';
+import AdminSEOBlog from './pages/AdminSEOBlog';
 import __Layout from './Layout.jsx';
 
 
@@ -70,6 +71,7 @@ export const PAGES = {
     "Blog": Blog,
     "BlogDetail": BlogDetail,
     "AdminBlog": AdminBlog,
+    "AdminSEOBlog": AdminSEOBlog,
 }
 
 export const pagesConfig = {
