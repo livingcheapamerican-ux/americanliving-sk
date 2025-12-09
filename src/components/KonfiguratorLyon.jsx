@@ -76,13 +76,13 @@ export default function KonfiguratorLyon() {
   const [bateria, setBateria] = useState("standard");
   const [skrinka, setSkrinka] = useState(false);
   const [inziniering, setInziniering] = useState(false);
+  const [projektACertifikacia, setProjektACertifikacia] = useState(false);
   const [revizia, setRevizia] = useState(true);
   const [zaklady, setZaklady] = useState("bez");
   const [montaz, setMontaz] = useState(false);
   const [doprava, setDoprava] = useState(false);
 
   const CENY = {
-    kolaudacia: { s_a0: 3745.35 },
     izolacia_stien: { "200mm": 1799.16, "250mm": 1558.17 },
     izolacia_podlahy: { "200mm": 334.08 },
     izolacia_stropu: { "200mm": 271.44 },
@@ -105,6 +105,7 @@ export default function KonfiguratorLyon() {
     bateria: 139.20,
     skrinka: 434.13,
     inziniering: 2773.56,
+    projektACertifikacia: 3745.35,
     revizia: 1605.15,
     zaklady: { vruty: 4494.42, patky: 2568.24, pasove: 11825.04 },
     montaz: 4805.88,
@@ -113,8 +114,6 @@ export default function KonfiguratorLyon() {
 
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
-    
-    if (kolaudacia === "s_a0") total += CENY.kolaudacia.s_a0;
     total += CENY.izolacia_stien[izolaciaStien] || 0;
     total += CENY.izolacia_podlahy[izolaciaPodlahy] || 0;
     total += CENY.izolacia_stropu[izolaciaStropu] || 0;
@@ -137,16 +136,17 @@ export default function KonfiguratorLyon() {
     if (bateria === "grohe") total += CENY.bateria;
     if (skrinka) total += CENY.skrinka;
     if (inziniering) total += CENY.inziniering;
+    if (projektACertifikacia) total += CENY.projektACertifikacia;
     if (revizia) total += CENY.revizia;
     total += CENY.zaklady[zaklady] || 0;
     if (montaz) total += CENY.montaz;
     if (doprava) total += CENY.doprava;
     
     return total;
-  }, [kolaudacia, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia,
+  }, [izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia,
       podlahovoKurenie, pripravaNaKrb, ochranaKachle, fasada, strecha, odkvapy, vchodoveDvere,
       obkladStien, interieroveDvere, elektro, bleskozvod, prepat, sprchovyKut, vana, bateria,
-      skrinka, inziniering, revizia, zaklady, montaz, doprava]);
+      skrinka, inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava]);
 
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
@@ -172,6 +172,7 @@ export default function KonfiguratorLyon() {
               setTepelneCerpadlo("nie");
               setRekuperacia("nie");
               setInziniering(false);
+              setProjektACertifikacia(false);
             }}
             className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${
               ucel === "chata" 
@@ -203,6 +204,7 @@ export default function KonfiguratorLyon() {
               setTepelneCerpadlo("ano");
               setRekuperacia("ano");
               setInziniering(true);
+              setProjektACertifikacia(true);
             }}
             className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${
               ucel === "rodinny" 
@@ -237,11 +239,13 @@ export default function KonfiguratorLyon() {
             <Tile selected={kolaudacia === "bez_a0"} onClick={() => {
               setKolaudacia("bez_a0");
               setInziniering(false);
+              setProjektACertifikacia(false);
             }} title="Bez kolaudácie A0" subtitle="Bez admin." price="0 €" isPriced={false} />
             <Tile selected={kolaudacia === "s_a0"} onClick={() => {
               setKolaudacia("s_a0");
               setInziniering(true);
-            }} title="S kolaudáciou A0" subtitle="Projekt + Certif." price="+ 3 745,35 €" isPriced={true} isA0={true} />
+              setProjektACertifikacia(true);
+            }} title="S kolaudáciou A0" subtitle="Admin proces" price="0 €" isPriced={false} isA0={true} />
           </div>
         </Card>
       )}
@@ -604,6 +608,9 @@ export default function KonfiguratorLyon() {
                     <Sparkles className="w-3 h-3" />💰 PRÍPLATOK
                   </p>
                   <Tile selected={inziniering} onClick={() => setInziniering(!inziniering)} title="Inžiniering" subtitle="Povolenie" price="+ 2 774 €" isPriced={true} isA0={true} />
+                  <div className="mt-1">
+                    <Tile selected={projektACertifikacia} onClick={() => setProjektACertifikacia(!projektACertifikacia)} title="Projekt + Certif." subtitle="A0" price="+ 3 745 €" isPriced={true} isA0={true} />
+                  </div>
                   <div className="mt-1">
                     <Tile selected={revizia} onClick={() => setRevizia(!revizia)} title="Revízna dok." subtitle="" price="+ 1 605 €" isPriced={true} />
                   </div>
