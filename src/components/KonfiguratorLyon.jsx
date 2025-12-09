@@ -452,9 +452,6 @@ export default function KonfiguratorLyon() {
                   <div className="mt-1">
                     <Tile selected={podlaha === "laminat"} onClick={() => setPodlaha("laminat")} title="Laminát" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                   </div>
-                  <div className="mt-1">
-                    <Tile selected={interieroveDvere === "kridlove"} onClick={() => setInterieroveDvere("kridlove")} title="Krídlové dvere" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
-                  </div>
                 </div>
               </div>
               {/* Pravá strana - PRÍPLATKY */}
@@ -467,6 +464,9 @@ export default function KonfiguratorLyon() {
                   </div>
                   <div className="mt-1">
                     <Tile selected={obkladStien === "osb_panel"} onClick={() => setObkladStien("osb_panel")} title="OSB + laminátový panel" subtitle="" price="+ 5 279 €" isPriced={true} />
+                  </div>
+                  <div className="mt-1">
+                    <Tile selected={interieroveDvere === "kridlove"} onClick={() => setInterieroveDvere("kridlove")} title="Krídlové dvere" subtitle="" price="0 €" isPriced={false} />
                   </div>
                   <div className="mt-1">
                     <Tile selected={interieroveDvere === "posuvne"} onClick={() => setInterieroveDvere("posuvne")} title="Posuvné dvere" subtitle="" price="+ 427 €" isPriced={true} />
