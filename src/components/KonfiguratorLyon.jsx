@@ -76,7 +76,7 @@ export default function KonfiguratorLyon() {
   const [bateria, setBateria] = useState("standard");
   const [skrinka, setSkrinka] = useState(false);
   const [inziniering, setInziniering] = useState(false);
-  const [revizia, setRevizia] = useState(false);
+  const [revizia, setRevizia] = useState(true);
   const [zaklady, setZaklady] = useState("bez");
   const [montaz, setMontaz] = useState(false);
   const [doprava, setDoprava] = useState(false);
