@@ -26,6 +26,7 @@ import KonfiguratorAFrame from "../components/KonfiguratorAFrame";
 import KonfiguratorBarn48 from "../components/KonfiguratorBarn48";
 import KonfiguratorBarnDouble from "../components/KonfiguratorBarnDouble";
 import KonfiguratorFlatSmall from "../components/KonfiguratorFlatSmall";
+import KonfiguratorLyonTest from "../components/KonfiguratorLyonTest";
 
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
@@ -2655,6 +2656,13 @@ export default function DetailDomu() {
                   setDoprava={setDoprava}
                   showOnlySummary={true}
                 />
+              </div>
+            )}
+
+            {/* Floating panel pre Lyon (Ticab house) */}
+            {isTicabhouse && dom.nazov?.includes("Lyon") && (
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+                <KonfiguratorLyonTest />
               </div>
             )}
 
