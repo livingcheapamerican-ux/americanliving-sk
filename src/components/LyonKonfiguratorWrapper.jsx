@@ -1,9 +1,6 @@
 import React from "react";
 import KonfiguratorLyon, { LyonSummaryPanel } from "./KonfiguratorLyon";
 
-// Export aj sidebar samostatne
-export { LyonSummaryPanel };
-
 export default function LyonKonfiguratorWrapper() {
   const BASE_PRICE = 73431;
   
@@ -146,46 +143,5 @@ export default function LyonKonfiguratorWrapper() {
     doprava, setDoprava,
   };
 
-  return {
-    konfigurator: <KonfiguratorLyon {...allProps} />,
-    sidebar: (
-      <div className="sticky top-24">
-        <LyonSummaryPanel
-          ucel={ucel}
-          izolaciaStien={izolaciaStien}
-          izolaciaPodlahy={izolaciaPodlahy}
-          izolaciaStropu={izolaciaStropu}
-          tepelneCerpadlo={tepelneCerpadlo}
-          rekuperacia={rekuperacia}
-          podlahovoKurenie={podlahovoKurenie}
-          pripravaNaKrb={pripravaNaKrb}
-          ochranaKachle={ochranaKachle}
-          fasada={fasada}
-          strecha={strecha}
-          odkvapy={odkvapy}
-          okna={okna}
-          vchodoveDvere={vchodoveDvere}
-          obkladStien={obkladStien}
-          interieroveDvere={interieroveDvere}
-          elektro={elektro}
-          bleskozvod={bleskozvod}
-          prepat={prepat}
-          sprchovyKut={sprchovyKut}
-          vana={vana}
-          bateria={bateria}
-          skrinka={skrinka}
-          stropKupelna={stropKupelna}
-          inziniering={inziniering}
-          projektACertifikacia={projektACertifikacia}
-          revizia={revizia}
-          zaklady={zaklady}
-          montaz={montaz}
-          doprava={doprava}
-          totalPrice={totalPrice}
-          formatPrice={formatPrice}
-          onSubmit={handleSubmit}
-        />
-      </div>
-    )
-  };
+  return <KonfiguratorLyon {...allProps} />;
 }

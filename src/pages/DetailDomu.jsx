@@ -1115,7 +1115,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Lyon (Ticab house) */}
             {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
-              <LyonKonfiguratorWrapper />.konfigurator
+              <LyonKonfiguratorWrapper />
             )}
 
             {/* Rozmery - presunute z pravej strany */}
@@ -2738,6 +2738,13 @@ export default function DetailDomu() {
               </div>
             )}
 
+            {/* Sidebar pre Lyon konfigurátor - pred kontakt tlačidlami */}
+            {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
+              <div className="lg:sticky lg:top-20 z-10 self-start mb-4" style={{ position: 'sticky', top: '80px' }}>
+                <LyonKonfiguratorWrapper />
+              </div>
+            )}
+
             {/* CTA Buttons */}
             <div className="space-y-2 sm:space-y-3">
 
@@ -2755,11 +2762,6 @@ export default function DetailDomu() {
               </a>
 
             </div>
-
-            {/* Sidebar pre Lyon konfigurátor - pod kontakt tlačidlami */}
-            {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
-              <LyonKonfiguratorWrapper />.sidebar
-            )}
           </motion.div>
         </div>
       </div>
