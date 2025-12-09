@@ -506,8 +506,8 @@ export default function KonfiguratorLyon() {
 
             {/* Strop kúpeľňa */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Strop (kúpeľňa) - vyber jednu možnosť:</p>
-              <div className="grid grid-cols-2 gap-2 border-2 border-teal-300 rounded-lg p-2 bg-teal-50">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Strop (kúpeľňa):</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={stropKupelna === "drevo"} onClick={() => setStropKupelna("drevo")} title="Strop - vzor dreva biely" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                 <Tile selected={stropKupelna === "sadrokarton"} onClick={() => setStropKupelna("sadrokarton")} title="Sadrokartón, tapeta, maľba" subtitle="" price="+ 0 €" isPriced={false} />
               </div>
@@ -515,23 +515,25 @@ export default function KonfiguratorLyon() {
 
             {/* Doplnky */}
             <div>
-              <p className="text-xs font-semibold text-gray-700 mb-2">Doplnky (môžeš vybrať viac):</p>
-              <div className="space-y-2">
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">Doplnky:</p>
+              <div className="space-y-1.5">
                 <Tile selected={vana} onClick={() => setVana(!vana)} title="Vaňa" subtitle="" price="+ 501 €" isPriced={true} />
                 <Tile selected={skrinka} onClick={() => setSkrinka(!skrinka)} title="Skrinka" subtitle="" price="+ 434 €" isPriced={true} />
               </div>
             </div>
             </div>
             </Card>
+            </div>
 
-        {/* ZÁKLADY */}
-        <Card className="p-3 border-2 border-stone-400">
-          <h3 className="text-lg font-bold text-stone-900 mb-3 flex items-center gap-2">
+            <div className="grid lg:grid-cols-2 gap-3 mb-3">
+            {/* ZÁKLADY */}
+            <Card className="p-3 bg-gradient-to-br from-stone-50 to-gray-50 border-2 border-stone-300 shadow-md">
+            <h3 className="text-base font-bold text-stone-900 mb-2 flex items-center gap-2">
             🏗️ Základy
-          </h3>
+            </h3>
           <div>
-            <p className="text-xs font-semibold text-gray-700 mb-2">Typ základov (vyber jednu možnosť):</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 border-2 border-stone-300 rounded-lg p-2 bg-stone-50">
+            <p className="text-[11px] font-semibold text-gray-700 mb-1">Typ základov:</p>
+            <div className="grid grid-cols-2 gap-1.5 border border-stone-300 rounded-md p-1.5 bg-white/50">
               <Tile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} title="Bez základov" subtitle="" price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} />
               <Tile selected={zaklady === "vruty"} onClick={() => setZaklady("vruty")} title="Zemné vruty" subtitle="" price="+ 4 494 €" isPriced={true} />
               <Tile selected={zaklady === "patky"} onClick={() => setZaklady("patky")} title="Betónové pätky" subtitle="" price="+ 2 568 €" isPriced={true} />
@@ -541,80 +543,42 @@ export default function KonfiguratorLyon() {
         </Card>
 
         {/* SLUŽBY */}
-        <Card className="p-3 border-2 border-green-400">
-          <h3 className="text-lg font-bold text-green-900 mb-3 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-green-600" />
+        <Card className="p-3 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 shadow-md">
+          <h3 className="text-base font-bold text-green-900 mb-2 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-green-600" />
             Inžiniering a dokumentácia (A0)
           </h3>
-          <div className="relative">
-            <div className="absolute top-0 bottom-0 left-1/2 w-1 bg-red-500 z-10 transform -translate-x-1/2"></div>
-            <div className="grid grid-cols-2 gap-3">
-              {/* Ľavá strana - prázdna alebo info */}
-              <div className="space-y-2">
-                <div className="bg-gray-100 border-2 border-gray-300 rounded-lg p-2 flex items-center justify-center min-h-[100px]">
-                  <p className="text-[13px] text-gray-500 text-center">Služby nie sú zahrnuté v základnej cene</p>
-                </div>
-              </div>
-              {/* Pravá strana - PRÍPLATKY */}
-              <div className="space-y-2">
-                <div className="bg-red-100 border-2 border-red-500 rounded-lg p-2">
-                  <p className="text-[10px] font-bold text-red-800 text-center mb-1 flex items-center justify-center gap-1">
-                    <Sparkles className="w-3 h-3" />💰 PRÍPLATOK
-                  </p>
+          <div className="space-y-1.5">
                   <Tile selected={inziniering} onClick={() => setInziniering(!inziniering)} title="Inžiniering" subtitle="Povolenie" price="+ 2 774 €" isPriced={true} isA0={true} />
-                  <div className="mt-1">
-                    <Tile selected={projektACertifikacia} onClick={() => setProjektACertifikacia(!projektACertifikacia)} title="Projekt + Certif." subtitle="A0" price="+ 3 745 €" isPriced={true} isA0={true} />
+                  <Tile selected={projektACertifikacia} onClick={() => setProjektACertifikacia(!projektACertifikacia)} title="Projekt + Certif." subtitle="A0" price="+ 3 745 €" isPriced={true} isA0={true} />
+                  <Tile selected={revizia} onClick={() => setRevizia(!revizia)} title="Revízna dok." subtitle="" price="+ 1 605 €" isPriced={true} />
                   </div>
-                  <div className="mt-1">
-                    <Tile selected={revizia} onClick={() => setRevizia(!revizia)} title="Revízna dok." subtitle="" price="+ 1 605 €" isPriced={true} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </Card>
 
         {/* REALIZÁCIA */}
-        <Card className="p-3 border-2 border-slate-400">
-          <h3 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+        <Card className="p-3 bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-slate-300 shadow-md">
+          <h3 className="text-base font-bold text-slate-900 mb-2 flex items-center gap-2">
             🚚 Realizácia
           </h3>
-          <div className="relative">
-            <div className="absolute top-0 bottom-0 left-1/2 w-1 bg-red-500 z-10 transform -translate-x-1/2"></div>
-            <div className="grid grid-cols-2 gap-3">
-              {/* Ľavá strana - prázdna */}
-              <div className="space-y-2">
-                <div className="bg-gray-100 border-2 border-gray-300 rounded-lg p-2 flex items-center justify-center min-h-[100px]">
-                  <p className="text-[13px] text-gray-500 text-center">Realizácia nie je zahrnutá v základnej cene</p>
-                </div>
-              </div>
-              {/* Pravá strana - PRÍPLATKY */}
-              <div className="space-y-2">
-                <div className="bg-red-100 border-2 border-red-500 rounded-lg p-2">
-                  <p className="text-sm font-bold text-red-800 text-center mb-1">💰 PRÍPLATOK</p>
-                  <Tile selected={montaz} onClick={() => setMontaz(!montaz)} title="Montáž domu" subtitle="" price="+ 4 806 €" isPriced={true} />
-                  <div className="mt-1">
-                    <Tile selected={doprava} onClick={() => setDoprava(!doprava)} title="Doprava" subtitle="Doprava všetkých modulov" price="+ 8 928 €" isPriced={true} />
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="space-y-1.5">
+            <Tile selected={montaz} onClick={() => setMontaz(!montaz)} title="Montáž domu" subtitle="" price="+ 4 806 €" isPriced={true} />
+            <Tile selected={doprava} onClick={() => setDoprava(!doprava)} title="Doprava" subtitle="Doprava všetkých modulov" price="+ 8 928 €" isPriced={true} />
           </div>
         </Card>
 
       </div>
 
-      {/* Sticky Footer */}
-      <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-r from-slate-800 to-slate-900 text-white p-2 shadow-2xl z-50 mt-4 rounded-t-lg">
-        <div className="flex justify-between items-center gap-2">
+      {/* Sticky Footer - modernejší */}
+      <div className="sticky bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white p-3 shadow-2xl z-50 mt-4 rounded-t-2xl border-t-4 border-white/20">
+        <div className="flex justify-between items-center gap-3">
           <div className="flex-1">
-            <p className="text-[9px] text-slate-400">Základ: {formatPrice(BASE_PRICE)} | Doplnky: {formatPrice(totalPrice - BASE_PRICE)}</p>
-            <p className="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+            <p className="text-[10px] text-white/70 mb-0.5">Základ: {formatPrice(BASE_PRICE)} | Doplnky: {formatPrice(totalPrice - BASE_PRICE)}</p>
+            <p className="text-xl sm:text-2xl font-black text-white drop-shadow-lg">
               {formatPrice(totalPrice)}
             </p>
           </div>
-          <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white font-bold shadow-xl text-xs h-8 px-3">
-            <Send className="w-3 h-3 mr-1" />
+          <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-xl text-xs sm:text-sm h-9 sm:h-10 px-4 sm:px-6 rounded-xl">
+            <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
             Mám záujem
           </Button>
         </div>
