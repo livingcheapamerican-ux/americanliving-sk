@@ -65,7 +65,7 @@ export default function KonfiguratorLyon() {
   const [odkvapy, setOdkvapy] = useState("nie");
   const [okna, setOkna] = useState("biele");
   const [vchodoveDvere, setVchodoveDvere] = useState("plastove");
-  const [obkladStien, setObkladStien] = useState("smrek");
+  const [obkladStien, setObkladStien] = useState("smrek_8cm");
   const [podlaha, setPodlaha] = useState("laminat");
   const [interieroveDvere, setInterieroveDvere] = useState("kridlove");
   const [elektro, setElektro] = useState("eu");
@@ -95,7 +95,7 @@ export default function KonfiguratorLyon() {
     strecha: { falcovane: 3227.70 },
     odkvapy: 1502.49,
     dvere: { kovove: 278.40 },
-    obklad: { biely: 1525.11, osb: 4592.73, sadrokarton: 6833.85 },
+    obklad: { smrek_bez_uzlov: 0, sadrokarton_tapeta: 7855, osb_panel: 5279 },
     dvere_posuvne: 427.17,
     elektro: { cz: 460.23, ge: 1583.40 },
     bleskozvod: 856.08,
@@ -448,7 +448,7 @@ export default function KonfiguratorLyon() {
               <div className="space-y-2">
                 <div className="bg-green-100 border-2 border-green-500 rounded-lg p-2">
                   <p className="text-sm font-bold text-green-800 text-center mb-1">✅ V CENE</p>
-                  <Tile selected={obkladStien === "smrek"} onClick={() => setObkladStien("smrek")} title="Smrek 8/12cm" subtitle="Prírodný" price="0 €" isPriced={false} isIncluded={true} />
+                  <Tile selected={obkladStien === "smrek_8cm"} onClick={() => setObkladStien("smrek_8cm")} title="Smrek 8cm" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                   <div className="mt-1">
                     <Tile selected={podlaha === "laminat"} onClick={() => setPodlaha("laminat")} title="Laminát" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                   </div>
@@ -461,12 +461,12 @@ export default function KonfiguratorLyon() {
               <div className="space-y-2">
                 <div className="bg-red-100 border-2 border-red-500 rounded-lg p-2">
                   <p className="text-sm font-bold text-red-800 text-center mb-1">💰 PRÍPLATOK</p>
-                  <Tile selected={obkladStien === "biely"} onClick={() => setObkladStien("biely")} title="Biely náter" subtitle="" price="+ 1 525 €" isPriced={true} />
+                  <Tile selected={obkladStien === "smrek_bez_uzlov"} onClick={() => setObkladStien("smrek_bez_uzlov")} title="Smrek bez uzlov 12cm" subtitle="" price="0 €" isPriced={false} />
                   <div className="mt-1">
-                    <Tile selected={obkladStien === "osb"} onClick={() => setObkladStien("osb")} title="OSB + Laminát" subtitle="" price="+ 4 593 €" isPriced={true} />
+                    <Tile selected={obkladStien === "sadrokarton_tapeta"} onClick={() => setObkladStien("sadrokarton_tapeta")} title="Sadrokarton+netkaná tapeta+maľovka" subtitle="" price="+ 7 855 €" isPriced={true} />
                   </div>
                   <div className="mt-1">
-                    <Tile selected={obkladStien === "sadrokarton"} onClick={() => setObkladStien("sadrokarton")} title="Sadrokartón" subtitle="" price="+ 6 834 €" isPriced={true} />
+                    <Tile selected={obkladStien === "osb_panel"} onClick={() => setObkladStien("osb_panel")} title="OSB + laminátový panel" subtitle="" price="+ 5 279 €" isPriced={true} />
                   </div>
                   <div className="mt-1">
                     <Tile selected={interieroveDvere === "posuvne"} onClick={() => setInterieroveDvere("posuvne")} title="Posuvné dvere" subtitle="" price="+ 427 €" isPriced={true} />
