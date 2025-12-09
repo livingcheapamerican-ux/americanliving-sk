@@ -219,10 +219,10 @@ export default function KonfiguratorLyon() {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto flex gap-6">
+    <div className="w-full max-w-7xl mx-auto flex gap-6 relative">
       {/* Floating Summary Panel - Ľavá strana - Draggable & Resizable */}
       <div 
-        className="hidden xl:block flex-shrink-0 fixed z-50"
+        className="hidden xl:block flex-shrink-0 absolute z-50"
         style={{
           left: `${panelPosition.x}px`,
           top: `${panelPosition.y}px`,
