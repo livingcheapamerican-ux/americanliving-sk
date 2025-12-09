@@ -396,7 +396,7 @@ export default function KonfiguratorLyon() {
                     <Tile selected={okna === "antracit"} onClick={() => setOkna("antracit")} title="Antracit" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                     <Tile selected={okna === "hnede"} onClick={() => setOkna("hnede")} title="Hnedé" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                   </div>
-                  <p className="text-[9px] text-gray-600 mb-1">Vchodové dvere:</p>
+                  <p className="text-xs text-gray-600 mb-1">Vchodové dvere:</p>
                   <Tile selected={vchodoveDvere === "plastove"} onClick={() => setVchodoveDvere("plastove")} title="Kovovo-plastové" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
                 </div>
               </div>
@@ -404,7 +404,7 @@ export default function KonfiguratorLyon() {
               <div className="space-y-2">
                 <div className="bg-red-100 border-2 border-red-500 rounded-lg p-2">
                   <p className="text-sm font-bold text-red-800 text-center mb-1">💰 PRÍPLATOK</p>
-                  <p className="text-[9px] text-gray-600 mb-1">Vchodové dvere:</p>
+                  <p className="text-xs text-gray-600 mb-1">Vchodové dvere:</p>
                   <Tile selected={vchodoveDvere === "kovove"} onClick={() => setVchodoveDvere("kovove")} title="Kovové dvere" subtitle="" price="+ 278 €" isPriced={true} />
                 </div>
               </div>
