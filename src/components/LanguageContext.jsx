@@ -200,7 +200,7 @@ const translations = {
     lifespanDesc: "Navrhnutá na viac ako 80 rokov pri pravidelnej údržbe a správnej inštalácii",
     basePriceNote: "Základná cena je za samotnú konštrukciu bez montážnych prác.",
     basePriceNoteDesc: "Cenu montáže si môžete vypočítať v konfigurátore.",
-    modularConstruction: "Modulárna a montovaná konštrukcia domu – flexibilné riešenie pre vaše bývanie.",
+    modularConstruction: "Modulárna a montovaná konštrukcia domu – flexibilné riešenie pre vaše bývanie. Dom si v konfigurátore dokážete prispôsobiť legislatívnym požiadavkám, aby spĺňal požiadavky pre energetický certifikát A0, nahlásenie trvalého pobytu, stavebnému povoleniu v obytnej štvrti a dom bude možné skolaudovať ako rodinný dom.",
     
     // Prosto House - Montážna sada
     assemblyKitTitle: "Montážna sada domu:",
