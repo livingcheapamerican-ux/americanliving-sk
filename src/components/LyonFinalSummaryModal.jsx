@@ -244,6 +244,7 @@ export default function LyonFinalSummaryModal({
                       <span className="text-slate-300">Účel stavby</span>
                       <span className="text-green-400 font-semibold">{actualStatus}</span>
                     </div>
+
                     <div className="border-t border-slate-700 pt-2">
                       <p className="text-slate-400 text-xs mb-1">IZOLÁCIA</p>
                       <div className="space-y-1 text-xs">
@@ -252,13 +253,102 @@ export default function LyonFinalSummaryModal({
                         <div className="flex justify-between"><span>Strop</span><span className="text-slate-300">{izolaciaStropu}</span></div>
                       </div>
                     </div>
-                    {(tepelneCerpadlo === "ano" || rekuperacia === "ano") && (
+
+                    <div className="border-t border-slate-700 pt-2">
+                      <p className="text-slate-400 text-xs mb-1">VYKUROVANIE</p>
+                      <div className="space-y-1 text-xs text-slate-300">
+                        {tepelneCerpadlo === "ano" ? <div>• Tepelné čerpadlo ✓</div> : <div>• Príprava pre konvektory ✓</div>}
+                        {rekuperacia === "ano" && <div>• Rekuperácia ✓</div>}
+                        {podlahovoKurenie && <div>• Podlahové kúrenie ✓</div>}
+                        {pripravaNaKrb && <div>• Príprava na krb ✓</div>}
+                        {ochranaKachle && <div>• Ochrana na kachle ✓</div>}
+                      </div>
+                    </div>
+
+                    <div className="border-t border-slate-700 pt-2">
+                      <p className="text-slate-400 text-xs mb-1">FASÁDA</p>
+                      <div className="text-xs text-slate-300">
+                        • {fasada === "drevo_smrek" ? "Drevo smrek" : 
+                           fasada === "omietka" ? "Šúchaná omietka" : 
+                           fasada === "smrekovec" ? "Smrekovec" :
+                           fasada === "falcovane" ? "Falcované panely" : "Thermowood"} ✓
+                      </div>
+                    </div>
+
+                    <div className="border-t border-slate-700 pt-2">
+                      <p className="text-slate-400 text-xs mb-1">STRECHA</p>
+                      <div className="space-y-1 text-xs text-slate-300">
+                        <div>• {strecha === "korugovan_plech" ? "Korugovaný plech" : "Falcované panely"} ✓</div>
+                        {odkvapy === "ano" && <div>• Odkvapy ✓</div>}
+                      </div>
+                    </div>
+
+                    <div className="border-t border-slate-700 pt-2">
+                      <p className="text-slate-400 text-xs mb-1">OKNÁ A DVERE</p>
+                      <div className="space-y-1 text-xs text-slate-300">
+                        <div>• Okná {okna === "biele" ? "biele" : okna === "antracit" ? "antracit" : "hnedé"} ✓</div>
+                        <div>• {vchodoveDvere === "plastove" ? "Kovovo-plastové" : "Kovové"} dvere ✓</div>
+                      </div>
+                    </div>
+
+                    <div className="border-t border-slate-700 pt-2">
+                      <p className="text-slate-400 text-xs mb-1">INTERIÉR</p>
+                      <div className="space-y-1 text-xs text-slate-300">
+                        <div>• {obkladStien === "smrek_8cm" ? "Smrek 8cm" :
+                               obkladStien === "smrek_bez_uzlov" ? "Smrek bez uzlov 12cm" :
+                               obkladStien === "sadrokarton_tapeta" ? "Sadrokarton + tapeta" : "OSB panel"} ✓</div>
+                        <div>• Laminát ✓</div>
+                        <div>• {interieroveDvere === "kridlove" ? "Krídlové" : "Posuvné"} dvere ✓</div>
+                      </div>
+                    </div>
+
+                    <div className="border-t border-slate-700 pt-2">
+                      <p className="text-slate-400 text-xs mb-1">ELEKTROINŠTALÁCIA</p>
+                      <div className="space-y-1 text-xs text-slate-300">
+                        <div>• {elektro === "eu" ? "EU štandard" : elektro === "cz" ? "CZ/SK štandard" : "GE štandard"} ✓</div>
+                        {bleskozvod && <div>• Bleskozvod ✓</div>}
+                        {prepat && <div>• Prepäťová ochrana ✓</div>}
+                      </div>
+                    </div>
+
+                    <div className="border-t border-slate-700 pt-2">
+                      <p className="text-slate-400 text-xs mb-1">KÚPEĽŇA</p>
+                      <div className="space-y-1 text-xs text-slate-300">
+                        <div>• {sprchovyKut === "standard" ? "Sprcha + WC Geberit" : "Sprcha Radaway"} ✓</div>
+                        <div>• Batéria {bateria === "standard" ? "štandard" : "Grohe"} ✓</div>
+                        <div>• Strop {stropKupelna === "drevo" ? "vzor dreva biely" : "sadrokarton"} ✓</div>
+                        {vana && <div>• Vaňa ✓</div>}
+                        {skrinka && <div>• Skrinka ✓</div>}
+                      </div>
+                    </div>
+
+                    {zaklady !== "bez" && (
                       <div className="border-t border-slate-700 pt-2">
-                        <p className="text-slate-400 text-xs mb-1">VYKUROVANIE</p>
+                        <p className="text-slate-400 text-xs mb-1">ZÁKLADY</p>
+                        <div className="text-xs text-slate-300">
+                          • {zaklady === "vruty" ? "Zemné vruty" :
+                             zaklady === "patky" ? "Betónové pätky" : "Pásové betónové"} ✓
+                        </div>
+                      </div>
+                    )}
+
+                    {(inziniering || projektACertifikacia || revizia) && (
+                      <div className="border-t border-slate-700 pt-2">
+                        <p className="text-slate-400 text-xs mb-1">SLUŽBY</p>
                         <div className="space-y-1 text-xs text-slate-300">
-                          {tepelneCerpadlo === "ano" && <div>• Tepelné čerpadlo</div>}
-                          {rekuperacia === "ano" && <div>• Rekuperácia</div>}
-                          {podlahovoKurenie && <div>• Podlahové kúrenie</div>}
+                          {inziniering && <div>• Inžiniering ✓</div>}
+                          {projektACertifikacia && <div>• Projekt + Certifikácia A0 ✓</div>}
+                          {revizia && <div>• Revízna dokumentácia ✓</div>}
+                        </div>
+                      </div>
+                    )}
+
+                    {(montaz || doprava) && (
+                      <div className="border-t border-slate-700 pt-2">
+                        <p className="text-slate-400 text-xs mb-1">REALIZÁCIA</p>
+                        <div className="space-y-1 text-xs text-slate-300">
+                          {montaz && <div>• Montáž domu ✓</div>}
+                          {doprava && <div>• Doprava modulov ✓</div>}
                         </div>
                       </div>
                     )}
