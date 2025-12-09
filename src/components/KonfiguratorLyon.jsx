@@ -81,6 +81,7 @@ export default function KonfiguratorLyon() {
   const [vana, setVana] = useState(false);
   const [bateria, setBateria] = useState("standard");
   const [skrinka, setSkrinka] = useState(false);
+  const [stropKupelna, setStropKupelna] = useState("drevo");
   const [inziniering, setInziniering] = useState(false);
   const [projektACertifikacia, setProjektACertifikacia] = useState(false);
   const [revizia, setRevizia] = useState(true);
@@ -110,6 +111,7 @@ export default function KonfiguratorLyon() {
     vana: 501.12,
     bateria: 139.20,
     skrinka: 434.13,
+    strop_kupelna: { sadrokarton: 0 },
     inziniering: 2773.56,
     projektACertifikacia: 3745.35,
     revizia: 1605.15,
@@ -141,6 +143,7 @@ export default function KonfiguratorLyon() {
     if (vana) total += CENY.vana;
     if (bateria === "grohe") total += CENY.bateria;
     if (skrinka) total += CENY.skrinka;
+    total += CENY.strop_kupelna[stropKupelna] || 0;
     if (inziniering) total += CENY.inziniering;
     if (projektACertifikacia) total += CENY.projektACertifikacia;
     if (revizia) total += CENY.revizia;
@@ -152,7 +155,7 @@ export default function KonfiguratorLyon() {
   }, [izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia,
       podlahovoKurenie, pripravaNaKrb, ochranaKachle, fasada, strecha, odkvapy, vchodoveDvere,
       obkladStien, interieroveDvere, elektro, bleskozvod, prepat, sprchovyKut, vana, bateria,
-      skrinka, inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava]);
+      skrinka, stropKupelna, inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava]);
 
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
@@ -494,6 +497,15 @@ export default function KonfiguratorLyon() {
               </div>
             </div>
 
+            {/* Strop kúpeľňa */}
+            <div>
+              <p className="text-xs font-semibold text-gray-700 mb-2">Strop (kúpeľňa) - vyber jednu možnosť:</p>
+              <div className="grid grid-cols-2 gap-2 border-2 border-teal-300 rounded-lg p-2 bg-teal-50">
+                <Tile selected={stropKupelna === "drevo"} onClick={() => setStropKupelna("drevo")} title="Strop - vzor dreva biely" subtitle="" price="0 €" isPriced={false} isIncluded={true} />
+                <Tile selected={stropKupelna === "sadrokarton"} onClick={() => setStropKupelna("sadrokarton")} title="Sadrokartón, tapeta, maľba" subtitle="" price="+ 0 €" isPriced={false} />
+              </div>
+            </div>
+
             {/* Doplnky */}
             <div>
               <p className="text-xs font-semibold text-gray-700 mb-2">Doplnky (môžeš vybrať viac):</p>
@@ -502,8 +514,8 @@ export default function KonfiguratorLyon() {
                 <Tile selected={skrinka} onClick={() => setSkrinka(!skrinka)} title="Skrinka" subtitle="" price="+ 434 €" isPriced={true} />
               </div>
             </div>
-          </div>
-        </Card>
+            </div>
+            </Card>
 
         {/* ZÁKLADY */}
         <Card className="p-3 border-2 border-stone-400">
