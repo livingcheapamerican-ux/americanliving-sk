@@ -38,9 +38,15 @@ const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isInc
       <div className="text-center">
         <span className="font-semibold text-gray-800 text-base block leading-tight">{title}</span>
         {subtitle && <span className="text-xs text-gray-500 block mt-0.5">{subtitle}</span>}
-        <span className={`text-[13px] font-bold block mt-1 ${isPriced ? "text-green-600" : "text-gray-400"}`}>
-          {price}
-        </span>
+        {price === "0 €" ? (
+          <span className="text-[11px] text-gray-500 block mt-1 italic leading-tight">
+            Táto položka je súčasťou základnej konfigurácie domu
+          </span>
+        ) : (
+          <span className={`text-[13px] font-bold block mt-1 ${isPriced ? "text-green-600" : "text-gray-400"}`}>
+            {price}
+          </span>
+        )}
       </div>
     </motion.div>
   );
