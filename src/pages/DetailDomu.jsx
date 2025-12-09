@@ -1463,25 +1463,7 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Špecifikácia - presunute z pravej strany */}
-            {dom.specifikacia && (
-              <Card className="p-3 sm:p-4">
-                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('specification')}</h3>
-                <TranslatedDescription 
-                  text={dom.specifikacia}
-                  textEn={dom.specifikacia_en}
-                  textHu={dom.specifikacia_hu}
-                  textPl={dom.specifikacia_pl}
-                  textUk={dom.specifikacia_uk}
-                  textDe={dom.specifikacia_de}
-                  textFr={dom.specifikacia_fr}
-                  textSr={dom.specifikacia_sr}
-                  textHr={dom.specifikacia_hr}
-                  textEl={dom.specifikacia_el}
-                  className="text-gray-700 text-sm leading-relaxed whitespace-pre-line"
-                />
-              </Card>
-            )}
+
 
             {/* Čo obsahuje cena pre JAK Modules - presunute z pravej strany */}
             {isJAKModules && (
