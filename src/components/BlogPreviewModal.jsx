@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar, Eye, User, Tag, Sparkles, Edit2, Check, X, Download } from "lucide-react";
+import { Calendar, Eye, User, Tag, Sparkles, Edit2, Check, X, Download, Upload } from "lucide-react";
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
 import ReactMarkdown from "react-markdown";
@@ -16,6 +16,7 @@ export default function BlogPreviewModal({ post, isOpen, onClose, onImageRegener
   const [editingImage, setEditingImage] = useState(false);
   const [imagePrompt, setImagePrompt] = useState("");
   const [regenerating, setRegenerating] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   if (!post) return null;
 
@@ -58,6 +59,25 @@ export default function BlogPreviewModal({ post, isOpen, onClose, onImageRegener
       toast.success('Obrázok stiahnutý');
     } catch (error) {
       toast.error('Chyba pri sťahovaní');
+    }
+  };
+
+  const handleUploadImage = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      await base44.entities.BlogPost.update(post.id, { titulny_obrazok: file_url });
+      toast.success('Obrázok nahraný a uložený!');
+      if (onImageRegenerate) {
+        onImageRegenerate(post.id);
+      }
+    } catch (error) {
+      toast.error('Chyba pri nahrávaní: ' + error.message);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -137,6 +157,26 @@ export default function BlogPreviewModal({ post, isOpen, onClose, onImageRegener
                   <Download className="w-4 h-4 mr-2" />
                   Stiahnuť
                 </Button>
+                <Button
+                  size="sm"
+                  className="bg-green-600 hover:bg-green-700"
+                  onClick={() => document.getElementById('upload-image-input').click()}
+                  disabled={uploading}
+                >
+                  {uploading ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  ) : (
+                    <Upload className="w-4 h-4 mr-2" />
+                  )}
+                  Nahrať nový
+                </Button>
+                <input
+                  id="upload-image-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUploadImage}
+                  className="hidden"
+                />
                 <Button
                   size="sm"
                   className="bg-purple-600 hover:bg-purple-700"
