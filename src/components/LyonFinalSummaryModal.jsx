@@ -263,9 +263,9 @@ export default function LyonFinalSummaryModal({
                       <div className="flex items-start gap-2">
                         <AlertCircle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
                         <div>
-                          <p className="text-yellow-400 font-bold text-sm mb-1">Neúplná A0 konfigurácia</p>
+                          <p className="text-yellow-400 font-bold text-sm mb-1">{t('incompleteA0Config') || 'Neúplná A0 konfigurácia'}</p>
                           <p className="text-yellow-300/80 text-xs">
-                            Aktuálne je to rekreačná stavba. Pre rodinný dom doplňte všetky A0 položky.
+                           {t('incompleteA0Msg') || 'Aktuálne je to rekreačná stavba. Pre rodinný dom doplňte všetky A0 položky.'}
                           </p>
                         </div>
                       </div>
@@ -308,36 +308,36 @@ export default function LyonFinalSummaryModal({
                       <div className="space-y-1 text-xs">
                         {tepelneCerpadlo === "ano" ? (
                           <div className="flex justify-between">
-                            <span className="text-slate-300">• Tepelné čerpadlo</span>
+                            <span className="text-slate-300">• {t('heatPump')}</span>
                             <span className="text-green-400 font-semibold">+ {formatPrice(CENY.tepelne_cerpadlo.ano)}</span>
                           </div>
                         ) : (
                           <div className="flex justify-between">
-                            <span className="text-slate-300">• Príprava pre konvektory</span>
-                            <span className="text-green-400 font-semibold">v cene</span>
+                            <span className="text-slate-300">• {t('heatingPreparation')}</span>
+                            <span className="text-green-400 font-semibold">{t('includedInPriceShort')}</span>
                           </div>
                         )}
                         {rekuperacia === "ano" && (
                           <div className="flex justify-between">
-                            <span className="text-slate-300">• Rekuperácia</span>
+                            <span className="text-slate-300">• {t('recuperation')}</span>
                             <span className="text-green-400 font-semibold">+ {formatPrice(CENY.rekuperacia.ano)}</span>
                           </div>
                         )}
                         {podlahovoKurenie && (
                           <div className="flex justify-between">
-                            <span className="text-slate-300">• Podlahové kúrenie</span>
+                            <span className="text-slate-300">• {t('floorHeating')}</span>
                             <span className="text-green-400 font-semibold">+ {formatPrice(CENY.podlahove_kurenie)}</span>
                           </div>
                         )}
                         {pripravaNaKrb && (
                           <div className="flex justify-between">
-                            <span className="text-slate-300">• Príprava na krb</span>
+                            <span className="text-slate-300">• {t('fireplacePrep')}</span>
                             <span className="text-green-400 font-semibold">+ {formatPrice(CENY.pripravaKrb)}</span>
                           </div>
                         )}
                         {ochranaKachle && (
                           <div className="flex justify-between">
-                            <span className="text-slate-300">• Ochrana na kachle</span>
+                            <span className="text-slate-300">• {t('stoveProtection')}</span>
                             <span className="text-green-400 font-semibold">+ {formatPrice(CENY.ochranaKachle)}</span>
                           </div>
                         )}
@@ -348,13 +348,13 @@ export default function LyonFinalSummaryModal({
                       <p className="text-slate-400 text-xs mb-1">{t('facadeSection') || 'FASÁDA'}</p>
                       <div className="flex justify-between text-xs">
                         <span className="text-slate-300">
-                          • {fasada === "drevo_smrek" ? "Drevo smrek" : 
-                             fasada === "omietka" ? "Šúchaná omietka" : 
-                             fasada === "smrekovec" ? "Smrekovec" :
-                             fasada === "falcovane" ? "Falcované panely" : "Thermowood"}
+                          • {fasada === "drevo_smrek" ? (t('spruceWood') || "Drevo smrek") : 
+                             fasada === "omietka" ? (t('scratchedPlaster') || "Šúchaná omietka") : 
+                             fasada === "smrekovec" ? (t('larch') || "Smrekovec") :
+                             fasada === "falcovane" ? (t('foldedPanels') || "Falcované panely") : "Thermowood"}
                         </span>
                         <span className="text-green-400 font-semibold">
-                          {fasada === "drevo_smrek" ? "v cene" : `+ ${formatPrice(CENY.fasada[fasada])}`}
+                          {fasada === "drevo_smrek" ? (t('includedInPriceShort') || "v cene") : `+ ${formatPrice(CENY.fasada[fasada])}`}
                         </span>
                       </div>
                     </div>
@@ -363,14 +363,14 @@ export default function LyonFinalSummaryModal({
                       <p className="text-slate-400 text-xs mb-1">{t('roofSection') || 'STRECHA'}</p>
                       <div className="space-y-1 text-xs">
                         <div className="flex justify-between">
-                          <span className="text-slate-300">• {strecha === "korugovan_plech" ? "Korugovaný plech" : "Falcované panely"}</span>
+                          <span className="text-slate-300">• {strecha === "korugovan_plech" ? (t('corrugatedMetal') || "Korugovaný plech") : (t('foldedPanels') || "Falcované panely")}</span>
                           <span className="text-green-400 font-semibold">
-                            {strecha === "korugovan_plech" ? "v cene" : `+ ${formatPrice(CENY.strecha.falcovane)}`}
+                            {strecha === "korugovan_plech" ? (t('includedInPriceShort') || "v cene") : `+ ${formatPrice(CENY.strecha.falcovane)}`}
                           </span>
                         </div>
                         {odkvapy === "ano" && (
                           <div className="flex justify-between">
-                            <span className="text-slate-300">• Odkvapy</span>
+                            <span className="text-slate-300">• {t('gutters') || 'Odkvapy'}</span>
                             <span className="text-green-400 font-semibold">+ {formatPrice(CENY.odkvapy)}</span>
                           </div>
                         )}
@@ -381,13 +381,13 @@ export default function LyonFinalSummaryModal({
                       <p className="text-slate-400 text-xs mb-1">{t('windowsDoorsSection') || 'OKNÁ A DVERE'}</p>
                       <div className="space-y-1 text-xs">
                         <div className="flex justify-between">
-                          <span className="text-slate-300">• Okná {okna === "biele" ? "biele" : okna === "antracit" ? "antracit" : "hnedé"}</span>
-                          <span className="text-green-400 font-semibold">v cene</span>
+                          <span className="text-slate-300">• {t('windows')} {okna === "biele" ? t('white') : okna === "antracit" ? t('anthracite') : t('brown')}</span>
+                          <span className="text-green-400 font-semibold">{t('includedInPriceShort')}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-300">• {vchodoveDvere === "plastove" ? "Kovovo-plastové" : "Kovové"} dvere</span>
+                          <span className="text-slate-300">• {vchodoveDvere === "plastove" ? t('metalPlasticDoors') : t('metalDoors')}</span>
                           <span className="text-green-400 font-semibold">
-                            {vchodoveDvere === "plastove" ? "v cene" : `+ ${formatPrice(CENY.dvere.kovove)}`}
+                            {vchodoveDvere === "plastove" ? (t('includedInPriceShort') || "v cene") : `+ ${formatPrice(CENY.dvere.kovove)}`}
                           </span>
                         </div>
                       </div>
@@ -398,22 +398,22 @@ export default function LyonFinalSummaryModal({
                       <div className="space-y-1 text-xs">
                         <div className="flex justify-between">
                           <span className="text-slate-300">
-                            • {obkladStien === "smrek_8cm" ? "Smrek 8cm" :
-                               obkladStien === "smrek_bez_uzlov" ? "Smrek bez uzlov 12cm" :
-                               obkladStien === "sadrokarton_tapeta" ? "Sadrokarton + tapeta" : "OSB panel"}
+                            • {obkladStien === "smrek_8cm" ? t('spruceWall8cm') :
+                               obkladStien === "smrek_bez_uzlov" ? t('spruceWallNoKnots') :
+                               obkladStien === "sadrokarton_tapeta" ? t('drywallWallpaper') : t('osbPanel')}
                           </span>
                           <span className="text-green-400 font-semibold">
-                            {obkladStien === "smrek_8cm" || obkladStien === "smrek_bez_uzlov" ? "v cene" : `+ ${formatPrice(CENY.obklad[obkladStien])}`}
+                            {obkladStien === "smrek_8cm" || obkladStien === "smrek_bez_uzlov" ? (t('includedInPriceShort') || "v cene") : `+ ${formatPrice(CENY.obklad[obkladStien])}`}
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-300">• Laminát</span>
-                          <span className="text-green-400 font-semibold">v cene</span>
+                          <span className="text-slate-300">• {t('laminate')}</span>
+                          <span className="text-green-400 font-semibold">{t('includedInPriceShort')}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-300">• {interieroveDvere === "kridlove" ? "Krídlové" : "Posuvné"} dvere</span>
+                          <span className="text-slate-300">• {interieroveDvere === "kridlove" ? t('hingedDoors') : t('slidingDoors')}</span>
                           <span className="text-green-400 font-semibold">
-                            {interieroveDvere === "kridlove" ? "v cene" : `+ ${formatPrice(CENY.dvere_posuvne)}`}
+                            {interieroveDvere === "kridlove" ? (t('includedInPriceShort') || "v cene") : `+ ${formatPrice(CENY.dvere_posuvne)}`}
                           </span>
                         </div>
                       </div>
@@ -423,20 +423,20 @@ export default function LyonFinalSummaryModal({
                       <p className="text-slate-400 text-xs mb-1">{t('electricalSection') || 'ELEKTROINŠTALÁCIA'}</p>
                       <div className="space-y-1 text-xs">
                         <div className="flex justify-between">
-                          <span className="text-slate-300">• {elektro === "eu" ? "EU štandard" : elektro === "cz" ? "CZ/SK štandard" : "GE štandard"}</span>
+                          <span className="text-slate-300">• {elektro === "eu" ? t('euStandard') : elektro === "cz" ? t('czSkStandard') : t('geStandard')}</span>
                           <span className="text-green-400 font-semibold">
-                            {elektro === "eu" ? "v cene" : `+ ${formatPrice(CENY.elektro[elektro])}`}
+                            {elektro === "eu" ? (t('includedInPriceShort') || "v cene") : `+ ${formatPrice(CENY.elektro[elektro])}`}
                           </span>
                         </div>
                         {bleskozvod && (
                           <div className="flex justify-between">
-                            <span className="text-slate-300">• Bleskozvod</span>
+                            <span className="text-slate-300">• {t('lightningRod')}</span>
                             <span className="text-green-400 font-semibold">+ {formatPrice(CENY.bleskozvod)}</span>
                           </div>
                         )}
                         {prepat && (
                           <div className="flex justify-between">
-                            <span className="text-slate-300">• Prepäťová ochrana</span>
+                            <span className="text-slate-300">• {t('surgeProtection')}</span>
                             <span className="text-green-400 font-semibold">+ {formatPrice(CENY.prepat)}</span>
                           </div>
                         )}
@@ -447,32 +447,32 @@ export default function LyonFinalSummaryModal({
                       <p className="text-slate-400 text-xs mb-1">{t('bathroomSection') || 'KÚPEĽŇA'}</p>
                       <div className="space-y-1 text-xs">
                         <div className="flex justify-between">
-                          <span className="text-slate-300">• {sprchovyKut === "standard" ? "Sprcha + WC Geberit" : "Sprcha Radaway"}</span>
+                          <span className="text-slate-300">• {sprchovyKut === "standard" ? t('showerWC') : t('showerRadaway')}</span>
                           <span className="text-green-400 font-semibold">
-                            {sprchovyKut === "standard" ? "v cene" : `+ ${formatPrice(CENY.sprchovyKut)}`}
+                            {sprchovyKut === "standard" ? (t('includedInPriceShort') || "v cene") : `+ ${formatPrice(CENY.sprchovyKut)}`}
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-300">• Batéria {bateria === "standard" ? "štandard" : "Grohe"}</span>
+                          <span className="text-slate-300">• {bateria === "standard" ? t('faucetStandard') : t('faucetGrohe')}</span>
                           <span className="text-green-400 font-semibold">
-                            {bateria === "standard" ? "v cene" : `+ ${formatPrice(CENY.bateria)}`}
+                            {bateria === "standard" ? (t('includedInPriceShort') || "v cene") : `+ ${formatPrice(CENY.bateria)}`}
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-300">• Strop {stropKupelna === "drevo" ? "vzor dreva biely" : "sadrokarton"}</span>
+                          <span className="text-slate-300">• {stropKupelna === "drevo" ? t('ceilingWoodPattern') : t('drywallCeiling')}</span>
                           <span className="text-green-400 font-semibold">
-                            {stropKupelna === "drevo" ? "v cene" : `+ ${formatPrice(CENY.strop_kupelna.sadrokarton)}`}
+                            {stropKupelna === "drevo" ? (t('includedInPriceShort') || "v cene") : `+ ${formatPrice(CENY.strop_kupelna.sadrokarton)}`}
                           </span>
                         </div>
                         {vana && (
                           <div className="flex justify-between">
-                            <span className="text-slate-300">• Vaňa</span>
+                            <span className="text-slate-300">• {t('bathtub')}</span>
                             <span className="text-green-400 font-semibold">+ {formatPrice(CENY.vana)}</span>
                           </div>
                         )}
                         {skrinka && (
                           <div className="flex justify-between">
-                            <span className="text-slate-300">• Skrinka</span>
+                            <span className="text-slate-300">• {t('cabinet')}</span>
                             <span className="text-green-400 font-semibold">+ {formatPrice(CENY.skrinka)}</span>
                           </div>
                         )}
@@ -484,8 +484,8 @@ export default function LyonFinalSummaryModal({
                         <p className="text-slate-400 text-xs mb-1">{t('foundationsSection') || 'ZÁKLADY'}</p>
                         <div className="flex justify-between text-xs">
                           <span className="text-slate-300">
-                            • {zaklady === "vruty" ? "Zemné vruty" :
-                               zaklady === "patky" ? "Betónové pätky" : "Pásové betónové"}
+                            • {zaklady === "vruty" ? t('groundScrews') :
+                               zaklady === "patky" ? t('concretePads') : t('stripFoundations')}
                           </span>
                           <span className="text-green-400 font-semibold">+ {formatPrice(CENY.zaklady[zaklady])}</span>
                         </div>
@@ -498,19 +498,19 @@ export default function LyonFinalSummaryModal({
                         <div className="space-y-1 text-xs">
                           {inziniering && (
                             <div className="flex justify-between">
-                              <span className="text-slate-300">• Inžiniering</span>
+                              <span className="text-slate-300">• {t('engineering')}</span>
                               <span className="text-green-400 font-semibold">+ {formatPrice(CENY.inziniering)}</span>
                             </div>
                           )}
                           {projektACertifikacia && (
                             <div className="flex justify-between">
-                              <span className="text-slate-300">• Projekt + Certifikácia A0</span>
+                              <span className="text-slate-300">• {t('projectCertification')} A0</span>
                               <span className="text-green-400 font-semibold">+ {formatPrice(CENY.projektACertifikacia)}</span>
                             </div>
                           )}
                           {revizia && (
                             <div className="flex justify-between">
-                              <span className="text-slate-300">• Revízna dokumentácia</span>
+                              <span className="text-slate-300">• {t('revisionDocs')}</span>
                               <span className="text-green-400 font-semibold">+ {formatPrice(CENY.revizia)}</span>
                             </div>
                           )}
@@ -524,13 +524,13 @@ export default function LyonFinalSummaryModal({
                         <div className="space-y-1 text-xs">
                           {montaz && (
                             <div className="flex justify-between">
-                              <span className="text-slate-300">• Montáž domu</span>
+                              <span className="text-slate-300">• {t('assembly')}</span>
                               <span className="text-green-400 font-semibold">+ {formatPrice(CENY.montaz)}</span>
                             </div>
                           )}
                           {doprava && (
                             <div className="flex justify-between">
-                              <span className="text-slate-300">• Doprava modulov</span>
+                              <span className="text-slate-300">• {t('transport')}</span>
                               <span className="text-green-400 font-semibold">+ {formatPrice(CENY.doprava)}</span>
                             </div>
                           )}
@@ -545,16 +545,16 @@ export default function LyonFinalSummaryModal({
                       <div className="flex items-center gap-2">
                         <Sparkles className="w-5 h-5 text-green-400" />
                         <div>
-                          <p className="text-green-400 font-bold text-sm">✓ Spĺňa podmienky A0</p>
-                          <p className="text-green-300/80 text-xs">Rodinný dom s energetickým certifikátom</p>
+                          <p className="text-green-400 font-bold text-sm">✓ {t('meetsA0Requirements') || 'Spĺňa podmienky A0'}</p>
+                          <p className="text-green-300/80 text-xs">{t('familyHouseWithCert') || 'Rodinný dom s energetickým certifikátom'}</p>
                         </div>
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">
                         <Home className="w-5 h-5 text-blue-400" />
                         <div>
-                          <p className="text-blue-400 font-bold text-sm">Rekreačná stavba</p>
-                          <p className="text-blue-300/80 text-xs">Chata / záhradný domček</p>
+                          <p className="text-blue-400 font-bold text-sm">{t('recreationalBuilding')}</p>
+                          <p className="text-blue-300/80 text-xs">{t('cottageGardenHouse') || 'Chata / záhradný domček'}</p>
                         </div>
                       </div>
                     )}
