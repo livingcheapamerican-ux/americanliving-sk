@@ -3002,6 +3002,7 @@ export default function DetailDomu() {
                   bleskozvod={lyonBleskozvod}
                   prepat={lyonPrepat}
                   pripravaNaSolarnePanely={lyonPripravaNaSolarnePanely}
+                  setPripravaNaSolarnePanely={setLyonPripravaNaSolarnePanely}
                   sprchovyKut={lyonSprchovyKut}
                   vana={lyonVana}
                   bateria={lyonBateria}
