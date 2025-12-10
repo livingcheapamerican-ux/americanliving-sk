@@ -15,7 +15,7 @@ export function LyonSummaryPanel({
   fasada, strecha, odkvapy, okna, vchodoveDvere, obkladStien, interieroveDvere,
   elektro, bleskozvod, prepat, sprchovyKut, vana, bateria, skrinka, stropKupelna,
   inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
-  totalPrice, formatPrice, onSubmit
+  totalPrice, formatPrice, onSubmit, t
 }) {
   return (
     <Card className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl border-2 border-slate-700 overflow-hidden">
@@ -24,7 +24,7 @@ export function LyonSummaryPanel({
         <div>
           <h3 className="text-lg font-bold flex items-center gap-2">
             <Home className="w-5 h-5" />
-            Vaša konfigurácia
+            {t?.('yourConfig') || 'Vaša konfigurácia'}
           </h3>
           <p className="text-xs text-blue-100 mt-1">Lyon 50m²</p>
         </div>
@@ -35,9 +35,9 @@ export function LyonSummaryPanel({
         {/* Účel */}
         {ucel && (
           <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-1">ÚČEL STAVBY</p>
+            <p className="text-xs font-semibold text-slate-400 mb-1">{t?.('purposeOfBuilding') || 'ÚČEL STAVBY'}</p>
             <p className="text-sm font-bold text-white">
-              {ucel === "chata" ? "Rekreačná stavba" : "Rodinný dom A0"}
+              {ucel === "chata" ? (t?.('recreationalBuilding') || "Rekreačná stavba") : (t?.('familyHouseA0') || "Rodinný dom A0")}
             </p>
           </div>
         )}
@@ -45,11 +45,11 @@ export function LyonSummaryPanel({
         {/* Izolácia */}
         {(izolaciaStien !== "150mm" || izolaciaPodlahy !== "150mm" || izolaciaStropu !== "150mm") && (
           <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">IZOLÁCIA</p>
+            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('insulation') || 'IZOLÁCIA'}</p>
             <div className="space-y-1 text-xs">
-              {izolaciaStien !== "150mm" && <p className="text-slate-300">• Steny {izolaciaStien}</p>}
-              {izolaciaPodlahy !== "150mm" && <p className="text-slate-300">• Podlaha {izolaciaPodlahy}</p>}
-              {izolaciaStropu !== "150mm" && <p className="text-slate-300">• Strop {izolaciaStropu}</p>}
+              {izolaciaStien !== "150mm" && <p className="text-slate-300">• {t?.('walls') || 'Steny'} {izolaciaStien}</p>}
+              {izolaciaPodlahy !== "150mm" && <p className="text-slate-300">• {t?.('floors') || 'Podlaha'} {izolaciaPodlahy}</p>}
+              {izolaciaStropu !== "150mm" && <p className="text-slate-300">• {t?.('roof') || 'Strop'} {izolaciaStropu}</p>}
             </div>
           </div>
         )}
@@ -57,11 +57,11 @@ export function LyonSummaryPanel({
         {/* Vykurovanie */}
         {(tepelneCerpadlo === "ano" || rekuperacia === "ano" || podlahovoKurenie || pripravaNaKrb || ochranaKachle) && (
           <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">VYKUROVANIE</p>
+            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('heating') || 'VYKUROVANIE'}</p>
             <div className="space-y-1 text-xs">
-              {tepelneCerpadlo === "ano" && <p className="text-slate-300">• Tepelné čerpadlo</p>}
-              {rekuperacia === "ano" && <p className="text-slate-300">• Rekuperácia</p>}
-              {podlahovoKurenie && <p className="text-slate-300">• Podlahové kúrenie</p>}
+              {tepelneCerpadlo === "ano" && <p className="text-slate-300">• {t?.('heatPump') || 'Tepelné čerpadlo'}</p>}
+              {rekuperacia === "ano" && <p className="text-slate-300">• {t?.('recuperation') || 'Rekuperácia'}</p>}
+              {podlahovoKurenie && <p className="text-slate-300">• {t?.('floorHeating') || 'Podlahové kúrenie'}</p>}
               {pripravaNaKrb && <p className="text-slate-300">• Príprava na krb</p>}
               {ochranaKachle && <p className="text-slate-300">• Ochrana na kachle</p>}
             </div>
@@ -71,7 +71,7 @@ export function LyonSummaryPanel({
         {/* Fasáda */}
         {fasada !== "drevo_smrek" && (
           <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-1">FASÁDA</p>
+            <p className="text-xs font-semibold text-slate-400 mb-1">{t?.('facadeSection') || 'FASÁDA'}</p>
             <p className="text-sm text-slate-300">
               {fasada === "omietka" ? "Šúchaná omietka" : 
                fasada === "smrekovec" ? "Smrekovec" :
@@ -83,7 +83,7 @@ export function LyonSummaryPanel({
         {/* Strecha */}
         {(strecha !== "korugovan_plech" || odkvapy === "ano") && (
           <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">STRECHA</p>
+            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('roofSection') || 'STRECHA'}</p>
             <div className="space-y-1 text-xs">
               {strecha !== "korugovan_plech" && <p className="text-slate-300">• Falcované panely</p>}
               {odkvapy === "ano" && <p className="text-slate-300">• Odkvapy</p>}
@@ -94,7 +94,7 @@ export function LyonSummaryPanel({
         {/* Okná a dvere */}
         {(okna !== "biele" || vchodoveDvere !== "plastove") && (
           <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">OKNÁ A DVERE</p>
+            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('windowsDoorsSection') || 'OKNÁ A DVERE'}</p>
             <div className="space-y-1 text-xs">
               {okna !== "biele" && <p className="text-slate-300">• Okná {okna === "antracit" ? "antracit" : "hnedé"}</p>}
               {vchodoveDvere !== "plastove" && <p className="text-slate-300">• Kovové dvere</p>}
@@ -105,7 +105,7 @@ export function LyonSummaryPanel({
         {/* Interiér */}
         {(obkladStien !== "smrek_8cm" || interieroveDvere !== "kridlove") && (
           <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">INTERIÉR</p>
+            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('interiorSection') || 'INTERIÉR'}</p>
             <div className="space-y-1 text-xs">
               {obkladStien !== "smrek_8cm" && (
                 <p className="text-slate-300">
@@ -121,7 +121,7 @@ export function LyonSummaryPanel({
         {/* Elektro */}
         {(elektro !== "eu" || bleskozvod || prepat) && (
           <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">ELEKTROINŠTALÁCIA</p>
+            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('electricalSection') || 'ELEKTROINŠTALÁCIA'}</p>
             <div className="space-y-1 text-xs">
               {elektro === "cz" && <p className="text-slate-300">• CZ/SK štandard</p>}
               {elektro === "ge" && <p className="text-slate-300 flex items-center gap-1">• GE štandard <span className="text-green-400">⚡A0</span></p>}
@@ -134,7 +134,7 @@ export function LyonSummaryPanel({
         {/* Kúpeľňa */}
         {(sprchovyKut !== "standard" || bateria !== "standard" || vana || skrinka || stropKupelna !== "drevo") && (
           <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">KÚPEĽŇA</p>
+            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('bathroomSection') || 'KÚPEĽŇA'}</p>
             <div className="space-y-1 text-xs">
               {sprchovyKut !== "standard" && <p className="text-slate-300">• Sprcha Radaway</p>}
               {bateria !== "standard" && <p className="text-slate-300">• Batéria Grohe</p>}
@@ -148,7 +148,7 @@ export function LyonSummaryPanel({
         {/* Základy */}
         {zaklady !== "bez" && (
           <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-1">ZÁKLADY</p>
+            <p className="text-xs font-semibold text-slate-400 mb-1">{t?.('foundationsSection') || 'ZÁKLADY'}</p>
             <p className="text-sm text-slate-300">
               {zaklady === "vruty" ? "Zemné vruty" :
                zaklady === "patky" ? "Betónové pätky" : "Pásové betónové"}
@@ -159,7 +159,7 @@ export function LyonSummaryPanel({
         {/* Služby */}
         {(inziniering || projektACertifikacia || revizia) && (
           <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">SLUŽBY</p>
+            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('servicesSection') || 'SLUŽBY'}</p>
             <div className="space-y-1 text-xs">
               {inziniering && <p className="text-slate-300 flex items-center gap-1">• Inžiniering <span className="text-green-400">⚡A0</span></p>}
               {projektACertifikacia && <p className="text-slate-300 flex items-center gap-1">• Projekt + Certifikácia <span className="text-green-400">⚡A0</span></p>}
@@ -171,10 +171,10 @@ export function LyonSummaryPanel({
         {/* Realizácia */}
         {(montaz || doprava) && (
           <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">REALIZÁCIA</p>
+            <p className="text-xs font-semibold text-slate-400 mb-2">{t?.('realizationSection') || 'REALIZÁCIA'}</p>
             <div className="space-y-1 text-xs">
-              {montaz && <p className="text-slate-300">• Montáž domu</p>}
-              {doprava && <p className="text-slate-300">• Doprava modulov</p>}
+              {montaz && <p className="text-slate-300">• {t?.('assembly') || 'Montáž domu'}</p>}
+              {doprava && <p className="text-slate-300">• {t?.('transport') || 'Doprava modulov'}</p>}
             </div>
           </div>
         )}
@@ -182,12 +182,12 @@ export function LyonSummaryPanel({
 
       {/* Total Price */}
       <div className="border-t-2 border-slate-700 bg-gradient-to-r from-blue-600 to-indigo-600 p-4">
-        <p className="text-xs text-blue-100 mb-1">Celková cena s DPH</p>
+        <p className="text-xs text-blue-100 mb-1">{t?.('totalPriceWithVAT') || 'Celková cena s DPH'}</p>
         <p className="text-2xl font-black text-white">{formatPrice(totalPrice)}</p>
         <div className="mt-3">
           <Button onClick={onSubmit} className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold shadow-lg">
             <Send className="w-4 h-4 mr-2" />
-            Odoslať dopyt
+            {t?.('sendInquiry') || 'Odoslať dopyt'}
           </Button>
         </div>
       </div>
@@ -195,7 +195,7 @@ export function LyonSummaryPanel({
   );
 }
 
-const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isIncluded, hideIncludedMessage }) => {
+const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isIncluded, hideIncludedMessage, t }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.01 }}
@@ -230,7 +230,7 @@ const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isInc
         {subtitle && <span className="text-xs text-gray-500 block mt-0.5">{subtitle}</span>}
         {price === "0 €" && !hideIncludedMessage ? (
           <span className="text-[11px] text-gray-500 block mt-1 italic leading-tight">
-            Táto položka je súčasťou základnej konfigurácie domu
+            {t?.('itemIncludedInBase') || 'Táto položka je súčasťou základnej konfigurácie domu'}
           </span>
         ) : (
           <span className={`text-[13px] font-bold block mt-1 ${isPriced ? "text-green-600" : "text-gray-400"}`}>
@@ -244,7 +244,7 @@ const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isInc
 
 export default function KonfiguratorLyon(props = {}) {
   const BASE_PRICE = 73431;
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   
   // Načítať texty konfiguratora
   const { data: konfigTexts = [] } = useQuery({
@@ -525,7 +525,7 @@ export default function KonfiguratorLyon(props = {}) {
               setKolaudacia("bez_a0");
               setInziniering(false);
               setProjektACertifikacia(false);
-            }} title="Bez kolaudácie A0" subtitle="Bez admin." price="0 €" isPriced={false} />
+            }} title="Bez kolaudácie A0" subtitle="Bez admin." price="0 €" isPriced={false} t={t} />
             <Tile selected={kolaudacia === "s_a0"} onClick={() => {
               setKolaudacia("s_a0");
               setInziniering(true);
@@ -533,7 +533,7 @@ export default function KonfiguratorLyon(props = {}) {
               setBleskozvod(true);
               setPrepat(true);
               setElektro("ge");
-            }} title="S kolaudáciou A0" subtitle="Admin proces" price="0 €" isPriced={false} isA0={true} />
+            }} title="S kolaudáciou A0" subtitle="Admin proces" price="0 €" isPriced={false} isA0={true} t={t} />
           </div>
         </Card>
       )}
@@ -559,15 +559,15 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={izolaciaStien === "150mm"} onClick={() => setIzolaciaStien("150mm")} 
                   title={getTranslatedText('izolacia_stien_150', 'nazov') || 'Steny 150mm'} 
                   subtitle={getTranslatedText('izolacia_stien_150', 'podnadpis') || 'Rekreačné'} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={izolaciaStien === "200mm"} onClick={() => setIzolaciaStien("200mm")} 
                   title={getTranslatedText('izolacia_stien_200', 'nazov') || 'Steny 200mm'} 
                   subtitle={getTranslatedText('izolacia_stien_200', 'podnadpis') || ''} 
-                  price="+ 1 799 €" isPriced={true} />
+                  price="+ 1 799 €" isPriced={true} t={t} />
                 <Tile selected={izolaciaStien === "250mm"} onClick={() => setIzolaciaStien("250mm")} 
                   title={getTranslatedText('izolacia_stien_250', 'nazov') || 'Steny 250mm'} 
                   subtitle={getTranslatedText('izolacia_stien_250', 'podnadpis') || 'Premium A0'} 
-                  price="+ 1 558 €" isPriced={true} isA0={true} />
+                  price="+ 1 558 €" isPriced={true} isA0={true} t={t} />
               </div>
             </div>
 
@@ -580,11 +580,11 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={izolaciaPodlahy === "150mm"} onClick={() => setIzolaciaPodlahy("150mm")} 
                   title={getTranslatedText('izolacia_podlahy_150', 'nazov') || 'Podlaha 150mm'} 
                   subtitle={getTranslatedText('izolacia_podlahy_150', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={izolaciaPodlahy === "200mm"} onClick={() => setIzolaciaPodlahy("200mm")} 
                   title={getTranslatedText('izolacia_podlahy_200', 'nazov') || 'Podlaha 200mm'} 
                   subtitle={getTranslatedText('izolacia_podlahy_200', 'podnadpis') || 'A0'} 
-                  price="+ 334 €" isPriced={true} isA0={true} />
+                  price="+ 334 €" isPriced={true} isA0={true} t={t} />
               </div>
             </div>
 
@@ -597,11 +597,11 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={izolaciaStropu === "150mm"} onClick={() => setIzolaciaStropu("150mm")} 
                   title={getTranslatedText('izolacia_stropu_150', 'nazov') || 'Strop 150mm'} 
                   subtitle={getTranslatedText('izolacia_stropu_150', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={izolaciaStropu === "200mm"} onClick={() => setIzolaciaStropu("200mm")} 
                   title={getTranslatedText('izolacia_stropu_200', 'nazov') || 'Strop 200mm'} 
                   subtitle={getTranslatedText('izolacia_stropu_200', 'podnadpis') || 'A0'} 
-                  price="+ 271 €" isPriced={true} isA0={true} />
+                  price="+ 271 €" isPriced={true} isA0={true} t={t} />
               </div>
             </div>
           </div>
@@ -623,11 +623,11 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={tepelneCerpadlo === "nie"} onClick={() => setTepelneCerpadlo("nie")} 
                   title={getTranslatedText('tepelne_cerpadlo_nie', 'nazov') || 'Príprava'} 
                   subtitle={getTranslatedText('tepelne_cerpadlo_nie', 'podnadpis') || 'Konvektory'} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={tepelneCerpadlo === "ano"} onClick={() => setTepelneCerpadlo("ano")} 
                   title={getTranslatedText('tepelne_cerpadlo_ano', 'nazov') || 'Tepelné čerpadlo'} 
                   subtitle={getTranslatedText('tepelne_cerpadlo_ano', 'podnadpis') || 'A0 povinné'} 
-                  price="+ 2 889 €" isPriced={true} isA0={true} />
+                  price="+ 2 889 €" isPriced={true} isA0={true} t={t} />
               </div>
             </div>
 
@@ -640,11 +640,11 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={rekuperacia === "nie"} onClick={() => setRekuperacia("nie")} 
                   title={getTranslatedText('rekuperacia_nie', 'nazov') || 'Bez rekuperácie'} 
                   subtitle={getTranslatedText('rekuperacia_nie', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} />
+                  price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} t={t} />
                 <Tile selected={rekuperacia === "ano"} onClick={() => setRekuperacia("ano")} 
                   title={getTranslatedText('rekuperacia_ano', 'nazov') || 'Rekuperácia'} 
                   subtitle={getTranslatedText('rekuperacia_ano', 'podnadpis') || 'A0 povinné'} 
-                  price="+ 1 155 €" isPriced={true} isA0={true} />
+                  price="+ 1 155 €" isPriced={true} isA0={true} t={t} />
               </div>
             </div>
 
@@ -657,15 +657,15 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={podlahovoKurenie} onClick={() => setPodlahovoKurenie(!podlahovoKurenie)} 
                   title={getTranslatedText('podlahove_kurenie', 'nazov') || 'Podlahové kúrenie'} 
                   subtitle={getTranslatedText('podlahove_kurenie', 'podnadpis') || ''} 
-                  price="+ 2 253 €" isPriced={true} />
+                  price="+ 2 253 €" isPriced={true} t={t} />
                 <Tile selected={pripravaNaKrb} onClick={() => setPripravaNaKrb(!pripravaNaKrb)} 
                   title={getTranslatedText('pripravaKrb', 'nazov') || 'Príprava na krb'} 
                   subtitle={getTranslatedText('pripravaKrb', 'podnadpis') || ''} 
-                  price="+ 579 €" isPriced={true} />
+                  price="+ 579 €" isPriced={true} t={t} />
                 <Tile selected={ochranaKachle} onClick={() => setOchranaKachle(!ochranaKachle)} 
                   title={getTranslatedText('ochranaKachle', 'nazov') || 'Ochrana na kachle'} 
                   subtitle={getTranslatedText('ochranaKachle', 'podnadpis') || ''} 
-                  price="+ 1 280 €" isPriced={true} />
+                  price="+ 1 280 €" isPriced={true} t={t} />
               </div>
             </div>
           </div>
@@ -688,23 +688,23 @@ export default function KonfiguratorLyon(props = {}) {
               <Tile selected={fasada === "drevo_smrek"} onClick={() => setFasada("drevo_smrek")} 
                 title={getTranslatedText('fasada_drevo_smrek', 'nazov') || 'Drevo smrek'} 
                 subtitle={getTranslatedText('fasada_drevo_smrek', 'podnadpis') || 'Tmavý/Svetlý'} 
-                price="0 €" isPriced={false} isIncluded={true} />
+                price="0 €" isPriced={false} isIncluded={true} t={t} />
               <Tile selected={fasada === "omietka"} onClick={() => setFasada("omietka")} 
                 title={getTranslatedText('fasada_omietka', 'nazov') || 'Šúchaná omietka'} 
                 subtitle={getTranslatedText('fasada_omietka', 'podnadpis') || 'Baumit'} 
-                price="+ 1 581 €" isPriced={true} />
+                price="+ 1 581 €" isPriced={true} t={t} />
               <Tile selected={fasada === "smrekovec"} onClick={() => setFasada("smrekovec")} 
                 title={getTranslatedText('fasada_smrekovec', 'nazov') || 'Smrekovec'} 
                 subtitle={getTranslatedText('fasada_smrekovec', 'podnadpis') || ''} 
-                price="+ 3 350 €" isPriced={true} />
+                price="+ 3 350 €" isPriced={true} t={t} />
               <Tile selected={fasada === "falcovane"} onClick={() => setFasada("falcovane")} 
                 title={getTranslatedText('fasada_falcovane', 'nazov') || 'Falcované panely'} 
                 subtitle={getTranslatedText('fasada_falcovane', 'podnadpis') || ''} 
-                price="+ 4 954 €" isPriced={true} />
+                price="+ 4 954 €" isPriced={true} t={t} />
               <Tile selected={fasada === "thermowood"} onClick={() => setFasada("thermowood")} 
                 title={getTranslatedText('fasada_thermowood', 'nazov') || 'Thermowood'} 
                 subtitle={getTranslatedText('fasada_thermowood', 'podnadpis') || ''} 
-                price="+ 6 677 €" isPriced={true} />
+                price="+ 6 677 €" isPriced={true} t={t} />
             </div>
           </div>
         </Card>
@@ -725,11 +725,11 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={strecha === "korugovan_plech"} onClick={() => setStrecha("korugovan_plech")} 
                   title={getTranslatedText('strecha_korugovan', 'nazov') || 'Korugovaný plech'} 
                   subtitle={getTranslatedText('strecha_korugovan', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={strecha === "falcovane"} onClick={() => setStrecha("falcovane")} 
                   title={getTranslatedText('strecha_falcovane', 'nazov') || 'Falcované panely'} 
                   subtitle={getTranslatedText('strecha_falcovane', 'podnadpis') || ''} 
-                  price="+ 3 228 €" isPriced={true} />
+                  price="+ 3 228 €" isPriced={true} t={t} />
               </div>
             </div>
 
@@ -742,11 +742,11 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={odkvapy === "nie"} onClick={() => setOdkvapy("nie")} 
                   title={getTranslatedText('odkvapy_nie', 'nazov') || 'Bez odkvapov'} 
                   subtitle={getTranslatedText('odkvapy_nie', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} />
+                  price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} t={t} />
                 <Tile selected={odkvapy === "ano"} onClick={() => setOdkvapy("ano")} 
                   title={getTranslatedText('odkvapy_ano', 'nazov') || 'Odkvapy'} 
                   subtitle={getTranslatedText('odkvapy_ano', 'podnadpis') || 'Farba strechy'} 
-                  price="+ 1 502 €" isPriced={true} />
+                  price="+ 1 502 €" isPriced={true} t={t} />
               </div>
             </div>
           </div>
@@ -771,15 +771,15 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={okna === "biele"} onClick={() => setOkna("biele")} 
                   title={getTranslatedText('okna_biele', 'nazov') || 'Biele'} 
                   subtitle={getTranslatedText('okna_biele', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={okna === "antracit"} onClick={() => setOkna("antracit")} 
                   title={getTranslatedText('okna_antracit', 'nazov') || 'Antracit'} 
                   subtitle={getTranslatedText('okna_antracit', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={okna === "hnede"} onClick={() => setOkna("hnede")} 
                   title={getTranslatedText('okna_hnede', 'nazov') || 'Hnedé'} 
                   subtitle={getTranslatedText('okna_hnede', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
               </div>
             </div>
 
@@ -792,11 +792,11 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={vchodoveDvere === "plastove"} onClick={() => setVchodoveDvere("plastove")} 
                   title={getTranslatedText('dvere_plastove', 'nazov') || 'Kovovo-plastové'} 
                   subtitle={getTranslatedText('dvere_plastove', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={vchodoveDvere === "kovove"} onClick={() => setVchodoveDvere("kovove")} 
                   title={getTranslatedText('dvere_kovove', 'nazov') || 'Kovové dvere'} 
                   subtitle={getTranslatedText('dvere_kovove', 'podnadpis') || ''} 
-                  price="+ 278 €" isPriced={true} />
+                  price="+ 278 €" isPriced={true} t={t} />
               </div>
             </div>
           </div>
@@ -818,19 +818,19 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={obkladStien === "smrek_8cm"} onClick={() => setObkladStien("smrek_8cm")} 
                   title={getTranslatedText('obklad_smrek_8cm', 'nazov') || 'Smrek 8cm'} 
                   subtitle={getTranslatedText('obklad_smrek_8cm', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={obkladStien === "smrek_bez_uzlov"} onClick={() => setObkladStien("smrek_bez_uzlov")} 
                   title={getTranslatedText('obklad_smrek_bez_uzlov', 'nazov') || 'Smrek bez uzlov 12cm'} 
                   subtitle={getTranslatedText('obklad_smrek_bez_uzlov', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} />
+                  price="0 €" isPriced={false} t={t} />
                 <Tile selected={obkladStien === "sadrokarton_tapeta"} onClick={() => setObkladStien("sadrokarton_tapeta")} 
                   title={getTranslatedText('obklad_sadrokarton', 'nazov') || 'Sadrokarton+netkaná tapeta+maľovka'} 
                   subtitle={getTranslatedText('obklad_sadrokarton', 'podnadpis') || ''} 
-                  price="+ 7 855 €" isPriced={true} />
+                  price="+ 7 855 €" isPriced={true} t={t} />
                 <Tile selected={obkladStien === "osb_panel"} onClick={() => setObkladStien("osb_panel")} 
                   title={getTranslatedText('obklad_osb', 'nazov') || 'OSB + laminátový panel'} 
                   subtitle={getTranslatedText('obklad_osb', 'podnadpis') || ''} 
-                  price="+ 5 279 €" isPriced={true} />
+                  price="+ 5 279 €" isPriced={true} t={t} />
               </div>
             </div>
 
@@ -843,7 +843,7 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={podlaha === "laminat"} onClick={() => setPodlaha("laminat")} 
                   title={getTranslatedText('podlaha_laminat', 'nazov') || 'Laminát'} 
                   subtitle={getTranslatedText('podlaha_laminat', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
               </div>
             </div>
 
@@ -856,11 +856,11 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={interieroveDvere === "kridlove"} onClick={() => setInterieroveDvere("kridlove")} 
                   title={getTranslatedText('dvere_kridlove', 'nazov') || 'Krídlové dvere'} 
                   subtitle={getTranslatedText('dvere_kridlove', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={interieroveDvere === "posuvne"} onClick={() => setInterieroveDvere("posuvne")} 
                   title={getTranslatedText('dvere_posuvne', 'nazov') || 'Posuvné dvere'} 
                   subtitle={getTranslatedText('dvere_posuvne', 'podnadpis') || ''} 
-                  price="+ 427 €" isPriced={true} />
+                  price="+ 427 €" isPriced={true} t={t} />
               </div>
             </div>
           </div>
@@ -885,15 +885,15 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={elektro === "eu"} onClick={() => setElektro("eu")} 
                   title={getTranslatedText('elektro_eu', 'nazov') || 'EU štandard'} 
                   subtitle={getTranslatedText('elektro_eu', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={elektro === "cz"} onClick={() => setElektro("cz")} 
                   title={getTranslatedText('elektro_cz', 'nazov') || 'CZ/SK štandard'} 
                   subtitle={getTranslatedText('elektro_cz', 'podnadpis') || 'Zásuvky, dodatočné istenie'} 
-                  price="+ 460 €" isPriced={true} />
+                  price="+ 460 €" isPriced={true} t={t} />
                 <Tile selected={elektro === "ge"} onClick={() => setElektro("ge")} 
                   title={getTranslatedText('elektro_ge', 'nazov') || 'GE štandard'} 
                   subtitle={getTranslatedText('elektro_ge', 'podnadpis') || ''} 
-                  price="+ 1 583 €" isPriced={true} isA0={true} />
+                  price="+ 1 583 €" isPriced={true} isA0={true} t={t} />
               </div>
             </div>
 
@@ -906,11 +906,11 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={bleskozvod} onClick={() => setBleskozvod(!bleskozvod)} 
                   title={getTranslatedText('bleskozvod', 'nazov') || 'Bleskozvod'} 
                   subtitle={getTranslatedText('bleskozvod', 'podnadpis') || ''} 
-                  price="+ 856 €" isPriced={true} isA0={true} />
+                  price="+ 856 €" isPriced={true} isA0={true} t={t} />
                 <Tile selected={prepat} onClick={() => setPrepat(!prepat)} 
                   title={getTranslatedText('prepat', 'nazov') || 'Prepäťová ochrana'} 
                   subtitle={getTranslatedText('prepat', 'podnadpis') || ''} 
-                  price="+ 311 €" isPriced={true} isA0={true} />
+                  price="+ 311 €" isPriced={true} isA0={true} t={t} />
               </div>
             </div>
           </div>
@@ -932,11 +932,11 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={sprchovyKut === "standard"} onClick={() => setSprchovyKut("standard")} 
                   title={getTranslatedText('sprcha_standard', 'nazov') || 'Sprcha'} 
                   subtitle={getTranslatedText('sprcha_standard', 'podnadpis') || 'WC Geberit'} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={sprchovyKut === "radaway"} onClick={() => setSprchovyKut("radaway")} 
                   title={getTranslatedText('sprcha_radaway', 'nazov') || 'Sprcha Radaway'} 
                   subtitle={getTranslatedText('sprcha_radaway', 'podnadpis') || ''} 
-                  price="+ 646 €" isPriced={true} />
+                  price="+ 646 €" isPriced={true} t={t} />
               </div>
             </div>
 
@@ -949,11 +949,11 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={bateria === "standard"} onClick={() => setBateria("standard")} 
                   title={getTranslatedText('bateria_standard', 'nazov') || 'Batéria štandard'} 
                   subtitle={getTranslatedText('bateria_standard', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={bateria === "grohe"} onClick={() => setBateria("grohe")} 
                   title={getTranslatedText('bateria_grohe', 'nazov') || 'Grohe'} 
                   subtitle={getTranslatedText('bateria_grohe', 'podnadpis') || ''} 
-                  price="+ 139 €" isPriced={true} />
+                  price="+ 139 €" isPriced={true} t={t} />
               </div>
             </div>
 
@@ -966,11 +966,11 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={stropKupelna === "drevo"} onClick={() => setStropKupelna("drevo")} 
                   title={getTranslatedText('strop_drevo', 'nazov') || 'Strop - vzor dreva biely'} 
                   subtitle={getTranslatedText('strop_drevo', 'podnadpis') || ''} 
-                  price="0 €" isPriced={false} isIncluded={true} />
+                  price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={stropKupelna === "sadrokarton"} onClick={() => setStropKupelna("sadrokarton")} 
                   title={getTranslatedText('strop_sadrokarton', 'nazov') || 'Sadrokartón, tapeta, maľba'} 
                   subtitle={getTranslatedText('strop_sadrokarton', 'podnadpis') || ''} 
-                  price="+ 0 €" isPriced={false} />
+                  price="+ 0 €" isPriced={false} t={t} />
               </div>
             </div>
 
@@ -983,11 +983,11 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={vana} onClick={() => setVana(!vana)} 
                   title={getTranslatedText('vana', 'nazov') || 'Vaňa'} 
                   subtitle={getTranslatedText('vana', 'podnadpis') || ''} 
-                  price="+ 501 €" isPriced={true} />
+                  price="+ 501 €" isPriced={true} t={t} />
                 <Tile selected={skrinka} onClick={() => setSkrinka(!skrinka)} 
                   title={getTranslatedText('skrinka', 'nazov') || 'Skrinka'} 
                   subtitle={getTranslatedText('skrinka', 'podnadpis') || ''} 
-                  price="+ 434 €" isPriced={true} />
+                  price="+ 434 €" isPriced={true} t={t} />
               </div>
             </div>
             </div>
@@ -1009,19 +1009,19 @@ export default function KonfiguratorLyon(props = {}) {
               <Tile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} 
                 title={getTranslatedText('zaklady_bez', 'nazov') || 'Bez základov'} 
                 subtitle={getTranslatedText('zaklady_bez', 'podnadpis') || ''} 
-                price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} />
+                price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} t={t} />
               <Tile selected={zaklady === "vruty"} onClick={() => setZaklady("vruty")} 
                 title={getTranslatedText('zaklady_vruty', 'nazov') || 'Zemné vruty'} 
                 subtitle={getTranslatedText('zaklady_vruty', 'podnadpis') || ''} 
-                price="+ 4 494 €" isPriced={true} />
+                price="+ 4 494 €" isPriced={true} t={t} />
               <Tile selected={zaklady === "patky"} onClick={() => setZaklady("patky")} 
                 title={getTranslatedText('zaklady_patky', 'nazov') || 'Betónové pätky'} 
                 subtitle={getTranslatedText('zaklady_patky', 'podnadpis') || ''} 
-                price="+ 2 568 €" isPriced={true} />
+                price="+ 2 568 €" isPriced={true} t={t} />
               <Tile selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} 
                 title={getTranslatedText('zaklady_pasove', 'nazov') || 'Pásové betónové'} 
                 subtitle={getTranslatedText('zaklady_pasove', 'podnadpis') || ''} 
-                price="+ 11 825 €" isPriced={true} />
+                price="+ 11 825 €" isPriced={true} t={t} />
             </div>
           </div>
         </Card>
@@ -1037,15 +1037,15 @@ export default function KonfiguratorLyon(props = {}) {
                   <Tile selected={inziniering} onClick={() => setInziniering(!inziniering)} 
                     title={getTranslatedText('inziniering', 'nazov') || 'Inžiniering'} 
                     subtitle={getTranslatedText('inziniering', 'podnadpis') || 'Povolenie'} 
-                    price="+ 2 774 €" isPriced={true} isA0={true} />
+                    price="+ 2 774 €" isPriced={true} isA0={true} t={t} />
                   <Tile selected={projektACertifikacia} onClick={() => setProjektACertifikacia(!projektACertifikacia)} 
                     title={getTranslatedText('projekt_certifikacia', 'nazov') || 'Projekt + Certif.'} 
                     subtitle={getTranslatedText('projekt_certifikacia', 'podnadpis') || 'A0'} 
-                    price="+ 3 745 €" isPriced={true} isA0={true} />
+                    price="+ 3 745 €" isPriced={true} isA0={true} t={t} />
                   <Tile selected={revizia} onClick={() => setRevizia(!revizia)} 
                     title={getTranslatedText('revizia', 'nazov') || 'Revízna dok.'} 
                     subtitle={getTranslatedText('revizia', 'podnadpis') || ''} 
-                    price="+ 1 605 €" isPriced={true} />
+                    price="+ 1 605 €" isPriced={true} t={t} />
                   </div>
         </Card>
 
@@ -1059,11 +1059,11 @@ export default function KonfiguratorLyon(props = {}) {
             <Tile selected={montaz} onClick={() => setMontaz(!montaz)} 
               title={getTranslatedText('montaz', 'nazov') || 'Montáž domu'} 
               subtitle={getTranslatedText('montaz', 'podnadpis') || ''} 
-              price="+ 4 806 €" isPriced={true} />
+              price="+ 4 806 €" isPriced={true} t={t} />
             <Tile selected={doprava} onClick={() => setDoprava(!doprava)} 
               title={getTranslatedText('doprava', 'nazov') || 'Doprava'} 
               subtitle={getTranslatedText('doprava', 'podnadpis') || 'Doprava všetkých modulov'} 
-              price="+ 8 928 €" isPriced={true} />
+              price="+ 8 928 €" isPriced={true} t={t} />
           </div>
         </Card>
       </div>
