@@ -1923,9 +1923,11 @@ export default function DetailDomu() {
                     <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
                     {t('basicHouseConfig')}
                   </h3>
-                  <p className="text-xs sm:text-sm text-gray-700 mb-4 leading-relaxed">
-                    {t('basicConfigDescription')}
-                  </p>
+                  {(dom.nazov === 'Lyon' || dom.nazov === 'Happy Wife' || dom.nazov?.includes('Lyon') || dom.nazov?.includes('Happy Wife')) && (
+                    <p className="text-xs sm:text-sm text-gray-700 mb-4 leading-relaxed">
+                      {t('basicConfigDescription')}
+                    </p>
+                  )}
                   
                   {/* Špecifický obsah pre každý dom zo specifikacia - správne unikátne pre každý dom */}
                   {dom.specifikacia && dom.nazov !== "Model HAPPY WIFE" && (
