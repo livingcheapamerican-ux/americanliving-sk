@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar, Eye, User, Tag, Sparkles, Edit2, Check, X } from "lucide-react";
+import { Calendar, Eye, User, Tag, Sparkles, Edit2, Check, X, Download } from "lucide-react";
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
 import ReactMarkdown from "react-markdown";
@@ -40,6 +40,24 @@ export default function BlogPreviewModal({ post, isOpen, onClose, onImageRegener
       toast.error('Chyba pri úprave: ' + error.message);
     } finally {
       setRegenerating(false);
+    }
+  };
+
+  const handleDownloadImage = async () => {
+    try {
+      const response = await fetch(post.titulny_obrazok);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${post.slug || 'blog-image'}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+      toast.success('Obrázok stiahnutý');
+    } catch (error) {
+      toast.error('Chyba pri sťahovaní');
     }
   };
 
@@ -110,14 +128,24 @@ export default function BlogPreviewModal({ post, isOpen, onClose, onImageRegener
               className="w-full h-auto object-cover"
             />
             {!editingImage && (
-              <Button
-                size="sm"
-                className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-purple-600 hover:bg-purple-700"
-                onClick={() => setEditingImage(true)}
-              >
-                <Edit2 className="w-4 h-4 mr-2" />
-                Upraviť AI obrázok
-              </Button>
+              <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+                <Button
+                  size="sm"
+                  className="bg-blue-600 hover:bg-blue-700"
+                  onClick={handleDownloadImage}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Stiahnuť
+                </Button>
+                <Button
+                  size="sm"
+                  className="bg-purple-600 hover:bg-purple-700"
+                  onClick={() => setEditingImage(true)}
+                >
+                  <Edit2 className="w-4 h-4 mr-2" />
+                  Upraviť AI obrázok
+                </Button>
+              </div>
             )}
           </div>
 
