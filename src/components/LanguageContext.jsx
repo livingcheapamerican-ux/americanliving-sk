@@ -1330,7 +1330,7 @@ const translations = {
     lifespanDesc: "Ausgelegt für mehr als 80 Jahre bei regelmäßiger Wartung und ordnungsgemäßer Installation",
     basePriceNote: "Der Grundpreis gilt nur für die Konstruktion ohne Montagearbeiten.",
     basePriceNoteDesc: "Den Montagepreis können Sie im Konfigurator berechnen.",
-    modularConstruction: "Modulhaus- und Fertigbau – flexible Lösung für Ihr Wohnen.",
+    modularConstruction: "Modulhaus- und Fertigbau – flexible Lösung für Ihr Wohnen. Im Konfigurator können Sie das Haus an gesetzliche Anforderungen anpassen, damit es die Anforderungen für ein A0-Energiezertifikat, die Anmeldung des Hauptwohnsitzes, die Baugenehmigung in einem Wohngebiet erfüllt und das Haus als Familienhaus genehmigt werden kann.",
     
     // Prosto House - Montage-Kit
     assemblyKitTitle: "Montage-Kit des Hauses:",
@@ -1345,7 +1345,7 @@ const translations = {
     assemblyKitStairsNotIncluded: "Der Preis für die Treppe ist im Grundangebot nicht enthalten.",
     assemblyKitPaintClient: "Die Farbe für den Außenfassadenanstrich wird vom Besteller bereitgestellt.",
     assemblyKitPaintingNotIncluded: "Der Preis für den Fassadenanstrich ist im Grundangebot nicht enthalten, wird zusätzlich nach der tatsächlich gestrichenen Fläche bestimmt.",
-    basePriceIncludesRecreational: "Grundpreis umfasst komplette Standardausstattung für Freizeitgebäude. Option zur Aufrüstung auf Familienhaus mit A0-Zertifikat im Konfigurator.",
+    basePriceIncludesRecreational: "Der Grundpreis umfasst die komplette Standardausstattung für Freizeitgebäude. Möglichkeit zur Aufrüstung auf ein Familienhaus mit A0-Zertifikat im Konfigurator.",
     gl24ModularHouse: "Modulhaus aus GL24-Leimholz – Kombination aus Eleganz, Komfort und Innovation.",
     
     // Konfigurátor Wizard
@@ -2223,7 +2223,7 @@ const translations = {
     lifespanDesc: "Conçu pour plus de 80 ans avec entretien régulier et installation appropriée",
     basePriceNote: "Le prix de base concerne uniquement la construction sans travaux de montage.",
     basePriceNoteDesc: "Vous pouvez calculer le prix du montage dans le configurateur.",
-    modularConstruction: "Construction de maison modulaire et préfabriquée – solution flexible pour votre habitat.",
+    modularConstruction: "Construction de maison modulaire et préfabriquée – solution flexible pour votre habitat. Dans le configurateur, vous pouvez adapter la maison aux exigences législatives afin qu'elle réponde aux exigences d'un certificat énergétique A0, d'enregistrement de résidence permanente, de permis de construire dans un quartier résidentiel, et que la maison puisse être approuvée en tant que maison familiale.",
     
     // Prosto House - Kit de montage
     assemblyKitTitle: "Kit de montage de la maison:",
@@ -2238,7 +2238,7 @@ const translations = {
     assemblyKitStairsNotIncluded: "Le prix de l'escalier n'est pas inclus dans l'offre de base.",
     assemblyKitPaintClient: "La peinture pour la peinture des façades extérieures est fournie par le client.",
     assemblyKitPaintingNotIncluded: "Le prix de la peinture de la façade n'est pas inclus dans l'offre de base, il est déterminé ultérieurement en fonction de la surface réellement peinte.",
-    basePriceIncludesRecreational: "Le prix de base comprend l'équipement standard complet pour bâtiment de loisirs. Option de mise à niveau vers Maison familiale avec certificat A0 dans le configurateur.",
+    basePriceIncludesRecreational: "Le prix de base comprend l'équipement standard complet pour bâtiment de loisirs. Possibilité de mise à niveau vers une maison familiale avec certificat A0 dans le configurateur.",
     gl24ModularHouse: "Maison modulaire en bois lamellé-collé GL24 – combinaison d'élégance, de confort et d'innovation.",
     
     // Konfigurátor Wizard
@@ -3066,7 +3066,7 @@ const translations = {
     lifespanDesc: "Пројектовано за више од 80 година уз редовно одржавање и правилну инсталацију",
     basePriceNote: "Основна цена је само за конструкцију без монтажних радова.",
     basePriceNoteDesc: "Цену монтаже можете израчунати у конфигуратору.",
-    modularConstruction: "Изградња модуларне и монтажне куће – флексибилно решење за ваше становање.",
+    modularConstruction: "Изградња модуларне и монтажне куће – флексибилно решење за ваше становање. У конфигуратору можете прилагодити кућу законским захтевима тако да испуњава услове за А0 енергетски сертификат, пријаву сталног боравка, грађевинску дозволу у стамбеној четврти, а кућа ће моћи да се колаудира као породична кућа.",
     
     // Prosto House - Монтажни комплет
     assemblyKitTitle: "Монтажни комплет куће:",
@@ -3976,7 +3976,7 @@ const translations = {
     lifespanDesc: "Projektirano za više od 80 godina uz redovito održavanje i pravilnu instalaciju",
     basePriceNote: "Osnovna cijena je samo za konstrukciju bez montažnih radova.",
     basePriceNoteDesc: "Cijenu montaže možete izračunati u konfiguratoru.",
-    modularConstruction: "Izgradnja modularne i montažne kuće – fleksibilno rješenje za vaše stanovanje.",
+    modularConstruction: "Izgradnja modularne i montažne kuće – fleksibilno rješenje za vaše stanovanje. U konfiguratoru možete prilagoditi kuću zakonskim zahtjevima tako da ispunjava uvjete za A0 energetski certifikat, prijavu stalnog boravka, građevinsku dozvolu u stambenoj četvrti, a kuća će moći biti kolaudirana kao obiteljska kuća.",
     
     // Prosto House - Montažni komplet
     assemblyKitTitle: "Montažni komplet kuće:",
@@ -4875,7 +4875,7 @@ const translations = {
     lifespanDesc: "Σχεδιασμένο για περισσότερα από 80 χρόνια με τακτική συντήρηση και σωστή εγκατάσταση",
     basePriceNote: "Η βασική τιμή είναι μόνο για την κατασκευή χωρίς εργασίες συναρμολόγησης.",
     basePriceNoteDesc: "Μπορείτε να υπολογίσετε την τιμή συναρμολόγησης στον διαμορφωτή.",
-    modularConstruction: "Κατασκευή αρθρωτού και προκατασκευασμένου σπιτιού – ευέλικτη λύση για τη στέγασή σας.",
+    modularConstruction: "Κατασκευή αρθρωτού και προκατασκευασμένου σπιτιού – ευέλικτη λύση για τη διαβίωσή σας. Στον διαμορφωτή μπορείτε να προσαρμόσετε το σπίτι στις νομοθετικές απαιτήσεις ώστε να πληροί τις προϋποθέσεις για πιστοποιητικό ενέργειας A0, δήλωση μόνιμης κατοικίας, οικοδομική άδεια σε οικιστική περιοχή και το σπίτι να μπορεί να εγκριθεί ως οικογενειακή κατοικία.",
     
     // Prosto House - Κιτ συναρμολόγησης
     assemblyKitTitle: "Κιτ συναρμολόγησης του σπιτιού:",
@@ -5484,7 +5484,7 @@ const translations = {
     lifespanDesc: "Designed for more than 80 years with regular maintenance and proper installation",
     basePriceNote: "The base price is for the construction only without assembly work.",
     basePriceNoteDesc: "You can calculate the assembly price in the configurator.",
-    modularConstruction: "Modular and prefab house construction – flexible solution for your living.",
+    modularConstruction: "Modular and prefab house construction – flexible solution for your living. In the configurator, you can adapt the house to legislative requirements so that it meets the requirements for an A0 energy certificate, permanent residence registration, building permit in a residential district, and the house can be approved as a family house.",
     
     // Prosto House - Assembly kit
     assemblyKitTitle: "House assembly kit:",
@@ -6290,7 +6290,7 @@ const translations = {
     lifespanDesc: "Több mint 80 évre tervezve rendszeres karbantartás és helyes telepítés mellett",
     basePriceNote: "Az alapár csak a konstrukcióra vonatkozik szerelési munkák nélkül.",
     basePriceNoteDesc: "A szerelés árát a konfigurátorban kiszámíthatja.",
-    modularConstruction: "Moduláris ház építés – rugalmas megoldás az Ön otthonához.",
+    modularConstruction: "Moduláris és előregyártott ház építés – rugalmas megoldás az Ön lakhatásához. A konfigurátorban a házat a törvényi követelményekhez igazíthatja, hogy megfeleljen az A0 energetikai tanúsítvány követelményeinek, az állandó lakcím bejelentésének, lakóövezetben építési engedélynek, és a házat családi házként lehessen engedélyezni.",
     
     // Prosto House - Összeszerelő készlet
     assemblyKitTitle: "Ház összeszerelő készlet:",
@@ -7086,7 +7086,7 @@ const translations = {
     lifespanDesc: "Zaprojektowany na ponad 80 lat przy regularnej konserwacji i właściwej instalacji",
     basePriceNote: "Cena podstawowa dotyczy tylko konstrukcji bez prac montażowych.",
     basePriceNoteDesc: "Cenę montażu można obliczyć w konfiguratorze.",
-    modularConstruction: "Budowa domu modułowego – elastyczne rozwiązanie dla Twojego mieszkania.",
+    modularConstruction: "Budowa domu modułowego i prefabrykowanego – elastyczne rozwiązanie dla Twojego mieszkania. W konfiguratorze możesz dostosować dom do wymagań prawnych, aby spełniał wymagania dotyczące certyfikatu energetycznego A0, zameldowania na pobyt stały, pozwolenia na budowę w dzielnicy mieszkalnej, a dom będzie mógł być odebrany jako dom rodzinny.",
     
     // Prosto House - Zestaw montażowy
     assemblyKitTitle: "Zestaw montażowy domu:",
@@ -7841,7 +7841,7 @@ const translations = {
     lifespanDesc: "Розроблено більш ніж на 80 років при регулярному обслуговуванні та правильному монтажі",
     basePriceNote: "Базова ціна стосується лише конструкції без монтажних робіт.",
     basePriceNoteDesc: "Ви можете розрахувати ціну монтажу в конфігураторі.",
-    modularConstruction: "Будівництво модульного будинку – гнучке рішення для вашого життя.",
+    modularConstruction: "Будівництво модульного та збірного будинку – гнучке рішення для вашого проживання. У конфігураторі ви можете адаптувати будинок до законодавчих вимог, щоб він відповідав вимогам для енергетичного сертифіката A0, реєстрації постійного місця проживання, дозволу на будівництво в житловому районі, і будинок можна буде затвердити як сімейний будинок.",
     
     // Prosto House - Монтажний комплект
     assemblyKitTitle: "Монтажний комплект будинку:",
