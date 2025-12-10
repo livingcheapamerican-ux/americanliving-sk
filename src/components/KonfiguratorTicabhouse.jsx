@@ -10,7 +10,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import EditableTile from "./EditableTile";
 import { toast } from "sonner";
 
-export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, izolaciaStien, setIzolaciaStien, izolaciaPodlahy, setIzolaciaPodlahy, izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia, pripravaNaRekuperaciu, setPripravaNaRekuperaciu, podlahovoKurenie, setPodlahovoKurenie, pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle, klimatizacia, setKlimatizacia, fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna, sieteProtiHmyzu, setSieteProtiHmyzu, vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha, interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod, prepat, setPrepat, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria, skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering, projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady, montaz, setMontaz, doprava, setDoprava }) {
+export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, izolaciaStien, setIzolaciaStien, izolaciaPodlahy, setIzolaciaPodlahy, izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia, pripravaNaRekuperaciu, setPripravaNaRekuperaciu, podlahovoKurenie, setPodlahovoKurenie, pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle, klimatizacia, setKlimatizacia, fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna, vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha, interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod, prepat, setPrepat, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria, skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering, projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady, montaz, setMontaz, doprava, setDoprava }) {
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
 
@@ -50,7 +50,6 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
     fasada_thermowood: 6677.25,
     strecha_falcovane: 3227.70,
     odkvapy: 1502.49,
-    sieteProtiHmyzu: 640,
     dvere_kovove: 278.40,
     obklad_smrek_bez_uzlov: 0,
     obklad_sadrokarton_tapeta: 7855,

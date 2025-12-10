@@ -14,7 +14,7 @@ export default function KonfiguratorMajorca({
   izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia,
   pripravaNaRekuperaciu, setPripravaNaRekuperaciu, podlahovoKurenie, setPodlahovoKurenie, 
   pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle, klimatizacia, setKlimatizacia,
-  fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna, sieteProtiHmyzu, setSieteProtiHmyzu,
+  fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna,
   vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha,
   interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod,
   prepat, setPrepat, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria,
@@ -56,7 +56,6 @@ export default function KonfiguratorMajorca({
     fasada_thermowood: 5398,
     strecha_falcovane: 2150,
     odkvapy: 950,
-    sieteProtiHmyzu: 384,
     dvere_kovove: 278,
     obklad_smrek_bez_uzlov: 0,
     obklad_sadrokarton_tapeta: 5200,
@@ -110,7 +109,6 @@ export default function KonfiguratorMajorca({
   React.useEffect(() => { if (setPrepat) setPrepat(prepat); }, [prepat]);
   React.useEffect(() => { if (setPripravaNaRekuperaciu) setPripravaNaRekuperaciu(pripravaNaRekuperaciu); }, [pripravaNaRekuperaciu]);
   React.useEffect(() => { if (setKlimatizacia) setKlimatizacia(klimatizacia); }, [klimatizacia]);
-  React.useEffect(() => { if (setSieteProtiHmyzu) setSieteProtiHmyzu(sieteProtiHmyzu); }, [sieteProtiHmyzu]);
   React.useEffect(() => { if (setSprchovyKut) setSprchovyKut(sprchovyKut); }, [sprchovyKut]);
   React.useEffect(() => { if (setVana) setVana(vana); }, [vana]);
   React.useEffect(() => { if (setBateria) setBateria(bateria); }, [bateria]);

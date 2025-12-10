@@ -1185,8 +1185,6 @@ export default function DetailDomu() {
                 setOdkvapy={setLyonOdkvapy}
                 okna={lyonOkna}
                 setOkna={setLyonOkna}
-                sieteProtiHmyzu={lyonSieteProtiHmyzu}
-                setSieteProtiHmyzu={setLyonSieteProtiHmyzu}
                 vchodoveDvere={lyonVchodoveDvere}
                 setVchodoveDvere={setLyonVchodoveDvere}
                 obkladStien={lyonObkladStien}
@@ -1259,8 +1257,6 @@ export default function DetailDomu() {
                 setOdkvapy={setLyonOdkvapy}
                 okna={lyonOkna}
                 setOkna={setLyonOkna}
-                sieteProtiHmyzu={lyonSieteProtiHmyzu}
-                setSieteProtiHmyzu={setLyonSieteProtiHmyzu}
                 vchodoveDvere={lyonVchodoveDvere}
                 setVchodoveDvere={setLyonVchodoveDvere}
                 obkladStien={lyonObkladStien}
