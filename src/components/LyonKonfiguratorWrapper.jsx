@@ -75,7 +75,7 @@ export default function LyonKonfiguratorWrapper(props) {
   const doprava = props.doprava || false;
   const setDoprava = props.setDoprava || (() => {});
 
-  const CENY = {
+  const DEFAULT_CENY = {
     izolacia_stien: { "200mm": 1799.16, "250mm": 1558.17 },
     izolacia_podlahy: { "200mm": 334.08 },
     izolacia_stropu: { "200mm": 271.44 },
@@ -109,7 +109,13 @@ export default function LyonKonfiguratorWrapper(props) {
     doprava: 8927.94
   };
 
+  const CENY = React.useMemo(() => ({
+    ...DEFAULT_CENY,
+    ...(props.dom?.konfigurator_ceny || {})
+  }), [props.dom?.konfigurator_ceny]);
+
   const totalPrice = React.useMemo(() => {
+    if (!CENY) return BASE_PRICE;
     let total = BASE_PRICE;
     total += CENY.izolacia_stien[izolaciaStien] || 0;
     total += CENY.izolacia_podlahy[izolaciaPodlahy] || 0;
@@ -143,7 +149,7 @@ export default function LyonKonfiguratorWrapper(props) {
     if (montaz) total += CENY.montaz || 0;
     if (doprava) total += CENY.doprava || 0;
     return total;
-  }, [izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu,
+  }, [CENY, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu,
       podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia, fasada, strecha, odkvapy, vchodoveDvere,
       obkladStien, interieroveDvere, elektro, bleskozvod, prepat, pripravaNaSolarnePanely, sprchovyKut, vana, bateria,
       skrinka, stropKupelna, inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava]);
