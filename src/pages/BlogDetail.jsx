@@ -10,8 +10,10 @@ import { ArrowLeft, Calendar, Clock, Eye, User, Tag } from "lucide-react";
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
 import ReactMarkdown from "react-markdown";
+import { useLanguage } from "../components/LanguageContext";
 
 export default function BlogDetail() {
+  const { t, language } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const postId = urlParams.get('id');
 
@@ -70,9 +72,9 @@ export default function BlogDetail() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card className="p-12 text-center">
-          <h2 className="text-2xl font-bold text-gray-700 mb-4">Článok nenájdený</h2>
+          <h2 className="text-2xl font-bold text-gray-700 mb-4">{t('blogArticleNotFound')}</h2>
           <Link to={createPageUrl("Blog")}>
-            <Button className="bg-primary">Späť na blog</Button>
+            <Button className="bg-primary">{t('blogBackToBlog')}</Button>
           </Link>
         </Card>
       </div>
@@ -80,10 +82,16 @@ export default function BlogDetail() {
   }
 
   const kategorieLabels = {
-    novinky: "Novinky",
-    tipy: "Tipy a rady",
-    realizacie: "Realizácie",
-    technologie: "Technológie"
+    novinky: t('blogNews'),
+    tipy: t('blogTips'),
+    realizacie: t('blogProjects'),
+    technologie: t('blogTech')
+  };
+
+  const getTranslatedField = (post, field) => {
+    if (language === 'sk') return post[field];
+    const translatedField = post[`${field}_${language}`];
+    return translatedField || post[field];
   };
 
   return (
@@ -94,7 +102,7 @@ export default function BlogDetail() {
           <Link to={createPageUrl("Blog")}>
             <Button variant="ghost" className="text-primary hover:text-primary/80">
               <ArrowLeft className="mr-2 w-4 h-4" />
-              Späť na blog
+              {t('blogBackToBlog')}
             </Button>
           </Link>
         </div>
@@ -120,10 +128,10 @@ export default function BlogDetail() {
               })()}
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              {post.nazov}
+              {getTranslatedField(post, 'nazov')}
             </h1>
             <p className="text-xl text-gray-600 mb-6">
-              {post.perex}
+              {getTranslatedField(post, 'perex')}
             </p>
             
             {/* Meta info */}
@@ -140,7 +148,7 @@ export default function BlogDetail() {
               )}
               <div className="flex items-center gap-2">
                 <Eye className="w-4 h-4" />
-                {post.pocet_zobrazeni || 0} zobrazení
+                {post.pocet_zobrazeni || 0} {t('blogViews')}
               </div>
             </div>
           </div>
@@ -149,7 +157,7 @@ export default function BlogDetail() {
           <div className="mb-8 rounded-2xl overflow-hidden shadow-xl">
             <img
               src={post.titulny_obrazok}
-              alt={post.nazov}
+              alt={getTranslatedField(post, 'nazov')}
               className="w-full h-auto object-cover"
             />
           </div>
@@ -159,7 +167,7 @@ export default function BlogDetail() {
             <ReactMarkdown
               className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-primary prose-strong:text-gray-900"
             >
-              {post.obsah}
+              {getTranslatedField(post, 'obsah')}
             </ReactMarkdown>
           </Card>
 

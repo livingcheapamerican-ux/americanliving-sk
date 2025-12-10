@@ -11,8 +11,10 @@ import { Calendar, Clock, Eye, Search, Tag } from "lucide-react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
+import { useLanguage } from "../components/LanguageContext";
 
 export default function Blog() {
+  const { t, language } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedKategoria, setSelectedKategoria] = useState("all");
 
@@ -30,15 +32,23 @@ export default function Blog() {
   const isAdmin = user?.role === 'admin';
 
   const kategorieLabels = {
-    novinky: "Novinky",
-    tipy: "Tipy a rady",
-    realizacie: "Realizácie",
-    technologie: "Technológie"
+    novinky: t('blogNews'),
+    tipy: t('blogTips'),
+    realizacie: t('blogProjects'),
+    technologie: t('blogTech')
+  };
+
+  const getTranslatedField = (post, field) => {
+    if (language === 'sk') return post[field];
+    const translatedField = post[`${field}_${language}`];
+    return translatedField || post[field];
   };
 
   const filteredPosts = posts.filter(post => {
-    const matchesSearch = post.nazov.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         post.perex.toLowerCase().includes(searchQuery.toLowerCase());
+    const nazov = getTranslatedField(post, 'nazov');
+    const perex = getTranslatedField(post, 'perex');
+    const matchesSearch = nazov.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         perex.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesKategoria = selectedKategoria === "all" || post.kategoria === selectedKategoria;
     return matchesSearch && matchesKategoria;
   });
@@ -48,7 +58,7 @@ export default function Blog() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Načítavam články...</p>
+          <p className="text-gray-600">{t('loading')}...</p>
         </div>
       </div>
     );
@@ -64,9 +74,18 @@ export default function Blog() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center"
           >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('blog')}</h1>
             <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              Novinky, tipy a užitočné informácie o modulárnych domoch
+              {language === 'sk' && 'Novinky, tipy a užitočné informácie o modulárnych domoch'}
+              {language === 'en' && 'News, tips and useful information about modular homes'}
+              {language === 'hu' && 'Hírek, tippek és hasznos információk moduláris házakról'}
+              {language === 'pl' && 'Aktualności, porady i przydatne informacje o domach modułowych'}
+              {language === 'uk' && 'Новини, поради та корисна інформація про модульні будинки'}
+              {language === 'de' && 'News, Tipps und nützliche Informationen über modulare Häuser'}
+              {language === 'fr' && 'Actualités, conseils et informations utiles sur les maisons modulaires'}
+              {language === 'sr' && 'Vesti, saveti i korisne informacije o modularnim kućama'}
+              {language === 'hr' && 'Vijesti, savjeti i korisne informacije o modularnim kućama'}
+              {language === 'el' && 'Νέα, συμβουλές και χρήσιμες πληροφορίες για modulárne σπίτια'}
             </p>
           </motion.div>
         </div>
@@ -78,7 +97,7 @@ export default function Blog() {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <Input
-              placeholder="Hľadať články..."
+              placeholder={t('blogSearch')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -90,7 +109,7 @@ export default function Blog() {
               onClick={() => setSelectedKategoria("all")}
               className={selectedKategoria === "all" ? "bg-primary" : ""}
             >
-              Všetky
+              {t('blogAllCategories')}
             </Button>
             {Object.entries(kategorieLabels).map(([key, label]) => (
               <Button
@@ -110,7 +129,7 @@ export default function Blog() {
           <div className="mb-6">
             <Link to={createPageUrl("AdminBlog")}>
               <Button className="bg-blue-600 hover:bg-blue-700">
-                Správa blogu
+                {t('blogManagement')}
               </Button>
             </Link>
           </div>
@@ -119,7 +138,7 @@ export default function Blog() {
         {/* Posts Grid */}
         {filteredPosts.length === 0 ? (
           <Card className="p-12 text-center">
-            <p className="text-gray-500 text-lg">Zatiaľ žiadne články.</p>
+            <p className="text-gray-500 text-lg">{t('blogNoArticles')}</p>
           </Card>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -135,7 +154,7 @@ export default function Blog() {
                     <div className="relative h-48 overflow-hidden">
                       <img
                         src={post.titulny_obrazok}
-                        alt={post.nazov}
+                        alt={getTranslatedField(post, 'nazov')}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       />
                       <div className="absolute top-3 right-3">
@@ -147,7 +166,7 @@ export default function Blog() {
                     <div className="p-5">
                       <div className="flex items-start gap-2 mb-2">
                         <h3 className="text-xl font-bold text-gray-900 flex-1 group-hover:text-primary transition-colors">
-                          {post.nazov}
+                          {getTranslatedField(post, 'nazov')}
                         </h3>
                         {(() => {
                           const content = (post.nazov + ' ' + (post.tagy?.join(' ') || '')).toLowerCase();
@@ -159,10 +178,10 @@ export default function Blog() {
                             return <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-300 text-xs shrink-0">American Living</Badge>;
                           }
                         })()}
-                      </div>
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                        {post.perex}
-                      </p>
+                        </div>
+                        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                        {getTranslatedField(post, 'perex')}
+                        </p>
                       <div className="flex items-center justify-between text-xs text-gray-500">
                         <div className="flex items-center gap-3">
                           <div className="flex items-center gap-1">
@@ -172,7 +191,7 @@ export default function Blog() {
                           {post.pocet_zobrazeni > 0 && (
                             <div className="flex items-center gap-1">
                               <Eye className="w-3.5 h-3.5" />
-                              {post.pocet_zobrazeni}
+                              {post.pocet_zobrazeni} {t('blogViews')}
                             </div>
                           )}
                         </div>

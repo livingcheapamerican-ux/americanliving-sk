@@ -23,7 +23,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, Eye, EyeOff, Calendar, FileSearch, Sparkles } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, EyeOff, Calendar, FileSearch, Sparkles, Languages } from "lucide-react";
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
 import { toast } from "sonner";
@@ -36,6 +36,7 @@ export default function AdminBlog() {
   const [previewPost, setPreviewPost] = useState(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [generatingImageForId, setGeneratingImageForId] = useState(null);
+  const [translatingPostId, setTranslatingPostId] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: posts = [], isLoading } = useQuery({
@@ -134,6 +135,19 @@ export default function AdminBlog() {
       toast.error('Chyba pri generovaní: ' + error.message);
     } finally {
       setGeneratingImageForId(null);
+    }
+  };
+
+  const handleTranslatePost = async (postId) => {
+    setTranslatingPostId(postId);
+    try {
+      await base44.functions.invoke('translateBlogPost', { postId });
+      queryClient.invalidateQueries({ queryKey: ['all-blog-posts'] });
+      toast.success('Článok preložený do všetkých jazykov');
+    } catch (error) {
+      toast.error('Chyba pri preklade: ' + error.message);
+    } finally {
+      setTranslatingPostId(null);
     }
   };
 
@@ -362,6 +376,19 @@ export default function AdminBlog() {
                         <div className="w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
                       ) : (
                         <Sparkles className="w-4 h-4" />
+                      )}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className={post.prelozene ? "text-green-600 hover:bg-green-50" : "text-orange-600 hover:bg-orange-50"}
+                      onClick={() => handleTranslatePost(post.id)}
+                      disabled={translatingPostId === post.id}
+                    >
+                      {translatingPostId === post.id ? (
+                        <div className="w-4 h-4 border-2 border-orange-600 border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <Languages className="w-4 h-4" />
                       )}
                     </Button>
                     <Button
