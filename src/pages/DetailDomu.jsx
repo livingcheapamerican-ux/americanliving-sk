@@ -106,13 +106,16 @@ export default function DetailDomu() {
   const [lyonIzolaciaStropu, setLyonIzolaciaStropu] = useState("150mm");
   const [lyonTepelneCerpadlo, setLyonTepelneCerpadlo] = useState("nie");
   const [lyonRekuperacia, setLyonRekuperacia] = useState("nie");
+  const [lyonPripravaNaRekuperaciu, setLyonPripravaNaRekuperaciu] = useState(false);
   const [lyonPodlahovoKurenie, setLyonPodlahovoKurenie] = useState(false);
   const [lyonPripravaNaKrb, setLyonPripravaNaKrb] = useState(false);
   const [lyonOchranaKachle, setLyonOchranaKachle] = useState(false);
+  const [lyonKlimatizacia, setLyonKlimatizacia] = useState(false);
   const [lyonFasada, setLyonFasada] = useState("drevo_smrek");
   const [lyonStrecha, setLyonStrecha] = useState("korugovan_plech");
   const [lyonOdkvapy, setLyonOdkvapy] = useState("nie");
   const [lyonOkna, setLyonOkna] = useState("biele");
+  const [lyonSieteProtiHmyzu, setLyonSieteProtiHmyzu] = useState(false);
   const [lyonVchodoveDvere, setLyonVchodoveDvere] = useState("plastove");
   const [lyonObkladStien, setLyonObkladStien] = useState("smrek_8cm");
   const [lyonPodlaha, setLyonPodlaha] = useState("laminat");
@@ -1165,12 +1168,16 @@ export default function DetailDomu() {
                 setTepelneCerpadlo={setLyonTepelneCerpadlo}
                 rekuperacia={lyonRekuperacia}
                 setRekuperacia={setLyonRekuperacia}
+                pripravaNaRekuperaciu={lyonPripravaNaRekuperaciu}
+                setPripravaNaRekuperaciu={setLyonPripravaNaRekuperaciu}
                 podlahovoKurenie={lyonPodlahovoKurenie}
                 setPodlahovoKurenie={setLyonPodlahovoKurenie}
                 pripravaNaKrb={lyonPripravaNaKrb}
                 setPripravaNaKrb={setLyonPripravaNaKrb}
                 ochranaKachle={lyonOchranaKachle}
                 setOchranaKachle={setLyonOchranaKachle}
+                klimatizacia={lyonKlimatizacia}
+                setKlimatizacia={setLyonKlimatizacia}
                 fasada={lyonFasada}
                 setFasada={setLyonFasada}
                 strecha={lyonStrecha}
@@ -1179,6 +1186,8 @@ export default function DetailDomu() {
                 setOdkvapy={setLyonOdkvapy}
                 okna={lyonOkna}
                 setOkna={setLyonOkna}
+                sieteProtiHmyzu={lyonSieteProtiHmyzu}
+                setSieteProtiHmyzu={setLyonSieteProtiHmyzu}
                 vchodoveDvere={lyonVchodoveDvere}
                 setVchodoveDvere={setLyonVchodoveDvere}
                 obkladStien={lyonObkladStien}
@@ -1233,12 +1242,16 @@ export default function DetailDomu() {
                 setTepelneCerpadlo={setLyonTepelneCerpadlo}
                 rekuperacia={lyonRekuperacia}
                 setRekuperacia={setLyonRekuperacia}
+                pripravaNaRekuperaciu={lyonPripravaNaRekuperaciu}
+                setPripravaNaRekuperaciu={setLyonPripravaNaRekuperaciu}
                 podlahovoKurenie={lyonPodlahovoKurenie}
                 setPodlahovoKurenie={setLyonPodlahovoKurenie}
                 pripravaNaKrb={lyonPripravaNaKrb}
                 setPripravaNaKrb={setLyonPripravaNaKrb}
                 ochranaKachle={lyonOchranaKachle}
                 setOchranaKachle={setLyonOchranaKachle}
+                klimatizacia={lyonKlimatizacia}
+                setKlimatizacia={setLyonKlimatizacia}
                 fasada={lyonFasada}
                 setFasada={setLyonFasada}
                 strecha={lyonStrecha}
@@ -1247,6 +1260,8 @@ export default function DetailDomu() {
                 setOdkvapy={setLyonOdkvapy}
                 okna={lyonOkna}
                 setOkna={setLyonOkna}
+                sieteProtiHmyzu={lyonSieteProtiHmyzu}
+                setSieteProtiHmyzu={setLyonSieteProtiHmyzu}
                 vchodoveDvere={lyonVchodoveDvere}
                 setVchodoveDvere={setLyonVchodoveDvere}
                 obkladStien={lyonObkladStien}
@@ -2975,13 +2990,16 @@ export default function DetailDomu() {
                   izolaciaStropu={lyonIzolaciaStropu}
                   tepelneCerpadlo={lyonTepelneCerpadlo}
                   rekuperacia={lyonRekuperacia}
+                  pripravaNaRekuperaciu={lyonPripravaNaRekuperaciu}
                   podlahovoKurenie={lyonPodlahovoKurenie}
                   pripravaNaKrb={lyonPripravaNaKrb}
                   ochranaKachle={lyonOchranaKachle}
+                  klimatizacia={lyonKlimatizacia}
                   fasada={lyonFasada}
                   strecha={lyonStrecha}
                   odkvapy={lyonOdkvapy}
                   okna={lyonOkna}
+                  sieteProtiHmyzu={lyonSieteProtiHmyzu}
                   vchodoveDvere={lyonVchodoveDvere}
                   obkladStien={lyonObkladStien}
                   interieroveDvere={lyonInterieroveDvere}
@@ -3009,8 +3027,10 @@ export default function DetailDomu() {
                     if (lyonIzolaciaPodlahy === "200mm") total += CENY.izolacia_podlahy_200mm || 0;
                     if (lyonIzolaciaStropu === "200mm") total += CENY.izolacia_stropu_200mm || 0;
                     if (lyonTepelneCerpadlo === "ano") total += CENY.tepelne_cerpadlo || 0;
+                    if (lyonPripravaNaRekuperaciu) total += CENY.pripravaNaRekuperaciu || 0;
                     if (lyonRekuperacia === "ano") total += CENY.rekuperacia || 0;
                     if (lyonPodlahovoKurenie) total += CENY.podlahove_kurenie || 0;
+                    if (lyonKlimatizacia) total += CENY.klimatizacia || 0;
                     if (lyonPripravaNaKrb) total += CENY.pripravaKrb || 0;
                     if (lyonOchranaKachle) total += CENY.ochranaKachle || 0;
                     if (lyonFasada === "omietka") total += CENY.fasada_omietka || 0;
@@ -3019,6 +3039,7 @@ export default function DetailDomu() {
                     if (lyonFasada === "thermowood") total += CENY.fasada_thermowood || 0;
                     if (lyonStrecha === "falcovane") total += CENY.strecha_falcovane || 0;
                     if (lyonOdkvapy === "ano") total += CENY.odkvapy || 0;
+                    if (lyonSieteProtiHmyzu) total += CENY.sieteProtiHmyzu || 0;
                     if (lyonVchodoveDvere === "kovove") total += CENY.dvere_kovove || 0;
                     if (lyonObkladStien === "smrek_bez_uzlov") total += CENY.obklad_smrek_bez_uzlov || 0;
                     if (lyonObkladStien === "sadrokarton_tapeta") total += CENY.obklad_sadrokarton_tapeta || 0;
