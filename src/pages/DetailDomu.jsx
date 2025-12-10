@@ -1850,10 +1850,10 @@ export default function DetailDomu() {
                 <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
                   <h3 className="text-sm sm:text-base font-bold text-primary mb-2 flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-                    Základná konfigurácia domu
+                    {t('basicHouseConfig') || 'Základná konfigurácia domu'}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-700 mb-4 leading-relaxed">
-                    Je vždy vyhovujúci pre status rekrečnej stavby na celoročné bývanie. Pokiaľ chcete z domu urobiť rodinný dom na (trvalé bývanie, nahlásenie trvalého pobytu, možnosť hypotekárneho úveru, energetického certifikátu A0 a stavebné povolenie v obytnej štvrti) musíte zmeniť parametre domu v konfigurátore nižšie.
+                    {t('basicConfigDescription') || 'Je vždy vyhovujúci pre status rekrečnej stavby na celoročné bývanie. Pokiaľ chcete z domu urobiť rodinný dom na (trvalé bývanie, nahlásenie trvalého pobytu, možnosť hypotekárneho úveru, energetického certifikátu A0 a stavebné povolenie v obytnej štvrti) musíte zmeniť parametre domu v konfigurátore nižšie.'}
                   </p>
                   
                   {/* Špecifický obsah pre každý dom zo specifikacia */}
@@ -1880,52 +1880,52 @@ export default function DetailDomu() {
                     <div className="bg-green-100 border-2 border-green-400 rounded-lg p-3">
                       <h4 className="font-bold text-green-800 mb-3 flex items-center gap-2 text-xs sm:text-sm">
                         <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-                        ✅ Zahrnuté v cene
+                        ✅ {t('includedInPrice') || 'Zahrnuté v cene'}
                       </h4>
                       <ul className="space-y-1.5 text-xs sm:text-sm text-green-900">
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Rám:</strong> Sušené kalibrované drevo</span>
+                          <span><strong>{t('frame') || 'Rám'}:</strong> {t('driedCalibratedWood') || 'Sušené kalibrované drevo'}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Izolácia:</strong> Štandard (150/200 mm)</span>
+                          <span><strong>{t('insulationLabel') || 'Izolácia'}:</strong> {t('standardInsulation') || 'Štandard (150/200 mm)'}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Okná:</strong> Dvojkomorové, laminované</span>
+                          <span><strong>{t('windows') || 'Okná'}:</strong> {t('doubleGlazedLaminated') || 'Dvojkomorové, laminované'}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Dvere:</strong> Kovoplastové</span>
+                          <span><strong>{t('doors') || 'Dvere'}:</strong> {t('metalPlastic') || 'Kovoplastové'}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Fasáda:</strong> Škandinavsky smrek</span>
+                          <span><strong>{t('facadeLabel') || 'Fasáda'}:</strong> {t('scandinavianSpruce') || 'Škandinavsky smrek'}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Strecha:</strong> Vlnitý plech/škridplech</span>
+                          <span><strong>{t('roofLabel') || 'Strecha'}:</strong> {t('corrugatedSheet') || 'Vlnitý plech/škridplech'}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Interiér:</strong> Drevený obklad</span>
+                          <span><strong>{t('interiorLabel') || 'Interiér'}:</strong> {t('woodenCladding') || 'Drevený obklad'}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Elektroinštalácia:</strong> Medené rozvody, LED</span>
+                          <span><strong>{t('electricalInstallationLabel') || 'Elektroinštalácia'}:</strong> {t('copperWiringLED') || 'Medené rozvody, LED'}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Sanita:</strong> Sprcha, WC, Bojler 80l</span>
+                          <span><strong>{t('sanitaryLabel') || 'Sanita'}:</strong> {t('showerWCBoiler') || 'Sprcha, WC, Bojler 80l'}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Kúrenie:</strong> Príprava na konvektory</span>
+                          <span><strong>{t('heatingLabel') || 'Kúrenie'}:</strong> {t('heatingPreparation') || 'Príprava na konvektory'}</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Klimatizácia:</strong> Príprava</span>
+                          <span><strong>{t('airConditioningLabel') || 'Klimatizácia'}:</strong> {t('acPreparation') || 'Príprava'}</span>
                         </li>
                       </ul>
                     </div>
@@ -1934,40 +1934,40 @@ export default function DetailDomu() {
                     <div className="bg-red-50 border-2 border-red-300 rounded-lg p-3">
                       <h4 className="font-bold text-red-800 mb-3 flex items-center gap-2 text-xs sm:text-sm">
                         <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
-                        ❌ Za príplatok
+                        ❌ {t('additionalCost') || 'Za príplatok'}
                       </h4>
                       <ul className="space-y-1.5 text-xs sm:text-sm text-red-900">
                         <li className="flex items-start gap-2">
                           <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Podlahové kúrenie</strong></span>
+                          <span><strong>{t('floorHeating') || 'Podlahové kúrenie'}</strong></span>
                         </li>
                         <li className="flex items-start gap-2">
                           <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Umývadlo so skrinkou</strong></span>
+                          <span><strong>{t('washbasinWithCabinet') || 'Umývadlo so skrinkou'}</strong></span>
                         </li>
                         <li className="flex items-start gap-2">
                           <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Kuchynská linka</strong></span>
+                          <span><strong>{t('kitchenUnit') || 'Kuchynská linka'}</strong></span>
                         </li>
                         <li className="flex items-start gap-2">
                           <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Terasa</strong></span>
+                          <span><strong>{t('terrace') || 'Terasa'}</strong></span>
                         </li>
                         <li className="flex items-start gap-2">
                           <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Doprava a montáž</strong></span>
+                          <span><strong>{t('transportAndAssembly') || 'Doprava a montáž'}</strong></span>
                         </li>
                         <li className="flex items-start gap-2">
                           <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Základy</strong></span>
+                          <span><strong>{t('foundationsSection') || 'Základy'}</strong></span>
                         </li>
                         <li className="flex items-start gap-2">
                           <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Vonkajšie prípojky</strong> (voda, elektrina, kanál)</span>
+                          <span><strong>{t('externalConnections') || 'Vonkajšie prípojky'}</strong> ({t('waterElectricitySewage') || 'voda, elektrina, kanál'})</span>
                         </li>
                         <li className="flex items-start gap-2">
                           <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 flex-shrink-0 mt-0.5" />
-                          <span><strong>Žeriav/nákladné auto</strong> na osadenie</span>
+                          <span><strong>{t('craneTruck') || 'Žeriav/nákladné auto'}</strong> {t('forInstallation') || 'na osadenie'}</span>
                         </li>
                       </ul>
                     </div>
