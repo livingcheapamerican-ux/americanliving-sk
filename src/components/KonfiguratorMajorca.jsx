@@ -17,7 +17,7 @@ export default function KonfiguratorMajorca({
   fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna,
   vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha,
   interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod,
-  prepat, setPrepat, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria,
+  prepat, setPrepat, pripravaNaSolarnePanely, setPripravaNaSolarnePanely, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria,
   skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering,
   projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady,
   montaz, setMontaz, doprava, setDoprava
@@ -65,6 +65,7 @@ export default function KonfiguratorMajorca({
     elektro_ge: 1199,
     bleskozvod: 856,
     prepat: 311,
+    pripravaNaSolarnePanely: 985,
     sprchovyKut: 646,
     vana: 501,
     bateria: 139,
@@ -109,6 +110,7 @@ export default function KonfiguratorMajorca({
   React.useEffect(() => { if (setPrepat) setPrepat(prepat); }, [prepat]);
   React.useEffect(() => { if (setPripravaNaRekuperaciu) setPripravaNaRekuperaciu(pripravaNaRekuperaciu); }, [pripravaNaRekuperaciu]);
   React.useEffect(() => { if (setKlimatizacia) setKlimatizacia(klimatizacia); }, [klimatizacia]);
+  React.useEffect(() => { if (setPripravaNaSolarnePanely) setPripravaNaSolarnePanely(pripravaNaSolarnePanely); }, [pripravaNaSolarnePanely]);
   React.useEffect(() => { if (setSprchovyKut) setSprchovyKut(sprchovyKut); }, [sprchovyKut]);
   React.useEffect(() => { if (setVana) setVana(vana); }, [vana]);
   React.useEffect(() => { if (setBateria) setBateria(bateria); }, [bateria]);
@@ -444,6 +446,10 @@ export default function KonfiguratorMajorca({
                 <EditableTile selected={prepat} onClick={() => setPrepat(!prepat)} 
                   title={t('surgeProtection')} price={formatPrice(CENY.prepat)} isPriced={true} isA0={true} t={t} isAdmin={isAdmin}
                   priceKey="prepat" onPriceChange={(key, val) => CENY[key] = val} />
+                <EditableTile selected={pripravaNaSolarnePanely} onClick={() => setPripravaNaSolarnePanely(!pripravaNaSolarnePanely)} 
+                  title={getTranslatedText('pripravaNaSolarnePanely', 'nazov') || 'Príprava na solárne panely'} 
+                  price={formatPrice(CENY.pripravaNaSolarnePanely)} isPriced={true} t={t} isAdmin={isAdmin}
+                  priceKey="pripravaNaSolarnePanely" onPriceChange={(key, val) => CENY[key] = val} />
               </div>
             </div>
           </div>

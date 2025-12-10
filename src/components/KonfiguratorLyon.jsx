@@ -276,6 +276,7 @@ export default function KonfiguratorLyon(props = {}) {
   const [klimatizacia, setKlimatizacia] = useState(props.klimatizacia || false);
   const [pripravaNaKrb, setPripravaNaKrb] = useState(props.pripravaNaKrb || false);
   const [ochranaKachle, setOchranaKachle] = useState(props.ochranaKachle || false);
+  const [pripravaNaSolarnePanely, setPripravaNaSolarnePanely] = useState(props.pripravaNaSolarnePanely || false);
   const [fasada, setFasada] = useState(props.fasada || "drevo_smrek");
   const [strecha, setStrecha] = useState(props.strecha || "korugovan_plech");
   const [odkvapy, setOdkvapy] = useState(props.odkvapy || "nie");
@@ -330,6 +331,9 @@ export default function KonfiguratorLyon(props = {}) {
   React.useEffect(() => {
     if (props.setPripravaNaKrb) props.setPripravaNaKrb(pripravaNaKrb);
   }, [pripravaNaKrb]);
+  React.useEffect(() => {
+    if (props.setPripravaNaSolarnePanely) props.setPripravaNaSolarnePanely(pripravaNaSolarnePanely);
+  }, [pripravaNaSolarnePanely]);
   React.useEffect(() => {
     if (props.setOchranaKachle) props.setOchranaKachle(ochranaKachle);
   }, [ochranaKachle]);
@@ -420,6 +424,7 @@ export default function KonfiguratorLyon(props = {}) {
     elektro: { cz: 460.23, ge: 1583.40 },
     bleskozvod: 856.08,
     prepat: 311.46,
+    pripravaNaSolarnePanely: 1305,
     sprchovyKut: 645.54,
     vana: 501.12,
     bateria: 139.20,
@@ -454,6 +459,7 @@ export default function KonfiguratorLyon(props = {}) {
     total += CENY.elektro[elektro] || 0;
     if (bleskozvod) total += CENY.bleskozvod;
     if (prepat) total += CENY.prepat;
+    if (pripravaNaSolarnePanely) total += CENY.pripravaNaSolarnePanely;
     if (sprchovyKut === "radaway") total += CENY.sprchovyKut;
     if (vana) total += CENY.vana;
     if (bateria === "grohe") total += CENY.bateria;
@@ -468,7 +474,7 @@ export default function KonfiguratorLyon(props = {}) {
     return total;
   }, [izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu,
       podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia, fasada, strecha, odkvapy, vchodoveDvere,
-      obkladStien, interieroveDvere, elektro, bleskozvod, prepat, sprchovyKut, vana, bateria,
+      obkladStien, interieroveDvere, elektro, bleskozvod, prepat, pripravaNaSolarnePanely, sprchovyKut, vana, bateria,
       skrinka, stropKupelna, inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava]);
 
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
@@ -969,6 +975,10 @@ export default function KonfiguratorLyon(props = {}) {
                   title={getTranslatedText('prepat', 'nazov') || t('surgeProtection')} 
                   subtitle={getTranslatedText('prepat', 'podnadpis') || ''} 
                   price="+ 311 €" isPriced={true} isA0={true} t={t} />
+                <Tile selected={pripravaNaSolarnePanely} onClick={() => setPripravaNaSolarnePanely(!pripravaNaSolarnePanely)} 
+                  title={getTranslatedText('pripravaNaSolarnePanely', 'nazov') || 'Príprava na solárne panely'} 
+                  subtitle={getTranslatedText('pripravaNaSolarnePanely', 'podnadpis') || ''} 
+                  price="+ 1 305 €" isPriced={true} t={t} />
               </div>
             </div>
           </div>

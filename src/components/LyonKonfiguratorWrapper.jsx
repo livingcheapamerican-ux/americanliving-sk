@@ -52,6 +52,8 @@ export default function LyonKonfiguratorWrapper(props) {
   const setBleskozvod = props.setBleskozvod || (() => {});
   const prepat = props.prepat || false;
   const setPrepat = props.setPrepat || (() => {});
+  const pripravaNaSolarnePanely = props.pripravaNaSolarnePanely || false;
+  const setPripravaNaSolarnePanely = props.setPripravaNaSolarnePanely || (() => {});
   const sprchovyKut = props.sprchovyKut || "standard";
   const setSprchovyKut = props.setSprchovyKut || (() => {});
   const vana = props.vana || false;
@@ -96,6 +98,7 @@ export default function LyonKonfiguratorWrapper(props) {
     elektro: { cz: 460.23, ge: 1583.40 },
     bleskozvod: 856.08,
     prepat: 311.46,
+    pripravaNaSolarnePanely: 1305,
     sprchovyKut: 645.54,
     vana: 501.12,
     bateria: 139.20,
@@ -131,6 +134,7 @@ export default function LyonKonfiguratorWrapper(props) {
     total += CENY.elektro[elektro] || 0;
     if (bleskozvod) total += CENY.bleskozvod;
     if (prepat) total += CENY.prepat;
+    if (pripravaNaSolarnePanely) total += CENY.pripravaNaSolarnePanely;
     if (sprchovyKut === "radaway") total += CENY.sprchovyKut;
     if (vana) total += CENY.vana;
     if (bateria === "grohe") total += CENY.bateria;
@@ -144,8 +148,8 @@ export default function LyonKonfiguratorWrapper(props) {
     if (doprava) total += CENY.doprava;
     return total;
   }, [izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu,
-      podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia, fasada, strecha, odkvapy, sieteProtiHmyzu, vchodoveDvere,
-      obkladStien, interieroveDvere, elektro, bleskozvod, prepat, sprchovyKut, vana, bateria,
+      podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia, fasada, strecha, odkvapy, vchodoveDvere,
+      obkladStien, interieroveDvere, elektro, bleskozvod, prepat, pripravaNaSolarnePanely, sprchovyKut, vana, bateria,
       skrinka, stropKupelna, inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava]);
 
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
@@ -178,6 +182,7 @@ export default function LyonKonfiguratorWrapper(props) {
     elektro, setElektro,
     bleskozvod, setBleskozvod,
     prepat, setPrepat,
+    pripravaNaSolarnePanely, setPripravaNaSolarnePanely,
     sprchovyKut, setSprchovyKut,
     vana, setVana,
     bateria, setBateria,

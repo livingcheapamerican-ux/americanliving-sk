@@ -10,7 +10,7 @@ export default function LyonSummaryPanelStandalone({
   ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu, 
   tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu, podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia,
   fasada, strecha, odkvapy, okna, vchodoveDvere, obkladStien, interieroveDvere,
-  elektro, bleskozvod, prepat, sprchovyKut, vana, bateria, skrinka, stropKupelna,
+  elektro, bleskozvod, prepat, pripravaNaSolarnePanely, sprchovyKut, vana, bateria, skrinka, stropKupelna,
   inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
   totalPrice, onSubmit, dom
 }) {
@@ -253,8 +253,12 @@ export default function LyonSummaryPanelStandalone({
               <span className="text-slate-300 flex items-center gap-1">• {t('surgeProtection')} {prepat && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
               <span className="text-green-400 text-xs">{getCenaPolozky('prepat') || '+ 311 €'}</span>
             </div>
-          </div>
-        </div>
+            <div className={pripravaNaSolarnePanely ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300">• Príprava na solárne panely {pripravaNaSolarnePanely && "✓"}</span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('pripravaNaSolarnePanely') || '+ 1 305 €'}</span>
+            </div>
+            </div>
+            </div>
 
         {/* Kúpeľňa - vždy ukáž */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">

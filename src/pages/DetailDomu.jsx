@@ -122,6 +122,7 @@ export default function DetailDomu() {
   const [lyonElektro, setLyonElektro] = useState("eu");
   const [lyonBleskozvod, setLyonBleskozvod] = useState(false);
   const [lyonPrepat, setLyonPrepat] = useState(false);
+  const [lyonPripravaNaSolarnePanely, setLyonPripravaNaSolarnePanely] = useState(false);
   const [lyonSprchovyKut, setLyonSprchovyKut] = useState("standard");
   const [lyonVana, setLyonVana] = useState(false);
   const [lyonBateria, setLyonBateria] = useState("standard");
@@ -3000,6 +3001,7 @@ export default function DetailDomu() {
                   elektro={lyonElektro}
                   bleskozvod={lyonBleskozvod}
                   prepat={lyonPrepat}
+                  pripravaNaSolarnePanely={lyonPripravaNaSolarnePanely}
                   sprchovyKut={lyonSprchovyKut}
                   vana={lyonVana}
                   bateria={lyonBateria}
@@ -3042,6 +3044,7 @@ export default function DetailDomu() {
                     if (lyonElektro === "ge") total += CENY.elektro_ge || 0;
                     if (lyonBleskozvod) total += CENY.bleskozvod || 0;
                     if (lyonPrepat) total += CENY.prepat || 0;
+                    if (lyonPripravaNaSolarnePanely) total += CENY.pripravaNaSolarnePanely || 0;
                     if (lyonSprchovyKut === "radaway") total += CENY.sprchovyKut || 0;
                     if (lyonVana) total += CENY.vana || 0;
                     if (lyonBateria === "grohe") total += CENY.bateria || 0;

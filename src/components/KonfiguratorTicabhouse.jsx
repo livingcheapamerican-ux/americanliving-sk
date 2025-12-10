@@ -10,7 +10,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import EditableTile from "./EditableTile";
 import { toast } from "sonner";
 
-export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, izolaciaStien, setIzolaciaStien, izolaciaPodlahy, setIzolaciaPodlahy, izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia, pripravaNaRekuperaciu, setPripravaNaRekuperaciu, podlahovoKurenie, setPodlahovoKurenie, pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle, klimatizacia, setKlimatizacia, fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna, vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha, interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod, prepat, setPrepat, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria, skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering, projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady, montaz, setMontaz, doprava, setDoprava }) {
+export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, izolaciaStien, setIzolaciaStien, izolaciaPodlahy, setIzolaciaPodlahy, izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia, pripravaNaRekuperaciu, setPripravaNaRekuperaciu, podlahovoKurenie, setPodlahovoKurenie, pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle, klimatizacia, setKlimatizacia, fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna, vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha, interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod, prepat, setPrepat, pripravaNaSolarnePanely, setPripravaNaSolarnePanely, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria, skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering, projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady, montaz, setMontaz, doprava, setDoprava }) {
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
 
@@ -59,6 +59,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
     elektro_ge: 1583.40,
     bleskozvod: 856.08,
     prepat: 311.46,
+    pripravaNaSolarnePanely: 1305,
     sprchovyKut: 645.54,
     vana: 501.12,
     bateria: 139.20,
@@ -136,6 +137,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
     if (elektro === "ge") price += CENY.elektro_ge;
     if (bleskozvod) price += CENY.bleskozvod;
     if (prepat) price += CENY.prepat;
+    if (pripravaNaSolarnePanely) price += CENY.pripravaNaSolarnePanely;
 
     // Kúpeľňa
     if (sprchovyKut === "radaway") price += CENY.sprchovyKut;
@@ -163,7 +165,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
     dom?.zakladna_cena, izolaciaStien, izolaciaPodlahy, izolaciaStropu,
     tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu, podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia,
     fasada, strecha, odkvapy, vchodoveDvere, obkladStien, interieroveDvere,
-    elektro, bleskozvod, prepat, sprchovyKut, vana, bateria, skrinka, stropKupelna,
+    elektro, bleskozvod, prepat, pripravaNaSolarnePanely, sprchovyKut, vana, bateria, skrinka, stropKupelna,
     inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava, CENY
   ]);
 
@@ -188,6 +190,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
   React.useEffect(() => { if (setElektro) setElektro(elektro); }, [elektro]);
   React.useEffect(() => { if (setBleskozvod) setBleskozvod(bleskozvod); }, [bleskozvod]);
   React.useEffect(() => { if (setPrepat) setPrepat(prepat); }, [prepat]);
+  React.useEffect(() => { if (setPripravaNaSolarnePanely) setPripravaNaSolarnePanely(pripravaNaSolarnePanely); }, [pripravaNaSolarnePanely]);
   React.useEffect(() => { if (setPripravaNaRekuperaciu) setPripravaNaRekuperaciu(pripravaNaRekuperaciu); }, [pripravaNaRekuperaciu]);
   React.useEffect(() => { if (setKlimatizacia) setKlimatizacia(klimatizacia); }, [klimatizacia]);
   React.useEffect(() => { if (setSieteProtiHmyzu) setSieteProtiHmyzu(sieteProtiHmyzu); }, [sieteProtiHmyzu]);
@@ -699,6 +702,11 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                     subtitle={getTranslatedText('prepat', 'podnadpis') || ''} 
                     price={formatPrice(CENY.prepat)} isPriced={true} isA0={true} t={t} 
                     priceKey="prepat" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                  <EditableTile selected={pripravaNaSolarnePanely} onClick={() => setPripravaNaSolarnePanely(!pripravaNaSolarnePanely)} 
+                    title={getTranslatedText('pripravaNaSolarnePanely', 'nazov') || 'Príprava na solárne panely'} 
+                    subtitle={getTranslatedText('pripravaNaSolarnePanely', 'podnadpis') || ''} 
+                    price={formatPrice(CENY.pripravaNaSolarnePanely)} isPriced={true} t={t} 
+                    priceKey="pripravaNaSolarnePanely" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
                 </div>
               </div>
             </div>
