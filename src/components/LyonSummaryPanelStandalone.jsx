@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Home, Send, Eye, AlertCircle } from "lucide-react";
 import LyonFinalSummaryModal from "./LyonFinalSummaryModal";
+import { useLanguage } from "./LanguageContext";
 
 export default function LyonSummaryPanelStandalone({ 
   ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu, 
@@ -14,6 +15,7 @@ export default function LyonSummaryPanelStandalone({
   totalPrice, onSubmit, dom
 }) {
   const [showModal, setShowModal] = useState(false);
+  const { t } = useLanguage();
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
   // Kontrola či je konfigurácia A0
@@ -33,7 +35,7 @@ export default function LyonSummaryPanelStandalone({
   };
 
   const isA0 = isA0Configuration();
-  const actualStatus = ucel === "rodinny" && isA0 ? "Rodinný dom A0" : "Rekreačná stavba";
+  const actualStatus = ucel === "rodinny" && isA0 ? (t('familyHouseA0') || "Rodinný dom A0") : (t('recreationalBuilding') || "Rekreačná stavba");
 
   return (
     <Card className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl border-2 border-slate-700 overflow-hidden">
@@ -42,7 +44,7 @@ export default function LyonSummaryPanelStandalone({
         <div>
           <h3 className="text-xl font-bold flex items-center gap-2">
             <Home className="w-6 h-6" />
-            Vaša konfigurácia
+            {t('yourConfig') || 'Vaša konfigurácia'}
           </h3>
           <p className="text-sm text-blue-100 mt-1">Lyon 50m²</p>
         </div>
@@ -52,7 +54,7 @@ export default function LyonSummaryPanelStandalone({
       <div className="p-4 space-y-4">
         {/* Účel + status */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-          <p className="text-sm font-semibold text-slate-400 mb-1">ÚČEL STAVBY</p>
+          <p className="text-sm font-semibold text-slate-400 mb-1">{t('purposeOfBuilding') || 'ÚČEL STAVBY'}</p>
           <p className="text-base font-bold text-white mb-2">{actualStatus}</p>
           {ucel === "rodinny" && !isA0 && (
             <div className="flex items-start gap-2 mt-2 p-2 bg-yellow-900/30 border border-yellow-700 rounded">
@@ -66,7 +68,7 @@ export default function LyonSummaryPanelStandalone({
 
         {/* Izolácia - vždy ukáž všetky možnosti */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-          <p className="text-sm font-semibold text-slate-400 mb-2">IZOLÁCIA</p>
+          <p className="text-sm font-semibold text-slate-400 mb-2">{t('insulation') || 'IZOLÁCIA'}</p>
           <div className="space-y-1.5 text-sm">
             <p className={izolaciaStien === "150mm" ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
               • Steny 150mm {izolaciaStien === "150mm" && "✓ (základné)"}
@@ -106,7 +108,7 @@ export default function LyonSummaryPanelStandalone({
 
         {/* Vykurovanie - vždy ukáž všetky možnosti */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-          <p className="text-sm font-semibold text-slate-400 mb-2">VYKUROVANIE</p>
+          <p className="text-sm font-semibold text-slate-400 mb-2">{t('heating') || 'VYKUROVANIE'}</p>
           <div className="space-y-1.5 text-sm">
             <p className={tepelneCerpadlo === "ano" ? "text-slate-300 flex items-center gap-1" : "text-slate-300 line-through opacity-50 flex items-center gap-1"}>
               • Tepelné čerpadlo {tepelneCerpadlo === "ano" && "✓"} <span className="text-green-400 text-xs">⚡A0</span>
@@ -133,7 +135,7 @@ export default function LyonSummaryPanelStandalone({
 
         {/* Fasáda - vždy ukáž */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-          <p className="text-base font-semibold text-slate-400 mb-1">FASÁDA</p>
+          <p className="text-base font-semibold text-slate-400 mb-1">{t('facadeSection') || 'FASÁDA'}</p>
           <p className="text-base text-slate-300">
             {fasada === "drevo_smrek" ? "✓ Drevo smrek (základné)" :
              fasada === "omietka" ? "✓ Šúchaná omietka" : 
@@ -144,7 +146,7 @@ export default function LyonSummaryPanelStandalone({
 
         {/* Strecha - vždy ukáž */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-          <p className="text-base font-semibold text-slate-400 mb-2">STRECHA</p>
+          <p className="text-base font-semibold text-slate-400 mb-2">{t('roofSection') || 'STRECHA'}</p>
           <div className="space-y-1.5 text-base">
             <p className="text-slate-300">
               • {strecha === "korugovan_plech" ? "✓ Korugovaný plech (základné)" : "✓ Falcované panely"}
@@ -157,7 +159,7 @@ export default function LyonSummaryPanelStandalone({
 
         {/* Okná a dvere - vždy ukáž */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-          <p className="text-base font-semibold text-slate-400 mb-2">OKNÁ A DVERE</p>
+          <p className="text-base font-semibold text-slate-400 mb-2">{t('windowsDoorsSection') || 'OKNÁ A DVERE'}</p>
           <div className="space-y-1.5 text-base">
             <p className="text-slate-300">
               • ✓ Okná {okna === "biele" ? "biele (základné)" : okna === "antracit" ? "antracit" : "hnedé"}
@@ -170,7 +172,7 @@ export default function LyonSummaryPanelStandalone({
 
         {/* Interiér - vždy ukáž */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-          <p className="text-base font-semibold text-slate-400 mb-2">INTERIÉR</p>
+          <p className="text-base font-semibold text-slate-400 mb-2">{t('interiorSection') || 'INTERIÉR'}</p>
           <div className="space-y-1.5 text-base">
             <p className="text-slate-300">
               • ✓ {obkladStien === "smrek_8cm" ? "Smrek 8cm (základné)" :
@@ -188,7 +190,7 @@ export default function LyonSummaryPanelStandalone({
 
         {/* Elektro - vždy ukáž všetky možnosti */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-          <p className="text-sm font-semibold text-slate-400 mb-2">ELEKTROINŠTALÁCIA</p>
+          <p className="text-sm font-semibold text-slate-400 mb-2">{t('electricalSection') || 'ELEKTROINŠTALÁCIA'}</p>
           <div className="space-y-1.5 text-sm">
             <p className={elektro === "eu" ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
               • EU štandard {elektro === "eu" && "✓"}
@@ -210,7 +212,7 @@ export default function LyonSummaryPanelStandalone({
 
         {/* Kúpeľňa - vždy ukáž */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-          <p className="text-base font-semibold text-slate-400 mb-2">KÚPEĽŇA</p>
+          <p className="text-base font-semibold text-slate-400 mb-2">{t('bathroomSection') || 'KÚPEĽŇA'}</p>
           <div className="space-y-1.5 text-base">
             <p className="text-slate-300">
               • ✓ {sprchovyKut === "standard" ? "Sprcha + WC Geberit (základné)" : "Sprcha Radaway"}
@@ -232,7 +234,7 @@ export default function LyonSummaryPanelStandalone({
 
         {/* Základy - vždy ukáž */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-          <p className="text-base font-semibold text-slate-400 mb-1">ZÁKLADY</p>
+          <p className="text-base font-semibold text-slate-400 mb-1">{t('foundationsSection') || 'ZÁKLADY'}</p>
           <p className="text-base text-slate-300">
             {zaklady === "bez" ? "Bez základov (zákazník zabezpečí)" :
              zaklady === "vruty" ? "✓ Zemné vruty" :
@@ -242,7 +244,7 @@ export default function LyonSummaryPanelStandalone({
 
         {/* Služby - vždy ukáž všetky možnosti */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-          <p className="text-sm font-semibold text-slate-400 mb-2">SLUŽBY</p>
+          <p className="text-sm font-semibold text-slate-400 mb-2">{t('servicesSection') || 'SLUŽBY'}</p>
           <div className="space-y-1.5 text-sm">
             <p className={inziniering ? "text-slate-300 flex items-center gap-1" : "text-slate-300 line-through opacity-50 flex items-center gap-1"}>
               • Inžiniering {inziniering && "✓"} <span className="text-green-400 text-xs">⚡A0</span>
@@ -258,7 +260,7 @@ export default function LyonSummaryPanelStandalone({
 
         {/* Realizácia - vždy ukáž */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-          <p className="text-base font-semibold text-slate-400 mb-2">REALIZÁCIA</p>
+          <p className="text-base font-semibold text-slate-400 mb-2">{t('realizationSection') || 'REALIZÁCIA'}</p>
           <div className="space-y-1.5 text-base">
             <p className={montaz ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
               • Montáž domu {montaz && "✓"}
@@ -272,7 +274,7 @@ export default function LyonSummaryPanelStandalone({
 
       {/* Total Price */}
       <div className="border-t-2 border-slate-700 bg-gradient-to-r from-blue-600 to-indigo-600 p-4">
-        <p className="text-sm text-blue-100 mb-1">Celková cena s DPH</p>
+        <p className="text-sm text-blue-100 mb-1">{t('totalPriceWithVAT') || 'Celková cena s DPH'}</p>
         <p className="text-3xl font-black text-white">{formatPrice(totalPrice)}</p>
         <div className="mt-3 space-y-2">
           <Button 
@@ -280,7 +282,7 @@ export default function LyonSummaryPanelStandalone({
             className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold shadow-lg"
           >
             <Eye className="w-4 h-4 mr-2" />
-            Ukáž môj dom
+            {t('interested') || 'Ukáž môj dom'}
           </Button>
           <Button 
             onClick={onSubmit} 
@@ -288,7 +290,7 @@ export default function LyonSummaryPanelStandalone({
             className="w-full bg-transparent border-2 border-white text-white hover:bg-white/10 font-bold"
           >
             <Send className="w-4 h-4 mr-2" />
-            Odoslať dopyt
+            {t('sendInquiry') || 'Odoslať dopyt'}
           </Button>
         </div>
       </div>
