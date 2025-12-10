@@ -557,16 +557,16 @@ export default function KonfiguratorLyon(props = {}) {
               </p>
               <div className="grid grid-cols-3 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={izolaciaStien === "150mm"} onClick={() => setIzolaciaStien("150mm")} 
-                  title={getTranslatedText('izolacia_stien_150', 'nazov') || 'Steny 150mm'} 
-                  subtitle={getTranslatedText('izolacia_stien_150', 'podnadpis') || 'Rekreačné'} 
+                  title={getTranslatedText('izolacia_stien_150', 'nazov') || t('walls150mm') || 'Steny 150mm'} 
+                  subtitle={getTranslatedText('izolacia_stien_150', 'podnadpis') || t('recreational') || 'Rekreačné'} 
                   price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={izolaciaStien === "200mm"} onClick={() => setIzolaciaStien("200mm")} 
-                  title={getTranslatedText('izolacia_stien_200', 'nazov') || 'Steny 200mm'} 
+                  title={getTranslatedText('izolacia_stien_200', 'nazov') || t('walls200mm') || 'Steny 200mm'} 
                   subtitle={getTranslatedText('izolacia_stien_200', 'podnadpis') || ''} 
                   price="+ 1 799 €" isPriced={true} t={t} />
                 <Tile selected={izolaciaStien === "250mm"} onClick={() => setIzolaciaStien("250mm")} 
-                  title={getTranslatedText('izolacia_stien_250', 'nazov') || 'Steny 250mm'} 
-                  subtitle={getTranslatedText('izolacia_stien_250', 'podnadpis') || 'Premium A0'} 
+                  title={getTranslatedText('izolacia_stien_250', 'nazov') || t('walls250mm') || 'Steny 250mm'} 
+                  subtitle={getTranslatedText('izolacia_stien_250', 'podnadpis') || t('premiumA0') || 'Premium A0'} 
                   price="+ 1 558 €" isPriced={true} isA0={true} t={t} />
               </div>
             </div>
@@ -578,12 +578,12 @@ export default function KonfiguratorLyon(props = {}) {
               </p>
               <div className="grid grid-cols-2 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={izolaciaPodlahy === "150mm"} onClick={() => setIzolaciaPodlahy("150mm")} 
-                  title={getTranslatedText('izolacia_podlahy_150', 'nazov') || 'Podlaha 150mm'} 
+                  title={getTranslatedText('izolacia_podlahy_150', 'nazov') || t('floor150mm') || 'Podlaha 150mm'} 
                   subtitle={getTranslatedText('izolacia_podlahy_150', 'podnadpis') || ''} 
                   price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={izolaciaPodlahy === "200mm"} onClick={() => setIzolaciaPodlahy("200mm")} 
-                  title={getTranslatedText('izolacia_podlahy_200', 'nazov') || 'Podlaha 200mm'} 
-                  subtitle={getTranslatedText('izolacia_podlahy_200', 'podnadpis') || 'A0'} 
+                  title={getTranslatedText('izolacia_podlahy_200', 'nazov') || t('floor200mm') || 'Podlaha 200mm'} 
+                  subtitle={getTranslatedText('izolacia_podlahy_200', 'podnadpis') || t('a0') || 'A0'} 
                   price="+ 334 €" isPriced={true} isA0={true} t={t} />
               </div>
             </div>
@@ -595,12 +595,12 @@ export default function KonfiguratorLyon(props = {}) {
               </p>
               <div className="grid grid-cols-2 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={izolaciaStropu === "150mm"} onClick={() => setIzolaciaStropu("150mm")} 
-                  title={getTranslatedText('izolacia_stropu_150', 'nazov') || 'Strop 150mm'} 
+                  title={getTranslatedText('izolacia_stropu_150', 'nazov') || t('ceiling150mm') || 'Strop 150mm'} 
                   subtitle={getTranslatedText('izolacia_stropu_150', 'podnadpis') || ''} 
                   price="0 €" isPriced={false} isIncluded={true} t={t} />
                 <Tile selected={izolaciaStropu === "200mm"} onClick={() => setIzolaciaStropu("200mm")} 
-                  title={getTranslatedText('izolacia_stropu_200', 'nazov') || 'Strop 200mm'} 
-                  subtitle={getTranslatedText('izolacia_stropu_200', 'podnadpis') || 'A0'} 
+                  title={getTranslatedText('izolacia_stropu_200', 'nazov') || t('ceiling200mm') || 'Strop 200mm'} 
+                  subtitle={getTranslatedText('izolacia_stropu_200', 'podnadpis') || t('a0') || 'A0'} 
                   price="+ 271 €" isPriced={true} isA0={true} t={t} />
               </div>
             </div>
