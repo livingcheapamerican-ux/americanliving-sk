@@ -1968,23 +1968,23 @@ export default function DetailDomu() {
                         </>
                       )}
                       
-                      {/* Ostatné Ticabhouse domy - štandardný formát */}
+                      {/* Ostatné Ticabhouse domy - štandardný formát s translation keys */}
                       {dom.nazov !== "Model HAPPY WIFE" && (
                         <>
                           <p className="font-semibold text-gray-800 mb-2">{t('generalInfo')}</p>
                           <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2 mb-3">
-                            <li>{t('area')}: {dom.zastavana_plocha} m²</li>
-                            <li>{t('outerDimensions')}: {dom.rozmery ? `${dom.rozmery.dlzka} × ${dom.rozmery.sirka} × ${dom.rozmery.vyska} m` : '-'}</li>
-                            <li>{t('ceilingHeight')}: {dom.vyska_stropu || '-'}</li>
+                            <li><strong>{t('area')}:</strong> {dom.zastavana_plocha} m²</li>
+                            <li><strong>{t('outerDimensions')}:</strong> {dom.rozmery ? `${dom.rozmery.dlzka} × ${dom.rozmery.sirka} × ${dom.rozmery.vyska} m` : '-'}</li>
+                            <li><strong>{t('ceilingHeight')}:</strong> {dom.vyska_stropu || '-'}</li>
                           </ul>
                           
                           <p className="font-semibold text-gray-800 mb-2">{t('insulationAndConstruction')}</p>
                           <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2 mb-3">
-                            <li>{t('floorAndCeiling')}: 200 mm {t('compressedTo')} 150 mm</li>
-                            <li>{t('wallsLabel')}: 150 mm</li>
-                            <li>{t('frameLabel')}: {t('driedCalibratedWood')}</li>
-                            <li>{t('windowsLabel')}: {t('doubleChamberPlastic')}</li>
-                            <li>{t('doorsLabel')}: {t('plasticSecurity')}</li>
+                            <li><strong>{t('floorAndCeiling')}:</strong> 200 mm {t('compressedTo')} 150 mm</li>
+                            <li><strong>{t('wallsLabel')}:</strong> 150 mm</li>
+                            <li><strong>{t('frameLabel')}:</strong> {t('driedCalibratedWood')}</li>
+                            <li><strong>{t('windowsLabel')}:</strong> {t('doubleChamberPlastic')}</li>
+                            <li><strong>{t('doorsLabel')}:</strong> {t('plasticSecurity')}</li>
                           </ul>
                           
                           <p className="font-semibold text-gray-800 mb-2">{t('equipment')}</p>
@@ -1998,20 +1998,20 @@ export default function DetailDomu() {
                             )}
                             <li><strong>{t('sanitaryLabel')}:</strong></li>
                             <ul className="list-none ml-4 space-y-0.5">
-                              <li>• {t('showerCabin')}</li>
-                              <li>• {t('wcLabel')}: {t('hangingWCIncluded')}</li>
-                              <li>• {t('washbasin')}: {t('withCabinetIncluded')}</li>
-                              <li>• {t('faucetsLabel')}: {t('brandedGroheIncluded')}</li>
+                              <li>• <strong>{t('showerCabin')}</strong></li>
+                              <li>• <strong>{t('wcLabel')}:</strong> {t('hangingWCIncluded')}</li>
+                              <li>• <strong>{t('washbasin')}:</strong> {t('withCabinetIncluded')}</li>
+                              <li>• <strong>{t('faucetsLabel')}:</strong> {t('brandedGroheIncluded')}</li>
                             </ul>
                             <li><strong>{t('electricalInstallationLabel')}:</strong> {t('copperWiringSocketsLED')}</li>
-                            <li>• {t('acLabel')}: {t('acUnitExtraCost')}</li>
+                            <li>• <strong>{t('acLabel')}:</strong> {t('acUnitExtraCost')}</li>
                           </ul>
                           
                           <p className="font-semibold text-gray-800 mb-2">{t('finishing')}</p>
                           <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2 mb-3">
-                            <li>{t('facadeLabel')}: {t('waterproofLaminatedPlywood')}</li>
-                            <li>{t('roofLabel')}: {t('trapezoidalSheet')}</li>
-                            <li>{t('interiorLabel')}: {t('naturalWoodCladding')}</li>
+                            <li><strong>{t('facadeLabel')}:</strong> {t('waterproofLaminatedPlywood')}</li>
+                            <li><strong>{t('roofLabel')}:</strong> {t('trapezoidalSheet')}</li>
+                            <li><strong>{t('interiorLabel')}:</strong> {t('naturalWoodCladding')}</li>
                           </ul>
                         </>
                       )}
