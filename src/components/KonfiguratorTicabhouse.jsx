@@ -137,7 +137,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
     if (elektro === "ge") price += CENY.elektro_ge;
     if (bleskozvod) price += CENY.bleskozvod;
     if (prepat) price += CENY.prepat;
-    if (pripravaNaSolarnePanely) price += CENY.pripravaNaSolarnePanely;
+    if (pripravaNaSolarnePanely) price += CENY.pripravaNaSolarnePanely || 0;
 
     // Kúpeľňa
     if (sprchovyKut === "radaway") price += CENY.sprchovyKut;

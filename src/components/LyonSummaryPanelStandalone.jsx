@@ -254,7 +254,7 @@ export default function LyonSummaryPanelStandalone({
               <span className="text-green-400 text-xs">{getCenaPolozky('prepat') || '+ 311 €'}</span>
             </div>
             <div className={pripravaNaSolarnePanely ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
-              <span className="text-slate-300">• Príprava na solárne panely {pripravaNaSolarnePanely && "✓"}</span>
+              <span className="text-slate-300">• {t('solarPanelsPrep') || 'Príprava na solárne panely'} {pripravaNaSolarnePanely && "✓"}</span>
               <span className="text-green-400 text-xs">{getCenaPolozky('pripravaNaSolarnePanely') || '+ 1 305 €'}</span>
             </div>
             </div>

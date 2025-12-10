@@ -130,7 +130,7 @@ export default function LyonKonfiguratorWrapper(props) {
     total += CENY.elektro[elektro] || 0;
     if (bleskozvod) total += CENY.bleskozvod;
     if (prepat) total += CENY.prepat;
-    if (pripravaNaSolarnePanely) total += CENY.pripravaNaSolarnePanely;
+    if (pripravaNaSolarnePanely) total += CENY.pripravaNaSolarnePanely || 0;
     if (sprchovyKut === "radaway") total += CENY.sprchovyKut;
     if (vana) total += CENY.vana;
     if (bateria === "grohe") total += CENY.bateria;
