@@ -23,7 +23,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, Eye, EyeOff, Calendar, FileSearch } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, EyeOff, Calendar, FileSearch, Sparkles } from "lucide-react";
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
 import { toast } from "sonner";
@@ -35,6 +35,7 @@ export default function AdminBlog() {
   const [uploading, setUploading] = useState(false);
   const [previewPost, setPreviewPost] = useState(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [generatingImageForId, setGeneratingImageForId] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: posts = [], isLoading } = useQuery({
@@ -120,6 +121,19 @@ export default function AdminBlog() {
       toast.error('Chyba pri nahrávaní');
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleGenerateImage = async (postId) => {
+    setGeneratingImageForId(postId);
+    try {
+      const response = await base44.functions.invoke('generateBlogImage', { postId });
+      queryClient.invalidateQueries({ queryKey: ['all-blog-posts'] });
+      toast.success('AI obrázok vygenerovaný');
+    } catch (error) {
+      toast.error('Chyba pri generovaní: ' + error.message);
+    } finally {
+      setGeneratingImageForId(null);
     }
   };
 
@@ -328,6 +342,19 @@ export default function AdminBlog() {
                     <Button
                       size="sm"
                       variant="outline"
+                      className="text-purple-600 hover:bg-purple-50"
+                      onClick={() => handleGenerateImage(post.id)}
+                      disabled={generatingImageForId === post.id}
+                    >
+                      {generatingImageForId === post.id ? (
+                        <div className="w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <Sparkles className="w-4 h-4" />
+                      )}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
                       onClick={() => {
                         togglePublishMutation.mutate({
                           id: post.id,
@@ -371,6 +398,10 @@ export default function AdminBlog() {
           post={previewPost}
           isOpen={isPreviewOpen}
           onClose={() => setIsPreviewOpen(false)}
+          onImageRegenerate={(postId) => {
+            handleGenerateImage(postId);
+            setIsPreviewOpen(false);
+          }}
         />
       </div>
     </div>

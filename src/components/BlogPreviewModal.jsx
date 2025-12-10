@@ -1,14 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Eye, User, Tag } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Calendar, Eye, User, Tag, Sparkles, Edit2, Check, X } from "lucide-react";
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
 import ReactMarkdown from "react-markdown";
+import { toast } from "sonner";
 
-export default function BlogPreviewModal({ post, isOpen, onClose }) {
+export default function BlogPreviewModal({ post, isOpen, onClose, onImageRegenerate }) {
+  const [editingImage, setEditingImage] = useState(false);
+  const [imagePrompt, setImagePrompt] = useState("");
+  const [regenerating, setRegenerating] = useState(false);
+
   if (!post) return null;
+
+  const handleRegenerateWithPrompt = async () => {
+    if (!imagePrompt.trim()) {
+      toast.error('Zadajte text pre úpravu obrázka');
+      return;
+    }
+
+    setRegenerating(true);
+    try {
+      const customPrompt = `${post.nazov}. ${post.perex}. Požiadavka na úpravu: ${imagePrompt}`;
+      const { url } = await base44.integrations.Core.GenerateImage({ prompt: customPrompt });
+      await base44.entities.BlogPost.update(post.id, { titulny_obrazok: url });
+      toast.success('Obrázok úspešne upravený!');
+      setEditingImage(false);
+      setImagePrompt("");
+      if (onImageRegenerate) {
+        onImageRegenerate(post.id);
+      }
+    } catch (error) {
+      toast.error('Chyba pri úprave: ' + error.message);
+    } finally {
+      setRegenerating(false);
+    }
+  };
 
   const kategorieLabels = {
     novinky: "Novinky",
@@ -58,13 +91,75 @@ export default function BlogPreviewModal({ post, isOpen, onClose }) {
           </div>
 
           {/* Featured Image */}
-          <div className="mb-6 rounded-xl overflow-hidden shadow-lg">
+          <div className="mb-6 rounded-xl overflow-hidden shadow-lg relative group">
             <img
               src={post.titulny_obrazok}
               alt={post.nazov}
               className="w-full h-auto object-cover"
             />
+            {!editingImage && (
+              <Button
+                size="sm"
+                className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-purple-600 hover:bg-purple-700"
+                onClick={() => setEditingImage(true)}
+              >
+                <Edit2 className="w-4 h-4 mr-2" />
+                Upraviť AI obrázok
+              </Button>
+            )}
           </div>
+
+          {/* Image Edit Panel */}
+          {editingImage && (
+            <Card className="p-4 mb-6 border-purple-300 bg-purple-50">
+              <div className="space-y-3">
+                <div>
+                  <label className="text-sm font-semibold text-gray-900 mb-2 block">
+                    Upravte text alebo opravte chyby na obrázku
+                  </label>
+                  <Textarea
+                    value={imagePrompt}
+                    onChange={(e) => setImagePrompt(e.target.value)}
+                    placeholder="Napr.: Oprav gramatickú chybu v texte, zmeň 'modularne' na 'modulárne', odstráň text z obrázka, pridaj text..."
+                    rows={3}
+                    className="mb-2"
+                  />
+                  <p className="text-xs text-gray-600">
+                    AI vygeneruje nový obrázok s požadovanými úpravami textu
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleRegenerateWithPrompt}
+                    disabled={regenerating || !imagePrompt.trim()}
+                    className="bg-purple-600 hover:bg-purple-700"
+                  >
+                    {regenerating ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        Generujem...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Vygenerovať upravený obrázok
+                      </>
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setEditingImage(false);
+                      setImagePrompt("");
+                    }}
+                  >
+                    <X className="w-4 h-4 mr-2" />
+                    Zrušiť
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          )}
 
           {/* Content */}
           <Card className="p-6 mb-6">
