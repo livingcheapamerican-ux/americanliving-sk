@@ -1921,10 +1921,10 @@ export default function DetailDomu() {
                 <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
                   <h3 className="text-sm sm:text-base font-bold text-primary mb-2 flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-                    {t('basicHouseConfig') || 'Základná konfigurácia domu'}
+                    {t('basicHouseConfig')}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-700 mb-4 leading-relaxed">
-                    {t('basicConfigDescription') || 'Je vždy vyhovujúci pre status rekrečnej stavby na celoročné bývanie. Pokiaľ chcete z domu urobiť rodinný dom na (trvalé bývanie, nahlásenie trvalého pobytu, možnosť hypotekárneho úveru, energetického certifikátu A0 a stavebné povolenie v obytnej štvrti) musíte zmeniť parametre domu v konfigurátore nižšie.'}
+                    {t('basicConfigDescription')}
                   </p>
                   
                   {/* Špecifický obsah pre každý dom zo specifikacia - správne unikátne pre každý dom */}
