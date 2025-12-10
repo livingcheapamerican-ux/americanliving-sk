@@ -8,7 +8,7 @@ import { useLanguage } from "./LanguageContext";
 
 export default function LyonSummaryPanelStandalone({ 
   ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu, 
-  tepelneCerpadlo, rekuperacia, podlahovoKurenie, pripravaNaKrb, ochranaKachle,
+  tepelneCerpadlo, rekuperacia, podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia,
   fasada, strecha, odkvapy, okna, vchodoveDvere, obkladStien, interieroveDvere,
   elektro, bleskozvod, prepat, sprchovyKut, vana, bateria, skrinka, stropKupelna,
   inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
@@ -134,6 +134,10 @@ export default function LyonSummaryPanelStandalone({
             <div className={ochranaKachle ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
               <span className="text-slate-300">• {t('stoveProtection')} {ochranaKachle && "✓"}</span>
               <span className="text-green-400 text-xs">{getCenaPolozky('ochranaKachle') || '+ 1 280 €'}</span>
+            </div>
+            <div className={klimatizacia ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300 flex items-center gap-1">• {t('airConditioningPrep') || 'Príprava na klimatizáciu'} {klimatizacia && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('klimatizacia') || '0 €'}</span>
             </div>
           </div>
         </div>

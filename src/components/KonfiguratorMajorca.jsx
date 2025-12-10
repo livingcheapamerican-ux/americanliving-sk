@@ -16,7 +16,7 @@ export default function KonfiguratorMajorca({
   fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna,
   vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha,
   interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod,
-  prepat, setPrepat, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria,
+  prepat, setPrepat, klimatizacia, setKlimatizacia, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria,
   skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering,
   projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady,
   montaz, setMontaz, doprava, setDoprava
@@ -37,7 +37,7 @@ export default function KonfiguratorMajorca({
     return translatedField || text[field] || '';
   };
 
-  const CENY = {
+  const CENY = dom?.konfigurator_ceny || {
     izolacia_stien_200mm: 1695,
     izolacia_stien_250mm: 1599,
     izolacia_podlahy_200mm: 256,
@@ -47,6 +47,7 @@ export default function KonfiguratorMajorca({
     podlahove_kurenie: 1850,
     pripravaKrb: 579,
     ochranaKachle: 1280,
+    klimatizacia: 0,
     fasada_omietka: 1734,
     fasada_smrekovec: 2850,
     fasada_falcovane: 4200,
@@ -104,6 +105,7 @@ export default function KonfiguratorMajorca({
   React.useEffect(() => { if (setElektro) setElektro(elektro); }, [elektro]);
   React.useEffect(() => { if (setBleskozvod) setBleskozvod(bleskozvod); }, [bleskozvod]);
   React.useEffect(() => { if (setPrepat) setPrepat(prepat); }, [prepat]);
+  React.useEffect(() => { if (setKlimatizacia) setKlimatizacia(klimatizacia); }, [klimatizacia]);
   React.useEffect(() => { if (setSprchovyKut) setSprchovyKut(sprchovyKut); }, [sprchovyKut]);
   React.useEffect(() => { if (setVana) setVana(vana); }, [vana]);
   React.useEffect(() => { if (setBateria) setBateria(bateria); }, [bateria]);
@@ -165,6 +167,7 @@ export default function KonfiguratorMajorca({
               setBleskozvod(true);
               setPrepat(true);
               setElektro("ge");
+              setKlimatizacia(true);
             }}
             className={`p-3 rounded-lg cursor-pointer transition-all border-2 ${
               ucel === "rodinny" ? "bg-green-100 border-green-500 shadow-md" : "bg-white border-gray-300 hover:border-green-400"
@@ -264,6 +267,9 @@ export default function KonfiguratorMajorca({
                 <EditableTile selected={ochranaKachle} onClick={() => setOchranaKachle(!ochranaKachle)} 
                   title={t('stoveProtection')} price={formatPrice(CENY.ochranaKachle)} isPriced={true} t={t} isAdmin={isAdmin}
                   priceKey="ochranaKachle" onPriceChange={(key, val) => CENY[key] = val} />
+                <EditableTile selected={klimatizacia} onClick={() => setKlimatizacia(!klimatizacia)} 
+                  title={t('airConditioningPrep') || 'Príprava na klimatizáciu'} price={formatPrice(CENY.klimatizacia)} isPriced={CENY.klimatizacia > 0} isA0={true} t={t} isAdmin={isAdmin}
+                  priceKey="klimatizacia" onPriceChange={(key, val) => CENY[key] = val} />
               </div>
             </div>
           </div>
@@ -325,8 +331,227 @@ export default function KonfiguratorMajorca({
         </Card>
       </div>
 
-      {/* OKNÁ, INTERIÉR, ELEKTRO, KÚPEĽŇA - pokračovanie analogicky... */}
-      {/* Pre stručnosť som vynechal zvyšok, ale rovnaká štruktúra */}
+      {/* OKNÁ A DVERE */}
+      <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <Card className="p-3 bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-cyan-300 shadow-md">
+          <h3 className="text-base font-bold text-cyan-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-cyan-600 text-white text-sm mr-1">5</span>
+            🚪 {t('windowsDoorsSection')}
+          </h3>
+          <div className="space-y-2">
+            <div>
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('windowColor')}</p>
+              <div className="grid grid-cols-3 gap-1.5 border border-cyan-300 rounded-md p-1.5 bg-white/50">
+                <EditableTile selected={okna === "biele"} onClick={() => setOkna("biele")} 
+                  title={t('white')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+                <EditableTile selected={okna === "antracit"} onClick={() => setOkna("antracit")} 
+                  title={t('anthracite')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+                <EditableTile selected={okna === "hnede"} onClick={() => setOkna("hnede")} 
+                  title={t('brown')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+              </div>
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('entryDoors')}</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-cyan-300 rounded-md p-1.5 bg-white/50">
+                <EditableTile selected={vchodoveDvere === "plastove"} onClick={() => setVchodoveDvere("plastove")} 
+                  title={t('metalPlasticDoors')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+                <EditableTile selected={vchodoveDvere === "kovove"} onClick={() => setVchodoveDvere("kovove")} 
+                  title={t('metalDoors')} price={formatPrice(CENY.dvere_kovove)} isPriced={true} t={t} isAdmin={isAdmin}
+                  priceKey="dvere_kovove" onPriceChange={(key, val) => CENY[key] = val} />
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* INTERIÉR */}
+        <Card className="p-3 bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300 shadow-md">
+          <h3 className="text-base font-bold text-amber-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-600 text-white text-sm mr-1">6</span>
+            🛋️ {t('interiorSection')}
+          </h3>
+          <div className="space-y-2">
+            <div>
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('wallCladding')}</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-amber-300 rounded-md p-1.5 bg-white/50">
+                <EditableTile selected={obkladStien === "smrek_8cm"} onClick={() => setObkladStien("smrek_8cm")} 
+                  title={t('spruceWall8cm')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+                <EditableTile selected={obkladStien === "smrek_bez_uzlov"} onClick={() => setObkladStien("smrek_bez_uzlov")} 
+                  title={t('spruceWallNoKnots')} price={formatPrice(CENY.obklad_smrek_bez_uzlov)} isPriced={false} t={t} isAdmin={isAdmin}
+                  priceKey="obklad_smrek_bez_uzlov" onPriceChange={(key, val) => CENY[key] = val} />
+                <EditableTile selected={obkladStien === "sadrokarton_tapeta"} onClick={() => setObkladStien("sadrokarton_tapeta")} 
+                  title={t('drywallWallpaperPaint')} price={formatPrice(CENY.obklad_sadrokarton_tapeta)} isPriced={true} t={t} isAdmin={isAdmin}
+                  priceKey="obklad_sadrokarton_tapeta" onPriceChange={(key, val) => CENY[key] = val} />
+                <EditableTile selected={obkladStien === "osb_panel"} onClick={() => setObkladStien("osb_panel")} 
+                  title={t('osbLaminatePanel')} price={formatPrice(CENY.obklad_osb_panel)} isPriced={true} t={t} isAdmin={isAdmin}
+                  priceKey="obklad_osb_panel" onPriceChange={(key, val) => CENY[key] = val} />
+              </div>
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('floorType')}</p>
+              <div className="border border-amber-300 rounded-md p-1.5 bg-white/50">
+                <EditableTile selected={podlaha === "laminat"} onClick={() => setPodlaha("laminat")} 
+                  title={t('laminate')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+              </div>
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('interiorDoorsType')}</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-amber-300 rounded-md p-1.5 bg-white/50">
+                <EditableTile selected={interieroveDvere === "kridlove"} onClick={() => setInterieroveDvere("kridlove")} 
+                  title={t('hingedDoors')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+                <EditableTile selected={interieroveDvere === "posuvne"} onClick={() => setInterieroveDvere("posuvne")} 
+                  title={t('slidingDoors')} price={formatPrice(CENY.dvere_posuvne)} isPriced={true} t={t} isAdmin={isAdmin}
+                  priceKey="dvere_posuvne" onPriceChange={(key, val) => CENY[key] = val} />
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* ELEKTRO + KÚPEĽŇA */}
+      <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <Card className="p-3 bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-300 shadow-md">
+          <h3 className="text-base font-bold text-yellow-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-yellow-600 text-white text-sm mr-1">7</span>
+            ⚡ {t('electricalSection')}
+          </h3>
+          <div className="space-y-2">
+            <div>
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('installationType')}</p>
+              <div className="grid grid-cols-3 gap-1.5 border border-yellow-300 rounded-md p-1.5 bg-white/50">
+                <EditableTile selected={elektro === "eu"} onClick={() => setElektro("eu")} 
+                  title={t('euStandard')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+                <EditableTile selected={elektro === "cz"} onClick={() => setElektro("cz")} 
+                  title={t('czSkStandard')} subtitle={t('socketsExtraFuses')} price={formatPrice(CENY.elektro_cz)} isPriced={true} t={t} isAdmin={isAdmin}
+                  priceKey="elektro_cz" onPriceChange={(key, val) => CENY[key] = val} />
+                <EditableTile selected={elektro === "ge"} onClick={() => setElektro("ge")} 
+                  title={t('geStandard')} price={formatPrice(CENY.elektro_ge)} isPriced={true} isA0={true} t={t} isAdmin={isAdmin}
+                  priceKey="elektro_ge" onPriceChange={(key, val) => CENY[key] = val} />
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-gray-700 mb-2">{t('heatingExtras')}</p>
+              <div className="space-y-2">
+                <EditableTile selected={bleskozvod} onClick={() => setBleskozvod(!bleskozvod)} 
+                  title={t('lightningRod')} price={formatPrice(CENY.bleskozvod)} isPriced={true} isA0={true} t={t} isAdmin={isAdmin}
+                  priceKey="bleskozvod" onPriceChange={(key, val) => CENY[key] = val} />
+                <EditableTile selected={prepat} onClick={() => setPrepat(!prepat)} 
+                  title={t('surgeProtection')} price={formatPrice(CENY.prepat)} isPriced={true} isA0={true} t={t} isAdmin={isAdmin}
+                  priceKey="prepat" onPriceChange={(key, val) => CENY[key] = val} />
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-3 bg-gradient-to-br from-teal-50 to-cyan-50 border-2 border-teal-300 shadow-md">
+          <h3 className="text-base font-bold text-teal-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-teal-600 text-white text-sm mr-1">8</span>
+            🚿 {t('bathroomSection')}
+          </h3>
+          <div className="space-y-2">
+            <div>
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('showerCabin')}</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
+                <EditableTile selected={sprchovyKut === "standard"} onClick={() => setSprchovyKut("standard")} 
+                  title={t('shower')} subtitle="WC Geberit" price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+                <EditableTile selected={sprchovyKut === "radaway"} onClick={() => setSprchovyKut("radaway")} 
+                  title={t('showerRadawayTile')} price={formatPrice(CENY.sprchovyKut)} isPriced={true} t={t} isAdmin={isAdmin}
+                  priceKey="sprchovyKut" onPriceChange={(key, val) => CENY[key] = val} />
+              </div>
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('faucet')}</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
+                <EditableTile selected={bateria === "standard"} onClick={() => setBateria("standard")} 
+                  title={t('faucetStandard')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+                <EditableTile selected={bateria === "grohe"} onClick={() => setBateria("grohe")} 
+                  title="Grohe" price={formatPrice(CENY.bateria)} isPriced={true} t={t} isAdmin={isAdmin}
+                  priceKey="bateria" onPriceChange={(key, val) => CENY[key] = val} />
+              </div>
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('bathroomCeiling')}</p>
+              <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
+                <EditableTile selected={stropKupelna === "drevo"} onClick={() => setStropKupelna("drevo")} 
+                  title={t('ceilingWoodPattern')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+                <EditableTile selected={stropKupelna === "sadrokarton"} onClick={() => setStropKupelna("sadrokarton")} 
+                  title={t('drywallWallpaperPaint')} price={formatPrice(CENY.strop_kupelna_sadrokarton)} isPriced={false} t={t} isAdmin={isAdmin}
+                  priceKey="strop_kupelna_sadrokarton" onPriceChange={(key, val) => CENY[key] = val} />
+              </div>
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('bathExtras')}</p>
+              <div className="space-y-1.5">
+                <EditableTile selected={vana} onClick={() => setVana(!vana)} 
+                  title={t('bathtub')} price={formatPrice(CENY.vana)} isPriced={true} t={t} isAdmin={isAdmin}
+                  priceKey="vana" onPriceChange={(key, val) => CENY[key] = val} />
+                <EditableTile selected={skrinka} onClick={() => setSkrinka(!skrinka)} 
+                  title={t('cabinet')} price={formatPrice(CENY.skrinka)} isPriced={true} t={t} isAdmin={isAdmin}
+                  priceKey="skrinka" onPriceChange={(key, val) => CENY[key] = val} />
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* ZÁKLADY + SLUŽBY */}
+      <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <Card className="p-3 bg-gradient-to-br from-stone-50 to-gray-50 border-2 border-stone-300 shadow-md">
+          <h3 className="text-base font-bold text-stone-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-stone-600 text-white text-sm mr-1">9</span>
+            🏗️ {t('foundationsSection')}
+          </h3>
+          <div>
+            <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('foundationType')}</p>
+            <div className="grid grid-cols-2 gap-1.5 border border-stone-300 rounded-md p-1.5 bg-white/50">
+              <EditableTile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} 
+                title={t('noFoundations')} price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} t={t} isAdmin={isAdmin} />
+              <EditableTile selected={zaklady === "vruty"} onClick={() => setZaklady("vruty")} 
+                title={t('groundScrews')} price={formatPrice(CENY.zaklady_vruty)} isPriced={true} t={t} isAdmin={isAdmin}
+                priceKey="zaklady_vruty" onPriceChange={(key, val) => CENY[key] = val} />
+              <EditableTile selected={zaklady === "patky"} onClick={() => setZaklady("patky")} 
+                title={t('concretePads')} price={formatPrice(CENY.zaklady_patky)} isPriced={true} t={t} isAdmin={isAdmin}
+                priceKey="zaklady_patky" onPriceChange={(key, val) => CENY[key] = val} />
+              <EditableTile selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} 
+                title={t('stripFoundations')} price={formatPrice(CENY.zaklady_pasove)} isPriced={true} t={t} isAdmin={isAdmin}
+                priceKey="zaklady_pasove" onPriceChange={(key, val) => CENY[key] = val} />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-3 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 shadow-md">
+          <h3 className="text-base font-bold text-green-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green-600 text-white text-sm mr-1">10</span>
+            📋 {t('servicesSection')}
+          </h3>
+          <div className="space-y-1.5">
+            <EditableTile selected={inziniering} onClick={() => setInziniering(!inziniering)} 
+              title={t('engineering')} subtitle={t('permit')} price={formatPrice(CENY.inziniering)} isPriced={true} isA0={true} t={t} isAdmin={isAdmin}
+              priceKey="inziniering" onPriceChange={(key, val) => CENY[key] = val} />
+            <EditableTile selected={projektACertifikacia} onClick={() => setProjektACertifikacia(!projektACertifikacia)} 
+              title={t('projectCertShort')} subtitle="A0" price={formatPrice(CENY.projektACertifikacia)} isPriced={true} isA0={true} t={t} isAdmin={isAdmin}
+              priceKey="projektACertifikacia" onPriceChange={(key, val) => CENY[key] = val} />
+            <EditableTile selected={revizia} onClick={() => setRevizia(!revizia)} 
+              title={t('revisionDocsShort')} price={formatPrice(CENY.revizia)} isPriced={true} t={t} isAdmin={isAdmin}
+              priceKey="revizia" onPriceChange={(key, val) => CENY[key] = val} />
+          </div>
+        </Card>
+      </div>
+
+      {/* REALIZÁCIA */}
+      <Card className="p-3 bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-slate-300 shadow-md mb-3">
+        <h3 className="text-base font-bold text-slate-900 mb-2 flex items-center gap-2">
+          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-600 text-white text-sm mr-1">11</span>
+          🚚 {t('realizationSection')}
+        </h3>
+        <div className="space-y-1.5">
+          <EditableTile selected={montaz} onClick={() => setMontaz(!montaz)} 
+            title={t('houseAssembly')} price={formatPrice(CENY.montaz)} isPriced={true} t={t} isAdmin={isAdmin}
+            priceKey="montaz" onPriceChange={(key, val) => CENY[key] = val} />
+          <EditableTile selected={doprava} onClick={() => setDoprava(!doprava)} 
+            title={t('transportTile')} subtitle={t('allModulesTransport')} price={formatPrice(CENY.doprava)} isPriced={true} t={t} isAdmin={isAdmin}
+            priceKey="doprava" onPriceChange={(key, val) => CENY[key] = val} />
+        </div>
+      </Card>
     </div>
   );
 }
