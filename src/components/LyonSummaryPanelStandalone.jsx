@@ -387,7 +387,6 @@ export default function LyonSummaryPanelStandalone({
         strecha={strecha}
         odkvapy={odkvapy}
         okna={okna}
-        sieteProtiHmyzu={sieteProtiHmyzu}
         vchodoveDvere={vchodoveDvere}
         obkladStien={obkladStien}
         interieroveDvere={interieroveDvere}
