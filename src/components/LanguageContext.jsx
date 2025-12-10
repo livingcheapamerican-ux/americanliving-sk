@@ -6833,15 +6833,6 @@ const translations = {
     thankYou: "Köszönjük üzenetét!",
     messageSuccess: "Üzenete sikeresen elküldve. Hamarosan felvesszük Önnel a kapcsolatot, általában 24 órán belül.",
     
-    // Happy Wife konfigurator
-    floorHeatingIncluded: "Padlófűtés az árban (földszint + fürdőszoba emeleten)",
-    projectEnergyClassification: "Projekt: Projekt (energetikai besorolás lehetősége)",
-    fullyAssembledInterior: "Teljesen összeszerelt belső tér (bútor design)",
-    interiorSelectionFromSamples: "Belső tér kiválasztása a biztosított mintakatalógus alapján",
-    bathroomIncluded: "Fürdőszoba az árban (földszint + emelet)",
-    kitchenIncluded: "Konyha az árban (bútor + hátfal)",
-    acPreparationIncluded: "Légkondicionálás: Előkészítés az árban (földszint + emelet)",
-    
     // Ticabhouse közös specifikációk
     generalInfo: "ÁLTALÁNOS INFORMÁCIÓK",
     area: "Terület",
@@ -7648,15 +7639,6 @@ const translations = {
     sendMessage: "Wyślij wiadomość",
     thankYou: "Dziękujemy za wiadomość!",
     messageSuccess: "Twoja wiadomość została pomyślnie wysłana. Skontaktujemy się z Tobą jak najszybciej, zwykle w ciągu 24 godzin.",
-    
-    // Happy Wife konfigurator
-    floorHeatingIncluded: "Ogrzewanie podłogowe w cenie (parter + łazienka na piętrze)",
-    projectEnergyClassification: "Projekt: Projekt (możliwość klasyfikacji energetycznej)",
-    fullyAssembledInterior: "Pełne wykończenie wnętrza (projekt mebli)",
-    interiorSelectionFromSamples: "Wybór wnętrza na podstawie dostarczonego katalogu wzorów",
-    bathroomIncluded: "Łazienka w cenie (parter + piętro)",
-    kitchenIncluded: "Kuchnia w cenie (meble + ściana)",
-    acPreparationIncluded: "Klimatyzacja: Przygotowanie w cenie (parter + piętro)",
     
     // Ticabhouse wspólne specyfikacje
     generalInfo: "INFORMACJE OGÓLNE",
@@ -8505,15 +8487,6 @@ const translations = {
     sendMessage: "Надіслати повідомлення",
     thankYou: "Дякуємо за ваше повідомлення!",
     messageSuccess: "Ваше повідомлення успішно надіслано. Ми зв'яжемося з вами якнайшвидше, зазвичай протягом 24 годин.",
-    
-    // Happy Wife konfigurator
-    floorHeatingIncluded: "Підлогове опалення в ціні (перший поверх + ванна на другому поверсі)",
-    projectEnergyClassification: "Проект: Проект (можливість енергетичної класифікації)",
-    fullyAssembledInterior: "Повністю зібраний інтер'єр (дизайн меблів)",
-    interiorSelectionFromSamples: "Вибір інтер'єру на основі наданого каталогу зразків",
-    bathroomIncluded: "Ванна кімната в ціні (перший поверх + другий поверх)",
-    kitchenIncluded: "Кухня в ціні (меблі + фартух)",
-    acPreparationIncluded: "Кондиціонування: Підготовка в ціні (перший поверх + другий поверх)",
     
     // Ticabhouse загальні специфікації
     generalInfo: "ЗАГАЛЬНА ІНФОРМАЦІЯ",
