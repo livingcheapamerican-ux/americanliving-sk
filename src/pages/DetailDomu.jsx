@@ -28,6 +28,7 @@ import KonfiguratorBarnDouble from "../components/KonfiguratorBarnDouble";
 import KonfiguratorFlatSmall from "../components/KonfiguratorFlatSmall";
 import LyonKonfiguratorWrapper from "../components/LyonKonfiguratorWrapper";
 import LyonSummaryPanelStandalone from "../components/LyonSummaryPanelStandalone";
+import KonfiguratorTicabhouse from "../components/KonfiguratorTicabhouse";
 
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
@@ -1145,6 +1146,11 @@ export default function DetailDomu() {
                   />
                 </div>
               </Card>
+            )}
+
+            {/* Konfigurátor pre ostatné Ticabhouse domy (okrem Lyon) */}
+            {isTicabhouse && !dom.nazov?.toLowerCase().includes("lyon") && (
+              <KonfiguratorTicabhouse dom={dom} isAdmin={isAdmin} />
             )}
 
             {/* Konfigurátor pre Lyon (Ticab house) */}
