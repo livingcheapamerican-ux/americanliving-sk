@@ -23,15 +23,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, Eye, EyeOff, Calendar } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, EyeOff, Calendar, FileSearch } from "lucide-react";
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
 import { toast } from "sonner";
+import BlogPreviewModal from "../components/BlogPreviewModal";
 
 export default function AdminBlog() {
   const [editingPost, setEditingPost] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [previewPost, setPreviewPost] = useState(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: posts = [], isLoading } = useQuery({
@@ -314,6 +317,17 @@ export default function AdminBlog() {
                     <Button
                       size="sm"
                       variant="outline"
+                      className="text-blue-600 hover:bg-blue-50"
+                      onClick={() => {
+                        setPreviewPost(post);
+                        setIsPreviewOpen(true);
+                      }}
+                    >
+                      <FileSearch className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
                       onClick={() => {
                         togglePublishMutation.mutate({
                           id: post.id,
@@ -351,6 +365,13 @@ export default function AdminBlog() {
             </Card>
           ))}
         </div>
+
+        {/* Preview Modal */}
+        <BlogPreviewModal
+          post={previewPost}
+          isOpen={isPreviewOpen}
+          onClose={() => setIsPreviewOpen(false)}
+        />
       </div>
     </div>
   );
