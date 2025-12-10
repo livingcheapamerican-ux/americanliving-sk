@@ -36,6 +36,7 @@ import AdminSEOBlog from './pages/AdminSEOBlog';
 import AdminGenerujObrazkyBlogov from './pages/AdminGenerujObrazkyBlogov';
 import AdminPrekladyBlogov from './pages/AdminPrekladyBlogov';
 import AdminPrekladyKonfiguratora from './pages/AdminPrekladyKonfiguratora';
+import AdminPrekladTicabhouseSpec from './pages/AdminPrekladTicabhouseSpec';
 import __Layout from './Layout.jsx';
 
 
@@ -78,6 +79,7 @@ export const PAGES = {
     "AdminGenerujObrazkyBlogov": AdminGenerujObrazkyBlogov,
     "AdminPrekladyBlogov": AdminPrekladyBlogov,
     "AdminPrekladyKonfiguratora": AdminPrekladyKonfiguratora,
+    "AdminPrekladTicabhouseSpec": AdminPrekladTicabhouseSpec,
 }
 
 export const pagesConfig = {
