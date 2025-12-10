@@ -37,7 +37,6 @@ import AdminGenerujObrazkyBlogov from './pages/AdminGenerujObrazkyBlogov';
 import AdminPrekladyBlogov from './pages/AdminPrekladyBlogov';
 import AdminPrekladyKonfiguratora from './pages/AdminPrekladyKonfiguratora';
 import AdminPrekladTicabhouseSpec from './pages/AdminPrekladTicabhouseSpec';
-import AutoPrekladTicabhouse from './pages/AutoPrekladTicabhouse';
 import __Layout from './Layout.jsx';
 
 
@@ -81,7 +80,6 @@ export const PAGES = {
     "AdminPrekladyBlogov": AdminPrekladyBlogov,
     "AdminPrekladyKonfiguratora": AdminPrekladyKonfiguratora,
     "AdminPrekladTicabhouseSpec": AdminPrekladTicabhouseSpec,
-    "AutoPrekladTicabhouse": AutoPrekladTicabhouse,
 }
 
 export const pagesConfig = {
