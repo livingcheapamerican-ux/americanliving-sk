@@ -2965,106 +2965,86 @@ export default function DetailDomu() {
             </div>
 
             {/* Sidebar pre všetky Ticabhouse domy - rovnaké ako Lyon */}
-            {isTicabhouse && (() => {
-              const CENY = dom.konfigurator_ceny || {};
-              let total = dom.zakladna_cena || 0;
-              
-              // Izolácia
-              if (lyonIzolaciaStien === "200mm") total += CENY.izolacia_stien_200mm || 0;
-              if (lyonIzolaciaStien === "250mm") total += CENY.izolacia_stien_250mm || 0;
-              if (lyonIzolaciaPodlahy === "200mm") total += CENY.izolacia_podlahy_200mm || 0;
-              if (lyonIzolaciaStropu === "200mm") total += CENY.izolacia_stropu_200mm || 0;
-              
-              // Vykurovanie
-              if (lyonTepelneCerpadlo === "ano") total += CENY.tepelne_cerpadlo || 0;
-              if (lyonRekuperacia === "ano") total += CENY.rekuperacia || 0;
-              if (lyonPodlahovoKurenie) total += CENY.podlahove_kurenie || 0;
-              if (lyonPripravaNaKrb) total += CENY.pripravaKrb || 0;
-              if (lyonOchranaKachle) total += CENY.ochranaKachle || 0;
-              
-              // Fasáda
-              if (lyonFasada === "omietka") total += CENY.fasada_omietka || 0;
-              if (lyonFasada === "smrekovec") total += CENY.fasada_smrekovec || 0;
-              if (lyonFasada === "falcovane") total += CENY.fasada_falcovane || 0;
-              if (lyonFasada === "thermowood") total += CENY.fasada_thermowood || 0;
-              
-              // Strecha
-              if (lyonStrecha === "falcovane") total += CENY.strecha_falcovane || 0;
-              if (lyonOdkvapy === "ano") total += CENY.odkvapy || 0;
-              
-              // Dvere
-              if (lyonVchodoveDvere === "kovove") total += CENY.dvere_kovove || 0;
-              
-              // Interiér
-              if (lyonObkladStien === "smrek_bez_uzlov") total += CENY.obklad_smrek_bez_uzlov || 0;
-              if (lyonObkladStien === "sadrokarton_tapeta") total += CENY.obklad_sadrokarton_tapeta || 0;
-              if (lyonObkladStien === "osb_panel") total += CENY.obklad_osb_panel || 0;
-              if (lyonInterieroveDvere === "posuvne") total += CENY.dvere_posuvne || 0;
-              
-              // Elektro
-              if (lyonElektro === "cz") total += CENY.elektro_cz || 0;
-              if (lyonElektro === "ge") total += CENY.elektro_ge || 0;
-              if (lyonBleskozvod) total += CENY.bleskozvod || 0;
-              if (lyonPrepat) total += CENY.prepat || 0;
-              
-              // Kúpeľňa
-              if (lyonSprchovyKut === "radaway") total += CENY.sprchovyKut || 0;
-              if (lyonVana) total += CENY.vana || 0;
-              if (lyonBateria === "grohe") total += CENY.bateria || 0;
-              if (lyonSkrinka) total += CENY.skrinka || 0;
-              if (lyonStropKupelna === "sadrokarton") total += CENY.strop_kupelna_sadrokarton || 0;
-              
-              // Služby
-              if (lyonInziniering) total += CENY.inziniering || 0;
-              if (lyonProjektACertifikacia) total += CENY.projektACertifikacia || 0;
-              if (lyonRevizia) total += CENY.revizia || 0;
-              
-              // Základy
-              if (lyonZaklady === "vruty") total += CENY.zaklady_vruty || 0;
-              if (lyonZaklady === "patky") total += CENY.zaklady_patky || 0;
-              if (lyonZaklady === "pasove") total += CENY.zaklady_pasove || 0;
-              
-              // Realizácia
-              if (lyonMontaz) total += CENY.montaz || 0;
-              if (lyonDoprava) total += CENY.doprava || 0;
-
-              return (
-                <div className="space-y-4">
-                  <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                    <LyonSummaryPanelStandalone
-                    ucel={lyonUcel}
-                    izolaciaStien={lyonIzolaciaStien}
-                    izolaciaPodlahy={lyonIzolaciaPodlahy}
-                    izolaciaStropu={lyonIzolaciaStropu}
-                    tepelneCerpadlo={lyonTepelneCerpadlo}
-                    rekuperacia={lyonRekuperacia}
-                    podlahovoKurenie={lyonPodlahovoKurenie}
-                    pripravaNaKrb={lyonPripravaNaKrb}
-                    ochranaKachle={lyonOchranaKachle}
-                    fasada={lyonFasada}
-                    strecha={lyonStrecha}
-                    odkvapy={lyonOdkvapy}
-                    okna={lyonOkna}
-                    vchodoveDvere={lyonVchodoveDvere}
-                    obkladStien={lyonObkladStien}
-                    interieroveDvere={lyonInterieroveDvere}
-                    elektro={lyonElektro}
-                    bleskozvod={lyonBleskozvod}
-                    prepat={lyonPrepat}
-                    sprchovyKut={lyonSprchovyKut}
-                    vana={lyonVana}
-                    bateria={lyonBateria}
-                    skrinka={lyonSkrinka}
-                    stropKupelna={lyonStropKupelna}
-                    inziniering={lyonInziniering}
-                    projektACertifikacia={lyonProjektACertifikacia}
-                    revizia={lyonRevizia}
-                    zaklady={lyonZaklady}
-                    montaz={lyonMontaz}
-                    doprava={lyonDoprava}
-                    dom={dom}
-                    totalPrice={total}
-                    onSubmit={() => alert("Odoslanie dopytu - funkcia bude implementovaná")}
+            {isTicabhouse && (
+              <div className="space-y-4">
+                <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+                  <LyonSummaryPanelStandalone
+                  ucel={lyonUcel}
+                  izolaciaStien={lyonIzolaciaStien}
+                  izolaciaPodlahy={lyonIzolaciaPodlahy}
+                  izolaciaStropu={lyonIzolaciaStropu}
+                  tepelneCerpadlo={lyonTepelneCerpadlo}
+                  rekuperacia={lyonRekuperacia}
+                  podlahovoKurenie={lyonPodlahovoKurenie}
+                  pripravaNaKrb={lyonPripravaNaKrb}
+                  ochranaKachle={lyonOchranaKachle}
+                  fasada={lyonFasada}
+                  strecha={lyonStrecha}
+                  odkvapy={lyonOdkvapy}
+                  okna={lyonOkna}
+                  vchodoveDvere={lyonVchodoveDvere}
+                  obkladStien={lyonObkladStien}
+                  interieroveDvere={lyonInterieroveDvere}
+                  elektro={lyonElektro}
+                  bleskozvod={lyonBleskozvod}
+                  prepat={lyonPrepat}
+                  sprchovyKut={lyonSprchovyKut}
+                  vana={lyonVana}
+                  bateria={lyonBateria}
+                  skrinka={lyonSkrinka}
+                  stropKupelna={lyonStropKupelna}
+                  inziniering={lyonInziniering}
+                  projektACertifikacia={lyonProjektACertifikacia}
+                  revizia={lyonRevizia}
+                  zaklady={lyonZaklady}
+                  montaz={lyonMontaz}
+                  doprava={lyonDoprava}
+                  dom={dom}
+                  totalPrice={(() => {
+                    const CENY = dom.konfigurator_ceny || {};
+                    let total = dom.zakladna_cena || 0;
+                    
+                    if (lyonIzolaciaStien === "200mm") total += CENY.izolacia_stien_200mm || 0;
+                    if (lyonIzolaciaStien === "250mm") total += CENY.izolacia_stien_250mm || 0;
+                    if (lyonIzolaciaPodlahy === "200mm") total += CENY.izolacia_podlahy_200mm || 0;
+                    if (lyonIzolaciaStropu === "200mm") total += CENY.izolacia_stropu_200mm || 0;
+                    if (lyonTepelneCerpadlo === "ano") total += CENY.tepelne_cerpadlo || 0;
+                    if (lyonRekuperacia === "ano") total += CENY.rekuperacia || 0;
+                    if (lyonPodlahovoKurenie) total += CENY.podlahove_kurenie || 0;
+                    if (lyonPripravaNaKrb) total += CENY.pripravaKrb || 0;
+                    if (lyonOchranaKachle) total += CENY.ochranaKachle || 0;
+                    if (lyonFasada === "omietka") total += CENY.fasada_omietka || 0;
+                    if (lyonFasada === "smrekovec") total += CENY.fasada_smrekovec || 0;
+                    if (lyonFasada === "falcovane") total += CENY.fasada_falcovane || 0;
+                    if (lyonFasada === "thermowood") total += CENY.fasada_thermowood || 0;
+                    if (lyonStrecha === "falcovane") total += CENY.strecha_falcovane || 0;
+                    if (lyonOdkvapy === "ano") total += CENY.odkvapy || 0;
+                    if (lyonVchodoveDvere === "kovove") total += CENY.dvere_kovove || 0;
+                    if (lyonObkladStien === "smrek_bez_uzlov") total += CENY.obklad_smrek_bez_uzlov || 0;
+                    if (lyonObkladStien === "sadrokarton_tapeta") total += CENY.obklad_sadrokarton_tapeta || 0;
+                    if (lyonObkladStien === "osb_panel") total += CENY.obklad_osb_panel || 0;
+                    if (lyonInterieroveDvere === "posuvne") total += CENY.dvere_posuvne || 0;
+                    if (lyonElektro === "cz") total += CENY.elektro_cz || 0;
+                    if (lyonElektro === "ge") total += CENY.elektro_ge || 0;
+                    if (lyonBleskozvod) total += CENY.bleskozvod || 0;
+                    if (lyonPrepat) total += CENY.prepat || 0;
+                    if (lyonSprchovyKut === "radaway") total += CENY.sprchovyKut || 0;
+                    if (lyonVana) total += CENY.vana || 0;
+                    if (lyonBateria === "grohe") total += CENY.bateria || 0;
+                    if (lyonSkrinka) total += CENY.skrinka || 0;
+                    if (lyonStropKupelna === "sadrokarton") total += CENY.strop_kupelna_sadrokarton || 0;
+                    if (lyonInziniering) total += CENY.inziniering || 0;
+                    if (lyonProjektACertifikacia) total += CENY.projektACertifikacia || 0;
+                    if (lyonRevizia) total += CENY.revizia || 0;
+                    if (lyonZaklady === "vruty") total += CENY.zaklady_vruty || 0;
+                    if (lyonZaklady === "patky") total += CENY.zaklady_patky || 0;
+                    if (lyonZaklady === "pasove") total += CENY.zaklady_pasove || 0;
+                    if (lyonMontaz) total += CENY.montaz || 0;
+                    if (lyonDoprava) total += CENY.doprava || 0;
+                    
+                    return total;
+                  })()}
+                  onSubmit={() => alert("Odoslanie dopytu - funkcia bude implementovaná")}
                   />
                 </div>
 
