@@ -604,6 +604,15 @@ const translations = {
     bathroomCeiling: "Strop (kúpeľňa):",
     configurator: "Konfigurátor",
     
+    // Happy Wife konfigurator
+    floorHeatingIncluded: "Podlahové kúrenie v cene (prízemí + kúpeľňa na poschodí)",
+    projectEnergyClassification: "Projekt: Projekt (možnosť energetickej klasifikácie)",
+    fullyAssembledInterior: "Plne vyskladaný interiér (nábytkový dizajn)",
+    interiorSelectionFromSamples: "Výber interiéru na základe dodaného vzorkovníka",
+    bathroomIncluded: "Kúpeľňa v cene (prízemie + poschodie)",
+    kitchenIncluded: "Kuchyňa v cene (nábytok + zástena)",
+    acPreparationIncluded: "Klimatizácia: Príprava v cene (prízemie + poschodie)",
+    
     // House detail
     basicParameters: "Základné parametre",
     basicConfiguration: "Základná konfigurácia",
@@ -1745,6 +1754,16 @@ const translations = {
     finalApproval: "Abnahme",
     needQuickAnswer: "Brauchen Sie eine schnelle Antwort?",
     callOrEmail: "Rufen Sie uns direkt an oder senden Sie eine E-Mail. Wir beantworten gerne alle Ihre Fragen.",
+    
+    // Happy Wife konfigurator - EN
+    floorHeatingIncluded: "Floor heating included in price (ground floor + bathroom on upper floor)",
+    projectEnergyClassification: "Project: Project (possibility of energy classification)",
+    fullyAssembledInterior: "Fully assembled interior (furniture design)",
+    interiorSelectionFromSamples: "Interior selection based on provided sample catalog",
+    bathroomIncluded: "Bathroom included in price (ground floor + upper floor)",
+    kitchenIncluded: "Kitchen included in price (furniture + backsplash)",
+    acPreparationIncluded: "Air conditioning: Preparation included in price (ground floor + upper floor)",
+    
     name: "Vollständiger Name",
     email: "E-Mail",
     phone: "Telefon",
@@ -6139,6 +6158,15 @@ const translations = {
     sending: "Sending...",
     needQuickAnswer: "Need a quick answer?",
     callOrEmail: "Call us directly or send an email. We'll be happy to answer all your questions.",
+    
+    // Happy Wife konfigurator - EN
+    floorHeatingIncluded: "Floor heating included in price (ground floor + bathroom on upper floor)",
+    projectEnergyClassification: "Project: Project (possibility of energy classification)",
+    fullyAssembledInterior: "Fully assembled interior (furniture design)",
+    interiorSelectionFromSamples: "Interior selection based on provided sample catalog",
+    bathroomIncluded: "Bathroom included in price (ground floor + upper floor)",
+    kitchenIncluded: "Kitchen included in price (furniture + backsplash)",
+    acPreparationIncluded: "Air conditioning: Preparation included in price (ground floor + upper floor)",
   },
   
   hu: {
@@ -6745,6 +6773,16 @@ const translations = {
     finalApproval: "Engedélyezés",
     needQuickAnswer: "Gyors választ szeretne?",
     callOrEmail: "Hívjon minket közvetlenül vagy írjon emailt. Szívesen válaszolunk minden kérdésére.",
+    
+    // Happy Wife konfigurator - HU
+    floorHeatingIncluded: "Padlófűtés az árban (földszint + fürdőszoba emeleten)",
+    projectEnergyClassification: "Projekt: Projekt (energetikai besorolás lehetősége)",
+    fullyAssembledInterior: "Teljesen összeszerelt belső tér (bútor design)",
+    interiorSelectionFromSamples: "Belső tér kiválasztása a biztosított mintakatalógus alapján",
+    bathroomIncluded: "Fürdőszoba az árban (földszint + emelet)",
+    kitchenIncluded: "Konyha az árban (bútor + hátfal)",
+    acPreparationIncluded: "Légkondicionálás: Előkészítés az árban (földszint + emelet)",
+    
     name: "Teljes név",
     email: "Email",
     phone: "Telefon",
@@ -7500,6 +7538,16 @@ const translations = {
     finalApproval: "Odbiór końcowy",
     needQuickAnswer: "Potrzebujesz szybkiej odpowiedzi?",
     callOrEmail: "Zadzwoń bezpośrednio lub napisz email. Chętnie odpowiemy na wszystkie pytania.",
+    
+    // Happy Wife konfigurator - PL
+    floorHeatingIncluded: "Ogrzewanie podłogowe w cenie (parter + łazienka na piętrze)",
+    projectEnergyClassification: "Projekt: Projekt (możliwość klasyfikacji energetycznej)",
+    fullyAssembledInterior: "Pełne wykończenie wnętrza (projekt mebli)",
+    interiorSelectionFromSamples: "Wybór wnętrza na podstawie dostarczonego katalogu wzorów",
+    bathroomIncluded: "Łazienka w cenie (parter + piętro)",
+    kitchenIncluded: "Kuchnia w cenie (meble + ściana)",
+    acPreparationIncluded: "Klimatyzacja: Przygotowanie w cenie (parter + piętro)",
+    
     name: "Imię i nazwisko",
     email: "Email",
     phone: "Telefon",
@@ -8296,6 +8344,16 @@ const translations = {
     finalApproval: "Приймання",
     needQuickAnswer: "Потрібна швидка відповідь?",
     callOrEmail: "Зателефонуйте безпосередньо або напишіть email. Ми з радістю відповімо на всі ваші питання.",
+    
+    // Happy Wife konfigurator - UK
+    floorHeatingIncluded: "Підлогове опалення в ціні (перший поверх + ванна на другому поверсі)",
+    projectEnergyClassification: "Проект: Проект (можливість енергетичної класифікації)",
+    fullyAssembledInterior: "Повністю зібраний інтер'єр (дизайн меблів)",
+    interiorSelectionFromSamples: "Вибір інтер'єру на основі наданого каталогу зразків",
+    bathroomIncluded: "Ванна кімната в ціні (перший поверх + другий поверх)",
+    kitchenIncluded: "Кухня в ціні (меблі + фартух)",
+    acPreparationIncluded: "Кондиціонування: Підготовка в ціні (перший поверх + другий поверх)",
+    
     name: "Повне ім'я",
     email: "Email",
     phone: "Телефон",
