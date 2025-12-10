@@ -291,11 +291,188 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin }) {
           </div>
         </Card>
 
-        {/* Zvyšok konfigurátora - ideme skopírovať štruktúru z Lyon ale s EditableTile */}
-        {/* Tu pokračuje zvyšok konfigurátora... */}
-        <p className="text-center text-gray-500 text-sm my-8">
-          Konfigurátor pre {dom?.nazov} - Základná cena: {dom?.zakladna_cena?.toLocaleString('sk-SK')} €
-        </p>
+        {/* Hlavný konfigurátor - Grid layout */}
+        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+          {/* IZOLÁCIA */}
+          <Card className="p-3 bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300 shadow-md">
+            <h3 className="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-sm mr-1">1</span>
+              🏠 {getTranslatedText('sekcia_izolacia', 'nazov') || t('insulationSection') || 'Izolácia'}
+            </h3>
+            <div className="space-y-2">
+              {/* Steny */}
+              <div>
+                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                  {getTranslatedText('izolacia_stien', 'nazov') || t('wallInsulation') || 'Izolácia stien:'}
+                </p>
+                <div className="grid grid-cols-3 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
+                  <EditableTile selected={izolaciaStien === "150mm"} onClick={() => setIzolaciaStien("150mm")} 
+                    title={getTranslatedText('izolacia_stien_150', 'nazov') || t('walls150mm') || 'Steny 150mm'} 
+                    subtitle={getTranslatedText('izolacia_stien_150', 'podnadpis') || t('recreational') || 'Rekreačné'} 
+                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+                  <EditableTile selected={izolaciaStien === "200mm"} onClick={() => setIzolaciaStien("200mm")} 
+                    title={getTranslatedText('izolacia_stien_200', 'nazov') || t('walls200mm') || 'Steny 200mm'} 
+                    subtitle={getTranslatedText('izolacia_stien_200', 'podnadpis') || ''} 
+                    price={formatPrice(CENY.izolacia_stien_200mm)} isPriced={true} t={t} 
+                    priceKey="izolacia_stien_200mm" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                  <EditableTile selected={izolaciaStien === "250mm"} onClick={() => setIzolaciaStien("250mm")} 
+                    title={getTranslatedText('izolacia_stien_250', 'nazov') || t('walls250mm') || 'Steny 250mm'} 
+                    subtitle={getTranslatedText('izolacia_stien_250', 'podnadpis') || t('premiumA0') || 'Premium A0'} 
+                    price={formatPrice(CENY.izolacia_stien_250mm)} isPriced={true} isA0={true} t={t} 
+                    priceKey="izolacia_stien_250mm" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                </div>
+              </div>
+
+              {/* Podlaha */}
+              <div>
+                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                  {getTranslatedText('izolacia_podlahy', 'nazov') || t('floorInsulation') || 'Izolácia podlahy:'}
+                </p>
+                <div className="grid grid-cols-2 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
+                  <EditableTile selected={izolaciaPodlahy === "150mm"} onClick={() => setIzolaciaPodlahy("150mm")} 
+                    title={getTranslatedText('izolacia_podlahy_150', 'nazov') || t('floor150mm') || 'Podlaha 150mm'} 
+                    subtitle={getTranslatedText('izolacia_podlahy_150', 'podnadpis') || ''} 
+                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+                  <EditableTile selected={izolaciaPodlahy === "200mm"} onClick={() => setIzolaciaPodlahy("200mm")} 
+                    title={getTranslatedText('izolacia_podlahy_200', 'nazov') || t('floor200mm') || 'Podlaha 200mm'} 
+                    subtitle={getTranslatedText('izolacia_podlahy_200', 'podnadpis') || t('a0') || 'A0'} 
+                    price={formatPrice(CENY.izolacia_podlahy_200mm)} isPriced={true} isA0={true} t={t} 
+                    priceKey="izolacia_podlahy_200mm" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                </div>
+              </div>
+
+              {/* Strop */}
+              <div>
+                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                  {getTranslatedText('izolacia_stropu', 'nazov') || t('ceilingInsulation') || 'Izolácia stropu:'}
+                </p>
+                <div className="grid grid-cols-2 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
+                  <EditableTile selected={izolaciaStropu === "150mm"} onClick={() => setIzolaciaStropu("150mm")} 
+                    title={getTranslatedText('izolacia_stropu_150', 'nazov') || t('ceiling150mm') || 'Strop 150mm'} 
+                    subtitle={getTranslatedText('izolacia_stropu_150', 'podnadpis') || ''} 
+                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+                  <EditableTile selected={izolaciaStropu === "200mm"} onClick={() => setIzolaciaStropu("200mm")} 
+                    title={getTranslatedText('izolacia_stropu_200', 'nazov') || t('ceiling200mm') || 'Strop 200mm'} 
+                    subtitle={getTranslatedText('izolacia_stropu_200', 'podnadpis') || t('a0') || 'A0'} 
+                    price={formatPrice(CENY.izolacia_stropu_200mm)} isPriced={true} isA0={true} t={t} 
+                    priceKey="izolacia_stropu_200mm" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* VYKUROVANIE */}
+          <Card className="p-3 bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-300 shadow-md">
+            <h3 className="text-base font-bold text-orange-900 mb-2 flex items-center gap-2">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-orange-600 text-white text-sm mr-1">2</span>
+              🔥 {getTranslatedText('sekcia_vykurovanie', 'nazov') || t('heatingSection') || 'Vykurovanie'}
+            </h3>
+            <div className="space-y-2">
+              {/* Tepelné čerpadlo */}
+              <div>
+                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                  {getTranslatedText('tepelne_cerpadlo', 'nazov') || t('heating') || 'Vykurovanie:'}
+                </p>
+                <div className="grid grid-cols-2 gap-1.5 border border-orange-300 rounded-md p-1.5 bg-white/50">
+                  <EditableTile selected={tepelneCerpadlo === "nie"} onClick={() => setTepelneCerpadlo("nie")} 
+                    title={getTranslatedText('tepelne_cerpadlo_nie', 'nazov') || t('heatingPreparation')} 
+                    subtitle={getTranslatedText('tepelne_cerpadlo_nie', 'podnadpis') || t('convectors')} 
+                    price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+                  <EditableTile selected={tepelneCerpadlo === "ano"} onClick={() => setTepelneCerpadlo("ano")} 
+                    title={getTranslatedText('tepelne_cerpadlo_ano', 'nazov') || t('heatPump')} 
+                    subtitle={getTranslatedText('tepelne_cerpadlo_ano', 'podnadpis') || t('a0Required')} 
+                    price={formatPrice(CENY.tepelne_cerpadlo)} isPriced={true} isA0={true} t={t} 
+                    priceKey="tepelne_cerpadlo" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                </div>
+              </div>
+
+              {/* Rekuperácia */}
+              <div>
+                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                  {getTranslatedText('rekuperacia', 'nazov') || t('ventilation') || 'Vetranie:'}
+                </p>
+                <div className="grid grid-cols-2 gap-1.5 border border-orange-300 rounded-md p-1.5 bg-white/50">
+                  <EditableTile selected={rekuperacia === "nie"} onClick={() => setRekuperacia("nie")} 
+                    title={getTranslatedText('rekuperacia_nie', 'nazov') || t('withoutRecuperation')} 
+                    subtitle={getTranslatedText('rekuperacia_nie', 'podnadpis') || ''} 
+                    price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} t={t} isAdmin={isAdmin} />
+                  <EditableTile selected={rekuperacia === "ano"} onClick={() => setRekuperacia("ano")} 
+                    title={getTranslatedText('rekuperacia_ano', 'nazov') || t('recuperation')} 
+                    subtitle={getTranslatedText('rekuperacia_ano', 'podnadpis') || t('a0Required')} 
+                    price={formatPrice(CENY.rekuperacia)} isPriced={true} isA0={true} t={t} 
+                    priceKey="rekuperacia" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                </div>
+              </div>
+
+              {/* Doplnky */}
+              <div>
+                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                  {getTranslatedText('vykurovanie_doplnky', 'nazov') || t('heatingExtras') || 'Doplnky:'}
+                </p>
+                <div className="space-y-1.5">
+                  <EditableTile selected={podlahovoKurenie} onClick={() => setPodlahovoKurenie(!podlahovoKurenie)} 
+                    title={getTranslatedText('podlahove_kurenie', 'nazov') || t('floorHeating')} 
+                    subtitle={getTranslatedText('podlahove_kurenie', 'podnadpis') || ''} 
+                    price={formatPrice(CENY.podlahove_kurenie)} isPriced={true} t={t} 
+                    priceKey="podlahove_kurenie" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                  <EditableTile selected={pripravaNaKrb} onClick={() => setPripravaNaKrb(!pripravaNaKrb)} 
+                    title={getTranslatedText('pripravaKrb', 'nazov') || t('fireplacePrep')} 
+                    subtitle={getTranslatedText('pripravaKrb', 'podnadpis') || ''} 
+                    price={formatPrice(CENY.pripravaKrb)} isPriced={true} t={t} 
+                    priceKey="pripravaKrb" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                  <EditableTile selected={ochranaKachle} onClick={() => setOchranaKachle(!ochranaKachle)} 
+                    title={getTranslatedText('ochranaKachle', 'nazov') || t('stoveProtection')} 
+                    subtitle={getTranslatedText('ochranaKachle', 'podnadpis') || ''} 
+                    price={formatPrice(CENY.ochranaKachle)} isPriced={true} t={t} 
+                    priceKey="ochranaKachle" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Pokračovanie sekcií */}
+        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+          {/* FASÁDA */}
+          <Card className="p-3 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-300 shadow-md">
+            <h3 className="text-base font-bold text-purple-900 mb-2 flex items-center gap-2">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-purple-600 text-white text-sm mr-1">3</span>
+              🎨 {getTranslatedText('sekcia_fasada', 'nazov') || t('facadeSection') || 'Fasáda'}
+            </h3>
+            <div>
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                {getTranslatedText('fasada_typ', 'nazov') || t('facadeType') || 'Typ fasády:'}
+              </p>
+              <div className="grid grid-cols-2 gap-1.5 border border-purple-300 rounded-md p-1.5 bg-white/50">
+                <EditableTile selected={fasada === "drevo_smrek"} onClick={() => setFasada("drevo_smrek")} 
+                  title={getTranslatedText('fasada_drevo_smrek', 'nazov') || t('spruceWood')} 
+                  subtitle={getTranslatedText('fasada_drevo_smrek', 'podnadpis') || t('darkLight')} 
+                  price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={isAdmin} />
+                <EditableTile selected={fasada === "omietka"} onClick={() => setFasada("omietka")} 
+                  title={getTranslatedText('fasada_omietka', 'nazov') || t('scratchedPlaster')} 
+                  subtitle={getTranslatedText('fasada_omietka', 'podnadpis') || 'Baumit'} 
+                  price={formatPrice(CENY.fasada_omietka)} isPriced={true} t={t} 
+                  priceKey="fasada_omietka" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                <EditableTile selected={fasada === "smrekovec"} onClick={() => setFasada("smrekovec")} 
+                  title={getTranslatedText('fasada_smrekovec', 'nazov') || t('larch')} 
+                  subtitle={getTranslatedText('fasada_smrekovec', 'podnadpis') || ''} 
+                  price={formatPrice(CENY.fasada_smrekovec)} isPriced={true} t={t} 
+                  priceKey="fasada_smrekovec" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                <EditableTile selected={fasada === "falcovane"} onClick={() => setFasada("falcovane")} 
+                  title={getTranslatedText('fasada_falcovane', 'nazov') || t('foldedPanels')} 
+                  subtitle={getTranslatedText('fasada_falcovane', 'podnadpis') || ''} 
+                  price={formatPrice(CENY.fasada_falcovane)} isPriced={true} t={t} 
+                  priceKey="fasada_falcovane" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                <EditableTile selected={fasada === "thermowood"} onClick={() => setFasada("thermowood")} 
+                  title={getTranslatedText('fasada_thermowood', 'nazov') || 'Thermowood'} 
+                  subtitle={getTranslatedText('fasada_thermowood', 'podnadpis') || ''} 
+                  price={formatPrice(CENY.fasada_thermowood)} isPriced={true} t={t} 
+                  priceKey="fasada_thermowood" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+              </div>
+            </div>
+          </Card>
+
+          {/* STRECHA - pokračuje na ďalšej strane... */}
       </div>
 
       {/* Sidebar - Summary Panel */}
