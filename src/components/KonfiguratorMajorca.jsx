@@ -257,7 +257,7 @@ export default function KonfiguratorMajorca({
                 <EditableTile selected={rekuperacia === "nie" && !pripravaNaRekuperaciu} onClick={() => {setRekuperacia("nie"); setPripravaNaRekuperaciu(false);}} 
                   title={t('withoutRecuperation')} price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} t={t} isAdmin={isAdmin} />
                 <EditableTile selected={pripravaNaRekuperaciu} onClick={() => {setPripravaNaRekuperaciu(true); setRekuperacia("nie");}} 
-                  title={t('recuperationPrep') || 'Príprava na rekuperáciu'} price={formatPrice(CENY.pripravaNaRekuperaciu)} isPriced={true} isA0={true} t={t} isAdmin={isAdmin}
+                  title={getTranslatedText('pripravaNaRekuperaciu', 'nazov') || 'Príprava na rekuperáciu'} price={formatPrice(CENY.pripravaNaRekuperaciu)} isPriced={true} isA0={true} t={t} isAdmin={isAdmin}
                   priceKey="pripravaNaRekuperaciu" onPriceChange={(key, val) => CENY[key] = val} />
                 <EditableTile selected={rekuperacia === "ano"} onClick={() => {setRekuperacia("ano"); setPripravaNaRekuperaciu(false);}} 
                   title={t('recuperation')} subtitle={t('a0Required')} price={formatPrice(CENY.rekuperacia)} isPriced={true} isA0={true} t={t} isAdmin={isAdmin}
@@ -277,7 +277,7 @@ export default function KonfiguratorMajorca({
                   title={t('stoveProtection')} price={formatPrice(CENY.ochranaKachle)} isPriced={true} t={t} isAdmin={isAdmin}
                   priceKey="ochranaKachle" onPriceChange={(key, val) => CENY[key] = val} />
                 <EditableTile selected={klimatizacia} onClick={() => setKlimatizacia(!klimatizacia)} 
-                  title={t('airConditioningPrep') || 'Príprava na klimatizáciu'} price={formatPrice(CENY.klimatizacia)} isPriced={CENY.klimatizacia > 0} isA0={true} t={t} isAdmin={isAdmin}
+                  title={getTranslatedText('klimatizacia', 'nazov') || 'Príprava na klimatizáciu'} price={formatPrice(CENY.klimatizacia)} isPriced={CENY.klimatizacia > 0} isA0={true} t={t} isAdmin={isAdmin}
                   priceKey="klimatizacia" onPriceChange={(key, val) => CENY[key] = val} />
               </div>
             </div>

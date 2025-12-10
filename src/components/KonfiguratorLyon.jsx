@@ -698,7 +698,7 @@ export default function KonfiguratorLyon(props = {}) {
                   subtitle={getTranslatedText('rekuperacia_nie', 'podnadpis') || ''} 
                   price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} t={t} />
                 <Tile selected={pripravaNaRekuperaciu} onClick={() => {setPripravaNaRekuperaciu(true); setRekuperacia("nie");}} 
-                  title={getTranslatedText('pripravaNaRekuperaciu', 'nazov') || t('recuperationPrep') || 'Príprava'} 
+                  title={getTranslatedText('pripravaNaRekuperaciu', 'nazov') || 'Príprava na rekuperáciu'} 
                   subtitle={getTranslatedText('pripravaNaRekuperaciu', 'podnadpis') || ''} 
                   price="+ 512 €" isPriced={true} isA0={true} t={t} />
                 <Tile selected={rekuperacia === "ano"} onClick={() => {setRekuperacia("ano"); setPripravaNaRekuperaciu(false);}} 
@@ -727,7 +727,7 @@ export default function KonfiguratorLyon(props = {}) {
                   subtitle={getTranslatedText('ochranaKachle', 'podnadpis') || ''} 
                   price="+ 1 280 €" isPriced={true} t={t} />
                 <Tile selected={klimatizacia} onClick={() => setKlimatizacia(!klimatizacia)} 
-                  title={getTranslatedText('klimatizacia', 'nazov') || t('airConditioningPrep') || 'Príprava na klimatizáciu'} 
+                  title={getTranslatedText('klimatizacia', 'nazov') || 'Príprava na klimatizáciu'} 
                   subtitle={getTranslatedText('klimatizacia', 'podnadpis') || ''} 
                   price="+ 902 €" isPriced={true} isA0={true} t={t} />
               </div>

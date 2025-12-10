@@ -405,7 +405,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                     subtitle={getTranslatedText('rekuperacia_nie', 'podnadpis') || ''} 
                     price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} t={t} isAdmin={isAdmin} />
                   <EditableTile selected={pripravaNaRekuperaciu} onClick={() => {setPripravaNaRekuperaciu(true); setRekuperacia("nie");}} 
-                    title={getTranslatedText('pripravaNaRekuperaciu', 'nazov') || t('recuperationPrep') || 'Príprava'} 
+                    title={getTranslatedText('pripravaNaRekuperaciu', 'nazov') || 'Príprava na rekuperáciu'} 
                     subtitle={getTranslatedText('pripravaNaRekuperaciu', 'podnadpis') || ''} 
                     price={formatPrice(CENY.pripravaNaRekuperaciu)} isPriced={true} isA0={true} t={t} 
                     priceKey="pripravaNaRekuperaciu" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
@@ -439,7 +439,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                     price={formatPrice(CENY.ochranaKachle)} isPriced={true} t={t} 
                     priceKey="ochranaKachle" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
                   <EditableTile selected={klimatizacia} onClick={() => setKlimatizacia(!klimatizacia)} 
-                    title={getTranslatedText('klimatizacia', 'nazov') || t('airConditioningPrep') || 'Príprava na klimatizáciu'} 
+                    title={getTranslatedText('klimatizacia', 'nazov') || 'Príprava na klimatizáciu'} 
                     subtitle={getTranslatedText('klimatizacia', 'podnadpis') || ''} 
                     price={formatPrice(CENY.klimatizacia)} isPriced={CENY.klimatizacia > 0} isA0={true} t={t} 
                     priceKey="klimatizacia" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
