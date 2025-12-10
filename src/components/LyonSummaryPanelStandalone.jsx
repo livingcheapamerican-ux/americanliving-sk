@@ -393,6 +393,7 @@ export default function LyonSummaryPanelStandalone({
         elektro={elektro}
         bleskozvod={bleskozvod}
         prepat={prepat}
+        pripravaNaSolarnePanely={pripravaNaSolarnePanely}
         sprchovyKut={sprchovyKut}
         vana={vana}
         bateria={bateria}
