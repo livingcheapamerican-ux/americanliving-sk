@@ -36,8 +36,6 @@ export default function LyonKonfiguratorWrapper(props) {
   const setOdkvapy = props.setOdkvapy || (() => {});
   const okna = props.okna || "biele";
   const setOkna = props.setOkna || (() => {});
-  const sieteProtiHmyzu = props.sieteProtiHmyzu || false;
-  const setSieteProtiHmyzu = props.setSieteProtiHmyzu || (() => {});
   const vchodoveDvere = props.vchodoveDvere || "plastove";
   const setVchodoveDvere = props.setVchodoveDvere || (() => {});
   const obkladStien = props.obkladStien || "smrek_8cm";
@@ -174,7 +172,6 @@ export default function LyonKonfiguratorWrapper(props) {
     strecha, setStrecha,
     odkvapy, setOdkvapy,
     okna, setOkna,
-    sieteProtiHmyzu, setSieteProtiHmyzu,
     vchodoveDvere, setVchodoveDvere,
     obkladStien, setObkladStien,
     podlaha, setPodlaha,
