@@ -2924,7 +2924,7 @@ export default function DetailDomu() {
 
             </div>
 
-            {/* Sidebar pre všetky Ticabhouse domy */}
+            {/* Sidebar pre všetky Ticabhouse domy - rovnaké ako Lyon */}
             {isTicabhouse && (
               <div className="space-y-4">
                 <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
