@@ -18,12 +18,16 @@ export default function LyonKonfiguratorWrapper(props) {
   const setTepelneCerpadlo = props.setTepelneCerpadlo || (() => {});
   const rekuperacia = props.rekuperacia || "nie";
   const setRekuperacia = props.setRekuperacia || (() => {});
+  const pripravaNaRekuperaciu = props.pripravaNaRekuperaciu || false;
+  const setPripravaNaRekuperaciu = props.setPripravaNaRekuperaciu || (() => {});
   const podlahovoKurenie = props.podlahovoKurenie || false;
   const setPodlahovoKurenie = props.setPodlahovoKurenie || (() => {});
   const pripravaNaKrb = props.pripravaNaKrb || false;
   const setPripravaNaKrb = props.setPripravaNaKrb || (() => {});
   const ochranaKachle = props.ochranaKachle || false;
   const setOchranaKachle = props.setOchranaKachle || (() => {});
+  const klimatizacia = props.klimatizacia || false;
+  const setKlimatizacia = props.setKlimatizacia || (() => {});
   const fasada = props.fasada || "drevo_smrek";
   const setFasada = props.setFasada || (() => {});
   const strecha = props.strecha || "korugovan_plech";
@@ -32,6 +36,8 @@ export default function LyonKonfiguratorWrapper(props) {
   const setOdkvapy = props.setOdkvapy || (() => {});
   const okna = props.okna || "biele";
   const setOkna = props.setOkna || (() => {});
+  const sieteProtiHmyzu = props.sieteProtiHmyzu || false;
+  const setSieteProtiHmyzu = props.setSieteProtiHmyzu || (() => {});
   const vchodoveDvere = props.vchodoveDvere || "plastove";
   const setVchodoveDvere = props.setVchodoveDvere || (() => {});
   const obkladStien = props.obkladStien || "smrek_8cm";
@@ -74,13 +80,16 @@ export default function LyonKonfiguratorWrapper(props) {
     izolacia_podlahy: { "200mm": 334.08 },
     izolacia_stropu: { "200mm": 271.44 },
     tepelne_cerpadlo: { ano: 2889.27 },
+    pripravaNaRekuperaciu: 512,
     rekuperacia: { ano: 1155.36 },
     podlahove_kurenie: 2253.30,
+    klimatizacia: 902,
     pripravaKrb: 578.55,
     ochranaKachle: 1279.77,
     fasada: { omietka: 1580.79, smrekovec: 3349.50, falcovane: 4953.78, thermowood: 6677.25 },
     strecha: { falcovane: 3227.70 },
     odkvapy: 1502.49,
+    sieteProtiHmyzu: 640,
     dvere: { kovove: 278.40 },
     obklad: { smrek_bez_uzlov: 0, sadrokarton_tapeta: 7855, osb_panel: 5279 },
     dvere_posuvne: 427.17,
@@ -106,13 +115,16 @@ export default function LyonKonfiguratorWrapper(props) {
     total += CENY.izolacia_podlahy[izolaciaPodlahy] || 0;
     total += CENY.izolacia_stropu[izolaciaStropu] || 0;
     if (tepelneCerpadlo === "ano") total += CENY.tepelne_cerpadlo.ano;
+    if (pripravaNaRekuperaciu) total += CENY.pripravaNaRekuperaciu;
     if (rekuperacia === "ano") total += CENY.rekuperacia.ano;
     if (podlahovoKurenie) total += CENY.podlahove_kurenie;
+    if (klimatizacia) total += CENY.klimatizacia;
     if (pripravaNaKrb) total += CENY.pripravaKrb;
     if (ochranaKachle) total += CENY.ochranaKachle;
     total += CENY.fasada[fasada] || 0;
     total += CENY.strecha[strecha] || 0;
     if (odkvapy === "ano") total += CENY.odkvapy;
+    if (sieteProtiHmyzu) total += CENY.sieteProtiHmyzu;
     total += CENY.dvere[vchodoveDvere] || 0;
     total += CENY.obklad[obkladStien] || 0;
     if (interieroveDvere === "posuvne") total += CENY.dvere_posuvne;
@@ -131,8 +143,8 @@ export default function LyonKonfiguratorWrapper(props) {
     if (montaz) total += CENY.montaz;
     if (doprava) total += CENY.doprava;
     return total;
-  }, [izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia,
-      podlahovoKurenie, pripravaNaKrb, ochranaKachle, fasada, strecha, odkvapy, vchodoveDvere,
+  }, [izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu,
+      podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia, fasada, strecha, odkvapy, sieteProtiHmyzu, vchodoveDvere,
       obkladStien, interieroveDvere, elektro, bleskozvod, prepat, sprchovyKut, vana, bateria,
       skrinka, stropKupelna, inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava]);
 
@@ -149,13 +161,16 @@ export default function LyonKonfiguratorWrapper(props) {
     izolaciaStropu, setIzolaciaStropu,
     tepelneCerpadlo, setTepelneCerpadlo,
     rekuperacia, setRekuperacia,
+    pripravaNaRekuperaciu, setPripravaNaRekuperaciu,
     podlahovoKurenie, setPodlahovoKurenie,
     pripravaNaKrb, setPripravaNaKrb,
     ochranaKachle, setOchranaKachle,
+    klimatizacia, setKlimatizacia,
     fasada, setFasada,
     strecha, setStrecha,
     odkvapy, setOdkvapy,
     okna, setOkna,
+    sieteProtiHmyzu, setSieteProtiHmyzu,
     vchodoveDvere, setVchodoveDvere,
     obkladStien, setObkladStien,
     podlaha, setPodlaha,

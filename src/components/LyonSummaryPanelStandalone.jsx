@@ -378,13 +378,16 @@ export default function LyonSummaryPanelStandalone({
         izolaciaStropu={izolaciaStropu}
         tepelneCerpadlo={tepelneCerpadlo}
         rekuperacia={rekuperacia}
+        pripravaNaRekuperaciu={pripravaNaRekuperaciu}
         podlahovoKurenie={podlahovoKurenie}
         pripravaNaKrb={pripravaNaKrb}
         ochranaKachle={ochranaKachle}
+        klimatizacia={klimatizacia}
         fasada={fasada}
         strecha={strecha}
         odkvapy={odkvapy}
         okna={okna}
+        sieteProtiHmyzu={sieteProtiHmyzu}
         vchodoveDvere={vchodoveDvere}
         obkladStien={obkladStien}
         interieroveDvere={interieroveDvere}
