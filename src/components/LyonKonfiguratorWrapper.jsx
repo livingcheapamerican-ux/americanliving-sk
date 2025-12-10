@@ -161,6 +161,9 @@ export default function LyonKonfiguratorWrapper(props) {
   };
 
   const allProps = {
+    dom: props.dom,
+    totalPrice,
+    formatPrice,
     ucel, setUcel,
     izolaciaStien, setIzolaciaStien,
     izolaciaPodlahy, setIzolaciaPodlahy,
