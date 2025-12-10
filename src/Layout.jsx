@@ -235,6 +235,11 @@ function LayoutContent({ children }) {
                     <Sparkles className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
+                <Link to={createPageUrl("AdminPrekladyBlogov")}>
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Preklady blogov">
+                    <Languages className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                  </Button>
+                </Link>
                 <Link to={createPageUrl("TestAnalyzaKonfiguratora")}>
                   <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Test Analýza Konfiguratora">
                     <Sparkles className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
@@ -379,6 +384,14 @@ function LayoutContent({ children }) {
                   >
                     <Sparkles className="w-5 h-5" />
                     AI Generovanie obrázkov blogu
+                  </Link>
+                  <Link
+                    to={createPageUrl("AdminPrekladyBlogov")}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                  >
+                    <Languages className="w-5 h-5" />
+                    Preklady blogov
                   </Link>
                   </>
                   )}
