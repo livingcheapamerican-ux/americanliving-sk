@@ -423,6 +423,42 @@ export default function KonfiguratorLyon(props = {}) {
     doprava: 8927.94
   };
 
+  const totalPrice = useMemo(() => {
+    let total = BASE_PRICE;
+    total += CENY.izolacia_stien[izolaciaStien] || 0;
+    total += CENY.izolacia_podlahy[izolaciaPodlahy] || 0;
+    total += CENY.izolacia_stropu[izolaciaStropu] || 0;
+    if (tepelneCerpadlo === "ano") total += CENY.tepelne_cerpadlo.ano;
+    if (rekuperacia === "ano") total += CENY.rekuperacia.ano;
+    if (podlahovoKurenie) total += CENY.podlahove_kurenie;
+    if (pripravaNaKrb) total += CENY.pripravaKrb;
+    if (ochranaKachle) total += CENY.ochranaKachle;
+    total += CENY.fasada[fasada] || 0;
+    total += CENY.strecha[strecha] || 0;
+    if (odkvapy === "ano") total += CENY.odkvapy;
+    total += CENY.dvere[vchodoveDvere] || 0;
+    total += CENY.obklad[obkladStien] || 0;
+    if (interieroveDvere === "posuvne") total += CENY.dvere_posuvne;
+    total += CENY.elektro[elektro] || 0;
+    if (bleskozvod) total += CENY.bleskozvod;
+    if (prepat) total += CENY.prepat;
+    if (sprchovyKut === "radaway") total += CENY.sprchovyKut;
+    if (vana) total += CENY.vana;
+    if (bateria === "grohe") total += CENY.bateria;
+    if (skrinka) total += CENY.skrinka;
+    total += CENY.strop_kupelna[stropKupelna] || 0;
+    if (inziniering) total += CENY.inziniering;
+    if (projektACertifikacia) total += CENY.projektACertifikacia;
+    if (revizia) total += CENY.revizia;
+    total += CENY.zaklady[zaklady] || 0;
+    if (montaz) total += CENY.montaz;
+    if (doprava) total += CENY.doprava;
+    return total;
+  }, [izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia,
+      podlahovoKurenie, pripravaNaKrb, ochranaKachle, fasada, strecha, odkvapy, vchodoveDvere,
+      obkladStien, interieroveDvere, elektro, bleskozvod, prepat, sprchovyKut, vana, bateria,
+      skrinka, stropKupelna, inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava]);
+
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
   return (
@@ -1072,9 +1108,9 @@ export default function KonfiguratorLyon(props = {}) {
       <div className="xl:hidden sticky bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white p-3 shadow-2xl z-50 mt-4 rounded-t-2xl border-t-4 border-white/20">
         <div className="flex justify-between items-center gap-3">
           <div className="flex-1">
-            <p className="text-[10px] text-white/70 mb-0.5">{t('priceWillBeCalculated') || 'Cena bude vypočítaná'}</p>
+            <p className="text-[10px] text-white/70 mb-0.5">{t('totalPriceWithVAT') || 'Celková cena s DPH'}</p>
             <p className="text-xl sm:text-2xl font-black text-white drop-shadow-lg">
-              {t('configurator') || 'Konfigurátor'}
+              {formatPrice(totalPrice)}
             </p>
           </div>
           <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-xl text-xs sm:text-sm h-9 sm:h-10 px-4 sm:px-6 rounded-xl">
