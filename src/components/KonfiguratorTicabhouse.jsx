@@ -102,66 +102,66 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
     let price = dom?.zakladna_cena || 0;
 
     // Izolácia
-    if (izolaciaStien === "200mm") price += CENY.izolacia_stien_200mm;
-    if (izolaciaStien === "250mm") price += CENY.izolacia_stien_250mm;
-    if (izolaciaPodlahy === "200mm") price += CENY.izolacia_podlahy_200mm;
-    if (izolaciaStropu === "200mm") price += CENY.izolacia_stropu_200mm;
+    if (izolaciaStien === "200mm") price += CENY.izolacia_stien_200mm || 0;
+    if (izolaciaStien === "250mm") price += CENY.izolacia_stien_250mm || 0;
+    if (izolaciaPodlahy === "200mm") price += CENY.izolacia_podlahy_200mm || 0;
+    if (izolaciaStropu === "200mm") price += CENY.izolacia_stropu_200mm || 0;
 
     // Vykurovanie
-    if (tepelneCerpadlo === "ano") price += CENY.tepelne_cerpadlo;
-    if (pripravaNaRekuperaciu) price += CENY.pripravaNaRekuperaciu;
-    if (rekuperacia === "ano") price += CENY.rekuperacia;
-    if (podlahovoKurenie) price += CENY.podlahove_kurenie;
-    if (klimatizacia) price += CENY.klimatizacia;
-    if (pripravaNaKrb) price += CENY.pripravaKrb;
-    if (ochranaKachle) price += CENY.ochranaKachle;
+    if (tepelneCerpadlo === "ano") price += CENY.tepelne_cerpadlo || 0;
+    if (pripravaNaRekuperaciu) price += CENY.pripravaNaRekuperaciu || 0;
+    if (rekuperacia === "ano") price += CENY.rekuperacia || 0;
+    if (podlahovoKurenie) price += CENY.podlahove_kurenie || 0;
+    if (klimatizacia) price += CENY.klimatizacia || 0;
+    if (pripravaNaKrb) price += CENY.pripravaKrb || 0;
+    if (ochranaKachle) price += CENY.ochranaKachle || 0;
 
     // Fasáda
-    if (fasada === "omietka") price += CENY.fasada_omietka;
-    if (fasada === "smrekovec") price += CENY.fasada_smrekovec;
-    if (fasada === "falcovane") price += CENY.fasada_falcovane;
-    if (fasada === "thermowood") price += CENY.fasada_thermowood;
+    if (fasada === "omietka") price += CENY.fasada_omietka || 0;
+    if (fasada === "smrekovec") price += CENY.fasada_smrekovec || 0;
+    if (fasada === "falcovane") price += CENY.fasada_falcovane || 0;
+    if (fasada === "thermowood") price += CENY.fasada_thermowood || 0;
 
     // Strecha
-    if (strecha === "falcovane") price += CENY.strecha_falcovane;
-    if (odkvapy === "ano") price += CENY.odkvapy;
+    if (strecha === "falcovane") price += CENY.strecha_falcovane || 0;
+    if (odkvapy === "ano") price += CENY.odkvapy || 0;
 
     // Dvere
-    if (vchodoveDvere === "kovove") price += CENY.dvere_kovove;
+    if (vchodoveDvere === "kovove") price += CENY.dvere_kovove || 0;
 
     // Interiér
-    if (obkladStien === "smrek_bez_uzlov") price += CENY.obklad_smrek_bez_uzlov;
-    if (obkladStien === "sadrokarton_tapeta") price += CENY.obklad_sadrokarton_tapeta;
-    if (obkladStien === "osb_panel") price += CENY.obklad_osb_panel;
-    if (interieroveDvere === "posuvne") price += CENY.dvere_posuvne;
+    if (obkladStien === "smrek_bez_uzlov") price += CENY.obklad_smrek_bez_uzlov || 0;
+    if (obkladStien === "sadrokarton_tapeta") price += CENY.obklad_sadrokarton_tapeta || 0;
+    if (obkladStien === "osb_panel") price += CENY.obklad_osb_panel || 0;
+    if (interieroveDvere === "posuvne") price += CENY.dvere_posuvne || 0;
 
     // Elektro
-    if (elektro === "cz") price += CENY.elektro_cz;
-    if (elektro === "ge") price += CENY.elektro_ge;
-    if (bleskozvod) price += CENY.bleskozvod;
-    if (prepat) price += CENY.prepat;
+    if (elektro === "cz") price += CENY.elektro_cz || 0;
+    if (elektro === "ge") price += CENY.elektro_ge || 0;
+    if (bleskozvod) price += CENY.bleskozvod || 0;
+    if (prepat) price += CENY.prepat || 0;
     if (pripravaNaSolarnePanely) price += CENY.pripravaNaSolarnePanely || 0;
 
     // Kúpeľňa
-    if (sprchovyKut === "radaway") price += CENY.sprchovyKut;
-    if (vana) price += CENY.vana;
-    if (bateria === "grohe") price += CENY.bateria;
-    if (skrinka) price += CENY.skrinka;
-    if (stropKupelna === "sadrokarton") price += CENY.strop_kupelna_sadrokarton;
+    if (sprchovyKut === "radaway") price += CENY.sprchovyKut || 0;
+    if (vana) price += CENY.vana || 0;
+    if (bateria === "grohe") price += CENY.bateria || 0;
+    if (skrinka) price += CENY.skrinka || 0;
+    if (stropKupelna === "sadrokarton") price += CENY.strop_kupelna_sadrokarton || 0;
 
     // Služby
-    if (inziniering) price += CENY.inziniering;
-    if (projektACertifikacia) price += CENY.projektACertifikacia;
-    if (revizia) price += CENY.revizia;
+    if (inziniering) price += CENY.inziniering || 0;
+    if (projektACertifikacia) price += CENY.projektACertifikacia || 0;
+    if (revizia) price += CENY.revizia || 0;
 
     // Základy
-    if (zaklady === "vruty") price += CENY.zaklady_vruty;
-    if (zaklady === "patky") price += CENY.zaklady_patky;
-    if (zaklady === "pasove") price += CENY.zaklady_pasove;
+    if (zaklady === "vruty") price += CENY.zaklady_vruty || 0;
+    if (zaklady === "patky") price += CENY.zaklady_patky || 0;
+    if (zaklady === "pasove") price += CENY.zaklady_pasove || 0;
 
     // Realizácia
-    if (montaz) price += CENY.montaz;
-    if (doprava) price += CENY.doprava;
+    if (montaz) price += CENY.montaz || 0;
+    if (doprava) price += CENY.doprava || 0;
 
     return price;
   }, [
