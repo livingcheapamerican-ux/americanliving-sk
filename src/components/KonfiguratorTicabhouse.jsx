@@ -269,6 +269,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                 setIzolaciaPodlahy("200mm");
                 setIzolaciaStropu("200mm");
                 setTepelneCerpadlo("ano");
+                setPripravaNaRekuperaciu(true);
                 setRekuperacia("ano");
                 setInziniering(true);
                 setProjektACertifikacia(true);
