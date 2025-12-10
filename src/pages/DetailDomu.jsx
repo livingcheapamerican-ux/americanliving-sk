@@ -1230,6 +1230,7 @@ export default function DetailDomu() {
             {/* Konfigurátor pre Lyon (Ticab house) */}
             {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
               <LyonKonfiguratorWrapper
+                dom={dom}
                 ucel={lyonUcel}
                 setUcel={setLyonUcel}
                 izolaciaStien={lyonIzolaciaStien}
@@ -1274,6 +1275,8 @@ export default function DetailDomu() {
                 setBleskozvod={setLyonBleskozvod}
                 prepat={lyonPrepat}
                 setPrepat={setLyonPrepat}
+                pripravaNaSolarnePanely={lyonPripravaNaSolarnePanely}
+                setPripravaNaSolarnePanely={setLyonPripravaNaSolarnePanely}
                 sprchovyKut={lyonSprchovyKut}
                 setSprchovyKut={setLyonSprchovyKut}
                 vana={lyonVana}
