@@ -472,7 +472,8 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin }) {
             </div>
           </Card>
 
-          {/* STRECHA - pokračuje na ďalšej strane... */}
+          {/* STRECHA a ostatné sekcie budú doplnené neskôr */}
+        </div>
       </div>
 
       {/* Sidebar - Summary Panel */}
