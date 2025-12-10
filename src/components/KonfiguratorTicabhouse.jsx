@@ -193,7 +193,6 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
   React.useEffect(() => { if (setPripravaNaSolarnePanely) setPripravaNaSolarnePanely(pripravaNaSolarnePanely); }, [pripravaNaSolarnePanely]);
   React.useEffect(() => { if (setPripravaNaRekuperaciu) setPripravaNaRekuperaciu(pripravaNaRekuperaciu); }, [pripravaNaRekuperaciu]);
   React.useEffect(() => { if (setKlimatizacia) setKlimatizacia(klimatizacia); }, [klimatizacia]);
-  React.useEffect(() => { if (setSieteProtiHmyzu) setSieteProtiHmyzu(sieteProtiHmyzu); }, [sieteProtiHmyzu]);
   React.useEffect(() => { if (setSprchovyKut) setSprchovyKut(sprchovyKut); }, [sprchovyKut]);
   React.useEffect(() => { if (setVana) setVana(vana); }, [vana]);
   React.useEffect(() => { if (setBateria) setBateria(bateria); }, [bateria]);
