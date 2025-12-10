@@ -5966,6 +5966,15 @@ const translations = {
     thankYou: "Thank you for your message!",
     messageSuccess: "Your message has been successfully sent. We will contact you as soon as possible, usually within 24 hours.",
     
+    // Happy Wife konfigurator
+    floorHeatingIncluded: "Floor heating included in price (ground floor + bathroom on upper floor)",
+    projectEnergyClassification: "Project: Project (possibility of energy classification)",
+    fullyAssembledInterior: "Fully assembled interior (furniture design)",
+    interiorSelectionFromSamples: "Interior selection based on provided sample catalog",
+    bathroomIncluded: "Bathroom included in price (ground floor + upper floor)",
+    kitchenIncluded: "Kitchen included in price (furniture + backsplash)",
+    acPreparationIncluded: "Air conditioning: Preparation included in price (ground floor + upper floor)",
+    
     // House detail
     basicParameters: "Basic parameters",
     basicConfiguration: "Basic configuration",
@@ -6158,15 +6167,6 @@ const translations = {
     sending: "Sending...",
     needQuickAnswer: "Need a quick answer?",
     callOrEmail: "Call us directly or send an email. We'll be happy to answer all your questions.",
-    
-    // Happy Wife konfigurator - EN
-    floorHeatingIncluded: "Floor heating included in price (ground floor + bathroom on upper floor)",
-    projectEnergyClassification: "Project: Project (possibility of energy classification)",
-    fullyAssembledInterior: "Fully assembled interior (furniture design)",
-    interiorSelectionFromSamples: "Interior selection based on provided sample catalog",
-    bathroomIncluded: "Bathroom included in price (ground floor + upper floor)",
-    kitchenIncluded: "Kitchen included in price (furniture + backsplash)",
-    acPreparationIncluded: "Air conditioning: Preparation included in price (ground floor + upper floor)",
   },
   
   hu: {
@@ -6790,6 +6790,15 @@ const translations = {
     sendMessage: "Üzenet küldése",
     thankYou: "Köszönjük üzenetét!",
     messageSuccess: "Üzenete sikeresen elküldve. Hamarosan felvesszük Önnel a kapcsolatot, általában 24 órán belül.",
+    
+    // Happy Wife konfigurator
+    floorHeatingIncluded: "Padlófűtés az árban (földszint + fürdőszoba emeleten)",
+    projectEnergyClassification: "Projekt: Projekt (energetikai besorolás lehetősége)",
+    fullyAssembledInterior: "Teljesen összeszerelt belső tér (bútor design)",
+    interiorSelectionFromSamples: "Belső tér kiválasztása a biztosított mintakatalógus alapján",
+    bathroomIncluded: "Fürdőszoba az árban (földszint + emelet)",
+    kitchenIncluded: "Konyha az árban (bútor + hátfal)",
+    acPreparationIncluded: "Légkondicionálás: Előkészítés az árban (földszint + emelet)",
     
     // House detail
     basicParameters: "Alapvető paraméterek",
@@ -7555,6 +7564,15 @@ const translations = {
     sendMessage: "Wyślij wiadomość",
     thankYou: "Dziękujemy za wiadomość!",
     messageSuccess: "Twoja wiadomość została pomyślnie wysłana. Skontaktujemy się z Tobą jak najszybciej, zwykle w ciągu 24 godzin.",
+    
+    // Happy Wife konfigurator
+    floorHeatingIncluded: "Ogrzewanie podłogowe w cenie (parter + łazienka na piętrze)",
+    projectEnergyClassification: "Projekt: Projekt (możliwość klasyfikacji energetycznej)",
+    fullyAssembledInterior: "Pełne wykończenie wnętrza (projekt mebli)",
+    interiorSelectionFromSamples: "Wybór wnętrza na podstawie dostarczonego katalogu wzorów",
+    bathroomIncluded: "Łazienka w cenie (parter + piętro)",
+    kitchenIncluded: "Kuchnia w cenie (meble + ściana)",
+    acPreparationIncluded: "Klimatyzacja: Przygotowanie w cenie (parter + piętro)",
     
     // House detail
     basicParameters: "Podstawowe parametry",
@@ -8361,6 +8379,15 @@ const translations = {
     sendMessage: "Надіслати повідомлення",
     thankYou: "Дякуємо за ваше повідомлення!",
     messageSuccess: "Ваше повідомлення успішно надіслано. Ми зв'яжемося з вами якнайшвидше, зазвичай протягом 24 годин.",
+    
+    // Happy Wife konfigurator
+    floorHeatingIncluded: "Підлогове опалення в ціні (перший поверх + ванна на другому поверсі)",
+    projectEnergyClassification: "Проект: Проект (можливість енергетичної класифікації)",
+    fullyAssembledInterior: "Повністю зібраний інтер'єр (дизайн меблів)",
+    interiorSelectionFromSamples: "Вибір інтер'єру на основі наданого каталогу зразків",
+    bathroomIncluded: "Ванна кімната в ціні (перший поверх + другий поверх)",
+    kitchenIncluded: "Кухня в ціні (меблі + фартух)",
+    acPreparationIncluded: "Кондиціонування: Підготовка в ціні (перший поверх + другий поверх)",
     
     // House detail
     basicParameters: "Основні параметри",
