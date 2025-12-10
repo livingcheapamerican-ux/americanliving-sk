@@ -75,7 +75,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
     doprava: 8927.94
   };
 
-  const CENY = dom?.konfigurator_ceny || DEFAULT_CENY;
+  const CENY = {
+    ...DEFAULT_CENY,
+    ...(dom?.konfigurator_ceny || {})
+  };
   const [kolaudacia, setKolaudacia] = useState("bez_a0");
 
   // Mutácia pre aktualizáciu cien

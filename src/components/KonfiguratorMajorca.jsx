@@ -38,7 +38,7 @@ export default function KonfiguratorMajorca({
     return translatedField || text[field] || '';
   };
 
-  const CENY = dom?.konfigurator_ceny || {
+  const DEFAULT_CENY_MAJORCA = {
     izolacia_stien_200mm: 1695,
     izolacia_stien_250mm: 1599,
     izolacia_podlahy_200mm: 256,
@@ -79,7 +79,12 @@ export default function KonfiguratorMajorca({
     zaklady_pasove: 5187,
     montaz: 4572,
     doprava: 5883
-  };
+    };
+
+    const CENY = {
+    ...DEFAULT_CENY_MAJORCA,
+    ...(dom?.konfigurator_ceny || {})
+    };
 
   const formatPrice = (price) => {
     const num = typeof price === 'number' ? price : parseFloat(price);
