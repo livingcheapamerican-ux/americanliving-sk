@@ -456,13 +456,13 @@ export default function KonfiguratorLyon(props = {}) {
             }`}
           >
             <h4 className="text-sm sm:text-base font-bold text-gray-900 mb-1">
-              {getTranslatedText('ucel_rekreacna', 'nazov') || 'Rekreačná stavba'}
+              {getTranslatedText('ucel_rekreacna', 'nazov') || t('recreationalBuilding')}
             </h4>
             <p className="text-xs sm:text-sm text-blue-600 font-semibold mb-1">
-              {getTranslatedText('ucel_rekreacna', 'podnadpis') || 'Ekonomická voľba'}
+              {getTranslatedText('ucel_rekreacna', 'podnadpis') || t('economicChoice')}
             </p>
             <ul className="space-y-0.5 text-[11px] sm:text-xs text-gray-600">
-              {(getTranslatedText('ucel_rekreacna', 'dlhy_popis') || 'Chata, záhradný domček\nCeloročná izolácia 150/200mm\nBez energetického certifikátu\nNižšia cena')
+              {(getTranslatedText('ucel_rekreacna', 'dlhy_popis') || t('recreationalBuildingDesc'))
                 .split('\n')
                 .map((line, i) => <li key={i}>• {line}</li>)}
             </ul>
@@ -500,12 +500,12 @@ export default function KonfiguratorLyon(props = {}) {
           >
             <div className="flex items-center gap-2 mb-1">
               <h4 className="text-sm sm:text-base font-bold text-gray-900">
-                {getTranslatedText('ucel_rodinny', 'nazov') || 'Rodinný dom A0'}
+                {getTranslatedText('ucel_rodinny', 'nazov') || t('familyHouseA0')}
               </h4>
               <Badge className="bg-green-600 text-white text-[8px] sm:text-[9px]">⚡</Badge>
             </div>
             <ul className="space-y-0.5 text-[11px] sm:text-xs text-gray-600">
-              {(getTranslatedText('ucel_rodinny', 'dlhy_popis') || 'Celoročné bývanie\nEnergetický certifikát A0\nPremium izolácia 250/300mm\nTepelné čerpadlo + Rekuperácia\nMožnosť trvalého pobytu')
+              {(getTranslatedText('ucel_rodinny', 'dlhy_popis') || t('familyHouseA0Desc'))
                 .split('\n')
                 .map((line, i) => <li key={i}>• {line}</li>)}
             </ul>
@@ -518,7 +518,7 @@ export default function KonfiguratorLyon(props = {}) {
         <Card className="p-2 mb-3 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-300">
           <h3 className="text-xs font-bold text-green-900 mb-2 flex items-center gap-1">
             <Sparkles className="w-4 h-4 text-green-600" />
-            Kolaudácia
+            {t('approval') || 'Kolaudácia'}
           </h3>
           <div className="grid grid-cols-2 gap-2">
           <Tile selected={kolaudacia === "bez_a0"} onClick={() => {
@@ -533,7 +533,7 @@ export default function KonfiguratorLyon(props = {}) {
             setBleskozvod(true);
             setPrepat(true);
             setElektro("ge");
-          }} title={t('withA0Approval') || "S kolaudáciou A0"} subtitle={t('adminProcess') || "Admin proces"} price="0 €" isPriced={false} isA0={true} t={t} />
+          }} title={t('withA0Approval')} subtitle={t('adminProcess')} price="0 €" isPriced={false} isA0={true} t={t} />
           </div>
         </Card>
       )}

@@ -2977,23 +2977,23 @@ export default function DetailDomu() {
                         <div className="flex items-start gap-3">
                           <div className="text-yellow-600 text-2xl">⚠️</div>
                           <div>
-                            <h4 className="text-yellow-900 font-bold mb-2">Rekreačná stavba</h4>
+                            <h4 className="text-yellow-900 font-bold mb-2">{t('recreationalBuilding')}</h4>
                             <p className="text-yellow-800 text-sm mb-3">
-                              Pre skolaudovanie ako rodinný dom musíte vybrať všetky povinné A0 položky označené <span className="text-green-600 font-bold">⚡A0</span> v konfigurátore.
+                              {t('toApproveAsFamilyHouse') || 'Pre skolaudovanie ako rodinný dom musíte vybrať všetky povinné A0 položky označené'} <span className="text-green-600 font-bold">⚡A0</span> {t('inConfigurator') || 'v konfigurátore'}.
                             </p>
                             <div className="text-xs text-yellow-700">
-                              <p className="font-semibold mb-1">Chýbajúce A0 položky:</p>
+                              <p className="font-semibold mb-1">{t('missingA0ItemsList') || 'Chýbajúce A0 položky'}:</p>
                               <ul className="list-disc list-inside space-y-0.5">
-                                {lyonIzolaciaStien !== "250mm" && <li>Izolácia stien 250mm</li>}
-                                {lyonIzolaciaPodlahy !== "200mm" && <li>Izolácia podlahy 200mm</li>}
-                                {lyonIzolaciaStropu !== "200mm" && <li>Izolácia stropu 200mm</li>}
-                                {lyonTepelneCerpadlo !== "ano" && <li>Tepelné čerpadlo</li>}
-                                {lyonRekuperacia !== "ano" && <li>Rekuperácia</li>}
-                                {lyonElektro !== "ge" && <li>GE elektroinštalácia</li>}
-                                {!lyonBleskozvod && <li>Bleskozvod</li>}
-                                {!lyonPrepat && <li>Prepäťová ochrana</li>}
-                                {!lyonInziniering && <li>Inžiniering</li>}
-                                {!lyonProjektACertifikacia && <li>Projekt + Certifikácia A0</li>}
+                                {lyonIzolaciaStien !== "250mm" && <li>{t('insulation')} {t('walls')} 250mm</li>}
+                                {lyonIzolaciaPodlahy !== "200mm" && <li>{t('insulation')} {t('floors')} 200mm</li>}
+                                {lyonIzolaciaStropu !== "200mm" && <li>{t('insulation')} {t('roof')} 200mm</li>}
+                                {lyonTepelneCerpadlo !== "ano" && <li>{t('heatPump')}</li>}
+                                {lyonRekuperacia !== "ano" && <li>{t('recuperation')}</li>}
+                                {lyonElektro !== "ge" && <li>GE {t('electricalInstallation')}</li>}
+                                {!lyonBleskozvod && <li>{t('lightningRod')}</li>}
+                                {!lyonPrepat && <li>{t('surgeProtection')}</li>}
+                                {!lyonInziniering && <li>{t('engineering')}</li>}
+                                {!lyonProjektACertifikacia && <li>{t('projectCertification')} A0</li>}
                               </ul>
                             </div>
                           </div>
@@ -3006,9 +3006,9 @@ export default function DetailDomu() {
                         <div className="flex items-start gap-3">
                           <div className="text-green-600 text-2xl">✅</div>
                           <div>
-                            <h4 className="text-green-900 font-bold mb-1">Rodinný dom A0</h4>
+                            <h4 className="text-green-900 font-bold mb-1">{t('familyHouseA0')}</h4>
                             <p className="text-green-800 text-sm">
-                              Vaša konfigurácia zahŕňa všetky potrebné A0 položky. Dom môže byť skolaudovaný ako energeticky efektívny rodinný dom.
+                              {t('configIncludesAllA0') || 'Vaša konfigurácia zahŕňa všetky potrebné A0 položky. Dom môže byť skolaudovaný ako energeticky efektívny rodinný dom.'}
                             </p>
                           </div>
                         </div>
@@ -3020,9 +3020,9 @@ export default function DetailDomu() {
                         <div className="flex items-start gap-3">
                           <div className="text-blue-600 text-2xl">ℹ️</div>
                           <div>
-                            <h4 className="text-blue-900 font-bold mb-1">Rekreačná stavba</h4>
+                            <h4 className="text-blue-900 font-bold mb-1">{t('recreationalBuilding')}</h4>
                             <p className="text-blue-800 text-sm">
-                              Dom je nakonfigurovaný ako rekreačná stavba. Pre rodinný dom s A0 certifikátom vyberte zodpovedajúcu možnosť v konfigurátore.
+                              {t('houseConfiguredAsRecreational') || 'Dom je nakonfigurovaný ako rekreačná stavba. Pre rodinný dom s A0 certifikátom vyberte zodpovedajúcu možnosť v konfigurátore.'}
                             </p>
                           </div>
                         </div>
