@@ -12,11 +12,12 @@ export default function KonfiguratorMajorca({
   dom, isAdmin,
   ucel, setUcel, izolaciaStien, setIzolaciaStien, izolaciaPodlahy, setIzolaciaPodlahy,
   izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia,
-  podlahovoKurenie, setPodlahovoKurenie, pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle,
-  fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna,
+  pripravaNaRekuperaciu, setPripravaNaRekuperaciu, podlahovoKurenie, setPodlahovoKurenie, 
+  pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle, klimatizacia, setKlimatizacia,
+  fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna, sieteProtiHmyzu, setSieteProtiHmyzu,
   vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha,
   interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod,
-  prepat, setPrepat, klimatizacia, setKlimatizacia, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria,
+  prepat, setPrepat, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria,
   skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering,
   projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady,
   montaz, setMontaz, doprava, setDoprava
@@ -43,17 +44,19 @@ export default function KonfiguratorMajorca({
     izolacia_podlahy_200mm: 256,
     izolacia_stropu_200mm: 204,
     tepelne_cerpadlo: 2889,
+    pripravaNaRekuperaciu: 256,
     rekuperacia: 1155,
     podlahove_kurenie: 1850,
+    klimatizacia: 710,
     pripravaKrb: 579,
     ochranaKachle: 1280,
-    klimatizacia: 0,
     fasada_omietka: 1734,
     fasada_smrekovec: 2850,
     fasada_falcovane: 4200,
     fasada_thermowood: 5398,
     strecha_falcovane: 2150,
     odkvapy: 950,
+    sieteProtiHmyzu: 384,
     dvere_kovove: 278,
     obklad_smrek_bez_uzlov: 0,
     obklad_sadrokarton_tapeta: 5200,
@@ -105,7 +108,9 @@ export default function KonfiguratorMajorca({
   React.useEffect(() => { if (setElektro) setElektro(elektro); }, [elektro]);
   React.useEffect(() => { if (setBleskozvod) setBleskozvod(bleskozvod); }, [bleskozvod]);
   React.useEffect(() => { if (setPrepat) setPrepat(prepat); }, [prepat]);
+  React.useEffect(() => { if (setPripravaNaRekuperaciu) setPripravaNaRekuperaciu(pripravaNaRekuperaciu); }, [pripravaNaRekuperaciu]);
   React.useEffect(() => { if (setKlimatizacia) setKlimatizacia(klimatizacia); }, [klimatizacia]);
+  React.useEffect(() => { if (setSieteProtiHmyzu) setSieteProtiHmyzu(sieteProtiHmyzu); }, [sieteProtiHmyzu]);
   React.useEffect(() => { if (setSprchovyKut) setSprchovyKut(sprchovyKut); }, [sprchovyKut]);
   React.useEffect(() => { if (setVana) setVana(vana); }, [vana]);
   React.useEffect(() => { if (setBateria) setBateria(bateria); }, [bateria]);
@@ -247,10 +252,13 @@ export default function KonfiguratorMajorca({
             </div>
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('ventilation')}</p>
-              <div className="grid grid-cols-2 gap-1.5 border border-orange-300 rounded-md p-1.5 bg-white/50">
-                <EditableTile selected={rekuperacia === "nie"} onClick={() => setRekuperacia("nie")} 
+              <div className="grid grid-cols-3 gap-1.5 border border-orange-300 rounded-md p-1.5 bg-white/50">
+                <EditableTile selected={rekuperacia === "nie" && !pripravaNaRekuperaciu} onClick={() => {setRekuperacia("nie"); setPripravaNaRekuperaciu(false);}} 
                   title={t('withoutRecuperation')} price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} t={t} isAdmin={isAdmin} />
-                <EditableTile selected={rekuperacia === "ano"} onClick={() => setRekuperacia("ano")} 
+                <EditableTile selected={pripravaNaRekuperaciu} onClick={() => {setPripravaNaRekuperaciu(true); setRekuperacia("nie");}} 
+                  title={t('recuperationPrep') || 'Príprava na rekuperáciu'} price={formatPrice(CENY.pripravaNaRekuperaciu)} isPriced={true} t={t} isAdmin={isAdmin}
+                  priceKey="pripravaNaRekuperaciu" onPriceChange={(key, val) => CENY[key] = val} />
+                <EditableTile selected={rekuperacia === "ano"} onClick={() => {setRekuperacia("ano"); setPripravaNaRekuperaciu(false);}} 
                   title={t('recuperation')} subtitle={t('a0Required')} price={formatPrice(CENY.rekuperacia)} isPriced={true} isA0={true} t={t} isAdmin={isAdmin}
                   priceKey="rekuperacia" onPriceChange={(key, val) => CENY[key] = val} />
               </div>
@@ -358,6 +366,14 @@ export default function KonfiguratorMajorca({
                 <EditableTile selected={vchodoveDvere === "kovove"} onClick={() => setVchodoveDvere("kovove")} 
                   title={t('metalDoors')} price={formatPrice(CENY.dvere_kovove)} isPriced={true} t={t} isAdmin={isAdmin}
                   priceKey="dvere_kovove" onPriceChange={(key, val) => CENY[key] = val} />
+              </div>
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('windowExtras') || 'Doplnky k oknám:'}</p>
+              <div className="border border-cyan-300 rounded-md p-1.5 bg-white/50">
+                <EditableTile selected={sieteProtiHmyzu} onClick={() => setSieteProtiHmyzu(!sieteProtiHmyzu)} 
+                  title={t('insectScreens') || 'Siete proti hmyzu'} price={formatPrice(CENY.sieteProtiHmyzu)} isPriced={true} t={t} isAdmin={isAdmin}
+                  priceKey="sieteProtiHmyzu" onPriceChange={(key, val) => CENY[key] = val} />
               </div>
             </div>
           </div>
