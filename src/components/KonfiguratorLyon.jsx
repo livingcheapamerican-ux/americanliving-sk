@@ -547,7 +547,7 @@ export default function KonfiguratorLyon(props = {}) {
         <Card className="p-3 bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300 shadow-md">
           <h3 className="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
             <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-sm mr-1">1</span>
-            🏠 {getTranslatedText('sekcia_izolacia', 'nazov') || 'Izolácia'}
+            🏠 {getTranslatedText('sekcia_izolacia', 'nazov') || t('insulationSection') || 'Izolácia'}
           </h3>
           <div className="space-y-2">
             {/* Steny */}
@@ -611,7 +611,7 @@ export default function KonfiguratorLyon(props = {}) {
         <Card className="p-3 bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-300 shadow-md">
           <h3 className="text-base font-bold text-orange-900 mb-2 flex items-center gap-2">
             <span className="flex items-center justify-center w-6 h-6 rounded-full bg-orange-600 text-white text-sm mr-1">2</span>
-            🔥 {getTranslatedText('sekcia_vykurovanie', 'nazov') || 'Vykurovanie'}
+            🔥 {getTranslatedText('sekcia_vykurovanie', 'nazov') || t('heatingSection') || 'Vykurovanie'}
           </h3>
           <div className="space-y-2">
             {/* Tepelné čerpadlo */}
@@ -678,7 +678,7 @@ export default function KonfiguratorLyon(props = {}) {
           <Card className="p-3 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-300 shadow-md">
             <h3 className="text-base font-bold text-purple-900 mb-2 flex items-center gap-2">
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-purple-600 text-white text-sm mr-1">3</span>
-              🎨 {getTranslatedText('sekcia_fasada', 'nazov') || 'Fasáda'}
+              🎨 {getTranslatedText('sekcia_fasada', 'nazov') || t('facadeSection') || 'Fasáda'}
             </h3>
           <div>
             <p className="text-[11px] font-semibold text-gray-700 mb-1">
@@ -713,7 +713,7 @@ export default function KonfiguratorLyon(props = {}) {
         <Card className="p-3 bg-gradient-to-br from-indigo-50 to-blue-50 border-2 border-indigo-300 shadow-md">
           <h3 className="text-base font-bold text-indigo-900 mb-2 flex items-center gap-2">
             <span className="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-600 text-white text-sm mr-1">4</span>
-            🏠 {getTranslatedText('sekcia_strecha', 'nazov') || 'Strecha'}
+            🏠 {getTranslatedText('sekcia_strecha', 'nazov') || t('roofSection') || 'Strecha'}
           </h3>
           <div className="space-y-2">
             {/* Krytina */}
@@ -759,7 +759,7 @@ export default function KonfiguratorLyon(props = {}) {
           <Card className="p-3 bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-cyan-300 shadow-md">
             <h3 className="text-base font-bold text-cyan-900 mb-2 flex items-center gap-2">
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-cyan-600 text-white text-sm mr-1">5</span>
-              🚪 {getTranslatedText('sekcia_okna_dvere', 'nazov') || 'Okná a dvere'}
+              🚪 {getTranslatedText('sekcia_okna_dvere', 'nazov') || t('windowsDoorsSection') || 'Okná a dvere'}
             </h3>
             <div className="space-y-2">
             {/* Okná */}
@@ -806,7 +806,7 @@ export default function KonfiguratorLyon(props = {}) {
         <Card className="p-3 bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300 shadow-md">
           <h3 className="text-base font-bold text-amber-900 mb-2 flex items-center gap-2">
             <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-600 text-white text-sm mr-1">6</span>
-            🛋️ {getTranslatedText('sekcia_interier', 'nazov') || 'Interiér'}
+            🛋️ {getTranslatedText('sekcia_interier', 'nazov') || t('interiorSection') || 'Interiér'}
           </h3>
           <div className="space-y-2">
             {/* Obklad stien */}
@@ -873,7 +873,7 @@ export default function KonfiguratorLyon(props = {}) {
           <Card className="p-3 bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-300 shadow-md">
             <h3 className="text-base font-bold text-yellow-900 mb-2 flex items-center gap-2">
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-yellow-600 text-white text-sm mr-1">7</span>
-              ⚡ {getTranslatedText('sekcia_elektro', 'nazov') || 'Elektroinštalácia'}
+              ⚡ {getTranslatedText('sekcia_elektro', 'nazov') || t('electricalSection') || 'Elektroinštalácia'}
             </h3>
             <div className="space-y-2">
             {/* Štandard */}
@@ -920,7 +920,7 @@ export default function KonfiguratorLyon(props = {}) {
         <Card className="p-3 bg-gradient-to-br from-teal-50 to-cyan-50 border-2 border-teal-300 shadow-md">
           <h3 className="text-base font-bold text-teal-900 mb-2 flex items-center gap-2">
             <span className="flex items-center justify-center w-6 h-6 rounded-full bg-teal-600 text-white text-sm mr-1">8</span>
-            🚿 {getTranslatedText('sekcia_kupelna', 'nazov') || 'Kúpeľňa'}
+            🚿 {getTranslatedText('sekcia_kupelna', 'nazov') || t('bathroomSection') || 'Kúpeľňa'}
           </h3>
           <div className="space-y-2">
             {/* Sprcha */}
@@ -999,7 +999,7 @@ export default function KonfiguratorLyon(props = {}) {
             <Card className="p-3 bg-gradient-to-br from-stone-50 to-gray-50 border-2 border-stone-300 shadow-md">
             <h3 className="text-base font-bold text-stone-900 mb-2 flex items-center gap-2">
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-stone-600 text-white text-sm mr-1">9</span>
-              🏗️ {getTranslatedText('sekcia_zaklady', 'nazov') || 'Základy'}
+              🏗️ {getTranslatedText('sekcia_zaklady', 'nazov') || t('foundationsSection') || 'Základy'}
             </h3>
           <div>
             <p className="text-[11px] font-semibold text-gray-700 mb-1">
@@ -1031,7 +1031,7 @@ export default function KonfiguratorLyon(props = {}) {
           <h3 className="text-base font-bold text-green-900 mb-2 flex items-center gap-2">
             <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green-600 text-white text-sm mr-1">10</span>
             <Sparkles className="w-4 h-4 text-green-600" />
-            {getTranslatedText('sekcia_inziniering', 'nazov') || 'Inžiniering a dokumentácia (A0)'}
+            {getTranslatedText('sekcia_inziniering', 'nazov') || t('engineeringDocsSection') || 'Inžiniering a dokumentácia (A0)'}
           </h3>
           <div className="space-y-1.5">
                   <Tile selected={inziniering} onClick={() => setInziniering(!inziniering)} 
@@ -1053,7 +1053,7 @@ export default function KonfiguratorLyon(props = {}) {
         <Card className="p-3 bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-slate-300 shadow-md">
           <h3 className="text-base font-bold text-slate-900 mb-2 flex items-center gap-2">
             <span className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-600 text-white text-sm mr-1">11</span>
-            🚚 {getTranslatedText('sekcia_realizacia', 'nazov') || 'Realizácia'}
+            🚚 {getTranslatedText('sekcia_realizacia', 'nazov') || t('realizationSection') || 'Realizácia'}
           </h3>
           <div className="space-y-1.5">
             <Tile selected={montaz} onClick={() => setMontaz(!montaz)} 
