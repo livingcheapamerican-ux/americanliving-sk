@@ -115,7 +115,6 @@ export default function DetailDomu() {
   const [lyonStrecha, setLyonStrecha] = useState("korugovan_plech");
   const [lyonOdkvapy, setLyonOdkvapy] = useState("nie");
   const [lyonOkna, setLyonOkna] = useState("biele");
-  const [lyonSieteProtiHmyzu, setLyonSieteProtiHmyzu] = useState(false);
   const [lyonVchodoveDvere, setLyonVchodoveDvere] = useState("plastove");
   const [lyonObkladStien, setLyonObkladStien] = useState("smrek_8cm");
   const [lyonPodlaha, setLyonPodlaha] = useState("laminat");
@@ -2999,7 +2998,6 @@ export default function DetailDomu() {
                   strecha={lyonStrecha}
                   odkvapy={lyonOdkvapy}
                   okna={lyonOkna}
-                  sieteProtiHmyzu={lyonSieteProtiHmyzu}
                   vchodoveDvere={lyonVchodoveDvere}
                   obkladStien={lyonObkladStien}
                   interieroveDvere={lyonInterieroveDvere}
@@ -3039,7 +3037,6 @@ export default function DetailDomu() {
                     if (lyonFasada === "thermowood") total += CENY.fasada_thermowood || 0;
                     if (lyonStrecha === "falcovane") total += CENY.strecha_falcovane || 0;
                     if (lyonOdkvapy === "ano") total += CENY.odkvapy || 0;
-                    if (lyonSieteProtiHmyzu) total += CENY.sieteProtiHmyzu || 0;
                     if (lyonVchodoveDvere === "kovove") total += CENY.dvere_kovove || 0;
                     if (lyonObkladStien === "smrek_bez_uzlov") total += CENY.obklad_smrek_bez_uzlov || 0;
                     if (lyonObkladStien === "sadrokarton_tapeta") total += CENY.obklad_sadrokarton_tapeta || 0;

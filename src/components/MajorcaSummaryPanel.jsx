@@ -9,7 +9,7 @@ import { useLanguage } from "./LanguageContext";
 export default function MajorcaSummaryPanel({ 
   ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu, 
   tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu, podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia,
-  fasada, strecha, odkvapy, okna, sieteProtiHmyzu, vchodoveDvere, obkladStien, interieroveDvere,
+  fasada, strecha, odkvapy, okna, vchodoveDvere, obkladStien, interieroveDvere,
   elektro, bleskozvod, prepat, sprchovyKut, vana, bateria, skrinka, stropKupelna,
   inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
   totalPrice, onSubmit, dom
@@ -173,13 +173,13 @@ export default function MajorcaSummaryPanel({
               <span className="text-slate-300">• {t('gutters')} {odkvapy === "ano" && "✓"}</span>
               <span className="text-green-400 text-xs">{getCenaPolozky('odkvapy') || '+ 950 €'}</span>
             </div>
-          </div>
-        </div>
+            </div>
+            </div>
 
-        {/* Okná a dvere */}
-        <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-          <p className="text-base font-semibold text-slate-400 mb-2">{t('windowsDoorsSection') || 'OKNÁ A DVERE'}</p>
-          <div className="space-y-1.5 text-base">
+            {/* Okná a dvere */}
+            <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
+            <p className="text-base font-semibold text-slate-400 mb-2">{t('windowsDoorsSection') || 'OKNÁ A DVERE'}</p>
+            <div className="space-y-1.5 text-base">
             <p className="text-slate-300">
               • ✓ {t('windows')} {okna === "biele" ? `${t('white')} (${t('baseConfig')})` : okna === "antracit" ? t('anthracite') : t('brown')}
             </p>
@@ -189,12 +189,8 @@ export default function MajorcaSummaryPanel({
               </p>
               {vchodoveDvere === "kovove" && <span className="text-green-400 text-xs">{getCenaPolozky('dvere_kovove') || '+ 278 €'}</span>}
             </div>
-            <div className={sieteProtiHmyzu ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
-              <span className="text-slate-300">• {t('insectScreens') || 'Siete proti hmyzu'} {sieteProtiHmyzu && "✓"}</span>
-              <span className="text-green-400 text-xs">{getCenaPolozky('sieteProtiHmyzu') || '+ 384 €'}</span>
             </div>
-          </div>
-        </div>
+            </div>
 
         {/* Interiér */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">

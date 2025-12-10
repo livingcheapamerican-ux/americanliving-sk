@@ -274,7 +274,6 @@ export default function KonfiguratorLyon(props = {}) {
   const [pripravaNaRekuperaciu, setPripravaNaRekuperaciu] = useState(props.pripravaNaRekuperaciu || false);
   const [podlahovoKurenie, setPodlahovoKurenie] = useState(props.podlahovoKurenie || false);
   const [klimatizacia, setKlimatizacia] = useState(props.klimatizacia || false);
-  const [sieteProtiHmyzu, setSieteProtiHmyzu] = useState(props.sieteProtiHmyzu || false);
   const [pripravaNaKrb, setPripravaNaKrb] = useState(props.pripravaNaKrb || false);
   const [ochranaKachle, setOchranaKachle] = useState(props.ochranaKachle || false);
   const [fasada, setFasada] = useState(props.fasada || "drevo_smrek");
@@ -328,9 +327,6 @@ export default function KonfiguratorLyon(props = {}) {
   React.useEffect(() => {
     if (props.setKlimatizacia) props.setKlimatizacia(klimatizacia);
   }, [klimatizacia]);
-  React.useEffect(() => {
-    if (props.setSieteProtiHmyzu) props.setSieteProtiHmyzu(sieteProtiHmyzu);
-  }, [sieteProtiHmyzu]);
   React.useEffect(() => {
     if (props.setPripravaNaKrb) props.setPripravaNaKrb(pripravaNaKrb);
   }, [pripravaNaKrb]);
@@ -418,7 +414,6 @@ export default function KonfiguratorLyon(props = {}) {
     fasada: { omietka: 1580.79, smrekovec: 3349.50, falcovane: 4953.78, thermowood: 6677.25 },
     strecha: { falcovane: 3227.70 },
     odkvapy: 1502.49,
-    sieteProtiHmyzu: 640,
     dvere: { kovove: 278.40 },
     obklad: { smrek_bez_uzlov: 0, sadrokarton_tapeta: 7855, osb_panel: 5279 },
     dvere_posuvne: 427.17,
@@ -453,7 +448,6 @@ export default function KonfiguratorLyon(props = {}) {
     total += CENY.fasada[fasada] || 0;
     total += CENY.strecha[strecha] || 0;
     if (odkvapy === "ano") total += CENY.odkvapy;
-    if (sieteProtiHmyzu) total += CENY.sieteProtiHmyzu;
     total += CENY.dvere[vchodoveDvere] || 0;
     total += CENY.obklad[obkladStien] || 0;
     if (interieroveDvere === "posuvne") total += CENY.dvere_posuvne;
@@ -473,7 +467,7 @@ export default function KonfiguratorLyon(props = {}) {
     if (doprava) total += CENY.doprava;
     return total;
   }, [izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu,
-      podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia, fasada, strecha, odkvapy, sieteProtiHmyzu, vchodoveDvere,
+      podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia, fasada, strecha, odkvapy, vchodoveDvere,
       obkladStien, interieroveDvere, elektro, bleskozvod, prepat, sprchovyKut, vana, bateria,
       skrinka, stropKupelna, inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava]);
 
@@ -861,19 +855,6 @@ export default function KonfiguratorLyon(props = {}) {
                   title={getTranslatedText('dvere_kovove', 'nazov') || t('metalDoors')} 
                   subtitle={getTranslatedText('dvere_kovove', 'podnadpis') || ''} 
                   price="+ 278 €" isPriced={true} t={t} />
-              </div>
-            </div>
-
-            {/* Siete proti hmyzu */}
-            <div>
-              <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('sieteProtiHmyzu', 'nazov') || t('windowExtras') || 'Doplnky k oknám:'}
-              </p>
-              <div className="border border-cyan-300 rounded-md p-1.5 bg-white/50">
-                <Tile selected={sieteProtiHmyzu} onClick={() => setSieteProtiHmyzu(!sieteProtiHmyzu)} 
-                  title={getTranslatedText('sieteProtiHmyzu', 'nazov') || t('insectScreens') || 'Siete proti hmyzu'} 
-                  subtitle={getTranslatedText('sieteProtiHmyzu', 'podnadpis') || ''} 
-                  price="+ 640 €" isPriced={true} t={t} />
               </div>
             </div>
           </div>

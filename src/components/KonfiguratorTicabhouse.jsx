@@ -122,7 +122,6 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
     // Strecha
     if (strecha === "falcovane") price += CENY.strecha_falcovane;
     if (odkvapy === "ano") price += CENY.odkvapy;
-    if (sieteProtiHmyzu) price += CENY.sieteProtiHmyzu;
 
     // Dvere
     if (vchodoveDvere === "kovove") price += CENY.dvere_kovove;
@@ -164,7 +163,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
   }, [
     dom?.zakladna_cena, izolaciaStien, izolaciaPodlahy, izolaciaStropu,
     tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu, podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia,
-    fasada, strecha, odkvapy, sieteProtiHmyzu, vchodoveDvere, obkladStien, interieroveDvere,
+    fasada, strecha, odkvapy, vchodoveDvere, obkladStien, interieroveDvere,
     elektro, bleskozvod, prepat, sprchovyKut, vana, bateria, skrinka, stropKupelna,
     inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava, CENY
   ]);
@@ -580,20 +579,6 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                     subtitle={getTranslatedText('dvere_kovove', 'podnadpis') || ''} 
                     price={formatPrice(CENY.dvere_kovove)} isPriced={true} t={t} 
                     priceKey="dvere_kovove" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
-
-              {/* Siete proti hmyzu */}
-              <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                  {getTranslatedText('sieteProtiHmyzu', 'nazov') || t('windowExtras') || 'Doplnky k oknám:'}
-                </p>
-                <div className="border border-cyan-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={sieteProtiHmyzu} onClick={() => setSieteProtiHmyzu(!sieteProtiHmyzu)} 
-                    title={getTranslatedText('sieteProtiHmyzu', 'nazov') || t('insectScreens') || 'Siete proti hmyzu'} 
-                    subtitle={getTranslatedText('sieteProtiHmyzu', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.sieteProtiHmyzu)} isPriced={true} t={t} 
-                    priceKey="sieteProtiHmyzu" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
                 </div>
               </div>
             </div>

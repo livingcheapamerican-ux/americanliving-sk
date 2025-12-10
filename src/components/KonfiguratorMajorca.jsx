@@ -369,14 +369,6 @@ export default function KonfiguratorMajorca({
                   priceKey="dvere_kovove" onPriceChange={(key, val) => CENY[key] = val} />
               </div>
             </div>
-            <div>
-              <p className="text-[11px] font-semibold text-gray-700 mb-1">{t('windowExtras') || 'Doplnky k oknám:'}</p>
-              <div className="border border-cyan-300 rounded-md p-1.5 bg-white/50">
-                <EditableTile selected={sieteProtiHmyzu} onClick={() => setSieteProtiHmyzu(!sieteProtiHmyzu)} 
-                  title={t('insectScreens') || 'Siete proti hmyzu'} price={formatPrice(CENY.sieteProtiHmyzu)} isPriced={true} t={t} isAdmin={isAdmin}
-                  priceKey="sieteProtiHmyzu" onPriceChange={(key, val) => CENY[key] = val} />
-              </div>
-            </div>
           </div>
         </Card>
 
