@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { X, Home, CheckCircle, Send, FileDown, Mail, Sparkles, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import { useLanguage } from "./LanguageContext";
 
 export default function LyonFinalSummaryModal({ 
   isOpen, 
@@ -56,6 +57,7 @@ export default function LyonFinalSummaryModal({
   });
   const [submitted, setSubmitted] = useState(false);
   const [generatingPDF, setGeneratingPDF] = useState(false);
+  const { t } = useLanguage();
 
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
@@ -118,7 +120,7 @@ export default function LyonFinalSummaryModal({
   };
 
   const isA0 = isA0Configuration();
-  const actualStatus = ucel === "rodinny" && isA0 ? "Rodinný dom A0" : "Rekreačná stavba";
+  const actualStatus = ucel === "rodinny" && isA0 ? (t('familyHouseA0') || "Rodinný dom A0") : (t('recreationalBuilding') || "Rekreačná stavba");
 
   // Vytvorenie súhrnu konfigurácie
   const buildConfigSummary = () => {
@@ -227,7 +229,7 @@ export default function LyonFinalSummaryModal({
                 {/* Ľavá strana - Obrázok a súhrn */}
                 <div className="lg:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 text-white">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-2xl font-bold">Vaša konfigurácia</h2>
+                    <h2 className="text-2xl font-bold">{t('yourConfig') || 'Vaša konfigurácia'}</h2>
                     <button
                       onClick={onClose}
                       className="lg:hidden w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center"
@@ -273,36 +275,36 @@ export default function LyonFinalSummaryModal({
                   {/* Súhrn konfigurácie */}
                   <div className="bg-slate-800/50 rounded-xl p-3 border border-slate-700/50 max-h-[280px] overflow-y-auto text-sm space-y-2">
                     <div className="flex justify-between items-center py-1">
-                      <span className="text-slate-300">Účel stavby</span>
+                      <span className="text-slate-300">{t('purposeOfBuilding') || 'Účel stavby'}</span>
                       <span className="text-green-400 font-semibold">{actualStatus}</span>
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
-                      <p className="text-slate-400 text-xs mb-1">IZOLÁCIA</p>
+                      <p className="text-slate-400 text-xs mb-1">{t('insulation') || 'IZOLÁCIA'}</p>
                       <div className="space-y-1 text-xs">
                         <div className="flex justify-between">
-                          <span>Steny {izolaciaStien}</span>
+                          <span>{t('walls')} {izolaciaStien}</span>
                           <span className="text-green-400 font-semibold">
-                            {izolaciaStien === "150mm" ? "v cene" : `+ ${formatPrice(CENY.izolacia_stien[izolaciaStien])}`}
+                            {izolaciaStien === "150mm" ? (t('includedInPriceShort') || "v cene") : `+ ${formatPrice(CENY.izolacia_stien[izolaciaStien])}`}
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Podlaha {izolaciaPodlahy}</span>
+                          <span>{t('floors')} {izolaciaPodlahy}</span>
                           <span className="text-green-400 font-semibold">
-                            {izolaciaPodlahy === "150mm" ? "v cene" : `+ ${formatPrice(CENY.izolacia_podlahy[izolaciaPodlahy])}`}
+                            {izolaciaPodlahy === "150mm" ? (t('includedInPriceShort') || "v cene") : `+ ${formatPrice(CENY.izolacia_podlahy[izolaciaPodlahy])}`}
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Strop {izolaciaStropu}</span>
+                          <span>{t('roof')} {izolaciaStropu}</span>
                           <span className="text-green-400 font-semibold">
-                            {izolaciaStropu === "150mm" ? "v cene" : `+ ${formatPrice(CENY.izolacia_stropu[izolaciaStropu])}`}
+                            {izolaciaStropu === "150mm" ? (t('includedInPriceShort') || "v cene") : `+ ${formatPrice(CENY.izolacia_stropu[izolaciaStropu])}`}
                           </span>
                         </div>
                       </div>
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
-                      <p className="text-slate-400 text-xs mb-1">VYKUROVANIE</p>
+                      <p className="text-slate-400 text-xs mb-1">{t('heating') || 'VYKUROVANIE'}</p>
                       <div className="space-y-1 text-xs">
                         {tepelneCerpadlo === "ano" ? (
                           <div className="flex justify-between">
@@ -343,7 +345,7 @@ export default function LyonFinalSummaryModal({
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
-                      <p className="text-slate-400 text-xs mb-1">FASÁDA</p>
+                      <p className="text-slate-400 text-xs mb-1">{t('facadeSection') || 'FASÁDA'}</p>
                       <div className="flex justify-between text-xs">
                         <span className="text-slate-300">
                           • {fasada === "drevo_smrek" ? "Drevo smrek" : 
@@ -358,7 +360,7 @@ export default function LyonFinalSummaryModal({
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
-                      <p className="text-slate-400 text-xs mb-1">STRECHA</p>
+                      <p className="text-slate-400 text-xs mb-1">{t('roofSection') || 'STRECHA'}</p>
                       <div className="space-y-1 text-xs">
                         <div className="flex justify-between">
                           <span className="text-slate-300">• {strecha === "korugovan_plech" ? "Korugovaný plech" : "Falcované panely"}</span>
@@ -376,7 +378,7 @@ export default function LyonFinalSummaryModal({
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
-                      <p className="text-slate-400 text-xs mb-1">OKNÁ A DVERE</p>
+                      <p className="text-slate-400 text-xs mb-1">{t('windowsDoorsSection') || 'OKNÁ A DVERE'}</p>
                       <div className="space-y-1 text-xs">
                         <div className="flex justify-between">
                           <span className="text-slate-300">• Okná {okna === "biele" ? "biele" : okna === "antracit" ? "antracit" : "hnedé"}</span>
@@ -392,7 +394,7 @@ export default function LyonFinalSummaryModal({
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
-                      <p className="text-slate-400 text-xs mb-1">INTERIÉR</p>
+                      <p className="text-slate-400 text-xs mb-1">{t('interiorSection') || 'INTERIÉR'}</p>
                       <div className="space-y-1 text-xs">
                         <div className="flex justify-between">
                           <span className="text-slate-300">
@@ -418,7 +420,7 @@ export default function LyonFinalSummaryModal({
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
-                      <p className="text-slate-400 text-xs mb-1">ELEKTROINŠTALÁCIA</p>
+                      <p className="text-slate-400 text-xs mb-1">{t('electricalSection') || 'ELEKTROINŠTALÁCIA'}</p>
                       <div className="space-y-1 text-xs">
                         <div className="flex justify-between">
                           <span className="text-slate-300">• {elektro === "eu" ? "EU štandard" : elektro === "cz" ? "CZ/SK štandard" : "GE štandard"}</span>
@@ -442,7 +444,7 @@ export default function LyonFinalSummaryModal({
                     </div>
 
                     <div className="border-t border-slate-700 pt-2">
-                      <p className="text-slate-400 text-xs mb-1">KÚPEĽŇA</p>
+                      <p className="text-slate-400 text-xs mb-1">{t('bathroomSection') || 'KÚPEĽŇA'}</p>
                       <div className="space-y-1 text-xs">
                         <div className="flex justify-between">
                           <span className="text-slate-300">• {sprchovyKut === "standard" ? "Sprcha + WC Geberit" : "Sprcha Radaway"}</span>
@@ -479,7 +481,7 @@ export default function LyonFinalSummaryModal({
 
                     {zaklady !== "bez" && (
                       <div className="border-t border-slate-700 pt-2">
-                        <p className="text-slate-400 text-xs mb-1">ZÁKLADY</p>
+                        <p className="text-slate-400 text-xs mb-1">{t('foundationsSection') || 'ZÁKLADY'}</p>
                         <div className="flex justify-between text-xs">
                           <span className="text-slate-300">
                             • {zaklady === "vruty" ? "Zemné vruty" :
@@ -492,7 +494,7 @@ export default function LyonFinalSummaryModal({
 
                     {(inziniering || projektACertifikacia || revizia) && (
                       <div className="border-t border-slate-700 pt-2">
-                        <p className="text-slate-400 text-xs mb-1">SLUŽBY</p>
+                        <p className="text-slate-400 text-xs mb-1">{t('servicesSection') || 'SLUŽBY'}</p>
                         <div className="space-y-1 text-xs">
                           {inziniering && (
                             <div className="flex justify-between">
@@ -518,7 +520,7 @@ export default function LyonFinalSummaryModal({
 
                     {(montaz || doprava) && (
                       <div className="border-t border-slate-700 pt-2">
-                        <p className="text-slate-400 text-xs mb-1">REALIZÁCIA</p>
+                        <p className="text-slate-400 text-xs mb-1">{t('realizationSection') || 'REALIZÁCIA'}</p>
                         <div className="space-y-1 text-xs">
                           {montaz && (
                             <div className="flex justify-between">
@@ -561,7 +563,7 @@ export default function LyonFinalSummaryModal({
                   {/* Celková cena */}
                   <div className="mt-3 p-3 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30">
                     <div className="flex justify-between items-center">
-                      <span className="text-slate-300 text-sm">Celkom s DPH</span>
+                      <span className="text-slate-300 text-sm">{t('totalPriceWithVAT') || 'Celkom s DPH'}</span>
                       <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
                         {formatPrice(totalPrice)}
                       </span>
@@ -579,15 +581,15 @@ export default function LyonFinalSummaryModal({
                 {/* Pravá strana - Formulár */}
                 <div className="lg:w-1/2 p-6">
                   <h3 className="text-xl font-bold text-gray-800 mb-2">
-                    Kontaktné údaje
+                    {t('contactInfo') || 'Kontaktné údaje'}
                   </h3>
                   <p className="text-gray-600 text-sm mb-6">
-                    Vyplňte formulár a my vás budeme kontaktovať s podrobnou ponukou.
+                    {t('fillFormForOffer') || 'Vyplňte formulár a my vás budeme kontaktovať s podrobnou ponukou.'}
                   </p>
 
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                      <Label htmlFor="meno">Meno a priezvisko *</Label>
+                      <Label htmlFor="meno">{t('nameAndSurname') || 'Meno a priezvisko'} *</Label>
                       <Input
                         id="meno"
                         required
@@ -612,7 +614,7 @@ export default function LyonFinalSummaryModal({
                     </div>
 
                     <div>
-                      <Label htmlFor="telefon">Telefón *</Label>
+                      <Label htmlFor="telefon">{t('phone') || 'Telefón'} *</Label>
                       <Input
                         id="telefon"
                         required
@@ -624,7 +626,7 @@ export default function LyonFinalSummaryModal({
                     </div>
 
                     <div>
-                      <Label htmlFor="obec">Obec / Mesto (kde bude dom stáť) *</Label>
+                      <Label htmlFor="obec">{t('townCity') || 'Obec / Mesto'} ({t('whereHouse') || 'kde bude dom stáť'}) *</Label>
                       <Input
                         id="obec"
                         required
@@ -636,7 +638,7 @@ export default function LyonFinalSummaryModal({
                     </div>
 
                     <div>
-                      <Label htmlFor="poznamka">Poznámka (voliteľné)</Label>
+                      <Label htmlFor="poznamka">{t('note') || 'Poznámka'} ({t('optional') || 'voliteľné'})</Label>
                       <Textarea
                         id="poznamka"
                         value={formData.poznamka}
@@ -657,7 +659,7 @@ export default function LyonFinalSummaryModal({
                         className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50"
                       >
                         <FileDown className="mr-2 w-4 h-4" />
-                        Stiahnuť PDF
+                        {t('downloadPDF') || 'Stiahnuť PDF'}
                       </Button>
 
                       <Button
@@ -669,7 +671,7 @@ export default function LyonFinalSummaryModal({
                         className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50"
                       >
                         <Mail className="mr-2 w-4 h-4" />
-                        Email PDF
+                        {t('emailPDF') || 'Email PDF'}
                       </Button>
                     </div>
 
@@ -680,11 +682,11 @@ export default function LyonFinalSummaryModal({
                       disabled={createDopytMutation.isPending}
                     >
                       {createDopytMutation.isPending ? (
-                        "Odosiela sa..."
+                        (t('sending') || "Odosiela sa") + "..."
                       ) : (
                         <>
                           <Send className="mr-2 w-5 h-5" />
-                          Odoslať dopyt
+                          {t('sendInquiry') || 'Odoslať dopyt'}
                         </>
                       )}
                     </Button>
@@ -701,11 +703,10 @@ export default function LyonFinalSummaryModal({
                   <CheckCircle className="w-10 h-10 text-green-600" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                  Ďakujeme za váš záujem!
+                  {t('thankYouForInterest') || 'Ďakujeme za váš záujem!'}
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Vaša konfigurácia bola úspešne odoslaná. Ozveme sa vám čo najskôr, 
-                  zvyčajne do 24 hodín.
+                  {t('configSentSuccess') || 'Vaša konfigurácia bola úspešne odoslaná. Ozveme sa vám čo najskôr, zvyčajne do 24 hodín.'}
                 </p>
               </motion.div>
             )}
