@@ -60,7 +60,7 @@ export default function LyonSummaryPanelStandalone({
             <div className="flex items-start gap-2 mt-2 p-2 bg-yellow-900/30 border border-yellow-700 rounded">
               <AlertCircle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-yellow-200">
-                Chýbajú povinné A0 položky. Aktuálne je to rekreačná stavba.
+                {t('missingA0Items') || 'Chýbajú povinné A0 položky. Aktuálne je to rekreačná stavba.'}
               </p>
             </div>
           )}
@@ -115,7 +115,7 @@ export default function LyonSummaryPanelStandalone({
             </p>
             {tepelneCerpadlo === "nie" && (
               <p className="text-slate-300">
-                • ✓ {t('heatingPreparation') || 'Príprava pre konvektory'} ({t('baseConfig')})
+                • ✓ {t('heatingPreparation')} ({t('baseConfig')})
               </p>
             )}
             <p className={rekuperacia === "ano" ? "text-slate-300 flex items-center gap-1" : "text-slate-300 line-through opacity-50 flex items-center gap-1"}>
@@ -137,7 +137,7 @@ export default function LyonSummaryPanelStandalone({
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
           <p className="text-base font-semibold text-slate-400 mb-1">{t('facadeSection') || 'FASÁDA'}</p>
           <p className="text-base text-slate-300">
-            {fasada === "drevo_smrek" ? "✓ Drevo smrek (základné)" :
+            {fasada === "drevo_smrek" ? `✓ ${t('spruceWood')} (${t('baseConfig')})` :
              fasada === "omietka" ? "✓ Šúchaná omietka" : 
              fasada === "smrekovec" ? "✓ Smrekovec" :
              fasada === "falcovane" ? "✓ Falcované panely" : "✓ Thermowood"}
@@ -149,7 +149,7 @@ export default function LyonSummaryPanelStandalone({
           <p className="text-base font-semibold text-slate-400 mb-2">{t('roofSection') || 'STRECHA'}</p>
           <div className="space-y-1.5 text-base">
             <p className="text-slate-300">
-              • {strecha === "korugovan_plech" ? "✓ Korugovaný plech (základné)" : "✓ Falcované panely"}
+              • {strecha === "korugovan_plech" ? `✓ ${t('corrugatedMetal')} (${t('baseConfig')})` : `✓ ${t('foldedPanels')}`}
             </p>
             <p className={odkvapy === "ano" ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
               • Odkvapy {odkvapy === "ano" && "✓"}
@@ -162,10 +162,10 @@ export default function LyonSummaryPanelStandalone({
           <p className="text-base font-semibold text-slate-400 mb-2">{t('windowsDoorsSection') || 'OKNÁ A DVERE'}</p>
           <div className="space-y-1.5 text-base">
             <p className="text-slate-300">
-              • ✓ Okná {okna === "biele" ? "biele (základné)" : okna === "antracit" ? "antracit" : "hnedé"}
+              • ✓ {t('windows')} {okna === "biele" ? `${t('white')} (${t('baseConfig')})` : okna === "antracit" ? t('anthracite') : t('brown')}
             </p>
             <p className="text-slate-300">
-              • ✓ {vchodoveDvere === "plastove" ? "Kovovo-plastové dvere (základné)" : "Kovové dvere"}
+              • ✓ {vchodoveDvere === "plastove" ? `${t('metalPlasticDoors')} (${t('baseConfig')})` : t('metalDoors')}
             </p>
           </div>
         </div>
@@ -215,19 +215,19 @@ export default function LyonSummaryPanelStandalone({
           <p className="text-base font-semibold text-slate-400 mb-2">{t('bathroomSection') || 'KÚPEĽŇA'}</p>
           <div className="space-y-1.5 text-base">
             <p className="text-slate-300">
-              • ✓ {sprchovyKut === "standard" ? `${t('showerWC') || 'Sprcha + WC Geberit'} (${t('baseConfig')})` : (t('showerRadaway') || 'Sprcha Radaway')}
+              • ✓ {sprchovyKut === "standard" ? `${t('showerWC')} (${t('baseConfig')})` : t('showerRadaway')}
             </p>
             <p className="text-slate-300">
-              • ✓ {bateria === "standard" ? `${t('faucetStandard') || 'Batéria štandard'} (${t('baseConfig')})` : (t('faucetGrohe') || 'Batéria Grohe')}
+              • ✓ {bateria === "standard" ? `${t('faucetStandard')} (${t('baseConfig')})` : t('faucetGrohe')}
             </p>
             <p className="text-slate-300">
-              • ✓ {stropKupelna === "drevo" ? `${t('ceilingWoodPattern') || 'Strop - vzor dreva biely'} (${t('baseConfig')})` : (t('drywallCeiling') || 'Sadrokartónový strop')}
+              • ✓ {stropKupelna === "drevo" ? `${t('ceilingWoodPattern')} (${t('baseConfig')})` : t('drywallCeiling')}
             </p>
             <p className={vana ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
-              • {t('bathtub') || 'Vaňa'} {vana && "✓"}
+              • {t('bathtub')} {vana && "✓"}
             </p>
             <p className={skrinka ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
-              • {t('cabinet') || 'Skrinka'} {skrinka && "✓"}
+              • {t('cabinet')} {skrinka && "✓"}
             </p>
           </div>
         </div>
