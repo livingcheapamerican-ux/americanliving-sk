@@ -35,6 +35,7 @@ import AdminBlog from './pages/AdminBlog';
 import AdminSEOBlog from './pages/AdminSEOBlog';
 import AdminGenerujObrazkyBlogov from './pages/AdminGenerujObrazkyBlogov';
 import AdminPrekladyBlogov from './pages/AdminPrekladyBlogov';
+import AdminPrekladyKonfiguratora from './pages/AdminPrekladyKonfiguratora';
 import __Layout from './Layout.jsx';
 
 
@@ -76,6 +77,7 @@ export const PAGES = {
     "AdminSEOBlog": AdminSEOBlog,
     "AdminGenerujObrazkyBlogov": AdminGenerujObrazkyBlogov,
     "AdminPrekladyBlogov": AdminPrekladyBlogov,
+    "AdminPrekladyKonfiguratora": AdminPrekladyKonfiguratora,
 }
 
 export const pagesConfig = {
