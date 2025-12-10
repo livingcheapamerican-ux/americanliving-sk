@@ -8,10 +8,9 @@ import { useLanguage } from "./LanguageContext";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import EditableTile from "./EditableTile";
-import { LyonSummaryPanel } from "./KonfiguratorLyon";
 import { toast } from "sonner";
 
-export default function KonfiguratorTicabhouse({ dom, isAdmin }) {
+export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, izolaciaStien, setIzolaciaStien, izolaciaPodlahy, setIzolaciaPodlahy, izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia, podlahovoKurenie, setPodlahovoKurenie, pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle, fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna, vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha, interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod, prepat, setPrepat, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria, skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering, projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady, montaz, setMontaz, doprava, setDoprava }) {
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
 
@@ -74,40 +73,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin }) {
   };
 
   const CENY = dom?.konfigurator_ceny || DEFAULT_CENY;
-
-  // State pre konfiguráciu
-  const [ucel, setUcel] = useState("chata");
   const [kolaudacia, setKolaudacia] = useState("bez_a0");
-  const [izolaciaStien, setIzolaciaStien] = useState("150mm");
-  const [izolaciaPodlahy, setIzolaciaPodlahy] = useState("150mm");
-  const [izolaciaStropu, setIzolaciaStropu] = useState("150mm");
-  const [tepelneCerpadlo, setTepelneCerpadlo] = useState("nie");
-  const [rekuperacia, setRekuperacia] = useState("nie");
-  const [podlahovoKurenie, setPodlahovoKurenie] = useState(false);
-  const [pripravaNaKrb, setPripravaNaKrb] = useState(false);
-  const [ochranaKachle, setOchranaKachle] = useState(false);
-  const [fasada, setFasada] = useState("drevo_smrek");
-  const [strecha, setStrecha] = useState("korugovan_plech");
-  const [odkvapy, setOdkvapy] = useState("nie");
-  const [okna, setOkna] = useState("biele");
-  const [vchodoveDvere, setVchodoveDvere] = useState("plastove");
-  const [obkladStien, setObkladStien] = useState("smrek_8cm");
-  const [podlaha, setPodlaha] = useState("laminat");
-  const [interieroveDvere, setInterieroveDvere] = useState("kridlove");
-  const [elektro, setElektro] = useState("eu");
-  const [bleskozvod, setBleskozvod] = useState(false);
-  const [prepat, setPrepat] = useState(false);
-  const [sprchovyKut, setSprchovyKut] = useState("standard");
-  const [vana, setVana] = useState(false);
-  const [bateria, setBateria] = useState("standard");
-  const [skrinka, setSkrinka] = useState(false);
-  const [stropKupelna, setStropKupelna] = useState("drevo");
-  const [inziniering, setInziniering] = useState(false);
-  const [projektACertifikacia, setProjektACertifikacia] = useState(false);
-  const [revizia, setRevizia] = useState(true);
-  const [zaklady, setZaklady] = useState("bez");
-  const [montaz, setMontaz] = useState(false);
-  const [doprava, setDoprava] = useState(false);
 
   // Mutácia pre aktualizáciu cien
   const updatePricesMutation = useMutation({
@@ -197,6 +163,39 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin }) {
     inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava, CENY
   ]);
 
+  // Synchronizácia s props
+  React.useEffect(() => { if (setUcel) setUcel(ucel); }, [ucel]);
+  React.useEffect(() => { if (setIzolaciaStien) setIzolaciaStien(izolaciaStien); }, [izolaciaStien]);
+  React.useEffect(() => { if (setIzolaciaPodlahy) setIzolaciaPodlahy(izolaciaPodlahy); }, [izolaciaPodlahy]);
+  React.useEffect(() => { if (setIzolaciaStropu) setIzolaciaStropu(izolaciaStropu); }, [izolaciaStropu]);
+  React.useEffect(() => { if (setTepelneCerpadlo) setTepelneCerpadlo(tepelneCerpadlo); }, [tepelneCerpadlo]);
+  React.useEffect(() => { if (setRekuperacia) setRekuperacia(rekuperacia); }, [rekuperacia]);
+  React.useEffect(() => { if (setPodlahovoKurenie) setPodlahovoKurenie(podlahovoKurenie); }, [podlahovoKurenie]);
+  React.useEffect(() => { if (setPripravaNaKrb) setPripravaNaKrb(pripravaNaKrb); }, [pripravaNaKrb]);
+  React.useEffect(() => { if (setOchranaKachle) setOchranaKachle(ochranaKachle); }, [ochranaKachle]);
+  React.useEffect(() => { if (setFasada) setFasada(fasada); }, [fasada]);
+  React.useEffect(() => { if (setStrecha) setStrecha(strecha); }, [strecha]);
+  React.useEffect(() => { if (setOdkvapy) setOdkvapy(odkvapy); }, [odkvapy]);
+  React.useEffect(() => { if (setOkna) setOkna(okna); }, [okna]);
+  React.useEffect(() => { if (setVchodoveDvere) setVchodoveDvere(vchodoveDvere); }, [vchodoveDvere]);
+  React.useEffect(() => { if (setObkladStien) setObkladStien(obkladStien); }, [obkladStien]);
+  React.useEffect(() => { if (setPodlaha) setPodlaha(podlaha); }, [podlaha]);
+  React.useEffect(() => { if (setInterieroveDvere) setInterieroveDvere(interieroveDvere); }, [interieroveDvere]);
+  React.useEffect(() => { if (setElektro) setElektro(elektro); }, [elektro]);
+  React.useEffect(() => { if (setBleskozvod) setBleskozvod(bleskozvod); }, [bleskozvod]);
+  React.useEffect(() => { if (setPrepat) setPrepat(prepat); }, [prepat]);
+  React.useEffect(() => { if (setSprchovyKut) setSprchovyKut(sprchovyKut); }, [sprchovyKut]);
+  React.useEffect(() => { if (setVana) setVana(vana); }, [vana]);
+  React.useEffect(() => { if (setBateria) setBateria(bateria); }, [bateria]);
+  React.useEffect(() => { if (setSkrinka) setSkrinka(skrinka); }, [skrinka]);
+  React.useEffect(() => { if (setStropKupelna) setStropKupelna(stropKupelna); }, [stropKupelna]);
+  React.useEffect(() => { if (setInziniering) setInziniering(inziniering); }, [inziniering]);
+  React.useEffect(() => { if (setProjektACertifikacia) setProjektACertifikacia(projektACertifikacia); }, [projektACertifikacia]);
+  React.useEffect(() => { if (setRevizia) setRevizia(revizia); }, [revizia]);
+  React.useEffect(() => { if (setZaklady) setZaklady(zaklady); }, [zaklady]);
+  React.useEffect(() => { if (setMontaz) setMontaz(montaz); }, [montaz]);
+  React.useEffect(() => { if (setDoprava) setDoprava(doprava); }, [doprava]);
+
   const formatPrice = (price) => {
     const num = typeof price === 'number' ? price : parseFloat(price);
     if (isNaN(num)) return '0 €';
@@ -208,9 +207,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin }) {
   };
 
   return (
-    <div className="grid xl:grid-cols-[1fr,400px] gap-4">
-      {/* Konfigurátor */}
-      <div className="w-full">
+    <div className="w-full">
         {/* Účel stavby */}
         <Card className="p-3 sm:p-4 mb-3 bg-gradient-to-br from-blue-50 via-white to-indigo-50 border-2 border-blue-200 shadow-lg">
           <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
@@ -475,46 +472,5 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin }) {
           {/* STRECHA a ostatné sekcie budú doplnené neskôr */}
         </div>
       </div>
-
-      {/* Sidebar - Summary Panel */}
-      <div className="hidden xl:block sticky top-24 h-fit">
-        <LyonSummaryPanel
-          ucel={ucel}
-          izolaciaStien={izolaciaStien}
-          izolaciaPodlahy={izolaciaPodlahy}
-          izolaciaStropu={izolaciaStropu}
-          tepelneCerpadlo={tepelneCerpadlo}
-          rekuperacia={rekuperacia}
-          podlahovoKurenie={podlahovoKurenie}
-          pripravaNaKrb={pripravaNaKrb}
-          ochranaKachle={ochranaKachle}
-          fasada={fasada}
-          strecha={strecha}
-          odkvapy={odkvapy}
-          okna={okna}
-          vchodoveDvere={vchodoveDvere}
-          obkladStien={obkladStien}
-          interieroveDvere={interieroveDvere}
-          elektro={elektro}
-          bleskozvod={bleskozvod}
-          prepat={prepat}
-          sprchovyKut={sprchovyKut}
-          vana={vana}
-          bateria={bateria}
-          skrinka={skrinka}
-          stropKupelna={stropKupelna}
-          inziniering={inziniering}
-          projektACertifikacia={projektACertifikacia}
-          revizia={revizia}
-          zaklady={zaklady}
-          montaz={montaz}
-          doprava={doprava}
-          totalPrice={totalPrice}
-          formatPrice={(p) => p.toLocaleString('sk-SK', { minimumFractionDigits: 2 }) + ' €'}
-          onSubmit={handleSubmit}
-          t={t}
-        />
-      </div>
-    </div>
   );
 }

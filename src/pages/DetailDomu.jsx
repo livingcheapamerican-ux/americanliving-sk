@@ -1150,7 +1150,72 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre ostatné Ticabhouse domy (okrem Lyon) */}
             {isTicabhouse && !dom.nazov?.toLowerCase().includes("lyon") && (
-              <KonfiguratorTicabhouse dom={dom} isAdmin={isAdmin} />
+              <KonfiguratorTicabhouse 
+                dom={dom} 
+                isAdmin={isAdmin}
+                ucel={lyonUcel}
+                setUcel={setLyonUcel}
+                izolaciaStien={lyonIzolaciaStien}
+                setIzolaciaStien={setLyonIzolaciaStien}
+                izolaciaPodlahy={lyonIzolaciaPodlahy}
+                setIzolaciaPodlahy={setLyonIzolaciaPodlahy}
+                izolaciaStropu={lyonIzolaciaStropu}
+                setIzolaciaStropu={setLyonIzolaciaStropu}
+                tepelneCerpadlo={lyonTepelneCerpadlo}
+                setTepelneCerpadlo={setLyonTepelneCerpadlo}
+                rekuperacia={lyonRekuperacia}
+                setRekuperacia={setLyonRekuperacia}
+                podlahovoKurenie={lyonPodlahovoKurenie}
+                setPodlahovoKurenie={setLyonPodlahovoKurenie}
+                pripravaNaKrb={lyonPripravaNaKrb}
+                setPripravaNaKrb={setLyonPripravaNaKrb}
+                ochranaKachle={lyonOchranaKachle}
+                setOchranaKachle={setLyonOchranaKachle}
+                fasada={lyonFasada}
+                setFasada={setLyonFasada}
+                strecha={lyonStrecha}
+                setStrecha={setLyonStrecha}
+                odkvapy={lyonOdkvapy}
+                setOdkvapy={setLyonOdkvapy}
+                okna={lyonOkna}
+                setOkna={setLyonOkna}
+                vchodoveDvere={lyonVchodoveDvere}
+                setVchodoveDvere={setLyonVchodoveDvere}
+                obkladStien={lyonObkladStien}
+                setObkladStien={setLyonObkladStien}
+                podlaha={lyonPodlaha}
+                setPodlaha={setLyonPodlaha}
+                interieroveDvere={lyonInterieroveDvere}
+                setInterieroveDvere={setLyonInterieroveDvere}
+                elektro={lyonElektro}
+                setElektro={setLyonElektro}
+                bleskozvod={lyonBleskozvod}
+                setBleskozvod={setLyonBleskozvod}
+                prepat={lyonPrepat}
+                setPrepat={setLyonPrepat}
+                sprchovyKut={lyonSprchovyKut}
+                setSprchovyKut={setLyonSprchovyKut}
+                vana={lyonVana}
+                setVana={setLyonVana}
+                bateria={lyonBateria}
+                setBateria={setLyonBateria}
+                skrinka={lyonSkrinka}
+                setSkrinka={setLyonSkrinka}
+                stropKupelna={lyonStropKupelna}
+                setStropKupelna={setLyonStropKupelna}
+                inziniering={lyonInziniering}
+                setInziniering={setLyonInziniering}
+                projektACertifikacia={lyonProjektACertifikacia}
+                setProjektACertifikacia={setLyonProjektACertifikacia}
+                revizia={lyonRevizia}
+                setRevizia={setLyonRevizia}
+                zaklady={lyonZaklady}
+                setZaklady={setLyonZaklady}
+                montaz={lyonMontaz}
+                setMontaz={setLyonMontaz}
+                doprava={lyonDoprava}
+                setDoprava={setLyonDoprava}
+              />
             )}
 
             {/* Konfigurátor pre Lyon (Ticab house) */}
@@ -2859,8 +2924,8 @@ export default function DetailDomu() {
 
             </div>
 
-            {/* Sidebar pre Lyon konfigurátor - pod kontakt tlačidlami */}
-            {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
+            {/* Sidebar pre všetky Ticabhouse domy */}
+            {isTicabhouse && (
               <div className="space-y-4">
                 <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                   <LyonSummaryPanelStandalone
