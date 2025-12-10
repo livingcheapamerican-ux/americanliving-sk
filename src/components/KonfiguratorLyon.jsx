@@ -553,7 +553,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Steny */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('izolacia_stien', 'nazov') || 'Izolácia stien:'}
+                {getTranslatedText('izolacia_stien', 'nazov') || t('wallInsulationLabel') || 'Izolácia stien:'}
               </p>
               <div className="grid grid-cols-3 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={izolaciaStien === "150mm"} onClick={() => setIzolaciaStien("150mm")} 
@@ -574,7 +574,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Podlaha */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('izolacia_podlahy', 'nazov') || 'Izolácia podlahy:'}
+                {getTranslatedText('izolacia_podlahy', 'nazov') || t('floorInsulationLabel') || 'Izolácia podlahy:'}
               </p>
               <div className="grid grid-cols-2 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={izolaciaPodlahy === "150mm"} onClick={() => setIzolaciaPodlahy("150mm")} 
@@ -591,7 +591,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Strop */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('izolacia_stropu', 'nazov') || 'Izolácia stropu:'}
+                {getTranslatedText('izolacia_stropu', 'nazov') || t('ceilingInsulationLabel') || 'Izolácia stropu:'}
               </p>
               <div className="grid grid-cols-2 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={izolaciaStropu === "150mm"} onClick={() => setIzolaciaStropu("150mm")} 
@@ -617,7 +617,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Tepelné čerpadlo */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('tepelne_cerpadlo', 'nazov') || 'Vykurovanie:'}
+                {getTranslatedText('tepelne_cerpadlo', 'nazov') || t('heatingLabel') || 'Vykurovanie:'}
               </p>
               <div className="grid grid-cols-2 gap-1.5 border border-orange-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={tepelneCerpadlo === "nie"} onClick={() => setTepelneCerpadlo("nie")} 
@@ -634,7 +634,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Rekuperácia */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('rekuperacia', 'nazov') || 'Vetranie:'}
+                {getTranslatedText('rekuperacia', 'nazov') || t('ventilationLabel') || 'Vetranie:'}
               </p>
               <div className="grid grid-cols-2 gap-1.5 border border-orange-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={rekuperacia === "nie"} onClick={() => setRekuperacia("nie")} 
@@ -651,7 +651,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Doplnky - checkbox */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('vykurovanie_doplnky', 'nazov') || 'Doplnky:'}
+                {getTranslatedText('vykurovanie_doplnky', 'nazov') || t('accessoriesLabel') || 'Doplnky:'}
               </p>
               <div className="space-y-1.5">
                 <Tile selected={podlahovoKurenie} onClick={() => setPodlahovoKurenie(!podlahovoKurenie)} 
@@ -682,7 +682,7 @@ export default function KonfiguratorLyon(props = {}) {
             </h3>
           <div>
             <p className="text-[11px] font-semibold text-gray-700 mb-1">
-              {getTranslatedText('fasada_typ', 'nazov') || 'Typ fasády:'}
+              {getTranslatedText('fasada_typ', 'nazov') || t('facadeTypeLabel') || 'Typ fasády:'}
             </p>
             <div className="grid grid-cols-2 gap-1.5 border border-purple-300 rounded-md p-1.5 bg-white/50">
               <Tile selected={fasada === "drevo_smrek"} onClick={() => setFasada("drevo_smrek")} 
@@ -719,7 +719,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Krytina */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('stresna_krytina', 'nazov') || 'Strešná krytina:'}
+                {getTranslatedText('stresna_krytina', 'nazov') || t('roofCoveringLabel') || 'Strešná krytina:'}
               </p>
               <div className="grid grid-cols-2 gap-1.5 border border-indigo-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={strecha === "korugovan_plech"} onClick={() => setStrecha("korugovan_plech")} 
@@ -736,7 +736,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Odkvapy */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('odkvapy', 'nazov') || 'Odkvapy:'}
+                {getTranslatedText('odkvapy', 'nazov') || t('guttersLabel') || 'Odkvapy:'}
               </p>
               <div className="grid grid-cols-2 gap-1.5 border border-indigo-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={odkvapy === "nie"} onClick={() => setOdkvapy("nie")} 
@@ -765,7 +765,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Okná */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('okna_farba', 'nazov') || 'Farba okien 3-sklo:'}
+                {getTranslatedText('okna_farba', 'nazov') || t('windowColorLabel') || 'Farba okien 3-sklo:'}
               </p>
               <div className="grid grid-cols-3 gap-1.5 border border-cyan-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={okna === "biele"} onClick={() => setOkna("biele")} 
@@ -786,7 +786,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Vchodové dvere */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('vchodove_dvere', 'nazov') || 'Vchodové dvere:'}
+                {getTranslatedText('vchodove_dvere', 'nazov') || t('entryDoorsLabel') || 'Vchodové dvere:'}
               </p>
               <div className="grid grid-cols-2 gap-1.5 border border-cyan-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={vchodoveDvere === "plastove"} onClick={() => setVchodoveDvere("plastove")} 
@@ -812,7 +812,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Obklad stien */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('obklad_stien', 'nazov') || 'Obklad stien:'}
+                {getTranslatedText('obklad_stien', 'nazov') || t('wallCladdingLabel') || 'Obklad stien:'}
               </p>
               <div className="grid grid-cols-2 gap-1.5 border border-amber-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={obkladStien === "smrek_8cm"} onClick={() => setObkladStien("smrek_8cm")} 
@@ -837,7 +837,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Podlaha - len jedna možnosť */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('podlaha', 'nazov') || 'Podlaha:'}
+                {getTranslatedText('podlaha', 'nazov') || t('floorLabel') || 'Podlaha:'}
               </p>
               <div className="border border-amber-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={podlaha === "laminat"} onClick={() => setPodlaha("laminat")} 
@@ -850,7 +850,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Interiérové dvere */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('interierove_dvere', 'nazov') || 'Interiérové dvere:'}
+                {getTranslatedText('interierove_dvere', 'nazov') || t('interiorDoorsLabel') || 'Interiérové dvere:'}
               </p>
               <div className="grid grid-cols-2 gap-1.5 border border-amber-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={interieroveDvere === "kridlove"} onClick={() => setInterieroveDvere("kridlove")} 
@@ -879,7 +879,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Štandard */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('elektro_typ', 'nazov') || 'Typ inštalácie:'}
+                {getTranslatedText('elektro_typ', 'nazov') || t('installationTypeLabel') || 'Typ inštalácie:'}
               </p>
               <div className="grid grid-cols-3 gap-1.5 border border-yellow-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={elektro === "eu"} onClick={() => setElektro("eu")} 
@@ -900,7 +900,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Doplnky */}
             <div>
               <p className="text-xs font-semibold text-gray-700 mb-2">
-                {getTranslatedText('elektro_doplnky', 'nazov') || 'Doplnky (môžeš vybrať viac):'}
+                {getTranslatedText('elektro_doplnky', 'nazov') || t('accessoriesMultiLabel') || 'Doplnky (môžeš vybrať viac):'}
               </p>
               <div className="space-y-2">
                 <Tile selected={bleskozvod} onClick={() => setBleskozvod(!bleskozvod)} 
@@ -926,7 +926,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Sprcha */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('sprchovyKut', 'nazov') || 'Sprchový kút:'}
+                {getTranslatedText('sprchovyKut', 'nazov') || t('showerCabinLabel') || 'Sprchový kút:'}
               </p>
               <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={sprchovyKut === "standard"} onClick={() => setSprchovyKut("standard")} 
@@ -943,7 +943,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Batéria */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('bateria', 'nazov') || 'Batéria:'}
+                {getTranslatedText('bateria', 'nazov') || t('faucetLabel') || 'Batéria:'}
               </p>
               <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={bateria === "standard"} onClick={() => setBateria("standard")} 
@@ -960,7 +960,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Strop kúpeľňa */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('strop_kupelna', 'nazov') || 'Strop (kúpeľňa):'}
+                {getTranslatedText('strop_kupelna', 'nazov') || t('bathroomCeilingLabel') || 'Strop (kúpeľňa):'}
               </p>
               <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
                 <Tile selected={stropKupelna === "drevo"} onClick={() => setStropKupelna("drevo")} 
@@ -977,7 +977,7 @@ export default function KonfiguratorLyon(props = {}) {
             {/* Doplnky */}
             <div>
               <p className="text-[11px] font-semibold text-gray-700 mb-1">
-                {getTranslatedText('kupelna_doplnky', 'nazov') || 'Doplnky:'}
+                {getTranslatedText('kupelna_doplnky', 'nazov') || t('accessoriesLabel') || 'Doplnky:'}
               </p>
               <div className="space-y-1.5">
                 <Tile selected={vana} onClick={() => setVana(!vana)} 
@@ -1003,7 +1003,7 @@ export default function KonfiguratorLyon(props = {}) {
             </h3>
           <div>
             <p className="text-[11px] font-semibold text-gray-700 mb-1">
-              {getTranslatedText('zaklady_typ', 'nazov') || 'Typ základov:'}
+              {getTranslatedText('zaklady_typ', 'nazov') || t('foundationsTypeLabel') || 'Typ základov:'}
             </p>
             <div className="grid grid-cols-2 gap-1.5 border border-stone-300 rounded-md p-1.5 bg-white/50">
               <Tile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} 
