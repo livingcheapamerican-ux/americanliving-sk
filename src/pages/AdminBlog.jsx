@@ -410,10 +410,6 @@ export default function AdminBlog() {
           post={previewPost}
           isOpen={isPreviewOpen}
           onClose={() => setIsPreviewOpen(false)}
-          onImageRegenerate={(postId) => {
-            handleGenerateImage(postId);
-            setIsPreviewOpen(false);
-          }}
         />
       </div>
     </div>

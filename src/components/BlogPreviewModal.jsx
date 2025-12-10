@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
+import { useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,11 +13,12 @@ import { sk } from "date-fns/locale";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
 
-export default function BlogPreviewModal({ post, isOpen, onClose, onImageRegenerate }) {
+export default function BlogPreviewModal({ post, isOpen, onClose }) {
   const [editingImage, setEditingImage] = useState(false);
   const [imagePrompt, setImagePrompt] = useState("");
   const [regenerating, setRegenerating] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const queryClient = useQueryClient();
 
   if (!post) return null;
 
@@ -31,12 +33,10 @@ export default function BlogPreviewModal({ post, isOpen, onClose, onImageRegener
       const customPrompt = `${post.nazov}. ${post.perex}. Požiadavka na úpravu: ${imagePrompt}`;
       const { url } = await base44.integrations.Core.GenerateImage({ prompt: customPrompt });
       await base44.entities.BlogPost.update(post.id, { titulny_obrazok: url });
+      queryClient.invalidateQueries({ queryKey: ['all-blog-posts'] });
       toast.success('Obrázok úspešne upravený!');
       setEditingImage(false);
       setImagePrompt("");
-      if (onImageRegenerate) {
-        onImageRegenerate(post.id);
-      }
     } catch (error) {
       toast.error('Chyba pri úprave: ' + error.message);
     } finally {
@@ -70,10 +70,8 @@ export default function BlogPreviewModal({ post, isOpen, onClose, onImageRegener
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       await base44.entities.BlogPost.update(post.id, { titulny_obrazok: file_url });
+      queryClient.invalidateQueries({ queryKey: ['all-blog-posts'] });
       toast.success('Obrázok nahraný a uložený!');
-      if (onImageRegenerate) {
-        onImageRegenerate(post.id);
-      }
     } catch (error) {
       toast.error('Chyba pri nahrávaní: ' + error.message);
     } finally {
