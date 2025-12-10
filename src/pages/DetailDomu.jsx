@@ -1915,8 +1915,8 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Štandardná výbava pre Ticabhouse */}
-            {isTicabhouse && (
+            {/* Štandardná výbava pre Ticabhouse - len Lyon a Happy Wife */}
+            {isTicabhouse && (dom.nazov?.toLowerCase().includes("lyon") || dom.nazov === "Model HAPPY WIFE") && (
               <div className="space-y-3 sm:space-y-4">
                 <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
                   <h3 className="text-sm sm:text-base font-bold text-primary mb-2 flex items-center gap-2">
