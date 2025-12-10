@@ -26,18 +26,28 @@ Deno.serve(async (req) => {
 
     for (const dom of domy) {
       try {
+        // Preskočiť Lyon a Happy Wife pre Ticabhouse
+        if (dom.vyrobca === 'Ticab house' && (dom.nazov === 'Lyon' || dom.nazov === 'Happy Wife' || dom.nazov?.includes('Lyon') || dom.nazov?.includes('Happy Wife'))) {
+          log(`⏭️ Preskakujem: ${dom.nazov}`);
+          continue;
+        }
+
         log(`\n=== Spracovávam: ${dom.nazov} (${dom.vyrobca}) ===`);
         
         const updates = {};
         let needsUpdate = false;
 
-        // Preklad popis do DE, FR, SR, HR, EL
-        if (dom.popis && (!dom.popis_de || !dom.popis_fr || !dom.popis_sr || !dom.popis_hr || !dom.popis_el)) {
+        // Preklad popis do všetkých jazykov
+        if (dom.popis) {
           log(`Prekladám popis...`);
           
           const languages = [
+            { code: 'en', field: 'popis_en', name: 'angličtina' },
             { code: 'de', field: 'popis_de', name: 'nemčina' },
             { code: 'fr', field: 'popis_fr', name: 'francúzština' },
+            { code: 'hu', field: 'popis_hu', name: 'maďarčina' },
+            { code: 'pl', field: 'popis_pl', name: 'poľština' },
+            { code: 'uk', field: 'popis_uk', name: 'ukrajinčina' },
             { code: 'sr', field: 'popis_sr', name: 'srbčina' },
             { code: 'hr', field: 'popis_hr', name: 'chorvátčina' },
             { code: 'el', field: 'popis_el', name: 'gréčtina' }
@@ -62,13 +72,17 @@ Deno.serve(async (req) => {
           }
         }
 
-        // Preklad specifikácia do DE, FR, SR, HR, EL
-        if (dom.specifikacia && (!dom.specifikacia_de || !dom.specifikacia_fr || !dom.specifikacia_sr || !dom.specifikacia_hr || !dom.specifikacia_el)) {
+        // Preklad specifikácia do všetkých jazykov
+        if (dom.specifikacia) {
           log(`Prekladám špecifikáciu...`);
           
           const languages = [
+            { code: 'en', field: 'specifikacia_en', name: 'angličtina' },
             { code: 'de', field: 'specifikacia_de', name: 'nemčina' },
             { code: 'fr', field: 'specifikacia_fr', name: 'francúzština' },
+            { code: 'hu', field: 'specifikacia_hu', name: 'maďarčina' },
+            { code: 'pl', field: 'specifikacia_pl', name: 'poľština' },
+            { code: 'uk', field: 'specifikacia_uk', name: 'ukrajinčina' },
             { code: 'sr', field: 'specifikacia_sr', name: 'srbčina' },
             { code: 'hr', field: 'specifikacia_hr', name: 'chorvátčina' },
             { code: 'el', field: 'specifikacia_el', name: 'gréčtina' }
