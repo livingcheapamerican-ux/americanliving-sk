@@ -700,7 +700,7 @@ export default function KonfiguratorLyon(props = {}) {
                 <Tile selected={pripravaNaRekuperaciu} onClick={() => {setPripravaNaRekuperaciu(true); setRekuperacia("nie");}} 
                   title={getTranslatedText('pripravaNaRekuperaciu', 'nazov') || t('recuperationPrep') || 'Príprava'} 
                   subtitle={getTranslatedText('pripravaNaRekuperaciu', 'podnadpis') || ''} 
-                  price="+ 512 €" isPriced={true} t={t} />
+                  price="+ 512 €" isPriced={true} isA0={true} t={t} />
                 <Tile selected={rekuperacia === "ano"} onClick={() => {setRekuperacia("ano"); setPripravaNaRekuperaciu(false);}} 
                   title={getTranslatedText('rekuperacia_ano', 'nazov') || t('recuperation')} 
                   subtitle={getTranslatedText('rekuperacia_ano', 'podnadpis') || t('a0Required')} 

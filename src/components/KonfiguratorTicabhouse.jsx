@@ -407,7 +407,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                   <EditableTile selected={pripravaNaRekuperaciu} onClick={() => {setPripravaNaRekuperaciu(true); setRekuperacia("nie");}} 
                     title={getTranslatedText('pripravaNaRekuperaciu', 'nazov') || t('recuperationPrep') || 'Príprava'} 
                     subtitle={getTranslatedText('pripravaNaRekuperaciu', 'podnadpis') || ''} 
-                    price={formatPrice(CENY.pripravaNaRekuperaciu)} isPriced={true} t={t} 
+                    price={formatPrice(CENY.pripravaNaRekuperaciu)} isPriced={true} isA0={true} t={t} 
                     priceKey="pripravaNaRekuperaciu" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
                   <EditableTile selected={rekuperacia === "ano"} onClick={() => {setRekuperacia("ano"); setPripravaNaRekuperaciu(false);}} 
                     title={getTranslatedText('rekuperacia_ano', 'nazov') || t('recuperation')} 

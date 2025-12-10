@@ -257,7 +257,7 @@ export default function KonfiguratorMajorca({
                 <EditableTile selected={rekuperacia === "nie" && !pripravaNaRekuperaciu} onClick={() => {setRekuperacia("nie"); setPripravaNaRekuperaciu(false);}} 
                   title={t('withoutRecuperation')} price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} t={t} isAdmin={isAdmin} />
                 <EditableTile selected={pripravaNaRekuperaciu} onClick={() => {setPripravaNaRekuperaciu(true); setRekuperacia("nie");}} 
-                  title={t('recuperationPrep') || 'Príprava na rekuperáciu'} price={formatPrice(CENY.pripravaNaRekuperaciu)} isPriced={true} t={t} isAdmin={isAdmin}
+                  title={t('recuperationPrep') || 'Príprava na rekuperáciu'} price={formatPrice(CENY.pripravaNaRekuperaciu)} isPriced={true} isA0={true} t={t} isAdmin={isAdmin}
                   priceKey="pripravaNaRekuperaciu" onPriceChange={(key, val) => CENY[key] = val} />
                 <EditableTile selected={rekuperacia === "ano"} onClick={() => {setRekuperacia("ano"); setPripravaNaRekuperaciu(false);}} 
                   title={t('recuperation')} subtitle={t('a0Required')} price={formatPrice(CENY.rekuperacia)} isPriced={true} isA0={true} t={t} isAdmin={isAdmin}
