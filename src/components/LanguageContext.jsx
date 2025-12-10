@@ -1726,6 +1726,16 @@ const translations = {
     faucet: "Armatur:",
     bathroomCeiling: "Decke (Badezimmer):",
     configurator: "Konfigurator",
+    
+    // Happy Wife konfigurator
+    floorHeatingIncluded: "Fußbodenheizung im Preis (Erdgeschoss + Bad im Obergeschoss)",
+    projectEnergyClassification: "Projekt: Projekt (Möglichkeit der Energieklassifizierung)",
+    fullyAssembledInterior: "Vollständig montierter Innenausbau (Möbeldesign)",
+    interiorSelectionFromSamples: "Innenauswahl basierend auf Musterkatalog",
+    bathroomIncluded: "Badezimmer im Preis (Erdgeschoss + Obergeschoss)",
+    kitchenIncluded: "Küche im Preis (Möbel + Rückwand)",
+    acPreparationIncluded: "Klimaanlage: Vorbereitung im Preis (Erdgeschoss + Obergeschoss)",
+    
     landSelection: "Auswahl und Kauf eines Grundstücks",
     mortgageArrangement: "Hypothekenabwicklung",
     projectDocumentation: "Projektdokumentation",
@@ -2569,6 +2579,16 @@ const translations = {
     faucet: "Robinet:",
     bathroomCeiling: "Plafond (salle de bain):",
     configurator: "Configurateur",
+    
+    // Happy Wife konfigurator
+    floorHeatingIncluded: "Chauffage au sol inclus dans le prix (rez-de-chaussée + salle de bain à l'étage)",
+    projectEnergyClassification: "Projet: Projet (possibilité de classification énergétique)",
+    fullyAssembledInterior: "Intérieur entièrement assemblé (design de mobilier)",
+    interiorSelectionFromSamples: "Sélection d'intérieur basée sur catalogue d'échantillons",
+    bathroomIncluded: "Salle de bain incluse dans le prix (rez-de-chaussée + étage)",
+    kitchenIncluded: "Cuisine incluse dans le prix (meubles + crédence)",
+    acPreparationIncluded: "Climatisation: Préparation incluse dans le prix (rez-de-chaussée + étage)",
+    
     landSelection: "Sélection et achat d'un terrain",
     mortgageArrangement: "Arrangement hypothécaire",
     projectDocumentation: "Documentation du projet",
@@ -3462,6 +3482,16 @@ const translations = {
     faucet: "Батерија:",
     bathroomCeiling: "Плафон (купатило):",
     configurator: "Конфигуратор",
+    
+    // Happy Wife konfigurator
+    floorHeatingIncluded: "Подно грејање у цени (приземље + купатило на спрату)",
+    projectEnergyClassification: "Пројекат: Пројекат (могућност енергетске класификације)",
+    fullyAssembledInterior: "Потпуно сложен ентеријер (дизајн намештаја)",
+    interiorSelectionFromSamples: "Избор ентеријера на основу каталога узорака",
+    bathroomIncluded: "Купатило у цени (приземље + спрат)",
+    kitchenIncluded: "Кухиња у цени (намештај + застена)",
+    acPreparationIncluded: "Климатизација: Припрема у цени (приземље + спрат)",
+    
     landSelection: "Избор и куповина земљишта",
     mortgageArrangement: "Уређење хипотеке",
     projectDocumentation: "Пројектна документација",
@@ -4370,6 +4400,16 @@ const translations = {
     faucet: "Baterija:",
     bathroomCeiling: "Strop (kupaonica):",
     configurator: "Konfigurator",
+    
+    // Happy Wife konfigurator
+    floorHeatingIncluded: "Podno grijanje u cijeni (prizemlje + kupaonica na katu)",
+    projectEnergyClassification: "Projekt: Projekt (mogućnost energetske klasifikacije)",
+    fullyAssembledInterior: "Potpuno složen interijer (dizajn namještaja)",
+    interiorSelectionFromSamples: "Odabir interijera na temelju kataloga uzoraka",
+    bathroomIncluded: "Kupaonica u cijeni (prizemlje + kat)",
+    kitchenIncluded: "Kuhinja u cijeni (namještaj + zastena)",
+    acPreparationIncluded: "Klimatizacija: Priprema u cijeni (prizemlje + kat)",
+    
     landSelection: "Odabir i kupnja zemljišta",
     mortgageArrangement: "Uređenje hipoteke",
     projectDocumentation: "Projektna dokumentacija",
@@ -5267,6 +5307,16 @@ const translations = {
     faucet: "Μπαταρία:",
     bathroomCeiling: "Οροφή (μπάνιο):",
     configurator: "Διαμορφωτής",
+    
+    // Happy Wife konfigurator
+    floorHeatingIncluded: "Ενδοδαπέδια θέρμανση στην τιμή (ισόγειο + μπάνιο στον όροφο)",
+    projectEnergyClassification: "Έργο: Έργο (δυνατότητα ενεργειακής ταξινόμησης)",
+    fullyAssembledInterior: "Πλήρως συναρμολογημένο εσωτερικό (σχεδιασμός επίπλων)",
+    interiorSelectionFromSamples: "Επιλογή εσωτερικού με βάση κατάλογο δειγμάτων",
+    bathroomIncluded: "Μπάνιο στην τιμή (ισόγειο + όροφος)",
+    kitchenIncluded: "Κουζίνα στην τιμή (έπιπλα + πίσω τοίχος)",
+    acPreparationIncluded: "Κλιματισμός: Προετοιμασία στην τιμή (ισόγειο + όροφος)",
+    
     landSelection: "Επιλογή και αγορά οικοπέδου",
     mortgageArrangement: "Διευθέτηση υποθήκης",
     projectDocumentation: "Τεκμηρίωση έργου",
