@@ -120,7 +120,7 @@ export default function LyonSummaryPanelStandalone({
               </p>
             )}
             <div className={pripravaNaRekuperaciu ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
-              <span className="text-slate-300">• {t('recuperationPrep') || 'Príprava na rekuperáciu'} {pripravaNaRekuperaciu && "✓"}</span>
+              <span className="text-slate-300">• Príprava na rekuperáciu {pripravaNaRekuperaciu && "✓"}</span>
               <span className="text-green-400 text-xs">{getCenaPolozky('pripravaNaRekuperaciu') || '+ 256 €'}</span>
             </div>
             <div className={rekuperacia === "ano" ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
@@ -140,7 +140,7 @@ export default function LyonSummaryPanelStandalone({
               <span className="text-green-400 text-xs">{getCenaPolozky('ochranaKachle') || '+ 1 280 €'}</span>
             </div>
             <div className={klimatizacia ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
-              <span className="text-slate-300 flex items-center gap-1">• {t('airConditioningPrep') || 'Príprava na klimatizáciu'} {klimatizacia && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
+              <span className="text-slate-300 flex items-center gap-1">• Príprava na klimatizáciu {klimatizacia && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
               <span className="text-green-400 text-xs">{getCenaPolozky('klimatizacia') || '0 €'}</span>
             </div>
           </div>
@@ -254,7 +254,7 @@ export default function LyonSummaryPanelStandalone({
               <span className="text-green-400 text-xs">{getCenaPolozky('prepat') || '+ 311 €'}</span>
             </div>
             <div className={pripravaNaSolarnePanely ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
-              <span className="text-slate-300">• {t('solarPanelsPrep') || 'Príprava na solárne panely'} {pripravaNaSolarnePanely && "✓"}</span>
+              <span className="text-slate-300">• Príprava na solárne panely {pripravaNaSolarnePanely && "✓"}</span>
               <span className="text-green-400 text-xs">{getCenaPolozky('pripravaNaSolarnePanely') || '+ 1 305 €'}</span>
             </div>
             </div>
