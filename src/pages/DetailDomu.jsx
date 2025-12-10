@@ -1928,7 +1928,7 @@ export default function DetailDomu() {
                   </p>
                   
                   {/* Špecifický obsah pre každý dom zo specifikacia */}
-                  {dom.specifikacia && (
+                  {dom.specifikacia && dom.nazov !== "Model HAPPY WIFE" && (
                     <div className="mb-4 text-xs sm:text-sm text-gray-700 leading-relaxed whitespace-pre-line">
                       <TranslatedDescription 
                         text={dom.specifikacia}
@@ -1942,6 +1942,44 @@ export default function DetailDomu() {
                         textHr={dom.specifikacia_hr}
                         textEl={dom.specifikacia_el}
                       />
+                    </div>
+                  )}
+                  
+                  {/* Špecifický obsah pre Happy Wife - s prekladmi */}
+                  {dom.nazov === "Model HAPPY WIFE" && (
+                    <div className="mb-4 text-xs sm:text-sm text-gray-700 leading-relaxed">
+                      <p className="font-semibold text-gray-800 mb-2">✔ {t('heatingLabel')}</p>
+                      <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2 mb-3">
+                        <li>{t('floorHeatingIncluded')}</li>
+                      </ul>
+                      
+                      <p className="font-semibold text-gray-800 mb-2">✔ {t('sanitaryLabel')}</p>
+                      <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2 mb-3">
+                        <li>{t('bathroomIncluded')}</li>
+                      </ul>
+                      
+                      <p className="font-semibold text-gray-800 mb-2">✔ {t('kitchenUnit')}</p>
+                      <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2 mb-3">
+                        <li>{t('kitchenIncluded')}</li>
+                      </ul>
+                      
+                      <p className="font-semibold text-gray-800 mb-2">✔ {t('interiorLabel')}</p>
+                      <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2 mb-3">
+                        <li>{t('fullyAssembledInterior')}</li>
+                        <li>{t('interiorSelectionFromSamples')}</li>
+                      </ul>
+                      
+                      <p className="font-semibold text-gray-800 mb-2">✔ {t('airConditioningLabel')}</p>
+                      <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2 mb-3">
+                        <li>{t('acPreparationIncluded')}</li>
+                      </ul>
+                      
+                      <p className="font-semibold text-gray-800 mb-2">✔ {t('projectCertification')}</p>
+                      <ul className="list-disc list-inside text-gray-700 space-y-1 ml-2 mb-3">
+                        <li>{t('projectEnergyClassification')}</li>
+                      </ul>
+                      
+                      <p className="text-red-600 font-semibold mt-3">• {t('terrace')}: ❌ {t('additionalCost')}</p>
                     </div>
                   )}
 
