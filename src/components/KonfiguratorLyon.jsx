@@ -431,7 +431,7 @@ export default function KonfiguratorLyon(props = {}) {
       <Card className="p-3 sm:p-4 mb-3 bg-gradient-to-br from-blue-50 via-white to-indigo-50 border-2 border-blue-200 shadow-lg">
         <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
           <Home className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-          {getTranslatedText('sekcia_ucel', 'nazov') || 'Účel stavby'}
+          {getTranslatedText('sekcia_ucel', 'nazov') || t('purposeOfBuilding') || 'Účel stavby'}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* Rekreačná stavba */}
