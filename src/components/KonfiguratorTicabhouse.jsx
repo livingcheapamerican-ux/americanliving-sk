@@ -10,7 +10,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import EditableTile from "./EditableTile";
 import { toast } from "sonner";
 
-export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, izolaciaStien, setIzolaciaStien, izolaciaPodlahy, setIzolaciaPodlahy, izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia, podlahovoKurenie, setPodlahovoKurenie, pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle, fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna, vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha, interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod, prepat, setPrepat, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria, skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering, projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady, montaz, setMontaz, doprava, setDoprava }) {
+export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, izolaciaStien, setIzolaciaStien, izolaciaPodlahy, setIzolaciaPodlahy, izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia, pripravaNaRekuperaciu, setPripravaNaRekuperaciu, podlahovoKurenie, setPodlahovoKurenie, pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle, klimatizacia, setKlimatizacia, fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna, sieteProtiHmyzu, setSieteProtiHmyzu, vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha, interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod, prepat, setPrepat, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria, skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering, projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady, montaz, setMontaz, doprava, setDoprava }) {
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
 
@@ -38,8 +38,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
     izolacia_podlahy_200mm: 334.08,
     izolacia_stropu_200mm: 271.44,
     tepelne_cerpadlo: 2889.27,
+    pripravaNaRekuperaciu: 512,
     rekuperacia: 1155.36,
     podlahove_kurenie: 2253.30,
+    klimatizacia: 902,
     pripravaKrb: 578.55,
     ochranaKachle: 1279.77,
     fasada_omietka: 1580.79,
@@ -48,6 +50,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
     fasada_thermowood: 6677.25,
     strecha_falcovane: 3227.70,
     odkvapy: 1502.49,
+    sieteProtiHmyzu: 640,
     dvere_kovove: 278.40,
     obklad_smrek_bez_uzlov: 0,
     obklad_sadrokarton_tapeta: 7855,
@@ -103,8 +106,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
 
     // Vykurovanie
     if (tepelneCerpadlo === "ano") price += CENY.tepelne_cerpadlo;
+    if (pripravaNaRekuperaciu) price += CENY.pripravaNaRekuperaciu;
     if (rekuperacia === "ano") price += CENY.rekuperacia;
     if (podlahovoKurenie) price += CENY.podlahove_kurenie;
+    if (klimatizacia) price += CENY.klimatizacia;
     if (pripravaNaKrb) price += CENY.pripravaKrb;
     if (ochranaKachle) price += CENY.ochranaKachle;
 
@@ -117,6 +122,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
     // Strecha
     if (strecha === "falcovane") price += CENY.strecha_falcovane;
     if (odkvapy === "ano") price += CENY.odkvapy;
+    if (sieteProtiHmyzu) price += CENY.sieteProtiHmyzu;
 
     // Dvere
     if (vchodoveDvere === "kovove") price += CENY.dvere_kovove;
@@ -157,8 +163,8 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
     return price;
   }, [
     dom?.zakladna_cena, izolaciaStien, izolaciaPodlahy, izolaciaStropu,
-    tepelneCerpadlo, rekuperacia, podlahovoKurenie, pripravaNaKrb, ochranaKachle,
-    fasada, strecha, odkvapy, vchodoveDvere, obkladStien, interieroveDvere,
+    tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu, podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia,
+    fasada, strecha, odkvapy, sieteProtiHmyzu, vchodoveDvere, obkladStien, interieroveDvere,
     elektro, bleskozvod, prepat, sprchovyKut, vana, bateria, skrinka, stropKupelna,
     inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava, CENY
   ]);
@@ -184,6 +190,9 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
   React.useEffect(() => { if (setElektro) setElektro(elektro); }, [elektro]);
   React.useEffect(() => { if (setBleskozvod) setBleskozvod(bleskozvod); }, [bleskozvod]);
   React.useEffect(() => { if (setPrepat) setPrepat(prepat); }, [prepat]);
+  React.useEffect(() => { if (setPripravaNaRekuperaciu) setPripravaNaRekuperaciu(pripravaNaRekuperaciu); }, [pripravaNaRekuperaciu]);
+  React.useEffect(() => { if (setKlimatizacia) setKlimatizacia(klimatizacia); }, [klimatizacia]);
+  React.useEffect(() => { if (setSieteProtiHmyzu) setSieteProtiHmyzu(sieteProtiHmyzu); }, [sieteProtiHmyzu]);
   React.useEffect(() => { if (setSprchovyKut) setSprchovyKut(sprchovyKut); }, [sprchovyKut]);
   React.useEffect(() => { if (setVana) setVana(vana); }, [vana]);
   React.useEffect(() => { if (setBateria) setBateria(bateria); }, [bateria]);
@@ -266,6 +275,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                 setBleskozvod(true);
                 setPrepat(true);
                 setElektro("ge");
+                setKlimatizacia(true);
               }}
               className={`p-3 rounded-lg cursor-pointer transition-all border-2 ${
                 ucel === "rodinny" 
@@ -388,12 +398,17 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                 <p className="text-[11px] font-semibold text-gray-700 mb-1">
                   {getTranslatedText('rekuperacia', 'nazov') || t('ventilation') || 'Vetranie:'}
                 </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-orange-300 rounded-md p-1.5 bg-white/50">
-                  <EditableTile selected={rekuperacia === "nie"} onClick={() => setRekuperacia("nie")} 
+                <div className="grid grid-cols-3 gap-1.5 border border-orange-300 rounded-md p-1.5 bg-white/50">
+                  <EditableTile selected={rekuperacia === "nie" && !pripravaNaRekuperaciu} onClick={() => {setRekuperacia("nie"); setPripravaNaRekuperaciu(false);}} 
                     title={getTranslatedText('rekuperacia_nie', 'nazov') || t('withoutRecuperation')} 
                     subtitle={getTranslatedText('rekuperacia_nie', 'podnadpis') || ''} 
                     price="0 €" isPriced={false} isIncluded={true} hideIncludedMessage={true} t={t} isAdmin={isAdmin} />
-                  <EditableTile selected={rekuperacia === "ano"} onClick={() => setRekuperacia("ano")} 
+                  <EditableTile selected={pripravaNaRekuperaciu} onClick={() => {setPripravaNaRekuperaciu(true); setRekuperacia("nie");}} 
+                    title={getTranslatedText('pripravaNaRekuperaciu', 'nazov') || t('recuperationPrep') || 'Príprava'} 
+                    subtitle={getTranslatedText('pripravaNaRekuperaciu', 'podnadpis') || ''} 
+                    price={formatPrice(CENY.pripravaNaRekuperaciu)} isPriced={true} t={t} 
+                    priceKey="pripravaNaRekuperaciu" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                  <EditableTile selected={rekuperacia === "ano"} onClick={() => {setRekuperacia("ano"); setPripravaNaRekuperaciu(false);}} 
                     title={getTranslatedText('rekuperacia_ano', 'nazov') || t('recuperation')} 
                     subtitle={getTranslatedText('rekuperacia_ano', 'podnadpis') || t('a0Required')} 
                     price={formatPrice(CENY.rekuperacia)} isPriced={true} isA0={true} t={t} 
@@ -422,8 +437,13 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                     subtitle={getTranslatedText('ochranaKachle', 'podnadpis') || ''} 
                     price={formatPrice(CENY.ochranaKachle)} isPriced={true} t={t} 
                     priceKey="ochranaKachle" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-                </div>
-              </div>
+                  <EditableTile selected={klimatizacia} onClick={() => setKlimatizacia(!klimatizacia)} 
+                    title={getTranslatedText('klimatizacia', 'nazov') || t('airConditioningPrep') || 'Príprava na klimatizáciu'} 
+                    subtitle={getTranslatedText('klimatizacia', 'podnadpis') || ''} 
+                    price={formatPrice(CENY.klimatizacia)} isPriced={CENY.klimatizacia > 0} isA0={true} t={t} 
+                    priceKey="klimatizacia" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                  </div>
+                  </div>
             </div>
           </Card>
         </div>
@@ -559,6 +579,20 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                     subtitle={getTranslatedText('dvere_kovove', 'podnadpis') || ''} 
                     price={formatPrice(CENY.dvere_kovove)} isPriced={true} t={t} 
                     priceKey="dvere_kovove" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+                </div>
+              </div>
+
+              {/* Siete proti hmyzu */}
+              <div>
+                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                  {getTranslatedText('sieteProtiHmyzu', 'nazov') || t('windowExtras') || 'Doplnky k oknám:'}
+                </p>
+                <div className="border border-cyan-300 rounded-md p-1.5 bg-white/50">
+                  <EditableTile selected={sieteProtiHmyzu} onClick={() => setSieteProtiHmyzu(!sieteProtiHmyzu)} 
+                    title={getTranslatedText('sieteProtiHmyzu', 'nazov') || t('insectScreens') || 'Siete proti hmyzu'} 
+                    subtitle={getTranslatedText('sieteProtiHmyzu', 'podnadpis') || ''} 
+                    price={formatPrice(CENY.sieteProtiHmyzu)} isPriced={true} t={t} 
+                    priceKey="sieteProtiHmyzu" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
                 </div>
               </div>
             </div>
