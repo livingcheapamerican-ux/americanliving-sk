@@ -42,7 +42,7 @@ export default function LyonSummaryPanelStandalone({
     const ceny = dom?.konfigurator_ceny || {};
     const cena = ceny[priceKey];
     if (!cena || cena === 0) return null;
-    return `+ ${cena.toLocaleString('sk-SK', { minimumFractionDigits: 2 })} €`;
+    return cena.toLocaleString('sk-SK', { minimumFractionDigits: 2 }) + ' €';
   };
 
   return (
@@ -81,28 +81,28 @@ export default function LyonSummaryPanelStandalone({
             <p className={izolaciaStien === "150mm" ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
               • {t('walls')} 150mm {izolaciaStien === "150mm" && `✓ (${t('baseConfig')})`}
             </p>
-            <p className={izolaciaStien === "200mm" ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span>• {t('walls')} 200mm {izolaciaStien === "200mm" && "✓"}</span>
-              {getCenaPolozky('izolacia_stien_200mm') && <span className="text-green-400 text-xs">{getCenaPolozky('izolacia_stien_200mm')}</span>}
-            </p>
-            <p className={izolaciaStien === "250mm" ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span className="flex items-center gap-1">• {t('walls')} 250mm {izolaciaStien === "250mm" && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
-              {getCenaPolozky('izolacia_stien_250mm') && <span className="text-green-400 text-xs">{getCenaPolozky('izolacia_stien_250mm')}</span>}
-            </p>
+            <div className={izolaciaStien === "200mm" ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300">• {t('walls')} 200mm {izolaciaStien === "200mm" && "✓"}</span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('izolacia_stien_200mm') || '+ 1 799 €'}</span>
+            </div>
+            <div className={izolaciaStien === "250mm" ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300 flex items-center gap-1">• {t('walls')} 250mm {izolaciaStien === "250mm" && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('izolacia_stien_250mm') || '+ 1 558 €'}</span>
+            </div>
             <p className={izolaciaPodlahy === "150mm" ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
               • {t('floors')} 150mm {izolaciaPodlahy === "150mm" && `✓ (${t('baseConfig')})`}
             </p>
-            <p className={izolaciaPodlahy === "200mm" ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span className="flex items-center gap-1">• {t('floors')} 200mm {izolaciaPodlahy === "200mm" && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
-              {getCenaPolozky('izolacia_podlahy_200mm') && <span className="text-green-400 text-xs">{getCenaPolozky('izolacia_podlahy_200mm')}</span>}
-            </p>
+            <div className={izolaciaPodlahy === "200mm" ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300 flex items-center gap-1">• {t('floors')} 200mm {izolaciaPodlahy === "200mm" && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('izolacia_podlahy_200mm') || '+ 334 €'}</span>
+            </div>
             <p className={izolaciaStropu === "150mm" ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
               • {t('roof')} 150mm {izolaciaStropu === "150mm" && `✓ (${t('baseConfig')})`}
             </p>
-            <p className={izolaciaStropu === "200mm" ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span className="flex items-center gap-1">• {t('roof')} 200mm {izolaciaStropu === "200mm" && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
-              {getCenaPolozky('izolacia_stropu_200mm') && <span className="text-green-400 text-xs">{getCenaPolozky('izolacia_stropu_200mm')}</span>}
-            </p>
+            <div className={izolaciaStropu === "200mm" ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300 flex items-center gap-1">• {t('roof')} 200mm {izolaciaStropu === "200mm" && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('izolacia_stropu_200mm') || '+ 271 €'}</span>
+            </div>
           </div>
         </div>
 
@@ -110,31 +110,31 @@ export default function LyonSummaryPanelStandalone({
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
           <p className="text-sm font-semibold text-slate-400 mb-2">{t('heating') || 'VYKUROVANIE'}</p>
           <div className="space-y-1.5 text-sm">
-            <p className={tepelneCerpadlo === "ano" ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span className="flex items-center gap-1">• {t('heatPump')} {tepelneCerpadlo === "ano" && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
-              {getCenaPolozky('tepelne_cerpadlo') && <span className="text-green-400 text-xs">{getCenaPolozky('tepelne_cerpadlo')}</span>}
-            </p>
+            <div className={tepelneCerpadlo === "ano" ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300 flex items-center gap-1">• {t('heatPump')} {tepelneCerpadlo === "ano" && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('tepelne_cerpadlo') || '+ 2 889 €'}</span>
+            </div>
             {tepelneCerpadlo === "nie" && (
               <p className="text-slate-300">
                 • ✓ {t('heatingPreparation')} ({t('baseConfig')})
               </p>
             )}
-            <p className={rekuperacia === "ano" ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span className="flex items-center gap-1">• {t('recuperation')} {rekuperacia === "ano" && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
-              {getCenaPolozky('rekuperacia') && <span className="text-green-400 text-xs">{getCenaPolozky('rekuperacia')}</span>}
-            </p>
-            <p className={podlahovoKurenie ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span>• {t('floorHeating')} {podlahovoKurenie && "✓"}</span>
-              {podlahovoKurenie && getCenaPolozky('podlahove_kurenie') && <span className="text-green-400 text-xs">{getCenaPolozky('podlahove_kurenie')}</span>}
-            </p>
-            <p className={pripravaNaKrb ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span>• {t('fireplacePrep')} {pripravaNaKrb && "✓"}</span>
-              {pripravaNaKrb && getCenaPolozky('pripravaKrb') && <span className="text-green-400 text-xs">{getCenaPolozky('pripravaKrb')}</span>}
-            </p>
-            <p className={ochranaKachle ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span>• {t('stoveProtection')} {ochranaKachle && "✓"}</span>
-              {ochranaKachle && getCenaPolozky('ochranaKachle') && <span className="text-green-400 text-xs">{getCenaPolozky('ochranaKachle')}</span>}
-            </p>
+            <div className={rekuperacia === "ano" ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300 flex items-center gap-1">• {t('recuperation')} {rekuperacia === "ano" && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('rekuperacia') || '+ 1 155 €'}</span>
+            </div>
+            <div className={podlahovoKurenie ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300">• {t('floorHeating')} {podlahovoKurenie && "✓"}</span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('podlahove_kurenie') || '+ 2 253 €'}</span>
+            </div>
+            <div className={pripravaNaKrb ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300">• {t('fireplacePrep')} {pripravaNaKrb && "✓"}</span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('pripravaKrb') || '+ 579 €'}</span>
+            </div>
+            <div className={ochranaKachle ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300">• {t('stoveProtection')} {ochranaKachle && "✓"}</span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('ochranaKachle') || '+ 1 280 €'}</span>
+            </div>
           </div>
         </div>
 
@@ -148,10 +148,14 @@ export default function LyonSummaryPanelStandalone({
                fasada === "smrekovec" ? `✓ ${t('larch')}` :
                fasada === "falcovane" ? `✓ ${t('foldedPanels')}` : "✓ Thermowood"}
             </p>
-            {fasada === "omietka" && getCenaPolozky('fasada_omietka') && <span className="text-green-400 text-xs">{getCenaPolozky('fasada_omietka')}</span>}
-            {fasada === "smrekovec" && getCenaPolozky('fasada_smrekovec') && <span className="text-green-400 text-xs">{getCenaPolozky('fasada_smrekovec')}</span>}
-            {fasada === "falcovane" && getCenaPolozky('fasada_falcovane') && <span className="text-green-400 text-xs">{getCenaPolozky('fasada_falcovane')}</span>}
-            {fasada === "thermowood" && getCenaPolozky('fasada_thermowood') && <span className="text-green-400 text-xs">{getCenaPolozky('fasada_thermowood')}</span>}
+            {fasada !== "drevo_smrek" && (
+              <span className="text-green-400 text-xs">
+                {fasada === "omietka" && (getCenaPolozky('fasada_omietka') || '+ 1 581 €')}
+                {fasada === "smrekovec" && (getCenaPolozky('fasada_smrekovec') || '+ 3 350 €')}
+                {fasada === "falcovane" && (getCenaPolozky('fasada_falcovane') || '+ 4 954 €')}
+                {fasada === "thermowood" && (getCenaPolozky('fasada_thermowood') || '+ 6 677 €')}
+              </span>
+            )}
           </div>
         </div>
 
@@ -163,12 +167,12 @@ export default function LyonSummaryPanelStandalone({
               <p className="text-slate-300">
                 • {strecha === "korugovan_plech" ? `✓ ${t('corrugatedMetal')} (${t('baseConfig')})` : `✓ ${t('foldedPanels')}`}
               </p>
-              {strecha === "falcovane" && getCenaPolozky('strecha_falcovane') && <span className="text-green-400 text-xs">{getCenaPolozky('strecha_falcovane')}</span>}
+              {strecha === "falcovane" && <span className="text-green-400 text-xs">{getCenaPolozky('strecha_falcovane') || '+ 3 228 €'}</span>}
             </div>
-            <p className={odkvapy === "ano" ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span>• {t('gutters')} {odkvapy === "ano" && "✓"}</span>
-              {odkvapy === "ano" && getCenaPolozky('odkvapy') && <span className="text-green-400 text-xs">{getCenaPolozky('odkvapy')}</span>}
-            </p>
+            <div className={odkvapy === "ano" ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300">• {t('gutters')} {odkvapy === "ano" && "✓"}</span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('odkvapy') || '+ 1 502 €'}</span>
+            </div>
           </div>
         </div>
 
@@ -183,7 +187,7 @@ export default function LyonSummaryPanelStandalone({
               <p className="text-slate-300">
                 • ✓ {vchodoveDvere === "plastove" ? `${t('metalPlasticDoors')} (${t('baseConfig')})` : t('metalDoors')}
               </p>
-              {vchodoveDvere === "kovove" && getCenaPolozky('dvere_kovove') && <span className="text-green-400 text-xs">{getCenaPolozky('dvere_kovove')}</span>}
+              {vchodoveDvere === "kovove" && <span className="text-green-400 text-xs">{getCenaPolozky('dvere_kovove') || '+ 278 €'}</span>}
             </div>
           </div>
         </div>
@@ -198,8 +202,13 @@ export default function LyonSummaryPanelStandalone({
                      obkladStien === "smrek_bez_uzlov" ? t('spruceWallNoKnots') :
                      obkladStien === "sadrokarton_tapeta" ? t('drywallWallpaper') : t('osbPanel')}
               </p>
-              {obkladStien === "sadrokarton_tapeta" && getCenaPolozky('obklad_sadrokarton_tapeta') && <span className="text-green-400 text-xs">{getCenaPolozky('obklad_sadrokarton_tapeta')}</span>}
-              {obkladStien === "osb_panel" && getCenaPolozky('obklad_osb_panel') && <span className="text-green-400 text-xs">{getCenaPolozky('obklad_osb_panel')}</span>}
+              {obkladStien !== "smrek_8cm" && (
+                <span className="text-green-400 text-xs">
+                  {obkladStien === "sadrokarton_tapeta" && (getCenaPolozky('obklad_sadrokarton_tapeta') || '+ 7 855 €')}
+                  {obkladStien === "osb_panel" && (getCenaPolozky('obklad_osb_panel') || '+ 5 279 €')}
+                  {obkladStien === "smrek_bez_uzlov" && '0 €'}
+                </span>
+              )}
             </div>
             <p className="text-slate-300">
               • ✓ {t('floors')}: {t('laminate')} ({t('baseConfig')})
@@ -208,7 +217,7 @@ export default function LyonSummaryPanelStandalone({
               <p className="text-slate-300">
                 • ✓ {interieroveDvere === "kridlove" ? `${t('hingedDoors')} (${t('baseConfig')})` : t('slidingDoors')}
               </p>
-              {interieroveDvere === "posuvne" && getCenaPolozky('dvere_posuvne') && <span className="text-green-400 text-xs">{getCenaPolozky('dvere_posuvne')}</span>}
+              {interieroveDvere === "posuvne" && <span className="text-green-400 text-xs">{getCenaPolozky('dvere_posuvne') || '+ 427 €'}</span>}
             </div>
           </div>
         </div>
@@ -220,22 +229,22 @@ export default function LyonSummaryPanelStandalone({
             <p className={elektro === "eu" ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
               • {t('euStandard')} {elektro === "eu" && "✓"}
             </p>
-            <p className={elektro === "cz" ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span>• {t('czSkStandard')} {elektro === "cz" && "✓"}</span>
-              {elektro === "cz" && getCenaPolozky('elektro_cz') && <span className="text-green-400 text-xs">{getCenaPolozky('elektro_cz')}</span>}
-            </p>
-            <p className={elektro === "ge" ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span className="flex items-center gap-1">• {t('geStandard')} {elektro === "ge" && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
-              {elektro === "ge" && getCenaPolozky('elektro_ge') && <span className="text-green-400 text-xs">{getCenaPolozky('elektro_ge')}</span>}
-            </p>
-            <p className={bleskozvod ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span className="flex items-center gap-1">• {t('lightningRod')} {bleskozvod && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
-              {bleskozvod && getCenaPolozky('bleskozvod') && <span className="text-green-400 text-xs">{getCenaPolozky('bleskozvod')}</span>}
-            </p>
-            <p className={prepat ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span className="flex items-center gap-1">• {t('surgeProtection')} {prepat && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
-              {prepat && getCenaPolozky('prepat') && <span className="text-green-400 text-xs">{getCenaPolozky('prepat')}</span>}
-            </p>
+            <div className={elektro === "cz" ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300">• {t('czSkStandard')} {elektro === "cz" && "✓"}</span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('elektro_cz') || '+ 460 €'}</span>
+            </div>
+            <div className={elektro === "ge" ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300 flex items-center gap-1">• {t('geStandard')} {elektro === "ge" && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('elektro_ge') || '+ 1 583 €'}</span>
+            </div>
+            <div className={bleskozvod ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300 flex items-center gap-1">• {t('lightningRod')} {bleskozvod && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('bleskozvod') || '+ 856 €'}</span>
+            </div>
+            <div className={prepat ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300 flex items-center gap-1">• {t('surgeProtection')} {prepat && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('prepat') || '+ 311 €'}</span>
+            </div>
           </div>
         </div>
 
@@ -247,25 +256,25 @@ export default function LyonSummaryPanelStandalone({
               <p className="text-slate-300">
                 • ✓ {sprchovyKut === "standard" ? `${t('showerWC')} (${t('baseConfig')})` : t('showerRadaway')}
               </p>
-              {sprchovyKut === "radaway" && getCenaPolozky('sprchovyKut') && <span className="text-green-400 text-xs">{getCenaPolozky('sprchovyKut')}</span>}
+              {sprchovyKut === "radaway" && <span className="text-green-400 text-xs">{getCenaPolozky('sprchovyKut') || '+ 646 €'}</span>}
             </div>
             <div className="flex items-center justify-between">
               <p className="text-slate-300">
                 • ✓ {bateria === "standard" ? `${t('faucetStandard')} (${t('baseConfig')})` : t('faucetGrohe')}
               </p>
-              {bateria === "grohe" && getCenaPolozky('bateria') && <span className="text-green-400 text-xs">{getCenaPolozky('bateria')}</span>}
+              {bateria === "grohe" && <span className="text-green-400 text-xs">{getCenaPolozky('bateria') || '+ 139 €'}</span>}
             </div>
             <p className="text-slate-300">
               • ✓ {stropKupelna === "drevo" ? `${t('ceilingWoodPattern')} (${t('baseConfig')})` : t('drywallCeiling')}
             </p>
-            <p className={vana ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span>• {t('bathtub')} {vana && "✓"}</span>
-              {vana && getCenaPolozky('vana') && <span className="text-green-400 text-xs">{getCenaPolozky('vana')}</span>}
-            </p>
-            <p className={skrinka ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span>• {t('cabinet')} {skrinka && "✓"}</span>
-              {skrinka && getCenaPolozky('skrinka') && <span className="text-green-400 text-xs">{getCenaPolozky('skrinka')}</span>}
-            </p>
+            <div className={vana ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300">• {t('bathtub')} {vana && "✓"}</span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('vana') || '+ 501 €'}</span>
+            </div>
+            <div className={skrinka ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300">• {t('cabinet')} {skrinka && "✓"}</span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('skrinka') || '+ 434 €'}</span>
+            </div>
           </div>
         </div>
 
@@ -278,9 +287,13 @@ export default function LyonSummaryPanelStandalone({
                zaklady === "vruty" ? `✓ ${t('groundScrews')}` :
                zaklady === "patky" ? `✓ ${t('concretePads')}` : `✓ ${t('stripFoundations')}`}
             </p>
-            {zaklady === "vruty" && getCenaPolozky('zaklady_vruty') && <span className="text-green-400 text-xs">{getCenaPolozky('zaklady_vruty')}</span>}
-            {zaklady === "patky" && getCenaPolozky('zaklady_patky') && <span className="text-green-400 text-xs">{getCenaPolozky('zaklady_patky')}</span>}
-            {zaklady === "pasove" && getCenaPolozky('zaklady_pasove') && <span className="text-green-400 text-xs">{getCenaPolozky('zaklady_pasove')}</span>}
+            {zaklady !== "bez" && (
+              <span className="text-green-400 text-xs">
+                {zaklady === "vruty" && (getCenaPolozky('zaklady_vruty') || '+ 4 494 €')}
+                {zaklady === "patky" && (getCenaPolozky('zaklady_patky') || '+ 2 568 €')}
+                {zaklady === "pasove" && (getCenaPolozky('zaklady_pasove') || '+ 11 825 €')}
+              </span>
+            )}
           </div>
         </div>
 
@@ -288,18 +301,18 @@ export default function LyonSummaryPanelStandalone({
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
           <p className="text-sm font-semibold text-slate-400 mb-2">{t('servicesSection') || 'SLUŽBY'}</p>
           <div className="space-y-1.5 text-sm">
-            <p className={inziniering ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span className="flex items-center gap-1">• {t('engineering')} {inziniering && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
-              {inziniering && getCenaPolozky('inziniering') && <span className="text-green-400 text-xs">{getCenaPolozky('inziniering')}</span>}
-            </p>
-            <p className={projektACertifikacia ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span className="flex items-center gap-1">• {t('projectCertification')} {projektACertifikacia && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
-              {projektACertifikacia && getCenaPolozky('projektACertifikacia') && <span className="text-green-400 text-xs">{getCenaPolozky('projektACertifikacia')}</span>}
-            </p>
-            <p className={revizia ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span>• {t('revisionDocs')} {revizia && "✓"}</span>
-              {revizia && getCenaPolozky('revizia') && <span className="text-green-400 text-xs">{getCenaPolozky('revizia')}</span>}
-            </p>
+            <div className={inziniering ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300 flex items-center gap-1">• {t('engineering')} {inziniering && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('inziniering') || '+ 2 774 €'}</span>
+            </div>
+            <div className={projektACertifikacia ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300 flex items-center gap-1">• {t('projectCertification')} {projektACertifikacia && "✓"} <span className="text-green-400 text-xs">⚡A0</span></span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('projektACertifikacia') || '+ 3 745 €'}</span>
+            </div>
+            <div className={revizia ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300">• {t('revisionDocs')} {revizia && "✓"}</span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('revizia') || '+ 1 605 €'}</span>
+            </div>
           </div>
         </div>
 
@@ -307,14 +320,14 @@ export default function LyonSummaryPanelStandalone({
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
           <p className="text-base font-semibold text-slate-400 mb-2">{t('realizationSection') || 'REALIZÁCIA'}</p>
           <div className="space-y-1.5 text-base">
-            <p className={montaz ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span>• {t('assembly')} {montaz && "✓"}</span>
-              {montaz && getCenaPolozky('montaz') && <span className="text-green-400 text-xs">{getCenaPolozky('montaz')}</span>}
-            </p>
-            <p className={doprava ? "text-slate-300 flex items-center justify-between" : "text-slate-300 line-through opacity-50 flex items-center justify-between"}>
-              <span>• {t('transport')} {doprava && "✓"}</span>
-              {doprava && getCenaPolozky('doprava') && <span className="text-green-400 text-xs">{getCenaPolozky('doprava')}</span>}
-            </p>
+            <div className={montaz ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300">• {t('assembly')} {montaz && "✓"}</span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('montaz') || '+ 4 806 €'}</span>
+            </div>
+            <div className={doprava ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+              <span className="text-slate-300">• {t('transport')} {doprava && "✓"}</span>
+              <span className="text-green-400 text-xs">{getCenaPolozky('doprava') || '+ 8 928 €'}</span>
+            </div>
           </div>
         </div>
       </div>
