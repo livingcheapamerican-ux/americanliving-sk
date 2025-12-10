@@ -89,7 +89,6 @@ export default function LyonKonfiguratorWrapper(props) {
     fasada: { omietka: 1580.79, smrekovec: 3349.50, falcovane: 4953.78, thermowood: 6677.25 },
     strecha: { falcovane: 3227.70 },
     odkvapy: 1502.49,
-    sieteProtiHmyzu: 640,
     dvere: { kovove: 278.40 },
     obklad: { smrek_bez_uzlov: 0, sadrokarton_tapeta: 7855, osb_panel: 5279 },
     dvere_posuvne: 427.17,
@@ -125,7 +124,6 @@ export default function LyonKonfiguratorWrapper(props) {
     total += CENY.fasada[fasada] || 0;
     total += CENY.strecha[strecha] || 0;
     if (odkvapy === "ano") total += CENY.odkvapy;
-    if (sieteProtiHmyzu) total += CENY.sieteProtiHmyzu;
     total += CENY.dvere[vchodoveDvere] || 0;
     total += CENY.obklad[obkladStien] || 0;
     if (interieroveDvere === "posuvne") total += CENY.dvere_posuvne;
