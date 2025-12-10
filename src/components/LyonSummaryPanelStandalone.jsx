@@ -94,18 +94,6 @@ export default function LyonSummaryPanelStandalone({
           </div>
         </div>
 
-        {/* Izolácia */}
-        {(izolaciaStien !== "150mm" || izolaciaPodlahy !== "150mm" || izolaciaStropu !== "150mm") && (
-          <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
-            <p className="text-xs font-semibold text-slate-400 mb-2">IZOLÁCIA</p>
-            <div className="space-y-1 text-xs">
-              {izolaciaStien !== "150mm" && <p className="text-slate-300">• Steny {izolaciaStien}</p>}
-              {izolaciaPodlahy !== "150mm" && <p className="text-slate-300">• Podlaha {izolaciaPodlahy}</p>}
-              {izolaciaStropu !== "150mm" && <p className="text-slate-300">• Strop {izolaciaStropu}</p>}
-            </div>
-          </div>
-        )}
-
         {/* Vykurovanie - vždy ukáž všetky možnosti */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
           <p className="text-sm font-semibold text-slate-400 mb-2">{t('heating') || 'VYKUROVANIE'}</p>
@@ -125,10 +113,10 @@ export default function LyonSummaryPanelStandalone({
               • {t('floorHeating')} {podlahovoKurenie && "✓"}
             </p>
             <p className={pripravaNaKrb ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
-              • {t('fireplacePrep') || 'Príprava na krb'} {pripravaNaKrb && "✓"}
+              • {t('fireplacePrep')} {pripravaNaKrb && "✓"}
             </p>
             <p className={ochranaKachle ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
-              • {t('stoveProtection') || 'Ochrana na kachle'} {ochranaKachle && "✓"}
+              • {t('stoveProtection')} {ochranaKachle && "✓"}
             </p>
           </div>
         </div>
@@ -138,9 +126,9 @@ export default function LyonSummaryPanelStandalone({
           <p className="text-base font-semibold text-slate-400 mb-1">{t('facadeSection') || 'FASÁDA'}</p>
           <p className="text-base text-slate-300">
             {fasada === "drevo_smrek" ? `✓ ${t('spruceWood')} (${t('baseConfig')})` :
-             fasada === "omietka" ? "✓ Šúchaná omietka" : 
-             fasada === "smrekovec" ? "✓ Smrekovec" :
-             fasada === "falcovane" ? "✓ Falcované panely" : "✓ Thermowood"}
+             fasada === "omietka" ? `✓ ${t('scratchedPlaster')}` : 
+             fasada === "smrekovec" ? `✓ ${t('larch')}` :
+             fasada === "falcovane" ? `✓ ${t('foldedPanels')}` : "✓ Thermowood"}
           </p>
         </div>
 
@@ -152,7 +140,7 @@ export default function LyonSummaryPanelStandalone({
               • {strecha === "korugovan_plech" ? `✓ ${t('corrugatedMetal')} (${t('baseConfig')})` : `✓ ${t('foldedPanels')}`}
             </p>
             <p className={odkvapy === "ano" ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
-              • Odkvapy {odkvapy === "ano" && "✓"}
+              • {t('gutters')} {odkvapy === "ano" && "✓"}
             </p>
           </div>
         </div>
@@ -175,15 +163,15 @@ export default function LyonSummaryPanelStandalone({
           <p className="text-base font-semibold text-slate-400 mb-2">{t('interiorSection') || 'INTERIÉR'}</p>
           <div className="space-y-1.5 text-base">
             <p className="text-slate-300">
-              • ✓ {obkladStien === "smrek_8cm" ? `${t('spruceWall8cm') || 'Smrek 8cm'} (${t('baseConfig')})` :
-                   obkladStien === "smrek_bez_uzlov" ? (t('spruceWallNoKnots') || 'Smrek bez uzlov 12cm') :
-                   obkladStien === "sadrokarton_tapeta" ? (t('drywallWallpaper') || 'Sadrokarton + tapeta') : (t('osbPanel') || 'OSB panel')}
+              • ✓ {obkladStien === "smrek_8cm" ? `${t('spruceWall8cm')} (${t('baseConfig')})` :
+                   obkladStien === "smrek_bez_uzlov" ? t('spruceWallNoKnots') :
+                   obkladStien === "sadrokarton_tapeta" ? t('drywallWallpaper') : t('osbPanel')}
             </p>
             <p className="text-slate-300">
-              • ✓ {t('floors')}: {t('laminate') || 'Laminát'} ({t('baseConfig')})
+              • ✓ {t('floors')}: {t('laminate')} ({t('baseConfig')})
             </p>
             <p className="text-slate-300">
-              • ✓ {interieroveDvere === "kridlove" ? `${t('hingedDoors') || 'Krídlové dvere'} (${t('baseConfig')})` : (t('slidingDoors') || 'Posuvné dvere')}
+              • ✓ {interieroveDvere === "kridlove" ? `${t('hingedDoors')} (${t('baseConfig')})` : t('slidingDoors')}
             </p>
           </div>
         </div>
@@ -193,19 +181,19 @@ export default function LyonSummaryPanelStandalone({
           <p className="text-sm font-semibold text-slate-400 mb-2">{t('electricalSection') || 'ELEKTROINŠTALÁCIA'}</p>
           <div className="space-y-1.5 text-sm">
             <p className={elektro === "eu" ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
-              • {t('euStandard') || 'EU štandard'} {elektro === "eu" && "✓"}
+              • {t('euStandard')} {elektro === "eu" && "✓"}
             </p>
             <p className={elektro === "cz" ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
-              • {t('czSkStandard') || 'CZ/SK štandard'} {elektro === "cz" && "✓"}
+              • {t('czSkStandard')} {elektro === "cz" && "✓"}
             </p>
             <p className={elektro === "ge" ? "text-slate-300 flex items-center gap-1" : "text-slate-300 line-through opacity-50 flex items-center gap-1"}>
-              • {t('geStandard') || 'GE štandard'} {elektro === "ge" && "✓"} <span className="text-green-400 text-xs">⚡A0</span>
+              • {t('geStandard')} {elektro === "ge" && "✓"} <span className="text-green-400 text-xs">⚡A0</span>
             </p>
             <p className={bleskozvod ? "text-slate-300 flex items-center gap-1" : "text-slate-300 line-through opacity-50 flex items-center gap-1"}>
-              • {t('lightningRod') || 'Bleskozvod'} {bleskozvod && "✓"} <span className="text-green-400 text-xs">⚡A0</span>
+              • {t('lightningRod')} {bleskozvod && "✓"} <span className="text-green-400 text-xs">⚡A0</span>
             </p>
             <p className={prepat ? "text-slate-300 flex items-center gap-1" : "text-slate-300 line-through opacity-50 flex items-center gap-1"}>
-              • {t('surgeProtection') || 'Prepäťová ochrana'} {prepat && "✓"} <span className="text-green-400 text-xs">⚡A0</span>
+              • {t('surgeProtection')} {prepat && "✓"} <span className="text-green-400 text-xs">⚡A0</span>
             </p>
           </div>
         </div>
@@ -236,9 +224,9 @@ export default function LyonSummaryPanelStandalone({
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
           <p className="text-base font-semibold text-slate-400 mb-1">{t('foundationsSection') || 'ZÁKLADY'}</p>
           <p className="text-base text-slate-300">
-            {zaklady === "bez" ? (t('noFoundations') || 'Bez základov') + ` (${t('customerProvides') || 'zákazník zabezpečí'})` :
-             zaklady === "vruty" ? `✓ ${t('groundScrews') || 'Zemné vruty'}` :
-             zaklady === "patky" ? `✓ ${t('concretePads') || 'Betónové pätky'}` : `✓ ${t('stripFoundations') || 'Pásové betónové'}`}
+            {zaklady === "bez" ? `${t('noFoundations')} (${t('customerProvides')})` :
+             zaklady === "vruty" ? `✓ ${t('groundScrews')}` :
+             zaklady === "patky" ? `✓ ${t('concretePads')}` : `✓ ${t('stripFoundations')}`}
           </p>
         </div>
 
@@ -247,13 +235,13 @@ export default function LyonSummaryPanelStandalone({
           <p className="text-sm font-semibold text-slate-400 mb-2">{t('servicesSection') || 'SLUŽBY'}</p>
           <div className="space-y-1.5 text-sm">
             <p className={inziniering ? "text-slate-300 flex items-center gap-1" : "text-slate-300 line-through opacity-50 flex items-center gap-1"}>
-              • {t('engineering') || 'Inžiniering'} {inziniering && "✓"} <span className="text-green-400 text-xs">⚡A0</span>
+              • {t('engineering')} {inziniering && "✓"} <span className="text-green-400 text-xs">⚡A0</span>
             </p>
             <p className={projektACertifikacia ? "text-slate-300 flex items-center gap-1" : "text-slate-300 line-through opacity-50 flex items-center gap-1"}>
-              • {t('projectCertification') || 'Projekt + Certifikácia'} {projektACertifikacia && "✓"} <span className="text-green-400 text-xs">⚡A0</span>
+              • {t('projectCertification')} {projektACertifikacia && "✓"} <span className="text-green-400 text-xs">⚡A0</span>
             </p>
             <p className={revizia ? "text-slate-300" : "text-slate-300 line-through opacity-50"}>
-              • {t('revisionDocs') || 'Revízna dokumentácia'} {revizia && "✓"}
+              • {t('revisionDocs')} {revizia && "✓"}
             </p>
           </div>
         </div>
