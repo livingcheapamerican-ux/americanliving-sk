@@ -306,8 +306,20 @@ export default function AdminBlog() {
                 />
                 <div className="flex-1">
                   <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">{post.nazov}</h3>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="text-lg font-bold text-gray-900">{post.nazov}</h3>
+                        {(() => {
+                          const content = (post.nazov + ' ' + (post.tagy?.join(' ') || '')).toLowerCase();
+                          if (content.includes('ticabhouse') || content.includes('ticab')) {
+                            return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">Ticabhouse</Badge>;
+                          } else if (content.includes('prostohouse') || content.includes('prosto')) {
+                            return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">ProstoHouse</Badge>;
+                          } else {
+                            return <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-300">American Living</Badge>;
+                          }
+                        })()}
+                      </div>
                       <p className="text-sm text-gray-600 line-clamp-2">{post.perex}</p>
                     </div>
                     <Badge className={post.publikovany ? "bg-green-600" : "bg-gray-400"}>

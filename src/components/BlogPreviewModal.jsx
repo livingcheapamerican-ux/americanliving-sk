@@ -60,9 +60,21 @@ export default function BlogPreviewModal({ post, isOpen, onClose, onImageRegener
         <div className="bg-gray-50 p-6 rounded-lg">
           {/* Header */}
           <div className="mb-6">
-            <Badge className="bg-primary text-white mb-3">
-              {kategorieLabels[post.kategoria]}
-            </Badge>
+            <div className="flex gap-2 mb-3">
+              <Badge className="bg-primary text-white">
+                {kategorieLabels[post.kategoria]}
+              </Badge>
+              {(() => {
+                const content = (post.nazov + ' ' + (post.tagy?.join(' ') || '')).toLowerCase();
+                if (content.includes('ticabhouse') || content.includes('ticab')) {
+                  return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">Ticabhouse</Badge>;
+                } else if (content.includes('prostohouse') || content.includes('prosto')) {
+                  return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">ProstoHouse</Badge>;
+                } else {
+                  return <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-300">American Living</Badge>;
+                }
+              })()}
+            </div>
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               {post.nazov}
             </h1>

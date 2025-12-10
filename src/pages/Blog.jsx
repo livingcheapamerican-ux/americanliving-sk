@@ -145,9 +145,21 @@ export default function Blog() {
                       </div>
                     </div>
                     <div className="p-5">
-                      <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">
-                        {post.nazov}
-                      </h3>
+                      <div className="flex items-start gap-2 mb-2">
+                        <h3 className="text-xl font-bold text-gray-900 flex-1 group-hover:text-primary transition-colors">
+                          {post.nazov}
+                        </h3>
+                        {(() => {
+                          const content = (post.nazov + ' ' + (post.tagy?.join(' ') || '')).toLowerCase();
+                          if (content.includes('ticabhouse') || content.includes('ticab')) {
+                            return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 text-xs shrink-0">Ticabhouse</Badge>;
+                          } else if (content.includes('prostohouse') || content.includes('prosto')) {
+                            return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300 text-xs shrink-0">ProstoHouse</Badge>;
+                          } else {
+                            return <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-300 text-xs shrink-0">American Living</Badge>;
+                          }
+                        })()}
+                      </div>
                       <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                         {post.perex}
                       </p>
