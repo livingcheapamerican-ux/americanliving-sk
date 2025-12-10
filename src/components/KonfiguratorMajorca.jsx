@@ -32,10 +32,10 @@ export default function KonfiguratorMajorca({
 
   const getTranslatedText = (polozkaId, field) => {
     const text = konfigTexts.find(t => t.polozka_id === polozkaId);
-    if (!text) return '';
-    if (language === 'sk') return text[field] || '';
+    if (!text) return null;
+    if (language === 'sk') return text[field] || null;
     const translatedField = text[`${field}_${language}`];
-    return translatedField || text[field] || '';
+    return translatedField || text[field] || null;
   };
 
   const DEFAULT_CENY_MAJORCA = {

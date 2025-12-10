@@ -24,11 +24,11 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
   // Pomocná funkcia na získanie preloženého textu
   const getTranslatedText = (polozkaId, field) => {
     const text = konfigTexts.find(t => t.polozka_id === polozkaId);
-    if (!text) return '';
+    if (!text) return null;
     
-    if (language === 'sk') return text[field] || '';
+    if (language === 'sk') return text[field] || null;
     const translatedField = text[`${field}_${language}`];
-    return translatedField || text[field] || '';
+    return translatedField || text[field] || null;
   };
 
   // Načítať ceny z entity Dom alebo použiť default ceny Lyon
