@@ -1870,6 +1870,15 @@ export default function DetailDomu() {
                     </div>
                   </div>
                 )}
+                {dom.pocet_modulov && (
+                  <div className="flex items-center gap-2">
+                    <Boxes className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
+                    <div>
+                      <p className="text-xs text-gray-500">Moduly</p>
+                      <p className="text-sm sm:text-base font-bold text-primary">{dom.pocet_modulov}</p>
+                    </div>
+                  </div>
+                )}
                 <div className="flex items-center gap-2">
                     <div className="w-5 h-3 sm:w-6 sm:h-4 border-2 border-primary rounded-sm" />
                     <div>

@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Square, LayoutGrid, Trash2, Eye, EyeOff, Grid3x3, Zap, Hammer, Caravan, Building2, TreePine, Fence } from "lucide-react";
+import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Square, LayoutGrid, Trash2, Eye, EyeOff, Grid3x3, Zap, Hammer, Caravan, Building2, TreePine, Fence, Boxes } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { useLanguage } from "../components/LanguageContext";
@@ -657,6 +657,15 @@ export default function Katalog() {
                                 <div className="flex flex-col min-w-0">
                                   <span className="hidden sm:block text-xs text-gray-500">{t('rooms')}</span>
                                   <span className="font-semibold text-primary text-[9px] sm:text-xs">{dom.pocet_izieb} {t('roomsLabel')}</span>
+                                </div>
+                              </div>
+                            )}
+                            {dom.pocet_modulov && (
+                              <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
+                                <Boxes className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-red-600" />
+                                <div className="flex flex-col min-w-0">
+                                  <span className="hidden sm:block text-xs text-gray-500">Moduly</span>
+                                  <span className="font-semibold text-primary text-[9px] sm:text-xs">{dom.pocet_modulov}</span>
                                 </div>
                               </div>
                             )}
