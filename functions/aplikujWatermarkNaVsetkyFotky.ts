@@ -37,12 +37,10 @@ Deno.serve(async (req) => {
 
     // Pomocná funkcia na aplikovanie watermarku
     const applyWatermark = async (imageUrl, fieldName, domId) => {
-      if (!imageUrl) return { url: null, fieldName, domId };
+      if (!imageUrl) return { url: null, fieldName, domId, skipped: true };
       
       // Skip ak už je watermarkovaný (obsahuje "watermarked_" v URL)
       if (imageUrl.includes('watermarked_')) {
-        log.push(`  ⏭️ ${fieldName}: už má watermark, preskakujem`);
-        skipped++;
         return { url: imageUrl, fieldName, domId, skipped: true };
       }
 
@@ -55,18 +53,14 @@ Deno.serve(async (req) => {
           size: watermark_size
         });
 
-        if (response.data?.success) {
-          migrated++;
-          log.push(`  ✅ ${fieldName}: úspešne aplikovaný watermark`);
-          return { url: response.data.newImageUrl, fieldName, domId, success: true };
+        const data = response?.data || response;
+        
+        if (data?.success && data?.newImageUrl) {
+          return { url: data.newImageUrl, fieldName, domId, success: true };
         } else {
-          errors++;
-          log.push(`  ❌ ${fieldName}: chyba - ${response.data?.error || 'unknown'}`);
-          return { url: imageUrl, fieldName, domId, error: response.data?.error };
+          return { url: imageUrl, fieldName, domId, error: data?.error || 'unknown error' };
         }
       } catch (err) {
-        errors++;
-        log.push(`  ❌ ${fieldName}: chyba - ${err.message}`);
         return { url: imageUrl, fieldName, domId, error: err.message };
       }
     };
