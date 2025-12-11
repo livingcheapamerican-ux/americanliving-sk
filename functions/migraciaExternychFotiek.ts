@@ -36,20 +36,19 @@ Deno.serve(async (req) => {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
 
-        const blob = await response.blob();
-        const arrayBuffer = await blob.arrayBuffer();
+        const arrayBuffer = await response.arrayBuffer();
         
         // Získať typ súboru
         const contentType = response.headers.get('content-type') || 'image/jpeg';
-        const extension = contentType.split('/')[1] || 'jpg';
+        const extension = contentType.split('/')[1]?.replace('jpeg', 'jpg') || 'jpg';
         const fileName = `${fieldName}_${Date.now()}.${extension}`;
 
-        // Upload do Base44
-        const formData = new FormData();
-        formData.append('file', new Blob([arrayBuffer], { type: contentType }), fileName);
+        // Vytvoriť File objekt pre upload
+        const file = new File([arrayBuffer], fileName, { type: contentType });
 
+        // Upload do Base44
         const uploadResult = await base44.integrations.Core.UploadFile({ 
-          file: new Blob([arrayBuffer], { type: contentType })
+          file: file
         });
 
         log.push(`✅ Uploadované: ${uploadResult.file_url}`);
