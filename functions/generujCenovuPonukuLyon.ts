@@ -1,6 +1,32 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 import { jsPDF } from 'npm:jspdf@2.5.2';
 
+// Helper funkcia na odstránenie diakritiky pre lepší rendering v PDF
+const removeDiacritics = (str) => {
+  if (!str) return '';
+  return str
+    .replace(/á/g, 'a').replace(/Á/g, 'A')
+    .replace(/ä/g, 'a').replace(/Ä/g, 'A')
+    .replace(/č/g, 'c').replace(/Č/g, 'C')
+    .replace(/ď/g, 'd').replace(/Ď/g, 'D')
+    .replace(/é/g, 'e').replace(/É/g, 'E')
+    .replace(/ě/g, 'e').replace(/Ě/g, 'E')
+    .replace(/í/g, 'i').replace(/Í/g, 'I')
+    .replace(/ľ/g, 'l').replace(/Ľ/g, 'L')
+    .replace(/ĺ/g, 'l').replace(/Ĺ/g, 'L')
+    .replace(/ň/g, 'n').replace(/Ň/g, 'N')
+    .replace(/ó/g, 'o').replace(/Ó/g, 'O')
+    .replace(/ô/g, 'o').replace(/Ô/g, 'O')
+    .replace(/ř/g, 'r').replace(/Ř/g, 'R')
+    .replace(/ŕ/g, 'r').replace(/Ŕ/g, 'R')
+    .replace(/š/g, 's').replace(/Š/g, 'S')
+    .replace(/ť/g, 't').replace(/Ť/g, 'T')
+    .replace(/ú/g, 'u').replace(/Ú/g, 'U')
+    .replace(/ů/g, 'u').replace(/Ů/g, 'U')
+    .replace(/ý/g, 'y').replace(/Ý/g, 'Y')
+    .replace(/ž/g, 'z').replace(/Ž/g, 'Z');
+};
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -91,9 +117,10 @@ Deno.serve(async (req) => {
     doc.text('info@americanliving.sk', pageWidth - 20, 61, { align: 'right' });
     doc.text('www.americanliving.sk', pageWidth - 20, 66, { align: 'right' });
 
-    // Dátum
+    // Dátum a číslo ponuky
     doc.setFontSize(10);
-    doc.text('Dátum: ' + new Date().toLocaleDateString('sk-SK'), 20, 50);
+    doc.text(removeDiacritics(`Číslo ponuky: ${cisloPonuky}`), 20, 50);
+    doc.text(removeDiacritics('Dátum: ' + new Date().toLocaleDateString('sk-SK')), 20, 56);
 
     let yPos = 75;
 
@@ -102,20 +129,20 @@ Deno.serve(async (req) => {
       doc.setFontSize(12);
       doc.setFont(undefined, 'bold');
       doc.setTextColor(mainColor.r, mainColor.g, mainColor.b);
-      doc.text('Pre klienta:', 20, yPos);
+      doc.text(removeDiacritics('Pre klienta:'), 20, yPos);
       yPos += 8;
 
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(10);
       doc.setFont(undefined, 'normal');
-      doc.text(`Meno: ${klientData.meno}`, 20, yPos);
+      doc.text(removeDiacritics(`Meno: ${klientData.meno}`), 20, yPos);
       yPos += 6;
       doc.text(`Email: ${klientData.email}`, 20, yPos);
       yPos += 6;
-      doc.text(`Telefón: ${klientData.telefon}`, 20, yPos);
+      doc.text(removeDiacritics(`Telefón: ${klientData.telefon}`), 20, yPos);
       yPos += 6;
       if (klientData.obec) {
-        doc.text(`Obec: ${klientData.obec}`, 20, yPos);
+        doc.text(removeDiacritics(`Obec: ${klientData.obec}`), 20, yPos);
         yPos += 6;
       }
       yPos += 6;
@@ -125,58 +152,58 @@ Deno.serve(async (req) => {
     doc.setFontSize(12);
     doc.setFont(undefined, 'bold');
     doc.setTextColor(mainColor.r, mainColor.g, mainColor.b);
-    doc.text('Vybraný model:', 20, yPos);
+    doc.text(removeDiacritics('Vybraný model:'), 20, yPos);
     yPos += 8;
 
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(11);
     doc.setFont(undefined, 'bold');
-    doc.text(dom?.nazov || 'Lyon 50m²', 20, yPos);
+    doc.text(removeDiacritics(dom?.nazov || 'Lyon 50m²'), 20, yPos);
     yPos += 7;
-    
+
     doc.setFontSize(9);
     doc.setFont(undefined, 'normal');
-    doc.text(`Výrobca: ${dom?.vyrobca || 'Ticab house'}`, 25, yPos);
+    doc.text(removeDiacritics(`Výrobca: ${dom?.vyrobca || 'Ticab house'}`), 25, yPos);
     yPos += 5;
-    doc.text(`Typ domu: ${dom?.typ_domu || 'Modulárny dom'}`, 25, yPos);
+    doc.text(removeDiacritics(`Typ domu: ${dom?.typ_domu || 'Modulárny dom'}`), 25, yPos);
     yPos += 5;
     if (dom?.pocet_modulov) {
-      doc.text(`Moduly: ${dom.pocet_modulov}`, 25, yPos);
+      doc.text(removeDiacritics(`Moduly: ${dom.pocet_modulov}`), 25, yPos);
       yPos += 5;
     }
     if (dom?.pocet_izieb) {
-      doc.text(`Počet izieb: max. ${dom.pocet_izieb}`, 25, yPos);
+      doc.text(removeDiacritics(`Počet izieb: max. ${dom.pocet_izieb}`), 25, yPos);
       yPos += 5;
     }
-    doc.text(`Zastavaná plocha: ${dom?.zastavana_plocha || 50} m²`, 25, yPos);
+    doc.text(removeDiacritics(`Zastavaná plocha: ${dom?.zastavana_plocha || 50} m²`), 25, yPos);
     yPos += 5;
     if (dom?.uzitkova_plocha) {
-      doc.text(`Úžitková plocha: ${dom.uzitkova_plocha} m²`, 25, yPos);
+      doc.text(removeDiacritics(`Úžitková plocha: ${dom.uzitkova_plocha} m²`), 25, yPos);
       yPos += 5;
     }
     if (dom?.terasa_plocha) {
-      doc.text(`Terasa: ${dom.terasa_plocha} m²`, 25, yPos);
+      doc.text(removeDiacritics(`Terasa: ${dom.terasa_plocha} m²`), 25, yPos);
       yPos += 5;
     }
     if (dom?.energeticky_certifikat) {
-      doc.text(`Možnosť energetického certifikátu A0: Áno`, 25, yPos);
+      doc.text(removeDiacritics(`Možnosť energetického certifikátu A0: Áno`), 25, yPos);
       yPos += 5;
     }
-    
+
     yPos += 3;
-    
+
     // TYP STAVBY - DÔLEŽITÉ
     doc.setFont(undefined, 'bold');
     doc.setFontSize(10);
     doc.setTextColor(mainColor.r, mainColor.g, mainColor.b);
-    doc.text(`Typ stavby: ${typStavby}`, 20, yPos);
+    doc.text(removeDiacritics(`Typ stavby: ${typStavby}`), 20, yPos);
     yPos += 10;
 
     // Konfigurácia
     doc.setFontSize(11);
     doc.setFont(undefined, 'bold');
     doc.setTextColor(mainColor.r, mainColor.g, mainColor.b);
-    doc.text('Konfigurácia:', 20, yPos);
+    doc.text(removeDiacritics('Konfigurácia:'), 20, yPos);
     yPos += 7;
 
     doc.setTextColor(0, 0, 0);
@@ -433,7 +460,7 @@ Deno.serve(async (req) => {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(10);
     doc.setFont(undefined, 'bold');
-    doc.text('Konfigurácia:', 25, yPos);
+    doc.text(removeDiacritics('Konfigurácia:'), 25, yPos);
     doc.text('Cena', pageWidth - 25, yPos, { align: 'right' });
     yPos += 10;
 
@@ -454,7 +481,7 @@ Deno.serve(async (req) => {
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(10);
         doc.setFont(undefined, 'bold');
-        doc.text(polozka.nazov, 25, yPos);
+        doc.text(removeDiacritics(polozka.nazov), 25, yPos);
         doc.setTextColor(0, 0, 0);
         yPos += 9;
         return;
@@ -471,19 +498,20 @@ Deno.serve(async (req) => {
         doc.setFont(undefined, 'normal');
 
         // Čiara cez text
-        const textWidth = doc.getTextWidth(polozka.nazov);
+        const textNoDiacritics = removeDiacritics(polozka.nazov);
+        const textWidth = doc.getTextWidth(textNoDiacritics);
         doc.line(25, yPos - 1, 25 + textWidth, yPos - 1);
 
-        doc.text(polozka.nazov, 25, yPos);
+        doc.text(textNoDiacritics, 25, yPos);
         if (polozka.cena !== null) {
-          doc.text(formatPrice(polozka.cena), pageWidth - 25, yPos, { align: 'right' });
+          doc.text(removeDiacritics(formatPrice(polozka.cena)), pageWidth - 25, yPos, { align: 'right' });
         }
 
         doc.setTextColor(0, 0, 0);
       } else {
-        doc.text(polozka.nazov, 25, yPos);
+        doc.text(removeDiacritics(polozka.nazov), 25, yPos);
         if (polozka.cena !== null) {
-          doc.text(formatPrice(polozka.cena), pageWidth - 25, yPos, { align: 'right' });
+          doc.text(removeDiacritics(formatPrice(polozka.cena)), pageWidth - 25, yPos, { align: 'right' });
         }
       }
 
@@ -493,15 +521,17 @@ Deno.serve(async (req) => {
     yPos += 5;
 
     // Celková cena
-    doc.setFillColor(mainColor.r, mainColor.g, mainColor.b, 0.1);
+    doc.setFillColor(0, 0, 0);
     doc.rect(20, yPos - 3, pageWidth - 40, 12, 'F');
-    
+
     doc.setFont(undefined, 'bold');
     doc.setFontSize(14);
-    doc.setTextColor(mainColor.r, mainColor.g, mainColor.b);
-    doc.text('CELKOVÁ CENA s DPH', 25, yPos + 4);
-    doc.text(formatPrice(konfiguraciaData.totalPrice), pageWidth - 25, yPos + 4, { align: 'right' });
+    doc.setTextColor(255, 255, 255);
+    doc.text(removeDiacritics('CELKOVÁ CENA s DPH'), 25, yPos + 4);
+    doc.text(removeDiacritics(formatPrice(konfiguraciaData.totalPrice)), pageWidth - 25, yPos + 4, { align: 'right' });
     yPos += 18;
+
+    doc.setTextColor(0, 0, 0);
 
     // Pôdorysy
     if (dom?.podorys_2d || dom?.podorys_3d) {
@@ -509,17 +539,17 @@ Deno.serve(async (req) => {
         doc.addPage();
         yPos = 20;
       }
-      
+
       doc.setFontSize(12);
       doc.setFont(undefined, 'bold');
       doc.setTextColor(mainColor.r, mainColor.g, mainColor.b);
-      doc.text('Pôdorysy:', 20, yPos);
+      doc.text(removeDiacritics('Pôdorysy:'), 20, yPos);
       yPos += 8;
-      
+
       doc.setTextColor(100, 100, 100);
       doc.setFontSize(9);
       doc.setFont(undefined, 'normal');
-      doc.text('(Pôdorysy sú k dispozícii v prílohe alebo na vyžiadanie)', 25, yPos);
+      doc.text(removeDiacritics('(Pôdorysy sú k dispozícii v prílohe alebo na vyžiadanie)'), 25, yPos);
       yPos += 10;
     }
 
@@ -527,24 +557,24 @@ Deno.serve(async (req) => {
     if (matchedGalleries.length > 0) {
       doc.addPage();
       yPos = 20;
-      
+
       doc.setFontSize(14);
       doc.setFont(undefined, 'bold');
       doc.setTextColor(mainColor.r, mainColor.g, mainColor.b);
-      doc.text('Fotogaléria', 20, yPos);
+      doc.text(removeDiacritics('Fotogaléria'), 20, yPos);
       yPos += 10;
-      
+
       for (const galeria of matchedGalleries) {
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(11);
         doc.setFont(undefined, 'bold');
-        doc.text(galeria.nazov, 20, yPos);
+        doc.text(removeDiacritics(galeria.nazov), 20, yPos);
         yPos += 7;
-        
+
         doc.setFontSize(8);
         doc.setFont(undefined, 'normal');
         doc.setTextColor(100, 100, 100);
-        doc.text(`${Math.min(6, galeria.fotky.length)} z ${galeria.fotky.length} fotiek`, 25, yPos);
+        doc.text(removeDiacritics(`${Math.min(6, galeria.fotky.length)} z ${galeria.fotky.length} fotiek`), 25, yPos);
         yPos += 7;
         
         // Aplikuj watermark a pridaj fotky do PDF
@@ -575,7 +605,7 @@ Deno.serve(async (req) => {
             
             doc.setFontSize(7);
             doc.setFont(undefined, 'normal');
-            doc.text(`${galeria.nazov} - Fotka ${i + 1}`, xPos + imgWidth/2, yPos + imgHeight - 5, { align: 'center' });
+            doc.text(removeDiacritics(`${galeria.nazov} - Fotka ${i + 1}`), xPos + imgWidth/2, yPos + imgHeight - 5, { align: 'center' });
             
           } catch (e) {
             console.error('Chyba pri vkladaní fotky:', e);
@@ -591,11 +621,11 @@ Deno.serve(async (req) => {
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(10);
       doc.setFont(undefined, 'bold');
-      doc.text('Poznámka:', 20, yPos);
+      doc.text(removeDiacritics('Poznámka:'), 20, yPos);
       yPos += 6;
       doc.setFont(undefined, 'normal');
       doc.setFontSize(9);
-      const splitPoznamka = doc.splitTextToSize(klientData.poznamka, pageWidth - 40);
+      const splitPoznamka = doc.splitTextToSize(removeDiacritics(klientData.poznamka), pageWidth - 40);
       doc.text(splitPoznamka, 20, yPos);
       yPos += splitPoznamka.length * 4 + 10;
     }
@@ -607,7 +637,7 @@ Deno.serve(async (req) => {
 
     doc.setFontSize(8);
     doc.setTextColor(100, 100, 100);
-    doc.text('Pre viac informácií nás neváhajte kontaktovať na +421 905 138 124 alebo info@americanliving.sk', 
+    doc.text(removeDiacritics('Pre viac informácií nás neváhajte kontaktovať na +421 905 138 124 alebo info@americanliving.sk'), 
       pageWidth / 2, pageHeight - 20, { align: 'center' });
 
     const pdfBytes = doc.output('arraybuffer');
