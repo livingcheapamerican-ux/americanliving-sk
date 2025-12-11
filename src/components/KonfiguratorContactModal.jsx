@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Send, CheckCircle, Package, Hammer, Key, FileText, Sparkles, FileDown, Mail, Eye } from "lucide-react";
+import { Send, CheckCircle, Package, Hammer, Key, FileText, Sparkles, FileDown, Mail } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
@@ -26,8 +26,7 @@ export default function KonfiguratorContactModal({
   izolaciaNavysenie,
   tepelneCerpadlo,
   rekuperacia,
-  projektA0,
-  konfiguraciaData
+  projektA0
 }) {
   const [formData, setFormData] = useState({
     meno: "",
@@ -38,15 +37,6 @@ export default function KonfiguratorContactModal({
   });
   const [submitted, setSubmitted] = useState(false);
   const [generatingPDF, setGeneratingPDF] = useState(false);
-  const [showEmailPreview, setShowEmailPreview] = useState(false);
-  const [emailPreviewHtml, setEmailPreviewHtml] = useState("");
-
-  const { data: user } = useQuery({
-    queryKey: ['current-user'],
-    queryFn: () => base44.auth.me()
-  });
-
-  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
   const formatPrice = (price) => price?.toLocaleString('sk-SK') + " €";
 
@@ -127,95 +117,26 @@ export default function KonfiguratorContactModal({
     }
   };
 
-  const handleDownloadPDFProstoHouse = async () => {
-    setGeneratingPDF(true);
-    try {
-      const response = await base44.functions.invoke('generujCenovuPonukuProstoHouse', {
-        dom,
-        konfiguraciaData: {
-          ...konfiguraciaData,
-          totalPrice,
-          polozky: selectedItems?.map(item => ({
-            nazov: item.name,
-            cena: item.price,
-            vybrane: item.selected,
-            kategoria: item.section === "base"
-          }))
-        },
-        klientData: formData
-      });
-      
-      const blob = new Blob([response.data], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      const domSlug = (dom?.nazov || 'dom').toLowerCase().replace(/[^a-z0-9]+/g, '-');
-      a.download = `cenova-ponuka-${domSlug}-${formData.meno || 'klient'}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
-      
-      toast.success('PDF stiahnuté');
-    } catch (error) {
-      toast.error('Chyba pri generovaní PDF');
-      console.error(error);
-    } finally {
-      setGeneratingPDF(false);
-    }
-  };
-
-  const handleEmailPreview = async () => {
-    try {
-      const response = await base44.functions.invoke('nahladCenovejPonukyProstoHouseEmail', {
-        dom,
-        konfiguraciaData: {
-          ...konfiguraciaData,
-          totalPrice,
-          polozky: selectedItems?.map(item => ({
-            nazov: item.name,
-            cena: item.price,
-            vybrane: item.selected,
-            kategoria: item.section === "base"
-          }))
-        },
-        klientData: formData
-      });
-      
-      setEmailPreviewHtml(response.data);
-      setShowEmailPreview(true);
-    } catch (error) {
-      toast.error('Chyba pri generovaní náhľadu');
-      console.error(error);
-    }
-  };
-
   const handleEmailPDF = async () => {
     if (!formData.email) {
       toast.error('Vyplňte email');
       return;
     }
+    
     setGeneratingPDF(true);
     try {
-      await base44.functions.invoke('odosliCenovuPonukuProstoHouseEmail', {
-        dom,
-        konfiguraciaData: {
-          ...konfiguraciaData,
-          totalPrice,
-          polozky: selectedItems?.map(item => ({
-            nazov: item.name,
-            cena: item.price,
-            vybrane: item.selected,
-            kategoria: item.section === "base"
-          }))
-        },
-        klientData: formData
+      await base44.functions.invoke('generateConfigurationPDF', {
+        domId: dom.id,
+        configuration: { vonkajsiaFasada, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0 },
+        totalPrice,
+        selectedItems,
+        sendEmail: true,
+        recipientEmail: formData.email
       });
       
-      toast.success('Cenová ponuka bola odoslaná emailom');
+      toast.success('PDF odoslané na email');
     } catch (error) {
-      toast.error('Chyba pri odosielaní emailu');
-      console.error(error);
+      toast.error('Chyba pri odosielaní: ' + error.message);
     } finally {
       setGeneratingPDF(false);
     }
@@ -414,44 +335,31 @@ export default function KonfiguratorContactModal({
                   />
                 </div>
 
-{isAdmin && dom?.vyrobca === "Prosto House" && (
-                  <div className="grid grid-cols-3 gap-2 mb-3">
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      onClick={handleDownloadPDFProstoHouse}
-                      disabled={generatingPDF}
-                      className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50"
-                    >
-                      <Eye className="mr-1 w-4 h-4" />
-                      PDF
-                    </Button>
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleDownloadPDF}
+                    disabled={generatingPDF}
+                    className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50"
+                  >
+                    <FileDown className="mr-2 w-4 h-4" />
+                    Stiahnuť PDF
+                  </Button>
 
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      onClick={handleEmailPreview}
-                      className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50"
-                    >
-                      <Eye className="mr-1 w-4 h-4" />
-                      Email
-                    </Button>
-
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      onClick={handleEmailPDF}
-                      disabled={generatingPDF || !formData.email}
-                      className="border-2 border-green-500 text-green-600 hover:bg-green-50"
-                    >
-                      <Mail className="mr-1 w-4 h-4" />
-                      {generatingPDF ? '...' : '✉'}
-                    </Button>
-                  </div>
-                )}
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={handleEmailPDF}
+                    disabled={generatingPDF || !formData.email}
+                    className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50"
+                  >
+                    <Mail className="mr-2 w-4 h-4" />
+                    Email PDF
+                  </Button>
+                </div>
 
                 <Button
                   type="submit"
@@ -490,22 +398,6 @@ export default function KonfiguratorContactModal({
           </motion.div>
         )}
       </DialogContent>
-
-      {/* Email Preview Dialog */}
-      <Dialog open={showEmailPreview} onOpenChange={setShowEmailPreview}>
-        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto p-0">
-          <DialogHeader className="p-6 pb-2">
-            <DialogTitle>Náhľad emailu - {dom?.nazov}</DialogTitle>
-          </DialogHeader>
-          <div className="px-6 pb-6">
-            <iframe
-              srcDoc={emailPreviewHtml}
-              className="w-full h-[70vh] border rounded"
-              title="Email Preview"
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
     </Dialog>
   );
 }

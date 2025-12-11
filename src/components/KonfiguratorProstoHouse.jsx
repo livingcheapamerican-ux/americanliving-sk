@@ -473,16 +473,6 @@ export default function KonfiguratorProstoHouse({
             tepelneCerpadlo={tepelneCerpadlo}
             rekuperacia={rekuperacia}
             projektA0={projektA0}
-            konfiguraciaData={{
-              montazHolodomu, predlzenie, vstupneDvere, izolaciaNavysenie,
-              elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler,
-              tepelneCerpadlo, rekuperacia, zaklady, pripojkaSiete,
-              stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55,
-              povrchokaOkien, tonovaneSkla, vonkajsiaFasada, interierFinis,
-              vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
-              inziniering, projektA0, revizna, doprava,
-              predajNehnutelnosti, hladaniePozemku, financneSluzby
-            }}
           />
 
           <div className="px-2 py-1 max-h-[65vh] overflow-y-auto">
@@ -1250,16 +1240,6 @@ export default function KonfiguratorProstoHouse({
                     tepelneCerpadlo={tepelneCerpadlo}
                     rekuperacia={rekuperacia}
                     projektA0={projektA0}
-                    konfiguraciaData={{
-                      montazHolodomu, predlzenie, vstupneDvere, izolaciaNavysenie,
-                      elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler,
-                      tepelneCerpadlo, rekuperacia, zaklady, pripojkaSiete,
-                      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55,
-                      povrchokaOkien, tonovaneSkla, vonkajsiaFasada, interierFinis,
-                      vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
-                      inziniering, projektA0, revizna, doprava,
-                      predajNehnutelnosti, hladaniePozemku, financneSluzby
-                    }}
                   />
                 </div>
               </div>
