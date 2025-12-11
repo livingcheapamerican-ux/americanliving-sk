@@ -14,7 +14,9 @@ export default function Chatbot() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
+  const timeoutRef = useRef(null);
 
   const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
@@ -48,9 +50,18 @@ export default function Chatbot() {
     const unsubscribe = base44.agents.subscribeToConversation(conversationId, (data) => {
       setMessages(data.messages || []);
       setIsLoading(false);
+      setError(null);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, [conversationId]);
 
   const scrollToBottom = () => {
@@ -68,6 +79,13 @@ export default function Chatbot() {
     const userMessage = input.trim();
     setInput("");
     setIsLoading(true);
+    setError(null);
+
+    // Timeout po 60 sekundách
+    timeoutRef.current = setTimeout(() => {
+      setIsLoading(false);
+      setError("Odpoveď trvá príliš dlho. Skúste znovu.");
+    }, 60000);
 
     try {
       const conversation = await base44.agents.getConversation(conversationId);
@@ -78,6 +96,10 @@ export default function Chatbot() {
     } catch (error) {
       console.error("Chyba pri odosielaní správy:", error);
       setIsLoading(false);
+      setError("Nepodarilo sa odoslať správu. Skúste znovu.");
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
     }
   };
 
@@ -207,6 +229,21 @@ export default function Chatbot() {
                   <div className="flex justify-start">
                     <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
                       <Loader2 className="w-5 h-5 animate-spin text-red-600" />
+                    </div>
+                  </div>
+                )}
+                {error && (
+                  <div className="flex justify-center">
+                    <div className="bg-red-50 border border-red-200 rounded-2xl px-4 py-3 max-w-[80%]">
+                      <p className="text-sm text-red-700">{error}</p>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setError(null)}
+                        className="mt-2 text-xs"
+                      >
+                        Zavrieť
+                      </Button>
                     </div>
                   </div>
                 )}
