@@ -546,76 +546,216 @@ export default function AdminGeneratorCenovychPonuk() {
           {/* DIZAJN */}
           <TabsContent value="dizajn">
             <Card className="p-6">
-              <h2 className="text-xl font-bold mb-6">Dizajn cenovej ponuky</h2>
+              <h2 className="text-xl font-bold mb-6">Vyberte dizajn cenovej ponuky</h2>
               
               <div className="space-y-6">
+                {/* Galéria šablón */}
                 <div>
-                  <Label>Šablóna dizajnu</Label>
-                  <Select value={formData.sablona_dizajnu} onValueChange={(val) => setFormData({...formData, sablona_dizajnu: val})}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="modern">Moderný dizajn</SelectItem>
-                      <SelectItem value="classic">Klasický dizajn</SelectItem>
-                      <SelectItem value="minimal">Minimalistický dizajn</SelectItem>
-                      <SelectItem value="premium">Premium dizajn</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <p className="text-sm text-gray-500 mt-1">Vyberte vizuálny štýl cenovej ponuky</p>
+                  <Label className="mb-4 block">Šablóny dizajnu</Label>
+                  <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {[
+                      { 
+                        id: "modern_red", 
+                        nazov: "Modern Red", 
+                        popis: "Moderný červený dizajn", 
+                        hlavna: "#EF4444", 
+                        sekundarna: "#dc2626",
+                        preview: "linear-gradient(135deg, #EF4444 0%, #dc2626 100%)"
+                      },
+                      { 
+                        id: "elegant_blue", 
+                        nazov: "Elegant Blue", 
+                        popis: "Elegantný modrý dizajn", 
+                        hlavna: "#3B82F6", 
+                        sekundarna: "#2563EB",
+                        preview: "linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)"
+                      },
+                      { 
+                        id: "premium_gold", 
+                        nazov: "Premium Gold", 
+                        popis: "Luxusný zlatý dizajn", 
+                        hlavna: "#F59E0B", 
+                        sekundarna: "#D97706",
+                        preview: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)"
+                      },
+                      { 
+                        id: "forest_green", 
+                        nazov: "Forest Green", 
+                        popis: "Prírodný zelený dizajn", 
+                        hlavna: "#10B981", 
+                        sekundarna: "#059669",
+                        preview: "linear-gradient(135deg, #10B981 0%, #059669 100%)"
+                      },
+                      { 
+                        id: "royal_purple", 
+                        nazov: "Royal Purple", 
+                        popis: "Kráľovský fialový dizajn", 
+                        hlavna: "#8B5CF6", 
+                        sekundarna: "#7C3AED",
+                        preview: "linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)"
+                      },
+                      { 
+                        id: "ocean_teal", 
+                        nazov: "Ocean Teal", 
+                        popis: "Oceánsky tyrkysový dizajn", 
+                        hlavna: "#14B8A6", 
+                        sekundarna: "#0D9488",
+                        preview: "linear-gradient(135deg, #14B8A6 0%, #0D9488 100%)"
+                      },
+                      { 
+                        id: "sunset_orange", 
+                        nazov: "Sunset Orange", 
+                        popis: "Západný oranžový dizajn", 
+                        hlavna: "#F97316", 
+                        sekundarna: "#EA580C",
+                        preview: "linear-gradient(135deg, #F97316 0%, #EA580C 100%)"
+                      },
+                      { 
+                        id: "midnight_dark", 
+                        nazov: "Midnight Dark", 
+                        popis: "Tmavý polnočný dizajn", 
+                        hlavna: "#1F2937", 
+                        sekundarna: "#111827",
+                        preview: "linear-gradient(135deg, #1F2937 0%, #111827 100%)"
+                      },
+                      { 
+                        id: "cherry_blossom", 
+                        nazov: "Cherry Blossom", 
+                        popis: "Ružový sakurový dizajn", 
+                        hlavna: "#EC4899", 
+                        sekundarna: "#DB2777",
+                        preview: "linear-gradient(135deg, #EC4899 0%, #DB2777 100%)"
+                      },
+                      { 
+                        id: "slate_professional", 
+                        nazov: "Slate Professional", 
+                        popis: "Profesionálny šedý dizajn", 
+                        hlavna: "#64748B", 
+                        sekundarna: "#475569",
+                        preview: "linear-gradient(135deg, #64748B 0%, #475569 100%)"
+                      },
+                      { 
+                        id: "emerald_fresh", 
+                        nazov: "Emerald Fresh", 
+                        popis: "Čerstvý smaragdový dizajn", 
+                        hlavna: "#34D399", 
+                        sekundarna: "#10B981",
+                        preview: "linear-gradient(135deg, #34D399 0%, #10B981 100%)"
+                      },
+                      { 
+                        id: "indigo_corporate", 
+                        nazov: "Indigo Corporate", 
+                        popis: "Korporátny indigový dizajn", 
+                        hlavna: "#6366F1", 
+                        sekundarna: "#4F46E5",
+                        preview: "linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)"
+                      },
+                    ].map((sablona) => (
+                      <div
+                        key={sablona.id}
+                        onClick={() => setFormData({
+                          ...formData, 
+                          sablona_dizajnu: sablona.id,
+                          farba_hlavna: sablona.hlavna,
+                          farba_sekundarna: sablona.sekundarna
+                        })}
+                        className={`cursor-pointer border-2 rounded-xl overflow-hidden transition-all ${
+                          formData.sablona_dizajnu === sablona.id
+                            ? 'border-primary ring-4 ring-primary/30 shadow-xl'
+                            : 'border-gray-200 hover:border-gray-400 hover:shadow-lg'
+                        }`}
+                      >
+                        {/* Preview */}
+                        <div 
+                          className="h-32 relative"
+                          style={{ background: sablona.preview }}
+                        >
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg">
+                              <div className="text-xs font-bold text-gray-900">CENOVÁ PONUKA</div>
+                              <div className="text-[10px] text-gray-600 mt-1">American Living</div>
+                            </div>
+                          </div>
+                          {formData.sablona_dizajnu === sablona.id && (
+                            <div className="absolute top-2 right-2 bg-primary text-white rounded-full p-1">
+                              <Eye className="w-4 h-4" />
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Info */}
+                        <div className="p-3 bg-white">
+                          <h4 className="font-bold text-sm text-gray-900">{sablona.nazov}</h4>
+                          <p className="text-xs text-gray-500 mt-1">{sablona.popis}</p>
+                          <div className="flex gap-2 mt-2">
+                            <div 
+                              className="w-6 h-6 rounded border shadow-sm"
+                              style={{ backgroundColor: sablona.hlavna }}
+                              title="Hlavná farba"
+                            />
+                            <div 
+                              className="w-6 h-6 rounded border shadow-sm"
+                              style={{ backgroundColor: sablona.sekundarna }}
+                              title="Sekundárna farba"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label>Hlavná farba</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        type="color"
-                        value={formData.farba_hlavna}
-                        onChange={(e) => setFormData({...formData, farba_hlavna: e.target.value})}
-                        className="w-20"
-                      />
-                      <Input
-                        value={formData.farba_hlavna}
-                        onChange={(e) => setFormData({...formData, farba_hlavna: e.target.value})}
-                        placeholder="#EF4444"
-                      />
+                {/* Vlastné farby */}
+                <div className="border-t pt-6">
+                  <Label className="mb-4 block">Prispôsobenie farieb</Label>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-sm">Hlavná farba</Label>
+                      <div className="flex gap-2 mt-2">
+                        <Input
+                          type="color"
+                          value={formData.farba_hlavna}
+                          onChange={(e) => setFormData({...formData, farba_hlavna: e.target.value})}
+                          className="w-20"
+                        />
+                        <Input
+                          value={formData.farba_hlavna}
+                          onChange={(e) => setFormData({...formData, farba_hlavna: e.target.value})}
+                          placeholder="#EF4444"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label className="text-sm">Sekundárna farba</Label>
+                      <div className="flex gap-2 mt-2">
+                        <Input
+                          type="color"
+                          value={formData.farba_sekundarna}
+                          onChange={(e) => setFormData({...formData, farba_sekundarna: e.target.value})}
+                          className="w-20"
+                        />
+                        <Input
+                          value={formData.farba_sekundarna}
+                          onChange={(e) => setFormData({...formData, farba_sekundarna: e.target.value})}
+                          placeholder="#dc2626"
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  <div>
-                    <Label>Sekundárna farba</Label>
-                    <div className="flex gap-2">
-                      <Input
-                        type="color"
-                        value={formData.farba_sekundarna}
-                        onChange={(e) => setFormData({...formData, farba_sekundarna: e.target.value})}
-                        className="w-20"
-                      />
-                      <Input
-                        value={formData.farba_sekundarna}
-                        onChange={(e) => setFormData({...formData, farba_sekundarna: e.target.value})}
-                        placeholder="#dc2626"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Náhľad farieb */}
-                <div className="border rounded-lg p-4">
-                  <Label className="mb-2 block">Náhľad farieb</Label>
-                  <div className="flex gap-4">
-                    <div 
-                      className="w-24 h-24 rounded-lg shadow-md flex items-center justify-center text-white font-bold"
-                      style={{ backgroundColor: formData.farba_hlavna }}
-                    >
-                      Hlavná
-                    </div>
-                    <div 
-                      className="w-24 h-24 rounded-lg shadow-md flex items-center justify-center text-white font-bold"
-                      style={{ backgroundColor: formData.farba_sekundarna }}
-                    >
-                      Sekundárna
+                  {/* Live preview */}
+                  <div className="mt-4 border rounded-lg p-6" style={{ 
+                    background: `linear-gradient(135deg, ${formData.farba_hlavna} 0%, ${formData.farba_sekundarna} 100%)` 
+                  }}>
+                    <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-2xl max-w-md mx-auto">
+                      <div className="text-center">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">CENOVÁ PONUKA</h3>
+                        <p className="text-sm text-gray-600">American Living s.r.o.</p>
+                        <div className="mt-4 pt-4 border-t">
+                          <p className="text-xs text-gray-500">Náhľad vybraného dizajnu</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
