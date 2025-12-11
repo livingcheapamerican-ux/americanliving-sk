@@ -7,6 +7,7 @@ import LyonFinalSummaryModal from "./LyonFinalSummaryModal";
 import { useLanguage } from "./LanguageContext";
 
 export default function LyonSummaryPanelStandalone({ 
+  predajNehnutelnosti, hladamPozemok, financneSluzby,
   ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu, 
   tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu, podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia,
   fasada, strecha, odkvapy, okna, vchodoveDvere, obkladStien, interieroveDvere,
@@ -60,6 +61,24 @@ export default function LyonSummaryPanelStandalone({
 
       {/* Content */}
       <div className="p-4 space-y-4">
+        {/* Dodatočné služby - zobrazovať len ak je aspoň jedna vybraná */}
+        {(predajNehnutelnosti || hladamPozemok || financneSluzby) && (
+          <div className="bg-cyan-900/30 rounded-lg p-3 border border-cyan-700">
+            <p className="text-sm font-semibold text-cyan-300 mb-2">📋 {t('additionalServices') || 'Dodatočné služby'}</p>
+            <div className="space-y-1.5 text-sm">
+              {predajNehnutelnosti && (
+                <p className="text-slate-300">✓ {t('sellProperty') || 'Predaj predošlej nehnuteľnosti'}</p>
+              )}
+              {hladamPozemok && (
+                <p className="text-slate-300">✓ {t('findLand') || 'Chcem pozemok pod svoj dom'}</p>
+              )}
+              {financneSluzby && (
+                <p className="text-slate-300">✓ {t('financialServices') || 'Finančné služby - úvery/poistky'}</p>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Účel + status */}
         <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700">
           <p className="text-sm font-semibold text-slate-400 mb-1">{t('purposeOfBuilding') || 'ÚČEL STAVBY'}</p>
