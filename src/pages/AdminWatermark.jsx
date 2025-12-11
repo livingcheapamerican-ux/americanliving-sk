@@ -23,6 +23,7 @@ export default function AdminWatermark() {
   });
 
   const [enabled, setEnabled] = useState(false);
+  const [enabledCatalog, setEnabledCatalog] = useState(false);
   const [text, setText] = useState("American Living");
   const [position, setPosition] = useState("bottom-right");
   const [opacity, setOpacity] = useState(0.3);
@@ -31,6 +32,7 @@ export default function AdminWatermark() {
   React.useEffect(() => {
     if (settings) {
       setEnabled(settings.watermark_enabled || false);
+      setEnabledCatalog(settings.watermark_enabled_catalog || false);
       setText(settings.watermark_text || "American Living");
       setPosition(settings.watermark_position || "bottom-right");
       setOpacity(settings.watermark_opacity || 0.3);
@@ -58,6 +60,7 @@ export default function AdminWatermark() {
   const handleSave = () => {
     saveMutation.mutate({
       watermark_enabled: enabled,
+      watermark_enabled_catalog: enabledCatalog,
       watermark_text: text,
       watermark_position: position,
       watermark_opacity: opacity,
@@ -76,7 +79,9 @@ export default function AdminWatermark() {
   const sizeClasses = {
     "small": "text-sm",
     "medium": "text-base",
-    "large": "text-xl"
+    "large": "text-xl",
+    "xlarge": "text-2xl",
+    "xxlarge": "text-4xl"
   };
 
   if (isLoading) return <div className="p-8">Načítavam...</div>;
@@ -95,16 +100,29 @@ export default function AdminWatermark() {
             <h2 className="text-xl font-bold mb-6">Nastavenia</h2>
             
             <div className="space-y-6">
-              {/* Zapnuté/Vypnuté */}
-              <div className="flex items-center justify-between">
+              {/* Zapnuté/Vypnuté - Galéria */}
+              <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
                 <div>
-                  <Label htmlFor="enabled" className="text-base font-semibold">Watermark zapnutý</Label>
-                  <p className="text-sm text-gray-500">Zobraziť watermark na všetkých fotkách</p>
+                  <Label htmlFor="enabled" className="text-base font-semibold">Galéria domov</Label>
+                  <p className="text-sm text-gray-500">Watermark v galérii detailu domu</p>
                 </div>
                 <Switch
                   id="enabled"
                   checked={enabled}
                   onCheckedChange={setEnabled}
+                />
+              </div>
+
+              {/* Zapnuté/Vypnuté - Katalóg */}
+              <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                <div>
+                  <Label htmlFor="enabledCatalog" className="text-base font-semibold">Katalóg domov</Label>
+                  <p className="text-sm text-gray-500">Watermark v katalógu domov (úvodné fotky)</p>
+                </div>
+                <Switch
+                  id="enabledCatalog"
+                  checked={enabledCatalog}
+                  onCheckedChange={setEnabledCatalog}
                 />
               </div>
 
@@ -148,6 +166,8 @@ export default function AdminWatermark() {
                     <SelectItem value="small">Malý</SelectItem>
                     <SelectItem value="medium">Stredný</SelectItem>
                     <SelectItem value="large">Veľký</SelectItem>
+                    <SelectItem value="xlarge">Extra veľký</SelectItem>
+                    <SelectItem value="xxlarge">XXL</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

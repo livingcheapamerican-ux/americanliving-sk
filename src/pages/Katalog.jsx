@@ -585,6 +585,7 @@ export default function Katalog() {
                                 src={dizajnFilter === "drevo" && dom.zakladna_konfiguracia_obrazok ? dom.zakladna_konfiguracia_obrazok : dom.hlavny_obrazok}
                                 alt={dom.nazov}
                                 className="w-full h-full object-contain bg-gray-100 group-hover:scale-105 transition-all duration-500"
+                                useCatalogSetting={true}
                                 onLoad={(e) => {
                                   const img = e.target;
                                   if (img.naturalHeight > img.naturalWidth) {
