@@ -125,26 +125,66 @@ export default function LyonFinalSummaryModal({
 
   // Získať galérie na základe mapovaných pravidiel
   const getMatchedGalleries = () => {
-    if (!aktivneNastavenie?.mapovanie_fotiek_ticabhouse || !dom?.galerie) return [];
+    if (!dom?.galerie) return [];
     
     const matchedGalleries = [];
     
-    // Pre každú galériu v nastavení
+    // Ak nie je nastavenie, použij default logiku
+    if (!aktivneNastavenie?.mapovanie_fotiek_ticabhouse || aktivneNastavenie.mapovanie_fotiek_ticabhouse.length === 0) {
+      // Default pravidlá pre exteriér
+      if (fasada === "omietka") {
+        const murovkaGaleria = dom.galerie?.find(g => g.typ === "exterier_murovka");
+        if (murovkaGaleria?.fotky?.length > 0) {
+          matchedGalleries.push({
+            nazov: "Exteriér - Murovka",
+            fotky: murovkaGaleria.fotky
+          });
+        }
+      } else if (fasada === "drevo_smrek" || fasada === "smrekovec" || fasada === "falcovane" || fasada === "thermowood") {
+        const drevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
+        if (drevoGaleria?.fotky?.length > 0) {
+          matchedGalleries.push({
+            nazov: "Exteriér - Drevo/Plech",
+            fotky: drevoGaleria.fotky
+          });
+        }
+      }
+      
+      // Default pravidlá pre interiér
+      if (obkladStien === "sadrokarton_tapeta") {
+        const sadroGaleria = dom.galerie?.find(g => g.typ === "interier_sadrokarton");
+        if (sadroGaleria?.fotky?.length > 0) {
+          matchedGalleries.push({
+            nazov: "Interiér - Sadrokartón",
+            fotky: sadroGaleria.fotky
+          });
+        }
+      } else if (obkladStien === "smrek_8cm" || obkladStien === "smrek_bez_uzlov") {
+        const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
+        if (drevoGaleria?.fotky?.length > 0) {
+          matchedGalleries.push({
+            nazov: "Interiér - Drevo",
+            fotky: drevoGaleria.fotky
+          });
+        }
+      }
+      
+      return matchedGalleries;
+    }
+    
+    // Použij nastavené mapovanie
     aktivneNastavenie.mapovanie_fotiek_ticabhouse.forEach(mapping => {
-      // Skontroluj či nejaká dlaždica z konfigurácie aktivuje túto galériu
       const isActive = mapping.dlazdice_ids?.some(dlazdicaId => {
-        // Mapovanie dlaždíc na konfiguráciu
         if (dlazdicaId === "fasada_omietka" && fasada === "omietka") return true;
         if (dlazdicaId === "fasada_smrekovec" && fasada === "smrekovec") return true;
         if (dlazdicaId === "fasada_falcovane" && fasada === "falcovane") return true;
         if (dlazdicaId === "fasada_thermowood" && fasada === "thermowood") return true;
         if (dlazdicaId === "obklad_sadrokarton_tapeta" && obkladStien === "sadrokarton_tapeta") return true;
-        if (dlazdicaId === "obklad_smrek_bez_uzlov" && obkladStien === "smrek_bez_uzlov") return true;
+        if (dlazdicaId === "obklad_smrek_bez_uzlov" && (obkladStien === "smrek_bez_uzlov" || obkladStien === "smrek_8cm")) return true;
         return false;
       });
       
       if (isActive) {
-        // Nájdi galériu v dome
         const galeria = dom.galerie?.find(g => g.typ === mapping.galeria_typ);
         if (galeria && galeria.fotky?.length > 0) {
           matchedGalleries.push({
@@ -927,8 +967,10 @@ export default function LyonFinalSummaryModal({
                             {galeria.fotky.slice(0, 6).map((img, idx) => (
                               <div key={idx} className="border rounded overflow-hidden relative">
                                 <img src={img} alt={`${galeria.nazov} ${idx + 1}`} className="w-full h-24 object-cover" />
-                                <div className="absolute bottom-1 right-1 text-white text-[8px] bg-black/30 px-1 rounded">
-                                  American Living
+                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                  <div className="text-white text-lg font-bold bg-black/40 px-4 py-2 rounded">
+                                    American Living
+                                  </div>
                                 </div>
                               </div>
                             ))}

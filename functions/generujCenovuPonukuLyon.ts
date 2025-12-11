@@ -210,10 +210,55 @@ Deno.serve(async (req) => {
 
     // Získaj galérie podľa mapovaných pravidiel
     const getMatchedGalleries = () => {
-      if (!aktivneNastavenie?.mapovanie_fotiek_ticabhouse || !dom?.galerie) return [];
+      if (!dom?.galerie) return [];
       
       const matchedGalleries = [];
       
+      // Ak nie je nastavenie, použij default logiku
+      if (!aktivneNastavenie?.mapovanie_fotiek_ticabhouse || aktivneNastavenie.mapovanie_fotiek_ticabhouse.length === 0) {
+        // Default pravidlá pre exteriér
+        if (konfiguraciaData.fasada === "omietka") {
+          const murovkaGaleria = dom.galerie?.find(g => g.typ === "exterier_murovka");
+          if (murovkaGaleria?.fotky?.length > 0) {
+            matchedGalleries.push({
+              nazov: "Exteriér - Murovka",
+              fotky: murovkaGaleria.fotky
+            });
+          }
+        } else if (konfiguraciaData.fasada === "drevo_smrek" || konfiguraciaData.fasada === "smrekovec" || 
+                   konfiguraciaData.fasada === "falcovane" || konfiguraciaData.fasada === "thermowood") {
+          const drevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
+          if (drevoGaleria?.fotky?.length > 0) {
+            matchedGalleries.push({
+              nazov: "Exteriér - Drevo/Plech",
+              fotky: drevoGaleria.fotky
+            });
+          }
+        }
+        
+        // Default pravidlá pre interiér
+        if (konfiguraciaData.obkladStien === "sadrokarton_tapeta") {
+          const sadroGaleria = dom.galerie?.find(g => g.typ === "interier_sadrokarton");
+          if (sadroGaleria?.fotky?.length > 0) {
+            matchedGalleries.push({
+              nazov: "Interiér - Sadrokartón",
+              fotky: sadroGaleria.fotky
+            });
+          }
+        } else if (konfiguraciaData.obkladStien === "smrek_8cm" || konfiguraciaData.obkladStien === "smrek_bez_uzlov") {
+          const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
+          if (drevoGaleria?.fotky?.length > 0) {
+            matchedGalleries.push({
+              nazov: "Interiér - Drevo",
+              fotky: drevoGaleria.fotky
+            });
+          }
+        }
+        
+        return matchedGalleries;
+      }
+      
+      // Použij nastavené mapovanie
       aktivneNastavenie.mapovanie_fotiek_ticabhouse.forEach(mapping => {
         const isActive = mapping.dlazdice_ids?.some(dlazdicaId => {
           if (dlazdicaId === "fasada_omietka" && konfiguraciaData.fasada === "omietka") return true;
@@ -221,7 +266,7 @@ Deno.serve(async (req) => {
           if (dlazdicaId === "fasada_falcovane" && konfiguraciaData.fasada === "falcovane") return true;
           if (dlazdicaId === "fasada_thermowood" && konfiguraciaData.fasada === "thermowood") return true;
           if (dlazdicaId === "obklad_sadrokarton_tapeta" && konfiguraciaData.obkladStien === "sadrokarton_tapeta") return true;
-          if (dlazdicaId === "obklad_smrek_bez_uzlov" && konfiguraciaData.obkladStien === "smrek_bez_uzlov") return true;
+          if (dlazdicaId === "obklad_smrek_bez_uzlov" && (konfiguraciaData.obkladStien === "smrek_bez_uzlov" || konfiguraciaData.obkladStien === "smrek_8cm")) return true;
           return false;
         });
         
@@ -389,11 +434,15 @@ Deno.serve(async (req) => {
             doc.setFillColor(240, 240, 240);
             doc.rect(xPos, yPos, imgWidth, imgHeight, 'F');
             
-            // Placeholder pre obrázok (jsPDF má obmedzenia s async načítaním obrázkov)
-            doc.setFontSize(8);
+            // Watermark v strede
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
             doc.setTextColor(150, 150, 150);
-            doc.text('Fotka ' + (i + 1), xPos + imgWidth/2, yPos + imgHeight/2, { align: 'center' });
-            doc.text('American Living', xPos + imgWidth - 3, yPos + imgHeight - 3, { align: 'right' });
+            doc.text('American Living', xPos + imgWidth/2, yPos + imgHeight/2, { align: 'center' });
+            
+            doc.setFontSize(7);
+            doc.setFont(undefined, 'normal');
+            doc.text(`${galeria.nazov} - Fotka ${i + 1}`, xPos + imgWidth/2, yPos + imgHeight - 5, { align: 'center' });
             
           } catch (e) {
             console.error('Chyba pri vkladaní fotky:', e);
