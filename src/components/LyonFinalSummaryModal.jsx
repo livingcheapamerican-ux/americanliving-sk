@@ -1379,16 +1379,16 @@ export default function LyonFinalSummaryModal({
 
                       {/* SEKCIA 12: DODATOČNÉ SLUŽBY - vždy zobrazené */}
                       <div className="bg-gray-200 px-3 py-1.5 rounded font-bold text-red-600 text-sm mt-2">DODATOČNÉ SLUŽBY</div>
-                      <div className={`flex justify-between text-sm py-1 ${!predajNehnutelnosti ? "text-gray-400 line-through" : ""}`}>
-                        <span>• Predaj predošlej nehnuteľnosti</span>
+                      <div className={`flex justify-between text-sm py-1 ${!predajNehnutelnosti ? "text-gray-400 line-through" : "font-semibold text-gray-900 bg-green-50"}`}>
+                        <span>• Predaj predošlej nehnuteľnosti {predajNehnutelnosti && <span className="text-green-600 ml-1">✓</span>}</span>
                         <span>na vyžiadanie</span>
                       </div>
-                      <div className={`flex justify-between text-sm py-1 ${!chcemPozemok ? "text-gray-400 line-through" : ""}`}>
-                        <span>• Chcem pozemok pod svoj dom</span>
+                      <div className={`flex justify-between text-sm py-1 ${!chcemPozemok ? "text-gray-400 line-through" : "font-semibold text-gray-900 bg-green-50"}`}>
+                        <span>• Chcem pozemok pod svoj dom {chcemPozemok && <span className="text-green-600 ml-1">✓</span>}</span>
                         <span>na vyžiadanie</span>
                       </div>
-                      <div className={`flex justify-between text-sm py-1 ${!financneSluzby ? "text-gray-400 line-through" : ""}`}>
-                        <span>• Finančné služby - úvery/pôžičky</span>
+                      <div className={`flex justify-between text-sm py-1 ${!financneSluzby ? "text-gray-400 line-through" : "font-semibold text-gray-900 bg-green-50"}`}>
+                        <span>• Finančné služby - úvery/pôžičky {financneSluzby && <span className="text-green-600 ml-1">✓</span>}</span>
                         <span>na vyžiadanie</span>
                       </div>
                       </div>
