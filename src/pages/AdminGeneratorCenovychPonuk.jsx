@@ -16,6 +16,8 @@ export default function AdminGeneratorCenovychPonuk() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("zakladne");
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [selectedSablona, setSelectedSablona] = useState(null);
+  const [expandedSekcie, setExpandedSekcie] = useState({});
   
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -27,7 +29,9 @@ export default function AdminGeneratorCenovychPonuk() {
     queryFn: () => base44.entities.NastavenieCenovejPonuky.list()
   });
 
-  const aktivneNastavenie = nastavenia.find(n => n.aktivne) || nastavenia[0];
+  const aktivneNastavenie = selectedSablona 
+    ? nastavenia.find(n => n.id === selectedSablona) 
+    : nastavenia.find(n => n.aktivne) || nastavenia[0];
 
   const [formData, setFormData] = useState({
     nazov: aktivneNastavenie?.nazov || "Predvolené nastavenie",
@@ -106,32 +110,191 @@ export default function AdminGeneratorCenovychPonuk() {
     setFormData({ ...formData, dalsie_texty: updated });
   };
 
-  // Definície dlaždíc konfigurátorov
-  const ticabhouseDlazdice = [
-    { id: "izolacia_stien", nazov: "Izolácia stien", kategoria: "Izolácia" },
-    { id: "izolacia_podlahy", nazov: "Izolácia podlahy", kategoria: "Izolácia" },
-    { id: "izolacia_stropu", nazov: "Izolácia stropu", kategoria: "Izolácia" },
-    { id: "tepelne_cerpadlo", nazov: "Tepelné čerpadlo", kategoria: "Vykurovanie" },
-    { id: "rekuperacia", nazov: "Rekuperácia", kategoria: "Ventilácia" },
-    { id: "fasada", nazov: "Fasáda", kategoria: "Fasáda" },
-    { id: "obklad_interier", nazov: "Obklad interiéru", kategoria: "Interiér" },
-    { id: "dvere", nazov: "Dvere", kategoria: "Výbava" },
-    { id: "kupelna", nazov: "Kúpeľňa", kategoria: "Výbava" },
+  // Definície sekcií a dlaždíc konfigurátorov
+  const ticabhouseSekcie = [
+    {
+      id: "izolacia",
+      nazov: "Izolácia",
+      dlazdice: [
+        { id: "izolacia_stien_200mm", nazov: "Izolácia stien 200mm" },
+        { id: "izolacia_stien_250mm", nazov: "Izolácia stien 250mm" },
+        { id: "izolacia_podlahy_200mm", nazov: "Izolácia podlahy 200mm" },
+        { id: "izolacia_stropu_200mm", nazov: "Izolácia stropu 200mm" },
+      ]
+    },
+    {
+      id: "vykurovanie",
+      nazov: "Vykurovanie a klimatizácia",
+      dlazdice: [
+        { id: "tepelne_cerpadlo", nazov: "Tepelné čerpadlo" },
+        { id: "podlahove_kurenie", nazov: "Podlahové kúrenie" },
+        { id: "klimatizacia", nazov: "Klimatizácia" },
+        { id: "pripravaKrb", nazov: "Príprava na krb" },
+        { id: "ochranaKachle", nazov: "Ochrana kachle" },
+      ]
+    },
+    {
+      id: "ventilacia",
+      nazov: "Ventilácia",
+      dlazdice: [
+        { id: "pripravaNaRekuperaciu", nazov: "Príprava na rekuperáciu" },
+        { id: "rekuperacia", nazov: "Rekuperácia" },
+      ]
+    },
+    {
+      id: "fasada",
+      nazov: "Fasáda",
+      dlazdice: [
+        { id: "fasada_omietka", nazov: "Omietka" },
+        { id: "fasada_smrekovec", nazov: "Smrekovec" },
+        { id: "fasada_falcovane", nazov: "Falcované dosky" },
+        { id: "fasada_thermowood", nazov: "Thermowood" },
+      ]
+    },
+    {
+      id: "strecha",
+      nazov: "Strecha",
+      dlazdice: [
+        { id: "strecha_falcovane", nazov: "Falcovaný plech" },
+        { id: "odkvapy", nazov: "Odkvapový systém" },
+      ]
+    },
+    {
+      id: "dvere_okna",
+      nazov: "Dvere a okná",
+      dlazdice: [
+        { id: "dvere_kovove", nazov: "Kovové dvere" },
+        { id: "dvere_posuvne", nazov: "Posuvné dvere" },
+      ]
+    },
+    {
+      id: "interier",
+      nazov: "Interiér",
+      dlazdice: [
+        { id: "obklad_smrek_bez_uzlov", nazov: "Smrek bez úzlov" },
+        { id: "obklad_sadrokarton_tapeta", nazov: "Sadrokartón + tapeta" },
+        { id: "obklad_osb_panel", nazov: "OSB panel" },
+      ]
+    },
+    {
+      id: "elektro",
+      nazov: "Elektroinštalácia",
+      dlazdice: [
+        { id: "elektro_cz", nazov: "Elektroinštalácia CZ" },
+        { id: "elektro_ge", nazov: "Elektroinštalácia GE" },
+        { id: "bleskozvod", nazov: "Bleskozvod" },
+        { id: "prepat", nazov: "Prepäťová ochrana" },
+        { id: "pripravaNaSolarnePanely", nazov: "Príprava na solárne panely" },
+      ]
+    },
+    {
+      id: "kupelna",
+      nazov: "Kúpeľňa",
+      dlazdice: [
+        { id: "sprchovyKut", nazov: "Sprchový kút" },
+        { id: "vana", nazov: "Vaňa" },
+        { id: "bateria", nazov: "Batéria" },
+        { id: "skrinka", nazov: "Skrinka" },
+        { id: "strop_kupelna_sadrokarton", nazov: "Strop sadrokartón" },
+      ]
+    },
+    {
+      id: "zaklady_montaz",
+      nazov: "Základy a montáž",
+      dlazdice: [
+        { id: "zaklady_vruty", nazov: "Základy vruty" },
+        { id: "zaklady_patky", nazov: "Základy pätky" },
+        { id: "zaklady_pasove", nazov: "Základy pásové" },
+        { id: "montaz", nazov: "Montáž" },
+        { id: "doprava", nazov: "Doprava" },
+      ]
+    },
+    {
+      id: "sluzby",
+      nazov: "Doplnkové služby",
+      dlazdice: [
+        { id: "inziniering", nazov: "Inžiniering" },
+        { id: "projektACertifikacia", nazov: "Projekt a certifikácia" },
+        { id: "revizia", nazov: "Revízia" },
+      ]
+    }
   ];
 
-  const prostohouseDlazdice = [
-    { id: "fasada", nazov: "Fasáda", kategoria: "Fasáda" },
-    { id: "strecha", nazov: "Strecha", kategoria: "Strecha" },
-    { id: "okna", nazov: "Okná", kategoria: "Výbava" },
-    { id: "vykurovanie", nazov: "Vykurovanie", kategoria: "Vykurovanie" },
-    { id: "kupelna", nazov: "Kúpeľňa", kategoria: "Výbava" },
+  const prostohouseSekcie = [
+    {
+      id: "fasada",
+      nazov: "Fasáda",
+      dlazdice: [
+        { id: "fasada_drevo", nazov: "Drevená fasáda" },
+        { id: "fasada_omietka", nazov: "Omietka" },
+        { id: "fasada_kombinovana", nazov: "Kombinovaná" },
+      ]
+    },
+    {
+      id: "strecha",
+      nazov: "Strecha",
+      dlazdice: [
+        { id: "strecha_skridla", nazov: "Škridla" },
+        { id: "strecha_plech", nazov: "Plech" },
+      ]
+    },
+    {
+      id: "okna_dvere",
+      nazov: "Okná a dvere",
+      dlazdice: [
+        { id: "okna_plastove", nazov: "Plastové okná" },
+        { id: "okna_drevene", nazov: "Drevené okná" },
+        { id: "dvere_vstupne", nazov: "Vstupné dvere" },
+      ]
+    },
+    {
+      id: "vykurovanie",
+      nazov: "Vykurovanie",
+      dlazdice: [
+        { id: "tepelne_cerpadlo", nazov: "Tepelné čerpadlo" },
+        { id: "krb", nazov: "Krb" },
+        { id: "elektricke", nazov: "Elektrické vykurovanie" },
+      ]
+    },
+    {
+      id: "interier",
+      nazov: "Interiér",
+      dlazdice: [
+        { id: "podlahy_drevo", nazov: "Drevené podlahy" },
+        { id: "podlahy_laminat", nazov: "Laminát" },
+        { id: "obklady_kupelna", nazov: "Obklady kúpeľňa" },
+      ]
+    },
+    {
+      id: "kupelna",
+      nazov: "Kúpeľňa",
+      dlazdice: [
+        { id: "sprcha", nazov: "Sprcha" },
+        { id: "vana", nazov: "Vaňa" },
+        { id: "zachod", nazov: "Záchod" },
+        { id: "umyvadlo", nazov: "Umývadlo" },
+      ]
+    }
   ];
 
-  const addMapovanieFotky = (vyrobca) => {
+  const toggleSekcia = (sekciaId) => {
+    setExpandedSekcie({
+      ...expandedSekcie,
+      [sekciaId]: !expandedSekcie[sekciaId]
+    });
+  };
+
+  const addMapovanieFotky = (vyrobca, sekciaId, dlazdicaId, nazovDlazdice) => {
     const field = vyrobca === "ticabhouse" ? "mapovanie_fotiek_ticabhouse" : "mapovanie_fotiek_prosto";
     setFormData({
       ...formData,
-      [field]: [...formData[field], { dlazdica_id: "", nazov_dlazdice: "", typ_fotky: "titulna", popis: "" }]
+      [field]: [...formData[field], { 
+        sekcia_id: sekciaId,
+        dlazdica_id: dlazdicaId, 
+        nazov_dlazdice: nazovDlazdice, 
+        typ_fotky: "titulna", 
+        popis: "" 
+      }]
     });
   };
 
@@ -146,17 +309,17 @@ export default function AdminGeneratorCenovychPonuk() {
     const fieldName = vyrobca === "ticabhouse" ? "mapovanie_fotiek_ticabhouse" : "mapovanie_fotiek_prosto";
     const updated = [...formData[fieldName]];
     updated[index][field] = value;
-    
-    // Auto-fill nazov_dlazdice
-    if (field === "dlazdica_id") {
-      const dlazdice = vyrobca === "ticabhouse" ? ticabhouseDlazdice : prostohouseDlazdice;
-      const dlazdica = dlazdice.find(d => d.id === value);
-      if (dlazdica) {
-        updated[index].nazov_dlazdice = dlazdica.nazov;
-      }
-    }
-    
     setFormData({ ...formData, [fieldName]: updated });
+  };
+
+  const createNovaSablona = () => {
+    const novaSablona = {
+      nazov: "Nová šablóna",
+      vyrobca_filter: "",
+      aktivne: false,
+      ...formData
+    };
+    saveMutation.mutate(novaSablona);
   };
 
   const isSuperAdmin = user?.super_admin === true;
@@ -180,11 +343,58 @@ export default function AdminGeneratorCenovychPonuk() {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Generátor cenových ponúk</h1>
             <p className="text-gray-600">Nastavte dizajn, obsah a mapovanie fotiek pre cenové ponuky</p>
           </div>
-          <Button onClick={handleSave} disabled={saveMutation.isPending} className="bg-primary">
-            <Save className="w-4 h-4 mr-2" />
-            Uložiť nastavenie
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={createNovaSablona} variant="outline">
+              <Plus className="w-4 h-4 mr-2" />
+              Nová šablóna
+            </Button>
+            <Button onClick={handleSave} disabled={saveMutation.isPending} className="bg-primary">
+              <Save className="w-4 h-4 mr-2" />
+              Uložiť nastavenie
+            </Button>
+          </div>
         </div>
+
+        {/* Prehľad šablón */}
+        {nastavenia.length > 0 && (
+          <Card className="p-6 mb-8">
+            <h2 className="text-lg font-bold mb-4">Prednastavené šablóny</h2>
+            <div className="grid md:grid-cols-3 gap-4">
+              {nastavenia.map((sablona) => (
+                <div
+                  key={sablona.id}
+                  onClick={() => setSelectedSablona(sablona.id)}
+                  className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                    selectedSablona === sablona.id 
+                      ? 'border-primary ring-2 ring-primary bg-primary/5' 
+                      : 'border-gray-200 hover:border-primary/50'
+                  }`}
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-bold text-gray-900">{sablona.nazov}</h3>
+                    {sablona.aktivne && (
+                      <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
+                        Aktívne
+                      </span>
+                    )}
+                  </div>
+                  {sablona.vyrobca_filter && (
+                    <p className="text-sm text-gray-600 mb-2">
+                      Pre: <span className="font-semibold">{sablona.vyrobca_filter}</span>
+                    </p>
+                  )}
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div 
+                      className="w-4 h-4 rounded border"
+                      style={{ backgroundColor: sablona.farba_hlavna }}
+                    />
+                    <span>{sablona.sablona_dizajnu}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid grid-cols-5 w-full">
@@ -492,88 +702,120 @@ export default function AdminGeneratorCenovychPonuk() {
           {/* FOTKY TICABHOUSE */}
           <TabsContent value="fotky-ticab">
             <Card className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-xl font-bold">Mapovanie fotiek pre Ticabhouse</h2>
-                  <p className="text-sm text-gray-600">Definujte ktoré fotky sa zobrazia pri výbere konkrétnych dlaždíc konfiguratora</p>
-                </div>
-                <Button onClick={() => addMapovanieFotky("ticabhouse")} variant="outline">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Pridať mapovanie
-                </Button>
+              <div className="mb-6">
+                <h2 className="text-xl font-bold mb-2">Mapovanie fotiek pre Ticabhouse</h2>
+                <p className="text-sm text-gray-600">
+                  Rozkliknite sekcie a priraďte fotky ku konkrétnym dlaždiciam konfiguratora. 
+                  Pravidlá platia pre všetky domy výrobcu Ticabhouse.
+                </p>
               </div>
 
-              <div className="space-y-4">
-                {formData.mapovanie_fotiek_ticabhouse.map((mapovanie, index) => (
-                  <div key={index} className="border rounded-lg p-4">
-                    <div className="flex gap-4 mb-4">
-                      <div className="flex-1">
-                        <Label>Dlazdica konfiguratora</Label>
-                        <Select 
-                          value={mapovanie.dlazdica_id}
-                          onValueChange={(val) => updateMapovanieFotky("ticabhouse", index, 'dlazdica_id', val)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Vyberte dlazdicu" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {ticabhouseDlazdice.map(dlazdica => (
-                              <SelectItem key={dlazdica.id} value={dlazdica.id}>
-                                {dlazdica.nazov} ({dlazdica.kategoria})
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="flex-1">
-                        <Label>Typ fotky</Label>
-                        <Select 
-                          value={mapovanie.typ_fotky}
-                          onValueChange={(val) => updateMapovanieFotky("ticabhouse", index, 'typ_fotky', val)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="titulna">Titulná fotka</SelectItem>
-                            <SelectItem value="zakladna_konfiguracia">Základná konfigurácia</SelectItem>
-                            <SelectItem value="interier_drevo">Interiér drevo</SelectItem>
-                            <SelectItem value="interier_sadrokarton">Interiér sadrokartón</SelectItem>
-                            <SelectItem value="galeria_exterier">Galéria exteriér</SelectItem>
-                            <SelectItem value="galeria_interier">Galéria interiér</SelectItem>
-                            <SelectItem value="podorysy">Pôdorysy</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        onClick={() => removeMapovanieFotky("ticabhouse", index)}
+              <div className="space-y-2">
+                {ticabhouseSekcie.map((sekcia) => {
+                  const sekciaMapovania = formData.mapovanie_fotiek_ticabhouse.filter(
+                    m => m.sekcia_id === sekcia.id
+                  );
+                  
+                  return (
+                    <div key={sekcia.id} className="border rounded-lg">
+                      <button
+                        onClick={() => toggleSekcia(sekcia.id)}
+                        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
                       >
-                        <Trash2 className="w-4 h-4 text-red-600" />
-                      </Button>
-                    </div>
+                        <div className="flex items-center gap-3">
+                          <div className={`transform transition-transform ${expandedSekcie[sekcia.id] ? 'rotate-90' : ''}`}>
+                            <ArrowRight className="w-5 h-5" />
+                          </div>
+                          <h3 className="font-bold text-gray-900">{sekcia.nazov}</h3>
+                          <span className="text-sm text-gray-500">
+                            ({sekcia.dlazdice.length} dlaždíc)
+                          </span>
+                        </div>
+                        {sekciaMapovania.length > 0 && (
+                          <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
+                            {sekciaMapovania.length} mapovaných
+                          </span>
+                        )}
+                      </button>
 
-                    <div>
-                      <Label>Popis (voliteľný)</Label>
-                      <Input
-                        value={mapovanie.popis}
-                        onChange={(e) => updateMapovanieFotky("ticabhouse", index, 'popis', e.target.value)}
-                        placeholder="Napr: Zobrazí fotky s dreveným obkladom interiéru"
-                      />
-                    </div>
-                  </div>
-                ))}
+                      {expandedSekcie[sekcia.id] && (
+                        <div className="border-t p-4 bg-gray-50 space-y-3">
+                          {sekcia.dlazdice.map((dlazdica) => {
+                            const existujuceMapovanie = formData.mapovanie_fotiek_ticabhouse.find(
+                              m => m.dlazdica_id === dlazdica.id
+                            );
+                            const mapovaIndex = formData.mapovanie_fotiek_ticabhouse.findIndex(
+                              m => m.dlazdica_id === dlazdica.id
+                            );
 
-                {formData.mapovanie_fotiek_ticabhouse.length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
-                    <Grid3x3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                    <p>Zatiaľ žiadne mapovanie fotiek</p>
-                    <p className="text-sm">Pridajte mapovanie na automatické zobrazenie fotiek</p>
-                  </div>
-                )}
+                            return (
+                              <div key={dlazdica.id} className="bg-white border rounded-lg p-4">
+                                <div className="flex items-start justify-between mb-3">
+                                  <div>
+                                    <h4 className="font-semibold text-gray-900">{dlazdica.nazov}</h4>
+                                    <p className="text-xs text-gray-500">ID: {dlazdica.id}</p>
+                                  </div>
+                                  {existujuceMapovanie ? (
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => removeMapovanieFotky("ticabhouse", mapovaIndex)}
+                                    >
+                                      <Trash2 className="w-4 h-4 text-red-600" />
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => addMapovanieFotky("ticabhouse", sekcia.id, dlazdica.id, dlazdica.nazov)}
+                                    >
+                                      <Plus className="w-4 h-4 mr-1" />
+                                      Pridať fotky
+                                    </Button>
+                                  )}
+                                </div>
+
+                                {existujuceMapovanie && (
+                                  <div className="space-y-3 pt-3 border-t">
+                                    <div>
+                                      <Label className="text-xs">Typ fotky</Label>
+                                      <Select
+                                        value={existujuceMapovanie.typ_fotky}
+                                        onValueChange={(val) => updateMapovanieFotky("ticabhouse", mapovaIndex, 'typ_fotky', val)}
+                                      >
+                                        <SelectTrigger className="h-8 text-sm">
+                                          <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          <SelectItem value="titulna">Titulná fotka</SelectItem>
+                                          <SelectItem value="zakladna_konfiguracia">Základná konfigurácia</SelectItem>
+                                          <SelectItem value="interier_drevo">Interiér drevo</SelectItem>
+                                          <SelectItem value="interier_sadrokarton">Interiér sadrokartón</SelectItem>
+                                          <SelectItem value="galeria_exterier">Galéria exteriér</SelectItem>
+                                          <SelectItem value="galeria_interier">Galéria interiér</SelectItem>
+                                          <SelectItem value="podorysy">Pôdorysy</SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                    </div>
+                                    <div>
+                                      <Label className="text-xs">Popis (voliteľný)</Label>
+                                      <Input
+                                        value={existujuceMapovanie.popis || ''}
+                                        onChange={(e) => updateMapovanieFotky("ticabhouse", mapovaIndex, 'popis', e.target.value)}
+                                        placeholder="Napr: Zobrazí interiér s týmto obkladom"
+                                        className="h-8 text-sm"
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </Card>
           </TabsContent>
@@ -581,88 +823,120 @@ export default function AdminGeneratorCenovychPonuk() {
           {/* FOTKY PROSTO HOUSE */}
           <TabsContent value="fotky-prosto">
             <Card className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-xl font-bold">Mapovanie fotiek pre Prosto House</h2>
-                  <p className="text-sm text-gray-600">Definujte ktoré fotky sa zobrazia pri výbere konkrétnych dlaždíc konfiguratora</p>
-                </div>
-                <Button onClick={() => addMapovanieFotky("prosto")} variant="outline">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Pridať mapovanie
-                </Button>
+              <div className="mb-6">
+                <h2 className="text-xl font-bold mb-2">Mapovanie fotiek pre Prosto House</h2>
+                <p className="text-sm text-gray-600">
+                  Rozkliknite sekcie a priraďte fotky ku konkrétnym dlaždiciam konfiguratora. 
+                  Pravidlá platia pre všetky domy výrobcu Prosto House.
+                </p>
               </div>
 
-              <div className="space-y-4">
-                {formData.mapovanie_fotiek_prosto.map((mapovanie, index) => (
-                  <div key={index} className="border rounded-lg p-4">
-                    <div className="flex gap-4 mb-4">
-                      <div className="flex-1">
-                        <Label>Dlazdica konfiguratora</Label>
-                        <Select 
-                          value={mapovanie.dlazdica_id}
-                          onValueChange={(val) => updateMapovanieFotky("prosto", index, 'dlazdica_id', val)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Vyberte dlazdicu" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {prostohouseDlazdice.map(dlazdica => (
-                              <SelectItem key={dlazdica.id} value={dlazdica.id}>
-                                {dlazdica.nazov} ({dlazdica.kategoria})
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="flex-1">
-                        <Label>Typ fotky</Label>
-                        <Select 
-                          value={mapovanie.typ_fotky}
-                          onValueChange={(val) => updateMapovanieFotky("prosto", index, 'typ_fotky', val)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="titulna">Titulná fotka</SelectItem>
-                            <SelectItem value="zakladna_konfiguracia">Základná konfigurácia</SelectItem>
-                            <SelectItem value="interier_drevo">Interiér drevo</SelectItem>
-                            <SelectItem value="interier_sadrokarton">Interiér sadrokartón</SelectItem>
-                            <SelectItem value="galeria_exterier">Galéria exteriér</SelectItem>
-                            <SelectItem value="galeria_interier">Galéria interiér</SelectItem>
-                            <SelectItem value="podorysy">Pôdorysy</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        onClick={() => removeMapovanieFotky("prosto", index)}
+              <div className="space-y-2">
+                {prostohouseSekcie.map((sekcia) => {
+                  const sekciaMapovania = formData.mapovanie_fotiek_prosto.filter(
+                    m => m.sekcia_id === sekcia.id
+                  );
+                  
+                  return (
+                    <div key={sekcia.id} className="border rounded-lg">
+                      <button
+                        onClick={() => toggleSekcia(sekcia.id)}
+                        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
                       >
-                        <Trash2 className="w-4 h-4 text-red-600" />
-                      </Button>
-                    </div>
+                        <div className="flex items-center gap-3">
+                          <div className={`transform transition-transform ${expandedSekcie[sekcia.id] ? 'rotate-90' : ''}`}>
+                            <ArrowRight className="w-5 h-5" />
+                          </div>
+                          <h3 className="font-bold text-gray-900">{sekcia.nazov}</h3>
+                          <span className="text-sm text-gray-500">
+                            ({sekcia.dlazdice.length} dlaždíc)
+                          </span>
+                        </div>
+                        {sekciaMapovania.length > 0 && (
+                          <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
+                            {sekciaMapovania.length} mapovaných
+                          </span>
+                        )}
+                      </button>
 
-                    <div>
-                      <Label>Popis (voliteľný)</Label>
-                      <Input
-                        value={mapovanie.popis}
-                        onChange={(e) => updateMapovanieFotky("prosto", index, 'popis', e.target.value)}
-                        placeholder="Napr: Zobrazí fotky s vybratou fasádou"
-                      />
-                    </div>
-                  </div>
-                ))}
+                      {expandedSekcie[sekcia.id] && (
+                        <div className="border-t p-4 bg-gray-50 space-y-3">
+                          {sekcia.dlazdice.map((dlazdica) => {
+                            const existujuceMapovanie = formData.mapovanie_fotiek_prosto.find(
+                              m => m.dlazdica_id === dlazdica.id
+                            );
+                            const mapovaIndex = formData.mapovanie_fotiek_prosto.findIndex(
+                              m => m.dlazdica_id === dlazdica.id
+                            );
 
-                {formData.mapovanie_fotiek_prosto.length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
-                    <Grid3x3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                    <p>Zatiaľ žiadne mapovanie fotiek</p>
-                    <p className="text-sm">Pridajte mapovanie na automatické zobrazenie fotiek</p>
-                  </div>
-                )}
+                            return (
+                              <div key={dlazdica.id} className="bg-white border rounded-lg p-4">
+                                <div className="flex items-start justify-between mb-3">
+                                  <div>
+                                    <h4 className="font-semibold text-gray-900">{dlazdica.nazov}</h4>
+                                    <p className="text-xs text-gray-500">ID: {dlazdica.id}</p>
+                                  </div>
+                                  {existujuceMapovanie ? (
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => removeMapovanieFotky("prosto", mapovaIndex)}
+                                    >
+                                      <Trash2 className="w-4 h-4 text-red-600" />
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => addMapovanieFotky("prosto", sekcia.id, dlazdica.id, dlazdica.nazov)}
+                                    >
+                                      <Plus className="w-4 h-4 mr-1" />
+                                      Pridať fotky
+                                    </Button>
+                                  )}
+                                </div>
+
+                                {existujuceMapovanie && (
+                                  <div className="space-y-3 pt-3 border-t">
+                                    <div>
+                                      <Label className="text-xs">Typ fotky</Label>
+                                      <Select
+                                        value={existujuceMapovanie.typ_fotky}
+                                        onValueChange={(val) => updateMapovanieFotky("prosto", mapovaIndex, 'typ_fotky', val)}
+                                      >
+                                        <SelectTrigger className="h-8 text-sm">
+                                          <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          <SelectItem value="titulna">Titulná fotka</SelectItem>
+                                          <SelectItem value="zakladna_konfiguracia">Základná konfigurácia</SelectItem>
+                                          <SelectItem value="interier_drevo">Interiér drevo</SelectItem>
+                                          <SelectItem value="interier_sadrokarton">Interiér sadrokartón</SelectItem>
+                                          <SelectItem value="galeria_exterier">Galéria exteriér</SelectItem>
+                                          <SelectItem value="galeria_interier">Galéria interiér</SelectItem>
+                                          <SelectItem value="podorysy">Pôdorysy</SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                    </div>
+                                    <div>
+                                      <Label className="text-xs">Popis (voliteľný)</Label>
+                                      <Input
+                                        value={existujuceMapovanie.popis || ''}
+                                        onChange={(e) => updateMapovanieFotky("prosto", mapovaIndex, 'popis', e.target.value)}
+                                        placeholder="Napr: Zobrazí dom s touto fasádou"
+                                        className="h-8 text-sm"
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </Card>
           </TabsContent>
