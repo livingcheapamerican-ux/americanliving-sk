@@ -357,8 +357,8 @@ export default function Katalog() {
                   </div>
                 </div>
 
-                {/* Počet modulov - zobrazí sa len pre modulárne domy Ticab house */}
-                {typFilter.includes("modularny") && vyrobcaFilter.includes("Ticab house") && (
+                {/* Počet modulov - zobrazí sa len pre modulárne domy */}
+                {typFilter.includes("modularny") && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-2">
                     <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
                       <Boxes className="w-3 h-3 text-red-600" />
