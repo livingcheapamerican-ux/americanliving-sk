@@ -1313,6 +1313,12 @@ export default function DetailDomu() {
                 setMontaz={setLyonMontaz}
                 doprava={lyonDoprava}
                 setDoprava={setLyonDoprava}
+                predajNehnutelnosti={lyonPredajNehnutelnosti}
+                setPredajNehnutelnosti={setLyonPredajNehnutelnosti}
+                chcemPozemok={lyonHladamPozemok}
+                setChcemPozemok={setLyonHladamPozemok}
+                financneSluzby={lyonFinancneSluzby}
+                setFinancneSluzby={setLyonFinancneSluzby}
               />
             )}
 
