@@ -458,6 +458,20 @@ Deno.serve(async (req) => {
     polozkyDetail.push({ nazov: 'Montáž domu', cena: CENY.montaz, vybrane: konfiguraciaData.montaz });
     polozkyDetail.push({ nazov: 'Doprava modulov', cena: CENY.doprava, vybrane: konfiguraciaData.doprava });
 
+    // === SEKCIA 12: DODATOČNÉ SLUŽBY ===
+    if (konfiguraciaData.predajNehnutelnosti || konfiguraciaData.chcemPozemok || konfiguraciaData.financneSluzby) {
+      polozkyDetail.push({ nazov: '--- DODATOČNÉ SLUŽBY ---', cena: null, vybrane: true, kategoria: true });
+      if (konfiguraciaData.predajNehnutelnosti) {
+        polozkyDetail.push({ nazov: 'Predaj predošlej nehnuteľnosti', cena: null, vybrane: true, popis: 'Budú sa Vám venovať naší najlepší odborníci v realitách.' });
+      }
+      if (konfiguraciaData.chcemPozemok) {
+        polozkyDetail.push({ nazov: 'Chcem pozemok pod svoj dom', cena: null, vybrane: true, popis: 'Pomôžeme Vám nájsť ideálny pozemok.' });
+      }
+      if (konfiguraciaData.financneSluzby) {
+        polozkyDetail.push({ nazov: 'Finančné služby - úvery/pôžičky', cena: null, vybrane: true, popis: 'Budú sa Vám venovať naší najlepší finančníci.' });
+      }
+    }
+
     // Tabuľka cenových položiek - Header
     doc.setFillColor(mainColor.r, mainColor.g, mainColor.b);
     doc.rect(20, yPos - 3, pageWidth - 40, 7, 'F');
@@ -507,15 +521,26 @@ Deno.serve(async (req) => {
         doc.line(25, yPos - 1, 25 + textWidth, yPos - 1);
 
         doc.text(textNoDiacritics, 25, yPos);
-        if (polozka.cena !== null) {
+        if (polozka.cena !== null && polozka.cena !== undefined) {
           doc.text(removeDiacritics(formatPrice(polozka.cena)), pageWidth - 25, yPos, { align: 'right' });
         }
 
         doc.setTextColor(0, 0, 0);
       } else {
         doc.text(removeDiacritics(polozka.nazov), 25, yPos);
-        if (polozka.cena !== null) {
+        if (polozka.cena !== null && polozka.cena !== undefined) {
           doc.text(removeDiacritics(formatPrice(polozka.cena)), pageWidth - 25, yPos, { align: 'right' });
+        }
+        // Ak existuje popis (pre dodatočné služby), pridaj ho na ďalší riadok
+        if (polozka.popis) {
+          yPos += 5;
+          doc.setFontSize(7);
+          doc.setTextColor(100, 100, 100);
+          const splitPopis = doc.splitTextToSize(removeDiacritics(polozka.popis), pageWidth - 50);
+          doc.text(splitPopis, 30, yPos);
+          yPos += (splitPopis.length - 1) * 3;
+          doc.setFontSize(9);
+          doc.setTextColor(0, 0, 0);
         }
       }
 

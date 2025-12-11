@@ -51,6 +51,9 @@ export default function LyonFinalSummaryModal({
   zaklady, 
   montaz, 
   doprava,
+  predajNehnutelnosti,
+  chcemPozemok,
+  financneSluzby,
   totalPrice
 }) {
   const [formData, setFormData] = useState({
@@ -342,7 +345,9 @@ export default function LyonFinalSummaryModal({
           obkladStien, interieroveDvere, elektro, bleskozvod, prepat,
           pripravaNaSolarnePanely, sprchovyKut, vana, bateria,
           skrinka, stropKupelna, inziniering, projektACertifikacia,
-          revizia, zaklady, montaz, doprava, totalPrice
+          revizia, zaklady, montaz, doprava,
+          predajNehnutelnosti, chcemPozemok, financneSluzby,
+          totalPrice
         },
         klientData: formData
       });
@@ -1336,9 +1341,55 @@ export default function LyonFinalSummaryModal({
                         <span>• Doprava modulov</span>
                         <span>+ {formatPrice(CENY.doprava)}</span>
                       </div>
-                    </div>
-                  </div>
-                </div>
+                      </div>
+                      </div>
+
+                      {/* DODATOČNÉ SLUŽBY */}
+                      {(predajNehnutelnosti || chcemPozemok || financneSluzby) && (
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="space-y-2">
+                        {/* SEKCIA HEADER */}
+                        <div className="bg-gray-200 px-3 py-1.5 rounded font-bold text-red-600 text-sm">DODATOČNÉ SLUŽBY</div>
+
+                        {predajNehnutelnosti && (
+                          <div className="flex items-start gap-2 p-2 bg-blue-50 rounded border border-blue-200">
+                            <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <span className="text-white text-xs font-bold">✓</span>
+                            </div>
+                            <div>
+                              <p className="font-semibold text-gray-800 text-sm">Predaj predošlej nehnuteľnosti</p>
+                              <p className="text-xs text-gray-600">Budú sa Vám venovať naší najlepší odborníci v realitách.</p>
+                            </div>
+                          </div>
+                        )}
+
+                        {chcemPozemok && (
+                          <div className="flex items-start gap-2 p-2 bg-green-50 rounded border border-green-200">
+                            <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <span className="text-white text-xs font-bold">✓</span>
+                            </div>
+                            <div>
+                              <p className="font-semibold text-gray-800 text-sm">Chcem pozemok pod svoj dom</p>
+                              <p className="text-xs text-gray-600">Pomôžeme Vám nájsť ideálny pozemok.</p>
+                            </div>
+                          </div>
+                        )}
+
+                        {financneSluzby && (
+                          <div className="flex items-start gap-2 p-2 bg-orange-50 rounded border border-orange-200">
+                            <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <span className="text-white text-xs font-bold">✓</span>
+                            </div>
+                            <div>
+                              <p className="font-semibold text-gray-800 text-sm">Finančné služby - úvery/pôžičky</p>
+                              <p className="text-xs text-gray-600">Budú sa Vám venovať naší najlepší finančníci.</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      </div>
+                      )}
+                      </div>
 
                 {/* Celková cena */}
                 <div className="bg-red-50 border-2 border-red-600 rounded-lg p-6 mt-6">

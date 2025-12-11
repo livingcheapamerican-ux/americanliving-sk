@@ -74,6 +74,14 @@ export default function LyonKonfiguratorWrapper(props) {
   const setMontaz = props.setMontaz || (() => {});
   const doprava = props.doprava || false;
   const setDoprava = props.setDoprava || (() => {});
+  
+  // Dodatočné služby
+  const predajNehnutelnosti = props.predajNehnutelnosti || false;
+  const setPredajNehnutelnosti = props.setPredajNehnutelnosti || (() => {});
+  const chcemPozemok = props.chcemPozemok || false;
+  const setChcemPozemok = props.setChcemPozemok || (() => {});
+  const financneSluzby = props.financneSluzby || false;
+  const setFinancneSluzby = props.setFinancneSluzby || (() => {});
 
   const DEFAULT_CENY = {
     izolacia_stien_200mm: 1799.16,
@@ -240,6 +248,9 @@ export default function LyonKonfiguratorWrapper(props) {
     zaklady, setZaklady,
     montaz, setMontaz,
     doprava, setDoprava,
+    predajNehnutelnosti, setPredajNehnutelnosti,
+    chcemPozemok, setChcemPozemok,
+    financneSluzby, setFinancneSluzby,
   };
 
   return <KonfiguratorLyon {...allProps} />;

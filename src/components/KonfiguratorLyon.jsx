@@ -299,6 +299,11 @@ export default function KonfiguratorLyon(props = {}) {
   const [zaklady, setZaklady] = useState(props.zaklady || "bez");
   const [montaz, setMontaz] = useState(props.montaz || false);
   const [doprava, setDoprava] = useState(props.doprava || false);
+  
+  // Dodatočné služby
+  const [predajNehnutelnosti, setPredajNehnutelnosti] = useState(props.predajNehnutelnosti || false);
+  const [chcemPozemok, setChcemPozemok] = useState(props.chcemPozemok || false);
+  const [financneSluzby, setFinancneSluzby] = useState(props.financneSluzby || false);
 
   // Synchronizovať state s props ak sa props zmenia
   React.useEffect(() => {
@@ -403,6 +408,15 @@ export default function KonfiguratorLyon(props = {}) {
   React.useEffect(() => {
     if (props.setDoprava) props.setDoprava(doprava);
   }, [doprava]);
+  React.useEffect(() => {
+    if (props.setPredajNehnutelnosti) props.setPredajNehnutelnosti(predajNehnutelnosti);
+  }, [predajNehnutelnosti]);
+  React.useEffect(() => {
+    if (props.setChcemPozemok) props.setChcemPozemok(chcemPozemok);
+  }, [chcemPozemok]);
+  React.useEffect(() => {
+    if (props.setFinancneSluzby) props.setFinancneSluzby(financneSluzby);
+  }, [financneSluzby]);
 
   const CENY = props.CENY || {
     izolacia_stien_200mm: 1799.16,
@@ -1183,6 +1197,85 @@ export default function KonfiguratorLyon(props = {}) {
               title={getTranslatedText('doprava', 'nazov') || t('transportTile')} 
               subtitle={getTranslatedText('doprava', 'podnadpis') || t('allModulesTransport')} 
               price={formatTilePrice(CENY.doprava)} isPriced={true} t={t} />
+          </div>
+        </Card>
+
+        {/* DODATOČNÉ SLUŽBY */}
+        <Card className="p-3 bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-300 shadow-md">
+          <h3 className="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-sm mr-1">0</span>
+            ✨ Dodatočné služby
+          </h3>
+          <p className="text-xs text-gray-600 mb-2">Vyberte si doplnkové služby (voliteľné):</p>
+          <div className="space-y-1.5">
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => setPredajNehnutelnosti(!predajNehnutelnosti)}
+              className={`p-2 rounded-md cursor-pointer transition-all border ${
+                predajNehnutelnosti 
+                  ? "bg-blue-100 border-blue-500 shadow-md" 
+                  : "bg-white border-gray-200 hover:border-blue-300"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                {predajNehnutelnosti && (
+                  <div className="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                    <span className="text-white text-[10px] font-bold">✓</span>
+                  </div>
+                )}
+                <div className="flex-1">
+                  <p className="font-semibold text-gray-800 text-sm">Predaj predošlej nehnuteľnosti</p>
+                  <p className="text-xs text-gray-500">Budú sa Vám venovať naší najlepší odborníci v realitách.</p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => setChcemPozemok(!chcemPozemok)}
+              className={`p-2 rounded-md cursor-pointer transition-all border ${
+                chcemPozemok 
+                  ? "bg-green-100 border-green-500 shadow-md" 
+                  : "bg-white border-gray-200 hover:border-green-300"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                {chcemPozemok && (
+                  <div className="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                    <span className="text-white text-[10px] font-bold">✓</span>
+                  </div>
+                )}
+                <div className="flex-1">
+                  <p className="font-semibold text-gray-800 text-sm">Chcem pozemok pod svoj dom</p>
+                  <p className="text-xs text-gray-500">Pomôžeme Vám nájsť ideálny pozemok.</p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              onClick={() => setFinancneSluzby(!financneSluzby)}
+              className={`p-2 rounded-md cursor-pointer transition-all border ${
+                financneSluzby 
+                  ? "bg-orange-100 border-orange-500 shadow-md" 
+                  : "bg-white border-gray-200 hover:border-orange-300"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                {financneSluzby && (
+                  <div className="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                    <span className="text-white text-[10px] font-bold">✓</span>
+                  </div>
+                )}
+                <div className="flex-1">
+                  <p className="font-semibold text-gray-800 text-sm">Finančné služby - úvery/pôžičky</p>
+                  <p className="text-xs text-gray-500">Budú sa Vám venovať naší najlepší finančníci, ktorí Vám pomôžu nie len s financovaním vášho bývania, ale pomôcnu ruku vám podajú aj v ťažkých chvíľach s financiami.</p>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </Card>
       </div>
