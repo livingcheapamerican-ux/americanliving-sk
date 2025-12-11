@@ -14,6 +14,7 @@ Deno.serve(async (req) => {
     const log = [];
     const problemy = [];
     const opravy = [];
+    let errors = 0;
 
     log.push('🔍 HLBKOVÁ KONTROLA ÚDAJOV O DOMOCH\n');
 
@@ -246,6 +247,7 @@ Vráť JSON:
         }
 
       } catch (error) {
+        errors++;
         log.push(`  ❌ Chyba: ${error.message}`);
       }
 
@@ -257,7 +259,8 @@ Vráť JSON:
     log.push(`\n📊 SÚHRN KONTROLY:`);
     log.push(`✅ Skontrolované: ${domy.length} domov`);
     log.push(`⚠️ Problémy nájdené: ${problemy.length} domov`);
-    log.push(`🔧 Opravy potrebné: ${opravy.length} polí`);
+    log.push(`🔧 Opravy potrebné: ${opravy.length} domov`);
+    log.push(`❌ Chýb: ${errors}`);
 
     // Aplikuj opravy ak nie je test mode
     if (!testMode && opravy.length > 0) {
