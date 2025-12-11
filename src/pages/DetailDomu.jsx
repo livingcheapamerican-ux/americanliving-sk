@@ -1861,21 +1861,21 @@ export default function DetailDomu() {
                       </p>
                     </div>
                   </div>
-                {dom.pocet_izieb && (
-                  <div className="flex items-center gap-2">
-                    <Grid2x2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                    <div>
-                      <p className="text-xs text-gray-500">{t('rooms')}</p>
-                      <p className="text-sm sm:text-base font-bold text-primary">{dom.pocet_izieb}</p>
-                    </div>
-                  </div>
-                )}
                 {dom.pocet_modulov && (
                   <div className="flex items-center gap-2">
                     <Boxes className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
                     <div>
                       <p className="text-xs text-gray-500">Moduly</p>
                       <p className="text-sm sm:text-base font-bold text-primary">{dom.pocet_modulov}</p>
+                    </div>
+                  </div>
+                )}
+                {dom.pocet_izieb && (
+                  <div className="flex items-center gap-2">
+                    <Grid2x2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                    <div>
+                      <p className="text-xs text-gray-500">{t('rooms')}</p>
+                      <p className="text-sm sm:text-base font-bold text-primary">{dom.pocet_izieb}</p>
                     </div>
                   </div>
                 )}

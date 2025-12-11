@@ -54,6 +54,7 @@ export default function Katalog() {
   const [vybraneNaSrovnanie, setVybraneNaSrovnanie] = useState([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const [dizajnFilter, setDizajnFilter] = useState("murovka"); // "murovka" alebo "drevo"
+  const [pocetModulovFilter, setPocetModulovFilter] = useState([]);
 
   const queryClient = useQueryClient();
 
@@ -145,7 +146,8 @@ export default function Katalog() {
     const hladanieMatch = hladanie === "" || dom.nazov.toLowerCase().includes(hladanie.toLowerCase());
     const cenaMatch = dom.zakladna_cena >= cenoveRozpatie[0] && dom.zakladna_cena <= cenoveRozpatie[1];
     const izbyMatch = pocetIziebFilter.length === 0 || (dom.pocet_izieb && pocetIziebFilter.includes(dom.pocet_izieb));
-    return verejnyMatch && kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch;
+    const modulyMatch = pocetModulovFilter.length === 0 || (dom.pocet_modulov && pocetModulovFilter.includes(dom.pocet_modulov));
+    return verejnyMatch && kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
   });
 
   // Zoradenie
@@ -354,6 +356,36 @@ export default function Katalog() {
                     ))}
                   </div>
                 </div>
+
+                {/* Počet modulov - zobrazí sa len pre modulárne domy Ticab house */}
+                {typFilter.includes("modularny") && vyrobcaFilter.includes("Ticab house") && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-2">
+                    <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+                      <Boxes className="w-3 h-3 text-red-600" />
+                      Počet modulov
+                    </label>
+                    <p className="text-[10px] text-gray-600 mb-2">Tento výber upravuje počet modulov z ktorých sa má modulárny dom skladať</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {[...new Set(domy.filter(d => d.pocet_modulov && d.vyrobca === "Ticab house").map(d => d.pocet_modulov))].sort((a, b) => a - b).map((moduly) => (
+                        <div key={moduly} className="flex items-center gap-0.5">
+                          <Checkbox
+                            id={`moduly-${moduly}`}
+                            checked={pocetModulovFilter.includes(moduly)}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                setPocetModulovFilter([...pocetModulovFilter, moduly]);
+                              } else {
+                                setPocetModulovFilter(pocetModulovFilter.filter((x) => x !== moduly));
+                              }
+                            }}
+                            className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600 h-3.5 w-3.5"
+                          />
+                          <label htmlFor={`moduly-${moduly}`} className="text-xs cursor-pointer">{moduly}</label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Zastavaná plocha */}
                 <div>
