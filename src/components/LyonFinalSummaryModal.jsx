@@ -965,10 +965,10 @@ export default function LyonFinalSummaryModal({
                           <p className="text-sm font-semibold text-gray-700 mb-2">{galeria.nazov}</p>
                           <div className="grid grid-cols-3 gap-2">
                             {galeria.fotky.slice(0, 6).map((img, idx) => (
-                              <div key={idx} className="border rounded overflow-hidden relative">
-                                <img src={img} alt={`${galeria.nazov} ${idx + 1}`} className="w-full h-24 object-cover" />
+                              <div key={idx} className="border rounded overflow-hidden relative bg-gray-50">
+                                <img src={img} alt={`${galeria.nazov} ${idx + 1}`} className="w-full h-24 object-contain" />
                                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                  <div className="text-white text-lg font-bold bg-black/40 px-4 py-2 rounded">
+                                  <div className="text-white text-lg font-bold bg-black/20 px-4 py-2 rounded">
                                     American Living
                                   </div>
                                 </div>
