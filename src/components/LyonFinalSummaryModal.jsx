@@ -66,6 +66,8 @@ export default function LyonFinalSummaryModal({
   const [submitted, setSubmitted] = useState(false);
   const [generatingPDF, setGeneratingPDF] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [showEmailPreview, setShowEmailPreview] = useState(false);
+  const [emailPreviewHtml, setEmailPreviewHtml] = useState("");
   const { t } = useLanguage();
 
   const { data: user } = useQuery({
@@ -380,6 +382,33 @@ export default function LyonFinalSummaryModal({
       console.error(error);
     } finally {
       setGeneratingPDF(false);
+    }
+  };
+
+  const handleEmailPreview = async () => {
+    try {
+      const response = await base44.functions.invoke('nahladCenovejPonukyLyonEmail', {
+        dom,
+        konfiguraciaData: {
+          ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu,
+          tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu,
+          podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia,
+          fasada, strecha, odkvapy, okna, vchodoveDvere,
+          obkladStien, interieroveDvere, elektro, bleskozvod, prepat,
+          pripravaNaSolarnePanely, sprchovyKut, vana, bateria,
+          skrinka, stropKupelna, inziniering, projektACertifikacia,
+          revizia, zaklady, montaz, doprava,
+          predajNehnutelnosti, chcemPozemok, financneSluzby,
+          totalPrice
+        },
+        klientData: formData
+      });
+      
+      setEmailPreviewHtml(response.data);
+      setShowEmailPreview(true);
+    } catch (error) {
+      toast.error('Chyba pri generovaní náhľadu');
+      console.error(error);
     }
   };
 
@@ -861,7 +890,7 @@ export default function LyonFinalSummaryModal({
                     </div>
 
                     {isAdmin && (
-                      <div className="grid grid-cols-2 gap-3 mb-3">
+                      <div className="grid grid-cols-3 gap-2 mb-3">
                         <Button
                           type="button"
                           size="sm"
@@ -869,8 +898,19 @@ export default function LyonFinalSummaryModal({
                           onClick={() => setShowPreview(true)}
                           className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50"
                         >
-                          <Eye className="mr-2 w-4 h-4" />
-                          {t('previewQuote') || 'Náhľad ponuky'}
+                          <Eye className="mr-1 w-4 h-4" />
+                          PDF
+                        </Button>
+
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={handleEmailPreview}
+                          className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50"
+                        >
+                          <Eye className="mr-1 w-4 h-4" />
+                          Email
                         </Button>
 
                         <Button
@@ -881,8 +921,8 @@ export default function LyonFinalSummaryModal({
                           disabled={generatingPDF || !formData.email}
                           className="border-2 border-green-500 text-green-600 hover:bg-green-50"
                         >
-                          <Mail className="mr-2 w-4 h-4" />
-                          {generatingPDF ? 'Odosiela sa...' : (t('sendEmail') || 'Odoslať email')}
+                          <Mail className="mr-1 w-4 h-4" />
+                          {generatingPDF ? '...' : '✉'}
                         </Button>
                       </div>
                     )}
@@ -923,6 +963,22 @@ export default function LyonFinalSummaryModal({
 
 
           </motion.div>
+
+          {/* Náhľad EMAIL - Modal */}
+          <Dialog open={showEmailPreview} onOpenChange={setShowEmailPreview}>
+            <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto p-0">
+              <DialogHeader className="p-6 pb-2">
+                <DialogTitle>Náhľad emailu - {dom?.nazov || 'Lyon 50m²'}</DialogTitle>
+              </DialogHeader>
+              <div className="px-6 pb-6">
+                <iframe
+                  srcDoc={emailPreviewHtml}
+                  className="w-full h-[70vh] border rounded"
+                  title="Email Preview"
+                />
+              </div>
+            </DialogContent>
+          </Dialog>
 
           {/* Náhľad cenovej ponuky - Modal */}
           <Dialog open={showPreview} onOpenChange={setShowPreview}>
