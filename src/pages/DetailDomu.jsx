@@ -1940,7 +1940,7 @@ export default function DetailDomu() {
               <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">📸 {t('basicConfiguration')}</h3>
                 <div className="rounded-lg overflow-hidden shadow-lg">
-                  <img 
+                  <ImageWithWatermark 
                     src={dom.zakladna_konfiguracia_obrazok} 
                     alt={`${dom.nazov} - základná konfigurácia`}
                     className="w-full h-auto object-cover"
@@ -2135,7 +2135,7 @@ export default function DetailDomu() {
               <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">📸 {t('basicConfiguration')}</h3>
                 <div className="rounded-lg overflow-hidden shadow-lg">
-                  <img 
+                  <ImageWithWatermark 
                     src={dom.zakladna_konfiguracia_obrazok} 
                     alt={`${dom.nazov} - ${t('basicConfiguration')}`}
                     className="w-full h-auto object-cover"
