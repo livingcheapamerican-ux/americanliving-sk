@@ -1019,7 +1019,7 @@ export default function LyonFinalSummaryModal({
                       {/* Základná cena */}
                       <div className="flex justify-between py-2 border-b">
                         <span className="font-semibold">Základná cena domu</span>
-                        <span className="font-semibold">{formatPrice(73431)}</span>
+                        <span className="font-semibold">{formatPrice(dom?.zakladna_cena || 0)}</span>
                       </div>
 
                       {/* Izolácia */}
