@@ -884,9 +884,107 @@ export default function AdminGeneratorCenovychPonuk() {
               <div className="mb-6">
                 <h2 className="text-xl font-bold mb-2">Mapovanie fotiek pre Ticabhouse</h2>
                 <p className="text-sm text-gray-600">
-                  Rozkliknite sekcie a priraďte fotky ku konkrétnym dlaždiciam konfiguratora. 
-                  Pravidlá platia pre všetky domy výrobcu Ticabhouse.
+                  Nastavte, ktoré galérie sa majú zobraziť v cenovej ponuke na základe vybraných dlaždíc v konfigurátore.
                 </p>
+                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-start gap-2">
+                    <Eye className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h5 className="font-semibold text-blue-900 mb-1">Automatické pravidlá</h5>
+                      <ul className="text-sm text-blue-800 space-y-1">
+                        <li>• 2D a 3D pôdorysy sa automaticky pridajú do každej ponuky</li>
+                        <li>• Pre každú galériu vyberte dlaždice, ktoré ju aktivujú</li>
+                        <li>• Galérie: Exteriér drevo/plech, Exteriér murovka, Interiér drevo, Interiér sadrokartón</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                {/* Mapovanie galérií */}
+                {[
+                  { id: 'exterier_drevo_plech', nazov: 'Exteriér - Drevo/Plech', popis: 'Fasáda s dreveným alebo plechovým obkladom', icon: '🏠' },
+                  { id: 'exterier_murovka', nazov: 'Exteriér - Murovka', popis: 'Fasáda s omietkou/murovkou', icon: '🧱' },
+                  { id: 'interier_drevo', nazov: 'Interiér - Drevo', popis: 'Vnútorný obklad z dreva', icon: '🪵' },
+                  { id: 'interier_sadrokarton', nazov: 'Interiér - Sadrokartón', popis: 'Vnútorný obklad so sadrokartónom', icon: '🏡' },
+                ].map((galeria) => {
+                  const existujuce = formData.mapovanie_fotiek_ticabhouse?.find(
+                    m => m.galeria_typ === galeria.id
+                  );
+
+                  return (
+                    <Card key={galeria.id} className="p-4 border-2 border-primary/20">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-2xl">{galeria.icon}</span>
+                        <div>
+                          <h4 className="font-bold">{galeria.nazov}</h4>
+                          <p className="text-xs text-gray-500">{galeria.popis}</p>
+                        </div>
+                      </div>
+
+                      <div className="text-sm text-gray-700 mb-3 font-medium">
+                        Ukáže galériu keď klient vyberie:
+                      </div>
+
+                      <div className="space-y-2">
+                        {ticabhouseSekcie.filter(s => s.id === 'fasada' || s.id === 'interier').map((sekcia) => (
+                          <div key={sekcia.id} className="border rounded-lg p-3 bg-gray-50">
+                            <div className="text-xs font-semibold text-gray-700 mb-2">{sekcia.nazov}</div>
+                            <div className="grid grid-cols-2 gap-2">
+                              {sekcia.dlazdice.map((dlazdica) => {
+                                const jeVybrane = existujuce?.dlazdice_ids?.includes(dlazdica.id);
+                                
+                                return (
+                                  <label 
+                                    key={dlazdica.id}
+                                    className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition-all ${
+                                      jeVybrane 
+                                        ? 'bg-primary/10 border-primary' 
+                                        : 'bg-white border-gray-200 hover:border-gray-300'
+                                    }`}
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      checked={jeVybrane}
+                                      onChange={(e) => {
+                                        const aktualneMapovanie = formData.mapovanie_fotiek_ticabhouse || [];
+                                        let galeriaMapping = aktualneMapovanie.find(m => m.galeria_typ === galeria.id);
+                                        
+                                        if (!galeriaMapping) {
+                                          galeriaMapping = {
+                                            galeria_typ: galeria.id,
+                                            galeria_nazov: galeria.nazov,
+                                            dlazdice_ids: []
+                                          };
+                                        }
+
+                                        if (e.target.checked) {
+                                          galeriaMapping.dlazdice_ids = [...(galeriaMapping.dlazdice_ids || []), dlazdica.id];
+                                        } else {
+                                          galeriaMapping.dlazdice_ids = (galeriaMapping.dlazdice_ids || []).filter(id => id !== dlazdica.id);
+                                        }
+
+                                        const noveMapovanie = aktualneMapovanie.filter(m => m.galeria_typ !== galeria.id);
+                                        if (galeriaMapping.dlazdice_ids.length > 0) {
+                                          noveMapovanie.push(galeriaMapping);
+                                        }
+
+                                        setFormData({...formData, mapovanie_fotiek_ticabhouse: noveMapovanie});
+                                      }}
+                                      className="rounded border-gray-300"
+                                    />
+                                    <span className="text-xs">{dlazdica.nazov}</span>
+                                  </label>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </Card>
+                  );
+                })}
               </div>
 
               <div className="space-y-2">
