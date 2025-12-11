@@ -56,6 +56,7 @@ export default function Katalog() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [dizajnFilter, setDizajnFilter] = useState("murovka"); // "murovka" alebo "drevo"
   const [pocetModulovFilter, setPocetModulovFilter] = useState([]);
+  const [portraitImages, setPortraitImages] = useState({});
 
   const queryClient = useQueryClient();
 
@@ -577,13 +578,19 @@ export default function Katalog() {
                     transition={{ delay: index * 0.05 }}>
 
                       <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 bg-white ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
-                        <div className="relative h-28 sm:h-72 overflow-hidden">
+                        <div className={`relative overflow-hidden ${portraitImages[dom.id] ? 'h-[134px] sm:h-[345px]' : 'h-28 sm:h-72'}`}>
                           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
                             {dom.hlavny_obrazok ? (
                               <ImageWithWatermark
                                 src={dizajnFilter === "drevo" && dom.zakladna_konfiguracia_obrazok ? dom.zakladna_konfiguracia_obrazok : dom.hlavny_obrazok}
                                 alt={dom.nazov}
-                                className="w-full h-full object-contain bg-gray-100 group-hover:scale-105 transition-all duration-500" />
+                                className="w-full h-full object-contain bg-gray-100 group-hover:scale-105 transition-all duration-500"
+                                onLoad={(e) => {
+                                  const img = e.target;
+                                  if (img.naturalHeight > img.naturalWidth) {
+                                    setPortraitImages(prev => ({ ...prev, [dom.id]: true }));
+                                  }
+                                }} />
                             ) : (
                               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                                 <Home className="w-16 h-16 text-gray-400" />

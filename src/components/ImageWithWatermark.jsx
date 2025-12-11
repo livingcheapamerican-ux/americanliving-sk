@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 
-export default function ImageWithWatermark({ src, alt, className, ...props }) {
+export default function ImageWithWatermark({ src, alt, className, onLoad, ...props }) {
   const { data: settings } = useQuery({
     queryKey: ['site-settings-watermark'],
     queryFn: async () => {
@@ -33,7 +33,7 @@ export default function ImageWithWatermark({ src, alt, className, ...props }) {
 
   return (
     <div className="relative w-full h-full">
-      <img src={src} alt={alt} className={className} {...props} />
+      <img src={src} alt={alt} className={className} onLoad={onLoad} {...props} />
       {watermarkEnabled && (
         <div 
           className={`absolute ${positionClasses[watermarkPosition]} ${sizeClasses[watermarkSize]} font-bold text-white pointer-events-none select-none`}
