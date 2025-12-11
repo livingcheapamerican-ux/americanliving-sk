@@ -896,7 +896,6 @@ export default function LyonFinalSummaryModal({
                 <div className="flex items-start justify-between mb-8 pb-6 border-b-2 border-red-600">
                   <div>
                     <h1 className="text-3xl font-bold text-red-600 mb-2">CENOVÁ PONUKA</h1>
-                    <p className="text-gray-600">Číslo ponuky: CP-2025-{(dom?.nazov || 'LYON').toUpperCase().replace(/\s+/g, '-')}</p>
                     <p className="text-gray-600">Dátum: {new Date().toLocaleDateString('sk-SK')}</p>
                   </div>
                   <div className="text-right text-sm">
@@ -907,13 +906,17 @@ export default function LyonFinalSummaryModal({
                   </div>
                 </div>
 
-                {/* Obrázok domu */}
+                {/* Obrázok domu s číslom ponuky */}
                 <div className="mb-6 relative">
                   <img 
                     src={getDisplayImage()} 
                     alt={dom?.nazov || 'Dom'} 
                     className="w-full h-64 object-contain rounded-lg border"
                   />
+                  <div className="absolute top-3 left-3 bg-white/95 px-4 py-2 rounded-lg shadow-lg border-2 border-red-600">
+                    <p className="text-sm font-bold text-red-600">Číslo ponuky:</p>
+                    <p className="text-lg font-black text-gray-900">CP-{new Date().getFullYear()}-XXXX</p>
+                  </div>
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <div className="text-white text-3xl font-bold bg-black/20 px-6 py-3 rounded">
                       American Living
