@@ -80,6 +80,12 @@ DÔLEŽITÉ PRAVIDLÁ:
 - JAK Modules a Domki z Gór majú dopravu cca 8-10k€
 - A0 upgrade pre Ticab house stojí +15-20k€
 
+KRITICKÉ - UVEDENÁ CENA:
+- zakladna_cena = ZÁKLADNÁ CENA (BEZ A0, bez základov, bez montáže)
+- V "considerations" VŽDY uveď: "Zobrazená cena je základná. Pre kompletný dom s A0 certifikátom a všetkými nákladmi odporúčame použiť konfigurátor na detaile domu."
+- Každý dom má vlastný konfigurátor kde si klient môže poskladať presný dom podľa svojich požiadaviek
+- estimated_total_cost = odhadni realistickú cenu s bežnými doplnkami (A0 ak Ticab house, základy, montáž, doprava)
+
 Odporuč len domy ktoré SÚ v databáze!`;
 
       const result = await base44.integrations.Core.InvokeLLM({
