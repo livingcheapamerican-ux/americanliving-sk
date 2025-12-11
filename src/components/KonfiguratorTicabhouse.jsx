@@ -263,6 +263,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                 setStropKupelna("drevo");
                 setInziniering(false);
                 setProjektACertifikacia(false);
+                setRevizia(false);
                 setZaklady("bez");
                 setMontaz(false);
                 setDoprava(false);
@@ -301,6 +302,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                 setRekuperacia("ano");
                 setInziniering(true);
                 setProjektACertifikacia(true);
+                setRevizia(true);
                 setBleskozvod(true);
                 setPrepat(true);
                 setElektro("ge");

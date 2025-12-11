@@ -171,6 +171,7 @@ export default function KonfiguratorMajorca({
               setStropKupelna("drevo");
               setInziniering(false);
               setProjektACertifikacia(false);
+              setRevizia(false);
               setZaklady("bez");
               setMontaz(false);
               setDoprava(false);
@@ -200,6 +201,7 @@ export default function KonfiguratorMajorca({
               setRekuperacia("ano");
               setInziniering(true);
               setProjektACertifikacia(true);
+              setRevizia(true);
               setBleskozvod(true);
               setPrepat(true);
               setElektro("ge");

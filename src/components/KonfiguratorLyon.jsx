@@ -549,6 +549,7 @@ export default function KonfiguratorLyon(props = {}) {
               setStropKupelna("drevo");
               setInziniering(false);
               setProjektACertifikacia(false);
+              setRevizia(false);
               setZaklady("bez");
               setMontaz(false);
               setDoprava(false);
