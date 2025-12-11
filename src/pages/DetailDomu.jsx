@@ -56,6 +56,11 @@ export default function DetailDomu() {
   const [hladaniePozemku, setHladaniePozemku] = useState(false);
   const [financneSluzby, setFinancneSluzby] = useState(false);
   
+  // Pre Ticabhouse - také isté služby ale rôzne názvy premenných
+  const [lyonPredajNehnutelnosti, setLyonPredajNehnutelnosti] = useState(false);
+  const [lyonHladamPozemok, setLyonHladamPozemok] = useState(false);
+  const [lyonFinancneSluzby, setLyonFinancneSluzby] = useState(false);
+  
   // Zdieľaný stav pre Fázu 1 - Hrubá stavba
   const [typStavby, setTypStavby] = useState("");
   const [montazHolodomu, setMontazHolodomu] = useState("nie");
@@ -1157,6 +1162,12 @@ export default function DetailDomu() {
               <KonfiguratorTicabhouse 
                 dom={dom} 
                 isAdmin={isAdmin}
+                predajNehnutelnosti={lyonPredajNehnutelnosti}
+                setPredajNehnutelnosti={setLyonPredajNehnutelnosti}
+                hladamPozemok={lyonHladamPozemok}
+                setHladamPozemok={setLyonHladamPozemok}
+                financneSluzby={lyonFinancneSluzby}
+                setFinancneSluzby={setLyonFinancneSluzby}
                 ucel={lyonUcel}
                 setUcel={setLyonUcel}
                 izolaciaStien={lyonIzolaciaStien}
@@ -2995,6 +3006,9 @@ export default function DetailDomu() {
               <div className="space-y-4">
                 <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                   <LyonSummaryPanelStandalone
+                  predajNehnutelnosti={lyonPredajNehnutelnosti}
+                  hladamPozemok={lyonHladamPozemok}
+                  financneSluzby={lyonFinancneSluzby}
                   ucel={lyonUcel}
                   izolaciaStien={lyonIzolaciaStien}
                   izolaciaPodlahy={lyonIzolaciaPodlahy}
