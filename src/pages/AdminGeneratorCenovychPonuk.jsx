@@ -394,14 +394,16 @@ export default function AdminGeneratorCenovychPonuk() {
                 <Plus className="w-4 h-4 mr-2" />
                 Nová šablóna
               </Button>
-              <Button 
-                onClick={() => setShowPreview(true)} 
-                variant="secondary"
-                className="bg-white/20 hover:bg-white/30 text-white border-white/30"
-              >
-                <Monitor className="w-4 h-4 mr-2" />
-                Náhľad ponuky
-              </Button>
+              {(isSuperAdmin || user?.role === 'admin') && (
+                <Button 
+                  onClick={() => setShowPreview(true)} 
+                  variant="secondary"
+                  className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                >
+                  <Monitor className="w-4 h-4 mr-2" />
+                  Náhľad ponuky
+                </Button>
+              )}
               <Button 
                 onClick={handleSave} 
                 disabled={saveMutation.isPending} 
