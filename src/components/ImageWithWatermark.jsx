@@ -46,18 +46,25 @@ export default function ImageWithWatermark({ src, alt, className, onLoad, useCat
   };
 
   return (
-    <div className="relative inline-block w-full h-full">
+    <div 
+      className="relative inline-block w-full h-full select-none" 
+      onContextMenu={(e) => e.preventDefault()}
+      style={{ userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
+    >
       {!loaded && !error && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
       )}
       <img 
         src={src} 
         alt={alt} 
-        className={`${className} ${loaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+        className={`${className} ${loaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 select-none pointer-events-none`}
         onLoad={handleLoad}
         onError={() => setError(true)}
         loading={priority ? "eager" : "lazy"}
         decoding="async"
+        draggable={false}
+        onContextMenu={(e) => e.preventDefault()}
+        style={{ userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
         {...props} 
       />
       {enabled && loaded && (
@@ -65,7 +72,9 @@ export default function ImageWithWatermark({ src, alt, className, onLoad, useCat
           className={`absolute ${positionClasses[position]} ${sizeClasses[size]} font-bold text-white pointer-events-none select-none`}
           style={{ 
             opacity: opacity,
-            textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
+            textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+            userSelect: 'none',
+            WebkitUserSelect: 'none'
           }}
         >
           {text}

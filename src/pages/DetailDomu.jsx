@@ -3286,7 +3286,7 @@ export default function DetailDomu() {
 
           {/* Image */}
           <div 
-            className="w-full h-full flex items-center justify-center overflow-hidden touch-none relative"
+            className="w-full h-full flex items-center justify-center overflow-hidden touch-none relative select-none"
             onClick={(e) => e.stopPropagation()}
             onWheel={handleWheel}
             onMouseDown={handleMouseDown}
@@ -3296,10 +3296,12 @@ export default function DetailDomu() {
             onTouchStart={handleMouseDown}
             onTouchMove={handleMouseMove}
             onTouchEnd={handleMouseUp}
+            onContextMenu={(e) => e.preventDefault()}
+            style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
           >
             {zoomLevel === 1 && lightboxImages.length > 1 ? (
               <div 
-                className="flex items-center h-full absolute left-0"
+                className="flex items-center justify-center h-full absolute left-0"
                 style={{
                   transform: `translateX(calc(-${lightboxIndex * 100}vw + ${swipeOffset}px))`,
                   transition: swipeStart ? 'none' : 'transform 0.3s ease-out',
@@ -3307,40 +3309,46 @@ export default function DetailDomu() {
                 }}
               >
                 {lightboxImages.map((img, idx) => (
-                  <div key={idx} className="w-screen h-full flex items-center justify-center flex-shrink-0">
-                    <ImageWithWatermark
-                      src={img}
-                      alt={`Fotka ${idx + 1}`}
-                      className="select-none max-w-[90vw] max-h-[80vh] object-contain"
-                      onContextMenu={(e) => e.preventDefault()}
-                      draggable={false}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (!swipeStart && Math.abs(swipeOffset) < 10) handleZoomIn();
-                      }}
-                    />
+                  <div key={idx} className="w-screen h-screen flex items-center justify-center flex-shrink-0 px-8">
+                    <div className="relative max-w-full max-h-full flex items-center justify-center">
+                      <ImageWithWatermark
+                        src={img}
+                        alt={`Fotka ${idx + 1}`}
+                        className="select-none w-auto h-auto max-w-[85vw] max-h-[85vh] object-contain"
+                        onContextMenu={(e) => e.preventDefault()}
+                        draggable={false}
+                        priority={true}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!swipeStart && Math.abs(swipeOffset) < 10) handleZoomIn();
+                        }}
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <ImageWithWatermark
-                src={lightboxImages[lightboxIndex]}
-                alt={`Fotka ${lightboxIndex + 1}`}
-                className={`select-none ${zoomLevel > 1 ? 'cursor-grab' : 'cursor-zoom-in'} ${isDragging ? 'cursor-grabbing' : ''}`}
-                style={{
-                  maxWidth: zoomLevel === 1 ? '90vw' : 'none',
-                  maxHeight: zoomLevel === 1 ? '80vh' : 'none',
-                  transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
-                  transformOrigin: 'center center',
-                  transition: isDragging ? 'none' : 'transform 0.2s ease-out',
-                }}
-                onContextMenu={(e) => e.preventDefault()}
-                draggable={false}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (zoomLevel === 1) handleZoomIn();
-                }}
-              />
+              <div className="relative flex items-center justify-center w-full h-full">
+                <ImageWithWatermark
+                  src={lightboxImages[lightboxIndex]}
+                  alt={`Fotka ${lightboxIndex + 1}`}
+                  className={`select-none ${zoomLevel > 1 ? 'cursor-grab' : 'cursor-zoom-in'} ${isDragging ? 'cursor-grabbing' : ''} w-auto h-auto object-contain`}
+                  priority={true}
+                  style={{
+                    maxWidth: zoomLevel === 1 ? '85vw' : 'none',
+                    maxHeight: zoomLevel === 1 ? '85vh' : 'none',
+                    transform: `scale(${zoomLevel}) translate(${panPosition.x / zoomLevel}px, ${panPosition.y / zoomLevel}px)`,
+                    transformOrigin: 'center center',
+                    transition: isDragging ? 'none' : 'transform 0.2s ease-out',
+                  }}
+                  onContextMenu={(e) => e.preventDefault()}
+                  draggable={false}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (zoomLevel === 1) handleZoomIn();
+                  }}
+                />
+              </div>
             )}
           </div>
 
