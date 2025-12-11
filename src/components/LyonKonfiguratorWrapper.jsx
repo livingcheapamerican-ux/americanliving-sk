@@ -3,7 +3,7 @@ import KonfiguratorLyon, { LyonSummaryPanel } from "./KonfiguratorLyon";
 import { useLanguage } from "./LanguageContext";
 
 export default function LyonKonfiguratorWrapper(props) {
-  const BASE_PRICE = 73431;
+  const BASE_PRICE = props.dom?.zakladna_cena || 73431;
   const { t } = useLanguage();
   
   const ucel = props.ucel || "chata";

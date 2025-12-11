@@ -288,8 +288,8 @@ Deno.serve(async (req) => {
 
     // Cenový rozpis - Detail položiek
     const polozkyDetail = [];
-    
-    polozkyDetail.push({ nazov: 'Základná cena domu', cena: 73431 });
+
+    polozkyDetail.push({ nazov: 'Základná cena domu', cena: dom?.zakladna_cena || 0 });
     
     if (konfiguraciaData.izolaciaStien === "200mm") polozkyDetail.push({ nazov: 'Izolácia stien 200mm', cena: CENY.izolacia_stien_200mm });
     if (konfiguraciaData.izolaciaStien === "250mm") polozkyDetail.push({ nazov: 'Izolácia stien 250mm', cena: CENY.izolacia_stien_250mm });
