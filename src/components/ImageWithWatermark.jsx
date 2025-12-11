@@ -12,7 +12,7 @@ export default function ImageWithWatermark({ src, alt, className, onLoad, useCat
       const all = await base44.entities.SiteSettings.list();
       return all.find(s => s.klic === 'watermark_settings') || null;
     },
-    staleTime: 60000,
+    staleTime: 300000,
   });
 
   const enabled = useCatalogSetting 

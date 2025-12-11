@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Toaster } from "sonner";
-import Chatbot from "./components/Chatbot";
-import AIAsistent from "./components/AIAsistent";
+const Chatbot = React.lazy(() => import("./components/Chatbot"));
+const AIAsistent = React.lazy(() => import("./components/AIAsistent"));
 import CookieConsentBanner from "./components/CookieConsentBanner";
 import { LanguageProvider, useLanguage } from "./components/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
@@ -511,7 +511,9 @@ function LayoutContent({ children }) {
 
       <CookieConsentBanner />
       <UserTracking />
-      <Chatbot />
+      <React.Suspense fallback={null}>
+        <Chatbot />
+      </React.Suspense>
       </div>
       );
       }
