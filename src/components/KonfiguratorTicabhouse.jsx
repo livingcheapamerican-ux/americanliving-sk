@@ -14,17 +14,30 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
 
-  // Načítať informáciu o viditeľnosti dopravy
-  const dopravaViditelna = dom?.doprava_viditelna !== false;
+  // Lokálny state pre okamžitú vizuálnu spätnú väzbu
+  const [localDopravaViditelna, setLocalDopravaViditelna] = React.useState(dom?.doprava_viditelna !== false);
+
+  // Synchronizovať lokálny state s DOM objektom
+  React.useEffect(() => {
+    setLocalDopravaViditelna(dom?.doprava_viditelna !== false);
+  }, [dom?.doprava_viditelna]);
+
+  const dopravaViditelna = localDopravaViditelna;
 
   // Mutácia pre zmenu viditeľnosti dopravy
   const toggleDopravaVisibilityMutation = useMutation({
     mutationFn: (visible) => base44.entities.Dom.update(dom.id, { doprava_viditelna: visible }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dom', dom.id] });
-      toast.success(dopravaViditelna ? 'Doprava skrytá pre verejnosť' : 'Doprava zobrazená pre verejnosť');
+      toast.success(!dopravaViditelna ? 'Doprava skrytá pre verejnosť' : 'Doprava zobrazená pre verejnosť');
     }
   });
+
+  const handleToggleDopravaVisibility = () => {
+    const newValue = !dopravaViditelna;
+    setLocalDopravaViditelna(newValue);
+    toggleDopravaVisibilityMutation.mutate(newValue);
+  };
 
   // Načítať texty konfiguratora
   const { data: konfigTexts = [] } = useQuery({
@@ -937,7 +950,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        toggleDopravaVisibilityMutation.mutate(!dopravaViditelna);
+                        handleToggleDopravaVisibility();
                       }}
                       disabled={toggleDopravaVisibilityMutation.isPending}
                       className={`absolute -top-2 -right-2 z-10 p-1.5 rounded-full shadow-lg transition-all ${
