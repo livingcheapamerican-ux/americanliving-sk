@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Upload, Save, Eye, Plus, Trash2, Palette, FileText, Image, Settings, Grid3x3, ArrowRight, Monitor, Download, CheckCircle } from "lucide-react";
+import { Save, Eye, Plus, Trash2, Palette, FileText, Image, Settings, Grid3x3, ArrowRight, Monitor, Download, CheckCircle, Badge } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function AdminGeneratorCenovychPonuk() {
@@ -1370,16 +1370,16 @@ export default function AdminGeneratorCenovychPonuk() {
                                       />
                                     </div>
                                   </div>
-                                  )}
-                                  </div>
-                                  );
-                                  })}
-                                  </div>
-                                  )}
-                                  </Card>
-                                  );
-                                  })}
-                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </Card>
           </TabsContent>
 
