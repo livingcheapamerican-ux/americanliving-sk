@@ -76,17 +76,22 @@ export default function AdminWatermark() {
   const handleBatchApply = async () => {
     setBatchLoading(true);
     setBatchResults(null);
-    
+
     try {
       const response = await base44.functions.invoke('aplikujWatermarkNaVsetkyFotky', {
         testMode
       });
-      
+
+      console.log('Response:', response);
+      console.log('Response data:', response.data);
+
       setBatchResults(response.data);
     } catch (error) {
+      console.error('Error:', error);
       setBatchResults({
         success: false,
-        error: error.message
+        error: error.message,
+        log: [`❌ Chyba: ${error.message}`]
       });
     } finally {
       setBatchLoading(false);
