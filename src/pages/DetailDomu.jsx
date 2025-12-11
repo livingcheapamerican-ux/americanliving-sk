@@ -589,7 +589,7 @@ export default function DetailDomu() {
                         : 'border-gray-200 hover:border-primary/50'
                     }`}
                   >
-                    <ImageWithWatermark
+                    <img
                       src={img}
                       alt={`Miniatúra ${index + 1}`}
                       className="w-full h-full object-cover"
@@ -674,7 +674,7 @@ export default function DetailDomu() {
                             key={fotoIndex} 
                             className="w-10 h-10 sm:w-14 sm:h-14 rounded-md overflow-hidden border border-gray-200 flex-shrink-0 relative"
                           >
-                            <ImageWithWatermark
+                            <img
                               src={foto}
                               alt={`Náhľad ${fotoIndex + 1}`}
                               className="w-full h-full object-cover"
@@ -3360,7 +3360,7 @@ export default function DetailDomu() {
                     idx === lightboxIndex ? 'border-white' : 'border-transparent opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <ImageWithWatermark src={img} alt="" className="w-full h-full object-cover" onContextMenu={(e) => e.preventDefault()} draggable={false} />
+                  <img src={img} alt="" className="w-full h-full object-cover" onContextMenu={(e) => e.preventDefault()} draggable={false} />
                 </button>
               ))}
             </div>
