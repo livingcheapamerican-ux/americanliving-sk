@@ -1461,90 +1461,54 @@ export default function AdminGeneratorCenovychPonuk() {
                                   </div>
 
                                   {jeMaping && (
-                                    <div className="space-y-3 pt-3 border-t-2 border-dashed">
-                                      <div>
-                                        <Label className="text-xs font-bold text-gray-700">Typ fotky v ponuke</Label>
-                                        <Select
-                                          value={existujuceMapovanie.typ_fotky}
-                                          onValueChange={(val) => updateMapovanieFotky("prosto", mapovaIndex, 'typ_fotky', val)}
-                                        >
-                                          <SelectTrigger className="h-9 text-sm mt-1 border-2">
-                                            <SelectValue />
-                                          </SelectTrigger>
-                                          <SelectContent>
-                                            <SelectItem value="titulna">
-                                              <div className="flex items-center gap-2">
-                                                <Image className="w-4 h-4" />
-                                                Titulná fotka
-                                              </div>
-                                            </SelectItem>
-                                            <SelectItem value="zakladna_konfiguracia">
-                                              <div className="flex items-center gap-2">
-                                                <Image className="w-4 h-4" />
-                                                Základná konfigurácia
-                                              </div>
-                                            </SelectItem>
-                                            <SelectItem value="interier_drevo">
-                                              <div className="flex items-center gap-2">
-                                                <Image className="w-4 h-4" />
-                                                Interiér - drevo
-                                              </div>
-                                            </SelectItem>
-                                            <SelectItem value="interier_sadrokarton">
-                                              <div className="flex items-center gap-2">
-                                                <Image className="w-4 h-4" />
-                                                Interiér - sadrokartón
-                                              </div>
-                                            </SelectItem>
-                                            <SelectItem value="galeria_exterier">
-                                              <div className="flex items-center gap-2">
-                                                <Grid3x3 className="w-4 h-4" />
-                                                Galéria - exteriér
-                                              </div>
-                                            </SelectItem>
-                                            <SelectItem value="galeria_interier">
-                                              <div className="flex items-center gap-2">
-                                                <Grid3x3 className="w-4 h-4" />
-                                                Galéria - interiér
-                                              </div>
-                                            </SelectItem>
-                                            <SelectItem value="podorysy">
-                                              <div className="flex items-center gap-2">
-                                                <FileText className="w-4 h-4" />
-                                                Pôdorysy
-                                              </div>
-                                            </SelectItem>
-                                          </SelectContent>
-                                        </Select>
-                                      </div>
-                                      <div>
-                                        <Label className="text-xs font-bold text-gray-700">Poznámka (voliteľné)</Label>
-                                        <Input
-                                          value={existujuceMapovanie.popis || ''}
-                                          onChange={(e) => updateMapovanieFotky("prosto", mapovaIndex, 'popis', e.target.value)}
-                                          placeholder="Napr: Zobrazí dom s touto fasádou"
-                                          className="h-9 text-sm mt-1 border-2"
-                                        />
-                                      </div>
-                                      <div className="pt-2 px-3 py-2 bg-blue-50 rounded-lg border border-blue-200">
-                                        <p className="text-xs text-blue-800">
-                                          <strong>Výsledok:</strong> Keď klient vyberie <span className="font-bold">{dlazdica.nazov}</span>, 
-                                          zobrazí sa <span className="font-bold">{existujuceMapovanie.typ_fotky}</span> v cenovej ponuke
-                                        </p>
-                                      </div>
-                                    </div>
+                                   <div className="space-y-3 pt-3 border-t-2 border-dashed">
+                                     <div>
+                                       <Label className="text-xs font-bold text-gray-700">Typ fotky v ponuke</Label>
+                                       <Select
+                                         value={existujuceMapovanie.typ_fotky}
+                                         onValueChange={(val) => updateMapovanieFotky("prosto", mapovaIndex, 'typ_fotky', val)}
+                                       >
+                                         <SelectTrigger className="h-9 text-sm mt-1 border-2">
+                                           <SelectValue />
+                                         </SelectTrigger>
+                                         <SelectContent>
+                                           <SelectItem value="titulna">Titulná fotka</SelectItem>
+                                           <SelectItem value="zakladna_konfiguracia">Základná konfigurácia</SelectItem>
+                                           <SelectItem value="interier_drevo">Interiér - drevo</SelectItem>
+                                           <SelectItem value="interier_sadrokarton">Interiér - sadrokartón</SelectItem>
+                                           <SelectItem value="galeria_exterier">Galéria - exteriér</SelectItem>
+                                           <SelectItem value="galeria_interier">Galéria - interiér</SelectItem>
+                                           <SelectItem value="podorysy">Pôdorysy</SelectItem>
+                                         </SelectContent>
+                                       </Select>
+                                     </div>
+                                     <div>
+                                       <Label className="text-xs font-bold text-gray-700">Poznámka (voliteľné)</Label>
+                                       <Input
+                                         value={existujuceMapovanie.popis || ''}
+                                         onChange={(e) => updateMapovanieFotky("prosto", mapovaIndex, 'popis', e.target.value)}
+                                         placeholder="Napr: Zobrazí dom s touto fasádou"
+                                         className="h-9 text-sm mt-1 border-2"
+                                       />
+                                     </div>
+                                     <div className="pt-2 px-3 py-2 bg-blue-50 rounded-lg border border-blue-200">
+                                       <p className="text-xs text-blue-800">
+                                         <strong>Výsledok:</strong> Keď klient vyberie {dlazdica.nazov}, zobrazí sa {existujuceMapovanie.typ_fotky} v cenovej ponuke
+                                       </p>
+                                     </div>
+                                   </div>
                                   )}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </Card>
-            </TabsContent>
+                                  </div>
+                                  );
+                                  })}
+                                  </div>
+                                  )}
+                                  </Card>
+                                  );
+                                  })}
+                                  </div>
+                                  </Card>
+                                  </TabsContent>
         </Tabs>
 
         {/* Preview Modal */}
