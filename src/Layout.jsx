@@ -10,45 +10,10 @@ import { base44 } from "@/api/base44Client";
 import { Toaster } from "sonner";
 import Chatbot from "./components/Chatbot";
 import AIAsistent from "./components/AIAsistent";
-import ChristmasEffects from "./components/ChristmasEffects";
 import CookieConsentBanner from "./components/CookieConsentBanner";
-import { Snowflake as SnowflakeIcon } from "lucide-react";
 import { LanguageProvider, useLanguage } from "./components/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
 import UserTracking from "./components/UserTracking";
-
-// Wrapper pre vianočné efekty s lokálnym uložením
-function ChristmasEffectsWrapper() {
-  const [enabled, setEnabled] = React.useState(() => {
-    const saved = localStorage.getItem('christmas_effects_enabled');
-    return saved === null ? true : saved === 'true';
-  });
-
-  const toggleEffects = () => {
-    const newValue = !enabled;
-    setEnabled(newValue);
-    localStorage.setItem('christmas_effects_enabled', String(newValue));
-  };
-
-  return (
-    <>
-      <ChristmasEffects enabled={enabled} />
-      {/* Tlačidlo pre všetkých návštevníkov */}
-      <button
-        onClick={toggleEffects}
-        className={`fixed top-48 left-4 z-40 p-3 rounded-full shadow-lg transition-all ${
-          enabled ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 hover:bg-gray-500'
-        }`}
-        title={enabled ? 'Vypnúť vianočné efekty' : 'Zapnúť vianočné efekty'}
-      >
-        <SnowflakeIcon 
-          className="w-7 h-7 text-white animate-spin" 
-          style={{ animationDuration: '4s' }} 
-        />
-      </button>
-    </>
-  );
-}
 
 function LayoutContent({ children }) {
   const location = useLocation();
@@ -544,7 +509,6 @@ function LayoutContent({ children }) {
         </div>
       </footer>
 
-      <ChristmasEffectsWrapper />
       <CookieConsentBanner />
       <UserTracking />
       <Chatbot />
