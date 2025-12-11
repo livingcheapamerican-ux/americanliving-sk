@@ -1195,9 +1195,9 @@ export default function AdminGeneratorCenovychPonuk() {
                             if (galeria.id.startsWith('exterier')) {
                               return s.id === 'fasada' || s.id === 'strecha' || s.id === 'dvere_okna';
                             }
-                            // Pre interiér galérie zobrazovať len interiér sekciu (3 dlaždice obkladov)
+                            // Pre interiér galérie zobrazovať interiér a kúpeľňu
                             if (galeria.id.startsWith('interier')) {
-                              return s.id === 'interier';
+                              return s.id === 'interier' || s.id === 'kupelna';
                             }
                             return false;
                           }).map((sekcia) => (
