@@ -424,6 +424,9 @@ export default function LyonSummaryPanelStandalone({
         zaklady={zaklady}
         montaz={montaz}
         doprava={doprava}
+        predajNehnutelnosti={predajNehnutelnosti}
+        chcemPozemok={hladamPozemok}
+        financneSluzby={financneSluzby}
         totalPrice={totalPrice}
       />
     </Card>
