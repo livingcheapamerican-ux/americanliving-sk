@@ -1343,20 +1343,30 @@ export default function LyonFinalSummaryModal({
                         <span>+ {formatPrice(CENY.doprava)}</span>
                       </div>
 
-                      {/* SEKCIA 12: DODATOČNÉ SLUŽBY */}
-                      <div className="bg-gray-200 px-3 py-1.5 rounded font-bold text-red-600 text-sm mt-2">DODATOČNÉ SLUŽBY</div>
-                      <div className={`flex justify-between text-sm py-1 ${!predajNehnutelnosti ? "text-gray-400 line-through" : ""}`}>
-                        <span>• Predaj predošlej nehnuteľnosti</span>
-                        <span>na vyžiadanie</span>
-                      </div>
-                      <div className={`flex justify-between text-sm py-1 ${!chcemPozemok ? "text-gray-400 line-through" : ""}`}>
-                        <span>• Chcem pozemok pod svoj dom</span>
-                        <span>na vyžiadanie</span>
-                      </div>
-                      <div className={`flex justify-between text-sm py-1 ${!financneSluzby ? "text-gray-400 line-through" : ""}`}>
-                        <span>• Finančné služby - úvery/pôžičky</span>
-                        <span>na vyžiadanie</span>
-                      </div>
+                      {/* SEKCIA 12: DODATOČNÉ SLUŽBY - zobrazuje sa len ak je aspoň jedna vybraná */}
+                      {(predajNehnutelnosti || chcemPozemok || financneSluzby) && (
+                        <>
+                          <div className="bg-gray-200 px-3 py-1.5 rounded font-bold text-red-600 text-sm mt-2">DODATOČNÉ SLUŽBY</div>
+                          {predajNehnutelnosti && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Predaj predošlej nehnuteľnosti</span>
+                              <span>na vyžiadanie</span>
+                            </div>
+                          )}
+                          {chcemPozemok && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Chcem pozemok pod svoj dom</span>
+                              <span>na vyžiadanie</span>
+                            </div>
+                          )}
+                          {financneSluzby && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Finančné služby - úvery/pôžičky</span>
+                              <span>na vyžiadanie</span>
+                            </div>
+                          )}
+                        </>
+                      )}
                       </div>
                       </div>
 

@@ -501,13 +501,13 @@ Deno.serve(async (req) => {
     if (konfiguraciaData.predajNehnutelnosti || konfiguraciaData.chcemPozemok || konfiguraciaData.financneSluzby) {
       polozkyDetail.push({ nazov: '--- DODATOCNE SLUZBY ---', cena: null, vybrane: true, kategoria: true });
       if (konfiguraciaData.predajNehnutelnosti) {
-        polozkyDetail.push({ nazov: 'Predaj predoslej nehnutelnosti', cena: null, vybrane: true, popis: 'Budu sa Vam venovat nasi najlepsi odbornici v realitach.' });
+        polozkyDetail.push({ nazov: 'Predaj predoslej nehnutelnosti', cena: 'na vyziadanie', vybrane: true, popis: 'Budu sa Vam venovat nasi najlepsi odbornici v realitach.' });
       }
       if (konfiguraciaData.chcemPozemok) {
-        polozkyDetail.push({ nazov: 'Chcem pozemok pod svoj dom', cena: null, vybrane: true, popis: 'Pomozeme Vam najst idealny pozemok.' });
+        polozkyDetail.push({ nazov: 'Chcem pozemok pod svoj dom', cena: 'na vyziadanie', vybrane: true, popis: 'Pomozeme Vam najst idealny pozemok.' });
       }
       if (konfiguraciaData.financneSluzby) {
-        polozkyDetail.push({ nazov: 'Financne sluzby - uvery/pozicky', cena: null, vybrane: true, popis: 'Budu sa Vam venovat nasi najlepsi financnici.' });
+        polozkyDetail.push({ nazov: 'Financne sluzby - uvery/pozicky', cena: 'na vyziadanie', vybrane: true, popis: 'Budu sa Vam venovat nasi najlepsi financnici.' });
       }
     }
 
@@ -570,7 +570,7 @@ Deno.serve(async (req) => {
         const itemText = removeDiacritics(polozka.nazov);
         doc.text(itemText, 25, yPos);
         if (polozka.cena !== null && polozka.cena !== undefined) {
-          const priceText = removeDiacritics(formatPrice(polozka.cena));
+          const priceText = typeof polozka.cena === 'string' ? removeDiacritics(polozka.cena) : removeDiacritics(formatPrice(polozka.cena));
           doc.text(priceText, pageWidth - 25, yPos, { align: 'right' });
         }
         // Ak existuje popis (pre dodatočné služby), pridaj ho na ďalší riadok
@@ -645,7 +645,7 @@ Deno.serve(async (req) => {
       yPos += imgHeight + 15;
     }
 
-    // Galérie s fotkami - nová stránka (max 4 fotky aby PDF nebolo veľké)
+    // Galérie s fotkami - nová stránka (max 2 fotky z každej galérie pre malý PDF)
     if (matchedGalleries.length > 0) {
       doc.addPage();
       yPos = 20;
@@ -671,11 +671,11 @@ Deno.serve(async (req) => {
         doc.setFontSize(8);
         doc.setFont(undefined, 'normal');
         doc.setTextColor(100, 100, 100);
-        const maxFotky = Math.min(4, galeria.fotky.length);
+        const maxFotky = Math.min(2, galeria.fotky.length);
         doc.text(removeDiacritics(`${maxFotky} z ${galeria.fotky.length} fotiek`), 25, yPos);
         yPos += 7;
 
-        // Vložiť max 4 fotky na galériu (zmenšené pre menší PDF)
+        // Vložiť max 2 fotky na galériu s malým rozlíšením
         for (let i = 0; i < maxFotky; i++) {
           if (yPos > pageHeight - 75) {
             doc.addPage();
@@ -689,10 +689,9 @@ Deno.serve(async (req) => {
 
             if (i % 2 === 0 && i > 0) yPos += 68;
 
-            // Stiahni a vlož obrázok
+            // Stiahni a vlož obrázok s nízkou kvalitou (FAST komprimácia)
             const imageData = await fetchImageAsBase64(galeria.fotky[i]);
             if (imageData) {
-              // Vlož obrázok s kompresiou
               doc.addImage(imageData.base64, imageData.format, xPos, yPos, imgWidth, imgHeight, undefined, 'FAST');
 
               // Watermark text
