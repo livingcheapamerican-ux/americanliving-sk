@@ -1152,8 +1152,8 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Konfigurátor pre ostatné Ticabhouse domy (okrem Lyon) */}
-            {isTicabhouse && !dom.nazov?.toLowerCase().includes("lyon") && (
+            {/* Konfigurátor pre ostatné Ticabhouse domy (okrem Lyon a Tiny House) */}
+            {isTicabhouse && !dom.nazov?.toLowerCase().includes("lyon") && !dom.nazov?.toLowerCase().includes("tiny house") && (
               <KonfiguratorTicabhouse 
                 dom={dom} 
                 isAdmin={isAdmin}
@@ -2990,8 +2990,8 @@ export default function DetailDomu() {
 
             </div>
 
-            {/* Sidebar pre všetky Ticabhouse domy - rovnaké ako Lyon */}
-            {isTicabhouse && (
+            {/* Sidebar pre všetky Ticabhouse domy - rovnaké ako Lyon (okrem Tiny House) */}
+            {isTicabhouse && !dom.nazov?.toLowerCase().includes("tiny house") && (
               <div className="space-y-4">
                 <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                   <LyonSummaryPanelStandalone
