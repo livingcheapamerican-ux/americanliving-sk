@@ -215,8 +215,12 @@ Deno.serve(async (req) => {
     doc.setFont(undefined, 'normal');
 
     const formatPrice = (price) => {
-      const formatted = price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      return formatted + " EUR";
+      // Manuálne formátovanie bez non-breaking spaces pre lepšiu kompatibilitu PDF
+      const num = typeof price === 'number' ? price : parseFloat(price);
+      const parts = num.toFixed(2).split('.');
+      // Pridaj oddeľovače tisícok pomocou normálnych medzier
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+      return parts.join(',') + ' EUR';
     };
 
     // Cenník
