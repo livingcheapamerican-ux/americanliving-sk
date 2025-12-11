@@ -352,14 +352,36 @@ export default function AdminGeneratorCenovychPonuk() {
     setFormData({ ...formData, [fieldName]: updated });
   };
 
-  const createNovaSablona = () => {
-    const novaSablona = {
-      nazov: "Nová šablóna",
-      vyrobca_filter: "",
-      aktivne: false,
-      ...formData
-    };
-    saveMutation.mutate(novaSablona);
+  const createNovaSablona = async () => {
+    try {
+      const novaSablona = {
+        nazov: "Nová šablóna",
+        logo_url: "",
+        nazov_spolocnosti: "American Living",
+        telefon: "+421 905 138 124",
+        email: "info@americanliving.sk",
+        web: "www.americanliving.sk",
+        sablona_dizajnu: "modern_red",
+        farba_hlavna: "#EF4444",
+        farba_sekundarna: "#dc2626",
+        aktivne: false,
+        zobrazovat_preciarknute: true,
+        zobrazovat_doplnkove_sluzby: true,
+        mapovanie_fotiek_ticabhouse: [],
+        mapovanie_fotiek_prosto: [],
+        automaticke_pravidla: {
+          pouzit_zakladnu_konfiguraciu_ak_nie_je_omietka: true,
+          vzdy_pridat_podorysy: true
+        }
+      };
+      
+      const result = await base44.entities.NastavenieCenovejPonuky.create(novaSablona);
+      queryClient.invalidateQueries({ queryKey: ['nastavenia-cenovej-ponuky'] });
+      setSelectedSablona(result.id);
+      toast.success('Nová šablóna vytvorená');
+    } catch (error) {
+      toast.error('Chyba pri vytváraní šablóny: ' + error.message);
+    }
   };
 
   const handleDownloadPdf = async () => {
