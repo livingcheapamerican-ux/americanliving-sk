@@ -70,7 +70,7 @@ export default function LyonSummaryPanelStandalone({
                 <p className="text-slate-300">✓ {t('sellProperty') || 'Predaj predošlej nehnuteľnosti'}</p>
               )}
               {hladamPozemok && (
-                <p className="text-slate-300">✓ {t('findLand') || 'Chcem pozemok pod svoj dom'}</p>
+                <p className="text-slate-300">✓ Chcem pozemok pod svoj dom</p>
               )}
               {financneSluzby && (
                 <p className="text-slate-300">✓ {t('financialServices') || 'Finančné služby - úvery/poistky'}</p>
