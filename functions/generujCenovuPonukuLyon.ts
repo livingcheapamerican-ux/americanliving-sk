@@ -427,15 +427,15 @@ Deno.serve(async (req) => {
     polozkyDetail.push({ nazov: 'Montáž domu', cena: CENY.montaz, vybrane: konfiguraciaData.montaz });
     polozkyDetail.push({ nazov: 'Doprava modulov', cena: CENY.doprava, vybrane: konfiguraciaData.doprava });
 
-    // Tabuľka cenových položiek
+    // Tabuľka cenových položiek - Header
     doc.setFillColor(mainColor.r, mainColor.g, mainColor.b);
     doc.rect(20, yPos - 3, pageWidth - 40, 7, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(10);
     doc.setFont(undefined, 'bold');
-    doc.text('Položka', 25, yPos);
+    doc.text('Konfigurácia:', 25, yPos);
     doc.text('Cena', pageWidth - 25, yPos, { align: 'right' });
-    yPos += 8;
+    yPos += 10;
 
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(9);
