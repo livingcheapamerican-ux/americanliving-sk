@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Upload, Save, Eye, Plus, Trash2, Palette, FileText, Image, Settings, Grid3x3, ArrowRight, Monitor } from "lucide-react";
+import { Upload, Save, Eye, Plus, Trash2, Palette, FileText, Image, Settings, Grid3x3, ArrowRight, Monitor, Download } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function AdminGeneratorCenovychPonuk() {
@@ -20,6 +20,7 @@ export default function AdminGeneratorCenovychPonuk() {
   const [selectedSablona, setSelectedSablona] = useState(null);
   const [expandedSekcie, setExpandedSekcie] = useState({});
   const [showPreview, setShowPreview] = useState(false);
+  const [generatingPdf, setGeneratingPdf] = useState(false);
   
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -361,6 +362,32 @@ export default function AdminGeneratorCenovychPonuk() {
     saveMutation.mutate(novaSablona);
   };
 
+  const handleDownloadPdf = async () => {
+    setGeneratingPdf(true);
+    try {
+      const response = await base44.functions.invoke('generujNahladCenovejPonuky', {
+        nastavenie: formData
+      });
+      
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'cenova-ponuka-nahlad.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+      
+      toast.success('PDF stiahnuté');
+    } catch (error) {
+      toast.error('Chyba pri generovaní PDF');
+      console.error(error);
+    } finally {
+      setGeneratingPdf(false);
+    }
+  };
+
   const isSuperAdmin = user?.super_admin === true;
 
   if (!isSuperAdmin) {
@@ -395,14 +422,25 @@ export default function AdminGeneratorCenovychPonuk() {
                 Nová šablóna
               </Button>
               {(isSuperAdmin || user?.role === 'admin') && (
-                <Button 
-                  onClick={() => setShowPreview(true)} 
-                  variant="secondary"
-                  className="bg-white/20 hover:bg-white/30 text-white border-white/30"
-                >
-                  <Monitor className="w-4 h-4 mr-2" />
-                  Náhľad ponuky
-                </Button>
+                <>
+                  <Button 
+                    onClick={() => setShowPreview(true)} 
+                    variant="secondary"
+                    className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                  >
+                    <Monitor className="w-4 h-4 mr-2" />
+                    Náhľad ponuky
+                  </Button>
+                  <Button 
+                    onClick={handleDownloadPdf} 
+                    disabled={generatingPdf}
+                    variant="secondary"
+                    className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    {generatingPdf ? 'Generujem PDF...' : 'Stiahnuť PDF'}
+                  </Button>
+                </>
               )}
               <Button 
                 onClick={handleSave} 
