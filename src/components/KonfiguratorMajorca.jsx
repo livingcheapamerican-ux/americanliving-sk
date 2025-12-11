@@ -147,8 +147,33 @@ export default function KonfiguratorMajorca({
               setIzolaciaStropu("150mm");
               setTepelneCerpadlo("nie");
               setRekuperacia("nie");
+              setPripravaNaRekuperaciu(false);
+              setPodlahovoKurenie(false);
+              setPripravaNaKrb(false);
+              setOchranaKachle(false);
+              setKlimatizacia(false);
+              setFasada("drevo_smrek");
+              setStrecha("korugovan_plech");
+              setOdkvapy("nie");
+              setOkna("biele");
+              setVchodoveDvere("plastove");
+              setObkladStien("smrek_8cm");
+              setPodlaha("laminat");
+              setInterieroveDvere("kridlove");
+              setElektro("eu");
+              setBleskozvod(false);
+              setPrepat(false);
+              setPripravaNaSolarnePanely(false);
+              setSprchovyKut("standard");
+              setVana(false);
+              setBateria("standard");
+              setSkrinka(false);
+              setStropKupelna("drevo");
               setInziniering(false);
               setProjektACertifikacia(false);
+              setZaklady("bez");
+              setMontaz(false);
+              setDoprava(false);
             }}
             className={`p-3 rounded-lg cursor-pointer transition-all border-2 ${
               ucel === "chata" ? "bg-green-100 border-green-500 shadow-md" : "bg-white border-gray-300 hover:border-green-400"
