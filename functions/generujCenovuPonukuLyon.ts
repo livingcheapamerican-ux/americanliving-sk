@@ -91,10 +91,9 @@ Deno.serve(async (req) => {
     doc.text('info@americanliving.sk', pageWidth - 20, 61, { align: 'right' });
     doc.text('www.americanliving.sk', pageWidth - 20, 66, { align: 'right' });
 
-    // Číslo ponuky
+    // Dátum
     doc.setFontSize(10);
-    doc.text(`Číslo ponuky: ${cisloPonuky}`, 20, 50);
-    doc.text('Dátum: ' + new Date().toLocaleDateString('sk-SK'), 20, 56);
+    doc.text('Dátum: ' + new Date().toLocaleDateString('sk-SK'), 20, 50);
 
     let yPos = 75;
 
@@ -326,54 +325,62 @@ Deno.serve(async (req) => {
 
     const matchedGalleries = getMatchedGalleries();
 
-    // Cenový rozpis - Detail položiek (s prečiarknutými)
+    // Cenový rozpis - PRESNÁ KÓPIA SIDEBARU - 12 sekcií ako v konfiguratoru
     const polozkyDetail = [];
 
+    // === SEKCIA 0: ÚČEL STAVBY ===
+    polozkyDetail.push({ nazov: '--- ÚČEL STAVBY ---', cena: null, vybrane: true, kategoria: true });
+    polozkyDetail.push({ nazov: 'Rekreačná stavba', cena: 0, vybrane: konfiguraciaData.ucel === "chata" });
+    polozkyDetail.push({ nazov: 'Rodinný dom A0', cena: 0, vybrane: konfiguraciaData.ucel === "rodinny" });
+
+    // === SEKCIA 1: IZOLÁCIA ===
+    polozkyDetail.push({ nazov: '--- 1. IZOLÁCIA ---', cena: null, vybrane: true, kategoria: true });
     polozkyDetail.push({ nazov: 'Základná cena domu', cena: dom?.zakladna_cena || 0, vybrane: true });
-
-    // Izolácia stien
-    if (konfiguraciaData.izolaciaStien === "200mm") {
-      polozkyDetail.push({ nazov: 'Izolácia stien 200mm', cena: CENY.izolacia_stien_200mm, vybrane: true });
-      polozkyDetail.push({ nazov: 'Izolácia stien 250mm', cena: CENY.izolacia_stien_250mm, vybrane: false });
-    } else if (konfiguraciaData.izolaciaStien === "250mm") {
-      polozkyDetail.push({ nazov: 'Izolácia stien 200mm', cena: CENY.izolacia_stien_200mm, vybrane: false });
-      polozkyDetail.push({ nazov: 'Izolácia stien 250mm', cena: CENY.izolacia_stien_250mm, vybrane: true });
-    }
-    // Izolácia podlahy
+    polozkyDetail.push({ nazov: 'Izolácia stien 150mm', cena: 0, vybrane: konfiguraciaData.izolaciaStien === "150mm" });
+    polozkyDetail.push({ nazov: 'Izolácia stien 200mm', cena: CENY.izolacia_stien_200mm, vybrane: konfiguraciaData.izolaciaStien === "200mm" });
+    polozkyDetail.push({ nazov: 'Izolácia stien 250mm', cena: CENY.izolacia_stien_250mm, vybrane: konfiguraciaData.izolaciaStien === "250mm" });
+    polozkyDetail.push({ nazov: 'Izolácia podlahy 150mm', cena: 0, vybrane: konfiguraciaData.izolaciaPodlahy === "150mm" });
     polozkyDetail.push({ nazov: 'Izolácia podlahy 200mm', cena: CENY.izolacia_podlahy_200mm, vybrane: konfiguraciaData.izolaciaPodlahy === "200mm" });
-
-    // Izolácia stropu
+    polozkyDetail.push({ nazov: 'Izolácia stropu 150mm', cena: 0, vybrane: konfiguraciaData.izolaciaStropu === "150mm" });
     polozkyDetail.push({ nazov: 'Izolácia stropu 200mm', cena: CENY.izolacia_stropu_200mm, vybrane: konfiguraciaData.izolaciaStropu === "200mm" });
 
-    // Vykurovanie
+    // === SEKCIA 2: VYKUROVANIE ===
+    polozkyDetail.push({ nazov: '--- 2. VYKUROVANIE ---', cena: null, vybrane: true, kategoria: true });
+    polozkyDetail.push({ nazov: 'Príprava na vykurovanie', cena: 0, vybrane: konfiguraciaData.tepelneCerpadlo === "nie" });
     polozkyDetail.push({ nazov: 'Tepelné čerpadlo', cena: CENY.tepelne_cerpadlo, vybrane: konfiguraciaData.tepelneCerpadlo === "ano" });
+    polozkyDetail.push({ nazov: 'Bez rekuperácie', cena: 0, vybrane: konfiguraciaData.rekuperacia === "nie" && !konfiguraciaData.pripravaNaRekuperaciu });
     polozkyDetail.push({ nazov: 'Príprava na rekuperáciu', cena: CENY.pripravaNaRekuperaciu || 0, vybrane: konfiguraciaData.pripravaNaRekuperaciu });
     polozkyDetail.push({ nazov: 'Rekuperácia', cena: CENY.rekuperacia, vybrane: konfiguraciaData.rekuperacia === "ano" });
     polozkyDetail.push({ nazov: 'Podlahové kúrenie', cena: CENY.podlahove_kurenie, vybrane: konfiguraciaData.podlahovoKurenie });
-    polozkyDetail.push({ nazov: 'Klimatizácia', cena: CENY.klimatizacia || 0, vybrane: konfiguraciaData.klimatizacia });
     polozkyDetail.push({ nazov: 'Príprava na krb', cena: CENY.pripravaKrb, vybrane: konfiguraciaData.pripravaNaKrb });
     polozkyDetail.push({ nazov: 'Ochrana kachle', cena: CENY.ochranaKachle, vybrane: konfiguraciaData.ochranaKachle });
+    polozkyDetail.push({ nazov: 'Príprava na klimatizáciu', cena: CENY.klimatizacia || 0, vybrane: konfiguraciaData.klimatizacia });
 
-    // Fasáda - VŠETKY možnosti
+    // === SEKCIA 3: FASÁDA ===
+    polozkyDetail.push({ nazov: '--- 3. FASÁDA ---', cena: null, vybrane: true, kategoria: true });
     polozkyDetail.push({ nazov: 'Fasáda - drevo smrek', cena: 0, vybrane: konfiguraciaData.fasada === "drevo_smrek" });
     polozkyDetail.push({ nazov: 'Fasáda - šúchaná omietka', cena: CENY.fasada_omietka, vybrane: konfiguraciaData.fasada === "omietka" });
     polozkyDetail.push({ nazov: 'Fasáda - smrekovec', cena: CENY.fasada_smrekovec, vybrane: konfiguraciaData.fasada === "smrekovec" });
     polozkyDetail.push({ nazov: 'Fasáda - falcované panely', cena: CENY.fasada_falcovane, vybrane: konfiguraciaData.fasada === "falcovane" });
     polozkyDetail.push({ nazov: 'Fasáda - thermowood', cena: CENY.fasada_thermowood, vybrane: konfiguraciaData.fasada === "thermowood" });
 
-    // Strecha - VŠETKY možnosti
+    // === SEKCIA 4: STRECHA ===
+    polozkyDetail.push({ nazov: '--- 4. STRECHA ---', cena: null, vybrane: true, kategoria: true });
     polozkyDetail.push({ nazov: 'Strecha - korugovaný plech', cena: 0, vybrane: konfiguraciaData.strecha === "korugovan_plech" });
     polozkyDetail.push({ nazov: 'Strecha - falcované panely', cena: CENY.strecha_falcovane, vybrane: konfiguraciaData.strecha === "falcovane" });
+    polozkyDetail.push({ nazov: 'Bez odkvapov', cena: 0, vybrane: konfiguraciaData.odkvapy === "nie" });
     polozkyDetail.push({ nazov: 'Odkvapy', cena: CENY.odkvapy, vybrane: konfiguraciaData.odkvapy === "ano" });
 
-    // Okná a dvere - VŠETKY možnosti
+    // === SEKCIA 5: OKNÁ A DVERE ===
+    polozkyDetail.push({ nazov: '--- 5. OKNÁ A DVERE ---', cena: null, vybrane: true, kategoria: true });
     polozkyDetail.push({ nazov: 'Okná - biele 3-sklo', cena: 0, vybrane: konfiguraciaData.okna === "biele" });
     polozkyDetail.push({ nazov: 'Okná - antracit 3-sklo', cena: 0, vybrane: konfiguraciaData.okna === "antracit" });
     polozkyDetail.push({ nazov: 'Okná - hnedé 3-sklo', cena: 0, vybrane: konfiguraciaData.okna === "hnede" });
     polozkyDetail.push({ nazov: 'Vchodové dvere - plast/kov', cena: 0, vybrane: konfiguraciaData.vchodoveDvere === "plastove" });
     polozkyDetail.push({ nazov: 'Vchodové dvere - kovové', cena: CENY.dvere_kovove, vybrane: konfiguraciaData.vchodoveDvere === "kovove" });
 
-    // Interiér - VŠETKY možnosti
+    // === SEKCIA 6: INTERIÉR ===
+    polozkyDetail.push({ nazov: '--- 6. INTERIÉR ---', cena: null, vybrane: true, kategoria: true });
     polozkyDetail.push({ nazov: 'Obklad - smrek 8cm', cena: 0, vybrane: konfiguraciaData.obkladStien === "smrek_8cm" });
     polozkyDetail.push({ nazov: 'Obklad - smrek bez uzlov', cena: 0, vybrane: konfiguraciaData.obkladStien === "smrek_bez_uzlov" });
     polozkyDetail.push({ nazov: 'Obklad - sadrokartón + tapeta', cena: CENY.obklad_sadrokarton, vybrane: konfiguraciaData.obkladStien === "sadrokarton_tapeta" });
@@ -382,7 +389,8 @@ Deno.serve(async (req) => {
     polozkyDetail.push({ nazov: 'Interiérové dvere - krídlové', cena: 0, vybrane: konfiguraciaData.interieroveDvere === "kridlove" });
     polozkyDetail.push({ nazov: 'Interiérové dvere - posuvné', cena: CENY.dvere_posuvne, vybrane: konfiguraciaData.interieroveDvere === "posuvne" });
 
-    // Elektro - VŠETKY možnosti
+    // === SEKCIA 7: ELEKTRO ===
+    polozkyDetail.push({ nazov: '--- 7. ELEKTROINŠTALÁCIA ---', cena: null, vybrane: true, kategoria: true });
     polozkyDetail.push({ nazov: 'Elektro - EU štandard', cena: 0, vybrane: konfiguraciaData.elektro === "eu" });
     polozkyDetail.push({ nazov: 'Elektro - CZ/SK štandard', cena: CENY.elektro_cz, vybrane: konfiguraciaData.elektro === "cz" });
     polozkyDetail.push({ nazov: 'Elektro - GE štandard (A0)', cena: CENY.elektro_ge, vybrane: konfiguraciaData.elektro === "ge" });
@@ -390,7 +398,8 @@ Deno.serve(async (req) => {
     polozkyDetail.push({ nazov: 'Prepäťová ochrana', cena: CENY.prepat, vybrane: konfiguraciaData.prepat });
     polozkyDetail.push({ nazov: 'Príprava na solárne panely', cena: CENY.pripravaNaSolarnePanely || 0, vybrane: konfiguraciaData.pripravaNaSolarnePanely });
 
-    // Kúpeľňa - VŠETKY možnosti
+    // === SEKCIA 8: KÚPEĽŇA ===
+    polozkyDetail.push({ nazov: '--- 8. KÚPEĽŇA ---', cena: null, vybrane: true, kategoria: true });
     polozkyDetail.push({ nazov: 'Sprcha + WC Geberit', cena: 0, vybrane: konfiguraciaData.sprchovyKut === "standard" });
     polozkyDetail.push({ nazov: 'Sprchový kút Radaway', cena: CENY.sprchovyKut, vybrane: konfiguraciaData.sprchovyKut === "radaway" });
     polozkyDetail.push({ nazov: 'Batéria - štandard', cena: 0, vybrane: konfiguraciaData.bateria === "standard" });
@@ -400,17 +409,21 @@ Deno.serve(async (req) => {
     polozkyDetail.push({ nazov: 'Vaňa', cena: CENY.vana, vybrane: konfiguraciaData.vana });
     polozkyDetail.push({ nazov: 'Skrinka', cena: CENY.skrinka, vybrane: konfiguraciaData.skrinka });
 
-    // Služby
-    polozkyDetail.push({ nazov: 'Inžiniering', cena: CENY.inziniering, vybrane: konfiguraciaData.inziniering });
-    polozkyDetail.push({ nazov: 'Projekt + Certifikácia A0', cena: CENY.projektACertifikacia, vybrane: konfiguraciaData.projektACertifikacia });
-    polozkyDetail.push({ nazov: 'Revízna dokumentácia', cena: CENY.revizia, vybrane: konfiguraciaData.revizia });
-
-    // Základy
+    // === SEKCIA 9: ZÁKLADY ===
+    polozkyDetail.push({ nazov: '--- 9. ZÁKLADY ---', cena: null, vybrane: true, kategoria: true });
+    polozkyDetail.push({ nazov: 'Bez základov', cena: 0, vybrane: konfiguraciaData.zaklady === "bez" });
     polozkyDetail.push({ nazov: 'Základy - zemné vruty', cena: CENY.zaklady_vruty, vybrane: konfiguraciaData.zaklady === "vruty" });
     polozkyDetail.push({ nazov: 'Základy - betónové pätky', cena: CENY.zaklady_patky, vybrane: konfiguraciaData.zaklady === "patky" });
     polozkyDetail.push({ nazov: 'Základy - pásové betónové', cena: CENY.zaklady_pasove, vybrane: konfiguraciaData.zaklady === "pasove" });
 
-    // Realizácia
+    // === SEKCIA 10: INŽINIERING A DOKUMENTÁCIA (A0) ===
+    polozkyDetail.push({ nazov: '--- 10. INŽINIERING A DOKUMENTÁCIA (A0) ---', cena: null, vybrane: true, kategoria: true });
+    polozkyDetail.push({ nazov: 'Inžiniering', cena: CENY.inziniering, vybrane: konfiguraciaData.inziniering });
+    polozkyDetail.push({ nazov: 'Projekt + Certifikácia A0', cena: CENY.projektACertifikacia, vybrane: konfiguraciaData.projektACertifikacia });
+    polozkyDetail.push({ nazov: 'Revízna dokumentácia', cena: CENY.revizia, vybrane: konfiguraciaData.revizia });
+
+    // === SEKCIA 11: REALIZÁCIA ===
+    polozkyDetail.push({ nazov: '--- 11. REALIZÁCIA ---', cena: null, vybrane: true, kategoria: true });
     polozkyDetail.push({ nazov: 'Montáž domu', cena: CENY.montaz, vybrane: konfiguraciaData.montaz });
     polozkyDetail.push({ nazov: 'Doprava modulov', cena: CENY.doprava, vybrane: konfiguraciaData.doprava });
 
@@ -434,6 +447,19 @@ Deno.serve(async (req) => {
         yPos = 20;
       }
 
+      // Kategória - hlavička sekcie
+      if (polozka.kategoria) {
+        doc.setFillColor(mainColor.r, mainColor.g, mainColor.b);
+        doc.rect(20, yPos - 4, pageWidth - 40, 7, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'bold');
+        doc.text(polozka.nazov, 25, yPos);
+        doc.setTextColor(0, 0, 0);
+        yPos += 9;
+        return;
+      }
+
       if (index % 2 === 0) {
         doc.setFillColor(245, 245, 245);
         doc.rect(20, yPos - 4, pageWidth - 40, 6, 'F');
@@ -449,12 +475,16 @@ Deno.serve(async (req) => {
         doc.line(25, yPos - 1, 25 + textWidth, yPos - 1);
 
         doc.text(polozka.nazov, 25, yPos);
-        doc.text(formatPrice(polozka.cena), pageWidth - 25, yPos, { align: 'right' });
+        if (polozka.cena !== null) {
+          doc.text(formatPrice(polozka.cena), pageWidth - 25, yPos, { align: 'right' });
+        }
 
         doc.setTextColor(0, 0, 0);
       } else {
         doc.text(polozka.nazov, 25, yPos);
-        doc.text(formatPrice(polozka.cena), pageWidth - 25, yPos, { align: 'right' });
+        if (polozka.cena !== null) {
+          doc.text(formatPrice(polozka.cena), pageWidth - 25, yPos, { align: 'right' });
+        }
       }
 
       yPos += 6;
