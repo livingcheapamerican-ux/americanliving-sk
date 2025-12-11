@@ -216,7 +216,7 @@ Deno.serve(async (req) => {
       
       // Ak nie je nastavenie, použij default logiku
       if (!aktivneNastavenie?.mapovanie_fotiek_ticabhouse || aktivneNastavenie.mapovanie_fotiek_ticabhouse.length === 0) {
-        // Default pravidlá pre exteriér
+        // Default pravidlá pre exteriér - vždy pridaj exteriér podľa fasády
         if (konfiguraciaData.fasada === "omietka") {
           const murovkaGaleria = dom.galerie?.find(g => g.typ === "exterier_murovka");
           if (murovkaGaleria?.fotky?.length > 0) {
@@ -225,8 +225,8 @@ Deno.serve(async (req) => {
               fotky: murovkaGaleria.fotky
             });
           }
-        } else if (konfiguraciaData.fasada === "drevo_smrek" || konfiguraciaData.fasada === "smrekovec" || 
-                   konfiguraciaData.fasada === "falcovane" || konfiguraciaData.fasada === "thermowood") {
+        } else {
+          // Pre všetky ostatné fasády (drevo, smrekovec, falcované, thermowood)
           const drevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
           if (drevoGaleria?.fotky?.length > 0) {
             matchedGalleries.push({

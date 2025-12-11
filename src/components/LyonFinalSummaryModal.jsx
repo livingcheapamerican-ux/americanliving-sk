@@ -131,7 +131,7 @@ export default function LyonFinalSummaryModal({
     
     // Ak nie je nastavenie, použij default logiku
     if (!aktivneNastavenie?.mapovanie_fotiek_ticabhouse || aktivneNastavenie.mapovanie_fotiek_ticabhouse.length === 0) {
-      // Default pravidlá pre exteriér
+      // Default pravidlá pre exteriér - vždy pridaj exteriér podľa fasády
       if (fasada === "omietka") {
         const murovkaGaleria = dom.galerie?.find(g => g.typ === "exterier_murovka");
         if (murovkaGaleria?.fotky?.length > 0) {
@@ -140,7 +140,8 @@ export default function LyonFinalSummaryModal({
             fotky: murovkaGaleria.fotky
           });
         }
-      } else if (fasada === "drevo_smrek" || fasada === "smrekovec" || fasada === "falcovane" || fasada === "thermowood") {
+      } else {
+        // Pre všetky ostatné fasády (drevo, smrekovec, falcované, thermowood)
         const drevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
         if (drevoGaleria?.fotky?.length > 0) {
           matchedGalleries.push({
@@ -966,7 +967,7 @@ export default function LyonFinalSummaryModal({
                           <div className="grid grid-cols-3 gap-2">
                             {galeria.fotky.slice(0, 6).map((img, idx) => (
                               <div key={idx} className="border rounded overflow-hidden relative bg-gray-50">
-                                <img src={img} alt={`${galeria.nazov} ${idx + 1}`} className="w-full h-24 object-contain" />
+                                <img src={img} alt={`${galeria.nazov} ${idx + 1}`} className="w-full h-48 object-contain" />
                                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                   <div className="text-white text-lg font-bold bg-black/20 px-4 py-2 rounded">
                                     American Living
