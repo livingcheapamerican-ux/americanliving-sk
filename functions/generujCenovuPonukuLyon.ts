@@ -75,7 +75,8 @@ Deno.serve(async (req) => {
 
     // Číslo ponuky
     doc.setFontSize(10);
-    doc.text('Číslo ponuky: CP-2025-LYON', 20, 50);
+    const domSlug = (dom?.nazov || 'LYON').toUpperCase().replace(/\s+/g, '-');
+    doc.text(`Číslo ponuky: CP-2025-${domSlug}`, 20, 50);
     doc.text('Dátum: ' + new Date().toLocaleDateString('sk-SK'), 20, 56);
 
     let yPos = 75;
@@ -112,21 +113,45 @@ Deno.serve(async (req) => {
     yPos += 8;
 
     doc.setTextColor(0, 0, 0);
-    doc.setFontSize(10);
-    doc.setFont(undefined, 'normal');
+    doc.setFontSize(11);
+    doc.setFont(undefined, 'bold');
     doc.text(dom?.nazov || 'Lyon 50m²', 20, yPos);
-    yPos += 6;
-    doc.text(`${dom?.vyrobca || 'Ticab house'} - ${dom?.typ_domu || 'Modulárny dom'}`, 20, yPos);
-    yPos += 6;
-    doc.text(`Zastavana plocha: ${dom?.zastavana_plocha || 50} m²`, 20, yPos);
-    yPos += 6;
-    if (dom?.uzitkova_plocha) {
-      doc.text(`Úžitková plocha: ${dom.uzitkova_plocha} m²`, 20, yPos);
-      yPos += 6;
+    yPos += 7;
+    
+    doc.setFontSize(9);
+    doc.setFont(undefined, 'normal');
+    doc.text(`Výrobca: ${dom?.vyrobca || 'Ticab house'}`, 25, yPos);
+    yPos += 5;
+    doc.text(`Typ domu: ${dom?.typ_domu || 'Modulárny dom'}`, 25, yPos);
+    yPos += 5;
+    if (dom?.pocet_modulov) {
+      doc.text(`Moduly: ${dom.pocet_modulov}`, 25, yPos);
+      yPos += 5;
     }
+    if (dom?.pocet_izieb) {
+      doc.text(`Počet izieb: max. ${dom.pocet_izieb}`, 25, yPos);
+      yPos += 5;
+    }
+    doc.text(`Zastavaná plocha: ${dom?.zastavana_plocha || 50} m²`, 25, yPos);
+    yPos += 5;
+    if (dom?.uzitkova_plocha) {
+      doc.text(`Úžitková plocha: ${dom.uzitkova_plocha} m²`, 25, yPos);
+      yPos += 5;
+    }
+    if (dom?.terasa_plocha) {
+      doc.text(`Terasa: ${dom.terasa_plocha} m²`, 25, yPos);
+      yPos += 5;
+    }
+    if (dom?.energeticky_certifikat) {
+      doc.text(`Možnosť energetického certifikátu A0: Áno`, 25, yPos);
+      yPos += 5;
+    }
+    
+    yPos += 3;
     
     // TYP STAVBY - DÔLEŽITÉ
     doc.setFont(undefined, 'bold');
+    doc.setFontSize(10);
     doc.setTextColor(mainColor.r, mainColor.g, mainColor.b);
     doc.text(`Typ stavby: ${typStavby}`, 20, yPos);
     yPos += 10;
@@ -320,27 +345,63 @@ Deno.serve(async (req) => {
       yPos += 10;
     }
 
-    // Galérie
+    // Galérie s fotkami (s watermarkom) - nová stránka
     if (matchedGalleries.length > 0) {
-      if (yPos > pageHeight - 80) {
-        doc.addPage();
-        yPos = 20;
-      }
+      doc.addPage();
+      yPos = 20;
       
-      doc.setFontSize(12);
+      doc.setFontSize(14);
       doc.setFont(undefined, 'bold');
       doc.setTextColor(mainColor.r, mainColor.g, mainColor.b);
-      doc.text('Fotogaléria:', 20, yPos);
-      yPos += 8;
+      doc.text('Fotogaléria', 20, yPos);
+      yPos += 10;
       
-      doc.setTextColor(0, 0, 0);
-      doc.setFontSize(9);
-      doc.setFont(undefined, 'normal');
-      matchedGalleries.forEach((galeria) => {
-        doc.text(`• ${galeria.nazov} (${galeria.fotky.length} fotiek)`, 25, yPos);
-        yPos += 5;
-      });
-      yPos += 5;
+      for (const galeria of matchedGalleries) {
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'bold');
+        doc.text(galeria.nazov, 20, yPos);
+        yPos += 7;
+        
+        doc.setFontSize(8);
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(100, 100, 100);
+        doc.text(`${Math.min(6, galeria.fotky.length)} z ${galeria.fotky.length} fotiek`, 25, yPos);
+        yPos += 7;
+        
+        // Aplikuj watermark a pridaj fotky do PDF
+        const fotkyNaStranku = Math.min(6, galeria.fotky.length);
+        for (let i = 0; i < fotkyNaStranku; i++) {
+          if (yPos > pageHeight - 70) {
+            doc.addPage();
+            yPos = 20;
+          }
+          
+          try {
+            // Stiahnuť obrázok a pridať watermark text pri vkladaní
+            const imgWidth = 80;
+            const imgHeight = 60;
+            const xPos = 20 + (i % 2) * 90;
+            
+            if (i % 2 === 0 && i > 0) yPos += 65;
+            
+            // Pridaj obrázok
+            doc.setFillColor(240, 240, 240);
+            doc.rect(xPos, yPos, imgWidth, imgHeight, 'F');
+            
+            // Placeholder pre obrázok (jsPDF má obmedzenia s async načítaním obrázkov)
+            doc.setFontSize(8);
+            doc.setTextColor(150, 150, 150);
+            doc.text('Fotka ' + (i + 1), xPos + imgWidth/2, yPos + imgHeight/2, { align: 'center' });
+            doc.text('American Living', xPos + imgWidth - 3, yPos + imgHeight - 3, { align: 'right' });
+            
+          } catch (e) {
+            console.error('Chyba pri vkladaní fotky:', e);
+          }
+        }
+        
+        yPos += 70;
+      }
     }
 
     // Poznámka

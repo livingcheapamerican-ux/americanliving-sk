@@ -817,7 +817,7 @@ export default function LyonFinalSummaryModal({
                 <div className="flex items-start justify-between mb-8 pb-6 border-b-2 border-red-600">
                   <div>
                     <h1 className="text-3xl font-bold text-red-600 mb-2">CENOVÁ PONUKA</h1>
-                    <p className="text-gray-600">Číslo ponuky: CP-2025-LYON</p>
+                    <p className="text-gray-600">Číslo ponuky: CP-2025-{(dom?.nazov || 'LYON').toUpperCase().replace(/\s+/g, '-')}</p>
                     <p className="text-gray-600">Dátum: {new Date().toLocaleDateString('sk-SK')}</p>
                   </div>
                   <div className="text-right text-sm">
@@ -841,16 +841,56 @@ export default function LyonFinalSummaryModal({
                 <div className="mb-6">
                   <h3 className="font-bold text-lg mb-2 text-red-600">Vybraný model:</h3>
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="font-bold text-gray-900 text-xl">{dom?.nazov || 'Lyon 50m²'}</p>
-                    <p className="text-sm text-gray-600">Výrobca: {dom?.vyrobca || 'Ticab house'}</p>
-                    <p className="text-sm text-gray-600">Typ domu: {dom?.typ_domu || 'Modulárny'}</p>
-                    <div className={`inline-block px-3 py-1 rounded-full mt-2 ${isA0 ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                    <p className="font-bold text-gray-900 text-xl mb-3">{dom?.nazov || 'Lyon 50m²'}</p>
+                    
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <span className="text-gray-500">Výrobca:</span>
+                        <p className="font-semibold text-gray-900">{dom?.vyrobca || 'Ticab house'}</p>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">Typ domu:</span>
+                        <p className="font-semibold text-gray-900">{dom?.typ_domu || 'Modulárny dom'}</p>
+                      </div>
+                      {dom?.pocet_modulov && (
+                        <div>
+                          <span className="text-gray-500">Moduly:</span>
+                          <p className="font-semibold text-gray-900">{dom.pocet_modulov}</p>
+                        </div>
+                      )}
+                      {dom?.pocet_izieb && (
+                        <div>
+                          <span className="text-gray-500">Počet izieb:</span>
+                          <p className="font-semibold text-gray-900">max. {dom.pocet_izieb}</p>
+                        </div>
+                      )}
+                      <div>
+                        <span className="text-gray-500">Zastavaná plocha:</span>
+                        <p className="font-semibold text-gray-900">{dom?.zastavana_plocha || 50} m²</p>
+                      </div>
+                      {dom?.uzitkova_plocha && (
+                        <div>
+                          <span className="text-gray-500">Úžitková plocha:</span>
+                          <p className="font-semibold text-gray-900">{dom.uzitkova_plocha} m²</p>
+                        </div>
+                      )}
+                      {dom?.terasa_plocha && (
+                        <div>
+                          <span className="text-gray-500">Terasa:</span>
+                          <p className="font-semibold text-gray-900">{dom.terasa_plocha} m²</p>
+                        </div>
+                      )}
+                      {dom?.energeticky_certifikat && (
+                        <div className="col-span-2">
+                          <span className="text-gray-500">Energetický certifikát A0:</span>
+                          <p className="font-semibold text-green-600">✓ Možný</p>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className={`inline-block px-3 py-1 rounded-full mt-3 ${isA0 ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
                       <p className="text-sm font-bold">Typ stavby: {actualStatus}</p>
                     </div>
-                    <p className="text-sm text-gray-600 mt-2">Zastavana plocha: {dom?.zastavana_plocha || 50} m²</p>
-                    {dom?.uzitkova_plocha && (
-                      <p className="text-sm text-gray-600">Úžitková plocha: {dom.uzitkova_plocha} m²</p>
-                    )}
                   </div>
                 </div>
 
@@ -875,7 +915,7 @@ export default function LyonFinalSummaryModal({
                   </div>
                 )}
 
-                {/* Galérie podľa mapovaných pravidiel */}
+                {/* Galérie podľa mapovaných pravidiel - s watermarkom */}
                 {matchedGalleries.length > 0 && (
                   <div className="mb-6">
                     <h3 className="font-bold text-lg mb-2 text-red-600">Fotogaléria:</h3>
@@ -885,11 +925,17 @@ export default function LyonFinalSummaryModal({
                           <p className="text-sm font-semibold text-gray-700 mb-2">{galeria.nazov}</p>
                           <div className="grid grid-cols-3 gap-2">
                             {galeria.fotky.slice(0, 6).map((img, idx) => (
-                              <div key={idx} className="border rounded overflow-hidden">
+                              <div key={idx} className="border rounded overflow-hidden relative">
                                 <img src={img} alt={`${galeria.nazov} ${idx + 1}`} className="w-full h-24 object-cover" />
+                                <div className="absolute bottom-1 right-1 text-white text-[8px] bg-black/30 px-1 rounded">
+                                  American Living
+                                </div>
                               </div>
                             ))}
                           </div>
+                          {galeria.fotky.length > 6 && (
+                            <p className="text-xs text-gray-500 mt-1">+ ďalších {galeria.fotky.length - 6} fotiek</p>
+                          )}
                         </div>
                       ))}
                     </div>
