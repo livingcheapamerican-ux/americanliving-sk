@@ -10,7 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Upload, Save, Eye, Plus, Trash2, Palette, FileText, Image, Settings, Grid3x3, ArrowRight } from "lucide-react";
+import { Upload, Save, Eye, Plus, Trash2, Palette, FileText, Image, Settings, Grid3x3, ArrowRight, Monitor } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function AdminGeneratorCenovychPonuk() {
   const queryClient = useQueryClient();
@@ -18,6 +19,7 @@ export default function AdminGeneratorCenovychPonuk() {
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [selectedSablona, setSelectedSablona] = useState(null);
   const [expandedSekcie, setExpandedSekcie] = useState({});
+  const [showPreview, setShowPreview] = useState(false);
   
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -391,6 +393,14 @@ export default function AdminGeneratorCenovychPonuk() {
               <Button onClick={createNovaSablona} variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-white/30">
                 <Plus className="w-4 h-4 mr-2" />
                 Nová šablóna
+              </Button>
+              <Button 
+                onClick={() => setShowPreview(true)} 
+                variant="secondary"
+                className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+              >
+                <Monitor className="w-4 h-4 mr-2" />
+                Náhľad ponuky
               </Button>
               <Button 
                 onClick={handleSave} 
