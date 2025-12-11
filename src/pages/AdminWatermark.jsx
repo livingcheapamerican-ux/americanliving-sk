@@ -8,16 +8,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { Save, Eye, Loader2, Play, AlertCircle } from "lucide-react";
+import { Save, Eye } from "lucide-react";
 import { toast } from "sonner";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+
 
 export default function AdminWatermark() {
   const queryClient = useQueryClient();
-  const [showBatchPanel, setShowBatchPanel] = useState(false);
-  const [batchLoading, setBatchLoading] = useState(false);
-  const [batchResults, setBatchResults] = useState(null);
-  const [testMode, setTestMode] = useState(true);
 
   const { data: settings, isLoading } = useQuery({
     queryKey: ['site-settings-watermark'],
@@ -73,30 +69,7 @@ export default function AdminWatermark() {
     });
   };
 
-  const handleBatchApply = async () => {
-    setBatchLoading(true);
-    setBatchResults(null);
 
-    try {
-      const response = await base44.functions.invoke('aplikujWatermarkNaVsetkyFotky', {
-        testMode
-      });
-
-      console.log('Response:', response);
-      console.log('Response data:', response.data);
-
-      setBatchResults(response.data);
-    } catch (error) {
-      console.error('Error:', error);
-      setBatchResults({
-        success: false,
-        error: error.message,
-        log: [`❌ Chyba: ${error.message}`]
-      });
-    } finally {
-      setBatchLoading(false);
-    }
-  };
 
   const positionClasses = {
     "top-left": "top-4 left-4",
@@ -217,23 +190,14 @@ export default function AdminWatermark() {
               </div>
 
               {/* Uložiť */}
-              <div className="flex gap-3">
-                <Button
-                  onClick={handleSave}
-                  disabled={saveMutation.isPending}
-                  className="flex-1 bg-primary hover:bg-primary/90"
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  {saveMutation.isPending ? 'Ukladám...' : 'Uložiť'}
-                </Button>
-                <Button
-                  onClick={() => setShowBatchPanel(!showBatchPanel)}
-                  variant="outline"
-                  className="flex-1 border-orange-500 text-orange-600 hover:bg-orange-50"
-                >
-                  Aplikovať natrvalo
-                </Button>
-              </div>
+              <Button
+                onClick={handleSave}
+                disabled={saveMutation.isPending}
+                className="w-full bg-primary hover:bg-primary/90"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                {saveMutation.isPending ? 'Ukladám...' : 'Uložiť'}
+              </Button>
             </div>
           </Card>
 
@@ -275,100 +239,7 @@ export default function AdminWatermark() {
           </Card>
         </div>
 
-        {/* Batch aplikácia watermarku */}
-        {showBatchPanel && (
-          <Card className="p-6 mt-6">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-bold">Aplikovať watermark natrvalo na fotky</h2>
-                <p className="text-sm text-gray-500 mt-1">
-                  Watermark sa aplikuje priamo do fotiek, nie cez overlay
-                </p>
-              </div>
-              <Button variant="ghost" onClick={() => setShowBatchPanel(false)}>
-                Zavrieť
-              </Button>
-            </div>
 
-            <Alert className="mb-6">
-              <AlertCircle className="w-4 h-4" />
-              <AlertDescription>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-semibold mb-1">
-                      {testMode ? '🧪 Test režim aktívny' : '⚠️ LIVE režim - fotky budú natrvalo zmenené!'}
-                    </p>
-                    <p className="text-sm">
-                      {testMode 
-                        ? 'Proces sa vykoná na sucho bez uloženia zmien.'
-                        : 'Pôvodné fotky budú nahradené novými s watermarkom. Stránka bude rýchlejšia.'}
-                    </p>
-                  </div>
-                  <Button
-                    variant={testMode ? "default" : "destructive"}
-                    onClick={() => setTestMode(!testMode)}
-                  >
-                    {testMode ? 'Prepnúť na LIVE' : 'Prepnúť na TEST'}
-                  </Button>
-                </div>
-              </AlertDescription>
-            </Alert>
-
-            <div className="flex gap-3">
-              <Button
-                onClick={handleBatchApply}
-                disabled={batchLoading}
-                className="bg-primary hover:bg-primary/90"
-              >
-                {batchLoading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Spracovávam...
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-4 h-4 mr-2" />
-                    {testMode ? 'Spustiť TEST' : 'Spustiť LIVE aplikáciu'}
-                  </>
-                )}
-              </Button>
-            </div>
-
-            {/* Výsledky */}
-            {batchResults && (
-              <div className="mt-6">
-                <h3 className="text-lg font-bold mb-4">Výsledky</h3>
-                
-                {batchResults.results && (
-                  <div className="grid grid-cols-4 gap-4 mb-4">
-                    <div className="bg-blue-50 p-3 rounded-lg text-center">
-                      <p className="text-2xl font-bold text-blue-600">{batchResults.results.processed}</p>
-                      <p className="text-sm text-gray-600">Spracovaných</p>
-                    </div>
-                    <div className="bg-green-50 p-3 rounded-lg text-center">
-                      <p className="text-2xl font-bold text-green-600">{batchResults.results.migrated}</p>
-                      <p className="text-sm text-gray-600">Watermarkov</p>
-                    </div>
-                    <div className="bg-red-50 p-3 rounded-lg text-center">
-                      <p className="text-2xl font-bold text-red-600">{batchResults.results.errors}</p>
-                      <p className="text-sm text-gray-600">Chýb</p>
-                    </div>
-                    <div className="bg-gray-50 p-3 rounded-lg text-center">
-                      <p className="text-2xl font-bold text-gray-600">{batchResults.results.skipped}</p>
-                      <p className="text-sm text-gray-600">Preskočených</p>
-                    </div>
-                  </div>
-                )}
-
-                <div className="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-xs overflow-auto max-h-96">
-                  {batchResults.log?.map((line, i) => (
-                    <div key={i}>{line}</div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </Card>
-        )}
       </div>
     </div>
   );
