@@ -31,6 +31,27 @@ const removeDiacritics = (str) => {
     .replace(/³/g, '3');
 };
 
+// Helper funkcia na stiahnutie obrázku a konverziu na base64
+const fetchImageAsBase64 = async (url) => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return null;
+    const arrayBuffer = await response.arrayBuffer();
+    const uint8Array = new Uint8Array(arrayBuffer);
+    let binary = '';
+    for (let i = 0; i < uint8Array.length; i++) {
+      binary += String.fromCharCode(uint8Array[i]);
+    }
+    const base64 = btoa(binary);
+    const contentType = response.headers.get('content-type') || 'image/jpeg';
+    const format = contentType.includes('png') ? 'PNG' : 'JPEG';
+    return { base64: `data:${contentType};base64,${base64}`, format };
+  } catch (e) {
+    console.error('Chyba pri stiahnutí obrázka:', url, e);
+    return null;
+  }
+};
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -576,27 +597,54 @@ Deno.serve(async (req) => {
 
     doc.setTextColor(0, 0, 0);
 
-    // Pôdorysy
+    // Pôdorysy - nová stránka s reálnymi obrázkami
     if (dom?.podorys_2d || dom?.podorys_3d) {
-      if (yPos > pageHeight - 80) {
-        doc.addPage();
-        yPos = 20;
-      }
+      doc.addPage();
+      yPos = 20;
 
-      doc.setFontSize(12);
+      doc.setFontSize(14);
       doc.setFont(undefined, 'bold');
       doc.setTextColor(mainColor.r, mainColor.g, mainColor.b);
-      doc.text(removeDiacritics('Podorysy:'), 20, yPos);
-      yPos += 8;
-
-      doc.setTextColor(100, 100, 100);
-      doc.setFontSize(9);
-      doc.setFont(undefined, 'normal');
-      doc.text(removeDiacritics('(Podorysy su k dispozicii v prilohe alebo na vyziadanie)'), 25, yPos);
+      doc.text(removeDiacritics('Podorysy'), 20, yPos);
       yPos += 10;
+
+      const podorysWidth = 80;
+      const podorysHeight = 100;
+      let xOffset = 20;
+
+      if (dom.podorys_2d) {
+        const img2d = await fetchImageAsBase64(dom.podorys_2d);
+        if (img2d) {
+          try {
+            doc.addImage(img2d.base64, img2d.format, xOffset, yPos, podorysWidth, podorysHeight);
+            doc.setFontSize(9);
+            doc.setTextColor(100, 100, 100);
+            doc.text('2D podorys', xOffset + podorysWidth/2, yPos + podorysHeight + 5, { align: 'center' });
+            xOffset += podorysWidth + 10;
+          } catch (e) {
+            console.error('Chyba pri vkladani 2D podorysu:', e);
+          }
+        }
+      }
+
+      if (dom.podorys_3d) {
+        const img3d = await fetchImageAsBase64(dom.podorys_3d);
+        if (img3d) {
+          try {
+            doc.addImage(img3d.base64, img3d.format, xOffset, yPos, podorysWidth, podorysHeight);
+            doc.setFontSize(9);
+            doc.setTextColor(100, 100, 100);
+            doc.text('3D podorys', xOffset + podorysWidth/2, yPos + podorysHeight + 5, { align: 'center' });
+          } catch (e) {
+            console.error('Chyba pri vkladani 3D podorysu:', e);
+          }
+        }
+      }
+
+      yPos += podorysHeight + 15;
     }
 
-    // Galérie s fotkami (s watermarkom) - nová stránka
+    // Galérie s fotkami - nová stránka s reálnymi obrázkami
     if (matchedGalleries.length > 0) {
       doc.addPage();
       yPos = 20;
@@ -619,42 +667,44 @@ Deno.serve(async (req) => {
         doc.setTextColor(100, 100, 100);
         doc.text(removeDiacritics(`${Math.min(6, galeria.fotky.length)} z ${galeria.fotky.length} fotiek`), 25, yPos);
         yPos += 7;
-        
-        // Aplikuj watermark a pridaj fotky do PDF
+
+        // Vložiť skutočné fotky do PDF
         const fotkyNaStranku = Math.min(6, galeria.fotky.length);
         for (let i = 0; i < fotkyNaStranku; i++) {
           if (yPos > pageHeight - 70) {
             doc.addPage();
             yPos = 20;
           }
-          
+
           try {
-            // Stiahnuť obrázok a pridať watermark text pri vkladaní
-            const imgWidth = 80;
+            const imgWidth = 85;
             const imgHeight = 60;
-            const xPos = 20 + (i % 2) * 90;
-            
-            if (i % 2 === 0 && i > 0) yPos += 65;
-            
-            // Pridaj obrázok
-            doc.setFillColor(240, 240, 240);
-            doc.rect(xPos, yPos, imgWidth, imgHeight, 'F');
-            
-            // Watermark v strede
-            doc.setFontSize(12);
-            doc.setFont(undefined, 'bold');
-            doc.setTextColor(150, 150, 150);
-            doc.text('American Living', xPos + imgWidth/2, yPos + imgHeight/2, { align: 'center' });
-            
-            doc.setFontSize(7);
-            doc.setFont(undefined, 'normal');
-            doc.text(removeDiacritics(`${galeria.nazov} - Fotka ${i + 1}`), xPos + imgWidth/2, yPos + imgHeight - 5, { align: 'center' });
-            
+            const xPos = 20 + (i % 2) * 92;
+
+            if (i % 2 === 0 && i > 0) yPos += 68;
+
+            // Stiahni a vlož obrázok
+            const imageData = await fetchImageAsBase64(galeria.fotky[i]);
+            if (imageData) {
+              doc.addImage(imageData.base64, imageData.format, xPos, yPos, imgWidth, imgHeight);
+
+              // Pridaj watermark text nad obrázok
+              doc.setFontSize(10);
+              doc.setFont(undefined, 'bold');
+              doc.setTextColor(200, 200, 200);
+              doc.text('American Living', xPos + imgWidth/2, yPos + imgHeight/2, { align: 'center' });
+
+              // Popis pod obrázkom
+              doc.setFontSize(7);
+              doc.setFont(undefined, 'normal');
+              doc.setTextColor(80, 80, 80);
+              doc.text(removeDiacritics(`${galeria.nazov} - Fotka ${i + 1}`), xPos + imgWidth/2, yPos + imgHeight + 4, { align: 'center' });
+            }
           } catch (e) {
-            console.error('Chyba pri vkladaní fotky:', e);
+            console.error('Chyba pri vkladani fotky:', e);
           }
         }
-        
+
         yPos += 70;
       }
     }
