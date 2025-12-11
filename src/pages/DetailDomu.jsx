@@ -99,7 +99,7 @@ export default function DetailDomu() {
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [wizardKey, setWizardKey] = useState(0);
 
-  // State pre Lyon konfigurátor
+  // State pre Ticabhouse konfigurátor - predvolene REKREAČNÁ STAVBA (chata)
   const [lyonUcel, setLyonUcel] = useState("chata");
   const [lyonIzolaciaStien, setLyonIzolaciaStien] = useState("150mm");
   const [lyonIzolaciaPodlahy, setLyonIzolaciaPodlahy] = useState("150mm");
@@ -130,7 +130,7 @@ export default function DetailDomu() {
   const [lyonStropKupelna, setLyonStropKupelna] = useState("drevo");
   const [lyonInziniering, setLyonInziniering] = useState(false);
   const [lyonProjektACertifikacia, setLyonProjektACertifikacia] = useState(false);
-  const [lyonRevizia, setLyonRevizia] = useState(true);
+  const [lyonRevizia, setLyonRevizia] = useState(false);
   const [lyonZaklady, setLyonZaklady] = useState("bez");
   const [lyonMontaz, setLyonMontaz] = useState(false);
   const [lyonDoprava, setLyonDoprava] = useState(false);
