@@ -388,9 +388,11 @@ export default function AdminGeneratorCenovychPonuk() {
     setGeneratingPdf(true);
     try {
       const response = await base44.functions.invoke('generujNahladCenovejPonuky', {
-        nastavenie: formData
+        nastavenie: formData,
+        dom: null,
+        konfiguraciaData: null
       });
-      
+
       const blob = new Blob([response.data], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -400,10 +402,10 @@ export default function AdminGeneratorCenovychPonuk() {
       a.click();
       window.URL.revokeObjectURL(url);
       a.remove();
-      
+
       toast.success('PDF stiahnuté');
     } catch (error) {
-      toast.error('Chyba pri generovaní PDF');
+      toast.error('Chyba pri generovaní PDF: ' + (error.message || 'Neznáma chyba'));
       console.error(error);
     } finally {
       setGeneratingPdf(false);
