@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Home, Send, Eye, EyeOff } from "lucide-react";
+import { Sparkles, Home, Send, Eye, EyeOff, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "./LanguageContext";
 import { base44 } from "@/api/base44Client";
