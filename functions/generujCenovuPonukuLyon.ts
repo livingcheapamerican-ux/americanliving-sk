@@ -103,7 +103,7 @@ Deno.serve(async (req) => {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
     doc.setFont(undefined, 'bold');
-    doc.text('CENOVÁ PONUKA', 20, 25);
+    doc.text(removeDiacritics('CENOVÁ PONUKA'), 20, 25);
 
     // Informácie o spoločnosti
     doc.setTextColor(0, 0, 0);
@@ -219,8 +219,10 @@ Deno.serve(async (req) => {
       izolacia_podlahy_200mm: 334.08,
       izolacia_stropu_200mm: 271.44,
       tepelne_cerpadlo: 2889.27,
+      pripravaNaRekuperaciu: 512,
       rekuperacia: 1155.36,
       podlahove_kurenie: 2253.30,
+      klimatizacia: 902,
       pripravaKrb: 578.55,
       ochranaKachle: 1279.77,
       fasada_omietka: 1580.79,
@@ -237,10 +239,12 @@ Deno.serve(async (req) => {
       elektro_ge: 1583.40,
       bleskozvod: 856.08,
       prepat: 311.46,
+      pripravaNaSolarnePanely: 1305,
       sprchovyKut: 645.54,
       vana: 501.12,
       bateria: 139.20,
       skrinka: 434.13,
+      strop_kupelna_sadrokarton: 0,
       inziniering: 2773.56,
       projektACertifikacia: 3745.35,
       revizia: 1605.15,
