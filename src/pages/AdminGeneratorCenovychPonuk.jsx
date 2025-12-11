@@ -1370,17 +1370,16 @@ export default function AdminGeneratorCenovychPonuk() {
                                       />
                                     </div>
                                   </div>
-                                  )}
-                                  </div>
-                                  );
-                                  })}
-                                  </div>
-                                  </div>
-                                  )}
-                                  </Card>
-                                  );
-                                  })}
-                                  </div>
+                                )}
+                                </div>
+                                );
+                                })}
+                                </div>
+                                )}
+                                </div>
+                                );
+                                })}
+                                </div>
             </Card>
           </TabsContent>
 
@@ -1527,50 +1526,50 @@ export default function AdminGeneratorCenovychPonuk() {
                                   </div>
 
                                   {existujuceMapovanie && (
-                                   <div className="space-y-3 pt-3 border-t border-green-200">
-                                     <div>
-                                       <Label className="text-xs font-semibold text-green-900 mb-1 block">Typ fotky</Label>
-                                       <Select
-                                         value={existujuceMapovanie.typ_fotky}
-                                         onValueChange={(val) => updateMapovanieFotky("prosto", mapovaIndex, 'typ_fotky', val)}
-                                       >
-                                         <SelectTrigger className="h-9 text-sm bg-white border-green-300">
-                                           <SelectValue />
-                                         </SelectTrigger>
-                                         <SelectContent>
-                                           <SelectItem value="titulna">📸 Titulná fotka</SelectItem>
-                                           <SelectItem value="zakladna_konfiguracia">🏠 Základná konfigurácia</SelectItem>
-                                           <SelectItem value="interier_drevo">🪵 Interiér drevo</SelectItem>
-                                           <SelectItem value="interier_sadrokarton">🏡 Interiér sadrokartón</SelectItem>
-                                           <SelectItem value="galeria_exterier">🏘️ Galéria exteriér</SelectItem>
-                                           <SelectItem value="galeria_interier">🛋️ Galéria interiér</SelectItem>
-                                           <SelectItem value="podorysy">📐 Pôdorysy</SelectItem>
-                                         </SelectContent>
-                                       </Select>
-                                     </div>
-                                     <div>
-                                       <Label className="text-xs font-semibold text-green-900 mb-1 block">Popis</Label>
-                                       <Input
-                                         value={existujuceMapovanie.popis || ''}
-                                         onChange={(e) => updateMapovanieFotky("prosto", mapovaIndex, 'popis', e.target.value)}
-                                         placeholder="Napr: Zobrazí dom s touto fasádou"
-                                         className="h-9 text-sm bg-white border-green-300"
-                                       />
-                                     </div>
-                                     <div className="p-2 bg-green-100 rounded-md">
-                                       <p className="text-xs text-green-800 flex items-center gap-1">
-                                         <Eye className="w-3 h-3" />
-                                         V ponuke: {existujuceMapovanie.typ_fotky.replace('_', ' ')}
-                                       </p>
-                                     </div>
-                                   </div>
+                                    <div className="space-y-3 pt-3 border-t border-green-200">
+                                      <div>
+                                        <Label className="text-xs font-semibold text-green-900 mb-1 block">Typ fotky</Label>
+                                        <Select
+                                          value={existujuceMapovanie.typ_fotky}
+                                          onValueChange={(val) => updateMapovanieFotky("prosto", mapovaIndex, 'typ_fotky', val)}
+                                        >
+                                          <SelectTrigger className="h-9 text-sm bg-white border-green-300">
+                                            <SelectValue />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            <SelectItem value="titulna">📸 Titulná fotka</SelectItem>
+                                            <SelectItem value="zakladna_konfiguracia">🏠 Základná konfigurácia</SelectItem>
+                                            <SelectItem value="interier_drevo">🪵 Interiér drevo</SelectItem>
+                                            <SelectItem value="interier_sadrokarton">🏡 Interiér sadrokartón</SelectItem>
+                                            <SelectItem value="galeria_exterier">🏘️ Galéria exteriér</SelectItem>
+                                            <SelectItem value="galeria_interier">🛋️ Galéria interiér</SelectItem>
+                                            <SelectItem value="podorysy">📐 Pôdorysy</SelectItem>
+                                          </SelectContent>
+                                        </Select>
+                                      </div>
+                                      <div>
+                                        <Label className="text-xs font-semibold text-green-900 mb-1 block">Popis</Label>
+                                        <Input
+                                          value={existujuceMapovanie.popis || ''}
+                                          onChange={(e) => updateMapovanieFotky("prosto", mapovaIndex, 'popis', e.target.value)}
+                                          placeholder="Napr: Zobrazí dom s touto fasádou"
+                                          className="h-9 text-sm bg-white border-green-300"
+                                        />
+                                      </div>
+                                      <div className="p-2 bg-green-100 rounded-md">
+                                        <p className="text-xs text-green-800 flex items-center gap-1">
+                                          <Eye className="w-3 h-3" />
+                                          V ponuke: {existujuceMapovanie.typ_fotky.replace('_', ' ')}
+                                        </p>
+                                      </div>
+                                    </div>
                                   )}
                                   </div>
                                   );
                                   })}
                                   </div>
                                   )}
-                                  </div>
+                                  </Card>
                                   );
                                   })}
                                   </div>
