@@ -57,6 +57,10 @@ export default function AdminGeneratorCenovychPonuk() {
         mapovanie_fotiek_prosto: aktivneNastavenie.mapovanie_fotiek_prosto || [],
         zobrazovat_preciarknute: aktivneNastavenie.zobrazovat_preciarknute !== false,
         zobrazovat_doplnkove_sluzby: aktivneNastavenie.zobrazovat_doplnkove_sluzby !== false,
+        automaticke_pravidla: aktivneNastavenie.automaticke_pravidla || {
+          pouzit_zakladnu_konfiguraciu_ak_nie_je_omietka: true,
+          vzdy_pridat_podorysy: true
+        },
         aktivne: aktivneNastavenie.aktivne || false
       });
     }
@@ -83,6 +87,10 @@ export default function AdminGeneratorCenovychPonuk() {
     mapovanie_fotiek_prosto: aktivneNastavenie?.mapovanie_fotiek_prosto || [],
     zobrazovat_preciarknute: aktivneNastavenie?.zobrazovat_preciarknute !== false,
     zobrazovat_doplnkove_sluzby: aktivneNastavenie?.zobrazovat_doplnkove_sluzby !== false,
+    automaticke_pravidla: aktivneNastavenie?.automaticke_pravidla || {
+      pouzit_zakladnu_konfiguraciu_ak_nie_je_omietka: true,
+      vzdy_pridat_podorysy: true
+    },
     aktivne: true
   });
 
@@ -993,16 +1001,62 @@ export default function AdminGeneratorCenovychPonuk() {
                 <p className="text-sm text-gray-600">
                   Nastavte, ktoré galérie sa majú zobraziť v cenovej ponuke na základe vybraných dlaždíc v konfigurátore.
                 </p>
-                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <div className="flex items-start gap-2">
-                    <Eye className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <h5 className="font-semibold text-blue-900 mb-1">Automatické pravidlá</h5>
-                      <ul className="text-sm text-blue-800 space-y-1">
-                        <li>• 2D a 3D pôdorysy sa automaticky pridajú do každej ponuky</li>
-                        <li>• Pre každú galériu vyberte dlaždice, ktoré ju aktivujú</li>
-                        <li>• Galérie: Exteriér drevo/plech, Exteriér murovka, Interiér drevo, Interiér sadrokartón</li>
-                      </ul>
+                <div className="space-y-3">
+                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-start gap-2">
+                      <Eye className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <h5 className="font-semibold text-blue-900 mb-1">Automatické pravidlá pre Ticabhouse</h5>
+                        <ul className="text-sm text-blue-800 space-y-1">
+                          <li>• 2D a 3D pôdorysy sa automaticky pridajú do každej ponuky</li>
+                          <li>• Pre každú galériu vyberte dlaždice, ktoré ju aktivujú</li>
+                          <li>• Galérie: Exteriér drevo/plech, Exteriér murovka, Interiér drevo, Interiér sadrokartón</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-start gap-2">
+                      <Settings className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1">
+                        <h5 className="font-semibold text-green-900 mb-2">Univerzálne pravidlá (pre všetkých výrobcov)</h5>
+                        <div className="space-y-2">
+                          <label className="flex items-start gap-2 cursor-pointer">
+                            <Switch
+                              checked={formData.automaticke_pravidla?.pouzit_zakladnu_konfiguraciu_ak_nie_je_omietka !== false}
+                              onCheckedChange={(checked) => setFormData({
+                                ...formData, 
+                                automaticke_pravidla: {
+                                  ...formData.automaticke_pravidla,
+                                  pouzit_zakladnu_konfiguraciu_ak_nie_je_omietka: checked
+                                }
+                              })}
+                              className="mt-0.5"
+                            />
+                            <span className="text-sm text-green-800">
+                              Ak sa nevyberie šúchaná fasáda (biela omietka), použiť fotku domu v základnej konfigurácii ako úvodnú fotku
+                            </span>
+                          </label>
+                          
+                          <label className="flex items-start gap-2 cursor-pointer">
+                            <Switch
+                              checked={formData.automaticke_pravidla?.vzdy_pridat_podorysy !== false}
+                              onCheckedChange={(checked) => setFormData({
+                                ...formData, 
+                                automaticke_pravidla: {
+                                  ...formData.automaticke_pravidla,
+                                  vzdy_pridat_podorysy: checked
+                                }
+                              })}
+                              className="mt-0.5"
+                            />
+                            <span className="text-sm text-green-800">
+                              2D a 3D pôdorysy sa vždy automaticky pridajú do každej ponuky
+                            </span>
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
