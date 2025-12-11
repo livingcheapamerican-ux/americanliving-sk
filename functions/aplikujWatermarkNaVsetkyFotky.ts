@@ -106,9 +106,28 @@ Deno.serve(async (req) => {
         // Spracovať všetky obrázky paralelne
         const results = await Promise.allSettled(promises);
 
+        // Spočítať štatistiky
+        for (const result of results) {
+          if (result.status === 'fulfilled') {
+            if (result.value.success) {
+              migrated++;
+              log.push(`  ✅ ${result.value.fieldName}: úspešne aplikovaný watermark`);
+            } else if (result.value.skipped) {
+              skipped++;
+              log.push(`  ⏭️ ${result.value.fieldName}: už má watermark, preskakujem`);
+            } else if (result.value.error) {
+              errors++;
+              log.push(`  ❌ ${result.value.fieldName}: chyba - ${result.value.error}`);
+            }
+          } else {
+            errors++;
+            log.push(`  ❌ Chyba pri spracovaní: ${result.reason}`);
+          }
+        }
+
         // Zostaviť updates z výsledkov
         for (const result of results) {
-          if (result.status === 'fulfilled' && result.value.success) {
+          if (result.status === 'fulfilled' && result.value.success && result.value.url) {
             const { url, fieldName } = result.value;
             
             if (fieldName === 'hlavny_obrazok') {
