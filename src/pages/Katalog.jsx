@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { debounce } from "lodash";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
@@ -49,6 +50,18 @@ export default function Katalog() {
   const [plocharozsah, setPlocharozsah] = useState([initialFilters.plocha_min, initialFilters.plocha_max || 200]);
   const [uzitkovaRozsah, setUzitkovaRozsah] = useState([initialFilters.uzitkova_min, initialFilters.uzitkova_max]);
   const [hladanie, setHladanie] = useState(initialFilters.hladanie);
+  const [hladanieInput, setHladanieInput] = useState(initialFilters.hladanie);
+
+  // Debounced search
+  const debouncedSetHladanie = useMemo(
+    () => debounce((value) => setHladanie(value), 500),
+    []
+  );
+
+  useEffect(() => {
+    debouncedSetHladanie(hladanieInput);
+    return () => debouncedSetHladanie.cancel();
+  }, [hladanieInput, debouncedSetHladanie]);
   const [cenoveRozpatie, setCenoveRozpatie] = useState([initialFilters.cena_min, initialFilters.cena_max || 200000]);
   const [pocetIziebFilter, setPocetIziebFilter] = useState(initialFilters.izby ? initialFilters.izby.split(',').map(Number) : []);
   const [zoradenie, setZoradenie] = useState(initialFilters.zoradenie);
@@ -92,7 +105,8 @@ export default function Katalog() {
 
   const { data: domy = [], isLoading } = useQuery({
     queryKey: ['domy-katalog'],
-    queryFn: () => base44.entities.Dom.list('poradie')
+    queryFn: () => base44.entities.Dom.list('poradie'),
+    staleTime: 300000,
   });
 
   const { data: user } = useQuery({
@@ -238,8 +252,8 @@ export default function Katalog() {
                     <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
                     <Input
                       placeholder={t('namePlaceholder')}
-                      value={hladanie}
-                      onChange={(e) => setHladanie(e.target.value)}
+                      value={hladanieInput}
+                      onChange={(e) => setHladanieInput(e.target.value)}
                       className="pl-7 h-8 text-sm" />
 
                   </div>
@@ -586,6 +600,7 @@ export default function Katalog() {
                                 alt={dom.nazov}
                                 className="w-full h-full object-contain bg-gray-100 group-hover:scale-105 transition-all duration-500"
                                 useCatalogSetting={true}
+                                priority={index < 6}
                                 onLoad={(e) => {
                                   const img = e.target;
                                   if (img.naturalHeight > img.naturalWidth) {

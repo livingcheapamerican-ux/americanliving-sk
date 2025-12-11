@@ -2,7 +2,10 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 
-export default function ImageWithWatermark({ src, alt, className, onLoad, useCatalogSetting = false, ...props }) {
+export default function ImageWithWatermark({ src, alt, className, onLoad, useCatalogSetting = false, priority = false, ...props }) {
+  const [loaded, setLoaded] = React.useState(false);
+  const [error, setError] = React.useState(false);
+
   const { data: settings } = useQuery({
     queryKey: ['site-settings-watermark'],
     queryFn: async () => {
@@ -37,10 +40,27 @@ export default function ImageWithWatermark({ src, alt, className, onLoad, useCat
     "xxlarge": "text-4xl"
   };
 
+  const handleLoad = (e) => {
+    setLoaded(true);
+    if (onLoad) onLoad(e);
+  };
+
   return (
-    <div className="relative inline-block">
-      <img src={src} alt={alt} className={className} onLoad={onLoad} {...props} />
-      {enabled && (
+    <div className="relative inline-block w-full h-full">
+      {!loaded && !error && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+      )}
+      <img 
+        src={src} 
+        alt={alt} 
+        className={`${className} ${loaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+        onLoad={handleLoad}
+        onError={() => setError(true)}
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+        {...props} 
+      />
+      {enabled && loaded && (
         <div 
           className={`absolute ${positionClasses[position]} ${sizeClasses[size]} font-bold text-white pointer-events-none select-none`}
           style={{ 

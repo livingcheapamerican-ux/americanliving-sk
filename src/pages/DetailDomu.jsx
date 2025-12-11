@@ -164,6 +164,7 @@ export default function DetailDomu() {
       return null;
     },
     enabled: !!domId || !!domSlug,
+    staleTime: 300000,
   });
 
   // SEO Meta tags
@@ -560,6 +561,7 @@ export default function DetailDomu() {
                   src={allImages[selectedImage]}
                   alt={`${dom.nazov} - obrázok ${selectedImage + 1}`}
                   className="w-full h-full object-contain bg-gray-100"
+                  priority={true}
                 />
               <div className="absolute top-4 left-4 space-y-2">
                 {dom.celorocny && (
