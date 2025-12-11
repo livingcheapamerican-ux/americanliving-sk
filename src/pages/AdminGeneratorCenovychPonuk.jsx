@@ -33,6 +33,35 @@ export default function AdminGeneratorCenovychPonuk() {
     ? nastavenia.find(n => n.id === selectedSablona) 
     : nastavenia.find(n => n.aktivne) || nastavenia[0];
 
+  // Update formData when aktivneNastavenie changes
+  React.useEffect(() => {
+    if (aktivneNastavenie) {
+      setFormData({
+        nazov: aktivneNastavenie.nazov || "Predvolené nastavenie",
+        logo_url: aktivneNastavenie.logo_url || "",
+        nazov_spolocnosti: aktivneNastavenie.nazov_spolocnosti || "American Living",
+        adresa: aktivneNastavenie.adresa || "",
+        telefon: aktivneNastavenie.telefon || "+421 905 138 124",
+        email: aktivneNastavenie.email || "info@americanliving.sk",
+        web: aktivneNastavenie.web || "www.americanliving.sk",
+        ico: aktivneNastavenie.ico || "",
+        dic: aktivneNastavenie.dic || "",
+        ic_dph: aktivneNastavenie.ic_dph || "",
+        sablona_dizajnu: aktivneNastavenie.sablona_dizajnu || "modern_red",
+        farba_hlavna: aktivneNastavenie.farba_hlavna || "#EF4444",
+        farba_sekundarna: aktivneNastavenie.farba_sekundarna || "#dc2626",
+        uvodni_text: aktivneNastavenie.uvodni_text || "",
+        zavery_text: aktivneNastavenie.zavery_text || "",
+        dalsie_texty: aktivneNastavenie.dalsie_texty || [],
+        mapovanie_fotiek_ticabhouse: aktivneNastavenie.mapovanie_fotiek_ticabhouse || [],
+        mapovanie_fotiek_prosto: aktivneNastavenie.mapovanie_fotiek_prosto || [],
+        zobrazovat_preciarknute: aktivneNastavenie.zobrazovat_preciarknute !== false,
+        zobrazovat_doplnkove_sluzby: aktivneNastavenie.zobrazovat_doplnkove_sluzby !== false,
+        aktivne: aktivneNastavenie.aktivne || false
+      });
+    }
+  }, [aktivneNastavenie]);
+
   const [formData, setFormData] = useState({
     nazov: aktivneNastavenie?.nazov || "Predvolené nastavenie",
     logo_url: aktivneNastavenie?.logo_url || "",
@@ -363,7 +392,10 @@ export default function AdminGeneratorCenovychPonuk() {
               {nastavenia.map((sablona) => (
                 <div
                   key={sablona.id}
-                  onClick={() => setSelectedSablona(sablona.id)}
+                  onClick={() => {
+                    setSelectedSablona(sablona.id);
+                    setActiveTab("zakladne");
+                  }}
                   className={`border rounded-lg p-4 cursor-pointer transition-all ${
                     selectedSablona === sablona.id 
                       ? 'border-primary ring-2 ring-primary bg-primary/5' 
@@ -372,11 +404,18 @@ export default function AdminGeneratorCenovychPonuk() {
                 >
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="font-bold text-gray-900">{sablona.nazov}</h3>
-                    {sablona.aktivne && (
-                      <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
-                        Aktívne
-                      </span>
-                    )}
+                    <div className="flex gap-2">
+                      {sablona.aktivne && (
+                        <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
+                          Aktívne
+                        </span>
+                      )}
+                      {selectedSablona === sablona.id && (
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                          Upravuje sa
+                        </span>
+                      )}
+                    </div>
                   </div>
                   {sablona.vyrobca_filter && (
                     <p className="text-sm text-gray-600 mb-2">
