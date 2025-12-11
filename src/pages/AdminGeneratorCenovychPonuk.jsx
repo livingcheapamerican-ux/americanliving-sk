@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Upload, Save, Eye, Plus, Trash2, Palette, FileText, Image, Settings, Grid3x3, ArrowRight, Monitor, Download } from "lucide-react";
+import { Upload, Save, Eye, Plus, Trash2, Palette, FileText, Image, Settings, Grid3x3, ArrowRight, Monitor, Download, CheckCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function AdminGeneratorCenovychPonuk() {
@@ -1340,124 +1340,211 @@ export default function AdminGeneratorCenovychPonuk() {
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900">Mapovanie fotiek pre Prosto House</h2>
-                    <p className="text-sm text-gray-600">Nastavte fotky podľa vybraných dlaždíc</p>
+                    <p className="text-sm text-gray-600">Vyberte dlaždice, ktoré určia fotky v cenovej ponuke</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600">
-                  Rozkliknite sekcie a priraďte fotky ku konkrétnym dlaždiciam konfiguratora. 
-                  Pravidlá platia pre všetky domy výrobcu Prosto House.
-                </p>
+                
+                <div className="p-4 bg-gradient-to-r from-orange-50 to-amber-50 border-2 border-orange-300 rounded-xl">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Eye className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h5 className="font-bold text-orange-900 mb-2">Pravidlá pre Prosto House</h5>
+                      <ul className="text-sm text-orange-800 space-y-1.5">
+                        <li className="flex items-start gap-2">
+                          <span className="text-orange-600 font-bold">•</span>
+                          <span>Priradíte konkrétnu dlaždicu → ktorý typ fotky sa má použiť</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-orange-600 font-bold">•</span>
+                          <span>Ak klient vyberie túto dlaždicu, systém zobrazí príslušné fotky v ponuke</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-orange-600 font-bold">•</span>
+                          <span>Môžete pridať viacero mapovaní pre rôzne kombinácie</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {prostohouseSekcie.map((sekcia) => {
                   const sekciaMapovania = formData.mapovanie_fotiek_prosto.filter(
                     m => m.sekcia_id === sekcia.id
                   );
+                  const isExpanded = expandedSekcie[sekcia.id];
                   
                   return (
-                    <div key={sekcia.id} className="border rounded-lg">
+                    <Card key={sekcia.id} className={`border-2 transition-all ${
+                      sekciaMapovania.length > 0 ? 'border-primary/30 bg-primary/5' : 'border-gray-200'
+                    }`}>
                       <button
                         onClick={() => toggleSekcia(sekcia.id)}
-                        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+                        className="w-full flex items-center justify-between p-4 hover:bg-gray-50/50 transition-colors rounded-t-lg"
                       >
                         <div className="flex items-center gap-3">
-                          <div className={`transform transition-transform ${expandedSekcie[sekcia.id] ? 'rotate-90' : ''}`}>
-                            <ArrowRight className="w-5 h-5" />
+                          <div className={`transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}>
+                            <ArrowRight className="w-5 h-5 text-primary" />
                           </div>
-                          <h3 className="font-bold text-gray-900">{sekcia.nazov}</h3>
-                          <span className="text-sm text-gray-500">
-                            ({sekcia.dlazdice.length} dlaždíc)
-                          </span>
+                          <h3 className="font-bold text-lg text-gray-900">{sekcia.nazov}</h3>
+                          <Badge variant="outline" className="text-xs">
+                            {sekcia.dlazdice.length} dlaždíc
+                          </Badge>
                         </div>
-                        {sekciaMapovania.length > 0 && (
-                          <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
-                            {sekciaMapovania.length} mapovaných
-                          </span>
+                        {sekciaMapovania.length > 0 ? (
+                          <Badge className="bg-green-500 text-white">
+                            ✓ {sekciaMapovania.length} namapovaných
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="text-gray-400">
+                            Žiadne mapovanie
+                          </Badge>
                         )}
                       </button>
 
-                      {expandedSekcie[sekcia.id] && (
-                        <div className="border-t p-4 bg-gray-50 space-y-3">
-                          {sekcia.dlazdice.map((dlazdica) => {
-                            const existujuceMapovanie = formData.mapovanie_fotiek_prosto.find(
-                              m => m.dlazdica_id === dlazdica.id
-                            );
-                            const mapovaIndex = formData.mapovanie_fotiek_prosto.findIndex(
-                              m => m.dlazdica_id === dlazdica.id
-                            );
+                      {isExpanded && (
+                        <div className="border-t p-4 bg-gradient-to-br from-gray-50 to-white">
+                          <div className="grid md:grid-cols-2 gap-3">
+                            {sekcia.dlazdice.map((dlazdica) => {
+                              const existujuceMapovanie = formData.mapovanie_fotiek_prosto.find(
+                                m => m.dlazdica_id === dlazdica.id
+                              );
+                              const mapovaIndex = formData.mapovanie_fotiek_prosto.findIndex(
+                                m => m.dlazdica_id === dlazdica.id
+                              );
+                              const jeMaping = !!existujuceMapovanie;
 
-                            return (
-                              <div key={dlazdica.id} className="bg-white border rounded-lg p-4">
-                                <div className="flex items-start justify-between mb-3">
-                                  <div>
-                                    <h4 className="font-semibold text-gray-900">{dlazdica.nazov}</h4>
-                                    <p className="text-xs text-gray-500">ID: {dlazdica.id}</p>
+                              return (
+                                <div 
+                                  key={dlazdica.id} 
+                                  className={`bg-white rounded-xl p-4 border-2 transition-all ${
+                                    jeMaping 
+                                      ? 'border-primary shadow-lg' 
+                                      : 'border-gray-200 hover:border-gray-300'
+                                  }`}
+                                >
+                                  <div className="flex items-start justify-between mb-3">
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2">
+                                        <h4 className="font-bold text-gray-900">{dlazdica.nazov}</h4>
+                                        {jeMaping && (
+                                          <Badge className="bg-green-500 text-white text-[10px]">
+                                            ✓ Aktívne
+                                          </Badge>
+                                        )}
+                                      </div>
+                                      <p className="text-xs text-gray-500 mt-1">ID: {dlazdica.id}</p>
+                                    </div>
+                                    {jeMaping ? (
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => removeMapovanieFotky("prosto", mapovaIndex)}
+                                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => addMapovanieFotky("prosto", sekcia.id, dlazdica.id, dlazdica.nazov)}
+                                        className="bg-primary hover:bg-primary/90"
+                                      >
+                                        <Plus className="w-4 h-4 mr-1" />
+                                        Pridať
+                                      </Button>
+                                    )}
                                   </div>
-                                  {existujuceMapovanie ? (
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => removeMapovanieFotky("prosto", mapovaIndex)}
-                                    >
-                                      <Trash2 className="w-4 h-4 text-red-600" />
-                                    </Button>
-                                  ) : (
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => addMapovanieFotky("prosto", sekcia.id, dlazdica.id, dlazdica.nazov)}
-                                    >
-                                      <Plus className="w-4 h-4 mr-1" />
-                                      Pridať fotky
-                                    </Button>
+
+                                  {jeMaping && (
+                                    <div className="space-y-3 pt-3 border-t-2 border-dashed">
+                                      <div>
+                                        <Label className="text-xs font-bold text-gray-700">Typ fotky v ponuke</Label>
+                                        <Select
+                                          value={existujuceMapovanie.typ_fotky}
+                                          onValueChange={(val) => updateMapovanieFotky("prosto", mapovaIndex, 'typ_fotky', val)}
+                                        >
+                                          <SelectTrigger className="h-9 text-sm mt-1 border-2">
+                                            <SelectValue />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            <SelectItem value="titulna">
+                                              <div className="flex items-center gap-2">
+                                                <Image className="w-4 h-4" />
+                                                Titulná fotka
+                                              </div>
+                                            </SelectItem>
+                                            <SelectItem value="zakladna_konfiguracia">
+                                              <div className="flex items-center gap-2">
+                                                <Image className="w-4 h-4" />
+                                                Základná konfigurácia
+                                              </div>
+                                            </SelectItem>
+                                            <SelectItem value="interier_drevo">
+                                              <div className="flex items-center gap-2">
+                                                <Image className="w-4 h-4" />
+                                                Interiér - drevo
+                                              </div>
+                                            </SelectItem>
+                                            <SelectItem value="interier_sadrokarton">
+                                              <div className="flex items-center gap-2">
+                                                <Image className="w-4 h-4" />
+                                                Interiér - sadrokartón
+                                              </div>
+                                            </SelectItem>
+                                            <SelectItem value="galeria_exterier">
+                                              <div className="flex items-center gap-2">
+                                                <Grid3x3 className="w-4 h-4" />
+                                                Galéria - exteriér
+                                              </div>
+                                            </SelectItem>
+                                            <SelectItem value="galeria_interier">
+                                              <div className="flex items-center gap-2">
+                                                <Grid3x3 className="w-4 h-4" />
+                                                Galéria - interiér
+                                              </div>
+                                            </SelectItem>
+                                            <SelectItem value="podorysy">
+                                              <div className="flex items-center gap-2">
+                                                <FileText className="w-4 h-4" />
+                                                Pôdorysy
+                                              </div>
+                                            </SelectItem>
+                                          </SelectContent>
+                                        </Select>
+                                      </div>
+                                      <div>
+                                        <Label className="text-xs font-bold text-gray-700">Poznámka (voliteľné)</Label>
+                                        <Input
+                                          value={existujuceMapovanie.popis || ''}
+                                          onChange={(e) => updateMapovanieFotky("prosto", mapovaIndex, 'popis', e.target.value)}
+                                          placeholder="Napr: Zobrazí dom s touto fasádou"
+                                          className="h-9 text-sm mt-1 border-2"
+                                        />
+                                      </div>
+                                      <div className="pt-2 px-3 py-2 bg-blue-50 rounded-lg border border-blue-200">
+                                        <p className="text-xs text-blue-800">
+                                          <strong>Výsledok:</strong> Keď klient vyberie <span className="font-bold">{dlazdica.nazov}</span>, 
+                                          zobrazí sa <span className="font-bold">{existujuceMapovanie.typ_fotky}</span> v cenovej ponuke
+                                        </p>
+                                      </div>
+                                    </div>
                                   )}
                                 </div>
-
-                                {existujuceMapovanie && (
-                                  <div className="space-y-3 pt-3 border-t">
-                                    <div>
-                                      <Label className="text-xs">Typ fotky</Label>
-                                      <Select
-                                        value={existujuceMapovanie.typ_fotky}
-                                        onValueChange={(val) => updateMapovanieFotky("prosto", mapovaIndex, 'typ_fotky', val)}
-                                      >
-                                        <SelectTrigger className="h-8 text-sm">
-                                          <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                          <SelectItem value="titulna">Titulná fotka</SelectItem>
-                                          <SelectItem value="zakladna_konfiguracia">Základná konfigurácia</SelectItem>
-                                          <SelectItem value="interier_drevo">Interiér drevo</SelectItem>
-                                          <SelectItem value="interier_sadrokarton">Interiér sadrokartón</SelectItem>
-                                          <SelectItem value="galeria_exterier">Galéria exteriér</SelectItem>
-                                          <SelectItem value="galeria_interier">Galéria interiér</SelectItem>
-                                          <SelectItem value="podorysy">Pôdorysy</SelectItem>
-                                        </SelectContent>
-                                      </Select>
-                                    </div>
-                                    <div>
-                                      <Label className="text-xs">Popis (voliteľný)</Label>
-                                      <Input
-                                        value={existujuceMapovanie.popis || ''}
-                                        onChange={(e) => updateMapovanieFotky("prosto", mapovaIndex, 'popis', e.target.value)}
-                                        placeholder="Napr: Zobrazí dom s touto fasádou"
-                                        className="h-8 text-sm"
-                                      />
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </Card>
-          </TabsContent>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </Card>
+            </TabsContent>
         </Tabs>
 
         {/* Preview Modal */}
