@@ -1376,7 +1376,7 @@ export default function AdminGeneratorCenovychPonuk() {
                           })}
                         </div>
                       )}
-                    </div>
+                    </Card>
                   );
                 })}
               </div>
