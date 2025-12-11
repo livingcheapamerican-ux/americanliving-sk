@@ -1360,12 +1360,15 @@ export default function LyonFinalSummaryModal({
                       </div>
                       </div>
 
-                      {/* DODATOČNÉ SLUŽBY - EXPANDED INFO */}
+                      {/* DODATOČNÉ SLUŽBY - EXPANDED INFO CARD */}
                       {(predajNehnutelnosti || chcemPozemok || financneSluzby) && (
-                      <div className="bg-gray-50 p-4 rounded-lg mt-4">
-                      <div className="space-y-2">
-                        {/* SEKCIA HEADER */}
-                        <h4 className="font-bold text-gray-800 text-sm mb-3">Vybrané dodatočné služby:</h4>
+                        <div className="bg-blue-50 border-2 border-blue-300 p-4 rounded-lg mt-4">
+                          <div className="space-y-2">
+                            {/* SEKCIA HEADER */}
+                            <h4 className="font-bold text-blue-900 text-sm mb-3 flex items-center gap-2">
+                              <Sparkles className="w-4 h-4" />
+                              Vybrané dodatočné služby:
+                            </h4>
 
                         {predajNehnutelnosti && (
                           <div className="flex items-start gap-2 p-2 bg-blue-50 rounded border border-blue-200">

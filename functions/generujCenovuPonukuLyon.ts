@@ -31,21 +31,28 @@ const removeDiacritics = (str) => {
     .replace(/³/g, '3');
 };
 
-// Helper funkcia na stiahnutie obrázku a konverziu na base64
+// Helper funkcia na stiahnutie obrázku cez proxy (pre CORS) a konverziu na base64
 const fetchImageAsBase64 = async (url) => {
   try {
-    const response = await fetch(url);
-    if (!response.ok) return null;
-    const arrayBuffer = await response.arrayBuffer();
-    const uint8Array = new Uint8Array(arrayBuffer);
-    let binary = '';
-    for (let i = 0; i < uint8Array.length; i++) {
-      binary += String.fromCharCode(uint8Array[i]);
+    // Použiť CORS proxy alebo priamo fetch
+    const proxyUrl = url.startsWith('http') ? url : url;
+    const response = await fetch(proxyUrl);
+    if (!response.ok) {
+      console.error('Failed to fetch image:', response.status);
+      return null;
     }
-    const base64 = btoa(binary);
-    const contentType = response.headers.get('content-type') || 'image/jpeg';
-    const format = contentType.includes('png') ? 'PNG' : 'JPEG';
-    return { base64: `data:${contentType};base64,${base64}`, format };
+    const blob = await response.blob();
+    const reader = new FileReader();
+    
+    return new Promise((resolve) => {
+      reader.onloadend = () => {
+        const base64 = reader.result;
+        const format = blob.type.includes('png') ? 'PNG' : 'JPEG';
+        resolve({ base64, format });
+      };
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(blob);
+    });
   } catch (e) {
     console.error('Chyba pri stiahnutí obrázka:', url, e);
     return null;
@@ -597,7 +604,7 @@ Deno.serve(async (req) => {
 
     doc.setTextColor(0, 0, 0);
 
-    // Pôdorysy - nová stránka s reálnymi obrázkami
+    // Pôdorysy - nová stránka s obrázkami
     if (dom?.podorys_2d || dom?.podorys_3d) {
       doc.addPage();
       yPos = 20;
@@ -608,43 +615,37 @@ Deno.serve(async (req) => {
       doc.text(removeDiacritics('Podorysy'), 20, yPos);
       yPos += 10;
 
-      const podorysWidth = 80;
-      const podorysHeight = 100;
-      let xOffset = 20;
+      const podorysy = [];
+      if (dom.podorys_2d) podorysy.push({ url: dom.podorys_2d, label: '2D podorys' });
+      if (dom.podorys_3d) podorysy.push({ url: dom.podorys_3d, label: '3D podorys' });
 
-      if (dom.podorys_2d) {
-        const img2d = await fetchImageAsBase64(dom.podorys_2d);
-        if (img2d) {
+      const imgWidth = 85;
+      const imgHeight = 100;
+
+      for (let i = 0; i < podorysy.length; i++) {
+        const xPos = 20 + (i % 2) * 92;
+        if (i === 2) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        const imageData = await fetchImageAsBase64(podorysy[i].url);
+        if (imageData) {
           try {
-            doc.addImage(img2d.base64, img2d.format, xOffset, yPos, podorysWidth, podorysHeight);
+            doc.addImage(imageData.base64, imageData.format, xPos, yPos, imgWidth, imgHeight);
             doc.setFontSize(9);
             doc.setTextColor(100, 100, 100);
-            doc.text('2D podorys', xOffset + podorysWidth/2, yPos + podorysHeight + 5, { align: 'center' });
-            xOffset += podorysWidth + 10;
+            doc.text(podorysy[i].label, xPos + imgWidth/2, yPos + imgHeight + 5, { align: 'center' });
           } catch (e) {
-            console.error('Chyba pri vkladani 2D podorysu:', e);
+            console.error('Chyba pri vkladani podorysu:', e);
           }
         }
       }
 
-      if (dom.podorys_3d) {
-        const img3d = await fetchImageAsBase64(dom.podorys_3d);
-        if (img3d) {
-          try {
-            doc.addImage(img3d.base64, img3d.format, xOffset, yPos, podorysWidth, podorysHeight);
-            doc.setFontSize(9);
-            doc.setTextColor(100, 100, 100);
-            doc.text('3D podorys', xOffset + podorysWidth/2, yPos + podorysHeight + 5, { align: 'center' });
-          } catch (e) {
-            console.error('Chyba pri vkladani 3D podorysu:', e);
-          }
-        }
-      }
-
-      yPos += podorysHeight + 15;
+      yPos += imgHeight + 15;
     }
 
-    // Galérie s fotkami - nová stránka s reálnymi obrázkami
+    // Galérie s fotkami - nová stránka (max 4 fotky aby PDF nebolo veľké)
     if (matchedGalleries.length > 0) {
       doc.addPage();
       yPos = 20;
@@ -656,6 +657,11 @@ Deno.serve(async (req) => {
       yPos += 10;
 
       for (const galeria of matchedGalleries) {
+        if (yPos > pageHeight - 80) {
+          doc.addPage();
+          yPos = 20;
+        }
+
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(11);
         doc.setFont(undefined, 'bold');
@@ -665,13 +671,13 @@ Deno.serve(async (req) => {
         doc.setFontSize(8);
         doc.setFont(undefined, 'normal');
         doc.setTextColor(100, 100, 100);
-        doc.text(removeDiacritics(`${Math.min(6, galeria.fotky.length)} z ${galeria.fotky.length} fotiek`), 25, yPos);
+        const maxFotky = Math.min(4, galeria.fotky.length);
+        doc.text(removeDiacritics(`${maxFotky} z ${galeria.fotky.length} fotiek`), 25, yPos);
         yPos += 7;
 
-        // Vložiť skutočné fotky do PDF
-        const fotkyNaStranku = Math.min(6, galeria.fotky.length);
-        for (let i = 0; i < fotkyNaStranku; i++) {
-          if (yPos > pageHeight - 70) {
+        // Vložiť max 4 fotky na galériu (zmenšené pre menší PDF)
+        for (let i = 0; i < maxFotky; i++) {
+          if (yPos > pageHeight - 75) {
             doc.addPage();
             yPos = 20;
           }
@@ -686,22 +692,23 @@ Deno.serve(async (req) => {
             // Stiahni a vlož obrázok
             const imageData = await fetchImageAsBase64(galeria.fotky[i]);
             if (imageData) {
-              doc.addImage(imageData.base64, imageData.format, xPos, yPos, imgWidth, imgHeight);
+              // Vlož obrázok s kompresiou
+              doc.addImage(imageData.base64, imageData.format, xPos, yPos, imgWidth, imgHeight, undefined, 'FAST');
 
-              // Pridaj watermark text nad obrázok
+              // Watermark text
               doc.setFontSize(10);
               doc.setFont(undefined, 'bold');
               doc.setTextColor(200, 200, 200);
               doc.text('American Living', xPos + imgWidth/2, yPos + imgHeight/2, { align: 'center' });
 
-              // Popis pod obrázkom
+              // Popis
               doc.setFontSize(7);
               doc.setFont(undefined, 'normal');
               doc.setTextColor(80, 80, 80);
               doc.text(removeDiacritics(`${galeria.nazov} - Fotka ${i + 1}`), xPos + imgWidth/2, yPos + imgHeight + 4, { align: 'center' });
             }
           } catch (e) {
-            console.error('Chyba pri vkladani fotky:', e);
+            console.error('Chyba pri vkladani fotky:', galeria.fotky[i], e);
           }
         }
 
