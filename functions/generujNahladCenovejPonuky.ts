@@ -10,7 +10,24 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { nastavenie } = await req.json();
+    const { nastavenie, dom, konfiguraciaData } = await req.json();
+
+    // Ak nie je zadaný dom, použijeme ukážkové dáta
+    const ukaDom = dom || {
+      nazov: 'WASHINGTON',
+      zastavana_plocha: 72,
+      vyrobca: 'Ticab house',
+      typ_domu: 'modulárny',
+      zakladna_cena: 72078
+    };
+
+    const ukaKonfiguracia = konfiguraciaData || [
+      { nazov: 'Základná cena domu', cena: 72078, vybrane: true },
+      { nazov: 'Izolácia stien 250mm', cena: 4800, vybrane: true },
+      { nazov: 'Tepelné čerpadlo', cena: 8500, vybrane: true },
+      { nazov: 'Podlahové kúrenie', cena: 3200, vybrane: true },
+      { nazov: 'Fasáda - šúchaná omietka', cena: 6500, vybrane: true },
+    ];
 
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -119,9 +136,9 @@ Deno.serve(async (req) => {
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(10);
     doc.setFont(undefined, 'normal');
-    doc.text('WASHINGTON (72 m²)', 20, yPos);
+    doc.text(`${ukaDom.nazov} (${ukaDom.zastavana_plocha} m²)`, 20, yPos);
     yPos += 6;
-    doc.text('Ticab house - Modulárny dom', 20, yPos);
+    doc.text(`${ukaDom.vyrobca} - ${ukaDom.typ_domu === 'modularny' ? 'Modulárny' : 'Montovaný'} dom`, 20, yPos);
     yPos += 12;
 
     // Cenová kalkulácia
@@ -145,23 +162,44 @@ Deno.serve(async (req) => {
     // Položky
     doc.setTextColor(0, 0, 0);
     doc.setFont(undefined, 'normal');
-    const polozky = [
-      { nazov: 'Základná cena domu', cena: '72 078 €' },
-      { nazov: 'Izolácia stien 250mm', cena: '4 800 €' },
-      { nazov: 'Tepelné čerpadlo', cena: '8 500 €' },
-      { nazov: 'Podlahové kúrenie', cena: '3 200 €' },
-      { nazov: 'Fasáda - šúchaná omietka', cena: '6 500 €' },
-    ];
+    
+    const polozky = ukaKonfiguracia.filter(p => p.vybrane);
+    const celkovaCena = polozky.reduce((sum, p) => sum + (p.cena || 0), 0);
 
     polozky.forEach((polozka, index) => {
       if (index % 2 === 0) {
         doc.setFillColor(245, 245, 245);
         doc.rect(20, yPos - 4, pageWidth - 40, 7, 'F');
       }
-      doc.text(polozka.nazov, 25, yPos);
-      doc.text(polozka.cena, pageWidth - 25, yPos, { align: 'right' });
+      
+      const nazov = polozka.nazov.length > 50 ? polozka.nazov.substring(0, 47) + '...' : polozka.nazov;
+      doc.text(nazov, 25, yPos);
+      doc.text((polozka.cena || 0).toLocaleString('sk-SK') + ' €', pageWidth - 25, yPos, { align: 'right' });
       yPos += 7;
+      
+      // Ak sa blížime ku koncu stránky, pridaj novú stránku
+      if (yPos > pageHeight - 60) {
+        doc.addPage();
+        yPos = 20;
+      }
     });
+
+    // Prečiarknuté položky (ak sú nastavené)
+    const preciarknute = ukaKonfiguracia.filter(p => !p.vybrane);
+    if (nastavenie.zobrazovat_preciarknute && preciarknute.length > 0) {
+      yPos += 5;
+      doc.setTextColor(150, 150, 150);
+      doc.setFontSize(9);
+      preciarknute.forEach((polozka) => {
+        if (yPos > pageHeight - 60) {
+          doc.addPage();
+          yPos = 20;
+        }
+        doc.text(polozka.nazov, 25, yPos);
+        doc.text('0 €', pageWidth - 25, yPos, { align: 'right' });
+        yPos += 6;
+      });
+    }
 
     // Celková cena
     yPos += 3;
@@ -172,7 +210,7 @@ Deno.serve(async (req) => {
     doc.setFontSize(12);
     doc.setTextColor(mainColor.r, mainColor.g, mainColor.b);
     doc.text('CELKOVÁ CENA s DPH', 25, yPos);
-    doc.text('95 078 €', pageWidth - 25, yPos, { align: 'right' });
+    doc.text(celkovaCena.toLocaleString('sk-SK') + ' €', pageWidth - 25, yPos, { align: 'right' });
     yPos += 15;
 
     // Záverečný text
