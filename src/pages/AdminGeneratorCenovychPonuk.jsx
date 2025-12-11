@@ -365,30 +365,61 @@ export default function AdminGeneratorCenovychPonuk() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Generátor cenových ponúk</h1>
-            <p className="text-gray-600">Nastavte dizajn, obsah a mapovanie fotiek pre cenové ponuky</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 py-8 px-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Header s gradient pozadím */}
+        <div className="mb-8 bg-gradient-to-r from-primary to-primary/80 rounded-2xl shadow-xl p-8 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                  <FileText className="w-6 h-6" />
+                </div>
+                <h1 className="text-4xl font-bold">Generátor cenových ponúk</h1>
+              </div>
+              <p className="text-white/90 ml-15">Nastavte dizajn, obsah a mapovanie fotiek pre cenové ponuky</p>
+            </div>
+            <div className="flex gap-3">
+              <Button onClick={createNovaSablona} variant="secondary" className="bg-white/20 hover:bg-white/30 text-white border-white/30">
+                <Plus className="w-4 h-4 mr-2" />
+                Nová šablóna
+              </Button>
+              <Button 
+                onClick={handleSave} 
+                disabled={saveMutation.isPending} 
+                className="bg-white text-primary hover:bg-white/90 shadow-lg"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                {saveMutation.isPending ? 'Ukladám...' : 'Uložiť nastavenie'}
+              </Button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Button onClick={createNovaSablona} variant="outline">
-              <Plus className="w-4 h-4 mr-2" />
-              Nová šablóna
-            </Button>
-            <Button onClick={handleSave} disabled={saveMutation.isPending} className="bg-primary">
-              <Save className="w-4 h-4 mr-2" />
-              Uložiť nastavenie
-            </Button>
-          </div>
+          
+          {/* Progress indicator */}
+          {aktivneNastavenie && (
+            <div className="mt-6 flex items-center gap-2 text-sm text-white/80">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              Upravujete: <span className="font-semibold text-white">{aktivneNastavenie.nazov}</span>
+            </div>
+          )}
         </div>
 
         {/* Prehľad šablón */}
         {nastavenia.length > 0 && (
-          <Card className="p-6 mb-8">
-            <h2 className="text-lg font-bold mb-4">Prednastavené šablóny</h2>
-            <div className="grid md:grid-cols-3 gap-4">
+          <Card className="p-8 mb-8 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                  <Settings className="w-6 h-6 text-primary" />
+                  Prednastavené šablóny
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">Vyberte šablónu pre úpravu alebo vytvorte novú</p>
+              </div>
+              <span className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">
+                {nastavenia.length} {nastavenia.length === 1 ? 'šablóna' : nastavenia.length < 5 ? 'šablóny' : 'šablón'}
+              </span>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {nastavenia.map((sablona) => (
                 <div
                   key={sablona.id}
@@ -396,73 +427,125 @@ export default function AdminGeneratorCenovychPonuk() {
                     setSelectedSablona(sablona.id);
                     setActiveTab("zakladne");
                   }}
-                  className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                  className={`group relative border-2 rounded-xl p-5 cursor-pointer transition-all hover:shadow-xl ${
                     selectedSablona === sablona.id 
-                      ? 'border-primary ring-2 ring-primary bg-primary/5' 
-                      : 'border-gray-200 hover:border-primary/50'
+                      ? 'border-primary ring-4 ring-primary/20 bg-primary/5 shadow-lg scale-[1.02]' 
+                      : 'border-gray-200 hover:border-primary/50 bg-white'
                   }`}
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-bold text-gray-900">{sablona.nazov}</h3>
-                    <div className="flex gap-2">
+                  {/* Color preview bar */}
+                  <div 
+                    className="absolute top-0 left-0 right-0 h-2 rounded-t-xl"
+                    style={{ background: `linear-gradient(90deg, ${sablona.farba_hlavna} 0%, ${sablona.farba_sekundarna} 100%)` }}
+                  />
+                  
+                  <div className="flex items-start justify-between mb-3 mt-2">
+                    <h3 className="font-bold text-gray-900 text-lg">{sablona.nazov}</h3>
+                    <div className="flex flex-col gap-2">
                       {sablona.aktivne && (
-                        <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
+                        <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium flex items-center gap-1">
+                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                           Aktívne
                         </span>
                       )}
                       {selectedSablona === sablona.id && (
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
-                          Upravuje sa
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
+                          ✏️ Upravuje sa
                         </span>
                       )}
                     </div>
                   </div>
+                  
                   {sablona.vyrobca_filter && (
-                    <p className="text-sm text-gray-600 mb-2">
-                      Pre: <span className="font-semibold">{sablona.vyrobca_filter}</span>
-                    </p>
+                    <div className="mb-3 px-3 py-1 bg-purple-50 border border-purple-200 rounded-lg inline-block">
+                      <p className="text-xs text-purple-700 font-medium">
+                        🏠 Pre: {sablona.vyrobca_filter}
+                      </p>
+                    </div>
                   )}
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
-                    <div 
-                      className="w-4 h-4 rounded border"
-                      style={{ backgroundColor: sablona.farba_hlavna }}
-                    />
-                    <span>{sablona.sablona_dizajnu}</span>
+                  
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-1">
+                      <div 
+                        className="w-8 h-8 rounded-lg border-2 border-white shadow-md"
+                        style={{ backgroundColor: sablona.farba_hlavna }}
+                        title="Hlavná farba"
+                      />
+                      <div 
+                        className="w-8 h-8 rounded-lg border-2 border-white shadow-md"
+                        style={{ backgroundColor: sablona.farba_sekundarna }}
+                        title="Sekundárna farba"
+                      />
+                    </div>
+                    <span className="text-xs text-gray-500 font-medium">{sablona.sablona_dizajnu}</span>
                   </div>
+                  
+                  {/* Hover effect */}
+                  <div className={`absolute inset-0 rounded-xl bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none ${
+                    selectedSablona === sablona.id ? 'hidden' : ''
+                  }`}></div>
                 </div>
               ))}
             </div>
           </Card>
         )}
 
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-5 w-full">
-            <TabsTrigger value="zakladne">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid grid-cols-5 w-full bg-white shadow-lg border-0 p-2 rounded-xl">
+            <TabsTrigger 
+              value="zakladne"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary/80 data-[state=active]:text-white rounded-lg transition-all"
+            >
               <Settings className="w-4 h-4 mr-2" />
-              Základné
+              <span className="hidden sm:inline">Základné</span>
+              <span className="sm:hidden">Info</span>
             </TabsTrigger>
-            <TabsTrigger value="dizajn">
+            <TabsTrigger 
+              value="dizajn"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary/80 data-[state=active]:text-white rounded-lg transition-all"
+            >
               <Palette className="w-4 h-4 mr-2" />
-              Dizajn
+              <span className="hidden sm:inline">Dizajn</span>
+              <span className="sm:hidden">🎨</span>
             </TabsTrigger>
-            <TabsTrigger value="texty">
+            <TabsTrigger 
+              value="texty"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary/80 data-[state=active]:text-white rounded-lg transition-all"
+            >
               <FileText className="w-4 h-4 mr-2" />
-              Texty
+              <span className="hidden sm:inline">Texty</span>
+              <span className="sm:hidden">📝</span>
             </TabsTrigger>
-            <TabsTrigger value="fotky-ticab">
+            <TabsTrigger 
+              value="fotky-ticab"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary/80 data-[state=active]:text-white rounded-lg transition-all"
+            >
               <Image className="w-4 h-4 mr-2" />
-              Fotky Ticabhouse
+              <span className="hidden lg:inline">Fotky Ticabhouse</span>
+              <span className="lg:hidden">Ticab</span>
             </TabsTrigger>
-            <TabsTrigger value="fotky-prosto">
+            <TabsTrigger 
+              value="fotky-prosto"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary/80 data-[state=active]:text-white rounded-lg transition-all"
+            >
               <Image className="w-4 h-4 mr-2" />
-              Fotky Prosto
+              <span className="hidden lg:inline">Fotky Prosto</span>
+              <span className="lg:hidden">Prosto</span>
             </TabsTrigger>
           </TabsList>
 
           {/* ZÁKLADNÉ NASTAVENIA */}
           <TabsContent value="zakladne">
-            <Card className="p-6">
-              <h2 className="text-xl font-bold mb-6">Základné informácie</h2>
+            <Card className="p-8 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                  <Settings className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Základné informácie</h2>
+                  <p className="text-sm text-gray-600">Kontaktné údaje a nastavenia spoločnosti</p>
+                </div>
+              </div>
               
               <div className="space-y-6">
                 {/* Logo Upload */}
@@ -584,8 +667,16 @@ export default function AdminGeneratorCenovychPonuk() {
 
           {/* DIZAJN */}
           <TabsContent value="dizajn">
-            <Card className="p-6">
-              <h2 className="text-xl font-bold mb-6">Vyberte dizajn cenovej ponuky</h2>
+            <Card className="p-8 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                  <Palette className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Vyberte dizajn cenovej ponuky</h2>
+                  <p className="text-sm text-gray-600">12 moderných dizajnových šablón</p>
+                </div>
+              </div>
               
               <div className="space-y-6">
                 {/* Galéria šablón */}
@@ -804,8 +895,16 @@ export default function AdminGeneratorCenovychPonuk() {
 
           {/* TEXTY */}
           <TabsContent value="texty">
-            <Card className="p-6">
-              <h2 className="text-xl font-bold mb-6">Texty v cenovej ponuke</h2>
+            <Card className="p-8 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <FileText className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Texty v cenovej ponuke</h2>
+                  <p className="text-sm text-gray-600">Úvodný, záverečný a ďalšie texty</p>
+                </div>
+              </div>
               
               <div className="space-y-6">
                 <div>
@@ -880,9 +979,17 @@ export default function AdminGeneratorCenovychPonuk() {
 
           {/* FOTKY TICABHOUSE */}
           <TabsContent value="fotky-ticab">
-            <Card className="p-6">
-              <div className="mb-6">
-                <h2 className="text-xl font-bold mb-2">Mapovanie fotiek pre Ticabhouse</h2>
+            <Card className="p-8 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+              <div className="mb-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                    <Image className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">Mapovanie fotiek pre Ticabhouse</h2>
+                    <p className="text-sm text-gray-600">Nastavte galérie podľa vybraných dlaždíc</p>
+                  </div>
+                </div>
                 <p className="text-sm text-gray-600">
                   Nastavte, ktoré galérie sa majú zobraziť v cenovej ponuke na základe vybraných dlaždíc v konfigurátore.
                 </p>
@@ -1099,9 +1206,17 @@ export default function AdminGeneratorCenovychPonuk() {
 
           {/* FOTKY PROSTO HOUSE */}
           <TabsContent value="fotky-prosto">
-            <Card className="p-6">
-              <div className="mb-6">
-                <h2 className="text-xl font-bold mb-2">Mapovanie fotiek pre Prosto House</h2>
+            <Card className="p-8 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+              <div className="mb-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                    <Image className="w-6 h-6 text-orange-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">Mapovanie fotiek pre Prosto House</h2>
+                    <p className="text-sm text-gray-600">Nastavte fotky podľa vybraných dlaždíc</p>
+                  </div>
+                </div>
                 <p className="text-sm text-gray-600">
                   Rozkliknite sekcie a priraďte fotky ku konkrétnym dlaždiciam konfiguratora. 
                   Pravidlá platia pre všetky domy výrobcu Prosto House.
