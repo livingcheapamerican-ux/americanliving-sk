@@ -943,7 +943,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                       className={`absolute -top-2 -right-2 z-10 p-1.5 rounded-full shadow-lg transition-all ${
                         dopravaViditelna 
                           ? 'bg-green-600 hover:bg-green-700 text-white' 
-                          : 'bg-gray-600 hover:bg-gray-700 text-white'
+                          : 'bg-red-600 hover:bg-red-700 text-white'
                       }`}
                       title={dopravaViditelna ? 'Skryť pre verejnosť' : 'Zobraziť pre verejnosť'}
                     >
