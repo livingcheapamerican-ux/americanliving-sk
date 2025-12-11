@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Home, Send } from "lucide-react";
+import { Sparkles, Home, Send, Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLanguage } from "./LanguageContext";
 import { base44 } from "@/api/base44Client";
@@ -13,6 +13,18 @@ import { toast } from "sonner";
 export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, izolaciaStien, setIzolaciaStien, izolaciaPodlahy, setIzolaciaPodlahy, izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia, pripravaNaRekuperaciu, setPripravaNaRekuperaciu, podlahovoKurenie, setPodlahovoKurenie, pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle, klimatizacia, setKlimatizacia, fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna, vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha, interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod, prepat, setPrepat, pripravaNaSolarnePanely, setPripravaNaSolarnePanely, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria, skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering, projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady, montaz, setMontaz, doprava, setDoprava }) {
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
+
+  // Načítať informáciu o viditeľnosti dopravy
+  const dopravaViditelna = dom?.doprava_viditelna !== false;
+
+  // Mutácia pre zmenu viditeľnosti dopravy
+  const toggleDopravaVisibilityMutation = useMutation({
+    mutationFn: (visible) => base44.entities.Dom.update(dom.id, { doprava_viditelna: visible }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dom', dom.id] });
+      toast.success(dopravaViditelna ? 'Doprava skrytá pre verejnosť' : 'Doprava zobrazená pre verejnosť');
+    }
+  });
 
   // Načítať texty konfiguratora
   const { data: konfigTexts = [] } = useQuery({
@@ -161,7 +173,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
 
     // Realizácia
     if (montaz) price += CENY.montaz || 0;
-    if (doprava) price += CENY.doprava || 0;
+    if (doprava && dopravaViditelna) price += CENY.doprava || 0;
 
     return price;
   }, [
@@ -169,7 +181,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
     tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu, podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia,
     fasada, strecha, odkvapy, vchodoveDvere, obkladStien, interieroveDvere,
     elektro, bleskozvod, prepat, pripravaNaSolarnePanely, sprchovyKut, vana, bateria, skrinka, stropKupelna,
-    inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava, CENY
+    inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava, CENY, dopravaViditelna
   ]);
 
   // Synchronizácia s props
@@ -899,11 +911,47 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
                 subtitle={getTranslatedText('montaz', 'podnadpis') || ''} 
                 price={formatPrice(CENY.montaz)} isPriced={true} t={t} 
                 priceKey="montaz" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
-              <EditableTile selected={doprava} onClick={() => setDoprava(!doprava)} 
-                title={getTranslatedText('doprava', 'nazov') || t('transportTile')} 
-                subtitle={getTranslatedText('doprava', 'podnadpis') || t('allModulesTransport')} 
-                price={formatPrice(CENY.doprava)} isPriced={true} t={t} 
-                priceKey="doprava" onPriceChange={handlePriceChange} isAdmin={isAdmin} />
+              {(dopravaViditelna || isAdmin) && (
+                <div className="relative">
+                  <EditableTile 
+                    selected={doprava && dopravaViditelna} 
+                    onClick={() => dopravaViditelna && setDoprava(!doprava)} 
+                    title={getTranslatedText('doprava', 'nazov') || t('transportTile')} 
+                    subtitle={getTranslatedText('doprava', 'podnadpis') || t('allModulesTransport')} 
+                    price={formatPrice(CENY.doprava)} 
+                    isPriced={true} 
+                    t={t} 
+                    priceKey="doprava" 
+                    onPriceChange={handlePriceChange} 
+                    isAdmin={isAdmin}
+                    className={!dopravaViditelna && isAdmin ? 'opacity-50 pointer-events-none' : ''} />
+                  {!dopravaViditelna && isAdmin && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-900/30 rounded-lg backdrop-blur-[1px]">
+                      <div className="bg-orange-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2">
+                        <EyeOff className="w-3 h-3" />
+                        Skryté pre verejnosť
+                      </div>
+                    </div>
+                  )}
+                  {isAdmin && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleDopravaVisibilityMutation.mutate(!dopravaViditelna);
+                      }}
+                      disabled={toggleDopravaVisibilityMutation.isPending}
+                      className={`absolute -top-2 -right-2 z-10 p-1.5 rounded-full shadow-lg transition-all ${
+                        dopravaViditelna 
+                          ? 'bg-green-600 hover:bg-green-700 text-white' 
+                          : 'bg-gray-600 hover:bg-gray-700 text-white'
+                      }`}
+                      title={dopravaViditelna ? 'Skryť pre verejnosť' : 'Zobraziť pre verejnosť'}
+                    >
+                      {dopravaViditelna ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </Card>
         </div>
