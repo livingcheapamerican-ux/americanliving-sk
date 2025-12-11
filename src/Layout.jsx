@@ -245,6 +245,11 @@ function LayoutContent({ children }) {
                     <Settings className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
+                <Link to={createPageUrl("AdminWatermark")}>
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Watermark">
+                    <Image className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                  </Button>
+                </Link>
                 <Link to={createPageUrl("TestAnalyzaKonfiguratora")}>
                   <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Test Analýza Konfiguratora">
                     <Sparkles className="w-3.5 h-3.5 lg:w-4 lg:h-4" />

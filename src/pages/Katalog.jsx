@@ -14,6 +14,7 @@ import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Squar
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { useLanguage } from "../components/LanguageContext";
+import ImageWithWatermark from "../components/ImageWithWatermark";
 
 export default function Katalog() {
   const location = useLocation();
@@ -579,7 +580,7 @@ export default function Katalog() {
                         <div className="relative h-28 sm:h-72 overflow-hidden">
                           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
                             {dom.hlavny_obrazok ? (
-                              <img
+                              <ImageWithWatermark
                                 src={dizajnFilter === "drevo" && dom.zakladna_konfiguracia_obrazok ? dom.zakladna_konfiguracia_obrazok : dom.hlavny_obrazok}
                                 alt={dom.nazov}
                                 className="w-full h-full object-contain bg-gray-100 group-hover:scale-105 transition-all duration-500" />
