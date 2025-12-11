@@ -286,7 +286,7 @@ Deno.serve(async (req) => {
           if (dlazdicaId === "obklad_smrek_bez_uzlov" && (konfiguraciaData.obkladStien === "smrek_bez_uzlov" || konfiguraciaData.obkladStien === "smrek_8cm")) return true;
           return false;
         });
-        
+
         if (isActive) {
           const galeria = dom.galerie?.find(g => g.typ === mapping.galeria_typ);
           if (galeria && galeria.fotky?.length > 0) {
@@ -297,7 +297,30 @@ Deno.serve(async (req) => {
           }
         }
       });
-      
+
+      // FALLBACK: Ak nebola pridaná žiadna exteriérová galéria, pridaj default podľa fasády
+      const maExterierovaGaleria = matchedGalleries.some(g => g.nazov && g.nazov.includes("Exteriér"));
+      if (!maExterierovaGaleria) {
+        if (konfiguraciaData.fasada === "omietka") {
+          const murovkaGaleria = dom.galerie?.find(g => g.typ === "exterier_murovka");
+          if (murovkaGaleria?.fotky?.length > 0) {
+            matchedGalleries.unshift({
+              nazov: "Exteriér - Murovka",
+              fotky: murovkaGaleria.fotky
+            });
+          }
+        } else {
+          // Pre všetky ostatné fasády vrátane drevo_smrek
+          const drevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
+          if (drevoGaleria?.fotky?.length > 0) {
+            matchedGalleries.unshift({
+              nazov: "Exteriér - Drevo/Plech",
+              fotky: drevoGaleria.fotky
+            });
+          }
+        }
+      }
+
       return matchedGalleries;
     };
 

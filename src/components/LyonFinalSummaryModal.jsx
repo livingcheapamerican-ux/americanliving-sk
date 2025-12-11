@@ -208,6 +208,30 @@ export default function LyonFinalSummaryModal({
       }
     });
     
+    // FALLBACK: Ak nebola pridaná žiadna exteriérová galéria, pridaj default podľa fasády
+    const maExterierovaGaleria = matchedGalleries.some(g => g.nazov.includes("Exteriér"));
+    if (!maExterierovaGaleria) {
+      if (fasada === "omietka") {
+        const murovkaGaleria = dom.galerie?.find(g => g.typ === "exterier_murovka");
+        if (murovkaGaleria?.fotky?.length > 0) {
+          matchedGalleries.unshift({
+            nazov: "Exteriér - Murovka",
+            fotky: murovkaGaleria.fotky
+          });
+        }
+      } else {
+        // Pre všetky ostatné fasády vrátane drevo_smrek
+        const drevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
+        console.log('🪵 Fallback - pridávam drevo/plech galériu pre fasádu:', fasada, drevoGaleria);
+        if (drevoGaleria?.fotky?.length > 0) {
+          matchedGalleries.unshift({
+            nazov: "Exteriér - Drevo/Plech",
+            fotky: drevoGaleria.fotky
+          });
+        }
+      }
+    }
+    
     console.log('✅ Matched galleries:', matchedGalleries);
     return matchedGalleries;
   };
