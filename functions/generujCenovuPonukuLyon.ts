@@ -347,8 +347,10 @@ Deno.serve(async (req) => {
 
     // Vykurovanie
     polozkyDetail.push({ nazov: 'Tepelné čerpadlo', cena: CENY.tepelne_cerpadlo, vybrane: konfiguraciaData.tepelneCerpadlo === "ano" });
+    polozkyDetail.push({ nazov: 'Príprava na rekuperáciu', cena: CENY.pripravaNaRekuperaciu || 0, vybrane: konfiguraciaData.pripravaNaRekuperaciu });
     polozkyDetail.push({ nazov: 'Rekuperácia', cena: CENY.rekuperacia, vybrane: konfiguraciaData.rekuperacia === "ano" });
     polozkyDetail.push({ nazov: 'Podlahové kúrenie', cena: CENY.podlahove_kurenie, vybrane: konfiguraciaData.podlahovoKurenie });
+    polozkyDetail.push({ nazov: 'Klimatizácia', cena: CENY.klimatizacia || 0, vybrane: konfiguraciaData.klimatizacia });
     polozkyDetail.push({ nazov: 'Príprava na krb', cena: CENY.pripravaKrb, vybrane: konfiguraciaData.pripravaNaKrb });
     polozkyDetail.push({ nazov: 'Ochrana kachle', cena: CENY.ochranaKachle, vybrane: konfiguraciaData.ochranaKachle });
 
@@ -375,12 +377,14 @@ Deno.serve(async (req) => {
     polozkyDetail.push({ nazov: 'Elektro - GE štandard (A0)', cena: CENY.elektro_ge, vybrane: konfiguraciaData.elektro === "ge" });
     polozkyDetail.push({ nazov: 'Bleskozvod', cena: CENY.bleskozvod, vybrane: konfiguraciaData.bleskozvod });
     polozkyDetail.push({ nazov: 'Prepäťová ochrana', cena: CENY.prepat, vybrane: konfiguraciaData.prepat });
+    polozkyDetail.push({ nazov: 'Príprava na solárne panely', cena: CENY.pripravaNaSolarnePanely || 0, vybrane: konfiguraciaData.pripravaNaSolarnePanely });
 
     // Kúpeľňa
     polozkyDetail.push({ nazov: 'Sprchový kút Radaway', cena: CENY.sprchovyKut, vybrane: konfiguraciaData.sprchovyKut === "radaway" });
     polozkyDetail.push({ nazov: 'Vaňa', cena: CENY.vana, vybrane: konfiguraciaData.vana });
     polozkyDetail.push({ nazov: 'Batéria Grohe', cena: CENY.bateria, vybrane: konfiguraciaData.bateria === "grohe" });
     polozkyDetail.push({ nazov: 'Skrinka', cena: CENY.skrinka, vybrane: konfiguraciaData.skrinka });
+    polozkyDetail.push({ nazov: 'Strop kúpeľňa sadrokartón', cena: CENY.strop_kupelna_sadrokarton || 0, vybrane: konfiguraciaData.stropKupelna === "sadrokarton" });
 
     // Služby
     polozkyDetail.push({ nazov: 'Inžiniering', cena: CENY.inziniering, vybrane: konfiguraciaData.inziniering });

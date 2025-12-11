@@ -908,12 +908,17 @@ export default function LyonFinalSummaryModal({
                 </div>
 
                 {/* Obrázok domu */}
-                <div className="mb-6">
+                <div className="mb-6 relative">
                   <img 
                     src={getDisplayImage()} 
                     alt={dom?.nazov || 'Dom'} 
                     className="w-full h-64 object-contain rounded-lg border"
                   />
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="text-white text-3xl font-bold bg-black/20 px-6 py-3 rounded">
+                      American Living
+                    </div>
+                  </div>
                 </div>
 
                 {/* Info o dome */}
