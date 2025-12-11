@@ -1190,7 +1190,17 @@ export default function AdminGeneratorCenovychPonuk() {
                         </div>
 
                         <div className="space-y-3">
-                          {ticabhouseSekcie.filter(s => s.id === 'fasada' || s.id === 'interier').map((sekcia) => (
+                          {ticabhouseSekcie.filter(s => {
+                            // Pre exteriér galérie zobrazovať fasádu a strechu
+                            if (galeria.id.startsWith('exterier')) {
+                              return s.id === 'fasada' || s.id === 'strecha' || s.id === 'dvere_okna';
+                            }
+                            // Pre interiér galérie zobrazovať interiér a kúpeľňu
+                            if (galeria.id.startsWith('interier')) {
+                              return s.id === 'interier' || s.id === 'kupelna';
+                            }
+                            return false;
+                          }).map((sekcia) => (
                             <div key={sekcia.id} className="bg-gradient-to-r from-gray-50 to-white rounded-lg p-3 border border-gray-200">
                               <div className="flex items-center gap-2 mb-2">
                                 <div className="w-6 h-6 bg-primary/10 rounded-md flex items-center justify-center">
