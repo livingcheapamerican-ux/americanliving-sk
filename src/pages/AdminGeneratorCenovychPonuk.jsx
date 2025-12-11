@@ -376,7 +376,7 @@ export default function AdminGeneratorCenovychPonuk() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header s gradient pozadím */}
-        <div className="mb-8 bg-gradient-to-r from-primary to-primary/80 rounded-2xl shadow-xl p-8 text-white">
+        <div className="mb-8 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl shadow-xl p-8 text-white">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-3 mb-2">
