@@ -377,7 +377,32 @@ export default function LyonFinalSummaryModal({
       toast.error('Vyplňte email');
       return;
     }
-    toast.info('Funkcia Email PDF bude dostupná čoskoro');
+    setGeneratingPDF(true);
+    try {
+      await base44.functions.invoke('odosliCenovuPonukuLyonEmail', {
+        dom,
+        konfiguraciaData: {
+          ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu,
+          tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu,
+          podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia,
+          fasada, strecha, odkvapy, okna, vchodoveDvere,
+          obkladStien, interieroveDvere, elektro, bleskozvod, prepat,
+          pripravaNaSolarnePanely, sprchovyKut, vana, bateria,
+          skrinka, stropKupelna, inziniering, projektACertifikacia,
+          revizia, zaklady, montaz, doprava,
+          predajNehnutelnosti, chcemPozemok, financneSluzby,
+          totalPrice
+        },
+        klientData: formData
+      });
+      
+      toast.success('Cenová ponuka bola odoslaná emailom');
+    } catch (error) {
+      toast.error('Chyba pri odosielaní emailu');
+      console.error(error);
+    } finally {
+      setGeneratingPDF(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -841,12 +866,12 @@ export default function LyonFinalSummaryModal({
                           type="button"
                           size="sm"
                           variant="outline"
-                          onClick={handleDownloadPDF}
-                          disabled={generatingPDF}
-                          className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50"
+                          onClick={handleEmailPDF}
+                          disabled={generatingPDF || !formData.email}
+                          className="border-2 border-green-500 text-green-600 hover:bg-green-50"
                         >
-                          <FileDown className="mr-2 w-4 h-4" />
-                          {generatingPDF ? 'Generujem...' : (t('downloadPDF') || 'Stiahnuť PDF')}
+                          <Mail className="mr-2 w-4 h-4" />
+                          {generatingPDF ? 'Odosiela sa...' : (t('sendEmail') || 'Odoslať email')}
                         </Button>
                       </div>
                     )}
