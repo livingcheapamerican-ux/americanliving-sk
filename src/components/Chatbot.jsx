@@ -6,34 +6,52 @@ import { MessageCircle, X, Send, Loader2, Minimize2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
+import ReactMarkdown from "react-markdown";
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content: "Dobrý deň! Som AI asistent American Living. 🏠\n\nMôžem vám pomôcť s:\n• Výberom vhodného domu\n• Otázkami o konfigurátore a položkách\n• Cenami a rozdielmi medzi možnosťami\n• Technickými parametrami (izolácia, vykurovanie...)\n• Rozdielom medzi rekreačnou stavbou a rodinným domom A0\n\nČo vás zaujíma?"
-    }
-  ]);
+  const [conversationId, setConversationId] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
   const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
-  // Načítaj konfiguračné texty a dokumenty pre kontext
-  const { data: konfigTexty = [] } = useQuery({
-    queryKey: ['konfig-texty-chatbot'],
-    queryFn: () => base44.entities.KonfiguratorText.list()
-  });
+  // Inicializuj konverzáciu pri otvorení
+  useEffect(() => {
+    if (isOpen && !conversationId) {
+      initConversation();
+    }
+  }, [isOpen]);
 
-  const { data: dokumenty = [] } = useQuery({
-    queryKey: ['dokumenty-chatbot'],
-    queryFn: () => base44.entities.Dokument.filter({ 
-      pre_chatbota: true,
-      analyzovaný: true 
-    })
-  });
+  const initConversation = async () => {
+    try {
+      const conversation = await base44.agents.createConversation({
+        agent_name: "american_living_assistant",
+        metadata: {
+          name: "Chatbot konverzácia",
+          description: "Konverzácia s AI asistentom"
+        }
+      });
+      setConversationId(conversation.id);
+      setMessages(conversation.messages || []);
+    } catch (error) {
+      console.error("Chyba pri vytváraní konverzácie:", error);
+    }
+  };
+
+  // Sleduj aktualizácie konverzácie
+  useEffect(() => {
+    if (!conversationId) return;
+
+    const unsubscribe = base44.agents.subscribeToConversation(conversationId, (data) => {
+      setMessages(data.messages || []);
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [conversationId]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -45,95 +63,20 @@ export default function Chatbot() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || !conversationId) return;
 
     const userMessage = input.trim();
     setInput("");
-    setMessages(prev => [...prev, { role: "user", content: userMessage }]);
     setIsLoading(true);
 
     try {
-      // Priprav kontext z konfiguračných textov
-      const konfigKontext = konfigTexty
-        .map(item => {
-          return `Položka: ${item.nazov} (${item.vyrobca})
-Kategória: ${item.kategoria || 'N/A'}
-Popis: ${item.dlhy_popis || item.podnadpis || 'N/A'}
-Poznámky: ${item.poznamky || 'N/A'}`;
-        })
-        .join('\n---\n');
-
-      // Priprav kontext z dokumentov
-      const dokumentyKontext = dokumenty
-        .map(dok => {
-          let info = `Dokument: ${dok.nazov} (${dok.vyrobca})\n`;
-          if (dok.extrahovaný_obsah) {
-            info += `Obsah: ${dok.extrahovaný_obsah.substring(0, 500)}\n`;
-          }
-          if (dok.kľúčové_informácie) {
-            if (dok.kľúčové_informácie.modely_domov?.length) {
-              info += `Modely: ${dok.kľúčové_informácie.modely_domov.join(', ')}\n`;
-            }
-            if (dok.kľúčové_informácie.cenové_informácie?.length) {
-              info += `Ceny: ${dok.kľúčové_informácie.cenové_informácie.slice(0, 3).join(', ')}\n`;
-            }
-            if (dok.kľúčové_informácie.rozmery) {
-              info += `Rozmery: ${JSON.stringify(dok.kľúčové_informácie.rozmery)}\n`;
-            }
-          }
-          return info;
-        })
-        .slice(0, 10)
-        .join('\n---\n');
-
-      const kontext = `=== KONFIGURAČNÉ POLOŽKY ===
-${konfigKontext}
-
-=== DOKUMENTY ===
-${dokumentyKontext}`;
-
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Si profesionálny AI asistent pre firmu American Living, ktorá sa zaoberá distribúciou a realizáciou modulárnych domov.
-
-Kontext spoločnosti:
-- Distribútor modulárnych domov (Ticab House, JAK Modules, Prosto House, Domki z Gór)
-- Vyrobených viac ako 700 domov od roku 2008
-- Ponúkame komplexné služby vrátane dovozu, montáže, pripojení
-
-AKTUÁLNE INFORMÁCIE Z DATABÁZY:
-${kontext}
-
-Tvoja úloha:
-- Odpovedaj profesionálne, priateľsky a v slovenčine
-- Využívaj PRESNE informácie z konfiguračných položiek a dokumentov vyššie
-- Pri otázkach o cenách, položkách v konfigurátore, vlastnostiach uvádzaj konkrétne údaje
-- Vysvetľuj rozdiel medzi možnosťami (napr. rekreačná stavba vs rodinný dom A0)
-- Pri otázkach o izolácii, vykurovaní, fasáde atď. odkazuj na konkrétne položky
-- Ak nevieš odpoveď, odporúčaj kontakt na +421 905 138 124 alebo email info@americanliving.sk
-- Buď nápomocný a nadšený z modulárneho bývania
-- Pri otázkach o konkrétnych modeloch domov odporúčaj návštevu katalógu
-
-Príklady otázok a správnych odpovedí:
-- "Aký je rozdiel medzi izoláciou 150mm a 250mm?" → Vysvetli technické parametre a cenu z databázy
-- "Čo zahŕňa základná konfigurácia?" → Vymenuj položky ktoré sú v cene
-- "Potrebujem A0 certifikát?" → Vysvetli kedy áno (rodinný dom) a kedy nie (rekreačná stavba)
-
-Otázka zákazníka: ${userMessage}
-
-Odpoveď (max 250 slov, priateľsky tón, využívaj presné údaje z databázy):`,
-        add_context_from_internet: false
+      const conversation = await base44.agents.getConversation(conversationId);
+      await base44.agents.addMessage(conversation, {
+        role: "user",
+        content: userMessage
       });
-
-      setMessages(prev => [...prev, { 
-        role: "assistant", 
-        content: response 
-      }]);
     } catch (error) {
-      setMessages(prev => [...prev, { 
-        role: "assistant", 
-        content: "Prepáčte, nastala chyba. Skúste to prosím znova alebo nás kontaktujte priamo na +421 905 138 124." 
-      }]);
-    } finally {
+      console.error("Chyba pri odosielaní správy:", error);
       setIsLoading(false);
     }
   };
@@ -226,9 +169,37 @@ Odpoveď (max 250 slov, priateľsky tón, využívaj presné údaje z databázy)
                           : "bg-white border border-gray-200 text-gray-800"
                       }`}
                     >
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                        {message.content}
-                      </p>
+                      {message.role === "user" ? (
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                          {message.content}
+                        </p>
+                      ) : (
+                        <ReactMarkdown 
+                          className="text-sm prose prose-sm prose-slate max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0"
+                          components={{
+                            p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                            ul: ({ children }) => <ul className="my-2 ml-4 list-disc">{children}</ul>,
+                            ol: ({ children }) => <ol className="my-2 ml-4 list-decimal">{children}</ol>,
+                            li: ({ children }) => <li className="mb-1">{children}</li>,
+                            strong: ({ children }) => <strong className="font-bold text-red-700">{children}</strong>,
+                            a: ({ children, href }) => <a href={href} target="_blank" rel="noopener noreferrer" className="text-red-600 underline hover:text-red-700">{children}</a>,
+                          }}
+                        >
+                          {message.content}
+                        </ReactMarkdown>
+                      )}
+                      
+                      {message.tool_calls?.length > 0 && (
+                        <div className="mt-3 space-y-1 border-t pt-2">
+                          <p className="text-xs text-gray-500 font-semibold">🔧 Použité nástroje:</p>
+                          {message.tool_calls.map((toolCall, idx) => (
+                            <div key={idx} className="text-xs text-gray-600 bg-gray-50 rounded px-2 py-1">
+                              {toolCall.name?.split('.').pop() || 'Nástroj'} 
+                              {toolCall.status === 'completed' && ' ✓'}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 ))}
@@ -260,8 +231,8 @@ Odpoveď (max 250 slov, priateľsky tón, využívaj presné údaje z databázy)
                     <Send className="w-5 h-5" />
                   </Button>
                 </div>
-                <p className="text-xs text-gray-500 text-center mt-2 flex items-center justify-center gap-1">
-                  AI asistent s vedomosťami o {konfigTexty.length} položkách konfigurátorov
+                <p className="text-xs text-gray-500 text-center mt-2">
+                  🧠 Inteligentný asistent s prístupom k databáze domov, služieb a dokumentov
                 </p>
               </form>
             </Card>
