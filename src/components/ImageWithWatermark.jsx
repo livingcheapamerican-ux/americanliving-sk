@@ -47,7 +47,7 @@ export default function ImageWithWatermark({ src, alt, className, onLoad, useCat
 
   return (
     <div 
-      className="relative inline-block w-full h-full select-none" 
+      className="relative w-full h-full flex items-center justify-center select-none" 
       onContextMenu={(e) => e.preventDefault()}
       style={{ userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
     >
