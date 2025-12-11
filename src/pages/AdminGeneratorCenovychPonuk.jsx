@@ -298,11 +298,11 @@ export default function AdminGeneratorCenovychPonuk() {
     },
     {
       id: "interier",
-      nazov: "Interiér",
+      nazov: "Interiér finiš",
       dlazdice: [
-        { id: "podlahy_drevo", nazov: "Drevené podlahy" },
-        { id: "podlahy_laminat", nazov: "Laminát" },
-        { id: "obklady_kupelna", nazov: "Obklady kúpeľňa" },
+        { id: "bez_interieru", nazov: "Bez interiéru (Hrubá stavba)" },
+        { id: "interier_drevo", nazov: "Drevo (Obloženie)" },
+        { id: "interier_sadrokarton", nazov: "Sadrokartón (Omietka)" },
       ]
     },
     {
