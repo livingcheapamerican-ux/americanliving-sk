@@ -830,7 +830,7 @@ Deno.serve(async (req) => {
     if (konfiguraciaData.doprava) polozky.push({ nazov: 'Doprava modulov', cena: CENY.doprava, vybrane: true, kategoria: 'Realizácia' });
 
     // Ulož ponuku do databázy
-    await base44.asServiceRole.entities.CenovaPonuka.create({
+    const novaPonuka = await base44.asServiceRole.entities.CenovaPonuka.create({
       cislo_ponuky: cisloPonuky,
       dom_id: dom?.id,
       dom_nazov: dom?.nazov || 'Lyon 50m²',
@@ -846,6 +846,22 @@ Deno.serve(async (req) => {
       datum_odoslania: new Date().toISOString(),
       predajca_email: user.email,
       nastavenie_id: aktivneNastavenie?.id
+    });
+
+    // Vytvor záznam aktivity v CRM
+    await base44.asServiceRole.entities.CRMAktivita.create({
+      typ: 'odoslana_ponuka',
+      ponuka_id: novaPonuka.id,
+      klient_email: klientData.email,
+      klient_meno: klientData.meno,
+      predajca_email: user.email,
+      popis: `Odoslaná cenová ponuka ${cisloPonuky} - ${dom?.nazov || 'Lyon'} - ${formatPrice(konfiguraciaData.totalPrice)}`,
+      metadata: {
+        cislo_ponuky: cisloPonuky,
+        dom_nazov: dom?.nazov,
+        celkova_cena: konfiguraciaData.totalPrice,
+        lokalita: klientData.obec
+      }
     });
 
     return Response.json({ 

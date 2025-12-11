@@ -308,28 +308,39 @@ export default function LyonFinalSummaryModal({
     return lines.join('\n');
   };
 
-  const createDopytMutation = useMutation({
-    mutationFn: (data) => base44.entities.Dopyt.create(data),
-    onSuccess: () => {
-      setSubmitted(true);
-      setTimeout(() => {
-        setSubmitted(false);
-        setFormData({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
-        onClose();
-      }, 3000);
-    },
-  });
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    createDopytMutation.mutate({
+    const novyDopyt = await base44.entities.Dopyt.create({
       ...formData,
       typ_dopytu: "konfigurator",
       dom_id: dom?.id,
       konfiguracny_kod: `Lyon 50m² - ${actualStatus} - ${formatPrice(totalPrice)}`,
       poznamka: `Lokalita: ${formData.obec}\n\n${formData.poznamka}\n\n--- KONFIGURÁCIA ---\n${buildConfigSummary()}`
     });
+
+    // Spusti notifikácie
+    await base44.functions.invoke('notifikujNovyDopyt', { 
+      dopyt: {
+        id: novyDopyt.id,
+        klient_meno: formData.meno,
+        klient_email: formData.email,
+        klient_telefon: formData.telefon,
+        klient_adresa: formData.obec,
+        dom_id: dom?.id,
+        dom_nazov: dom?.nazov,
+        poznamka: formData.poznamka
+      }
+    });
+
+    setSubmitted(true);
+    setTimeout(() => {
+      setSubmitted(false);
+      setFormData({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
+      onClose();
+    }, 3000);
   };
 
   const handleDownloadPDF = async () => {
@@ -880,11 +891,9 @@ export default function LyonFinalSummaryModal({
                       type="submit"
                       size="lg"
                       className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold"
-                      disabled={createDopytMutation.isPending}
+
                     >
-                      {createDopytMutation.isPending ? (
-                        (t('sending') || "Odosiela sa") + "..."
-                      ) : (
+                      {(
                         <>
                           <Send className="mr-2 w-5 h-5" />
                           {t('sendInquiry') || 'Odoslať dopyt'}
