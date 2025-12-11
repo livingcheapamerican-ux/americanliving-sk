@@ -354,37 +354,51 @@ Deno.serve(async (req) => {
     polozkyDetail.push({ nazov: 'Príprava na krb', cena: CENY.pripravaKrb, vybrane: konfiguraciaData.pripravaNaKrb });
     polozkyDetail.push({ nazov: 'Ochrana kachle', cena: CENY.ochranaKachle, vybrane: konfiguraciaData.ochranaKachle });
 
-    // Fasáda
+    // Fasáda - VŠETKY možnosti
+    polozkyDetail.push({ nazov: 'Fasáda - drevo smrek', cena: 0, vybrane: konfiguraciaData.fasada === "drevo_smrek" });
     polozkyDetail.push({ nazov: 'Fasáda - šúchaná omietka', cena: CENY.fasada_omietka, vybrane: konfiguraciaData.fasada === "omietka" });
     polozkyDetail.push({ nazov: 'Fasáda - smrekovec', cena: CENY.fasada_smrekovec, vybrane: konfiguraciaData.fasada === "smrekovec" });
     polozkyDetail.push({ nazov: 'Fasáda - falcované panely', cena: CENY.fasada_falcovane, vybrane: konfiguraciaData.fasada === "falcovane" });
     polozkyDetail.push({ nazov: 'Fasáda - thermowood', cena: CENY.fasada_thermowood, vybrane: konfiguraciaData.fasada === "thermowood" });
 
-    // Strecha
+    // Strecha - VŠETKY možnosti
+    polozkyDetail.push({ nazov: 'Strecha - korugovaný plech', cena: 0, vybrane: konfiguraciaData.strecha === "korugovan_plech" });
     polozkyDetail.push({ nazov: 'Strecha - falcované panely', cena: CENY.strecha_falcovane, vybrane: konfiguraciaData.strecha === "falcovane" });
     polozkyDetail.push({ nazov: 'Odkvapy', cena: CENY.odkvapy, vybrane: konfiguraciaData.odkvapy === "ano" });
 
-    // Dvere
-    polozkyDetail.push({ nazov: 'Kovové dvere', cena: CENY.dvere_kovove, vybrane: konfiguraciaData.vchodoveDvere === "kovove" });
+    // Okná a dvere - VŠETKY možnosti
+    polozkyDetail.push({ nazov: 'Okná - biele 3-sklo', cena: 0, vybrane: konfiguraciaData.okna === "biele" });
+    polozkyDetail.push({ nazov: 'Okná - antracit 3-sklo', cena: 0, vybrane: konfiguraciaData.okna === "antracit" });
+    polozkyDetail.push({ nazov: 'Okná - hnedé 3-sklo', cena: 0, vybrane: konfiguraciaData.okna === "hnede" });
+    polozkyDetail.push({ nazov: 'Vchodové dvere - plast/kov', cena: 0, vybrane: konfiguraciaData.vchodoveDvere === "plastove" });
+    polozkyDetail.push({ nazov: 'Vchodové dvere - kovové', cena: CENY.dvere_kovove, vybrane: konfiguraciaData.vchodoveDvere === "kovove" });
 
-    // Interiér
+    // Interiér - VŠETKY možnosti
+    polozkyDetail.push({ nazov: 'Obklad - smrek 8cm', cena: 0, vybrane: konfiguraciaData.obkladStien === "smrek_8cm" });
+    polozkyDetail.push({ nazov: 'Obklad - smrek bez uzlov', cena: 0, vybrane: konfiguraciaData.obkladStien === "smrek_bez_uzlov" });
     polozkyDetail.push({ nazov: 'Obklad - sadrokartón + tapeta', cena: CENY.obklad_sadrokarton, vybrane: konfiguraciaData.obkladStien === "sadrokarton_tapeta" });
     polozkyDetail.push({ nazov: 'Obklad - OSB panel', cena: CENY.obklad_osb, vybrane: konfiguraciaData.obkladStien === "osb_panel" });
-    polozkyDetail.push({ nazov: 'Posuvné dvere', cena: CENY.dvere_posuvne, vybrane: konfiguraciaData.interieroveDvere === "posuvne" });
+    polozkyDetail.push({ nazov: 'Podlaha - laminát', cena: 0, vybrane: true });
+    polozkyDetail.push({ nazov: 'Interiérové dvere - krídlové', cena: 0, vybrane: konfiguraciaData.interieroveDvere === "kridlove" });
+    polozkyDetail.push({ nazov: 'Interiérové dvere - posuvné', cena: CENY.dvere_posuvne, vybrane: konfiguraciaData.interieroveDvere === "posuvne" });
 
-    // Elektro
+    // Elektro - VŠETKY možnosti
+    polozkyDetail.push({ nazov: 'Elektro - EU štandard', cena: 0, vybrane: konfiguraciaData.elektro === "eu" });
     polozkyDetail.push({ nazov: 'Elektro - CZ/SK štandard', cena: CENY.elektro_cz, vybrane: konfiguraciaData.elektro === "cz" });
     polozkyDetail.push({ nazov: 'Elektro - GE štandard (A0)', cena: CENY.elektro_ge, vybrane: konfiguraciaData.elektro === "ge" });
     polozkyDetail.push({ nazov: 'Bleskozvod', cena: CENY.bleskozvod, vybrane: konfiguraciaData.bleskozvod });
     polozkyDetail.push({ nazov: 'Prepäťová ochrana', cena: CENY.prepat, vybrane: konfiguraciaData.prepat });
     polozkyDetail.push({ nazov: 'Príprava na solárne panely', cena: CENY.pripravaNaSolarnePanely || 0, vybrane: konfiguraciaData.pripravaNaSolarnePanely });
 
-    // Kúpeľňa
+    // Kúpeľňa - VŠETKY možnosti
+    polozkyDetail.push({ nazov: 'Sprcha + WC Geberit', cena: 0, vybrane: konfiguraciaData.sprchovyKut === "standard" });
     polozkyDetail.push({ nazov: 'Sprchový kút Radaway', cena: CENY.sprchovyKut, vybrane: konfiguraciaData.sprchovyKut === "radaway" });
+    polozkyDetail.push({ nazov: 'Batéria - štandard', cena: 0, vybrane: konfiguraciaData.bateria === "standard" });
+    polozkyDetail.push({ nazov: 'Batéria - Grohe', cena: CENY.bateria, vybrane: konfiguraciaData.bateria === "grohe" });
+    polozkyDetail.push({ nazov: 'Strop kúpeľňa - drevo', cena: 0, vybrane: konfiguraciaData.stropKupelna === "drevo" });
+    polozkyDetail.push({ nazov: 'Strop kúpeľňa - sadrokartón', cena: CENY.strop_kupelna_sadrokarton || 0, vybrane: konfiguraciaData.stropKupelna === "sadrokarton" });
     polozkyDetail.push({ nazov: 'Vaňa', cena: CENY.vana, vybrane: konfiguraciaData.vana });
-    polozkyDetail.push({ nazov: 'Batéria Grohe', cena: CENY.bateria, vybrane: konfiguraciaData.bateria === "grohe" });
     polozkyDetail.push({ nazov: 'Skrinka', cena: CENY.skrinka, vybrane: konfiguraciaData.skrinka });
-    polozkyDetail.push({ nazov: 'Strop kúpeľňa sadrokartón', cena: CENY.strop_kupelna_sadrokarton || 0, vybrane: konfiguraciaData.stropKupelna === "sadrokarton" });
 
     // Služby
     polozkyDetail.push({ nazov: 'Inžiniering', cena: CENY.inziniering, vybrane: konfiguraciaData.inziniering });
