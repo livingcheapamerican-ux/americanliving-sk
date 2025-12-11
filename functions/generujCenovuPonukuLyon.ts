@@ -680,12 +680,16 @@ Deno.serve(async (req) => {
       pageWidth / 2, pageHeight - 20, { align: 'center' });
 
     const pdfBytes = doc.output('arraybuffer');
+    
+    // Dynamický názov súboru podľa domu
+    const domSlug = (dom?.nazov || 'dom').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const fileName = `cenova-ponuka-${domSlug}-${cisloPonuky}.pdf`;
 
     return new Response(pdfBytes, {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': 'attachment; filename=cenova-ponuka-lyon.pdf'
+        'Content-Disposition': `attachment; filename=${fileName}`
       }
     });
   } catch (error) {

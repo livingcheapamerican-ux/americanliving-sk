@@ -356,7 +356,8 @@ export default function LyonFinalSummaryModal({
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `cenova-ponuka-lyon-${formData.meno || 'klient'}.pdf`;
+      const domSlug = (dom?.nazov || 'dom').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      a.download = `cenova-ponuka-${domSlug}-${formData.meno || 'klient'}.pdf`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -1341,15 +1342,30 @@ export default function LyonFinalSummaryModal({
                         <span>• Doprava modulov</span>
                         <span>+ {formatPrice(CENY.doprava)}</span>
                       </div>
+
+                      {/* SEKCIA 12: DODATOČNÉ SLUŽBY */}
+                      <div className="bg-gray-200 px-3 py-1.5 rounded font-bold text-red-600 text-sm mt-2">DODATOČNÉ SLUŽBY</div>
+                      <div className={`flex justify-between text-sm py-1 ${!predajNehnutelnosti ? "text-gray-400 line-through" : ""}`}>
+                        <span>• Predaj predošlej nehnuteľnosti</span>
+                        <span>na vyžiadanie</span>
+                      </div>
+                      <div className={`flex justify-between text-sm py-1 ${!chcemPozemok ? "text-gray-400 line-through" : ""}`}>
+                        <span>• Chcem pozemok pod svoj dom</span>
+                        <span>na vyžiadanie</span>
+                      </div>
+                      <div className={`flex justify-between text-sm py-1 ${!financneSluzby ? "text-gray-400 line-through" : ""}`}>
+                        <span>• Finančné služby - úvery/pôžičky</span>
+                        <span>na vyžiadanie</span>
+                      </div>
                       </div>
                       </div>
 
-                      {/* DODATOČNÉ SLUŽBY */}
+                      {/* DODATOČNÉ SLUŽBY - EXPANDED INFO */}
                       {(predajNehnutelnosti || chcemPozemok || financneSluzby) && (
-                      <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="bg-gray-50 p-4 rounded-lg mt-4">
                       <div className="space-y-2">
                         {/* SEKCIA HEADER */}
-                        <div className="bg-gray-200 px-3 py-1.5 rounded font-bold text-red-600 text-sm">DODATOČNÉ SLUŽBY</div>
+                        <h4 className="font-bold text-gray-800 text-sm mb-3">Vybrané dodatočné služby:</h4>
 
                         {predajNehnutelnosti && (
                           <div className="flex items-start gap-2 p-2 bg-blue-50 rounded border border-blue-200">
