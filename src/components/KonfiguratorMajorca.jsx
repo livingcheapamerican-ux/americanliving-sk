@@ -19,7 +19,7 @@ export default function KonfiguratorMajorca({
   interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod,
   prepat, setPrepat, pripravaNaSolarnePanely, setPripravaNaSolarnePanely, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria,
   skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering,
-  projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady,
+  projektACertifikacia, setProjektACertifikacia, revizia = true, setRevizia, zaklady, setZaklady,
   montaz, setMontaz, doprava, setDoprava
 }) {
   const { language, t } = useLanguage();

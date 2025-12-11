@@ -80,6 +80,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
     ...(dom?.konfigurator_ceny || {})
   };
   const [kolaudacia, setKolaudacia] = useState("bez_a0");
+  const [revizia, setRevizia] = useState(true);
 
   // Mutácia pre aktualizáciu cien
   const updatePricesMutation = useMutation({
