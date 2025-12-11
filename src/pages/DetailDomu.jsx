@@ -850,6 +850,12 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useFjordPrices={true}
+                predajNehnutelnosti={predajNehnutelnosti}
+                setPredajNehnutelnosti={setPredajNehnutelnosti}
+                hladaniePozemku={hladaniePozemku}
+                setHladaniePozemku={setHladaniePozemku}
+                financneSluzby={financneSluzby}
+                setFinancneSluzby={setFinancneSluzby}
                 typStavby={typStavby}
                 setTypStavby={setTypStavby}
                 montazHolodomu={montazHolodomu}
