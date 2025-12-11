@@ -288,7 +288,7 @@ export default function LyonFinalSummaryModal({
                   <div className="relative rounded-xl overflow-hidden mb-4 bg-white">
                     <img 
                       src={getDisplayImage()} 
-                      alt="Lyon 50m²" 
+                      alt={dom?.nazov || 'Lyon 50m²'} 
                       className="w-full h-48 object-contain"
                     />
                     <div className="absolute top-2 left-2">
@@ -301,7 +301,7 @@ export default function LyonFinalSummaryModal({
                     </div>
                   </div>
 
-                  <h3 className="text-xl font-bold mb-3">Lyon 50m²</h3>
+                  <h3 className="text-xl font-bold mb-3">{dom?.nazov || 'Lyon 50m²'}</h3>
 
                   {/* Upozornenie pre neúplnú A0 */}
                   {ucel === "rodinny" && !isA0 && (
@@ -765,7 +765,7 @@ export default function LyonFinalSummaryModal({
           <Dialog open={showPreview} onOpenChange={setShowPreview}>
             <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>Náhľad cenovej ponuky - Lyon 50m²</DialogTitle>
+                <DialogTitle>Náhľad cenovej ponuky - {dom?.nazov || 'Lyon 50m²'}</DialogTitle>
               </DialogHeader>
               
               <div className="bg-white p-8 border rounded-lg">
@@ -788,7 +788,7 @@ export default function LyonFinalSummaryModal({
                 <div className="mb-6">
                   <img 
                     src={getDisplayImage()} 
-                    alt="Lyon 50m²" 
+                    alt={dom?.nazov || 'Dom'} 
                     className="w-full h-64 object-contain rounded-lg border"
                   />
                 </div>
@@ -797,14 +797,44 @@ export default function LyonFinalSummaryModal({
                 <div className="mb-6">
                   <h3 className="font-bold text-lg mb-2 text-red-600">Vybraný model:</h3>
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="font-bold text-gray-900">Lyon 50m²</p>
-                    <p className="text-sm text-gray-600">Výrobca: Ticab house</p>
+                    <p className="font-bold text-gray-900 text-xl">{dom?.nazov || 'Lyon 50m²'}</p>
+                    <p className="text-sm text-gray-600">Výrobca: {dom?.vyrobca || 'Ticab house'}</p>
+                    <p className="text-sm text-gray-600">Typ domu: {dom?.typ_domu || 'Modulárny'}</p>
                     <div className={`inline-block px-3 py-1 rounded-full mt-2 ${isA0 ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
                       <p className="text-sm font-bold">Typ stavby: {actualStatus}</p>
                     </div>
-                    <p className="text-sm text-gray-600 mt-2">Zastavana plocha: 50 m²</p>
+                    <p className="text-sm text-gray-600 mt-2">Zastavana plocha: {dom?.zastavana_plocha || 50} m²</p>
+                    {dom?.uzitkova_plocha && (
+                      <p className="text-sm text-gray-600">Úžitková plocha: {dom.uzitkova_plocha} m²</p>
+                    )}
                   </div>
                 </div>
+
+                {/* Galéria a pôdorysy */}
+                {(dom?.galeria?.length > 0 || dom?.podorys_2d || dom?.podorys_3d) && (
+                  <div className="mb-6">
+                    <h3 className="font-bold text-lg mb-2 text-red-600">Fotogaléria a pôdorysy:</h3>
+                    <div className="grid grid-cols-3 gap-2">
+                      {dom?.podorys_2d && (
+                        <div className="border rounded overflow-hidden">
+                          <img src={dom.podorys_2d} alt="2D pôdorys" className="w-full h-24 object-cover" />
+                          <p className="text-xs text-center py-1 bg-gray-100">2D pôdorys</p>
+                        </div>
+                      )}
+                      {dom?.podorys_3d && (
+                        <div className="border rounded overflow-hidden">
+                          <img src={dom.podorys_3d} alt="3D pôdorys" className="w-full h-24 object-cover" />
+                          <p className="text-xs text-center py-1 bg-gray-100">3D pôdorys</p>
+                        </div>
+                      )}
+                      {dom?.galeria?.slice(0, 4).map((img, idx) => (
+                        <div key={idx} className="border rounded overflow-hidden">
+                          <img src={img} alt={`Galéria ${idx + 1}`} className="w-full h-24 object-cover" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Klient info */}
                 {formData.meno && (

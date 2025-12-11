@@ -110,10 +110,16 @@ Deno.serve(async (req) => {
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(10);
     doc.setFont(undefined, 'normal');
-    doc.text('Lyon 50m²', 20, yPos);
+    doc.text(dom?.nazov || 'Lyon 50m²', 20, yPos);
     yPos += 6;
-    doc.text('Ticab house - Modulárny dom', 20, yPos);
+    doc.text(`${dom?.vyrobca || 'Ticab house'} - ${dom?.typ_domu || 'Modulárny dom'}`, 20, yPos);
     yPos += 6;
+    doc.text(`Zastavana plocha: ${dom?.zastavana_plocha || 50} m²`, 20, yPos);
+    yPos += 6;
+    if (dom?.uzitkova_plocha) {
+      doc.text(`Úžitková plocha: ${dom.uzitkova_plocha} m²`, 20, yPos);
+      yPos += 6;
+    }
     
     // TYP STAVBY - DÔLEŽITÉ
     doc.setFont(undefined, 'bold');
