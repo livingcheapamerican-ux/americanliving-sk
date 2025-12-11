@@ -118,10 +118,10 @@ export default function LyonKonfiguratorWrapper(props) {
     doprava: 8927.94
   };
 
-  const CENY = React.useMemo(() => ({
+  const CENY = {
     ...DEFAULT_CENY,
     ...(props.dom?.konfigurator_ceny || {})
-  }), [props.dom?.konfigurator_ceny]);
+  };
 
   const totalPrice = React.useMemo(() => {
     if (!CENY) return BASE_PRICE;
@@ -203,6 +203,7 @@ export default function LyonKonfiguratorWrapper(props) {
 
   const allProps = {
     dom: props.dom,
+    CENY,
     totalPrice,
     formatPrice,
     ucel, setUcel,
