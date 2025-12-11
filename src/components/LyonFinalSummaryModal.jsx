@@ -799,8 +799,10 @@ export default function LyonFinalSummaryModal({
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <p className="font-bold text-gray-900">Lyon 50m²</p>
                     <p className="text-sm text-gray-600">Výrobca: Ticab house</p>
-                    <p className="text-sm text-gray-600">Účel stavby: {actualStatus}</p>
-                    <p className="text-sm text-gray-600">Zastavana plocha: 50 m²</p>
+                    <div className={`inline-block px-3 py-1 rounded-full mt-2 ${isA0 ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
+                      <p className="text-sm font-bold">Typ stavby: {actualStatus}</p>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-2">Zastavana plocha: 50 m²</p>
                   </div>
                 </div>
 
