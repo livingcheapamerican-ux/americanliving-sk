@@ -53,13 +53,6 @@ Deno.serve(async (req) => {
           return imageUrl;
         }
 
-        // Skip ak nie je z našej domény (externé linky)
-        if (!imageUrl.includes('supabase.co')) {
-          log.push(`  ⏭️ ${fieldName}: externý link, preskakujem`);
-          skipped++;
-          return imageUrl;
-        }
-
         try {
           log.push(`  🖼️ ${fieldName}: aplikujem watermark...`);
           
