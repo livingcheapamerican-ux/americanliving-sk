@@ -140,8 +140,9 @@ export default function LyonFinalSummaryModal({
     if (!aktivneNastavenie?.mapovanie_fotiek_ticabhouse || aktivneNastavenie.mapovanie_fotiek_ticabhouse.length === 0) {
       console.log('📋 Používam default pravidlá');
       
-      // Default pravidlá pre exteriér - vždy pridaj exteriér podľa fasády
+      // VŽDY zobraz exteriér
       if (fasada === "omietka") {
+        // Ak je šúchaná omietka, zobraz murovka galériu
         const murovkaGaleria = dom.galerie?.find(g => g.typ === "exterier_murovka");
         console.log('🧱 Hľadám murovka galériu:', murovkaGaleria);
         if (murovkaGaleria?.fotky?.length > 0) {
@@ -151,9 +152,9 @@ export default function LyonFinalSummaryModal({
           });
         }
       } else {
-        // Pre všetky ostatné fasády (drevo, smrekovec, falcované, thermowood)
+        // Pre VŠETKY ostatné fasády (drevo_smrek, smrekovec, falcované, thermowood) - vždy drevo/plech galériu
         const drevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
-        console.log('🪵 Hľadám drevo/plech galériu:', drevoGaleria);
+        console.log('🪵 Hľadám drevo/plech galériu pre fasádu:', fasada, drevoGaleria);
         if (drevoGaleria?.fotky?.length > 0) {
           matchedGalleries.push({
             nazov: "Exteriér - Drevo/Plech",
@@ -863,7 +864,7 @@ export default function LyonFinalSummaryModal({
           <Dialog open={showPreview} onOpenChange={setShowPreview}>
             <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>Náhľad cenovej ponuky - {dom?.nazov || 'Lyon 50m²'}</DialogTitle>
+                <DialogTitle>Náhľad cenovej ponuky - {dom?.nazov || 'Lyon 50m²'} (Číslo: CP-{new Date().getFullYear()}-XXXX)</DialogTitle>
               </DialogHeader>
               
               <div className="bg-white p-8 border rounded-lg">
@@ -1126,23 +1127,31 @@ export default function LyonFinalSummaryModal({
                       )}
 
                       {/* Interiér */}
-                      {(obkladStien !== "smrek_8cm" || interieroveDvere !== "kridlove") && (
-                        <div>
-                          <p className="text-sm font-bold text-gray-700 mb-1">INTERIÉR:</p>
-                          {obkladStien !== "smrek_8cm" && obkladStien !== "smrek_bez_uzlov" && (
-                            <div className="flex justify-between text-sm py-1">
-                              <span>• {obkladStien === "sadrokarton_tapeta" ? "Sadrokartón + tapeta" : "OSB panel"}</span>
-                              <span>+ {formatPrice(CENY.obklad[obkladStien])}</span>
-                            </div>
-                          )}
-                          {interieroveDvere !== "kridlove" && (
-                            <div className="flex justify-between text-sm py-1">
-                              <span>• Posuvné dvere</span>
-                              <span>+ {formatPrice(CENY.dvere_posuvne)}</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                      <div>
+                        <p className="text-sm font-bold text-gray-700 mb-1">INTERIÉR:</p>
+                        {obkladStien === "smrek_8cm" || obkladStien === "smrek_bez_uzlov" ? (
+                          <div className="flex justify-between text-sm py-1 text-gray-400 line-through">
+                            <span>• Sadrokartón + tapeta</span>
+                            <span>+ {formatPrice(CENY.obklad.sadrokarton_tapeta)}</span>
+                          </div>
+                        ) : (
+                          <div className="flex justify-between text-sm py-1">
+                            <span>• {obkladStien === "sadrokarton_tapeta" ? "Sadrokartón + tapeta" : "OSB panel"}</span>
+                            <span>+ {formatPrice(CENY.obklad[obkladStien])}</span>
+                          </div>
+                        )}
+                        {interieroveDvere === "kridlove" ? (
+                          <div className="flex justify-between text-sm py-1 text-gray-400 line-through">
+                            <span>• Posuvné dvere</span>
+                            <span>+ {formatPrice(CENY.dvere_posuvne)}</span>
+                          </div>
+                        ) : (
+                          <div className="flex justify-between text-sm py-1">
+                            <span>• Posuvné dvere</span>
+                            <span>+ {formatPrice(CENY.dvere_posuvne)}</span>
+                          </div>
+                        )}
+                      </div>
 
                       {/* Elektro */}
                       {(elektro !== "eu" || bleskozvod || prepat) && (
