@@ -81,11 +81,11 @@ export default function Chatbot() {
     setIsLoading(true);
     setError(null);
 
-    // Timeout po 10 sekundách
+    // Timeout po 60 sekundách (agent potrebuje čas na čítanie databázy)
     timeoutRef.current = setTimeout(() => {
       setIsLoading(false);
       setError("Odpoveď trvá príliš dlho. Skúste znovu.");
-    }, 10000);
+    }, 60000);
 
     try {
       const conversation = await base44.agents.getConversation(conversationId);
