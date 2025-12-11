@@ -12,6 +12,10 @@ Deno.serve(async (req) => {
 
     const { dom, konfiguraciaData, klientData } = await req.json();
 
+    // Načítaj nastavenie cenovej ponuky
+    const nastavenia = await base44.asServiceRole.entities.NastavenieCenovejPonuky.list();
+    const aktivneNastavenie = nastavenia.find(n => n.aktivne) || nastavenia[0];
+
     // Identifikácia typu stavby podľa pravidiel A0
     const isA0Configuration = () => {
       return (
@@ -140,55 +144,148 @@ Deno.serve(async (req) => {
 
     const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
-    // Izolácia
-    doc.text(`• Steny: ${konfiguraciaData.izolaciaStien}`, 25, yPos);
-    yPos += 5;
-    doc.text(`• Podlaha: ${konfiguraciaData.izolaciaPodlahy}`, 25, yPos);
-    yPos += 5;
-    doc.text(`• Strop: ${konfiguraciaData.izolaciaStropu}`, 25, yPos);
-    yPos += 5;
+    // Cenník
+    const CENY = {
+      izolacia_stien_200mm: 1799.16,
+      izolacia_stien_250mm: 1558.17,
+      izolacia_podlahy_200mm: 334.08,
+      izolacia_stropu_200mm: 271.44,
+      tepelne_cerpadlo: 2889.27,
+      rekuperacia: 1155.36,
+      podlahove_kurenie: 2253.30,
+      pripravaKrb: 578.55,
+      ochranaKachle: 1279.77,
+      fasada_omietka: 1580.79,
+      fasada_smrekovec: 3349.50,
+      fasada_falcovane: 4953.78,
+      fasada_thermowood: 6677.25,
+      strecha_falcovane: 3227.70,
+      odkvapy: 1502.49,
+      dvere_kovove: 278.40,
+      obklad_sadrokarton: 7855,
+      obklad_osb: 5279,
+      dvere_posuvne: 427.17,
+      elektro_cz: 460.23,
+      elektro_ge: 1583.40,
+      bleskozvod: 856.08,
+      prepat: 311.46,
+      sprchovyKut: 645.54,
+      vana: 501.12,
+      bateria: 139.20,
+      skrinka: 434.13,
+      inziniering: 2773.56,
+      projektACertifikacia: 3745.35,
+      revizia: 1605.15,
+      zaklady_vruty: 4494.42,
+      zaklady_patky: 2568.24,
+      zaklady_pasove: 11825.04,
+      montaz: 4805.88,
+      doprava: 8927.94
+    };
 
-    if (konfiguraciaData.tepelneCerpadlo === "ano") {
-      doc.text(`• Tepelné čerpadlo`, 25, yPos);
-      yPos += 5;
-    }
-    if (konfiguraciaData.rekuperacia === "ano") {
-      doc.text(`• Rekuperácia`, 25, yPos);
-      yPos += 5;
-    }
-    if (konfiguraciaData.podlahovoKurenie) {
-      doc.text(`• Podlahové kúrenie`, 25, yPos);
-      yPos += 5;
-    }
+    // Získaj galérie podľa mapovaných pravidiel
+    const getMatchedGalleries = () => {
+      if (!aktivneNastavenie?.mapovanie_fotiek_ticabhouse || !dom?.galerie) return [];
+      
+      const matchedGalleries = [];
+      
+      aktivneNastavenie.mapovanie_fotiek_ticabhouse.forEach(mapping => {
+        const isActive = mapping.dlazdice_ids?.some(dlazdicaId => {
+          if (dlazdicaId === "fasada_omietka" && konfiguraciaData.fasada === "omietka") return true;
+          if (dlazdicaId === "fasada_smrekovec" && konfiguraciaData.fasada === "smrekovec") return true;
+          if (dlazdicaId === "fasada_falcovane" && konfiguraciaData.fasada === "falcovane") return true;
+          if (dlazdicaId === "fasada_thermowood" && konfiguraciaData.fasada === "thermowood") return true;
+          if (dlazdicaId === "obklad_sadrokarton_tapeta" && konfiguraciaData.obkladStien === "sadrokarton_tapeta") return true;
+          if (dlazdicaId === "obklad_smrek_bez_uzlov" && konfiguraciaData.obkladStien === "smrek_bez_uzlov") return true;
+          return false;
+        });
+        
+        if (isActive) {
+          const galeria = dom.galerie?.find(g => g.typ === mapping.galeria_typ);
+          if (galeria && galeria.fotky?.length > 0) {
+            matchedGalleries.push({
+              nazov: mapping.galeria_nazov || galeria.nazov,
+              fotky: galeria.fotky
+            });
+          }
+        }
+      });
+      
+      return matchedGalleries;
+    };
 
-    const fasadaText = konfiguraciaData.fasada === "drevo_smrek" ? "Drevo smrek" :
-                       konfiguraciaData.fasada === "omietka" ? "Šúchaná omietka" :
-                       konfiguraciaData.fasada === "smrekovec" ? "Smrekovec" :
-                       konfiguraciaData.fasada === "falcovane" ? "Falcované panely" : "Thermowood";
-    doc.text(`• Fasáda: ${fasadaText}`, 25, yPos);
-    yPos += 5;
+    const matchedGalleries = getMatchedGalleries();
 
-    const elektroText = konfiguraciaData.elektro === "eu" ? "EU štandard" :
-                        konfiguraciaData.elektro === "cz" ? "CZ/SK štandard" : "GE štandard (A0)";
-    doc.text(`• Elektroinštalácia: ${elektroText}`, 25, yPos);
-    yPos += 5;
+    // Cenový rozpis - Detail položiek
+    const polozkyDetail = [];
+    
+    polozkyDetail.push({ nazov: 'Základná cena domu', cena: 73431 });
+    
+    if (konfiguraciaData.izolaciaStien === "200mm") polozkyDetail.push({ nazov: 'Izolácia stien 200mm', cena: CENY.izolacia_stien_200mm });
+    if (konfiguraciaData.izolaciaStien === "250mm") polozkyDetail.push({ nazov: 'Izolácia stien 250mm', cena: CENY.izolacia_stien_250mm });
+    if (konfiguraciaData.izolaciaPodlahy === "200mm") polozkyDetail.push({ nazov: 'Izolácia podlahy 200mm', cena: CENY.izolacia_podlahy_200mm });
+    if (konfiguraciaData.izolaciaStropu === "200mm") polozkyDetail.push({ nazov: 'Izolácia stropu 200mm', cena: CENY.izolacia_stropu_200mm });
+    if (konfiguraciaData.tepelneCerpadlo === "ano") polozkyDetail.push({ nazov: 'Tepelné čerpadlo', cena: CENY.tepelne_cerpadlo });
+    if (konfiguraciaData.rekuperacia === "ano") polozkyDetail.push({ nazov: 'Rekuperácia', cena: CENY.rekuperacia });
+    if (konfiguraciaData.podlahovoKurenie) polozkyDetail.push({ nazov: 'Podlahové kúrenie', cena: CENY.podlahove_kurenie });
+    if (konfiguraciaData.pripravaNaKrb) polozkyDetail.push({ nazov: 'Príprava na krb', cena: CENY.pripravaKrb });
+    if (konfiguraciaData.ochranaKachle) polozkyDetail.push({ nazov: 'Ochrana kachle', cena: CENY.ochranaKachle });
+    if (konfiguraciaData.fasada === "omietka") polozkyDetail.push({ nazov: 'Fasáda - šúchaná omietka', cena: CENY.fasada_omietka });
+    if (konfiguraciaData.fasada === "smrekovec") polozkyDetail.push({ nazov: 'Fasáda - smrekovec', cena: CENY.fasada_smrekovec });
+    if (konfiguraciaData.fasada === "falcovane") polozkyDetail.push({ nazov: 'Fasáda - falcované panely', cena: CENY.fasada_falcovane });
+    if (konfiguraciaData.fasada === "thermowood") polozkyDetail.push({ nazov: 'Fasáda - thermowood', cena: CENY.fasada_thermowood });
+    if (konfiguraciaData.strecha === "falcovane") polozkyDetail.push({ nazov: 'Strecha - falcované panely', cena: CENY.strecha_falcovane });
+    if (konfiguraciaData.odkvapy === "ano") polozkyDetail.push({ nazov: 'Odkvapy', cena: CENY.odkvapy });
+    if (konfiguraciaData.vchodoveDvere === "kovove") polozkyDetail.push({ nazov: 'Kovové dvere', cena: CENY.dvere_kovove });
+    if (konfiguraciaData.obkladStien === "sadrokarton_tapeta") polozkyDetail.push({ nazov: 'Obklad - sadrokartón + tapeta', cena: CENY.obklad_sadrokarton });
+    if (konfiguraciaData.obkladStien === "osb_panel") polozkyDetail.push({ nazov: 'Obklad - OSB panel', cena: CENY.obklad_osb });
+    if (konfiguraciaData.interieroveDvere === "posuvne") polozkyDetail.push({ nazov: 'Posuvné dvere', cena: CENY.dvere_posuvne });
+    if (konfiguraciaData.elektro === "cz") polozkyDetail.push({ nazov: 'Elektro - CZ/SK štandard', cena: CENY.elektro_cz });
+    if (konfiguraciaData.elektro === "ge") polozkyDetail.push({ nazov: 'Elektro - GE štandard (A0)', cena: CENY.elektro_ge });
+    if (konfiguraciaData.bleskozvod) polozkyDetail.push({ nazov: 'Bleskozvod', cena: CENY.bleskozvod });
+    if (konfiguraciaData.prepat) polozkyDetail.push({ nazov: 'Prepäťová ochrana', cena: CENY.prepat });
+    if (konfiguraciaData.sprchovyKut === "radaway") polozkyDetail.push({ nazov: 'Sprchový kút Radaway', cena: CENY.sprchovyKut });
+    if (konfiguraciaData.vana) polozkyDetail.push({ nazov: 'Vaňa', cena: CENY.vana });
+    if (konfiguraciaData.bateria === "grohe") polozkyDetail.push({ nazov: 'Batéria Grohe', cena: CENY.bateria });
+    if (konfiguraciaData.skrinka) polozkyDetail.push({ nazov: 'Skrinka', cena: CENY.skrinka });
+    if (konfiguraciaData.inziniering) polozkyDetail.push({ nazov: 'Inžiniering', cena: CENY.inziniering });
+    if (konfiguraciaData.projektACertifikacia) polozkyDetail.push({ nazov: 'Projekt + Certifikácia A0', cena: CENY.projektACertifikacia });
+    if (konfiguraciaData.revizia) polozkyDetail.push({ nazov: 'Revízna dokumentácia', cena: CENY.revizia });
+    if (konfiguraciaData.zaklady === "vruty") polozkyDetail.push({ nazov: 'Základy - zemné vruty', cena: CENY.zaklady_vruty });
+    if (konfiguraciaData.zaklady === "patky") polozkyDetail.push({ nazov: 'Základy - betónové pätky', cena: CENY.zaklady_patky });
+    if (konfiguraciaData.zaklady === "pasove") polozkyDetail.push({ nazov: 'Základy - pásové betónové', cena: CENY.zaklady_pasove });
+    if (konfiguraciaData.montaz) polozkyDetail.push({ nazov: 'Montáž domu', cena: CENY.montaz });
+    if (konfiguraciaData.doprava) polozkyDetail.push({ nazov: 'Doprava modulov', cena: CENY.doprava });
 
-    if (konfiguraciaData.zaklady !== "bez") {
-      const zakladyText = konfiguraciaData.zaklady === "vruty" ? "Zemné vruty" :
-                          konfiguraciaData.zaklady === "patky" ? "Betónové pätky" : "Pásové betónové";
-      doc.text(`• Základy: ${zakladyText}`, 25, yPos);
-      yPos += 5;
-    }
+    // Tabuľka cenových položiek
+    doc.setFillColor(mainColor.r, mainColor.g, mainColor.b);
+    doc.rect(20, yPos - 3, pageWidth - 40, 7, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'bold');
+    doc.text('Položka', 25, yPos);
+    doc.text('Cena', pageWidth - 25, yPos, { align: 'right' });
+    yPos += 8;
 
-    if (konfiguraciaData.montaz) {
-      doc.text(`• Montáž domu`, 25, yPos);
-      yPos += 5;
-    }
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(9);
+    doc.setFont(undefined, 'normal');
 
-    if (konfiguraciaData.doprava) {
-      doc.text(`• Doprava modulov`, 25, yPos);
-      yPos += 5;
-    }
+    polozkyDetail.forEach((polozka, index) => {
+      if (yPos > pageHeight - 50) {
+        doc.addPage();
+        yPos = 20;
+      }
+      
+      if (index % 2 === 0) {
+        doc.setFillColor(245, 245, 245);
+        doc.rect(20, yPos - 4, pageWidth - 40, 6, 'F');
+      }
+      
+      doc.text(polozka.nazov, 25, yPos);
+      doc.text(formatPrice(polozka.cena), pageWidth - 25, yPos, { align: 'right' });
+      yPos += 6;
+    });
 
     yPos += 5;
 
@@ -202,6 +299,49 @@ Deno.serve(async (req) => {
     doc.text('CELKOVÁ CENA s DPH', 25, yPos + 4);
     doc.text(formatPrice(konfiguraciaData.totalPrice), pageWidth - 25, yPos + 4, { align: 'right' });
     yPos += 18;
+
+    // Pôdorysy
+    if (dom?.podorys_2d || dom?.podorys_3d) {
+      if (yPos > pageHeight - 80) {
+        doc.addPage();
+        yPos = 20;
+      }
+      
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'bold');
+      doc.setTextColor(mainColor.r, mainColor.g, mainColor.b);
+      doc.text('Pôdorysy:', 20, yPos);
+      yPos += 8;
+      
+      doc.setTextColor(100, 100, 100);
+      doc.setFontSize(9);
+      doc.setFont(undefined, 'normal');
+      doc.text('(Pôdorysy sú k dispozícii v prílohe alebo na vyžiadanie)', 25, yPos);
+      yPos += 10;
+    }
+
+    // Galérie
+    if (matchedGalleries.length > 0) {
+      if (yPos > pageHeight - 80) {
+        doc.addPage();
+        yPos = 20;
+      }
+      
+      doc.setFontSize(12);
+      doc.setFont(undefined, 'bold');
+      doc.setTextColor(mainColor.r, mainColor.g, mainColor.b);
+      doc.text('Fotogaléria:', 20, yPos);
+      yPos += 8;
+      
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(9);
+      doc.setFont(undefined, 'normal');
+      matchedGalleries.forEach((galeria) => {
+        doc.text(`• ${galeria.nazov} (${galeria.fotky.length} fotiek)`, 25, yPos);
+        yPos += 5;
+      });
+      yPos += 5;
+    }
 
     // Poznámka
     if (klientData.poznamka) {

@@ -70,6 +70,13 @@ export default function LyonFinalSummaryModal({
     queryFn: () => base44.auth.me()
   });
 
+  const { data: nastaveniaCenovejPonuky = [] } = useQuery({
+    queryKey: ['nastavenia-cenovej-ponuky'],
+    queryFn: () => base44.entities.NastavenieCenovejPonuky.list()
+  });
+
+  const aktivneNastavenie = nastaveniaCenovejPonuky.find(n => n.aktivne) || nastaveniaCenovejPonuky[0];
+
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
@@ -115,6 +122,43 @@ export default function LyonFinalSummaryModal({
     // Ak je vybraná iná fasáda alebo default drevo smrek, zobraz základnú konfiguráciu
     return dom?.zakladna_konfiguracia_obrazok || dom?.hlavny_obrazok;
   };
+
+  // Získať galérie na základe mapovaných pravidiel
+  const getMatchedGalleries = () => {
+    if (!aktivneNastavenie?.mapovanie_fotiek_ticabhouse || !dom?.galerie) return [];
+    
+    const matchedGalleries = [];
+    
+    // Pre každú galériu v nastavení
+    aktivneNastavenie.mapovanie_fotiek_ticabhouse.forEach(mapping => {
+      // Skontroluj či nejaká dlaždica z konfigurácie aktivuje túto galériu
+      const isActive = mapping.dlazdice_ids?.some(dlazdicaId => {
+        // Mapovanie dlaždíc na konfiguráciu
+        if (dlazdicaId === "fasada_omietka" && fasada === "omietka") return true;
+        if (dlazdicaId === "fasada_smrekovec" && fasada === "smrekovec") return true;
+        if (dlazdicaId === "fasada_falcovane" && fasada === "falcovane") return true;
+        if (dlazdicaId === "fasada_thermowood" && fasada === "thermowood") return true;
+        if (dlazdicaId === "obklad_sadrokarton_tapeta" && obkladStien === "sadrokarton_tapeta") return true;
+        if (dlazdicaId === "obklad_smrek_bez_uzlov" && obkladStien === "smrek_bez_uzlov") return true;
+        return false;
+      });
+      
+      if (isActive) {
+        // Nájdi galériu v dome
+        const galeria = dom.galerie?.find(g => g.typ === mapping.galeria_typ);
+        if (galeria && galeria.fotky?.length > 0) {
+          matchedGalleries.push({
+            nazov: mapping.galeria_nazov || galeria.nazov,
+            fotky: galeria.fotky
+          });
+        }
+      }
+    });
+    
+    return matchedGalleries;
+  };
+
+  const matchedGalleries = getMatchedGalleries();
 
   // Kontrola či je konfigurácia A0
   const isA0Configuration = () => {
@@ -810,26 +854,42 @@ export default function LyonFinalSummaryModal({
                   </div>
                 </div>
 
-                {/* Galéria a pôdorysy */}
-                {(dom?.galeria?.length > 0 || dom?.podorys_2d || dom?.podorys_3d) && (
+                {/* Pôdorysy - vždy zobraz */}
+                {(dom?.podorys_2d || dom?.podorys_3d) && (
                   <div className="mb-6">
-                    <h3 className="font-bold text-lg mb-2 text-red-600">Fotogaléria a pôdorysy:</h3>
-                    <div className="grid grid-cols-3 gap-2">
+                    <h3 className="font-bold text-lg mb-2 text-red-600">Pôdorysy:</h3>
+                    <div className="grid grid-cols-2 gap-3">
                       {dom?.podorys_2d && (
-                        <div className="border rounded overflow-hidden">
-                          <img src={dom.podorys_2d} alt="2D pôdorys" className="w-full h-24 object-cover" />
-                          <p className="text-xs text-center py-1 bg-gray-100">2D pôdorys</p>
+                        <div className="border rounded-lg overflow-hidden">
+                          <img src={dom.podorys_2d} alt="2D pôdorys" className="w-full h-48 object-contain bg-gray-50" />
+                          <p className="text-xs text-center py-2 bg-gray-100 font-semibold">2D pôdorys</p>
                         </div>
                       )}
                       {dom?.podorys_3d && (
-                        <div className="border rounded overflow-hidden">
-                          <img src={dom.podorys_3d} alt="3D pôdorys" className="w-full h-24 object-cover" />
-                          <p className="text-xs text-center py-1 bg-gray-100">3D pôdorys</p>
+                        <div className="border rounded-lg overflow-hidden">
+                          <img src={dom.podorys_3d} alt="3D pôdorys" className="w-full h-48 object-contain bg-gray-50" />
+                          <p className="text-xs text-center py-2 bg-gray-100 font-semibold">3D pôdorys</p>
                         </div>
                       )}
-                      {dom?.galeria?.slice(0, 4).map((img, idx) => (
-                        <div key={idx} className="border rounded overflow-hidden">
-                          <img src={img} alt={`Galéria ${idx + 1}`} className="w-full h-24 object-cover" />
+                    </div>
+                  </div>
+                )}
+
+                {/* Galérie podľa mapovaných pravidiel */}
+                {matchedGalleries.length > 0 && (
+                  <div className="mb-6">
+                    <h3 className="font-bold text-lg mb-2 text-red-600">Fotogaléria:</h3>
+                    <div className="space-y-4">
+                      {matchedGalleries.map((galeria, gIdx) => (
+                        <div key={gIdx}>
+                          <p className="text-sm font-semibold text-gray-700 mb-2">{galeria.nazov}</p>
+                          <div className="grid grid-cols-3 gap-2">
+                            {galeria.fotky.slice(0, 6).map((img, idx) => (
+                              <div key={idx} className="border rounded overflow-hidden">
+                                <img src={img} alt={`${galeria.nazov} ${idx + 1}`} className="w-full h-24 object-cover" />
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -849,11 +909,256 @@ export default function LyonFinalSummaryModal({
                   </div>
                 )}
 
-                {/* Konfigurácia */}
+                {/* Konfigurácia - Detailný rozpis */}
                 <div className="mb-6">
-                  <h3 className="font-bold text-lg mb-2 text-red-600">Konfigurácia:</h3>
-                  <div className="bg-gray-50 p-4 rounded-lg text-sm space-y-1">
-                    <pre className="whitespace-pre-wrap font-mono text-xs">{buildConfigSummary()}</pre>
+                  <h3 className="font-bold text-lg mb-2 text-red-600">Cenový rozpis:</h3>
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="space-y-3">
+                      {/* Základná cena */}
+                      <div className="flex justify-between py-2 border-b">
+                        <span className="font-semibold">Základná cena domu</span>
+                        <span className="font-semibold">{formatPrice(73431)}</span>
+                      </div>
+
+                      {/* Izolácia */}
+                      {(izolaciaStien !== "150mm" || izolaciaPodlahy !== "150mm" || izolaciaStropu !== "150mm") && (
+                        <div>
+                          <p className="text-sm font-bold text-gray-700 mb-1">IZOLÁCIA:</p>
+                          {izolaciaStien !== "150mm" && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Steny {izolaciaStien}</span>
+                              <span>+ {formatPrice(CENY.izolacia_stien[izolaciaStien])}</span>
+                            </div>
+                          )}
+                          {izolaciaPodlahy !== "150mm" && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Podlaha {izolaciaPodlahy}</span>
+                              <span>+ {formatPrice(CENY.izolacia_podlahy[izolaciaPodlahy])}</span>
+                            </div>
+                          )}
+                          {izolaciaStropu !== "150mm" && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Strop {izolaciaStropu}</span>
+                              <span>+ {formatPrice(CENY.izolacia_stropu[izolaciaStropu])}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Vykurovanie */}
+                      {(tepelneCerpadlo === "ano" || rekuperacia === "ano" || podlahovoKurenie || pripravaNaKrb || ochranaKachle) && (
+                        <div>
+                          <p className="text-sm font-bold text-gray-700 mb-1">VYKUROVANIE:</p>
+                          {tepelneCerpadlo === "ano" && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Tepelné čerpadlo</span>
+                              <span>+ {formatPrice(CENY.tepelne_cerpadlo.ano)}</span>
+                            </div>
+                          )}
+                          {rekuperacia === "ano" && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Rekuperácia</span>
+                              <span>+ {formatPrice(CENY.rekuperacia.ano)}</span>
+                            </div>
+                          )}
+                          {podlahovoKurenie && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Podlahové kúrenie</span>
+                              <span>+ {formatPrice(CENY.podlahove_kurenie)}</span>
+                            </div>
+                          )}
+                          {pripravaNaKrb && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Príprava na krb</span>
+                              <span>+ {formatPrice(CENY.pripravaKrb)}</span>
+                            </div>
+                          )}
+                          {ochranaKachle && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Ochrana kachle</span>
+                              <span>+ {formatPrice(CENY.ochranaKachle)}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Fasáda */}
+                      {fasada !== "drevo_smrek" && (
+                        <div>
+                          <p className="text-sm font-bold text-gray-700 mb-1">FASÁDA:</p>
+                          <div className="flex justify-between text-sm py-1">
+                            <span>• {fasada === "omietka" ? "Šúchaná omietka" : fasada === "smrekovec" ? "Smrekovec" : fasada === "falcovane" ? "Falcované panely" : "Thermowood"}</span>
+                            <span>+ {formatPrice(CENY.fasada[fasada])}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Strecha */}
+                      {(strecha !== "korugovan_plech" || odkvapy === "ano") && (
+                        <div>
+                          <p className="text-sm font-bold text-gray-700 mb-1">STRECHA:</p>
+                          {strecha !== "korugovan_plech" && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Falcované panely</span>
+                              <span>+ {formatPrice(CENY.strecha.falcovane)}</span>
+                            </div>
+                          )}
+                          {odkvapy === "ano" && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Odkvapy</span>
+                              <span>+ {formatPrice(CENY.odkvapy)}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Dvere */}
+                      {vchodoveDvere !== "plastove" && (
+                        <div>
+                          <p className="text-sm font-bold text-gray-700 mb-1">DVERE:</p>
+                          <div className="flex justify-between text-sm py-1">
+                            <span>• Kovové dvere</span>
+                            <span>+ {formatPrice(CENY.dvere.kovove)}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Interiér */}
+                      {(obkladStien !== "smrek_8cm" || interieroveDvere !== "kridlove") && (
+                        <div>
+                          <p className="text-sm font-bold text-gray-700 mb-1">INTERIÉR:</p>
+                          {obkladStien !== "smrek_8cm" && obkladStien !== "smrek_bez_uzlov" && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• {obkladStien === "sadrokarton_tapeta" ? "Sadrokartón + tapeta" : "OSB panel"}</span>
+                              <span>+ {formatPrice(CENY.obklad[obkladStien])}</span>
+                            </div>
+                          )}
+                          {interieroveDvere !== "kridlove" && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Posuvné dvere</span>
+                              <span>+ {formatPrice(CENY.dvere_posuvne)}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Elektro */}
+                      {(elektro !== "eu" || bleskozvod || prepat) && (
+                        <div>
+                          <p className="text-sm font-bold text-gray-700 mb-1">ELEKTRO:</p>
+                          {elektro !== "eu" && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• {elektro === "cz" ? "CZ/SK štandard" : "GE štandard (A0)"}</span>
+                              <span>+ {formatPrice(CENY.elektro[elektro])}</span>
+                            </div>
+                          )}
+                          {bleskozvod && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Bleskozvod</span>
+                              <span>+ {formatPrice(CENY.bleskozvod)}</span>
+                            </div>
+                          )}
+                          {prepat && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Prepäťová ochrana</span>
+                              <span>+ {formatPrice(CENY.prepat)}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Kúpeľňa */}
+                      {(sprchovyKut !== "standard" || bateria !== "standard" || stropKupelna !== "drevo" || vana || skrinka) && (
+                        <div>
+                          <p className="text-sm font-bold text-gray-700 mb-1">KÚPEĽŇA:</p>
+                          {sprchovyKut !== "standard" && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Sprchový kút Radaway</span>
+                              <span>+ {formatPrice(CENY.sprchovyKut)}</span>
+                            </div>
+                          )}
+                          {bateria !== "standard" && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Batéria Grohe</span>
+                              <span>+ {formatPrice(CENY.bateria)}</span>
+                            </div>
+                          )}
+                          {stropKupelna !== "drevo" && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Strop sadrokartón</span>
+                              <span>+ {formatPrice(CENY.strop_kupelna.sadrokarton)}</span>
+                            </div>
+                          )}
+                          {vana && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Vaňa</span>
+                              <span>+ {formatPrice(CENY.vana)}</span>
+                            </div>
+                          )}
+                          {skrinka && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Skrinka</span>
+                              <span>+ {formatPrice(CENY.skrinka)}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Služby */}
+                      {(inziniering || projektACertifikacia || revizia) && (
+                        <div>
+                          <p className="text-sm font-bold text-gray-700 mb-1">SLUŽBY:</p>
+                          {inziniering && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Inžiniering</span>
+                              <span>+ {formatPrice(CENY.inziniering)}</span>
+                            </div>
+                          )}
+                          {projektACertifikacia && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Projekt + Certifikácia A0</span>
+                              <span>+ {formatPrice(CENY.projektACertifikacia)}</span>
+                            </div>
+                          )}
+                          {revizia && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Revízna dokumentácia</span>
+                              <span>+ {formatPrice(CENY.revizia)}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Základy */}
+                      {zaklady !== "bez" && (
+                        <div>
+                          <p className="text-sm font-bold text-gray-700 mb-1">ZÁKLADY:</p>
+                          <div className="flex justify-between text-sm py-1">
+                            <span>• {zaklady === "vruty" ? "Zemné vruty" : zaklady === "patky" ? "Betónové pätky" : "Pásové betónové"}</span>
+                            <span>+ {formatPrice(CENY.zaklady[zaklady])}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Realizácia */}
+                      {(montaz || doprava) && (
+                        <div>
+                          <p className="text-sm font-bold text-gray-700 mb-1">REALIZÁCIA:</p>
+                          {montaz && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Montáž domu</span>
+                              <span>+ {formatPrice(CENY.montaz)}</span>
+                            </div>
+                          )}
+                          {doprava && (
+                            <div className="flex justify-between text-sm py-1">
+                              <span>• Doprava modulov</span>
+                              <span>+ {formatPrice(CENY.doprava)}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
