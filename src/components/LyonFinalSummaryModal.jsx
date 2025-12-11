@@ -207,43 +207,28 @@ export default function LyonFinalSummaryModal({
   };
 
   const handleDownloadPDF = async () => {
-    if (!isAdmin) {
-      toast.error('Táto funkcia je dostupná len pre administrátorov');
-      return;
-    }
-    
     setGeneratingPDF(true);
     try {
-      // Priprav data pre PDF
-      const configData = {
-        dom_nazov: dom?.nazov || "Lyon 50m²",
-        dom_vyrobca: dom?.vyrobca || "Ticab house",
-        zastavana_plocha: dom?.zastavana_plocha || 50,
-        klient_meno: formData.meno,
-        klient_email: formData.email,
-        klient_telefon: formData.telefon,
-        konfigurator_data: {
+      const response = await base44.functions.invoke('generujCenovuPonukuLyon', {
+        dom,
+        konfiguraciaData: {
           ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu,
           tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu,
           podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia,
           fasada, strecha, odkvapy, okna, vchodoveDvere,
-          obkladStien, interieroveDvere, elektro, bleskozvod, prepat, pripravaNaSolarnePanely,
-          sprchovyKut, vana, bateria, skrinka, stropKupelna,
-          inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava
+          obkladStien, interieroveDvere, elektro, bleskozvod, prepat,
+          pripravaNaSolarnePanely, sprchovyKut, vana, bateria,
+          skrinka, stropKupelna, inziniering, projektACertifikacia,
+          revizia, zaklady, montaz, doprava, totalPrice
         },
-        celkova_cena: totalPrice,
-        status: actualStatus
-      };
-
-      const response = await base44.functions.invoke('generujNahladCenovejPonuky', {
-        nastavenie: configData
+        klientData: formData
       });
       
       const blob = new Blob([response.data], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `cenova-ponuka-${dom?.nazov || 'Lyon'}.pdf`;
+      a.download = `cenova-ponuka-lyon-${formData.meno || 'klient'}.pdf`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -720,7 +705,7 @@ export default function LyonFinalSummaryModal({
                           className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50"
                         >
                           <Eye className="mr-2 w-4 h-4" />
-                          {t('previewOffer') || 'Náhľad ponuky'}
+                          {t('previewQuote') || 'Náhľad ponuky'}
                         </Button>
 
                         <Button
@@ -732,7 +717,7 @@ export default function LyonFinalSummaryModal({
                           className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50"
                         >
                           <FileDown className="mr-2 w-4 h-4" />
-                          {generatingPDF ? t('generating') || 'Generujem...' : t('downloadPDF') || 'Stiahnuť PDF'}
+                          {generatingPDF ? 'Generujem...' : (t('downloadPDF') || 'Stiahnuť PDF')}
                         </Button>
                       </div>
                     )}
@@ -776,22 +761,20 @@ export default function LyonFinalSummaryModal({
 
           </motion.div>
 
-          {/* Preview Modal */}
+          {/* Náhľad cenovej ponuky - Modal */}
           <Dialog open={showPreview} onOpenChange={setShowPreview}>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>Náhľad cenovej ponuky - {dom?.nazov || 'Lyon 50m²'}</DialogTitle>
+                <DialogTitle>Náhľad cenovej ponuky - Lyon 50m²</DialogTitle>
               </DialogHeader>
               
               <div className="bg-white p-8 border rounded-lg">
-                {/* Header */}
+                {/* Header ponuky */}
                 <div className="flex items-start justify-between mb-8 pb-6 border-b-2 border-red-600">
                   <div>
-                    <h1 className="text-3xl font-bold text-red-600">
-                      CENOVÁ PONUKA
-                    </h1>
-                    <p className="text-gray-600 mt-1">Číslo ponuky: CP-2025-VZOR</p>
-                    <p className="text-gray-500 text-sm">Dátum: {new Date().toLocaleDateString('sk-SK')}</p>
+                    <h1 className="text-3xl font-bold text-red-600 mb-2">CENOVÁ PONUKA</h1>
+                    <p className="text-gray-600">Číslo ponuky: CP-2025-LYON</p>
+                    <p className="text-gray-600">Dátum: {new Date().toLocaleDateString('sk-SK')}</p>
                   </div>
                   <div className="text-right text-sm">
                     <p className="font-bold text-gray-900">American Living</p>
@@ -801,137 +784,63 @@ export default function LyonFinalSummaryModal({
                   </div>
                 </div>
 
-                {/* Klient */}
+                {/* Obrázok domu */}
                 <div className="mb-6">
-                  <h3 className="font-bold text-lg mb-3 text-red-600">Pre klienta:</h3>
+                  <img 
+                    src={getDisplayImage()} 
+                    alt="Lyon 50m²" 
+                    className="w-full h-64 object-contain rounded-lg border"
+                  />
+                </div>
+
+                {/* Info o dome */}
+                <div className="mb-6">
+                  <h3 className="font-bold text-lg mb-2 text-red-600">Vybraný model:</h3>
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-gray-700"><strong>Meno:</strong> {formData.meno || 'Ján Novák'}</p>
-                    <p className="text-gray-700"><strong>Email:</strong> {formData.email || 'jan.novak@email.com'}</p>
-                    <p className="text-gray-700"><strong>Telefón:</strong> {formData.telefon || '+421 900 123 456'}</p>
-                    {formData.obec && <p className="text-gray-700"><strong>Lokalita:</strong> {formData.obec}</p>}
+                    <p className="font-bold text-gray-900">Lyon 50m²</p>
+                    <p className="text-sm text-gray-600">Výrobca: Ticab house</p>
+                    <p className="text-sm text-gray-600">Účel stavby: {actualStatus}</p>
+                    <p className="text-sm text-gray-600">Zastavana plocha: 50 m²</p>
                   </div>
                 </div>
 
-                {/* Dom a obrázok */}
-                <div className="mb-6">
-                  <h3 className="font-bold text-lg mb-3 text-red-600">Vybraný model:</h3>
-                  <div className="bg-gray-50 p-4 rounded-lg flex gap-4">
-                    <img 
-                      src={getDisplayImage()} 
-                      alt={dom?.nazov} 
-                      className="w-48 h-32 object-cover rounded"
-                    />
-                    <div>
-                      <p className="font-bold text-gray-900 text-xl">{dom?.nazov || 'Lyon 50m²'}</p>
-                      <p className="text-sm text-gray-600">{dom?.vyrobca || 'Ticab house'} - {dom?.typ_domu || 'Modulárny dom'}</p>
-                      <p className="text-sm text-gray-600">Zastavana plocha: {dom?.zastavana_plocha || 50} m²</p>
-                      <Badge className={`mt-2 ${isA0 ? 'bg-green-500' : 'bg-blue-500'} text-white`}>
-                        {actualStatus}
-                      </Badge>
+                {/* Klient info */}
+                {formData.meno && (
+                  <div className="mb-6">
+                    <h3 className="font-bold text-lg mb-2 text-red-600">Pre klienta:</h3>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <p className="text-gray-700"><strong>Meno:</strong> {formData.meno}</p>
+                      <p className="text-gray-700"><strong>Email:</strong> {formData.email}</p>
+                      <p className="text-gray-700"><strong>Telefón:</strong> {formData.telefon}</p>
+                      {formData.obec && <p className="text-gray-700"><strong>Obec:</strong> {formData.obec}</p>}
                     </div>
-                  </div>
-                </div>
-
-                {/* Cenová kalkulácia */}
-                <div className="mb-6">
-                  <h3 className="font-bold text-lg mb-3 text-red-600">Cenová kalkulácia:</h3>
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b-2 border-red-700">
-                        <th className="text-left py-2 px-4 font-bold text-red-600">Položka</th>
-                        <th className="text-right py-2 px-4 font-bold text-red-600">Cena</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b bg-gray-50">
-                        <td className="py-2 px-4">Základná cena domu</td>
-                        <td className="text-right py-2 px-4">{formatPrice(dom?.zakladna_cena || 73431)}</td>
-                      </tr>
-                      {izolaciaStien !== "150mm" && (
-                        <tr className="border-b">
-                          <td className="py-2 px-4">Izolácia stien {izolaciaStien}</td>
-                          <td className="text-right py-2 px-4">{formatPrice(CENY.izolacia_stien[izolaciaStien])}</td>
-                        </tr>
-                      )}
-                      {izolaciaPodlahy === "200mm" && (
-                        <tr className="border-b">
-                          <td className="py-2 px-4">Izolácia podlahy 200mm</td>
-                          <td className="text-right py-2 px-4">{formatPrice(CENY.izolacia_podlahy["200mm"])}</td>
-                        </tr>
-                      )}
-                      {izolaciaStropu === "200mm" && (
-                        <tr className="border-b">
-                          <td className="py-2 px-4">Izolácia stropu 200mm</td>
-                          <td className="text-right py-2 px-4">{formatPrice(CENY.izolacia_stropu["200mm"])}</td>
-                        </tr>
-                      )}
-                      {tepelneCerpadlo === "ano" && (
-                        <tr className="border-b">
-                          <td className="py-2 px-4">Tepelné čerpadlo</td>
-                          <td className="text-right py-2 px-4">{formatPrice(CENY.tepelne_cerpadlo.ano)}</td>
-                        </tr>
-                      )}
-                      {rekuperacia === "ano" && (
-                        <tr className="border-b">
-                          <td className="py-2 px-4">Rekuperácia</td>
-                          <td className="text-right py-2 px-4">{formatPrice(CENY.rekuperacia.ano)}</td>
-                        </tr>
-                      )}
-                      {podlahovoKurenie && (
-                        <tr className="border-b">
-                          <td className="py-2 px-4">Podlahové kúrenie</td>
-                          <td className="text-right py-2 px-4">{formatPrice(CENY.podlahove_kurenie)}</td>
-                        </tr>
-                      )}
-                      {fasada !== "drevo_smrek" && (
-                        <tr className="border-b">
-                          <td className="py-2 px-4">Fasáda - {fasada === "omietka" ? "Šúchaná omietka" : fasada === "smrekovec" ? "Smrekovec" : fasada === "falcovane" ? "Falcované panely" : "Thermowood"}</td>
-                          <td className="text-right py-2 px-4">{formatPrice(CENY.fasada[fasada])}</td>
-                        </tr>
-                      )}
-                      {zaklady !== "bez" && (
-                        <tr className="border-b">
-                          <td className="py-2 px-4">Základy - {zaklady === "vruty" ? "Zemné vruty" : zaklady === "patky" ? "Betónové pätky" : "Pásové betónové"}</td>
-                          <td className="text-right py-2 px-4">{formatPrice(CENY.zaklady[zaklady])}</td>
-                        </tr>
-                      )}
-                      {montaz && (
-                        <tr className="border-b">
-                          <td className="py-2 px-4">Montáž domu</td>
-                          <td className="text-right py-2 px-4">{formatPrice(CENY.montaz)}</td>
-                        </tr>
-                      )}
-                      {doprava && (
-                        <tr className="border-b">
-                          <td className="py-2 px-4">Doprava modulov</td>
-                          <td className="text-right py-2 px-4">{formatPrice(CENY.doprava)}</td>
-                        </tr>
-                      )}
-                      <tr className="border-b bg-red-50">
-                        <td className="py-3 px-4 font-bold text-lg text-red-600">CELKOVÁ CENA s DPH</td>
-                        <td className="text-right py-3 px-4 font-bold text-xl text-red-600">{formatPrice(totalPrice)}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Poznámka */}
-                {formData.poznamka && (
-                  <div className="mb-6 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                    <p className="text-gray-700"><strong>Poznámka klienta:</strong></p>
-                    <p className="text-gray-600 mt-1">{formData.poznamka}</p>
                   </div>
                 )}
 
-                {/* Kontakt */}
-                <div className="mt-8 pt-6 border-t-2 border-red-600 text-center">
-                  <p className="text-sm text-gray-600">
-                    Pre viac informácií nás neváhajte kontaktovať na +421 905 138 124 alebo info@americanliving.sk
-                  </p>
+                {/* Konfigurácia */}
+                <div className="mb-6">
+                  <h3 className="font-bold text-lg mb-2 text-red-600">Konfigurácia:</h3>
+                  <div className="bg-gray-50 p-4 rounded-lg text-sm space-y-1">
+                    <pre className="whitespace-pre-wrap font-mono text-xs">{buildConfigSummary()}</pre>
+                  </div>
+                </div>
+
+                {/* Celková cena */}
+                <div className="bg-red-50 border-2 border-red-600 rounded-lg p-6 mt-6">
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-xl text-gray-800">CELKOVÁ CENA s DPH</span>
+                    <span className="text-3xl font-bold text-red-600">{formatPrice(totalPrice)}</span>
+                  </div>
+                </div>
+
+                {/* Päticka */}
+                <div className="mt-8 pt-6 border-t text-center text-sm text-gray-600">
+                  <p>Pre viac informácií nás neváhajte kontaktovať na +421 905 138 124 alebo info@americanliving.sk</p>
                 </div>
               </div>
             </DialogContent>
           </Dialog>
+
         </motion.div>
       )}
     </AnimatePresence>
