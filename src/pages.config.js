@@ -39,6 +39,7 @@ import AdminPrekladyKonfiguratora from './pages/AdminPrekladyKonfiguratora';
 import AdminPrekladTicabhouseSpec from './pages/AdminPrekladTicabhouseSpec';
 import AdminWatermark from './pages/AdminWatermark';
 import AdminMigraciaFotiek from './pages/AdminMigraciaFotiek';
+import AdminVerifikaciaUdajov from './pages/AdminVerifikaciaUdajov';
 import __Layout from './Layout.jsx';
 
 
@@ -84,6 +85,7 @@ export const PAGES = {
     "AdminPrekladTicabhouseSpec": AdminPrekladTicabhouseSpec,
     "AdminWatermark": AdminWatermark,
     "AdminMigraciaFotiek": AdminMigraciaFotiek,
+    "AdminVerifikaciaUdajov": AdminVerifikaciaUdajov,
 }
 
 export const pagesConfig = {
