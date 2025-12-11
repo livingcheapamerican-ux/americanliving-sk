@@ -20,7 +20,6 @@ export default function AdminGeneratorCenovychPonuk() {
   const [selectedSablona, setSelectedSablona] = useState(null);
   const [expandedSekcie, setExpandedSekcie] = useState({});
   const [showPreview, setShowPreview] = useState(false);
-  const [generatingPdf, setGeneratingPdf] = useState(false);
   
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -384,33 +383,7 @@ export default function AdminGeneratorCenovychPonuk() {
     }
   };
 
-  const handleDownloadPdf = async () => {
-    setGeneratingPdf(true);
-    try {
-      const response = await base44.functions.invoke('generujNahladCenovejPonuky', {
-        nastavenie: formData,
-        dom: null,
-        konfiguraciaData: null
-      });
 
-      const blob = new Blob([response.data], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'cenova-ponuka-nahlad.pdf';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
-
-      toast.success('PDF stiahnuté');
-    } catch (error) {
-      toast.error('Chyba pri generovaní PDF: ' + (error.message || 'Neznáma chyba'));
-      console.error(error);
-    } finally {
-      setGeneratingPdf(false);
-    }
-  };
 
   const isSuperAdmin = user?.super_admin === true;
 
@@ -445,27 +418,14 @@ export default function AdminGeneratorCenovychPonuk() {
                 <Plus className="w-4 h-4 mr-2" />
                 Nová šablóna
               </Button>
-              {(isSuperAdmin || user?.role === 'admin') && (
-                <>
-                  <Button 
-                    onClick={() => setShowPreview(true)} 
-                    variant="secondary"
-                    className="bg-white/20 hover:bg-white/30 text-white border-white/30"
-                  >
-                    <Monitor className="w-4 h-4 mr-2" />
-                    Náhľad ponuky
-                  </Button>
-                  <Button 
-                    onClick={handleDownloadPdf} 
-                    disabled={generatingPdf}
-                    variant="secondary"
-                    className="bg-white/20 hover:bg-white/30 text-white border-white/30"
-                  >
-                    <Download className="w-4 h-4 mr-2" />
-                    {generatingPdf ? 'Generujem PDF...' : 'Stiahnuť PDF'}
-                  </Button>
-                </>
-              )}
+              <Button 
+                onClick={() => setShowPreview(true)} 
+                variant="secondary"
+                className="bg-white/20 hover:bg-white/30 text-white border-white/30"
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                Náhľad ponuky
+              </Button>
               <Button 
                 onClick={handleSave} 
                 disabled={saveMutation.isPending} 
@@ -1483,11 +1443,12 @@ export default function AdminGeneratorCenovychPonuk() {
         </Tabs>
 
         {/* Preview Modal */}
-        <Dialog open={showPreview} onOpenChange={setShowPreview}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Náhľad cenovej ponuky</DialogTitle>
-            </DialogHeader>
+        {showPreview && (
+          <Dialog open={showPreview} onOpenChange={setShowPreview}>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Náhľad cenovej ponuky</DialogTitle>
+              </DialogHeader>
             
             <div className="bg-white p-8 border rounded-lg" style={{
               background: `linear-gradient(to bottom, ${formData.farba_hlavna}15 0%, white 200px)`
@@ -1628,10 +1589,11 @@ export default function AdminGeneratorCenovychPonuk() {
                   IČO: {formData.ico} | DIČ: {formData.dic} | IČ DPH: {formData.ic_dph}
                 </p>
               </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-    </div>
-  );
-}
+              </div>
+              </DialogContent>
+              </Dialog>
+              )}
+              </div>
+              </div>
+              );
+              }
