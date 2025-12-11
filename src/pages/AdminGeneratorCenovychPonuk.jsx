@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Upload, Save, Eye, Plus, Trash2, Palette, FileText, Image, Settings, Grid3x3, ArrowRight, Monitor, Download } from "lucide-react";
+import { Upload, Save, Eye, Plus, Trash2, Palette, FileText, Image, Settings, Grid3x3, ArrowRight, Monitor, Download, CheckCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function AdminGeneratorCenovychPonuk() {
@@ -260,16 +260,61 @@ export default function AdminGeneratorCenovychPonuk() {
     }
   ];
 
-  const prostohouseDlazdice = [
-    { id: "vonkajsia_fasada_standard", nazov: "Fasáda drevo/plech", kategoria: "Fasáda" },
-    { id: "vonkajsia_fasada_suchana", nazov: "Fasáda škúchaná omietka", kategoria: "Fasáda" },
-    { id: "interier_drevo", nazov: "Interiér drevený obklad", kategoria: "Interiér" },
-    { id: "interier_sadrokarton", nazov: "Interiér sadrokartón", kategoria: "Interiér" },
-    { id: "interier_ziadne", nazov: "Interiér bez finálnej úpravy", kategoria: "Interiér" },
-    { id: "montaz_holodomu_ano", nazov: "Montáž holodomu", kategoria: "Montáž" },
-    { id: "tepelne_cerpadlo", nazov: "Tepelné čerpadlo", kategoria: "Vykurovanie" },
-    { id: "rekuperacia", nazov: "Rekuperácia", kategoria: "Vykurovanie" },
-    { id: "podlahove_vykurovanie", nazov: "Podlahové vykurovanie", kategoria: "Vykurovanie" },
+  const prostohouseSekcie = [
+    {
+      id: "fasada",
+      nazov: "Fasáda",
+      dlazdice: [
+        { id: "fasada_drevo", nazov: "Drevená fasáda" },
+        { id: "fasada_omietka", nazov: "Omietka" },
+        { id: "fasada_kombinovana", nazov: "Kombinovaná" },
+      ]
+    },
+    {
+      id: "strecha",
+      nazov: "Strecha",
+      dlazdice: [
+        { id: "strecha_skridla", nazov: "Škridla" },
+        { id: "strecha_plech", nazov: "Plech" },
+      ]
+    },
+    {
+      id: "okna_dvere",
+      nazov: "Okná a dvere",
+      dlazdice: [
+        { id: "okna_plastove", nazov: "Plastové okná" },
+        { id: "okna_drevene", nazov: "Drevené okná" },
+        { id: "dvere_vstupne", nazov: "Vstupné dvere" },
+      ]
+    },
+    {
+      id: "vykurovanie",
+      nazov: "Vykurovanie",
+      dlazdice: [
+        { id: "tepelne_cerpadlo", nazov: "Tepelné čerpadlo" },
+        { id: "krb", nazov: "Krb" },
+        { id: "elektricke", nazov: "Elektrické vykurovanie" },
+      ]
+    },
+    {
+      id: "interier",
+      nazov: "Interiér",
+      dlazdice: [
+        { id: "podlahy_drevo", nazov: "Drevené podlahy" },
+        { id: "podlahy_laminat", nazov: "Laminát" },
+        { id: "obklady_kupelna", nazov: "Obklady kúpeľňa" },
+      ]
+    },
+    {
+      id: "kupelna",
+      nazov: "Kúpeľňa",
+      dlazdice: [
+        { id: "sprcha", nazov: "Sprcha" },
+        { id: "vana", nazov: "Vaňa" },
+        { id: "zachod", nazov: "Záchod" },
+        { id: "umyvadlo", nazov: "Umývadlo" },
+      ]
+    }
   ];
 
   const toggleSekcia = (sekciaId) => {
@@ -281,12 +326,6 @@ export default function AdminGeneratorCenovychPonuk() {
 
   const addMapovanieFotky = (vyrobca, sekciaId, dlazdicaId, nazovDlazdice) => {
     const field = vyrobca === "ticabhouse" ? "mapovanie_fotiek_ticabhouse" : "mapovanie_fotiek_prosto";
-    
-    if (vyrobca === "prosto") {
-      // Pre Prosto House používame galérie podobne ako Ticabhouse
-      return;
-    }
-    
     setFormData({
       ...formData,
       [field]: [...formData[field], { 
@@ -1098,83 +1137,136 @@ export default function AdminGeneratorCenovychPonuk() {
               <div className="space-y-6">
                 {/* Mapovanie galérií */}
                 {[
-                  { id: 'exterier_drevo_plech', nazov: 'Exteriér - Drevo/Plech', popis: 'Fasáda s dreveným alebo plechovým obkladom', icon: '🏠' },
-                  { id: 'exterier_murovka', nazov: 'Exteriér - Murovka', popis: 'Fasáda s omietkou/murovkou', icon: '🧱' },
-                  { id: 'interier_drevo', nazov: 'Interiér - Drevo', popis: 'Vnútorný obklad z dreva', icon: '🪵' },
-                  { id: 'interier_sadrokarton', nazov: 'Interiér - Sadrokartón', popis: 'Vnútorný obklad so sadrokartónom', icon: '🏡' },
+                  { id: 'exterier_drevo_plech', nazov: 'Exteriér - Drevo/Plech', popis: 'Fasáda s dreveným alebo plechovým obkladom', icon: '🏠', color: 'blue' },
+                  { id: 'exterier_murovka', nazov: 'Exteriér - Murovka', popis: 'Fasáda s omietkou/murovkou', icon: '🧱', color: 'orange' },
+                  { id: 'interier_drevo', nazov: 'Interiér - Drevo', popis: 'Vnútorný obklad z dreva', icon: '🪵', color: 'amber' },
+                  { id: 'interier_sadrokarton', nazov: 'Interiér - Sadrokartón', popis: 'Vnútorný obklad so sadrokartónom', icon: '🏡', color: 'green' },
                 ].map((galeria) => {
                   const existujuce = formData.mapovanie_fotiek_ticabhouse?.find(
                     m => m.galeria_typ === galeria.id
                   );
+                  const pocetVybranych = existujuce?.dlazdice_ids?.length || 0;
+
+                  const colorClasses = {
+                    blue: 'border-blue-300 bg-blue-50/50',
+                    orange: 'border-orange-300 bg-orange-50/50',
+                    amber: 'border-amber-300 bg-amber-50/50',
+                    green: 'border-green-300 bg-green-50/50'
+                  };
 
                   return (
-                    <Card key={galeria.id} className="p-4 border-2 border-primary/20">
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-2xl">{galeria.icon}</span>
-                        <div>
-                          <h4 className="font-bold">{galeria.nazov}</h4>
-                          <p className="text-xs text-gray-500">{galeria.popis}</p>
+                    <Card key={galeria.id} className={`p-5 border-2 ${colorClasses[galeria.color]} hover:shadow-lg transition-all`}>
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-3xl shadow-md">
+                            {galeria.icon}
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-lg text-gray-900">{galeria.nazov}</h4>
+                            <p className="text-xs text-gray-600">{galeria.popis}</p>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end gap-1">
+                          {pocetVybranych > 0 ? (
+                            <Badge className="bg-green-600 text-white">
+                              ✓ {pocetVybranych} {pocetVybranych === 1 ? 'dlaždica' : 'dlaždice'}
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-gray-500">
+                              Nie je mapovaná
+                            </Badge>
+                          )}
                         </div>
                       </div>
 
-                      <div className="text-sm text-gray-700 mb-3 font-medium">
-                        Ukáže galériu keď klient vyberie:
-                      </div>
+                      <div className="bg-white/60 backdrop-blur-sm rounded-lg p-4 border border-gray-200">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center">
+                            <Grid3x3 className="w-4 h-4 text-white" />
+                          </div>
+                          <p className="text-sm font-semibold text-gray-700">
+                            Vyberte dlaždice, ktoré aktivujú túto galériu:
+                          </p>
+                        </div>
 
-                      <div className="space-y-2">
-                        {ticabhouseSekcie.filter(s => s.id === 'fasada' || s.id === 'interier').map((sekcia) => (
-                          <div key={sekcia.id} className="border rounded-lg p-3 bg-gray-50">
-                            <div className="text-xs font-semibold text-gray-700 mb-2">{sekcia.nazov}</div>
-                            <div className="grid grid-cols-2 gap-2">
-                              {sekcia.dlazdice.map((dlazdica) => {
-                                const jeVybrane = existujuce?.dlazdice_ids?.includes(dlazdica.id);
-                                
-                                return (
-                                  <label 
-                                    key={dlazdica.id}
-                                    className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition-all ${
-                                      jeVybrane 
-                                        ? 'bg-primary/10 border-primary' 
-                                        : 'bg-white border-gray-200 hover:border-gray-300'
-                                    }`}
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      checked={jeVybrane}
-                                      onChange={(e) => {
-                                        const aktualneMapovanie = formData.mapovanie_fotiek_ticabhouse || [];
-                                        let galeriaMapping = aktualneMapovanie.find(m => m.galeria_typ === galeria.id);
-                                        
-                                        if (!galeriaMapping) {
-                                          galeriaMapping = {
-                                            galeria_typ: galeria.id,
-                                            galeria_nazov: galeria.nazov,
-                                            dlazdice_ids: []
-                                          };
-                                        }
+                        <div className="space-y-3">
+                          {ticabhouseSekcie.filter(s => s.id === 'fasada' || s.id === 'interier').map((sekcia) => (
+                            <div key={sekcia.id} className="bg-gradient-to-r from-gray-50 to-white rounded-lg p-3 border border-gray-200">
+                              <div className="flex items-center gap-2 mb-2">
+                                <div className="w-6 h-6 bg-primary/10 rounded-md flex items-center justify-center">
+                                  <span className="text-xs font-bold text-primary">{sekcia.nazov.charAt(0)}</span>
+                                </div>
+                                <div className="text-xs font-bold text-gray-700 uppercase tracking-wide">{sekcia.nazov}</div>
+                              </div>
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                {sekcia.dlazdice.map((dlazdica) => {
+                                  const jeVybrane = existujuce?.dlazdice_ids?.includes(dlazdica.id);
+                                  
+                                  return (
+                                    <label 
+                                      key={dlazdica.id}
+                                      className={`group relative flex items-center gap-2 p-2.5 rounded-lg border-2 cursor-pointer transition-all ${
+                                        jeVybrane 
+                                          ? 'bg-primary border-primary shadow-md scale-[1.02]' 
+                                          : 'bg-white border-gray-300 hover:border-primary/50 hover:shadow-sm'
+                                      }`}
+                                    >
+                                      <input
+                                        type="checkbox"
+                                        checked={jeVybrane}
+                                        onChange={(e) => {
+                                          const aktualneMapovanie = formData.mapovanie_fotiek_ticabhouse || [];
+                                          let galeriaMapping = aktualneMapovanie.find(m => m.galeria_typ === galeria.id);
+                                          
+                                          if (!galeriaMapping) {
+                                            galeriaMapping = {
+                                              galeria_typ: galeria.id,
+                                              galeria_nazov: galeria.nazov,
+                                              dlazdice_ids: []
+                                            };
+                                          }
 
-                                        if (e.target.checked) {
-                                          galeriaMapping.dlazdice_ids = [...(galeriaMapping.dlazdice_ids || []), dlazdica.id];
-                                        } else {
-                                          galeriaMapping.dlazdice_ids = (galeriaMapping.dlazdice_ids || []).filter(id => id !== dlazdica.id);
-                                        }
+                                          if (e.target.checked) {
+                                            galeriaMapping.dlazdice_ids = [...(galeriaMapping.dlazdice_ids || []), dlazdica.id];
+                                          } else {
+                                            galeriaMapping.dlazdice_ids = (galeriaMapping.dlazdice_ids || []).filter(id => id !== dlazdica.id);
+                                          }
 
-                                        const noveMapovanie = aktualneMapovanie.filter(m => m.galeria_typ !== galeria.id);
-                                        if (galeriaMapping.dlazdice_ids.length > 0) {
-                                          noveMapovanie.push(galeriaMapping);
-                                        }
+                                          const noveMapovanie = aktualneMapovanie.filter(m => m.galeria_typ !== galeria.id);
+                                          if (galeriaMapping.dlazdice_ids.length > 0) {
+                                            noveMapovanie.push(galeriaMapping);
+                                          }
 
-                                        setFormData({...formData, mapovanie_fotiek_ticabhouse: noveMapovanie});
-                                      }}
-                                      className="rounded border-gray-300"
-                                    />
-                                    <span className="text-xs">{dlazdica.nazov}</span>
-                                  </label>
-                                );
-                              })}
+                                          setFormData({...formData, mapovanie_fotiek_ticabhouse: noveMapovanie});
+                                        }}
+                                        className="w-4 h-4 rounded border-gray-400 accent-primary"
+                                      />
+                                      <span className={`text-xs font-medium ${jeVybrane ? 'text-white' : 'text-gray-700 group-hover:text-gray-900'}`}>
+                                        {dlazdica.nazov.replace('Izolácia ', '').replace('Fasáda ', '').replace('Obklad ', '')}
+                                      </span>
+                                      {jeVybrane && (
+                                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center shadow-md">
+                                          <CheckCircle className="w-3 h-3 text-white" />
+                                        </div>
+                                      )}
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {pocetVybranych > 0 && (
+                          <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                            <div className="flex items-center gap-2">
+                              <CheckCircle className="w-4 h-4 text-green-600" />
+                              <p className="text-xs text-green-800 font-medium">
+                                Galéria sa zobrazí, ak klient vyberie {pocetVybranych === 1 ? 'túto dlaždicu' : 'jednu z týchto dlaždíc'}
+                              </p>
                             </div>
                           </div>
-                        ))}
+                        )}
                       </div>
                     </Card>
                   );
@@ -1278,16 +1370,16 @@ export default function AdminGeneratorCenovychPonuk() {
                                       />
                                     </div>
                                   </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+                                  )}
+                                  </div>
+                                  );
+                                  })}
+                                  </div>
+                                  )}
+                                  </Card>
+                                  );
+                                  })}
+                                  </div>
             </Card>
           </TabsContent>
 
@@ -1301,206 +1393,186 @@ export default function AdminGeneratorCenovychPonuk() {
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900">Mapovanie fotiek pre Prosto House</h2>
-                    <p className="text-sm text-gray-600">Vyberte dlaždice pre zobrazenie galérií v ponuke</p>
+                    <p className="text-sm text-gray-600">Nastavte fotky podľa vybraných dlaždíc</p>
                   </div>
                 </div>
-                
-                <div className="space-y-3">
-                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <div className="flex items-start gap-2">
-                      <Eye className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <h5 className="font-semibold text-blue-900 mb-1">Automatické pravidlá pre Prosto House</h5>
-                        <ul className="text-sm text-blue-800 space-y-1">
-                          <li>• Úvodná fotka: ak je vybraná omietka → hlavný obrázok, inak → základná konfigurácia</li>
-                          <li>• Galérie exteriér: podľa výberu fasády (drevo/plech alebo murovka)</li>
-                          <li>• Galérie interiér: podľa výberu interiéru (drevo alebo sadrokartón)</li>
-                          <li>• 2D a 3D pôdorysy sa automaticky pridajú do každej ponuky</li>
-                        </ul>
+                <p className="text-sm text-gray-600">
+                  Rozkliknite sekcie a priraďte fotky ku konkrétnym dlaždiciam konfiguratora. 
+                  Pravidlá platia pre všetky domy výrobcu Prosto House.
+                </p>
+              </div>
+
+              {/* Prehľad všetkých dlaždíc */}
+              <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <Grid3x3 className="w-5 h-5 text-blue-600" />
+                  <h3 className="font-bold text-blue-900">Všetky dlaždice konfiguratora</h3>
+                </div>
+                <p className="text-sm text-blue-800 mb-4">
+                  Vyberte dlaždice z konfiguratora a priraďte im fotky/galérie, ktoré sa majú zobraziť v cenovej ponuke.
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                  {ticabhouseSekcie.flatMap(s => s.dlazdice).map(d => {
+                    const jeMappovana = formData.mapovanie_fotiek_prosto?.some(m => m.dlazdica_id === d.id);
+                    return (
+                      <div key={d.id} className={`px-2 py-1.5 rounded-md text-xs font-medium border ${
+                        jeMappovana 
+                          ? 'bg-green-100 border-green-400 text-green-800' 
+                          : 'bg-white border-gray-300 text-gray-600'
+                      }`}>
+                        {jeMappovana && <CheckCircle className="w-3 h-3 inline mr-1" />}
+                        {d.nazov}
                       </div>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <div className="flex items-start gap-2">
-                      <Settings className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                      <div className="flex-1">
-                        <h5 className="font-semibold text-green-900 mb-2">Univerzálne pravidlá</h5>
-                        <div className="space-y-2">
-                          <label className="flex items-start gap-2 cursor-pointer">
-                            <Switch
-                              checked={formData.automaticke_pravidla?.pouzit_zakladnu_konfiguraciu_ak_nie_je_omietka !== false}
-                              onCheckedChange={(checked) => setFormData({
-                                ...formData, 
-                                automaticke_pravidla: {
-                                  ...formData.automaticke_pravidla,
-                                  pouzit_zakladnu_konfiguraciu_ak_nie_je_omietka: checked
-                                }
-                              })}
-                              className="mt-0.5"
-                            />
-                            <span className="text-sm text-green-800">
-                              Ak sa nevyberie škúchaná fasáda, použiť fotku domu v základnej konfigurácii ako úvodnú fotku
-                            </span>
-                          </label>
-                          
-                          <label className="flex items-start gap-2 cursor-pointer">
-                            <Switch
-                              checked={formData.automaticke_pravidla?.vzdy_pridat_podorysy !== false}
-                              onCheckedChange={(checked) => setFormData({
-                                ...formData, 
-                                automaticke_pravidla: {
-                                  ...formData.automaticke_pravidla,
-                                  vzdy_pridat_podorysy: checked
-                                }
-                              })}
-                              className="mt-0.5"
-                            />
-                            <span className="text-sm text-green-800">
-                              2D a 3D pôdorysy vždy automaticky pridať do ponuky
-                            </span>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Galérie so visual mapovaním */}
-              <div className="space-y-6">
-                {[
-                  { 
-                    id: 'exterier_drevo_plech', 
-                    nazov: 'Exteriér - Drevo/Plech', 
-                    popis: 'Fotky domu s drevenou alebo plechovou fasádou', 
-                    icon: '🏠',
-                    color: 'amber'
-                  },
-                  { 
-                    id: 'exterier_murovka', 
-                    nazov: 'Exteriér - Murovka/Omietka', 
-                    popis: 'Fotky domu so škúchanou fasádou', 
-                    icon: '🧱',
-                    color: 'orange'
-                  },
-                  { 
-                    id: 'interier_drevo', 
-                    nazov: 'Interiér - Drevený obklad', 
-                    popis: 'Vnútorné priestory s dreveným obkladom', 
-                    icon: '🪵',
-                    color: 'green'
-                  },
-                  { 
-                    id: 'interier_sadrokarton', 
-                    nazov: 'Interiér - Sadrokartón', 
-                    popis: 'Vnútorné priestory so sadrokartónom', 
-                    icon: '🏡',
-                    color: 'blue'
-                  },
-                ].map((galeria) => {
-                  const existujuce = formData.mapovanie_fotiek_prosto?.find(
-                    m => m.galeria_typ === galeria.id
+              <div className="space-y-3">
+                {prostohouseSekcie.map((sekcia) => {
+                  const sekciaMapovania = formData.mapovanie_fotiek_prosto.filter(
+                    m => m.sekcia_id === sekcia.id
                   );
+                  
+                  const sectionColors = {
+                    fasada: { bg: 'from-purple-50 to-pink-50', border: 'border-purple-300', text: 'text-purple-900' },
+                    strecha: { bg: 'from-blue-50 to-cyan-50', border: 'border-blue-300', text: 'text-blue-900' },
+                    okna_dvere: { bg: 'from-cyan-50 to-teal-50', border: 'border-cyan-300', text: 'text-cyan-900' },
+                    vykurovanie: { bg: 'from-orange-50 to-red-50', border: 'border-orange-300', text: 'text-orange-900' },
+                    interier: { bg: 'from-amber-50 to-yellow-50', border: 'border-amber-300', text: 'text-amber-900' },
+                    kupelna: { bg: 'from-teal-50 to-emerald-50', border: 'border-teal-300', text: 'text-teal-900' }
+                  };
 
-                  const relevantDlazdice = prostohouseDlazdice.filter(d => {
-                    if (galeria.id === 'exterier_drevo_plech') return d.id === 'vonkajsia_fasada_standard';
-                    if (galeria.id === 'exterier_murovka') return d.id === 'vonkajsia_fasada_suchana';
-                    if (galeria.id === 'interier_drevo') return d.id === 'interier_drevo';
-                    if (galeria.id === 'interier_sadrokarton') return d.id === 'interier_sadrokarton';
-                    return false;
-                  });
-
+                  const colors = sectionColors[sekcia.id] || { bg: 'from-gray-50 to-white', border: 'border-gray-300', text: 'text-gray-900' };
+                  
                   return (
-                    <Card key={galeria.id} className={`p-5 border-2 border-${galeria.color}-200 bg-${galeria.color}-50/30`}>
-                      <div className="flex items-start justify-between mb-4">
+                    <Card key={sekcia.id} className={`border-2 ${colors.border} bg-gradient-to-r ${colors.bg} overflow-hidden`}>
+                      <button
+                        onClick={() => toggleSekcia(sekcia.id)}
+                        className="w-full flex items-center justify-between p-4 hover:bg-white/30 transition-all"
+                      >
                         <div className="flex items-center gap-3">
-                          <span className="text-3xl">{galeria.icon}</span>
-                          <div>
-                            <h4 className="font-bold text-lg text-gray-900">{galeria.nazov}</h4>
-                            <p className="text-xs text-gray-600 mt-1">{galeria.popis}</p>
+                          <div className={`w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md transform transition-transform ${expandedSekcie[sekcia.id] ? 'rotate-90' : ''}`}>
+                            <ArrowRight className="w-5 h-5 text-primary" />
+                          </div>
+                          <div className="text-left">
+                            <h3 className={`font-bold text-lg ${colors.text}`}>{sekcia.nazov}</h3>
+                            <p className="text-xs text-gray-600">{sekcia.dlazdice.length} dlaždíc celkom</p>
                           </div>
                         </div>
-                        {existujuce && (
-                          <span className="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium flex items-center gap-1">
-                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                            Aktívna galéria
-                          </span>
-                        )}
-                      </div>
+                        <div className="flex items-center gap-2">
+                          {sekciaMapovania.length > 0 ? (
+                            <Badge className="bg-green-600 text-white px-3 py-1">
+                              ✓ {sekciaMapovania.length} mapovaných
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-gray-500 px-3 py-1">
+                              Žiadne mapovanie
+                            </Badge>
+                          )}
+                        </div>
+                      </button>
 
-                      <div className={`text-sm font-semibold mb-3 text-${galeria.color}-900`}>
-                        📸 Galéria sa zobrazí keď klient vyberie:
-                      </div>
+                      {expandedSekcie[sekcia.id] && (
+                        <div className="border-t bg-white/60 backdrop-blur-sm p-4">
+                          <div className="grid md:grid-cols-2 gap-4">
+                            {sekcia.dlazdice.map((dlazdica) => {
+                              const existujuceMapovanie = formData.mapovanie_fotiek_prosto.find(
+                                m => m.dlazdica_id === dlazdica.id
+                              );
+                              const mapovaIndex = formData.mapovanie_fotiek_prosto.findIndex(
+                                m => m.dlazdica_id === dlazdica.id
+                              );
 
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                        {relevantDlazdice.map((dlazdica) => {
-                          const jeVybrane = existujuce?.dlazdice_ids?.includes(dlazdica.id);
-                          
-                          return (
-                            <label 
-                              key={dlazdica.id}
-                              className={`flex items-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                                jeVybrane 
-                                  ? `bg-${galeria.color}-100 border-${galeria.color}-500 shadow-md` 
-                                  : 'bg-white border-gray-200 hover:border-gray-400 hover:shadow-sm'
-                              }`}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={jeVybrane}
-                                onChange={(e) => {
-                                  const aktualneMapovanie = formData.mapovanie_fotiek_prosto || [];
-                                  let galeriaMapping = aktualneMapovanie.find(m => m.galeria_typ === galeria.id);
-                                  
-                                  if (!galeriaMapping) {
-                                    galeriaMapping = {
-                                      galeria_typ: galeria.id,
-                                      galeria_nazov: galeria.nazov,
-                                      dlazdice_ids: []
-                                    };
-                                  }
-
-                                  if (e.target.checked) {
-                                    galeriaMapping.dlazdice_ids = [...(galeriaMapping.dlazdice_ids || []), dlazdica.id];
-                                  } else {
-                                    galeriaMapping.dlazdice_ids = (galeriaMapping.dlazdice_ids || []).filter(id => id !== dlazdica.id);
-                                  }
-
-                                  const noveMapovanie = aktualneMapovanie.filter(m => m.galeria_typ !== galeria.id);
-                                  if (galeriaMapping.dlazdice_ids.length > 0) {
-                                    noveMapovanie.push(galeriaMapping);
-                                  }
-
-                                  setFormData({...formData, mapovanie_fotiek_prosto: noveMapovanie});
-                                }}
-                                className="w-4 h-4 rounded border-gray-300"
-                              />
-                              <span className="text-sm font-medium text-gray-900">{dlazdica.nazov}</span>
-                            </label>
-                          );
-                        })}
-                      </div>
-
-                      {existujuce && existujuce.dlazdice_ids?.length > 0 && (
-                        <div className="mt-4 p-3 bg-white rounded-lg border">
-                          <p className="text-xs font-semibold text-gray-700 mb-2">✅ Galéria sa zobrazí pri:</p>
-                          <div className="flex flex-wrap gap-2">
-                            {existujuce.dlazdice_ids.map(dlazdicaId => {
-                              const dlazdica = prostohouseDlazdice.find(d => d.id === dlazdicaId);
                               return (
-                                <span key={dlazdicaId} className={`px-2 py-1 bg-${galeria.color}-100 text-${galeria.color}-800 text-xs rounded-full`}>
-                                  {dlazdica?.nazov || dlazdicaId}
-                                </span>
+                                <div key={dlazdica.id} className={`relative border-2 rounded-xl p-4 transition-all ${
+                                  existujuceMapovanie 
+                                    ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-400 shadow-lg' 
+                                    : 'bg-white border-gray-300 hover:border-gray-400 hover:shadow-md'
+                                }`}>
+                                  {existujuceMapovanie && (
+                                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg z-10">
+                                      <CheckCircle className="w-5 h-5 text-white" />
+                                    </div>
+                                  )}
+
+                                  <div className="flex items-start justify-between mb-3">
+                                    <div className="flex-1">
+                                      <h4 className={`font-bold text-base mb-1 ${existujuceMapovanie ? 'text-green-900' : 'text-gray-900'}`}>
+                                        {dlazdica.nazov}
+                                      </h4>
+                                      <p className="text-xs text-gray-500">ID: {dlazdica.id}</p>
+                                    </div>
+                                    {existujuceMapovanie ? (
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => removeMapovanieFotky("prosto", mapovaIndex)}
+                                        className="hover:bg-red-100"
+                                      >
+                                        <Trash2 className="w-4 h-4 text-red-600" />
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => addMapovanieFotky("prosto", sekcia.id, dlazdica.id, dlazdica.nazov)}
+                                        className="bg-primary hover:bg-primary/90"
+                                      >
+                                        <Plus className="w-4 h-4 mr-1" />
+                                        Pridať
+                                      </Button>
+                                    )}
+                                  </div>
+
+                                  {existujuceMapovanie && (
+                                    <div className="space-y-3 pt-3 border-t border-green-200">
+                                      <div>
+                                        <Label className="text-xs font-semibold text-green-900 mb-1 block">Typ fotky</Label>
+                                        <Select
+                                          value={existujuceMapovanie.typ_fotky}
+                                          onValueChange={(val) => updateMapovanieFotky("prosto", mapovaIndex, 'typ_fotky', val)}
+                                        >
+                                          <SelectTrigger className="h-9 text-sm bg-white border-green-300">
+                                            <SelectValue />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            <SelectItem value="titulna">📸 Titulná fotka</SelectItem>
+                                            <SelectItem value="zakladna_konfiguracia">🏠 Základná konfigurácia</SelectItem>
+                                            <SelectItem value="interier_drevo">🪵 Interiér drevo</SelectItem>
+                                            <SelectItem value="interier_sadrokarton">🏡 Interiér sadrokartón</SelectItem>
+                                            <SelectItem value="galeria_exterier">🏘️ Galéria exteriér</SelectItem>
+                                            <SelectItem value="galeria_interier">🛋️ Galéria interiér</SelectItem>
+                                            <SelectItem value="podorysy">📐 Pôdorysy</SelectItem>
+                                          </SelectContent>
+                                        </Select>
+                                      </div>
+                                      <div>
+                                        <Label className="text-xs font-semibold text-green-900 mb-1 block">Popis</Label>
+                                        <Input
+                                          value={existujuceMapovanie.popis || ''}
+                                          onChange={(e) => updateMapovanieFotky("prosto", mapovaIndex, 'popis', e.target.value)}
+                                          placeholder="Napr: Zobrazí dom s touto fasádou"
+                                          className="h-9 text-sm bg-white border-green-300"
+                                        />
+                                      </div>
+                                      <div className="p-2 bg-green-100 rounded-md">
+                                        <p className="text-xs text-green-800 flex items-center gap-1">
+                                          <Eye className="w-3 h-3" />
+                                          V ponuke: {existujuceMapovanie.typ_fotky.replace('_', ' ')}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
                               );
                             })}
                           </div>
-                        </div>
-                      )}
-                    </Card>
-                  );
-                })}
-              </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
             </Card>
           </TabsContent>
         </Tabs>
