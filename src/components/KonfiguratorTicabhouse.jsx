@@ -11,6 +11,10 @@ import EditableTile from "./EditableTile";
 import { toast } from "sonner";
 
 export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, izolaciaStien, setIzolaciaStien, izolaciaPodlahy, setIzolaciaPodlahy, izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia, pripravaNaRekuperaciu, setPripravaNaRekuperaciu, podlahovoKurenie, setPodlahovoKurenie, pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle, klimatizacia, setKlimatizacia, fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna, vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha, interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod, prepat, setPrepat, pripravaNaSolarnePanely, setPripravaNaSolarnePanely, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria, skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering, projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady, montaz, setMontaz, doprava, setDoprava }) {
+  // Dodatočné služby - state
+  const [predajNehnutelnosti, setPredajNehnutelnosti] = useState(false);
+  const [hladamPozemok, setHladamPozemok] = useState(false);
+  const [financneSluzby, setFinancneSluzby] = useState(false);
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
 
@@ -245,6 +249,96 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, ucel, setUcel, iz
 
   return (
     <div className="w-full">
+        {/* Dodatočné služby - KROK 0 */}
+        <Card className="p-3 sm:p-4 mb-3 bg-gradient-to-br from-cyan-50 via-white to-teal-50 border-2 border-cyan-300 shadow-lg">
+          <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-cyan-600 text-white text-sm mr-1">0</span>
+            📋 {getTranslatedText('sekcia_sluzby', 'nazov') || t('additionalServices') || 'Dodatočné služby'}
+          </h3>
+          <p className="text-xs sm:text-sm text-gray-600 mb-3">
+            {getTranslatedText('sekcia_sluzby', 'podnadpis') || 'Vyberte si doplnkové služby (voliteľné):'}
+          </p>
+          <div className="space-y-2">
+            {/* Predaj nehnuteľnosti */}
+            <div
+              onClick={() => setPredajNehnutelnosti(!predajNehnutelnosti)}
+              className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                predajNehnutelnosti 
+                  ? 'bg-blue-100 border-blue-500 shadow-md' 
+                  : 'bg-white border-blue-200 hover:border-blue-400'
+              }`}
+            >
+              <div className="flex items-start gap-2">
+                <div className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                  predajNehnutelnosti ? 'bg-blue-500 border-blue-500' : 'border-gray-300'
+                }`}>
+                  {predajNehnutelnosti && <CheckCircle className="w-4 h-4 text-white" />}
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm sm:text-base font-semibold text-gray-900">
+                    {getTranslatedText('sluzba_predaj', 'nazov') || 'Predaj predošlej nehnuteľnosti'}
+                  </p>
+                  <p className="text-xs text-gray-600 mt-0.5">
+                    {getTranslatedText('sluzba_predaj', 'dlhy_popis') || 'Budú sa Vám venovať naši najlepší odborníci v realitách.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Hľadám pozemok */}
+            <div
+              onClick={() => setHladamPozemok(!hladamPozemok)}
+              className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                hladamPozemok 
+                  ? 'bg-green-100 border-green-500 shadow-md' 
+                  : 'bg-white border-green-200 hover:border-green-400'
+              }`}
+            >
+              <div className="flex items-start gap-2">
+                <div className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                  hladamPozemok ? 'bg-green-500 border-green-500' : 'border-gray-300'
+                }`}>
+                  {hladamPozemok && <CheckCircle className="w-4 h-4 text-white" />}
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm sm:text-base font-semibold text-gray-900">
+                    {getTranslatedText('sluzba_pozemok', 'nazov') || 'Chcem pozemok pod svoj dom'}
+                  </p>
+                  <p className="text-xs text-gray-600 mt-0.5">
+                    {getTranslatedText('sluzba_pozemok', 'dlhy_popis') || 'Pomôžeme Vám nájsť ideálny pozemok.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Finančné služby */}
+            <div
+              onClick={() => setFinancneSluzby(!financneSluzby)}
+              className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                financneSluzby 
+                  ? 'bg-orange-100 border-orange-500 shadow-md' 
+                  : 'bg-white border-orange-200 hover:border-orange-400'
+              }`}
+            >
+              <div className="flex items-start gap-2">
+                <div className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                  financneSluzby ? 'bg-orange-500 border-orange-500' : 'border-gray-300'
+                }`}>
+                  {financneSluzby && <CheckCircle className="w-4 h-4 text-white" />}
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm sm:text-base font-semibold text-gray-900">
+                    {getTranslatedText('sluzba_finance', 'nazov') || 'Finančné služby - úvery/poistky'}
+                  </p>
+                  <p className="text-xs text-gray-600 mt-0.5">
+                    {getTranslatedText('sluzba_finance', 'dlhy_popis') || 'Budú sa Vám venovať naši najlepší finančníci, ktorí Vám pomôžu nie len s financovaním vášho bývania, ale pomocnú ruku vám podajú aj v ťažkých chvíľach s financiami.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+
         {/* Účel stavby */}
         <Card className="p-3 sm:p-4 mb-3 bg-gradient-to-br from-blue-50 via-white to-indigo-50 border-2 border-blue-200 shadow-lg">
           <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
