@@ -31,28 +31,34 @@ const removeDiacritics = (str) => {
     .replace(/³/g, '3');
 };
 
-// Helper funkcia na stiahnutie obrázku cez proxy (pre CORS) a konverziu na base64
+// Helper funkcia na stiahnutie obrázku a konverziu na base64 pre Deno
 const fetchImageAsBase64 = async (url) => {
   try {
-    // Použiť CORS proxy alebo priamo fetch
-    const proxyUrl = url.startsWith('http') ? url : url;
-    const response = await fetch(proxyUrl);
+    const response = await fetch(url);
     if (!response.ok) {
-      console.error('Failed to fetch image:', response.status);
+      console.error('Failed to fetch image:', response.status, url);
       return null;
     }
-    const blob = await response.blob();
-    const reader = new FileReader();
     
-    return new Promise((resolve) => {
-      reader.onloadend = () => {
-        const base64 = reader.result;
-        const format = blob.type.includes('png') ? 'PNG' : 'JPEG';
-        resolve({ base64, format });
-      };
-      reader.onerror = () => resolve(null);
-      reader.readAsDataURL(blob);
-    });
+    const arrayBuffer = await response.arrayBuffer();
+    const bytes = new Uint8Array(arrayBuffer);
+    
+    // Konverzia na base64
+    let binary = '';
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    const base64 = btoa(binary);
+    
+    // Zisti typ obrázka
+    const contentType = response.headers.get('content-type') || 'image/jpeg';
+    const format = contentType.includes('png') ? 'PNG' : 'JPEG';
+    
+    return { 
+      base64: `data:${contentType};base64,${base64}`, 
+      format 
+    };
   } catch (e) {
     console.error('Chyba pri stiahnutí obrázka:', url, e);
     return null;
@@ -497,19 +503,26 @@ Deno.serve(async (req) => {
     polozkyDetail.push({ nazov: 'Montaz domu', cena: CENY.montaz, vybrane: konfiguraciaData.montaz });
     polozkyDetail.push({ nazov: 'Doprava modulov', cena: CENY.doprava, vybrane: konfiguraciaData.doprava });
 
-    // === SEKCIA 12: DODATOČNÉ SLUŽBY ===
-    if (konfiguraciaData.predajNehnutelnosti || konfiguraciaData.chcemPozemok || konfiguraciaData.financneSluzby) {
-      polozkyDetail.push({ nazov: '--- DODATOCNE SLUZBY ---', cena: null, vybrane: true, kategoria: true });
-      if (konfiguraciaData.predajNehnutelnosti) {
-        polozkyDetail.push({ nazov: 'Predaj predoslej nehnutelnosti', cena: 'na vyziadanie', vybrane: true, popis: 'Budu sa Vam venovat nasi najlepsi odbornici v realitach.' });
-      }
-      if (konfiguraciaData.chcemPozemok) {
-        polozkyDetail.push({ nazov: 'Chcem pozemok pod svoj dom', cena: 'na vyziadanie', vybrane: true, popis: 'Pomozeme Vam najst idealny pozemok.' });
-      }
-      if (konfiguraciaData.financneSluzby) {
-        polozkyDetail.push({ nazov: 'Financne sluzby - uvery/pozicky', cena: 'na vyziadanie', vybrane: true, popis: 'Budu sa Vam venovat nasi najlepsi financnici.' });
-      }
-    }
+    // === SEKCIA 12: DODATOČNÉ SLUŽBY - vždy zobrazené ===
+    polozkyDetail.push({ nazov: '--- DODATOCNE SLUZBY ---', cena: null, vybrane: true, kategoria: true });
+    polozkyDetail.push({ 
+      nazov: 'Predaj predoslej nehnutelnosti', 
+      cena: 'na vyziadanie', 
+      vybrane: konfiguraciaData.predajNehnutelnosti, 
+      popis: konfiguraciaData.predajNehnutelnosti ? 'Budu sa Vam venovat nasi najlepsi odbornici v realitach.' : null 
+    });
+    polozkyDetail.push({ 
+      nazov: 'Chcem pozemok pod svoj dom', 
+      cena: 'na vyziadanie', 
+      vybrane: konfiguraciaData.chcemPozemok, 
+      popis: konfiguraciaData.chcemPozemok ? 'Pomozeme Vam najst idealny pozemok.' : null 
+    });
+    polozkyDetail.push({ 
+      nazov: 'Financne sluzby - uvery/pozicky', 
+      cena: 'na vyziadanie', 
+      vybrane: konfiguraciaData.financneSluzby, 
+      popis: konfiguraciaData.financneSluzby ? 'Budu sa Vam venovat nasi najlepsi financnici.' : null 
+    });
 
     // Tabuľka cenových položiek - Header
     doc.setFillColor(mainColor.r, mainColor.g, mainColor.b);
