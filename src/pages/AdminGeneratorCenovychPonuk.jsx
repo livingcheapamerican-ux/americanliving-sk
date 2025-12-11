@@ -1370,16 +1370,17 @@ export default function AdminGeneratorCenovychPonuk() {
                                       />
                                     </div>
                                   </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+                                  )}
+                                  </div>
+                                  );
+                                  })}
+                                  </div>
+                                  </div>
+                                  )}
+                                  </Card>
+                                  );
+                                  })}
+                                  </div>
             </Card>
           </TabsContent>
 
