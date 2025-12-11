@@ -419,7 +419,11 @@ export default function AdminGeneratorCenovychPonuk() {
                 Nová šablóna
               </Button>
               <Button 
-                onClick={() => setShowPreview(true)} 
+                onClick={() => {
+                  console.log('Otváram preview, showPreview:', showPreview);
+                  setShowPreview(true);
+                  console.log('Po nastavení showPreview na true');
+                }} 
                 variant="secondary"
                 className="bg-white/20 hover:bg-white/30 text-white border-white/30"
               >
@@ -1443,13 +1447,12 @@ export default function AdminGeneratorCenovychPonuk() {
         </Tabs>
 
         {/* Preview Modal */}
-        {showPreview && (
-          <Dialog open={showPreview} onOpenChange={setShowPreview}>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Náhľad cenovej ponuky</DialogTitle>
-              </DialogHeader>
-            
+        <Dialog open={showPreview} onOpenChange={setShowPreview}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Náhľad cenovej ponuky</DialogTitle>
+            </DialogHeader>
+          
             <div className="bg-white p-8 border rounded-lg" style={{
               background: `linear-gradient(to bottom, ${formData.farba_hlavna}15 0%, white 200px)`
             }}>
@@ -1589,11 +1592,10 @@ export default function AdminGeneratorCenovychPonuk() {
                   IČO: {formData.ico} | DIČ: {formData.dic} | IČ DPH: {formData.ic_dph}
                 </p>
               </div>
-              </div>
-              </DialogContent>
-              </Dialog>
-              )}
-              </div>
-              </div>
-              );
-              }
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </div>
+  );
+}
