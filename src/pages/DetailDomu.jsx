@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle, Boxes, Grid2x2, Layers, Edit, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw, Hammer, Caravan, Package, Droplets, Landmark } from "lucide-react";
 import { motion } from "framer-motion";
 import PriceCalculator from "../components/PriceCalculator";
+import ImageWithWatermark from "../components/ImageWithWatermark";
 import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
 import FloatingPrice from "../components/FloatingPrice";
 import DomGalerieManager from "../components/admin/DomGalerieManager";
@@ -550,7 +551,7 @@ export default function DetailDomu() {
               className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl bg-gray-200 cursor-pointer"
               onClick={() => openLightbox(allImages, selectedImage)}
             >
-              <img
+              <ImageWithWatermark
                   src={allImages[selectedImage]}
                   alt={`${dom.nazov} - obrázok ${selectedImage + 1}`}
                   className="w-full h-full object-contain bg-gray-100"
@@ -583,7 +584,7 @@ export default function DetailDomu() {
                         : 'border-gray-200 hover:border-primary/50'
                     }`}
                   >
-                    <img
+                    <ImageWithWatermark
                       src={img}
                       alt={`Miniatúra ${index + 1}`}
                       className="w-full h-full object-cover"
@@ -605,7 +606,7 @@ export default function DetailDomu() {
                         className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
                         onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), 0)}
                       >
-                        <img
+                        <ImageWithWatermark
                           src={dom.podorys_2d}
                           alt="2D Pôdorys"
                           className="w-full h-auto object-contain hover:opacity-90"
@@ -620,7 +621,7 @@ export default function DetailDomu() {
                         className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
                         onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), dom.podorys_2d ? 1 : 0)}
                       >
-                        <img
+                        <ImageWithWatermark
                           src={dom.podorys_3d}
                           alt="3D Pôdorys"
                           className="w-full h-auto object-contain hover:opacity-90"
@@ -668,7 +669,7 @@ export default function DetailDomu() {
                             key={fotoIndex} 
                             className="w-10 h-10 sm:w-14 sm:h-14 rounded-md overflow-hidden border border-gray-200 flex-shrink-0 relative"
                           >
-                            <img
+                            <ImageWithWatermark
                               src={foto}
                               alt={`Náhľad ${fotoIndex + 1}`}
                               className="w-full h-full object-cover"
@@ -3291,7 +3292,7 @@ export default function DetailDomu() {
               >
                 {lightboxImages.map((img, idx) => (
                   <div key={idx} className="w-screen h-full flex items-center justify-center flex-shrink-0">
-                    <img
+                    <ImageWithWatermark
                       src={img}
                       alt={`Fotka ${idx + 1}`}
                       className="select-none max-w-[90vw] max-h-[80vh] object-contain"
@@ -3306,7 +3307,7 @@ export default function DetailDomu() {
                 ))}
               </div>
             ) : (
-              <img
+              <ImageWithWatermark
                 src={lightboxImages[lightboxIndex]}
                 alt={`Fotka ${lightboxIndex + 1}`}
                 className={`select-none ${zoomLevel > 1 ? 'cursor-grab' : 'cursor-zoom-in'} ${isDragging ? 'cursor-grabbing' : ''}`}
@@ -3345,7 +3346,7 @@ export default function DetailDomu() {
                     idx === lightboxIndex ? 'border-white' : 'border-transparent opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" onContextMenu={(e) => e.preventDefault()} draggable={false} />
+                  <ImageWithWatermark src={img} alt="" className="w-full h-full object-cover" onContextMenu={(e) => e.preventDefault()} draggable={false} />
                 </button>
               ))}
             </div>

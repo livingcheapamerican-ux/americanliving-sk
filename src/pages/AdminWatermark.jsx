@@ -225,10 +225,13 @@ export default function AdminWatermark() {
             </div>
 
             <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-800">
-                <strong>Tip:</strong> Watermark sa zobrazí na všetkých fotkách domov v katalógu. 
-                Nastavenia sa aplikujú okamžite po uložení.
+              <p className="text-sm text-blue-800 mb-2">
+                <strong>Tip:</strong> Watermark sa aplikuje na:
               </p>
+              <ul className="text-sm text-blue-700 space-y-1">
+                <li>• <strong>Galéria domov:</strong> Všetky fotky v detaile domu (hlavná fotka, miniatúry, galérie, lightbox)</li>
+                <li>• <strong>Katalóg domov:</strong> Úvodné fotky domov v zozname (len ak zapnuté)</li>
+              </ul>
             </div>
           </Card>
         </div>
