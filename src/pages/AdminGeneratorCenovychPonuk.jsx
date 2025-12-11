@@ -1430,7 +1430,7 @@ export default function AdminGeneratorCenovychPonuk() {
                                   {existujuceMapovanie && (
                                     <div className="space-y-3 pt-3 border-t border-green-200">
                                       <div>
-                                        <Label className="text-xs font-semibold text-green-900 mb-1 block">Typ fotky</Label>
+                                        <Label className="text-xs font-semibold text-green-900 mb-1 block">Typ fotky / Galéria</Label>
                                         <Select
                                           value={existujuceMapovanie.typ_fotky}
                                           onValueChange={(val) => updateMapovanieFotky("prosto", mapovaIndex, 'typ_fotky', val)}
@@ -1441,10 +1441,10 @@ export default function AdminGeneratorCenovychPonuk() {
                                           <SelectContent>
                                             <SelectItem value="titulna">📸 Titulná fotka</SelectItem>
                                             <SelectItem value="zakladna_konfiguracia">🏠 Základná konfigurácia</SelectItem>
-                                            <SelectItem value="interier_drevo">🪵 Interiér drevo</SelectItem>
-                                            <SelectItem value="interier_sadrokarton">🏡 Interiér sadrokartón</SelectItem>
-                                            <SelectItem value="galeria_exterier">🏘️ Galéria exteriér</SelectItem>
-                                            <SelectItem value="galeria_interier">🛋️ Galéria interiér</SelectItem>
+                                            <SelectItem value="exterier_drevo_plech">🏠 Galéria: Exteriér drevo/plech</SelectItem>
+                                            <SelectItem value="exterier_murovka">🧱 Galéria: Exteriér murovka</SelectItem>
+                                            <SelectItem value="interier_drevo">🪵 Galéria: Interiér drevo</SelectItem>
+                                            <SelectItem value="interier_sadrokarton">🏡 Galéria: Interiér sadrokartón</SelectItem>
                                             <SelectItem value="podorysy">📐 Pôdorysy</SelectItem>
                                           </SelectContent>
                                         </Select>
