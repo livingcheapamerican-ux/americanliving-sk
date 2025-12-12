@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Dialog,
   DialogContent,
@@ -47,7 +47,13 @@ export default function KonfiguratorContactModal({
   const [showPreview, setShowPreview] = useState(false);
   const [previewHtml, setPreviewHtml] = useState("");
 
+  const { data: user } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => base44.auth.me()
+  });
+
   const isProstoHouse = dom?.vyrobca === "Prosto House";
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
   const formatPrice = (price) => price?.toLocaleString('sk-SK') + " €";
 
