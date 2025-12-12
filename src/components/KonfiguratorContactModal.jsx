@@ -45,8 +45,6 @@ export default function KonfiguratorContactModal({
   });
   const [submitted, setSubmitted] = useState(false);
   const [generatingPDF, setGeneratingPDF] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
-  const [previewHtml, setPreviewHtml] = useState("");
 
   const isProstoHouse = dom?.vyrobca === "Prosto House";
 
@@ -129,88 +127,12 @@ export default function KonfiguratorContactModal({
     }
   };
 
-  const handlePreview = async () => {
-    if (!isProstoHouse) return;
-    
-    try {
-      const response = await base44.functions.invoke('nahladCenovejPonukyProstoHouseEmail', {
-        dom_id: dom.id,
-        klient_meno: formData.meno || 'Klient',
-        klient_email: formData.email || 'email@example.com',
-        klient_telefon: formData.telefon || '+421',
-        klient_adresa: formData.obec,
-        predajNehnutelnosti, hladaniePozemku, financneSluzby,
-        montazHolodomu, izolaciaNavysenie, zaklady, predlzenie, vstupneDvere,
-        elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo,
-        rekuperacia, pripojkaSiete, stresneOkno, bocneOknoFixne, bocneOknoVyklopne90,
-        bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, vonkajsiaFasada, interierFinis,
-        vnutornePodlahy, podlahovVykurovanie, interieroveDvere, inziniering, projektA0,
-        revizna, doprava
-      });
-      
-      setPreviewHtml(response.data);
-      setShowPreview(true);
-    } catch (error) {
-      toast.error('Chyba pri načítaní náhľadu: ' + error.message);
-    }
-  };
-
-  const handleSendEmail = async () => {
-    if (!formData.email || !formData.meno || !formData.telefon || !formData.obec) {
-      toast.error('Vyplňte všetky povinné polia');
-      return;
-    }
-    
-    if (!isProstoHouse) return;
-    
-    setGeneratingPDF(true);
-    try {
-      await base44.functions.invoke('odosliCenovuPonukuProstoHouseEmail', {
-        dom_id: dom.id,
-        klient_meno: formData.meno,
-        klient_email: formData.email,
-        klient_telefon: formData.telefon,
-        klient_adresa: formData.obec,
-        klient_poznamka: formData.poznamka,
-        predajNehnutelnosti, hladaniePozemku, financneSluzby,
-        montazHolodomu, izolaciaNavysenie, zaklady, predlzenie, vstupneDvere,
-        elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo,
-        rekuperacia, pripojkaSiete, stresneOkno, bocneOknoFixne, bocneOknoVyklopne90,
-        bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, vonkajsiaFasada, interierFinis,
-        vnutornePodlahy, podlahovVykurovanie, interieroveDvere, inziniering, projektA0,
-        revizna, doprava
-      });
-      
-      toast.success('Cenová ponuka odoslaná na email');
-      setSubmitted(true);
-      setTimeout(() => {
-        setSubmitted(false);
-        setFormData({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
-        onClose();
-      }, 3000);
-    } catch (error) {
-      toast.error('Chyba pri odosielaní: ' + error.message);
-    } finally {
-      setGeneratingPDF(false);
-    }
+  const handleEmailPDF = async () => {
+    toast.info('Funkcia v príprave');
   };
 
   return (
-    <>
-      {/* Preview Modal */}
-      {showPreview && (
-        <Dialog open={showPreview} onOpenChange={setShowPreview}>
-          <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto p-0">
-            <div className="p-4 border-b bg-gray-50">
-              <h3 className="text-lg font-bold">Náhľad cenovej ponuky</h3>
-              <p className="text-sm text-gray-600">Takto bude vyzerať email pre klienta</p>
-            </div>
-            <div dangerouslySetInnerHTML={{ __html: previewHtml }} />
-          </DialogContent>
-        </Dialog>
-      )}
-
-      <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
         {!submitted ? (
           <div className="flex flex-col lg:flex-row">
@@ -402,56 +324,7 @@ export default function KonfiguratorContactModal({
                   />
                 </div>
 
-                {isProstoHouse ? (
-                  <div className="space-y-3">
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      onClick={handlePreview}
-                      className="w-full border-2 border-blue-500 text-blue-600 hover:bg-blue-50"
-                    >
-                      <Mail className="mr-2 w-4 h-4" />
-                      Náhľad cenovej ponuky
-                    </Button>
-                    <Button
-                      type="button"
-                      size="sm"
-                      onClick={handleSendEmail}
-                      disabled={generatingPDF || !formData.email || !formData.meno || !formData.telefon || !formData.obec}
-                      className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white"
-                    >
-                      <Mail className="mr-2 w-4 h-4" />
-                      {generatingPDF ? 'Odosiela sa...' : 'Odoslať cenovú ponuku emailom'}
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-3 mb-3">
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      onClick={handleDownloadPDF}
-                      disabled={generatingPDF}
-                      className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50"
-                    >
-                      <FileDown className="mr-2 w-4 h-4" />
-                      Stiahnuť PDF
-                    </Button>
 
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      onClick={handleEmailPDF}
-                      disabled={generatingPDF || !formData.email}
-                      className="border-2 border-purple-500 text-purple-600 hover:bg-purple-50"
-                    >
-                      <Mail className="mr-2 w-4 h-4" />
-                      Email PDF
-                    </Button>
-                  </div>
-                )}
 
                 <Button
                   type="submit"
@@ -491,6 +364,5 @@ export default function KonfiguratorContactModal({
         )}
       </DialogContent>
     </Dialog>
-    </>
   );
 }
