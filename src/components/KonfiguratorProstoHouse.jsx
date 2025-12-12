@@ -473,6 +473,28 @@ export default function KonfiguratorProstoHouse({
             tepelneCerpadlo={tepelneCerpadlo}
             rekuperacia={rekuperacia}
             projektA0={projektA0}
+            montazHolodomu={montazHolodomu}
+            zaklady={zaklady}
+            predlzenie={predlzenie}
+            vstupneDvere={vstupneDvere}
+            elektroinstalacia={elektroinstalacia}
+            vodaKanalizacia={vodaKanalizacia}
+            sanitaKomplet={sanitaKomplet}
+            bojler={bojler}
+            pripojkaSiete={pripojkaSiete}
+            stresneOkno={stresneOkno}
+            bocneOknoFixne={bocneOknoFixne}
+            bocneOknoVyklopne90={bocneOknoVyklopne90}
+            bocneOknoVyklopne55={bocneOknoVyklopne55}
+            povrchokaOkien={povrchokaOkien}
+            tonovaneSkla={tonovaneSkla}
+            interierFinis={interierFinis}
+            vnutornePodlahy={vnutornePodlahy}
+            podlahovVykurovanie={podlahovVykurovanie}
+            interieroveDvere={interieroveDvere}
+            inziniering={inziniering}
+            revizna={revizna}
+            doprava={doprava}
           />
 
           <div className="px-2 py-1 max-h-[65vh] overflow-y-auto">
@@ -1240,6 +1262,28 @@ export default function KonfiguratorProstoHouse({
                     tepelneCerpadlo={tepelneCerpadlo}
                     rekuperacia={rekuperacia}
                     projektA0={projektA0}
+                    montazHolodomu={montazHolodomu}
+                    zaklady={zaklady}
+                    predlzenie={predlzenie}
+                    vstupneDvere={vstupneDvere}
+                    elektroinstalacia={elektroinstalacia}
+                    vodaKanalizacia={vodaKanalizacia}
+                    sanitaKomplet={sanitaKomplet}
+                    bojler={bojler}
+                    pripojkaSiete={pripojkaSiete}
+                    stresneOkno={stresneOkno}
+                    bocneOknoFixne={bocneOknoFixne}
+                    bocneOknoVyklopne90={bocneOknoVyklopne90}
+                    bocneOknoVyklopne55={bocneOknoVyklopne55}
+                    povrchokaOkien={povrchokaOkien}
+                    tonovaneSkla={tonovaneSkla}
+                    interierFinis={interierFinis}
+                    vnutornePodlahy={vnutornePodlahy}
+                    podlahovVykurovanie={podlahovVykurovanie}
+                    interieroveDvere={interieroveDvere}
+                    inziniering={inziniering}
+                    revizna={revizna}
+                    doprava={doprava}
                   />
                 </div>
               </div>

@@ -1,0 +1,541 @@
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+
+Deno.serve(async (req) => {
+  try {
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+
+    if (!user || (user.role !== 'admin' && user.super_admin !== true)) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const payload = await req.json();
+    const {
+      dom_id, klient_meno, klient_email, klient_telefon, klient_adresa,
+      montazHolodomu, izolaciaNavysenie, zaklady, vstupneDvere,
+      elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler,
+      tepelneCerpadlo, rekuperacia, pripojkaSiete,
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55,
+      povrchokaOkien, tonovaneSkla, vonkajsiaFasada, interierFinis,
+      vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
+      inziniering, projektA0, revizna, doprava, predlzenie
+    } = payload;
+
+    // Načítaj dom
+    const domy = await base44.asServiceRole.entities.Dom.list();
+    const dom = domy.find(d => d.id === dom_id);
+
+    if (!dom) {
+      return Response.json({ error: 'Dom nenájdený' }, { status: 404 });
+    }
+
+    // Cenník
+    const CENY = {
+      montaz: { nie: 0, ano: 9225 },
+      predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
+      dvere: { ziadne: 0, kovove: 720, plastove: 660 },
+      izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 },
+      elektroinstalacia: 3900,
+      vodaKanalizacia: 1150,
+      sanitaKomplet: 1169,
+      bojler: 264,
+      tepelneCerpadlo: 3321,
+      rekuperacia: 1600,
+      zaklady: { bez: 0, skrutky: 4751, doska: 9633, pasove: 11823 },
+      pripojkaSiete: 1501,
+      inziniering: 2592,
+      projektA0: 3500,
+      interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 9430 },
+      vonkajsiaFasada: { standard: 0, suchana: 6371 },
+      povrchokaOkien: 1450,
+      vnutornePodlahy: 1750,
+      podlahovVykurovanie: 3960,
+      interieroveDvere: 180,
+      tonovaneSkla: 700,
+      doprava: 0,
+      revizna: 1000,
+      stresneOkno: 760,
+      bocneOknoFixne: 500,
+      bocneOknoVyklopne90: 540,
+      bocneOknoVyklopne55: 225
+    };
+
+    const BASE_PRICE = dom.zakladna_cena || 0;
+    let totalPrice = BASE_PRICE;
+
+    totalPrice += CENY.montaz[montazHolodomu] || 0;
+    totalPrice += CENY.predlzenie[predlzenie] || 0;
+    totalPrice += CENY.dvere[vstupneDvere] || 0;
+    totalPrice += CENY.izolacia[izolaciaNavysenie] || 0;
+    
+    if (elektroinstalacia) totalPrice += CENY.elektroinstalacia;
+    if (vodaKanalizacia) totalPrice += CENY.vodaKanalizacia;
+    if (sanitaKomplet) totalPrice += CENY.sanitaKomplet;
+    if (bojler) totalPrice += CENY.bojler;
+    if (tepelneCerpadlo) totalPrice += CENY.tepelneCerpadlo;
+    if (rekuperacia) totalPrice += CENY.rekuperacia;
+    
+    totalPrice += CENY.zaklady[zaklady] || 0;
+    if (pripojkaSiete) totalPrice += CENY.pripojkaSiete;
+    
+    if (inziniering) totalPrice += CENY.inziniering;
+    if (projektA0) totalPrice += CENY.projektA0;
+    
+    totalPrice += CENY.interierFinis[interierFinis] || 0;
+    totalPrice += CENY.vonkajsiaFasada[vonkajsiaFasada] || 0;
+    if (povrchokaOkien) totalPrice += CENY.povrchokaOkien;
+    if (vnutornePodlahy) totalPrice += CENY.vnutornePodlahy;
+    if (podlahovVykurovanie) totalPrice += CENY.podlahovVykurovanie;
+    totalPrice += (interieroveDvere || 0) * CENY.interieroveDvere;
+    if (tonovaneSkla) totalPrice += CENY.tonovaneSkla;
+    if (doprava) totalPrice += CENY.doprava;
+    if (revizna) totalPrice += CENY.revizna;
+    
+    totalPrice += (stresneOkno || 0) * CENY.stresneOkno;
+    totalPrice += (bocneOknoFixne || 0) * CENY.bocneOknoFixne;
+    totalPrice += (bocneOknoVyklopne90 || 0) * CENY.bocneOknoVyklopne90;
+    totalPrice += (bocneOknoVyklopne55 || 0) * CENY.bocneOknoVyklopne55;
+
+    // Typ stavby
+    const isA0 = projektA0 && izolaciaNavysenie === "premium" && tepelneCerpadlo && rekuperacia;
+    const typStavby = isA0 ? "rodinny_dom_a0" : "rekreacna_stavba";
+
+    // Výber hlavnej fotky
+    const hlavnaFotka = vonkajsiaFasada === "suchana" 
+      ? dom.hlavny_obrazok 
+      : (dom.zakladna_konfiguracia_obrazok || dom.hlavny_obrazok);
+
+    // Galérie podľa pravidiel
+    const galerie = [];
+    
+    // Interiér podľa výberu
+    if (interierFinis === "drevo") {
+      const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
+      if (drevoGaleria?.fotky?.length > 0) {
+        galerie.push({ nazov: "Interiér - Drevo", fotky: drevoGaleria.fotky });
+      }
+    } else if (interierFinis === "sadrokarton") {
+      const sadroGaleria = dom.galerie?.find(g => g.typ === "interier_sadrokarton");
+      if (sadroGaleria?.fotky?.length > 0) {
+        galerie.push({ nazov: "Interiér - Sadrokartón", fotky: sadroGaleria.fotky });
+      }
+    }
+
+    // Exteriér podľa fasády
+    if (vonkajsiaFasada === "standard") {
+      const drevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
+      if (drevoGaleria?.fotky?.length > 0) {
+        galerie.push({ nazov: "Exteriér - Drevo/Plech", fotky: drevoGaleria.fotky });
+      }
+    } else if (vonkajsiaFasada === "suchana") {
+      const murovkaGaleria = dom.galerie?.find(g => g.typ === "exterier_murovka");
+      if (murovkaGaleria?.fotky?.length > 0) {
+        galerie.push({ nazov: "Exteriér - Murovka", fotky: murovkaGaleria.fotky });
+      }
+    }
+
+    const formatPrice = (price) => {
+      if (!price) return "0,00 €";
+      return price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+    };
+
+    // Vytvor HTML
+    const html = `
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cenová ponuka - ${dom.nazov}</title>
+  <style>
+    body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #f5f5f5; }
+    .container { max-width: 800px; margin: 0 auto; background: white; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    .header { background: linear-gradient(135deg, #EF4444 0%, #dc2626 100%); color: white; padding: 40px 30px; text-align: center; }
+    .header h1 { margin: 0 0 10px 0; font-size: 32px; }
+    .content { padding: 30px; }
+    .section { margin-bottom: 30px; }
+    .section-title { font-size: 20px; font-weight: bold; color: #EF4444; margin-bottom: 15px; border-bottom: 3px solid #EF4444; padding-bottom: 8px; }
+    
+    .typ-stavby { padding: 20px; border-radius: 12px; margin: 20px 0; border: 3px solid; }
+    .typ-stavby.rekreacna { background: #fef3c7; border-color: #f59e0b; }
+    .typ-stavby.a0 { background: #d1fae5; border-color: #10b981; }
+    .typ-stavby h3 { margin: 0 0 10px 0; font-size: 22px; display: flex; align-items: center; gap: 10px; }
+    .typ-stavby ul { margin: 10px 0; padding-left: 20px; }
+    .typ-stavby li { margin: 5px 0; }
+    
+    .info-box { background: #f0fdf4; border: 2px solid #10b981; border-radius: 8px; padding: 15px; margin: 15px 0; }
+    .info-box h4 { margin: 0 0 10px 0; color: #065f46; font-size: 16px; }
+    .info-box ul { margin: 0; padding-left: 20px; color: #047857; }
+    .info-box li { margin: 5px 0; font-size: 14px; }
+    
+    .house-img { width: 100%; max-height: 400px; object-fit: contain; background: #f9fafb; border-radius: 8px; margin: 15px 0; position: relative; }
+    .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255,255,255,0.3); font-size: 48px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); pointer-events: none; }
+    
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    th { background: #EF4444; color: white; padding: 12px; text-align: left; font-size: 14px; }
+    td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+    tr:nth-child(even) { background: #f9fafb; }
+    .section-row { background: #3b82f6 !important; color: white; font-weight: bold; text-transform: uppercase; font-size: 12px; }
+    .selected-row { color: #059669; font-weight: bold; }
+    .not-selected-row { color: #dc2626; text-decoration: line-through; }
+    .base-row { background: #dbeafe !important; font-weight: bold; color: #1e40af; }
+    
+    .total-box { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 25px; border-radius: 12px; text-align: center; margin: 30px 0; }
+    .total-box .label { font-size: 16px; opacity: 0.9; }
+    .total-box .amount { font-size: 42px; font-weight: bold; margin-top: 10px; }
+    
+    .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
+    .gallery-item { position: relative; border-radius: 8px; overflow: hidden; }
+    .gallery-item img { width: 100%; height: 200px; object-fit: cover; }
+    .gallery-caption { background: #f3f4f6; padding: 8px; text-align: center; font-size: 12px; color: #6b7280; }
+    
+    .footer { background: #111827; color: #9ca3af; padding: 30px; text-align: center; font-size: 13px; }
+    .footer a { color: #60a5fa; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>CENOVÁ PONUKA</h1>
+      <p style="font-size: 16px; opacity: 0.95;">Číslo ponuky: CP-PREVIEW</p>
+      <p style="font-size: 14px; opacity: 0.9;">Dátum: ${new Date().toLocaleDateString('sk-SK')}</p>
+    </div>
+
+    <div class="content">
+      <!-- Typ stavby -->
+      <div class="typ-stavby ${typStavby === 'rodinny_dom_a0' ? 'a0' : 'rekreacna'}">
+        ${typStavby === 'rodinny_dom_a0' ? `
+          <h3><span style="font-size: 28px;">🏡</span> Rodinný dom A0</h3>
+          <div style="display: inline-block; background: #10b981; color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 10px;">⚡ Odporúčané</div>
+          <ul style="margin: 10px 0; color: #065f46;">
+            <li>✓ Celoročné bývanie</li>
+            <li>✓ Energetický certifikát A0</li>
+            <li>✓ Premium izolácia 250/300mm</li>
+            <li>✓ Tepelné čerpadlo + Rekuperácia</li>
+            <li>✓ Možnosť trvalého pobytu</li>
+          </ul>
+          <p style="margin: 10px 0 0 0; font-size: 12px; color: #047857; font-style: italic;">Spĺňa všetky normy pre rodinný dom</p>
+        ` : `
+          <h3><span style="font-size: 28px;">🏕️</span> Rekreačná stavba</h3>
+          <div style="display: inline-block; background: #f59e0b; color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 10px;">💰 Ekonomická voľba</div>
+          <ul style="margin: 10px 0; color: #92400e;">
+            <li>✓ Chata, záhradný domček</li>
+            <li>✓ Celoročná izolácia 150/200mm</li>
+            <li>✓ Bez energetického certifikátu</li>
+            <li>✓ Nižšia cena</li>
+          </ul>
+          <p style="margin: 10px 0 0 0; font-size: 12px; color: #b45309; font-style: italic;">Spĺňa parametre rekreačnej stavby</p>
+        `}
+      </div>
+
+      <!-- Klient info -->
+      <div class="section">
+        <div class="section-title">Pre klienta</div>
+        <p style="margin: 8px 0;"><strong>Meno:</strong> ${klient_meno}</p>
+        <p style="margin: 8px 0;"><strong>Email:</strong> ${klient_email}</p>
+        <p style="margin: 8px 0;"><strong>Telefón:</strong> ${klient_telefon}</p>
+        ${klient_adresa ? `<p style="margin: 8px 0;"><strong>Lokalita:</strong> ${klient_adresa}</p>` : ''}
+      </div>
+
+      <!-- Vybraný model -->
+      <div class="section">
+        <div class="section-title">Vybraný model domu</div>
+        <div style="position: relative;">
+          <img src="${hlavnaFotka}" alt="${dom.nazov}" class="house-img">
+          <div class="watermark">American Living</div>
+        </div>
+        <h2 style="margin: 15px 0 10px 0; color: #1f2937; font-size: 26px;">${dom.nazov}</h2>
+        <p style="margin: 5px 0; color: #6b7280;"><strong>Výrobca:</strong> ${dom.vyrobca}</p>
+        <p style="margin: 5px 0; color: #6b7280;"><strong>Typ domu:</strong> ${dom.typ_domu}</p>
+        <p style="margin: 5px 0; color: #6b7280;"><strong>Zastavaná plocha:</strong> ${dom.zastavana_plocha} m²</p>
+      </div>
+
+      <!-- Sprievodné texty -->
+      <div class="info-box">
+        <h4>📦 Komplet pre montáž</h4>
+        <ul>
+          <li>drevená konštrukcia, hoblovaný hranol</li>
+          <li>vonkajšie steny, falcovaný plech 0,45mm</li>
+          <li>strecha, falcovaný plech 0,45mm</li>
+          <li>okná s dvojkomorovým sklom</li>
+          <li>dvere s dvojkomorovým sklom</li>
+          <li>hydroizoláčná membrána Strotex 1300</li>
+          <li>tepelná izolácia (150–250mm)</li>
+          <li>parozábranová fólia Strotex AL90</li>
+          <li>hrubá podlaha z OSB 22mm</li>
+        </ul>
+        <p style="color: #dc2626; font-weight: bold; margin-top: 10px;">Maľovanie: 4,5 €/m²</p>
+      </div>
+
+      <div class="info-box">
+        <h4>⚡ Elektroinštalácia</h4>
+        <ul>
+          <li>montáž elektrických káblov</li>
+          <li>inštalácia rozvádzača s ističmi</li>
+          <li>uloženie chráničky pre vonkajší kábel</li>
+          <li>montáž inštalačných krabíc</li>
+        </ul>
+        <p style="color: #dc2626; font-weight: bold; margin-top: 10px;">Nezahŕňa: bleskozvod, revízne doklady, montáž zásuviek/svietidiel</p>
+      </div>
+
+      <div class="info-box">
+        <h4>💧 Voda a kanalizácia</h4>
+        <ul>
+          <li>montáž vodovodných potrubí</li>
+          <li>montáž ventilov, záslepiek</li>
+          <li>montáž kanalizačných potrubí</li>
+          <li>kontrola tesnosti pod tlakom</li>
+        </ul>
+        <p style="color: #dc2626; font-weight: bold; margin-top: 10px;">Protokoly a sanitárne zariadenia za príplatok</p>
+      </div>
+
+      <div class="info-box">
+        <h4>🏗️ Základy</h4>
+        <ul>
+          <li>vrutové stĺpy, betónové stĺpiky alebo doska</li>
+          <li>uvedená minimálna cena za rovný terén</li>
+          <li>konečná cena po geodetickej analýze</li>
+        </ul>
+        <p style="color: #dc2626; font-weight: bold; margin-top: 10px;">Prípravné práce nie sú v cene</p>
+      </div>
+
+      <div class="info-box" style="background: #fef3c7; border-color: #f59e0b;">
+        <h4 style="color: #92400e;">🏡 Interiér finiš</h4>
+        <ul style="color: #b45309;">
+          <li>montáž priečok podľa projektu</li>
+          <li>izolácia 100mm + parозábrana</li>
+          <li>tatranský profil 8–12mm</li>
+        </ul>
+        <p style="color: #dc2626; font-weight: bold; margin-top: 10px;">Maľovanie: 4,5 €/m², farbu dodáva klient</p>
+      </div>
+
+      <!-- Cenový rozpis -->
+      <div class="section">
+        <div class="section-title">Cenový rozpis konfigurácie</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Položka</th>
+              <th style="text-align: right;">Cena s DPH</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="base-row">
+              <td><strong>Základná cena sady (svojpomocná montáž)</strong></td>
+              <td style="text-align: right;"><strong>${formatPrice(BASE_PRICE)}</strong></td>
+            </tr>
+
+            <tr class="section-row">
+              <td colspan="2">🏗️ HRUBÁ STAVBA</td>
+            </tr>
+            <tr class="${montazHolodomu === 'ano' ? 'selected-row' : 'not-selected-row'}">
+              <td>Montáž hrubej stavby</td>
+              <td style="text-align: right;">${montazHolodomu === 'ano' ? formatPrice(CENY.montaz.ano) : '—'}</td>
+            </tr>
+            ${predlzenie > 0 ? `
+            <tr class="selected-row">
+              <td>Predĺženie domu +${predlzenie}m</td>
+              <td style="text-align: right;">${formatPrice(CENY.predlzenie[predlzenie])}</td>
+            </tr>
+            ` : `
+            <tr class="not-selected-row">
+              <td>Predĺženie domu</td>
+              <td style="text-align: right;">—</td>
+            </tr>
+            `}
+            <tr class="${izolaciaNavysenie !== 'standard' ? 'selected-row' : 'not-selected-row'}">
+              <td>Premium izolácia A0 (250/300mm)</td>
+              <td style="text-align: right;">${izolaciaNavysenie === 'premium' ? formatPrice(CENY.izolacia.premium) : izolaciaNavysenie === 'zvysena' ? formatPrice(CENY.izolacia.zvysena) : '—'}</td>
+            </tr>
+            <tr class="${zaklady !== 'bez' ? 'selected-row' : 'not-selected-row'}">
+              <td>Základy ${zaklady === 'pasove' ? '(pásové)' : zaklady === 'doska' ? '(doska)' : zaklady === 'skrutky' ? '(skrutky)' : ''}</td>
+              <td style="text-align: right;">${zaklady !== 'bez' ? formatPrice(CENY.zaklady[zaklady]) : '—'}</td>
+            </tr>
+
+            <tr class="section-row">
+              <td colspan="2">🔨 HOLODOM</td>
+            </tr>
+            <tr class="${interierFinis !== 'ziadne' ? 'selected-row' : 'not-selected-row'}">
+              <td>Interiér finiš ${interierFinis === 'drevo' ? '(Drevo)' : interierFinis === 'sadrokarton' ? '(Sadrokartón)' : ''}</td>
+              <td style="text-align: right;">${interierFinis !== 'ziadne' ? formatPrice(CENY.interierFinis[interierFinis]) : '—'}</td>
+            </tr>
+            <tr class="${elektroinstalacia ? 'selected-row' : 'not-selected-row'}">
+              <td>Elektrická inštalácia</td>
+              <td style="text-align: right;">${elektroinstalacia ? formatPrice(CENY.elektroinstalacia) : '—'}</td>
+            </tr>
+            <tr class="${vodaKanalizacia ? 'selected-row' : 'not-selected-row'}">
+              <td>Rozvody vody a kanalizácie</td>
+              <td style="text-align: right;">${vodaKanalizacia ? formatPrice(CENY.vodaKanalizacia) : '—'}</td>
+            </tr>
+            <tr class="${sanitaKomplet ? 'selected-row' : 'not-selected-row'}">
+              <td>Sanita komplet</td>
+              <td style="text-align: right;">${sanitaKomplet ? formatPrice(CENY.sanitaKomplet) : '—'}</td>
+            </tr>
+            <tr class="${bojler ? 'selected-row' : 'not-selected-row'}">
+              <td>Bojler</td>
+              <td style="text-align: right;">${bojler ? formatPrice(CENY.bojler) : '—'}</td>
+            </tr>
+            <tr class="${tepelneCerpadlo ? 'selected-row' : 'not-selected-row'}">
+              <td>Tepelné čerpadlo / Klimatizácia</td>
+              <td style="text-align: right;">${tepelneCerpadlo ? formatPrice(CENY.tepelneCerpadlo) : '—'}</td>
+            </tr>
+            <tr class="${rekuperacia ? 'selected-row' : 'not-selected-row'}">
+              <td>Rekuperácia</td>
+              <td style="text-align: right;">${rekuperacia ? formatPrice(CENY.rekuperacia) : '—'}</td>
+            </tr>
+            <tr class="${pripojkaSiete ? 'selected-row' : 'not-selected-row'}">
+              <td>Pripojenie na siete</td>
+              <td style="text-align: right;">${pripojkaSiete ? formatPrice(CENY.pripojkaSiete) : '—'}</td>
+            </tr>
+            <tr class="${vstupneDvere !== 'ziadne' ? 'selected-row' : 'not-selected-row'}">
+              <td>Vstupné dvere ${vstupneDvere === 'kovove' ? '(kovové)' : vstupneDvere === 'plastove' ? '(plastové)' : ''}</td>
+              <td style="text-align: right;">${vstupneDvere !== 'ziadne' ? formatPrice(CENY.dvere[vstupneDvere]) : '—'}</td>
+            </tr>
+            ${(stresneOkno || 0) > 0 ? `
+            <tr class="selected-row">
+              <td>Strešné okno (${stresneOkno}×)</td>
+              <td style="text-align: right;">${formatPrice(stresneOkno * CENY.stresneOkno)}</td>
+            </tr>` : ''}
+            ${(bocneOknoFixne || 0) > 0 ? `
+            <tr class="selected-row">
+              <td>Bočné okno fixné (${bocneOknoFixne}×)</td>
+              <td style="text-align: right;">${formatPrice(bocneOknoFixne * CENY.bocneOknoFixne)}</td>
+            </tr>` : ''}
+            ${(bocneOknoVyklopne90 || 0) > 0 ? `
+            <tr class="selected-row">
+              <td>Bočné okno vyklopné 90×205 (${bocneOknoVyklopne90}×)</td>
+              <td style="text-align: right;">${formatPrice(bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90)}</td>
+            </tr>` : ''}
+            ${(bocneOknoVyklopne55 || 0) > 0 ? `
+            <tr class="selected-row">
+              <td>Bočné okno vyklopné 55×90 (${bocneOknoVyklopne55}×)</td>
+              <td style="text-align: right;">${formatPrice(bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55)}</td>
+            </tr>` : ''}
+            <tr class="${povrchokaOkien ? 'selected-row' : 'not-selected-row'}">
+              <td>Laminácia farby okien - Antracit</td>
+              <td style="text-align: right;">${povrchokaOkien ? formatPrice(CENY.povrchokaOkien) : '—'}</td>
+            </tr>
+            <tr class="${tonovaneSkla ? 'selected-row' : 'not-selected-row'}">
+              <td>Tónované sklá (Solar)</td>
+              <td style="text-align: right;">${tonovaneSkla ? formatPrice(CENY.tonovaneSkla) : '—'}</td>
+            </tr>
+
+            <tr class="section-row">
+              <td colspan="2">🔑 DOM NA KĽÚČ</td>
+            </tr>
+            <tr class="${vonkajsiaFasada === 'suchana' ? 'selected-row' : vonkajsiaFasada === 'standard' ? 'selected-row' : 'not-selected-row'}">
+              <td>${vonkajsiaFasada === 'suchana' ? 'Šúchaná' : 'Drevo/Plech'}</td>
+              <td style="text-align: right;">${vonkajsiaFasada === 'suchana' ? formatPrice(CENY.vonkajsiaFasada.suchana) : '0,00 €'}</td>
+            </tr>
+            <tr class="${vnutornePodlahy ? 'selected-row' : 'not-selected-row'}">
+              <td>Podlaha – Laminát</td>
+              <td style="text-align: right;">${vnutornePodlahy ? formatPrice(CENY.vnutornePodlahy) : '—'}</td>
+            </tr>
+            <tr class="${podlahovVykurovanie ? 'selected-row' : 'not-selected-row'}">
+              <td>Elektrické podlahové vykurovanie s WiFi termostatom</td>
+              <td style="text-align: right;">${podlahovVykurovanie ? formatPrice(CENY.podlahovVykurovanie) : '—'}</td>
+            </tr>
+            ${(interieroveDvere || 0) > 0 ? `
+            <tr class="selected-row">
+              <td>Interiérové dvere (${interieroveDvere}×)</td>
+              <td style="text-align: right;">${formatPrice(interieroveDvere * CENY.interieroveDvere)}</td>
+            </tr>` : `
+            <tr class="not-selected-row">
+              <td>Interiérové dvere (0×)</td>
+              <td style="text-align: right;">—</td>
+            </tr>`}
+
+            <tr class="section-row">
+              <td colspan="2">📋 DOKUMENTÁCIA</td>
+            </tr>
+            <tr class="${inziniering ? 'selected-row' : 'not-selected-row'}">
+              <td>Inžiniering stavebného povolenia</td>
+              <td style="text-align: right;">${inziniering ? formatPrice(CENY.inziniering) : '—'}</td>
+            </tr>
+            <tr class="${projektA0 ? 'selected-row' : 'not-selected-row'}">
+              <td>Projektant a certifikácia A0</td>
+              <td style="text-align: right;">${projektA0 ? formatPrice(CENY.projektA0) : '—'}</td>
+            </tr>
+            <tr class="${revizna ? 'selected-row' : 'not-selected-row'}">
+              <td>Revízna dokumentácia</td>
+              <td style="text-align: right;">${revizna ? formatPrice(CENY.revizna) : '—'}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Celková cena -->
+      <div class="total-box">
+        <div class="label">CELKOVÁ CENA s DPH</div>
+        <div class="amount">${formatPrice(totalPrice)}</div>
+      </div>
+
+      <!-- Pôdorysy -->
+      ${(dom.podorys_2d || dom.podorys_3d) ? `
+      <div class="section">
+        <div class="section-title">Pôdorysy</div>
+        <div class="gallery">
+          ${dom.podorys_2d ? `
+          <div class="gallery-item">
+            <div style="position: relative;">
+              <img src="${dom.podorys_2d}" alt="2D pôdorys">
+              <div class="watermark" style="font-size: 32px;">American Living</div>
+            </div>
+            <div class="gallery-caption">2D pôdorys</div>
+          </div>
+          ` : ''}
+          ${dom.podorys_3d ? `
+          <div class="gallery-item">
+            <div style="position: relative;">
+              <img src="${dom.podorys_3d}" alt="3D pôdorys">
+              <div class="watermark" style="font-size: 32px;">American Living</div>
+            </div>
+            <div class="gallery-caption">3D pôdorys</div>
+          </div>
+          ` : ''}
+        </div>
+      </div>
+      ` : ''}
+
+      <!-- Fotogalérie -->
+      ${galerie.length > 0 ? `
+      <div class="section">
+        <div class="section-title">Fotogaléria</div>
+        ${galerie.map(g => `
+          <h3 style="color: #374151; font-size: 16px; margin: 20px 0 10px 0;">${g.nazov}</h3>
+          <div class="gallery">
+            ${g.fotky.slice(0, 6).map((fotka, idx) => `
+            <div class="gallery-item">
+              <div style="position: relative;">
+                <img src="${fotka}" alt="${g.nazov} ${idx + 1}">
+                <div class="watermark" style="font-size: 28px;">American Living</div>
+              </div>
+              <div class="gallery-caption">${g.nazov} - Fotka ${idx + 1}</div>
+            </div>
+            `).join('')}
+          </div>
+          ${g.fotky.length > 6 ? `<p style="text-align: center; color: #6b7280; font-size: 12px;">+ ďalších ${g.fotky.length - 6} fotiek</p>` : ''}
+        `).join('')}
+      </div>
+      ` : ''}
+    </div>
+
+    <div class="footer">
+      <p style="font-size: 18px; font-weight: bold; margin-bottom: 15px;">American Living</p>
+      <p style="margin: 8px 0;">📞 Telefón: <a href="tel:+421905138124">+421 905 138 124</a></p>
+      <p style="margin: 8px 0;">✉️ Email: <a href="mailto:info@americanliving.sk">info@americanliving.sk</a></p>
+      <p style="margin: 8px 0;">🌐 Web: <a href="https://www.americanliving.sk">www.americanliving.sk</a></p>
+      <p style="margin: 20px 0 5px 0; font-size: 11px;">&copy; ${new Date().getFullYear()} American Living. Všetky práva vyhradené.</p>
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+    return Response.json({ html });
+
+  } catch (error) {
+    console.error('Error:', error);
+    return Response.json({ error: error.message }, { status: 500 });
+  }
+});

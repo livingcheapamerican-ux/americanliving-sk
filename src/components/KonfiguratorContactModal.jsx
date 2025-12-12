@@ -28,7 +28,6 @@ export default function KonfiguratorContactModal({
   rekuperacia,
   projektA0,
   // Všetky Prosto House parametre
-  predajNehnutelnosti, hladaniePozemku, financneSluzby,
   montazHolodomu, zaklady, predlzenie, vstupneDvere,
   elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler,
   pripojkaSiete, stresneOkno, bocneOknoFixne, bocneOknoVyklopne90,
@@ -45,6 +44,8 @@ export default function KonfiguratorContactModal({
   });
   const [submitted, setSubmitted] = useState(false);
   const [generatingPDF, setGeneratingPDF] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewHtml, setPreviewHtml] = useState("");
 
   const isProstoHouse = dom?.vyrobca === "Prosto House";
 
@@ -127,12 +128,94 @@ export default function KonfiguratorContactModal({
     }
   };
 
-  const handleEmailPDF = async () => {
-    toast.info('Funkcia v príprave');
+  const handlePreview = async () => {
+    if (!isProstoHouse) {
+      toast.info('Funkcia dostupná len pre Prosto House');
+      return;
+    }
+    
+    try {
+      const response = await base44.functions.invoke('nahladCenovejPonukyProstoHouse', {
+        dom_id: dom.id,
+        klient_meno: formData.meno || 'Klient',
+        klient_email: formData.email || 'email@example.com',
+        klient_telefon: formData.telefon || '+421 900 000 000',
+        klient_adresa: formData.obec || '',
+        montazHolodomu, izolaciaNavysenie, zaklady, vstupneDvere,
+        elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler,
+        tepelneCerpadlo, rekuperacia, pripojkaSiete,
+        stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55,
+        povrchokaOkien, tonovaneSkla, vonkajsiaFasada, interierFinis,
+        vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
+        inziniering, projektA0, revizna, doprava, predlzenie
+      });
+      
+      setPreviewHtml(response.data.html);
+      setShowPreview(true);
+    } catch (error) {
+      toast.error('Chyba pri načítaní náhľadu: ' + error.message);
+    }
+  };
+
+  const handleSendEmail = async () => {
+    if (!formData.email || !formData.meno || !formData.telefon || !formData.obec) {
+      toast.error('Vyplňte všetky povinné polia');
+      return;
+    }
+    
+    if (!isProstoHouse) {
+      toast.info('Funkcia dostupná len pre Prosto House');
+      return;
+    }
+    
+    setGeneratingPDF(true);
+    try {
+      await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
+        dom_id: dom.id,
+        klient_meno: formData.meno,
+        klient_email: formData.email,
+        klient_telefon: formData.telefon,
+        klient_adresa: formData.obec,
+        klient_poznamka: formData.poznamka,
+        montazHolodomu, izolaciaNavysenie, zaklady, vstupneDvere,
+        elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler,
+        tepelneCerpadlo, rekuperacia, pripojkaSiete,
+        stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55,
+        povrchokaOkien, tonovaneSkla, vonkajsiaFasada, interierFinis,
+        vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
+        inziniering, projektA0, revizna, doprava, predlzenie
+      });
+      
+      toast.success('✓ Cenová ponuka odoslaná na email');
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
+        onClose();
+      }, 3000);
+    } catch (error) {
+      toast.error('Chyba pri odosielaní: ' + error.message);
+    } finally {
+      setGeneratingPDF(false);
+    }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <>
+      {/* Preview Modal */}
+      <Dialog open={showPreview} onOpenChange={setShowPreview}>
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto p-0">
+          <div className="p-4 border-b bg-gray-50 sticky top-0 z-10">
+            <h3 className="text-lg font-bold">Náhľad cenovej ponuky</h3>
+            <p className="text-sm text-gray-600">Takto bude vyzerať email pre klienta</p>
+          </div>
+          <div className="p-4">
+            <div dangerouslySetInnerHTML={{ __html: previewHtml }} />
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
         {!submitted ? (
           <div className="flex flex-col lg:flex-row">
@@ -364,5 +447,6 @@ export default function KonfiguratorContactModal({
         )}
       </DialogContent>
     </Dialog>
+    </>
   );
 }
