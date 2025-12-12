@@ -50,22 +50,6 @@ Deno.serve(async (req) => {
       cisloPonuky = `CP-${aktualnyRok}-${String(noveCislo).padStart(3, '0')}`;
     }
 
-    // Generuj číslo ponuky
-    const rok = new Date().getFullYear();
-    let pocitadlo = await base44.asServiceRole.entities.PocitadloCenovychPonuk.filter({ rok });
-
-    if (!pocitadlo || pocitadlo.length === 0) {
-      pocitadlo = await base44.asServiceRole.entities.PocitadloCenovychPonuk.create({ rok, posledne_cislo: 1 });
-    } else {
-      pocitadlo = pocitadlo[0];
-      await base44.asServiceRole.entities.PocitadloCenovychPonuk.update(pocitadlo.id, { 
-        posledne_cislo: pocitadlo.posledne_cislo + 1 
-      });
-      pocitadlo.posledne_cislo += 1;
-    }
-
-    const cisloPonuky = `CP-${rok}-${String(pocitadlo.posledne_cislo).padStart(4, '0')}`;
-
     // Cenník
     const CENY = {
       montaz: { nie: 0, ano: 9225 },
