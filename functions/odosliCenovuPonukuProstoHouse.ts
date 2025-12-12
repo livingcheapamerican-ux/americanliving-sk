@@ -544,7 +544,7 @@ Deno.serve(async (req) => {
         ${galerie.map(g => `
           <h3 style="color: #374151; font-size: 16px; margin: 20px 0 10px 0;">${g.nazov}</h3>
           <div class="gallery">
-            ${g.fotky.slice(0, 6).map((fotka, idx) => `
+            ${g.fotky.slice(0, 9).map((fotka, idx) => `
             <div class="gallery-item">
               <div class="img-wrapper">
                 <img src="${fotka}" alt="${g.nazov} ${idx + 1}">
@@ -554,10 +554,16 @@ Deno.serve(async (req) => {
             </div>
             `).join('')}
           </div>
-          ${g.fotky.length > 6 ? `<p style="text-align: center; color: #6b7280; font-size: 12px;">+ ďalších ${g.fotky.length - 6} fotiek</p>` : ''}
+          ${g.fotky.length > 9 ? `<p style="text-align: center; color: #6b7280; font-size: 12px;">+ ďalších ${g.fotky.length - 9} fotiek</p>` : ''}
         `).join('')}
       </div>
-      ` : ''}
+      ` : `
+      <div class="section">
+        <p style="color: #dc2626; font-weight: bold;">DEBUG: Žiadne galérie nenájdené</p>
+        <p style="font-size: 12px; color: #6b7280;">interierFinis: ${interierFinis}</p>
+        <p style="font-size: 12px; color: #6b7280;">vonkajsiaFasada: ${vonkajsiaFasada}</p>
+      </div>
+      `}
     </div>
 
     <div class="footer">
