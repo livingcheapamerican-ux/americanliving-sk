@@ -31,10 +31,6 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Dom nenájdený' }, { status: 404 });
     }
 
-    // Načítaj aktívne nastavenie cenovej ponuky
-    const nastavenia = await base44.asServiceRole.entities.NastavenieCenovejPonuky.list();
-    const aktivneNastavenie = nastavenia.find(n => n.aktivne) || nastavenia[0];
-
     // Generuj číslo ponuky
     const aktualnyRok = new Date().getFullYear();
     const pocitadla = await base44.asServiceRole.entities.PocitadloCenovychPonuk.list();
@@ -68,60 +64,30 @@ Deno.serve(async (req) => {
       ? dom.hlavny_obrazok 
       : (dom.zakladna_konfiguracia_obrazok || dom.hlavny_obrazok);
 
-    // Galérie podľa mapovacích pravidiel z nastavenia
+    // Galérie - VŽDY zobraz obe interiérové galérie a exteriér podľa fasády
     const galerie = [];
     
-    if (aktivneNastavenie?.mapovanie_fotiek_prosto?.length > 0) {
-      // Použiť mapovanie z nastavenia
-      const vybraneGalerieTypy = new Set();
-      
-      // Prejdi všetky vybrané položky z konfiguratora
-      selectedItems?.forEach(item => {
-        if (item.selected) {
-          // Nájdi mapovanie pre túto položku
-          const mapovanie = aktivneNastavenie.mapovanie_fotiek_prosto.find(
-            m => m.dlazdica_id === item.id || m.nazov_dlazdice === item.name
-          );
-          
-          if (mapovanie?.typ_fotky) {
-            vybraneGalerieTypy.add(mapovanie.typ_fotky);
-          }
-        }
-      });
-      
-      // Pridaj galérie podľa vybraných typov
-      vybraneGalerieTypy.forEach(typ => {
-        const galeriaData = dom.galerie?.find(g => g.typ === typ);
-        if (galeriaData?.fotky?.length > 0) {
-          const nazovGalerie = typ === "interier_drevo" ? "Interiér - Drevo" :
-                              typ === "interier_sadrokarton" ? "Interiér - Sadrokartón" :
-                              typ === "exterier_drevo_plech" ? "Exteriér - Drevo/Plech" :
-                              typ === "exterier_murovka" ? "Exteriér - Murovka" : typ;
-          galerie.push({ nazov: nazovGalerie, fotky: galeriaData.fotky });
-        }
-      });
-    } else {
-      // Fallback - VŽDY zobraz všetky dostupné galérie
-      const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
-      if (drevoGaleria?.fotky?.length > 0) {
-        galerie.push({ nazov: "Interiér - Drevo", fotky: drevoGaleria.fotky });
-      }
-      
-      const sadroGaleria = dom.galerie?.find(g => g.typ === "interier_sadrokarton");
-      if (sadroGaleria?.fotky?.length > 0) {
-        galerie.push({ nazov: "Interiér - Sadrokartón", fotky: sadroGaleria.fotky });
-      }
+    // INTERIÉR - vždy zobraz obe galérie ak existujú
+    const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
+    if (drevoGaleria?.fotky?.length > 0) {
+      galerie.push({ nazov: "Interiér - Drevo", fotky: drevoGaleria.fotky });
+    }
+    
+    const sadroGaleria = dom.galerie?.find(g => g.typ === "interier_sadrokarton");
+    if (sadroGaleria?.fotky?.length > 0) {
+      galerie.push({ nazov: "Interiér - Sadrokartón", fotky: sadroGaleria.fotky });
+    }
 
-      if (vonkajsiaFasada === "standard" || !vonkajsiaFasada) {
-        const exterierDrevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
-        if (exterierDrevoGaleria?.fotky?.length > 0) {
-          galerie.push({ nazov: "Exteriér - Drevo/Plech", fotky: exterierDrevoGaleria.fotky });
-        }
-      } else if (vonkajsiaFasada === "suchana") {
-        const murovkaGaleria = dom.galerie?.find(g => g.typ === "exterier_murovka");
-        if (murovkaGaleria?.fotky?.length > 0) {
-          galerie.push({ nazov: "Exteriér - Murovka", fotky: murovkaGaleria.fotky });
-        }
+    // EXTERIÉR - podľa fasády
+    if (vonkajsiaFasada === "standard" || !vonkajsiaFasada) {
+      const exterierDrevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
+      if (exterierDrevoGaleria?.fotky?.length > 0) {
+        galerie.push({ nazov: "Exteriér - Drevo/Plech", fotky: exterierDrevoGaleria.fotky });
+      }
+    } else if (vonkajsiaFasada === "suchana") {
+      const murovkaGaleria = dom.galerie?.find(g => g.typ === "exterier_murovka");
+      if (murovkaGaleria?.fotky?.length > 0) {
+        galerie.push({ nazov: "Exteriér - Murovka", fotky: murovkaGaleria.fotky });
       }
     }
 
