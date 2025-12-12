@@ -1704,9 +1704,3 @@ export default function AdminGeneratorCenovychPonuk() {
     </div>
   );
 }
-          </DialogContent>
-        </Dialog>
-      </div>
-    </div>
-  );
-}
