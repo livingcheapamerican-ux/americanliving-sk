@@ -64,30 +64,18 @@ Deno.serve(async (req) => {
       ? dom.hlavny_obrazok 
       : (dom.zakladna_konfiguracia_obrazok || dom.hlavny_obrazok);
 
-    // Debug log
-    console.log('=== DEBUG GALÉRIE NÁHĽAD ===');
-    console.log('interierFinis:', interierFinis);
-    console.log('vonkajsiaFasada:', vonkajsiaFasada);
-    console.log('Dostupné galérie:', dom.galerie?.map(g => ({ typ: g.typ, pocet: g.fotky?.length })));
-
-    // Galérie podľa pravidiel - len vybrané galérie
+    // Galérie - VŽDY zobraz obe interiérové galérie a exteriér podľa fasády
     const galerie = [];
-
-    // INTERIÉR - ak je vybraný interiér finiš
-    if (interierFinis && interierFinis !== "ziadne") {
-      if (interierFinis === "drevo") {
-        const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
-        if (drevoGaleria?.fotky?.length > 0) {
-          galerie.push({ nazov: "Interiér - Drevo", fotky: drevoGaleria.fotky });
-          console.log('✓ Pridaná galéria Interiér - Drevo');
-        }
-      } else if (interierFinis === "sadrokarton") {
-        const sadroGaleria = dom.galerie?.find(g => g.typ === "interier_sadrokarton");
-        if (sadroGaleria?.fotky?.length > 0) {
-          galerie.push({ nazov: "Interiér - Sadrokartón", fotky: sadroGaleria.fotky });
-          console.log('✓ Pridaná galéria Interiér - Sadrokartón');
-        }
-      }
+    
+    // INTERIÉR - vždy zobraz obe galérie ak existujú
+    const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
+    if (drevoGaleria?.fotky?.length > 0) {
+      galerie.push({ nazov: "Interiér - Drevo", fotky: drevoGaleria.fotky });
+    }
+    
+    const sadroGaleria = dom.galerie?.find(g => g.typ === "interier_sadrokarton");
+    if (sadroGaleria?.fotky?.length > 0) {
+      galerie.push({ nazov: "Interiér - Sadrokartón", fotky: sadroGaleria.fotky });
     }
 
     // EXTERIÉR - podľa fasády
@@ -95,18 +83,13 @@ Deno.serve(async (req) => {
       const exterierDrevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
       if (exterierDrevoGaleria?.fotky?.length > 0) {
         galerie.push({ nazov: "Exteriér - Drevo/Plech", fotky: exterierDrevoGaleria.fotky });
-        console.log('✓ Pridaná galéria Exteriér - Drevo/Plech');
       }
     } else if (vonkajsiaFasada === "suchana") {
       const murovkaGaleria = dom.galerie?.find(g => g.typ === "exterier_murovka");
       if (murovkaGaleria?.fotky?.length > 0) {
         galerie.push({ nazov: "Exteriér - Murovka", fotky: murovkaGaleria.fotky });
-        console.log('✓ Pridaná galéria Exteriér - Murovka');
       }
     }
-
-    console.log('Finálny počet galérií:', galerie.length);
-    console.log('===========================');
 
     const formatPrice = (price) => {
       if (!price) return "0,00 €";
