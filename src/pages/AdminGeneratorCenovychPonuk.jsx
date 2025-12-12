@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Save, Eye, Plus, Trash2, Palette, FileText, Image, Settings, Grid3x3, ArrowRight, Monitor, Download, CheckCircle, Badge } from "lucide-react";
+import { Save, Eye, Plus, Trash2, Palette, FileText, Image, Settings, Grid3x3, ArrowRight, CheckCircle, Send } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function AdminGeneratorCenovychPonuk() {
@@ -1446,153 +1446,257 @@ export default function AdminGeneratorCenovychPonuk() {
           </TabsContent>
         </Tabs>
 
-        {/* Preview Modal */}
+        {/* Preview Modal - Náhľad emailu */}
         <Dialog open={showPreview} onOpenChange={setShowPreview}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Náhľad cenovej ponuky</DialogTitle>
+              <DialogTitle className="text-xl font-bold flex items-center gap-2">
+                <Eye className="w-5 h-5 text-primary" />
+                Náhľad emailu cenovej ponuky
+              </DialogTitle>
             </DialogHeader>
           
-            <div className="bg-white p-8 border rounded-lg" style={{
-              background: `linear-gradient(to bottom, ${formData.farba_hlavna}15 0%, white 200px)`
-            }}>
-              {/* Header */}
-              <div className="flex items-start justify-between mb-8 pb-6 border-b-2" style={{ borderColor: formData.farba_hlavna }}>
-                <div>
-                  {formData.logo_url && (
-                    <img src={formData.logo_url} alt="Logo" className="h-16 mb-4" />
-                  )}
-                  <h1 className="text-3xl font-bold" style={{ color: formData.farba_hlavna }}>
-                    CENOVÁ PONUKA
-                  </h1>
-                  <p className="text-gray-600 mt-1">Číslo ponuky: CP-2025-001</p>
+            {/* Email preview header */}
+            <div className="mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-lg shadow-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                  <Send className="w-4 h-4" />
                 </div>
-                <div className="text-right text-sm">
-                  <p className="font-bold text-gray-900">{formData.nazov_spolocnosti}</p>
-                  <p className="text-gray-600">{formData.adresa}</p>
-                  <p className="text-gray-600">{formData.telefon}</p>
-                  <p className="text-gray-600">{formData.email}</p>
-                  <p className="text-gray-600">{formData.web}</p>
+                <div className="flex-1">
+                  <p className="font-semibold">Email pre klienta</p>
+                  <p className="text-xs text-white/80">Predmet: Cenová ponuka CP-2025-001 - WASHINGTON - American Living</p>
                 </div>
-              </div>
-
-              {/* Úvodný text */}
-              {formData.uvodni_text && (
-                <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                  <p className="text-gray-700 leading-relaxed">{formData.uvodni_text}</p>
-                </div>
-              )}
-
-              {/* Klient */}
-              <div className="mb-6">
-                <h3 className="font-bold text-lg mb-3" style={{ color: formData.farba_hlavna }}>
-                  Pre klienta:
-                </h3>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-gray-700"><strong>Meno:</strong> Ján Novák</p>
-                  <p className="text-gray-700"><strong>Email:</strong> jan.novak@email.com</p>
-                  <p className="text-gray-700"><strong>Telefón:</strong> +421 900 123 456</p>
-                </div>
-              </div>
-
-              {/* Dom */}
-              <div className="mb-6">
-                <h3 className="font-bold text-lg mb-3" style={{ color: formData.farba_hlavna }}>
-                  Vybraný model:
-                </h3>
-                <div className="bg-gray-50 p-4 rounded-lg flex gap-4">
-                  <div className="w-32 h-24 bg-gray-200 rounded flex items-center justify-center">
-                    <Image className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-gray-900">WASHINGTON (72 m²)</p>
-                    <p className="text-sm text-gray-600">Ticab house - Modulárny dom</p>
-                    <p className="text-sm text-gray-600">Zastavana plocha: 72 m²</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Cenové položky */}
-              <div className="mb-6">
-                <h3 className="font-bold text-lg mb-3" style={{ color: formData.farba_hlavna }}>
-                  Cenová kalkulácia:
-                </h3>
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b-2" style={{ borderColor: formData.farba_sekundarna }}>
-                      <th className="text-left py-2 px-4 font-bold" style={{ color: formData.farba_hlavna }}>Položka</th>
-                      <th className="text-right py-2 px-4 font-bold" style={{ color: formData.farba_hlavna }}>Cena</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b">
-                      <td className="py-2 px-4">Základná cena domu</td>
-                      <td className="text-right py-2 px-4">72 078 €</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-2 px-4">Izolácia stien 250mm</td>
-                      <td className="text-right py-2 px-4">4 800 €</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-2 px-4">Tepelné čerpadlo</td>
-                      <td className="text-right py-2 px-4">8 500 €</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-2 px-4">Podlahové kúrenie</td>
-                      <td className="text-right py-2 px-4">3 200 €</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-2 px-4">Fasáda - šúchaná omietka</td>
-                      <td className="text-right py-2 px-4">6 500 €</td>
-                    </tr>
-                    {formData.zobrazovat_preciarknute && (
-                      <tr className="border-b bg-red-50">
-                        <td className="py-2 px-4 line-through text-gray-400">Rekuperácia</td>
-                        <td className="text-right py-2 px-4 line-through text-gray-400">0 €</td>
-                      </tr>
-                    )}
-                    <tr className="border-b bg-gray-100">
-                      <td className="py-3 px-4 font-bold text-lg" style={{ color: formData.farba_hlavna }}>CELKOVÁ CENA s DPH</td>
-                      <td className="text-right py-3 px-4 font-bold text-xl" style={{ color: formData.farba_hlavna }}>95 078 €</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Fotogaléria */}
-              <div className="mb-6">
-                <h3 className="font-bold text-lg mb-3" style={{ color: formData.farba_hlavna }}>
-                  Fotogaléria:
-                </h3>
-                <div className="grid grid-cols-3 gap-4">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <div key={i} className="aspect-video bg-gray-200 rounded-lg flex items-center justify-center">
-                      <Image className="w-8 h-8 text-gray-400" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Záverečný text */}
-              {formData.zavery_text && (
-                <div className="mb-6 p-4 rounded-lg" style={{ 
-                  backgroundColor: `${formData.farba_hlavna}10`,
-                  borderLeft: `4px solid ${formData.farba_hlavna}`
-                }}>
-                  <p className="text-gray-700 leading-relaxed">{formData.zavery_text}</p>
-                </div>
-              )}
-
-              {/* Kontakt */}
-              <div className="mt-8 pt-6 border-t-2 text-center" style={{ borderColor: formData.farba_hlavna }}>
-                <p className="text-sm text-gray-600">
-                  Pre viac informácií nás neváhajte kontaktovať na {formData.telefon} alebo {formData.email}
-                </p>
-                <p className="text-xs text-gray-500 mt-2">
-                  IČO: {formData.ico} | DIČ: {formData.dic} | IČ DPH: {formData.ic_dph}
-                </p>
               </div>
             </div>
+
+            {/* Iframe s HTML emailom */}
+            <div className="border-4 border-gray-300 rounded-lg overflow-hidden bg-white shadow-2xl">
+              <iframe 
+                srcDoc={`
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+    .container { max-width: 700px; margin: 20px auto; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .header { 
+      background: linear-gradient(135deg, ${formData.farba_hlavna || '#EF4444'} 0%, ${formData.farba_sekundarna || '#dc2626'} 100%); 
+      padding: 30px; 
+      text-align: center; 
+      color: white; 
+    }
+    .logo { max-width: 200px; margin-bottom: 15px; background: white; padding: 10px; border-radius: 8px; }
+    .content { padding: 30px; }
+    .section { margin-bottom: 25px; }
+    .section-title { 
+      font-size: 18px; 
+      font-weight: bold; 
+      color: ${formData.farba_hlavna || '#EF4444'}; 
+      margin-bottom: 15px; 
+      border-bottom: 2px solid ${formData.farba_hlavna || '#EF4444'}; 
+      padding-bottom: 8px; 
+    }
+    .client-info { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+    .house-info { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+    .house-img { max-width: 250px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+    th { 
+      background: ${formData.farba_sekundarna || '#dc2626'}; 
+      font-weight: bold; 
+      color: white; 
+    }
+    .price { color: #059669; font-weight: bold; }
+    .strikethrough { text-decoration: line-through; color: #9ca3af; background: #fef2f2; }
+    .total { 
+      background: linear-gradient(135deg, ${formData.farba_hlavna || '#EF4444'} 0%, ${formData.farba_sekundarna || '#dc2626'} 100%); 
+      color: white;
+      font-size: 18px; 
+      font-weight: bold; 
+    }
+    .footer { background: #1f2937; color: white; padding: 25px; text-align: center; }
+    .footer a { color: #60a5fa; text-decoration: none; }
+    .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
+    .gallery img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; }
+    .services-box { 
+      background: #ecfdf5; 
+      border: 2px solid #10b981; 
+      border-radius: 8px; 
+      padding: 15px; 
+      margin: 15px 0; 
+    }
+    .badge { 
+      display: inline-block; 
+      background: #10b981; 
+      color: white; 
+      padding: 6px 12px; 
+      border-radius: 20px; 
+      font-size: 12px; 
+      font-weight: bold; 
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      ${formData.logo_url ? `<img src="${formData.logo_url}" alt="Logo" class="logo">` : '<h1 style="margin: 0;">American Living</h1>'}
+      <h1 style="margin: 10px 0; font-size: 28px;">CENOVÁ PONUKA</h1>
+      <p style="margin: 5px 0; opacity: 0.95;">Číslo ponuky: CP-2025-001</p>
+      <p style="margin: 5px 0; opacity: 0.9; font-size: 14px;">Dátum: ${new Date().toLocaleDateString('sk-SK')}</p>
+    </div>
+
+    <div class="content">
+      ${formData.uvodni_text ? `
+      <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #0284c7;">
+        <p style="margin: 0; color: #0c4a6e; line-height: 1.6;">${formData.uvodni_text}</p>
+      </div>
+      ` : ''}
+
+      <div class="client-info">
+        <h3 style="margin-top: 0; color: #374151; font-size: 16px;">Informácie o klientovi</h3>
+        <p style="margin: 5px 0;"><strong>Meno:</strong> Ján Novák</p>
+        <p style="margin: 5px 0;"><strong>Email:</strong> jan.novak@email.com</p>
+        <p style="margin: 5px 0;"><strong>Telefón:</strong> +421 900 123 456</p>
+        <p style="margin: 5px 0;"><strong>Lokalita:</strong> Bratislava</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Vybraný model domu</div>
+        <div class="house-info">
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=500&q=80" alt="Dom" class="house-img">
+          <div>
+            <h2 style="margin: 0 0 10px 0; color: #1f2937; font-size: 22px;">WASHINGTON</h2>
+            <p style="margin: 5px 0; color: #6b7280;"><strong>Výrobca:</strong> Ticab house</p>
+            <p style="margin: 5px 0; color: #6b7280;"><strong>Typ:</strong> Modulárny dom</p>
+            <p style="margin: 5px 0; color: #6b7280;"><strong>Zastavana plocha:</strong> 72 m²</p>
+            <span class="badge">✓ Celoročný dom</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="services-box">
+        <h3 style="margin-top: 0; color: #065f46; font-size: 16px;">📋 Dodatočné služby</h3>
+        <p style="margin: 8px 0; color: #047857;">✓ Predaj predošlej nehnuteľnosti</p>
+        <p style="margin: 8px 0; color: #047857;">✓ Chcem pozemok pod svoj dom</p>
+        <p style="margin: 8px 0; color: #047857;">✓ Finančné služby - úvery/poistky</p>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Cenová kalkulácia</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Položka</th>
+              <th style="text-align: right;">Cena s DPH</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Základná cena domu</td>
+              <td class="price" style="text-align: right;">72 078,00 €</td>
+            </tr>
+            <tr>
+              <td>Montáž holodomu</td>
+              <td class="price" style="text-align: right;">9 225,00 €</td>
+            </tr>
+            <tr>
+              <td>Izolácia 250mm (Premium)</td>
+              <td class="price" style="text-align: right;">5 400,00 €</td>
+            </tr>
+            <tr>
+              <td>Tepelné čerpadlo (5 ks)</td>
+              <td class="price" style="text-align: right;">3 321,00 €</td>
+            </tr>
+            <tr>
+              <td>Rekuperácia (3 ks)</td>
+              <td class="price" style="text-align: right;">1 600,00 €</td>
+            </tr>
+            <tr>
+              <td>Fasáda - šúchaná omietka</td>
+              <td class="price" style="text-align: right;">6 371,00 €</td>
+            </tr>
+            <tr>
+              <td>Interiér - sadrokartón</td>
+              <td class="price" style="text-align: right;">9 430,00 €</td>
+            </tr>
+            <tr>
+              <td>Základy - pásové betónové</td>
+              <td class="price" style="text-align: right;">11 823,00 €</td>
+            </tr>
+            <tr>
+              <td>Inžiniering</td>
+              <td class="price" style="text-align: right;">2 592,00 €</td>
+            </tr>
+            <tr>
+              <td>Projekt A0 + certifikácia</td>
+              <td class="price" style="text-align: right;">3 500,00 €</td>
+            </tr>
+            ${formData.zobrazovat_preciarknute ? `
+            <tr class="strikethrough">
+              <td>Podlahové kúrenie</td>
+              <td style="text-align: right;">0,00 €</td>
+            </tr>
+            <tr class="strikethrough">
+              <td>Elektroinštalácia komplet</td>
+              <td style="text-align: right;">0,00 €</td>
+            </tr>
+            ` : ''}
+            <tr class="total">
+              <td style="padding: 16px 12px;"><strong>CELKOVÁ CENA s DPH</strong></td>
+              <td style="text-align: right; padding: 16px 12px;"><strong>125 340,00 €</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Fotogaléria</div>
+        <div class="gallery">
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80" alt="Exterier 1">
+          <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&q=80" alt="Exterier 2">
+          <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=80" alt="Exterier 3">
+          <img src="https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=400&q=80" alt="Interier 1">
+          <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=400&q=80" alt="Interier 2">
+          <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=400&q=80" alt="Podorys">
+        </div>
+      </div>
+
+      ${formData.zavery_text ? `
+      <div style="background: ${formData.farba_hlavna || '#EF4444'}10; padding: 15px; border-radius: 8px; border-left: 4px solid ${formData.farba_hlavna || '#EF4444'}; margin: 20px 0;">
+        <p style="margin: 0; color: #374151; line-height: 1.6;">${formData.zavery_text}</p>
+      </div>
+      ` : ''}
+
+      <div style="background: #fffbeb; border: 2px solid #f59e0b; border-radius: 8px; padding: 15px; margin: 20px 0;">
+        <p style="margin: 0; color: #78350f; font-size: 14px; line-height: 1.6;">
+          <strong>⚠️ Dôležité:</strong> Táto ponuka je orientačná a finálna cena bude upresnená po obhliadke pozemku a konzultácii.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p style="margin: 5px 0; font-size: 18px; font-weight: bold;">${formData.nazov_spolocnosti || 'American Living'}</p>
+      <p style="margin: 8px 0;">📞 Telefón: <a href="tel:${formData.telefon}">${formData.telefon}</a></p>
+      <p style="margin: 8px 0;">✉️ Email: <a href="mailto:${formData.email}">${formData.email}</a></p>
+      <p style="margin: 8px 0;">🌐 Web: <a href="https://${formData.web}">${formData.web}</a></p>
+      ${(formData.ico || formData.dic || formData.ic_dph) ? `
+      <p style="margin: 15px 0 5px 0; font-size: 12px; color: #9ca3af;">
+        ${formData.ico ? `IČO: ${formData.ico}` : ''} 
+        ${formData.dic ? ` | DIČ: ${formData.dic}` : ''} 
+        ${formData.ic_dph ? ` | IČ DPH: ${formData.ic_dph}` : ''}
+      </p>
+      ` : ''}
+      <p style="margin: 20px 0 5px 0; color: #9ca3af; font-size: 12px;">&copy; ${new Date().getFullYear()} American Living. Všetky práva vyhradené.</p>
+    </div>
+  </div>
+</body>
+</html>
+                `}
+                className="w-full"
+                style={{ height: '600px', border: 'none' }}
+                title="Email Preview"
+              />
           </DialogContent>
         </Dialog>
       </div>
