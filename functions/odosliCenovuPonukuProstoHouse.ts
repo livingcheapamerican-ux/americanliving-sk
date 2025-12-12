@@ -12,6 +12,7 @@ Deno.serve(async (req) => {
     const payload = await req.json();
     const {
       dom_id, klient_meno, klient_email, klient_telefon, klient_adresa, klient_poznamka,
+      selectedItems, totalPrice,
       montazHolodomu, izolaciaNavysenie, zaklady, vstupneDvere,
       elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler,
       tepelneCerpadlo, rekuperacia, pripojkaSiete,
@@ -50,72 +51,9 @@ Deno.serve(async (req) => {
       cisloPonuky = `CP-${aktualnyRok}-${String(noveCislo).padStart(3, '0')}`;
     }
 
-    // Cenník
-    const CENY = {
-      montaz: { nie: 0, ano: 9225 },
-      predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
-      dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-      izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 },
-      elektroinstalacia: 3900,
-      vodaKanalizacia: 1150,
-      sanitaKomplet: 1169,
-      bojler: 264,
-      tepelneCerpadlo: 3321,
-      rekuperacia: 1600,
-      zaklady: { bez: 0, skrutky: 4751, doska: 9633, pasove: 11823 },
-      pripojkaSiete: 1501,
-      inziniering: 2592,
-      projektA0: 3500,
-      interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 9430 },
-      vonkajsiaFasada: { standard: 0, suchana: 6371 },
-      povrchokaOkien: 1450,
-      vnutornePodlahy: 1750,
-      podlahovVykurovanie: 3960,
-      interieroveDvere: 180,
-      tonovaneSkla: 700,
-      doprava: 0,
-      revizna: 1000,
-      stresneOkno: 760,
-      bocneOknoFixne: 500,
-      bocneOknoVyklopne90: 540,
-      bocneOknoVyklopne55: 225
-    };
-
-    const BASE_PRICE = dom.zakladna_cena || 0;
-    let totalPrice = BASE_PRICE;
-
-    totalPrice += CENY.montaz[montazHolodomu] || 0;
-    totalPrice += CENY.predlzenie[predlzenie] || 0;
-    totalPrice += CENY.dvere[vstupneDvere] || 0;
-    totalPrice += CENY.izolacia[izolaciaNavysenie] || 0;
-    
-    if (elektroinstalacia) totalPrice += CENY.elektroinstalacia;
-    if (vodaKanalizacia) totalPrice += CENY.vodaKanalizacia;
-    if (sanitaKomplet) totalPrice += CENY.sanitaKomplet;
-    if (bojler) totalPrice += CENY.bojler;
-    if (tepelneCerpadlo) totalPrice += CENY.tepelneCerpadlo;
-    if (rekuperacia) totalPrice += CENY.rekuperacia;
-    
-    totalPrice += CENY.zaklady[zaklady] || 0;
-    if (pripojkaSiete) totalPrice += CENY.pripojkaSiete;
-    
-    if (inziniering) totalPrice += CENY.inziniering;
-    if (projektA0) totalPrice += CENY.projektA0;
-    
-    totalPrice += CENY.interierFinis[interierFinis] || 0;
-    totalPrice += CENY.vonkajsiaFasada[vonkajsiaFasada] || 0;
-    if (povrchokaOkien) totalPrice += CENY.povrchokaOkien;
-    if (vnutornePodlahy) totalPrice += CENY.vnutornePodlahy;
-    if (podlahovVykurovanie) totalPrice += CENY.podlahovVykurovanie;
-    totalPrice += (interieroveDvere || 0) * CENY.interieroveDvere;
-    if (tonovaneSkla) totalPrice += CENY.tonovaneSkla;
-    if (doprava) totalPrice += CENY.doprava;
-    if (revizna) totalPrice += CENY.revizna;
-    
-    totalPrice += (stresneOkno || 0) * CENY.stresneOkno;
-    totalPrice += (bocneOknoFixne || 0) * CENY.bocneOknoFixne;
-    totalPrice += (bocneOknoVyklopne90 || 0) * CENY.bocneOknoVyklopne90;
-    totalPrice += (bocneOknoVyklopne55 || 0) * CENY.bocneOknoVyklopne55;
+    console.log('=== PRIJATÉ DÁTA PRE EMAIL ===');
+    console.log('selectedItems:', selectedItems);
+    console.log('totalPrice:', totalPrice);
 
     // Typ stavby
     const isA0 = projektA0 && izolaciaNavysenie === "premium" && tepelneCerpadlo && rekuperacia;
@@ -378,146 +316,27 @@ Deno.serve(async (req) => {
             </tr>
           </thead>
           <tbody>
-            <tr class="base-row">
-              <td><strong>Základná cena sady (svojpomocná montáž)</strong></td>
-              <td style="text-align: right;"><strong>${formatPrice(BASE_PRICE)}</strong></td>
-            </tr>
+            ${selectedItems?.map(item => {
+              const isBase = item.section === "base";
+              const isSectionHeader = item.name === "HRUBÁ STAVBA" || item.name === "HOLODOM" || item.name === "DOM NA KĽÚČ" || item.name === "DOKUMENTÁCIA";
 
-            <tr class="section-row">
-              <td colspan="2">🏗️ HRUBÁ STAVBA</td>
-            </tr>
-            <tr class="${montazHolodomu === 'ano' ? 'selected-row' : 'not-selected-row'}">
-              <td>Montáž hrubej stavby</td>
-              <td style="text-align: right;">${montazHolodomu === 'ano' ? formatPrice(CENY.montaz.ano) : '—'}</td>
-            </tr>
-            ${predlzenie > 0 ? `
-            <tr class="selected-row">
-              <td>Predĺženie domu +${predlzenie}m</td>
-              <td style="text-align: right;">${formatPrice(CENY.predlzenie[predlzenie])}</td>
-            </tr>
-            ` : `
-            <tr class="not-selected-row">
-              <td>Predĺženie domu</td>
-              <td style="text-align: right;">—</td>
-            </tr>
-            `}
-            <tr class="${izolaciaNavysenie !== 'standard' ? 'selected-row' : 'not-selected-row'}">
-              <td>Premium izolácia A0 (250/300mm)</td>
-              <td style="text-align: right;">${izolaciaNavysenie === 'premium' ? formatPrice(CENY.izolacia.premium) : izolaciaNavysenie === 'zvysena' ? formatPrice(CENY.izolacia.zvysena) : '—'}</td>
-            </tr>
-            <tr class="${zaklady !== 'bez' ? 'selected-row' : 'not-selected-row'}">
-              <td>Základy ${zaklady === 'pasove' ? '(pásové)' : zaklady === 'doska' ? '(doska)' : zaklady === 'skrutky' ? '(skrutky)' : ''}</td>
-              <td style="text-align: right;">${zaklady !== 'bez' ? formatPrice(CENY.zaklady[zaklady]) : '—'}</td>
-            </tr>
+              if (isSectionHeader) {
+                const icon = item.name === "HRUBÁ STAVBA" ? "🏗️" : 
+                            item.name === "HOLODOM" ? "🔨" : 
+                            item.name === "DOM NA KĽÚČ" ? "🔑" : "📋";
+                return `<tr class="section-row"><td colspan="2">\${icon} \${item.name}</td></tr>`;
+              }
 
-            <tr class="section-row">
-              <td colspan="2">🔨 HOLODOM</td>
-            </tr>
-            <tr class="${interierFinis !== 'ziadne' ? 'selected-row' : 'not-selected-row'}">
-              <td>Interiér finiš ${interierFinis === 'drevo' ? '(Drevo)' : interierFinis === 'sadrokarton' ? '(Sadrokartón)' : ''}</td>
-              <td style="text-align: right;">${interierFinis !== 'ziadne' ? formatPrice(CENY.interierFinis[interierFinis]) : '—'}</td>
-            </tr>
-            <tr class="${elektroinstalacia ? 'selected-row' : 'not-selected-row'}">
-              <td>Elektrická inštalácia</td>
-              <td style="text-align: right;">${elektroinstalacia ? formatPrice(CENY.elektroinstalacia) : '—'}</td>
-            </tr>
-            <tr class="${vodaKanalizacia ? 'selected-row' : 'not-selected-row'}">
-              <td>Rozvody vody a kanalizácie</td>
-              <td style="text-align: right;">${vodaKanalizacia ? formatPrice(CENY.vodaKanalizacia) : '—'}</td>
-            </tr>
-            <tr class="${sanitaKomplet ? 'selected-row' : 'not-selected-row'}">
-              <td>Sanita komplet</td>
-              <td style="text-align: right;">${sanitaKomplet ? formatPrice(CENY.sanitaKomplet) : '—'}</td>
-            </tr>
-            <tr class="${bojler ? 'selected-row' : 'not-selected-row'}">
-              <td>Bojler</td>
-              <td style="text-align: right;">${bojler ? formatPrice(CENY.bojler) : '—'}</td>
-            </tr>
-            <tr class="${tepelneCerpadlo ? 'selected-row' : 'not-selected-row'}">
-              <td>Tepelné čerpadlo / Klimatizácia</td>
-              <td style="text-align: right;">${tepelneCerpadlo ? formatPrice(CENY.tepelneCerpadlo) : '—'}</td>
-            </tr>
-            <tr class="${rekuperacia ? 'selected-row' : 'not-selected-row'}">
-              <td>Rekuperácia</td>
-              <td style="text-align: right;">${rekuperacia ? formatPrice(CENY.rekuperacia) : '—'}</td>
-            </tr>
-            <tr class="${pripojkaSiete ? 'selected-row' : 'not-selected-row'}">
-              <td>Pripojenie na siete</td>
-              <td style="text-align: right;">${pripojkaSiete ? formatPrice(CENY.pripojkaSiete) : '—'}</td>
-            </tr>
-            <tr class="${vstupneDvere !== 'ziadne' ? 'selected-row' : 'not-selected-row'}">
-              <td>Vstupné dvere ${vstupneDvere === 'kovove' ? '(kovové)' : vstupneDvere === 'plastove' ? '(plastové)' : ''}</td>
-              <td style="text-align: right;">${vstupneDvere !== 'ziadne' ? formatPrice(CENY.dvere[vstupneDvere]) : '—'}</td>
-            </tr>
-            ${(stresneOkno || 0) > 0 ? `
-            <tr class="selected-row">
-              <td>Strešné okno (${stresneOkno}×)</td>
-              <td style="text-align: right;">${formatPrice(stresneOkno * CENY.stresneOkno)}</td>
-            </tr>` : ''}
-            ${(bocneOknoFixne || 0) > 0 ? `
-            <tr class="selected-row">
-              <td>Bočné okno fixné (${bocneOknoFixne}×)</td>
-              <td style="text-align: right;">${formatPrice(bocneOknoFixne * CENY.bocneOknoFixne)}</td>
-            </tr>` : ''}
-            ${(bocneOknoVyklopne90 || 0) > 0 ? `
-            <tr class="selected-row">
-              <td>Bočné okno vyklopné 90×205 (${bocneOknoVyklopne90}×)</td>
-              <td style="text-align: right;">${formatPrice(bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90)}</td>
-            </tr>` : ''}
-            ${(bocneOknoVyklopne55 || 0) > 0 ? `
-            <tr class="selected-row">
-              <td>Bočné okno vyklopné 55×90 (${bocneOknoVyklopne55}×)</td>
-              <td style="text-align: right;">${formatPrice(bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55)}</td>
-            </tr>` : ''}
-            <tr class="${povrchokaOkien ? 'selected-row' : 'not-selected-row'}">
-              <td>Laminácia farby okien - Antracit</td>
-              <td style="text-align: right;">${povrchokaOkien ? formatPrice(CENY.povrchokaOkien) : '—'}</td>
-            </tr>
-            <tr class="${tonovaneSkla ? 'selected-row' : 'not-selected-row'}">
-              <td>Tónované sklá (Solar)</td>
-              <td style="text-align: right;">${tonovaneSkla ? formatPrice(CENY.tonovaneSkla) : '—'}</td>
-            </tr>
+              const rowClass = item.selected ? 'selected-row' : 'not-selected-row';
+              const baseClass = isBase ? 'base-row' : rowClass;
 
-            <tr class="section-row">
-              <td colspan="2">🔑 DOM NA KĽÚČ</td>
-            </tr>
-            <tr class="${vonkajsiaFasada ? 'selected-row' : 'not-selected-row'}">
-              <td>${vonkajsiaFasada === 'suchana' ? 'Šúchaná' : 'Drevo/Plech'}</td>
-              <td style="text-align: right;">${vonkajsiaFasada === 'suchana' ? formatPrice(CENY.vonkajsiaFasada.suchana) : '0,00 €'}</td>
-            </tr>
-            <tr class="${vnutornePodlahy ? 'selected-row' : 'not-selected-row'}">
-              <td>Podlaha – Laminát</td>
-              <td style="text-align: right;">${vnutornePodlahy ? formatPrice(CENY.vnutornePodlahy) : '—'}</td>
-            </tr>
-            <tr class="${podlahovVykurovanie ? 'selected-row' : 'not-selected-row'}">
-              <td>Elektrické podlahové vykurovanie s WiFi termostatom</td>
-              <td style="text-align: right;">${podlahovVykurovanie ? formatPrice(CENY.podlahovVykurovanie) : '—'}</td>
-            </tr>
-            ${(interieroveDvere || 0) > 0 ? `
-            <tr class="selected-row">
-              <td>Interiérové dvere (${interieroveDvere}×)</td>
-              <td style="text-align: right;">${formatPrice(interieroveDvere * CENY.interieroveDvere)}</td>
-            </tr>` : `
-            <tr class="not-selected-row">
-              <td>Interiérové dvere (0×)</td>
-              <td style="text-align: right;">—</td>
-            </tr>`}
-
-            <tr class="section-row">
-              <td colspan="2">📋 DOKUMENTÁCIA</td>
-            </tr>
-            <tr class="${inziniering ? 'selected-row' : 'not-selected-row'}">
-              <td>Inžiniering stavebného povolenia</td>
-              <td style="text-align: right;">${inziniering ? formatPrice(CENY.inziniering) : '—'}</td>
-            </tr>
-            <tr class="${projektA0 ? 'selected-row' : 'not-selected-row'}">
-              <td>Projektant a certifikácia A0</td>
-              <td style="text-align: right;">${projektA0 ? formatPrice(CENY.projektA0) : '—'}</td>
-            </tr>
-            <tr class="${revizna ? 'selected-row' : 'not-selected-row'}">
-              <td>Revízna dokumentácia</td>
-              <td style="text-align: right;">${revizna ? formatPrice(CENY.revizna) : '—'}</td>
-            </tr>
+              return `
+                <tr class="\${baseClass}">
+                  <td>\${isBase ? '<strong>' + item.name + '</strong>' : item.name}</td>
+                  <td style="text-align: right;">\${isBase ? '<strong>' + formatPrice(item.price) + '</strong>' : (item.selected ? formatPrice(item.price) : '—')}</td>
+                </tr>
+              `;
+            }).join('') || ''}
           </tbody>
         </table>
       </div>
