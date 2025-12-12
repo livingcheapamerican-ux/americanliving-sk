@@ -67,16 +67,25 @@ Deno.serve(async (req) => {
     // Galérie podľa pravidiel - len vybrané galérie
     const galerie = [];
 
+    console.log('=== DEBUG GALÉRIE EMAIL ===');
+    console.log('interierFinis:', interierFinis);
+    console.log('vonkajsiaFasada:', vonkajsiaFasada);
+    console.log('dom.galerie:', dom.galerie?.map(g => ({ typ: g.typ, pocet_fotiek: g.fotky?.length })));
+
     // INTERIÉR - len jedna galéria podľa výberu
     if (interierFinis === "drevo") {
       const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
+      console.log('Hľadám drevo galériu:', drevoGaleria ? 'našiel' : 'nenašiel');
       if (drevoGaleria?.fotky?.length > 0) {
         galerie.push({ nazov: "Interiér - Drevo", fotky: drevoGaleria.fotky });
+        console.log('Pridaná galéria Interiér - Drevo, fotiek:', drevoGaleria.fotky.length);
       }
     } else if (interierFinis === "sadrokarton") {
       const sadroGaleria = dom.galerie?.find(g => g.typ === "interier_sadrokarton");
+      console.log('Hľadám sadrokarton galériu:', sadroGaleria ? 'našiel' : 'nenašiel');
       if (sadroGaleria?.fotky?.length > 0) {
         galerie.push({ nazov: "Interiér - Sadrokartón", fotky: sadroGaleria.fotky });
+        console.log('Pridaná galéria Interiér - Sadrokartón, fotiek:', sadroGaleria.fotky.length);
       }
     }
 
@@ -85,13 +94,18 @@ Deno.serve(async (req) => {
       const exterierDrevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
       if (exterierDrevoGaleria?.fotky?.length > 0) {
         galerie.push({ nazov: "Exteriér - Drevo/Plech", fotky: exterierDrevoGaleria.fotky });
+        console.log('Pridaná galéria Exteriér - Drevo/Plech, fotiek:', exterierDrevoGaleria.fotky.length);
       }
     } else if (vonkajsiaFasada === "suchana") {
       const murovkaGaleria = dom.galerie?.find(g => g.typ === "exterier_murovka");
       if (murovkaGaleria?.fotky?.length > 0) {
         galerie.push({ nazov: "Exteriér - Murovka", fotky: murovkaGaleria.fotky });
+        console.log('Pridaná galéria Exteriér - Murovka, fotiek:', murovkaGaleria.fotky.length);
       }
     }
+
+    console.log('Celkový počet galérií:', galerie.length);
+    console.log('=========================');
 
     const formatPrice = (price) => {
       if (!price) return "0,00 €";
