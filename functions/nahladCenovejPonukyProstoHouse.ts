@@ -64,21 +64,23 @@ Deno.serve(async (req) => {
       ? dom.hlavny_obrazok 
       : (dom.zakladna_konfiguracia_obrazok || dom.hlavny_obrazok);
 
-    // Galérie - VŽDY zobraz obe interiérové galérie a exteriér podľa fasády
+    // Galérie podľa pravidiel - len vybrané galérie
     const galerie = [];
-    
-    // INTERIÉR - vždy zobraz obe galérie ak existujú
-    const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
-    if (drevoGaleria?.fotky?.length > 0) {
-      galerie.push({ nazov: "Interiér - Drevo", fotky: drevoGaleria.fotky });
-    }
-    
-    const sadroGaleria = dom.galerie?.find(g => g.typ === "interier_sadrokarton");
-    if (sadroGaleria?.fotky?.length > 0) {
-      galerie.push({ nazov: "Interiér - Sadrokartón", fotky: sadroGaleria.fotky });
+
+    // INTERIÉR - len jedna galéria podľa výberu
+    if (interierFinis === "drevo") {
+      const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
+      if (drevoGaleria?.fotky?.length > 0) {
+        galerie.push({ nazov: "Interiér - Drevo", fotky: drevoGaleria.fotky });
+      }
+    } else if (interierFinis === "sadrokarton") {
+      const sadroGaleria = dom.galerie?.find(g => g.typ === "interier_sadrokarton");
+      if (sadroGaleria?.fotky?.length > 0) {
+        galerie.push({ nazov: "Interiér - Sadrokartón", fotky: sadroGaleria.fotky });
+      }
     }
 
-    // EXTERIÉR - podľa fasády
+    // EXTERIÉR - len jedna galéria podľa fasády
     if (vonkajsiaFasada === "standard" || !vonkajsiaFasada) {
       const exterierDrevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
       if (exterierDrevoGaleria?.fotky?.length > 0) {
