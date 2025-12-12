@@ -413,23 +413,64 @@ export default function KonfiguratorContactModal({
                   />
                 </div>
 
-
-
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold"
-                  disabled={createDopytMutation.isPending}
-                >
-                  {createDopytMutation.isPending ? (
-                    "Odosiela sa..."
-                  ) : (
-                    <>
-                      <Send className="mr-2 w-5 h-5" />
-                      Odoslať dopyt
-                    </>
-                  )}
-                </Button>
+                {isProstoHouse ? (
+                  <div className="space-y-3">
+                    {isAdmin && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={handlePreview}
+                        className="w-full border-2 border-blue-500 text-blue-600 hover:bg-blue-50"
+                      >
+                        <Mail className="mr-2 w-4 h-4" />
+                        Náhľad cenovej ponuky
+                      </Button>
+                    )}
+                    <Button
+                      type="button"
+                      size="lg"
+                      onClick={handleSendEmail}
+                      disabled={generatingPDF || !formData.email || !formData.meno || !formData.telefon || !formData.obec}
+                      className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold"
+                    >
+                      <Mail className="mr-2 w-5 h-5" />
+                      {generatingPDF ? 'Odosiela sa...' : 'Odoslať cenovú ponuku emailom'}
+                    </Button>
+                    <Button
+                      type="submit"
+                      size="lg"
+                      variant="outline"
+                      className="w-full border-2 border-green-500 text-green-600 hover:bg-green-50 font-bold"
+                      disabled={createDopytMutation.isPending}
+                    >
+                      {createDopytMutation.isPending ? (
+                        "Odosiela sa..."
+                      ) : (
+                        <>
+                          <Send className="mr-2 w-5 h-5" />
+                          Odoslať len dopyt (bez ponuky)
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold"
+                    disabled={createDopytMutation.isPending}
+                  >
+                    {createDopytMutation.isPending ? (
+                      "Odosiela sa..."
+                    ) : (
+                      <>
+                        <Send className="mr-2 w-5 h-5" />
+                        Odoslať dopyt
+                      </>
+                    )}
+                  </Button>
+                )}
               </form>
             </div>
           </div>
