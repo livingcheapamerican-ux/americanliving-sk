@@ -30,6 +30,26 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Dom nenájdený' }, { status: 404 });
     }
 
+    // Generuj číslo ponuky
+    const aktualnyRok = new Date().getFullYear();
+    const pocitadla = await base44.asServiceRole.entities.PocitadloCenovychPonuk.list();
+    let pocitadlo = pocitadla.find(p => p.rok === aktualnyRok);
+    
+    let cisloPonuky;
+    if (!pocitadlo) {
+      await base44.asServiceRole.entities.PocitadloCenovychPonuk.create({
+        rok: aktualnyRok,
+        posledne_cislo: 1
+      });
+      cisloPonuky = `CP-${aktualnyRok}-001`;
+    } else {
+      const noveCislo = pocitadlo.posledne_cislo + 1;
+      await base44.asServiceRole.entities.PocitadloCenovychPonuk.update(pocitadlo.id, {
+        posledne_cislo: noveCislo
+      });
+      cisloPonuky = `CP-${aktualnyRok}-${String(noveCislo).padStart(3, '0')}`;
+    }
+
     // Cenník
     const CENY = {
       montaz: { nie: 0, ano: 9225 },
@@ -108,8 +128,8 @@ Deno.serve(async (req) => {
 
     // Galérie podľa pravidiel
     const galerie = [];
-    
-    // Interiér podľa výberu
+
+    // Interiér podľa výberu (PRIORITA)
     if (interierFinis === "drevo") {
       const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
       if (drevoGaleria?.fotky?.length > 0) {
@@ -198,7 +218,7 @@ Deno.serve(async (req) => {
   <div class="container">
     <div class="header">
       <h1>CENOVÁ PONUKA</h1>
-      <p style="font-size: 16px; opacity: 0.95;">Číslo ponuky: CP-PREVIEW</p>
+      <p style="font-size: 16px; opacity: 0.95;">Číslo ponuky: ${cisloPonuky}</p>
       <p style="font-size: 14px; opacity: 0.9;">Dátum: ${new Date().toLocaleDateString('sk-SK')}</p>
     </div>
 

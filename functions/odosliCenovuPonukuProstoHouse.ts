@@ -30,6 +30,26 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Dom nenájdený' }, { status: 404 });
     }
 
+    // Generuj unikátne číslo ponuky
+    const aktualnyRok = new Date().getFullYear();
+    const pocitadla = await base44.asServiceRole.entities.PocitadloCenovychPonuk.list();
+    let pocitadlo = pocitadla.find(p => p.rok === aktualnyRok);
+    
+    let cisloPonuky;
+    if (!pocitadlo) {
+      const novePocitadlo = await base44.asServiceRole.entities.PocitadloCenovychPonuk.create({
+        rok: aktualnyRok,
+        posledne_cislo: 1
+      });
+      cisloPonuky = `CP-${aktualnyRok}-001`;
+    } else {
+      const noveCislo = pocitadlo.posledne_cislo + 1;
+      await base44.asServiceRole.entities.PocitadloCenovychPonuk.update(pocitadlo.id, {
+        posledne_cislo: noveCislo
+      });
+      cisloPonuky = `CP-${aktualnyRok}-${String(noveCislo).padStart(3, '0')}`;
+    }
+
     // Generuj číslo ponuky
     const rok = new Date().getFullYear();
     let pocitadlo = await base44.asServiceRole.entities.PocitadloCenovychPonuk.filter({ rok });
