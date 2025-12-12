@@ -129,20 +129,25 @@ Deno.serve(async (req) => {
     // Galérie podľa pravidiel
     const galerie = [];
 
-    // Interiér podľa výberu (PRIORITA)
+    console.log('DEBUG PREVIEW - interierFinis:', interierFinis);
+    console.log('DEBUG PREVIEW - dom.galerie:', JSON.stringify(dom.galerie));
+
+    // INTERIÉR podľa výberu (VŽDY PRIORITA)
     if (interierFinis === "drevo") {
       const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
+      console.log('DEBUG PREVIEW - drevoGaleria:', drevoGaleria);
       if (drevoGaleria?.fotky?.length > 0) {
         galerie.push({ nazov: "Interiér - Drevo", fotky: drevoGaleria.fotky });
       }
     } else if (interierFinis === "sadrokarton") {
       const sadroGaleria = dom.galerie?.find(g => g.typ === "interier_sadrokarton");
+      console.log('DEBUG PREVIEW - sadroGaleria:', sadroGaleria);
       if (sadroGaleria?.fotky?.length > 0) {
         galerie.push({ nazov: "Interiér - Sadrokartón", fotky: sadroGaleria.fotky });
       }
     }
 
-    // Exteriér podľa fasády
+    // EXTERIÉR podľa fasády
     if (vonkajsiaFasada === "standard") {
       const drevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
       if (drevoGaleria?.fotky?.length > 0) {
@@ -154,6 +159,9 @@ Deno.serve(async (req) => {
         galerie.push({ nazov: "Exteriér - Murovka", fotky: murovkaGaleria.fotky });
       }
     }
+
+    console.log('DEBUG PREVIEW - galerie.length:', galerie.length);
+    console.log('DEBUG PREVIEW - galerie:', JSON.stringify(galerie.map(g => ({ nazov: g.nazov, pocet: g.fotky.length }))));
 
     const formatPrice = (price) => {
       if (!price) return "0,00 €";
