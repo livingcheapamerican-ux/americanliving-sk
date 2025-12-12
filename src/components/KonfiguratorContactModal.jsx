@@ -101,7 +101,7 @@ export default function KonfiguratorContactModal({
       ...formData,
       typ_dopytu: "konfigurator",
       dom_id: dom?.id,
-      konfiguracny_kod: `Flat Double 142m² - ${formatPrice(totalPrice)}`,
+      konfiguracny_kod: `${dom?.nazov || 'Flat Double 142m²'} - ${formatPrice(totalPrice)}`,
       poznamka: `Lokalita: ${formData.obec}\n\n${formData.poznamka}\n\n--- KONFIGURÁCIA ---\n${konfiguracnySuhrn}\n\nCELKOM: ${formatPrice(totalPrice)}`
     });
   };
@@ -250,7 +250,7 @@ export default function KonfiguratorContactModal({
                 </div>
               </div>
 
-              <h3 className="text-lg font-bold mb-3">Flat Double 142m²</h3>
+              <h3 className="text-lg font-bold mb-3">{dom?.nazov || 'Flat Double 142m²'}</h3>
 
               {/* Súhrn položiek */}
               <div className="bg-slate-800/50 rounded-xl p-3 border border-slate-700/50 max-h-[200px] sm:max-h-[250px] overflow-y-auto text-sm">

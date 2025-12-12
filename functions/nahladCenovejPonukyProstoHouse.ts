@@ -562,7 +562,7 @@ Deno.serve(async (req) => {
         ${galerie.map(g => `
           <h3 style="color: #374151; font-size: 16px; margin: 20px 0 10px 0;">${g.nazov}</h3>
           <div class="gallery">
-            ${g.fotky.slice(0, 6).map((fotka, idx) => `
+            ${g.fotky.slice(0, 9).map((fotka, idx) => `
             <div class="gallery-item">
               <div style="position: relative;">
                 <img src="${fotka}" alt="${g.nazov} ${idx + 1}">
@@ -572,10 +572,20 @@ Deno.serve(async (req) => {
             </div>
             `).join('')}
           </div>
-          ${g.fotky.length > 6 ? `<p style="text-align: center; color: #6b7280; font-size: 12px;">+ ďalších ${g.fotky.length - 6} fotiek</p>` : ''}
+          ${g.fotky.length > 9 ? `<p style="text-align: center; color: #6b7280; font-size: 12px;">+ ďalších ${g.fotky.length - 9} fotiek</p>` : ''}
         `).join('')}
       </div>
-      ` : ''}
+      ` : `
+      <div class="section">
+        <p style="color: #dc2626; font-weight: bold; background: #fee; padding: 15px; border-radius: 8px;">⚠️ DEBUG: Žiadne galérie nenájdené</p>
+        <div style="background: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 12px;">
+          <p><strong>interierFinis:</strong> ${interierFinis}</p>
+          <p><strong>vonkajsiaFasada:</strong> ${vonkajsiaFasada}</p>
+          <p><strong>dom.galerie existuje:</strong> ${dom.galerie ? 'áno' : 'nie'}</p>
+          <p><strong>počet galérií v dome:</strong> ${dom.galerie?.length || 0}</p>
+        </div>
+      </div>
+      `}
     </div>
 
     <div class="footer">
