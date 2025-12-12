@@ -1697,6 +1697,13 @@ export default function AdminGeneratorCenovychPonuk() {
                 style={{ height: '600px', border: 'none' }}
                 title="Email Preview"
               />
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </div>
+  );
+}
           </DialogContent>
         </Dialog>
       </div>
