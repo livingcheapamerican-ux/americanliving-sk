@@ -495,6 +495,9 @@ export default function KonfiguratorProstoHouse({
             inziniering={inziniering}
             revizna={revizna}
             doprava={doprava}
+            predajNehnutelnosti={predajNehnutelnosti}
+            hladaniePozemku={hladaniePozemku}
+            financneSluzby={financneSluzby}
           />
 
           <div className="px-2 py-1 max-h-[65vh] overflow-y-auto">
@@ -1284,6 +1287,9 @@ export default function KonfiguratorProstoHouse({
                     inziniering={inziniering}
                     revizna={revizna}
                     doprava={doprava}
+                    predajNehnutelnosti={predajNehnutelnosti}
+                    hladaniePozemku={hladaniePozemku}
+                    financneSluzby={financneSluzby}
                   />
                 </div>
               </div>

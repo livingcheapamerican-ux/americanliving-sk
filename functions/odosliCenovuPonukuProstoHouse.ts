@@ -18,7 +18,8 @@ Deno.serve(async (req) => {
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55,
       povrchokaOkien, tonovaneSkla, vonkajsiaFasada, interierFinis,
       vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
-      inziniering, projektA0, revizna, doprava, predlzenie
+      inziniering, projektA0, revizna, doprava, predlzenie,
+      predajNehnutelnosti, hladaniePozemku, financneSluzby
     } = payload;
 
     // Načítaj dom
@@ -252,6 +253,35 @@ Deno.serve(async (req) => {
         ${klient_adresa ? `<p style="margin: 8px 0;"><strong>Lokalita:</strong> ${klient_adresa}</p>` : ''}
         ${klient_poznamka ? `<p style="margin: 8px 0;"><strong>Poznámka:</strong> ${klient_poznamka}</p>` : ''}
       </div>
+
+      <!-- Dodatočné služby -->
+      ${(predajNehnutelnosti || hladaniePozemku || financneSluzby) ? `
+      <div class="section">
+        <div style="background: #ecfdf5; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin: 20px 0;">
+          <h3 style="margin: 0 0 15px 0; color: #065f46; font-size: 18px; display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 24px;">✨</span> Vybrané dodatočné služby
+          </h3>
+          ${predajNehnutelnosti ? `
+          <div style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #10b981;">
+            <p style="margin: 0; color: #047857; font-weight: bold;">✓ Predaj predošlej nehnuteľnosti</p>
+            <p style="margin: 5px 0 0 0; color: #059669; font-size: 13px;">Budú sa Vám venovať naši najlepší odborníci v realitách.</p>
+          </div>
+          ` : ''}
+          ${hladaniePozemku ? `
+          <div style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #10b981;">
+            <p style="margin: 0; color: #047857; font-weight: bold;">✓ Chcem pozemok pod svoj dom</p>
+            <p style="margin: 5px 0 0 0; color: #059669; font-size: 13px;">Pomôžeme Vám nájsť ideálny pozemok.</p>
+          </div>
+          ` : ''}
+          ${financneSluzby ? `
+          <div style="background: white; padding: 12px; border-radius: 8px; border-left: 4px solid #10b981;">
+            <p style="margin: 0; color: #047857; font-weight: bold;">✓ Finančné služby - úvery/pôžičky</p>
+            <p style="margin: 5px 0 0 0; color: #059669; font-size: 13px;">Budú sa Vám venovať naši najlepší finančníci.</p>
+          </div>
+          ` : ''}
+        </div>
+      </div>
+      ` : ''}
 
       <!-- Vybraný model -->
       <div class="section">

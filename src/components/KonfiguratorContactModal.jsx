@@ -33,7 +33,8 @@ export default function KonfiguratorContactModal({
   pripojkaSiete, stresneOkno, bocneOknoFixne, bocneOknoVyklopne90,
   bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, interierFinis,
   vnutornePodlahy, podlahovVykurovanie, interieroveDvere, inziniering,
-  revizna, doprava
+  revizna, doprava,
+  predajNehnutelnosti, hladaniePozemku, financneSluzby
 }) {
   const [formData, setFormData] = useState({
     meno: "",
@@ -153,7 +154,8 @@ export default function KonfiguratorContactModal({
         stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55,
         povrchokaOkien, tonovaneSkla, vonkajsiaFasada, interierFinis,
         vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
-        inziniering, projektA0, revizna, doprava, predlzenie
+        inziniering, projektA0, revizna, doprava, predlzenie,
+        predajNehnutelnosti, hladaniePozemku, financneSluzby
       });
       
       setPreviewHtml(response.data.html);
@@ -189,7 +191,8 @@ export default function KonfiguratorContactModal({
         stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55,
         povrchokaOkien, tonovaneSkla, vonkajsiaFasada, interierFinis,
         vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
-        inziniering, projektA0, revizna, doprava, predlzenie
+        inziniering, projektA0, revizna, doprava, predlzenie,
+        predajNehnutelnosti, hladaniePozemku, financneSluzby
       });
       
       toast.success('✓ Cenová ponuka odoslaná na email');
