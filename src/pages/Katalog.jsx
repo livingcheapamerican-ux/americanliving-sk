@@ -109,10 +109,7 @@ export default function Katalog() {
     staleTime: 300000,
   });
 
-  const { data: user } = useQuery({
-    queryKey: ['current-user'],
-    queryFn: () => base44.auth.me()
-  });
+
 
   const deleteDomMutation = useMutation({
     mutationFn: (domId) => base44.entities.Dom.delete(domId),
