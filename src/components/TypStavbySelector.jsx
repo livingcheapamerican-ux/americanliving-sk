@@ -12,7 +12,7 @@ export default function TypStavbySelector({
   hladaniePozemku, setHladaniePozemku,
   financneSluzby, setFinancneSluzby
 }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <div className="min-h-[70vh] flex items-center justify-center px-2 sm:px-4 w-full max-w-full overflow-hidden">
@@ -192,7 +192,7 @@ export default function TypStavbySelector({
                     ) : (
                       <Square className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                     )}
-                    <div>
+                    <div className="flex-1">
                       <p className="font-semibold text-gray-800">{t('sellPreviousProperty')}</p>
                       <p className="text-xs text-gray-600 mt-1">{t('sellPreviousPropertyDesc')}</p>
                     </div>
@@ -214,7 +214,7 @@ export default function TypStavbySelector({
                     ) : (
                       <Square className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                     )}
-                    <div>
+                    <div className="flex-1">
                       <p className="font-semibold text-gray-800">{t('wantLandForHouse')}</p>
                       <p className="text-xs text-gray-600 mt-1">{t('wantLandForHouseDesc')}</p>
                     </div>
@@ -236,7 +236,7 @@ export default function TypStavbySelector({
                     ) : (
                       <Square className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                     )}
-                    <div>
+                    <div className="flex-1">
                       <p className="font-semibold text-gray-800">{t('financialServicesLoans')}</p>
                       <p className="text-xs text-gray-600 mt-1">{t('financialServicesLoansDesc')}</p>
                     </div>
