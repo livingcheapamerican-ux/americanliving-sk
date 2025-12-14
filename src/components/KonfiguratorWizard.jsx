@@ -322,7 +322,7 @@ export default function KonfiguratorWizard({
   doprava, setDoprava
 }) {
   const [currentStep, setCurrentStep] = useState(0);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   // Vždy začať od kroku 0 pri mount
   React.useEffect(() => {
@@ -513,6 +513,7 @@ export default function KonfiguratorWizard({
       case 0:
         return (
           <TypStavbySelector
+            key={language}
             typStavby={typStavby} 
             setTypStavby={handleTypStavbyChange}
             predajNehnutelnosti={predajNehnutelnosti}
