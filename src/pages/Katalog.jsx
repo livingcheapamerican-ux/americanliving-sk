@@ -128,24 +128,14 @@ export default function Katalog() {
     refetchOnWindowFocus: false,
   });
 
-  // Debug logging
-  React.useEffect(() => {
-    console.log('=== KATALOG DEBUG ===');
-    console.log('User:', user);
-    console.log('canManage:', canManage);
-    console.log('All domy loaded:', allDomy?.length);
-    console.log('Category filter:', kategoriaFilter);
-    if (allDomy && allDomy.length > 0) {
-      const publicCount = allDomy.filter(d => d.verejny !== false).length;
-      const hiddenCount = allDomy.filter(d => d.verejny === false).length;
-      console.log('Public domy:', publicCount);
-      console.log('Hidden domy:', hiddenCount);
-      console.log('Sample domy:', allDomy.slice(0, 3).map(d => ({
-        nazov: d.nazov,
-        verejny: d.verejny
-      })));
-    }
-  }, [allDomy, user, canManage, kategoriaFilter]);
+  // Pre počty v taboch a filtre používame všetky domy
+  const domy = allDomy;
+
+  // Pre počty v taboch použiť len verejné domy
+  const verejneDomy = Array.isArray(allDomy) ? allDomy.filter((d) => d.verejny !== false) : [];
+  const skryteDomy = Array.isArray(allDomy) ? allDomy.filter((d) => d.verejny === false) : [];
+  const rodinneDomy = verejneDomy.filter((d) => d.kategoria === "rodinne_domy");
+  const mobilneDomy = verejneDomy.filter((d) => d.kategoria === "mobilne_domy");
 
   const deleteDomMutation = useMutation({
     mutationFn: (domId) => base44.entities.Dom.delete(domId),
@@ -200,7 +190,7 @@ export default function Katalog() {
     const izbyMatch = pocetIziebFilter.length === 0 || (dom.pocet_izieb && pocetIziebFilter.includes(dom.pocet_izieb));
     const modulyMatch = pocetModulovFilter.length === 0 || (dom.pocet_modulov && pocetModulovFilter.includes(dom.pocet_modulov));
     
-    return kategoriaMatch && vyrobcaFilter && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
+    return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
   }) : [];
 
   // Zoradenie
@@ -218,12 +208,6 @@ export default function Katalog() {
   });
 
   const vyrobcovia = ["JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"];
-
-  // Pre počty v taboch použiť len verejné domy
-  const verejneDomy = Array.isArray(allDomy) ? allDomy.filter((d) => d.verejny !== false) : [];
-  const skryteDomy = Array.isArray(allDomy) ? allDomy.filter((d) => d.verejny === false) : [];
-  const rodinneDomy = verejneDomy.filter((d) => d.kategoria === "rodinne_domy");
-  const mobilneDomy = verejneDomy.filter((d) => d.kategoria === "mobilne_domy");
 
   const toggleSrovnanie = (dom) => {
     if (vybraneNaSrovnanie.find((d) => d.id === dom.id)) {
