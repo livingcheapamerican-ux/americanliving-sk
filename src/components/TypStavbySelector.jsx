@@ -195,8 +195,8 @@ export default function TypStavbySelector({
                       <Square className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                     )}
                     <div className="flex-1">
-                      <p className="font-semibold text-gray-800">{t('sellPreviousProperty')}</p>
-                      <p className="text-xs text-gray-600 mt-1">{t('sellPreviousPropertyDesc')}</p>
+                      <p key={`sell-title-${language}`} className="font-semibold text-gray-800">{t('sellPreviousProperty')}</p>
+                      <p key={`sell-desc-${language}`} className="text-xs text-gray-600 mt-1">{t('sellPreviousPropertyDesc')}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -218,8 +218,8 @@ export default function TypStavbySelector({
                       <Square className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                     )}
                     <div className="flex-1">
-                      <p className="font-semibold text-gray-800">{t('wantLandForHouse')}</p>
-                      <p className="text-xs text-gray-600 mt-1">{t('wantLandForHouseDesc')}</p>
+                      <p key={`land-title-${language}`} className="font-semibold text-gray-800">{t('wantLandForHouse')}</p>
+                      <p key={`land-desc-${language}`} className="text-xs text-gray-600 mt-1">{t('wantLandForHouseDesc')}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -241,8 +241,8 @@ export default function TypStavbySelector({
                       <Square className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                     )}
                     <div className="flex-1">
-                      <p className="font-semibold text-gray-800">{t('financialServicesLoans')}</p>
-                      <p className="text-xs text-gray-600 mt-1">{t('financialServicesLoansDesc')}</p>
+                      <p key={`finance-title-${language}`} className="font-semibold text-gray-800">{t('financialServicesLoans')}</p>
+                      <p key={`finance-desc-${language}`} className="text-xs text-gray-600 mt-1">{t('financialServicesLoansDesc')}</p>
                     </div>
                   </div>
                 </motion.div>
