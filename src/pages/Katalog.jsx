@@ -159,23 +159,10 @@ export default function Katalog() {
 
   // CRITICAL: Vypočítať všetky hodnoty PRED return
   const domy = Array.isArray(allDomy) ? allDomy : [];
-  
-  // DEBUG LOGGING
-  console.log('=== KATALOG DEBUG ===');
-  console.log('Celkový počet domov:', domy.length);
-  console.log('Domy s verejny:', domy.map(d => ({ nazov: d.nazov, verejny: d.verejny, kategoria: d.kategoria })));
-  
   const verejneDomy = domy.filter((d) => d.verejny === true || d.verejny === undefined);
   const skryteDomy = domy.filter((d) => d.verejny === false);
-  
-  console.log('Verejné domy:', verejneDomy.length, verejneDomy.map(d => d.nazov));
-  console.log('Skryté domy:', skryteDomy.length, skryteDomy.map(d => d.nazov));
-  
   const rodinneDomy = verejneDomy.filter((d) => d.kategoria === "rodinne_domy");
   const mobilneDomy = verejneDomy.filter((d) => d.kategoria === "mobilne_domy");
-  
-  console.log('Rodinné domy:', rodinneDomy.length);
-  console.log('Mobilné domy:', mobilneDomy.length);
 
   // Filtrovanie
   let filtrovane = [];
@@ -196,26 +183,9 @@ export default function Katalog() {
       const izbyMatch = pocetIziebFilter.length === 0 || (dom.pocet_izieb && pocetIziebFilter.includes(dom.pocet_izieb));
       const modulyMatch = pocetModulovFilter.length === 0 || (dom.pocet_modulov && pocetModulovFilter.includes(dom.pocet_modulov));
       
-      // DEBUG pre prvý dom
-      if (dom === verejneDomy[0]) {
-        console.log('Filter check pre prvý dom:', dom.nazov);
-        console.log('- kategoriaMatch:', kategoriaMatch, '(filter:', kategoriaFilter, ', dom:', dom.kategoria, ')');
-        console.log('- vyrobcaMatch:', vyrobcaMatch);
-        console.log('- typMatch:', typMatch);
-        console.log('- plochaMatch:', plochaMatch, '(dom:', dom.zastavana_plocha, ', rozsah:', plocharozsah, ')');
-        console.log('- uzitkovaMatch:', uzitkovaMatch);
-        console.log('- hladanieMatch:', hladanieMatch);
-        console.log('- cenaMatch:', cenaMatch, '(dom:', dom.zakladna_cena, ', rozsah:', cenoveRozpatie, ')');
-        console.log('- izbyMatch:', izbyMatch);
-        console.log('- modulyMatch:', modulyMatch);
-      }
-      
       return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
     });
   }
-  
-  console.log('Filtrované domy:', filtrovane.length);
-  console.log('===================');
 
   // Zoradenie
   const zoradeneDomy = [...filtrovane].sort((a, b) => {
