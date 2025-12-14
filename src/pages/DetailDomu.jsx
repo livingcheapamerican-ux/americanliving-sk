@@ -1761,10 +1761,10 @@ export default function DetailDomu() {
             <div>
               {/* Mobilná verzia - cena hore */}
               <div className="lg:hidden mb-3">
-                <div className="bg-gradient-to-r from-primary to-secondary text-white rounded-xl p-3 shadow-lg">
-                  <p className="text-xs mb-1 opacity-90">{isTicabhouse ? t('basicConfigPrice') : t('priceFromLabel')}</p>
+                <div className="bg-gray-900 text-white rounded-xl p-3 shadow-xl border-2 border-primary">
+                  <p className="text-xs mb-1 text-gray-300">{isTicabhouse ? t('basicConfigPrice') : t('priceFromLabel')}</p>
                   <p className="text-3xl font-black">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</p>
-                  <p className="text-xs opacity-90 mt-0.5">{t('withVAT')}</p>
+                  <p className="text-xs text-gray-300 mt-0.5">{t('withVAT')}</p>
                 </div>
               </div>
 
