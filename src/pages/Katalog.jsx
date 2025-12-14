@@ -31,12 +31,12 @@ export default function Katalog() {
       vyrobca: params.get("vyrobca") || "",
       typ: params.get("typ") || "",
       plocha_min: parseInt(params.get("plocha_min")) || 0,
-      plocha_max: parseInt(params.get("plocha_max")) || 200,
+      plocha_max: parseInt(params.get("plocha_max")) || 500,
       uzitkova_min: parseInt(params.get("uzitkova_min")) || 0,
-      uzitkova_max: parseInt(params.get("uzitkova_max")) || 200,
+      uzitkova_max: parseInt(params.get("uzitkova_max")) || 500,
       hladanie: params.get("hladanie") || "",
       cena_min: parseInt(params.get("cena_min")) || 0,
-      cena_max: parseInt(params.get("cena_max")) || 200000,
+      cena_max: parseInt(params.get("cena_max")) || 500000,
       izby: params.get("izby") || "",
       zoradenie: params.get("zoradenie") || "poradie"
     };
@@ -47,8 +47,8 @@ export default function Katalog() {
   const [kategoriaFilter, setKategoriaFilter] = useState(initialFilters.kategoria);
   const [vyrobcaFilter, setVyrobcaFilter] = useState(initialFilters.vyrobca ? initialFilters.vyrobca.split(',') : []);
   const [typFilter, setTypFilter] = useState(initialFilters.typ ? initialFilters.typ.split(',') : []);
-  const [plocharozsah, setPlocharozsah] = useState([initialFilters.plocha_min, initialFilters.plocha_max || 200]);
-  const [uzitkovaRozsah, setUzitkovaRozsah] = useState([initialFilters.uzitkova_min, initialFilters.uzitkova_max]);
+  const [plocharozsah, setPlocharozsah] = useState([initialFilters.plocha_min, initialFilters.plocha_max || 500]);
+  const [uzitkovaRozsah, setUzitkovaRozsah] = useState([initialFilters.uzitkova_min, initialFilters.uzitkova_max || 500]);
   const [hladanie, setHladanie] = useState(initialFilters.hladanie);
   const [hladanieInput, setHladanieInput] = useState(initialFilters.hladanie);
 
@@ -62,7 +62,7 @@ export default function Katalog() {
     debouncedSetHladanie(hladanieInput);
     return () => debouncedSetHladanie.cancel();
   }, [hladanieInput, debouncedSetHladanie]);
-  const [cenoveRozpatie, setCenoveRozpatie] = useState([initialFilters.cena_min, initialFilters.cena_max || 200000]);
+  const [cenoveRozpatie, setCenoveRozpatie] = useState([initialFilters.cena_min, initialFilters.cena_max || 500000]);
   const [pocetIziebFilter, setPocetIziebFilter] = useState(initialFilters.izby ? initialFilters.izby.split(',').map(Number) : []);
   const [zoradenie, setZoradenie] = useState(initialFilters.zoradenie);
   const [vybraneNaSrovnanie, setVybraneNaSrovnanie] = useState([]);
@@ -356,7 +356,7 @@ export default function Katalog() {
                   </label>
                   <Slider
                     min={0}
-                    max={Array.isArray(domy) && domy.length > 0 ? Math.max(...domy.map(d => d.zakladna_cena || 0), 200000) : 200000}
+                    max={500000}
                     step={5000}
                     value={cenoveRozpatie}
                     onValueChange={setCenoveRozpatie}
@@ -424,7 +424,7 @@ export default function Katalog() {
                   </label>
                   <Slider
                     min={0}
-                    max={Array.isArray(domy) && domy.length > 0 ? Math.max(...domy.map(d => d.zastavana_plocha || 0), 200) : 200}
+                    max={500}
                     step={5}
                     value={plocharozsah}
                     onValueChange={setPlocharozsah}
@@ -438,7 +438,7 @@ export default function Katalog() {
                   </label>
                   <Slider
                     min={0}
-                    max={Array.isArray(domy) && domy.length > 0 ? Math.max(...domy.map(d => d.uzitkova_plocha || 0), 200) : 200}
+                    max={500}
                     step={5}
                     value={uzitkovaRozsah}
                     onValueChange={setUzitkovaRozsah}
@@ -454,11 +454,11 @@ export default function Katalog() {
                     setKategoriaFilter("vsetky");
                     setVyrobcaFilter([]);
                     setTypFilter([]);
-                    setPlocharozsah([0, 200]);
-                    setUzitkovaRozsah([0, 200]);
+                    setPlocharozsah([0, 500]);
+                    setUzitkovaRozsah([0, 500]);
                     setHladanie("");
                     setHladanieInput("");
-                    setCenoveRozpatie([0, 200000]);
+                    setCenoveRozpatie([0, 500000]);
                     setPocetIziebFilter([]);
                     setPocetModulovFilter([]);
                     setZoradenie("poradie");
@@ -805,11 +805,11 @@ export default function Katalog() {
                   setKategoriaFilter("vsetky");
                   setVyrobcaFilter([]);
                   setTypFilter([]);
-                  setPlocharozsah([0, 200]);
-                  setUzitkovaRozsah([0, 200]);
+                  setPlocharozsah([0, 500]);
+                  setUzitkovaRozsah([0, 500]);
                   setHladanie("");
                   setHladanieInput("");
-                  setCenoveRozpatie([0, 200000]);
+                  setCenoveRozpatie([0, 500000]);
                   setPocetIziebFilter([]);
                   setPocetModulovFilter([]);
                   setZoradenie("poradie");
