@@ -128,8 +128,8 @@ export default function Katalog() {
     refetchOnWindowFocus: false,
   });
 
-  // Filtruj domy podľa admin práv - admini vidia všetky, bežní používatelia len verejné
-  const domy = canManage ? allDomy : allDomy.filter(dom => dom.verejny !== false);
+  // Pre display používame všetky načítané domy - filtrovanie je v logike filtrovane
+  const domy = allDomy;
 
   const deleteDomMutation = useMutation({
     mutationFn: (domId) => base44.entities.Dom.delete(domId),
@@ -167,8 +167,11 @@ export default function Katalog() {
       return dom.verejny === false;
     }
     
-    // V ostatných taboch zobraz LEN verejné domy (aj pre adminov)
-    const verejnyMatch = dom.verejny !== false;
+    // V ostatných taboch - admini vidia všetky verejné, bežní používatelia len verejné
+    // Ak je dom.verejny === false, je skrytý
+    // Ak je dom.verejny === true alebo undefined, je verejný
+    const verejnyMatch = canManage || dom.verejny !== false;
+    
     const kategoriaMatch = kategoriaFilter === "vsetky" || dom.kategoria === kategoriaFilter;
     const vyrobcaMatch = vyrobcaFilter.length === 0 || vyrobcaFilter.includes(dom.vyrobca);
     const typMatch = typFilter.length === 0 || typFilter.includes(dom.typ_domu);
