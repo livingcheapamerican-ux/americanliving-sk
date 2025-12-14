@@ -153,14 +153,17 @@ export default function Katalog() {
   const filtrovane = domy.filter((dom) => {
     // Tab "skryte" zobrazuje len skryté domy (iba pre adminov)
     if (kategoriaFilter === "skryte") {
+      if (!canManage) return false; // Skryté domy vidia len admini
       return dom.verejny === false;
     }
-    // Pre bežných užívateľov zobraz len verejné domy
-    if (!isAdmin) {
-      if (dom.verejny === false) return false;
+    
+    // Pre bežných užívateľov v ostatných taboch zobraz len verejné domy
+    if (!canManage && dom.verejny === false) {
+      return false;
     }
-    // Pre ostatné taby (verejné view)
-    const verejnyMatch = isAdmin ? true : dom.verejny !== false;
+    
+    // Pre adminov v ostatných taboch zobraz len verejné
+    const verejnyMatch = canManage || dom.verejny !== false;
     const kategoriaMatch = kategoriaFilter === "vsetky" || dom.kategoria === kategoriaFilter;
     const vyrobcaMatch = vyrobcaFilter.length === 0 || vyrobcaFilter.includes(dom.vyrobca);
     const typMatch = typFilter.length === 0 || typFilter.includes(dom.typ_domu);
