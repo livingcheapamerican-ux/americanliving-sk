@@ -15,7 +15,7 @@ export default function TypStavbySelector({
   const { t, language } = useLanguage();
 
   return (
-    <div className="min-h-[70vh] flex items-center justify-center px-2 sm:px-4 w-full max-w-full overflow-hidden">
+    <div key={language} className="min-h-[70vh] flex items-center justify-center px-2 sm:px-4 w-full max-w-full overflow-hidden">
       <div className="max-w-4xl w-full overflow-hidden">
         {/* Header */}
         <motion.div
