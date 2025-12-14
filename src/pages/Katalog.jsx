@@ -113,14 +113,13 @@ export default function Katalog() {
   }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie]);
 
   const { data: allDomy = [], isLoading, error } = useQuery({
-    queryKey: ['domy-katalog', Date.now()],
+    queryKey: ['domy-katalog'],
     queryFn: async () => {
       const result = await base44.entities.Dom.list('poradie', 200);
+      console.log('✅ Načítané domy:', result?.length);
       return result || [];
     },
-    staleTime: 0,
-    cacheTime: 0,
-    retry: 1,
+    refetchOnMount: true,
   });
 
   const deleteDomMutation = useMutation({
