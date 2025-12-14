@@ -167,10 +167,8 @@ export default function Katalog() {
       return dom.verejny === false;
     }
     
-    // V ostatných taboch - admini vidia všetky verejné, bežní používatelia len verejné
-    // Ak je dom.verejny === false, je skrytý
-    // Ak je dom.verejny === true alebo undefined, je verejný
-    const verejnyMatch = canManage || dom.verejny !== false;
+    // V ostatných taboch zobrazuj LEN verejné domy (pre všetkých)
+    const verejnyMatch = dom.verejny !== false;
     
     const kategoriaMatch = kategoriaFilter === "vsetky" || dom.kategoria === kategoriaFilter;
     const vyrobcaMatch = vyrobcaFilter.length === 0 || vyrobcaFilter.includes(dom.vyrobca);
