@@ -113,20 +113,14 @@ export default function Katalog() {
   }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie]);
 
   const { data: allDomy = [], isLoading, error } = useQuery({
-    queryKey: ['domy-katalog'],
+    queryKey: ['domy-katalog', Date.now()],
     queryFn: async () => {
-      try {
-        const result = await base44.entities.Dom.list('poradie', 200);
-        console.log('Načítané domy z DB:', result?.length);
-        return result || [];
-      } catch (err) {
-        console.error('Error loading houses:', err);
-        return [];
-      }
+      const result = await base44.entities.Dom.list('poradie', 200);
+      return result || [];
     },
-    staleTime: 300000,
-    retry: false,
-    refetchOnWindowFocus: false,
+    staleTime: 0,
+    cacheTime: 0,
+    retry: 1,
   });
 
   const deleteDomMutation = useMutation({
@@ -158,34 +152,12 @@ export default function Katalog() {
     toggleVerejnyMutation.mutate({ domId: dom.id, verejny: !dom.verejny });
   };
 
-  // CRITICAL: Vypočítať všetky hodnoty PRED return
   const domy = Array.isArray(allDomy) ? allDomy : [];
-  console.log('🔍 Celkový počet domov:', domy.length);
-  console.log('🔍 Prvý dom:', domy[0]);
-  console.log('🔍 Kategórie prvých 5 domov:', domy.slice(0, 5).map(d => ({ nazov: d.nazov, kategoria: d.kategoria })));
-  
   const verejneDomy = domy.filter((d) => d.verejny === true || d.verejny === undefined);
-  console.log('✅ Verejné domy:', verejneDomy.length, 'z', domy.length);
-  
   const skryteDomy = domy.filter((d) => d.verejny === false);
   const rodinneDomy = verejneDomy.filter((d) => d.kategoria === "rodinne_domy");
   const mobilneDomy = verejneDomy.filter((d) => d.kategoria === "mobilne_domy");
-  
-  console.log('🏠 Rodinné:', rodinneDomy.length, '🚐 Mobilné:', mobilneDomy.length);
-  console.log('⚠️ Domy BEZ kategórie:', verejneDomy.filter(d => !d.kategoria).length);
 
-  // Filtrovanie
-  console.log('📊 FILTRE:');
-  console.log('- kategoriaFilter:', kategoriaFilter);
-  console.log('- vyrobcaFilter:', vyrobcaFilter);
-  console.log('- typFilter:', typFilter);
-  console.log('- plocharozsah:', plocharozsah);
-  console.log('- uzitkovaRozsah:', uzitkovaRozsah);
-  console.log('- cenoveRozpatie:', cenoveRozpatie);
-  console.log('- pocetIziebFilter:', pocetIziebFilter);
-  console.log('- pocetModulovFilter:', pocetModulovFilter);
-  console.log('- hladanie:', hladanie);
-  
   let filtrovane = [];
   
   if (kategoriaFilter === "skryte") {
@@ -204,24 +176,8 @@ export default function Katalog() {
       const izbyMatch = pocetIziebFilter.length === 0 || (dom.pocet_izieb && pocetIziebFilter.includes(dom.pocet_izieb));
       const modulyMatch = pocetModulovFilter.length === 0 || (dom.pocet_modulov && pocetModulovFilter.includes(dom.pocet_modulov));
       
-      const passed = kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
-      
-      if (!passed && dom === verejneDomy[0]) {
-        console.log('❌ PRVÝ DOM NEZODPOVEDÁ:');
-        console.log('  kategoriaMatch:', kategoriaMatch, '(filter:', kategoriaFilter, 'dom:', dom.kategoria, ')');
-        console.log('  vyrobcaMatch:', vyrobcaMatch);
-        console.log('  typMatch:', typMatch);
-        console.log('  plochaMatch:', plochaMatch);
-        console.log('  uzitkovaMatch:', uzitkovaMatch);
-        console.log('  hladanieMatch:', hladanieMatch);
-        console.log('  cenaMatch:', cenaMatch);
-        console.log('  izbyMatch:', izbyMatch);
-        console.log('  modulyMatch:', modulyMatch);
-      }
-      
-      return passed;
+      return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
     });
-    console.log('🎯 Po filtrovaní:', filtrovane.length, 'domov');
   }
 
   // Zoradenie
