@@ -224,6 +224,12 @@ const translations = {
     newBadge: "NOVÉ",
     viewHousesInDifferentColors: "Prezrite si domy v rôznych farbách fasády",
     selectAdditionalServices: "Vyberte si doplnkové služby (voliteľné):",
+    sellPreviousProperty: "Predaj predošlej nehnuteľnosti",
+    sellPreviousPropertyDesc: "Budú sa Vám venovať naši najlepší odborníci v realitách.",
+    findLand: "Chcem pozemok pod svoj dom",
+    findLandDesc: "Pomôžeme Vám nájsť ideálny pozemok.",
+    financialServices: "Finančné služby - úvery/poistky",
+    financialServicesDesc: "Budú sa Vám venovať naši najlepší finančníci, ktorí Vám pomôžu nie len s financovaním vášho bývania, ale pomocnú ruku vám podajú aj v ťažkých chvíľach s financiami.",
     terrace: "Terasa",
     
     // DetailDomu specific
@@ -1401,6 +1407,12 @@ const translations = {
     newBadge: "NEU",
     viewHousesInDifferentColors: "Sehen Sie sich Häuser in verschiedenen Fassadenfarben an",
     selectAdditionalServices: "Wählen Sie zusätzliche Dienstleistungen (optional):",
+    sellPreviousProperty: "Verkauf der bisherigen Immobilie",
+    sellPreviousPropertyDesc: "Unsere besten Immobilienexperten werden sich um Sie kümmern.",
+    findLand: "Ich möchte ein Grundstück für mein Haus",
+    findLandDesc: "Wir helfen Ihnen, das ideale Grundstück zu finden.",
+    financialServices: "Finanzdienstleistungen - Kredite/Versicherungen",
+    financialServicesDesc: "Unsere besten Finanzexperten werden sich um Sie kümmern und Ihnen nicht nur bei der Finanzierung Ihres Eigenheims helfen, sondern auch in schwierigen finanziellen Zeiten zur Seite stehen.",
     terrace: "Terrasse",
     
     // DetailDomu specific
@@ -2352,6 +2364,12 @@ const translations = {
     newBadge: "NOUVEAU",
     viewHousesInDifferentColors: "Consultez les maisons dans différentes couleurs de façade",
     selectAdditionalServices: "Sélectionnez des services supplémentaires (facultatif):",
+    sellPreviousProperty: "Vente du bien immobilier précédent",
+    sellPreviousPropertyDesc: "Nos meilleurs experts immobiliers s'occuperont de vous.",
+    findLand: "Je veux un terrain pour ma maison",
+    findLandDesc: "Nous vous aiderons à trouver le terrain idéal.",
+    financialServices: "Services financiers - prêts/assurances",
+    financialServicesDesc: "Nos meilleurs experts financiers s'occuperont de vous et vous aideront non seulement à financer votre logement, mais vous tendront également la main dans les moments financiers difficiles.",
     terrace: "Terrasse",
     
     // DetailDomu specific
@@ -3243,6 +3261,12 @@ const translations = {
     newBadge: "НОВО",
     viewHousesInDifferentColors: "Погледајте куће у различитим бојама фасаде",
     selectAdditionalServices: "Изаберите додатне услуге (опционо):",
+    sellPreviousProperty: "Продаја претходне некретнине",
+    sellPreviousPropertyDesc: "Наши најбољи стручњаци за некретнине ће се посветити вама.",
+    findLand: "Желим земљиште за своју кућу",
+    findLandDesc: "Помоћи ћемо вам да пронађете идеално земљиште.",
+    financialServices: "Финансијске услуге - кредити/осигурање",
+    financialServicesDesc: "Наши најбољи финансијски стручњаци ће се посветити вама и помоћи вам не само у финансирању вашег становања, већ ће вам пружити руку и у тешким финансијским тренуцима.",
     terrace: "Тераса",
     
     // DetailDomu specific
@@ -4798,6 +4822,12 @@ const translations = {
     newBadge: "ΝΕΟ",
     viewHousesInDifferentColors: "Δείτε σπίτια σε διάφορα χρώματα πρόσοψης",
     selectAdditionalServices: "Επιλέξτε πρόσθετες υπηρεσίες (προαιρετικά):",
+    sellPreviousProperty: "Πώληση προηγούμενης ακίνητης περιουσίας",
+    sellPreviousPropertyDesc: "Οι καλύτεροι ειδικοί μας σε ακίνητα θα σας αφιερώσουν.",
+    findLand: "Θέλω οικόπεδο για το σπίτι μου",
+    findLandDesc: "Θα σας βοηθήσουμε να βρείτε το ιδανικό οικόπεδο.",
+    financialServices: "Χρηματοοικονομικές υπηρεσίες - δάνεια/ασφάλειες",
+    financialServicesDesc: "Οι καλύτεροι χρηματοοικονομικοί σύμβουλοί μας θα σας αφιερώσουν και θα σας βοηθήσουν όχι μόνο με τη χρηματοδότηση της κατοικίας σας, αλλά θα σας δώσουν και βοηθητικό χέρι σε δύσκολες οικονομικές στιγμές.",
     terrace: "Βεράντα",
     
     // Building type selection
@@ -5805,6 +5835,12 @@ const translations = {
     newBadge: "NEW",
     viewHousesInDifferentColors: "View houses in different facade colors",
     selectAdditionalServices: "Select additional services (optional):",
+    sellPreviousProperty: "Sale of previous property",
+    sellPreviousPropertyDesc: "Our best real estate experts will take care of you.",
+    findLand: "I want a plot for my house",
+    findLandDesc: "We will help you find the ideal plot.",
+    financialServices: "Financial services - loans/insurance",
+    financialServicesDesc: "Our best financial experts will take care of you and help you not only with financing your housing, but will also lend a helping hand in difficult financial times.",
     terrace: "Terrace",
     
     // DetailDomu specific
@@ -6665,6 +6701,12 @@ const translations = {
     newBadge: "ÚJ",
     viewHousesInDifferentColors: "Tekintse meg a házakat különböző homlokzatszínekben",
     selectAdditionalServices: "Válasszon további szolgáltatásokat (opcionális):",
+    sellPreviousProperty: "Előző ingatlan eladása",
+    sellPreviousPropertyDesc: "Legjobb ingatlan szakértőink foglalkoznak Önnel.",
+    findLand: "Szeretnék telket a házam alá",
+    findLandDesc: "Segítünk megtalálni az ideális telket.",
+    financialServices: "Pénzügyi szolgáltatások - hitelek/biztosítások",
+    financialServicesDesc: "Legjobb pénzügyi szakértőink foglalkoznak Önnel, és segítenek nem csak lakása finanszírozásában, hanem nehéz pénzügyi pillanatokban is segítő kezet nyújtanak.",
     terrace: "Terasz",
     
     // DetailDomu specific
@@ -7516,6 +7558,12 @@ const translations = {
     newBadge: "NOWE",
     viewHousesInDifferentColors: "Zobacz domy w różnych kolorach elewacji",
     selectAdditionalServices: "Wybierz dodatkowe usługi (opcjonalne):",
+    sellPreviousProperty: "Sprzedaż poprzedniej nieruchomości",
+    sellPreviousPropertyDesc: "Nasi najlepsi specjaliści od nieruchomości poświęcą Ci uwagę.",
+    findLand: "Chcę działkę pod swój dom",
+    findLandDesc: "Pomożemy Ci znaleźć idealną działkę.",
+    financialServices: "Usługi finansowe - kredyty/ubezpieczenia",
+    financialServicesDesc: "Nasi najlepsi specjaliści finansowi poświęcą Ci uwagę i pomogą nie tylko w finansowaniu Twojego mieszkania, ale podadzą Ci pomocną dłoń również w trudnych momentach finansowych.",
     terrace: "Taras",
     
     // DetailDomu specific
@@ -8326,6 +8374,12 @@ const translations = {
     newBadge: "НОВЕ",
     viewHousesInDifferentColors: "Переглянути будинки в різних кольорах фасаду",
     selectAdditionalServices: "Виберіть додаткові послуги (необов'язково):",
+    sellPreviousProperty: "Продаж попередньої нерухомості",
+    sellPreviousPropertyDesc: "Наші найкращі фахівці з нерухомості приділять вам увагу.",
+    findLand: "Хочу ділянку під свій будинок",
+    findLandDesc: "Ми допоможемо вам знайти ідеальну ділянку.",
+    financialServices: "Фінансові послуги - кредити/страхування",
+    financialServicesDesc: "Наші найкращі фінансові фахівці приділять вам увагу і допоможуть не лише з фінансуванням вашого житла, але й подадуть допоміжну руку у важкі фінансові моменти.",
     terrace: "Тераса",
     
     // DetailDomu specific
