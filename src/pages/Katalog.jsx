@@ -640,6 +640,11 @@ export default function Katalog() {
                               </div>
                           }
                           </div>
+                          <div className="absolute bottom-1 left-1 sm:hidden">
+                            <div className="bg-primary text-white px-2 py-1 rounded-lg shadow-lg">
+                              <p className="text-xs font-bold">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</p>
+                            </div>
+                          </div>
                           <div className="absolute top-1 right-1 sm:top-4 sm:right-4 flex gap-1 sm:gap-2">
                             <button
                             onClick={() => toggleSrovnanie(dom)}
@@ -764,14 +769,14 @@ export default function Katalog() {
                             </div>
                           
                           <div className="flex items-center justify-between pt-1.5 sm:pt-4 border-t">
-                            <div>
-                              <p className="hidden sm:block text-xs text-gray-500 mb-1">{dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : t('priceFromLabel')}</p>
-                              <p className="text-sm sm:text-xl font-bold text-primary">
+                            <div className="hidden sm:block">
+                              <p className="text-xs text-gray-500 mb-1">{dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : t('priceFromLabel')}</p>
+                              <p className="text-xl font-bold text-primary">
                                 {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                               </p>
                             </div>
-                            <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-                              <Button size="sm" className="bg-primary hover:bg-primary/90 group-hover:bg-secondary text-[10px] sm:text-sm px-2 sm:px-3 h-6 sm:h-8">
+                            <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`} className="w-full sm:w-auto">
+                              <Button size="sm" className="w-full sm:w-auto bg-primary hover:bg-primary/90 group-hover:bg-secondary text-[10px] sm:text-sm px-2 sm:px-3 h-6 sm:h-8">
                                 {t('detail')}
                                 <ArrowRight className="ml-0.5 sm:ml-1 w-3 h-3 sm:w-4 sm:h-4" />
                               </Button>
