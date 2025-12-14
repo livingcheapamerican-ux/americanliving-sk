@@ -73,14 +73,14 @@ export default function Katalog() {
 
   const queryClient = useQueryClient();
 
-  const { data: user } = useQuery({
+  const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me().catch(() => null)
   });
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
   const isSuperAdmin = user?.super_admin === true;
-  const canManage = isAdmin || isSuperAdmin;
+  const canManage = user ? (isAdmin || isSuperAdmin) : false;
 
   // Označiť ako inicializované po prvom renderovaní
   useEffect(() => {
@@ -126,10 +126,15 @@ export default function Katalog() {
     staleTime: 300000,
     retry: false,
     refetchOnWindowFocus: false,
+    enabled: !userLoading, // Počkaj kým sa načíta user
   });
 
   // Filtruj domy podľa admin práv - admini vidia všetky, bežní používatelia len verejné
-  const domy = canManage ? allDomy : (allDomy || []).filter(dom => dom.verejny !== false);
+  const domy = React.useMemo(() => {
+    if (!allDomy || allDomy.length === 0) return [];
+    if (canManage) return allDomy;
+    return allDomy.filter(dom => dom.verejny !== false);
+  }, [allDomy, canManage]);
 
   const deleteDomMutation = useMutation({
     mutationFn: (domId) => base44.entities.Dom.delete(domId),
