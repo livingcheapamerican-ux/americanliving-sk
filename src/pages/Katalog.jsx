@@ -73,6 +73,15 @@ export default function Katalog() {
 
   const queryClient = useQueryClient();
 
+  const { data: user } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => base44.auth.me().catch(() => null)
+  });
+
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
+  const isSuperAdmin = user?.super_admin === true;
+  const canManage = isAdmin || isSuperAdmin;
+
   // Označiť ako inicializované po prvom renderovaní
   useEffect(() => {
     setIsInitialized(true);
@@ -119,15 +128,6 @@ export default function Katalog() {
     retry: false,
     refetchOnWindowFocus: false,
   });
-
-  const { data: user } = useQuery({
-    queryKey: ['current-user'],
-    queryFn: () => base44.auth.me().catch(() => null)
-  });
-
-  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
-  const isSuperAdmin = user?.super_admin === true;
-  const canManage = isAdmin || isSuperAdmin;
 
   const deleteDomMutation = useMutation({
     mutationFn: (domId) => base44.entities.Dom.delete(domId),
