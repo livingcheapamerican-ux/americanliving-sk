@@ -37,7 +37,7 @@ function LayoutContent({ children }) {
   const navItems = [
     { name: t('home'), path: createPageUrl("Domov"), icon: Home },
     { name: t('catalog'), path: createPageUrl("Katalog"), icon: Grid3x3 },
-    { name: "AI Odporúčania", path: createPageUrl("OdporucanieDomov"), icon: Sparkles },
+    { name: t('aiRecommendations'), path: createPageUrl("OdporucanieDomov"), icon: Sparkles },
     { name: t('about'), path: createPageUrl("ONas"), icon: Info },
     { name: "Blog", path: createPageUrl("Blog"), icon: FileText },
     { name: t('contact'), path: createPageUrl("Kontakt"), icon: Phone },
