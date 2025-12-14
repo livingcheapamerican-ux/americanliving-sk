@@ -294,9 +294,9 @@ export default function KonfiguratorProstoHouse({
     
     items.push({ name: t('basePriceKit'), price: BASE_PRICE, section: "base", selected: true });
     
-    if (predajNehnutelnosti) items.push({ name: t('sellPreviousProperty'), price: 0, section: "services", selected: true });
-    if (hladaniePozemku) items.push({ name: t('wantLandForHouse'), price: 0, section: "services", selected: true });
-    if (financneSluzby) items.push({ name: t('financialServicesLoans'), price: 0, section: "services", selected: true });
+    if (predajNehnutelnosti) items.push({ name: "Predaj predošlej nehnuteľnosti", price: 0, section: "services", selected: true });
+    if (hladaniePozemku) items.push({ name: "Chcem pozemok pod svoj dom", price: 0, section: "services", selected: true });
+    if (financneSluzby) items.push({ name: "Finančné služby - úvery/poistky", price: 0, section: "services", selected: true });
     
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
