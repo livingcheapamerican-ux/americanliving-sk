@@ -158,7 +158,7 @@ export default function Katalog() {
   const isSuperAdmin = user?.super_admin === true;
   const canManage = isAdmin || isSuperAdmin;
 
-  const filtrovane = domy.filter((dom) => {
+  const filtrovane = Array.isArray(domy) ? domy.filter((dom) => {
     // Tab "skryte" zobrazuje len skryté domy (iba pre adminov)
     if (kategoriaFilter === "skryte") {
       if (!canManage) return false; // Skryté domy vidia len admini
@@ -177,7 +177,7 @@ export default function Katalog() {
     const izbyMatch = pocetIziebFilter.length === 0 || (dom.pocet_izieb && pocetIziebFilter.includes(dom.pocet_izieb));
     const modulyMatch = pocetModulovFilter.length === 0 || (dom.pocet_modulov && pocetModulovFilter.includes(dom.pocet_modulov));
     return verejnyMatch && kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
-  });
+  }) : [];
 
   // Zoradenie
   const zoradeneDomy = [...filtrovane].sort((a, b) => {
@@ -355,7 +355,7 @@ export default function Katalog() {
                   </label>
                   <Slider
                     min={0}
-                    max={Math.max(...domy.map(d => d.zakladna_cena || 0), 200000)}
+                    max={Array.isArray(domy) && domy.length > 0 ? Math.max(...domy.map(d => d.zakladna_cena || 0), 200000) : 200000}
                     step={5000}
                     value={cenoveRozpatie}
                     onValueChange={setCenoveRozpatie}
@@ -366,7 +366,7 @@ export default function Katalog() {
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">{t('roomsFilter')}</label>
                   <div className="flex flex-wrap gap-1.5">
-                    {[...new Set(domy.filter(d => d.pocet_izieb).map(d => d.pocet_izieb))].sort((a, b) => a - b).map((izby) => (
+                    {Array.isArray(domy) && [...new Set(domy.filter(d => d.pocet_izieb).map(d => d.pocet_izieb))].sort((a, b) => a - b).map((izby) => (
                       <div key={izby} className="flex items-center gap-0.5">
                         <Checkbox
                           id={`izby-${izby}`}
@@ -395,7 +395,7 @@ export default function Katalog() {
                     </label>
                     <p className="text-[10px] text-gray-600 mb-2">Tento výber upravuje počet modulov z ktorých sa má modulárny dom skladať</p>
                     <div className="flex flex-wrap gap-1.5">
-                      {[...new Set(domy.filter(d => d.pocet_modulov && d.vyrobca === "Ticab house").map(d => d.pocet_modulov))].sort((a, b) => a - b).map((moduly) => (
+                      {Array.isArray(domy) && [...new Set(domy.filter(d => d.pocet_modulov && d.vyrobca === "Ticab house").map(d => d.pocet_modulov))].sort((a, b) => a - b).map((moduly) => (
                         <div key={moduly} className="flex items-center gap-0.5">
                           <Checkbox
                             id={`moduly-${moduly}`}
@@ -423,7 +423,7 @@ export default function Katalog() {
                   </label>
                   <Slider
                     min={0}
-                    max={Math.max(...domy.map(d => d.zastavana_plocha || 0), 200)}
+                    max={Array.isArray(domy) && domy.length > 0 ? Math.max(...domy.map(d => d.zastavana_plocha || 0), 200) : 200}
                     step={5}
                     value={plocharozsah}
                     onValueChange={setPlocharozsah}
@@ -437,7 +437,7 @@ export default function Katalog() {
                   </label>
                   <Slider
                     min={0}
-                    max={Math.max(...domy.map(d => d.uzitkova_plocha || 0), 200)}
+                    max={Array.isArray(domy) && domy.length > 0 ? Math.max(...domy.map(d => d.uzitkova_plocha || 0), 200) : 200}
                     step={5}
                     value={uzitkovaRozsah}
                     onValueChange={setUzitkovaRozsah}
@@ -453,11 +453,13 @@ export default function Katalog() {
                     setKategoriaFilter("vsetky");
                     setVyrobcaFilter([]);
                     setTypFilter([]);
-                    setPlocharozsah([0, Math.max(...domy.map(d => d.zastavana_plocha || 0), 200)]);
-                    setUzitkovaRozsah([0, Math.max(...domy.map(d => d.uzitkova_plocha || 0), 200)]);
+                    setPlocharozsah([0, 200]);
+                    setUzitkovaRozsah([0, 200]);
                     setHladanie("");
-                    setCenoveRozpatie([0, Math.max(...domy.map(d => d.zakladna_cena || 0), 200000)]);
+                    setHladanieInput("");
+                    setCenoveRozpatie([0, 200000]);
                     setPocetIziebFilter([]);
+                    setPocetModulovFilter([]);
                     setZoradenie("poradie");
                   }}>
                   Reset
