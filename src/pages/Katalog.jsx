@@ -105,7 +105,14 @@ export default function Katalog() {
 
   const { data: domy = [], isLoading, error } = useQuery({
     queryKey: ['domy-katalog'],
-    queryFn: () => base44.entities.Dom.list('poradie'),
+    queryFn: async () => {
+      try {
+        return await base44.entities.Dom.list('poradie');
+      } catch (err) {
+        console.error('Error loading houses:', err);
+        throw err;
+      }
+    },
     staleTime: 300000,
     retry: 3,
   });
@@ -158,13 +165,8 @@ export default function Katalog() {
       return dom.verejny === false;
     }
     
-    // Pre bežných užívateľov v ostatných taboch zobraz len verejné domy
-    if (!canManage && dom.verejny === false) {
-      return false;
-    }
-    
-    // Pre adminov v ostatných taboch zobraz len verejné
-    const verejnyMatch = canManage || dom.verejny !== false;
+    // V ostatných taboch zobraz LEN verejné domy (aj pre adminov)
+    const verejnyMatch = dom.verejny !== false;
     const kategoriaMatch = kategoriaFilter === "vsetky" || dom.kategoria === kategoriaFilter;
     const vyrobcaMatch = vyrobcaFilter.length === 0 || vyrobcaFilter.includes(dom.vyrobca);
     const typMatch = typFilter.length === 0 || typFilter.includes(dom.typ_domu);
