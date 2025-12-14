@@ -116,11 +116,13 @@ export default function Katalog() {
     queryKey: ['domy-katalog', canManage],
     queryFn: async () => {
       try {
+        console.log('Loading houses, canManage:', canManage);
         // Admini môžu načítať všetky domy, bežní používatelia len verejné
         const result = canManage 
           ? await base44.entities.Dom.list('poradie')
           : await base44.entities.Dom.filter({ verejny: true }, 'poradie');
-        console.log('Houses loaded:', result?.length || 0);
+        console.log('Houses loaded:', result?.length || 0, 'canManage:', canManage);
+        console.log('Sample house verejny values:', result?.slice(0, 5).map(d => ({ nazov: d.nazov, verejny: d.verejny })));
         return result || [];
       } catch (err) {
         console.error('Error loading houses:', err);
