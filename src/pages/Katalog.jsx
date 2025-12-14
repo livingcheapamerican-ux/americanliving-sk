@@ -241,8 +241,8 @@ export default function Katalog() {
   const [kategoriaFilter, setKategoriaFilter] = useState(initialFilters.kategoria);
   const [vyrobcaFilter, setVyrobcaFilter] = useState(initialFilters.vyrobca ? initialFilters.vyrobca.split(',') : []);
   const [typFilter, setTypFilter] = useState(initialFilters.typ ? initialFilters.typ.split(',') : []);
-  const [plocharozsah, setPlocharozsah] = useState([initialFilters.plocha_min, initialFilters.plocha_max || 500]);
-  const [uzitkovaRozsah, setUzitkovaRozsah] = useState([initialFilters.uzitkova_min, initialFilters.uzitkova_max || 500]);
+  const [plocharozsah, setPlocharozsah] = useState([initialFilters.plocha_min, initialFilters.plocha_max || 200]);
+  const [uzitkovaRozsah, setUzitkovaRozsah] = useState([initialFilters.uzitkova_min, initialFilters.uzitkova_max || 200]);
   const [hladanie, setHladanie] = useState(initialFilters.hladanie);
   const [hladanieInput, setHladanieInput] = useState(initialFilters.hladanie);
 
@@ -648,7 +648,7 @@ export default function Katalog() {
                       <Input
                         type="number"
                         min={0}
-                        max={500}
+                        max={200}
                         step={5}
                         value={plocharozsah[0]}
                         onChange={(e) => setPlocharozsah([Number(e.target.value), plocharozsah[1]])}
@@ -660,7 +660,7 @@ export default function Katalog() {
                       <Input
                         type="number"
                         min={0}
-                        max={500}
+                        max={200}
                         step={5}
                         value={plocharozsah[1]}
                         onChange={(e) => setPlocharozsah([plocharozsah[0], Number(e.target.value)])}
@@ -670,7 +670,7 @@ export default function Katalog() {
                   </div>
                   <Slider
                     min={0}
-                    max={500}
+                    max={200}
                     step={5}
                     value={plocharozsah}
                     onValueChange={setPlocharozsah}
@@ -678,7 +678,7 @@ export default function Katalog() {
                   />
                   <div className="flex justify-between text-[10px] text-gray-500 mt-1">
                     <span>0 m²</span>
-                    <span>500 m²</span>
+                    <span>200 m²</span>
                   </div>
                 </div>
 
@@ -693,7 +693,7 @@ export default function Katalog() {
                       <Input
                         type="number"
                         min={0}
-                        max={500}
+                        max={200}
                         step={5}
                         value={uzitkovaRozsah[0]}
                         onChange={(e) => setUzitkovaRozsah([Number(e.target.value), uzitkovaRozsah[1]])}
@@ -705,7 +705,7 @@ export default function Katalog() {
                       <Input
                         type="number"
                         min={0}
-                        max={500}
+                        max={200}
                         step={5}
                         value={uzitkovaRozsah[1]}
                         onChange={(e) => setUzitkovaRozsah([uzitkovaRozsah[0], Number(e.target.value)])}
@@ -715,7 +715,7 @@ export default function Katalog() {
                   </div>
                   <Slider
                     min={0}
-                    max={500}
+                    max={200}
                     step={5}
                     value={uzitkovaRozsah}
                     onValueChange={setUzitkovaRozsah}
@@ -723,7 +723,7 @@ export default function Katalog() {
                   />
                   <div className="flex justify-between text-[10px] text-gray-500 mt-1">
                     <span>0 m²</span>
-                    <span>500 m²</span>
+                    <span>200 m²</span>
                   </div>
                 </div>
 
@@ -736,8 +736,8 @@ export default function Katalog() {
                     setKategoriaFilter("vsetky");
                     setVyrobcaFilter([]);
                     setTypFilter([]);
-                    setPlocharozsah([0, 500]);
-                    setUzitkovaRozsah([0, 500]);
+                    setPlocharozsah([0, 200]);
+                    setUzitkovaRozsah([0, 200]);
                     setHladanie("");
                     setHladanieInput("");
                     setCenoveRozpatie([0, 500000]);
