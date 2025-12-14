@@ -222,7 +222,7 @@ export default function Katalog() {
         </div>
       </section>
 
-      <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-8 max-w-full overflow-hidden">
+      <div className="container mx-auto px-1 sm:px-4 py-2 sm:py-8 max-w-full overflow-hidden">
         {/* Tabs pre kategórie */}
         <Tabs value={kategoriaFilter} onValueChange={setKategoriaFilter} className="mb-4 sm:mb-6">
           <TabsList className={`grid w-full max-w-xl mx-auto h-8 sm:h-10 ${canManage ? 'grid-cols-4' : 'grid-cols-3'}`}>
@@ -585,7 +585,7 @@ export default function Katalog() {
                 <Button onClick={() => window.location.reload()}>Obnoviť stránku</Button>
               </Card>
             ) : isLoading ? (
-              <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1.5 sm:gap-4">
                 {[...Array(6)].map((_, i) =>
               <Card key={i} className="h-48 sm:h-96 animate-pulse bg-gray-200" />
               )}
@@ -594,7 +594,7 @@ export default function Katalog() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-6 w-full max-w-full">
+              className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1.5 sm:gap-4 w-full max-w-full">
 
                 {zoradeneDomy.map((dom, index) => {
                 const jeVybrany = vybraneNaSrovnanie.find((d) => d.id === dom.id);
@@ -676,7 +676,7 @@ export default function Katalog() {
                           </div>
                         </div>
                         
-                        <div className="p-2 sm:p-5">
+                        <div className="p-1.5 sm:p-5">
                           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
                             <h3 className="text-xs sm:text-xl font-bold text-primary mb-1 sm:mb-3 group-hover:text-secondary transition-colors line-clamp-1">
                               {dom.nazov}
@@ -684,7 +684,7 @@ export default function Katalog() {
                           </Link>
 
                           {/* Základné parametre */}
-                          <div className="grid grid-cols-2 gap-1 sm:gap-2 mb-2 sm:mb-4 text-[10px] sm:text-sm">
+                          <div className="grid grid-cols-2 gap-0.5 sm:gap-2 mb-1.5 sm:mb-4 text-[10px] sm:text-sm">
                             <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
                               <Home className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-primary" />
                               <div className="flex flex-col min-w-0">
@@ -763,7 +763,7 @@ export default function Katalog() {
                             )}
                             </div>
                           
-                          <div className="flex items-center justify-between pt-2 sm:pt-4 border-t">
+                          <div className="flex items-center justify-between pt-1.5 sm:pt-4 border-t">
                             <div>
                               <p className="hidden sm:block text-xs text-gray-500 mb-1">{dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : t('priceFromLabel')}</p>
                               <p className="text-sm sm:text-xl font-bold text-primary">
