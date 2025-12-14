@@ -265,7 +265,7 @@ export default function KonfiguratorProstoHouse({
       zaklady, pripojkaSiete, inziniering, projektA0, interierFinis,
       vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, podlahovVykurovanie,
       interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55]);
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE]);
 
   const a0Odporucania = useMemo(() => {
     if (!projektA0) return null;
@@ -289,72 +289,51 @@ export default function KonfiguratorProstoHouse({
   }, [montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
       tepelneCerpadlo, rekuperacia, interierFinis, vnutornePodlahy, vonkajsiaFasada]);
 
-  const selectedItems = useMemo(() => {
-    const items = [];
-    
-    items.push({ name: t('basePriceKit'), price: BASE_PRICE, section: "base", selected: true });
-    
-    if (predajNehnutelnosti) items.push({ name: "Predaj predošlej nehnuteľnosti", price: 0, section: "services", selected: true });
-    if (hladaniePozemku) items.push({ name: "Chcem pozemok pod svoj dom", price: 0, section: "services", selected: true });
-    if (financneSluzby) items.push({ name: "Finančné služby - úvery/poistky", price: 0, section: "services", selected: true });
-    
-    items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
-    
-    if (predlzenie > 0) {
-      items.push({ name: `Predĺženie domu +${predlzenie}m`, price: CENY.predlzenie[predlzenie] || 0, section: "hruba", selected: true });
-    }
-    
-    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Izolácia 300mm" : izolaciaNavysenie === "premium" ? t('insulationPremium') + " (250mm)" : izolaciaNavysenie === "zvysena" ? t('insulationEnhanced') + " (200mm)" : t('insulationStd');
-    const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
-    items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" });
-    
-    const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? "Pilóty/Pätky" : t('foundationsLabel');
-    const zakladyPrice = zaklady === "pasove" ? CENY.zaklady.pasove : zaklady === "doska" ? CENY.zaklady.doska : zaklady === "skrutky" ? CENY.zaklady.skrutky : 0;
-    items.push({ name: zakladyLabel, price: zakladyPrice, section: "hruba", selected: zaklady !== "bez" });
-    
-    const interierLabel = interierFinis === "drevo" ? t('interiorWood') : interierFinis === "sadrokarton" ? t('interiorDrywall') : t('interiorFinish');
-    const interierPrice = interierFinis === "drevo" ? CENY.interierFinis.drevo : interierFinis === "sadrokarton" ? CENY.interierFinis.sadrokarton : 0;
-    items.push({ name: interierLabel, price: interierPrice, section: "holodom", selected: interierFinis !== "ziadne" });
+const { t, language } = useLanguage();
 
-    items.push({ name: t('electricalFull'), price: elektroinstalacia ? CENY.elektroinstalacia : 0, section: "holodom", selected: elektroinstalacia });
-    items.push({ name: t('waterFull'), price: vodaKanalizacia ? CENY.vodaKanalizacia : 0, section: "holodom", selected: vodaKanalizacia });
-    items.push({ name: t('sanitaryFull'), price: sanitaKomplet ? CENY.sanitaKomplet : 0, section: "holodom", selected: sanitaKomplet });
-    items.push({ name: t('boiler'), price: bojler ? CENY.bojler : 0, section: "holodom", selected: bojler });
-    items.push({ name: t('heatPumpFull'), price: tepelneCerpadlo ? CENY.tepelneCerpadlo : 0, section: "holodom", selected: tepelneCerpadlo });
-    items.push({ name: t('recuperation'), price: rekuperacia ? CENY.rekuperacia : 0, section: "holodom", selected: rekuperacia });
-    items.push({ name: t('gridConnectionFull'), price: pripojkaSiete ? CENY.pripojkaSiete : 0, section: "holodom", selected: pripojkaSiete });
-    
-    const dvereLabel = vstupneDvere === "kovove" ? t('doorMetal') : vstupneDvere === "plastove" ? t('doorPlastic') : t('doorStandard');
-    const dverePrice = vstupneDvere === "kovove" ? CENY.dvere.kovove : vstupneDvere === "plastove" ? CENY.dvere.plastove : 0;
-    items.push({ name: dvereLabel, price: dverePrice, section: "holodom", selected: vstupneDvere !== "ziadne" });
-    
-    if (stresneOkno > 0) items.push({ name: `${t('roofWindow')} (${stresneOkno}×)`, price: stresneOkno * CENY.stresneOkno, section: "holodom", selected: true });
-    if (bocneOknoFixne > 0) items.push({ name: `${t('fixedWindow')} (${bocneOknoFixne}×)`, price: bocneOknoFixne * CENY.bocneOknoFixne, section: "holodom", selected: true });
-    if (bocneOknoVyklopne90 > 0) items.push({ name: `${t('tiltWindow')} 90×205 (${bocneOknoVyklopne90}×)`, price: bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90, section: "holodom", selected: true });
-    if (bocneOknoVyklopne55 > 0) items.push({ name: `${t('tiltWindow')} 55×90 (${bocneOknoVyklopne55}×)`, price: bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55, section: "holodom", selected: true });
-    items.push({ name: t('lamination') + " - " + t('laminationAnthracite'), price: povrchokaOkien ? CENY.povrchokaOkien : 0, section: "holodom", selected: povrchokaOkien });
-    items.push({ name: t('tintedGlass') + " (Solar)", price: tonovaneSkla ? CENY.tonovaneSkla : 0, section: "holodom", selected: tonovaneSkla });
-    
-    const fasadaLabel = vonkajsiaFasada === "suchana" ? t('facadeStucco') : vonkajsiaFasada === "standard" ? t('facadeWoodMetal') : t('facade');
-    const fasadaPrice = vonkajsiaFasada === "suchana" ? CENY.vonkajsiaFasada.suchana : 0;
-    items.push({ name: fasadaLabel, price: fasadaPrice, section: "kluc", selected: !!vonkajsiaFasada });
+  const totalPrice = useMemo(() => {
+    let total = BASE_PRICE;
 
-    items.push({ name: t('floors') + " - " + t('floorsLaminate'), price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
-    items.push({ name: t('floorHeatingFull'), price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
-    items.push({ name: `${t('interiorDoors')} (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere, section: "kluc", selected: interieroveDvere > 0 });
+    total += CENY.montaz[montazHolodomu];
+    total += CENY.predlzenie[predlzenie] || 0;
+    total += CENY.dvere[vstupneDvere];
+    total += CENY.izolacia[izolaciaNavysenie];
     
-    items.push({ name: t('engineeringFull'), price: inziniering ? CENY.inziniering : 0, section: "docs", selected: inziniering });
-    items.push({ name: t('projectA0Full'), price: projektA0 ? CENY.projektA0 : 0, section: "docs", selected: projektA0 });
-    items.push({ name: t('revisionFull'), price: revizna ? CENY.revizna : 0, section: "docs", selected: revizna });
-    items.push({ name: t('transport'), price: doprava ? CENY.doprava : 0, section: "docs", selected: doprava });
+    if (elektroinstalacia) total += CENY.elektroinstalacia;
+    if (vodaKanalizacia) total += CENY.vodaKanalizacia;
+    if (sanitaKomplet) total += CENY.sanitaKomplet;
+    if (bojler) total += CENY.bojler;
+    if (tepelneCerpadlo) total += CENY.tepelneCerpadlo;
+    if (rekuperacia) total += CENY.rekuperacia;
     
-    return items;
-  }, [predajNehnutelnosti, hladaniePozemku, financneSluzby,
-      montazHolodomu, predlzenie, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
-      sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
-      tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
-      interieroveDvere, inziniering, projektA0, revizna, doprava, t]);
+    total += CENY.zaklady[zaklady];
+    if (pripojkaSiete) total += CENY.pripojkaSiete;
+    
+    if (inziniering) total += CENY.inziniering;
+    if (projektA0) total += CENY.projektA0;
+    
+    total += CENY.interierFinis[interierFinis] || 0;
+    total += CENY.vonkajsiaFasada[vonkajsiaFasada] || 0;
+    if (povrchokaOkien) total += CENY.povrchokaOkien;
+    if (vnutornePodlahy) total += CENY.vnutornePodlahy;
+    if (podlahovVykurovanie) total += CENY.podlahovVykurovanie;
+    total += interieroveDvere * CENY.interieroveDvere;
+    if (tonovaneSkla) total += CENY.tonovaneSkla;
+    if (doprava) total += CENY.doprava;
+    if (revizna) total += CENY.revizna;
+    
+    total += stresneOkno * CENY.stresneOkno;
+    total += bocneOknoFixne * CENY.bocneOknoFixne;
+    total += bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90;
+    total += bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55;
+    
+    return total;
+  }, [montazHolodomu, predlzenie, vstupneDvere, izolaciaNavysenie, elektroinstalacia, 
+      vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia,
+      zaklady, pripojkaSiete, inziniering, projektA0, interierFinis,
+      vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, podlahovVykurovanie,
+      interieroveDvere, tonovaneSkla, doprava, revizna,
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE]);
 
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
