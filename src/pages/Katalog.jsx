@@ -698,7 +698,7 @@ export default function Katalog() {
                     setUzitkovaRozsah([0, 200]);
                     setHladanie("");
                     setHladanieInput("");
-                    setCenoveRozpatie([0, 500000]);
+                    setCenoveRozpatie([0, 200000]);
                     setPocetIziebFilter([]);
                     setPocetModulovFilter([]);
                     setZoradenie("poradie");
