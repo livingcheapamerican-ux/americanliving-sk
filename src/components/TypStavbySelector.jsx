@@ -178,6 +178,7 @@ export default function TypStavbySelector({
               
               <div className="space-y-3">
                 <motion.div
+                  key={`sell-${language}`}
                   whileHover={{ scale: 1.01 }}
                   onClick={() => setPredajNehnutelnosti?.(!predajNehnutelnosti)}
                   className={`p-4 rounded-lg cursor-pointer transition-all border-2 ${
@@ -200,6 +201,7 @@ export default function TypStavbySelector({
                 </motion.div>
 
                 <motion.div
+                  key={`land-${language}`}
                   whileHover={{ scale: 1.01 }}
                   onClick={() => setHladaniePozemku?.(!hladaniePozemku)}
                   className={`p-4 rounded-lg cursor-pointer transition-all border-2 ${
@@ -222,6 +224,7 @@ export default function TypStavbySelector({
                 </motion.div>
 
                 <motion.div
+                  key={`finance-${language}`}
                   whileHover={{ scale: 1.01 }}
                   onClick={() => setFinancneSluzby?.(!financneSluzby)}
                   className={`p-4 rounded-lg cursor-pointer transition-all border-2 ${
