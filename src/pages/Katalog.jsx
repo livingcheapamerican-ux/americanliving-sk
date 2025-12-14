@@ -232,7 +232,7 @@ export default function Katalog() {
       cena_min: parseInt(params.get("cena_min")) || 0,
       cena_max: parseInt(params.get("cena_max")) || 500000,
       izby: params.get("izby") || "",
-      zoradenie: params.get("zoradenie") || "poradie"
+      zoradenie: params.get("zoradenie") || "plocha_zostupne"
     };
   };
 
@@ -297,7 +297,7 @@ export default function Katalog() {
     if (cenoveRozpatie[0] !== 0) params.set("cena_min", cenoveRozpatie[0].toString());
     if (cenoveRozpatie[1] !== 200000) params.set("cena_max", cenoveRozpatie[1].toString());
     if (pocetIziebFilter.length > 0) params.set("izby", pocetIziebFilter.join(','));
-    if (zoradenie !== "poradie") params.set("zoradenie", zoradenie);
+    if (zoradenie !== "plocha_zostupne") params.set("zoradenie", zoradenie);
 
     const newSearch = params.toString();
     const currentSearch = location.search.substring(1);
