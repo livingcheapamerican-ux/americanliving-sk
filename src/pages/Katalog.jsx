@@ -107,14 +107,17 @@ export default function Katalog() {
     queryKey: ['domy-katalog'],
     queryFn: async () => {
       try {
-        return await base44.entities.Dom.list('poradie');
+        const result = await base44.entities.Dom.list('poradie');
+        console.log('Houses loaded:', result?.length || 0);
+        return result || [];
       } catch (err) {
         console.error('Error loading houses:', err);
-        throw err;
+        return [];
       }
     },
     staleTime: 300000,
-    retry: 3,
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 
   const { data: user } = useQuery({
@@ -804,11 +807,13 @@ export default function Katalog() {
                   setKategoriaFilter("vsetky");
                   setVyrobcaFilter([]);
                   setTypFilter([]);
-                  setPlocharozsah([18, 200]);
+                  setPlocharozsah([0, 200]);
                   setUzitkovaRozsah([0, 200]);
                   setHladanie("");
-                  setCenoveRozpatie([15000, 200000]);
-                  setPocetIziebRozpatie([1, 8]);
+                  setHladanieInput("");
+                  setCenoveRozpatie([0, 200000]);
+                  setPocetIziebFilter([]);
+                  setPocetModulovFilter([]);
                   setZoradenie("poradie");
                 }}>
 
