@@ -215,8 +215,8 @@ export default function TypStavbySelector({
                       <Square className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                     )}
                     <div>
-                      <p className="font-semibold text-gray-800">{t('findLand')}</p>
-                      <p className="text-xs text-gray-600 mt-1">{t('findLandDesc')}</p>
+                      <p className="font-semibold text-gray-800">{t('wantLandForHouse')}</p>
+                      <p className="text-xs text-gray-600 mt-1">{t('wantLandForHouseDesc')}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -237,8 +237,8 @@ export default function TypStavbySelector({
                       <Square className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                     )}
                     <div>
-                      <p className="font-semibold text-gray-800">{t('financialServices')}</p>
-                      <p className="text-xs text-gray-600 mt-1">{t('financialServicesDesc')}</p>
+                      <p className="font-semibold text-gray-800">{t('financialServicesLoans')}</p>
+                      <p className="text-xs text-gray-600 mt-1">{t('financialServicesLoansDesc')}</p>
                     </div>
                   </div>
                 </motion.div>

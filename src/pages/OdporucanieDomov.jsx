@@ -133,13 +133,13 @@ Odporuč len domy ktoré SÚ v databáze!`;
         >
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full mb-4">
             <Sparkles className="w-5 h-5" />
-            <span className="font-bold">AI Odporúčací Systém</span>
+            <span className="font-bold">{t('aiRecommendationSystem')}</span>
           </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Nájdite svoj dokonalý dom
+            {t('findYourPerfectHome')}
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Povedzte nám vaše požiadavky a AI vám odporuč najvhodnejšie domy z našej ponuky
+            {t('tellUsYourRequirements')}
           </p>
         </motion.div>
 
@@ -152,14 +152,14 @@ Odporuč len domy ktoré SÚ v databáze!`;
             <Card className="p-6 shadow-xl">
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                 <TrendingUp className="w-6 h-6 text-primary" />
-                Vaše preferencie
+                {t('yourPreferences')}
               </h2>
 
               <div className="space-y-6">
                 {/* Rozpočet */}
                 <div>
                   <Label className="text-base font-semibold mb-2 block">
-                    Rozpočet: {preferences.budget.toLocaleString('sk-SK')} €
+                    {t('budget')}: {preferences.budget.toLocaleString('sk-SK')} €
                   </Label>
                   <Slider
                     min={40000}
@@ -169,13 +169,13 @@ Odporuč len domy ktoré SÚ v databáze!`;
                     onValueChange={([val]) => setPreferences({...preferences, budget: val})}
                     className="mt-2"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Základná cena domu bez doplnkov</p>
+                  <p className="text-xs text-gray-500 mt-1">{t('basePriceWithoutExtras')}</p>
                 </div>
 
                 {/* Počet izieb */}
                 <div>
                   <Label className="text-base font-semibold mb-2 block">
-                    Počet izieb: {preferences.rooms}
+                    {t('rooms')}: {preferences.rooms}
                   </Label>
                   <Slider
                     min={1}
@@ -185,16 +185,16 @@ Odporuč len domy ktoré SÚ v databáze!`;
                     onValueChange={([val]) => setPreferences({...preferences, rooms: val})}
                     className="mt-2"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Maximálny počet izieb (môže byť menej)</p>
+                  <p className="text-xs text-gray-500 mt-1">{t('maxRoomsCanBeLess')}</p>
                 </div>
 
                 {/* Účel */}
                 <div>
                   <Label className="text-base font-semibold mb-2 block">
-                    Účel použitia
+                    {t('purposeOfUse')}
                   </Label>
                   <Input
-                    placeholder="Napr: celoročné bývanie, rekreačná chata, prenájom..."
+                    placeholder={t('purposePlaceholder')}
                     value={preferences.purpose}
                     onChange={(e) => setPreferences({...preferences, purpose: e.target.value})}
                   />
@@ -203,10 +203,10 @@ Odporuč len domy ktoré SÚ v databáze!`;
                 {/* Štýl */}
                 <div>
                   <Label className="text-base font-semibold mb-2 block">
-                    Preferovaný štýl
+                    {t('preferredStyle')}
                   </Label>
                   <Input
-                    placeholder="Napr: moderný, tradičný, minimalistický..."
+                    placeholder={t('stylePlaceholder')}
                     value={preferences.style}
                     onChange={(e) => setPreferences({...preferences, style: e.target.value})}
                   />
@@ -215,10 +215,10 @@ Odporuč len domy ktoré SÚ v databáze!`;
                 {/* Ďalšie požiadavky */}
                 <div>
                   <Label className="text-base font-semibold mb-2 block">
-                    Ďalšie požiadavky
+                    {t('otherRequirements')}
                   </Label>
                   <Textarea
-                    placeholder="Napr: potrebujem terasu, energeticky úsporný, musí mať 2 kúpeľne, chcem rýchlu montáž..."
+                    placeholder={t('otherRequirementsPlaceholder')}
                     value={preferences.otherNeeds}
                     onChange={(e) => setPreferences({...preferences, otherNeeds: e.target.value})}
                     className="h-24"
@@ -234,12 +234,12 @@ Odporuč len domy ktoré SÚ v databáze!`;
                   {isAnalyzing ? (
                     <>
                       <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      AI analyzuje...
+                      {t('aiAnalyzing')}
                     </>
                   ) : (
                     <>
                       <Sparkles className="w-5 h-5 mr-2" />
-                      Získať AI odporúčania
+                      {t('getAIRecommendations')}
                     </>
                   )}
                 </Button>
@@ -260,10 +260,10 @@ Odporuč len domy ktoré SÚ v databáze!`;
                   <Card className="p-12 text-center bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-dashed border-purple-300">
                     <Sparkles className="w-16 h-16 text-purple-400 mx-auto mb-4" />
                     <h3 className="text-xl font-bold text-gray-700 mb-2">
-                      Pripravený na odporúčania
+                      {t('readyForRecommendations')}
                     </h3>
                     <p className="text-gray-600">
-                      Vyplňte vaše preferencie a AI vám odporuč najvhodnejšie domy
+                      {t('fillPreferencesForAI')}
                     </p>
                   </Card>
                 </motion.div>
@@ -279,10 +279,10 @@ Odporuč len domy ktoré SÚ v databáze!`;
                   <Card className="p-12 text-center">
                     <Loader2 className="w-16 h-16 text-purple-600 mx-auto mb-4 animate-spin" />
                     <h3 className="text-xl font-bold text-gray-700 mb-2">
-                      AI analyzuje databázu...
+                      {t('aiAnalyzingDatabase')}
                     </h3>
                     <p className="text-gray-600">
-                      Hľadám najlepšie domy pre vaše potreby
+                      {t('searchingBestHouses')}
                     </p>
                   </Card>
                 </motion.div>
@@ -298,7 +298,7 @@ Odporuč len domy ktoré SÚ v databáze!`;
                   <Card className="p-6 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200">
                     <h3 className="font-bold text-lg mb-2 flex items-center gap-2">
                       <CheckCircle className="w-5 h-5 text-green-600" />
-                      AI Analýza
+                      {t('aiAnalysis')}
                     </h3>
                     <p className="text-gray-700 leading-relaxed">{recommendations.summary}</p>
                   </Card>
@@ -347,10 +347,10 @@ Odporuč len domy ktoré SÚ v databáze!`;
                                 <div>
                                   <h3 className="text-xl font-bold text-primary mb-2">{house.nazov}</h3>
                                   <div className="space-y-1 text-sm text-gray-600">
-                                    <p>• Výrobca: <span className="font-semibold">{house.vyrobca}</span></p>
-                                    <p>• Typ: <span className="font-semibold">{house.typ_domu}</span></p>
-                                    <p>• Izby: <span className="font-semibold">max. {house.pocet_izieb}</span></p>
-                                    <p>• Plocha: <span className="font-semibold">{house.zastavana_plocha} m²</span></p>
+                                    <p>• {t('manufacturer')}: <span className="font-semibold">{house.vyrobca}</span></p>
+                                    <p>• {t('type')}: <span className="font-semibold">{house.typ_domu}</span></p>
+                                    <p>• {t('rooms')}: <span className="font-semibold">max. {house.pocet_izieb}</span></p>
+                                    <p>• {t('builtArea')}: <span className="font-semibold">{house.zastavana_plocha} m²</span></p>
                                     <p className="text-lg font-bold text-primary mt-2">
                                       {house.zakladna_cena?.toLocaleString('sk-SK')} €
                                     </p>
@@ -361,7 +361,7 @@ Odporuč len domy ktoré SÚ v databáze!`;
                               {/* Match Score */}
                               <div className="mb-4">
                                 <div className="flex items-center justify-between mb-2">
-                                  <span className="text-sm font-semibold text-gray-700">Zhoda s požiadavkami</span>
+                                  <span className="text-sm font-semibold text-gray-700">{t('matchWithRequirements')}</span>
                                   <span className="text-sm font-bold text-purple-600">{rec.match_score}%</span>
                                 </div>
                                 <div className="w-full bg-gray-200 rounded-full h-3">
@@ -380,14 +380,14 @@ Odporuč len domy ktoré SÚ v databáze!`;
 
                               {/* Why Suitable */}
                               <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4 rounded">
-                                <p className="font-semibold text-blue-900 mb-1">Prečo je vhodný:</p>
+                                <p className="font-semibold text-blue-900 mb-1">{t('whySuitable')}:</p>
                                 <p className="text-sm text-blue-800">{rec.why_suitable}</p>
                               </div>
 
                               {/* Pros */}
                               {rec.pros?.length > 0 && (
                                 <div className="mb-4">
-                                  <p className="font-semibold text-green-900 mb-2">✅ Výhody:</p>
+                                  <p className="font-semibold text-green-900 mb-2">✅ {t('advantages')}:</p>
                                   <ul className="space-y-1">
                                     {rec.pros.map((pro, i) => (
                                       <li key={i} className="text-sm text-green-800 flex items-start gap-2">
@@ -402,7 +402,7 @@ Odporuč len domy ktoré SÚ v databáze!`;
                               {/* Considerations */}
                               {rec.considerations?.length > 0 && (
                                 <div className="mb-4">
-                                  <p className="font-semibold text-orange-900 mb-2">⚠️ Na zváženie:</p>
+                                  <p className="font-semibold text-orange-900 mb-2">⚠️ {t('toConsider')}:</p>
                                   <ul className="space-y-1">
                                     {rec.considerations.map((con, i) => (
                                       <li key={i} className="text-sm text-orange-800">• {con}</li>
@@ -414,7 +414,7 @@ Odporuč len domy ktoré SÚ v databáze!`;
                               {/* Estimated Total Cost */}
                               {rec.estimated_total_cost && (
                                 <div className="bg-gray-100 p-4 rounded-lg mb-4">
-                                  <p className="text-sm text-gray-600 mb-1">Odhadovaná celková cena (s doplnkami):</p>
+                                  <p className="text-sm text-gray-600 mb-1">{t('estimatedTotalPrice')}:</p>
                                   <p className="text-2xl font-bold text-primary">
                                     {rec.estimated_total_cost.toLocaleString('sk-SK')} €
                                   </p>
@@ -424,7 +424,7 @@ Odporuč len domy ktoré SÚ v databáze!`;
                               {/* CTA Button */}
                               <Link to={`${createPageUrl("DetailDomu")}?id=${house.id}`}>
                                 <Button className="w-full bg-primary hover:bg-secondary">
-                                  Zobraziť detail domu
+                                  {t('viewHouseDetail')}
                                   <ArrowRight className="w-4 h-4 ml-2" />
                                 </Button>
                               </Link>
@@ -441,7 +441,7 @@ Odporuč len domy ktoré SÚ v databáze!`;
                     onClick={() => setRecommendations(null)}
                     className="w-full"
                   >
-                    Nové vyhľadávanie
+                    {t('newSearch')}
                   </Button>
                 </motion.div>
               )}
@@ -461,9 +461,9 @@ Odporuč len domy ktoré SÚ v databáze!`;
               <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Sparkles className="w-6 h-6 text-purple-600" />
               </div>
-              <h3 className="font-bold text-gray-900 mb-2">Inteligentná analýza</h3>
+              <h3 className="font-bold text-gray-900 mb-2">{t('intelligentAnalysis')}</h3>
               <p className="text-sm text-gray-600">
-                AI analyzuje celú databázu domov a hľadá najlepšie zhody
+                {t('intelligentAnalysisDesc')}
               </p>
             </Card>
 
@@ -471,9 +471,9 @@ Odporuč len domy ktoré SÚ v databáze!`;
               <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <TrendingUp className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="font-bold text-gray-900 mb-2">Personalizované odporúčania</h3>
+              <h3 className="font-bold text-gray-900 mb-2">{t('personalizedRecommendations')}</h3>
               <p className="text-sm text-gray-600">
-                Každé odporúčanie je vysvetlené a prispôsobené vašim potrebám
+                {t('personalizedRecommendationsDesc')}
               </p>
             </Card>
 
@@ -481,9 +481,9 @@ Odporuč len domy ktoré SÚ v databáze!`;
               <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="w-6 h-6 text-green-600" />
               </div>
-              <h3 className="font-bold text-gray-900 mb-2">Transparentné ceny</h3>
+              <h3 className="font-bold text-gray-900 mb-2">{t('transparentPrices')}</h3>
               <p className="text-sm text-gray-600">
-                Vidíte základnú cenu aj odhadovanú celkovú cenu s doplnkami
+                {t('transparentPricesDesc')}
               </p>
             </Card>
           </motion.div>
