@@ -112,17 +112,12 @@ export default function Katalog() {
     }
   }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie]);
 
-  const { data: domy = [], isLoading, error } = useQuery({
-    queryKey: ['domy-katalog', canManage],
+  const { data: allDomy = [], isLoading, error } = useQuery({
+    queryKey: ['domy-katalog'],
     queryFn: async () => {
       try {
-        console.log('Loading houses, canManage:', canManage);
-        // Admini môžu načítať všetky domy, bežní používatelia len verejné
-        const result = canManage 
-          ? await base44.entities.Dom.list('poradie')
-          : await base44.entities.Dom.filter({ verejny: true }, 'poradie');
-        console.log('Houses loaded:', result?.length || 0, 'canManage:', canManage);
-        console.log('Sample house verejny values:', result?.slice(0, 5).map(d => ({ nazov: d.nazov, verejny: d.verejny })));
+        const result = await base44.entities.Dom.list('poradie');
+        console.log('All houses loaded:', result?.length || 0);
         return result || [];
       } catch (err) {
         console.error('Error loading houses:', err);
@@ -133,6 +128,14 @@ export default function Katalog() {
     retry: false,
     refetchOnWindowFocus: false,
   });
+
+  // Filtruj domy podľa admin práv - admini vidia všetky, bežní používatelia len verejné
+  const domy = React.useMemo(() => {
+    if (!Array.isArray(allDomy)) return [];
+    if (canManage) return allDomy;
+    // Bežní používatelia vidia len domy kde verejny !== false
+    return allDomy.filter(dom => dom.verejny !== false);
+  }, [allDomy, canManage]);
 
   const deleteDomMutation = useMutation({
     mutationFn: (domId) => base44.entities.Dom.delete(domId),
