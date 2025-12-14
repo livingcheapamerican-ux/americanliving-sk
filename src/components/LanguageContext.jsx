@@ -3865,6 +3865,14 @@ const translations = {
     noHiddenFees: "Bez skrivenih troškova",
     newBadge: "NOVO",
     viewHousesInDifferentColors: "Pogledajte kuće u različitim bojama fasade",
+    selectAdditionalServices: "Odaberite dodatne usluge (opcionalno):",
+    sellPreviousProperty: "Prodaja prethodne nekretnine",
+    sellPreviousPropertyDesc: "Naši najbolji stručnjaci za nekretnine pobrinut će se za vas.",
+    findLand: "Želim zemljište za svoju kuću",
+    findLandDesc: "Pomoći ćemo vam pronaći idealno zemljište.",
+    financialServices: "Financijske usluge - krediti/osiguranje",
+    financialServicesDesc: "Naši najbolji financijski stručnjaci pobrinut će se za vas i pomoći vam ne samo s financiranjem vašeg stanovanja, već i pružiti ruku pomoći u teškim financijskim trenucima.",
+    terrace: "Terasa",
     
     // Building type selection
     selectBuildingType: "Odaberite tip zgrade",
