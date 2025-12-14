@@ -177,7 +177,7 @@ export default function KonfiguratorProstoHouse({
   const BASE_PRICE = dom?.zakladna_cena || 0;
 
   const { animations, triggerAnimation } = useFlyingAnimation();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   // Načítanie dynamických textov pre tooltips
   const { data: konfiguratorTexts } = useQuery({
@@ -288,52 +288,6 @@ export default function KonfiguratorProstoHouse({
     return { hrubaStavba, holodom, domNaKluc };
   }, [montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
       tepelneCerpadlo, rekuperacia, interierFinis, vnutornePodlahy, vonkajsiaFasada]);
-
-const { t, language } = useLanguage();
-
-  const totalPrice = useMemo(() => {
-    let total = BASE_PRICE;
-
-    total += CENY.montaz[montazHolodomu];
-    total += CENY.predlzenie[predlzenie] || 0;
-    total += CENY.dvere[vstupneDvere];
-    total += CENY.izolacia[izolaciaNavysenie];
-    
-    if (elektroinstalacia) total += CENY.elektroinstalacia;
-    if (vodaKanalizacia) total += CENY.vodaKanalizacia;
-    if (sanitaKomplet) total += CENY.sanitaKomplet;
-    if (bojler) total += CENY.bojler;
-    if (tepelneCerpadlo) total += CENY.tepelneCerpadlo;
-    if (rekuperacia) total += CENY.rekuperacia;
-    
-    total += CENY.zaklady[zaklady];
-    if (pripojkaSiete) total += CENY.pripojkaSiete;
-    
-    if (inziniering) total += CENY.inziniering;
-    if (projektA0) total += CENY.projektA0;
-    
-    total += CENY.interierFinis[interierFinis] || 0;
-    total += CENY.vonkajsiaFasada[vonkajsiaFasada] || 0;
-    if (povrchokaOkien) total += CENY.povrchokaOkien;
-    if (vnutornePodlahy) total += CENY.vnutornePodlahy;
-    if (podlahovVykurovanie) total += CENY.podlahovVykurovanie;
-    total += interieroveDvere * CENY.interieroveDvere;
-    if (tonovaneSkla) total += CENY.tonovaneSkla;
-    if (doprava) total += CENY.doprava;
-    if (revizna) total += CENY.revizna;
-    
-    total += stresneOkno * CENY.stresneOkno;
-    total += bocneOknoFixne * CENY.bocneOknoFixne;
-    total += bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90;
-    total += bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55;
-    
-    return total;
-  }, [montazHolodomu, predlzenie, vstupneDvere, izolaciaNavysenie, elektroinstalacia, 
-      vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia,
-      zaklady, pripojkaSiete, inziniering, projektA0, interierFinis,
-      vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, podlahovVykurovanie,
-      interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE]);
 
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
