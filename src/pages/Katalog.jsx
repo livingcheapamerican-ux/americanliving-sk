@@ -104,23 +104,15 @@ export default function Katalog() {
   }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie]);
 
   const { data: domy = [], isLoading, error } = useQuery({
-    queryKey: ['domy-katalog'],
+    queryKey: ['domy-katalog', canManage],
     queryFn: async () => {
       try {
-        // Pre neprihlásených používateľov načítaj len verejné domy cez filter
-        const result = await base44.entities.Dom.filter({ verejny: true }, 'poradie');
+        const result = await base44.entities.Dom.list('poradie');
         console.log('Houses loaded:', result?.length || 0);
         return result || [];
       } catch (err) {
         console.error('Error loading houses:', err);
-        // Fallback - skús načítať všetky domy ak filter zlyhá
-        try {
-          const allHouses = await base44.entities.Dom.list('poradie');
-          return allHouses || [];
-        } catch (fallbackErr) {
-          console.error('Fallback also failed:', fallbackErr);
-          return [];
-        }
+        return [];
       }
     },
     staleTime: 300000,
@@ -134,8 +126,8 @@ export default function Katalog() {
   });
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
-
-
+  const isSuperAdmin = user?.super_admin === true;
+  const canManage = isAdmin || isSuperAdmin;
 
   const deleteDomMutation = useMutation({
     mutationFn: (domId) => base44.entities.Dom.delete(domId),
@@ -165,9 +157,6 @@ export default function Katalog() {
     e.stopPropagation();
     toggleVerejnyMutation.mutate({ domId: dom.id, verejny: !dom.verejny });
   };
-
-  const isSuperAdmin = user?.super_admin === true;
-  const canManage = isAdmin || isSuperAdmin;
 
   const filtrovane = Array.isArray(domy) ? domy.filter((dom) => {
     // Tab "skryte" zobrazuje len skryté domy (iba pre adminov)
