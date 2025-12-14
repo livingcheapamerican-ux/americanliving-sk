@@ -162,6 +162,7 @@ export default function Katalog() {
   const domy = Array.isArray(allDomy) ? allDomy : [];
   console.log('🔍 Celkový počet domov:', domy.length);
   console.log('🔍 Prvý dom:', domy[0]);
+  console.log('🔍 Kategórie prvých 5 domov:', domy.slice(0, 5).map(d => ({ nazov: d.nazov, kategoria: d.kategoria })));
   
   const verejneDomy = domy.filter((d) => d.verejny === true || d.verejny === undefined);
   console.log('✅ Verejné domy:', verejneDomy.length, 'z', domy.length);
@@ -171,6 +172,7 @@ export default function Katalog() {
   const mobilneDomy = verejneDomy.filter((d) => d.kategoria === "mobilne_domy");
   
   console.log('🏠 Rodinné:', rodinneDomy.length, '🚐 Mobilné:', mobilneDomy.length);
+  console.log('⚠️ Domy BEZ kategórie:', verejneDomy.filter(d => !d.kategoria).length);
 
   // Filtrovanie
   console.log('📊 FILTRE:');
@@ -202,7 +204,22 @@ export default function Katalog() {
       const izbyMatch = pocetIziebFilter.length === 0 || (dom.pocet_izieb && pocetIziebFilter.includes(dom.pocet_izieb));
       const modulyMatch = pocetModulovFilter.length === 0 || (dom.pocet_modulov && pocetModulovFilter.includes(dom.pocet_modulov));
       
-      return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
+      const passed = kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
+      
+      if (!passed && dom === verejneDomy[0]) {
+        console.log('❌ PRVÝ DOM NEZODPOVEDÁ:');
+        console.log('  kategoriaMatch:', kategoriaMatch, '(filter:', kategoriaFilter, 'dom:', dom.kategoria, ')');
+        console.log('  vyrobcaMatch:', vyrobcaMatch);
+        console.log('  typMatch:', typMatch);
+        console.log('  plochaMatch:', plochaMatch);
+        console.log('  uzitkovaMatch:', uzitkovaMatch);
+        console.log('  hladanieMatch:', hladanieMatch);
+        console.log('  cenaMatch:', cenaMatch);
+        console.log('  izbyMatch:', izbyMatch);
+        console.log('  modulyMatch:', modulyMatch);
+      }
+      
+      return passed;
     });
     console.log('🎯 Po filtrovaní:', filtrovane.length, 'domov');
   }
