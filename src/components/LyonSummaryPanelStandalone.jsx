@@ -67,13 +67,13 @@ export default function LyonSummaryPanelStandalone({
             <p className="text-sm font-semibold text-cyan-300 mb-2">📋 {t('additionalServices') || 'Dodatočné služby'}</p>
             <div className="space-y-1.5 text-sm">
               {predajNehnutelnosti && (
-                <p className="text-slate-300">✓ {t('sellProperty') || 'Predaj predošlej nehnuteľnosti'}</p>
+                <p className="text-slate-300">✓ {t('sellPreviousProperty') || 'Predaj predošlej nehnuteľnosti'}</p>
               )}
               {hladamPozemok && (
-                <p className="text-slate-300">✓ Chcem pozemok pod svoj dom</p>
+                <p className="text-slate-300">✓ {t('wantLandForHouse') || 'Chcem pozemok pod svoj dom'}</p>
               )}
               {financneSluzby && (
-                <p className="text-slate-300">✓ {t('financialServices') || 'Finančné služby - úvery/poistky'}</p>
+                <p className="text-slate-300">✓ {t('financialServicesLoans') || 'Finančné služby - úvery/poistky'}</p>
               )}
             </div>
           </div>
