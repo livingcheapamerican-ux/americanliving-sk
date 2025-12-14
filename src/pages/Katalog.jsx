@@ -109,6 +109,13 @@ export default function Katalog() {
     staleTime: 300000,
   });
 
+  const { data: user } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => base44.auth.me().catch(() => null)
+  });
+
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
+
 
 
   const deleteDomMutation = useMutation({
@@ -140,17 +147,20 @@ export default function Katalog() {
     toggleVerejnyMutation.mutate({ domId: dom.id, verejny: !dom.verejny });
   };
 
-  const isAdmin = user?.role === 'admin';
   const isSuperAdmin = user?.super_admin === true;
   const canManage = isAdmin || isSuperAdmin;
 
   const filtrovane = domy.filter((dom) => {
-    // Tab "skryte" zobrazuje len skryté domy, ostatné taby len verejné
+    // Tab "skryte" zobrazuje len skryté domy (iba pre adminov)
     if (kategoriaFilter === "skryte") {
       return dom.verejny === false;
     }
-    // Pre ostatné taby zobrazovať len verejné domy
-    const verejnyMatch = dom.verejny !== false;
+    // Pre bežných užívateľov zobraz len verejné domy
+    if (!isAdmin) {
+      if (dom.verejny === false) return false;
+    }
+    // Pre ostatné taby (verejné view)
+    const verejnyMatch = isAdmin ? true : dom.verejny !== false;
     const kategoriaMatch = kategoriaFilter === "vsetky" || dom.kategoria === kategoriaFilter;
     const vyrobcaMatch = vyrobcaFilter.length === 0 || vyrobcaFilter.includes(dom.vyrobca);
     const typMatch = typFilter.length === 0 || typFilter.includes(dom.typ_domu);
