@@ -226,10 +226,10 @@ const translations = {
     selectAdditionalServices: "Vyberte si doplnkové služby (voliteľné):",
     sellPreviousProperty: "Predaj predošlej nehnuteľnosti",
     sellPreviousPropertyDesc: "Budú sa Vám venovať naši najlepší odborníci v realitách.",
-    findLand: "Chcem pozemok pod svoj dom",
-    findLandDesc: "Pomôžeme Vám nájsť ideálny pozemok.",
-    financialServices: "Finančné služby - úvery/poistky",
-    financialServicesDesc: "Budú sa Vám venovať naši najlepší finančníci, ktorí Vám pomôžu nie len s financovaním vášho bývania, ale pomocnú ruku vám podajú aj v ťažkých chvíľach s financiami.",
+    wantLandForHouse: "Chcem pozemok pod svoj dom",
+    wantLandForHouseDesc: "Pomôžeme Vám nájsť ideálny pozemok.",
+    financialServicesLoans: "Finančné služby - úvery/poistky",
+    financialServicesLoansDesc: "Budú sa Vám venovať naši najlepší finančníci, ktorí Vám pomôžu nie len s financovaním vášho bývania, ale pomocnú ruku vám podajú aj v ťažkých chvíľach s financiami.",
     terrace: "Terasa",
     
     // DetailDomu specific
