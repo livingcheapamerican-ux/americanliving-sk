@@ -641,7 +641,7 @@ export default function Katalog() {
                           }
                           </div>
                           <div className="absolute bottom-1 left-1 sm:hidden">
-                            <div className="bg-primary text-white px-2 py-1 rounded-lg shadow-lg">
+                            <div className="bg-gray-900/95 text-white px-2 py-1 rounded-lg shadow-xl border border-white/20">
                               <p className="text-xs font-bold">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</p>
                             </div>
                           </div>
