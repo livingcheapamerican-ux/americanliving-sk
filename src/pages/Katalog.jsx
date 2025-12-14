@@ -256,7 +256,7 @@ export default function Katalog() {
     debouncedSetHladanie(hladanieInput);
     return () => debouncedSetHladanie.cancel();
   }, [hladanieInput, debouncedSetHladanie]);
-  const [cenoveRozpatie, setCenoveRozpatie] = useState([0, initialFilters.cena_max || 200000]);
+  const [cenoveRozpatie, setCenoveRozpatie] = useState([0, initialFilters.cena_max || 300000]);
   const [pocetIziebFilter, setPocetIziebFilter] = useState(initialFilters.izby ? initialFilters.izby.split(',').map(Number) : []);
   const [zoradenie, setZoradenie] = useState(initialFilters.zoradenie);
   const [vybraneNaSrovnanie, setVybraneNaSrovnanie] = useState([]);
@@ -548,25 +548,25 @@ export default function Katalog() {
                     <Input
                       type="number"
                       min={0}
-                      max={200000}
+                      max={300000}
                       step={5000}
                       value={cenoveRozpatie[1]}
                       onChange={(e) => setCenoveRozpatie([0, Number(e.target.value)])}
                       className="h-7 text-xs"
                     />
-                  </div>
-                  <Slider
+                    </div>
+                    <Slider
                     min={0}
-                    max={200000}
+                    max={300000}
                     step={5000}
                     value={[cenoveRozpatie[1]]}
                     onValueChange={([val]) => setCenoveRozpatie([0, val])}
                     className="mt-1"
-                  />
-                  <div className="flex justify-between text-[10px] text-gray-500 mt-1">
+                    />
+                    <div className="flex justify-between text-[10px] text-gray-500 mt-1">
                     <span>0 €</span>
-                    <span>200 000 €</span>
-                  </div>
+                    <span>300 000 €</span>
+                    </div>
                 </div>
 
                 {/* Počet izieb */}
@@ -698,7 +698,7 @@ export default function Katalog() {
                     setUzitkovaRozsah([0, 200]);
                     setHladanie("");
                     setHladanieInput("");
-                    setCenoveRozpatie([0, 200000]);
+                    setCenoveRozpatie([0, 300000]);
                     setPocetIziebFilter([]);
                     setPocetModulovFilter([]);
                     setZoradenie("poradie");
