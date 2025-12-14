@@ -167,6 +167,11 @@ export default function DetailDomu() {
     staleTime: 300000,
   });
 
+  // Scroll na vrch pri načítaní stránky
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [domId, domSlug]);
+
   // SEO Meta tags
   useEffect(() => {
     if (dom) {
