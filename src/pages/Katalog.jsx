@@ -117,7 +117,6 @@ export default function Katalog() {
     queryFn: async () => {
       try {
         const result = await base44.entities.Dom.list('poradie');
-        console.log('All houses loaded:', result?.length || 0);
         return result || [];
       } catch (err) {
         console.error('Error loading houses:', err);
@@ -130,12 +129,7 @@ export default function Katalog() {
   });
 
   // Filtruj domy podľa admin práv - admini vidia všetky, bežní používatelia len verejné
-  const domy = React.useMemo(() => {
-    if (!Array.isArray(allDomy)) return [];
-    if (canManage) return allDomy;
-    // Bežní používatelia vidia len domy kde verejny !== false
-    return allDomy.filter(dom => dom.verejny !== false);
-  }, [allDomy, canManage]);
+  const domy = canManage ? allDomy : (allDomy || []).filter(dom => dom.verejny !== false);
 
   const deleteDomMutation = useMutation({
     mutationFn: (domId) => base44.entities.Dom.delete(domId),
