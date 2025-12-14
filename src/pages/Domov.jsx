@@ -36,7 +36,7 @@ export default function Domov() {
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
-    queryFn: () => base44.auth.me()
+    queryFn: () => base44.auth.me().catch(() => null)
   });
 
   const { data: heroSettings } = useQuery({
