@@ -539,17 +539,48 @@ export default function Katalog() {
                 </div>
 
                 {/* Cenové rozpätie */}
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    {t('priceRange')}: {cenoveRozpatie[0].toLocaleString('sk-SK')} - {cenoveRozpatie[1].toLocaleString('sk-SK')} €
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                  <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                    💰 {t('priceRange')}
                   </label>
+                  <div className="grid grid-cols-2 gap-2 mb-3">
+                    <div>
+                      <label className="text-[10px] text-gray-500 mb-1 block">{t('from')}</label>
+                      <Input
+                        type="number"
+                        min={0}
+                        max={500000}
+                        step={5000}
+                        value={cenoveRozpatie[0]}
+                        onChange={(e) => setCenoveRozpatie([Number(e.target.value), cenoveRozpatie[1]])}
+                        className="h-7 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-gray-500 mb-1 block">{t('to')}</label>
+                      <Input
+                        type="number"
+                        min={0}
+                        max={500000}
+                        step={5000}
+                        value={cenoveRozpatie[1]}
+                        onChange={(e) => setCenoveRozpatie([cenoveRozpatie[0], Number(e.target.value)])}
+                        className="h-7 text-xs"
+                      />
+                    </div>
+                  </div>
                   <Slider
                     min={0}
                     max={500000}
                     step={5000}
                     value={cenoveRozpatie}
                     onValueChange={setCenoveRozpatie}
-                    className="mt-2" />
+                    className="mt-1"
+                  />
+                  <div className="flex justify-between text-[10px] text-gray-500 mt-1">
+                    <span>0 €</span>
+                    <span>500 000 €</span>
+                  </div>
                 </div>
 
                 {/* Počet izieb */}
@@ -607,31 +638,93 @@ export default function Katalog() {
                 )}
 
                 {/* Zastavaná plocha */}
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    {t('builtAreaFilter')}: {plocharozsah[0]}-{plocharozsah[1]} m²
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                    📐 {t('builtAreaFilter')}
                   </label>
+                  <div className="grid grid-cols-2 gap-2 mb-3">
+                    <div>
+                      <label className="text-[10px] text-gray-500 mb-1 block">{t('from')}</label>
+                      <Input
+                        type="number"
+                        min={0}
+                        max={500}
+                        step={5}
+                        value={plocharozsah[0]}
+                        onChange={(e) => setPlocharozsah([Number(e.target.value), plocharozsah[1]])}
+                        className="h-7 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-gray-500 mb-1 block">{t('to')}</label>
+                      <Input
+                        type="number"
+                        min={0}
+                        max={500}
+                        step={5}
+                        value={plocharozsah[1]}
+                        onChange={(e) => setPlocharozsah([plocharozsah[0], Number(e.target.value)])}
+                        className="h-7 text-xs"
+                      />
+                    </div>
+                  </div>
                   <Slider
                     min={0}
                     max={500}
                     step={5}
                     value={plocharozsah}
                     onValueChange={setPlocharozsah}
-                    className="mt-2" />
+                    className="mt-1"
+                  />
+                  <div className="flex justify-between text-[10px] text-gray-500 mt-1">
+                    <span>0 m²</span>
+                    <span>500 m²</span>
+                  </div>
                 </div>
 
                 {/* Úžitková plocha */}
-                <div className="hidden sm:block">
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    {t('usableAreaFilter')}: {uzitkovaRozsah[0]}-{uzitkovaRozsah[1]} m²
+                <div className="hidden sm:block bg-purple-50 border border-purple-200 rounded-lg p-3">
+                  <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                    📏 {t('usableAreaFilter')}
                   </label>
+                  <div className="grid grid-cols-2 gap-2 mb-3">
+                    <div>
+                      <label className="text-[10px] text-gray-500 mb-1 block">{t('from')}</label>
+                      <Input
+                        type="number"
+                        min={0}
+                        max={500}
+                        step={5}
+                        value={uzitkovaRozsah[0]}
+                        onChange={(e) => setUzitkovaRozsah([Number(e.target.value), uzitkovaRozsah[1]])}
+                        className="h-7 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-gray-500 mb-1 block">{t('to')}</label>
+                      <Input
+                        type="number"
+                        min={0}
+                        max={500}
+                        step={5}
+                        value={uzitkovaRozsah[1]}
+                        onChange={(e) => setUzitkovaRozsah([uzitkovaRozsah[0], Number(e.target.value)])}
+                        className="h-7 text-xs"
+                      />
+                    </div>
+                  </div>
                   <Slider
                     min={0}
                     max={500}
                     step={5}
                     value={uzitkovaRozsah}
                     onValueChange={setUzitkovaRozsah}
-                    className="mt-2" />
+                    className="mt-1"
+                  />
+                  <div className="flex justify-between text-[10px] text-gray-500 mt-1">
+                    <span>0 m²</span>
+                    <span>500 m²</span>
+                  </div>
                 </div>
 
                 {/* Reset */}
