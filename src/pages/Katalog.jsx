@@ -107,12 +107,20 @@ export default function Katalog() {
     queryKey: ['domy-katalog'],
     queryFn: async () => {
       try {
-        const result = await base44.entities.Dom.list('poradie');
+        // Pre neprihlásených používateľov načítaj len verejné domy cez filter
+        const result = await base44.entities.Dom.filter({ verejny: true }, 'poradie');
         console.log('Houses loaded:', result?.length || 0);
         return result || [];
       } catch (err) {
         console.error('Error loading houses:', err);
-        return [];
+        // Fallback - skús načítať všetky domy ak filter zlyhá
+        try {
+          const allHouses = await base44.entities.Dom.list('poradie');
+          return allHouses || [];
+        } catch (fallbackErr) {
+          console.error('Fallback also failed:', fallbackErr);
+          return [];
+        }
       }
     },
     staleTime: 300000,
