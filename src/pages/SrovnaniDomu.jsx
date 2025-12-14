@@ -92,7 +92,12 @@ export default function SrovnaniDomu() {
     { 
       nazov: "Typ domu",
       icon: Building2,
-      getValue: (dom) => dom.typ_domu === 'mobilny' ? 'Mobilný dom' : 'Rodinný dom'
+      getValue: (dom) => {
+        if (dom.typ_domu === 'mobilny') return 'Mobilný dom';
+        if (dom.typ_domu === 'modularny') return 'Modulárny dom';
+        if (dom.typ_domu === 'montovany') return 'Montovaný dom';
+        return 'Rodinný dom';
+      }
     },
     { 
       nazov: "Celoročný",
