@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
@@ -197,7 +198,7 @@ export default function KonfiguratorProstoHouse({
     montaz: { nie: 0, ano: 9225 },
     predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 },
+    izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 }, // Added ultra option
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
@@ -271,12 +272,12 @@ export default function KonfiguratorProstoHouse({
     if (!projektA0) return null;
     
     const chybajuce = [];
-    if (izolaciaNavysenie !== "premium") chybajuce.push("Premium izolácia (250mm steny, 300mm strecha)");
-    if (!tepelneCerpadlo) chybajuce.push("Tepelné čerpadlo / Klimatizácia");
-    if (!rekuperacia) chybajuce.push("Rekuperácia");
+    if (izolaciaNavysenie !== "premium" && izolaciaNavysenie !== "ultra") chybajuce.push(t("a0RecInsulation")); // Updated A0 recommendation logic
+    if (!tepelneCerpadlo) chybajuce.push(t("a0RecHeatPump"));
+    if (!rekuperacia) chybajuce.push(t("a0RecRecuperation"));
     
     return chybajuce.length > 0 ? chybajuce : null;
-  }, [projektA0, izolaciaNavysenie, tepelneCerpadlo, rekuperacia]);
+  }, [projektA0, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, t]);
 
   const formatPrice = (price) => price.toLocaleString('sk-SK') + " €";
 
@@ -288,6 +289,73 @@ export default function KonfiguratorProstoHouse({
     return { hrubaStavba, holodom, domNaKluc };
   }, [montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
       tepelneCerpadlo, rekuperacia, interierFinis, vnutornePodlahy, vonkajsiaFasada]);
+
+  const selectedItems = useMemo(() => {
+    const items = [];
+    
+    items.push({ name: t('basePriceKit'), price: BASE_PRICE, section: "base", selected: true });
+    
+    if (predajNehnutelnosti) items.push({ name: t('sellPreviousProperty'), price: 0, section: "services", selected: true });
+    if (hladaniePozemku) items.push({ name: t('wantLandForHouse'), price: 0, section: "services", selected: true });
+    if (financneSluzby) items.push({ name: t('financialServicesLoans'), price: 0, section: "services", selected: true });
+    
+    items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
+    
+    if (predlzenie > 0) {
+      items.push({ name: `${t('extension')} +${predlzenie}m`, price: CENY.predlzenie[predlzenie] || 0, section: "hruba", selected: true });
+    }
+    
+    const izolaciaLabel = izolaciaNavysenie === "ultra" ? t('insulationUltra') : izolaciaNavysenie === "premium" ? t('insulationPremium') : izolaciaNavysenie === "zvysena" ? t('insulationEnhanced') : t('insulationStd');
+    const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
+    items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" });
+    
+    const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? t('foundationsScrews') : t('foundationsLabel');
+    const zakladyPrice = zaklady === "pasove" ? CENY.zaklady.pasove : zaklady === "doska" ? CENY.zaklady.doska : zaklady === "skrutky" ? CENY.zaklady.skrutky : 0;
+    items.push({ name: zakladyLabel, price: zakladyPrice, section: "hruba", selected: zaklady !== "bez" });
+    
+    const interierLabel = interierFinis === "drevo" ? t('interiorWood') : interierFinis === "sadrokarton" ? t('interiorDrywall') : t('interiorNone');
+    const interierPrice = interierFinis === "drevo" ? CENY.interierFinis.drevo : interierFinis === "sadrokarton" ? CENY.interierFinis.sadrokarton : 0;
+    items.push({ name: interierLabel, price: interierPrice, section: "holodom", selected: interierFinis !== "ziadne" });
+
+    items.push({ name: t('electricalFull'), price: elektroinstalacia ? CENY.elektroinstalacia : 0, section: "holodom", selected: elektroinstalacia });
+    items.push({ name: t('waterFull'), price: vodaKanalizacia ? CENY.vodaKanalizacia : 0, section: "holodom", selected: vodaKanalizacia });
+    items.push({ name: t('sanitaryFull'), price: sanitaKomplet ? CENY.sanitaKomplet : 0, section: "holodom", selected: sanitaKomplet });
+    items.push({ name: t('boiler'), price: bojler ? CENY.bojler : 0, section: "holodom", selected: bojler });
+    items.push({ name: t('heatPumpFull'), price: tepelneCerpadlo ? CENY.tepelneCerpadlo : 0, section: "holodom", selected: tepelneCerpadlo });
+    items.push({ name: t('recuperation'), price: rekuperacia ? CENY.rekuperacia : 0, section: "holodom", selected: rekuperacia });
+    items.push({ name: t('gridConnectionFull'), price: pripojkaSiete ? CENY.pripojkaSiete : 0, section: "holodom", selected: pripojkaSiete });
+    
+    const dvereLabel = vstupneDvere === "kovove" ? t('doorMetal') : vstupneDvere === "plastove" ? t('doorPlastic') : t('doorStandard');
+    const dverePrice = vstupneDvere === "kovove" ? CENY.dvere.kovove : vstupneDvere === "plastove" ? CENY.dvere.plastove : 0;
+    items.push({ name: dvereLabel, price: dverePrice, section: "holodom", selected: vstupneDvere !== "ziadne" });
+    
+    if (stresneOkno > 0) items.push({ name: `${t('roofWindow')} (${stresneOkno}×)`, price: stresneOkno * CENY.stresneOkno, section: "holodom", selected: true });
+    if (bocneOknoFixne > 0) items.push({ name: `${t('fixedWindow')} (${bocneOknoFixne}×)`, price: bocneOknoFixne * CENY.bocneOknoFixne, section: "holodom", selected: true });
+    if (bocneOknoVyklopne90 > 0) items.push({ name: `${t('tiltWindow')} 90×205 (${bocneOknoVyklopne90}×)`, price: bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90, section: "holodom", selected: true });
+    if (bocneOknoVyklopne55 > 0) items.push({ name: `${t('tiltWindow')} 55×90 (${bocneOknoVyklopne55}×)`, price: bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55, section: "holodom", selected: true });
+    items.push({ name: t('lamination') + " - " + t('laminationAnthracite'), price: povrchokaOkien ? CENY.povrchokaOkien : 0, section: "holodom", selected: povrchokaOkien });
+    items.push({ name: t('tintedGlass') + " (Solar)", price: tonovaneSkla ? CENY.tonovaneSkla : 0, section: "holodom", selected: tonovaneSkla });
+    
+    const fasadaLabel = vonkajsiaFasada === "suchana" ? t('facadeStucco') : vonkajsiaFasada === "standard" ? t('facadeWoodMetal') : t('facade');
+    const fasadaPrice = vonkajsiaFasada === "suchana" ? CENY.vonkajsiaFasada.suchana : 0;
+    items.push({ name: fasadaLabel, price: fasadaPrice, section: "kluc", selected: !!vonkajsiaFasada });
+
+    items.push({ name: t('floors') + " - " + t('floorsLaminate'), price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
+    items.push({ name: t('floorHeatingFull'), price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
+    items.push({ name: `${t('interiorDoors')} (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere, section: "kluc", selected: interieroveDvere > 0 });
+    
+    items.push({ name: t('engineeringFull'), price: inziniering ? CENY.inziniering : 0, section: "docs", selected: inziniering });
+    items.push({ name: t('projectA0Full'), price: projektA0 ? CENY.projektA0 : 0, section: "docs", selected: projektA0 });
+    items.push({ name: t('revisionFull'), price: revizna ? CENY.revizna : 0, section: "docs", selected: revizna });
+    items.push({ name: t('transport'), price: doprava ? CENY.doprava : 0, section: "docs", selected: doprava });
+    
+    return items;
+  }, [predajNehnutelnosti, hladaniePozemku, financneSluzby,
+      montazHolodomu, predlzenie, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
+      sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
+      tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
+      interieroveDvere, inziniering, projektA0, revizna, doprava, language, BASE_PRICE, t]);
 
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
@@ -438,10 +506,10 @@ export default function KonfiguratorProstoHouse({
               const isBase = item.section === "base";
               const prevItem = selectedItems[index - 1];
               const showServicesDivider = item.section === "services" && (!prevItem || prevItem.section === "base");
-              const showHrubaDivider = item.section === "hruba" && (prevItem?.section !== "hruba" && prevItem?.section !== "services");
-              const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
-              const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
-              const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
+              const showHrubaDivider = item.section === "hruba" && (!['hruba', 'services', 'base'].includes(prevItem?.section));
+              const showHolodomDivider = item.section === "holodom" && (!['holodom', 'hruba', 'services', 'base'].includes(prevItem?.section));
+              const showKlucDivider = item.section === "kluc" && (!['kluc', 'holodom', 'hruba', 'services', 'base'].includes(prevItem?.section));
+              const showDocsDivider = item.section === "docs" && (!['docs', 'kluc', 'holodom', 'hruba', 'services', 'base'].includes(prevItem?.section));
 
               return (
                 <React.Fragment key={index}>
@@ -591,7 +659,7 @@ export default function KonfiguratorProstoHouse({
                       subtitle={t('shellConstruction')}
                       price="+ 0 €"
                       isPriced={false}
-                      tooltip={t('interiorNone')}
+                      tooltip={getTooltip('interier-ziadny', t('interiorNone'))}
                     />
 
                     <Tile
@@ -604,7 +672,7 @@ export default function KonfiguratorProstoHouse({
                       subtitle={t('woodCladding')}
                       price="+ 8 200 €"
                       isPriced={true}
-                      tooltip={t('interiorWood')}
+                      tooltip={getTooltip('interier-drevo', t('interiorWood'))}
                     />
 
                     <Tile
@@ -617,7 +685,7 @@ export default function KonfiguratorProstoHouse({
                       subtitle={t('plaster')}
                       price="+ 9 430 €"
                       isPriced={true}
-                      tooltip={t('interiorDrywall')}
+                      tooltip={getTooltip('interier-sadrokarton', t('interiorDrywall'))}
                     />
                   </div>
 
@@ -640,7 +708,7 @@ export default function KonfiguratorProstoHouse({
                       selectedBorder="border-yellow-500"
                       selectedRing="ring-yellow-300"
                       hoverBorder="hover:border-yellow-300"
-                      tooltip={t('electricalFull')}
+                      tooltip={getTooltip('elektroinstalacia', t('electricalFull'))}
                     />
 
                     <Tile
@@ -653,7 +721,7 @@ export default function KonfiguratorProstoHouse({
                       subtitle={t('wiring')}
                       price="+ 1 150 €"
                       isPriced={true}
-                      tooltip={t('waterFull')}
+                      tooltip={getTooltip('voda-kanalizacia', t('waterFull'))}
                     />
 
                     <Tile
@@ -666,7 +734,7 @@ export default function KonfiguratorProstoHouse({
                       subtitle={t('complete')}
                       price="+ 1 169 €"
                       isPriced={true}
-                      tooltip={t('sanitaryFull')}
+                      tooltip={getTooltip('sanita-komplet', t('sanitaryFull'))}
                     />
 
                     <Tile
@@ -683,7 +751,7 @@ export default function KonfiguratorProstoHouse({
                       selectedBorder="border-orange-500"
                       selectedRing="ring-orange-300"
                       hoverBorder="hover:border-orange-300"
-                      tooltip={t('boiler')}
+                      tooltip={getTooltip('bojler', t('boiler'))}
                     />
                   </div>
 
@@ -706,7 +774,7 @@ export default function KonfiguratorProstoHouse({
                       selectedBg="bg-green-100"
                       selectedBorder="border-green-500"
                       selectedRing="ring-green-300"
-                      tooltip={t('heatPumpFull')}
+                      tooltip={getTooltip('tepelne-cerpadlo', t('heatPumpFull'))}
                     />
 
                     <Tile
@@ -723,7 +791,7 @@ export default function KonfiguratorProstoHouse({
                       selectedBg="bg-green-100"
                       selectedBorder="border-green-500"
                       selectedRing="ring-green-300"
-                      tooltip={t('recuperation')}
+                      tooltip={getTooltip('rekuperacia', t('recuperation'))}
                     />
                   </div>
 
@@ -741,7 +809,7 @@ export default function KonfiguratorProstoHouse({
                     selectedBorder="border-gray-500"
                     selectedRing="ring-gray-300"
                     hoverBorder="hover:border-gray-400"
-                    tooltip={t('gridConnectionFull')}
+                    tooltip={getTooltip('pripojka-siete', t('gridConnectionFull'))}
                   />
 
                   <Tile
@@ -758,7 +826,7 @@ export default function KonfiguratorProstoHouse({
                     selectedBorder="border-slate-600"
                     selectedRing="ring-slate-300"
                     hoverBorder="hover:border-slate-400"
-                    tooltip={t('lamination')}
+                    tooltip={getTooltip('povrchoka-okien', t('lamination'))}
                   />
 
                   <Tile
@@ -775,7 +843,7 @@ export default function KonfiguratorProstoHouse({
                     selectedBorder="border-amber-500"
                     selectedRing="ring-amber-300"
                     hoverBorder="hover:border-amber-300"
-                    tooltip={t('tintedGlass')}
+                    tooltip={getTooltip('tonovane-skla', t('tintedGlass'))}
                   />
 
                 </div>
@@ -877,7 +945,7 @@ export default function KonfiguratorProstoHouse({
                       selectedBorder="border-emerald-500"
                       selectedRing="ring-emerald-300"
                       hoverBorder="hover:border-emerald-300"
-                      tooltip={t('facadeWoodMetal')}
+                      tooltip={getTooltip('vonkajsia-fasada-standard', t('facadeWoodMetal'))}
                     />
 
                     <Tile
@@ -894,7 +962,7 @@ export default function KonfiguratorProstoHouse({
                       selectedBorder="border-emerald-500"
                       selectedRing="ring-emerald-300"
                       hoverBorder="hover:border-emerald-300"
-                      tooltip={t('facadeStucco')}
+                      tooltip={getTooltip('vonkajsia-fasada-suchana', t('facadeStucco'))}
                     />
                   </div>
 
@@ -912,7 +980,7 @@ export default function KonfiguratorProstoHouse({
                     selectedBorder="border-emerald-500"
                     selectedRing="ring-emerald-300"
                     hoverBorder="hover:border-emerald-300"
-                    tooltip={t('floors')}
+                    tooltip={getTooltip('vnutorne-podlahy', t('floors'))}
                   />
 
                   <Tile
@@ -929,7 +997,7 @@ export default function KonfiguratorProstoHouse({
                     selectedBorder="border-orange-500"
                     selectedRing="ring-orange-300"
                     hoverBorder="hover:border-orange-300"
-                    tooltip={t('floorHeatingFull')}
+                    tooltip={getTooltip('podlahove-vykurovanie', t('floorHeatingFull'))}
                   />
 
                 </div>
@@ -991,7 +1059,7 @@ export default function KonfiguratorProstoHouse({
                     selectedBorder="border-purple-500"
                     selectedRing="ring-purple-300"
                     hoverBorder="hover:border-purple-300"
-                    tooltip={t('engineeringFull')}
+                    tooltip={getTooltip('inziniering', t('engineeringFull'))}
                   />
 
                   <Tile
@@ -1008,7 +1076,7 @@ export default function KonfiguratorProstoHouse({
                     selectedBg="bg-green-100"
                     selectedBorder="border-green-500"
                     selectedRing="ring-green-300"
-                    tooltip={t('projectA0Full')}
+                    tooltip={getTooltip('projekt-a0', t('projectA0Full'))}
                   />
 
                   <Tile
@@ -1025,7 +1093,7 @@ export default function KonfiguratorProstoHouse({
                     selectedBorder="border-purple-500"
                     selectedRing="ring-purple-300"
                     hoverBorder="hover:border-purple-300"
-                    tooltip={t('revisionFull')}
+                    tooltip={getTooltip('revizna-sprava', t('revisionFull'))}
                   />
 
                   <Tile
@@ -1042,7 +1110,7 @@ export default function KonfiguratorProstoHouse({
                     selectedBorder="border-purple-500"
                     selectedRing="ring-purple-300"
                     hoverBorder="hover:border-purple-300"
-                    tooltip={t('transport')}
+                    tooltip={getTooltip('doprava', t('transport'))}
                   />
 
                 </div>
@@ -1109,10 +1177,10 @@ export default function KonfiguratorProstoHouse({
                             const isBase = item.section === "base";
                             const prevItem = selectedItems[index - 1];
                             const showServicesDivider = item.section === "services" && (!prevItem || prevItem.section === "base");
-                            const showHrubaDivider = item.section === "hruba" && (prevItem?.section !== "hruba" && prevItem?.section !== "services");
-                            const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
-                            const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
-                            const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
+                            const showHrubaDivider = item.section === "hruba" && (!['hruba', 'services', 'base'].includes(prevItem?.section));
+                            const showHolodomDivider = item.section === "holodom" && (!['holodom', 'hruba', 'services', 'base'].includes(prevItem?.section));
+                            const showKlucDivider = item.section === "kluc" && (!['kluc', 'holodom', 'hruba', 'services', 'base'].includes(prevItem?.section));
+                            const showDocsDivider = item.section === "docs" && (!['docs', 'kluc', 'holodom', 'hruba', 'services', 'base'].includes(prevItem?.section));
                             
                             return (
                               <React.Fragment key={index}>
