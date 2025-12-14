@@ -160,12 +160,30 @@ export default function Katalog() {
 
   // CRITICAL: Vypočítať všetky hodnoty PRED return
   const domy = Array.isArray(allDomy) ? allDomy : [];
+  console.log('🔍 Celkový počet domov:', domy.length);
+  console.log('🔍 Prvý dom:', domy[0]);
+  
   const verejneDomy = domy.filter((d) => d.verejny === true || d.verejny === undefined);
+  console.log('✅ Verejné domy:', verejneDomy.length, 'z', domy.length);
+  
   const skryteDomy = domy.filter((d) => d.verejny === false);
   const rodinneDomy = verejneDomy.filter((d) => d.kategoria === "rodinne_domy");
   const mobilneDomy = verejneDomy.filter((d) => d.kategoria === "mobilne_domy");
+  
+  console.log('🏠 Rodinné:', rodinneDomy.length, '🚐 Mobilné:', mobilneDomy.length);
 
   // Filtrovanie
+  console.log('📊 FILTRE:');
+  console.log('- kategoriaFilter:', kategoriaFilter);
+  console.log('- vyrobcaFilter:', vyrobcaFilter);
+  console.log('- typFilter:', typFilter);
+  console.log('- plocharozsah:', plocharozsah);
+  console.log('- uzitkovaRozsah:', uzitkovaRozsah);
+  console.log('- cenoveRozpatie:', cenoveRozpatie);
+  console.log('- pocetIziebFilter:', pocetIziebFilter);
+  console.log('- pocetModulovFilter:', pocetModulovFilter);
+  console.log('- hladanie:', hladanie);
+  
   let filtrovane = [];
   
   if (kategoriaFilter === "skryte") {
@@ -186,6 +204,7 @@ export default function Katalog() {
       
       return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
     });
+    console.log('🎯 Po filtrovaní:', filtrovane.length, 'domov');
   }
 
   // Zoradenie
