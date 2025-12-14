@@ -79,8 +79,8 @@ function LayoutContent({ children }) {
       <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white shadow-md py-0`}
       >
-        <div className="container mx-auto px-2 sm:px-4 py-1">
-          <div className="flex items-center justify-between gap-2">
+        <div className="container mx-auto px-1 sm:px-4 py-0.5 sm:py-1">
+          <div className="flex items-center justify-between gap-1 sm:gap-2">
             {/* Mobile - Language Dropdown */}
             <div className="sm:hidden">
               <Popover>
@@ -434,7 +434,7 @@ function LayoutContent({ children }) {
         </div>
       </header>
 
-      <main className="pt-12 sm:pt-14 md:pt-16 lg:pt-20">
+      <main className="pt-10 sm:pt-14 md:pt-16 lg:pt-20">
       {children}
       </main>
 
