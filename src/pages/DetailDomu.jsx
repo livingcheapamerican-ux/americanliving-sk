@@ -1759,6 +1759,15 @@ export default function DetailDomu() {
           >
             {/* Hlavička */}
             <div>
+              {/* Mobilná verzia - cena hore */}
+              <div className="lg:hidden mb-3">
+                <div className="bg-gradient-to-r from-primary to-secondary text-white rounded-xl p-3 shadow-lg">
+                  <p className="text-xs mb-1 opacity-90">{isTicabhouse ? t('basicConfigPrice') : t('priceFromLabel')}</p>
+                  <p className="text-3xl font-black">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</p>
+                  <p className="text-xs opacity-90 mt-0.5">{t('withVAT')}</p>
+                </div>
+              </div>
+
               <div className="flex items-center gap-2 mb-2 flex-wrap">
                 <Badge className="bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 text-xs">
                   {dom.vyrobca}
@@ -1770,12 +1779,14 @@ export default function DetailDomu() {
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2 sm:mb-3">
                 {dom.nazov}
               </h1>
-              <div className="flex items-baseline gap-1 sm:gap-2 flex-wrap">
-                <span className="text-xs sm:text-sm text-gray-500">{isTicabhouse ? t('basicConfigPrice') : t('priceFromLabel')}</span>
-                <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">
+              
+              {/* Desktop verzia - cena */}
+              <div className="hidden lg:flex items-baseline gap-2 flex-wrap">
+                <span className="text-sm text-gray-500">{isTicabhouse ? t('basicConfigPrice') : t('priceFromLabel')}</span>
+                <span className="text-3xl md:text-4xl font-bold text-primary">
                   {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                 </span>
-                <span className="text-xs sm:text-sm text-gray-500">{t('withVAT')}</span>
+                <span className="text-sm text-gray-500">{t('withVAT')}</span>
               </div>
               {isProstoHouse ? (
                 <div className="mt-2 bg-amber-50 border border-amber-200 rounded-lg p-3 sm:p-4">
