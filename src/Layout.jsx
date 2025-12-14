@@ -39,7 +39,7 @@ function LayoutContent({ children }) {
     { name: t('catalog'), path: createPageUrl("Katalog"), icon: Grid3x3 },
     { name: t('aiRecommendations'), path: createPageUrl("OdporucanieDomov"), icon: Sparkles },
     { name: t('about'), path: createPageUrl("ONas"), icon: Info },
-    { name: "Blog", path: createPageUrl("Blog"), icon: FileText },
+    { name: t('blog'), path: createPageUrl("Blog"), icon: BlogIcon },
     { name: t('contact'), path: createPageUrl("Kontakt"), icon: Phone },
   ];
 

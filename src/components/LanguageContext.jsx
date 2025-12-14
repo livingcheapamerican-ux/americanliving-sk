@@ -7,6 +7,7 @@ const translations = {
     catalog: "Katalóg domov",
     gallery: "Galéria realizácií",
     configurator: "Konfigurátor",
+    aiRecommendations: "AI Odporúčania",
     about: "O nás",
     contact: "Kontakt",
     
@@ -819,6 +820,7 @@ const translations = {
     catalog: "Hauskatalog",
     gallery: "Realisierungsgalerie",
     configurator: "Konfigurator",
+    aiRecommendations: "KI-Empfehlungen",
     about: "Über uns",
     contact: "Kontakt",
     
@@ -1860,6 +1862,7 @@ const translations = {
     catalog: "Catalogue de maisons",
     gallery: "Galerie de réalisations",
     configurator: "Configurateur",
+    aiRecommendations: "Recommandations IA",
     about: "À propos",
     contact: "Contact",
     
@@ -2792,6 +2795,7 @@ const translations = {
     catalog: "Каталог кућа",
     gallery: "Галерија реализација",
     configurator: "Конфигуратор",
+    aiRecommendations: "AI Препоруке",
     about: "О нама",
     contact: "Контакт",
     
@@ -3774,6 +3778,7 @@ const translations = {
     catalog: "Katalog kuća",
     gallery: "Galerija realizacija",
     configurator: "Konfigurator",
+    aiRecommendations: "AI Preporuke",
     about: "O nama",
     contact: "Kontakt",
     
@@ -4773,6 +4778,7 @@ const translations = {
     catalog: "Κατάλογος σπιτιών",
     gallery: "Γκαλερί υλοποιήσεων",
     configurator: "Διαμορφωτής",
+    aiRecommendations: "Συστάσεις AI",
     about: "Σχετικά με εμάς",
     contact: "Επικοινωνία",
     
@@ -5759,6 +5765,7 @@ const translations = {
     catalog: "House Catalog",
     gallery: "Realization Gallery",
     configurator: "Configurator",
+    aiRecommendations: "AI Recommendations",
     about: "About Us",
     contact: "Contact",
     
@@ -6660,6 +6667,7 @@ const translations = {
     catalog: "Házkatalógus",
     gallery: "Megvalósítási galéria",
     configurator: "Konfigurátor",
+    aiRecommendations: "AI Ajánlások",
     about: "Rólunk",
     contact: "Kapcsolat",
     
@@ -7552,6 +7560,7 @@ const translations = {
     catalog: "Katalog domów",
     gallery: "Galeria realizacji",
     configurator: "Konfigurator",
+    aiRecommendations: "Rekomendacje AI",
     about: "O nas",
     contact: "Kontakt",
     
@@ -8403,6 +8412,7 @@ const translations = {
     catalog: "Каталог будинків",
     gallery: "Галерея реалізацій",
     configurator: "Конфігуратор",
+    aiRecommendations: "AI Рекомендації",
     about: "Про нас",
     contact: "Контакт",
     
