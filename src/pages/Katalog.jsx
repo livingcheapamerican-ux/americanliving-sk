@@ -103,10 +103,11 @@ export default function Katalog() {
     }
   }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie]);
 
-  const { data: domy = [], isLoading } = useQuery({
+  const { data: domy = [], isLoading, error } = useQuery({
     queryKey: ['domy-katalog'],
     queryFn: () => base44.entities.Dom.list('poradie'),
     staleTime: 300000,
+    retry: 3,
   });
 
   const { data: user } = useQuery({
@@ -193,8 +194,8 @@ export default function Katalog() {
   const vyrobcovia = ["JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"];
 
   // Pre počty v taboch použiť len verejné domy
-  const verejneDomy = domy.filter((d) => d.verejny !== false);
-  const skryteDomy = domy.filter((d) => d.verejny === false);
+  const verejneDomy = Array.isArray(domy) ? domy.filter((d) => d.verejny !== false) : [];
+  const skryteDomy = Array.isArray(domy) ? domy.filter((d) => d.verejny === false) : [];
   const rodinneDomy = verejneDomy.filter((d) => d.kategoria === "rodinne_domy");
   const mobilneDomy = verejneDomy.filter((d) => d.kategoria === "mobilne_domy");
 
@@ -580,13 +581,19 @@ export default function Katalog() {
               </Card>
             }
 
-            {isLoading ?
-            <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-6">
+            {error ? (
+              <Card className="p-12 text-center">
+                <h3 className="text-xl font-bold text-red-700 mb-2">Chyba pri načítaní</h3>
+                <p className="text-gray-500 mb-6">{error.message}</p>
+                <Button onClick={() => window.location.reload()}>Obnoviť stránku</Button>
+              </Card>
+            ) : isLoading ? (
+              <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-6">
                 {[...Array(6)].map((_, i) =>
               <Card key={i} className="h-48 sm:h-96 animate-pulse bg-gray-200" />
               )}
-              </div> :
-            zoradeneDomy.length > 0 ?
+              </div>
+            ) : zoradeneDomy.length > 0 ?
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
