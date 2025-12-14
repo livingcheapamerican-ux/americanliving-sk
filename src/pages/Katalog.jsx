@@ -116,7 +116,8 @@ export default function Katalog() {
     queryKey: ['domy-katalog'],
     queryFn: async () => {
       try {
-        const result = await base44.entities.Dom.list('poradie');
+        const result = await base44.entities.Dom.list('poradie', 200);
+        console.log('Načítané domy z DB:', result?.length);
         return result || [];
       } catch (err) {
         console.error('Error loading houses:', err);
