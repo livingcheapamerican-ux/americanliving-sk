@@ -157,41 +157,35 @@ export default function Katalog() {
     toggleVerejnyMutation.mutate({ domId: dom.id, verejny: !dom.verejny });
   };
 
-  // Pre počty v taboch a filtre používame všetky domy
-  const domy = allDomy || [];
-
-  // Pre počty v taboch použiť len verejné domy
-  const verejneDomy = Array.isArray(allDomy) ? allDomy.filter((d) => d.verejny !== false) : [];
-  const skryteDomy = Array.isArray(allDomy) ? allDomy.filter((d) => d.verejny === false) : [];
+  // CRITICAL: Vypočítať všetky hodnoty PRED return
+  const domy = Array.isArray(allDomy) ? allDomy : [];
+  const verejneDomy = domy.filter((d) => d.verejny !== false);
+  const skryteDomy = domy.filter((d) => d.verejny === false);
   const rodinneDomy = verejneDomy.filter((d) => d.kategoria === "rodinne_domy");
   const mobilneDomy = verejneDomy.filter((d) => d.kategoria === "mobilne_domy");
 
-  const filtrovane = Array.isArray(allDomy) ? allDomy.filter((dom) => {
+  // Filtrovanie
+  let filtrovane = [];
+  
+  if (kategoriaFilter === "skryte") {
     // Tab "skryte" zobrazuje len skryté domy (iba pre adminov)
-    if (kategoriaFilter === "skryte") {
-      if (!canManage) return false; // Skryté domy vidia len admini
-      return dom.verejny === false;
-    }
-    
+    filtrovane = canManage ? skryteDomy : [];
+  } else {
     // V ostatných taboch zobrazuj LEN verejné domy (pre všetkých)
-    // verejny !== false znamená: true alebo undefined alebo null = verejný
-    // verejny === false znamená: skrytý
-    if (dom.verejny === false) {
-      return false; // Explicitne skryté domy sa nezobrazujú v normálnych taboch
-    }
-    
-    const kategoriaMatch = kategoriaFilter === "vsetky" || dom.kategoria === kategoriaFilter;
-    const vyrobcaMatch = vyrobcaFilter.length === 0 || vyrobcaFilter.includes(dom.vyrobca);
-    const typMatch = typFilter.length === 0 || typFilter.includes(dom.typ_domu);
-    const plochaMatch = dom.zastavana_plocha >= plocharozsah[0] && dom.zastavana_plocha <= plocharozsah[1];
-    const uzitkovaMatch = !dom.uzitkova_plocha || (dom.uzitkova_plocha >= uzitkovaRozsah[0] && dom.uzitkova_plocha <= uzitkovaRozsah[1]);
-    const hladanieMatch = hladanie === "" || dom.nazov.toLowerCase().includes(hladanie.toLowerCase());
-    const cenaMatch = dom.zakladna_cena >= cenoveRozpatie[0] && dom.zakladna_cena <= cenoveRozpatie[1];
-    const izbyMatch = pocetIziebFilter.length === 0 || (dom.pocet_izieb && pocetIziebFilter.includes(dom.pocet_izieb));
-    const modulyMatch = pocetModulovFilter.length === 0 || (dom.pocet_modulov && pocetModulovFilter.includes(dom.pocet_modulov));
-    
-    return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
-  }) : [];
+    filtrovane = verejneDomy.filter((dom) => {
+      const kategoriaMatch = kategoriaFilter === "vsetky" || dom.kategoria === kategoriaFilter;
+      const vyrobcaMatch = vyrobcaFilter.length === 0 || vyrobcaFilter.includes(dom.vyrobca);
+      const typMatch = typFilter.length === 0 || typFilter.includes(dom.typ_domu);
+      const plochaMatch = dom.zastavana_plocha >= plocharozsah[0] && dom.zastavana_plocha <= plocharozsah[1];
+      const uzitkovaMatch = !dom.uzitkova_plocha || (dom.uzitkova_plocha >= uzitkovaRozsah[0] && dom.uzitkova_plocha <= uzitkovaRozsah[1]);
+      const hladanieMatch = hladanie === "" || dom.nazov.toLowerCase().includes(hladanie.toLowerCase());
+      const cenaMatch = dom.zakladna_cena >= cenoveRozpatie[0] && dom.zakladna_cena <= cenoveRozpatie[1];
+      const izbyMatch = pocetIziebFilter.length === 0 || (dom.pocet_izieb && pocetIziebFilter.includes(dom.pocet_izieb));
+      const modulyMatch = pocetModulovFilter.length === 0 || (dom.pocet_modulov && pocetModulovFilter.includes(dom.pocet_modulov));
+      
+      return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
+    });
+  }
 
   // Zoradenie
   const zoradeneDomy = [...filtrovane].sort((a, b) => {
@@ -201,7 +195,6 @@ export default function Katalog() {
     if (zoradenie === "plocha_zostupne") return b.zastavana_plocha - a.zastavana_plocha;
     if (zoradenie === "uzitkova_vzostupne") return (a.uzitkova_plocha || 0) - (b.uzitkova_plocha || 0);
     if (zoradenie === "uzitkova_zostupne") return (b.uzitkova_plocha || 0) - (a.uzitkova_plocha || 0);
-
     if (zoradenie === "nazov_az") return a.nazov.localeCompare(b.nazov, 'sk');
     if (zoradenie === "nazov_za") return b.nazov.localeCompare(a.nazov, 'sk');
     return (a.poradie || 0) - (b.poradie || 0);
