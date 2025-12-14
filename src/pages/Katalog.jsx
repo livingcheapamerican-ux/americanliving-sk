@@ -128,8 +128,24 @@ export default function Katalog() {
     refetchOnWindowFocus: false,
   });
 
-  // Pre display používame všetky načítané domy - filtrovanie je v logike filtrovane
-  const domy = allDomy;
+  // Debug logging
+  React.useEffect(() => {
+    console.log('=== KATALOG DEBUG ===');
+    console.log('User:', user);
+    console.log('canManage:', canManage);
+    console.log('All domy loaded:', allDomy?.length);
+    console.log('Category filter:', kategoriaFilter);
+    if (allDomy && allDomy.length > 0) {
+      const publicCount = allDomy.filter(d => d.verejny !== false).length;
+      const hiddenCount = allDomy.filter(d => d.verejny === false).length;
+      console.log('Public domy:', publicCount);
+      console.log('Hidden domy:', hiddenCount);
+      console.log('Sample domy:', allDomy.slice(0, 3).map(d => ({
+        nazov: d.nazov,
+        verejny: d.verejny
+      })));
+    }
+  }, [allDomy, user, canManage, kategoriaFilter]);
 
   const deleteDomMutation = useMutation({
     mutationFn: (domId) => base44.entities.Dom.delete(domId),
@@ -160,7 +176,7 @@ export default function Katalog() {
     toggleVerejnyMutation.mutate({ domId: dom.id, verejny: !dom.verejny });
   };
 
-  const filtrovane = Array.isArray(domy) ? domy.filter((dom) => {
+  const filtrovane = Array.isArray(allDomy) ? allDomy.filter((dom) => {
     // Tab "skryte" zobrazuje len skryté domy (iba pre adminov)
     if (kategoriaFilter === "skryte") {
       if (!canManage) return false; // Skryté domy vidia len admini
@@ -168,7 +184,11 @@ export default function Katalog() {
     }
     
     // V ostatných taboch zobrazuj LEN verejné domy (pre všetkých)
-    const verejnyMatch = dom.verejny !== false;
+    // verejny !== false znamená: true alebo undefined alebo null = verejný
+    // verejny === false znamená: skrytý
+    if (dom.verejny === false) {
+      return false; // Explicitne skryté domy sa nezobrazujú v normálnych taboch
+    }
     
     const kategoriaMatch = kategoriaFilter === "vsetky" || dom.kategoria === kategoriaFilter;
     const vyrobcaMatch = vyrobcaFilter.length === 0 || vyrobcaFilter.includes(dom.vyrobca);
@@ -179,7 +199,8 @@ export default function Katalog() {
     const cenaMatch = dom.zakladna_cena >= cenoveRozpatie[0] && dom.zakladna_cena <= cenoveRozpatie[1];
     const izbyMatch = pocetIziebFilter.length === 0 || (dom.pocet_izieb && pocetIziebFilter.includes(dom.pocet_izieb));
     const modulyMatch = pocetModulovFilter.length === 0 || (dom.pocet_modulov && pocetModulovFilter.includes(dom.pocet_modulov));
-    return verejnyMatch && kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
+    
+    return kategoriaMatch && vyrobcaFilter && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
   }) : [];
 
   // Zoradenie
