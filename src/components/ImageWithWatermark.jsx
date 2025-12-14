@@ -9,10 +9,16 @@ export default function ImageWithWatermark({ src, alt, className, onLoad, useCat
   const { data: settings } = useQuery({
     queryKey: ['site-settings-watermark'],
     queryFn: async () => {
-      const all = await base44.entities.SiteSettings.list();
-      return all.find(s => s.klic === 'watermark_settings') || null;
+      try {
+        const all = await base44.entities.SiteSettings.list();
+        return all.find(s => s.klic === 'watermark_settings') || null;
+      } catch (error) {
+        console.error('Error loading watermark settings:', error);
+        return null;
+      }
     },
     staleTime: 300000,
+    retry: false,
   });
 
   const enabled = useCatalogSetting 

@@ -42,9 +42,16 @@ export default function Domov() {
   const { data: heroSettings } = useQuery({
     queryKey: ['site-settings', 'hero'],
     queryFn: async () => {
-      const settings = await base44.entities.SiteSettings.filter({ klic: 'hero_settings' });
-      return settings[0] || null;
+      try {
+        const settings = await base44.entities.SiteSettings.filter({ klic: 'hero_settings' });
+        return settings[0] || null;
+      } catch (error) {
+        console.error('Error loading hero settings:', error);
+        return null;
+      }
     },
+    retry: false,
+    staleTime: 300000,
   });
 
 
