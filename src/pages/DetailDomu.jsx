@@ -3016,7 +3016,62 @@ export default function DetailDomu() {
 
             {/* Kalkulátor hypotéky */}
             <div className="mb-4">
-              <HypotekaKalkulator cenaDoma={dom.zakladna_cena} dom={dom} />
+              <HypotekaKalkulator 
+                cenaDoma={dom.zakladna_cena} 
+                dom={dom}
+                aktualnaKonfiguracia={
+                  isTicabhouse ? {
+                    celkovaCena: (() => {
+                      const CENY = dom.konfigurator_ceny || {};
+                      let total = dom.zakladna_cena || 0;
+                      if (lyonIzolaciaStien === "200mm") total += CENY.izolacia_stien_200mm || 0;
+                      if (lyonIzolaciaStien === "250mm") total += CENY.izolacia_stien_250mm || 0;
+                      if (lyonIzolaciaPodlahy === "200mm") total += CENY.izolacia_podlahy_200mm || 0;
+                      if (lyonIzolaciaStropu === "200mm") total += CENY.izolacia_stropu_200mm || 0;
+                      if (lyonTepelneCerpadlo === "ano") total += CENY.tepelne_cerpadlo || 0;
+                      if (lyonPripravaNaRekuperaciu) total += CENY.pripravaNaRekuperaciu || 0;
+                      if (lyonRekuperacia === "ano") total += CENY.rekuperacia || 0;
+                      if (lyonBleskozvod) total += CENY.bleskozvod || 0;
+                      if (lyonPrepat) total += CENY.prepat || 0;
+                      if (lyonPripravaNaSolarnePanely) total += CENY.pripravaNaSolarnePanely || 0;
+                      if (lyonInziniering) total += CENY.inziniering || 0;
+                      if (lyonProjektACertifikacia) total += CENY.projektACertifikacia || 0;
+                      if (lyonRevizia) total += CENY.revizia || 0;
+                      if (lyonZaklady === "vruty") total += CENY.zaklady_vruty || 0;
+                      if (lyonZaklady === "patky") total += CENY.zaklady_patky || 0;
+                      if (lyonZaklady === "pasove") total += CENY.zaklady_pasove || 0;
+                      if (lyonMontaz) total += CENY.montaz || 0;
+                      if (lyonDoprava) total += CENY.doprava || 0;
+                      return total;
+                    })(),
+                    izolaciaStien: lyonIzolaciaStien,
+                    izolaciaPodlahy: lyonIzolaciaPodlahy,
+                    izolaciaStropu: lyonIzolaciaStropu,
+                    tepelneCerpadlo: lyonTepelneCerpadlo,
+                    rekuperacia: lyonRekuperacia,
+                    pripravaNaSolarnePanely: lyonPripravaNaSolarnePanely,
+                    bleskozvod: lyonBleskozvod,
+                    prepat: lyonPrepat,
+                    inziniering: lyonInziniering,
+                    projektACertifikacia: lyonProjektACertifikacia,
+                    zaklady: lyonZaklady
+                  } : null
+                }
+                onNastavA0Prvky={isTicabhouse ? () => {
+                  setLyonIzolaciaStien("250mm");
+                  setLyonIzolaciaPodlahy("200mm");
+                  setLyonIzolaciaStropu("200mm");
+                  setLyonTepelneCerpadlo("ano");
+                  setLyonRekuperacia("ano");
+                  setLyonPripravaNaSolarnePanely(true);
+                  setLyonBleskozvod(true);
+                  setLyonPrepat(true);
+                  setLyonInziniering(true);
+                  setLyonProjektACertifikacia(true);
+                  setLyonZaklady("pasove");
+                  setLyonUcel("rodinny");
+                } : null}
+              />
             </div>
 
             {/* CTA Buttons */}
