@@ -431,32 +431,32 @@ export default function Katalog() {
             </motion.div>
 
             {/* Pravá časť - Fixácia úrokov banner */}
-            <Card className="w-full lg:w-[540px] lg:flex-shrink-0 bg-gradient-to-br from-orange-600 via-red-600 to-orange-700 border-2 border-yellow-400 p-3 sm:p-4 shadow-2xl">
+            <Card className="w-full lg:w-[650px] lg:flex-shrink-0 bg-gradient-to-br from-orange-600 via-red-600 to-orange-700 border-2 border-yellow-400 p-3 sm:p-5 shadow-2xl">
               <div className="flex gap-3 items-center">
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                   className="flex-shrink-0"
                 >
-                  <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/40">
-                    <Euro className="w-6 h-6 text-white" />
+                  <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/40">
+                    <Euro className="w-7 h-7 text-white" />
                   </div>
                 </motion.div>
                 <div className="flex-1 min-w-0">
-                  <h2 className="text-xs sm:text-sm font-black text-white mb-1 leading-tight">
+                  <h2 className="text-sm sm:text-lg font-black text-white mb-1.5 leading-tight">
                     {t('mortgageFixationTitle')}
                   </h2>
-                  <p className="text-[10px] sm:text-xs text-white/95 leading-snug mb-2">
+                  <p className="text-xs sm:text-sm text-white/95 leading-snug mb-2.5">
                     {t('mortgageFixationDesc')}
                   </p>
-                  <div className="flex gap-1.5">
+                  <div className="flex gap-2">
                     <Link to={createPageUrl("Kontakt")}>
-                      <Button size="sm" className="bg-white text-red-700 hover:bg-yellow-100 font-bold text-[10px] px-2 py-1 h-auto">
+                      <Button size="sm" className="bg-white text-red-700 hover:bg-yellow-100 font-bold text-xs px-3 py-1.5 h-auto">
                         {t('contactUs')}
                       </Button>
                     </Link>
                     <a href="tel:+421905138124">
-                      <Button size="sm" variant="outline" className="bg-transparent border border-white text-white hover:bg-white hover:text-red-700 font-bold text-[10px] px-2 py-1 h-auto">
+                      <Button size="sm" variant="outline" className="bg-transparent border border-white text-white hover:bg-white hover:text-red-700 font-bold text-xs px-3 py-1.5 h-auto">
                         <Phone className="mr-1 w-3 h-3" />
                         Volať
                       </Button>
