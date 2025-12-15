@@ -11,6 +11,7 @@ import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, Al
 import { motion } from "framer-motion";
 import PriceCalculator from "../components/PriceCalculator";
 import ImageWithWatermark from "../components/ImageWithWatermark";
+import HypotekaKalkulator from "../components/HypotekaKalkulator";
 import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
 import FloatingPrice from "../components/FloatingPrice";
 import DomGalerieManager from "../components/admin/DomGalerieManager";
