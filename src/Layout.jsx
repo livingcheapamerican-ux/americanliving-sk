@@ -79,7 +79,7 @@ function LayoutContent({ children }) {
       <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white shadow-md py-0`}
       >
-        <div className="container mx-auto px-1 sm:px-4 py-0.5 sm:py-1">
+        <div className="container mx-auto px-1 sm:px-4 py-0.5 sm:py-0.5">
           <div className="flex items-center justify-between gap-1 sm:gap-2">
             {/* Mobile - Language Dropdown */}
             <div className="sm:hidden">
@@ -116,7 +116,7 @@ function LayoutContent({ children }) {
                 <img 
                   src={LOGO_URL} 
                   alt="American Living" 
-                  className="h-6 sm:h-8 md:h-10 lg:h-12 xl:h-16 w-auto transition-transform group-hover:scale-105"
+                  className="h-5 sm:h-8 md:h-10 lg:h-12 xl:h-16 w-auto transition-transform group-hover:scale-105"
                 />
               </Link>
 
