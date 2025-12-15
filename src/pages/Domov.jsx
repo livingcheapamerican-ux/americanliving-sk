@@ -284,6 +284,47 @@ export default function Domov() {
         </div>
       </section>
 
+      {/* Fixácia úrokov - Nová sekcia */}
+      <section className="py-8 sm:py-12 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 relative overflow-hidden">
+        <div className="container mx-auto px-4 sm:px-8">
+          <Card className="bg-gradient-to-br from-red-600 via-orange-600 to-red-700 border-4 border-orange-400 p-6 sm:p-10 shadow-2xl hover:shadow-orange-500/40 transition-shadow">
+            <div className="flex flex-col md:flex-row gap-6 items-center">
+              <motion.div
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="flex-shrink-0"
+              >
+                <div className="w-20 h-20 sm:w-28 sm:h-28 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-4 border-white/40">
+                  <Euro className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
+                </div>
+              </motion.div>
+              <div className="flex-1 text-center md:text-left">
+                <h2 className="text-2xl sm:text-4xl font-black text-white mb-4 leading-tight drop-shadow-lg">
+                  Skončila vám fixácia úrokov a splátka za predražený murovaný dom alebo byt vás doslova dusí?
+                </h2>
+                <p className="text-base sm:text-xl text-white/95 leading-relaxed font-medium drop-shadow-md">
+                  Zverte celú situáciu do našich rúk. Postaráme sa o predaj vašej pôvodnej nehnuteľnosti, postavíme vám nový dom a naši kolegovia pre vás vybavia nový úver s nižšou splátkou. <strong className="text-yellow-200">Vymeňte starosti za nové bývanie a plaťte mesačne menej.</strong>
+                </p>
+                <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+                  <Link to={createPageUrl("Kontakt")}>
+                    <Button size="lg" className="bg-white text-red-700 hover:bg-yellow-100 font-bold px-8 py-6 text-lg shadow-xl w-full sm:w-auto">
+                      Kontaktujte nás teraz
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Button>
+                  </Link>
+                  <a href="tel:+421905138124">
+                    <Button size="lg" variant="outline" className="bg-transparent border-3 border-white text-white hover:bg-white hover:text-red-700 font-bold px-8 py-6 text-lg shadow-xl w-full sm:w-auto">
+                      <Phone className="mr-2 w-5 h-5" />
+                      +421 905 138 124
+                    </Button>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </section>
+
       {/* Komplexné služby - S OBRÁZKAMI */}
       <section className="py-6 sm:py-16 bg-gradient-to-br from-gray-950 via-blue-950 to-gray-900 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent"></div>
