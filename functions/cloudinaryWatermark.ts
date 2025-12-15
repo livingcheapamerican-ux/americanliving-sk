@@ -21,26 +21,27 @@ Deno.serve(async (req) => {
       }, { status: 400 });
     }
 
-    // Upload to Cloudinary with watermark transformation
+    // Generate signature for authenticated upload
+    const timestamp = Math.floor(Date.now() / 1000).toString();
+    const transformation = `l_text:Arial_48_bold:${encodeURIComponent(watermarkText)},g_south_east,o_30,x_20,y_20`;
+    
+    // Create string to sign
+    const stringToSign = `timestamp=${timestamp}&transformation=${transformation}${apiSecret}`;
+    
+    // Generate SHA-256 signature
+    const encoder = new TextEncoder();
+    const data = encoder.encode(stringToSign);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const signature = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+    // Upload to Cloudinary with signed request
     const formData = new FormData();
     formData.append('file', imageUrl);
     formData.append('api_key', apiKey);
-    formData.append('timestamp', Math.floor(Date.now() / 1000).toString());
-    formData.append('upload_preset', 'ml_default'); // Using default unsigned preset
-    
-    // Add watermark transformation
-    formData.append('transformation', JSON.stringify({
-      overlay: {
-        font_family: 'Arial',
-        font_size: 48,
-        font_weight: 'bold',
-        text: watermarkText
-      },
-      gravity: 'south_east',
-      opacity: 30,
-      x: 20,
-      y: 20
-    }));
+    formData.append('timestamp', timestamp);
+    formData.append('transformation', transformation);
+    formData.append('signature', signature);
 
     const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
     
