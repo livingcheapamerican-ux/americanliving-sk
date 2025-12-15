@@ -45,19 +45,25 @@ Deno.serve(async (req) => {
 
     const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
     
+    console.log('Uploading to Cloudinary:', { uploadUrl, timestamp, transformation });
+    
     const uploadResponse = await fetch(uploadUrl, {
       method: 'POST',
       body: formData
     });
 
     const result = await uploadResponse.json();
+    
+    console.log('Cloudinary response:', { status: uploadResponse.status, result });
 
     if (!uploadResponse.ok) {
+      console.error('Cloudinary upload failed:', result);
       return Response.json({ 
         success: false, 
         error: result.error?.message || JSON.stringify(result) || 'Upload failed',
-        cloudinaryResponse: result
-      }, { status: 400 });
+        cloudinaryResponse: result,
+        httpStatus: uploadResponse.status
+      }, { status: 200 }); // Changed to 200 so we can see the response in batch
     }
 
     return Response.json({ 
@@ -68,9 +74,12 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
+    console.error('Cloudinary watermark error:', error);
     return Response.json({ 
       success: false, 
-      error: error.message 
+      error: error.message,
+      stack: error.stack,
+      details: JSON.stringify(error)
     }, { status: 500 });
   }
 });
