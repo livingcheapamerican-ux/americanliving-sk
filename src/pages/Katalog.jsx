@@ -193,13 +193,20 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
           
           <div className="flex items-center justify-between pt-1.5 sm:pt-4 border-t">
             <div className="hidden sm:block">
-              <p className="text-xs text-gray-500 mb-1">{dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : t('priceFromLabel')}</p>
+              <p className="text-xs text-gray-500 mb-1">
+                {dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : dom.vyrobca === "Prosto House" ? "Základná cena" : t('priceFromLabel')}
+              </p>
               <p className="text-xl font-bold text-primary">
                 {dom.zakladna_cena?.toLocaleString('sk-SK')} €
               </p>
               {dom.vyrobca === "Ticab house" && (
                 <p className="text-[9px] text-gray-400 mt-1 italic">
                   Cena na kľúč v štatuse rekreačnej stavby - fotka domu v základnej konfigurácii v detailoch
+                </p>
+              )}
+              {dom.vyrobca === "Prosto House" && (
+                <p className="text-[9px] text-gray-400 mt-1 italic">
+                  Základná cena je za samotnú konštrukciu bez montážnych prác
                 </p>
               )}
             </div>
