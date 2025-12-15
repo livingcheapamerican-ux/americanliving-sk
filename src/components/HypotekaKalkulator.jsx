@@ -128,6 +128,9 @@ export default function HypotekaKalkulator({
             </div>
           )}
 
+          </div>
+        )}
+
         {/* Vlastný vklad */}
         <div>
           <div className="flex items-center justify-between mb-1">
