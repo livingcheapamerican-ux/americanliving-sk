@@ -1,5 +1,4 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
-import { Image } from "https://deno.land/x/imagescript@1.3.0/mod.ts";
 
 Deno.serve(async (req) => {
   try {
@@ -39,132 +38,36 @@ Deno.serve(async (req) => {
     log.push(`⚙️ Režim: ${testMode ? 'TEST (bez uloženia)' : 'LIVE (uloží zmeny)'}`);
     log.push('');
 
-    // Funkcia na aplikovanie watermarku na jeden obrázok
+    // Použijeme existujúcu funkčnú funkciu aplikujWatermarkNaFotku
     async function applyWatermark(imageUrl, context = '') {
-      const errorDetails = {
-        url: imageUrl,
-        context,
-        phase: '',
-        error: ''
-      };
-
       try {
-        // Stiahnuť obrázok
-        errorDetails.phase = 'fetch';
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000);
-        
-        const imageResponse = await fetch(imageUrl, { 
-          signal: controller.signal,
-          headers: { "User-Agent": "Base44-Watermark-Bot/1.0" }
+        const result = await base44.asServiceRole.functions.invoke('aplikujWatermarkNaFotku', {
+          imageUrl,
+          watermarkText: watermark_text,
+          position: watermark_position,
+          opacity: watermark_opacity,
+          size: watermark_size
         });
-        clearTimeout(timeoutId);
-        
-        if (!imageResponse.ok) {
-          errorDetails.error = `HTTP ${imageResponse.status} ${imageResponse.statusText}`;
-          return { success: false, ...errorDetails };
+
+        if (result.data?.success) {
+          return { success: true, newImageUrl: result.data.newImageUrl, originalUrl: imageUrl };
+        } else {
+          return { 
+            success: false, 
+            url: imageUrl, 
+            context, 
+            phase: 'watermark', 
+            error: result.data?.error || 'Unknown error' 
+          };
         }
-
-        errorDetails.phase = 'download';
-        const imageBuffer = await imageResponse.arrayBuffer();
-
-        if (imageBuffer.byteLength === 0) {
-          errorDetails.error = 'Empty image file';
-          return { success: false, ...errorDetails };
-        }
-
-        if (imageBuffer.byteLength > 50 * 1024 * 1024) {
-          errorDetails.error = `File too large: ${(imageBuffer.byteLength / 1024 / 1024).toFixed(1)}MB`;
-          return { success: false, ...errorDetails };
-        }
-
-        // Dekódovať obrázok pomocou ImageScript
-        errorDetails.phase = 'decode';
-        const image = await Image.decode(new Uint8Array(imageBuffer));
-
-        // Vypočítať veľkosť a pozíciu watermarku
-        errorDetails.phase = 'watermark';
-        const fontSize = {
-          'small': Math.floor(image.height * 0.03),
-          'medium': Math.floor(image.height * 0.05),
-          'large': Math.floor(image.height * 0.07),
-          'xlarge': Math.floor(image.height * 0.09),
-          'xxlarge': Math.floor(image.height * 0.12)
-        }[watermark_size || 'medium'];
-
-        // Kalkulovať pozíciu
-        const padding = Math.floor(image.width * 0.02);
-        const opacity = Math.floor((watermark_opacity || 0.3) * 255);
-
-        // Vypočítať približnú šírku textu (7 pixelov na znak * fontSize / 10)
-        const approxTextWidth = watermark_text.length * fontSize * 0.7;
-
-        let x, y;
-        switch (watermark_position || 'bottom-right') {
-          case 'top-left':
-            x = padding;
-            y = padding + fontSize;
-            break;
-          case 'top-right':
-            x = image.width - approxTextWidth - padding;
-            y = padding + fontSize;
-            break;
-          case 'bottom-left':
-            x = padding;
-            y = image.height - padding;
-            break;
-          case 'bottom-right':
-            x = image.width - approxTextWidth - padding;
-            y = image.height - padding;
-            break;
-          case 'center':
-            x = (image.width - approxTextWidth) / 2;
-            y = (image.height + fontSize) / 2;
-            break;
-          default:
-            x = image.width - approxTextWidth - padding;
-            y = image.height - padding;
-        }
-
-        // ImageScript nemá vstavený text rendering, použijeme semi-transparentný box
-        const boxColor = Image.rgbaToColor(255, 255, 255, opacity);
-        const boxHeight = Math.max(10, Math.floor(fontSize * 1.2));
-        const boxWidth = Math.max(20, Math.floor(approxTextWidth * 1.1));
-        
-        // Bezpečné hranice (ImageScript indexuje od 0, ale potrebujeme validné súradnice)
-        const startY = Math.max(1, Math.min(image.height - 1, Math.floor(y - boxHeight)));
-        const endY = Math.max(1, Math.min(image.height - 1, Math.floor(y + 5)));
-        const startX = Math.max(1, Math.min(image.width - 1, Math.floor(x)));
-        const endX = Math.max(1, Math.min(image.width - 1, Math.floor(x + boxWidth)));
-        
-        // Ak sú hranice platné, nakresliť watermark
-        if (startX < endX && startY < endY) {
-          for (let py = startY; py < endY; py++) {
-            for (let px = startX; px < endX; px++) {
-              try {
-                image.setPixelAt(px, py, boxColor);
-              } catch (e) {
-                // Preskočiť problematické pixely
-              }
-            }
-          }
-        }
-
-        // Enkódovať späť na JPEG
-        errorDetails.phase = 'encode';
-        const finalBuffer = await image.encodeJPEG(95);
-
-        // Upload
-        errorDetails.phase = 'upload';
-        const fileName = `watermarked_${Date.now()}_${imageUrl.split('/').pop() || 'image.jpg'}`;
-        const file = new File([finalBuffer], fileName, { type: 'image/jpeg' });
-
-        const uploadResult = await base44.asServiceRole.integrations.Core.UploadFile({ file });
-
-        return { success: true, newImageUrl: uploadResult.file_url, originalUrl: imageUrl };
       } catch (error) {
-        errorDetails.error = `${error.name}: ${error.message}`;
-        return { success: false, ...errorDetails };
+        return { 
+          success: false, 
+          url: imageUrl, 
+          context, 
+          phase: 'function_call', 
+          error: `${error.name}: ${error.message}` 
+        };
       }
     }
 
