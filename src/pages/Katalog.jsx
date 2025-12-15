@@ -431,7 +431,7 @@ export default function Katalog() {
             </motion.div>
 
             {/* Pravá časť - Fixácia úrokov banner */}
-            <Card className="w-full lg:w-96 lg:flex-shrink-0 bg-gradient-to-br from-orange-600 via-red-600 to-orange-700 border-2 border-yellow-400 p-3 sm:p-4 shadow-2xl">
+            <Card className="w-full lg:w-[540px] lg:flex-shrink-0 bg-gradient-to-br from-orange-600 via-red-600 to-orange-700 border-2 border-yellow-400 p-3 sm:p-4 shadow-2xl">
               <div className="flex gap-3 items-center">
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
