@@ -168,11 +168,14 @@ export default function AdminSpravaDomov() {
   };
 
   const handleWatermarkPreview = async (imageUrl, fieldPath) => {
+    console.log('🎯 handleWatermarkPreview called:', { imageUrl, fieldPath });
     setWatermarkOriginalUrl(imageUrl);
     setWatermarkFieldPath(fieldPath);
     setWatermarkLoading(true);
+    toast.info('Generujem watermark preview...');
     
     try {
+      console.log('📞 Calling aplikujWatermarkNaFotku...');
       const response = await base44.functions.invoke('aplikujWatermarkNaFotku', {
         imageUrl,
         watermarkText: 'American Living',
@@ -181,14 +184,19 @@ export default function AdminSpravaDomov() {
         size: 'medium'
       });
 
+      console.log('✅ Response:', response);
+
       if (response.data.success) {
         setWatermarkPreview(response.data.newImageUrl);
+        toast.success('Preview je pripravený!');
       } else {
-        toast.error('Chyba pri generovaní preview: ' + response.data.error);
+        console.error('❌ Error from function:', response.data);
+        toast.error('Chyba: ' + (response.data.error || 'Neznáma chyba'));
+        setWatermarkLoading(false);
       }
     } catch (error) {
+      console.error('❌ Exception:', error);
       toast.error('Chyba: ' + error.message);
-    } finally {
       setWatermarkLoading(false);
     }
   };
