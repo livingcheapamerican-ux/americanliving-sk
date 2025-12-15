@@ -127,18 +127,26 @@ Deno.serve(async (req) => {
         }
 
         // ImageScript nemá vstavený text rendering, použijeme semi-transparentný box
-        // Frontend watermark sa bude renderovať cez CSS overlay
         const boxColor = Image.rgbaToColor(255, 255, 255, opacity);
-        const boxHeight = Math.floor(fontSize * 1.2);
-        const boxWidth = Math.floor(approxTextWidth * 1.1);
+        const boxHeight = Math.max(10, Math.floor(fontSize * 1.2));
+        const boxWidth = Math.max(20, Math.floor(approxTextWidth * 1.1));
         
-        // Nakresliť semi-transparentný box na pozíciu watermarku
-        for (let py = Math.max(0, Math.floor(y - boxHeight)); py < Math.min(image.height, Math.floor(y + 5)); py++) {
-          for (let px = Math.max(0, Math.floor(x)); px < Math.min(image.width, Math.floor(x + boxWidth)); px++) {
-            const currentPixel = image.getPixelAt(px, py);
-            // Blend s bielou farbou
-            const blended = Image.rgbaToColor(255, 255, 255, opacity);
-            image.setPixelAt(px, py, blended);
+        // Bezpečné hranice (ImageScript indexuje od 0, ale potrebujeme validné súradnice)
+        const startY = Math.max(1, Math.min(image.height - 1, Math.floor(y - boxHeight)));
+        const endY = Math.max(1, Math.min(image.height - 1, Math.floor(y + 5)));
+        const startX = Math.max(1, Math.min(image.width - 1, Math.floor(x)));
+        const endX = Math.max(1, Math.min(image.width - 1, Math.floor(x + boxWidth)));
+        
+        // Ak sú hranice platné, nakresliť watermark
+        if (startX < endX && startY < endY) {
+          for (let py = startY; py < endY; py++) {
+            for (let px = startX; px < endX; px++) {
+              try {
+                image.setPixelAt(px, py, boxColor);
+              } catch (e) {
+                // Preskočiť problematické pixely
+              }
+            }
           }
         }
 
