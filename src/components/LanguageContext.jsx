@@ -5762,6 +5762,8 @@ const translations = {
     waterproofLaminatedPlywood: "Αδιάβροχο επικαλυμμένο κόντρα πλακέ, thermowood",
     trapezoidalSheet: "Τραπεζοειδές φύλλο",
     naturalWoodCladding: "Φυσική ξύλινη επένδυση",
+    transportAndAssembly: "Μεταφορά και συναρμολόγηση",
+    houseConfiguredAsRecreational: "Σπίτι διαμορφωμένο ως ψυχαγωγικό κτίριο",
   },
   
   en: {
@@ -6471,6 +6473,8 @@ const translations = {
     trapezoidalSheet: "Trapezoidal sheet",
     interiorLabel: "Interior",
     naturalWoodCladding: "Natural wood cladding",
+    transportAndAssembly: "Transport and assembly",
+    houseConfiguredAsRecreational: "House configured as recreational building",
     
     // House detail
     basicParameters: "Basic parameters",
@@ -7374,6 +7378,8 @@ const translations = {
     trapezoidalSheet: "Trapéz lemez",
     interiorLabel: "Belső tér",
     naturalWoodCladding: "Természetes fa burkolat",
+    transportAndAssembly: "Szállítás és szerelés",
+    houseConfiguredAsRecreational: "Ház rekreációs épületként konfigurálva",
     
     // House detail
     basicParameters: "Alapvető paraméterek",
@@ -8228,6 +8234,8 @@ const translations = {
     trapezoidalSheet: "Blacha trapezowa",
     interiorLabel: "Wnętrze",
     naturalWoodCladding: "Naturalna boazeria drewniana",
+    transportAndAssembly: "Transport i montaż",
+    houseConfiguredAsRecreational: "Dom skonfigurowany jako budynek rekreacyjny",
     
     // House detail
     basicParameters: "Podstawowe parametry",
@@ -9123,6 +9131,8 @@ const translations = {
     trapezoidalSheet: "Трапецієподібний лист",
     interiorLabel: "Інтер'єр",
     naturalWoodCladding: "Натуральне дерев'яне облицювання",
+    transportAndAssembly: "Транспорт та монтаж",
+    houseConfiguredAsRecreational: "Будинок налаштований як рекреаційна будівля",
     
     // House detail
     basicParameters: "Основні параметри",
