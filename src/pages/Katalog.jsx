@@ -435,10 +435,10 @@ export default function Katalog() {
                 </motion.div>
                 <div className="flex-1">
                   <h2 className="text-sm sm:text-2xl md:text-3xl font-black text-white mb-2 leading-tight drop-shadow-lg">
-                    Skončila vám fixácia úrokov a splátka za predražený murovaný dom alebo byt vás doslova dusí?
+                    {t('mortgageFixationTitle')}
                   </h2>
                   <p className="text-xs sm:text-base text-white/95 leading-relaxed font-medium drop-shadow-md">
-                    Zverte celú situáciu do našich rúk. Postaráme sa o predaj vašej pôvodnej nehnuteľnosti, postavíme vám nový dom a naši kolegovia pre vás vybavia nový úver s nižšou splátkou. <strong className="text-yellow-200">Vymeňte starosti za nové bývanie a plaťte mesačne menej.</strong>
+                    {t('mortgageFixationDesc')}
                   </p>
                   <div className="mt-3 flex flex-col sm:flex-row gap-2 justify-center sm:justify-start">
                     <Link to={createPageUrl("Kontakt")}>
