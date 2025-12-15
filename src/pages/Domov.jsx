@@ -300,15 +300,15 @@ export default function Domov() {
               </motion.div>
               <div className="flex-1 text-center md:text-left">
                 <h2 className="text-2xl sm:text-4xl font-black text-white mb-4 leading-tight drop-shadow-lg">
-                  Skončila vám fixácia úrokov a splátka za predražený murovaný dom alebo byt vás doslova dusí?
+                  {t('mortgageFixationTitle')}
                 </h2>
                 <p className="text-base sm:text-xl text-white/95 leading-relaxed font-medium drop-shadow-md">
-                  Zverte celú situáciu do našich rúk. Postaráme sa o predaj vašej pôvodnej nehnuteľnosti, postavíme vám nový dom a naši kolegovia pre vás vybavia nový úver s nižšou splátkou. <strong className="text-yellow-200">Vymeňte starosti za nové bývanie a plaťte mesačne menej.</strong>
+                  {t('mortgageFixationDesc')}
                 </p>
                 <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
                   <Link to={createPageUrl("Kontakt")}>
                     <Button size="lg" className="bg-white text-red-700 hover:bg-yellow-100 font-bold px-8 py-6 text-lg shadow-xl w-full sm:w-auto">
-                      Kontaktujte nás teraz
+                      {t('contactUs')}
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                   </Link>
