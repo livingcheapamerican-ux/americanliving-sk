@@ -9,24 +9,23 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    let imageUrl, watermarkText, position, opacity, size;
-    
+    let body;
     try {
-      const body = await req.json();
-      imageUrl = body.imageUrl;
-      watermarkText = body.watermarkText;
-      position = body.position;
-      opacity = body.opacity;
-      size = body.size;
+      body = await req.json();
     } catch (e) {
       return Response.json({ 
         success: false,
-        error: `Invalid request body: ${e.message}` 
+        error: `Failed to parse JSON body: ${e.message}` 
       }, { status: 400 });
     }
 
+    const { imageUrl, watermarkText, position, opacity, size } = body;
+
     if (!imageUrl || !watermarkText) {
-      return Response.json({ error: 'Missing required parameters' }, { status: 400 });
+      return Response.json({ 
+        success: false,
+        error: `Missing required parameters. Received: ${JSON.stringify({ imageUrl: imageUrl ? 'present' : 'missing', watermarkText: watermarkText ? 'present' : 'missing', body: Object.keys(body || {}) })}` 
+      }, { status: 400 });
     }
 
     // Validovať URL
