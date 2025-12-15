@@ -24,7 +24,9 @@ Deno.serve(async (req) => {
 
     // Načítať domy (v test režime len 6)
     const allDomy = await base44.asServiceRole.entities.Dom.list('poradie', testMode ? 6 : 200);
-    const domy = testMode ? allDomy.slice(0, 6) : allDomy;
+    // Filtrovať len Ticab house a Prosto House
+    const filteredDomy = allDomy.filter(d => d.vyrobca === 'Ticab house' || d.vyrobca === 'Prosto House');
+    const domy = testMode ? filteredDomy.slice(0, 6) : filteredDomy;
 
     const log = [];
     let processed = 0;
@@ -33,7 +35,7 @@ Deno.serve(async (req) => {
     let skipped = 0;
 
     log.push(`🚀 Začínam batch aplikáciu watermarku na fotky domov...`);
-    log.push(`📊 Našiel som ${domy.length} domov`);
+    log.push(`📊 Celkom domov: ${allDomy.length}, po filtrovaní (Ticab house + Prosto House): ${domy.length}`);
     log.push(`⚙️ Režim: ${testMode ? 'TEST (bez uloženia)' : 'LIVE (uloží zmeny)'}`);
     log.push('');
 
