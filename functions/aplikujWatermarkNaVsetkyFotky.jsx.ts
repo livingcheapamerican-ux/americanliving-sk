@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { Image } from "https://deno.land/x/imagescript@1.3.0/mod.ts";
 
 Deno.serve(async (req) => {
   try {
@@ -48,26 +49,22 @@ Deno.serve(async (req) => {
       try {
         // Stiahnuť obrázok
         errorDetails.phase = 'fetch';
-        const imageResponse = await fetch(imageUrl, { signal: AbortSignal.timeout(30000) });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
+        
+        const imageResponse = await fetch(imageUrl, { 
+          signal: controller.signal,
+          headers: { "User-Agent": "Base44-Watermark-Bot/1.0" }
+        });
+        clearTimeout(timeoutId);
         
         if (!imageResponse.ok) {
           errorDetails.error = `HTTP ${imageResponse.status} ${imageResponse.statusText}`;
           return { success: false, ...errorDetails };
         }
 
-        const contentType = imageResponse.headers.get('content-type');
-        const isValidContentType = contentType?.startsWith('image/') || 
-                                   contentType === 'application/octet-stream' ||
-                                   !contentType;
-        
-        if (!isValidContentType) {
-          errorDetails.error = `Invalid content-type: ${contentType}`;
-          return { success: false, ...errorDetails };
-        }
-
         errorDetails.phase = 'download';
-        const imageBlob = await imageResponse.blob();
-        const imageBuffer = await imageBlob.arrayBuffer();
+        const imageBuffer = await imageResponse.arrayBuffer();
 
         if (imageBuffer.byteLength === 0) {
           errorDetails.error = 'Empty image file';
@@ -79,74 +76,68 @@ Deno.serve(async (req) => {
           return { success: false, ...errorDetails };
         }
 
-        // Canvas processing
-        errorDetails.phase = 'bitmap';
-        const imageBitmap = await createImageBitmap(new Blob([imageBuffer]));
-        
-        errorDetails.phase = 'canvas';
-        const canvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);
-        const ctx = canvas.getContext('2d');
+        // Dekódovať obrázok pomocou ImageScript
+        errorDetails.phase = 'decode';
+        const image = await Image.decode(new Uint8Array(imageBuffer));
 
-        ctx.drawImage(imageBitmap, 0, 0);
-
-        // Nastaviť štýl watermarku
+        // Vypočítať veľkosť a pozíciu watermarku
+        errorDetails.phase = 'watermark';
         const fontSize = {
-          'small': imageBitmap.height * 0.03,
-          'medium': imageBitmap.height * 0.05,
-          'large': imageBitmap.height * 0.07,
-          'xlarge': imageBitmap.height * 0.09,
-          'xxlarge': imageBitmap.height * 0.12
+          'small': Math.floor(image.height * 0.03),
+          'medium': Math.floor(image.height * 0.05),
+          'large': Math.floor(image.height * 0.07),
+          'xlarge': Math.floor(image.height * 0.09),
+          'xxlarge': Math.floor(image.height * 0.12)
         }[watermark_size || 'medium'];
 
-        ctx.font = `bold ${fontSize}px Arial`;
-        ctx.fillStyle = `rgba(255, 255, 255, ${watermark_opacity || 0.3})`;
-        ctx.strokeStyle = `rgba(0, 0, 0, ${(watermark_opacity || 0.3) * 0.5})`;
-        ctx.lineWidth = 2;
+        // Kalkulovať pozíciu
+        const padding = Math.floor(image.width * 0.02);
+        const opacity = Math.floor((watermark_opacity || 0.3) * 255);
 
-        const textMetrics = ctx.measureText(watermark_text);
-        const textWidth = textMetrics.width;
-        const textHeight = fontSize;
+        // Vypočítať približnú šírku textu (7 pixelov na znak * fontSize / 10)
+        const approxTextWidth = watermark_text.length * fontSize * 0.7;
 
         let x, y;
-        const padding = imageBitmap.width * 0.02;
-
         switch (watermark_position || 'bottom-right') {
           case 'top-left':
             x = padding;
-            y = padding + textHeight;
+            y = padding + fontSize;
             break;
           case 'top-right':
-            x = imageBitmap.width - textWidth - padding;
-            y = padding + textHeight;
+            x = image.width - approxTextWidth - padding;
+            y = padding + fontSize;
             break;
           case 'bottom-left':
             x = padding;
-            y = imageBitmap.height - padding;
+            y = image.height - padding;
             break;
           case 'bottom-right':
-            x = imageBitmap.width - textWidth - padding;
-            y = imageBitmap.height - padding;
+            x = image.width - approxTextWidth - padding;
+            y = image.height - padding;
             break;
           case 'center':
-            x = (imageBitmap.width - textWidth) / 2;
-            y = (imageBitmap.height + textHeight) / 2;
+            x = (image.width - approxTextWidth) / 2;
+            y = (image.height + fontSize) / 2;
             break;
           default:
-            x = imageBitmap.width - textWidth - padding;
-            y = imageBitmap.height - padding;
+            x = image.width - approxTextWidth - padding;
+            y = image.height - padding;
         }
 
-        ctx.strokeText(watermark_text, x, y);
-        ctx.fillText(watermark_text, x, y);
+        // Pridať text watermark s tieňom
+        // Najprv tieň (čierny)
+        image.printText(Image.font('sans'), x + 2, y + 2, watermark_text, Image.rgbaToColor(0, 0, 0, Math.floor(opacity * 0.5)));
+        // Potom biely text
+        image.printText(Image.font('sans'), x, y, watermark_text, Image.rgbaToColor(255, 255, 255, opacity));
 
-        // Konvertovať na blob
-        errorDetails.phase = 'convert';
-        const blob = await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.95 });
+        // Enkódovať späť na JPEG
+        errorDetails.phase = 'encode';
+        const finalBuffer = await image.encodeJPEG(95);
 
         // Upload
         errorDetails.phase = 'upload';
         const fileName = `watermarked_${Date.now()}_${imageUrl.split('/').pop() || 'image.jpg'}`;
-        const file = new File([blob], fileName, { type: 'image/jpeg' });
+        const file = new File([finalBuffer], fileName, { type: 'image/jpeg' });
 
         const uploadResult = await base44.asServiceRole.integrations.Core.UploadFile({ file });
 
