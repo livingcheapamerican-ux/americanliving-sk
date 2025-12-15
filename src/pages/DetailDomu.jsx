@@ -3014,6 +3014,11 @@ export default function DetailDomu() {
               </div>
             )}
 
+            {/* Kalkulátor hypotéky */}
+            <div className="mb-4">
+              <HypotekaKalkulator cenaDoma={dom.zakladna_cena} />
+            </div>
+
             {/* CTA Buttons */}
             <div className="space-y-2 sm:space-y-3">
 
