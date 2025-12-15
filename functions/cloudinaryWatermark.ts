@@ -55,7 +55,8 @@ Deno.serve(async (req) => {
     if (!uploadResponse.ok) {
       return Response.json({ 
         success: false, 
-        error: result.error?.message || 'Upload failed' 
+        error: result.error?.message || JSON.stringify(result) || 'Upload failed',
+        cloudinaryResponse: result
       }, { status: 400 });
     }
 
