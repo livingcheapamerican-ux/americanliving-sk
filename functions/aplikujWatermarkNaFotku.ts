@@ -45,8 +45,24 @@ Deno.serve(async (req) => {
     const imageBlob = await imageResponse.blob();
     const imageBuffer = await imageBlob.arrayBuffer();
 
+    // Kontrola veľkosti súboru
+    if (imageBuffer.byteLength === 0) {
+      return Response.json({ 
+        success: false,
+        error: 'Image file is empty' 
+      }, { status: 400 });
+    }
+
     // Použiť Canvas API na aplikovanie watermarku
-    const imageBitmap = await createImageBitmap(new Blob([imageBuffer]));
+    let imageBitmap;
+    try {
+      imageBitmap = await createImageBitmap(new Blob([imageBuffer]));
+    } catch (bitmapError) {
+      return Response.json({ 
+        success: false,
+        error: `Failed to create image bitmap: ${bitmapError.message}` 
+      }, { status: 400 });
+    }
     
     const canvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);
     const ctx = canvas.getContext('2d');
@@ -107,13 +123,29 @@ Deno.serve(async (req) => {
     ctx.fillText(watermarkText, x, y);
 
     // Konvertovať canvas na blob
-    const blob = await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.95 });
+    let blob;
+    try {
+      blob = await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.95 });
+    } catch (convertError) {
+      return Response.json({ 
+        success: false,
+        error: `Failed to convert canvas to blob: ${convertError.message}` 
+      }, { status: 500 });
+    }
 
     // Uploadnúť nový obrázok
     const fileName = `watermarked_${Date.now()}_${imageUrl.split('/').pop() || 'image.jpg'}`;
     const file = new File([blob], fileName, { type: 'image/jpeg' });
 
-    const uploadResult = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+    let uploadResult;
+    try {
+      uploadResult = await base44.asServiceRole.integrations.Core.UploadFile({ file });
+    } catch (uploadError) {
+      return Response.json({ 
+        success: false,
+        error: `Failed to upload watermarked image: ${uploadError.message}` 
+      }, { status: 500 });
+    }
 
     return Response.json({ 
       success: true, 
@@ -122,6 +154,9 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ 
+      success: false,
+      error: error.message 
+    }, { status: 500 });
   }
 });
