@@ -8,8 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { Save, Eye, Zap, AlertTriangle } from "lucide-react";
+import { Save, Eye, Zap, AlertTriangle, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import ImageWithWatermark from "../components/ImageWithWatermark";
 
 
 export default function AdminWatermark() {
@@ -71,6 +72,32 @@ export default function AdminWatermark() {
 
   const [batchRunning, setBatchRunning] = useState(false);
   const [batchLog, setBatchLog] = useState([]);
+  const [previewDomy, setPreviewDomy] = useState([]);
+  const [loadingPreview, setLoadingPreview] = useState(false);
+
+  const { data: domy } = useQuery({
+    queryKey: ['domy-preview'],
+    queryFn: async () => {
+      const result = await base44.entities.Dom.list('poradie', 50);
+      return result || [];
+    },
+    enabled: false
+  });
+
+  const loadPreview = async () => {
+    setLoadingPreview(true);
+    try {
+      const result = await base44.entities.Dom.list('poradie', 6);
+      setPreviewDomy(result || []);
+    } catch (error) {
+      toast.error('Chyba pri načítaní náhľadu');
+    }
+    setLoadingPreview(false);
+  };
+
+  React.useEffect(() => {
+    loadPreview();
+  }, []);
 
   const burnWatermarkMutation = useMutation({
     mutationFn: async (testMode) => {
@@ -273,6 +300,71 @@ export default function AdminWatermark() {
             </div>
           </Card>
         </div>
+
+        {/* Náhľad na skutočných fotkách */}
+        <Card className="p-6 mt-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <Eye className="w-5 h-5" />
+              Náhľad watermarku na skutočných fotkách
+            </h2>
+            <Button
+              onClick={loadPreview}
+              disabled={loadingPreview}
+              variant="outline"
+              size="sm"
+            >
+              <RefreshCw className={`w-4 h-4 mr-2 ${loadingPreview ? 'animate-spin' : ''}`} />
+              Obnoviť
+            </Button>
+          </div>
+
+          <p className="text-sm text-gray-600 mb-4">
+            Ukážka ako bude watermark vyzerať na obrázkov domov z katalógu:
+          </p>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {previewDomy.map((dom) => (
+              <div key={dom.id} className="space-y-2">
+                <div className="relative bg-gray-200 rounded-lg overflow-hidden aspect-[4/3]">
+                  {dom.hlavny_obrazok ? (
+                    <>
+                      <img
+                        src={dom.hlavny_obrazok}
+                        alt={dom.nazov}
+                        className="w-full h-full object-cover"
+                      />
+                      {(enabled || enabledCatalog) && (
+                        <div 
+                          className={`absolute ${positionClasses[position]} ${sizeClasses[size]} font-bold text-white pointer-events-none select-none`}
+                          style={{ 
+                            opacity: opacity,
+                            textShadow: '2px 2px 4px rgba(0,0,0,0.8)'
+                          }}
+                        >
+                          {text}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-500">
+                      Bez obrázka
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs font-medium text-gray-700 truncate">{dom.nazov}</p>
+              </div>
+            ))}
+          </div>
+
+          {!enabled && !enabledCatalog && (
+            <div className="mt-4 p-3 bg-yellow-50 rounded border border-yellow-200 text-center">
+              <p className="text-sm text-yellow-800">
+                ⚠️ Watermark je momentálne vypnutý. Zapnite ho vyššie, aby ste videli náhľad.
+              </p>
+            </div>
+          )}
+        </Card>
 
         {/* Batch aplikácia watermarku */}
         <Card className="p-6 mt-6 border-2 border-orange-300 bg-orange-50">
