@@ -409,7 +409,7 @@ export default function Katalog() {
     return (a.poradie || 0) - (b.poradie || 0);
   });
 
-  const vyrobcovia = ["JAK Modules", "Ticab house", "Prosto House", "Domki z Gór"];
+  const vyrobcovia = ["Ticab house", "Prosto House", "Domki z Gór"];
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden max-w-full">
@@ -443,7 +443,7 @@ export default function Katalog() {
                   <div className="mt-3 flex flex-col sm:flex-row gap-2 justify-center sm:justify-start">
                     <Link to={createPageUrl("Kontakt")}>
                       <Button size="sm" className="bg-white text-red-700 hover:bg-yellow-100 font-bold text-xs sm:text-base px-4 py-2 sm:px-6 sm:py-3 shadow-xl w-full sm:w-auto">
-                        Kontaktujte nás
+                        {t('contactUs')}
                         <ArrowRight className="ml-1 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4" />
                       </Button>
                     </Link>
