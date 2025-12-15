@@ -197,6 +197,11 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
               <p className="text-xl font-bold text-primary">
                 {dom.zakladna_cena?.toLocaleString('sk-SK')} €
               </p>
+              {dom.vyrobca === "Ticab house" && (
+                <p className="text-[9px] text-gray-400 mt-1 italic">
+                  Cena na kľúč v štatuse rekreačnej stavby - fotka domu v základnej konfigurácii v detailoch
+                </p>
+              )}
             </div>
             <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`} className="w-full sm:w-auto">
               <Button size="sm" className="w-full sm:w-auto bg-primary hover:bg-primary/90 group-hover:bg-secondary text-[10px] sm:text-sm px-2 sm:px-3 h-6 sm:h-8">
