@@ -39,7 +39,6 @@ export default function HypotekaKalkulator({
         (config.zaklady === "pasove" || config.zaklady === "platna")
       );
     } else if (vyrobca.includes("Prosto")) {
-      // Prosto - kontrola A0 prvkov: premium/ultra izolácia + TČ + rekuperácia + projekt A0 + základy
       return (
         (config.izolaciaNavysenie === "premium" || config.izolaciaNavysenie === "ultra") &&
         config.tepelneCerpadlo === true &&
@@ -51,7 +50,38 @@ export default function HypotekaKalkulator({
     return true;
   };
 
+  // Získať zoznam chýbajúcich A0 prvkov
+  const getChybajuceA0Prvky = () => {
+    if (!dom || !aktualnaKonfiguracia) return [];
+    const vyrobca = dom.vyrobca || "";
+    const config = aktualnaKonfiguracia;
+    const chybajuce = [];
+
+    if (vyrobca.includes("Ticab")) {
+      if (config.izolaciaStien !== "250mm") chybajuce.push("Izolácia stien 250mm");
+      if (config.izolaciaPodlahy !== "200mm") chybajuce.push("Izolácia podlahy 200mm");
+      if (config.izolaciaStropu !== "200mm") chybajuce.push("Izolácia stropu 200mm");
+      if (config.tepelneCerpadlo !== "ano") chybajuce.push("Tepelné čerpadlo");
+      if (config.rekuperacia !== "ano") chybajuce.push("Rekuperácia");
+      if (!config.pripravaNaSolarnePanely) chybajuce.push("Príprava na solárne panely");
+      if (!config.bleskozvod) chybajuce.push("Bleskozvod");
+      if (!config.prepat) chybajuce.push("Prepäťová ochrana");
+      if (!config.inziniering) chybajuce.push("Inžiniering");
+      if (!config.projektACertifikacia) chybajuce.push("Projekt a certifikácia A0");
+      if (config.zaklady !== "pasove" && config.zaklady !== "platna") chybajuce.push("Základy (pásové alebo platňa)");
+    } else if (vyrobca.includes("Prosto")) {
+      if (config.izolaciaNavysenie !== "premium" && config.izolaciaNavysenie !== "ultra") chybajuce.push("Izolácia Premium alebo Ultra");
+      if (!config.tepelneCerpadlo) chybajuce.push("Tepelné čerpadlo");
+      if (!config.rekuperacia) chybajuce.push("Rekuperácia");
+      if (!config.projektA0) chybajuce.push("Projekt A0");
+      if (!config.zaklady || config.zaklady === "bez") chybajuce.push("Základy");
+    }
+
+    return chybajuce;
+  };
+
   const maA0 = maVsetkyA0Prvky();
+  const chybajuceA0 = getChybajuceA0Prvky();
   const aktCena = aktualnaKonfiguracia?.celkovaCena || cenaDoma || 100000;
   const vyskaUveru = Math.round(aktCena * (100 - vlastnyVklad) / 100);
 
@@ -104,9 +134,22 @@ export default function HypotekaKalkulator({
                   <p className="text-xs font-semibold text-red-900 mb-1">
                     ❌ Hypotéka NEDOSTUPNÁ
                   </p>
-                  <p className="text-xs text-red-800">
+                  <p className="text-xs text-red-800 mb-2">
                     Aktuálna konfigurácia nemá všetky prvky pre A0 certifikát potrebný na hypotéku.
                   </p>
+                  {chybajuceA0.length > 0 && (
+                    <div className="mt-2">
+                      <p className="text-xs font-semibold text-red-900 mb-1">Chýbajúce prvky:</p>
+                      <ul className="space-y-1">
+                        {chybajuceA0.map((prvok, index) => (
+                          <li key={index} className="text-xs text-red-800 flex items-start gap-1">
+                            <span className="text-red-600">•</span>
+                            {prvok}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
               {onNastavA0Prvky && (
