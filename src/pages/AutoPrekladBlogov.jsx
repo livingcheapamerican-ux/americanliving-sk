@@ -14,6 +14,11 @@ export default function AutoPrekladBlogov() {
         const response = await base44.functions.invoke('bulkTranslateBlogPosts', {});
         setResults(response.data.results);
         setStatus("success");
+        
+        // Po 3 sekundách presmeruj na Blog
+        setTimeout(() => {
+          window.location.href = '/Blog';
+        }, 3000);
       } catch (error) {
         console.error("Chyba:", error);
         setStatus("error");

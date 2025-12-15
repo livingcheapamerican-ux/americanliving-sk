@@ -219,7 +219,7 @@ export default function Domov() {
       )}
 
       {/* Hero Section */}
-      <section className="relative h-[55vh] sm:h-[75vh] min-h-[320px] sm:min-h-[450px] overflow-hidden">
+      <section className="relative h-[55vh] sm:h-[75vh] min-h-[320px] sm:min-h-[450px] overflow-hidden bg-gradient-to-br from-red-900 via-red-800 to-red-700">
         
         {heroImages.map((img, index) => (
           <div
@@ -285,7 +285,7 @@ export default function Domov() {
       </section>
 
       {/* Fixácia úrokov - Nová sekcia */}
-      <section className="py-8 sm:py-12 bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 relative overflow-hidden">
+      <section className="py-8 sm:py-12 bg-gradient-to-br from-red-900 via-red-800 to-red-700 relative overflow-hidden">
         <div className="container mx-auto px-4 sm:px-8">
           <Card className="bg-gradient-to-br from-red-600 via-orange-600 to-red-700 border-4 border-orange-400 p-6 sm:p-10 shadow-2xl hover:shadow-orange-500/40 transition-shadow">
             <div className="flex flex-col md:flex-row gap-6 items-center">
@@ -326,7 +326,7 @@ export default function Domov() {
       </section>
 
       {/* Komplexné služby - S OBRÁZKAMI */}
-      <section className="py-6 sm:py-16 bg-gradient-to-br from-gray-950 via-blue-950 to-gray-900 relative overflow-hidden">
+      <section className="py-6 sm:py-16 bg-gradient-to-br from-red-950 via-red-900 to-red-800 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent"></div>
         <div className="container mx-auto px-2 sm:px-4 relative z-10">
           <motion.div 
@@ -407,7 +407,7 @@ export default function Domov() {
       </section>
 
       {/* Prečo American Living */}
-      <section className="py-6 sm:py-16 bg-gradient-to-br from-blue-50 via-indigo-50 to-white relative overflow-hidden">
+      <section className="py-6 sm:py-16 bg-gradient-to-br from-red-100 via-red-50 to-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-transparent"></div>
         <div className="container mx-auto px-2 sm:px-4 relative z-10">
           <motion.div 
@@ -502,7 +502,7 @@ export default function Domov() {
 
       {/* Naša ponuka */}
       {domy.length > 0 && (
-        <section className="py-6 sm:py-16 bg-gradient-to-br from-gray-100 via-slate-100 to-gray-50 relative overflow-hidden">
+        <section className="py-6 sm:py-16 bg-gradient-to-br from-red-100 via-red-50 to-white relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-100/30 via-transparent to-transparent"></div>
           <div className="container mx-auto px-2 sm:px-4 relative z-10">
             <motion.div 
@@ -611,7 +611,7 @@ export default function Domov() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-6 sm:py-16 bg-gradient-to-br from-gray-950 via-gray-900 to-black relative overflow-hidden">
+      <section className="py-6 sm:py-16 bg-gradient-to-br from-red-950 via-red-900 to-red-800 relative overflow-hidden">
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="container mx-auto px-2 sm:px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">

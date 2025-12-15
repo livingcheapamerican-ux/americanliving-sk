@@ -414,7 +414,7 @@ export default function Katalog() {
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden max-w-full">
       {/* Header */}
-      <section className="bg-red-900 py-3 sm:py-12">
+      <section className="bg-gradient-to-br from-red-900 via-red-800 to-red-700 py-3 sm:py-12">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
