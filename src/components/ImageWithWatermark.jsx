@@ -106,11 +106,10 @@ export default function ImageWithWatermark({ src, alt, className, onLoad, useCat
         <div 
           className={`absolute ${positionClasses[position]} ${sizeClasses[size]} font-bold text-white pointer-events-none select-none z-20`}
           style={{ 
-            opacity: Math.max(opacity, 0.5),
-            textShadow: '2px 2px 8px rgba(0,0,0,0.9), 0 0 10px rgba(0,0,0,0.8)',
+            opacity: opacity,
+            textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
             userSelect: 'none',
-            WebkitUserSelect: 'none',
-            letterSpacing: '0.1em'
+            WebkitUserSelect: 'none'
           }}
         >
           {text}
