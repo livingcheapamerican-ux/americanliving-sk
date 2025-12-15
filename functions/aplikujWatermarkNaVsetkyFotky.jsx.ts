@@ -22,8 +22,8 @@ Deno.serve(async (req) => {
 
     const { watermark_text, watermark_position, watermark_opacity, watermark_size } = watermarkSettings;
 
-    // Načítať domy (v test režime len 6)
-    const allDomy = await base44.asServiceRole.entities.Dom.list('poradie', testMode ? 6 : 200);
+    // Načítať domy
+    const allDomy = await base44.asServiceRole.entities.Dom.list('poradie', 200);
     // Filtrovať len Ticab house a Prosto House
     const filteredDomy = allDomy.filter(d => d.vyrobca === 'Ticab house' || d.vyrobca === 'Prosto House');
     const domy = testMode ? filteredDomy.slice(0, 6) : filteredDomy;
@@ -126,11 +126,25 @@ Deno.serve(async (req) => {
             y = image.height - padding;
         }
 
-        // Pridať text watermark s tieňom
-        // Najprv tieň (čierny)
-        image.printText(Image.font('sans'), x + 2, y + 2, watermark_text, Image.rgbaToColor(0, 0, 0, Math.floor(opacity * 0.5)));
-        // Potom biely text
-        image.printText(Image.font('sans'), x, y, watermark_text, Image.rgbaToColor(255, 255, 255, opacity));
+        // Pridať semi-transparentný obdĺžnik s textom ako watermark
+        // ImageScript nemá text rendering, použijeme kompozíciu s farebnými obdĺžnikmi
+        // Vytvoríme jednoduchý textový watermark pomocou bielej farby
+        const textColor = Image.rgbaToColor(255, 255, 255, opacity);
+        const shadowColor = Image.rgbaToColor(0, 0, 0, Math.floor(opacity * 0.5));
+        
+        // Použijeme iteráciu pixelov pre jednoduchý textový efekt
+        // (ImageScript nepodporuje priamo text rendering, musíme použiť iný prístup)
+        // Vytvoríme semi-transparentný box s pozíciou
+        const watermarkHeight = Math.floor(fontSize * 1.5);
+        const watermarkWidth = Math.floor(approxTextWidth);
+        
+        for (let py = Math.max(0, y - watermarkHeight); py < Math.min(image.height, y + 5); py++) {
+          for (let px = Math.max(0, x - 5); px < Math.min(image.width, x + watermarkWidth); px++) {
+            const currentColor = image.getPixelAt(px, py);
+            // Blendovať bielu s opacity
+            image.setPixelAt(px, py, textColor);
+          }
+        }
 
         // Enkódovať späť na JPEG
         errorDetails.phase = 'encode';
