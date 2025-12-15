@@ -37,23 +37,49 @@ Deno.serve(async (req) => {
     log.push('');
 
     // Funkcia na aplikovanie watermarku na jeden obrázok
-    async function applyWatermark(imageUrl) {
+    async function applyWatermark(imageUrl, context = '') {
+      const errorDetails = {
+        url: imageUrl,
+        context,
+        phase: '',
+        error: ''
+      };
+
       try {
         // Stiahnuť obrázok
-        const imageResponse = await fetch(imageUrl);
+        errorDetails.phase = 'fetch';
+        const imageResponse = await fetch(imageUrl, { signal: AbortSignal.timeout(30000) });
+        
         if (!imageResponse.ok) {
-          return { success: false, error: `HTTP ${imageResponse.status}` };
+          errorDetails.error = `HTTP ${imageResponse.status} ${imageResponse.statusText}`;
+          return { success: false, ...errorDetails };
         }
 
+        const contentType = imageResponse.headers.get('content-type');
+        if (!contentType?.startsWith('image/')) {
+          errorDetails.error = `Invalid content-type: ${contentType}`;
+          return { success: false, ...errorDetails };
+        }
+
+        errorDetails.phase = 'download';
         const imageBlob = await imageResponse.blob();
         const imageBuffer = await imageBlob.arrayBuffer();
 
         if (imageBuffer.byteLength === 0) {
-          return { success: false, error: 'Empty image' };
+          errorDetails.error = 'Empty image file';
+          return { success: false, ...errorDetails };
+        }
+
+        if (imageBuffer.byteLength > 50 * 1024 * 1024) {
+          errorDetails.error = `File too large: ${(imageBuffer.byteLength / 1024 / 1024).toFixed(1)}MB`;
+          return { success: false, ...errorDetails };
         }
 
         // Canvas processing
+        errorDetails.phase = 'bitmap';
         const imageBitmap = await createImageBitmap(new Blob([imageBuffer]));
+        
+        errorDetails.phase = 'canvas';
         const canvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);
         const ctx = canvas.getContext('2d');
 
@@ -110,9 +136,11 @@ Deno.serve(async (req) => {
         ctx.fillText(watermark_text, x, y);
 
         // Konvertovať na blob
+        errorDetails.phase = 'convert';
         const blob = await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.95 });
 
         // Upload
+        errorDetails.phase = 'upload';
         const fileName = `watermarked_${Date.now()}_${imageUrl.split('/').pop() || 'image.jpg'}`;
         const file = new File([blob], fileName, { type: 'image/jpeg' });
 
@@ -120,7 +148,8 @@ Deno.serve(async (req) => {
 
         return { success: true, newImageUrl: uploadResult.file_url, originalUrl: imageUrl };
       } catch (error) {
-        return { success: false, error: error.message };
+        errorDetails.error = `${error.name}: ${error.message}`;
+        return { success: false, ...errorDetails };
       }
     }
 
@@ -134,15 +163,17 @@ Deno.serve(async (req) => {
 
         // Hlavný obrázok
         if (dom.hlavny_obrazok && typeof dom.hlavny_obrazok === 'string' && dom.hlavny_obrazok.trim() && !dom.hlavny_obrazok.includes('watermarked_')) {
-          log.push(`  🖼️ hlavny_obrazok...`);
-          const result = await applyWatermark(dom.hlavny_obrazok);
+          const result = await applyWatermark(dom.hlavny_obrazok, `Dom: ${dom.nazov} | Hlavný obrázok`);
           if (result.success) {
             updates.hlavny_obrazok = result.newImageUrl;
             migrated++;
             log.push(`  ✅ hlavny_obrazok: úspešne`);
           } else {
             errors++;
-            log.push(`  ❌ hlavny_obrazok: ${result.error}`);
+            log.push(`  ❌ hlavny_obrazok CHYBA:`);
+            log.push(`     URL: ${result.url?.substring(0, 80)}...`);
+            log.push(`     Fáza: ${result.phase}`);
+            log.push(`     Chyba: ${result.error}`);
           }
         } else if (dom.hlavny_obrazok?.includes('watermarked_')) {
           skipped++;
@@ -151,15 +182,17 @@ Deno.serve(async (req) => {
 
         // Základná konfigurácia
         if (dom.zakladna_konfiguracia_obrazok && typeof dom.zakladna_konfiguracia_obrazok === 'string' && dom.zakladna_konfiguracia_obrazok.trim() && !dom.zakladna_konfiguracia_obrazok.includes('watermarked_')) {
-          log.push(`  🖼️ zakladna_konfiguracia_obrazok...`);
-          const result = await applyWatermark(dom.zakladna_konfiguracia_obrazok);
+          const result = await applyWatermark(dom.zakladna_konfiguracia_obrazok, `Dom: ${dom.nazov} | Základná konfigurácia`);
           if (result.success) {
             updates.zakladna_konfiguracia_obrazok = result.newImageUrl;
             migrated++;
             log.push(`  ✅ zakladna_konfiguracia_obrazok: úspešne`);
           } else {
             errors++;
-            log.push(`  ❌ zakladna_konfiguracia_obrazok: ${result.error}`);
+            log.push(`  ❌ zakladna_konfiguracia_obrazok CHYBA:`);
+            log.push(`     URL: ${result.url?.substring(0, 80)}...`);
+            log.push(`     Fáza: ${result.phase}`);
+            log.push(`     Chyba: ${result.error}`);
           }
         } else if (dom.zakladna_konfiguracia_obrazok?.includes('watermarked_')) {
           skipped++;
@@ -172,7 +205,7 @@ Deno.serve(async (req) => {
           for (let i = 0; i < dom.galeria.length; i++) {
             const imageUrl = dom.galeria[i];
             if (imageUrl && typeof imageUrl === 'string' && imageUrl.trim() && !imageUrl.includes('watermarked_')) {
-              const result = await applyWatermark(imageUrl);
+              const result = await applyWatermark(imageUrl, `Dom: ${dom.nazov} | Galéria[${i}]`);
               if (result.success) {
                 newGaleria.push(result.newImageUrl);
                 migrated++;
@@ -180,7 +213,7 @@ Deno.serve(async (req) => {
               } else {
                 newGaleria.push(imageUrl);
                 errors++;
-                log.push(`  ❌ galeria[${i}]: ${result.error}`);
+                log.push(`  ❌ galeria[${i}] CHYBA: ${result.phase} - ${result.error}`);
               }
             } else {
               newGaleria.push(imageUrl);
@@ -202,7 +235,7 @@ Deno.serve(async (req) => {
               for (let i = 0; i < galeria.fotky.length; i++) {
                 const imageUrl = galeria.fotky[i];
                 if (imageUrl && typeof imageUrl === 'string' && imageUrl.trim() && !imageUrl.includes('watermarked_')) {
-                  const result = await applyWatermark(imageUrl);
+                  const result = await applyWatermark(imageUrl, `Dom: ${dom.nazov} | ${galeria.nazov}[${i}]`);
                   if (result.success) {
                     newFotky.push(result.newImageUrl);
                     migrated++;
@@ -210,7 +243,7 @@ Deno.serve(async (req) => {
                   } else {
                     newFotky.push(imageUrl);
                     errors++;
-                    log.push(`  ❌ galerie[${galeria.nazov}][${i}]: ${result.error}`);
+                    log.push(`  ❌ galerie[${galeria.nazov}][${i}] CHYBA: ${result.phase} - ${result.error}`);
                   }
                 } else {
                   newFotky.push(imageUrl);
