@@ -57,7 +57,32 @@ Deno.serve(async (req) => {
             max_podlaznost: { type: "string", description: "Maximálna podlažnosť stavby" },
             max_vyska: { type: "string", description: "Maximálna výška stavby v metroch" },
             min_odstup_od_hranice: { type: "string", description: "Minimálny odstup od hranice pozemku" },
-            koeficient_zastavanosti: { type: "string", description: "Koeficient zastavanosti (ak je uvedený)" }
+            koeficient_zastavanosti: { type: "string", description: "Koeficient zastavanosti (ak je uvedený)" },
+            detailne_odstupy: {
+              type: "object",
+              description: "Detailné odstupy pre rôzne zóny",
+              properties: {
+                obytna_zona: { type: "string" },
+                rekracna_zona: { type: "string" },
+                priemyselna_zona: { type: "string" },
+                od_susedneho_domu: { type: "string" },
+                od_verejnej_komunikacie: { type: "string" }
+              }
+            },
+            povolene_materialy: {
+              type: "array",
+              items: { type: "string" },
+              description: "Zoznam povolených stavebných materiálov a fasád podľa územného plánu"
+            },
+            zakazane_materialy: {
+              type: "array",
+              items: { type: "string" },
+              description: "Zoznam zakázaných materiálov alebo typov stavieb"
+            },
+            typ_zonovanie: {
+              type: "string",
+              description: "Detailný typ zónovania (napr. 'IBV - rodinné domy nízkej zástavby', 'rekreačné územie', 'zmiešané obytné')"
+            }
           }
         },
         inzinierske_siete: {
@@ -82,21 +107,29 @@ Deno.serve(async (req) => {
               type: "object",
               properties: {
                 vhodne: { type: "boolean" },
-                dovod: { type: "string" }
+                dovod: { type: "string" },
+                legislativne_poznamky: { type: "string", description: "Legislatívne obmedzenia pre mobilné domy" }
               }
             },
             rodinny_dom: {
               type: "object",
               properties: {
                 vhodne: { type: "boolean" },
-                dovod: { type: "string" }
+                dovod: { type: "string" },
+                vyzaduje_a0: { type: "boolean", description: "Či pozemok/zóna vyžaduje A0 certifikát" }
               }
             },
             odporucana_velkost_domu: { type: "string", description: "Odporúčaná veľkosť domu v m²" },
-            odporucane_modely: {
+            max_zastavanost_m2: { type: "string", description: "Maximálna zastavaná plocha v m² (vypočítaná z výmery a koeficientu)" },
+            vhodne_typy_konstrukcii: {
               type: "array",
               items: { type: "string" },
-              description: "Konkrétne modely domov z databázy, ktoré by boli vhodné"
+              description: "Povolené typy konštrukcií (modulárny, montovaný, murovaný)"
+            },
+            vhodne_fasady: {
+              type: "array",
+              items: { type: "string" },
+              description: "Povolené typy fasád podľa regulácií (omietka, drevo, kombinované)"
             }
           }
         },
@@ -111,20 +144,47 @@ Deno.serve(async (req) => {
     const analyza = await base44.integrations.Core.InvokeLLM({
       prompt: `Analyzuj tento dokument týkajúci sa pozemku alebo stavebného povolenia.
 
-Extrahuj všetky kľúčové informácie vrátane:
-- Rozmerov a výmery pozemku
-- Regulácií a obmedzení (výškové limity, odstupy od hraníc, koeficienty zastavanosti)
+Extrahuj VŠETKY kľúčové informácie vrátane:
+- Rozmerov a výmery pozemku (celková výmera, šírka, dĺžka, tvar)
+- Detailných regulácií a obmedzení:
+  * Výškové limity stavby
+  * Odstupy od hraníc pre rôzne typy zón (obytná, rekreačná, priemyselná)
+  * Odstupy od susedných domov
+  * Odstupy od verejných komunikácií
+  * Koeficienty zastavanosti
 - Podmienok pre stavebné povolenie
-- Funkčného využitia územia
-- Dostupných inžinierskych sietí
-- Ochranných pásiem
+- Funkčného využitia územia a detailného zónovania
+- Dostupných inžinierskych sietí (elektrina, voda, plyn, kanalizácia)
+- Ochranných pásiem (príroda, voda, elektrické vedenia)
+- **POVOLENÝCH A ZAKÁZANÝCH stavebných materiálov a typov fasád**
+- **DETAILNÝCH požiadaviek na vzhľad stavby** (farby, materiály, architektonický štýl)
 
-Na základe analýzy posuď:
-- Či je pozemok vhodný pre mobilný dom (rekreačnú stavbu)
-- Či je pozemok vhodný pre rodinný dom (trvalé bývanie)
-- Akú veľkosť domu by bolo možné na tomto pozemku postaviť
+DÔLEŽITÉ - Vypočítaj:
+- Maximálnu zastavanosť v m² (výmera × koeficient zastavanosti)
+- Odporúčanú veľkosť domu vzhľadom na regulácie
 
-Poskytni presné a konkrétne informácie. Ak niektorá informácia nie je v dokumente uvedená, použi hodnotu "Neuvedené".`,
+Na základe analýzy DETAILNE posuď:
+1. **MOBILNÝ DOM (rekreačná stavba):**
+   - Legislatívne povolenie v danej zóne
+   - Upozornenia na obmedzenia
+   
+2. **RODINNÝ DOM (trvalé bývanie):**
+   - Legislatívne povolenie
+   - Či je vyžadovaný A0 energetický certifikát
+   
+3. **VHODNÉ TYPY KONŠTRUKCIÍ:**
+   - Modulárne domy (Ticab house)
+   - Montované domy (Prosto House)
+   - Murované/kombinácie
+   
+4. **VHODNÉ TYPY FASÁD:**
+   - Omietka/šúchaná fasáda
+   - Drevený obklad
+   - Kombinácie
+   - Farby a štýly podľa regulácií
+
+Poskytni PRESNÉ a KONKRÉTNE informácie s číslami a podrobnosťami.
+Ak niektorá informácia nie je v dokumente uvedená, použi hodnotu "Neuvedené".`,
       file_urls: [file_url],
       response_json_schema: schema
     });

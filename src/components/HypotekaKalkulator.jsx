@@ -7,19 +7,65 @@ import { Button } from "@/components/ui/button";
 import { Calculator, TrendingUp, Calendar, Percent, Euro, Info } from "lucide-react";
 import { useLanguage } from "./LanguageContext";
 
-export default function HypotekaKalkulator({ cenaDoma, onPriceUpdate }) {
+export default function HypotekaKalkulator({ cenaDoma, dom, onPriceUpdate }) {
   const { t } = useLanguage();
   const [vyskaUveru, setVyskaUveru] = useState(cenaDoma || 100000);
   const [dobaSplatnosti, setDobaSplatnosti] = useState(25);
   const [urokovaSadzba, setUrokovaSadzba] = useState(3.5);
   const [vlastnyVklad, setVlastnyVklad] = useState(20);
 
-  useEffect(() => {
-    if (cenaDoma) {
-      const vklad = (cenaDoma * vlastnyVklad) / 100;
-      setVyskaUveru(Math.round(cenaDoma - vklad));
+  // Vypočítať realistickú cenu domu na kľúč s A0 a základmi
+  const vypocitatRealistickuCenu = () => {
+    if (!dom) return cenaDoma || 100000;
+
+    let celkovaCena = dom.zakladna_cena || 0;
+    const vyrobca = dom.vyrobca || "";
+    const CENY = dom.konfigurator_ceny || {};
+
+    // Ticab house - upgrade na rodinný dom + A0
+    if (vyrobca.includes("Ticab")) {
+      // Základy (betónová platňa alebo pásy)
+      celkovaCena += CENY.zaklady_pasove || 11825;
+      
+      // A0 povinné položky
+      celkovaCena += CENY.izolacia_stien_250mm || 8000;
+      celkovaCena += CENY.izolacia_podlahy_200mm || 3000;
+      celkovaCena += CENY.izolacia_stropu_200mm || 4000;
+      celkovaCena += CENY.tepelne_cerpadlo || 7000;
+      celkovaCena += CENY.rekuperacia || 4000;
+      celkovaCena += CENY.pripravaNaSolarnePanely || 1000;
+      celkovaCena += CENY.bleskozvod || 856;
+      celkovaCena += CENY.prepat || 311;
+      celkovaCena += CENY.inziniering || 2774;
+      celkovaCena += CENY.projektACertifikacia || 3745;
+      celkovaCena += CENY.revizia || 1605;
+      celkovaCena += CENY.montaz || 4806;
+      celkovaCena += CENY.doprava || 8928;
+    } 
+    // Prosto House - pridať základy, montáž, A0 už included
+    else if (vyrobca.includes("Prosto")) {
+      celkovaCena += 8000; // Základy pásy
+      celkovaCena += 13000; // Montáž
+      celkovaCena += 10000; // Prípojky
+      celkovaCena += 2000; // Dokumentácia
+      celkovaCena += 5000; // Legislatíva
     }
-  }, [cenaDoma, vlastnyVklad]);
+    // JAK Modules, Domki - pridať všetko
+    else {
+      celkovaCena += 28000; // Základy, montáž, doprava
+      celkovaCena += 18000; // A0 upgrade
+      celkovaCena += 6000; // Legislatíva
+    }
+
+    return Math.round(celkovaCena);
+  };
+
+  const realistickaCena = vypocitatRealistickuCenu();
+
+  useEffect(() => {
+    const vklad = (realistickaCena * vlastnyVklad) / 100;
+    setVyskaUveru(Math.round(realistickaCena - vklad));
+  }, [realistickaCena, vlastnyVklad]);
 
   // Výpočet mesačnej splátky pomocou anuitného vzorca
   const vypocitatMesacnuSplatku = () => {
@@ -54,15 +100,52 @@ export default function HypotekaKalkulator({ cenaDoma, onPriceUpdate }) {
       <div className="space-y-6">
         {/* Cena domu */}
         {cenaDoma && (
-          <div className="p-4 bg-blue-100 rounded-lg">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Euro className="w-5 h-5 text-blue-700" />
-                <span className="font-semibold text-blue-900">Cena domu:</span>
+          <div className="space-y-2">
+            <div className="p-3 bg-gray-100 rounded-lg">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Základná cena:</span>
+                <span className="text-lg font-bold text-gray-800">
+                  {cenaDoma.toLocaleString('sk-SK')} €
+                </span>
               </div>
-              <span className="text-xl font-bold text-blue-700">
-                {cenaDoma.toLocaleString('sk-SK')} €
-              </span>
+            </div>
+            <div className="p-4 bg-blue-100 rounded-lg border-2 border-blue-300">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Euro className="w-5 h-5 text-blue-700" />
+                  <span className="font-semibold text-blue-900">Realistická cena na kľúč:</span>
+                </div>
+                <span className="text-xl font-bold text-blue-700">
+                  {realistickaCena.toLocaleString('sk-SK')} €
+                </span>
+              </div>
+              <div className="text-xs text-blue-800 space-y-0.5">
+                {dom?.vyrobca?.includes("Ticab") && (
+                  <>
+                    <p>• Vrátane základov (betón. pásy)</p>
+                    <p>• A0 upgrade (izolácia, TČ, rekuperácia)</p>
+                    <p>• Montáž, doprava, legislatíva</p>
+                  </>
+                )}
+                {dom?.vyrobca?.includes("Prosto") && (
+                  <>
+                    <p>• Základná = len konštrukcia</p>
+                    <p>• + Základy, montáž, prípojky</p>
+                    <p>• A0 už included v konštrukcii</p>
+                  </>
+                )}
+                {!dom?.vyrobca?.includes("Ticab") && !dom?.vyrobca?.includes("Prosto") && (
+                  <>
+                    <p>• Základy, montáž, doprava</p>
+                    <p>• A0 upgrade pre hypotéku</p>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="p-2 bg-yellow-50 rounded border border-yellow-200">
+              <p className="text-xs text-yellow-800">
+                ⚠️ Pre hypotéku je potrebný <strong>rodinný dom s A0 certifikátom</strong>. Rekreačné stavby a mobilné domy nedostanú hypotéku.
+              </p>
             </div>
           </div>
         )}
