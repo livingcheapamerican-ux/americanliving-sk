@@ -761,6 +761,10 @@ const translations = {
     priceFromLabel: "Cena od",
     roomsLabel: "izby",
     
+    // Mortgage fixation banner
+    mortgageFixationTitle: "Skončila vám fixácia úrokov a splátka za predražený murovaný dom alebo byt vás doslova dusí?",
+    mortgageFixationDesc: "Zverte celú situáciu do našich rúk. Postaráme sa o predaj vašej pôvodnej nehnuteľnosti, postavíme vám nový dom a naši kolegovia pre vás vybavia nový úver s nižšou splátkou. Vymeňte starosti za nové bývanie a plaťte mesačne menej.",
+    
     // About page
     aboutUs: "O nás",
     distributorAndBuilder: "Distribútor a realizátor stavby modulárnych a montovaných domov",
@@ -1137,6 +1141,10 @@ const translations = {
     basicConfigPrice: "Grundkonfigurationspreis",
     priceFromLabel: "Preis ab",
     roomsLabel: "Zimmer",
+    
+    // Mortgage fixation banner
+    mortgageFixationTitle: "Ist Ihre Zinsbindung abgelaufen und die Rate für ein überteuertes Ziegelhaus oder eine Wohnung erstickt Sie buchstäblich?",
+    mortgageFixationDesc: "Überlassen Sie die gesamte Situation uns. Wir kümmern uns um den Verkauf Ihrer bisherigen Immobilie, bauen Ihnen ein neues Haus und unsere Kollegen arrangieren Ihnen einen neuen Kredit mit niedrigerer Rate. Tauschen Sie Sorgen gegen neues Wohnen und zahlen Sie monatlich weniger.",
     
     // About page
     aboutUs: "Über uns",
@@ -2131,6 +2139,10 @@ const translations = {
     priceFromLabel: "Prix à partir de",
     roomsLabel: "pièces",
     
+    // Mortgage fixation banner
+    mortgageFixationTitle: "Votre taux fixe est-il terminé et la mensualité pour une maison en brique ou un appartement surévalué vous étouffe littéralement?",
+    mortgageFixationDesc: "Confiez toute la situation entre nos mains. Nous nous occuperons de la vente de votre bien immobilier précédent, construirons votre nouvelle maison et nos collègues vous arrangeront un nouveau prêt avec une mensualité inférieure. Échangez les soucis contre un nouveau logement et payez moins chaque mois.",
+    
     // About page
     aboutUs: "À propos de nous",
     distributorAndBuilder: "Distributeur et constructeur de maisons modulaires et préfabriquées",
@@ -3065,6 +3077,10 @@ const translations = {
     basicConfigPrice: "Цена основне конфигурације",
     priceFromLabel: "Цена од",
     roomsLabel: "собе",
+    
+    // Mortgage fixation banner
+    mortgageFixationTitle: "Да ли вам је завршила фиксација камата а рата за предраг зидани дом или стан вас дословно гуши?",
+    mortgageFixationDesc: "Поверите целу ситуацију у наше руке. Побринућемо се за продају ваше претходне непокретности, изградићемо вам нову кућу и наше колеге ће вам средити нови кредит са нижом ратом. Замените бриге за ново становање и плаћајте месечно мање.",
     
     // About page
     aboutUs: "О нама",
@@ -4076,6 +4092,10 @@ const translations = {
     priceFromLabel: "Cijena od",
     roomsLabel: "sobe",
     
+    // Mortgage fixation banner
+    mortgageFixationTitle: "Je li vam završila fiksacija kamata a rata za preskupu zidanu kuću ili stan vas doslovno guši?",
+    mortgageFixationDesc: "Povjerite cijelu situaciju u naše ruke. Pobrinut ćemo se za prodaju vaše prethodne nekretnine, izgradit ćemo vam novu kuću i naše kolege će vam srediti novi kredit s nižom ratom. Zamijenite brige za novo stanovanje i plaćajte mjesečno manje.",
+    
     // About page
     aboutUs: "O nama",
     distributorAndBuilder: "Distributer i izvođač modularnih i montažnih kuća",
@@ -5064,6 +5084,10 @@ const translations = {
     basicConfigPrice: "Τιμή βασικής διαμόρφωσης",
     priceFromLabel: "Τιμή από",
     roomsLabel: "δωμάτια",
+    
+    // Mortgage fixation banner
+    mortgageFixationTitle: "Έχει τελειώσει η σταθερή σας περίοδος επιτοκίου και η δόση για ένα υπερτιμημένο τούβλινο σπίτι ή διαμέρισμα σας πνίγει κυριολεκτικά;",
+    mortgageFixationDesc: "Αφήστε ολόκληρη την κατάσταση στα χέρια μας. Θα φροντίσουμε για την πώληση της προηγούμενης ιδιοκτησίας σας, θα χτίσουμε το νέο σας σπίτι και οι συνάδελφοί μας θα κανονίσουν ένα νέο δάνειο με χαμηλότερη δόση. Αντικαταστήστε τις ανησυχίες με νέα στέγαση και πληρώστε λιγότερα μηνιαίως.",
     
     // About page
     aboutUs: "Σχετικά με εμάς",
@@ -6613,6 +6637,10 @@ const translations = {
     priceFromLabel: "Price from",
     roomsLabel: "rooms",
     
+    // Mortgage fixation banner
+    mortgageFixationTitle: "Has your interest rate fixation ended and the installment for an overpriced brick house or apartment is literally suffocating you?",
+    mortgageFixationDesc: "Leave the entire situation in our hands. We will take care of selling your previous property, build you a new house and our colleagues will arrange a new loan with a lower installment for you. Exchange worries for new housing and pay less monthly.",
+    
     // About page
     aboutUs: "About us",
     distributorAndBuilder: "Distributor and builder of modular and prefab houses",
@@ -7508,6 +7536,10 @@ const translations = {
     priceFromLabel: "Ártól",
     roomsLabel: "szoba",
     
+    // Mortgage fixation banner
+    mortgageFixationTitle: "Lejárt a kamatperiódusod és a túlárazott téglaházért vagy lakásért fizetett részlet szó szerint fojtogat?",
+    mortgageFixationDesc: "Bízza ránk az egész helyzetet. Gondoskodunk korábbi ingatlanának eladásáról, építünk egy új házat, és kollégáink intéznek egy új hitelt alacsonyabb törlesztővel. Cserélje a gondokat új lakhatásra és fizessen havonta kevesebbet.",
+    
     // About page
     aboutUs: "Rólunk",
     distributorAndBuilder: "Moduláris és előregyártott házak forgalmazója és építője",
@@ -8363,6 +8395,10 @@ const translations = {
     basicConfigPrice: "Cena podstawowej konfiguracji",
     priceFromLabel: "Cena od",
     roomsLabel: "pokoje",
+    
+    // Mortgage fixation banner
+    mortgageFixationTitle: "Skończyła Ci się fiksacja oprocentowania a rata za przewartościowany dom murowany lub mieszkanie dosłownie Cię dusi?",
+    mortgageFixationDesc: "Zostaw całą sytuację w naszych rękach. Zajmiemy się sprzedażą Twojej poprzedniej nieruchomości, zbudujemy Ci nowy dom, a nasi koledzy załatwią nowy kredyt z niższą ratą. Zamień zmartwienia na nowe mieszkanie i płać mniej miesięcznie.",
     
     // About page
     aboutUs: "O nas",
@@ -9260,6 +9296,10 @@ const translations = {
     basicConfigPrice: "Ціна базової конфігурації",
     priceFromLabel: "Ціна від",
     roomsLabel: "кімнати",
+    
+    // Mortgage fixation banner
+    mortgageFixationTitle: "Закінчилася ваша фіксація відсотків, а платіж за переоцінений цегляний будинок або квартиру вас буквально душить?",
+    mortgageFixationDesc: "Довірте всю ситуацію в наші руки. Ми подбаємо про продаж вашої попередньої нерухомості, побудуємо вам новий будинок, і наші колеги оформлять новий кредит з нижчим платежем. Обміняйте турботи на нове житло і платіть менше щомісяця.",
     
     // About page
     aboutUs: "Про нас",
