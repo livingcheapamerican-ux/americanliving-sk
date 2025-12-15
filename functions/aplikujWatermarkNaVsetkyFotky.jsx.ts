@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
         // Aplikovať watermark na základnú konfiguráciu
         if (dom.zakladna_konfiguracia_obrazok && typeof dom.zakladna_konfiguracia_obrazok === 'string' && dom.zakladna_konfiguracia_obrazok.trim() && !dom.zakladna_konfiguracia_obrazok.includes('watermarked_')) {
           try {
-            log.push(`  🖼️ zakladna_konfiguracia_obrazok: aplikujem watermark...`);
+            log.push(`  🖼️ zakladna_konfiguracia_obrazok: ${dom.zakladna_konfiguracia_obrazok}`);
             const response = await base44.functions.invoke('aplikujWatermarkNaFotku', {
               imageUrl: dom.zakladna_konfiguracia_obrazok,
               watermarkText: watermark_text,
@@ -100,11 +100,16 @@ Deno.serve(async (req) => {
               log.push(`  ✅ zakladna_konfiguracia_obrazok: úspešne aplikovaný watermark`);
             } else {
               errors++;
-              log.push(`  ❌ zakladna_konfiguracia_obrazok: chyba - ${response?.data?.error || 'unknown'}`);
+              log.push(`  ❌ zakladna_konfiguracia_obrazok FAILED:`);
+              if (response?.data?.logs) {
+                response.data.logs.forEach(l => log.push(`      ${l}`));
+              } else {
+                log.push(`      ${JSON.stringify(response?.data)}`);
+              }
             }
           } catch (err) {
             errors++;
-            log.push(`  ❌ zakladna_konfiguracia_obrazok: chyba - ${err.message}`);
+            log.push(`  ❌ zakladna_konfiguracia_obrazok: CATCH - ${err.message}`);
           }
         } else if (dom.zakladna_konfiguracia_obrazok && dom.zakladna_konfiguracia_obrazok.includes('watermarked_')) {
           skipped++;
@@ -121,7 +126,6 @@ Deno.serve(async (req) => {
             const imageUrl = dom.galeria[i];
             if (imageUrl && typeof imageUrl === 'string' && imageUrl.trim() && !imageUrl.includes('watermarked_')) {
               try {
-                log.push(`  🖼️ galeria[${i}]: aplikujem watermark...`);
                 const response = await base44.functions.invoke('aplikujWatermarkNaFotku', {
                   imageUrl,
                   watermarkText: watermark_text,
@@ -137,12 +141,15 @@ Deno.serve(async (req) => {
                 } else {
                   newGaleria.push(imageUrl);
                   errors++;
-                  log.push(`  ❌ galeria[${i}]: chyba - ${response?.data?.error || 'unknown'}`);
+                  log.push(`  ❌ galeria[${i}] FAILED:`);
+                  if (response?.data?.logs) {
+                    response.data.logs.forEach(l => log.push(`      ${l}`));
+                  }
                 }
               } catch (err) {
                 newGaleria.push(imageUrl);
                 errors++;
-                log.push(`  ❌ galeria[${i}]: chyba - ${err.message}`);
+                log.push(`  ❌ galeria[${i}]: CATCH - ${err.message}`);
               }
             } else {
               newGaleria.push(imageUrl);
@@ -168,7 +175,6 @@ Deno.serve(async (req) => {
                 const imageUrl = galeria.fotky[i];
                 if (imageUrl && typeof imageUrl === 'string' && imageUrl.trim() && !imageUrl.includes('watermarked_')) {
                   try {
-                    log.push(`  🖼️ galerie[${galeria.nazov}][${i}]: aplikujem watermark...`);
                     const response = await base44.functions.invoke('aplikujWatermarkNaFotku', {
                       imageUrl,
                       watermarkText: watermark_text,
@@ -184,12 +190,15 @@ Deno.serve(async (req) => {
                     } else {
                       newFotky.push(imageUrl);
                       errors++;
-                      log.push(`  ❌ galerie[${galeria.nazov}][${i}]: chyba - ${response?.data?.error || 'unknown'}`);
+                      log.push(`  ❌ galerie[${galeria.nazov}][${i}] FAILED:`);
+                      if (response?.data?.logs) {
+                        response.data.logs.forEach(l => log.push(`      ${l}`));
+                      }
                     }
                   } catch (err) {
                     newFotky.push(imageUrl);
                     errors++;
-                    log.push(`  ❌ galerie[${galeria.nazov}][${i}]: chyba - ${err.message}`);
+                    log.push(`  ❌ galerie[${galeria.nazov}][${i}]: CATCH - ${err.message}`);
                   }
                 } else {
                   newFotky.push(imageUrl);
