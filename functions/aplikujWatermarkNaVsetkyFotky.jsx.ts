@@ -56,7 +56,11 @@ Deno.serve(async (req) => {
         }
 
         const contentType = imageResponse.headers.get('content-type');
-        if (!contentType?.startsWith('image/')) {
+        const isValidContentType = contentType?.startsWith('image/') || 
+                                   contentType === 'application/octet-stream' ||
+                                   !contentType;
+        
+        if (!isValidContentType) {
           errorDetails.error = `Invalid content-type: ${contentType}`;
           return { success: false, ...errorDetails };
         }
