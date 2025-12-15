@@ -126,25 +126,14 @@ Deno.serve(async (req) => {
             y = image.height - padding;
         }
 
-        // Pridať semi-transparentný obdĺžnik s textom ako watermark
-        // ImageScript nemá text rendering, použijeme kompozíciu s farebnými obdĺžnikmi
-        // Vytvoríme jednoduchý textový watermark pomocou bielej farby
+        // Pridať text watermark pomocou Image.renderText
         const textColor = Image.rgbaToColor(255, 255, 255, opacity);
         const shadowColor = Image.rgbaToColor(0, 0, 0, Math.floor(opacity * 0.5));
         
-        // Použijeme iteráciu pixelov pre jednoduchý textový efekt
-        // (ImageScript nepodporuje priamo text rendering, musíme použiť iný prístup)
-        // Vytvoríme semi-transparentný box s pozíciou
-        const watermarkHeight = Math.floor(fontSize * 1.5);
-        const watermarkWidth = Math.floor(approxTextWidth);
-        
-        for (let py = Math.max(0, y - watermarkHeight); py < Math.min(image.height, y + 5); py++) {
-          for (let px = Math.max(0, x - 5); px < Math.min(image.width, x + watermarkWidth); px++) {
-            const currentColor = image.getPixelAt(px, py);
-            // Blendovať bielu s opacity
-            image.setPixelAt(px, py, textColor);
-          }
-        }
+        // Najprv tieň
+        Image.renderText(image, x + 2, y + 2, shadowColor, watermark_text, fontSize);
+        // Potom biely text
+        Image.renderText(image, x, y, textColor, watermark_text, fontSize);
 
         // Enkódovať späť na JPEG
         errorDetails.phase = 'encode';
