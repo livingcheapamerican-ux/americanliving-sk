@@ -7,19 +7,24 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
-  Home, Image, Trash2, Upload, AlertCircle, Loader2, X, Star, StarOff, Eye, Grid3x3, Search
+  Home, Image, Trash2, Upload, AlertCircle, Loader2, X, Star, StarOff, Eye, Grid3x3, Search, Droplet
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import DomGalerieManager from "../components/admin/DomGalerieManager";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 
 export default function AdminSpravaDomov() {
   const [selectedDom, setSelectedDom] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const [uploadingImages, setUploadingImages] = useState(false);
+  const [watermarkPreview, setWatermarkPreview] = useState(null);
+  const [watermarkLoading, setWatermarkLoading] = useState(false);
+  const [watermarkOriginalUrl, setWatermarkOriginalUrl] = useState(null);
+  const [watermarkFieldPath, setWatermarkFieldPath] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -161,6 +166,73 @@ export default function AdminSpravaDomov() {
     }
   };
 
+  const handleWatermarkPreview = async (imageUrl, fieldPath) => {
+    setWatermarkOriginalUrl(imageUrl);
+    setWatermarkFieldPath(fieldPath);
+    setWatermarkLoading(true);
+    
+    try {
+      const response = await base44.functions.invoke('aplikujWatermarkNaFotku', {
+        imageUrl,
+        watermarkText: 'American Living',
+        position: 'bottom-right',
+        opacity: 0.3,
+        size: 'medium'
+      });
+
+      if (response.data.success) {
+        setWatermarkPreview(response.data.newImageUrl);
+      } else {
+        toast.error('Chyba pri generovaní preview: ' + response.data.error);
+      }
+    } catch (error) {
+      toast.error('Chyba: ' + error.message);
+    } finally {
+      setWatermarkLoading(false);
+    }
+  };
+
+  const handleWatermarkConfirm = async () => {
+    if (!watermarkPreview || !watermarkFieldPath) return;
+
+    try {
+      const updateData = {};
+      if (watermarkFieldPath.startsWith('galerie.')) {
+        const parts = watermarkFieldPath.split('.');
+        const galeriaIndex = parseInt(parts[1]);
+        const fotkyIndex = parseInt(parts[3]);
+        
+        const galerie = [...selectedDom.galerie];
+        galerie[galeriaIndex].fotky[fotkyIndex] = watermarkPreview;
+        updateData.galerie = galerie;
+      } else if (watermarkFieldPath === 'galeria') {
+        const galeria = selectedDom.galeria || [];
+        const index = galeria.indexOf(watermarkOriginalUrl);
+        if (index !== -1) {
+          galeria[index] = watermarkPreview;
+          updateData.galeria = galeria;
+        }
+      } else {
+        updateData[watermarkFieldPath] = watermarkPreview;
+      }
+
+      await updateDomMutation.mutateAsync({
+        id: selectedDom.id,
+        data: updateData
+      });
+
+      toast.success('Watermark úspešne aplikovaný!');
+      setWatermarkPreview(null);
+      setWatermarkOriginalUrl(null);
+      setWatermarkFieldPath(null);
+
+      const updatedDom = domy.find(d => d.id === selectedDom.id);
+      if (updatedDom) setSelectedDom(updatedDom);
+    } catch (error) {
+      toast.error('Chyba: ' + error.message);
+    }
+  };
+
   if (userLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 flex items-center justify-center p-4">
@@ -286,6 +358,108 @@ export default function AdminSpravaDomov() {
                   </DialogHeader>
 
                   <div className="space-y-6 mt-4">
+                    {/* Vodoznakové tlačidlá pre Prosto House a Ticabhouse */}
+                    {(selectedDom.vyrobca === "Prosto House" || selectedDom.vyrobca === "Ticab house") && (
+                      <Card className="p-4 bg-blue-50 border-blue-200">
+                        <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                          <Droplet className="w-5 h-5 text-blue-600" />
+                          Vodoznaky - Rýchle akcie
+                        </h3>
+                        <div className="space-y-4">
+                          {/* Hlavný obrázok */}
+                          {selectedDom.hlavny_obrazok && (
+                            <div className="flex items-center gap-3">
+                              <img src={selectedDom.hlavny_obrazok} alt="Hlavný" className="w-20 h-20 object-cover rounded" />
+                              <div className="flex-1">
+                                <p className="text-sm font-medium text-gray-700">Hlavný obrázok</p>
+                              </div>
+                              <Button
+                                size="sm"
+                                onClick={() => handleWatermarkPreview(selectedDom.hlavny_obrazok, 'hlavny_obrazok')}
+                                className="bg-blue-600 hover:bg-blue-700"
+                              >
+                                <Droplet className="w-4 h-4 mr-1" />
+                                Watermark
+                              </Button>
+                            </div>
+                          )}
+                          
+                          {/* Základná konfigurácia */}
+                          {selectedDom.zakladna_konfiguracia_obrazok && (
+                            <div className="flex items-center gap-3">
+                              <img src={selectedDom.zakladna_konfiguracia_obrazok} alt="Základná" className="w-20 h-20 object-cover rounded" />
+                              <div className="flex-1">
+                                <p className="text-sm font-medium text-gray-700">Základná konfigurácia</p>
+                              </div>
+                              <Button
+                                size="sm"
+                                onClick={() => handleWatermarkPreview(selectedDom.zakladna_konfiguracia_obrazok, 'zakladna_konfiguracia_obrazok')}
+                                className="bg-blue-600 hover:bg-blue-700"
+                              >
+                                <Droplet className="w-4 h-4 mr-1" />
+                                Watermark
+                              </Button>
+                            </div>
+                          )}
+
+                          {/* Galéria (array) */}
+                          {selectedDom.galeria && selectedDom.galeria.length > 0 && (
+                            <div>
+                              <p className="text-sm font-semibold text-gray-700 mb-2">Galéria ({selectedDom.galeria.length})</p>
+                              <div className="space-y-2 max-h-60 overflow-y-auto">
+                                {selectedDom.galeria.map((url, index) => (
+                                  <div key={index} className="flex items-center gap-3 bg-white p-2 rounded">
+                                    <img src={url} alt={`Galéria ${index + 1}`} className="w-16 h-16 object-cover rounded" />
+                                    <div className="flex-1">
+                                      <p className="text-xs text-gray-600">Fotka {index + 1}</p>
+                                    </div>
+                                    <Button
+                                      size="sm"
+                                      onClick={() => handleWatermarkPreview(url, 'galeria')}
+                                      className="bg-blue-600 hover:bg-blue-700 text-xs"
+                                    >
+                                      <Droplet className="w-3 h-3 mr-1" />
+                                      Watermark
+                                    </Button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Galerie (object array) */}
+                          {selectedDom.galerie && selectedDom.galerie.length > 0 && (
+                            <div>
+                              <p className="text-sm font-semibold text-gray-700 mb-2">Galerie ({selectedDom.galerie.length})</p>
+                              {selectedDom.galerie.map((gal, galIndex) => (
+                                <div key={galIndex} className="mb-3">
+                                  <p className="text-xs font-medium text-gray-600 mb-1">{gal.nazov}</p>
+                                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                                    {gal.fotky && gal.fotky.map((url, fotoIndex) => (
+                                      <div key={fotoIndex} className="flex items-center gap-3 bg-white p-2 rounded">
+                                        <img src={url} alt={`${gal.nazov} ${fotoIndex + 1}`} className="w-16 h-16 object-cover rounded" />
+                                        <div className="flex-1">
+                                          <p className="text-xs text-gray-600">Fotka {fotoIndex + 1}</p>
+                                        </div>
+                                        <Button
+                                          size="sm"
+                                          onClick={() => handleWatermarkPreview(url, `galerie.${galIndex}.fotky.${fotoIndex}`)}
+                                          className="bg-blue-600 hover:bg-blue-700 text-xs"
+                                        >
+                                          <Droplet className="w-3 h-3 mr-1" />
+                                          Watermark
+                                        </Button>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </Card>
+                    )}
+
                     {/* Galérie Manager */}
                     <DomGalerieManager 
                       dom={selectedDom} 
@@ -406,6 +580,80 @@ export default function AdminSpravaDomov() {
                     alt="Náhľad" 
                     className="w-full h-full object-contain rounded-lg"
                   />
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Watermark Preview Modal */}
+          <AnimatePresence>
+            {(watermarkPreview || watermarkLoading) && (
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                exit={{ opacity: 0 }} 
+                className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+              >
+                <motion.div 
+                  initial={{ scale: 0.9, opacity: 0 }} 
+                  animate={{ scale: 1, opacity: 1 }} 
+                  exit={{ scale: 0.9, opacity: 0 }} 
+                  className="relative max-w-4xl w-full bg-white rounded-lg p-6"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                      <Droplet className="w-6 h-6 text-blue-600" />
+                      Preview watermarku
+                    </h3>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => {
+                        setWatermarkPreview(null);
+                        setWatermarkOriginalUrl(null);
+                        setWatermarkFieldPath(null);
+                      }}
+                    >
+                      <X className="w-5 h-5" />
+                    </Button>
+                  </div>
+
+                  {watermarkLoading ? (
+                    <div className="flex flex-col items-center justify-center py-20">
+                      <Loader2 className="w-12 h-12 animate-spin text-blue-600 mb-4" />
+                      <p className="text-gray-600">Generujem preview watermarku...</p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="mb-6 max-h-[60vh] overflow-auto bg-gray-100 rounded-lg p-4">
+                        <img 
+                          src={watermarkPreview} 
+                          alt="Preview s watermarkom" 
+                          className="w-full h-auto object-contain"
+                        />
+                      </div>
+                      <div className="flex gap-3 justify-end">
+                        <Button 
+                          variant="outline" 
+                          onClick={() => {
+                            setWatermarkPreview(null);
+                            setWatermarkOriginalUrl(null);
+                            setWatermarkFieldPath(null);
+                          }}
+                        >
+                          Zrušiť
+                        </Button>
+                        <Button 
+                          onClick={handleWatermarkConfirm}
+                          className="bg-blue-600 hover:bg-blue-700"
+                        >
+                          <Droplet className="w-4 h-4 mr-2" />
+                          Potvrdiť a aplikovať
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </motion.div>
               </motion.div>
             )}
