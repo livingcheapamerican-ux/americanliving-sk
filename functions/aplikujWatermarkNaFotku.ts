@@ -15,10 +15,31 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required parameters' }, { status: 400 });
     }
 
+    // Validovať URL
+    try {
+      new URL(imageUrl);
+    } catch (e) {
+      return Response.json({ 
+        success: false, 
+        error: `Invalid image URL: ${imageUrl}` 
+      }, { status: 400 });
+    }
+
     // Stiahnuť pôvodný obrázok
-    const imageResponse = await fetch(imageUrl);
-    if (!imageResponse.ok) {
-      return Response.json({ error: 'Failed to fetch image' }, { status: 400 });
+    let imageResponse;
+    try {
+      imageResponse = await fetch(imageUrl);
+      if (!imageResponse.ok) {
+        return Response.json({ 
+          success: false,
+          error: `Failed to fetch image (${imageResponse.status}): ${imageUrl}` 
+        }, { status: 400 });
+      }
+    } catch (fetchError) {
+      return Response.json({ 
+        success: false,
+        error: `Network error fetching image: ${fetchError.message}` 
+      }, { status: 400 });
     }
 
     const imageBlob = await imageResponse.blob();

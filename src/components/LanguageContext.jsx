@@ -2368,6 +2368,8 @@ const translations = {
     financialServices: "Services financiers - prêts/assurances",
     financialServicesDesc: "Nos meilleurs experts financiers s'occuperont de vous et vous aideront non seulement à financer votre logement, mais vous tendront également la main dans les moments financiers difficiles.",
     terrace: "Terrasse",
+    transportAndAssembly: "Transport et assemblage",
+    houseConfiguredAsRecreational: "Maison configurée comme bâtiment de loisirs",
     
     // DetailDomu specific
     twoD: "2D",
@@ -3301,6 +3303,8 @@ const translations = {
     financialServices: "Финансијске услуге - кредити/осигурање",
     financialServicesDesc: "Наши најбољи финансијски стручњаци ће се посветити вама и помоћи вам не само у финансирању вашег становања, већ ће вам пружити руку и у тешким финансијским тренуцима.",
     terrace: "Тераса",
+    transportAndAssembly: "Транспорт и монтажа",
+    houseConfiguredAsRecreational: "Кућа конфигурисана као рекреативна зграда",
     
     // DetailDomu specific
     twoD: "2D",
@@ -7786,6 +7790,8 @@ const translations = {
     financialServices: "Usługi finansowe - kredyty/ubezpieczenia",
     financialServicesDesc: "Nasi najlepsi specjaliści finansowi poświęcą Ci uwagę i pomogą nie tylko w finansowaniu Twojego mieszkania, ale podadzą Ci pomocną dłoń również w trudnych momentach finansowych.",
     terrace: "Taras",
+    transportAndAssembly: "Transport i montaż",
+    houseConfiguredAsRecreational: "Dom skonfigurowany jako budynek rekreacyjny",
     
     // DetailDomu specific
     twoD: "2D",
@@ -8638,6 +8644,8 @@ const translations = {
     financialServices: "Фінансові послуги - кредити/страхування",
     financialServicesDesc: "Наші найкращі фінансові фахівці приділять вам увагу і допоможуть не лише з фінансуванням вашого житла, але й подадуть допоміжну руку у важкі фінансові моменти.",
     terrace: "Тераса",
+    transportAndAssembly: "Транспорт та монтаж",
+    houseConfiguredAsRecreational: "Будинок налаштований як рекреаційна будівля",
     
     // DetailDomu specific
     twoD: "2D",

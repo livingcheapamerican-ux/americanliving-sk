@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
         const updates = {};
 
         // Aplikovať watermark na hlavný obrázok
-        if (dom.hlavny_obrazok && !dom.hlavny_obrazok.includes('watermarked_')) {
+        if (dom.hlavny_obrazok && typeof dom.hlavny_obrazok === 'string' && dom.hlavny_obrazok.trim() && !dom.hlavny_obrazok.includes('watermarked_')) {
           try {
             log.push(`  🖼️ hlavny_obrazok: aplikujem watermark...`);
             const response = await base44.asServiceRole.functions.invoke('aplikujWatermarkNaFotku', {
@@ -68,13 +68,16 @@ Deno.serve(async (req) => {
             errors++;
             log.push(`  ❌ hlavny_obrazok: chyba - ${err.message}`);
           }
-        } else if (dom.hlavny_obrazok) {
+        } else if (dom.hlavny_obrazok && dom.hlavny_obrazok.includes('watermarked_')) {
           skipped++;
           log.push(`  ⏭️ hlavny_obrazok: už má watermark`);
+        } else if (!dom.hlavny_obrazok || !dom.hlavny_obrazok.trim()) {
+          skipped++;
+          log.push(`  ⏭️ hlavny_obrazok: neplatný alebo prázdny URL`);
         }
 
         // Aplikovať watermark na základnú konfiguráciu
-        if (dom.zakladna_konfiguracia_obrazok && !dom.zakladna_konfiguracia_obrazok.includes('watermarked_')) {
+        if (dom.zakladna_konfiguracia_obrazok && typeof dom.zakladna_konfiguracia_obrazok === 'string' && dom.zakladna_konfiguracia_obrazok.trim() && !dom.zakladna_konfiguracia_obrazok.includes('watermarked_')) {
           try {
             log.push(`  🖼️ zakladna_konfiguracia_obrazok: aplikujem watermark...`);
             const response = await base44.asServiceRole.functions.invoke('aplikujWatermarkNaFotku', {
@@ -97,9 +100,12 @@ Deno.serve(async (req) => {
             errors++;
             log.push(`  ❌ zakladna_konfiguracia_obrazok: chyba - ${err.message}`);
           }
-        } else if (dom.zakladna_konfiguracia_obrazok) {
+        } else if (dom.zakladna_konfiguracia_obrazok && dom.zakladna_konfiguracia_obrazok.includes('watermarked_')) {
           skipped++;
           log.push(`  ⏭️ zakladna_konfiguracia_obrazok: už má watermark`);
+        } else if (!dom.zakladna_konfiguracia_obrazok || !dom.zakladna_konfiguracia_obrazok.trim()) {
+          skipped++;
+          log.push(`  ⏭️ zakladna_konfiguracia_obrazok: neplatný alebo prázdny URL`);
         }
 
         // Aplikovať watermark na galériu
@@ -107,7 +113,7 @@ Deno.serve(async (req) => {
           const newGaleria = [];
           for (let i = 0; i < dom.galeria.length; i++) {
             const imageUrl = dom.galeria[i];
-            if (imageUrl && !imageUrl.includes('watermarked_')) {
+            if (imageUrl && typeof imageUrl === 'string' && imageUrl.trim() && !imageUrl.includes('watermarked_')) {
               try {
                 log.push(`  🖼️ galeria[${i}]: aplikujem watermark...`);
                 const response = await base44.asServiceRole.functions.invoke('aplikujWatermarkNaFotku', {
@@ -154,7 +160,7 @@ Deno.serve(async (req) => {
               const newFotky = [];
               for (let i = 0; i < galeria.fotky.length; i++) {
                 const imageUrl = galeria.fotky[i];
-                if (imageUrl && !imageUrl.includes('watermarked_')) {
+                if (imageUrl && typeof imageUrl === 'string' && imageUrl.trim() && !imageUrl.includes('watermarked_')) {
                   try {
                     log.push(`  🖼️ galerie[${galeria.nazov}][${i}]: aplikujem watermark...`);
                     const response = await base44.asServiceRole.functions.invoke('aplikujWatermarkNaFotku', {
