@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
       logs.push(`URL: ${img.url.substring(0, 70)}...`);
       
       try {
-        const result = await base44.asServiceRole.functions.invoke('watermarkSharp', {
+        const result = await base44.asServiceRole.functions.invoke('watermarkCanvas', {
           imageUrl: img.url,
           watermarkText: watermark_text,
           position: watermark_position,
