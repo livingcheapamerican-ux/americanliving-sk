@@ -21,8 +21,9 @@ Deno.serve(async (req) => {
 
     const { watermark_text, watermark_position, watermark_opacity, watermark_size } = watermarkSettings;
 
-    // Načítať všetky domy
-    const domy = await base44.asServiceRole.entities.Dom.list();
+    // Načítať domy (v test režime len 6)
+    const allDomy = await base44.asServiceRole.entities.Dom.list('poradie', testMode ? 6 : 200);
+    const domy = testMode ? allDomy.slice(0, 6) : allDomy;
 
     const log = [];
     let processed = 0;

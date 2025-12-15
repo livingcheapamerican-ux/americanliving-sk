@@ -101,13 +101,14 @@ export default function AdminWatermark() {
 
   const burnWatermarkMutation = useMutation({
     mutationFn: async (testMode) => {
+      setBatchLog(['🚀 Spúšťam proces...', '']);
       const response = await base44.functions.invoke('aplikujWatermarkNaVsetkyFotky', { testMode });
       return response.data;
     },
     onSuccess: (data) => {
       setBatchLog(data.log || []);
       if (data.testMode) {
-        toast.info('Test dokončený - pozri log nižšie');
+        toast.info(`Test dokončený - skontrolovaných ${data.results?.processed || 0} domov (6 ukážkových)`);
       } else {
         toast.success(`Hotovo! Watermark aplikovaný na ${data.results?.migrated || 0} fotiek`);
         queryClient.invalidateQueries({ queryKey: ['domy-katalog'] });
@@ -116,6 +117,7 @@ export default function AdminWatermark() {
     },
     onError: (error) => {
       toast.error(`Chyba: ${error.message}`);
+      setBatchLog(prev => [...prev, '', `❌ CHYBA: ${error.message}`]);
       setBatchRunning(false);
     }
   });
@@ -401,7 +403,7 @@ export default function AdminWatermark() {
               variant="outline"
               className="flex-1"
             >
-              {batchRunning ? 'Spúšťam...' : 'Test režim (bez uloženia)'}
+              {batchRunning ? 'Testujem...' : 'Test na 6 obrázkoch (bez uloženia)'}
             </Button>
             
             <Button
