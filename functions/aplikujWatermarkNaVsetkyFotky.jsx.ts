@@ -47,7 +47,9 @@ Deno.serve(async (req) => {
         // Aplikovať watermark na hlavný obrázok
         if (dom.hlavny_obrazok && typeof dom.hlavny_obrazok === 'string' && dom.hlavny_obrazok.trim() && !dom.hlavny_obrazok.includes('watermarked_')) {
           try {
-            log.push(`  🖼️ hlavny_obrazok: aplikujem watermark...`);
+            log.push(`  🖼️ hlavny_obrazok: ${dom.hlavny_obrazok}`);
+            log.push(`  📤 Posielam: watermarkText="${watermark_text}", position="${watermark_position}", opacity=${watermark_opacity}, size="${watermark_size}"`);
+            
             const response = await base44.functions.invoke('aplikujWatermarkNaFotku', {
               imageUrl: dom.hlavny_obrazok,
               watermarkText: watermark_text,
@@ -56,17 +58,20 @@ Deno.serve(async (req) => {
               size: watermark_size
             });
 
+            log.push(`  📥 Response status: ${response?.status}, success: ${response?.data?.success}`);
+            
             if (response?.data?.success && response.data.newImageUrl) {
               updates.hlavny_obrazok = response.data.newImageUrl;
               migrated++;
               log.push(`  ✅ hlavny_obrazok: úspešne aplikovaný watermark`);
             } else {
               errors++;
-              log.push(`  ❌ hlavny_obrazok: chyba - ${response?.data?.error || 'unknown'}`);
+              log.push(`  ❌ hlavny_obrazok: ${JSON.stringify(response?.data || response)}`);
             }
           } catch (err) {
             errors++;
-            log.push(`  ❌ hlavny_obrazok: chyba - ${err.message}`);
+            log.push(`  ❌ hlavny_obrazok: CATCH ERROR - ${err.message}`);
+            log.push(`  🔍 Error stack: ${err.stack?.substring(0, 200)}`);
           }
         } else if (dom.hlavny_obrazok && dom.hlavny_obrazok.includes('watermarked_')) {
           skipped++;
