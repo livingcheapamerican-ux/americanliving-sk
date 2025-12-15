@@ -416,55 +416,56 @@ export default function Katalog() {
       {/* Header */}
       <section className="bg-gradient-to-br from-red-900 via-red-800 to-red-700 py-3 sm:py-12">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="max-w-5xl">
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 items-start lg:items-center">
+            {/* Ľavá časť - Hlavný nadpis a popis */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex-1">
+              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-4 text-white">
+                {t('houseCatalog')}
+              </h1>
+              <p className="text-sm sm:text-lg text-white font-medium">
+                {t('modularAndMobileHouses')}
+              </p>
+            </motion.div>
 
-            {/* Fixácia úrokov banner */}
-            <Card className="bg-gradient-to-br from-orange-600 via-red-600 to-orange-700 border-2 sm:border-4 border-yellow-400 p-3 sm:p-6 shadow-2xl mb-3 sm:mb-6">
-              <div className="flex flex-col sm:flex-row gap-4 items-center text-center sm:text-left">
+            {/* Pravá časť - Fixácia úrokov banner */}
+            <Card className="w-full lg:w-96 lg:flex-shrink-0 bg-gradient-to-br from-orange-600 via-red-600 to-orange-700 border-2 border-yellow-400 p-3 sm:p-4 shadow-2xl">
+              <div className="flex gap-3 items-center">
                 <motion.div
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="flex-shrink-0 hidden sm:block"
+                  className="flex-shrink-0"
                 >
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-4 border-white/40">
-                    <Euro className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
+                  <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/40">
+                    <Euro className="w-6 h-6 text-white" />
                   </div>
                 </motion.div>
-                <div className="flex-1">
-                  <h2 className="text-sm sm:text-2xl md:text-3xl font-black text-white mb-2 leading-tight drop-shadow-lg">
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-xs sm:text-sm font-black text-white mb-1 leading-tight">
                     {t('mortgageFixationTitle')}
                   </h2>
-                  <p className="text-xs sm:text-base text-white/95 leading-relaxed font-medium drop-shadow-md">
+                  <p className="text-[10px] sm:text-xs text-white/95 leading-snug mb-2">
                     {t('mortgageFixationDesc')}
                   </p>
-                  <div className="mt-3 flex flex-col sm:flex-row gap-2 justify-center sm:justify-start">
+                  <div className="flex gap-1.5">
                     <Link to={createPageUrl("Kontakt")}>
-                      <Button size="sm" className="bg-white text-red-700 hover:bg-yellow-100 font-bold text-xs sm:text-base px-4 py-2 sm:px-6 sm:py-3 shadow-xl w-full sm:w-auto">
+                      <Button size="sm" className="bg-white text-red-700 hover:bg-yellow-100 font-bold text-[10px] px-2 py-1 h-auto">
                         {t('contactUs')}
-                        <ArrowRight className="ml-1 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4" />
                       </Button>
                     </Link>
                     <a href="tel:+421905138124">
-                      <Button size="sm" variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-red-700 font-bold text-xs sm:text-base px-4 py-2 sm:px-6 sm:py-3 shadow-xl w-full sm:w-auto">
-                        <Phone className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
-                        +421 905 138 124
+                      <Button size="sm" variant="outline" className="bg-transparent border border-white text-white hover:bg-white hover:text-red-700 font-bold text-[10px] px-2 py-1 h-auto">
+                        <Phone className="mr-1 w-3 h-3" />
+                        Volať
                       </Button>
                     </a>
                   </div>
                 </div>
               </div>
             </Card>
-
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-4 text-white">
-              {t('houseCatalog')}
-            </h1>
-            <p className="text-sm sm:text-lg text-white font-medium">
-              {t('modularAndMobileHouses')}
-            </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
