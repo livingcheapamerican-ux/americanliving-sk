@@ -55,8 +55,28 @@ export default function ImageWithWatermark({ src, alt, className, onLoad, useCat
     <div 
       className="relative w-full h-full flex items-center justify-center select-none" 
       onContextMenu={(e) => e.preventDefault()}
-      style={{ userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
+      onDragStart={(e) => e.preventDefault()}
+      onMouseDown={(e) => {
+        if (e.button === 2) e.preventDefault();
+      }}
+      style={{ 
+        userSelect: 'none', 
+        WebkitUserSelect: 'none', 
+        WebkitTouchCallout: 'none',
+        WebkitUserDrag: 'none',
+        userDrag: 'none'
+      }}
     >
+      {/* Invisible overlay to prevent inspection */}
+      <div 
+        className="absolute inset-0 z-10 pointer-events-none"
+        style={{
+          background: 'transparent',
+          userSelect: 'none',
+          WebkitUserSelect: 'none'
+        }}
+      />
+      
       {!loaded && !error && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
       )}
@@ -70,17 +90,27 @@ export default function ImageWithWatermark({ src, alt, className, onLoad, useCat
         decoding="async"
         draggable={false}
         onContextMenu={(e) => e.preventDefault()}
-        style={{ userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
+        onDragStart={(e) => e.preventDefault()}
+        onMouseDown={(e) => e.preventDefault()}
+        style={{ 
+          userSelect: 'none', 
+          WebkitUserSelect: 'none', 
+          WebkitTouchCallout: 'none',
+          WebkitUserDrag: 'none',
+          userDrag: 'none',
+          pointerEvents: 'none'
+        }}
         {...props} 
       />
       {enabled && loaded && (
         <div 
-          className={`absolute ${positionClasses[position]} ${sizeClasses[size]} font-bold text-white pointer-events-none select-none`}
+          className={`absolute ${positionClasses[position]} ${sizeClasses[size]} font-bold text-white pointer-events-none select-none z-20`}
           style={{ 
-            opacity: opacity,
-            textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+            opacity: Math.max(opacity, 0.5),
+            textShadow: '2px 2px 8px rgba(0,0,0,0.9), 0 0 10px rgba(0,0,0,0.8)',
             userSelect: 'none',
-            WebkitUserSelect: 'none'
+            WebkitUserSelect: 'none',
+            letterSpacing: '0.1em'
           }}
         >
           {text}
