@@ -126,14 +126,21 @@ Deno.serve(async (req) => {
             y = image.height - padding;
         }
 
-        // Pridať text watermark pomocou Image.renderText
-        const textColor = Image.rgbaToColor(255, 255, 255, opacity);
-        const shadowColor = Image.rgbaToColor(0, 0, 0, Math.floor(opacity * 0.5));
+        // ImageScript nemá vstavený text rendering, použijeme semi-transparentný box
+        // Frontend watermark sa bude renderovať cez CSS overlay
+        const boxColor = Image.rgbaToColor(255, 255, 255, opacity);
+        const boxHeight = Math.floor(fontSize * 1.2);
+        const boxWidth = Math.floor(approxTextWidth * 1.1);
         
-        // Najprv tieň
-        Image.renderText(image, x + 2, y + 2, shadowColor, watermark_text, fontSize);
-        // Potom biely text
-        Image.renderText(image, x, y, textColor, watermark_text, fontSize);
+        // Nakresliť semi-transparentný box na pozíciu watermarku
+        for (let py = Math.max(0, Math.floor(y - boxHeight)); py < Math.min(image.height, Math.floor(y + 5)); py++) {
+          for (let px = Math.max(0, Math.floor(x)); px < Math.min(image.width, Math.floor(x + boxWidth)); px++) {
+            const currentPixel = image.getPixelAt(px, py);
+            // Blend s bielou farbou
+            const blended = Image.rgbaToColor(255, 255, 255, opacity);
+            image.setPixelAt(px, py, blended);
+          }
+        }
 
         // Enkódovať späť na JPEG
         errorDetails.phase = 'encode';
