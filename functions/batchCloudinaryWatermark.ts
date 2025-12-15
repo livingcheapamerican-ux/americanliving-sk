@@ -56,11 +56,15 @@ Deno.serve(async (req) => {
             log.push(`  ✅ hlavny_obrazok`);
           } else {
             errors++;
-            log.push(`  ❌ hlavny_obrazok: ${result.data?.error}`);
+            log.push(`  ❌ hlavny_obrazok: ${result.data?.error || JSON.stringify(result.data)}`);
+            if (result.data?.cloudinaryResponse) {
+              log.push(`     Cloudinary response: ${JSON.stringify(result.data.cloudinaryResponse)}`);
+            }
           }
         } catch (err) {
           errors++;
           log.push(`  ❌ hlavny_obrazok: ${err.message}`);
+          log.push(`     Full error: ${JSON.stringify(err)}`);
         }
       } else if (dom.hlavny_obrazok?.includes('cloudinary.com')) {
         skipped++;
