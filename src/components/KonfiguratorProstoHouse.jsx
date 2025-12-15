@@ -198,7 +198,7 @@ export default function KonfiguratorProstoHouse({
     montaz: { nie: 0, ano: 9225 },
     predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 }, // Added ultra option
+    izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 },
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
@@ -272,7 +272,7 @@ export default function KonfiguratorProstoHouse({
     if (!projektA0) return null;
     
     const chybajuce = [];
-    if (izolaciaNavysenie !== "premium" && izolaciaNavysenie !== "ultra") chybajuce.push(t("a0RecInsulation")); // Updated A0 recommendation logic
+    if (izolaciaNavysenie !== "premium" && izolaciaNavysenie !== "ultra") chybajuce.push(t("a0RecInsulation"));
     if (!tepelneCerpadlo) chybajuce.push(t("a0RecHeatPump"));
     if (!rekuperacia) chybajuce.push(t("a0RecRecuperation"));
     
@@ -357,6 +357,9 @@ export default function KonfiguratorProstoHouse({
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
       interieroveDvere, inziniering, projektA0, revizna, doprava, language, BASE_PRICE, t]);
 
+  const [panelWidth, setPanelWidth] = useState(null);
+  const [showContactModal, setShowContactModal] = useState(false);
+
   // Poslať konfiguráciu do rodičovského komponentu
   useEffect(() => {
     if (onConfigChange) {
@@ -370,49 +373,7 @@ export default function KonfiguratorProstoHouse({
         zaklady
       });
     }
-  }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady, onConfigChange]); 
-  dom,
-  onReset,
-  onConfigChange,
-  dynamicTexts = null,
-  predajNehnutelnosti, setPredajNehnutelnosti,
-  hladaniePozemku, setHladaniePozemku,
-  financneSluzby, setFinancneSluzby,
-  montazHolodomu, setMontazHolodomu,
-  izolaciaNavysenie, setIzolaciaNavysenie,
-  zaklady, setZaklady,
-  predlzenie, setPredlzenie,
-  vstupneDvere, setVstupneDvere,
-  elektroinstalacia, setElektroinstalacia,
-  vodaKanalizacia, setVodaKanalizacia,
-  sanitaKomplet, setSanitaKomplet,
-  bojler, setBojler,
-  tepelneCerpadlo, setTepelneCerpadlo,
-  rekuperacia, setRekuperacia,
-  pripojkaSiete, setPripojkaSiete,
-  stresneOkno, setStresneOkno,
-  bocneOknoFixne, setBocneOknoFixne,
-  bocneOknoVyklopne90, setBocneOknoVyklopne90,
-  bocneOknoVyklopne55, setBocneOknoVyklopne55,
-  povrchokaOkien, setPovrchokaOkien,
-  tonovaneSkla, setTonovaneSkla,
-  vonkajsiaFasada, setVonkajsiaFasada,
-  interierFinis, setInterierFinis,
-  vnutornePodlahy, setVnutornePodlahy,
-  podlahovVykurovanie, setPodlahovVykurovanie,
-  interieroveDvere, setInterieroveDvere,
-  pergola, setPergola,
-  inziniering, setInziniering,
-  projektA0, setProjektA0,
-  revizna, setRevizna,
-  doprava, setDoprava,
-  showOnlySummary = false,
-  showOnlyPhase = null,
-  typStavby = ""
-}) {
-
-  const [panelWidth, setPanelWidth] = useState(null);
-  const [showContactModal, setShowContactModal] = useState(false);
+  }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady, onConfigChange]);
 
   useEffect(() => {
     const updateWidth = () => {
