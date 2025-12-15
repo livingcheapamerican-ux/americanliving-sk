@@ -433,6 +433,7 @@ const translations = {
     itemIncludedInBase: "Táto položka je súčasťou základnej konfigurácie domu",
     totalPriceWithVAT: "Celková cena s DPH",
     yourConfig: "Vaša konfigurácia",
+    purposeOfBuilding: "ÚČEL STAVBY",
     heating: "VYKUROVANIE",
     facadeSection: "FASÁDA",
     roofSection: "STRECHA",
