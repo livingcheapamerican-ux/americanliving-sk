@@ -65,6 +65,7 @@ export default function AdminSpravaDomov() {
   });
 
   const isSuperAdmin = user?.super_admin === true;
+  const isAdmin = user?.role === 'admin' || isSuperAdmin;
 
   const filteredDomy = useMemo(() => {
     return domy.filter(dom =>
@@ -244,7 +245,7 @@ export default function AdminSpravaDomov() {
     );
   }
 
-  if (!isSuperAdmin) {
+  if (!isAdmin) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 flex items-center justify-center p-4">
         <Card className="p-12 text-center max-w-md shadow-xl">
@@ -252,7 +253,7 @@ export default function AdminSpravaDomov() {
             <AlertCircle className="w-8 h-8 text-red-600" />
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Prístup zamietnutý</h2>
-          <p className="text-gray-600">Táto stránka je dostupná len pre super administrátorov.</p>
+          <p className="text-gray-600">Táto stránka je dostupná len pre administrátorov.</p>
         </Card>
       </div>
     );
