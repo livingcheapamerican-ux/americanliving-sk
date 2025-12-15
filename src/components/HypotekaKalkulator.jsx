@@ -4,14 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { Calculator, TrendingUp, Calendar, Percent, Euro, Info, Zap, CheckCircle, AlertCircle } from "lucide-react";
+import { Calculator, TrendingUp, Calendar, Percent, Euro, Info, CheckCircle, AlertCircle } from "lucide-react";
 import { useLanguage } from "./LanguageContext";
 
 export default function HypotekaKalkulator({ 
   cenaDoma, 
   dom, 
-  aktualnaKonfiguracia,
-  onNastavA0Prvky 
+  aktualnaKonfiguracia
 }) {
   const { t } = useLanguage();
   const [dobaSplatnosti, setDobaSplatnosti] = useState(25);
@@ -150,18 +149,13 @@ export default function HypotekaKalkulator({
                       </ul>
                     </div>
                   )}
+                  <div className="mt-2 p-2 bg-yellow-50 rounded border border-yellow-300">
+                    <p className="text-xs text-yellow-900 font-medium">
+                      💡 Pre získanie hypotéky je potrebné mať v konfigurácii zvolené všetky uvedené prvky pre A0 certifikát.
+                    </p>
+                  </div>
                 </div>
               </div>
-              {onNastavA0Prvky && (
-                <Button
-                  onClick={onNastavA0Prvky}
-                  size="sm"
-                  className="w-full bg-green-600 hover:bg-green-700 text-white text-xs h-7"
-                >
-                  <Zap className="w-3 h-3 mr-1" />
-                  Voľba prvkov A0 na možnosť hypotéky
-                </Button>
-              )}
             </div>
           ) : (
             <div className="p-2 bg-green-50 rounded-lg border border-green-300">
