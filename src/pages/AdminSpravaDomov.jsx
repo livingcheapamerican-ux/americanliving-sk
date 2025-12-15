@@ -497,6 +497,19 @@ export default function AdminSpravaDomov() {
                                 </Badge>
                               )}
                               <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity rounded flex flex-col items-center justify-center gap-2 p-2">
+                                {(selectedDom.vyrobca === "Prosto House" || selectedDom.vyrobca === "Ticab house") && (
+                                  <Button
+                                    size="sm"
+                                    className="w-full text-xs bg-blue-600 hover:bg-blue-700"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleWatermarkPreview(dok.subor_url, 'ulozisko');
+                                    }}
+                                  >
+                                    <Droplet className="w-3 h-3 mr-1" />
+                                    Watermark
+                                  </Button>
+                                )}
                                 <Button
                                   size="sm"
                                   variant="secondary"
