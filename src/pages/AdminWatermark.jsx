@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { Save, Eye } from "lucide-react";
+import { Save, Eye, Zap, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
 
@@ -67,6 +67,41 @@ export default function AdminWatermark() {
       watermark_opacity: opacity,
       watermark_size: size
     });
+  };
+
+  const [batchRunning, setBatchRunning] = useState(false);
+  const [batchLog, setBatchLog] = useState([]);
+
+  const burnWatermarkMutation = useMutation({
+    mutationFn: async (testMode) => {
+      const response = await base44.functions.invoke('aplikujWatermarkNaVsetkyFotky', { testMode });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setBatchLog(data.log || []);
+      if (data.testMode) {
+        toast.info('Test dokončený - pozri log nižšie');
+      } else {
+        toast.success(`Hotovo! Watermark aplikovaný na ${data.results?.migrated || 0} fotiek`);
+        queryClient.invalidateQueries({ queryKey: ['domy-katalog'] });
+      }
+      setBatchRunning(false);
+    },
+    onError: (error) => {
+      toast.error(`Chyba: ${error.message}`);
+      setBatchRunning(false);
+    }
+  });
+
+  const handleBurnWatermark = (testMode) => {
+    if (!testMode) {
+      if (!confirm('VAROVANIE: Toto vpáli watermark do všetkých obrázkov natrvalo. Pôvodné obrázky budú stále dostupné, ale zmena URL v databáze. Pokračovať?')) {
+        return;
+      }
+    }
+    setBatchRunning(true);
+    setBatchLog([]);
+    burnWatermarkMutation.mutate(testMode);
   };
 
 
@@ -239,6 +274,65 @@ export default function AdminWatermark() {
           </Card>
         </div>
 
+        {/* Batch aplikácia watermarku */}
+        <Card className="p-6 mt-6 border-2 border-orange-300 bg-orange-50">
+          <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-orange-900">
+            <Zap className="w-5 h-5" />
+            Vpáliť watermark do obrázkov
+          </h2>
+          
+          <div className="mb-4 p-4 bg-white rounded-lg border-2 border-orange-200">
+            <div className="flex items-start gap-3 mb-3">
+              <AlertTriangle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold text-orange-900 mb-2">Čo táto funkcia robí?</p>
+                <ul className="text-sm text-gray-700 space-y-1">
+                  <li>• Vytvorí <strong>nové verzie všetkých fotiek</strong> s vypáleným watermarkom</li>
+                  <li>• Aktualizuje odkazy v databáze na nové fotky</li>
+                  <li>• Pôvodné fotky ostanú uložené, ale nebudú viditeľné cez HTML</li>
+                  <li>• Watermark sa stane <strong>neoddeliteľnou súčasťou obrázka</strong></li>
+                </ul>
+              </div>
+            </div>
+            
+            <div className="mt-3 p-3 bg-yellow-50 rounded border border-yellow-200">
+              <p className="text-sm text-yellow-800">
+                <strong>💡 Odporúčanie:</strong> Najprv spustite test režim, skontrolujte logy a až potom spustite ostrú verziu.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <Button
+              onClick={() => handleBurnWatermark(true)}
+              disabled={batchRunning || !enabled && !enabledCatalog}
+              variant="outline"
+              className="flex-1"
+            >
+              {batchRunning ? 'Spúšťam...' : 'Test režim (bez uloženia)'}
+            </Button>
+            
+            <Button
+              onClick={() => handleBurnWatermark(false)}
+              disabled={batchRunning || !enabled && !enabledCatalog}
+              className="flex-1 bg-orange-600 hover:bg-orange-700 text-white"
+            >
+              <Zap className="w-4 h-4 mr-2" />
+              {batchRunning ? 'Spúšťam...' : 'Vpáliť watermark (ostré)'}
+            </Button>
+          </div>
+
+          {batchLog.length > 0 && (
+            <div className="mt-4">
+              <h3 className="font-semibold mb-2">Log:</h3>
+              <div className="bg-gray-900 text-green-400 p-4 rounded font-mono text-xs max-h-96 overflow-y-auto">
+                {batchLog.map((line, i) => (
+                  <div key={i}>{line}</div>
+                ))}
+              </div>
+            </div>
+          )}
+        </Card>
 
       </div>
     </div>
