@@ -142,6 +142,9 @@ export default function DetailDomu() {
   const [lyonMontaz, setLyonMontaz] = useState(false);
   const [lyonDoprava, setLyonDoprava] = useState(false);
 
+  // State pre konfiguráciu Prosto House
+  const [prostoKonfiguracia, setProstoKonfiguracia] = useState(null);
+
   const { data: user } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me().catch(() => null)
@@ -2947,6 +2950,7 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorProstoHouse 
                   dom={dom}
+                  onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -3055,7 +3059,7 @@ export default function DetailDomu() {
                     inziniering: lyonInziniering,
                     projektACertifikacia: lyonProjektACertifikacia,
                     zaklady: lyonZaklady
-                  } : null
+                  } : isProstoHouse ? prostoKonfiguracia : null
                 }
                 onNastavA0Prvky={isTicabhouse ? () => {
                   setLyonIzolaciaStien("250mm");
@@ -3070,6 +3074,12 @@ export default function DetailDomu() {
                   setLyonProjektACertifikacia(true);
                   setLyonZaklady("pasove");
                   setLyonUcel("rodinny");
+                } : isProstoHouse ? () => {
+                  setIzolaciaNavysenie("premium");
+                  setTepelneCerpadlo(true);
+                  setRekuperacia(true);
+                  setProjektA0(true);
+                  setZaklady("pasove");
                 } : null}
               />
             </div>

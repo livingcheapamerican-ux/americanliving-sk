@@ -39,8 +39,14 @@ export default function HypotekaKalkulator({
         (config.zaklady === "pasove" || config.zaklady === "platna")
       );
     } else if (vyrobca.includes("Prosto")) {
-      // Prosto má A0 included, len kontroluj základy
-      return config.zaklady && config.zaklady !== "bez";
+      // Prosto - kontrola A0 prvkov: premium/ultra izolácia + TČ + rekuperácia + projekt A0 + základy
+      return (
+        (config.izolaciaNavysenie === "premium" || config.izolaciaNavysenie === "ultra") &&
+        config.tepelneCerpadlo === true &&
+        config.rekuperacia === true &&
+        config.projektA0 === true &&
+        config.zaklady && config.zaklady !== "bez"
+      );
     }
     return true;
   };
