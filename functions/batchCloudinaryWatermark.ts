@@ -40,67 +40,26 @@ Deno.serve(async (req) => {
     log.push(`⚙️ Mode: ${testMode ? 'TEST (no save)' : 'LIVE (saves to DB)'}`);
     log.push('');
 
-    // Canvas watermark helper function
+    // Apply watermark by calling the working watermark function
     async function applyWatermark(imageUrl, context = '') {
       try {
         if (!imageUrl || imageUrl.includes('watermarked_')) {
           return { success: false, url: imageUrl, skipped: true };
         }
 
-        const imageResponse = await fetch(imageUrl);
-        if (!imageResponse.ok) {
-          return { success: false, url: imageUrl, error: `HTTP ${imageResponse.status}` };
+        const result = await base44.asServiceRole.functions.invoke('aplikujWatermarkNaFotku', {
+          imageUrl,
+          watermarkText: watermark_text,
+          watermarkPosition: watermark_position,
+          watermarkOpacity: watermark_opacity,
+          watermarkSize: watermark_size
+        });
+
+        if (result.data?.success) {
+          return { success: true, newImageUrl: result.data.newImageUrl, originalUrl: imageUrl };
+        } else {
+          return { success: false, url: imageUrl, error: result.data?.error || 'Unknown error' };
         }
-
-        const imageBlob = await imageResponse.blob();
-        const imageBuffer = await imageBlob.arrayBuffer();
-        const imageBitmap = await createImageBitmap(new Blob([imageBuffer]));
-        const canvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(imageBitmap, 0, 0);
-
-        const fontSize = {
-          'small': imageBitmap.height * 0.03,
-          'medium': imageBitmap.height * 0.05,
-          'large': imageBitmap.height * 0.07,
-          'xlarge': imageBitmap.height * 0.09,
-          'xxlarge': imageBitmap.height * 0.12
-        }[watermark_size || 'medium'];
-
-        ctx.font = `bold ${fontSize}px Arial`;
-        ctx.fillStyle = `rgba(255, 255, 255, ${watermark_opacity || 0.3})`;
-        ctx.strokeStyle = `rgba(0, 0, 0, ${(watermark_opacity || 0.3) * 0.5})`;
-        ctx.lineWidth = 2;
-
-        const textMetrics = ctx.measureText(watermark_text);
-        const textWidth = textMetrics.width;
-        const padding = imageBitmap.width * 0.02;
-
-        let x, y;
-        switch (watermark_position || 'bottom-right') {
-          case 'top-left':
-            x = padding; y = padding + fontSize; break;
-          case 'top-right':
-            x = imageBitmap.width - textWidth - padding; y = padding + fontSize; break;
-          case 'bottom-left':
-            x = padding; y = imageBitmap.height - padding; break;
-          case 'bottom-right':
-            x = imageBitmap.width - textWidth - padding; y = imageBitmap.height - padding; break;
-          case 'center':
-            x = (imageBitmap.width - textWidth) / 2; y = (imageBitmap.height + fontSize) / 2; break;
-          default:
-            x = imageBitmap.width - textWidth - padding; y = imageBitmap.height - padding;
-        }
-
-        ctx.strokeText(watermark_text, x, y);
-        ctx.fillText(watermark_text, x, y);
-
-        const blob = await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.95 });
-        const fileName = `watermarked_${Date.now()}_${imageUrl.split('/').pop() || 'image.jpg'}`;
-        const file = new File([blob], fileName, { type: 'image/jpeg' });
-        const uploadResult = await base44.asServiceRole.integrations.Core.UploadFile({ file });
-
-        return { success: true, newImageUrl: uploadResult.file_url, originalUrl: imageUrl };
       } catch (error) {
         return { success: false, url: imageUrl, error: error.message };
       }
