@@ -21,11 +21,14 @@ Deno.serve(async (req) => {
 
     const { watermark_text, watermark_position, watermark_opacity, watermark_size } = watermarkSettings;
 
-    // Načítať domy
+    // Načítať domy - LEN VEREJNÉ
     const allDomy = await base44.asServiceRole.entities.Dom.list('poradie', 200);
-    // Filtrovať len Ticab house a Prosto House
-    const filteredDomy = allDomy.filter(d => d.vyrobca === 'Ticab house' || d.vyrobca === 'Prosto House');
-    const domy = testMode ? filteredDomy.slice(0, 6) : filteredDomy;
+    // Filtrovať len Ticab house a Prosto House A verejné
+    const filteredDomy = allDomy.filter(d => 
+      (d.vyrobca === 'Ticab house' || d.vyrobca === 'Prosto House') && 
+      (d.verejny === true || d.verejny === undefined)
+    );
+    const domy = testMode ? filteredDomy.slice(0, 3) : filteredDomy;
 
     const log = [];
     let processed = 0;
