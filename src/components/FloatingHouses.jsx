@@ -17,7 +17,7 @@ export default function FloatingHouses({ side = "left" }) {
   const domy = useMemo(() => {
     return allDomy
       .filter(d => 
-        (d.verejny === true || d.verejny === undefined) && 
+        d.verejny === true && 
         d.hlavny_obrazok &&
         (d.vyrobca === "Ticab house" || d.vyrobca === "Prosto House")
       );
