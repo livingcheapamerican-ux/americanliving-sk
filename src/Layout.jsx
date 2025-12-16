@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload, ChevronDown, Sparkles, Languages, FileText as BlogIcon } from "lucide-react";
+import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload, ChevronDown, Sparkles, Languages, FileText as BlogIcon, Activity } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { AVAILABLE_LANGUAGES } from "./components/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ import { LanguageProvider, useLanguage } from "./components/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
 import UserTracking from "./components/UserTracking";
 import FloatingHouses from "./components/FloatingHouses";
+const SessionRecorder = React.lazy(() => import("./components/SessionRecorder"));
 
 function LayoutContent({ children }) {
   const location = useLocation();
@@ -175,6 +176,13 @@ function LayoutContent({ children }) {
             </div>
 
           <div className="hidden lg:flex items-center gap-1 xl:gap-2">
+            {isAdmin && (
+              <Link to={createPageUrl("AdminAnalyzaSessions")}>
+                <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Analýza sessions">
+                  <Activity className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                </Button>
+              </Link>
+            )}
             {isSuperAdmin && (
               <>
                 <Link to={createPageUrl("AdminAnalyzaDomov")}>
@@ -393,16 +401,24 @@ function LayoutContent({ children }) {
                   </Link>
                   </>
                   )}
-              {isAdmin && (
-                <>
-                  <Link
-                    to={createPageUrl("AdminDokumenty")}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
-                  >
-                    <FileText className="w-5 h-5" />
-                    Správa dokumentov
-                  </Link>
+                  {isAdmin && (
+                  <>
+                    <Link
+                      to={createPageUrl("AdminAnalyzaSessions")}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    >
+                      <Activity className="w-5 h-5" />
+                      Analýza sessions
+                    </Link>
+                    <Link
+                      to={createPageUrl("AdminDokumenty")}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    >
+                      <FileText className="w-5 h-5" />
+                      Správa dokumentov
+                    </Link>
                   <Link
                     to={createPageUrl("AdminGoogleDrive")}
                     onClick={() => setMobileMenuOpen(false)}
@@ -518,6 +534,9 @@ function LayoutContent({ children }) {
 
       <CookieConsentBanner />
       <UserTracking />
+      <React.Suspense fallback={null}>
+        <SessionRecorder />
+      </React.Suspense>
       <React.Suspense fallback={null}>
         <Chatbot />
       </React.Suspense>

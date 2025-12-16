@@ -44,6 +44,7 @@ import OdporucanieDomov from './pages/OdporucanieDomov';
 import AdminGeneratorCenovychPonuk from './pages/AdminGeneratorCenovychPonuk';
 import AdminAnalytikaCenovychPonuk from './pages/AdminAnalytikaCenovychPonuk';
 import AutoPrekladBlogov from './pages/AutoPrekladBlogov';
+import AdminAnalyzaSessions from './pages/AdminAnalyzaSessions';
 import __Layout from './Layout.jsx';
 
 
@@ -94,6 +95,7 @@ export const PAGES = {
     "AdminGeneratorCenovychPonuk": AdminGeneratorCenovychPonuk,
     "AdminAnalytikaCenovychPonuk": AdminAnalytikaCenovychPonuk,
     "AutoPrekladBlogov": AutoPrekladBlogov,
+    "AdminAnalyzaSessions": AdminAnalyzaSessions,
 }
 
 export const pagesConfig = {
