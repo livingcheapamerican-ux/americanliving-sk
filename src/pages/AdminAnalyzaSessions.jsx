@@ -35,6 +35,7 @@ import {
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
 import AnalyticsDashboard from "../components/analytics/AnalyticsDashboard";
+import HouseAnalyticsDashboard from "../components/analytics/HouseAnalyticsDashboard";
 
 export default function AdminAnalyzaSessions() {
   const [filterEmail, setFilterEmail] = useState("");
@@ -58,6 +59,13 @@ export default function AdminAnalyzaSessions() {
     initialData: [],
     enabled: isAdmin,
     refetchInterval: 30000
+  });
+
+  const { data: domy = [] } = useQuery({
+    queryKey: ['domy-analytics'],
+    queryFn: () => base44.entities.Dom.list(),
+    initialData: [],
+    enabled: isAdmin
   });
 
   if (!isAdmin) {
@@ -128,11 +136,16 @@ export default function AdminAnalyzaSessions() {
           <p className="text-gray-600">Komplexná analytika ako Google Analytics</p>
         </div>
 
-        <Tabs defaultValue="dashboard" className="mb-6">
-          <TabsList className="grid w-full max-w-2xl grid-cols-2">
+        <Tabs defaultValue="houses" className="mb-6">
+          <TabsList className="grid w-full max-w-3xl grid-cols-3">
+            <TabsTrigger value="houses">🏠 Analytika Domov</TabsTrigger>
             <TabsTrigger value="dashboard">📈 Analytics Dashboard</TabsTrigger>
             <TabsTrigger value="sessions">🔍 Detailné Sessions</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="houses">
+            <HouseAnalyticsDashboard sessions={filteredSessions} domy={domy} />
+          </TabsContent>
 
           <TabsContent value="dashboard">
             <AnalyticsDashboard sessions={filteredSessions} />
