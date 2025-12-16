@@ -124,55 +124,7 @@ export default function HypotekaKalkulator({
               </span>
             </div>
           </div>
-          
-          {!maA0 ? (
-            <div className="p-2 bg-red-50 rounded-lg border border-red-300">
-              <div className="flex items-start gap-2 mb-2">
-                <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <p className="text-xs font-semibold text-red-900 mb-1">
-                    ❌ Hypotéka NEDOSTUPNÁ
-                  </p>
-                  <p className="text-xs text-red-800 mb-2">
-                    Aktuálna konfigurácia nemá všetky prvky pre A0 certifikát potrebný na hypotéku.
-                  </p>
-                  {chybajuceA0.length > 0 && (
-                    <div className="mt-2">
-                      <p className="text-xs font-semibold text-red-900 mb-1">Chýbajúce prvky:</p>
-                      <ul className="space-y-1">
-                        {chybajuceA0.map((prvok, index) => (
-                          <li key={index} className="text-xs text-red-800 flex items-start gap-1">
-                            <span className="text-red-600">•</span>
-                            {prvok}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  <div className="mt-2 p-2 bg-yellow-50 rounded border border-yellow-300">
-                    <p className="text-xs text-yellow-900 font-medium">
-                      💡 Pre získanie hypotéky je potrebné mať v konfigurácii zvolené všetky uvedené prvky pre A0 certifikát.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="p-2 bg-green-50 rounded-lg border border-green-300">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-600" />
-                <p className="text-xs font-semibold text-green-900">
-                  ✅ Hypotéka DOSTUPNÁ
-                </p>
-              </div>
-              <p className="text-xs text-green-800 mt-1">
-                Konfigurácia spĺňa požiadavky pre A0 certifikát.
-              </p>
-            </div>
-          )}
-
-          </div>
-        )}
+        </div>
 
         {/* Vlastný vklad */}
         <div>
