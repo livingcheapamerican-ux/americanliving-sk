@@ -13,7 +13,7 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "👋 Ahoj! Som AI asistent. Môžem ti pomôcť s:\n\n✨ Vypĺňaním formulárov\n📚 Otázkami o aplikácii\n🏠 Hľadaním informácií o domoch\n\nČo ťa zaujíma?"
+      content: "👋 Ahoj! Som Kexo, tvoj AI konzultant. Môžem ti pomôcť s:\n\n🏠 Hľadaním vhodných domov\n💰 Výpočtom hypotéky\n📋 Analýzou pozemkov\n✨ Vysvetlením konfigurátorov\n\nČo ťa zaujíma?"
     }
   ]);
   const [input, setInput] = useState("");
@@ -89,7 +89,7 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
               <Sparkles className="w-6 h-6" />
               <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-pulse"></span>
               <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-white text-gray-800 px-4 py-2 rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                AI Asistent
+                Kexo - AI konzultant
               </div>
             </Button>
           </motion.div>
@@ -113,8 +113,8 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
                     <Sparkles className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">AI Asistent</h3>
-                    <p className="text-xs text-white/80">Tu som, aby som pomohol</p>
+                    <h3 className="font-semibold">Kexo</h3>
+                    <p className="text-xs text-white/80">Tvoj AI konzultant</p>
                   </div>
                 </div>
                 <div className="flex gap-1">
