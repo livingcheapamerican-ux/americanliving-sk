@@ -10,78 +10,16 @@ import { useLanguage } from "./LanguageContext";
 export default function HypotekaKalkulator({ 
   cenaDoma, 
   dom, 
-  aktualnaKonfiguracia
+  aktualnaKonfiguracia,
+  celkovaCenaZKonfiguratora
 }) {
   const { t } = useLanguage();
   const [dobaSplatnosti, setDobaSplatnosti] = useState(25);
   const [urokovaSadzba, setUrokovaSadzba] = useState(3.5);
   const [vlastnyVklad, setVlastnyVklad] = useState(20);
 
-  // Kontrola či má konfigurácia všetky A0 prvky
-  const maVsetkyA0Prvky = () => {
-    if (!dom || !aktualnaKonfiguracia) return false;
-    const vyrobca = dom.vyrobca || "";
-    const config = aktualnaKonfiguracia;
-
-    if (vyrobca.includes("Ticab")) {
-      return (
-        config.izolaciaStien === "250mm" &&
-        config.izolaciaPodlahy === "200mm" &&
-        config.izolaciaStropu === "200mm" &&
-        config.tepelneCerpadlo === "ano" &&
-        config.rekuperacia === "ano" &&
-        config.pripravaNaSolarnePanely === true &&
-        config.bleskozvod === true &&
-        config.prepat === true &&
-        config.inziniering === true &&
-        config.projektACertifikacia === true &&
-        (config.zaklady === "pasove" || config.zaklady === "platna")
-      );
-    } else if (vyrobca.includes("Prosto")) {
-      return (
-        (config.izolaciaNavysenie === "premium" || config.izolaciaNavysenie === "ultra") &&
-        config.tepelneCerpadlo === true &&
-        config.rekuperacia === true &&
-        config.projektA0 === true &&
-        config.zaklady && config.zaklady !== "bez"
-      );
-    }
-    return true;
-  };
-
-  // Získať zoznam chýbajúcich A0 prvkov
-  const getChybajuceA0Prvky = () => {
-    if (!dom || !aktualnaKonfiguracia) return [];
-    const vyrobca = dom.vyrobca || "";
-    const config = aktualnaKonfiguracia;
-    const chybajuce = [];
-
-    if (vyrobca.includes("Ticab")) {
-      if (config.izolaciaStien !== "250mm") chybajuce.push("Izolácia stien 250mm");
-      if (config.izolaciaPodlahy !== "200mm") chybajuce.push("Izolácia podlahy 200mm");
-      if (config.izolaciaStropu !== "200mm") chybajuce.push("Izolácia stropu 200mm");
-      if (config.tepelneCerpadlo !== "ano") chybajuce.push("Tepelné čerpadlo");
-      if (config.rekuperacia !== "ano") chybajuce.push("Rekuperácia");
-      if (!config.pripravaNaSolarnePanely) chybajuce.push("Príprava na solárne panely");
-      if (!config.bleskozvod) chybajuce.push("Bleskozvod");
-      if (!config.prepat) chybajuce.push("Prepäťová ochrana");
-      if (!config.inziniering) chybajuce.push("Inžiniering");
-      if (!config.projektACertifikacia) chybajuce.push("Projekt a certifikácia A0");
-      if (config.zaklady !== "pasove" && config.zaklady !== "platna") chybajuce.push("Základy (pásové alebo platňa)");
-    } else if (vyrobca.includes("Prosto")) {
-      if (config.izolaciaNavysenie !== "premium" && config.izolaciaNavysenie !== "ultra") chybajuce.push("Izolácia Premium alebo Ultra");
-      if (!config.tepelneCerpadlo) chybajuce.push("Tepelné čerpadlo");
-      if (!config.rekuperacia) chybajuce.push("Rekuperácia");
-      if (!config.projektA0) chybajuce.push("Projekt A0");
-      if (!config.zaklady || config.zaklady === "bez") chybajuce.push("Základy");
-    }
-
-    return chybajuce;
-  };
-
-  const maA0 = maVsetkyA0Prvky();
-  const chybajuceA0 = getChybajuceA0Prvky();
-  const aktCena = aktualnaKonfiguracia?.celkovaCena || cenaDoma || 100000;
+  // Použiť cenu z konfiguratora ak je dostupná, inak fallback
+  const aktCena = celkovaCenaZKonfiguratora || aktualnaKonfiguracia?.celkovaCena || cenaDoma || 100000;
   const vyskaUveru = Math.round(aktCena * (100 - vlastnyVklad) / 100);
 
   // Výpočet mesačnej splátky pomocou anuitného vzorca
