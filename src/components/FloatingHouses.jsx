@@ -36,11 +36,9 @@ export default function FloatingHouses({ side = "left" }) {
   const animateY2 = isLeft ? 0 : totalHeight;
 
   return (
-    <div className="fixed top-20 bottom-0 w-[200px] z-10 hidden xl:block overflow-hidden"
+    <div className="fixed top-20 bottom-0 w-[200px] z-10 hidden xl:block overflow-hidden pointer-events-none"
       style={{ 
-        [side]: side === 'left' 
-          ? 'max(20px, calc(50% - 960px - 200px))' 
-          : 'max(20px, calc(50% - 960px - 200px))',
+        [side]: 'max(20px, calc(50% - 960px - 200px))',
       }}
     >
       <div className="relative h-full">
