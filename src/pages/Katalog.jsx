@@ -319,10 +319,12 @@ export default function Katalog() {
 
     const newSearch = params.toString();
     const currentSearch = location.search.substring(1);
+    
+    // KRITICKÉ: Len ak sa URL skutočne zmenil, updatni ho
     if (newSearch !== currentSearch) {
       navigate(`${location.pathname}${newSearch ? `?${newSearch}` : ""}`, { replace: true });
     }
-  }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie]);
+  }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie, location.pathname, location.search, navigate]);
 
   const { data: allDomy = [], isLoading, error } = useQuery({
     queryKey: ['domy-katalog'],
