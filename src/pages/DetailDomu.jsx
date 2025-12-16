@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle, Boxes, Grid2x2, Layers, Edit, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw, Hammer, Caravan, Package, Droplets, Landmark } from "lucide-react";
+import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle, Boxes, Grid2x2, Layers, Edit, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw, Hammer, Caravan, Package, Droplets, Landmark, Share2, Facebook } from "lucide-react";
 import { motion } from "framer-motion";
 import PriceCalculator from "../components/PriceCalculator";
 import ImageWithWatermark from "../components/ImageWithWatermark";
@@ -3100,6 +3100,54 @@ export default function DetailDomu() {
                   +421 905 138 124
                 </Button>
               </a>
+
+              {/* Social Share Buttons */}
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-purple-50">
+                <div className="flex items-center gap-2 mb-2">
+                  <Share2 className="w-4 h-4 text-primary" />
+                  <h3 className="text-xs sm:text-sm font-bold text-gray-800">{t('shareHouse') || 'Zdieľať dom'}</h3>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.open(
+                        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`,
+                        'facebook-share',
+                        'width=600,height=400'
+                      );
+                    }}
+                  >
+                    <Button size="sm" className="w-full bg-[#1877F2] hover:bg-[#166FE5] text-white text-xs">
+                      <Facebook className="mr-1 w-3 h-3" />
+                      Facebook
+                    </Button>
+                  </a>
+                  <a
+                    href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(`${dom.nazov} - ${dom.vyrobca} | American Living`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.open(
+                        `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(`${dom.nazov} - ${dom.vyrobca} | American Living`)}`,
+                        'twitter-share',
+                        'width=600,height=400'
+                      );
+                    }}
+                  >
+                    <Button size="sm" className="w-full bg-[#1DA1F2] hover:bg-[#1A8CD8] text-white text-xs">
+                      <svg className="mr-1 w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                      Twitter
+                    </Button>
+                  </a>
+                </div>
+              </Card>
 
             </div>
 
