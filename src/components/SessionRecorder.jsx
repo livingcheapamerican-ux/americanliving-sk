@@ -88,8 +88,12 @@ export default function SessionRecorder() {
     };
   };
 
-  // Initialize session
+  // Initialize session ONCE
+  const initOnceRef = useRef(false);
   useEffect(() => {
+    if (initOnceRef.current) return; // Already initialized
+    initOnceRef.current = true;
+    
     if (!sessionIdRef.current) {
       sessionIdRef.current = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       sessionStartRef.current = new Date().toISOString();
@@ -192,7 +196,7 @@ export default function SessionRecorder() {
         originalSetItem.apply(this, arguments);
       };
     }
-  }, [user]);
+  }, []); // Empty deps - init only once!
 
   // Track page changes
   useEffect(() => {
