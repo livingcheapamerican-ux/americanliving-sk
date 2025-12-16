@@ -3373,19 +3373,21 @@ export default function DetailDomu() {
       {/* Lightbox */}
       {lightboxOpen && (
         <div 
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          className="fixed inset-0 bg-black/95 flex items-center justify-center"
+          style={{ zIndex: 9999 }}
           onClick={closeLightbox}
         >
           {/* Close button */}
           <button 
-            className="absolute top-4 right-4 text-white hover:text-gray-300 z-50 bg-black/50 rounded-full p-2 backdrop-blur-sm"
+            className="absolute top-4 right-4 text-white hover:text-gray-300 bg-red-600 hover:bg-red-700 rounded-full p-3 shadow-2xl transition-all"
+            style={{ zIndex: 10000 }}
             onClick={(e) => { e.stopPropagation(); closeLightbox(); }}
           >
             <X className="w-6 h-6 sm:w-8 sm:h-8" />
           </button>
 
           {/* Zoom controls */}
-          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 z-10 bg-black/50 rounded-full px-4 py-2">
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 bg-black/50 rounded-full px-4 py-2" style={{ zIndex: 9998 }}>
             <button 
               onClick={(e) => { e.stopPropagation(); handleZoomOut(); }}
               disabled={zoomLevel <= 1}
