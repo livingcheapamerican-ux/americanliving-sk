@@ -434,8 +434,8 @@ function LayoutContent({ children }) {
         </div>
       </header>
 
-      <main className="pt-10 sm:pt-14 md:pt-16 lg:pt-20 bg-gray-100">
-        <div className="max-w-[1920px] mx-auto bg-white shadow-xl min-h-screen">
+      <main className="pt-10 sm:pt-14 md:pt-16 lg:pt-20 lg:bg-gray-100">
+        <div className="lg:max-w-[1920px] lg:mx-auto bg-white lg:shadow-xl min-h-screen">
           {children}
         </div>
       </main>
