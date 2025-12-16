@@ -10,7 +10,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import EditableTile from "./EditableTile";
 import { toast } from "sonner";
 
-export default function KonfiguratorTicabhouse({ dom, isAdmin, predajNehnutelnosti, setPredajNehnutelnosti, hladamPozemok, setHladamPozemok, financneSluzby, setFinancneSluzby, ucel, setUcel, izolaciaStien, setIzolaciaStien, izolaciaPodlahy, setIzolaciaPodlahy, izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia, pripravaNaRekuperaciu, setPripravaNaRekuperaciu, podlahovoKurenie, setPodlahovoKurenie, pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle, klimatizacia, setKlimatizacia, fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna, vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha, interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod, prepat, setPrepat, pripravaNaSolarnePanely, setPripravaNaSolarnePanely, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria, skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering, projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady, montaz, setMontaz, doprava, setDoprava }) {
+export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, predajNehnutelnosti, setPredajNehnutelnosti, hladamPozemok, setHladamPozemok, financneSluzby, setFinancneSluzby, ucel, setUcel, izolaciaStien, setIzolaciaStien, izolaciaPodlahy, setIzolaciaPodlahy, izolaciaStropu, setIzolaciaStropu, tepelneCerpadlo, setTepelneCerpadlo, rekuperacia, setRekuperacia, pripravaNaRekuperaciu, setPripravaNaRekuperaciu, podlahovoKurenie, setPodlahovoKurenie, pripravaNaKrb, setPripravaNaKrb, ochranaKachle, setOchranaKachle, klimatizacia, setKlimatizacia, fasada, setFasada, strecha, setStrecha, odkvapy, setOdkvapy, okna, setOkna, vchodoveDvere, setVchodoveDvere, obkladStien, setObkladStien, podlaha, setPodlaha, interieroveDvere, setInterieroveDvere, elektro, setElektro, bleskozvod, setBleskozvod, prepat, setPrepat, pripravaNaSolarnePanely, setPripravaNaSolarnePanely, sprchovyKut, setSprchovyKut, vana, setVana, bateria, setBateria, skrinka, setSkrinka, stropKupelna, setStropKupelna, inziniering, setInziniering, projektACertifikacia, setProjektACertifikacia, revizia, setRevizia, zaklady, setZaklady, montaz, setMontaz, doprava, setDoprava }) {
   const { language, t } = useLanguage();
   const queryClient = useQueryClient();
 
@@ -196,6 +196,22 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, predajNehnutelnos
     elektro, bleskozvod, prepat, pripravaNaSolarnePanely, sprchovyKut, vana, bateria, skrinka, stropKupelna,
     inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava, CENY, dopravaViditelna
   ]);
+
+  // Poslať konfiguráciu do rodičovského komponentu (pre hypotéku)
+  React.useEffect(() => {
+    if (onConfigChange) {
+      onConfigChange({
+        celkovaCena: totalPrice,
+        izolaciaStien,
+        izolaciaPodlahy,
+        izolaciaStropu,
+        tepelneCerpadlo,
+        rekuperacia,
+        projektACertifikacia,
+        zaklady
+      });
+    }
+  }, [totalPrice, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia, projektACertifikacia, zaklady, onConfigChange]);
 
   // Synchronizácia s props
   React.useEffect(() => { if (setUcel) setUcel(ucel); }, [ucel]);

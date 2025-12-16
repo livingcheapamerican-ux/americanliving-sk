@@ -1207,6 +1207,7 @@ export default function DetailDomu() {
               <KonfiguratorTicabhouse 
                 dom={dom} 
                 isAdmin={isAdmin}
+                onConfigChange={(config) => setTicabKonfiguracia(config)}
                 predajNehnutelnosti={lyonPredajNehnutelnosti}
                 setPredajNehnutelnosti={setLyonPredajNehnutelnosti}
                 hladamPozemok={lyonHladamPozemok}
