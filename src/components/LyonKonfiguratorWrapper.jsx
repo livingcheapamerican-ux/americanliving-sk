@@ -209,6 +209,22 @@ export default function LyonKonfiguratorWrapper(props) {
     alert("Odoslanie dopytu - funkcia bude implementovaná");
   };
 
+  // Poslať totalPrice späť do rodičovského komponentu
+  React.useEffect(() => {
+    if (props.onConfigChange) {
+      props.onConfigChange({
+        celkovaCena: totalPrice,
+        izolaciaStien,
+        izolaciaPodlahy,
+        izolaciaStropu,
+        tepelneCerpadlo,
+        rekuperacia,
+        projektACertifikacia,
+        zaklady
+      });
+    }
+  }, [totalPrice, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia, projektACertifikacia, zaklady, props.onConfigChange]);
+
   const allProps = {
     dom: props.dom,
     CENY,
