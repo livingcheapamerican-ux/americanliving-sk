@@ -177,6 +177,30 @@ export default function DetailDomu() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [domId, domSlug]);
 
+  // Keyboard navigation for lightbox
+  useEffect(() => {
+    if (!lightboxOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setLightboxOpen(false);
+        setZoomLevel(1);
+        setPanPosition({ x: 0, y: 0 });
+      } else if (e.key === 'ArrowLeft') {
+        setLightboxIndex((prev) => (prev - 1 + lightboxImages.length) % lightboxImages.length);
+        setZoomLevel(1);
+        setPanPosition({ x: 0, y: 0 });
+      } else if (e.key === 'ArrowRight') {
+        setLightboxIndex((prev) => (prev + 1) % lightboxImages.length);
+        setZoomLevel(1);
+        setPanPosition({ x: 0, y: 0 });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxOpen, lightboxImages]);
+
   // SEO Meta tags
   useEffect(() => {
     if (dom) {
@@ -381,30 +405,6 @@ export default function DetailDomu() {
     setZoomLevel(1);
     setPanPosition({ x: 0, y: 0 });
   };
-
-  // Keyboard navigation for lightbox
-  useEffect(() => {
-    if (!lightboxOpen) return;
-
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setLightboxOpen(false);
-        setZoomLevel(1);
-        setPanPosition({ x: 0, y: 0 });
-      } else if (e.key === 'ArrowLeft') {
-        setLightboxIndex((prev) => (prev - 1 + lightboxImages.length) % lightboxImages.length);
-        setZoomLevel(1);
-        setPanPosition({ x: 0, y: 0 });
-      } else if (e.key === 'ArrowRight') {
-        setLightboxIndex((prev) => (prev + 1) % lightboxImages.length);
-        setZoomLevel(1);
-        setPanPosition({ x: 0, y: 0 });
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxOpen, lightboxImages]);
 
   const handleZoomIn = () => {
     setZoomLevel((prev) => Math.min(prev + 0.5, 4));
