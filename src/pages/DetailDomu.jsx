@@ -3048,6 +3048,7 @@ export default function DetailDomu() {
               <HypotekaKalkulator 
                 cenaDoma={dom.zakladna_cena} 
                 dom={dom}
+                user={user}
                 aktualnaKonfiguracia={
                   isTicabhouse ? {
                     celkovaCena: (() => {
