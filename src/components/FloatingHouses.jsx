@@ -23,10 +23,9 @@ export default function FloatingHouses({ side = "left" }) {
   if (domy.length === 0) return null;
 
   return (
-    <div className="fixed top-20 bottom-0 w-[180px] pointer-events-none z-10 hidden xl:block"
+    <div className="fixed top-20 bottom-0 w-[200px] pointer-events-none z-10 hidden xl:block"
       style={{ 
-        [side]: '50%',
-        marginLeft: side === 'left' ? '-960px' : '960px',
+        [side]: side === 'left' ? 'calc(50% - 960px - 200px)' : 'calc(50% + 960px)',
       }}
     >
       <div className="relative h-full">
