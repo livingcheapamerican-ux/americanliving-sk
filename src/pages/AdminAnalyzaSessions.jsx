@@ -139,10 +139,8 @@ export default function AdminAnalyzaSessions() {
           </TabsContent>
 
           <TabsContent value="sessions">
-            <div className="space-y-6">{/* ... rest of existing content ... */}
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4 mb-6">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4 mb-6">
           <Card className="p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-100 rounded-lg">
@@ -869,33 +867,10 @@ export default function AdminAnalyzaSessions() {
               </Card>
             ))
           )}
-        </div>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
     </div>
   );
-}
-
-function getTagColor(tag) {
-  const colors = {
-    'bounced': 'bg-red-100 text-red-800',
-    'engaged': 'bg-blue-100 text-blue-800',
-    'highly_engaged': 'bg-purple-100 text-purple-800',
-    'explorer': 'bg-green-100 text-green-800',
-    'converted': 'bg-yellow-100 text-yellow-800',
-    'configurator_user': 'bg-indigo-100 text-indigo-800'
-  };
-  return colors[tag] || 'bg-gray-100 text-gray-800';
-}
-
-function formatDuration(seconds) {
-  if (!seconds) return '0s';
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-  
-  if (hrs > 0) return `${hrs}h ${mins}m ${secs}s`;
-  if (mins > 0) return `${mins}m ${secs}s`;
-  return `${secs}s`;
 }
