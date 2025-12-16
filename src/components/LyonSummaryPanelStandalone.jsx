@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,18 +13,11 @@ export default function LyonSummaryPanelStandalone({
   fasada, strecha, odkvapy, okna, vchodoveDvere, obkladStien, interieroveDvere,
   elektro, bleskozvod, prepat, pripravaNaSolarnePanely, sprchovyKut, vana, bateria, skrinka, stropKupelna,
   inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
-  totalPrice, onSubmit, dom, onPriceChange
+  totalPrice, onSubmit, dom
 }) {
   const [showModal, setShowModal] = useState(false);
   const { t } = useLanguage();
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
-
-  // Odoslať cenu do parent komponentu pri každej zmene
-  useEffect(() => {
-    if (onPriceChange && totalPrice) {
-      onPriceChange(totalPrice);
-    }
-  }, [totalPrice, onPriceChange]);
 
   // Kontrola či je konfigurácia A0
   const isA0Configuration = () => {

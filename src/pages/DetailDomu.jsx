@@ -146,9 +146,6 @@ export default function DetailDomu() {
   // State pre konfiguráciu Prosto House
   const [prostoKonfiguracia, setProstoKonfiguracia] = useState(null);
 
-  // Celková cena z konfiguratora
-  const [celkovaCenaKonfigurator, setCelkovaCenaKonfigurator] = useState(null);
-
   const { data: user } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me().catch(() => null)
@@ -743,7 +740,6 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useFlat15Prices={true}
-                onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -817,7 +813,6 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useFlatDoublePrices={true}
-                onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -889,7 +884,6 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useFjordPrices={true}
-                onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -961,7 +955,6 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useNordPrices={true}
-                onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -1033,7 +1026,6 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useFlat72Prices={true}
-                onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -1105,7 +1097,6 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useProstoHousePrices={true}
-                onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -1213,7 +1204,6 @@ export default function DetailDomu() {
               <KonfiguratorTicabhouse 
                 dom={dom} 
                 isAdmin={isAdmin}
-                onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                 predajNehnutelnosti={lyonPredajNehnutelnosti}
                 setPredajNehnutelnosti={setLyonPredajNehnutelnosti}
                 hladamPozemok={lyonHladamPozemok}
@@ -1295,7 +1285,6 @@ export default function DetailDomu() {
             {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
               <LyonKonfiguratorWrapper
                 dom={dom}
-                onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                 ucel={lyonUcel}
                 setUcel={setLyonUcel}
                 izolaciaStien={lyonIzolaciaStien}
@@ -1407,7 +1396,6 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useBarnDoublePrices={true}
-                onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -1481,7 +1469,6 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useBarn48Prices={true}
-                onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -1555,7 +1542,6 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useFlatSmallPrices={true}
-                onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -1627,7 +1613,6 @@ export default function DetailDomu() {
                 key={wizardKey}
                 dom={dom}
                 useAFramePrices={true}
-                onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -2330,7 +2315,6 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlat15
                   dom={dom}
-                  onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -2401,7 +2385,6 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorNord
                   dom={dom}
-                  onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2474,7 +2457,6 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFjord
                   dom={dom}
-                  onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2548,7 +2530,6 @@ export default function DetailDomu() {
                 <KonfiguratorFlat72
                   dom={dom}
                   onReset={handleKonfiguratorReset}
-                  onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2622,7 +2603,6 @@ export default function DetailDomu() {
                 <KonfiguratorBarnDouble
                   dom={dom}
                   onReset={handleKonfiguratorReset}
-                  onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2698,7 +2678,6 @@ export default function DetailDomu() {
                 <KonfiguratorBarn48
                   dom={dom}
                   onReset={handleKonfiguratorReset}
-                  onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2847,7 +2826,6 @@ export default function DetailDomu() {
                 <KonfiguratorFlatSmall
                   dom={dom}
                   onReset={handleKonfiguratorReset}
-                  onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2921,7 +2899,6 @@ export default function DetailDomu() {
                 <KonfiguratorAFrame
                   dom={dom}
                   onReset={handleKonfiguratorReset}
-                  onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2999,7 +2976,6 @@ export default function DetailDomu() {
                 <KonfiguratorProstoHouse 
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
-                  onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -3072,7 +3048,6 @@ export default function DetailDomu() {
               <HypotekaKalkulator 
                 cenaDoma={dom.zakladna_cena} 
                 dom={dom}
-                celkovaCenaZKonfiguratora={celkovaCenaKonfigurator}
                 aktualnaKonfiguracia={
                   isTicabhouse ? {
                     celkovaCena: (() => {
@@ -3091,6 +3066,9 @@ export default function DetailDomu() {
                       if (lyonInziniering) total += CENY.inziniering || 0;
                       if (lyonProjektACertifikacia) total += CENY.projektACertifikacia || 0;
                       if (lyonRevizia) total += CENY.revizia || 0;
+                      if (lyonZaklady === "vruty") total += CENY.zaklady_vruty || 0;
+                      if (lyonZaklady === "patky") total += CENY.zaklady_patky || 0;
+                      if (lyonZaklady === "pasove") total += CENY.zaklady_pasove || 0;
                       if (lyonMontaz) total += CENY.montaz || 0;
                       if (lyonDoprava) total += CENY.doprava || 0;
                       return total;
@@ -3119,12 +3097,14 @@ export default function DetailDomu() {
                   setLyonPrepat(true);
                   setLyonInziniering(true);
                   setLyonProjektACertifikacia(true);
+                  setLyonZaklady("pasove");
                   setLyonUcel("rodinny");
                 } : isProstoHouse ? () => {
                   setIzolaciaNavysenie("premium");
                   setTepelneCerpadlo(true);
                   setRekuperacia(true);
                   setProjektA0(true);
+                  setZaklady("pasove");
                 } : null}
               />
             </div>
@@ -3200,7 +3180,6 @@ export default function DetailDomu() {
               <div className="space-y-4">
                 <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                   <LyonSummaryPanelStandalone
-                  onPriceChange={(price) => setCelkovaCenaKonfigurator(price)}
                   predajNehnutelnosti={lyonPredajNehnutelnosti}
                   hladamPozemok={lyonHladamPozemok}
                   financneSluzby={lyonFinancneSluzby}
@@ -3320,6 +3299,9 @@ export default function DetailDomu() {
                     if (lyonInziniering) total += CENY.inziniering || 0;
                     if (lyonProjektACertifikacia) total += CENY.projektACertifikacia || 0;
                     if (lyonRevizia) total += CENY.revizia || 0;
+                    if (lyonZaklady === "vruty") total += CENY.zaklady_vruty || 0;
+                    if (lyonZaklady === "patky") total += CENY.zaklady_patky || 0;
+                    if (lyonZaklady === "pasove") total += CENY.zaklady_pasove || 0;
                     if (lyonMontaz) total += CENY.montaz || 0;
                     if (lyonDoprava) total += CENY.doprava || 0;
                     
