@@ -19,14 +19,16 @@ export default function HypotekaKalkulator({
   const [vlastnyVklad, setVlastnyVklad] = useState(20);
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
-  const aktCena = aktualnaKonfiguracia?.celkovaCena || cenaDoma || 100000;
-  const vyskaUveru = Math.round(aktCena * (100 - vlastnyVklad) / 100);
+  
+  // Suma z ktorej sa počíta hypotéka je PRESNE suma "Celkom s DPH" zo sidebar panelu
+  const celkomSDph = aktualnaKonfiguracia?.celkovaCena || cenaDoma || 100000;
+  const vyskaUveru = Math.round(celkomSDph * (100 - vlastnyVklad) / 100);
 
   // Výpočet mesačnej splátky pomocou anuitného vzorca
   const vypocitatMesacnuSplatku = () => {
-    const P = vyskaUveru; // Výška úveru
-    const r = urokovaSadzba / 100 / 12; // Mesačná úroková sadzba
-    const n = dobaSplatnosti * 12; // Počet mesiacov
+    const P = vyskaUveru;
+    const r = urokovaSadzba / 100 / 12;
+    const n = dobaSplatnosti * 12;
 
     if (r === 0) {
       return P / n;
@@ -52,24 +54,27 @@ export default function HypotekaKalkulator({
       </div>
 
       <div className="space-y-3">
-        {/* Aktuálna konfigurácia */}
+        {/* Suma z konfigurácie */}
         <div className="space-y-2">
           <div className="p-2 bg-gray-100 rounded-lg">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-600">Vaša konfigurácia:</span>
+              <span className="text-xs text-gray-600">Celkom s DPH:</span>
               <span className="text-sm font-bold text-gray-800">
-                {aktCena.toLocaleString('sk-SK')} €
+                {celkomSDph.toLocaleString('sk-SK')} €
               </span>
             </div>
           </div>
           
-          {/* Admin log */}
-          {isAdmin && aktualnaKonfiguracia && (
+          {/* Admin log - výpočet hypotéky */}
+          {isAdmin && (
             <div className="p-2 bg-purple-50 rounded-lg border border-purple-200">
-              <p className="text-xs font-semibold text-purple-900 mb-1">🔧 Admin Log - Výpočet sumy:</p>
+              <p className="text-xs font-semibold text-purple-900 mb-1">🔧 Admin Log - Hypotéka:</p>
               <div className="text-[10px] text-purple-800 space-y-0.5">
-                <p>• Celková suma z konfigurácie: {aktualnaKonfiguracia.celkovaCena?.toLocaleString('sk-SK')} €</p>
-                <p className="text-purple-600 font-semibold mt-1">Hypotéka sa počíta z tejto sumy ↑</p>
+                <p>• Celkom s DPH (zo sidebar): {celkomSDph.toLocaleString('sk-SK')} €</p>
+                <p>• Vlastný vklad ({vlastnyVklad}%): {(celkomSDph * vlastnyVklad / 100).toLocaleString('sk-SK')} €</p>
+                <p className="text-purple-600 font-semibold">• Výška úveru: {vyskaUveru.toLocaleString('sk-SK')} €</p>
+                <p>• Úroková sadzba: {urokovaSadzba.toFixed(1)}%</p>
+                <p>• Doba splatnosti: {dobaSplatnosti} rokov</p>
               </div>
             </div>
           )}
@@ -80,7 +85,7 @@ export default function HypotekaKalkulator({
           <div className="flex items-center justify-between mb-1">
             <Label className="text-xs">Vlastný vklad</Label>
             <span className="text-xs font-semibold text-blue-700">
-              {vlastnyVklad}% ({(aktCena * vlastnyVklad / 100).toLocaleString('sk-SK')} €)
+              {vlastnyVklad}% ({(celkomSDph * vlastnyVklad / 100).toLocaleString('sk-SK')} €)
             </span>
           </div>
           <Slider
