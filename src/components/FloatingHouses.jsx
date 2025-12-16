@@ -36,9 +36,11 @@ export default function FloatingHouses({ side = "left" }) {
   const animateY2 = isLeft ? 0 : totalHeight;
 
   return (
-    <div className="fixed top-20 bottom-0 w-[200px] pointer-events-none z-10 hidden xl:block overflow-hidden"
+    <div className="fixed top-20 bottom-0 w-[200px] z-10 hidden xl:block overflow-hidden"
       style={{ 
-        [side]: 'max(20px, calc(50% - 960px - 200px))',
+        [side]: side === 'left' 
+          ? 'max(20px, calc(50% - 960px - 200px))' 
+          : 'max(20px, calc(50% - 960px - 200px))',
       }}
     >
       <div className="relative h-full">
@@ -55,10 +57,10 @@ export default function FloatingHouses({ side = "left" }) {
           style={{ left: '20px', top: 0 }}
         >
           {domy.map((dom) => (
-            <div key={dom.id} className="pointer-events-auto mb-0" style={{ height: cardHeight }}>
+            <div key={dom.id} className="mb-0" style={{ height: cardHeight }}>
               <Link 
                 to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}
-                className="block group"
+                className="block group pointer-events-auto"
               >
                 <motion.div
                   whileHover={{ scale: 1.05, rotate: 2 }}
@@ -106,10 +108,10 @@ export default function FloatingHouses({ side = "left" }) {
           style={{ left: '20px', top: 0 }}
         >
           {domy.map((dom) => (
-            <div key={`${dom.id}-2`} className="pointer-events-auto mb-0" style={{ height: cardHeight }}>
+            <div key={`${dom.id}-2`} className="mb-0" style={{ height: cardHeight }}>
               <Link 
                 to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}
-                className="block group"
+                className="block group pointer-events-auto"
               >
                 <motion.div
                   whileHover={{ scale: 1.05, rotate: 2 }}
