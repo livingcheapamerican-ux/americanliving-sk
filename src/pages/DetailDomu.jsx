@@ -2386,6 +2386,7 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorNord
                   dom={dom}
+                  onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2458,6 +2459,7 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFjord
                   dom={dom}
+                  onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2531,6 +2533,7 @@ export default function DetailDomu() {
                 <KonfiguratorFlat72
                   dom={dom}
                   onReset={handleKonfiguratorReset}
+                  onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2604,6 +2607,7 @@ export default function DetailDomu() {
                 <KonfiguratorBarnDouble
                   dom={dom}
                   onReset={handleKonfiguratorReset}
+                  onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2679,6 +2683,7 @@ export default function DetailDomu() {
                 <KonfiguratorBarn48
                   dom={dom}
                   onReset={handleKonfiguratorReset}
+                  onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2754,6 +2759,7 @@ export default function DetailDomu() {
                 <KonfiguratorFlatDouble 
                   dom={dom}
                   onReset={handleKonfiguratorReset}
+                  onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2827,6 +2833,7 @@ export default function DetailDomu() {
                 <KonfiguratorFlatSmall
                   dom={dom}
                   onReset={handleKonfiguratorReset}
+                  onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2900,6 +2907,7 @@ export default function DetailDomu() {
                 <KonfiguratorAFrame
                   dom={dom}
                   onReset={handleKonfiguratorReset}
+                  onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
