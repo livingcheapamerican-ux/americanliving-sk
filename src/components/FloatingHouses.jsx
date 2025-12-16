@@ -27,6 +27,13 @@ export default function FloatingHouses({ side = "left" }) {
 
   const cardHeight = 180; // Výška jednej karty s domom
   const totalHeight = domy.length * cardHeight;
+  
+  // Ľavá strana: dole, Pravá strana: hore
+  const isLeft = side === 'left';
+  const initialY1 = isLeft ? 0 : -totalHeight;
+  const animateY1 = isLeft ? -totalHeight : 0;
+  const initialY2 = isLeft ? totalHeight : 0;
+  const animateY2 = isLeft ? 0 : totalHeight;
 
   return (
     <div className="fixed top-20 bottom-0 w-[200px] pointer-events-none z-10 hidden xl:block overflow-hidden"
@@ -37,8 +44,8 @@ export default function FloatingHouses({ side = "left" }) {
       <div className="relative h-full">
         {/* Prvý set domov */}
         <motion.div
-          initial={{ y: 0 }}
-          animate={{ y: -totalHeight }}
+          initial={{ y: initialY1 }}
+          animate={{ y: animateY1 }}
           transition={{
             duration: domy.length * 3,
             repeat: Infinity,
@@ -88,8 +95,8 @@ export default function FloatingHouses({ side = "left" }) {
 
         {/* Druhý set domov pre seamless loop */}
         <motion.div
-          initial={{ y: totalHeight }}
-          animate={{ y: 0 }}
+          initial={{ y: initialY2 }}
+          animate={{ y: animateY2 }}
           transition={{
             duration: domy.length * 3,
             repeat: Infinity,
