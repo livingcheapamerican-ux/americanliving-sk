@@ -3296,8 +3296,8 @@ export default function DetailDomu() {
         >
           {/* Close button */}
           <button 
-            className="absolute top-20 right-4 text-white hover:text-gray-300 bg-red-600 hover:bg-red-700 rounded-full p-3 shadow-2xl transition-all"
-            style={{ zIndex: 10000 }}
+            className="absolute top-4 right-4 text-white hover:text-gray-300 bg-red-600 hover:bg-red-700 rounded-full p-3 sm:p-4 shadow-2xl transition-all"
+            style={{ zIndex: 10001 }}
             onClick={(e) => { e.stopPropagation(); closeLightbox(); }}
           >
             <X className="w-6 h-6 sm:w-8 sm:h-8" />
