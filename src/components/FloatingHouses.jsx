@@ -13,51 +13,48 @@ export default function FloatingHouses({ side = "left" }) {
     staleTime: 300000,
   });
 
-  // Len verejné domy s titulnou fotkou
+  // Len verejné domy od Ticabhouse a Prosto House s titulnou fotkou
   const domy = useMemo(() => {
     return allDomy
-      .filter(d => (d.verejny === true || d.verejny === undefined) && d.hlavny_obrazok)
-      .slice(0, 4); // Max 4 domy na stranu
+      .filter(d => 
+        (d.verejny === true || d.verejny === undefined) && 
+        d.hlavny_obrazok &&
+        (d.vyrobca === "Ticab house" || d.vyrobca === "Prosto House")
+      );
   }, [allDomy]);
 
   if (domy.length === 0) return null;
 
+  const cardHeight = 180; // Výška jednej karty s domom
+  const totalHeight = domy.length * cardHeight;
+
   return (
-    <div className="fixed top-20 bottom-0 w-[200px] pointer-events-none z-10 hidden xl:block"
+    <div className="fixed top-20 bottom-0 w-[200px] pointer-events-none z-10 hidden xl:block overflow-hidden"
       style={{ 
         [side]: side === 'left' ? 'calc(50% - 960px - 200px)' : 'calc(50% + 960px)',
       }}
     >
       <div className="relative h-full">
-        {domy.map((dom, index) => {
-          const delay = index * 5; // Rozdielny delay pre každý dom
-          const duration = 15 + index * 2; // Rozdielna rýchlosť
-          
-          return (
-            <motion.div
-              key={dom.id}
-              initial={{ y: side === 'left' ? '-120%' : '100vh' }}
-              animate={{ 
-                y: side === 'left' ? '100vh' : '-120%'
-              }}
-              transition={{
-                duration: duration,
-                repeat: Infinity,
-                ease: "linear",
-                delay: delay,
-              }}
-              className="absolute pointer-events-auto"
-              style={{ 
-                [side]: '20px',
-                top: 0,
-              }}
-            >
+        {/* Prvý set domov */}
+        <motion.div
+          initial={{ y: 0 }}
+          animate={{ y: -totalHeight }}
+          transition={{
+            duration: domy.length * 3,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute"
+          style={{ left: '20px', top: 0 }}
+        >
+          {domy.map((dom) => (
+            <div key={dom.id} className="pointer-events-auto mb-0" style={{ height: cardHeight }}>
               <Link 
                 to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}
                 className="block group"
               >
                 <motion.div
-                  whileHover={{ scale: 1.1, rotate: 3 }}
+                  whileHover={{ scale: 1.05, rotate: 2 }}
                   className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-primary transition-all"
                   style={{ width: '150px' }}
                 >
@@ -85,9 +82,60 @@ export default function FloatingHouses({ side = "left" }) {
                   </div>
                 </motion.div>
               </Link>
-            </motion.div>
-          );
-        })}
+            </div>
+          ))}
+        </motion.div>
+
+        {/* Druhý set domov pre seamless loop */}
+        <motion.div
+          initial={{ y: totalHeight }}
+          animate={{ y: 0 }}
+          transition={{
+            duration: domy.length * 3,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute"
+          style={{ left: '20px', top: 0 }}
+        >
+          {domy.map((dom) => (
+            <div key={`${dom.id}-2`} className="pointer-events-auto mb-0" style={{ height: cardHeight }}>
+              <Link 
+                to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}
+                className="block group"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.05, rotate: 2 }}
+                  className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-primary transition-all"
+                  style={{ width: '150px' }}
+                >
+                  {dom.hlavny_obrazok ? (
+                    <img
+                      src={dom.hlavny_obrazok}
+                      alt={dom.nazov}
+                      className="w-full h-32 object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-32 bg-gray-100 flex items-center justify-center">
+                      <Home className="w-8 h-8 text-gray-300" />
+                    </div>
+                  )}
+                  <div className="p-2 bg-gradient-to-r from-red-600 to-red-700">
+                    <p className="text-xs font-bold text-white text-center truncate">
+                      {dom.nazov}
+                    </p>
+                    {dom.zakladna_cena && (
+                      <p className="text-xs text-white/90 text-center mt-0.5">
+                        {dom.zakladna_cena.toLocaleString('sk-SK')} €
+                      </p>
+                    )}
+                  </div>
+                </motion.div>
+              </Link>
+            </div>
+          ))}
+        </motion.div>
       </div>
     </div>
   );
