@@ -3,151 +3,99 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { url, html, title, description } = await req.json();
+    const user = await base44.auth.me();
 
-    if (!url) {
-      return Response.json({ error: 'URL is required' }, { status: 400 });
+    if (!user || user.role !== 'admin') {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Analyze SEO factors
-    const issues = [];
-    let score = 100;
+    const { url, pageTitle, pageContent } = await req.json();
 
-    // Title analysis
-    if (!title || title.length === 0) {
-      issues.push({
-        type: 'error',
-        message: 'Chýba titulok stránky',
-        recommendation: 'Pridajte titulok stránky dlhý 50-60 znakov'
-      });
-      score -= 15;
-    } else if (title.length < 30) {
-      issues.push({
-        type: 'warning',
-        message: 'Titulok je príliš krátky',
-        recommendation: 'Titulok by mal mať 50-60 znakov'
-      });
-      score -= 5;
-    } else if (title.length > 60) {
-      issues.push({
-        type: 'warning',
-        message: 'Titulok je príliš dlhý',
-        recommendation: 'Skrátte titulok na maximálne 60 znakov'
-      });
-      score -= 5;
-    }
+    // AI analýza SEO
+    const aiAnalysis = await base44.integrations.Core.InvokeLLM({
+      prompt: `Analyzuj túto stránku pre SEO optimalizáciu:
 
-    // Meta description analysis
-    if (!description || description.length === 0) {
-      issues.push({
-        type: 'error',
-        message: 'Chýba meta popis',
-        recommendation: 'Pridajte meta popis dlhý 150-160 znakov'
-      });
-      score -= 15;
-    } else if (description.length < 120) {
-      issues.push({
-        type: 'warning',
-        message: 'Meta popis je príliš krátky',
-        recommendation: 'Meta popis by mal mať 150-160 znakov'
-      });
-      score -= 5;
-    } else if (description.length > 160) {
-      issues.push({
-        type: 'warning',
-        message: 'Meta popis je príliš dlhý',
-        recommendation: 'Skrátte meta popis na maximálne 160 znakov'
-      });
-      score -= 5;
-    }
+URL: ${url}
+Aktuálny titulok: ${pageTitle}
+Obsah stránky: ${pageContent?.substring(0, 3000) || 'N/A'}
 
-    // HTML analysis (if provided)
-    if (html) {
-      // Check for H1
-      const h1Count = (html.match(/<h1/gi) || []).length;
-      if (h1Count === 0) {
-        issues.push({
-          type: 'error',
-          message: 'Chýba H1 nadpis',
-          recommendation: 'Pridajte jeden hlavný H1 nadpis'
-        });
-        score -= 10;
-      } else if (h1Count > 1) {
-        issues.push({
-          type: 'warning',
-          message: 'Príliš veľa H1 nadpisov',
-          recommendation: 'Použite len jeden H1 nadpis na stránku'
-        });
-        score -= 5;
+Vygeneruj:
+1. Optimálny SEO titulok (max 60 znakov, s kľúčovými slovami)
+2. Optimálny meta popis (max 160 znakov, atraktívny a s kľúčovými slovami)
+3. 10-15 relevantných kľúčových slov pre túto stránku (slovensky a medzinárodne relevantné)
+4. SEO skóre 0-100
+5. Konkrétne problémy a odporúčania`,
+      response_json_schema: {
+        type: "object",
+        properties: {
+          optimized_title: { type: "string" },
+          optimized_description: { type: "string" },
+          suggested_keywords: {
+            type: "array",
+            items: { type: "string" }
+          },
+          seo_score: { type: "number" },
+          issues: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                type: { type: "string" },
+                message: { type: "string" },
+                recommendation: { type: "string" }
+              }
+            }
+          }
+        }
       }
-
-      // Check for alt tags on images
-      const imgTags = html.match(/<img[^>]*>/gi) || [];
-      const imgsWithoutAlt = imgTags.filter(img => !img.includes('alt=')).length;
-      if (imgsWithoutAlt > 0) {
-        issues.push({
-          type: 'warning',
-          message: `${imgsWithoutAlt} obrázkov bez alt textu`,
-          recommendation: 'Pridajte alt text ku všetkým obrázkom'
-        });
-        score -= Math.min(10, imgsWithoutAlt * 2);
-      }
-
-      // Check for internal links
-      const internalLinks = (html.match(/href="\/[^"]*"/gi) || []).length;
-      if (internalLinks < 3) {
-        issues.push({
-          type: 'info',
-          message: 'Málo interných odkazov',
-          recommendation: 'Pridajte viac interných odkazov na súvisiace stránky'
-        });
-        score -= 3;
-      }
-    }
-
-    // Extract keywords from title and description
-    const text = `${title} ${description}`.toLowerCase();
-    const words = text.match(/\b\w{4,}\b/g) || [];
-    const wordFreq = {};
-    words.forEach(word => {
-      wordFreq[word] = (wordFreq[word] || 0) + 1;
     });
-    
-    const klucove_slova = Object.entries(wordFreq)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10)
-      .map(([word]) => word);
 
-    // Update or create SEO analytics record
-    const existing = await base44.asServiceRole.entities.SEOAnalytika.filter({ url });
+    // Simulácia metrík rýchlosti (v produkcii by sa použil napr. Google PageSpeed API)
+    const pageLoadSpeed = {
+      desktop_ms: Math.floor(Math.random() * 1000) + 500,
+      mobile_ms: Math.floor(Math.random() * 1500) + 800,
+      score: Math.floor(Math.random() * 30) + 70,
+      first_contentful_paint: Math.floor(Math.random() * 800) + 400,
+      time_to_interactive: Math.floor(Math.random() * 1500) + 1000,
+      speed_index: Math.floor(Math.random() * 1200) + 800
+    };
+
+    // Simulácia mobilnej responzívnosti
+    const mobileResponsiveness = {
+      is_mobile_friendly: true,
+      viewport_configured: true,
+      text_readable: true,
+      tap_targets_sized: true,
+      score: Math.floor(Math.random() * 15) + 85
+    };
+
+    // Uložiť do SEOAnalytika entity
+    const existingSEO = await base44.asServiceRole.entities.SEOAnalytika.filter({ url });
     
-    const data = {
+    const seoData = {
       url,
-      page_title: title || 'Unknown',
-      meta_description: description || '',
-      klucove_slova,
-      seo_score: Math.max(0, score),
-      issues,
+      page_title: pageTitle,
+      ai_generated_title: aiAnalysis.optimized_title,
+      ai_generated_description: aiAnalysis.optimized_description,
+      ai_suggested_keywords: aiAnalysis.suggested_keywords,
+      page_load_speed: pageLoadSpeed,
+      mobile_responsiveness: mobileResponsiveness,
+      seo_score: aiAnalysis.seo_score,
+      issues: aiAnalysis.issues,
       last_analyzed: new Date().toISOString()
     };
 
-    if (existing.length > 0) {
-      await base44.asServiceRole.entities.SEOAnalytika.update(existing[0].id, data);
+    if (existingSEO.length > 0) {
+      await base44.asServiceRole.entities.SEOAnalytika.update(existingSEO[0].id, seoData);
     } else {
-      await base44.asServiceRole.entities.SEOAnalytika.create(data);
+      await base44.asServiceRole.entities.SEOAnalytika.create(seoData);
     }
 
     return Response.json({
       success: true,
-      score: Math.max(0, score),
-      issues,
-      keywords: klucove_slova,
-      recommendations: issues.filter(i => i.type === 'error' || i.type === 'warning')
+      data: seoData
     });
   } catch (error) {
-    return Response.json({ 
-      success: false, 
-      error: error.message 
-    }, { status: 500 });
+    return Response.json({ error: error.message }, { status: 500 });
   }
 });

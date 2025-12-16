@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Activity, 
   Users, 
@@ -27,10 +28,13 @@ import {
   FileText,
   Layers,
   Navigation,
-  BarChart3
+  BarChart3,
+  Home,
+  Settings
 } from "lucide-react";
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
+import AnalyticsDashboard from "../components/analytics/AnalyticsDashboard";
 
 export default function AdminAnalyzaSessions() {
   const [filterEmail, setFilterEmail] = useState("");
@@ -120,9 +124,22 @@ export default function AdminAnalyzaSessions() {
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">📊 Podrobná Analýza Sessions</h1>
-          <p className="text-gray-600">Kompletný prehľad používateľského správania a interakcií</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">📊 Analytics & Sessions</h1>
+          <p className="text-gray-600">Komplexná analytika ako Google Analytics</p>
         </div>
+
+        <Tabs defaultValue="dashboard" className="mb-6">
+          <TabsList className="grid w-full max-w-2xl grid-cols-2">
+            <TabsTrigger value="dashboard">📈 Analytics Dashboard</TabsTrigger>
+            <TabsTrigger value="sessions">🔍 Detailné Sessions</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="dashboard">
+            <AnalyticsDashboard sessions={filteredSessions} />
+          </TabsContent>
+
+          <TabsContent value="sessions">
+            <div className="space-y-6">{/* ... rest of existing content ... */}
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4 mb-6">
@@ -210,6 +227,91 @@ export default function AdminAnalyzaSessions() {
             </div>
           </Card>
         </div>
+
+        {/* Filters */}
+        <Card className="p-4 mb-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Filter className="w-5 h-5 text-gray-600" />
+            <h3 className="font-semibold text-gray-900">Filtre a vyhľadávanie</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+            <div>
+              <label className="text-xs text-gray-600 mb-1 block">Email / Meno</label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Input
+                  placeholder="Hľadať..."
+                  value={filterEmail}
+                  onChange={(e) => setFilterEmail(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="text-xs text-gray-600 mb-1 block">Dátum od</label>
+              <Input
+                type="date"
+                value={filterDateFrom}
+                onChange={(e) => setFilterDateFrom(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="text-xs text-gray-600 mb-1 block">Dátum do</label>
+              <Input
+                type="date"
+                value={filterDateTo}
+                onChange={(e) => setFilterDateTo(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="text-xs text-gray-600 mb-1 block">Zariadenie</label>
+              <select
+                value={filterDevice}
+                onChange={(e) => setFilterDevice(e.target.value)}
+                className="w-full px-3 py-2 border rounded-md text-sm"
+              >
+                <option value="all">Všetky</option>
+                <option value="desktop">Desktop</option>
+                <option value="mobile">Mobil</option>
+                <option value="tablet">Tablet</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-xs text-gray-600 mb-1 block">Tag</label>
+              <select
+                value={filterTag}
+                onChange={(e) => setFilterTag(e.target.value)}
+                className="w-full px-3 py-2 border rounded-md text-sm"
+              >
+                <option value="all">Všetky</option>
+                <option value="bounced">Bounced</option>
+                <option value="engaged">Engaged</option>
+                <option value="highly_engaged">Vysoko angažovaný</option>
+                <option value="converted">Konvertovaný</option>
+                <option value="configurator_user">Konfigurátor</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 mt-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setFilterEmail("");
+                setFilterDateFrom("");
+                setFilterDateTo("");
+                setFilterDevice("all");
+                setFilterTag("all");
+              }}
+            >
+              Vyčistiť filtre
+            </Button>
+            <Badge className="bg-blue-100 text-blue-800">
+              {filteredSessions.length} sessions
+            </Badge>
+          </div>
+        </Card>
 
         {/* Filters */}
         <Card className="p-4 mb-6">
@@ -768,6 +870,8 @@ export default function AdminAnalyzaSessions() {
             ))
           )}
         </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

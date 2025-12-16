@@ -177,11 +177,18 @@ function LayoutContent({ children }) {
 
           <div className="hidden lg:flex items-center gap-1 xl:gap-2">
             {isAdmin && (
-              <Link to={createPageUrl("AdminAnalyzaSessions")}>
-                <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Analýza sessions">
-                  <Activity className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                </Button>
-              </Link>
+              <>
+                <Link to={createPageUrl("AdminAnalyzaSessions")}>
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Analytics & Sessions">
+                    <Activity className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                  </Button>
+                </Link>
+                <Link to={createPageUrl("AdminSEOAnalyzer")}>
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="SEO Analyzer">
+                    <Zap className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                  </Button>
+                </Link>
+              </>
             )}
             {isSuperAdmin && (
               <>
@@ -409,7 +416,15 @@ function LayoutContent({ children }) {
                       className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                     >
                       <Activity className="w-5 h-5" />
-                      Analýza sessions
+                      Analytics & Sessions
+                    </Link>
+                    <Link
+                      to={createPageUrl("AdminSEOAnalyzer")}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    >
+                      <Zap className="w-5 h-5" />
+                      SEO Analyzer
                     </Link>
                     <Link
                       to={createPageUrl("AdminDokumenty")}
