@@ -143,6 +143,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
 export default function KonfiguratorFlat72({ 
   dom,
   onReset,
+  onConfigChange,
   typStavby = "",
   setTypStavby,
   predajNehnutelnosti, setPredajNehnutelnosti,
@@ -360,6 +361,21 @@ export default function KonfiguratorFlat72({
   const interierFinisRef = useRef(null);
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
+
+  // Poslať konfiguráciu do rodičovského komponentu
+  useEffect(() => {
+    if (onConfigChange) {
+      onConfigChange({
+        celkovaCena: totalPrice,
+        izolaciaNavysenie,
+        tepelneCerpadlo,
+        rekuperacia,
+        projektA0,
+        montazHolodomu,
+        zaklady
+      });
+    }
+  }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady, onConfigChange]);
 
   // Get width of Interiér finiš panel
   useEffect(() => {

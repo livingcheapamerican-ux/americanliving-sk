@@ -130,6 +130,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
 export default function KonfiguratorAFrame({ 
   dom,
   onReset,
+  onConfigChange,
   predajNehnutelnosti, setPredajNehnutelnosti,
   hladaniePozemku, setHladaniePozemku,
   financneSluzby, setFinancneSluzby,
@@ -335,6 +336,21 @@ export default function KonfiguratorAFrame({
 
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
+
+  // Poslať konfiguráciu do rodičovského komponentu
+  useEffect(() => {
+    if (onConfigChange) {
+      onConfigChange({
+        celkovaCena: totalPrice,
+        izolaciaNavysenie,
+        tepelneCerpadlo,
+        rekuperacia,
+        projektA0,
+        montazHolodomu,
+        zaklady
+      });
+    }
+  }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady, onConfigChange]);
 
   useEffect(() => {
     const updateWidth = () => {
