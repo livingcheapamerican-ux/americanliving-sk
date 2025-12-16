@@ -30,7 +30,13 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
             {dom.hlavny_obrazok ? (
               <ImageWithWatermark
-                src={dizajnFilter === "drevo" && dom.zakladna_konfiguracia_obrazok ? dom.zakladna_konfiguracia_obrazok : dom.hlavny_obrazok}
+                src={
+                  dizajnFilter === "podorys3d" && dom.podorys_3d 
+                    ? dom.podorys_3d 
+                    : dizajnFilter === "drevo" && dom.zakladna_konfiguracia_obrazok 
+                      ? dom.zakladna_konfiguracia_obrazok 
+                      : dom.hlavny_obrazok
+                }
                 alt={dom.nazov}
                 className="w-full h-full object-contain bg-gray-100 group-hover:scale-105 transition-all duration-500"
                 useCatalogSetting={true}
@@ -273,7 +279,7 @@ export default function Katalog() {
   const [zoradenie, setZoradenie] = useState(initialFilters.zoradenie);
   const [vybraneNaSrovnanie, setVybraneNaSrovnanie] = useState([]);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [dizajnFilter, setDizajnFilter] = useState("murovka"); // "murovka" alebo "drevo"
+  const [dizajnFilter, setDizajnFilter] = useState("murovka"); // "murovka", "drevo", alebo "podorys3d"
   const [pocetModulovFilter, setPocetModulovFilter] = useState([]);
   const [portraitImages, setPortraitImages] = useState({});
 
@@ -817,7 +823,7 @@ export default function Katalog() {
                         {t('brickDesign')}
                       </Button>
                     </motion.div>
-                    
+
                     <motion.div
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -834,6 +840,25 @@ export default function Katalog() {
                       >
                         <TreePine className="w-4 h-4 sm:w-6 sm:h-6 mr-1 sm:mr-2" />
                         {t('woodDesign')}
+                      </Button>
+                    </motion.div>
+
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex-1 sm:flex-initial"
+                    >
+                      <Button
+                        variant={dizajnFilter === "podorys3d" ? "default" : "outline"}
+                        onClick={() => setDizajnFilter("podorys3d")}
+                        className={`w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 text-xs sm:text-lg font-bold shadow-lg transition-all ${
+                          dizajnFilter === "podorys3d" 
+                            ? "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 ring-4 ring-purple-300" 
+                            : "border-3 border-purple-500 hover:bg-purple-100 text-gray-800"
+                        }`}
+                      >
+                        <Grid3x3 className="w-4 h-4 sm:w-6 sm:h-6 mr-1 sm:mr-2" />
+                        3D Pôdorys
                       </Button>
                     </motion.div>
                   </div>
