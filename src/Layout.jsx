@@ -14,6 +14,7 @@ import CookieConsentBanner from "./components/CookieConsentBanner";
 import { LanguageProvider, useLanguage } from "./components/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
 import UserTracking from "./components/UserTracking";
+import FloatingHouses from "./components/FloatingHouses";
 
 function LayoutContent({ children }) {
   const location = useLocation();
@@ -434,8 +435,12 @@ function LayoutContent({ children }) {
         </div>
       </header>
 
-      <main className="pt-10 sm:pt-14 md:pt-16 lg:pt-20 lg:bg-gray-100">
-        <div className="lg:max-w-[1920px] lg:mx-auto bg-white lg:shadow-xl min-h-screen">
+      <main className="pt-10 sm:pt-14 md:pt-16 lg:pt-20 lg:bg-gray-100 relative">
+        {/* Plavajúce domy po bokoch */}
+        <FloatingHouses side="left" />
+        <FloatingHouses side="right" />
+
+        <div className="lg:max-w-[1920px] lg:mx-auto bg-white lg:shadow-xl min-h-screen relative z-20">
           {children}
         </div>
       </main>
