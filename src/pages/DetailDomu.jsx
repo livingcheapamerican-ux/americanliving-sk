@@ -2315,6 +2315,7 @@ export default function DetailDomu() {
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlat15
                   dom={dom}
+                  onConfigChange={(config) => setProstoKonfiguracia(config)}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
