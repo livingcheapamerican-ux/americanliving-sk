@@ -8,8 +8,8 @@ import { Home } from "lucide-react";
 
 export default function FloatingHouses({ side = "left" }) {
   const { data: allDomy = [] } = useQuery({
-    queryKey: ['domy-floating'],
-    queryFn: () => base44.entities.Dom.list('poradie', 50),
+    queryKey: ['domy-floating-public'],
+    queryFn: () => base44.entities.Dom.filter({ verejny: true }),
     staleTime: 300000,
   });
 
@@ -17,7 +17,6 @@ export default function FloatingHouses({ side = "left" }) {
   const domy = useMemo(() => {
     return allDomy
       .filter(d => 
-        d.verejny === true && 
         d.hlavny_obrazok &&
         (d.vyrobca === "Ticab house" || d.vyrobca === "Prosto House")
       );
