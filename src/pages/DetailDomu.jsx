@@ -388,11 +388,17 @@ export default function DetailDomu() {
 
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
-        closeLightbox();
+        setLightboxOpen(false);
+        setZoomLevel(1);
+        setPanPosition({ x: 0, y: 0 });
       } else if (e.key === 'ArrowLeft') {
-        prevImage();
+        setLightboxIndex((prev) => (prev - 1 + lightboxImages.length) % lightboxImages.length);
+        setZoomLevel(1);
+        setPanPosition({ x: 0, y: 0 });
       } else if (e.key === 'ArrowRight') {
-        nextImage();
+        setLightboxIndex((prev) => (prev + 1) % lightboxImages.length);
+        setZoomLevel(1);
+        setPanPosition({ x: 0, y: 0 });
       }
     };
 
