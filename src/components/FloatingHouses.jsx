@@ -38,7 +38,7 @@ export default function FloatingHouses({ side = "left" }) {
   return (
     <div className="fixed top-20 bottom-0 w-[200px] pointer-events-none z-10 hidden xl:block overflow-hidden"
       style={{ 
-        [side]: side === 'left' ? 'calc(50% - 960px - 200px)' : 'calc(50% + 960px)',
+        [side]: 'max(20px, calc(50% - 960px - 200px))',
       }}
     >
       <div className="relative h-full">
