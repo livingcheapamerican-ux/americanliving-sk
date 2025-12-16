@@ -3066,9 +3066,6 @@ export default function DetailDomu() {
                       if (lyonInziniering) total += CENY.inziniering || 0;
                       if (lyonProjektACertifikacia) total += CENY.projektACertifikacia || 0;
                       if (lyonRevizia) total += CENY.revizia || 0;
-                      if (lyonZaklady === "vruty") total += CENY.zaklady_vruty || 0;
-                      if (lyonZaklady === "patky") total += CENY.zaklady_patky || 0;
-                      if (lyonZaklady === "pasove") total += CENY.zaklady_pasove || 0;
                       if (lyonMontaz) total += CENY.montaz || 0;
                       if (lyonDoprava) total += CENY.doprava || 0;
                       return total;
@@ -3097,14 +3094,12 @@ export default function DetailDomu() {
                   setLyonPrepat(true);
                   setLyonInziniering(true);
                   setLyonProjektACertifikacia(true);
-                  setLyonZaklady("pasove");
                   setLyonUcel("rodinny");
                 } : isProstoHouse ? () => {
                   setIzolaciaNavysenie("premium");
                   setTepelneCerpadlo(true);
                   setRekuperacia(true);
                   setProjektA0(true);
-                  setZaklady("pasove");
                 } : null}
               />
             </div>
@@ -3299,9 +3294,6 @@ export default function DetailDomu() {
                     if (lyonInziniering) total += CENY.inziniering || 0;
                     if (lyonProjektACertifikacia) total += CENY.projektACertifikacia || 0;
                     if (lyonRevizia) total += CENY.revizia || 0;
-                    if (lyonZaklady === "vruty") total += CENY.zaklady_vruty || 0;
-                    if (lyonZaklady === "patky") total += CENY.zaklady_patky || 0;
-                    if (lyonZaklady === "pasove") total += CENY.zaklady_pasove || 0;
                     if (lyonMontaz) total += CENY.montaz || 0;
                     if (lyonDoprava) total += CENY.doprava || 0;
                     
