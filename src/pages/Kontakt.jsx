@@ -107,7 +107,7 @@ export default function Kontakt() {
                         value={formData.meno}
                         onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
                         placeholder="Ján Novák"
-                        className="mt-2 text-gray-900"
+                        className="mt-2 !text-gray-900 placeholder:text-gray-500"
                       />
                     </div>
 
@@ -120,7 +120,7 @@ export default function Kontakt() {
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="jan.novak@email.sk"
-                        className="mt-2 text-gray-900"
+                        className="mt-2 !text-gray-900 placeholder:text-gray-500"
                       />
                     </div>
 
@@ -132,7 +132,7 @@ export default function Kontakt() {
                         value={formData.telefon}
                         onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
                         placeholder="+421 900 123 456"
-                        className="mt-2 text-gray-900"
+                        className="mt-2 !text-gray-900 placeholder:text-gray-500"
                       />
                     </div>
 
@@ -163,7 +163,7 @@ export default function Kontakt() {
                         onChange={(e) => setFormData({ ...formData, poznamka: e.target.value })}
                         placeholder="Popíšte vašu požiadavku alebo otázku..."
                         rows={6}
-                        className="mt-2 text-gray-900"
+                        className="mt-2 !text-gray-900 placeholder:text-gray-500"
                       />
                     </div>
 
