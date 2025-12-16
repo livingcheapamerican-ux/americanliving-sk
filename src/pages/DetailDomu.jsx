@@ -155,105 +155,6 @@ export default function DetailDomu() {
   const isSuperAdmin = user?.super_admin === true;
   const canManage = isAdmin || isSuperAdmin;
 
-  // Výpočet celkovej ceny pre Ticabhouse
-  const ticabhouseTotalPrice = useMemo(() => {
-    if (!dom || dom.vyrobca !== "Ticab house") return null;
-    
-    const DEFAULT_CENY = {
-      izolacia_stien_200mm: 1799.16,
-      izolacia_stien_250mm: 1558.17,
-      izolacia_podlahy_200mm: 334.08,
-      izolacia_stropu_200mm: 271.44,
-      tepelne_cerpadlo: 2889.27,
-      pripravaNaRekuperaciu: 512,
-      rekuperacia: 1155.36,
-      podlahove_kurenie: 2253.30,
-      klimatizacia: 902,
-      pripravaKrb: 578.55,
-      ochranaKachle: 1279.77,
-      fasada_omietka: 1580.79,
-      fasada_smrekovec: 3349.50,
-      fasada_falcovane: 4953.78,
-      fasada_thermowood: 6677.25,
-      strecha_falcovane: 3227.70,
-      odkvapy: 1502.49,
-      dvere_kovove: 278.40,
-      obklad_smrek_bez_uzlov: 0,
-      obklad_sadrokarton_tapeta: 7855,
-      obklad_osb_panel: 5279,
-      dvere_posuvne: 427.17,
-      elektro_cz: 460.23,
-      elektro_ge: 1583.40,
-      bleskozvod: 856.08,
-      prepat: 311.46,
-      pripravaNaSolarnePanely: 1305,
-      sprchovyKut: 645.54,
-      vana: 501.12,
-      bateria: 139.20,
-      skrinka: 434.13,
-      strop_kupelna_sadrokarton: 0,
-      inziniering: 2773.56,
-      projektACertifikacia: 3745.35,
-      revizia: 1605.15,
-      zaklady_vruty: 4494.42,
-      zaklady_patky: 2568.24,
-      zaklady_pasove: 11825.04,
-      montaz: 4805.88,
-      doprava: 8927.94
-    };
-    const CENY = { ...DEFAULT_CENY, ...(dom.konfigurator_ceny || {}) };
-    let total = dom.zakladna_cena || 0;
-    
-    if (lyonIzolaciaStien === "200mm") total += CENY.izolacia_stien_200mm || 0;
-    if (lyonIzolaciaStien === "250mm") total += CENY.izolacia_stien_250mm || 0;
-    if (lyonIzolaciaPodlahy === "200mm") total += CENY.izolacia_podlahy_200mm || 0;
-    if (lyonIzolaciaStropu === "200mm") total += CENY.izolacia_stropu_200mm || 0;
-    if (lyonTepelneCerpadlo === "ano") total += CENY.tepelne_cerpadlo || 0;
-    if (lyonPripravaNaRekuperaciu) total += CENY.pripravaNaRekuperaciu || 0;
-    if (lyonRekuperacia === "ano") total += CENY.rekuperacia || 0;
-    if (lyonPodlahovoKurenie) total += CENY.podlahove_kurenie || 0;
-    if (lyonKlimatizacia) total += CENY.klimatizacia || 0;
-    if (lyonPripravaNaKrb) total += CENY.pripravaKrb || 0;
-    if (lyonOchranaKachle) total += CENY.ochranaKachle || 0;
-    if (lyonFasada === "omietka") total += CENY.fasada_omietka || 0;
-    if (lyonFasada === "smrekovec") total += CENY.fasada_smrekovec || 0;
-    if (lyonFasada === "falcovane") total += CENY.fasada_falcovane || 0;
-    if (lyonFasada === "thermowood") total += CENY.fasada_thermowood || 0;
-    if (lyonStrecha === "falcovane") total += CENY.strecha_falcovane || 0;
-    if (lyonOdkvapy === "ano") total += CENY.odkvapy || 0;
-    if (lyonVchodoveDvere === "kovove") total += CENY.dvere_kovove || 0;
-    if (lyonObkladStien === "smrek_bez_uzlov") total += CENY.obklad_smrek_bez_uzlov || 0;
-    if (lyonObkladStien === "sadrokarton_tapeta") total += CENY.obklad_sadrokarton_tapeta || 0;
-    if (lyonObkladStien === "osb_panel") total += CENY.obklad_osb_panel || 0;
-    if (lyonInterieroveDvere === "posuvne") total += CENY.dvere_posuvne || 0;
-    if (lyonElektro === "cz") total += CENY.elektro_cz || 0;
-    if (lyonElektro === "ge") total += CENY.elektro_ge || 0;
-    if (lyonBleskozvod) total += CENY.bleskozvod || 0;
-    if (lyonPrepat) total += CENY.prepat || 0;
-    if (lyonPripravaNaSolarnePanely) total += CENY.pripravaNaSolarnePanely || 0;
-    if (lyonSprchovyKut === "radaway") total += CENY.sprchovyKut || 0;
-    if (lyonVana) total += CENY.vana || 0;
-    if (lyonBateria === "grohe") total += CENY.bateria || 0;
-    if (lyonSkrinka) total += CENY.skrinka || 0;
-    if (lyonStropKupelna === "sadrokarton") total += CENY.strop_kupelna_sadrokarton || 0;
-    if (lyonInziniering) total += CENY.inziniering || 0;
-    if (lyonProjektACertifikacia) total += CENY.projektACertifikacia || 0;
-    if (lyonRevizia) total += CENY.revizia || 0;
-    if (lyonZaklady === "vruty") total += CENY.zaklady_vruty || 0;
-    if (lyonZaklady === "patky") total += CENY.zaklady_patky || 0;
-    if (lyonZaklady === "pasove") total += CENY.zaklady_pasove || 0;
-    if (lyonMontaz) total += CENY.montaz || 0;
-    if (lyonDoprava) total += CENY.doprava || 0;
-    
-    return total;
-  }, [dom, lyonIzolaciaStien, lyonIzolaciaPodlahy, lyonIzolaciaStropu, lyonTepelneCerpadlo, 
-      lyonPripravaNaRekuperaciu, lyonRekuperacia, lyonPodlahovoKurenie, lyonKlimatizacia,
-      lyonPripravaNaKrb, lyonOchranaKachle, lyonFasada, lyonStrecha, lyonOdkvapy,
-      lyonVchodoveDvere, lyonObkladStien, lyonInterieroveDvere, lyonElektro,
-      lyonBleskozvod, lyonPrepat, lyonPripravaNaSolarnePanely, lyonSprchovyKut,
-      lyonVana, lyonBateria, lyonSkrinka, lyonStropKupelna, lyonInziniering,
-      lyonProjektACertifikacia, lyonRevizia, lyonZaklady, lyonMontaz, lyonDoprava]);
-
   const { data: dom, isLoading } = useQuery({
     queryKey: ['dom-detail', domId, domSlug],
     queryFn: async () => {
@@ -466,9 +367,108 @@ export default function DetailDomu() {
     ? [dom.hlavny_obrazok, ...dom.galeria]
     : [dom.hlavny_obrazok];
 
-  const isProstoHouse = dom.vyrobca === "Prosto House";
-  const isTicabhouse = dom.vyrobca === "Ticab house";
-  const isJAKModules = dom.vyrobca === "JAK Modules";
+  const isProstoHouse = dom?.vyrobca === "Prosto House";
+  const isTicabhouse = dom?.vyrobca === "Ticab house";
+  const isJAKModules = dom?.vyrobca === "JAK Modules";
+
+  // Výpočet celkovej ceny pre Ticabhouse
+  const ticabhouseTotalPrice = useMemo(() => {
+    if (!dom || dom.vyrobca !== "Ticab house") return null;
+    
+    const DEFAULT_CENY = {
+      izolacia_stien_200mm: 1799.16,
+      izolacia_stien_250mm: 1558.17,
+      izolacia_podlahy_200mm: 334.08,
+      izolacia_stropu_200mm: 271.44,
+      tepelne_cerpadlo: 2889.27,
+      pripravaNaRekuperaciu: 512,
+      rekuperacia: 1155.36,
+      podlahove_kurenie: 2253.30,
+      klimatizacia: 902,
+      pripravaKrb: 578.55,
+      ochranaKachle: 1279.77,
+      fasada_omietka: 1580.79,
+      fasada_smrekovec: 3349.50,
+      fasada_falcovane: 4953.78,
+      fasada_thermowood: 6677.25,
+      strecha_falcovane: 3227.70,
+      odkvapy: 1502.49,
+      dvere_kovove: 278.40,
+      obklad_smrek_bez_uzlov: 0,
+      obklad_sadrokarton_tapeta: 7855,
+      obklad_osb_panel: 5279,
+      dvere_posuvne: 427.17,
+      elektro_cz: 460.23,
+      elektro_ge: 1583.40,
+      bleskozvod: 856.08,
+      prepat: 311.46,
+      pripravaNaSolarnePanely: 1305,
+      sprchovyKut: 645.54,
+      vana: 501.12,
+      bateria: 139.20,
+      skrinka: 434.13,
+      strop_kupelna_sadrokarton: 0,
+      inziniering: 2773.56,
+      projektACertifikacia: 3745.35,
+      revizia: 1605.15,
+      zaklady_vruty: 4494.42,
+      zaklady_patky: 2568.24,
+      zaklady_pasove: 11825.04,
+      montaz: 4805.88,
+      doprava: 8927.94
+    };
+    const CENY = { ...DEFAULT_CENY, ...(dom.konfigurator_ceny || {}) };
+    let total = dom.zakladna_cena || 0;
+    
+    if (lyonIzolaciaStien === "200mm") total += CENY.izolacia_stien_200mm || 0;
+    if (lyonIzolaciaStien === "250mm") total += CENY.izolacia_stien_250mm || 0;
+    if (lyonIzolaciaPodlahy === "200mm") total += CENY.izolacia_podlahy_200mm || 0;
+    if (lyonIzolaciaStropu === "200mm") total += CENY.izolacia_stropu_200mm || 0;
+    if (lyonTepelneCerpadlo === "ano") total += CENY.tepelne_cerpadlo || 0;
+    if (lyonPripravaNaRekuperaciu) total += CENY.pripravaNaRekuperaciu || 0;
+    if (lyonRekuperacia === "ano") total += CENY.rekuperacia || 0;
+    if (lyonPodlahovoKurenie) total += CENY.podlahove_kurenie || 0;
+    if (lyonKlimatizacia) total += CENY.klimatizacia || 0;
+    if (lyonPripravaNaKrb) total += CENY.pripravaKrb || 0;
+    if (lyonOchranaKachle) total += CENY.ochranaKachle || 0;
+    if (lyonFasada === "omietka") total += CENY.fasada_omietka || 0;
+    if (lyonFasada === "smrekovec") total += CENY.fasada_smrekovec || 0;
+    if (lyonFasada === "falcovane") total += CENY.fasada_falcovane || 0;
+    if (lyonFasada === "thermowood") total += CENY.fasada_thermowood || 0;
+    if (lyonStrecha === "falcovane") total += CENY.strecha_falcovane || 0;
+    if (lyonOdkvapy === "ano") total += CENY.odkvapy || 0;
+    if (lyonVchodoveDvere === "kovove") total += CENY.dvere_kovove || 0;
+    if (lyonObkladStien === "smrek_bez_uzlov") total += CENY.obklad_smrek_bez_uzlov || 0;
+    if (lyonObkladStien === "sadrokarton_tapeta") total += CENY.obklad_sadrokarton_tapeta || 0;
+    if (lyonObkladStien === "osb_panel") total += CENY.obklad_osb_panel || 0;
+    if (lyonInterieroveDvere === "posuvne") total += CENY.dvere_posuvne || 0;
+    if (lyonElektro === "cz") total += CENY.elektro_cz || 0;
+    if (lyonElektro === "ge") total += CENY.elektro_ge || 0;
+    if (lyonBleskozvod) total += CENY.bleskozvod || 0;
+    if (lyonPrepat) total += CENY.prepat || 0;
+    if (lyonPripravaNaSolarnePanely) total += CENY.pripravaNaSolarnePanely || 0;
+    if (lyonSprchovyKut === "radaway") total += CENY.sprchovyKut || 0;
+    if (lyonVana) total += CENY.vana || 0;
+    if (lyonBateria === "grohe") total += CENY.bateria || 0;
+    if (lyonSkrinka) total += CENY.skrinka || 0;
+    if (lyonStropKupelna === "sadrokarton") total += CENY.strop_kupelna_sadrokarton || 0;
+    if (lyonInziniering) total += CENY.inziniering || 0;
+    if (lyonProjektACertifikacia) total += CENY.projektACertifikacia || 0;
+    if (lyonRevizia) total += CENY.revizia || 0;
+    if (lyonZaklady === "vruty") total += CENY.zaklady_vruty || 0;
+    if (lyonZaklady === "patky") total += CENY.zaklady_patky || 0;
+    if (lyonZaklady === "pasove") total += CENY.zaklady_pasove || 0;
+    if (lyonMontaz) total += CENY.montaz || 0;
+    if (lyonDoprava) total += CENY.doprava || 0;
+    
+    return total;
+  }, [dom, lyonIzolaciaStien, lyonIzolaciaPodlahy, lyonIzolaciaStropu, lyonTepelneCerpadlo, 
+      lyonPripravaNaRekuperaciu, lyonRekuperacia, lyonPodlahovoKurenie, lyonKlimatizacia,
+      lyonPripravaNaKrb, lyonOchranaKachle, lyonFasada, lyonStrecha, lyonOdkvapy,
+      lyonVchodoveDvere, lyonObkladStien, lyonInterieroveDvere, lyonElektro,
+      lyonBleskozvod, lyonPrepat, lyonPripravaNaSolarnePanely, lyonSprchovyKut,
+      lyonVana, lyonBateria, lyonSkrinka, lyonStropKupelna, lyonInziniering,
+      lyonProjektACertifikacia, lyonRevizia, lyonZaklady, lyonMontaz, lyonDoprava]);
 
   // Typy galérií pre zobrazenie
   const getGaleriaLabel = (typ) => {
