@@ -382,6 +382,24 @@ export default function DetailDomu() {
     setPanPosition({ x: 0, y: 0 });
   };
 
+  // Keyboard navigation for lightbox
+  useEffect(() => {
+    if (!lightboxOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      } else if (e.key === 'ArrowLeft') {
+        prevImage();
+      } else if (e.key === 'ArrowRight') {
+        nextImage();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxOpen, lightboxImages]);
+
   const handleZoomIn = () => {
     setZoomLevel((prev) => Math.min(prev + 0.5, 4));
   };
