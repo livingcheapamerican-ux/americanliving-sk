@@ -19,6 +19,9 @@ export default function LyonSummaryPanelStandalone({
   const { t } = useLanguage();
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
+  // DÔLEŽITÉ: Používame totalPrice priamo z propu, nerobíme vlastný výpočet!
+  const displayPrice = totalPrice || dom?.zakladna_cena || 0;
+
   // Kontrola či je konfigurácia A0
   const isA0Configuration = () => {
     return (
@@ -366,7 +369,7 @@ export default function LyonSummaryPanelStandalone({
       {/* Total Price */}
       <div className="border-t-2 border-slate-700 bg-gradient-to-r from-blue-600 to-indigo-600 p-4">
         <p className="text-sm text-blue-100 mb-1">{t('totalPriceWithVAT') || 'Celková cena s DPH'}</p>
-        <p className="text-3xl font-black text-white">{formatPrice(totalPrice)}</p>
+        <p className="text-3xl font-black text-white">{formatPrice(displayPrice)}</p>
         <div className="mt-3 space-y-2">
           <Button 
             onClick={() => setShowModal(true)} 
@@ -427,7 +430,7 @@ export default function LyonSummaryPanelStandalone({
         predajNehnutelnosti={predajNehnutelnosti}
         chcemPozemok={hladamPozemok}
         financneSluzby={financneSluzby}
-        totalPrice={totalPrice}
+        totalPrice={displayPrice}
       />
     </Card>
   );
