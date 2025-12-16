@@ -83,6 +83,7 @@ export default function KonfiguratorWizard({
         useBarn48Prices = false,
         useBarnDoublePrices = false,
         useFlatSmallPrices = false,
+        onPriceChange,
   predajNehnutelnosti, setPredajNehnutelnosti,
   hladaniePozemku, setHladaniePozemku,
   financneSluzby, setFinancneSluzby,
@@ -118,6 +119,7 @@ export default function KonfiguratorWizard({
 }) {
   const [currentStep, setCurrentStep] = useState(0);
   const { t, language } = useLanguage();
+  const [celkovaCena, setCelkovaCena] = useState(0);
 
   // Vždy začať od kroku 0 pri mount
   React.useEffect(() => {
@@ -244,6 +246,10 @@ export default function KonfiguratorWizard({
     const commonProps = {
       dom,
       onReset: handleFullReset,
+      onPriceChange: (price) => {
+        setCelkovaCena(price);
+        if (onPriceChange) onPriceChange(price);
+      },
       predajNehnutelnosti, setPredajNehnutelnosti,
       hladaniePozemku, setHladaniePozemku,
       financneSluzby, setFinancneSluzby,
