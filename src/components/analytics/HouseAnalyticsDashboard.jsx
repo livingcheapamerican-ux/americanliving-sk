@@ -29,8 +29,13 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
   const houseStats = useMemo(() => {
     const stats = {};
 
-    // Inicializácia pre všetky domy
-    domy.forEach(dom => {
+    // Filtrovať len Ticab House a Prosto House
+    const filteredDomy = domy.filter(dom => 
+      dom.vyrobca?.includes('Ticab') || dom.vyrobca?.includes('Prosto')
+    );
+
+    // Inicializácia pre filtrované domy
+    filteredDomy.forEach(dom => {
       stats[dom.id] = {
         dom,
         totalVisits: 0,
