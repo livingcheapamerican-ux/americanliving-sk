@@ -146,6 +146,9 @@ export default function DetailDomu() {
   // State pre konfiguráciu Prosto House
   const [prostoKonfiguracia, setProstoKonfiguracia] = useState(null);
 
+  // State pre konfiguráciu Ticabhouse
+  const [ticabKonfiguracia, setTicabKonfiguracia] = useState(null);
+
   const { data: user } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me().catch(() => null)
@@ -3059,42 +3062,7 @@ export default function DetailDomu() {
                 dom={dom}
                 user={user}
                 aktualnaKonfiguracia={
-                  isTicabhouse ? {
-                    celkovaCena: (() => {
-                      const CENY = dom.konfigurator_ceny || {};
-                      let total = dom.zakladna_cena || 0;
-                      if (lyonIzolaciaStien === "200mm") total += CENY.izolacia_stien_200mm || 0;
-                      if (lyonIzolaciaStien === "250mm") total += CENY.izolacia_stien_250mm || 0;
-                      if (lyonIzolaciaPodlahy === "200mm") total += CENY.izolacia_podlahy_200mm || 0;
-                      if (lyonIzolaciaStropu === "200mm") total += CENY.izolacia_stropu_200mm || 0;
-                      if (lyonTepelneCerpadlo === "ano") total += CENY.tepelne_cerpadlo || 0;
-                      if (lyonPripravaNaRekuperaciu) total += CENY.pripravaNaRekuperaciu || 0;
-                      if (lyonRekuperacia === "ano") total += CENY.rekuperacia || 0;
-                      if (lyonBleskozvod) total += CENY.bleskozvod || 0;
-                      if (lyonPrepat) total += CENY.prepat || 0;
-                      if (lyonPripravaNaSolarnePanely) total += CENY.pripravaNaSolarnePanely || 0;
-                      if (lyonInziniering) total += CENY.inziniering || 0;
-                      if (lyonProjektACertifikacia) total += CENY.projektACertifikacia || 0;
-                      if (lyonRevizia) total += CENY.revizia || 0;
-                      if (lyonZaklady === "vruty") total += CENY.zaklady_vruty || 0;
-                      if (lyonZaklady === "patky") total += CENY.zaklady_patky || 0;
-                      if (lyonZaklady === "pasove") total += CENY.zaklady_pasove || 0;
-                      if (lyonMontaz) total += CENY.montaz || 0;
-                      if (lyonDoprava) total += CENY.doprava || 0;
-                      return total;
-                    })(),
-                    izolaciaStien: lyonIzolaciaStien,
-                    izolaciaPodlahy: lyonIzolaciaPodlahy,
-                    izolaciaStropu: lyonIzolaciaStropu,
-                    tepelneCerpadlo: lyonTepelneCerpadlo,
-                    rekuperacia: lyonRekuperacia,
-                    pripravaNaSolarnePanely: lyonPripravaNaSolarnePanely,
-                    bleskozvod: lyonBleskozvod,
-                    prepat: lyonPrepat,
-                    inziniering: lyonInziniering,
-                    projektACertifikacia: lyonProjektACertifikacia,
-                    zaklady: lyonZaklady
-                  } : isProstoHouse ? prostoKonfiguracia : null
+                  isTicabhouse ? ticabKonfiguracia : isProstoHouse ? prostoKonfiguracia : null
                 }
                 onNastavA0Prvky={isTicabhouse ? () => {
                   setLyonIzolaciaStien("250mm");
@@ -3190,6 +3158,7 @@ export default function DetailDomu() {
               <div className="space-y-4">
                 <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                   <LyonSummaryPanelStandalone
+                  onConfigChange={(config) => setTicabKonfiguracia(config)}
                   predajNehnutelnosti={lyonPredajNehnutelnosti}
                   hladamPozemok={lyonHladamPozemok}
                   financneSluzby={lyonFinancneSluzby}

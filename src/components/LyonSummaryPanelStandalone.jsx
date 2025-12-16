@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,10 +13,26 @@ export default function LyonSummaryPanelStandalone({
   fasada, strecha, odkvapy, okna, vchodoveDvere, obkladStien, interieroveDvere,
   elektro, bleskozvod, prepat, pripravaNaSolarnePanely, sprchovyKut, vana, bateria, skrinka, stropKupelna,
   inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
-  totalPrice, onSubmit, dom
+  totalPrice, onSubmit, dom, onConfigChange
 }) {
   const [showModal, setShowModal] = useState(false);
   const { t } = useLanguage();
+
+  // Poslať konfiguráciu do rodičovského komponentu (pre hypotéku)
+  useEffect(() => {
+    if (onConfigChange && totalPrice) {
+      onConfigChange({
+        celkovaCena: totalPrice,
+        izolaciaStien,
+        izolaciaPodlahy,
+        izolaciaStropu,
+        tepelneCerpadlo,
+        rekuperacia,
+        projektACertifikacia,
+        zaklady
+      });
+    }
+  }, [totalPrice, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia, projektACertifikacia, zaklady, onConfigChange]);
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
   // Kontrola či je konfigurácia A0
