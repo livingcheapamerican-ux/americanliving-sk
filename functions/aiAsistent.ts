@@ -11,30 +11,107 @@ Deno.serve(async (req) => {
 
     const { message, context, history } = await req.json();
 
+    // Načítaj všetky databázové entity pre knowledge base
+    const [domy, blogy, konfigTexty, dokumenty] = await Promise.all([
+      base44.asServiceRole.entities.Dom.list(),
+      base44.asServiceRole.entities.BlogPost.list(),
+      base44.asServiceRole.entities.KonfiguratorText.list(),
+      base44.asServiceRole.entities.Dokument.filter({ pre_chatbota: true })
+    ]);
+
+    // Priprav kompaktné znalosti o domoch
+    const domyKnowledge = domy.filter(d => d.verejny !== false).map(d => ({
+      nazov: d.nazov,
+      vyrobca: d.vyrobca,
+      typ: d.typ_domu,
+      kategoria: d.kategoria,
+      plocha: d.zastavana_plocha,
+      uzitkova: d.uzitkova_plocha,
+      izby: d.pocet_izieb,
+      moduly: d.pocet_modulov,
+      cena: d.zakladna_cena,
+      popis: d.popis?.substring(0, 500),
+      a0: d.energeticky_certifikat
+    }));
+
+    // Priprav kompaktné znalosti o blogoch
+    const blogyKnowledge = blogy.filter(b => b.publikovany).map(b => ({
+      nazov: b.nazov,
+      perex: b.perex,
+      kategoria: b.kategoria,
+      tagy: b.tagy
+    }));
+
+    // Priprav kompaktné znalosti o konfigurátoroch
+    const konfigKnowledge = konfigTexty.map(k => ({
+      vyrobca: k.vyrobca,
+      polozka: k.polozka_id,
+      nazov: k.nazov,
+      popis: k.dlhy_popis
+    }));
+
+    // Priprav kompaktné znalosti z dokumentov
+    const dokumentyKnowledge = dokumenty.map(d => ({
+      nazov: d.nazov,
+      typ: d.typ,
+      vyrobca: d.vyrobca,
+      zhrnutie: d.zhrnutie || d.ai_generovany_popis,
+      klucove_info: d.klúčové_informácie
+    })).slice(0, 20);
+
     // Systémový prompt pre AI asistenta
-    const systemPrompt = `Si AI asistent pre aplikáciu American Living - distribútor modulárnych domov.
+    const systemPrompt = `Si AI KONZULTANT pre American Living - distribútor modulárnych a montovaných domov.
 
-TVOJE HLAVNÉ ÚLOHY:
-1. Pomáhať s vypĺňaním formulárov (navrhovať typ dokumentu, výrobcu, model domu na základe kontextu)
-2. Odpovedať na otázky o fungovaní aplikácie
-3. Poskytovať rady a návrhy v prirodzenom jazyku
+🎯 TVOJA ÚLOHA:
+Pomáhať zákazníkom nájsť ideálny dom, vysvetliť konfigurátor, kalkulovať hypotéku, poradiť s pozemkom a legislatívou.
 
-KONTEXT APLIKÁCIE:
-- Výrobcovia: JAK Modules, Ticab house, Prosto House, Domki z Gór, American Living
-- Typy dokumentov: cenník, technická_špecifikácia, návod, certifikát, FAQ, blog, fotky, video, zmluva, faktúra, ponuka, objednávka
-- AI analýza dokumentov extrahuje rozmery, materiály, ceny, energetické parametre
-- Admin môže nahrať súbory/priečinky hromadne
-- Konfigurátor umožňuje vypočítať cenu domu s rôznymi možnosťami
+📚 DATABÁZA DOMOV (${domyKnowledge.length} modelov):
+${JSON.stringify(domyKnowledge, null, 2)}
 
-AKO ODPOVEDAŤ:
-- Buď priateľský a stručný
-- Použi emoji kde to dáva zmysel
-- Ak používateľ pýta sa na formulár, navrhni konkrétne hodnoty
-- Vysvetľuj jednoducho, aj pre netechnických používateľov
+📖 BLOGY A ČLÁNKY:
+${JSON.stringify(blogyKnowledge.slice(0, 10), null, 2)}
 
-AKTUÁLNY KONTEXT: ${context}
+🛠️ KONFIGURÁTOR TEXTY:
+${JSON.stringify(konfigKnowledge.slice(0, 30), null, 2)}
 
-Odpovedaj v slovenčine.`;
+📄 KĽÚČOVÉ DOKUMENTY:
+${JSON.stringify(dokumentyKnowledge, null, 2)}
+
+⚠️ KRITICKÉ PRAVIDLÁ:
+
+1. HYPOTÉKA:
+   ❌ Rekreačná stavba = BEZ HYPOTÉKY
+   ❌ Mobilný dom = BEZ HYPOTÉKY
+   ✅ Rodinný dom A0 = HYPOTÉKA OK
+
+2. VÝPOČET CENY NA KĽÚČ:
+   
+   TICAB HOUSE:
+   • Rekreačná = zakladna_cena (INCLUDED: doprava, montáž)
+   • Rodinný A0 = zakladna_cena + pásy (11 825€) + A0 upgrade (~18 000€) + legislatíva (6 000€)
+   
+   PROSTO HOUSE:
+   • Základ = zakladna_cena (LEN KONŠTRUKCIA, A0 included)
+   • Na kľúč = zakladna_cena + základy (8k€) + montáž (13k€) + prípojky (10k€) + legislatíva (5k€)
+
+3. POUŽÍVAJ LEN SKUTOČNÉ NÁZVY Z DB:
+   ❌ "Ticab Family L3" - NEEXISTUJE
+   ✅ "${domyKnowledge[0]?.nazov}" - SKUTOČNÝ DOM
+
+4. REALISTICKÉ CENY:
+   • Vždy počítaj S ZÁKLADAMI
+   • Vždy počítaj S A0 ak rodina
+   • Vždy počítaj S LEGISLATÍVOU
+
+5. ODPORÚČANIA:
+   • Vypočítaj cenu kompletne
+   • Porovnaj 2-3 vhodné modely
+   • Vysvetli rozdiely
+   • Upozorni na hypotéku ak potrebná
+
+KONTEXT: ${context}
+
+Odpovedaj v slovenčine, priateľsky, stručne, s emoji.`;
 
     // Priprav históriu pre LLM
     const conversationHistory = (history || []).map(msg => ({
