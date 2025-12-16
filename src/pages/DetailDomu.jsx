@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -38,7 +38,8 @@ import TranslatedDescription from "../components/TranslatedDescription";
 
 export default function DetailDomu() {
   const { t } = useLanguage();
-  const urlParams = new URLSearchParams(window.location.search);
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
   const domId = urlParams.get('id');
   const domSlug = urlParams.get('slug');
   const returnUrl = urlParams.get('return') || createPageUrl("Katalog");
