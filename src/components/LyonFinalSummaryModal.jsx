@@ -836,7 +836,7 @@ export default function LyonFinalSummaryModal({
                         value={formData.meno}
                         onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
                         placeholder="Ján Novák"
-                        className="mt-1"
+                        className="mt-1 !text-gray-900 placeholder:text-gray-500"
                       />
                     </div>
 
@@ -849,7 +849,7 @@ export default function LyonFinalSummaryModal({
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="jan.novak@email.sk"
-                        className="mt-1"
+                        className="mt-1 !text-gray-900 placeholder:text-gray-500"
                       />
                     </div>
 
@@ -861,7 +861,7 @@ export default function LyonFinalSummaryModal({
                         value={formData.telefon}
                         onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
                         placeholder="+421 900 123 456"
-                        className="mt-1"
+                        className="mt-1 !text-gray-900 placeholder:text-gray-500"
                       />
                     </div>
 
@@ -873,7 +873,7 @@ export default function LyonFinalSummaryModal({
                         value={formData.obec}
                         onChange={(e) => setFormData({ ...formData, obec: e.target.value })}
                         placeholder="napr. Bratislava, Košice..."
-                        className="mt-1"
+                        className="mt-1 !text-gray-900 placeholder:text-gray-500"
                       />
                     </div>
 
@@ -885,7 +885,7 @@ export default function LyonFinalSummaryModal({
                         onChange={(e) => setFormData({ ...formData, poznamka: e.target.value })}
                         placeholder="Máte otázky alebo špeciálne požiadavky?"
                         rows={3}
-                        className="mt-1"
+                        className="mt-1 !text-gray-900 placeholder:text-gray-500"
                       />
                     </div>
 
