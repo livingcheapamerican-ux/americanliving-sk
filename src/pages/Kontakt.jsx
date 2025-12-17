@@ -25,7 +25,27 @@ export default function Kontakt() {
   const queryClient = useQueryClient();
 
   const createDopytMutation = useMutation({
-    mutationFn: (data) => base44.entities.Dopyt.create(data),
+    mutationFn: async (data) => {
+      // Vytvor dopyt v databáze
+      const novyDopyt = await base44.entities.Dopyt.create(data);
+      
+      // Pošli notifikáciu predajcovi a klientovi
+      await base44.functions.invoke('notifikujNovyDopyt', {
+        dopyt: {
+          id: novyDopyt.id,
+          klient_meno: data.meno,
+          klient_email: data.email,
+          klient_telefon: data.telefon,
+          klient_adresa: data.lokalita || '',
+          typ_dopytu: data.typ_dopytu,
+          poznamka: data.poznamka,
+          dom_nazov: data.dom_nazov || null,
+          dom_id: data.dom_id || null
+        }
+      });
+      
+      return novyDopyt;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dopyty'] });
       setSubmitted(true);
