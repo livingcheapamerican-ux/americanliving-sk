@@ -18,7 +18,6 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
 
     setSending(true);
     try {
-      // Vytvor dopyt v databáze
       const novyDopyt = await base44.entities.Dopyt.create({
         meno: formData.meno,
         email: formData.email,
@@ -28,16 +27,15 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
         poznamka: `Lokalita: ${formData.obec}\n\n${formData.poznamka || ''}\n\nCelková cena: ${price.toLocaleString('sk-SK')} €`
       });
 
-      // Pošli notifikáciu predajcovi
       await base44.functions.invoke('notifikujNovyDopyt', {
         dopyt: {
           id: novyDopyt.id,
-          klient_meno: novyDopyt.meno,
-          klient_email: novyDopyt.email,
-          klient_telefon: novyDopyt.telefon,
+          klient_meno: formData.meno,
+          klient_email: formData.email,
+          klient_telefon: formData.telefon,
           klient_adresa: formData.obec,
-          typ_dopytu: novyDopyt.typ_dopytu,
-          poznamka: novyDopyt.poznamka,
+          typ_dopytu: 'konfigurator',
+          poznamka: `Lokalita: ${formData.obec}\n\n${formData.poznamka || ''}\n\nCelková cena: ${price.toLocaleString('sk-SK')} €`,
           dom_nazov: dom?.nazov || 'Konfigurátor',
           dom_id: dom?.id
         }
