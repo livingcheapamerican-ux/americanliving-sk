@@ -273,13 +273,29 @@ export default function LyonKonfiguratorWrapper(props) {
   };
 
   const handleSendQuoteFromFloating = async (contactData) => {
-    const response = await base44.functions.invoke('odosliCenovuPonukuLyonEmail', {
-      dom: props.dom,
-      klient: contactData,
-      konfiguraciaData: allProps,
-      totalPrice
-    });
-    return response;
+    try {
+      const response = await base44.functions.invoke('odosliCenovuPonukuLyonEmail', {
+        dom: props.dom,
+        klientData: contactData,
+        konfiguraciaData: {
+          ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu, 
+          tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu,
+          podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia,
+          fasada, strecha, odkvapy, okna, vchodoveDvere,
+          obkladStien, podlaha, interieroveDvere,
+          elektro, bleskozvod, prepat, pripravaNaSolarnePanely,
+          sprchovyKut, vana, bateria, skrinka, stropKupelna,
+          inziniering, projektACertifikacia, revizia,
+          zaklady, montaz, doprava,
+          predajNehnutelnosti, chcemPozemok, financneSluzby,
+          totalPrice
+        }
+      });
+      return response;
+    } catch (error) {
+      console.error('Error in handleSendQuoteFromFloating:', error);
+      throw error;
+    }
   };
 
   return (
