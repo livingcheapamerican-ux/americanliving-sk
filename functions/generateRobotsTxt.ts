@@ -1,15 +1,27 @@
 Deno.serve(async (req) => {
-  const robotsTxt = `User-agent: *
+  const baseUrl = 'https://www.americanliving.sk';
+  
+  const robotsTxt = `# robots.txt pre americanliving.sk
+User-agent: *
 Allow: /
 
-Sitemap: https://americanliving.sk/api/sitemap
+# Sitemap
+Sitemap: ${baseUrl}/api/generateSitemap
 
-# Disallow admin pages
+# Disallow admin stránky
 Disallow: /admin-*
-Disallow: /*admin*
-Disallow: /test-*
-Disallow: /regeneruj-*
-Disallow: /migracia-*
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Preferované indexovanie
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
 `;
 
   return new Response(robotsTxt, {
