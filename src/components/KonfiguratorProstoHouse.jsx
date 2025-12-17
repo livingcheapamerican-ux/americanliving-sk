@@ -22,125 +22,7 @@ import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation"
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
-
-// Dlaždica s tooltip a veľkou fajkou
-const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [hoverTimer, setHoverTimer] = useState(null);
-  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
-  const tileRef = useRef(null);
-
-  const updateTooltipPosition = () => {
-    if (tileRef.current) {
-      const rect = tileRef.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const viewportWidth = window.innerWidth;
-      const tooltipHeight = 80;
-      
-      let top, left;
-      const centerY = viewportHeight / 2;
-      if (rect.bottom < centerY) {
-        top = rect.bottom + 10;
-      } else {
-        top = Math.max(rect.top - tooltipHeight - 10, 60);
-      }
-      
-      left = viewportWidth / 2;
-      setTooltipPosition({ top, left });
-    }
-  };
-
-  const handleMouseEnter = () => {
-    const timer = setTimeout(() => {
-      updateTooltipPosition();
-      setShowTooltip(true);
-      setTimeout(() => setShowTooltip(false), 3000);
-    }, 2000);
-    setHoverTimer(timer);
-  };
-
-  const handleMouseLeave = () => {
-    if (hoverTimer) clearTimeout(hoverTimer);
-    setShowTooltip(false);
-  };
-
-  React.useEffect(() => {
-    if (showTooltip) {
-      const handleScroll = () => updateTooltipPosition();
-      window.addEventListener('scroll', handleScroll, true);
-      return () => window.removeEventListener('scroll', handleScroll, true);
-    }
-  }, [showTooltip]);
-
-  return (
-    <motion.div
-      ref={tileRef}
-      whileHover={{ scale: 1.02, y: -2 }}
-      whileTap={{ scale: 0.98 }}
-      onClick={onClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={`relative p-1 sm:p-2.5 rounded-md sm:rounded-lg cursor-pointer transition-all flex flex-col items-center text-center ${
-        selected 
-          ? `bg-gradient-to-br ${selectedBg.replace('bg-', 'from-')}/90 via-white to-${selectedBg.replace('bg-', '')}/50 border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
-          : isA0 
-            ? "bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
-            : `bg-white border-2 border-gray-200 ${hoverBorder} hover:shadow-md`
-      }`}
-    >
-      {isA0 && (
-        <motion.div
-          animate={{ scale: [1, 1.1, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute top-0.5 left-0.5 sm:top-1 sm:left-1 z-10"
-        >
-          <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-[6px] sm:text-[8px] px-1 sm:px-1.5 shadow-lg">
-            <Sparkles className="w-1.5 h-1.5 sm:w-2 sm:h-2 mr-0.5" />A0
-          </Badge>
-        </motion.div>
-      )}
-      
-      <AnimatePresence>
-        {selected && (
-          <motion.div
-            initial={{ scale: 0, opacity: 0, rotate: -180 }}
-            animate={{ scale: 1, opacity: 1, rotate: 0 }}
-            exit={{ scale: 0, opacity: 0, rotate: 180 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="absolute top-1 right-1 sm:top-2 sm:right-2 z-20 pointer-events-none"
-          >
-            <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg ring-2 ring-white">
-              <Check className="w-4 h-4 sm:w-5 sm:h-5 text-white stroke-[3]" />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <Icon className={`w-3 h-3 sm:w-6 sm:h-6 mb-0.5 sm:mb-1 ${selected ? iconSelectedColor : iconColor}`} />
-      <span className={`font-semibold text-gray-800 text-[8px] sm:text-xs leading-tight`}>{title}</span>
-      <span className={`text-[6px] sm:text-[10px] text-gray-500 mt-0.5 leading-tight`}>{subtitle}</span>
-      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[7px] sm:text-[10px] mt-0.5 sm:mt-1`}>{price}</span>
-
-      {showTooltip && tooltip && ReactDOM.createPortal(
-        <motion.div
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -5 }}
-          className="fixed z-[9999] max-w-[85vw] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
-          style={{
-            top: tooltipPosition.top,
-            left: Math.min(Math.max(tooltipPosition.left, 135), window.innerWidth - 135),
-            transform: 'translateX(-50%)'
-          }}
-        >
-          <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900" />
-          {tooltip}
-        </motion.div>,
-        document.body
-      )}
-    </motion.div>
-  );
-};
+import EditableTile from "./EditableTile";
 
 export default function KonfiguratorProstoHouse({ 
   dom,
@@ -671,43 +553,38 @@ export default function KonfiguratorProstoHouse({
                       <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">1</span>
                       {t('interiorFinish')} ({t('selectOne')})
                     </p>
-                    <Tile
+                    <EditableTile
                       selected={interierFinis === "ziadne"}
                       onClick={() => setInterierFinis("ziadne")}
-                      icon={Home}
-                      iconColor="text-gray-400"
-                      iconSelectedColor="text-blue-600"
                       title={t('interiorNone')}
                       subtitle={t('shellConstruction')}
-                      price="+ 0 €"
+                      price="0 €"
                       isPriced={false}
-                      tooltip={getTooltip('interier-ziadny', t('interiorNone'))}
+                      isIncluded={true}
+                      t={t}
+                      isAdmin={false}
                     />
 
-                    <Tile
+                    <EditableTile
                       selected={interierFinis === "drevo"}
                       onClick={(e) => { if (interierFinis !== "drevo") triggerAnimation("drevo", e.currentTarget); setInterierFinis("drevo"); }}
-                      icon={Home}
-                      iconColor="text-amber-600"
-                      iconSelectedColor="text-blue-600"
                       title={t('interiorWood')}
                       subtitle={t('woodCladding')}
                       price="+ 8 200 €"
                       isPriced={true}
-                      tooltip={getTooltip('interier-drevo', t('interiorWood'))}
+                      t={t}
+                      isAdmin={false}
                     />
 
-                    <Tile
+                    <EditableTile
                       selected={interierFinis === "sadrokarton"}
                       onClick={(e) => { if (interierFinis !== "sadrokarton") triggerAnimation("sadrokarton", e.currentTarget); setInterierFinis("sadrokarton"); }}
-                      icon={Home}
-                      iconColor="text-gray-500"
-                      iconSelectedColor="text-blue-600"
                       title={t('interiorDrywall')}
                       subtitle={t('plaster')}
                       price="+ 9 430 €"
                       isPriced={true}
-                      tooltip={getTooltip('interier-sadrokarton', t('interiorDrywall'))}
+                      t={t}
+                      isAdmin={false}
                     />
                   </div>
 
@@ -716,64 +593,48 @@ export default function KonfiguratorProstoHouse({
                       <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">2</span>
                       {t('electrical')} & {t('water')}
                     </p>
-                    <Tile
+                    <EditableTile
                       selected={elektroinstalacia}
                       onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); setElektroinstalacia(!elektroinstalacia); }}
-                      icon={Zap}
-                      iconColor="text-yellow-500"
-                      iconSelectedColor="text-yellow-600"
                       title={t('electrical')}
                       subtitle={t('wiring')}
                       price="+ 3 900 €"
                       isPriced={true}
-                      selectedBg="bg-yellow-100"
-                      selectedBorder="border-yellow-500"
-                      selectedRing="ring-yellow-300"
-                      hoverBorder="hover:border-yellow-300"
-                      tooltip={getTooltip('elektroinstalacia', t('electricalFull'))}
+                      t={t}
+                      isAdmin={false}
                     />
 
-                    <Tile
+                    <EditableTile
                       selected={vodaKanalizacia}
                       onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); setVodaKanalizacia(!vodaKanalizacia); }}
-                      icon={Droplets}
-                      iconColor="text-blue-400"
-                      iconSelectedColor="text-blue-600"
                       title={t('water')}
                       subtitle={t('wiring')}
                       price="+ 1 150 €"
                       isPriced={true}
-                      tooltip={getTooltip('voda-kanalizacia', t('waterFull'))}
+                      t={t}
+                      isAdmin={false}
                     />
 
-                    <Tile
+                    <EditableTile
                       selected={sanitaKomplet}
                       onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); setSanitaKomplet(!sanitaKomplet); }}
-                      icon={ShowerHead}
-                      iconColor="text-blue-400"
-                      iconSelectedColor="text-blue-600"
                       title={t('sanitary')}
                       subtitle={t('complete')}
                       price="+ 1 169 €"
                       isPriced={true}
-                      tooltip={getTooltip('sanita-komplet', t('sanitaryFull'))}
+                      t={t}
+                      isAdmin={false}
                     />
 
-                    <Tile
+                    <EditableTile
                       selected={bojler}
                       onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }}
-                      icon={Flame}
-                      iconColor="text-orange-400"
-                      iconSelectedColor="text-orange-600"
                       title={t('boiler')}
                       subtitle={t('boilerElectric')}
                       price="+ 264 €"
                       isPriced={true}
-                      selectedBg="bg-orange-100"
-                      selectedBorder="border-orange-500"
-                      selectedRing="ring-orange-300"
-                      hoverBorder="hover:border-orange-300"
-                      tooltip={getTooltip('bojler', t('boiler'))}
+                      t={t}
+                      isAdmin={false}
                     />
                   </div>
 
@@ -782,90 +643,62 @@ export default function KonfiguratorProstoHouse({
                       <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-green-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">3</span>
                       {t('heatPump')} & {t('recuperation')} (A0)
                     </p>
-                    <Tile
+                    <EditableTile
                       selected={tepelneCerpadlo}
                       onClick={(e) => { if (!tepelneCerpadlo) triggerAnimation("klimatizacia", e.currentTarget); setTepelneCerpadlo(!tepelneCerpadlo); }}
-                      icon={ThermometerSun}
-                      iconColor="text-red-500"
-                      iconSelectedColor="text-green-600"
                       title={t('heatPump')}
                       subtitle={t('units5')}
                       price="+ 3 321 €"
                       isPriced={true}
                       isA0={true}
-                      selectedBg="bg-green-100"
-                      selectedBorder="border-green-500"
-                      selectedRing="ring-green-300"
-                      tooltip={getTooltip('tepelne-cerpadlo', t('heatPumpFull'))}
+                      t={t}
+                      isAdmin={false}
                     />
 
-                    <Tile
+                    <EditableTile
                       selected={rekuperacia}
                       onClick={(e) => { if (!rekuperacia) triggerAnimation("rekuperacia", e.currentTarget); setRekuperacia(!rekuperacia); }}
-                      icon={Wind}
-                      iconColor="text-cyan-500"
-                      iconSelectedColor="text-green-600"
                       title={t('recuperation')}
                       subtitle="3 ks"
                       price="+ 1 600 €"
                       isPriced={true}
                       isA0={true}
-                      selectedBg="bg-green-100"
-                      selectedBorder="border-green-500"
-                      selectedRing="ring-green-300"
-                      tooltip={getTooltip('rekuperacia', t('recuperation'))}
+                      t={t}
+                      isAdmin={false}
                     />
                   </div>
 
-                  <Tile
+                  <EditableTile
                     selected={pripojkaSiete}
                     onClick={(e) => { if (!pripojkaSiete) triggerAnimation("siete", e.currentTarget); setPripojkaSiete(!pripojkaSiete); }}
-                    icon={Cable}
-                    iconColor="text-gray-400"
-                    iconSelectedColor="text-gray-700"
                     title={t('gridConnection')}
                     subtitle={t('connection')}
                     price="+ 1 501 €"
                     isPriced={true}
-                    selectedBg="bg-gray-200"
-                    selectedBorder="border-gray-500"
-                    selectedRing="ring-gray-300"
-                    hoverBorder="hover:border-gray-400"
-                    tooltip={getTooltip('pripojka-siete', t('gridConnectionFull'))}
+                    t={t}
+                    isAdmin={false}
                   />
 
-                  <Tile
+                  <EditableTile
                     selected={povrchokaOkien}
                     onClick={(e) => { if (!povrchokaOkien) triggerAnimation("oknoAntracit", e.currentTarget); setPovrchokaOkien(!povrchokaOkien); }}
-                    icon={Square}
-                    iconColor="text-slate-400"
-                    iconSelectedColor="text-slate-700"
                     title={t('lamination')}
                     subtitle={t('laminationAnthracite')}
                     price="+ 1 450 €"
                     isPriced={true}
-                    selectedBg="bg-slate-200"
-                    selectedBorder="border-slate-600"
-                    selectedRing="ring-slate-300"
-                    hoverBorder="hover:border-slate-400"
-                    tooltip={getTooltip('povrchoka-okien', t('lamination'))}
+                    t={t}
+                    isAdmin={false}
                   />
 
-                  <Tile
+                  <EditableTile
                     selected={tonovaneSkla}
                     onClick={(e) => { if (!tonovaneSkla) triggerAnimation("oknoTonovane", e.currentTarget); setTonovaneSkla(!tonovaneSkla); }}
-                    icon={Sun}
-                    iconColor="text-amber-400"
-                    iconSelectedColor="text-amber-600"
                     title={t('tintedGlass')}
                     subtitle={t('solarGlass')}
                     price="+ 700 €"
                     isPriced={true}
-                    selectedBg="bg-amber-100"
-                    selectedBorder="border-amber-500"
-                    selectedRing="ring-amber-300"
-                    hoverBorder="hover:border-amber-300"
-                    tooltip={getTooltip('tonovane-skla', t('tintedGlass'))}
+                    t={t}
+                    isAdmin={false}
                   />
 
                 </div>
@@ -953,73 +786,50 @@ export default function KonfiguratorProstoHouse({
                       <span className={`w-3.5 h-3.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
                       {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
                     </p>
-                    <Tile
+                    <EditableTile
                       selected={vonkajsiaFasada === "standard"}
                       onClick={() => setVonkajsiaFasada("standard")}
-                      icon={Paintbrush}
-                      iconColor="text-amber-500"
-                      iconSelectedColor="text-emerald-600"
                       title={t('facadeWoodMetal')}
                       subtitle="Drevo / Plech"
-                      price="+ 0 €"
+                      price="0 €"
                       isPriced={false}
-                      selectedBg="bg-emerald-100"
-                      selectedBorder="border-emerald-500"
-                      selectedRing="ring-emerald-300"
-                      hoverBorder="hover:border-emerald-300"
-                      tooltip={getTooltip('vonkajsia-fasada-standard', t('facadeWoodMetal'))}
+                      isIncluded={true}
+                      t={t}
+                      isAdmin={false}
                     />
 
-                    <Tile
+                    <EditableTile
                       selected={vonkajsiaFasada === "suchana"}
                       onClick={(e) => { if (vonkajsiaFasada !== "suchana") triggerAnimation("fasadaSuchana", e.currentTarget); setVonkajsiaFasada("suchana"); }}
-                      icon={Paintbrush}
-                      iconColor="text-orange-400"
-                      iconSelectedColor="text-emerald-600"
                       title={t('facadeStucco')}
                       subtitle={t('whitePlaster')}
                       price="+ 6 371 €"
                       isPriced={true}
-                      selectedBg="bg-emerald-100"
-                      selectedBorder="border-emerald-500"
-                      selectedRing="ring-emerald-300"
-                      hoverBorder="hover:border-emerald-300"
-                      tooltip={getTooltip('vonkajsia-fasada-suchana', t('facadeStucco'))}
+                      t={t}
+                      isAdmin={false}
                     />
                   </div>
 
-                  <Tile
+                  <EditableTile
                     selected={vnutornePodlahy}
                     onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); setVnutornePodlahy(!vnutornePodlahy); }}
-                    icon={Square}
-                    iconColor="text-amber-500"
-                    iconSelectedColor="text-emerald-600"
                     title={t('floors')}
                     subtitle={t('floorsLaminate')}
                     price="+ 1 750 €"
                     isPriced={true}
-                    selectedBg="bg-emerald-100"
-                    selectedBorder="border-emerald-500"
-                    selectedRing="ring-emerald-300"
-                    hoverBorder="hover:border-emerald-300"
-                    tooltip={getTooltip('vnutorne-podlahy', t('floors'))}
+                    t={t}
+                    isAdmin={false}
                   />
 
-                  <Tile
+                  <EditableTile
                     selected={podlahovVykurovanie}
                     onClick={(e) => { if (!podlahovVykurovanie) triggerAnimation("podlahovVykurovanie", e.currentTarget); setPodlahovVykurovanie(!podlahovVykurovanie); }}
-                    icon={Flame}
-                    iconColor="text-orange-400"
-                    iconSelectedColor="text-orange-600"
                     title={t('floorHeating')}
                     subtitle={t('wifiThermostat')}
                     price="+ 3 960 €"
                     isPriced={true}
-                    selectedBg="bg-orange-100"
-                    selectedBorder="border-orange-500"
-                    selectedRing="ring-orange-300"
-                    hoverBorder="hover:border-orange-300"
-                    tooltip={getTooltip('podlahove-vykurovanie', t('floorHeatingFull'))}
+                    t={t}
+                    isAdmin={false}
                   />
 
                 </div>
@@ -1067,72 +877,50 @@ export default function KonfiguratorProstoHouse({
               <div className="p-1.5 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
                   
-                  <Tile
+                  <EditableTile
                     selected={inziniering}
                     onClick={(e) => { if (!inziniering) triggerAnimation("inziniering", e.currentTarget); setInziniering(!inziniering); }}
-                    icon={FileText}
-                    iconColor="text-purple-400"
-                    iconSelectedColor="text-purple-600"
                     title={t('engineering')}
                     subtitle={t('buildingPermit')}
                     price="+ 2 592 €"
                     isPriced={true}
-                    selectedBg="bg-purple-100"
-                    selectedBorder="border-purple-500"
-                    selectedRing="ring-purple-300"
-                    hoverBorder="hover:border-purple-300"
-                    tooltip={getTooltip('inziniering', t('engineeringFull'))}
+                    t={t}
+                    isAdmin={false}
                   />
 
-                  <Tile
+                  <EditableTile
                     selected={projektA0}
                     onClick={(e) => { if (!projektA0) triggerAnimation("projektant", e.currentTarget); setProjektA0(!projektA0); }}
-                    icon={FileCheck}
-                    iconColor="text-green-500"
-                    iconSelectedColor="text-green-600"
                     title={t('projectA0')}
                     subtitle={t('certification')}
                     price="+ 3 500 €"
                     isPriced={true}
                     isA0={true}
-                    selectedBg="bg-green-100"
-                    selectedBorder="border-green-500"
-                    selectedRing="ring-green-300"
-                    tooltip={getTooltip('projekt-a0', t('projectA0Full'))}
+                    t={t}
+                    isAdmin={false}
                   />
 
-                  <Tile
+                  <EditableTile
                     selected={revizna}
                     onClick={() => setRevizna(!revizna)}
-                    icon={FileText}
-                    iconColor="text-gray-400"
-                    iconSelectedColor="text-purple-600"
                     title={t('revision')}
                     subtitle={t('documentation')}
                     price="+ 1 000 €"
                     isPriced={true}
-                    selectedBg="bg-purple-100"
-                    selectedBorder="border-purple-500"
-                    selectedRing="ring-purple-300"
-                    hoverBorder="hover:border-purple-300"
-                    tooltip={getTooltip('revizna-sprava', t('revisionFull'))}
+                    t={t}
+                    isAdmin={false}
                   />
 
-                  <Tile
+                  <EditableTile
                     selected={doprava}
                     onClick={(e) => { if (!doprava) triggerAnimation("doprava", e.currentTarget); setDoprava(!doprava); }}
-                    icon={Truck}
-                    iconColor="text-purple-400"
-                    iconSelectedColor="text-purple-600"
                     title={t('transport')}
                     subtitle={t('transportFull')}
-                    price="+ 0 €"
+                    price="0 €"
                     isPriced={false}
-                    selectedBg="bg-purple-100"
-                    selectedBorder="border-purple-500"
-                    selectedRing="ring-purple-300"
-                    hoverBorder="hover:border-purple-300"
-                    tooltip={getTooltip('doprava', t('transport'))}
+                    isIncluded={true}
+                    t={t}
+                    isAdmin={false}
                   />
 
                 </div>
