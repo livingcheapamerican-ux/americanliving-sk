@@ -49,33 +49,37 @@ export default function EditableTile({
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
       onClick={!isEditing ? onClick : undefined}
-      className={`relative p-2 rounded-md cursor-pointer transition-all border ${
+      className={`relative p-2 rounded-md cursor-pointer transition-all ${
         selected 
           ? isA0 
-            ? "bg-green-100 border-green-500 shadow-md" 
-            : "bg-blue-100 border-blue-500 shadow-md"
+            ? "bg-gradient-to-br from-green-500 to-emerald-600 border-4 border-green-600 shadow-xl ring-4 ring-green-200" 
+            : "bg-gradient-to-br from-blue-500 to-indigo-600 border-4 border-blue-600 shadow-xl ring-4 ring-blue-200"
           : isA0
-            ? "bg-green-50 border-green-300 hover:border-green-400"
+            ? "bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-400 hover:border-green-600 hover:shadow-lg"
             : isIncluded
-              ? "bg-gray-50 border-gray-300"
-              : "bg-white border-gray-200 hover:border-blue-300"
+              ? "bg-white border-2 border-gray-300 hover:border-gray-400"
+              : "bg-white border-2 border-gray-200 hover:border-blue-400 hover:shadow-md"
       }`}
     >
       {isA0 && (
-        <Badge className="absolute -top-1 -right-1 bg-green-600 text-white text-[9px] px-1 py-0 z-10">
+        <Badge className="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-[10px] px-2 py-0.5 z-10 shadow-lg font-black border-2 border-white animate-pulse">
           ⚡A0
         </Badge>
       )}
       
       {selected && !isEditing && (
-        <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-green-500 flex items-center justify-center">
-          <span className="text-white text-[10px] font-bold">✓</span>
+        <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white shadow-lg flex items-center justify-center border-2 border-current z-10">
+          <span className={`text-[14px] font-black ${isA0 ? 'text-green-600' : 'text-blue-600'}`}>✓</span>
         </div>
       )}
       
       <div className="text-center">
-        <span className="font-semibold text-gray-800 text-base block leading-tight">{title}</span>
-        {subtitle && <span className="text-xs text-gray-500 block mt-0.5">{subtitle}</span>}
+        <span className={`font-bold text-base block leading-tight ${
+          selected ? 'text-white drop-shadow-md' : 'text-gray-900'
+        }`}>{title}</span>
+        {subtitle && <span className={`text-xs block mt-0.5 ${
+          selected ? 'text-white/90 font-medium' : 'text-gray-600'
+        }`}>{subtitle}</span>}
         
         {isEditing ? (
           <div className="flex items-center gap-1 mt-2 justify-center" onClick={(e) => e.stopPropagation()}>
@@ -96,9 +100,17 @@ export default function EditableTile({
           </div>
         ) : (
           <div className="flex items-center gap-1 justify-center mt-1">
-            <span className={`text-[13px] font-bold ${isPriced ? "text-green-600" : "text-gray-400"}`}>
+            <span className={`text-[13px] font-bold ${
+              selected 
+                ? 'text-white drop-shadow-md' 
+                : isPriced 
+                  ? "text-green-700" 
+                  : "text-gray-500"
+            }`}>
               {price === "0 €" && !hideIncludedMessage ? (
-                <span className="text-[11px] text-gray-500 italic leading-tight">
+                <span className={`text-[11px] italic leading-tight font-medium ${
+                  selected ? 'text-white/90' : 'text-gray-600'
+                }`}>
                   {t?.('itemIncludedInBase') || 'Táto položka je súčasťou základnej konfigurácie domu'}
                 </span>
               ) : (
