@@ -207,7 +207,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
               </p>
               {dom.vyrobca === "Ticab house" && (
                 <p className="text-[7px] sm:text-[9px] text-gray-400 mt-0.5 sm:mt-1 italic leading-tight">
-                  Cena na kľúč v štatuse rekreačnej stavby - fotka domu v základnej konfigurácii v detailoch
+                  {t('ticabPriceNote')}
                 </p>
               )}
               {dom.vyrobca === "Prosto House" && (

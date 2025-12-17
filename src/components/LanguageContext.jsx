@@ -892,6 +892,7 @@ const translations = {
     bratislavaFast: "Váš dom môže byť hotový za 3-4 mesiace od objednávky. Ideálne riešenie pre rýchle sťahovanie.",
     affordablePrices: "Cenovo dostupné riešenie",
     bratislavaPrice: "Priame ceny od výrobcu bez navýšenia. Ušetríte až 30% oproti klasickej výstavbe v Bratislave.",
+    ticabPriceNote: "Cena na kľúč v statuse rekreačnej stavby - fotka domu v základnej konfigurácii v detailoch",
     quickDelivery: "Rýchla dodávka",
     bratislavaDelivery: "Expresné dodanie do Bratislavy. Montáž trvá len 1-2 dni.",
     popularModelsBratislava: "Obľúbené modely pre Bratislavu",
