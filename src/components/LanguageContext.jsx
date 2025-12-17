@@ -1031,6 +1031,17 @@ const translations = {
     familyHouse: "Familienhaus",
     familyHouseDesc: "Ganzjähriges Wohnen mit A0-Energiezertifikat",
     
+    // Mortgage Calculator
+    mortgageCalculator: "Hypothekenrechner",
+    downPayment: "Eigenkapital",
+    loanTerm: "Laufzeit",
+    years: "Jahre",
+    interestRate: "Zinssatz",
+    monthlyPayment: "Monatliche Rate",
+    totalPaymentToBank: "Gesamt an Bank zahlen\n(Kapital + Zinsen)",
+    interest: "Zinsen",
+    estimatedCalculation: "Ungefähre Berechnung. Tatsächliche Rate hängt von Bankbedingungen ab.",
+
     // Footer
     allRightsReserved: "Alle Rechte vorbehalten",
     builtHouses: "Über 700 Häuser seit 2008 gebaut",
@@ -2028,6 +2039,17 @@ const translations = {
     familyHouse: "Maison familiale",
     familyHouseDesc: "Habitation toute l'année avec certificat énergétique A0",
     
+    // Mortgage Calculator
+    mortgageCalculator: "Calculateur hypothécaire",
+    downPayment: "Apport personnel",
+    loanTerm: "Durée du prêt",
+    years: "ans",
+    interestRate: "Taux d'intérêt",
+    monthlyPayment: "Mensualité",
+    totalPaymentToBank: "Total payé à la banque\n(capital + intérêts)",
+    interest: "Intérêts",
+    estimatedCalculation: "Calcul estimatif. Le paiement réel dépend des conditions de la banque.",
+
     // Footer
     allRightsReserved: "Tous droits réservés",
     builtHouses: "Plus de 700 maisons construites depuis 2008",
@@ -2967,6 +2989,17 @@ const translations = {
     familyHouse: "Породична кућа",
     familyHouseDesc: "Целогодишње становање са А0 енергетским сертификатом",
     
+    // Mortgage Calculator
+    mortgageCalculator: "Калкулатор хипотеке",
+    downPayment: "Сопствена средства",
+    loanTerm: "Рок отплате",
+    years: "година",
+    interestRate: "Каматна стопа",
+    monthlyPayment: "Месечна рата",
+    totalPaymentToBank: "Укупно плаћа банци\n(главница + камата)",
+    interest: "Камата",
+    estimatedCalculation: "Оријентациони прорачун. Стварна рата зависи од услова банке.",
+
     // Footer
     allRightsReserved: "Сва права задржана",
     builtHouses: "Више од 700 кућа изграђено од 2008.",
@@ -3981,6 +4014,17 @@ const translations = {
     financialServicesLoans: "Financijske usluge - krediti/osiguranje",
     financialServicesLoansDesc: "Naši najbolji financijski stručnjaci pobrinut će se za vas i pomoći vam ne samo s financiranjem vašeg stanovanja, već i pružiti ruku pomoći u teškim financijskim trenucima.",
     
+    // Mortgage Calculator
+    mortgageCalculator: "Kalkulator hipoteke",
+    downPayment: "Vlastita sredstva",
+    loanTerm: "Rok otplate",
+    years: "godina",
+    interestRate: "Kamatna stopa",
+    monthlyPayment: "Mjesečna rata",
+    totalPaymentToBank: "Ukupno plaća banci\n(glavnica + kamata)",
+    interest: "Kamata",
+    estimatedCalculation: "Orijentacijski proračun. Stvarna rata ovisi o uvjetima banke.",
+
     // Footer
     allRightsReserved: "Sva prava pridržana",
     builtHouses: "Više od 700 kuća izgrađeno od 2008.",
@@ -4974,6 +5018,17 @@ const translations = {
     familyHouse: "Οικογενειακή κατοικία",
     familyHouseDesc: "Ολοετής διαβίωση με ενεργειακό πιστοποιητικό A0",
     
+    // Mortgage Calculator
+    mortgageCalculator: "Υπολογιστής στεγαστικού δανείου",
+    downPayment: "Ιδία κεφάλαια",
+    loanTerm: "Διάρκεια δανείου",
+    years: "έτη",
+    interestRate: "Επιτόκιο",
+    monthlyPayment: "Μηνιαία δόση",
+    totalPaymentToBank: "Σύνολο πληρωμής στην τράπεζα\n(κεφάλαιο + τόκοι)",
+    interest: "Τόκοι",
+    estimatedCalculation: "Εκτιμώμενος υπολογισμός. Η πραγματική δόση εξαρτάται από τους όρους της τράπεζας.",
+
     // Footer
     allRightsReserved: "Όλα τα δικαιώματα διατηρούνται",
     builtHouses: "Περισσότερα από 700 σπίτια χτισμένα από το 2008",
@@ -6526,6 +6581,17 @@ const translations = {
     familyHouse: "Family house",
     familyHouseDesc: "Year-round living with A0 energy certificate",
     
+    // Mortgage Calculator
+    mortgageCalculator: "Mortgage Calculator",
+    downPayment: "Down Payment",
+    loanTerm: "Loan Term",
+    years: "years",
+    interestRate: "Interest Rate",
+    monthlyPayment: "Monthly Payment",
+    totalPaymentToBank: "Total Payment to Bank\n(principal + interest)",
+    interest: "Interest",
+    estimatedCalculation: "Estimated calculation. Actual payment depends on bank conditions.",
+
     // Footer
     allRightsReserved: "All rights reserved",
     builtHouses: "More than 700 houses built since 2008",
@@ -7435,6 +7501,17 @@ const translations = {
     familyHouse: "Családi ház",
     familyHouseDesc: "Egész éves lakhatás A0 energetikai tanúsítvánnyal",
     
+    // Mortgage Calculator
+    mortgageCalculator: "Jelzáloghitel kalkulátor",
+    downPayment: "Saját forrás",
+    loanTerm: "Futamidő",
+    years: "év",
+    interestRate: "Kamatláb",
+    monthlyPayment: "Havi törlesztés",
+    totalPaymentToBank: "Összesen fizet a banknak\n(tőke + kamat)",
+    interest: "Kamat",
+    estimatedCalculation: "Tájékoztató számítás. A tényleges törlesztés a bank feltételeitől függ.",
+
     // Footer
     allRightsReserved: "Minden jog fenntartva",
     builtHouses: "Több mint 700 ház épült 2008 óta",
@@ -8295,6 +8372,17 @@ const translations = {
     familyHouse: "Dom rodzinny",
     familyHouseDesc: "Całoroczne zamieszkanie z certyfikatem energetycznym A0",
     
+    // Mortgage Calculator
+    mortgageCalculator: "Kalkulator kredytu",
+    downPayment: "Wkład własny",
+    loanTerm: "Okres spłaty",
+    years: "lat",
+    interestRate: "Stopa procentowa",
+    monthlyPayment: "Miesięczna rata",
+    totalPaymentToBank: "Całkowicie zapłaci bankowi\n(kapitał + odsetki)",
+    interest: "Odsetki",
+    estimatedCalculation: "Szacunkowe obliczenie. Rzeczywista rata zależy od warunków banku.",
+
     // Footer
     allRightsReserved: "Wszelkie prawa zastrzeżone",
     builtHouses: "Ponad 700 domów zbudowanych od 2008 roku",
@@ -9196,6 +9284,17 @@ const translations = {
     familyHouse: "Сімейний будинок",
     familyHouseDesc: "Цілорічне проживання з енергетичним сертифікатом A0",
     
+    // Mortgage Calculator
+    mortgageCalculator: "Калькулятор іпотеки",
+    downPayment: "Власний внесок",
+    loanTerm: "Термін кредиту",
+    years: "років",
+    interestRate: "Процентна ставка",
+    monthlyPayment: "Щомісячний платіж",
+    totalPaymentToBank: "Всього сплатите банку\n(основна сума + відсотки)",
+    interest: "Відсотки",
+    estimatedCalculation: "Орієнтовний розрахунок. Фактичний платіж залежить від умов банку.",
+
     // Footer
     allRightsReserved: "Всі права захищені",
     builtHouses: "Понад 700 будинків побудовано з 2008 року",
