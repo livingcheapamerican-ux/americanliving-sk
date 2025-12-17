@@ -1036,7 +1036,11 @@ export default function DetailDomu() {
                   setRevizna={setRevizna}
                   doprava={doprava}
                   setDoprava={setDoprava}
-            {/* Konfigurátor pre Fjord - Wizard výber typu */}
+                  />
+                  </div>
+                  )}
+
+                  {/* Konfigurátor pre Fjord - Wizard výber typu */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
               <KonfiguratorWizard 
                 key={wizardKey}
