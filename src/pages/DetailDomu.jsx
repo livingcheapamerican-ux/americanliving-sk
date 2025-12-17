@@ -3057,16 +3057,17 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Kalkulátor hypotéky */}
-            <div className="mb-4">
-              <HypotekaKalkulator 
-                cenaDoma={dom.zakladna_cena} 
-                dom={dom}
-                user={user}
-                aktualnaKonfiguracia={
-                  isTicabhouse ? ticabKonfiguracia : isProstoHouse ? prostoKonfiguracia : null
-                }
-                onNastavA0Prvky={isTicabhouse ? () => {
+            {/* Kalkulátor hypotéky - skryté pre mobilné domy */}
+            {dom.kategoria !== "mobilne_domy" && (
+              <div className="mb-4">
+                <HypotekaKalkulator 
+                  cenaDoma={dom.zakladna_cena} 
+                  dom={dom}
+                  user={user}
+                  aktualnaKonfiguracia={
+                    isTicabhouse ? ticabKonfiguracia : isProstoHouse ? prostoKonfiguracia : null
+                  }
+                  onNastavA0Prvky={isTicabhouse ? () => {
                   setLyonIzolaciaStien("250mm");
                   setLyonIzolaciaPodlahy("200mm");
                   setLyonIzolaciaStropu("200mm");
@@ -3086,8 +3087,9 @@ export default function DetailDomu() {
                   setProjektA0(true);
                   setZaklady("pasove");
                 } : null}
-              />
-            </div>
+                />
+              </div>
+            )}
 
             {/* CTA Buttons */}
             <div className="space-y-2 sm:space-y-3">
