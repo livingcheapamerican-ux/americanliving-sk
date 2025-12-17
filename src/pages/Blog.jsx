@@ -18,6 +18,20 @@ export default function Blog() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedKategoria, setSelectedKategoria] = useState("all");
 
+  // SEO Meta tags
+  useEffect(() => {
+    document.title = `${t('blog')} - American Living | ${t('blogSubtitle')}`;
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', `${t('blogMetaDesc')}`);
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = t('blogMetaDesc');
+      document.head.appendChild(meta);
+    }
+  }, [language, t]);
+
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ['blog-posts'],
     queryFn: () => base44.entities.BlogPost.filter({ publikovany: true }, '-datum_publikacie'),

@@ -43,6 +43,7 @@ function LayoutContent({ children }) {
     { name: t('aiRecommendations'), path: createPageUrl("OdporucanieDomov"), icon: Sparkles },
     { name: t('about'), path: createPageUrl("ONas"), icon: Info },
     { name: t('blog'), path: createPageUrl("Blog"), icon: BlogIcon },
+    { name: t('faq'), path: createPageUrl("FAQ"), icon: Info },
     { name: t('contact'), path: createPageUrl("Kontakt"), icon: Phone },
   ];
 
