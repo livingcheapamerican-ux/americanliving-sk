@@ -23,6 +23,7 @@ import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
 import EditableTile from "./EditableTile";
+import FloatingPrice from "./FloatingPrice";
 
 export default function KonfiguratorProstoHouse({ 
   dom,
@@ -489,6 +490,7 @@ export default function KonfiguratorProstoHouse({
   return (
     <div className="mt-4 sm:mt-8 relative overflow-x-hidden">
       <FlyingAnimationContainer animations={animations} />
+      <FloatingPrice price={totalPrice} isVisible={!showOnlySummary} />
 
       <div className="w-full max-w-full overflow-hidden">
         <div className="space-y-3 sm:space-y-6">

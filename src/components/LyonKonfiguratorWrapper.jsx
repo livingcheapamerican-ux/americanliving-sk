@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import KonfiguratorLyon, { LyonSummaryPanel } from "./KonfiguratorLyon";
 import { useLanguage } from "./LanguageContext";
 import LyonFinalSummaryModal from "./LyonFinalSummaryModal";
+import FloatingPrice from "./FloatingPrice";
 
 export default function LyonKonfiguratorWrapper(props) {
   const [showSummaryModal, setShowSummaryModal] = useState(false);
@@ -274,6 +275,7 @@ export default function LyonKonfiguratorWrapper(props) {
   return (
     <>
       <KonfiguratorLyon {...allProps} onSubmit={handleSubmit} />
+      <FloatingPrice price={totalPrice} isVisible={true} />
       <LyonFinalSummaryModal
         isOpen={showSummaryModal}
         onClose={() => setShowSummaryModal(false)}
