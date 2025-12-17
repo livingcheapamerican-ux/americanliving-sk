@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -798,19 +797,6 @@ export default function DetailDomu() {
 
           {/* Upozornenie pod sidebarom */}
           {(() => {
-            const isA0Complete = (
-              lyonIzolaciaStien === "250mm" &&
-              lyonIzolaciaPodlahy === "200mm" &&
-              lyonIzolaciaStropu === "200mm" &&
-              lyonTepelneCerpadlo === "ano" &&
-              lyonRekuperacia === "ano" &&
-              lyonElektro === "ge" &&
-              lyonBleskozvod &&
-              lyonPrepat &&
-              lyonInziniering &&
-              lyonProjektACertifikacia
-            );
-            
             if (lyonUcel === "rodinny" && !isA0Complete) {
               return (
                 <Card className="bg-yellow-50 border-2 border-yellow-400 p-4">
@@ -895,11 +881,7 @@ export default function DetailDomu() {
         SummaryComponent = <KonfiguratorProstoHouse {...commonProps} />;
       }
 
-      return (
-        <div className="lg:sticky lg:top-20 z-10 self-start order-3 lg:order-2" style={{ position: 'sticky', top: '80px' }}>
-          {SummaryComponent}
-        </div>
-      );
+      return SummaryComponent;
     }
     return null;
   };
@@ -940,12 +922,12 @@ export default function DetailDomu() {
       )}
 
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6 max-w-full overflow-hidden">
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6 w-full max-w-full overflow-hidden">
-          {/* Ľavý stĺpec - Galéria */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 w-full max-w-full overflow-hidden">
+          {/* Ľavý stĺpec - Galéria + Konfigurátor (order-1 mobile, lg:col-start-1) */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-4 w-full max-w-full overflow-hidden order-1 lg:order-1"
+            className="space-y-4 w-full max-w-full overflow-hidden lg:col-start-1 lg:row-start-1"
           >
             {/* Hlavný obrázok */}
             <div 
@@ -1257,11 +1239,50 @@ export default function DetailDomu() {
             )}
           </motion.div>
 
-          {/* Pravý stĺpec - Informácie */}
+          {/* Sidebar pre Ticabhouse/Prosto - mobile order-2, desktop col-2 */}
+          {(isTicabhouse || isProstoHouse) && renderSidebarSummary() && (
+            <div className="w-full lg:col-start-2 lg:row-start-1 lg:sticky lg:top-20 lg:self-start" style={{ top: '80px' }}>
+              {renderSidebarSummary()}
+            </div>
+          )}
+
+          {/* Hypotekárny kalkulátor - mobile order-3, desktop col-2 row-2 */}
+          {dom.kategoria !== "mobilne_domy" && (isTicabhouse || isProstoHouse) && (
+            <div className="w-full lg:col-start-2 lg:row-start-2">
+              <HypotekaKalkulator 
+                cenaDoma={dom.zakladna_cena} 
+                dom={dom}
+                user={user}
+                aktualnaKonfiguracia={isTicabhouse ? ticabKonfiguracia : isProstoHouse ? prostoKonfiguracia : null}
+                onNastavA0Prvky={isTicabhouse ? () => {
+                  setLyonIzolaciaStien("250mm");
+                  setLyonIzolaciaPodlahy("200mm");
+                  setLyonIzolaciaStropu("200mm");
+                  setLyonTepelneCerpadlo("ano");
+                  setLyonRekuperacia("ano");
+                  setLyonPripravaNaSolarnePanely(true);
+                  setLyonBleskozvod(true);
+                  setLyonPrepat(true);
+                  setLyonInziniering(true);
+                  setLyonProjektACertifikacia(true);
+                  setLyonZaklady("pasove");
+                  setLyonUcel("rodinny");
+                } : isProstoHouse ? () => {
+                  setIzolaciaNavysenie("premium");
+                  setTepelneCerpadlo(true);
+                  setRekuperacia(true);
+                  setProjektA0(true);
+                  setZaklady("pasove");
+                } : null}
+              />
+            </div>
+          )}
+
+          {/* Pravý stĺpec - Informácie (mobile order-4, desktop col-2 row-3+) */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden order-2 lg:order-2"
+            className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden lg:col-start-2 lg:row-start-3"
           >
             {/* Hlavička */}
             <div>
@@ -1780,44 +1801,8 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {renderSidebarSummary()}
-
-            {/* Kalkulátor hypotéky - skryté pre mobilné domy */}
-            {dom.kategoria !== "mobilne_domy" && (
-              <div className="mb-4 order-4 lg:order-3">
-                <HypotekaKalkulator 
-                  cenaDoma={dom.zakladna_cena} 
-                  dom={dom}
-                  user={user}
-                  aktualnaKonfiguracia={
-                    isTicabhouse ? ticabKonfiguracia : isProstoHouse ? prostoKonfiguracia : null
-                  }
-                  onNastavA0Prvky={isTicabhouse ? () => {
-                  setLyonIzolaciaStien("250mm");
-                  setLyonIzolaciaPodlahy("200mm");
-                  setLyonIzolaciaStropu("200mm");
-                  setLyonTepelneCerpadlo("ano");
-                  setLyonRekuperacia("ano");
-                  setLyonPripravaNaSolarnePanely(true);
-                  setLyonBleskozvod(true);
-                  setLyonPrepat(true);
-                  setLyonInziniering(true);
-                  setLyonProjektACertifikacia(true);
-                  setLyonZaklady("pasove");
-                  setLyonUcel("rodinny");
-                } : isProstoHouse ? () => {
-                  setIzolaciaNavysenie("premium");
-                  setTepelneCerpadlo(true);
-                  setRekuperacia(true);
-                  setProjektA0(true);
-                  setZaklady("pasove");
-                } : null}
-                />
-              </div>
-            )}
-
             {/* CTA Buttons */}
-            <div className="space-y-2 sm:space-y-3 order-5 lg:order-4">
+            <div className="space-y-2 sm:space-y-3">
 
               <Link to={createPageUrl("Kontakt")}>
                 <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-sm sm:text-base py-4 sm:py-5">
