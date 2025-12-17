@@ -1098,7 +1098,17 @@ export default function DetailDomu() {
                 setPodlahovVykurovanie={setPodlahovVykurovanie}
                 interieroveDvere={interieroveDvere}
                 setInterieroveDvere={setInterieroveDvere}
-                  showOnlySummary={true}
+                pergola={pergola}
+                setPergola={setPergola}
+                inziniering={inziniering}
+                setInziniering={setInziniering}
+                projektA0={projektA0}
+                setProjektA0={setProjektA0}
+                revizna={revizna}
+                setRevizna={setRevizna}
+                doprava={doprava}
+                setDoprava={setDoprava}
+                showOnlySummary={true}
                 />
 
                 {dom.kategoria !== "mobilne_domy" && (
