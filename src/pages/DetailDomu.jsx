@@ -1454,7 +1454,7 @@ export default function DetailDomu() {
 
               {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
               <div className="lg:hidden space-y-4">
-                <KonfiguratorNord 
+                <KonfiguratorProstoHouse
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
@@ -1520,28 +1520,28 @@ export default function DetailDomu() {
                   doprava={doprava}
                   setDoprava={setDoprava}
                   showOnlySummary={true}
+                />
+
+                {dom.kategoria !== "mobilne_domy" && (
+                  <HypotekaKalkulator 
+                    cenaDoma={dom.zakladna_cena} 
+                    dom={dom}
+                    user={user}
+                    aktualnaKonfiguracia={prostoKonfiguracia}
+                    onNastavA0Prvky={() => {
+                      setIzolaciaNavysenie("premium");
+                      setTepelneCerpadlo(true);
+                      setRekuperacia(true);
+                      setProjektA0(true);
+                      setZaklady("pasove");
+                    }}
                   />
+                )}
+              </div>
+              </div>
+            )}
 
-                  {dom.kategoria !== "mobilne_domy" && (
-                    <HypotekaKalkulator 
-                      cenaDoma={dom.zakladna_cena} 
-                      dom={dom}
-                      user={user}
-                      aktualnaKonfiguracia={prostoKonfiguracia}
-                      onNastavA0Prvky={() => {
-                        setIzolaciaNavysenie("premium");
-                        setTepelneCerpadlo(true);
-                        setRekuperacia(true);
-                        setProjektA0(true);
-                        setZaklady("pasove");
-                      }}
-                    />
-                  )}
-                  </div>
-                  </div>
-                  )}
-
-                  {/* Pôdorysy */}
+            {/* Pôdorysy */}
             {dom.podorysy && dom.podorysy.length > 0 && (
               <Card className="p-3 sm:p-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">
