@@ -1810,6 +1810,76 @@ export default function DetailDomu() {
                 doprava={lyonDoprava}
                 setDoprava={setLyonDoprava}
               />
+
+              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+              <div className="lg:hidden space-y-4">
+                <LyonSummaryPanelStandalone
+                  predajNehnutelnosti={lyonPredajNehnutelnosti}
+                  hladamPozemok={lyonHladamPozemok}
+                  financneSluzby={lyonFinancneSluzby}
+                  ucel={lyonUcel}
+                  izolaciaStien={lyonIzolaciaStien}
+                  izolaciaPodlahy={lyonIzolaciaPodlahy}
+                  izolaciaStropu={lyonIzolaciaStropu}
+                  tepelneCerpadlo={lyonTepelneCerpadlo}
+                  rekuperacia={lyonRekuperacia}
+                  pripravaNaRekuperaciu={lyonPripravaNaRekuperaciu}
+                  podlahovoKurenie={lyonPodlahovoKurenie}
+                  pripravaNaKrb={lyonPripravaNaKrb}
+                  ochranaKachle={lyonOchranaKachle}
+                  klimatizacia={lyonKlimatizacia}
+                  fasada={lyonFasada}
+                  strecha={lyonStrecha}
+                  odkvapy={lyonOdkvapy}
+                  okna={lyonOkna}
+                  vchodoveDvere={lyonVchodoveDvere}
+                  obkladStien={lyonObkladStien}
+                  interieroveDvere={lyonInterieroveDvere}
+                  elektro={lyonElektro}
+                  bleskozvod={lyonBleskozvod}
+                  prepat={lyonPrepat}
+                  pripravaNaSolarnePanely={lyonPripravaNaSolarnePanely}
+                  setPripravaNaSolarnePanely={setLyonPripravaNaSolarnePanely}
+                  sprchovyKut={lyonSprchovyKut}
+                  vana={lyonVana}
+                  bateria={lyonBateria}
+                  skrinka={lyonSkrinka}
+                  stropKupelna={lyonStropKupelna}
+                  inziniering={lyonInziniering}
+                  projektACertifikacia={lyonProjektACertifikacia}
+                  revizia={lyonRevizia}
+                  zaklady={lyonZaklady}
+                  montaz={lyonMontaz}
+                  doprava={lyonDoprava}
+                  dom={dom}
+                  totalPrice={ticabKonfiguracia?.celkovaCena || dom.zakladna_cena}
+                  onSubmit={() => alert("Odoslanie dopytu - funkcia bude implementovaná")}
+                />
+
+                {dom.kategoria !== "mobilne_domy" && (
+                  <HypotekaKalkulator 
+                    cenaDoma={dom.zakladna_cena} 
+                    dom={dom}
+                    user={user}
+                    aktualnaKonfiguracia={ticabKonfiguracia}
+                    onNastavA0Prvky={() => {
+                      setLyonIzolaciaStien("250mm");
+                      setLyonIzolaciaPodlahy("200mm");
+                      setLyonIzolaciaStropu("200mm");
+                      setLyonTepelneCerpadlo("ano");
+                      setLyonRekuperacia("ano");
+                      setLyonPripravaNaSolarnePanely(true);
+                      setLyonBleskozvod(true);
+                      setLyonPrepat(true);
+                      setLyonInziniering(true);
+                      setLyonProjektACertifikacia(true);
+                      setLyonZaklady("pasove");
+                      setLyonUcel("rodinny");
+                    }}
+                  />
+                )}
+              </div>
+            </div>
             )}
 
             {/* Konfigurátor pre Lyon (Ticab house) */}
