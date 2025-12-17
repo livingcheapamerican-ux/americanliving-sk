@@ -1308,6 +1308,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Flat 72 - Wizard - PO POPISE */}
             {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
+              <>
               <div className="hidden lg:block">
               <KonfiguratorWizard
                 key={wizardKey}
@@ -1461,7 +1462,7 @@ export default function DetailDomu() {
                   />
                 )}
               </div>
-              </div>
+              </>
             )}
 
             {/* Konfigurátor pre ostatné Prosto House domy */}
