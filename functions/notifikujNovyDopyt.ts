@@ -72,6 +72,14 @@ Deno.serve(async (req) => {
         from_name: 'American Living CRM'
       });
 
+      // Kópia pre firmu
+      await base44.asServiceRole.integrations.Core.SendEmail({
+        to: 'info.americanliving@gmail.com',
+        subject: `[KÓPIA] 🏡 Nový dopyt: ${dopyt.klient_meno} - ${dopyt.dom_nazov || 'Všeobecný záujem'}`,
+        body: emailBody,
+        from_name: 'American Living CRM'
+      });
+
       // Slack notifikácia ak je nastavená
       if (prirdenenyPredajca.slack_webhook) {
         await fetch(prirdenenyPredajca.slack_webhook, {

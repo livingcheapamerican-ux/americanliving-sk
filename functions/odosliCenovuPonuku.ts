@@ -93,6 +93,14 @@ Deno.serve(async (req) => {
       body: klientEmail
     });
 
+    // Kópia pre firmu
+    await base44.integrations.Core.SendEmail({
+      from_name: "American Living",
+      to: 'info.americanliving@gmail.com',
+      subject: `[KÓPIA] Cenová ponuka #${ponuka.cislo_ponuky} - ${ponuka.klient_meno}`,
+      body: klientEmail
+    });
+
     // Email pre predajcu
     const predajcaEmail = ponuka.predajca_email || user.email;
     const notifikaciaEmail = `
