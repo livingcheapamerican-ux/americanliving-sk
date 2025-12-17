@@ -456,7 +456,7 @@ export default function KonfiguratorContactModal({
                       ) : (
                         <>
                           <Send className="mr-2 w-5 h-5" />
-                          Odoslať len dopyt (bez ponuky)
+                          Poslať nezáväzný dopyt
                         </>
                       )}
                     </Button>

@@ -82,28 +82,35 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       onMouseLeave={handleMouseLeave}
       className={`relative p-1 sm:p-2.5 rounded-md sm:rounded-lg cursor-pointer transition-all flex flex-col items-center text-center ${
         selected 
-          ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
+          ? `bg-gradient-to-br ${selectedBg.replace('bg-', 'from-')}/90 via-white to-${selectedBg.replace('bg-', '')}/50 border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
           : isA0 
-            ? "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
+            ? "bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
             : `bg-white border-2 border-gray-200 ${hoverBorder} hover:shadow-md`
       }`}
     >
       {isA0 && (
-        <Badge className="absolute top-0.5 left-0.5 sm:top-1 sm:left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[6px] sm:text-[8px] px-1 sm:px-1.5 z-10">
-          <Sparkles className="w-1.5 h-1.5 sm:w-2 sm:h-2 mr-0.5" />A0
-        </Badge>
+        <motion.div
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute top-0.5 left-0.5 sm:top-1 sm:left-1 z-10"
+        >
+          <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-[6px] sm:text-[8px] px-1 sm:px-1.5 shadow-lg">
+            <Sparkles className="w-1.5 h-1.5 sm:w-2 sm:h-2 mr-0.5" />A0
+          </Badge>
+        </motion.div>
       )}
       
       <AnimatePresence>
         {selected && (
           <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
+            initial={{ scale: 0, opacity: 0, rotate: -180 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            exit={{ scale: 0, opacity: 0, rotate: 180 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
             className="absolute top-1 right-1 sm:top-2 sm:right-2 z-20 pointer-events-none"
           >
-            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
-              <Check className="w-3 h-3 sm:w-4 sm:h-4 text-white stroke-[3]" />
+            <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg ring-2 ring-white">
+              <Check className="w-4 h-4 sm:w-5 sm:h-5 text-white stroke-[3]" />
             </div>
           </motion.div>
         )}
