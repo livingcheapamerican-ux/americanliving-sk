@@ -3,10 +3,13 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-
-    if (!user || (user.role !== 'admin' && user.super_admin !== true)) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    
+    // Skús načítať používateľa, ale nie je povinný (pre verejných návštevníkov)
+    let user;
+    try {
+      user = await base44.auth.me();
+    } catch (e) {
+      user = null;
     }
 
     const { dom, konfiguraciaData, klientData } = await req.json();
@@ -896,7 +899,7 @@ Deno.serve(async (req) => {
       status: 'odoslana',
       odoslana: true,
       datum_odoslania: new Date().toISOString(),
-      predajca_email: user.email,
+      predajca_email: user?.email || 'system',
       nastavenie_id: aktivneNastavenie?.id
     });
 
@@ -906,7 +909,7 @@ Deno.serve(async (req) => {
       ponuka_id: novaPonuka.id,
       klient_email: klientData.email,
       klient_meno: klientData.meno,
-      predajca_email: user.email,
+      predajca_email: user?.email || 'system',
       popis: `Odoslaná cenová ponuka ${cisloPonuky} - ${dom?.nazov || 'Lyon'} - ${formatPrice(konfiguraciaData.totalPrice)}`,
       metadata: {
         cislo_ponuky: cisloPonuky,
