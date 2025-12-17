@@ -29,20 +29,25 @@ export default function Kontakt() {
       // Vytvor dopyt v databáze
       const novyDopyt = await base44.entities.Dopyt.create(data);
       
+      console.log('✅ Dopyt vytvorený:', novyDopyt.id);
+      console.log('📧 Volám notifikujNovyDopyt...');
+      
       // Pošli notifikáciu predajcovi
-      await base44.functions.invoke('notifikujNovyDopyt', {
+      const notifikaciaResult = await base44.functions.invoke('notifikujNovyDopyt', {
         dopyt: {
           id: novyDopyt.id,
-          klient_meno: data.meno,
-          klient_email: data.email,
-          klient_telefon: data.telefon,
+          klient_meno: novyDopyt.meno,
+          klient_email: novyDopyt.email,
+          klient_telefon: novyDopyt.telefon,
           klient_adresa: '',
-          typ_dopytu: data.typ_dopytu,
-          poznamka: data.poznamka,
+          typ_dopytu: novyDopyt.typ_dopytu,
+          poznamka: novyDopyt.poznamka,
           dom_nazov: 'Všeobecný dopyt z kontaktného formulára',
           dom_id: null
         }
       });
+      
+      console.log('📧 Notifikácia result:', notifikaciaResult);
       
       return novyDopyt;
     },
