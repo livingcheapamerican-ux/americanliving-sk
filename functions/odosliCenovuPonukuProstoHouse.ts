@@ -481,7 +481,7 @@ Deno.serve(async (req) => {
       ponuka_id: novaPonuka.id,
       klient_email,
       klient_meno,
-      predajca_email: user.email,
+      predajca_email: user?.email || 'system',
       popis: `Odoslaná cenová ponuka ${cisloPonuky} - ${dom.nazov} - ${formatPrice(totalPrice)}`,
       metadata: {
         cislo_ponuky: cisloPonuky,
