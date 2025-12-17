@@ -2006,7 +2006,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Barn 48 - Wizard - PO POPISE */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && !dom.nazov?.toLowerCase().includes("double") && (
-              <div>
+              <div className="hidden lg:block">
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
@@ -2076,8 +2076,11 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
+            </div>
+            )}
 
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+            {/* Barn 48 - MOBILNÉ ZOBRAZENIE */}
+            {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && !dom.nazov?.toLowerCase().includes("double") && (
               <div className="lg:hidden space-y-4">
                 <KonfiguratorBarn48
                   dom={dom}
@@ -2170,7 +2173,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Flat Small - Wizard */}
             {isProstoHouse && dom.nazov?.includes("Flat Small") && (
-              <div>
+              <div className="hidden lg:block">
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
@@ -2238,8 +2241,11 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
+            </div>
+            )}
 
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+            {/* Flat Small - MOBILNÉ ZOBRAZENIE */}
+            {isProstoHouse && dom.nazov?.includes("Flat Small") && (
               <div className="lg:hidden space-y-4">
                 <KonfiguratorFlatSmall
                   dom={dom}
@@ -2331,7 +2337,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre A-Frame - Wizard - PO POPISE */}
             {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && !dom.nazov?.includes("Barn") && (
-              <div>
+              <div className="hidden lg:block">
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
@@ -2401,8 +2407,11 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
+            </div>
+            )}
 
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+            {/* A-Frame - MOBILNÉ ZOBRAZENIE */}
+            {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && !dom.nazov?.includes("Barn") && (
               <div className="lg:hidden space-y-4">
                 <KonfiguratorAFrame
                   dom={dom}
