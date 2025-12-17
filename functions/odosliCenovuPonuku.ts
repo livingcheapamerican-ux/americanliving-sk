@@ -85,16 +85,22 @@ Deno.serve(async (req) => {
 </html>
     `;
 
+    console.log('📧 Odosielam email klientovi:', ponuka.klient_email);
+    
     // Odošli email cez Resend s kópiou pre firmu
-    await base44.functions.invoke('sendEmailResend', {
+    const emailResult1 = await base44.asServiceRole.functions.invoke('sendEmailResend', {
       to: ponuka.klient_email,
       cc: 'info.americanliving@gmail.com',
       subject: `Cenová ponuka #${ponuka.cislo_ponuky} - ${ponuka.dom_nazov}`,
       html: klientEmail
     });
+    
+    console.log('✅ Email klientovi odoslaný:', emailResult1);
 
     // Email pre predajcu
-    const predajcaEmail = ponuka.predajca_email || user.email;
+    const predajcaEmail = ponuka.predajca_email || user.email || 'info.americanliving@gmail.com';
+    console.log('📧 Odosielam notifikáciu predajcovi:', predajcaEmail);
+    
     const notifikaciaEmail = `
 <!DOCTYPE html>
 <html>
@@ -130,11 +136,13 @@ Deno.serve(async (req) => {
 </html>
     `;
 
-    await base44.functions.invoke('sendEmailResend', {
+    const emailResult2 = await base44.asServiceRole.functions.invoke('sendEmailResend', {
       to: predajcaEmail,
       subject: `📧 Cenová ponuka #${ponuka.cislo_ponuky} odoslaná - ${ponuka.klient_meno}`,
       html: notifikaciaEmail
     });
+    
+    console.log('✅ Email predajcovi odoslaný:', emailResult2);
 
     // Aktualizuj status ponuky
     await base44.asServiceRole.entities.CenovaPonuka.update(ponuka_id, {
