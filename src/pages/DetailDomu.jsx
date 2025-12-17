@@ -2969,7 +2969,6 @@ export default function DetailDomu() {
                 )}
               </Card>
             )}
-          </motion.div>
 
           {/* Pravý stĺpec - Informácie */}
           <motion.div
