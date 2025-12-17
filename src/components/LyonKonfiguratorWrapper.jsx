@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import KonfiguratorLyon, { LyonSummaryPanel } from "./KonfiguratorLyon";
 import { useLanguage } from "./LanguageContext";
+import LyonFinalSummaryModal from "./LyonFinalSummaryModal";
 
 export default function LyonKonfiguratorWrapper(props) {
+  const [showSummaryModal, setShowSummaryModal] = useState(false);
   const BASE_PRICE = props.dom?.zakladna_cena || 73431;
   const { t } = useLanguage();
   
@@ -206,7 +208,7 @@ export default function LyonKonfiguratorWrapper(props) {
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
   const handleSubmit = () => {
-    alert("Odoslanie dopytu - funkcia bude implementovaná");
+    setShowSummaryModal(true);
   };
 
   // Poslať totalPrice späť do rodičovského komponentu
@@ -269,5 +271,15 @@ export default function LyonKonfiguratorWrapper(props) {
     financneSluzby, setFinancneSluzby,
   };
 
-  return <KonfiguratorLyon {...allProps} />;
+  return (
+    <>
+      <KonfiguratorLyon {...allProps} onSubmit={handleSubmit} />
+      <LyonFinalSummaryModal
+        isOpen={showSummaryModal}
+        onClose={() => setShowSummaryModal(false)}
+        dom={props.dom}
+        {...allProps}
+      />
+    </>
+  );
 }

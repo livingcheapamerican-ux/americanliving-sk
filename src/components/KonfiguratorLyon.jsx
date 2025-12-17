@@ -245,6 +245,7 @@ const Tile = ({ selected, onClick, title, subtitle, price, isPriced, isA0, isInc
 export default function KonfiguratorLyon(props = {}) {
   const BASE_PRICE = 73431;
   const { language, t } = useLanguage();
+  const onSubmit = props.onSubmit || (() => {});
   
   // Načítať texty konfiguratora
   const { data: konfigTexts = [] } = useQuery({
@@ -1289,7 +1290,11 @@ export default function KonfiguratorLyon(props = {}) {
               {formatPrice(totalPrice)}
             </p>
           </div>
-          <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-xl text-xs sm:text-sm h-9 sm:h-10 px-4 sm:px-6 rounded-xl">
+          <Button 
+            size="sm" 
+            onClick={onSubmit}
+            className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-xl text-xs sm:text-sm h-9 sm:h-10 px-4 sm:px-6 rounded-xl"
+          >
             <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
             {t('interested') || 'Mám záujem'}
           </Button>
