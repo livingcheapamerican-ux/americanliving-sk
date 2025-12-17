@@ -582,12 +582,12 @@ export default function DetailDomu() {
       )}
 
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6 max-w-full overflow-hidden">
-        <div className="grid lg:grid-cols-2 gap-4 sm:gap-6 w-full max-w-full overflow-hidden">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6 w-full max-w-full overflow-hidden">
           {/* Ľavý stĺpec - Galéria */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-4 w-full max-w-full overflow-hidden"
+            className="space-y-4 w-full max-w-full overflow-hidden order-1 lg:order-1"
           >
             {/* Hlavný obrázok */}
             <div 
@@ -1794,7 +1794,7 @@ export default function DetailDomu() {
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden"
+            className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden order-2 lg:order-2"
           >
             {/* Hlavička */}
             <div>
@@ -2317,7 +2317,7 @@ export default function DetailDomu() {
 
             {/* Floating panel s cenami pre Flat 1,5 - pravá strana */}
             {isProstoHouse && (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start order-3 lg:order-2" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlat15
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -2388,7 +2388,7 @@ export default function DetailDomu() {
 
             {/* Floating panel pre Nord */}
             {isProstoHouse && dom.nazov?.includes("Nord") && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start order-3 lg:order-2" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorNord
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -2461,7 +2461,7 @@ export default function DetailDomu() {
 
             {/* Floating panel pre Fjord */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start order-3 lg:order-2" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFjord
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -2534,7 +2534,7 @@ export default function DetailDomu() {
 
             {/* Floating panel pre Flat 72 */}
             {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start order-3 lg:order-2" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlat72
                   dom={dom}
                   onReset={handleKonfiguratorReset}
@@ -2608,7 +2608,7 @@ export default function DetailDomu() {
 
             {/* Floating panel pre Barn Double */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && dom.nazov?.toLowerCase().includes("double") && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start order-3 lg:order-2" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorBarnDouble
                   dom={dom}
                   onReset={handleKonfiguratorReset}
@@ -2684,7 +2684,7 @@ export default function DetailDomu() {
 
             {/* Floating panel pre Barn 48 */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && !dom.nazov?.toLowerCase().includes("double") && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start order-3 lg:order-2" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorBarn48
                   dom={dom}
                   onReset={handleKonfiguratorReset}
@@ -2760,7 +2760,7 @@ export default function DetailDomu() {
 
             {/* Floating panel pre Flat Double */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start order-3 lg:order-2" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlatDouble 
                   dom={dom}
                   onReset={handleKonfiguratorReset}
@@ -2834,7 +2834,7 @@ export default function DetailDomu() {
 
             {/* Floating panel pre Flat Small */}
             {isProstoHouse && dom.nazov?.includes("Flat Small") && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start order-3 lg:order-2" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlatSmall
                   dom={dom}
                   onReset={handleKonfiguratorReset}
@@ -2986,7 +2986,7 @@ export default function DetailDomu() {
 
             {/* Floating panel pre ostatné Prosto House domy */}
             {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("Flat Small") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && !dom.nazov?.includes("Barn") && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start order-3 lg:order-2" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorProstoHouse 
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -3059,7 +3059,7 @@ export default function DetailDomu() {
 
             {/* Kalkulátor hypotéky - skryté pre mobilné domy */}
             {dom.kategoria !== "mobilne_domy" && (
-              <div className="mb-4">
+              <div className="mb-4 order-4 lg:order-3">
                 <HypotekaKalkulator 
                   cenaDoma={dom.zakladna_cena} 
                   dom={dom}
@@ -3092,7 +3092,7 @@ export default function DetailDomu() {
             )}
 
             {/* CTA Buttons */}
-            <div className="space-y-2 sm:space-y-3">
+            <div className="space-y-2 sm:space-y-3 order-5 lg:order-4">
 
               <Link to={createPageUrl("Kontakt")}>
                 <Button size="lg" variant="outline" className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold text-sm sm:text-base py-4 sm:py-5">
@@ -3159,7 +3159,7 @@ export default function DetailDomu() {
 
             {/* Sidebar pre všetky Ticabhouse domy - rovnaké ako Lyon (okrem Tiny House) */}
             {isTicabhouse && !dom.nazov?.toLowerCase().includes("tiny house") && (
-              <div className="space-y-4">
+              <div className="space-y-4 order-3 lg:order-2">
                 <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                   <LyonSummaryPanelStandalone
                   predajNehnutelnosti={lyonPredajNehnutelnosti}
