@@ -490,7 +490,7 @@ export default function KonfiguratorProstoHouse({
   return (
     <div className="mt-4 sm:mt-8 relative overflow-x-hidden">
       <FlyingAnimationContainer animations={animations} />
-      <FloatingPrice price={totalPrice} isVisible={!showOnlySummary} />
+      {!showOnlySummary && <FloatingPrice price={totalPrice} isVisible={true} />}
 
       <div className="w-full max-w-full overflow-hidden">
         <div className="space-y-3 sm:space-y-6">
