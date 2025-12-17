@@ -775,12 +775,45 @@ Deno.serve(async (req) => {
 </html>
     `;
 
-    // Odošli email
-    await base44.asServiceRole.integrations.Core.SendEmail({
-      to: klientData.email,
-      subject: `Cenová ponuka ${cisloPonuky} - ${dom?.nazov || 'Lyon 50m²'} - American Living`,
-      body: htmlEmail,
-      from_name: 'American Living'
+    const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
+    
+    // Odošli email klientovi
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'American Living <info@americanliving.sk>',
+        to: klientData.email,
+        subject: `Cenová ponuka ${cisloPonuky} - ${dom?.nazov || 'Lyon 50m²'} - American Living`,
+        html: htmlEmail
+      })
+    });
+    
+    // Odošli ROVNAKÚ ponuku na firemný email
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'American Living <info@americanliving.sk>',
+        to: 'info.americanliving@gmail.com',
+        subject: `[KÓPIA] Cenová ponuka ${cisloPonuky} - ${dom?.nazov || 'Lyon'} - ${klientData.meno}`,
+        html: `
+          <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h3 style="margin: 0 0 10px 0; color: #1f2937;">📋 Interná kópia cenovej ponuky</h3>
+            <p style="margin: 5px 0; color: #6b7280;"><strong>Klient:</strong> ${klientData.meno}</p>
+            <p style="margin: 5px 0; color: #6b7280;"><strong>Email:</strong> ${klientData.email}</p>
+            <p style="margin: 5px 0; color: #6b7280;"><strong>Telefón:</strong> ${klientData.telefon}</p>
+            <p style="margin: 5px 0; color: #6b7280;"><strong>Celková cena:</strong> ${formatPrice(konfiguraciaData.totalPrice)}</p>
+          </div>
+          ${htmlEmail}
+        `
+      })
     });
 
     // Ulož do databázy
