@@ -15,6 +15,7 @@ import { LanguageProvider, useLanguage } from "./components/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
 import UserTracking from "./components/UserTracking";
 import FloatingHouses from "./components/FloatingHouses";
+import InteractiveTour from "./components/InteractiveTour";
 const SessionRecorder = React.lazy(() => import("./components/SessionRecorder"));
 
 function LayoutContent({ children }) {
@@ -140,19 +141,28 @@ function LayoutContent({ children }) {
             </div>
 
             <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1">
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`px-2 xl:px-3 py-1 xl:py-1.5 rounded-md text-xs lg:text-sm xl:text-base font-medium transition-all ${
-                    isActive(item.path)
-                      ? 'bg-primary text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {navItems.map((item) => {
+                const tourId = item.path === createPageUrl("Katalog") ? "nav-katalog"
+                  : item.path === createPageUrl("OdporucanieDomov") ? "nav-ai"
+                  : item.path === createPageUrl("ONas") ? "nav-onas"
+                  : item.path === createPageUrl("Kontakt") ? "nav-kontakt"
+                  : null;
+
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    data-tour={tourId}
+                    className={`px-2 xl:px-3 py-1 xl:py-1.5 rounded-md text-xs lg:text-sm xl:text-base font-medium transition-all ${
+                      isActive(item.path)
+                        ? 'bg-primary text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                );
+              })}
             </nav>
 
             <div className="hidden sm:flex items-center gap-1 sm:gap-2">
@@ -549,6 +559,7 @@ function LayoutContent({ children }) {
 
       <CookieConsentBanner />
       <UserTracking />
+      <InteractiveTour />
       <React.Suspense fallback={null}>
         <SessionRecorder />
       </React.Suspense>
