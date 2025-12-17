@@ -262,35 +262,35 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
   return (
     <div className="w-full">
         {/* Dodatočné služby - KROK 0 */}
-        <Card className="p-3 sm:p-4 mb-3 bg-gradient-to-br from-cyan-50 via-white to-teal-50 border-2 border-cyan-300 shadow-lg">
-          <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
-            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-cyan-600 text-white text-sm mr-1">0</span>
+        <Card className="p-4 sm:p-5 md:p-6 mb-4 sm:mb-5 bg-gradient-to-br from-cyan-50 via-white to-teal-50 border-2 border-cyan-300 shadow-lg">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+            <span className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-cyan-600 text-white text-sm sm:text-base">0</span>
             📋 {getTranslatedText('sekcia_sluzby', 'nazov') || t('additionalServices') || 'Dodatočné služby'}
           </h3>
-          <p className="text-xs sm:text-sm text-gray-600 mb-3">
+          <p className="text-sm sm:text-base text-gray-600 mb-4">
             {getTranslatedText('sekcia_sluzby', 'podnadpis') || 'Vyberte si doplnkové služby (voliteľné):'}
           </p>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {/* Predaj nehnuteľnosti */}
             <div
               onClick={() => setPredajNehnutelnosti(!predajNehnutelnosti)}
-              className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
+              className={`p-4 sm:p-5 rounded-lg border-2 cursor-pointer transition-all ${
                 predajNehnutelnosti 
                   ? 'bg-blue-100 border-blue-500 shadow-md' 
                   : 'bg-white border-blue-200 hover:border-blue-400'
               }`}
             >
-              <div className="flex items-start gap-2">
-                <div className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className={`flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 rounded border-2 flex items-center justify-center transition-all ${
                   predajNehnutelnosti ? 'bg-blue-500 border-blue-500' : 'border-gray-300'
                 }`}>
-                  {predajNehnutelnosti && <CheckCircle className="w-4 h-4 text-white" />}
+                  {predajNehnutelnosti && <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-white" />}
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm sm:text-base font-semibold text-gray-900">
+                  <p className="text-base sm:text-lg md:text-xl font-semibold text-gray-900">
                     {getTranslatedText('sluzba_predaj', 'nazov') || 'Predaj predošlej nehnuteľnosti'}
                   </p>
-                  <p className="text-xs text-gray-600 mt-0.5">
+                  <p className="text-sm sm:text-base text-gray-600 mt-1">
                     {getTranslatedText('sluzba_predaj', 'dlhy_popis') || 'Budú sa Vám venovať naši najlepší odborníci v realitách.'}
                   </p>
                 </div>
@@ -300,23 +300,23 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
             {/* Hľadám pozemok */}
             <div
               onClick={() => setHladamPozemok(!hladamPozemok)}
-              className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
+              className={`p-4 sm:p-5 rounded-lg border-2 cursor-pointer transition-all ${
                 hladamPozemok 
                   ? 'bg-green-100 border-green-500 shadow-md' 
                   : 'bg-white border-green-200 hover:border-green-400'
               }`}
             >
-              <div className="flex items-start gap-2">
-                <div className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className={`flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 rounded border-2 flex items-center justify-center transition-all ${
                   hladamPozemok ? 'bg-green-500 border-green-500' : 'border-gray-300'
                 }`}>
-                  {hladamPozemok && <CheckCircle className="w-4 h-4 text-white" />}
+                  {hladamPozemok && <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-white" />}
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm sm:text-base font-semibold text-gray-900">
+                  <p className="text-base sm:text-lg md:text-xl font-semibold text-gray-900">
                     {getTranslatedText('sluzba_pozemok', 'nazov') || 'Chcem pozemok pod svoj dom'}
                   </p>
-                  <p className="text-xs text-gray-600 mt-0.5">
+                  <p className="text-sm sm:text-base text-gray-600 mt-1">
                     {getTranslatedText('sluzba_pozemok', 'dlhy_popis') || 'Pomôžeme Vám nájsť ideálny pozemok.'}
                   </p>
                 </div>
@@ -326,23 +326,23 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
             {/* Finančné služby */}
             <div
               onClick={() => setFinancneSluzby(!financneSluzby)}
-              className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
+              className={`p-4 sm:p-5 rounded-lg border-2 cursor-pointer transition-all ${
                 financneSluzby 
                   ? 'bg-orange-100 border-orange-500 shadow-md' 
                   : 'bg-white border-orange-200 hover:border-orange-400'
               }`}
             >
-              <div className="flex items-start gap-2">
-                <div className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className={`flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 rounded border-2 flex items-center justify-center transition-all ${
                   financneSluzby ? 'bg-orange-500 border-orange-500' : 'border-gray-300'
                 }`}>
-                  {financneSluzby && <CheckCircle className="w-4 h-4 text-white" />}
+                  {financneSluzby && <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-white" />}
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm sm:text-base font-semibold text-gray-900">
+                  <p className="text-base sm:text-lg md:text-xl font-semibold text-gray-900">
                     {getTranslatedText('sluzba_finance', 'nazov') || 'Finančné služby - úvery/poistky'}
                   </p>
-                  <p className="text-xs text-gray-600 mt-0.5">
+                  <p className="text-sm sm:text-base text-gray-600 mt-1">
                     {getTranslatedText('sluzba_finance', 'dlhy_popis') || 'Budú sa Vám venovať naši najlepší finančníci, ktorí Vám pomôžu nie len s financovaním vášho bývania, ale pomocnú ruku vám podajú aj v ťažkých chvíľach s financiami.'}
                   </p>
                 </div>
@@ -352,12 +352,12 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </Card>
 
         {/* Účel stavby */}
-        <Card className="p-3 sm:p-4 mb-3 bg-gradient-to-br from-blue-50 via-white to-indigo-50 border-2 border-blue-200 shadow-lg">
-          <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
-            <Home className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+        <Card className="p-4 sm:p-5 md:p-6 mb-4 sm:mb-5 bg-gradient-to-br from-blue-50 via-white to-indigo-50 border-2 border-blue-200 shadow-lg">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+            <Home className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
             {getTranslatedText('sekcia_ucel', 'nazov') || t('purposeOfBuilding') || 'Účel stavby'}
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {/* Rekreačná stavba */}
             <motion.div
               whileHover={{ scale: 1.02 }}
@@ -399,19 +399,19 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
                 setMontaz(false);
                 setDoprava(false);
               }}
-              className={`p-3 rounded-lg cursor-pointer transition-all border-2 ${
+              className={`p-4 sm:p-5 rounded-lg cursor-pointer transition-all border-2 ${
                 ucel === "chata" 
                   ? "bg-green-100 border-green-500 shadow-md" 
                   : "bg-white border-gray-300 hover:border-green-400"
               }`}
             >
-              <h4 className="text-sm sm:text-base font-bold text-gray-900 mb-1">
+              <h4 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-2">
                 {getTranslatedText('ucel_rekreacna', 'nazov') || t('recreationalBuilding')}
               </h4>
-              <p className="text-xs sm:text-sm text-blue-600 font-semibold mb-1">
+              <p className="text-sm sm:text-base text-blue-600 font-semibold mb-2">
                 {getTranslatedText('ucel_rekreacna', 'podnadpis') || t('economicChoice')}
               </p>
-              <ul className="space-y-0.5 text-[11px] sm:text-xs text-gray-600">
+              <ul className="space-y-1 text-xs sm:text-sm text-gray-600">
                 {(getTranslatedText('ucel_rekreacna', 'dlhy_popis') || t('recreationalBuildingDesc'))
                   .split('\n')
                   .map((line, i) => <li key={i}>• {line}</li>)}
@@ -439,19 +439,19 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
                 setElektro("ge");
                 setKlimatizacia(true);
               }}
-              className={`p-3 rounded-lg cursor-pointer transition-all border-2 ${
+              className={`p-4 sm:p-5 rounded-lg cursor-pointer transition-all border-2 ${
                 ucel === "rodinny" 
                   ? "bg-green-100 border-green-500 shadow-md" 
                   : "bg-white border-gray-300 hover:border-green-400"
               }`}
             >
-              <div className="flex items-center gap-2 mb-1">
-                <h4 className="text-sm sm:text-base font-bold text-gray-900">
+              <div className="flex items-center gap-2 mb-2">
+                <h4 className="text-base sm:text-lg md:text-xl font-bold text-gray-900">
                   {getTranslatedText('ucel_rodinny', 'nazov') || t('familyHouseA0')}
                 </h4>
-                <Badge className="bg-green-600 text-white text-[8px] sm:text-[9px]">⚡</Badge>
+                <Badge className="bg-green-600 text-white text-xs sm:text-sm px-2 py-0.5">⚡</Badge>
               </div>
-              <ul className="space-y-0.5 text-[11px] sm:text-xs text-gray-600">
+              <ul className="space-y-1 text-xs sm:text-sm text-gray-600">
                 {(getTranslatedText('ucel_rodinny', 'dlhy_popis') || t('familyHouseA0Desc'))
                   .split('\n')
                   .map((line, i) => <li key={i}>• {line}</li>)}
@@ -461,20 +461,20 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </Card>
 
         {/* Hlavný konfigurátor - Grid layout */}
-        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <div className="grid lg:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
           {/* IZOLÁCIA */}
-          <Card className="p-3 bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300 shadow-md">
-            <h3 className="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-sm mr-1">1</span>
+          <Card className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300 shadow-md">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-900 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+              <span className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-600 text-white text-sm sm:text-base">1</span>
               🏠 {getTranslatedText('sekcia_izolacia', 'nazov') || t('insulationSection') || 'Izolácia'}
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-3 sm:space-y-4">
               {/* Steny */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('izolacia_stien', 'nazov') || t('wallInsulation') || 'Izolácia stien:'}
                 </p>
-                <div className="grid grid-cols-3 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5 border border-blue-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={izolaciaStien === "150mm"} onClick={() => setIzolaciaStien("150mm")} 
                     title={getTranslatedText('izolacia_stien_150', 'nazov') || t('walls150mm') || 'Steny 150mm'} 
                     subtitle={getTranslatedText('izolacia_stien_150', 'podnadpis') || t('recreational') || 'Rekreačné'} 
@@ -494,10 +494,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
               {/* Podlaha */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('izolacia_podlahy', 'nazov') || t('floorInsulation') || 'Izolácia podlahy:'}
                 </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 border border-blue-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={izolaciaPodlahy === "150mm"} onClick={() => setIzolaciaPodlahy("150mm")} 
                     title={getTranslatedText('izolacia_podlahy_150', 'nazov') || t('floor150mm') || 'Podlaha 150mm'} 
                     subtitle={getTranslatedText('izolacia_podlahy_150', 'podnadpis') || ''} 
@@ -512,10 +512,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
               {/* Strop */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('izolacia_stropu', 'nazov') || t('ceilingInsulation') || 'Izolácia stropu:'}
                 </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 border border-blue-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={izolaciaStropu === "150mm"} onClick={() => setIzolaciaStropu("150mm")} 
                     title={getTranslatedText('izolacia_stropu_150', 'nazov') || t('ceiling150mm') || 'Strop 150mm'} 
                     subtitle={getTranslatedText('izolacia_stropu_150', 'podnadpis') || ''} 
@@ -531,18 +531,18 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </Card>
 
           {/* VYKUROVANIE */}
-          <Card className="p-3 bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-300 shadow-md">
-            <h3 className="text-base font-bold text-orange-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-orange-600 text-white text-sm mr-1">2</span>
+          <Card className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-orange-50 to-red-50 border-2 border-orange-300 shadow-md">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-orange-900 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+              <span className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-orange-600 text-white text-sm sm:text-base">2</span>
               🔥 {getTranslatedText('sekcia_vykurovanie', 'nazov') || t('heatingSection') || 'Vykurovanie'}
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-3 sm:space-y-4">
               {/* Tepelné čerpadlo */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('tepelne_cerpadlo', 'nazov') || t('heating') || 'Vykurovanie:'}
                 </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-orange-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 border border-orange-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={tepelneCerpadlo === "nie"} onClick={() => setTepelneCerpadlo("nie")} 
                     title={getTranslatedText('tepelne_cerpadlo_nie', 'nazov') || t('heatingPreparation')} 
                     subtitle={getTranslatedText('tepelne_cerpadlo_nie', 'podnadpis') || t('convectors')} 
@@ -557,10 +557,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
               {/* Rekuperácia */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('rekuperacia', 'nazov') || t('ventilation') || 'Vetranie:'}
                 </p>
-                <div className="grid grid-cols-3 gap-1.5 border border-orange-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5 border border-orange-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={rekuperacia === "nie" && !pripravaNaRekuperaciu} onClick={() => {setRekuperacia("nie"); setPripravaNaRekuperaciu(false);}} 
                     title={getTranslatedText('rekuperacia_nie', 'nazov') || t('withoutRecuperation')} 
                     subtitle={getTranslatedText('rekuperacia_nie', 'podnadpis') || ''} 
@@ -580,10 +580,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
               {/* Doplnky */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('vykurovanie_doplnky', 'nazov') || t('heatingExtras') || 'Doplnky:'}
                 </p>
-                <div className="space-y-1.5">
+                <div className="space-y-2 sm:space-y-2.5">
                   <EditableTile selected={podlahovoKurenie} onClick={() => setPodlahovoKurenie(!podlahovoKurenie)} 
                     title={getTranslatedText('podlahove_kurenie', 'nazov') || t('floorHeating')} 
                     subtitle={getTranslatedText('podlahove_kurenie', 'podnadpis') || ''} 
@@ -611,18 +611,18 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </div>
 
         {/* Pokračovanie sekcií */}
-        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <div className="grid lg:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
           {/* FASÁDA */}
-          <Card className="p-3 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-300 shadow-md">
-            <h3 className="text-base font-bold text-purple-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-purple-600 text-white text-sm mr-1">3</span>
+          <Card className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-300 shadow-md">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-purple-900 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+              <span className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-purple-600 text-white text-sm sm:text-base">3</span>
               🎨 {getTranslatedText('sekcia_fasada', 'nazov') || t('facadeSection') || 'Fasáda'}
             </h3>
             <div>
-              <p className="text-[11px] font-semibold text-gray-700 mb-1">
+              <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                 {getTranslatedText('fasada_typ', 'nazov') || t('facadeType') || 'Typ fasády:'}
               </p>
-              <div className="grid grid-cols-2 gap-1.5 border border-purple-300 rounded-md p-1.5 bg-white/50">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 border border-purple-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                 <EditableTile selected={fasada === "drevo_smrek"} onClick={() => setFasada("drevo_smrek")} 
                   title={getTranslatedText('fasada_drevo_smrek', 'nazov') || t('spruceWood')} 
                   subtitle={getTranslatedText('fasada_drevo_smrek', 'podnadpis') || t('darkLight')} 
@@ -652,18 +652,18 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </Card>
 
           {/* STRECHA */}
-          <Card className="p-3 bg-gradient-to-br from-indigo-50 to-blue-50 border-2 border-indigo-300 shadow-md">
-            <h3 className="text-base font-bold text-indigo-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-600 text-white text-sm mr-1">4</span>
+          <Card className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-indigo-50 to-blue-50 border-2 border-indigo-300 shadow-md">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-indigo-900 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+              <span className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-600 text-white text-sm sm:text-base">4</span>
               🏠 {getTranslatedText('sekcia_strecha', 'nazov') || t('roofSection') || 'Strecha'}
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-3 sm:space-y-4">
               {/* Krytina */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('stresna_krytina', 'nazov') || t('roofCoveringType') || 'Strešná krytina:'}
                 </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-indigo-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 border border-indigo-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={strecha === "korugovan_plech"} onClick={() => setStrecha("korugovan_plech")} 
                     title={getTranslatedText('strecha_korugovan', 'nazov') || t('corrugatedMetal')} 
                     subtitle={getTranslatedText('strecha_korugovan', 'podnadpis') || ''} 
@@ -678,10 +678,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
               {/* Odkvapy */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('odkvapy', 'nazov') || t('gutters') || 'Odkvapy:'}
                 </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-indigo-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 border border-indigo-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={odkvapy === "nie"} onClick={() => setOdkvapy("nie")} 
                     title={getTranslatedText('odkvapy_nie', 'nazov') || t('withoutGutters')} 
                     subtitle={getTranslatedText('odkvapy_nie', 'podnadpis') || ''} 
@@ -697,20 +697,20 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </Card>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <div className="grid lg:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
           {/* OKNÁ A DVERE */}
-          <Card className="p-3 bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-cyan-300 shadow-md">
-            <h3 className="text-base font-bold text-cyan-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-cyan-600 text-white text-sm mr-1">5</span>
+          <Card className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-cyan-300 shadow-md">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-cyan-900 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+              <span className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-cyan-600 text-white text-sm sm:text-base">5</span>
               🚪 {getTranslatedText('sekcia_okna_dvere', 'nazov') || t('windowsDoorsSection') || 'Okná a dvere'}
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-3 sm:space-y-4">
               {/* Okná */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('okna_farba', 'nazov') || t('windowColor') || 'Farba okien 3-sklo:'}
                 </p>
-                <div className="grid grid-cols-3 gap-1.5 border border-cyan-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5 border border-cyan-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={okna === "biele"} onClick={() => setOkna("biele")} 
                     title={getTranslatedText('okna_biele', 'nazov') || t('white')} 
                     subtitle={getTranslatedText('okna_biele', 'podnadpis') || ''} 
@@ -728,10 +728,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
               {/* Vchodové dvere */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('vchodove_dvere', 'nazov') || t('entryDoors') || 'Vchodové dvere:'}
                 </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-cyan-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 border border-cyan-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={vchodoveDvere === "plastove"} onClick={() => setVchodoveDvere("plastove")} 
                     title={getTranslatedText('dvere_plastove', 'nazov') || t('metalPlasticDoors')} 
                     subtitle={getTranslatedText('dvere_plastove', 'podnadpis') || ''} 
@@ -747,18 +747,18 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </Card>
 
           {/* INTERIÉR */}
-          <Card className="p-3 bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300 shadow-md">
-            <h3 className="text-base font-bold text-amber-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-600 text-white text-sm mr-1">6</span>
+          <Card className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300 shadow-md">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-amber-900 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+              <span className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-600 text-white text-sm sm:text-base">6</span>
               🛋️ {getTranslatedText('sekcia_interier', 'nazov') || t('interiorSection') || 'Interiér'}
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-3 sm:space-y-4">
               {/* Obklad stien */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('obklad_stien', 'nazov') || t('wallCladding') || 'Obklad stien:'}
                 </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-amber-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 border border-amber-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={obkladStien === "smrek_8cm"} onClick={() => setObkladStien("smrek_8cm")} 
                     title={getTranslatedText('obklad_smrek_8cm', 'nazov') || t('spruceWall8cm')} 
                     subtitle={getTranslatedText('obklad_smrek_8cm', 'podnadpis') || ''} 
@@ -783,10 +783,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
               {/* Podlaha */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('podlaha', 'nazov') || t('floorType') || 'Podlaha:'}
                 </p>
-                <div className="border border-amber-300 rounded-md p-1.5 bg-white/50">
+                <div className="border border-amber-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={podlaha === "laminat"} onClick={() => setPodlaha("laminat")} 
                     title={getTranslatedText('podlaha_laminat', 'nazov') || t('laminate')} 
                     subtitle={getTranslatedText('podlaha_laminat', 'podnadpis') || ''} 
@@ -796,10 +796,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
               {/* Interiérové dvere */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('interierove_dvere', 'nazov') || t('interiorDoorsType') || 'Interiérové dvere:'}
                 </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-amber-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 border border-amber-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={interieroveDvere === "kridlove"} onClick={() => setInterieroveDvere("kridlove")} 
                     title={getTranslatedText('dvere_kridlove', 'nazov') || t('hingedDoors')} 
                     subtitle={getTranslatedText('dvere_kridlove', 'podnadpis') || ''} 
@@ -815,20 +815,20 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </Card>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <div className="grid lg:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
           {/* ELEKTRO */}
-          <Card className="p-3 bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-300 shadow-md">
-            <h3 className="text-base font-bold text-yellow-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-yellow-600 text-white text-sm mr-1">7</span>
+          <Card className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-300 shadow-md">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-yellow-900 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+              <span className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-yellow-600 text-white text-sm sm:text-base">7</span>
               ⚡ {getTranslatedText('sekcia_elektro', 'nazov') || t('electricalSection') || 'Elektroinštalácia'}
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-3 sm:space-y-4">
               {/* Štandard */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('elektro_typ', 'nazov') || t('installationType') || 'Typ inštalácie:'}
                 </p>
-                <div className="grid grid-cols-3 gap-1.5 border border-yellow-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5 border border-yellow-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={elektro === "eu"} onClick={() => setElektro("eu")} 
                     title={getTranslatedText('elektro_eu', 'nazov') || t('euStandard')} 
                     subtitle={getTranslatedText('elektro_eu', 'podnadpis') || ''} 
@@ -848,10 +848,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
               {/* Doplnky */}
               <div>
-                <p className="text-xs font-semibold text-gray-700 mb-2">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('elektro_doplnky', 'nazov') || (t('heatingExtras') + ' (' + t('selectMultiple') + ')') || 'Doplnky (môžeš vybrať viac):'}
                 </p>
-                <div className="space-y-2">
+                <div className="space-y-2 sm:space-y-2.5">
                   <EditableTile selected={bleskozvod} onClick={() => setBleskozvod(!bleskozvod)} 
                     title={getTranslatedText('bleskozvod', 'nazov') || t('lightningRod')} 
                     subtitle={getTranslatedText('bleskozvod', 'podnadpis') || ''} 
@@ -873,18 +873,18 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </Card>
 
           {/* KÚPEĽŇA */}
-          <Card className="p-3 bg-gradient-to-br from-teal-50 to-cyan-50 border-2 border-teal-300 shadow-md">
-            <h3 className="text-base font-bold text-teal-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-teal-600 text-white text-sm mr-1">8</span>
+          <Card className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-teal-50 to-cyan-50 border-2 border-teal-300 shadow-md">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-teal-900 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+              <span className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-teal-600 text-white text-sm sm:text-base">8</span>
               🚿 {getTranslatedText('sekcia_kupelna', 'nazov') || t('bathroomSection') || 'Kúpeľňa'}
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-3 sm:space-y-4">
               {/* Sprcha */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('sprchovyKut', 'nazov') || t('showerCabin') || 'Sprchový kút:'}
                 </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 border border-teal-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={sprchovyKut === "standard"} onClick={() => setSprchovyKut("standard")} 
                     title={getTranslatedText('sprcha_standard', 'nazov') || t('shower')} 
                     subtitle={getTranslatedText('sprcha_standard', 'podnadpis') || 'WC Geberit'} 
@@ -899,10 +899,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
               {/* Batéria */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('bateria', 'nazov') || t('faucet') || 'Batéria:'}
                 </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 border border-teal-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={bateria === "standard"} onClick={() => setBateria("standard")} 
                     title={getTranslatedText('bateria_standard', 'nazov') || t('faucetStandard')} 
                     subtitle={getTranslatedText('bateria_standard', 'podnadpis') || ''} 
@@ -917,10 +917,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
               {/* Strop kúpeľňa */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('strop_kupelna', 'nazov') || t('bathroomCeiling') || 'Strop (kúpeľňa):'}
                 </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-teal-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 border border-teal-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                   <EditableTile selected={stropKupelna === "drevo"} onClick={() => setStropKupelna("drevo")} 
                     title={getTranslatedText('strop_drevo', 'nazov') || t('ceilingWoodPattern')} 
                     subtitle={getTranslatedText('strop_drevo', 'podnadpis') || ''} 
@@ -935,10 +935,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
               {/* Doplnky */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                   {getTranslatedText('kupelna_doplnky', 'nazov') || t('bathExtras') || 'Doplnky:'}
                 </p>
-                <div className="space-y-1.5">
+                <div className="space-y-2 sm:space-y-2.5">
                   <EditableTile selected={vana} onClick={() => setVana(!vana)} 
                     title={getTranslatedText('vana', 'nazov') || t('bathtub')} 
                     subtitle={getTranslatedText('vana', 'podnadpis') || ''} 
@@ -955,18 +955,18 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </Card>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <div className="grid lg:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
           {/* ZÁKLADY */}
-          <Card className="p-3 bg-gradient-to-br from-stone-50 to-gray-50 border-2 border-stone-300 shadow-md">
-            <h3 className="text-base font-bold text-stone-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-stone-600 text-white text-sm mr-1">9</span>
+          <Card className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-stone-50 to-gray-50 border-2 border-stone-300 shadow-md">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-stone-900 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+              <span className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-stone-600 text-white text-sm sm:text-base">9</span>
               🏗️ {getTranslatedText('sekcia_zaklady', 'nazov') || t('foundationsSection') || 'Základy'}
             </h3>
             <div>
-              <p className="text-[11px] font-semibold text-gray-700 mb-1">
+              <p className="text-sm sm:text-base font-semibold text-gray-700 mb-2">
                 {getTranslatedText('zaklady_typ', 'nazov') || t('foundationType') || 'Typ základov:'}
               </p>
-              <div className="grid grid-cols-2 gap-1.5 border border-stone-300 rounded-md p-1.5 bg-white/50">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 border border-stone-300 rounded-md p-2 sm:p-2.5 bg-white/50">
                 <EditableTile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} 
                   title={getTranslatedText('zaklady_bez', 'nazov') || t('noFoundations')} 
                   subtitle={getTranslatedText('zaklady_bez', 'podnadpis') || ''} 
@@ -991,13 +991,13 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </Card>
 
           {/* SLUŽBY */}
-          <Card className="p-3 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 shadow-md">
-            <h3 className="text-base font-bold text-green-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green-600 text-white text-sm mr-1">10</span>
-              <Sparkles className="w-4 h-4 text-green-600" />
+          <Card className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 shadow-md">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-green-900 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+              <span className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-green-600 text-white text-sm sm:text-base">10</span>
+              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
               {getTranslatedText('sekcia_inziniering', 'nazov') || t('engineeringDocsSection') || 'Inžiniering a dokumentácia (A0)'}
             </h3>
-            <div className="space-y-1.5">
+            <div className="space-y-2 sm:space-y-2.5">
               <EditableTile selected={inziniering} onClick={() => setInziniering(!inziniering)} 
                 title={getTranslatedText('inziniering', 'nazov') || t('engineering')} 
                 subtitle={getTranslatedText('inziniering', 'podnadpis') || t('permit')} 
@@ -1017,14 +1017,14 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </Card>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <div className="grid lg:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
           {/* REALIZÁCIA */}
-          <Card className="p-3 bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-slate-300 shadow-md">
-            <h3 className="text-base font-bold text-slate-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-600 text-white text-sm mr-1">11</span>
+          <Card className="p-4 sm:p-5 md:p-6 bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-slate-300 shadow-md">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
+              <span className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-600 text-white text-sm sm:text-base">11</span>
               🚚 {getTranslatedText('sekcia_realizacia', 'nazov') || t('realizationSection') || 'Realizácia'}
             </h3>
-            <div className="space-y-1.5">
+            <div className="space-y-2 sm:space-y-2.5">
               <EditableTile selected={montaz} onClick={() => setMontaz(!montaz)} 
                 title={getTranslatedText('montaz', 'nazov') || t('houseAssembly')} 
                 subtitle={getTranslatedText('montaz', 'podnadpis') || ''} 

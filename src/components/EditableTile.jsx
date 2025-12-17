@@ -49,7 +49,7 @@ export default function EditableTile({
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
       onClick={!isEditing ? onClick : undefined}
-      className={`relative p-2 rounded-md cursor-pointer transition-all ${
+      className={`relative p-3 sm:p-4 rounded-lg cursor-pointer transition-all ${
         selected 
           ? isA0 
             ? "bg-gradient-to-br from-green-500 to-emerald-600 border-4 border-green-600 shadow-xl ring-4 ring-green-200" 
@@ -74,10 +74,10 @@ export default function EditableTile({
       )}
       
       <div className="text-center">
-        <span className={`font-bold text-base block leading-tight ${
+        <span className={`font-bold text-sm sm:text-base md:text-lg block leading-tight ${
           selected ? 'text-white drop-shadow-md' : 'text-gray-900'
         }`}>{title}</span>
-        {subtitle && <span className={`text-xs block mt-0.5 ${
+        {subtitle && <span className={`text-xs sm:text-sm block mt-1 ${
           selected ? 'text-white/90 font-medium' : 'text-gray-600'
         }`}>{subtitle}</span>}
         
@@ -99,8 +99,8 @@ export default function EditableTile({
             </Button>
           </div>
         ) : (
-          <div className="flex items-center gap-1 justify-center mt-1">
-            <span className={`text-[13px] font-bold ${
+          <div className="flex items-center gap-1 justify-center mt-2">
+            <span className={`text-sm sm:text-base font-bold ${
               selected 
                 ? 'text-white drop-shadow-md' 
                 : isPriced 
@@ -108,7 +108,7 @@ export default function EditableTile({
                   : "text-gray-500"
             }`}>
               {price === "0 €" && !hideIncludedMessage ? (
-                <span className={`text-[11px] italic leading-tight font-medium ${
+                <span className={`text-xs sm:text-sm italic leading-tight font-medium ${
                   selected ? 'text-white/90' : 'text-gray-600'
                 }`}>
                   {t?.('itemIncludedInBase') || 'Táto položka je súčasťou základnej konfigurácie domu'}
