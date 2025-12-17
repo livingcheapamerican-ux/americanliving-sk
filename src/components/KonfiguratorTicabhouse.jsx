@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -271,7 +272,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         obkladStien, podlaha, interieroveDvere, elektro, bleskozvod, prepat,
         pripravaNaSolarnePanely, sprchovyKut, vana, bateria, skrinka, stropKupelna,
         inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
-        predajNehnutelnosti, chcemPozemok, financneSluzby
+        predajNehnutelnosti, hladamPozemok, financneSluzby
       },
       totalPrice
     });
@@ -287,6 +288,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           dom={dom}
           vyrobca="Ticab house"
         />
+        
         {/* Dodatočné služby - KROK 0 */}
         <Card className="p-3 sm:p-4 mb-3 bg-gradient-to-br from-cyan-50 via-white to-teal-50 border-2 border-cyan-300 shadow-lg">
           <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
