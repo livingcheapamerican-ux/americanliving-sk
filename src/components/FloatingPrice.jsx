@@ -27,6 +27,7 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
         poznamka: `Lokalita: ${formData.obec}\n\n${formData.poznamka || ''}\n\nModel: ${dom?.nazov || 'Konfigurátor'}\nCelková cena: ${price.toLocaleString('sk-SK')} €`
       });
 
+      // Email pre firmu
       await base44.integrations.Core.SendEmail({
         to: 'info.americanliving@gmail.com',
         subject: `🏡 Nový dopyt z konfiguratora: ${formData.meno} - ${dom?.nazov || 'Konfigurátor'}`,
@@ -49,6 +50,40 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
           <h3>Poznámka od klienta:</h3>
           <p>${formData.poznamka.replace(/\n/g, '<br>')}</p>
           ` : ''}
+        `
+      });
+
+      // Email pre klienta
+      await base44.integrations.Core.SendEmail({
+        to: formData.email,
+        subject: 'Potvrdenie dopytu - American Living',
+        body: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #EF4444;">Ďakujeme za Váš dopyt!</h2>
+            
+            <p>Dobrý deň ${formData.meno},</p>
+            
+            <p>Prijali sme Váš dopyt ohľadom modelu <strong>${dom?.nazov || 'Konfigurátor'}</strong>.</p>
+            
+            <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="margin-top: 0;">Vaše údaje:</h3>
+              <ul style="list-style: none; padding: 0;">
+                <li>📧 Email: ${formData.email}</li>
+                <li>📱 Telefón: ${formData.telefon}</li>
+                <li>📍 Lokalita: ${formData.obec}</li>
+              </ul>
+              <p><strong>Orientačná cena:</strong> ${price.toLocaleString('sk-SK')} €</p>
+            </div>
+
+            <p>Náš tým Vás bude čoskoro kontaktovať s podrobnou cenovou ponukou.</p>
+            
+            <p style="margin-top: 30px;">
+              S pozdravom,<br>
+              <strong>American Living</strong><br>
+              <a href="tel:+421905138124">+421 905 138 124</a><br>
+              <a href="mailto:info@americanliving.sk">info@americanliving.sk</a>
+            </p>
+          </div>
         `
       });
 
