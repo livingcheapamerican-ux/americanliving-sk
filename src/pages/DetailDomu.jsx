@@ -2082,7 +2082,6 @@ export default function DetailDomu() {
                   </div>
                   </div>
                   )}
-                  </motion.div>
 
                   {/* Pravý stĺpec - Informácie */}
                   <motion.div
