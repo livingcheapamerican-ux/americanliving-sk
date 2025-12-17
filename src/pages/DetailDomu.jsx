@@ -1250,16 +1250,18 @@ export default function DetailDomu() {
             )}
           </motion.div>
 
-          {/* Sidebar pre Ticabhouse/Prosto - mobile order-3, desktop col-2 row-1 sticky */}
+          {/* Sidebar pre Ticabhouse/Prosto - mobile order-3, desktop sticky v pravom stĺpci */}
           {(isTicabhouse || isProstoHouse) && renderSidebarSummary() && (
-            <div className="w-full order-3 lg:order-none lg:col-start-2 lg:row-start-1 lg:sticky lg:top-20 lg:self-start" style={{ top: '80px' }}>
-              {renderSidebarSummary()}
+            <div className="w-full order-3 lg:order-none">
+              <div className="lg:sticky lg:top-20" style={{ top: '80px' }}>
+                {renderSidebarSummary()}
+              </div>
             </div>
           )}
 
-          {/* Hypotekárny kalkulátor - mobile order-4, desktop col-2 row-2 */}
+          {/* Hypotekárny kalkulátor - mobile order-4, desktop v pravom stĺpci */}
           {dom.kategoria !== "mobilne_domy" && (isTicabhouse || isProstoHouse) && (
-            <div className="w-full order-4 lg:order-none lg:col-start-2 lg:row-start-2">
+            <div className="w-full order-4 lg:order-none">
               <HypotekaKalkulator 
                 cenaDoma={dom.zakladna_cena} 
                 dom={dom}
@@ -1289,11 +1291,11 @@ export default function DetailDomu() {
             </div>
           )}
 
-          {/* Pravý stĺpec - Informácie - mobile order-5, desktop col-2 row-3+ */}
+          {/* Pravý stĺpec - Informácie - mobile order-5, desktop v pravom stĺpci */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden order-5 lg:order-none lg:col-start-2 lg:row-start-3"
+            className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden order-5 lg:order-none"
           >
             {/* Hlavička */}
             <div>
