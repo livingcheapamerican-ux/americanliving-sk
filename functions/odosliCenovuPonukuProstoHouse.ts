@@ -471,7 +471,7 @@ Deno.serve(async (req) => {
       status: 'odoslana',
       odoslana: true,
       datum_odoslania: new Date().toISOString(),
-      predajca_email: user.email,
+      predajca_email: user?.email || 'system',
       poznamka: klient_poznamka || ''
     });
 
