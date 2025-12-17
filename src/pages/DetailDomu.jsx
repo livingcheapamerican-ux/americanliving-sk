@@ -2057,38 +2057,38 @@ export default function DetailDomu() {
                   zaklady={lyonZaklady}
                   montaz={lyonMontaz}
                   doprava={lyonDoprava}
-                    dom={dom}
-                    totalPrice={ticabKonfiguracia?.celkovaCena || dom.zakladna_cena}
-                    onSubmit={() => alert("Odoslanie dopytu - funkcia bude implementovaná")}
+                  dom={dom}
+                  totalPrice={ticabKonfiguracia?.celkovaCena || dom.zakladna_cena}
+                  onSubmit={() => alert("Odoslanie dopytu - funkcia bude implementovaná")}
                   />
 
                   {dom.kategoria !== "mobilne_domy" && (
-                    <HypotekaKalkulator 
-                      cenaDoma={dom.zakladna_cena} 
-                      dom={dom}
-                      user={user}
-                      aktualnaKonfiguracia={ticabKonfiguracia}
-                      onNastavA0Prvky={() => {
-                        setLyonIzolaciaStien("250mm");
-                        setLyonIzolaciaPodlahy("200mm");
-                        setLyonIzolaciaStropu("200mm");
-                        setLyonTepelneCerpadlo("ano");
-                        setLyonRekuperacia("ano");
-                        setLyonPripravaNaSolarnePanely(true);
-                        setLyonBleskozvod(true);
-                        setLyonPrepat(true);
-                        setLyonInziniering(true);
-                        setLyonProjektACertifikacia(true);
-                        setLyonZaklady("pasove");
-                        setLyonUcel("rodinny");
-                      }}
-                    />
+                  <HypotekaKalkulator 
+                    cenaDoma={dom.zakladna_cena} 
+                    dom={dom}
+                    user={user}
+                    aktualnaKonfiguracia={ticabKonfiguracia}
+                    onNastavA0Prvky={() => {
+                      setLyonIzolaciaStien("250mm");
+                      setLyonIzolaciaPodlahy("200mm");
+                      setLyonIzolaciaStropu("200mm");
+                      setLyonTepelneCerpadlo("ano");
+                      setLyonRekuperacia("ano");
+                      setLyonPripravaNaSolarnePanely(true);
+                      setLyonBleskozvod(true);
+                      setLyonPrepat(true);
+                      setLyonInziniering(true);
+                      setLyonProjektACertifikacia(true);
+                      setLyonZaklady("pasove");
+                      setLyonUcel("rodinny");
+                    }}
+                  />
                   )}
-                </div>
-              </div>
-            )}
+                  </div>
+                  </div>
+                  )}
 
-            {/* Pôdorysy */}
+                  {/* Rozmery - presunute z pravej strany */}
             {dom.podorysy && dom.podorysy.length > 0 && (
               <Card className="p-3 sm:p-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">
