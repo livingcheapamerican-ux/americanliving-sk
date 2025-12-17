@@ -704,6 +704,19 @@ export default function DetailDomu() {
   const renderSidebarSummary = () => {
     if (!isTicabhouse && !isProstoHouse) return null;
 
+    const isA0Complete = (
+      lyonIzolaciaStien === "250mm" &&
+      lyonIzolaciaPodlahy === "200mm" &&
+      lyonIzolaciaStropu === "200mm" &&
+      lyonTepelneCerpadlo === "ano" &&
+      lyonRekuperacia === "ano" &&
+      lyonElektro === "ge" &&
+      lyonBleskozvod &&
+      lyonPrepat &&
+      lyonInziniering &&
+      lyonProjektACertifikacia
+    );
+
     const summaryProps = {
       predajNehnutelnosti: lyonPredajNehnutelnosti,
       hladamPozemok: lyonHladamPozemok,
