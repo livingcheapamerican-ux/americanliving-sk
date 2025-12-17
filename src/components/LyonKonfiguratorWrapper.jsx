@@ -272,16 +272,32 @@ export default function LyonKonfiguratorWrapper(props) {
     financneSluzby, setFinancneSluzby,
   };
 
+  const handleSendQuoteFromFloating = async (contactData) => {
+    const response = await base44.functions.invoke('odosliCenovuPonukuLyonEmail', {
+      dom: props.dom,
+      klient: contactData,
+      konfiguraciaData: allProps,
+      totalPrice
+    });
+    return response;
+  };
+
   return (
-    <>
-      <KonfiguratorLyon {...allProps} onSubmit={handleSubmit} />
-      <FloatingPrice price={totalPrice} isVisible={true} />
-      <LyonFinalSummaryModal
-        isOpen={showSummaryModal}
-        onClose={() => setShowSummaryModal(false)}
-        dom={props.dom}
-        {...allProps}
-      />
-    </>
-  );
+      <>
+        <KonfiguratorLyon {...allProps} onSubmit={handleSubmit} />
+        <FloatingPrice 
+          price={totalPrice} 
+          isVisible={true} 
+          onSendQuote={handleSendQuoteFromFloating}
+          dom={props.dom}
+          vyrobca="Ticab house"
+        />
+        <LyonFinalSummaryModal
+          isOpen={showSummaryModal}
+          onClose={() => setShowSummaryModal(false)}
+          dom={props.dom}
+          {...allProps}
+        />
+      </>
+    );
 }

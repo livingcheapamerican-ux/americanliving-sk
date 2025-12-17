@@ -487,10 +487,34 @@ export default function KonfiguratorProstoHouse({
   const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
 
+  const handleSendQuoteFromFloating = async (contactData) => {
+    const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
+      dom,
+      klient: contactData,
+      konfiguraciaData: {
+        montazHolodomu, izolaciaNavysenie, zaklady, predlzenie, vstupneDvere,
+        elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo,
+        rekuperacia, pripojkaSiete, stresneOkno, bocneOknoFixne, bocneOknoVyklopne90,
+        bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, vonkajsiaFasada,
+        interierFinis, vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
+        inziniering, projektA0, revizna, doprava, predajNehnutelnosti,
+        hladaniePozemku, financneSluzby
+      },
+      totalPrice
+    });
+    return response;
+  };
+
   return (
     <div className="mt-4 sm:mt-8 relative overflow-x-hidden">
       <FlyingAnimationContainer animations={animations} />
-      {!showOnlySummary && <FloatingPrice price={totalPrice} isVisible={true} />}
+      {!showOnlySummary && <FloatingPrice 
+        price={totalPrice} 
+        isVisible={true} 
+        onSendQuote={handleSendQuoteFromFloating}
+        dom={dom}
+        vyrobca="Prosto House"
+      />}
 
       <div className="w-full max-w-full overflow-hidden">
         <div className="space-y-3 sm:space-y-6">

@@ -260,9 +260,33 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
     console.log('Submit konfigurácie');
   };
 
+  const handleSendQuoteFromFloating = async (contactData) => {
+    const response = await base44.functions.invoke('odosliCenovuPonukuLyonEmail', {
+      dom,
+      klient: contactData,
+      konfiguraciaData: {
+        ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo,
+        rekuperacia, pripravaNaRekuperaciu, podlahovoKurenie, pripravaNaKrb,
+        ochranaKachle, klimatizacia, fasada, strecha, odkvapy, okna, vchodoveDvere,
+        obkladStien, podlaha, interieroveDvere, elektro, bleskozvod, prepat,
+        pripravaNaSolarnePanely, sprchovyKut, vana, bateria, skrinka, stropKupelna,
+        inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
+        predajNehnutelnosti, chcemPozemok, financneSluzby
+      },
+      totalPrice
+    });
+    return response;
+  };
+
   return (
     <div className="w-full">
-        <FloatingPrice price={totalPrice} isVisible={true} />
+        <FloatingPrice 
+          price={totalPrice} 
+          isVisible={true} 
+          onSendQuote={handleSendQuoteFromFloating}
+          dom={dom}
+          vyrobca="Ticab house"
+        />
         {/* Dodatočné služby - KROK 0 */}
         <Card className="p-3 sm:p-4 mb-3 bg-gradient-to-br from-cyan-50 via-white to-teal-50 border-2 border-cyan-300 shadow-lg">
           <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">

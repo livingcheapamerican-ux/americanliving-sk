@@ -605,11 +605,35 @@ export default function KonfiguratorFlatDouble({
   const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
 
+  const handleSendQuoteFromFloating = async (contactData) => {
+    const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
+      dom,
+      klient: contactData,
+      konfiguraciaData: {
+        montazHolodomu, izolaciaNavysenie, zaklady, vstupneDvere,
+        elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo,
+        rekuperacia, pripojkaSiete, stresneOkno, bocneOknoFixne, bocneOknoVyklopne90,
+        bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, vonkajsiaFasada,
+        interierFinis, vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
+        pergola, inziniering, projektA0, revizna, doprava, predajNehnutelnosti,
+        hladaniePozemku, financneSluzby
+      },
+      totalPrice
+    });
+    return response;
+  };
+
   return (
     <div className="mt-8 relative">
       {/* Flying animations container */}
       <FlyingAnimationContainer animations={animations} />
-      {!showOnlySummary && <FloatingPrice price={totalPrice} isVisible={true} />}
+      {!showOnlySummary && <FloatingPrice 
+        price={totalPrice} 
+        isVisible={true} 
+        onSendQuote={handleSendQuoteFromFloating}
+        dom={dom}
+        vyrobca="Prosto House"
+      />}
 
       <div>
       <div className="space-y-6">
