@@ -4397,13 +4397,13 @@ export default function DetailDomu() {
                     );
                   }
                 })()}
-              </div>
-            )}
-          </motion.div>
-        </div>
-      </div>
+                </div>
+                )}
+                </motion.div>
+                </div>
+                </div>
 
-      {/* Floating Price Display - len ak nie je JAK Modules */}
+                {/* Floating Price Display - len ak nie je JAK Modules */}
       {!isJAKModules && <FloatingPrice price={calculatedPrice} isVisible={showCalculator} />}
 
       {/* Lightbox */}
