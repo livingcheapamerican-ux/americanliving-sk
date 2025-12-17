@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Calculator, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { base44 } from "@/api/base44Client";
 
 export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyrobca }) {
   const [showContactModal, setShowContactModal] = useState(false);
@@ -17,20 +18,37 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
 
     setSending(true);
     try {
-      if (onSendQuote) {
-        await onSendQuote({
-          meno: formData.meno,
-          email: formData.email,
-          telefon: formData.telefon,
-          adresa: formData.obec,
-          poznamka: formData.poznamka
-        });
-      }
-      toast.success('✓ Cenová ponuka odoslaná na email');
+      // Vytvor dopyt v databáze
+      const novyDopyt = await base44.entities.Dopyt.create({
+        meno: formData.meno,
+        email: formData.email,
+        telefon: formData.telefon,
+        typ_dopytu: 'konfigurator',
+        dom_id: dom?.id,
+        poznamka: `Lokalita: ${formData.obec}\n\n${formData.poznamka || ''}\n\nCelková cena: ${price.toLocaleString('sk-SK')} €`
+      });
+
+      // Pošli notifikáciu predajcovi
+      await base44.functions.invoke('notifikujNovyDopyt', {
+        dopyt: {
+          id: novyDopyt.id,
+          klient_meno: novyDopyt.meno,
+          klient_email: novyDopyt.email,
+          klient_telefon: novyDopyt.telefon,
+          klient_adresa: formData.obec,
+          typ_dopytu: novyDopyt.typ_dopytu,
+          poznamka: novyDopyt.poznamka,
+          dom_nazov: dom?.nazov || 'Konfigurátor',
+          dom_id: dom?.id
+        }
+      });
+
+      toast.success('✓ Dopyt odoslaný, budeme vás kontaktovať s cenovou ponukou');
       setFormData({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
       setShowContactModal(false);
     } catch (error) {
-      toast.error('Chyba pri odosielaní: ' + error.message);
+      console.error('Chyba pri odosielaní:', error);
+      toast.error('Chyba pri odosielaní. Skúste to prosím znova.');
     } finally {
       setSending(false);
     }
