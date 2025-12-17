@@ -740,7 +740,7 @@ export default function DetailDomu() {
             {/* Wizard pre Flat 1,5 - ľavá strana */}
             {isProstoHouse && (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) && (
               <div className="hidden lg:block">
-              <KonfiguratorWizard
+                <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
                 useFlat15Prices={true}
@@ -806,10 +806,10 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-              />
+                />
 
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-              <div className="lg:hidden space-y-4">
+                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+                <div className="lg:hidden space-y-4">
                 <KonfiguratorFlat15
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -900,7 +900,7 @@ export default function DetailDomu() {
             {/* Konfigurátor - Wizard krok po kroku pre Flat Double (ale nie Flat 1,5) */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
               <div className="hidden lg:block">
-              <KonfiguratorWizard 
+                <KonfiguratorWizard 
                 key={wizardKey}
                 dom={dom}
                 useFlatDoublePrices={true}
@@ -1218,7 +1218,7 @@ export default function DetailDomu() {
             {/* Konfigurátor pre Nord - vlastné ceny */}
             {isProstoHouse && dom.nazov?.includes("Nord") && (
               <div className="hidden lg:block">
-              <KonfiguratorWizard
+                <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
                 useNordPrices={true}
@@ -1284,10 +1284,10 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-              />
+                />
 
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-              <div className="lg:hidden space-y-4">
+                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+                <div className="lg:hidden space-y-4">
                 <KonfiguratorNord
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
