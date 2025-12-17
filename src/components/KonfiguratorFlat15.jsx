@@ -553,21 +553,29 @@ export default function KonfiguratorFlat15({
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
 
   const handleSendQuoteFromFloating = async (contactData) => {
-    const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
-      dom,
-      klient: contactData,
-      konfiguraciaData: {
+    try {
+      const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
+        dom_id: dom?.id,
+        klient_meno: contactData.meno,
+        klient_email: contactData.email,
+        klient_telefon: contactData.telefon,
+        klient_adresa: contactData.obec,
+        klient_poznamka: contactData.poznamka || '',
+        selectedItems: selectedItems,
+        totalPrice: totalPrice,
         montazHolodomu, izolaciaNavysenie, zaklady, vstupneDvere,
         elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo,
         rekuperacia, pripojkaSiete, stresneOkno, bocneOknoFixne, bocneOknoVyklopne90,
         bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, vonkajsiaFasada,
         interierFinis, vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
-        pergola, inziniering, projektA0, revizna, doprava, predajNehnutelnosti,
-        hladaniePozemku, financneSluzby
-      },
-      totalPrice
-    });
-    return response;
+        pergola, inziniering, projektA0, revizna, doprava, predlzenie: 0,
+        predajNehnutelnosti, hladaniePozemku, financneSluzby
+      });
+      return response;
+    } catch (error) {
+      console.error('Error in handleSendQuoteFromFloating:', error);
+      throw error;
+    }
   };
 
   return (
