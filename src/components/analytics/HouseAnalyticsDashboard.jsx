@@ -24,10 +24,19 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
   const [expandedHouse, setExpandedHouse] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("visits");
+  
+  // Live indicator - aktualizovať každých 30 sekúnd
+  const [, setRefreshTick] = useState(0);
+  React.useEffect(() => {
+    const interval = setInterval(() => setRefreshTick(t => t + 1), 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Agregácia dát podľa domov
   const houseStats = useMemo(() => {
     const stats = {};
+    const now = Date.now();
+    const activeThreshold = 5 * 60 * 1000; // 5 minút
 
     // Filtrovať len Ticab House a Prosto House
     const filteredDomy = domy.filter(dom => 
@@ -50,6 +59,7 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
         configurationSteps: {},
         bounceRate: 0,
         bounces: 0,
+        activeNow: 0,
         demographics: {
           ageGroups: { '18-24': 0, '25-34': 0, '35-44': 0, '45-54': 0, '55+': 0 },
           devices: { desktop: 0, mobile: 0, tablet: 0 },
@@ -61,14 +71,25 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
 
     // Spracovanie sessions
     sessions.forEach(session => {
-      if (!session.dom_interactions || session.dom_interactions.length === 0) return;
+      // Nájsť všetky návštevy detail stránok domov
+      session.pages_visited?.forEach(page => {
+        if (page.page_url?.includes('DetailDomu') || page.page_url?.includes('/dom/')) {
+          // Extrahovať dom_id z URL alebo z dom_interactions
+          const urlParams = new URLSearchParams(page.page_url.split('?')[1] || '');
+          let domId = urlParams.get('id');
+          
+          // Ak nemáme ID z URL, skúsiť dom_interactions
+          if (!domId && session.dom_interactions) {
+            const interaction = session.dom_interactions.find(di => 
+              page.page_url.includes(di.dom_id) || page.page_url.includes(di.dom_nazov?.replace(/\s/g, ''))
+            );
+            domId = interaction?.dom_id;
+          }
 
-      session.dom_interactions.forEach(interaction => {
-        if (!interaction.dom_id || !stats[interaction.dom_id]) return;
-
-        const stat = stats[interaction.dom_id];
-        stat.totalVisits++;
-        stat.uniqueVisitors.add(session.user_email || session.session_id);
+          if (domId && stats[domId]) {
+            const stat = stats[domId];
+            stat.totalVisits++;
+            stat.uniqueVisitors.add(session.user_email || session.session_id);
         
         if (interaction.duration_seconds) {
           stat.totalTimeSpent += interaction.duration_seconds;
@@ -269,12 +290,18 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
                 </div>
 
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Návštevy</p>
+                  <p className="text-xs text-gray-500 mb-1">Zobrazení</p>
                   <div className="flex items-center gap-1">
                     <Eye className="w-3 h-3 text-blue-600" />
                     <p className="font-bold text-blue-600">{stat.totalVisits}</p>
                   </div>
                   <p className="text-xs text-gray-400">{stat.uniqueVisitorCount} unikátnych</p>
+                  {stat.activeNow > 0 && (
+                    <div className="flex items-center gap-1 mt-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                      <p className="text-xs text-green-600 font-semibold">{stat.activeNow} online</p>
+                    </div>
+                  )}
                 </div>
 
                 <div>
