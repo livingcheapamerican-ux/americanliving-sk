@@ -1730,7 +1730,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre ostatné Ticabhouse domy (okrem Lyon a Tiny House) */}
             {isTicabhouse && !dom.nazov?.toLowerCase().includes("lyon") && !dom.nazov?.toLowerCase().includes("tiny house") && (
-              <div>
+              <div className="hidden lg:block">
               <KonfiguratorTicabhouse 
                 dom={dom} 
                 isAdmin={isAdmin}
