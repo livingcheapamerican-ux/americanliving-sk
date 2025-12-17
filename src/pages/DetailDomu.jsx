@@ -1884,7 +1884,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Lyon (Ticab house) */}
             {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
-              <div>
+              <div className="hidden lg:block">
               <LyonKonfiguratorWrapper
                 dom={dom}
                 onConfigChange={(config) => setTicabKonfiguracia(config)}
