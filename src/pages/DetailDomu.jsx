@@ -2082,8 +2082,14 @@ export default function DetailDomu() {
                   </div>
                   </div>
                   )}
+                  </motion.div>
 
-                  {/* Pôdorysy */}
+                  {/* Pravý stĺpec - Informácie */}
+                  <motion.div
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden"
+                  >
                   {dom.podorysy && dom.podorysy.length > 0 && (
               <Card className="p-3 sm:p-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">
