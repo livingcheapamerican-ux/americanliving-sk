@@ -65,12 +65,22 @@ Deno.serve(async (req) => {
         </p>
       `;
 
-      await base44.asServiceRole.functions.invoke('sendEmailResend', {
-        to: prirdenenyPredajca.email,
-        cc: 'info.americanliving@gmail.com',
-        subject: `🏡 Nový dopyt: ${dopyt.klient_meno} - ${dopyt.dom_nazov || 'Všeobecný záujem'}`,
-        html: emailBody
-      });
+      console.log('📧 Posielam email notifikáciu...');
+      console.log('To:', prirdenenyPredajca.email);
+      console.log('CC: info.americanliving@gmail.com');
+      
+      try {
+        const emailResult = await base44.asServiceRole.functions.invoke('sendEmailResend', {
+          to: prirdenenyPredajca.email,
+          cc: 'info.americanliving@gmail.com',
+          subject: `🏡 Nový dopyt: ${dopyt.klient_meno} - ${dopyt.dom_nazov || 'Všeobecný záujem'}`,
+          html: emailBody
+        });
+        console.log('✅ Email odoslaný:', emailResult);
+      } catch (emailError) {
+        console.error('❌ Chyba pri odosielaní emailu:', emailError);
+        throw emailError;
+      }
 
       // Slack notifikácia ak je nastavená
       if (prirdenenyPredajca.slack_webhook) {

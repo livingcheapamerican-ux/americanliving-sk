@@ -6,9 +6,15 @@ Deno.serve(async (req) => {
     
     const { to, subject, html, cc } = await req.json();
 
+    console.log('📧 sendEmailResend called with:');
+    console.log('To:', to);
+    console.log('CC:', cc);
+    console.log('Subject:', subject);
+
     const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
     
     if (!RESEND_API_KEY) {
+      console.error('❌ RESEND_API_KEY not configured');
       return Response.json({ error: 'RESEND_API_KEY not configured' }, { status: 500 });
     }
 
@@ -24,6 +30,7 @@ Deno.serve(async (req) => {
       emailData.cc = Array.isArray(cc) ? cc : [cc];
     }
 
+    console.log('📤 Sending to Resend API...');
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -34,12 +41,17 @@ Deno.serve(async (req) => {
     });
 
     const result = await response.json();
+    console.log('Resend API response:', result);
 
     if (!response.ok) {
-      console.error('Resend API error:', result);
-      return Response.json({ error: result.message || 'Failed to send email' }, { status: response.status });
+      console.error('❌ Resend API error:', result);
+      return Response.json({ 
+        error: result.message || 'Failed to send email',
+        details: result 
+      }, { status: response.status });
     }
 
+    console.log('✅ Email sent successfully, ID:', result.id);
     return Response.json({ 
       success: true, 
       message: 'Email sent successfully',
