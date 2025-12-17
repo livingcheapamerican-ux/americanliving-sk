@@ -1593,12 +1593,12 @@ export default function DetailDomu() {
                         setZaklady("pasove");
                       }}
                     />
-                  )}
-                  </div>
-                  </div>
-                  )}
+                    )}
+                    </div>
+                    </div>
+                    )}
 
-                  {/* Konfigurátor pre ostatné Prosto House domy */}
+                    {/* Pôdorysy */}
             {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("Flat Small") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && !dom.nazov?.includes("Barn") && (
               <div className="hidden lg:block">
               <KonfiguratorWizard
