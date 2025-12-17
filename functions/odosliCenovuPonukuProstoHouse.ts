@@ -3,10 +3,13 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-
-    if (!user || (user.role !== 'admin' && user.super_admin !== true)) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    
+    // Skús načítať používateľa, ale nie je povinný (pre verejných návštevníkov)
+    let user;
+    try {
+      user = await base44.auth.me();
+    } catch (e) {
+      user = null;
     }
 
     const payload = await req.json();
