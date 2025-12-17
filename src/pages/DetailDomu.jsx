@@ -2226,8 +2226,15 @@ export default function DetailDomu() {
               />
             </div>
             )}
+          </motion.div>
 
-                {/* Štandardná výbava pre JAK Modules - presunute z pravej strany */}
+          {/* Pravý stĺpec - Informácie */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden"
+          >
+            {/* Štandardná výbava pre JAK Modules */}
             {isJAKModules && (
               <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">✔ {t('mainFeatures')}</h3>
