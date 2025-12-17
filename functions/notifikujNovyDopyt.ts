@@ -34,8 +34,12 @@ Deno.serve(async (req) => {
       prirdenenyPredajca = predajcovia[0];
     }
 
-    // Email notifikácia
-    if (prirdenenyPredajca) {
+    // Email notifikácia - vždy pošli na info.americanliving@gmail.com
+    const emailTo = prirdenenyPredajca?.email || 'info.americanliving@gmail.com';
+    
+    console.log('📧 Pripravujem email notifikáciu...');
+    console.log('Priradený predajca:', prirdenenyPredajca?.meno || 'Žiadny (fallback na info)');
+    console.log('Email to:', emailTo);
       const emailBody = `
         <h2>🏡 Nový dopyt od klienta</h2>
         
@@ -65,33 +69,32 @@ Deno.serve(async (req) => {
         </p>
       `;
 
-      console.log('📧 Posielam email notifikáciu...');
-      console.log('To:', prirdenenyPredajca.email);
-      console.log('CC: info.americanliving@gmail.com');
-      
-      try {
-        const emailResult = await base44.asServiceRole.functions.invoke('sendEmailResend', {
-          to: prirdenenyPredajca.email,
-          cc: 'info.americanliving@gmail.com',
-          subject: `🏡 Nový dopyt: ${dopyt.klient_meno} - ${dopyt.dom_nazov || 'Všeobecný záujem'}`,
-          html: emailBody
-        });
-        console.log('✅ Email odoslaný:', emailResult);
-      } catch (emailError) {
-        console.error('❌ Chyba pri odosielaní emailu:', emailError);
-        throw emailError;
-      }
+    console.log('📧 Posielam email notifikáciu...');
+    console.log('To:', emailTo);
+    console.log('CC: info.americanliving@gmail.com');
+    
+    try {
+      const emailResult = await base44.asServiceRole.functions.invoke('sendEmailResend', {
+        to: emailTo,
+        cc: emailTo !== 'info.americanliving@gmail.com' ? 'info.americanliving@gmail.com' : undefined,
+        subject: `🏡 Nový dopyt: ${dopyt.klient_meno} - ${dopyt.dom_nazov || 'Všeobecný záujem'}`,
+        html: emailBody
+      });
+      console.log('✅ Email odoslaný:', emailResult);
+    } catch (emailError) {
+      console.error('❌ Chyba pri odosielaní emailu:', emailError);
+      throw emailError;
+    }
 
-      // Slack notifikácia ak je nastavená
-      if (prirdenenyPredajca.slack_webhook) {
-        await fetch(prirdenenyPredajca.slack_webhook, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            text: `🏡 *Nový dopyt*\n\n*Klient:* ${dopyt.klient_meno}\n*Email:* ${dopyt.klient_email}\n*Telefón:* ${dopyt.klient_telefon}\n${dopyt.klient_adresa ? `*Lokalita:* ${dopyt.klient_adresa}\n` : ''}${dopyt.dom_nazov ? `*Model:* ${dopyt.dom_nazov}` : ''}`
-          })
-        });
-      }
+    // Slack notifikácia ak je nastavená
+    if (prirdenenyPredajca?.slack_webhook) {
+      await fetch(prirdenenyPredajca.slack_webhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: `🏡 *Nový dopyt*\n\n*Klient:* ${dopyt.klient_meno}\n*Email:* ${dopyt.klient_email}\n*Telefón:* ${dopyt.klient_telefon}\n${dopyt.klient_adresa ? `*Lokalita:* ${dopyt.klient_adresa}\n` : ''}${dopyt.dom_nazov ? `*Model:* ${dopyt.dom_nazov}` : ''}`
+        })
+      });
     }
 
     // Vytvor záznam aktivity
@@ -100,17 +103,19 @@ Deno.serve(async (req) => {
       dopyt_id: dopyt.id,
       klient_email: dopyt.klient_email,
       klient_meno: dopyt.klient_meno,
-      predajca_email: prirdenenyPredajca?.email,
-      popis: `Nový dopyt z konfiguratora: ${dopyt.dom_nazov || 'Všeobecný záujem'}`,
+      predajca_email: emailTo,
+      popis: `Nový dopyt z kontaktného formulára: ${dopyt.dom_nazov || 'Všeobecný záujem'}`,
       metadata: {
         lokalita: dopyt.klient_adresa,
         dom_nazov: dopyt.dom_nazov
       }
     });
 
+    console.log('✅ Notifikácia úspešne spracovaná');
     return Response.json({ 
       success: true, 
-      priradeny_predajca: prirdenenyPredajca?.meno 
+      priradeny_predajca: prirdenenyPredajca?.meno || 'Default (info@americanliving.sk)',
+      email_sent_to: emailTo
     });
 
   } catch (error) {
