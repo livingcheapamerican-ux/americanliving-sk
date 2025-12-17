@@ -397,33 +397,20 @@ export default function KonfiguratorFjord({
   };
 
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
-  <motion.div 
-    initial={{ opacity: 0, y: -10 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.4 }}
-    className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${color}`}
-  >
-      <motion.div 
-        whileHover={{ scale: 1.1, rotate: 5 }}
-        className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white/90 rounded-lg sm:rounded-xl shadow-lg"
-      >
+    <div className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${color}`}>
+      <div className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white/90 rounded-lg sm:rounded-xl shadow-lg flex-shrink-0">
         <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-800" />
-      </motion.div>
-      <div className="relative flex-1">
-        <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
-          <motion.span 
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring" }}
-            className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[9px] sm:text-xs font-bold uppercase tracking-wider"
-          >
-            {t('phase')} {step}
-          </motion.span>
-        </div>
-        <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight drop-shadow-lg">{title}</h3>
-        {subtitle && <p className="text-white text-[10px] sm:text-xs mt-0.5 drop-shadow-md">{subtitle}</p>}
       </div>
-    </motion.div>
+      <div className="relative flex-1 min-w-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
+          <span className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[9px] sm:text-xs font-bold uppercase tracking-wider">
+            {t('phase')} {step}
+          </span>
+        </div>
+        <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
+        {subtitle && <p className="text-white text-[10px] sm:text-xs mt-0.5 truncate drop-shadow-md">{subtitle}</p>}
+      </div>
+    </div>
   );
 
   if (showOnlySummary) {
