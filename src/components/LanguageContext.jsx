@@ -650,6 +650,17 @@ const translations = {
     familyHouse: "Rodinný dom",
     familyHouseDesc: "Celoročné bývanie s energetickým certifikátom A0",
     
+    // Mortgage Calculator
+    mortgageCalculator: "Kalkulátor hypotéky",
+    downPayment: "Vlastný vklad",
+    loanTerm: "Doba splatnosti",
+    years: "rokov",
+    interestRate: "Úroková sadzba",
+    monthlyPayment: "Mesačná splátka",
+    totalPaymentToBank: "Celkom zaplatíte banke\n(istina + úroky)",
+    interest: "Úroky",
+    estimatedCalculation: "Orientačný výpočet. Skutočná splátka závisí od podmienok banky.",
+
     // Footer
     allRightsReserved: "Všetky práva vyhradené",
     builtHouses: "Vyrobených viac ako 700 domov od roku 2008",
