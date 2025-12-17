@@ -739,8 +739,7 @@ export default function DetailDomu() {
 
             {/* Wizard pre Flat 1,5 - ľavá strana */}
             {isProstoHouse && (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) && (
-              <div className="hidden lg:block">
-                <KonfiguratorWizard
+              <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
                 useFlat15Prices={true}
@@ -806,101 +805,14 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-                />
-
-                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-                <div className="lg:hidden space-y-4">
-                <KonfiguratorFlat15
-                  dom={dom}
-                  onConfigChange={(config) => setProstoKonfiguracia(config)}
-                  predajNehnutelnosti={predajNehnutelnosti}
-                  setPredajNehnutelnosti={setPredajNehnutelnosti}
-                  hladaniePozemku={hladaniePozemku}
-                  setHladaniePozemku={setHladaniePozemku}
-                  financneSluzby={financneSluzby}
-                  setFinancneSluzby={setFinancneSluzby}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
-                  setIzolaciaNavysenie={setIzolaciaNavysenie}
-                  zaklady={zaklady}
-                  setZaklady={setZaklady}
-                  vstupneDvere={vstupneDvere}
-                  setVstupneDvere={setVstupneDvere}
-                  elektroinstalacia={elektroinstalacia}
-                  setElektroinstalacia={setElektroinstalacia}
-                  vodaKanalizacia={vodaKanalizacia}
-                  setVodaKanalizacia={setVodaKanalizacia}
-                  sanitaKomplet={sanitaKomplet}
-                  setSanitaKomplet={setSanitaKomplet}
-                  bojler={bojler}
-                  setBojler={setBojler}
-                  tepelneCerpadlo={tepelneCerpadlo}
-                  setTepelneCerpadlo={setTepelneCerpadlo}
-                  rekuperacia={rekuperacia}
-                  setRekuperacia={setRekuperacia}
-                  pripojkaSiete={pripojkaSiete}
-                  setPripojkaSiete={setPripojkaSiete}
-                  stresneOkno={stresneOkno}
-                  setStresneOkno={setStresneOkno}
-                  bocneOknoFixne={bocneOknoFixne}
-                  setBocneOknoFixne={setBocneOknoFixne}
-                  bocneOknoVyklopne90={bocneOknoVyklopne90}
-                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                  bocneOknoVyklopne55={bocneOknoVyklopne55}
-                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                  povrchokaOkien={povrchokaOkien}
-                  setPovrchokaOkien={setPovrchokaOkien}
-                  tonovaneSkla={tonovaneSkla}
-                  setTonovaneSkla={setTonovaneSkla}
-                  vonkajsiaFasada={vonkajsiaFasada}
-                  setVonkajsiaFasada={setVonkajsiaFasada}
-                  interierFinis={interierFinis}
-                  setInterierFinis={setInterierFinis}
-                  vnutornePodlahy={vnutornePodlahy}
-                  setVnutornePodlahy={setVnutornePodlahy}
-                  podlahovVykurovanie={podlahovVykurovanie}
-                  setPodlahovVykurovanie={setPodlahovVykurovanie}
-                  interieroveDvere={interieroveDvere}
-                  setInterieroveDvere={setInterieroveDvere}
-                  pergola={pergola}
-                  setPergola={setPergola}
-                  inziniering={inziniering}
-                  setInziniering={setInziniering}
-                  projektA0={projektA0}
-                  setProjektA0={setProjektA0}
-                  revizna={revizna}
-                  setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                  showOnlySummary={true}
-                />
-
-                {dom.kategoria !== "mobilne_domy" && (
-                  <HypotekaKalkulator 
-                    cenaDoma={dom.zakladna_cena} 
-                    dom={dom}
-                    user={user}
-                    aktualnaKonfiguracia={prostoKonfiguracia}
-                    onNastavA0Prvky={() => {
-                      setIzolaciaNavysenie("premium");
-                      setTepelneCerpadlo(true);
-                      setRekuperacia(true);
-                      setProjektA0(true);
-                      setZaklady("pasove");
-                    }}
-                  />
-                )}
-              </div>
-              </div>
+              />
             )}
 
 
 
             {/* Konfigurátor - Wizard krok po kroku pre Flat Double (ale nie Flat 1,5) */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
-              <div className="hidden lg:block">
-                <KonfiguratorWizard 
+              <KonfiguratorWizard 
                 key={wizardKey}
                 dom={dom}
                 useFlatDoublePrices={true}
@@ -967,100 +879,10 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
-
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-              <div className="lg:hidden space-y-4">
-                <KonfiguratorFlatDouble 
-                  dom={dom}
-                  onReset={handleKonfiguratorReset}
-                  onConfigChange={(config) => setProstoKonfiguracia(config)}
-                  predajNehnutelnosti={predajNehnutelnosti}
-                  setPredajNehnutelnosti={setPredajNehnutelnosti}
-                  hladaniePozemku={hladaniePozemku}
-                  setHladaniePozemku={setHladaniePozemku}
-                  financneSluzby={financneSluzby}
-                  setFinancneSluzby={setFinancneSluzby}
-                  typStavby={typStavby}
-                  setTypStavby={setTypStavby}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
-                  setIzolaciaNavysenie={setIzolaciaNavysenie}
-                  zaklady={zaklady}
-                  setZaklady={setZaklady}
-                  vstupneDvere={vstupneDvere}
-                  setVstupneDvere={setVstupneDvere}
-                  elektroinstalacia={elektroinstalacia}
-                  setElektroinstalacia={setElektroinstalacia}
-                  vodaKanalizacia={vodaKanalizacia}
-                  setVodaKanalizacia={setVodaKanalizacia}
-                  sanitaKomplet={sanitaKomplet}
-                  setSanitaKomplet={setSanitaKomplet}
-                  bojler={bojler}
-                  setBojler={setBojler}
-                  tepelneCerpadlo={tepelneCerpadlo}
-                  setTepelneCerpadlo={setTepelneCerpadlo}
-                  rekuperacia={rekuperacia}
-                  setRekuperacia={setRekuperacia}
-                  pripojkaSiete={pripojkaSiete}
-                  setPripojkaSiete={setPripojkaSiete}
-                  stresneOkno={stresneOkno}
-                  setStresneOkno={setStresneOkno}
-                  bocneOknoFixne={bocneOknoFixne}
-                  setBocneOknoFixne={setBocneOknoFixne}
-                  bocneOknoVyklopne90={bocneOknoVyklopne90}
-                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                  bocneOknoVyklopne55={bocneOknoVyklopne55}
-                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                  povrchokaOkien={povrchokaOkien}
-                  setPovrchokaOkien={setPovrchokaOkien}
-                  tonovaneSkla={tonovaneSkla}
-                  setTonovaneSkla={setTonovaneSkla}
-                  vonkajsiaFasada={vonkajsiaFasada}
-                  setVonkajsiaFasada={setVonkajsiaFasada}
-                  interierFinis={interierFinis}
-                  setInterierFinis={setInterierFinis}
-                  vnutornePodlahy={vnutornePodlahy}
-                  setVnutornePodlahy={setVnutornePodlahy}
-                  podlahovVykurovanie={podlahovVykurovanie}
-                  setPodlahovVykurovanie={setPodlahovVykurovanie}
-                  interieroveDvere={interieroveDvere}
-                  setInterieroveDvere={setInterieroveDvere}
-                  pergola={pergola}
-                  setPergola={setPergola}
-                  inziniering={inziniering}
-                  setInziniering={setInziniering}
-                  projektA0={projektA0}
-                  setProjektA0={setProjektA0}
-                  revizna={revizna}
-                  setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                  showOnlySummary={true}
-                />
-
-                {dom.kategoria !== "mobilne_domy" && (
-                  <HypotekaKalkulator 
-                    cenaDoma={dom.zakladna_cena} 
-                    dom={dom}
-                    user={user}
-                    aktualnaKonfiguracia={prostoKonfiguracia}
-                    onNastavA0Prvky={() => {
-                      setIzolaciaNavysenie("premium");
-                      setTepelneCerpadlo(true);
-                      setRekuperacia(true);
-                      setProjektA0(true);
-                      setZaklady("pasove");
-                    }}
-                  />
-                )}
-              </div>
-              </div>
             )}
 
             {/* Konfigurátor pre Fjord - Wizard výber typu */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
-              <div className="hidden lg:block">
               <KonfiguratorWizard 
                 key={wizardKey}
                 dom={dom}
@@ -1125,101 +947,14 @@ export default function DetailDomu() {
                 setProjektA0={setProjektA0}
                 revizna={revizna}
                 setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                />
-
-                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-                <div className="lg:hidden space-y-4">
-                  <KonfiguratorFjord
-                    dom={dom}
-                    onConfigChange={(config) => setProstoKonfiguracia(config)}
-                  predajNehnutelnosti={predajNehnutelnosti}
-                  setPredajNehnutelnosti={setPredajNehnutelnosti}
-                  hladaniePozemku={hladaniePozemku}
-                  setHladaniePozemku={setHladaniePozemku}
-                  financneSluzby={financneSluzby}
-                  setFinancneSluzby={setFinancneSluzby}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
-                  setIzolaciaNavysenie={setIzolaciaNavysenie}
-                  zaklady={zaklady}
-                  setZaklady={setZaklady}
-                  vstupneDvere={vstupneDvere}
-                  setVstupneDvere={setVstupneDvere}
-                  elektroinstalacia={elektroinstalacia}
-                  setElektroinstalacia={setElektroinstalacia}
-                  vodaKanalizacia={vodaKanalizacia}
-                  setVodaKanalizacia={setVodaKanalizacia}
-                  sanitaKomplet={sanitaKomplet}
-                  setSanitaKomplet={setSanitaKomplet}
-                  bojler={bojler}
-                  setBojler={setBojler}
-                  tepelneCerpadlo={tepelneCerpadlo}
-                  setTepelneCerpadlo={setTepelneCerpadlo}
-                  rekuperacia={rekuperacia}
-                  setRekuperacia={setRekuperacia}
-                  pripojkaSiete={pripojkaSiete}
-                  setPripojkaSiete={setPripojkaSiete}
-                  stresneOkno={stresneOkno}
-                  setStresneOkno={setStresneOkno}
-                  bocneOknoFixne={bocneOknoFixne}
-                  setBocneOknoFixne={setBocneOknoFixne}
-                  bocneOknoVyklopne90={bocneOknoVyklopne90}
-                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                  bocneOknoVyklopne55={bocneOknoVyklopne55}
-                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                  povrchokaOkien={povrchokaOkien}
-                  setPovrchokaOkien={setPovrchokaOkien}
-                  tonovaneSkla={tonovaneSkla}
-                  setTonovaneSkla={setTonovaneSkla}
-                  vonkajsiaFasada={vonkajsiaFasada}
-                  setVonkajsiaFasada={setVonkajsiaFasada}
-                  interierFinis={interierFinis}
-                  setInterierFinis={setInterierFinis}
-                  vnutornePodlahy={vnutornePodlahy}
-                  setVnutornePodlahy={setVnutornePodlahy}
-                  podlahovVykurovanie={podlahovVykurovanie}
-                  setPodlahovVykurovanie={setPodlahovVykurovanie}
-                  interieroveDvere={interieroveDvere}
-                  setInterieroveDvere={setInterieroveDvere}
-                  pergola={pergola}
-                  setPergola={setPergola}
-                  inziniering={inziniering}
-                  setInziniering={setInziniering}
-                  projektA0={projektA0}
-                  setProjektA0={setProjektA0}
-                  revizna={revizna}
-                  setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                  showOnlySummary={true}
-                />
-
-                {dom.kategoria !== "mobilne_domy" && (
-                  <HypotekaKalkulator 
-                    cenaDoma={dom.zakladna_cena} 
-                    dom={dom}
-                    user={user}
-                    aktualnaKonfiguracia={prostoKonfiguracia}
-                    onNastavA0Prvky={() => {
-                      setIzolaciaNavysenie("premium");
-                      setTepelneCerpadlo(true);
-                      setRekuperacia(true);
-                      setProjektA0(true);
-                      setZaklady("pasove");
-                    }}
-                  />
-                )}
-                </div>
-              </div>
+                doprava={doprava}
+                setDoprava={setDoprava}
+              />
             )}
 
             {/* Konfigurátor pre Nord - vlastné ceny */}
             {isProstoHouse && dom.nazov?.includes("Nord") && (
-              <div className="hidden lg:block">
-                <KonfiguratorWizard
+              <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
                 useNordPrices={true}
@@ -1285,99 +1020,12 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-                />
-
-                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-                <div className="lg:hidden space-y-4">
-                <KonfiguratorNord
-                  dom={dom}
-                  onConfigChange={(config) => setProstoKonfiguracia(config)}
-                  predajNehnutelnosti={predajNehnutelnosti}
-                  setPredajNehnutelnosti={setPredajNehnutelnosti}
-                  hladaniePozemku={hladaniePozemku}
-                  setHladaniePozemku={setHladaniePozemku}
-                  financneSluzby={financneSluzby}
-                  setFinancneSluzby={setFinancneSluzby}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
-                  setIzolaciaNavysenie={setIzolaciaNavysenie}
-                  zaklady={zaklady}
-                  setZaklady={setZaklady}
-                  vstupneDvere={vstupneDvere}
-                  setVstupneDvere={setVstupneDvere}
-                  elektroinstalacia={elektroinstalacia}
-                  setElektroinstalacia={setElektroinstalacia}
-                  vodaKanalizacia={vodaKanalizacia}
-                  setVodaKanalizacia={setVodaKanalizacia}
-                  sanitaKomplet={sanitaKomplet}
-                  setSanitaKomplet={setSanitaKomplet}
-                  bojler={bojler}
-                  setBojler={setBojler}
-                  tepelneCerpadlo={tepelneCerpadlo}
-                  setTepelneCerpadlo={setTepelneCerpadlo}
-                  rekuperacia={rekuperacia}
-                  setRekuperacia={setRekuperacia}
-                  pripojkaSiete={pripojkaSiete}
-                  setPripojkaSiete={setPripojkaSiete}
-                  stresneOkno={stresneOkno}
-                  setStresneOkno={setStresneOkno}
-                  bocneOknoFixne={bocneOknoFixne}
-                  setBocneOknoFixne={setBocneOknoFixne}
-                  bocneOknoVyklopne90={bocneOknoVyklopne90}
-                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                  bocneOknoVyklopne55={bocneOknoVyklopne55}
-                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                  povrchokaOkien={povrchokaOkien}
-                  setPovrchokaOkien={setPovrchokaOkien}
-                  tonovaneSkla={tonovaneSkla}
-                  setTonovaneSkla={setTonovaneSkla}
-                  vonkajsiaFasada={vonkajsiaFasada}
-                  setVonkajsiaFasada={setVonkajsiaFasada}
-                  interierFinis={interierFinis}
-                  setInterierFinis={setInterierFinis}
-                  vnutornePodlahy={vnutornePodlahy}
-                  setVnutornePodlahy={setVnutornePodlahy}
-                  podlahovVykurovanie={podlahovVykurovanie}
-                  setPodlahovVykurovanie={setPodlahovVykurovanie}
-                  interieroveDvere={interieroveDvere}
-                  setInterieroveDvere={setInterieroveDvere}
-                  pergola={pergola}
-                  setPergola={setPergola}
-                  inziniering={inziniering}
-                  setInziniering={setInziniering}
-                  projektA0={projektA0}
-                  setProjektA0={setProjektA0}
-                  revizna={revizna}
-                  setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                  showOnlySummary={true}
-                />
-
-                {dom.kategoria !== "mobilne_domy" && (
-                  <HypotekaKalkulator 
-                    cenaDoma={dom.zakladna_cena} 
-                    dom={dom}
-                    user={user}
-                    aktualnaKonfiguracia={prostoKonfiguracia}
-                    onNastavA0Prvky={() => {
-                      setIzolaciaNavysenie("premium");
-                      setTepelneCerpadlo(true);
-                      setRekuperacia(true);
-                      setProjektA0(true);
-                      setZaklady("pasove");
-                    }}
-                  />
-                )}
-              </div>
-            </div>
+              />
             )}
 
-            {/* Konfigurátor pre Flat 72 - Wizard - PO POPISE */}
+            {/* Konfigurátor pre Flat 72 - Wizard */}
             {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
-              <div className="hidden lg:block">
-                <KonfiguratorWizard
+              <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
                 useFlat72Prices={true}
@@ -1443,166 +1091,12 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-                />
+              />
+            )}
 
-                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-                <div className="lg:hidden space-y-4">
-                <KonfiguratorFlat72
-                  dom={dom}
-                  onConfigChange={(config) => setProstoKonfiguracia(config)}
-                  predajNehnutelnosti={predajNehnutelnosti}
-                  setPredajNehnutelnosti={setPredajNehnutelnosti}
-                  hladaniePozemku={hladaniePozemku}
-                  setHladaniePozemku={setHladaniePozemku}
-                  financneSluzby={financneSluzby}
-                  setFinancneSluzby={setFinancneSluzby}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
-                  setIzolaciaNavysenie={setIzolaciaNavysenie}
-                  zaklady={zaklady}
-                  setZaklady={setZaklady}
-                  vstupneDvere={vstupneDvere}
-                  setVstupneDvere={setVstupneDvere}
-                  elektroinstalacia={elektroinstalacia}
-                  setElektroinstalacia={setElektroinstalacia}
-                  vodaKanalizacia={vodaKanalizacia}
-                  setVodaKanalizacia={setVodaKanalizacia}
-                  sanitaKomplet={sanitaKomplet}
-                  setSanitaKomplet={setSanitaKomplet}
-                  bojler={bojler}
-                  setBojler={setBojler}
-                  tepelneCerpadlo={tepelneCerpadlo}
-                  setTepelneCerpadlo={setTepelneCerpadlo}
-                  rekuperacia={rekuperacia}
-                  setRekuperacia={setRekuperacia}
-                  pripojkaSiete={pripojkaSiete}
-                  setPripojkaSiete={setPripojkaSiete}
-                  stresneOkno={stresneOkno}
-                  setStresneOkno={setStresneOkno}
-                  bocneOknoFixne={bocneOknoFixne}
-                  setBocneOknoFixne={setBocneOknoFixne}
-                  bocneOknoVyklopne90={bocneOknoVyklopne90}
-                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                  bocneOknoVyklopne55={bocneOknoVyklopne55}
-                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                  povrchokaOkien={povrchokaOkien}
-                  setPovrchokaOkien={setPovrchokaOkien}
-                  tonovaneSkla={tonovaneSkla}
-                  setTonovaneSkla={setTonovaneSkla}
-                  vonkajsiaFasada={vonkajsiaFasada}
-                  setVonkajsiaFasada={setVonkajsiaFasada}
-                  interierFinis={interierFinis}
-                  setInterierFinis={setInterierFinis}
-                  vnutornePodlahy={vnutornePodlahy}
-                  setVnutornePodlahy={setVnutornePodlahy}
-                  podlahovVykurovanie={podlahovVykurovanie}
-                  setPodlahovVykurovanie={setPodlahovVykurovanie}
-                  interieroveDvere={interieroveDvere}
-                  setInterieroveDvere={setInterieroveDvere}
-                  pergola={pergola}
-                  setPergola={setPergola}
-                  inziniering={inziniering}
-                  setInziniering={setInziniering}
-                  projektA0={projektA0}
-                  setProjektA0={setProjektA0}
-                  revizna={revizna}
-                  setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                  />
-
-                  {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-                  <div className="lg:hidden space-y-4">
-                  <KonfiguratorNord
-                    dom={dom}
-                    onConfigChange={(config) => setProstoKonfiguracia(config)}
-                    predajNehnutelnosti={predajNehnutelnosti}
-                    setPredajNehnutelnosti={setPredajNehnutelnosti}
-                    hladaniePozemku={hladaniePozemku}
-                    setHladaniePozemku={setHladaniePozemku}
-                    financneSluzby={financneSluzby}
-                    setFinancneSluzby={setFinancneSluzby}
-                    montazHolodomu={montazHolodomu}
-                    setMontazHolodomu={setMontazHolodomu}
-                    izolaciaNavysenie={izolaciaNavysenie}
-                    setIzolaciaNavysenie={setIzolaciaNavysenie}
-                    zaklady={zaklady}
-                    setZaklady={setZaklady}
-                    vstupneDvere={vstupneDvere}
-                    setVstupneDvere={setVstupneDvere}
-                    elektroinstalacia={elektroinstalacia}
-                    setElektroinstalacia={setElektroinstalacia}
-                    vodaKanalizacia={vodaKanalizacia}
-                    setVodaKanalizacia={setVodaKanalizacia}
-                    sanitaKomplet={sanitaKomplet}
-                    setSanitaKomplet={setSanitaKomplet}
-                    bojler={bojler}
-                    setBojler={setBojler}
-                    tepelneCerpadlo={tepelneCerpadlo}
-                    setTepelneCerpadlo={setTepelneCerpadlo}
-                    rekuperacia={rekuperacia}
-                    setRekuperacia={setRekuperacia}
-                    pripojkaSiete={pripojkaSiete}
-                    setPripojkaSiete={setPripojkaSiete}
-                    stresneOkno={stresneOkno}
-                    setStresneOkno={setStresneOkno}
-                    bocneOknoFixne={bocneOknoFixne}
-                    setBocneOknoFixne={setBocneOknoFixne}
-                    bocneOknoVyklopne90={bocneOknoVyklopne90}
-                    setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                    bocneOknoVyklopne55={bocneOknoVyklopne55}
-                    setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                    povrchokaOkien={povrchokaOkien}
-                    setPovrchokaOkien={setPovrchokaOkien}
-                    tonovaneSkla={tonovaneSkla}
-                    setTonovaneSkla={setTonovaneSkla}
-                    vonkajsiaFasada={vonkajsiaFasada}
-                    setVonkajsiaFasada={setVonkajsiaFasada}
-                    interierFinis={interierFinis}
-                    setInterierFinis={setInterierFinis}
-                    vnutornePodlahy={vnutornePodlahy}
-                    setVnutornePodlahy={setVnutornePodlahy}
-                    podlahovVykurovanie={podlahovVykurovanie}
-                    setPodlahovVykurovanie={setPodlahovVykurovanie}
-                    interieroveDvere={interieroveDvere}
-                    setInterieroveDvere={setInterieroveDvere}
-                    pergola={pergola}
-                    setPergola={setPergola}
-                    inziniering={inziniering}
-                    setInziniering={setInziniering}
-                    projektA0={projektA0}
-                    setProjektA0={setProjektA0}
-                    revizna={revizna}
-                    setRevizna={setRevizna}
-                    doprava={doprava}
-                    setDoprava={setDoprava}
-                    showOnlySummary={true}
-                  />
-
-                  {dom.kategoria !== "mobilne_domy" && (
-                    <HypotekaKalkulator 
-                      cenaDoma={dom.zakladna_cena} 
-                      dom={dom}
-                      user={user}
-                      aktualnaKonfiguracia={prostoKonfiguracia}
-                      onNastavA0Prvky={() => {
-                        setIzolaciaNavysenie("premium");
-                        setTepelneCerpadlo(true);
-                        setRekuperacia(true);
-                        setProjektA0(true);
-                        setZaklady("pasove");
-                      }}
-                    />
-                    )}
-                    </div>
-                    </div>
-                    )}
-
-                    {/* Konfigurátor pre ostatné ProstoHouse domy - Wizard */}
+            {/* Konfigurátor pre ostatné Prosto House domy */}
             {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("Flat Small") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && !dom.nazov?.includes("Barn") && (
-              <div className="hidden lg:block">
-                <KonfiguratorWizard
+              <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
                 useProstoHousePrices={true}
@@ -1671,94 +1165,26 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
+            )}
 
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-              <div className="lg:hidden space-y-4">
-                <KonfiguratorProstoHouse
-                  dom={dom}
-                  onConfigChange={(config) => setProstoKonfiguracia(config)}
-                  predajNehnutelnosti={predajNehnutelnosti}
-                  setPredajNehnutelnosti={setPredajNehnutelnosti}
-                  hladaniePozemku={hladaniePozemku}
-                  setHladaniePozemku={setHladaniePozemku}
-                  financneSluzby={financneSluzby}
-                  setFinancneSluzby={setFinancneSluzby}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
-                  setIzolaciaNavysenie={setIzolaciaNavysenie}
-                  zaklady={zaklady}
-                  setZaklady={setZaklady}
-                  predlzenie={predlzenie}
-                  setPredlzenie={setPredlzenie}
-                  vstupneDvere={vstupneDvere}
-                  setVstupneDvere={setVstupneDvere}
-                  elektroinstalacia={elektroinstalacia}
-                  setElektroinstalacia={setElektroinstalacia}
-                  vodaKanalizacia={vodaKanalizacia}
-                  setVodaKanalizacia={setVodaKanalizacia}
-                  sanitaKomplet={sanitaKomplet}
-                  setSanitaKomplet={setSanitaKomplet}
-                  bojler={bojler}
-                  setBojler={setBojler}
-                  tepelneCerpadlo={tepelneCerpadlo}
-                  setTepelneCerpadlo={setTepelneCerpadlo}
-                  rekuperacia={rekuperacia}
-                  setRekuperacia={setRekuperacia}
-                  pripojkaSiete={pripojkaSiete}
-                  setPripojkaSiete={setPripojkaSiete}
-                  stresneOkno={stresneOkno}
-                  setStresneOkno={setStresneOkno}
-                  bocneOknoFixne={bocneOknoFixne}
-                  setBocneOknoFixne={setBocneOknoFixne}
-                  bocneOknoVyklopne90={bocneOknoVyklopne90}
-                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                  bocneOknoVyklopne55={bocneOknoVyklopne55}
-                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                  povrchokaOkien={povrchokaOkien}
-                  setPovrchokaOkien={setPovrchokaOkien}
-                  tonovaneSkla={tonovaneSkla}
-                  setTonovaneSkla={setTonovaneSkla}
-                  vonkajsiaFasada={vonkajsiaFasada}
-                  setVonkajsiaFasada={setVonkajsiaFasada}
-                  interierFinis={interierFinis}
-                  setInterierFinis={setInterierFinis}
-                  vnutornePodlahy={vnutornePodlahy}
-                  setVnutornePodlahy={setVnutornePodlahy}
-                  podlahovVykurovanie={podlahovVykurovanie}
-                  setPodlahovVykurovanie={setPodlahovVykurovanie}
-                  interieroveDvere={interieroveDvere}
-                  setInterieroveDvere={setInterieroveDvere}
-                  pergola={pergola}
-                  setPergola={setPergola}
-                  inziniering={inziniering}
-                  setInziniering={setInziniering}
-                  projektA0={projektA0}
-                  setProjektA0={setProjektA0}
-                  revizna={revizna}
-                  setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                  showOnlySummary={true}
-                />
-
-                {dom.kategoria !== "mobilne_domy" && (
-                  <HypotekaKalkulator 
-                    cenaDoma={dom.zakladna_cena} 
-                    dom={dom}
-                    user={user}
-                    aktualnaKonfiguracia={prostoKonfiguracia}
-                    onNastavA0Prvky={() => {
-                      setIzolaciaNavysenie("premium");
-                      setTepelneCerpadlo(true);
-                      setRekuperacia(true);
-                      setProjektA0(true);
-                      setZaklady("pasove");
-                    }}
-                  />
-                )}
-              </div>
-              </div>
+            {/* Pôdorysy */}
+            {dom.podorysy && dom.podorysy.length > 0 && (
+              <Card className="p-3 sm:p-4">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">
+                  {dom.podorysy.length > 1 ? 'Pôdorysy' : 'Pôdorys'}
+                </h3>
+                <div className="space-y-2 sm:space-y-3">
+                  {dom.podorysy.map((podorysUrl, index) => (
+                    <div key={index} className="rounded-lg overflow-hidden bg-gray-50">
+                      <img
+                        src={podorysUrl}
+                        alt={`Pôdorys ${index + 1}`}
+                        className="w-full h-auto object-contain"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </Card>
             )}
 
             {/* YouTube Video */}
@@ -1778,12 +1204,11 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre ostatné Ticabhouse domy (okrem Lyon a Tiny House) */}
             {isTicabhouse && !dom.nazov?.toLowerCase().includes("lyon") && !dom.nazov?.toLowerCase().includes("tiny house") && (
-              <div className="hidden lg:block">
-                <KonfiguratorTicabhouse 
-                    dom={dom} 
-                  isAdmin={isAdmin}
-                  onConfigChange={(config) => setTicabKonfiguracia(config)}
-                  predajNehnutelnosti={lyonPredajNehnutelnosti}
+              <KonfiguratorTicabhouse 
+                dom={dom} 
+                isAdmin={isAdmin}
+                onConfigChange={(config) => setTicabKonfiguracia(config)}
+                predajNehnutelnosti={lyonPredajNehnutelnosti}
                 setPredajNehnutelnosti={setLyonPredajNehnutelnosti}
                 hladamPozemok={lyonHladamPozemok}
                 setHladamPozemok={setLyonHladamPozemok}
@@ -1853,92 +1278,21 @@ export default function DetailDomu() {
                 setRevizia={setLyonRevizia}
                 zaklady={lyonZaklady}
                 setZaklady={setLyonZaklady}
-                  montaz={lyonMontaz}
-                  setMontaz={setLyonMontaz}
-                  doprava={lyonDoprava}
-                  setDoprava={setLyonDoprava}
-                  />
-
-                  {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-                  <div className="lg:hidden space-y-4">
-                  <LyonSummaryPanelStandalone
-                    predajNehnutelnosti={lyonPredajNehnutelnosti}
-                  hladamPozemok={lyonHladamPozemok}
-                  financneSluzby={lyonFinancneSluzby}
-                  ucel={lyonUcel}
-                  izolaciaStien={lyonIzolaciaStien}
-                  izolaciaPodlahy={lyonIzolaciaPodlahy}
-                  izolaciaStropu={lyonIzolaciaStropu}
-                  tepelneCerpadlo={lyonTepelneCerpadlo}
-                  rekuperacia={lyonRekuperacia}
-                  pripravaNaRekuperaciu={lyonPripravaNaRekuperaciu}
-                  podlahovoKurenie={lyonPodlahovoKurenie}
-                  pripravaNaKrb={lyonPripravaNaKrb}
-                  ochranaKachle={lyonOchranaKachle}
-                  klimatizacia={lyonKlimatizacia}
-                  fasada={lyonFasada}
-                  strecha={lyonStrecha}
-                  odkvapy={lyonOdkvapy}
-                  okna={lyonOkna}
-                  vchodoveDvere={lyonVchodoveDvere}
-                  obkladStien={lyonObkladStien}
-                  interieroveDvere={lyonInterieroveDvere}
-                  elektro={lyonElektro}
-                  bleskozvod={lyonBleskozvod}
-                  prepat={lyonPrepat}
-                  pripravaNaSolarnePanely={lyonPripravaNaSolarnePanely}
-                  setPripravaNaSolarnePanely={setLyonPripravaNaSolarnePanely}
-                  sprchovyKut={lyonSprchovyKut}
-                  vana={lyonVana}
-                  bateria={lyonBateria}
-                  skrinka={lyonSkrinka}
-                  stropKupelna={lyonStropKupelna}
-                  inziniering={lyonInziniering}
-                  projektACertifikacia={lyonProjektACertifikacia}
-                  revizia={lyonRevizia}
-                  zaklady={lyonZaklady}
-                  montaz={lyonMontaz}
-                  doprava={lyonDoprava}
-                  dom={dom}
-                  totalPrice={ticabKonfiguracia?.celkovaCena || dom.zakladna_cena}
-                  onSubmit={() => alert("Odoslanie dopytu - funkcia bude implementovaná")}
-                />
-
-                {dom.kategoria !== "mobilne_domy" && (
-                  <HypotekaKalkulator 
-                    cenaDoma={dom.zakladna_cena} 
-                    dom={dom}
-                    user={user}
-                    aktualnaKonfiguracia={ticabKonfiguracia}
-                    onNastavA0Prvky={() => {
-                      setLyonIzolaciaStien("250mm");
-                      setLyonIzolaciaPodlahy("200mm");
-                      setLyonIzolaciaStropu("200mm");
-                      setLyonTepelneCerpadlo("ano");
-                      setLyonRekuperacia("ano");
-                      setLyonPripravaNaSolarnePanely(true);
-                      setLyonBleskozvod(true);
-                      setLyonPrepat(true);
-                      setLyonInziniering(true);
-                      setLyonProjektACertifikacia(true);
-                      setLyonZaklady("pasove");
-                      setLyonUcel("rodinny");
-                    }}
-                  />
-                )}
-                </div>
-              </div>
+                montaz={lyonMontaz}
+                setMontaz={setLyonMontaz}
+                doprava={lyonDoprava}
+                setDoprava={setLyonDoprava}
+              />
             )}
 
             {/* Konfigurátor pre Lyon (Ticab house) */}
             {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
-              <div className="hidden lg:block">
-                <LyonKonfiguratorWrapper
-                  dom={dom}
-                    onConfigChange={(config) => setTicabKonfiguracia(config)}
-                  ucel={lyonUcel}
-                  setUcel={setLyonUcel}
-                  izolaciaStien={lyonIzolaciaStien}
+              <LyonKonfiguratorWrapper
+                dom={dom}
+                onConfigChange={(config) => setTicabKonfiguracia(config)}
+                ucel={lyonUcel}
+                setUcel={setLyonUcel}
+                izolaciaStien={lyonIzolaciaStien}
                 setIzolaciaStien={setLyonIzolaciaStien}
                 izolaciaPodlahy={lyonIzolaciaPodlahy}
                 setIzolaciaPodlahy={setLyonIzolaciaPodlahy}
@@ -2004,108 +1358,13 @@ export default function DetailDomu() {
                 setMontaz={setLyonMontaz}
                 doprava={lyonDoprava}
                 setDoprava={setLyonDoprava}
-                  predajNehnutelnosti={lyonPredajNehnutelnosti}
-                  setPredajNehnutelnosti={setLyonPredajNehnutelnosti}
-                  chcemPozemok={lyonHladamPozemok}
-                  setChcemPozemok={setLyonHladamPozemok}
-                  financneSluzby={lyonFinancneSluzby}
-                  setFinancneSluzby={setLyonFinancneSluzby}
-                />
-
-                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-                <div className="lg:hidden space-y-4">
-                  <LyonSummaryPanelStandalone
-                    predajNehnutelnosti={lyonPredajNehnutelnosti}
-                  hladamPozemok={lyonHladamPozemok}
-                  financneSluzby={lyonFinancneSluzby}
-                  ucel={lyonUcel}
-                  izolaciaStien={lyonIzolaciaStien}
-                  izolaciaPodlahy={lyonIzolaciaPodlahy}
-                  izolaciaStropu={lyonIzolaciaStropu}
-                  tepelneCerpadlo={lyonTepelneCerpadlo}
-                  rekuperacia={lyonRekuperacia}
-                  pripravaNaRekuperaciu={lyonPripravaNaRekuperaciu}
-                  podlahovoKurenie={lyonPodlahovoKurenie}
-                  pripravaNaKrb={lyonPripravaNaKrb}
-                  ochranaKachle={lyonOchranaKachle}
-                  klimatizacia={lyonKlimatizacia}
-                  fasada={lyonFasada}
-                  strecha={lyonStrecha}
-                  odkvapy={lyonOdkvapy}
-                  okna={lyonOkna}
-                  vchodoveDvere={lyonVchodoveDvere}
-                  obkladStien={lyonObkladStien}
-                  interieroveDvere={lyonInterieroveDvere}
-                  elektro={lyonElektro}
-                  bleskozvod={lyonBleskozvod}
-                  prepat={lyonPrepat}
-                  pripravaNaSolarnePanely={lyonPripravaNaSolarnePanely}
-                  setPripravaNaSolarnePanely={setLyonPripravaNaSolarnePanely}
-                  sprchovyKut={lyonSprchovyKut}
-                  vana={lyonVana}
-                  bateria={lyonBateria}
-                  skrinka={lyonSkrinka}
-                  stropKupelna={lyonStropKupelna}
-                  inziniering={lyonInziniering}
-                  projektACertifikacia={lyonProjektACertifikacia}
-                  revizia={lyonRevizia}
-                  zaklady={lyonZaklady}
-                  montaz={lyonMontaz}
-                  doprava={lyonDoprava}
-                  dom={dom}
-                  totalPrice={ticabKonfiguracia?.celkovaCena || dom.zakladna_cena}
-                  onSubmit={() => alert("Odoslanie dopytu - funkcia bude implementovaná")}
-                  />
-
-                  {dom.kategoria !== "mobilne_domy" && (
-                  <HypotekaKalkulator 
-                    cenaDoma={dom.zakladna_cena} 
-                    dom={dom}
-                    user={user}
-                    aktualnaKonfiguracia={ticabKonfiguracia}
-                    onNastavA0Prvky={() => {
-                      setLyonIzolaciaStien("250mm");
-                      setLyonIzolaciaPodlahy("200mm");
-                      setLyonIzolaciaStropu("200mm");
-                      setLyonTepelneCerpadlo("ano");
-                      setLyonRekuperacia("ano");
-                      setLyonPripravaNaSolarnePanely(true);
-                      setLyonBleskozvod(true);
-                      setLyonPrepat(true);
-                      setLyonInziniering(true);
-                      setLyonProjektACertifikacia(true);
-                      setLyonZaklady("pasove");
-                      setLyonUcel("rodinny");
-                    }}
-                  />
-                  )}
-                  </div>
-                  </div>
-                  )}
-
-                  {/* Pravý stĺpec - Informácie */}
-                  <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden"
-                  >
-                  {dom.podorysy && dom.podorysy.length > 0 && (
-              <Card className="p-3 sm:p-4">
-                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">
-                  {dom.podorysy.length > 1 ? 'Pôdorysy' : 'Pôdorys'}
-                </h3>
-                <div className="space-y-2 sm:space-y-3">
-                  {dom.podorysy.map((podorysUrl, index) => (
-                    <div key={index} className="rounded-lg overflow-hidden bg-gray-50">
-                      <img
-                        src={podorysUrl}
-                        alt={`Pôdorys ${index + 1}`}
-                        className="w-full h-auto object-contain"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </Card>
+                predajNehnutelnosti={lyonPredajNehnutelnosti}
+                setPredajNehnutelnosti={setLyonPredajNehnutelnosti}
+                chcemPozemok={lyonHladamPozemok}
+                setChcemPozemok={setLyonHladamPozemok}
+                financneSluzby={lyonFinancneSluzby}
+                setFinancneSluzby={setLyonFinancneSluzby}
+              />
             )}
 
             {/* Rozmery - presunute z pravej strany */}
@@ -2134,28 +1393,14 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* YouTube Video */}
-            {dom.youtube_url && (
-              <Card className="p-3 sm:p-4">
-                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('videoPresentation')}</h3>
-                <div className="aspect-video rounded-lg overflow-hidden">
-                  <iframe
-                    src={dom.youtube_url}
-                    className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              </Card>
-            )}
+
 
             {/* Konfigurátor pre Barn Double - Wizard - PO POPISE */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && dom.nazov?.toLowerCase().includes("double") && (
-              <div className="hidden lg:block">
-                <KonfiguratorWizard
-                  key={wizardKey}
-                  dom={dom}
-                  useBarnDoublePrices={true}
+              <KonfiguratorWizard
+                key={wizardKey}
+                dom={dom}
+                useBarnDoublePrices={true}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -2221,106 +1466,14 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
-
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-              <div className="lg:hidden space-y-4">
-                <KonfiguratorFlatSmall
-                  dom={dom}
-                  onReset={handleKonfiguratorReset}
-                  onConfigChange={(config) => setProstoKonfiguracia(config)}
-                  predajNehnutelnosti={predajNehnutelnosti}
-                  setPredajNehnutelnosti={setPredajNehnutelnosti}
-                  hladaniePozemku={hladaniePozemku}
-                  setHladaniePozemku={setHladaniePozemku}
-                  financneSluzby={financneSluzby}
-                  setFinancneSluzby={setFinancneSluzby}
-                  typStavby={typStavby}
-                  setTypStavby={setTypStavby}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
-                  setIzolaciaNavysenie={setIzolaciaNavysenie}
-                  zaklady={zaklady}
-                  setZaklady={setZaklady}
-                  predlzenie={predlzenie}
-                  setPredlzenie={setPredlzenie}
-                  vstupneDvere={vstupneDvere}
-                  setVstupneDvere={setVstupneDvere}
-                  elektroinstalacia={elektroinstalacia}
-                  setElektroinstalacia={setElektroinstalacia}
-                  vodaKanalizacia={vodaKanalizacia}
-                  setVodaKanalizacia={setVodaKanalizacia}
-                  sanitaKomplet={sanitaKomplet}
-                  setSanitaKomplet={setSanitaKomplet}
-                  bojler={bojler}
-                  setBojler={setBojler}
-                  tepelneCerpadlo={tepelneCerpadlo}
-                  setTepelneCerpadlo={setTepelneCerpadlo}
-                  rekuperacia={rekuperacia}
-                  setRekuperacia={setRekuperacia}
-                  pripojkaSiete={pripojkaSiete}
-                  setPripojkaSiete={setPripojkaSiete}
-                  stresneOkno={stresneOkno}
-                  setStresneOkno={setStresneOkno}
-                  bocneOknoFixne={bocneOknoFixne}
-                  setBocneOknoFixne={setBocneOknoFixne}
-                  bocneOknoVyklopne90={bocneOknoVyklopne90}
-                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                  bocneOknoVyklopne55={bocneOknoVyklopne55}
-                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                  povrchokaOkien={povrchokaOkien}
-                  setPovrchokaOkien={setPovrchokaOkien}
-                  tonovaneSkla={tonovaneSkla}
-                  setTonovaneSkla={setTonovaneSkla}
-                  vonkajsiaFasada={vonkajsiaFasada}
-                  setVonkajsiaFasada={setVonkajsiaFasada}
-                  interierFinis={interierFinis}
-                  setInterierFinis={setInterierFinis}
-                  vnutornePodlahy={vnutornePodlahy}
-                  setVnutornePodlahy={setVnutornePodlahy}
-                  podlahovVykurovanie={podlahovVykurovanie}
-                  setPodlahovVykurovanie={setPodlahovVykurovanie}
-                  interieroveDvere={interieroveDvere}
-                  setInterieroveDvere={setInterieroveDvere}
-                  pergola={pergola}
-                  setPergola={setPergola}
-                  inziniering={inziniering}
-                  setInziniering={setInziniering}
-                  projektA0={projektA0}
-                  setProjektA0={setProjektA0}
-                  revizna={revizna}
-                  setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                  showOnlySummary={true}
-                />
-
-                {dom.kategoria !== "mobilne_domy" && (
-                  <HypotekaKalkulator 
-                    cenaDoma={dom.zakladna_cena} 
-                    dom={dom}
-                    user={user}
-                    aktualnaKonfiguracia={prostoKonfiguracia}
-                    onNastavA0Prvky={() => {
-                      setIzolaciaNavysenie("premium");
-                      setTepelneCerpadlo(true);
-                      setRekuperacia(true);
-                      setProjektA0(true);
-                      setZaklady("pasove");
-                    }}
-                  />
-                )}
-                </div>
-              </div>
             )}
 
             {/* Konfigurátor pre Barn 48 - Wizard - PO POPISE */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && !dom.nazov?.toLowerCase().includes("double") && (
-              <div className="hidden lg:block">
-                <KonfiguratorWizard
-                  key={wizardKey}
-                  dom={dom}
-                  useBarn48Prices={true}
+              <KonfiguratorWizard
+                key={wizardKey}
+                dom={dom}
+                useBarn48Prices={true}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -2383,109 +1536,17 @@ export default function DetailDomu() {
                 setProjektA0={setProjektA0}
                 revizna={revizna}
                 setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                />
-
-                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-                <div className="lg:hidden space-y-4">
-                  <KonfiguratorBarn48
-                  dom={dom}
-                  onReset={handleKonfiguratorReset}
-                  onConfigChange={(config) => setProstoKonfiguracia(config)}
-                  predajNehnutelnosti={predajNehnutelnosti}
-                  setPredajNehnutelnosti={setPredajNehnutelnosti}
-                  hladaniePozemku={hladaniePozemku}
-                  setHladaniePozemku={setHladaniePozemku}
-                  financneSluzby={financneSluzby}
-                  setFinancneSluzby={setFinancneSluzby}
-                  typStavby={typStavby}
-                  setTypStavby={setTypStavby}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
-                  setIzolaciaNavysenie={setIzolaciaNavysenie}
-                  zaklady={zaklady}
-                  setZaklady={setZaklady}
-                  predlzenie={predlzenie}
-                  setPredlzenie={setPredlzenie}
-                  vstupneDvere={vstupneDvere}
-                  setVstupneDvere={setVstupneDvere}
-                  elektroinstalacia={elektroinstalacia}
-                  setElektroinstalacia={setElektroinstalacia}
-                  vodaKanalizacia={vodaKanalizacia}
-                  setVodaKanalizacia={setVodaKanalizacia}
-                  sanitaKomplet={sanitaKomplet}
-                  setSanitaKomplet={setSanitaKomplet}
-                  bojler={bojler}
-                  setBojler={setBojler}
-                  tepelneCerpadlo={tepelneCerpadlo}
-                  setTepelneCerpadlo={setTepelneCerpadlo}
-                  rekuperacia={rekuperacia}
-                  setRekuperacia={setRekuperacia}
-                  pripojkaSiete={pripojkaSiete}
-                  setPripojkaSiete={setPripojkaSiete}
-                  stresneOkno={stresneOkno}
-                  setStresneOkno={setStresneOkno}
-                  bocneOknoFixne={bocneOknoFixne}
-                  setBocneOknoFixne={setBocneOknoFixne}
-                  bocneOknoVyklopne90={bocneOknoVyklopne90}
-                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                  bocneOknoVyklopne55={bocneOknoVyklopne55}
-                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                  povrchokaOkien={povrchokaOkien}
-                  setPovrchokaOkien={setPovrchokaOkien}
-                  tonovaneSkla={tonovaneSkla}
-                  setTonovaneSkla={setTonovaneSkla}
-                  vonkajsiaFasada={vonkajsiaFasada}
-                  setVonkajsiaFasada={setVonkajsiaFasada}
-                  interierFinis={interierFinis}
-                  setInterierFinis={setInterierFinis}
-                  vnutornePodlahy={vnutornePodlahy}
-                  setVnutornePodlahy={setVnutornePodlahy}
-                  podlahovVykurovanie={podlahovVykurovanie}
-                  setPodlahovVykurovanie={setPodlahovVykurovanie}
-                  interieroveDvere={interieroveDvere}
-                  setInterieroveDvere={setInterieroveDvere}
-                  pergola={pergola}
-                  setPergola={setPergola}
-                  inziniering={inziniering}
-                  setInziniering={setInziniering}
-                  projektA0={projektA0}
-                  setProjektA0={setProjektA0}
-                  revizna={revizna}
-                  setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                  showOnlySummary={true}
-                />
-
-                {dom.kategoria !== "mobilne_domy" && (
-                  <HypotekaKalkulator 
-                    cenaDoma={dom.zakladna_cena} 
-                    dom={dom}
-                    user={user}
-                    aktualnaKonfiguracia={prostoKonfiguracia}
-                    onNastavA0Prvky={() => {
-                      setIzolaciaNavysenie("premium");
-                      setTepelneCerpadlo(true);
-                      setRekuperacia(true);
-                      setProjektA0(true);
-                      setZaklady("pasove");
-                    }}
-                  />
-                )}
-                </div>
-              </div>
+                doprava={doprava}
+                setDoprava={setDoprava}
+              />
             )}
 
             {/* Konfigurátor pre Flat Small - Wizard */}
             {isProstoHouse && dom.nazov?.includes("Flat Small") && (
-              <div className="hidden lg:block">
-                <KonfiguratorWizard
-                  key={wizardKey}
-                  dom={dom}
-                  useFlatSmallPrices={true}
+              <KonfiguratorWizard
+                key={wizardKey}
+                dom={dom}
+                useFlatSmallPrices={true}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -2549,104 +1610,14 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
-
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-              <div className="lg:hidden space-y-4">
-                <KonfiguratorFlatSmall
-                  dom={dom}
-                  onReset={handleKonfiguratorReset}
-                  onConfigChange={(config) => setProstoKonfiguracia(config)}
-                  predajNehnutelnosti={predajNehnutelnosti}
-                  setPredajNehnutelnosti={setPredajNehnutelnosti}
-                  hladaniePozemku={hladaniePozemku}
-                  setHladaniePozemku={setHladaniePozemku}
-                  financneSluzby={financneSluzby}
-                  setFinancneSluzby={setFinancneSluzby}
-                  typStavby={typStavby}
-                  setTypStavby={setTypStavby}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
-                  setIzolaciaNavysenie={setIzolaciaNavysenie}
-                  zaklady={zaklady}
-                  setZaklady={setZaklady}
-                  vstupneDvere={vstupneDvere}
-                  setVstupneDvere={setVstupneDvere}
-                  elektroinstalacia={elektroinstalacia}
-                  setElektroinstalacia={setElektroinstalacia}
-                  vodaKanalizacia={vodaKanalizacia}
-                  setVodaKanalizacia={setVodaKanalizacia}
-                  sanitaKomplet={sanitaKomplet}
-                  setSanitaKomplet={setSanitaKomplet}
-                  bojler={bojler}
-                  setBojler={setBojler}
-                  tepelneCerpadlo={tepelneCerpadlo}
-                  setTepelneCerpadlo={setTepelneCerpadlo}
-                  rekuperacia={rekuperacia}
-                  setRekuperacia={setRekuperacia}
-                  pripojkaSiete={pripojkaSiete}
-                  setPripojkaSiete={setPripojkaSiete}
-                  stresneOkno={stresneOkno}
-                  setStresneOkno={setStresneOkno}
-                  bocneOknoFixne={bocneOknoFixne}
-                  setBocneOknoFixne={setBocneOknoFixne}
-                  bocneOknoVyklopne90={bocneOknoVyklopne90}
-                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                  bocneOknoVyklopne55={bocneOknoVyklopne55}
-                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                  povrchokaOkien={povrchokaOkien}
-                  setPovrchokaOkien={setPovrchokaOkien}
-                  tonovaneSkla={tonovaneSkla}
-                  setTonovaneSkla={setTonovaneSkla}
-                  vonkajsiaFasada={vonkajsiaFasada}
-                  setVonkajsiaFasada={setVonkajsiaFasada}
-                  interierFinis={interierFinis}
-                  setInterierFinis={setInterierFinis}
-                  vnutornePodlahy={vnutornePodlahy}
-                  setVnutornePodlahy={setVnutornePodlahy}
-                  podlahovVykurovanie={podlahovVykurovanie}
-                  setPodlahovVykurovanie={setPodlahovVykurovanie}
-                  interieroveDvere={interieroveDvere}
-                  setInterieroveDvere={setInterieroveDvere}
-                  pergola={pergola}
-                  setPergola={setPergola}
-                  inziniering={inziniering}
-                  setInziniering={setInziniering}
-                  projektA0={projektA0}
-                  setProjektA0={setProjektA0}
-                  revizna={revizna}
-                  setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                  showOnlySummary={true}
-                />
-
-                {dom.kategoria !== "mobilne_domy" && (
-                  <HypotekaKalkulator 
-                    cenaDoma={dom.zakladna_cena} 
-                    dom={dom}
-                    user={user}
-                    aktualnaKonfiguracia={prostoKonfiguracia}
-                    onNastavA0Prvky={() => {
-                      setIzolaciaNavysenie("premium");
-                      setTepelneCerpadlo(true);
-                      setRekuperacia(true);
-                      setProjektA0(true);
-                      setZaklady("pasove");
-                    }}
-                  />
-                )}
-                </div>
-              </div>
             )}
 
             {/* Konfigurátor pre A-Frame - Wizard - PO POPISE */}
             {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && !dom.nazov?.includes("Barn") && (
-              <div className="hidden lg:block">
-                <KonfiguratorWizard
-                  key={wizardKey}
-                  dom={dom}
-                  useAFramePrices={true}
+              <KonfiguratorWizard
+                key={wizardKey}
+                dom={dom}
+                useAFramePrices={true}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -2709,111 +1680,12 @@ export default function DetailDomu() {
                 setProjektA0={setProjektA0}
                 revizna={revizna}
                 setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                />
-
-                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-                <div className="lg:hidden space-y-4">
-                  <KonfiguratorAFrame
-                    dom={dom}
-                    onReset={handleKonfiguratorReset}
-                    onConfigChange={(config) => setProstoKonfiguracia(config)}
-                    predajNehnutelnosti={predajNehnutelnosti}
-                  setPredajNehnutelnosti={setPredajNehnutelnosti}
-                  hladaniePozemku={hladaniePozemku}
-                  setHladaniePozemku={setHladaniePozemku}
-                  financneSluzby={financneSluzby}
-                  setFinancneSluzby={setFinancneSluzby}
-                  typStavby={typStavby}
-                  setTypStavby={setTypStavby}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
-                  setIzolaciaNavysenie={setIzolaciaNavysenie}
-                  zaklady={zaklady}
-                  setZaklady={setZaklady}
-                  predlzenie={predlzenie}
-                  setPredlzenie={setPredlzenie}
-                  vstupneDvere={vstupneDvere}
-                  setVstupneDvere={setVstupneDvere}
-                  elektroinstalacia={elektroinstalacia}
-                  setElektroinstalacia={setElektroinstalacia}
-                  vodaKanalizacia={vodaKanalizacia}
-                  setVodaKanalizacia={setVodaKanalizacia}
-                  sanitaKomplet={sanitaKomplet}
-                  setSanitaKomplet={setSanitaKomplet}
-                  bojler={bojler}
-                  setBojler={setBojler}
-                  tepelneCerpadlo={tepelneCerpadlo}
-                  setTepelneCerpadlo={setTepelneCerpadlo}
-                  rekuperacia={rekuperacia}
-                  setRekuperacia={setRekuperacia}
-                  pripojkaSiete={pripojkaSiete}
-                  setPripojkaSiete={setPripojkaSiete}
-                  stresneOkno={stresneOkno}
-                  setStresneOkno={setStresneOkno}
-                  bocneOknoFixne={bocneOknoFixne}
-                  setBocneOknoFixne={setBocneOknoFixne}
-                  bocneOknoVyklopne90={bocneOknoVyklopne90}
-                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                  bocneOknoVyklopne55={bocneOknoVyklopne55}
-                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                  povrchokaOkien={povrchokaOkien}
-                  setPovrchokaOkien={setPovrchokaOkien}
-                  tonovaneSkla={tonovaneSkla}
-                  setTonovaneSkla={setTonovaneSkla}
-                  vonkajsiaFasada={vonkajsiaFasada}
-                  setVonkajsiaFasada={setVonkajsiaFasada}
-                  interierFinis={interierFinis}
-                  setInterierFinis={setInterierFinis}
-                  vnutornePodlahy={vnutornePodlahy}
-                  setVnutornePodlahy={setVnutornePodlahy}
-                  podlahovVykurovanie={podlahovVykurovanie}
-                  setPodlahovVykurovanie={setPodlahovVykurovanie}
-                  interieroveDvere={interieroveDvere}
-                  setInterieroveDvere={setInterieroveDvere}
-                  pergola={pergola}
-                  setPergola={setPergola}
-                  inziniering={inziniering}
-                  setInziniering={setInziniering}
-                  projektA0={projektA0}
-                  setProjektA0={setProjektA0}
-                  revizna={revizna}
-                  setRevizna={setRevizna}
-                  doprava={doprava}
-                    setDoprava={setDoprava}
-                    showOnlySummary={true}
-                  />
-
-                  {dom.kategoria !== "mobilne_domy" && (
-                    <HypotekaKalkulator 
-                    cenaDoma={dom.zakladna_cena} 
-                    dom={dom}
-                    user={user}
-                    aktualnaKonfiguracia={prostoKonfiguracia}
-                    onNastavA0Prvky={() => {
-                      setIzolaciaNavysenie("premium");
-                      setTepelneCerpadlo(true);
-                      setRekuperacia(true);
-                      setProjektA0(true);
-                      setZaklady("pasove");
-                    }}
-                  />
-                )}
-                </div>
-              </div>
+                doprava={doprava}
+                setDoprava={setDoprava}
+              />
             )}
 
-          </motion.div>
-
-          {/* Pravý stĺpec - Informácie */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden"
-          >
-            {/* Štandardná výbava pre JAK Modules */}
+            {/* Štandardná výbava pre JAK Modules - presunute z pravej strany */}
             {isJAKModules && (
               <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">✔ {t('mainFeatures')}</h3>
@@ -2913,6 +1785,17 @@ export default function DetailDomu() {
               </Card>
             )}
 
+
+
+
+                          </motion.div>
+
+          {/* Pravý stĺpec - Informácie */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden"
+          >
             {/* Hlavička */}
             <div>
               {/* Mobilná verzia - cena hore */}
@@ -3432,9 +2315,9 @@ export default function DetailDomu() {
 
 
 
-            {/* Floating panel s cenami pre Flat 1,5 - pravá strana - IBA DESKTOP */}
+            {/* Floating panel s cenami pre Flat 1,5 - pravá strana */}
             {isProstoHouse && (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) && (
-              <div className="hidden lg:block lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlat15
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -3503,9 +2386,9 @@ export default function DetailDomu() {
                 </div>
                 )}
 
-            {/* Floating panel pre Nord - IBA DESKTOP */}
+            {/* Floating panel pre Nord */}
             {isProstoHouse && dom.nazov?.includes("Nord") && (
-              <div className="hidden lg:block lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorNord
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -3576,9 +2459,9 @@ export default function DetailDomu() {
 
 
 
-            {/* Floating panel pre Fjord - IBA DESKTOP */}
+            {/* Floating panel pre Fjord */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
-              <div className="hidden lg:block lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFjord
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -3649,9 +2532,9 @@ export default function DetailDomu() {
 
 
 
-            {/* Floating panel pre Flat 72 - IBA DESKTOP */}
+            {/* Floating panel pre Flat 72 */}
             {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
-              <div className="hidden lg:block lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlat72
                   dom={dom}
                   onReset={handleKonfiguratorReset}
@@ -3723,9 +2606,9 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Floating panel pre Barn Double - IBA DESKTOP */}
+            {/* Floating panel pre Barn Double */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && dom.nazov?.toLowerCase().includes("double") && (
-              <div className="hidden lg:block lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorBarnDouble
                   dom={dom}
                   onReset={handleKonfiguratorReset}
@@ -3799,9 +2682,9 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Floating panel pre Barn 48 - IBA DESKTOP */}
+            {/* Floating panel pre Barn 48 */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && !dom.nazov?.toLowerCase().includes("double") && (
-              <div className="hidden lg:block lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorBarn48
                   dom={dom}
                   onReset={handleKonfiguratorReset}
@@ -3875,9 +2758,9 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Floating panel pre Flat Double - IBA DESKTOP */}
+            {/* Floating panel pre Flat Double */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
-              <div className="hidden lg:block lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlatDouble 
                   dom={dom}
                   onReset={handleKonfiguratorReset}
@@ -3949,9 +2832,9 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Floating panel pre Flat Small - IBA DESKTOP */}
+            {/* Floating panel pre Flat Small */}
             {isProstoHouse && dom.nazov?.includes("Flat Small") && (
-              <div className="hidden lg:block lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorFlatSmall
                   dom={dom}
                   onReset={handleKonfiguratorReset}
@@ -4023,9 +2906,9 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Floating panel pre A-Frame - IBA DESKTOP */}
+            {/* Floating panel pre A-Frame */}
             {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && !dom.nazov?.includes("Barn") && (
-              <div className="hidden lg:block lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '600px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '600px' }}>
                 <KonfiguratorAFrame
                   dom={dom}
                   onReset={handleKonfiguratorReset}
@@ -4101,9 +2984,9 @@ export default function DetailDomu() {
 
 
 
-            {/* Floating panel pre ostatné Prosto House domy - IBA DESKTOP */}
+            {/* Floating panel pre ostatné Prosto House domy */}
             {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("Flat Small") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && !dom.nazov?.includes("Barn") && (
-              <div className="hidden lg:block lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorProstoHouse 
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -4174,9 +3057,9 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Kalkulátor hypotéky - skryté pre mobilné domy - IBA DESKTOP */}
+            {/* Kalkulátor hypotéky - skryté pre mobilné domy */}
             {dom.kategoria !== "mobilne_domy" && (
-              <div className="mb-4 hidden lg:block">
+              <div className="mb-4">
                 <HypotekaKalkulator 
                   cenaDoma={dom.zakladna_cena} 
                   dom={dom}
@@ -4274,9 +3157,9 @@ export default function DetailDomu() {
 
             </div>
 
-            {/* Sidebar pre všetky Ticabhouse domy - rovnaké ako Lyon (okrem Tiny House) - IBA DESKTOP */}
+            {/* Sidebar pre všetky Ticabhouse domy - rovnaké ako Lyon (okrem Tiny House) */}
             {isTicabhouse && !dom.nazov?.toLowerCase().includes("tiny house") && (
-              <div className="space-y-4 hidden lg:block">
+              <div className="space-y-4">
                 <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                   <LyonSummaryPanelStandalone
                   predajNehnutelnosti={lyonPredajNehnutelnosti}
@@ -4397,13 +3280,13 @@ export default function DetailDomu() {
                     );
                   }
                 })()}
-                </div>
-                )}
-                </motion.div>
-                </div>
-                </div>
+              </div>
+            )}
+          </motion.div>
+        </div>
+      </div>
 
-                {/* Floating Price Display - len ak nie je JAK Modules */}
+      {/* Floating Price Display - len ak nie je JAK Modules */}
       {!isJAKModules && <FloatingPrice price={calculatedPrice} isVisible={showCalculator} />}
 
       {/* Lightbox */}
