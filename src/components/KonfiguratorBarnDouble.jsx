@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,8 @@ import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation"
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
+import FloatingPrice from "./FloatingPrice";
+import { base44 } from "@/api/base44Client";
 
 // Dlaždica s tooltip a malou fajkou v rohu
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
@@ -333,7 +336,7 @@ export default function KonfiguratorBarnDouble({
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, zaklady, pripojkaSiete, 
       inziniering, projektA0, interierFinis, vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, 
       podlahovVykurovanie, interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, t]);
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, t, BASE_PRICE, CENY]);
 
   const [showContactModal, setShowContactModal] = useState(false);
 
@@ -403,6 +406,32 @@ export default function KonfiguratorBarnDouble({
       </div>
     </div>
   );
+
+  const handleSendQuoteFromFloating = async (contactData) => {
+    try {
+      const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
+        dom_id: dom?.id,
+        klient_meno: contactData.meno,
+        klient_email: contactData.email,
+        klient_telefon: contactData.telefon,
+        klient_adresa: contactData.obec,
+        klient_poznamka: contactData.poznamka || '',
+        selectedItems: selectedItems,
+        totalPrice: totalPrice,
+        montazHolodomu, izolaciaNavysenie, zaklady, vstupneDvere,
+        elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo,
+        rekuperacia, pripojkaSiete, stresneOkno, bocneOknoFixne, bocneOknoVyklopne90,
+        bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, vonkajsiaFasada,
+        interierFinis, vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
+        pergola, inziniering, projektA0, revizna, doprava, predlzenie,
+        predajNehnutelnosti, hladaniePozemku, financneSluzby
+      });
+      return response;
+    } catch (error) {
+      console.error('Error in handleSendQuoteFromFloating:', error);
+      throw error;
+    }
+  };
 
   if (showOnlySummary) {
     return (
@@ -538,6 +567,13 @@ export default function KonfiguratorBarnDouble({
   return (
     <div className="mt-8 relative">
       <FlyingAnimationContainer animations={animations} />
+      <FloatingPrice 
+        price={totalPrice} 
+        isVisible={true} 
+        onSendQuote={handleSendQuoteFromFloating}
+        dom={dom}
+        vyrobca="Prosto House"
+      />
 
       <div>
         <div className="space-y-6">

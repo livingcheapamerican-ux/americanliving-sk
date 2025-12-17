@@ -1,9 +1,10 @@
+
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
+import {
   Send, AlertTriangle, Check, RotateCcw,
   Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
   Zap, ShowerHead, Flame, Cable, Paintbrush, Home, Truck, Sun, DoorOpen,
@@ -14,6 +15,8 @@ import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation"
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
+import FloatingPrice from "./FloatingPrice";
+import { base44 } from "@/api/base44Client";
 
 // Dlaždica s tooltip a malou fajkou v rohu
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
@@ -28,17 +31,17 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       const viewportHeight = window.innerHeight;
       const tooltipWidth = 256;
       const tooltipHeight = 80;
-      
+
       const tileCenter = rect.left + rect.width / 2;
       const left = Math.min(Math.max(tileCenter, tooltipWidth / 2 + 10), window.innerWidth - tooltipWidth / 2 - 10);
-      
+
       let top;
       if (rect.bottom + tooltipHeight + 20 < viewportHeight) {
         top = rect.bottom + 10;
       } else {
         top = Math.max(rect.top - tooltipHeight - 10, 10);
       }
-      
+
       setTooltipPosition({ top, left });
     }
   };
@@ -74,9 +77,9 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={`relative p-2 sm:p-4 rounded-lg sm:rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
-        selected 
-          ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
-          : isA0 
+        selected
+          ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}`
+          : isA0
             ? "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
             : `bg-white border-2 border-gray-200 ${hoverBorder} hover:shadow-md`
       }`}
@@ -86,7 +89,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
           <Sparkles className="w-1.5 h-1.5 sm:w-2 sm:h-2 mr-0.5" />A0
         </Badge>
       )}
-      
+
       <AnimatePresence>
         {selected && (
           <motion.div
@@ -127,7 +130,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
   );
 };
 
-export default function KonfiguratorBarn48({ 
+export default function KonfiguratorBarn48({
   dom,
   onReset,
   onConfigChange,
@@ -210,20 +213,20 @@ export default function KonfiguratorBarn48({
     total += CENY.predlzenie[predlzenie] || 0;
     total += CENY.dvere[vstupneDvere];
     total += CENY.izolacia[izolaciaNavysenie];
-    
+
     if (elektroinstalacia) total += CENY.elektroinstalacia;
     if (vodaKanalizacia) total += CENY.vodaKanalizacia;
     if (sanitaKomplet) total += CENY.sanitaKomplet;
     if (bojler) total += CENY.bojler;
     if (tepelneCerpadlo) total += CENY.tepelneCerpadlo;
     if (rekuperacia) total += CENY.rekuperacia;
-    
+
     total += CENY.zaklady[zaklady];
     if (pripojkaSiete) total += CENY.pripojkaSiete;
-    
+
     if (inziniering) total += CENY.inziniering;
     if (projektA0) total += CENY.projektA0;
-    
+
     total += CENY.interierFinis[interierFinis] || 0;
     total += CENY.vonkajsiaFasada[vonkajsiaFasada] || 0;
     if (povrchokaOkien) total += CENY.povrchokaOkien;
@@ -233,28 +236,28 @@ export default function KonfiguratorBarn48({
     if (tonovaneSkla) total += CENY.tonovaneSkla;
     if (doprava) total += CENY.doprava;
     if (revizna) total += CENY.revizna;
-    
+
     total += stresneOkno * CENY.stresneOkno;
     total += bocneOknoFixne * CENY.bocneOknoFixne;
     total += bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90;
     total += bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55;
-    
+
     return total;
-  }, [montazHolodomu, predlzenie, vstupneDvere, izolaciaNavysenie, elektroinstalacia, 
+  }, [montazHolodomu, predlzenie, vstupneDvere, izolaciaNavysenie, elektroinstalacia,
       vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia,
       zaklady, pripojkaSiete, inziniering, projektA0, interierFinis,
       vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, podlahovVykurovanie,
       interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55]);
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE]);
 
   const a0Odporucania = useMemo(() => {
     if (!projektA0) return null;
-    
+
     const chybajuce = [];
     if (izolaciaNavysenie !== "premium" && izolaciaNavysenie !== "ultra") chybajuce.push("Premium alebo Ultra izolácia (250mm alebo 300mm)");
     if (!tepelneCerpadlo) chybajuce.push("Tepelné čerpadlo / Klimatizácia");
     if (!rekuperacia) chybajuce.push("Rekuperácia");
-    
+
     return chybajuce.length > 0 ? chybajuce : null;
   }, [projektA0, izolaciaNavysenie, tepelneCerpadlo, rekuperacia]);
 
@@ -264,34 +267,34 @@ export default function KonfiguratorBarn48({
     const hrubaStavba = montazHolodomu === "ano" || izolaciaNavysenie !== "standard" || zaklady !== "bez";
     const holodom = hrubaStavba && (elektroinstalacia || vodaKanalizacia || tepelneCerpadlo || rekuperacia);
     const domNaKluc = holodom && (interierFinis !== "ziadne" || vnutornePodlahy || vonkajsiaFasada === "suchana");
-    
+
     return { hrubaStavba, holodom, domNaKluc };
-  }, [montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
+  }, [montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia,
       tepelneCerpadlo, rekuperacia, interierFinis, vnutornePodlahy, vonkajsiaFasada]);
 
   const selectedItems = useMemo(() => {
     const items = [];
-    
+
     items.push({ name: t('basePriceKit'), price: BASE_PRICE, section: "base", selected: true });
-    
+
     if (predajNehnutelnosti) items.push({ name: t('sellPreviousProperty'), price: 0, section: "services", selected: true });
     if (hladaniePozemku) items.push({ name: t('wantLandForHouse'), price: 0, section: "services", selected: true });
     if (financneSluzby) items.push({ name: t('financialServicesLoans'), price: 0, section: "services", selected: true });
-    
+
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
-    
+
     if (predlzenie > 0) {
       items.push({ name: `Predĺženie domu +${predlzenie}m`, price: CENY.predlzenie[predlzenie] || 0, section: "hruba", selected: true });
     }
-    
+
     const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Izolácia 300mm" : izolaciaNavysenie === "premium" ? t('insulationPremium') + " (250mm)" : izolaciaNavysenie === "zvysena" ? t('insulationEnhanced') + " (200mm)" : t('insulationStd');
     const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
     items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" });
-    
+
     const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? "Pilóty/Pätky" : t('foundationsLabel');
     const zakladyPrice = zaklady === "pasove" ? CENY.zaklady.pasove : zaklady === "doska" ? CENY.zaklady.doska : zaklady === "skrutky" ? CENY.zaklady.skrutky : 0;
     items.push({ name: zakladyLabel, price: zakladyPrice, section: "hruba", selected: zaklady !== "bez" });
-    
+
     const interierLabel = interierFinis === "drevo" ? t('interiorWood') : interierFinis === "sadrokarton" ? t('interiorDrywall') : t('interiorFinish');
     const interierPrice = interierFinis === "drevo" ? CENY.interierFinis.drevo : interierFinis === "sadrokarton" ? CENY.interierFinis.sadrokarton : 0;
     items.push({ name: interierLabel, price: interierPrice, section: "holodom", selected: interierFinis !== "ziadne" });
@@ -303,36 +306,36 @@ export default function KonfiguratorBarn48({
     items.push({ name: t('heatPumpFull'), price: tepelneCerpadlo ? CENY.tepelneCerpadlo : 0, section: "holodom", selected: tepelneCerpadlo });
     items.push({ name: t('recuperation'), price: rekuperacia ? CENY.rekuperacia : 0, section: "holodom", selected: rekuperacia });
     items.push({ name: t('gridConnectionFull'), price: pripojkaSiete ? CENY.pripojkaSiete : 0, section: "holodom", selected: pripojkaSiete });
-    
+
     const dvereLabel = vstupneDvere === "kovove" ? "Kovové dvere s 2 zámkami" : vstupneDvere === "plastove" ? "Plastovo-kovové dvere" : t('doorStandard');
     const dverePrice = vstupneDvere === "kovove" ? CENY.dvere.kovove : vstupneDvere === "plastove" ? CENY.dvere.plastove : 0;
     items.push({ name: dvereLabel, price: dverePrice, section: "holodom", selected: vstupneDvere !== "ziadne" });
-    
+
     if (stresneOkno > 0) items.push({ name: `${t('roofWindow')} (${stresneOkno}×)`, price: stresneOkno * CENY.stresneOkno, section: "holodom", selected: true });
     if (bocneOknoFixne > 0) items.push({ name: `${t('fixedWindow')} 90×205 (${bocneOknoFixne}×)`, price: bocneOknoFixne * CENY.bocneOknoFixne, section: "holodom", selected: true });
     if (bocneOknoVyklopne90 > 0) items.push({ name: `${t('tiltWindow')} 90×205 (${bocneOknoVyklopne90}×)`, price: bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90, section: "holodom", selected: true });
     if (bocneOknoVyklopne55 > 0) items.push({ name: `${t('tiltWindow')} 55×90 (${bocneOknoVyklopne55}×)`, price: bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55, section: "holodom", selected: true });
     items.push({ name: t('lamination') + " - " + t('laminationAnthracite'), price: povrchokaOkien ? CENY.povrchokaOkien : 0, section: "holodom", selected: povrchokaOkien });
     items.push({ name: t('tintedGlass') + " (Solar)", price: tonovaneSkla ? CENY.tonovaneSkla : 0, section: "holodom", selected: tonovaneSkla });
-    
+
     items.push({ name: "Fasáda - Drevo/Plech", price: 0, section: "kluc", selected: true });
 
     items.push({ name: t('floors') + " - " + t('floorsLaminate'), price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
     items.push({ name: t('floorHeatingFull'), price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
     items.push({ name: `${t('interiorDoors')} (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere, section: "kluc", selected: interieroveDvere > 0 });
-    
+
     items.push({ name: t('engineeringFull'), price: inziniering ? CENY.inziniering : 0, section: "docs", selected: inziniering });
     items.push({ name: t('projectA0Full'), price: projektA0 ? CENY.projektA0 : 0, section: "docs", selected: projektA0 });
     items.push({ name: t('revisionFull'), price: revizna ? CENY.revizna : 0, section: "docs", selected: revizna });
     items.push({ name: t('transport'), price: doprava ? CENY.doprava : 0, section: "docs", selected: doprava });
-    
+
     return items;
   }, [predajNehnutelnosti, hladaniePozemku, financneSluzby,
-      montazHolodomu, predlzenie, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
+      montazHolodomu, predlzenie, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia,
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
-      interieroveDvere, inziniering, projektA0, revizna, doprava, t]);
+      interieroveDvere, inziniering, projektA0, revizna, doprava, t, BASE_PRICE]);
 
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
@@ -415,6 +418,32 @@ export default function KonfiguratorBarn48({
       </div>
     </div>
   );
+
+  const handleSendQuoteFromFloating = async (contactData) => {
+    try {
+      const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
+        dom_id: dom?.id,
+        klient_meno: contactData.meno,
+        klient_email: contactData.email,
+        klient_telefon: contactData.telefon,
+        klient_adresa: contactData.obec,
+        klient_poznamka: contactData.poznamka || '',
+        selectedItems: selectedItems,
+        totalPrice: totalPrice,
+        montazHolodomu, izolaciaNavysenie, zaklady, vstupneDvere,
+        elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo,
+        rekuperacia, pripojkaSiete, stresneOkno, bocneOknoFixne, bocneOknoVyklopne90,
+        bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, vonkajsiaFasada,
+        interierFinis, vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
+        pergola, inziniering, projektA0, revizna, doprava, predlzenie,
+        predajNehnutelnosti, hladaniePozemku, financneSluzby
+      });
+      return response;
+    } catch (error) {
+      console.error('Error in handleSendQuoteFromFloating:', error);
+      throw error;
+    }
+  };
 
   if (showOnlySummary) {
     return (
@@ -518,17 +547,17 @@ export default function KonfiguratorBarn48({
               </span>
             </div>
             <div className="space-y-1.5">
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 onClick={() => setShowContactModal(true)}
                 className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg text-xs h-8"
               >
                 <Send className="mr-1.5 w-3.5 h-3.5" />
                 {t('interested')}
               </Button>
-              <Button 
-                size="sm" 
-                variant="outline" 
+              <Button
+                size="sm"
+                variant="outline"
                 onClick={handleReset}
                 className="w-full border-slate-200 text-slate-700 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all text-xs h-8"
               >
@@ -550,12 +579,19 @@ export default function KonfiguratorBarn48({
   return (
     <div className="mt-8 relative">
       <FlyingAnimationContainer animations={animations} />
+      <FloatingPrice
+        price={totalPrice}
+        isVisible={true}
+        onSendQuote={handleSendQuoteFromFloating}
+        dom={dom}
+        vyrobca="Prosto House"
+      />
 
       <div>
         <div className="space-y-6">
 
           {showHruba && (
-            <KonfiguratorFaza1HrubaStavba 
+            <KonfiguratorFaza1HrubaStavba
               montazHolodomu={montazHolodomu}
               setMontazHolodomu={setMontazHolodomu}
               izolaciaNavysenie={izolaciaNavysenie}
@@ -575,9 +611,9 @@ export default function KonfiguratorBarn48({
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <Card className="overflow-hidden border-2 border-blue-300 shadow-lg">
-              <SectionHeader 
-                icon={Hammer} 
-                title={t('phase2')} 
+              <SectionHeader
+                icon={Hammer}
+                title={t('phase2')}
                 subtitle={t('phase2Subtitle')}
                 color="from-blue-600 to-indigo-600"
                 step="2"
@@ -806,8 +842,8 @@ export default function KonfiguratorBarn48({
                         whileTap={{ scale: 0.98 }}
                         onClick={() => setVstupneDvere(opt.value)}
                         className={`p-2 sm:p-3 rounded-lg cursor-pointer text-center transition-all ${
-                          vstupneDvere === opt.value 
-                            ? "bg-blue-100 border-2 border-blue-500" 
+                          vstupneDvere === opt.value
+                            ? "bg-blue-100 border-2 border-blue-500"
                             : "bg-gray-50 border-2 border-gray-200 hover:border-blue-300"
                         }`}
                       >
@@ -831,12 +867,12 @@ export default function KonfiguratorBarn48({
                       <div key={idx} className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
                         <span className="font-medium text-gray-800 text-[10px] sm:text-xs block mb-1">{opt.label}</span>
                         <div className="flex items-center justify-center gap-1">
-                          <button 
+                          <button
                             onClick={() => opt.setter(Math.max(0, opt.state - 1))}
                             className="w-6 h-6 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm"
-                          >−</button>
+                          >-</button>
                           <span className="w-6 text-center font-bold text-sm">{opt.state}</span>
-                          <button 
+                          <button
                             onClick={() => opt.setter(opt.state + 1)}
                             className="w-6 h-6 rounded bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm"
                           >+</button>
@@ -857,9 +893,9 @@ export default function KonfiguratorBarn48({
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Card className="overflow-hidden border-2 border-emerald-300 shadow-lg">
-              <SectionHeader 
-                icon={Key} 
-                title={t('phase3')} 
+              <SectionHeader
+                icon={Key}
+                title={t('phase3')}
                 subtitle={t('phase3Subtitle')}
                 color="from-emerald-600 to-teal-600"
                 step="3"
@@ -927,12 +963,12 @@ export default function KonfiguratorBarn48({
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <button 
+                      <button
                         onClick={() => setInterieroveDvere(Math.max(0, interieroveDvere - 1))}
                         className="w-6 h-6 sm:w-7 sm:h-7 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm"
-                      >−</button>
+                      >-</button>
                       <span className="w-6 text-center font-bold text-sm">{interieroveDvere}</span>
-                      <button 
+                      <button
                         onClick={() => setInterieroveDvere(interieroveDvere + 1)}
                         className="w-6 h-6 sm:w-7 sm:h-7 rounded bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm"
                       >+</button>
@@ -950,16 +986,16 @@ export default function KonfiguratorBarn48({
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <Card className="overflow-hidden border-2 border-purple-300 shadow-lg">
-              <SectionHeader 
-                icon={FileText} 
-                title={t('phase4')} 
+              <SectionHeader
+                icon={FileText}
+                title={t('phase4')}
                 subtitle={t('phase4Subtitle')}
                 color="from-purple-600 to-violet-600"
                 step="4"
               />
               <div className="p-3 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-                  
+
                   <Tile
                     selected={inziniering}
                     onClick={(e) => { if (!inziniering) triggerAnimation("inziniering", e.currentTarget); setInziniering(!inziniering); }}
@@ -1084,7 +1120,7 @@ export default function KonfiguratorBarn48({
                       {projektA0 && !a0Odporucania && (
                         <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] sm:text-sm py-1 sm:py-1.5 px-2 sm:px-4 shadow-lg shadow-green-500/30">✓ {t('meetsA0')}</Badge>
                       )}
-                    
+
                       <div className="mt-4 sm:mt-6 bg-slate-800/50 rounded-xl p-3 sm:p-4 border border-slate-700/50 max-h-[300px] overflow-y-auto">
                         <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">{t('selectedItems')}</p>
                         <div className="space-y-1">
@@ -1095,7 +1131,7 @@ export default function KonfiguratorBarn48({
                             const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
                             const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
                             const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
-                            
+
                             return (
                               <React.Fragment key={index}>
                                 {showHrubaDivider && dosiahnuteUrovne.hrubaStavba && (
@@ -1151,8 +1187,8 @@ export default function KonfiguratorBarn48({
                   </div>
 
                   <div className="mt-6 sm:mt-10 pt-4 sm:pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-                    <Button 
-                      size="lg" 
+                    <Button
+                      size="lg"
                       onClick={() => setShowContactModal(true)}
                       className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
                     >

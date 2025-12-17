@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "@/components/ui/button";
@@ -7,13 +8,15 @@ import {
   Send, AlertTriangle, Check, RotateCcw,
   Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
   Zap, ShowerHead, Flame, Cable, Paintbrush, Home, Truck, Sun, DoorOpen,
-  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, TreePine, Building2
+  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, Building2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
+import FloatingPrice from "./FloatingPrice";
+import { base44 } from "@/api/base44Client";
 
 // Dlaždica s tooltip a malou fajkou v rohu
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
@@ -406,7 +409,7 @@ export default function KonfiguratorAFrame({
       </div>
       <div className="relative flex-1 min-w-0">
         <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
-          <span className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[9px] sm:text-xs font-bold uppercase tracking-wider">
+          <span className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider">
             {t('phase')} {step}
           </span>
         </div>
@@ -415,6 +418,32 @@ export default function KonfiguratorAFrame({
       </div>
     </div>
   );
+
+  const handleSendQuoteFromFloating = async (contactData) => {
+    try {
+      const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
+        dom_id: dom?.id,
+        klient_meno: contactData.meno,
+        klient_email: contactData.email,
+        klient_telefon: contactData.telefon,
+        klient_adresa: contactData.obec,
+        klient_poznamka: contactData.poznamka || '',
+        selectedItems: selectedItems,
+        totalPrice: totalPrice,
+        montazHolodomu, izolaciaNavysenie, zaklady, vstupneDvere,
+        elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo,
+        rekuperacia, pripojkaSiete, stresneOkno, bocneOknoFixne, bocneOknoVyklopne90,
+        bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, vonkajsiaFasada,
+        interierFinis, vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
+        pergola, inziniering, projektA0, revizna, doprava, predlzenie,
+        predajNehnutelnosti, hladaniePozemku, financneSluzby
+      });
+      return response;
+    } catch (error) {
+      console.error('Error in handleSendQuoteFromFloating:', error);
+      throw error;
+    }
+  };
 
   if (showOnlySummary) {
     return (
@@ -550,6 +579,13 @@ export default function KonfiguratorAFrame({
   return (
     <div className="mt-8 relative">
       <FlyingAnimationContainer animations={animations} />
+      <FloatingPrice 
+        price={totalPrice} 
+        isVisible={true} 
+        onSendQuote={handleSendQuoteFromFloating}
+        dom={dom}
+        vyrobca="Prosto House"
+      />
 
       <div>
         <div className="space-y-6">

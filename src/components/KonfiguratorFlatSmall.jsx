@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,8 @@ import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation"
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
+import FloatingPrice from "./FloatingPrice";
+import { base44 } from "@/api/base44Client";
 
 // Dlaždica s tooltip a malou fajkou v rohu
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
@@ -241,7 +244,7 @@ export default function KonfiguratorFlatSmall({
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, zaklady, pripojkaSiete, 
       inziniering, projektA0, interierFinis, vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, 
       podlahovVykurovanie, interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55]);
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE]);
 
   const a0Odporucania = useMemo(() => {
     if (!projektA0) return null;
@@ -326,7 +329,7 @@ export default function KonfiguratorFlatSmall({
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, zaklady, pripojkaSiete, 
       inziniering, projektA0, interierFinis, vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, 
       podlahovVykurovanie, interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, t]);
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE, CENY, t]);
 
   const [showContactModal, setShowContactModal] = useState(false);
 
@@ -412,7 +415,7 @@ export default function KonfiguratorFlatSmall({
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring" }}
-            className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[9px] sm:text-xs font-bold uppercase tracking-wider"
+            className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider"
           >
             {t('phase')} {step}
           </motion.span>
@@ -422,6 +425,32 @@ export default function KonfiguratorFlatSmall({
       </div>
     </motion.div>
   );
+
+  const handleSendQuoteFromFloating = async (contactData) => {
+    try {
+      const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
+        dom_id: dom?.id,
+        klient_meno: contactData.meno,
+        klient_email: contactData.email,
+        klient_telefon: contactData.telefon,
+        klient_adresa: contactData.obec,
+        klient_poznamka: contactData.poznamka || '',
+        selectedItems: selectedItems,
+        totalPrice: totalPrice,
+        montazHolodomu, izolaciaNavysenie, zaklady, vstupneDvere,
+        elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo,
+        rekuperacia, pripojkaSiete, stresneOkno, bocneOknoFixne, bocneOknoVyklopne90,
+        bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, vonkajsiaFasada,
+        interierFinis, vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
+        pergola, inziniering, projektA0, revizna, doprava, predlzenie: 0,
+        predajNehnutelnosti, hladaniePozemku, financneSluzby
+      });
+      return response;
+    } catch (error) {
+      console.error('Error in handleSendQuoteFromFloating:', error);
+      throw error;
+    }
+  };
 
   if (showOnlySummary) {
     return (
@@ -557,6 +586,13 @@ export default function KonfiguratorFlatSmall({
   return (
     <div className="mt-8 relative">
       <FlyingAnimationContainer animations={animations} />
+      <FloatingPrice 
+        price={totalPrice} 
+        isVisible={true} 
+        onSendQuote={handleSendQuoteFromFloating}
+        dom={dom}
+        vyrobca="Prosto House"
+      />
 
       <div>
         <div className="space-y-6">
