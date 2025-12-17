@@ -1375,7 +1375,6 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Flat 72 - Wizard - PO POPISE */}
             {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
-              <>
               <div className="hidden lg:block">
               <KonfiguratorWizard
                 key={wizardKey}
@@ -1443,10 +1442,10 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-              />
+                />
 
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-              <div className="lg:hidden space-y-4">
+                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+                <div className="lg:hidden space-y-4">
                 <KonfiguratorFlat72
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -2531,7 +2530,6 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Flat Small - Wizard */}
             {isProstoHouse && dom.nazov?.includes("Flat Small") && (
-              <>
               <div className="hidden lg:block">
               <KonfiguratorWizard
                 key={wizardKey}
@@ -2685,7 +2683,6 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre A-Frame - Wizard - PO POPISE */}
             {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && !dom.nazov?.includes("Barn") && (
-              <>
               <div className="hidden lg:block">
               <KonfiguratorWizard
                 key={wizardKey}
@@ -2846,7 +2843,7 @@ export default function DetailDomu() {
                   />
                 )}
               </div>
-              </>
+            </div>
             )}
           </motion.div>
 
