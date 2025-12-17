@@ -21,6 +21,7 @@ import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
 import TypStavbySelector from "./TypStavbySelector";
+import FloatingPrice from "./FloatingPrice";
 
 // Dlaždica s tooltip a malou fajkou v rohu
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
@@ -635,6 +636,7 @@ export default function KonfiguratorFlat72({
     <div className="mt-8 relative">
       {/* Flying animations container */}
       <FlyingAnimationContainer animations={animations} />
+      {!showOnlySummary && <FloatingPrice price={totalPrice} isVisible={true} />}
 
       <div>
       <div className="space-y-6">
