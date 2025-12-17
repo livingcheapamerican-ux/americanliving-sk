@@ -315,26 +315,22 @@ export default function LyonFinalSummaryModal({
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const novyDopyt = await base44.entities.Dopyt.create({
-      ...formData,
-      typ_dopytu: "konfigurator",
-      dom_id: dom?.id,
-      konfiguracny_kod: `Lyon 50m² - ${actualStatus} - ${formatPrice(totalPrice)}`,
-      poznamka: `Lokalita: ${formData.obec}\n\n${formData.poznamka}\n\n--- KONFIGURÁCIA ---\n${buildConfigSummary()}`
-    });
-
-    // Spusti notifikácie
-    await base44.functions.invoke('notifikujNovyDopyt', { 
-      dopyt: {
-        id: novyDopyt.id,
-        klient_meno: formData.meno,
-        klient_email: formData.email,
-        klient_telefon: formData.telefon,
-        klient_adresa: formData.obec,
-        dom_id: dom?.id,
-        dom_nazov: dom?.nazov,
-        poznamka: formData.poznamka
-      }
+    // Odošli cenovú ponuku emailom
+    await base44.functions.invoke('odosliCenovuPonukuLyonEmail', {
+      dom,
+      konfiguraciaData: {
+        ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu,
+        tepelneCerpadlo, rekuperacia, pripravaNaRekuperaciu,
+        podlahovoKurenie, pripravaNaKrb, ochranaKachle, klimatizacia,
+        fasada, strecha, odkvapy, okna, vchodoveDvere,
+        obkladStien, interieroveDvere, elektro, bleskozvod, prepat,
+        pripravaNaSolarnePanely, sprchovyKut, vana, bateria,
+        skrinka, stropKupelna, inziniering, projektACertifikacia,
+        revizia, zaklady, montaz, doprava,
+        predajNehnutelnosti, chcemPozemok, financneSluzby,
+        totalPrice
+      },
+      klientData: formData
     });
 
     setSubmitted(true);
