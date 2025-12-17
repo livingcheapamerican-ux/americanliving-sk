@@ -2531,6 +2531,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Flat Small - Wizard */}
             {isProstoHouse && dom.nazov?.includes("Flat Small") && (
+              <>
               <div className="hidden lg:block">
               <KonfiguratorWizard
                 key={wizardKey}
@@ -2692,6 +2693,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre A-Frame - Wizard - PO POPISE */}
             {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && !dom.nazov?.includes("Barn") && (
+              <>
               <div className="hidden lg:block">
               <KonfiguratorWizard
                 key={wizardKey}
