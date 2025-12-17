@@ -1125,15 +1125,15 @@ export default function DetailDomu() {
                 setProjektA0={setProjektA0}
                 revizna={revizna}
                 setRevizna={setRevizna}
-                doprava={doprava}
-                setDoprava={setDoprava}
-              />
+                  doprava={doprava}
+                  setDoprava={setDoprava}
+                />
 
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-              <div className="lg:hidden space-y-4">
-                <KonfiguratorFjord
-                  dom={dom}
-                  onConfigChange={(config) => setProstoKonfiguracia(config)}
+                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+                <div className="lg:hidden space-y-4">
+                  <KonfiguratorFjord
+                    dom={dom}
+                    onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2032,14 +2032,14 @@ export default function DetailDomu() {
                 setZaklady={setLyonZaklady}
                 montaz={lyonMontaz}
                 setMontaz={setLyonMontaz}
-                doprava={lyonDoprava}
-                setDoprava={setLyonDoprava}
-              />
+                  doprava={lyonDoprava}
+                  setDoprava={setLyonDoprava}
+                />
 
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-              <div className="lg:hidden space-y-4">
-                <LyonSummaryPanelStandalone
-                  predajNehnutelnosti={lyonPredajNehnutelnosti}
+                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+                <div className="lg:hidden space-y-4">
+                  <LyonSummaryPanelStandalone
+                    predajNehnutelnosti={lyonPredajNehnutelnosti}
                   hladamPozemok={lyonHladamPozemok}
                   financneSluzby={lyonFinancneSluzby}
                   ucel={lyonUcel}
@@ -2110,8 +2110,8 @@ export default function DetailDomu() {
             {/* Konfigurátor pre Lyon (Ticab house) */}
             {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
               <div className="hidden lg:block">
-              <LyonKonfiguratorWrapper
-                dom={dom}
+                <LyonKonfiguratorWrapper
+                  dom={dom}
                 onConfigChange={(config) => setTicabKonfiguracia(config)}
                 ucel={lyonUcel}
                 setUcel={setLyonUcel}
@@ -2185,14 +2185,14 @@ export default function DetailDomu() {
                 setPredajNehnutelnosti={setLyonPredajNehnutelnosti}
                 chcemPozemok={lyonHladamPozemok}
                 setChcemPozemok={setLyonHladamPozemok}
-                financneSluzby={lyonFinancneSluzby}
-                setFinancneSluzby={setLyonFinancneSluzby}
-              />
+                  financneSluzby={lyonFinancneSluzby}
+                  setFinancneSluzby={setLyonFinancneSluzby}
+                />
 
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-              <div className="lg:hidden space-y-4">
-                <LyonSummaryPanelStandalone
-                  predajNehnutelnosti={lyonPredajNehnutelnosti}
+                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+                <div className="lg:hidden space-y-4">
+                  <LyonSummaryPanelStandalone
+                    predajNehnutelnosti={lyonPredajNehnutelnosti}
                   hladamPozemok={lyonHladamPozemok}
                   financneSluzby={lyonFinancneSluzby}
                   ucel={lyonUcel}
@@ -2254,13 +2254,13 @@ export default function DetailDomu() {
                       setLyonZaklady("pasove");
                       setLyonUcel("rodinny");
                     }}
-                  />
-                )}
-              </div>
-              </div>
-            )}
+                    />
+                    )}
+                    </div>
+                    </div>
+                    )}
 
-            {/* Rozmery - presunute z pravej strany */}
+                    {/* YouTube Video */}
             {dom.rozmery && (
               <Card className="p-3 sm:p-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('outerDimensions')}</h3>
@@ -2291,9 +2291,9 @@ export default function DetailDomu() {
             {/* Konfigurátor pre Barn Double - Wizard - PO POPISE */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && dom.nazov?.toLowerCase().includes("double") && (
               <div className="hidden lg:block">
-              <KonfiguratorWizard
-                key={wizardKey}
-                dom={dom}
+                <KonfiguratorWizard
+                  key={wizardKey}
+                  dom={dom}
                 useBarnDoublePrices={true}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
@@ -2447,18 +2447,18 @@ export default function DetailDomu() {
                       setProjektA0(true);
                       setZaklady("pasove");
                     }}
-                  />
-                )}
-              </div>
-              </div>
-            )}
+                    />
+                    )}
+                    </div>
+                    </div>
+                    )}
 
-            {/* Konfigurátor pre Barn 48 - Wizard - PO POPISE */}
+                    {/* Konfigurátor pre A-Frame - Wizard */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && !dom.nazov?.toLowerCase().includes("double") && (
               <div className="hidden lg:block">
-              <KonfiguratorWizard
-                key={wizardKey}
-                dom={dom}
+                <KonfiguratorWizard
+                  key={wizardKey}
+                  dom={dom}
                 useBarn48Prices={true}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
@@ -2524,10 +2524,10 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-              />
+                />
 
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-              <div className="lg:hidden space-y-4">
+                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+                <div className="lg:hidden space-y-4">
                 <KonfiguratorBarn48
                   dom={dom}
                   onReset={handleKonfiguratorReset}
@@ -2621,9 +2621,9 @@ export default function DetailDomu() {
             {/* Konfigurátor pre Flat Small - Wizard */}
             {isProstoHouse && dom.nazov?.includes("Flat Small") && (
               <div className="hidden lg:block">
-              <KonfiguratorWizard
-                key={wizardKey}
-                dom={dom}
+                <KonfiguratorWizard
+                  key={wizardKey}
+                  dom={dom}
                 useFlatSmallPrices={true}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
@@ -2782,9 +2782,9 @@ export default function DetailDomu() {
             {/* Konfigurátor pre A-Frame - Wizard - PO POPISE */}
             {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && !dom.nazov?.includes("Barn") && (
               <div className="hidden lg:block">
-              <KonfiguratorWizard
-                key={wizardKey}
-                dom={dom}
+                <KonfiguratorWizard
+                  key={wizardKey}
+                  dom={dom}
                 useAFramePrices={true}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
@@ -2848,16 +2848,16 @@ export default function DetailDomu() {
                 setProjektA0={setProjektA0}
                 revizna={revizna}
                 setRevizna={setRevizna}
-                doprava={doprava}
-                setDoprava={setDoprava}
-              />
+                  doprava={doprava}
+                  setDoprava={setDoprava}
+                />
 
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-              <div className="lg:hidden space-y-4">
-                <KonfiguratorAFrame
-                  dom={dom}
-                  onReset={handleKonfiguratorReset}
-                  onConfigChange={(config) => setProstoKonfiguracia(config)}
+                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+                <div className="lg:hidden space-y-4">
+                  <KonfiguratorAFrame
+                    dom={dom}
+                    onReset={handleKonfiguratorReset}
+                    onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
@@ -2923,9 +2923,9 @@ export default function DetailDomu() {
                   doprava={doprava}
                   setDoprava={setDoprava}
                   showOnlySummary={true}
-                />
+                  />
 
-                {dom.kategoria !== "mobilne_domy" && (
+                  {dom.kategoria !== "mobilne_domy" && (
                   <HypotekaKalkulator 
                     cenaDoma={dom.zakladna_cena} 
                     dom={dom}
@@ -2939,12 +2939,12 @@ export default function DetailDomu() {
                       setZaklady("pasove");
                     }}
                   />
-                )}
-              </div>
-            </div>
-            )}
+                  )}
+                  </div>
+                  </div>
+                  )}
 
-            {/* Rozmery - presunute z pravej strany */}
+                  {/* Rozmery - presunute z pravej strany */}
             {dom.rozmery && (
               <Card className="p-3 sm:p-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('outerDimensions')}</h3>
