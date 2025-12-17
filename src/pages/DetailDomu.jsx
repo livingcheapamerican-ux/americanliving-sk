@@ -2335,17 +2335,6 @@ export default function DetailDomu() {
               </Card>
             )}
 
-
-
-
-                          </motion.div>
-
-          {/* Pravý stĺpec - Informácie */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden"
-          >
             {/* Hlavička */}
             <div>
               {/* Mobilná verzia - cena hore */}
