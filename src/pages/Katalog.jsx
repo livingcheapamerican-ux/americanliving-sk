@@ -212,7 +212,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
               )}
               {dom.vyrobca === "Prosto House" && (
                 <p className="text-[7px] sm:text-[9px] text-gray-400 mt-0.5 sm:mt-1 italic leading-tight">
-                  Základná cena je za samotnú konštrukciu bez montážnych prác
+                  {t('basePriceNote')}
                 </p>
               )}
             </div>
