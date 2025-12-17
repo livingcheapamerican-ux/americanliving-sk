@@ -49,7 +49,7 @@ export default function HypotekaKalkulator({
           <Calculator className="w-4 h-4 text-white" />
         </div>
         <div>
-          <h3 className="text-base font-bold text-gray-900">Kalkulátor hypotéky</h3>
+          <h3 className="text-base font-bold text-gray-900">{t('mortgageCalculator')}</h3>
         </div>
       </div>
 
@@ -58,7 +58,7 @@ export default function HypotekaKalkulator({
         <div className="space-y-2">
           <div className="p-2 bg-gray-100 rounded-lg">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-600">Celkom s DPH:</span>
+              <span className="text-xs text-gray-600">{t('totalWithVAT')}:</span>
               <span className="text-sm font-bold text-gray-800">
                 {celkomSDph.toLocaleString('sk-SK')} €
               </span>
@@ -83,7 +83,7 @@ export default function HypotekaKalkulator({
         {/* Vlastný vklad */}
         <div>
           <div className="flex items-center justify-between mb-1">
-            <Label className="text-xs">Vlastný vklad</Label>
+            <Label className="text-xs">{t('downPayment')}</Label>
             <span className="text-xs font-semibold text-blue-700">
               {vlastnyVklad}% ({(celkomSDph * vlastnyVklad / 100).toLocaleString('sk-SK')} €)
             </span>
@@ -105,8 +105,8 @@ export default function HypotekaKalkulator({
         {/* Doba splatnosti */}
         <div>
           <div className="flex items-center justify-between mb-1">
-            <Label className="text-xs">Doba splatnosti</Label>
-            <span className="text-xs font-semibold text-blue-700">{dobaSplatnosti} rokov</span>
+            <Label className="text-xs">{t('loanTerm')}</Label>
+            <span className="text-xs font-semibold text-blue-700">{dobaSplatnosti} {t('years')}</span>
           </div>
           <Slider
             min={5}
@@ -125,7 +125,7 @@ export default function HypotekaKalkulator({
         {/* Úroková sadzba */}
         <div>
           <div className="flex items-center justify-between mb-1">
-            <Label className="text-xs">Úroková sadzba</Label>
+            <Label className="text-xs">{t('interestRate')}</Label>
             <span className="text-xs font-semibold text-blue-700">{urokovaSadzba.toFixed(1)}%</span>
           </div>
           <Slider
@@ -145,17 +145,17 @@ export default function HypotekaKalkulator({
         {/* Výsledky */}
         <div className="pt-2 border-t border-blue-200 space-y-2">
           <div className="bg-blue-600 text-white p-3 rounded-lg">
-            <p className="text-xs opacity-90">Mesačná splátka</p>
+            <p className="text-xs opacity-90">{t('monthlyPayment')}</p>
             <p className="text-2xl font-bold">{Math.round(mesacnaSplatka).toLocaleString('sk-SK')} €</p>
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="bg-gray-100 p-2 rounded">
-              <p className="text-gray-600 mb-0.5 leading-tight">Celkom zaplatíte banke<br/>(istina + úroky)</p>
+              <p className="text-gray-600 mb-0.5 leading-tight">{t('totalPaymentToBank')}</p>
               <p className="font-bold text-gray-900">{Math.round(celkovaCena).toLocaleString('sk-SK')} €</p>
             </div>
             <div className="bg-gray-100 p-2 rounded">
-              <p className="text-gray-600 mb-0.5">Úroky</p>
+              <p className="text-gray-600 mb-0.5">{t('interest')}</p>
               <p className="font-bold text-orange-600">{Math.round(celkomPreplatky).toLocaleString('sk-SK')} €</p>
             </div>
           </div>
@@ -164,7 +164,7 @@ export default function HypotekaKalkulator({
         {/* Info */}
         <div className="p-2 bg-yellow-50 rounded border border-yellow-200">
           <p className="text-xs text-yellow-800">
-            ℹ️ Orientačný výpočet. Skutočná splátka závisí od podmienok banky.
+            ℹ️ {t('estimatedCalculation')}
           </p>
         </div>
       </div>
