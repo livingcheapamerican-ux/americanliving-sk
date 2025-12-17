@@ -18,22 +18,35 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
 
     setSending(true);
     try {
-      if (onSendQuote) {
-        await onSendQuote({
-          meno: formData.meno,
-          email: formData.email,
-          telefon: formData.telefon,
-          obec: formData.obec,
-          poznamka: formData.poznamka
-        });
+      console.log('FloatingPrice - odosielam ponuku:', formData);
+      
+      if (!onSendQuote) {
+        console.error('FloatingPrice - onSendQuote callback neexistuje!');
+        toast.error('Chyba konfigurácie. Skúste to prosím znova.');
+        return;
       }
 
-      toast.success('✓ Cenová ponuka odoslaná na váš email');
-      setFormData({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
-      setShowContactModal(false);
+      const response = await onSendQuote({
+        meno: formData.meno,
+        email: formData.email,
+        telefon: formData.telefon,
+        obec: formData.obec,
+        poznamka: formData.poznamka
+      });
+
+      console.log('FloatingPrice - odpoveď zo servera:', response);
+
+      if (response?.data?.success || response?.success) {
+        toast.success('✓ Cenová ponuka odoslaná na váš email');
+        setFormData({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
+        setShowContactModal(false);
+      } else {
+        console.error('FloatingPrice - neúspešná odpoveď:', response);
+        toast.error('Chyba pri odosielaní ponuky. Skúste to prosím znova.');
+      }
     } catch (error) {
-      console.error('Chyba pri odosielaní:', error);
-      toast.error('Chyba pri odosielaní. Skúste to prosím znova.');
+      console.error('FloatingPrice - chyba pri odosielaní:', error);
+      toast.error(`Chyba: ${error.message || 'Neznáma chyba'}`);
     } finally {
       setSending(false);
     }
