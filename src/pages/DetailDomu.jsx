@@ -2079,10 +2079,7 @@ export default function DetailDomu() {
             </div>
             )}
 
-            {/* Barn 48 - MOBILNÉ ZOBRAZENIE */}
-            {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && !dom.nazov?.toLowerCase().includes("double") && (
-              <div className="lg:hidden space-y-4">
-                <KonfiguratorBarn48
+
                   dom={dom}
                   onReset={handleKonfiguratorReset}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -2244,10 +2241,7 @@ export default function DetailDomu() {
             </div>
             )}
 
-            {/* Flat Small - MOBILNÉ ZOBRAZENIE */}
-            {isProstoHouse && dom.nazov?.includes("Flat Small") && (
-              <div className="lg:hidden space-y-4">
-                <KonfiguratorFlatSmall
+
                   dom={dom}
                   onReset={handleKonfiguratorReset}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -2410,10 +2404,7 @@ export default function DetailDomu() {
             </div>
             )}
 
-            {/* A-Frame - MOBILNÉ ZOBRAZENIE */}
-            {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && !dom.nazov?.includes("Barn") && (
-              <div className="lg:hidden space-y-4">
-                <KonfiguratorAFrame
+
                   dom={dom}
                   onReset={handleKonfiguratorReset}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
