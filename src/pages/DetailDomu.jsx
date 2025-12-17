@@ -1785,10 +1785,10 @@ export default function DetailDomu() {
             {isTicabhouse && !dom.nazov?.toLowerCase().includes("lyon") && !dom.nazov?.toLowerCase().includes("tiny house") && (
               <div className="hidden lg:block">
                 <KonfiguratorTicabhouse 
-                dom={dom} 
-                isAdmin={isAdmin}
-                onConfigChange={(config) => setTicabKonfiguracia(config)}
-                predajNehnutelnosti={lyonPredajNehnutelnosti}
+                    dom={dom} 
+                  isAdmin={isAdmin}
+                  onConfigChange={(config) => setTicabKonfiguracia(config)}
+                  predajNehnutelnosti={lyonPredajNehnutelnosti}
                 setPredajNehnutelnosti={setLyonPredajNehnutelnosti}
                 hladamPozemok={lyonHladamPozemok}
                 setHladamPozemok={setLyonHladamPozemok}
@@ -1858,14 +1858,14 @@ export default function DetailDomu() {
                 setRevizia={setLyonRevizia}
                 zaklady={lyonZaklady}
                 setZaklady={setLyonZaklady}
-                montaz={lyonMontaz}
-                setMontaz={setLyonMontaz}
+                  montaz={lyonMontaz}
+                  setMontaz={setLyonMontaz}
                   doprava={lyonDoprava}
                   setDoprava={setLyonDoprava}
-                  />
+                />
 
-                  {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-                  <div className="lg:hidden space-y-4">
+                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+                <div className="lg:hidden space-y-4">
                   <LyonSummaryPanelStandalone
                     predajNehnutelnosti={lyonPredajNehnutelnosti}
                   hladamPozemok={lyonHladamPozemok}
@@ -1940,10 +1940,10 @@ export default function DetailDomu() {
               <div className="hidden lg:block">
                 <LyonKonfiguratorWrapper
                   dom={dom}
-                onConfigChange={(config) => setTicabKonfiguracia(config)}
-                ucel={lyonUcel}
-                setUcel={setLyonUcel}
-                izolaciaStien={lyonIzolaciaStien}
+                    onConfigChange={(config) => setTicabKonfiguracia(config)}
+                  ucel={lyonUcel}
+                  setUcel={setLyonUcel}
+                  izolaciaStien={lyonIzolaciaStien}
                 setIzolaciaStien={setLyonIzolaciaStien}
                 izolaciaPodlahy={lyonIzolaciaPodlahy}
                 setIzolaciaPodlahy={setLyonIzolaciaPodlahy}
@@ -2009,10 +2009,10 @@ export default function DetailDomu() {
                 setMontaz={setLyonMontaz}
                 doprava={lyonDoprava}
                 setDoprava={setLyonDoprava}
-                predajNehnutelnosti={lyonPredajNehnutelnosti}
-                setPredajNehnutelnosti={setLyonPredajNehnutelnosti}
-                chcemPozemok={lyonHladamPozemok}
-                setChcemPozemok={setLyonHladamPozemok}
+                  predajNehnutelnosti={lyonPredajNehnutelnosti}
+                  setPredajNehnutelnosti={setLyonPredajNehnutelnosti}
+                  chcemPozemok={lyonHladamPozemok}
+                  setChcemPozemok={setLyonHladamPozemok}
                   financneSluzby={lyonFinancneSluzby}
                   setFinancneSluzby={setLyonFinancneSluzby}
                 />
@@ -2057,40 +2057,59 @@ export default function DetailDomu() {
                   zaklady={lyonZaklady}
                   montaz={lyonMontaz}
                   doprava={lyonDoprava}
-                  dom={dom}
-                  totalPrice={ticabKonfiguracia?.celkovaCena || dom.zakladna_cena}
-                  onSubmit={() => alert("Odoslanie dopytu - funkcia bude implementovaná")}
-                />
-
-                {dom.kategoria !== "mobilne_domy" && (
-                  <HypotekaKalkulator 
-                    cenaDoma={dom.zakladna_cena} 
                     dom={dom}
-                    user={user}
-                    aktualnaKonfiguracia={ticabKonfiguracia}
-                    onNastavA0Prvky={() => {
-                      setLyonIzolaciaStien("250mm");
-                      setLyonIzolaciaPodlahy("200mm");
-                      setLyonIzolaciaStropu("200mm");
-                      setLyonTepelneCerpadlo("ano");
-                      setLyonRekuperacia("ano");
-                      setLyonPripravaNaSolarnePanely(true);
-                      setLyonBleskozvod(true);
-                      setLyonPrepat(true);
-                      setLyonInziniering(true);
-                      setLyonProjektACertifikacia(true);
-                      setLyonZaklady("pasove");
-                      setLyonUcel("rodinny");
-                    }}
-                    />
-                    )}
-                    </div>
-                    </div>
-                    </div>
-                    )}
+                    totalPrice={ticabKonfiguracia?.celkovaCena || dom.zakladna_cena}
+                    onSubmit={() => alert("Odoslanie dopytu - funkcia bude implementovaná")}
+                  />
 
-                    {/* Rozmery - presunute z pravej strany */}
-                    {dom.rozmery && (
+                  {dom.kategoria !== "mobilne_domy" && (
+                    <HypotekaKalkulator 
+                      cenaDoma={dom.zakladna_cena} 
+                      dom={dom}
+                      user={user}
+                      aktualnaKonfiguracia={ticabKonfiguracia}
+                      onNastavA0Prvky={() => {
+                        setLyonIzolaciaStien("250mm");
+                        setLyonIzolaciaPodlahy("200mm");
+                        setLyonIzolaciaStropu("200mm");
+                        setLyonTepelneCerpadlo("ano");
+                        setLyonRekuperacia("ano");
+                        setLyonPripravaNaSolarnePanely(true);
+                        setLyonBleskozvod(true);
+                        setLyonPrepat(true);
+                        setLyonInziniering(true);
+                        setLyonProjektACertifikacia(true);
+                        setLyonZaklady("pasove");
+                        setLyonUcel("rodinny");
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Pôdorysy */}
+            {dom.podorysy && dom.podorysy.length > 0 && (
+              <Card className="p-3 sm:p-4">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">
+                  {dom.podorysy.length > 1 ? 'Pôdorysy' : 'Pôdorys'}
+                </h3>
+                <div className="space-y-2 sm:space-y-3">
+                  {dom.podorysy.map((podorysUrl, index) => (
+                    <div key={index} className="rounded-lg overflow-hidden bg-gray-50">
+                      <img
+                        src={podorysUrl}
+                        alt={`Pôdorys ${index + 1}`}
+                        className="w-full h-auto object-contain"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            {/* Rozmery - presunute z pravej strany */}
+            {dom.rozmery && (
               <Card className="p-3 sm:p-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('outerDimensions')}</h3>
                 <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
@@ -2115,7 +2134,20 @@ export default function DetailDomu() {
               </Card>
             )}
 
-
+            {/* YouTube Video */}
+            {dom.youtube_url && (
+              <Card className="p-3 sm:p-4">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('videoPresentation')}</h3>
+                <div className="aspect-video rounded-lg overflow-hidden">
+                  <iframe
+                    src={dom.youtube_url}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              </Card>
+            )}
 
             {/* Konfigurátor pre Barn Double - Wizard - PO POPISE */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && dom.nazov?.toLowerCase().includes("double") && (
