@@ -3813,7 +3813,7 @@ export default function DetailDomu() {
                 })()}
               </div>
             )}
-          </motion.div>
+          </div>
         </div>
       </div>
 
