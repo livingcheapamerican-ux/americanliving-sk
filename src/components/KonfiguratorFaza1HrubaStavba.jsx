@@ -207,46 +207,22 @@ export default function KonfiguratorFaza1HrubaStavba({
 
   const { t } = useLanguage();
   
-  // Sekcia Header komponenta s animáciou
+  // Sekcia Header komponenta bez animácií
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
-    <motion.div 
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${color} overflow-hidden`}
-    >
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-1/2 w-24 h-24 bg-white rounded-full blur-2xl"></div>
+    <div className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${color}`}>
+      <div className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white/90 rounded-lg sm:rounded-xl shadow-lg flex-shrink-0">
+        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-800" />
       </div>
-      
-      <motion.div 
-        className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/5"
-        animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-      />
-      
-      <motion.div 
-        whileHover={{ scale: 1.1, rotate: 5 }}
-        className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white/25 backdrop-blur-sm rounded-lg sm:rounded-xl shadow-lg border border-white/20"
-      >
-        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-      </motion.div>
-      <div className="relative flex-1">
+      <div className="relative flex-1 min-w-0">
         <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
-          <motion.span 
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring" }}
-            className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[9px] sm:text-xs font-bold uppercase tracking-wider"
-          >
+          <span className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[9px] sm:text-xs font-bold uppercase tracking-wider">
             {t('phase')} {step}
-          </motion.span>
+          </span>
         </div>
-        <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight">{title}</h3>
-        {subtitle && <p className="text-white/80 text-[10px] sm:text-xs mt-0.5">{subtitle}</p>}
+        <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
+        {subtitle && <p className="text-white text-[10px] sm:text-xs mt-0.5 truncate drop-shadow-md">{subtitle}</p>}
       </div>
-    </motion.div>
+    </div>
   );
 
   return (
