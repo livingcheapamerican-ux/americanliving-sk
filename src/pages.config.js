@@ -48,6 +48,7 @@ import AdminAnalyzaSessions from './pages/AdminAnalyzaSessions';
 import AdminSEOAnalyzer from './pages/AdminSEOAnalyzer';
 import FAQ from './pages/FAQ';
 import ModularneDomyBratislava from './pages/ModularneDomyBratislava';
+import AutoSEOTrigger from './pages/AutoSEOTrigger';
 import __Layout from './Layout.jsx';
 
 
@@ -102,6 +103,7 @@ export const PAGES = {
     "AdminSEOAnalyzer": AdminSEOAnalyzer,
     "FAQ": FAQ,
     "ModularneDomyBratislava": ModularneDomyBratislava,
+    "AutoSEOTrigger": AutoSEOTrigger,
 }
 
 export const pagesConfig = {

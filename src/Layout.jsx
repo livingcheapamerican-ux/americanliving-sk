@@ -17,8 +17,9 @@ import UserTracking from "./components/UserTracking";
 import FloatingHouses from "./components/FloatingHouses";
 import InteractiveTour from "./components/InteractiveTour";
 const SessionRecorder = React.lazy(() => import("./components/SessionRecorder"));
+const AutoSEOTrigger = React.lazy(() => import("./pages/AutoSEOTrigger"));
 
-function LayoutContent({ children }) {
+      function LayoutContent({ children }) {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -567,6 +568,9 @@ function LayoutContent({ children }) {
       <InteractiveTour />
       <React.Suspense fallback={null}>
         <SessionRecorder />
+      </React.Suspense>
+      <React.Suspense fallback={null}>
+        <AutoSEOTrigger />
       </React.Suspense>
       <div className="hidden md:block">
         <React.Suspense fallback={null}>
