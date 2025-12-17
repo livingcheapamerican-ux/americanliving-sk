@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -382,7 +381,7 @@ Projektant: ${konfig.projektant}
                       "Odosiela sa..."
                     ) : (
                       <>
-                        Odoslať dopyt
+                        Poslať cenovú ponuku
                         <Send className="ml-2 w-5 h-5" />
                       </>
                     )}
