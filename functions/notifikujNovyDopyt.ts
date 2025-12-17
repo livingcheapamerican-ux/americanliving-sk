@@ -65,19 +65,11 @@ Deno.serve(async (req) => {
         </p>
       `;
 
-      await base44.asServiceRole.integrations.Core.SendEmail({
+      await base44.asServiceRole.functions.invoke('sendEmailResend', {
         to: prirdenenyPredajca.email,
+        cc: 'info.americanliving@gmail.com',
         subject: `🏡 Nový dopyt: ${dopyt.klient_meno} - ${dopyt.dom_nazov || 'Všeobecný záujem'}`,
-        body: emailBody,
-        from_name: 'American Living CRM'
-      });
-
-      // Kópia pre firmu
-      await base44.asServiceRole.integrations.Core.SendEmail({
-        to: 'info.americanliving@gmail.com',
-        subject: `[KÓPIA] 🏡 Nový dopyt: ${dopyt.klient_meno} - ${dopyt.dom_nazov || 'Všeobecný záujem'}`,
-        body: emailBody,
-        from_name: 'American Living CRM'
+        html: emailBody
       });
 
       // Slack notifikácia ak je nastavená

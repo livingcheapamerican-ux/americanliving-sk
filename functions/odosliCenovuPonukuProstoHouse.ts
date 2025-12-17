@@ -413,20 +413,12 @@ Deno.serve(async (req) => {
 </html>
     `;
 
-    // Odošli email klientovi
-    await base44.asServiceRole.integrations.Core.SendEmail({
+    // Odošli email cez Resend s kópiou pre firmu
+    await base44.asServiceRole.functions.invoke('sendEmailResend', {
       to: klient_email,
+      cc: 'info.americanliving@gmail.com',
       subject: `Cenová ponuka ${cisloPonuky} - ${dom.nazov} - American Living`,
-      body: htmlEmail,
-      from_name: 'American Living'
-    });
-
-    // Kópia pre firmu
-    await base44.asServiceRole.integrations.Core.SendEmail({
-      to: 'info.americanliving@gmail.com',
-      subject: `[KÓPIA] Cenová ponuka ${cisloPonuky} - ${dom.nazov} - ${klient_meno}`,
-      body: htmlEmail,
-      from_name: 'American Living'
+      html: htmlEmail
     });
 
     // Ulož do databázy

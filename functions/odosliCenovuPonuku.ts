@@ -85,20 +85,12 @@ Deno.serve(async (req) => {
 </html>
     `;
 
-    // Odošli email klientovi
-    await base44.integrations.Core.SendEmail({
-      from_name: "American Living",
+    // Odošli email cez Resend s kópiou pre firmu
+    await base44.functions.invoke('sendEmailResend', {
       to: ponuka.klient_email,
+      cc: 'info.americanliving@gmail.com',
       subject: `Cenová ponuka #${ponuka.cislo_ponuky} - ${ponuka.dom_nazov}`,
-      body: klientEmail
-    });
-
-    // Kópia pre firmu
-    await base44.integrations.Core.SendEmail({
-      from_name: "American Living",
-      to: 'info.americanliving@gmail.com',
-      subject: `[KÓPIA] Cenová ponuka #${ponuka.cislo_ponuky} - ${ponuka.klient_meno}`,
-      body: klientEmail
+      html: klientEmail
     });
 
     // Email pre predajcu
@@ -138,11 +130,10 @@ Deno.serve(async (req) => {
 </html>
     `;
 
-    await base44.integrations.Core.SendEmail({
-      from_name: "American Living CRM",
+    await base44.functions.invoke('sendEmailResend', {
       to: predajcaEmail,
       subject: `📧 Cenová ponuka #${ponuka.cislo_ponuky} odoslaná - ${ponuka.klient_meno}`,
-      body: notifikaciaEmail
+      html: notifikaciaEmail
     });
 
     // Aktualizuj status ponuky
