@@ -568,9 +568,11 @@ function LayoutContent({ children }) {
       <React.Suspense fallback={null}>
         <SessionRecorder />
       </React.Suspense>
-      <React.Suspense fallback={null}>
-        <Chatbot />
-      </React.Suspense>
+      <div className="hidden md:block">
+        <React.Suspense fallback={null}>
+          <Chatbot />
+        </React.Suspense>
+      </div>
       </div>
       );
       }

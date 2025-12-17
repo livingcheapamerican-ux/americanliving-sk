@@ -18,20 +18,6 @@ export default function Blog() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedKategoria, setSelectedKategoria] = useState("all");
 
-  // SEO Meta tags
-  useEffect(() => {
-    document.title = `${t('blog')} - American Living | ${t('blogSubtitle')}`;
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', `${t('blogMetaDesc')}`);
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'description';
-      meta.content = t('blogMetaDesc');
-      document.head.appendChild(meta);
-    }
-  }, [language, t]);
-
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ['blog-posts'],
     queryFn: () => base44.entities.BlogPost.filter({ publikovany: true }, '-datum_publikacie'),
@@ -59,8 +45,8 @@ export default function Blog() {
   };
 
   const filteredPosts = posts.filter(post => {
-    const nazov = getTranslatedField(post, 'nazov');
-    const perex = getTranslatedField(post, 'perex');
+    const nazov = getTranslatedField(post, 'nazov') || '';
+    const perex = getTranslatedField(post, 'perex') || '';
     const matchesSearch = nazov.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          perex.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesKategoria = selectedKategoria === "all" || post.kategoria === selectedKategoria;

@@ -66,6 +66,9 @@ export default function InteractiveTour() {
     const tourCompleted = localStorage.getItem(TOUR_COMPLETED_KEY);
     if (tourCompleted) return;
 
+    // Skip tour on mobile devices
+    if (window.innerWidth < 1024) return;
+
     // Check if cookies were accepted
     const cookieConsent = localStorage.getItem(COOKIE_CONSENT_KEY);
     if (cookieConsent) {

@@ -776,91 +776,79 @@ export default function Katalog() {
 
           {/* Domy Grid */}
           <div className="flex-grow w-full max-w-full overflow-hidden">
-            {/* Dizajn filter - Vylepšený dizajn */}
+            {/* Dizajn filter - Mobilne responzívny */}
             <div className="relative mb-4 sm:mb-6">
               {/* Animovaný gradient pozadie */}
               <div className="absolute inset-0 bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 rounded-2xl opacity-90 blur-sm animate-pulse"></div>
               
-              <Card className="relative p-4 sm:p-6 bg-gradient-to-br from-orange-50 via-white to-red-50 border-4 border-orange-400 shadow-2xl">
+              <Card className="relative p-3 sm:p-6 bg-gradient-to-br from-orange-50 via-white to-red-50 border-2 sm:border-4 border-orange-400 shadow-2xl">
                 {/* Dekoratívne prvky */}
                 <div className="absolute top-0 left-0 w-20 h-20 bg-yellow-300 rounded-full blur-3xl opacity-30 animate-pulse"></div>
                 <div className="absolute bottom-0 right-0 w-24 h-24 bg-red-300 rounded-full blur-3xl opacity-30 animate-pulse" style={{ animationDelay: '1s' }}></div>
                 
-                <div className="relative flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-                  {/* Ľavá časť - Text s ikonou */}
-                  <div className="flex items-center gap-2 sm:gap-3">
+                <div className="relative flex flex-col items-center gap-2 sm:gap-4">
+                  {/* Text s ikonou */}
+                  <div className="flex items-center gap-1.5 sm:gap-3 w-full justify-center">
                     <motion.div 
                       animate={{ rotate: [0, 10, -10, 0] }}
                       transition={{ duration: 2, repeat: Infinity }}
-                      className="flex-shrink-0 w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg"
+                      className="flex-shrink-0 w-8 h-8 sm:w-14 sm:h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg"
                     >
-                      <span className="text-xl sm:text-3xl">🎨</span>
+                      <span className="text-base sm:text-3xl">🎨</span>
                     </motion.div>
-                    <div>
-                      <p className="text-xs sm:text-base font-bold text-gray-900 flex items-center gap-1">
-                        <span className="bg-red-600 text-white px-2 py-0.5 rounded-full text-[10px] sm:text-xs animate-pulse">{t('newBadge')}</span>
-                        {t('showInDesign')}
+                    <div className="text-center sm:text-left">
+                      <p className="text-[10px] sm:text-base font-bold text-gray-900 flex flex-wrap items-center justify-center sm:justify-start gap-1">
+                        <span className="bg-red-600 text-white px-1.5 py-0.5 rounded-full text-[8px] sm:text-xs animate-pulse">{t('newBadge')}</span>
+                        <span className="whitespace-nowrap">{t('showInDesign')}</span>
                       </p>
-                      <p className="text-[10px] sm:text-sm text-gray-600 font-medium">{t('viewHousesInDifferentColors')}</p>
+                      <p className="text-[8px] sm:text-sm text-gray-600 font-medium hidden sm:block">{t('viewHousesInDifferentColors')}</p>
                     </div>
                   </div>
                   
-                  {/* Pravá časť - Tlačidlá */}
-                  <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex-1 sm:flex-initial"
-                    >
+                  {/* Tlačidlá - optimalizované pre malé mobily */}
+                  <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-3 w-full">
+                    <motion.div whileTap={{ scale: 0.95 }} className="flex-1">
                       <Button
                         variant={dizajnFilter === "murovka" ? "default" : "outline"}
                         onClick={() => setDizajnFilter("murovka")}
-                        className={`w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 text-xs sm:text-lg font-bold shadow-lg transition-all ${
+                        className={`w-full px-2 py-2 sm:px-8 sm:py-4 text-[10px] sm:text-lg font-bold shadow-lg transition-all ${
                           dizajnFilter === "murovka" 
-                            ? "bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white border-0 ring-4 ring-orange-300" 
-                            : "border-3 border-orange-500 hover:bg-orange-100 text-gray-800"
+                            ? "bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white border-0" 
+                            : "border-2 border-orange-500 hover:bg-orange-100 text-gray-800"
                         }`}
                       >
-                        <Building2 className="w-4 h-4 sm:w-6 sm:h-6 mr-1 sm:mr-2" />
-                        {t('brickDesign')}
+                        <Building2 className="w-3 h-3 sm:w-6 sm:h-6 mr-1" />
+                        <span className="truncate">{t('brickDesign')}</span>
                       </Button>
                     </motion.div>
 
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex-1 sm:flex-initial"
-                    >
+                    <motion.div whileTap={{ scale: 0.95 }} className="flex-1">
                       <Button
                         variant={dizajnFilter === "drevo" ? "default" : "outline"}
                         onClick={() => setDizajnFilter("drevo")}
-                        className={`w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 text-xs sm:text-lg font-bold shadow-lg transition-all ${
+                        className={`w-full px-2 py-2 sm:px-8 sm:py-4 text-[10px] sm:text-lg font-bold shadow-lg transition-all ${
                           dizajnFilter === "drevo" 
-                            ? "bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 text-white border-0 ring-4 ring-amber-300" 
-                            : "border-3 border-amber-500 hover:bg-amber-100 text-gray-800"
+                            ? "bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 text-white border-0" 
+                            : "border-2 border-amber-500 hover:bg-amber-100 text-gray-800"
                         }`}
                       >
-                        <TreePine className="w-4 h-4 sm:w-6 sm:h-6 mr-1 sm:mr-2" />
-                        {t('woodDesign')}
+                        <TreePine className="w-3 h-3 sm:w-6 sm:h-6 mr-1" />
+                        <span className="truncate">{t('woodDesign')}</span>
                       </Button>
                     </motion.div>
 
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex-1 sm:flex-initial"
-                    >
+                    <motion.div whileTap={{ scale: 0.95 }} className="flex-1">
                       <Button
                         variant={dizajnFilter === "podorys3d" ? "default" : "outline"}
                         onClick={() => setDizajnFilter("podorys3d")}
-                        className={`w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 text-xs sm:text-lg font-bold shadow-lg transition-all ${
+                        className={`w-full px-2 py-2 sm:px-8 sm:py-4 text-[10px] sm:text-lg font-bold shadow-lg transition-all ${
                           dizajnFilter === "podorys3d" 
-                            ? "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 ring-4 ring-purple-300" 
-                            : "border-3 border-purple-500 hover:bg-purple-100 text-gray-800"
+                            ? "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0" 
+                            : "border-2 border-purple-500 hover:bg-purple-100 text-gray-800"
                         }`}
                       >
-                        <Grid3x3 className="w-4 h-4 sm:w-6 sm:h-6 mr-1 sm:mr-2" />
-                        3D Pôdorys
+                        <Grid3x3 className="w-3 h-3 sm:w-6 sm:h-6 mr-1" />
+                        <span className="truncate">3D</span>
                       </Button>
                     </motion.div>
                   </div>
