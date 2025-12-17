@@ -23,22 +23,33 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
         email: formData.email,
         telefon: formData.telefon,
         typ_dopytu: 'konfigurator',
-        dom_id: dom?.id,
-        poznamka: `Lokalita: ${formData.obec}\n\n${formData.poznamka || ''}\n\nCelková cena: ${price.toLocaleString('sk-SK')} €`
+        dom_id: dom?.id || null,
+        poznamka: `Lokalita: ${formData.obec}\n\n${formData.poznamka || ''}\n\nModel: ${dom?.nazov || 'Konfigurátor'}\nCelková cena: ${price.toLocaleString('sk-SK')} €`
       });
 
-      await base44.functions.invoke('notifikujNovyDopyt', {
-        dopyt: {
-          id: novyDopyt.id,
-          klient_meno: formData.meno,
-          klient_email: formData.email,
-          klient_telefon: formData.telefon,
-          klient_adresa: formData.obec,
-          typ_dopytu: 'konfigurator',
-          poznamka: `Lokalita: ${formData.obec}\n\n${formData.poznamka || ''}\n\nCelková cena: ${price.toLocaleString('sk-SK')} €`,
-          dom_nazov: dom?.nazov || 'Konfigurátor',
-          dom_id: dom?.id
-        }
+      await base44.integrations.Core.SendEmail({
+        to: 'info.americanliving@gmail.com',
+        subject: `🏡 Nový dopyt z konfiguratora: ${formData.meno} - ${dom?.nazov || 'Konfigurátor'}`,
+        body: `
+          <h2>🏡 Nový dopyt od klienta</h2>
+          
+          <h3>Informácie o klientovi:</h3>
+          <ul>
+            <li><strong>Meno:</strong> ${formData.meno}</li>
+            <li><strong>Email:</strong> ${formData.email}</li>
+            <li><strong>Telefón:</strong> ${formData.telefon}</li>
+            <li><strong>Lokalita:</strong> ${formData.obec}</li>
+          </ul>
+
+          <h3>Záujem o model:</h3>
+          <p><strong>${dom?.nazov || 'Konfigurátor'}</strong></p>
+          <p><strong>Celková cena:</strong> ${price.toLocaleString('sk-SK')} €</p>
+
+          ${formData.poznamka ? `
+          <h3>Poznámka od klienta:</h3>
+          <p>${formData.poznamka.replace(/\n/g, '<br>')}</p>
+          ` : ''}
+        `
       });
 
       toast.success('✓ Dopyt odoslaný, budeme vás kontaktovať s cenovou ponukou');
