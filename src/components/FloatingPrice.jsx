@@ -36,13 +36,17 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
 
       console.log('FloatingPrice - odpoveď zo servera:', response);
 
-      if (response?.data?.success || response?.success) {
+      // Backend functions vracajú objekt s .data property
+      const result = response?.data || response;
+      
+      if (result?.success) {
         toast.success('✓ Cenová ponuka odoslaná na váš email');
         setFormData({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
         setShowContactModal(false);
       } else {
-        console.error('FloatingPrice - neúspešná odpoveď:', response);
-        toast.error('Chyba pri odosielaní ponuky. Skúste to prosím znova.');
+        console.error('FloatingPrice - neúspešná odpoveď:', { response, result });
+        const errorMsg = result?.error || result?.message || 'Neznáma chyba';
+        toast.error(`Chyba: ${errorMsg}`);
       }
     } catch (error) {
       console.error('FloatingPrice - chyba pri odosielaní:', error);
