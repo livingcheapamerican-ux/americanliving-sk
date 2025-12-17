@@ -1212,6 +1212,7 @@ export default function DetailDomu() {
                     }}
                   />
                 )}
+                </div>
               </div>
             )}
 
