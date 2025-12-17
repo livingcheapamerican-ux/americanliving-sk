@@ -43,7 +43,6 @@ function LayoutContent({ children }) {
     { name: t('aiRecommendations'), path: createPageUrl("OdporucanieDomov"), icon: Sparkles },
     { name: t('about'), path: createPageUrl("ONas"), icon: Info },
     { name: t('blog'), path: createPageUrl("Blog"), icon: BlogIcon },
-    { name: t('faq'), path: createPageUrl("FAQ"), icon: Info },
     { name: t('contact'), path: createPageUrl("Kontakt"), icon: Phone },
   ];
 
@@ -517,6 +516,11 @@ function LayoutContent({ children }) {
                     </Link>
                   </li>
                 ))}
+                <li>
+                  <Link to={createPageUrl("FAQ")} className="text-gray-300 hover:text-white transition-colors">
+                    {t('faq')}
+                  </Link>
+                </li>
               </ul>
             </div>
             
