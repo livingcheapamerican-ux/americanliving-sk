@@ -481,7 +481,7 @@ function LayoutContent({ children }) {
         <FloatingHouses side="left" />
         <FloatingHouses side="right" />
 
-        <div className="lg:max-w-[1400px] xl:max-w-[1600px] lg:mx-auto bg-white lg:shadow-xl min-h-screen relative z-20">
+        <div className="lg:max-w-[1200px] xl:max-w-[1400px] lg:mx-auto bg-white lg:shadow-xl min-h-screen relative z-20">
           {children}
         </div>
       </main>

@@ -53,7 +53,7 @@ export default function FloatingHouses({ side = "left" }) {
             ease: "linear",
           }}
           className="absolute"
-          style={{ left: '20px', top: 0 }}
+          style={{ left: '10px', top: 0 }}
         >
           {domy.map((dom) => (
             <div key={dom.id} className="mb-0" style={{ height: cardHeight }}>
@@ -64,7 +64,7 @@ export default function FloatingHouses({ side = "left" }) {
                 <motion.div
                   whileHover={{ scale: 1.05, rotate: 2 }}
                   className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-primary transition-all"
-                  style={{ width: '150px' }}
+                  style={{ width: '160px' }}
                 >
                   {dom.hlavny_obrazok ? (
                     <img
@@ -104,7 +104,7 @@ export default function FloatingHouses({ side = "left" }) {
             ease: "linear",
           }}
           className="absolute"
-          style={{ left: '20px', top: 0 }}
+          style={{ left: '10px', top: 0 }}
         >
           {domy.map((dom) => (
             <div key={`${dom.id}-2`} className="mb-0" style={{ height: cardHeight }}>
@@ -115,7 +115,7 @@ export default function FloatingHouses({ side = "left" }) {
                 <motion.div
                   whileHover={{ scale: 1.05, rotate: 2 }}
                   className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-primary transition-all"
-                  style={{ width: '150px' }}
+                  style={{ width: '160px' }}
                 >
                   {dom.hlavny_obrazok ? (
                     <img
