@@ -739,7 +739,7 @@ export default function DetailDomu() {
 
             {/* Wizard pre Flat 1,5 - ľavá strana */}
             {isProstoHouse && (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) && (
-              <div>
+              <div className="hidden lg:block">
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
@@ -899,7 +899,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor - Wizard krok po kroku pre Flat Double (ale nie Flat 1,5) */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
-              <div>
+              <div className="hidden lg:block">
               <KonfiguratorWizard 
                 key={wizardKey}
                 dom={dom}
@@ -1060,7 +1060,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Fjord - Wizard výber typu */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
-              <div>
+              <div className="hidden lg:block">
               <KonfiguratorWizard 
                 key={wizardKey}
                 dom={dom}
@@ -1375,10 +1375,10 @@ export default function DetailDomu() {
                 setRevizna={setRevizna}
                 doprava={doprava}
                 setDoprava={setDoprava}
-              />
+                />
 
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-              <div className="lg:hidden space-y-4">
+                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+                <div className="lg:hidden space-y-4">
                 <KonfiguratorFjord
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -1466,7 +1466,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre ostatné Prosto House domy */}
             {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("Flat Small") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && !dom.nazov?.includes("Barn") && (
-              <div>
+              <div className="hidden lg:block">
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
@@ -1687,13 +1687,13 @@ export default function DetailDomu() {
                         setProjektA0(true);
                         setZaklady("pasove");
                       }}
-                    />
-                  )}
-                  </div>
-                  </div>
-                  )}
+                      />
+                      )}
+                      </div>
+                      </div>
+                      )}
 
-                  {/* Pôdorysy */}
+                      {/* Pôdorysy */}
             {dom.podorysy && dom.podorysy.length > 0 && (
               <Card className="p-3 sm:p-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">
@@ -2065,7 +2065,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Barn Double - Wizard - PO POPISE */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && dom.nazov?.toLowerCase().includes("double") && (
-              <div>
+              <div className="hidden lg:block">
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
