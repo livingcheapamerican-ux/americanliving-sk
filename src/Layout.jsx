@@ -16,6 +16,7 @@ import LanguageSelector from "./components/LanguageSelector";
 import UserTracking from "./components/UserTracking";
 import FloatingHouses from "./components/FloatingHouses";
 import InteractiveTour from "./components/InteractiveTour";
+import AutoRedirect from "./components/AutoRedirect";
 const SessionRecorder = React.lazy(() => import("./components/SessionRecorder"));
 const AutoSEOTrigger = React.lazy(() => import("./pages/AutoSEOTrigger"));
 
@@ -565,6 +566,7 @@ const AutoSEOTrigger = React.lazy(() => import("./pages/AutoSEOTrigger"));
 
       <CookieConsentBanner />
       <UserTracking />
+      <AutoRedirect />
       <InteractiveTour />
       <React.Suspense fallback={null}>
         <SessionRecorder />
