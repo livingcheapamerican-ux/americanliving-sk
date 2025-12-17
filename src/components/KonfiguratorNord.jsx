@@ -401,24 +401,13 @@ export default function KonfiguratorNord({
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className={`relative flex items-center gap-2 sm:gap-4 p-3 sm:p-5 bg-gradient-to-r ${color} overflow-hidden`}
+      className={`relative flex items-center gap-2 sm:gap-4 p-3 sm:p-5 bg-gradient-to-r ${color}`}
     >
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-1/2 w-24 h-24 bg-white rounded-full blur-2xl"></div>
-      </div>
-      
-      <motion.div 
-        className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/5"
-        animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-      />
-      
       <motion.div 
         whileHover={{ scale: 1.1, rotate: 5 }}
-        className="relative flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 bg-white/25 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-white/20"
+        className="relative flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 bg-white/90 rounded-xl sm:rounded-2xl shadow-lg"
       >
-        <Icon className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
+        <Icon className="w-5 h-5 sm:w-7 sm:h-7 text-gray-800" />
       </motion.div>
       <div className="relative flex-1">
         <div className="flex items-center gap-2 sm:gap-3 mb-0.5 sm:mb-1">
@@ -426,13 +415,13 @@ export default function KonfiguratorNord({
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring" }}
-            className="inline-flex items-center justify-center px-2 sm:px-3 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider"
+            className="inline-flex items-center justify-center px-2 sm:px-3 py-0.5 bg-white/90 rounded-full text-gray-800 text-[10px] sm:text-xs font-bold uppercase tracking-wider"
           >
             {t('phase')} {step}
           </motion.span>
         </div>
-        <h3 className="text-lg sm:text-2xl font-bold text-white tracking-tight">{title}</h3>
-        {subtitle && <p className="text-white/80 text-xs sm:text-sm mt-0.5 sm:mt-1">{subtitle}</p>}
+        <h3 className="text-lg sm:text-2xl font-bold text-white tracking-tight drop-shadow-lg">{title}</h3>
+        {subtitle && <p className="text-white text-xs sm:text-sm mt-0.5 sm:mt-1 drop-shadow-md">{subtitle}</p>}
       </div>
     </motion.div>
   );
