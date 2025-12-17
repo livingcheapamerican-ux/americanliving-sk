@@ -1150,7 +1150,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Nord - vlastné ceny */}
             {isProstoHouse && dom.nazov?.includes("Nord") && (
-              <div>
+              <div className="hidden lg:block">
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
