@@ -920,7 +920,7 @@ CELKOVÁ CENA: ${cena.toLocaleString('sk-SK')} € s DPH
                   >
                     {createDopytMutation.isPending ? "Odosiela sa..." : (
                       <>
-                        Odoslať dopyt
+                        Poslať cenovú ponuku
                         <Send className="ml-2 w-5 h-5" />
                       </>
                     )}
