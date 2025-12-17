@@ -29,18 +29,18 @@ export default function Kontakt() {
       // Vytvor dopyt v databáze
       const novyDopyt = await base44.entities.Dopyt.create(data);
       
-      // Pošli notifikáciu predajcovi a klientovi
+      // Pošli notifikáciu predajcovi
       await base44.functions.invoke('notifikujNovyDopyt', {
         dopyt: {
           id: novyDopyt.id,
           klient_meno: data.meno,
           klient_email: data.email,
           klient_telefon: data.telefon,
-          klient_adresa: data.lokalita || '',
+          klient_adresa: '',
           typ_dopytu: data.typ_dopytu,
           poznamka: data.poznamka,
-          dom_nazov: data.dom_nazov || null,
-          dom_id: data.dom_id || null
+          dom_nazov: 'Všeobecný dopyt z kontaktného formulára',
+          dom_id: null
         }
       });
       
