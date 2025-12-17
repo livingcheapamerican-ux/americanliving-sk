@@ -739,7 +739,7 @@ export default function DetailDomu() {
 
             {/* Wizard pre Flat 1,5 - ľavá strana */}
             {isProstoHouse && (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) && (
-              <>
+              <div>
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
@@ -892,14 +892,14 @@ export default function DetailDomu() {
                   />
                 )}
               </div>
-              </>
+              </div>
             )}
 
 
 
             {/* Konfigurátor - Wizard krok po kroku pre Flat Double (ale nie Flat 1,5) */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
-              <>
+              <div>
               <KonfiguratorWizard 
                 key={wizardKey}
                 dom={dom}
@@ -1055,7 +1055,7 @@ export default function DetailDomu() {
                   />
                 )}
               </div>
-              </>
+              </div>
             )}
 
             {/* Konfigurátor pre Fjord - Wizard výber typu */}
@@ -1273,7 +1273,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre ostatné Prosto House domy */}
             {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("Flat Small") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && !dom.nazov?.includes("Barn") && (
-              <>
+              <div>
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
@@ -1430,7 +1430,7 @@ export default function DetailDomu() {
                   />
                 )}
               </div>
-              </>
+              </div>
             )}
 
             {/* Pôdorysy */}
@@ -1470,7 +1470,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre ostatné Ticabhouse domy (okrem Lyon a Tiny House) */}
             {isTicabhouse && !dom.nazov?.toLowerCase().includes("lyon") && !dom.nazov?.toLowerCase().includes("tiny house") && (
-              <>
+              <div>
               <KonfiguratorTicabhouse 
                 dom={dom} 
                 isAdmin={isAdmin}
@@ -1554,7 +1554,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Lyon (Ticab house) */}
             {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
-              <>
+              <div>
               <LyonKonfiguratorWrapper
                 dom={dom}
                 onConfigChange={(config) => setTicabKonfiguracia(config)}
@@ -1702,7 +1702,7 @@ export default function DetailDomu() {
                   />
                 )}
               </div>
-              </>
+              </div>
             )}
 
             {/* Rozmery - presunute z pravej strany */}
