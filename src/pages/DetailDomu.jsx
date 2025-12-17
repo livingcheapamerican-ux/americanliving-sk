@@ -2364,7 +2364,7 @@ export default function DetailDomu() {
 
               {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
               <div className="lg:hidden space-y-4">
-                <KonfiguratorBarn48
+                <KonfiguratorFlatSmall
                   dom={dom}
                   onReset={handleKonfiguratorReset}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
