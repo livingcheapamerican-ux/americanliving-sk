@@ -9587,11 +9587,11 @@ export function LanguageProvider({ children }) {
   }, [language]);
 
   const t = (key) => {
-    return translations[language]?.[key] || translations['sk']?.[key] || key;
+    return translationsData[language]?.[key] || translationsData['sk']?.[key] || key;
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, translations }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, translations: translationsData }}>
       {children}
     </LanguageContext.Provider>
   );
