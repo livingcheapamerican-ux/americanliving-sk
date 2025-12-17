@@ -46,6 +46,7 @@ import AdminAnalytikaCenovychPonuk from './pages/AdminAnalytikaCenovychPonuk';
 import AutoPrekladBlogov from './pages/AutoPrekladBlogov';
 import AdminAnalyzaSessions from './pages/AdminAnalyzaSessions';
 import AdminSEOAnalyzer from './pages/AdminSEOAnalyzer';
+import FAQ from './pages/FAQ';
 import __Layout from './Layout.jsx';
 
 
@@ -98,6 +99,7 @@ export const PAGES = {
     "AutoPrekladBlogov": AutoPrekladBlogov,
     "AdminAnalyzaSessions": AdminAnalyzaSessions,
     "AdminSEOAnalyzer": AdminSEOAnalyzer,
+    "FAQ": FAQ,
 }
 
 export const pagesConfig = {
