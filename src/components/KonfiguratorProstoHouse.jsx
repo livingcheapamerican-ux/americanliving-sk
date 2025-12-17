@@ -511,6 +511,13 @@ export default function KonfiguratorProstoHouse({
           )}
 
           {showHolodom && <motion.div
+            ref={(el) => {
+              if (el && window.innerWidth < 768) {
+                setTimeout(() => {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+              }
+            }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -744,6 +751,13 @@ export default function KonfiguratorProstoHouse({
           </motion.div>}
 
           {showKluc && <motion.div
+            ref={(el) => {
+              if (el && window.innerWidth < 768) {
+                setTimeout(() => {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+              }
+            }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -840,6 +854,13 @@ export default function KonfiguratorProstoHouse({
           </motion.div>}
 
           {showDocs && <motion.div
+            ref={(el) => {
+              if (el && window.innerWidth < 768) {
+                setTimeout(() => {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+              }
+            }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}

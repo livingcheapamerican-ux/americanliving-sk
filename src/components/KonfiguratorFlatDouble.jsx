@@ -632,6 +632,13 @@ export default function KonfiguratorFlatDouble({
           FÁZA 2: HOLODOM (Montáž, Inštalácie, Okná/Dvere)
           ═══════════════════════════════════════════════════════════════════════ */}
         {showHolodom && <motion.div
+        ref={(el) => {
+        if (el && window.innerWidth < 768) {
+          setTimeout(() => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }
+        }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
@@ -922,6 +929,13 @@ export default function KonfiguratorFlatDouble({
           FÁZA 3: DOM NA KĽÚČ (Interiér, Podlahy, Fasáda, Dokončenie)
           ═══════════════════════════════════════════════════════════════════════ */}
         {showKluc && <motion.div
+        ref={(el) => {
+        if (el && window.innerWidth < 768) {
+          setTimeout(() => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }
+        }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
@@ -1064,6 +1078,13 @@ export default function KonfiguratorFlatDouble({
           FÁZA 4: DOKUMENTÁCIA A DOPRAVA
           ═══════════════════════════════════════════════════════════════════════ */}
         {showDocs && <motion.div
+        ref={(el) => {
+        if (el && window.innerWidth < 768) {
+          setTimeout(() => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }
+        }}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
