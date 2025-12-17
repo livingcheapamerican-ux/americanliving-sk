@@ -461,20 +461,20 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </Card>
 
         {/* Hlavný konfigurátor - Grid layout */}
-        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <div className="grid md:grid-cols-2 gap-3 mb-3">
           {/* IZOLÁCIA */}
-          <Card className="p-3 bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300 shadow-md">
-            <h3 className="text-base font-bold text-blue-900 mb-2 flex items-center gap-2">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-sm mr-1">1</span>
+          <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-300 shadow-md">
+            <h3 className="text-sm sm:text-base font-bold text-blue-900 mb-2 sm:mb-3 flex items-center gap-2">
+              <span className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-600 text-white text-xs sm:text-sm mr-1">1</span>
               🏠 {getTranslatedText('sekcia_izolacia', 'nazov') || t('insulationSection') || 'Izolácia'}
             </h3>
-            <div className="space-y-2">
+            <div className="space-y-2 sm:space-y-3">
               {/* Steny */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-xs sm:text-[11px] font-semibold text-gray-700 mb-1">
                   {getTranslatedText('izolacia_stien', 'nazov') || t('wallInsulation') || 'Izolácia stien:'}
                 </p>
-                <div className="grid grid-cols-3 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2 border border-blue-300 rounded-md p-1.5 sm:p-2 bg-white/50">
                   <EditableTile selected={izolaciaStien === "150mm"} onClick={() => setIzolaciaStien("150mm")} 
                     title={getTranslatedText('izolacia_stien_150', 'nazov') || t('walls150mm') || 'Steny 150mm'} 
                     subtitle={getTranslatedText('izolacia_stien_150', 'podnadpis') || t('recreational') || 'Rekreačné'} 
@@ -494,10 +494,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
               {/* Podlaha */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-xs sm:text-[11px] font-semibold text-gray-700 mb-1">
                   {getTranslatedText('izolacia_podlahy', 'nazov') || t('floorInsulation') || 'Izolácia podlahy:'}
                 </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-2 gap-1.5 sm:gap-2 border border-blue-300 rounded-md p-1.5 sm:p-2 bg-white/50">
                   <EditableTile selected={izolaciaPodlahy === "150mm"} onClick={() => setIzolaciaPodlahy("150mm")} 
                     title={getTranslatedText('izolacia_podlahy_150', 'nazov') || t('floor150mm') || 'Podlaha 150mm'} 
                     subtitle={getTranslatedText('izolacia_podlahy_150', 'podnadpis') || ''} 
@@ -512,10 +512,10 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
 
               {/* Strop */}
               <div>
-                <p className="text-[11px] font-semibold text-gray-700 mb-1">
+                <p className="text-xs sm:text-[11px] font-semibold text-gray-700 mb-1">
                   {getTranslatedText('izolacia_stropu', 'nazov') || t('ceilingInsulation') || 'Izolácia stropu:'}
                 </p>
-                <div className="grid grid-cols-2 gap-1.5 border border-blue-300 rounded-md p-1.5 bg-white/50">
+                <div className="grid grid-cols-2 gap-1.5 sm:gap-2 border border-blue-300 rounded-md p-1.5 sm:p-2 bg-white/50">
                   <EditableTile selected={izolaciaStropu === "150mm"} onClick={() => setIzolaciaStropu("150mm")} 
                     title={getTranslatedText('izolacia_stropu_150', 'nazov') || t('ceiling150mm') || 'Strop 150mm'} 
                     subtitle={getTranslatedText('izolacia_stropu_150', 'podnadpis') || ''} 
@@ -611,7 +611,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
         </div>
 
         {/* Pokračovanie sekcií */}
-        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <div className="grid md:grid-cols-2 gap-3 mb-3">
           {/* FASÁDA */}
           <Card className="p-3 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-300 shadow-md">
             <h3 className="text-base font-bold text-purple-900 mb-2 flex items-center gap-2">
@@ -697,7 +697,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </Card>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <div className="grid md:grid-cols-2 gap-3 mb-3">
           {/* OKNÁ A DVERE */}
           <Card className="p-3 bg-gradient-to-br from-cyan-50 to-teal-50 border-2 border-cyan-300 shadow-md">
             <h3 className="text-base font-bold text-cyan-900 mb-2 flex items-center gap-2">
@@ -815,7 +815,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </Card>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <div className="grid md:grid-cols-2 gap-3 mb-3">
           {/* ELEKTRO */}
           <Card className="p-3 bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-300 shadow-md">
             <h3 className="text-base font-bold text-yellow-900 mb-2 flex items-center gap-2">
@@ -955,7 +955,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </Card>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <div className="grid md:grid-cols-2 gap-3 mb-3">
           {/* ZÁKLADY */}
           <Card className="p-3 bg-gradient-to-br from-stone-50 to-gray-50 border-2 border-stone-300 shadow-md">
             <h3 className="text-base font-bold text-stone-900 mb-2 flex items-center gap-2">
@@ -1017,7 +1017,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </Card>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-3 mb-3">
+        <div className="grid md:grid-cols-2 gap-3 mb-3">
           {/* REALIZÁCIA */}
           <Card className="p-3 bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-slate-300 shadow-md">
             <h3 className="text-base font-bold text-slate-900 mb-2 flex items-center gap-2">
