@@ -1308,7 +1308,7 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Flat 72 - Wizard */}
             {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
-              <div>
+              <div className="hidden lg:block">
               <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
