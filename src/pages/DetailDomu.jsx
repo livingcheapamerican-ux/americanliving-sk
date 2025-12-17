@@ -1042,6 +1042,7 @@ export default function DetailDomu() {
 
                   {/* Konfigurátor pre Fjord - Wizard výber typu */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
+              <div>
               <KonfiguratorWizard 
                 key={wizardKey}
                 dom={dom}
