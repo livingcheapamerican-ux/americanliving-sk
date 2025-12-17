@@ -933,12 +933,12 @@ export default function DetailDomu() {
       )}
 
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6 max-w-full overflow-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 w-full max-w-full overflow-hidden">
-          {/* Ľavý stĺpec - Galéria + Konfigurátor (mobile order-1, desktop col-1 all rows) */}
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6 w-full max-w-full overflow-hidden">
+          {/* Ľavý stĺpec - Galéria (mobile order-1) */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-4 w-full max-w-full overflow-hidden order-1 lg:col-start-1"
+            className="space-y-4 w-full max-w-full overflow-hidden order-1"
           >
             {/* Hlavný obrázok */}
             <div 
@@ -1085,9 +1085,58 @@ export default function DetailDomu() {
                 </div>
               </Card>
             )}
+          </motion.div>
 
-            {renderKonfigurator()}
+          {/* Konfigurátor (mobile order-2, desktop ostáva v ľavom stĺpci) */}
+          {renderKonfigurator() && (
+            <div className="order-2 lg:col-start-1 w-full max-w-full overflow-hidden">
+              {renderKonfigurator()}
+            </div>
+          )}
 
+          {/* Sidebar pre Ticabhouse/Prosto (mobile order-3, desktop sticky vpravo) */}
+          {(isTicabhouse || isProstoHouse) && renderSidebarSummary() && (
+            <div className="order-3 lg:col-start-2 lg:row-start-1 w-full">
+              <div className="lg:sticky lg:top-20" style={{ top: '80px' }}>
+                {renderSidebarSummary()}
+              </div>
+            </div>
+          )}
+
+          {/* Hypotekárny kalkulátor (mobile order-4, desktop vpravo pod sidebar) */}
+          {dom.kategoria !== "mobilne_domy" && (isTicabhouse || isProstoHouse) && (
+            <div className="order-4 lg:col-start-2 lg:row-start-2 w-full">
+              <HypotekaKalkulator 
+                cenaDoma={dom.zakladna_cena} 
+                dom={dom}
+                user={user}
+                aktualnaKonfiguracia={isTicabhouse ? ticabKonfiguracia : isProstoHouse ? prostoKonfiguracia : null}
+                onNastavA0Prvky={isTicabhouse ? () => {
+                  setLyonIzolaciaStien("250mm");
+                  setLyonIzolaciaPodlahy("200mm");
+                  setLyonIzolaciaStropu("200mm");
+                  setLyonTepelneCerpadlo("ano");
+                  setLyonRekuperacia("ano");
+                  setLyonPripravaNaSolarnePanely(true);
+                  setLyonBleskozvod(true);
+                  setLyonPrepat(true);
+                  setLyonInziniering(true);
+                  setLyonProjektACertifikacia(true);
+                  setLyonZaklady("pasove");
+                  setLyonUcel("rodinny");
+                } : isProstoHouse ? () => {
+                  setIzolaciaNavysenie("premium");
+                  setTepelneCerpadlo(true);
+                  setRekuperacia(true);
+                  setProjektA0(true);
+                  setZaklady("pasove");
+                } : null}
+              />
+            </div>
+          )}
+
+          {/* Dodatočné komponenty - Pôdorysy, YouTube, atď. (mobile order-5, desktop vľavo pod konfigurator) */}
+          <div className="order-5 lg:col-start-1 w-full max-w-full overflow-hidden space-y-4">
             {/* Pôdorysy */}
             {dom.podorysy && dom.podorysy.length > 0 && (
               <Card className="p-3 sm:p-4">
@@ -1122,10 +1171,17 @@ export default function DetailDomu() {
                 </div>
               </Card>
             )}
+          </div>
 
-            {/* Rozmery - presunute z pravej strany */}
+          {/* Pravá strana - Informácie (mobile order-6, desktop vpravo pod hypotékou) */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="space-y-4 sm:space-y-6 w-full max-w-full overflow-hidden order-6 lg:col-start-2 lg:row-start-3"
+          >
+            {/* Rozmery */}
             {dom.rozmery && (
-              <Card className="p-3 sm:p-4">
+              <Card className="p-3 sm:p-4 mb-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('outerDimensions')}</h3>
                 <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
                   <div>
@@ -1149,9 +1205,9 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Štandardná výbava pre JAK Modules - presunute z pravej strany */}
+            {/* Štandardná výbava pre JAK Modules */}
             {isJAKModules && (
-              <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200 mb-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">✔ {t('mainFeatures')}</h3>
                 <div className="space-y-2 text-xs sm:text-sm">
                   <div className="flex items-start gap-2">
@@ -1182,11 +1238,9 @@ export default function DetailDomu() {
               </Card>
             )}
 
-
-
-            {/* Čo obsahuje cena pre JAK Modules - presunute z pravej strany */}
+            {/* Čo obsahuje cena pre JAK Modules */}
             {isJAKModules && (
-              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200 mb-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">💰 {t('whatIncludesPrice')}</h3>
                 <div className="space-y-2 text-xs sm:text-sm">
                   <div>
@@ -1248,55 +1302,7 @@ export default function DetailDomu() {
                 </div>
               </Card>
             )}
-          </motion.div>
 
-          {/* Sidebar pre Ticabhouse/Prosto - mobile order-3, desktop sticky v pravom stĺpci */}
-          {(isTicabhouse || isProstoHouse) && renderSidebarSummary() && (
-            <div className="w-full order-3 lg:order-none">
-              <div className="lg:sticky lg:top-20" style={{ top: '80px' }}>
-                {renderSidebarSummary()}
-              </div>
-            </div>
-          )}
-
-          {/* Hypotekárny kalkulátor - mobile order-4, desktop v pravom stĺpci */}
-          {dom.kategoria !== "mobilne_domy" && (isTicabhouse || isProstoHouse) && (
-            <div className="w-full order-4 lg:order-none">
-              <HypotekaKalkulator 
-                cenaDoma={dom.zakladna_cena} 
-                dom={dom}
-                user={user}
-                aktualnaKonfiguracia={isTicabhouse ? ticabKonfiguracia : isProstoHouse ? prostoKonfiguracia : null}
-                onNastavA0Prvky={isTicabhouse ? () => {
-                  setLyonIzolaciaStien("250mm");
-                  setLyonIzolaciaPodlahy("200mm");
-                  setLyonIzolaciaStropu("200mm");
-                  setLyonTepelneCerpadlo("ano");
-                  setLyonRekuperacia("ano");
-                  setLyonPripravaNaSolarnePanely(true);
-                  setLyonBleskozvod(true);
-                  setLyonPrepat(true);
-                  setLyonInziniering(true);
-                  setLyonProjektACertifikacia(true);
-                  setLyonZaklady("pasove");
-                  setLyonUcel("rodinny");
-                } : isProstoHouse ? () => {
-                  setIzolaciaNavysenie("premium");
-                  setTepelneCerpadlo(true);
-                  setRekuperacia(true);
-                  setProjektA0(true);
-                  setZaklady("pasove");
-                } : null}
-              />
-            </div>
-          )}
-
-          {/* Pravý stĺpec - Informácie - mobile order-5, desktop v pravom stĺpci */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden order-5 lg:order-none"
-          >
             {/* Hlavička */}
             <div>
               {/* Mobilná verzia - cena hore */}
@@ -1502,7 +1508,7 @@ export default function DetailDomu() {
 
             {/* Obrázok základnej konfigurácie - pre Ticabhouse */}
             {isTicabhouse && dom.zakladna_konfiguracia_obrazok && (
-              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200 mb-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">📸 {t('basicConfiguration')}</h3>
                 <div className="rounded-lg overflow-hidden shadow-lg">
                   <ImageWithWatermark 
@@ -1697,7 +1703,7 @@ export default function DetailDomu() {
 
             {/* Obrázok základnej konfigurácie - pre Prosto House - hneď pod parametre */}
             {isProstoHouse && dom.zakladna_konfiguracia_obrazok && (
-              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200 mb-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">📸 {t('basicConfiguration')}</h3>
                 <div className="rounded-lg overflow-hidden shadow-lg">
                   <ImageWithWatermark 
@@ -1714,7 +1720,7 @@ export default function DetailDomu() {
 
             {/* Možnosti využitia - pre Prosto House */}
             {isProstoHouse && (
-              <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200 mb-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">✔ {t('usageOptions')}</h3>
                 <ul className="space-y-1.5 sm:space-y-2">
                   <li className="flex items-start gap-2 text-xs sm:text-sm">
@@ -1733,9 +1739,9 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Informačné panely - pre všetky Prosto House domy - PRESUNUTÉ NA PRAVÚ STRANU */}
+            {/* Informačné panely - pre všetky Prosto House domy */}
             {isProstoHouse && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-full overflow-hidden">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-full overflow-hidden mb-4">
                 {/* Komplet pre montáž */}
                 <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
                   <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-amber-900 border-b border-amber-200">
