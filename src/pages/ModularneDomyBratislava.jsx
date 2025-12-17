@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
@@ -10,21 +10,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "../components/LanguageContext";
 
 export default function ModularneDomyBratislava() {
-  const { t, language } = useLanguage();
-
-  useEffect(() => {
-    document.title = `${t('modularHomesBratislava')} - American Living`;
-    const metaDescription = document.querySelector('meta[name="description"]');
-    const desc = t('modularHomesBratislavaMetaDesc');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', desc);
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'description';
-      meta.content = desc;
-      document.head.appendChild(meta);
-    }
-  }, [language, t]);
+  const { t } = useLanguage();
 
   const { data: domy = [] } = useQuery({
     queryKey: ['domy-bratislava'],

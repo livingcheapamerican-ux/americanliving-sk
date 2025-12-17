@@ -47,6 +47,7 @@ import AutoPrekladBlogov from './pages/AutoPrekladBlogov';
 import AdminAnalyzaSessions from './pages/AdminAnalyzaSessions';
 import AdminSEOAnalyzer from './pages/AdminSEOAnalyzer';
 import FAQ from './pages/FAQ';
+import ModularneDomyBratislava from './pages/ModularneDomyBratislava';
 import __Layout from './Layout.jsx';
 
 
@@ -100,6 +101,7 @@ export const PAGES = {
     "AdminAnalyzaSessions": AdminAnalyzaSessions,
     "AdminSEOAnalyzer": AdminSEOAnalyzer,
     "FAQ": FAQ,
+    "ModularneDomyBratislava": ModularneDomyBratislava,
 }
 
 export const pagesConfig = {
