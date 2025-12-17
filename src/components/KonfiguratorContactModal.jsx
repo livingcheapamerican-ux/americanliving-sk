@@ -217,7 +217,7 @@ export default function KonfiguratorContactModal({
     <>
       {/* Preview Modal */}
       <Dialog open={showPreview} onOpenChange={setShowPreview}>
-        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto p-0">
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto p-0 z-[9999]">
           <div className="p-4 border-b bg-gray-50 sticky top-0 z-10">
             <h3 className="text-lg font-bold">Náhľad cenovej ponuky</h3>
             <p className="text-sm text-gray-600">Takto bude vyzerať email pre klienta</p>
@@ -229,7 +229,7 @@ export default function KonfiguratorContactModal({
       </Dialog>
 
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 z-[9999]">
         {!submitted ? (
           <div className="flex flex-col lg:flex-row">
             {/* Ľavá strana - Obrázok a súhrn */}
@@ -456,7 +456,7 @@ export default function KonfiguratorContactModal({
                       ) : (
                         <>
                           <Send className="mr-2 w-5 h-5" />
-                          Poslať nezáväzný dopyt
+                          Odoslať len dopyt (bez ponuky)
                         </>
                       )}
                     </Button>
