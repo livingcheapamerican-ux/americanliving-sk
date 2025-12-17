@@ -1827,13 +1827,13 @@ export default function DetailDomu() {
                 setProjektA0={setProjektA0}
                 revizna={revizna}
                 setRevizna={setRevizna}
-                doprava={doprava}
-                setDoprava={setDoprava}
-              />
+                  doprava={doprava}
+                  setDoprava={setDoprava}
+                />
 
-              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-              <div className="lg:hidden space-y-4">
-                <KonfiguratorFjord
+                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+                <div className="lg:hidden space-y-4">
+                  <KonfiguratorFjord
                     dom={dom}
                     onConfigChange={(config) => setProstoKonfiguracia(config)}
                     predajNehnutelnosti={predajNehnutelnosti}
@@ -2698,6 +2698,14 @@ export default function DetailDomu() {
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
+                  setHladaniePozemku={setHladaniePozemku}
+                  financneSluzby={financneSluzby}
+                  setFinancneSluzby={setFinancneSluzby}
+                  typStavby={typStavby}
+                  setTypStavby={setTypStavby}
+                  montazHolodomu={montazHolodomu}
+                  setMontazHolodomu={setMontazHolodomu}
+                  izolaciaNavysenie={izolaciaNavysenie}
                   setIzolaciaNavysenie={setIzolaciaNavysenie}
                   zaklady={zaklady}
                   setZaklady={setZaklady}
