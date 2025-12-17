@@ -516,13 +516,13 @@ export default function KonfiguratorProstoHouse({
   return (
     <div className="mt-4 sm:mt-8 relative overflow-x-hidden">
       <FlyingAnimationContainer animations={animations} />
-      {!showOnlySummary && <FloatingPrice 
+      <FloatingPrice 
         price={totalPrice} 
         isVisible={true} 
         onSendQuote={handleSendQuoteFromFloating}
         dom={dom}
         vyrobca="Prosto House"
-      />}
+      />
 
       <div className="w-full max-w-full overflow-hidden">
         <div className="space-y-3 sm:space-y-6">
