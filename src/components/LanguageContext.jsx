@@ -1233,6 +1233,7 @@ const translations = {
     basicConfigPrice: "Grundkonfigurationspreis",
     priceFromLabel: "Preis ab",
     roomsLabel: "Zimmer",
+    ticabPriceNote: "Schlüsselfertiger Preis im Status eines Freizeitgebäudes - Foto des Hauses in Grundkonfiguration in Details",
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Ist Ihre Zinsbindung abgelaufen und die Rate für ein überteuertes Ziegelhaus oder eine Wohnung erstickt Sie buchstäblich?",
@@ -2241,6 +2242,7 @@ const translations = {
     basicConfigPrice: "Prix de la configuration de base",
     priceFromLabel: "Prix à partir de",
     roomsLabel: "pièces",
+    ticabPriceNote: "Prix clé en main en statut de construction récréative - photo de la maison en configuration de base dans les détails",
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Votre taux fixe est-il terminé et la mensualité pour une maison en brique ou un appartement surévalué vous étouffe littéralement?",
@@ -3191,6 +3193,7 @@ const translations = {
     basicConfigPrice: "Цена основне конфигурације",
     priceFromLabel: "Цена од",
     roomsLabel: "собе",
+    ticabPriceNote: "Цена кључ у руке у статусу рекреативне зграде - фотографија куће у основној конфигурацији у детаљима",
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Да ли вам је завршила фиксација камата а рата за предраг зидани дом или стан вас дословно гуши?",
@@ -4216,6 +4219,7 @@ const translations = {
     basicConfigPrice: "Cijena osnovne konfiguracije",
     priceFromLabel: "Cijena od",
     roomsLabel: "sobe",
+    ticabPriceNote: "Cijena ključ u ruke u statusu rekreativne zgrade - fotografija kuće u osnovnoj konfiguraciji u detaljima",
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Je li vam završila fiksacija kamata a rata za preskupu zidanu kuću ili stan vas doslovno guši?",
@@ -5220,6 +5224,7 @@ const translations = {
     basicConfigPrice: "Τιμή βασικής διαμόρφωσης",
     priceFromLabel: "Τιμή από",
     roomsLabel: "δωμάτια",
+    ticabPriceNote: "Τιμή με το κλειδί στο χέρι σε κατάσταση ψυχαγωγικού κτιρίου - φωτογραφία του σπιτιού σε βασική διαμόρφωση στις λεπτομέρειες",
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Έχει τελειώσει η σταθερή σας περίοδος επιτοκίου και η δόση για ένα υπερτιμημένο τούβλινο σπίτι ή διαμέρισμα σας πνίγει κυριολεκτικά;",
@@ -6783,6 +6788,7 @@ const translations = {
     basicConfigPrice: "Basic configuration price",
     priceFromLabel: "Price from",
     roomsLabel: "rooms",
+    ticabPriceNote: "Turnkey price in recreational building status - photo of the house in basic configuration in details",
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Has your interest rate fixation ended and the installment for an overpriced brick house or apartment is literally suffocating you?",
@@ -7693,6 +7699,7 @@ const translations = {
     basicConfigPrice: "Alapkonfiguráció ára",
     priceFromLabel: "Ártól",
     roomsLabel: "szoba",
+    ticabPriceNote: "Kulcsrakész ár rekreációs épület státuszban - fotó a házról alapkonfigurációban a részletekben",
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Lejárt a kamatperiódusod és a túlárazott téglaházért vagy lakásért fizetett részlet szó szerint fojtogat?",
@@ -8564,6 +8571,7 @@ const translations = {
     basicConfigPrice: "Cena podstawowej konfiguracji",
     priceFromLabel: "Cena od",
     roomsLabel: "pokoje",
+    ticabPriceNote: "Cena pod klucz w statusie budynku rekreacyjnego - zdjęcie domu w podstawowej konfiguracji w szczegółach",
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Skończyła Ci się fiksacja oprocentowania a rata za przewartościowany dom murowany lub mieszkanie dosłownie Cię dusi?",
@@ -9476,6 +9484,7 @@ const translations = {
     basicConfigPrice: "Ціна базової конфігурації",
     priceFromLabel: "Ціна від",
     roomsLabel: "кімнати",
+    ticabPriceNote: "Ціна під ключ у статусі рекреаційної будівлі - фото будинку в базовій конфігурації в деталях",
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Закінчилася ваша фіксація відсотків, а платіж за переоцінений цегляний будинок або квартиру вас буквально душить?",
