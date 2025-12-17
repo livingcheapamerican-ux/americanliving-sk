@@ -803,7 +803,7 @@ export default function DetailDomu() {
 
     if (isTicabhouse && !dom.nazov?.toLowerCase().includes("tiny house")) {
       return (
-        <div className="space-y-4">
+        <>
           <LyonSummaryPanelStandalone {...summaryProps} />
 
           {/* Upozornenie pod sidebarom */}
@@ -867,7 +867,7 @@ export default function DetailDomu() {
               );
             }
           })()}
-        </div>
+        </>
       );
     } else if (isProstoHouse) {
       if (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) {
@@ -934,11 +934,11 @@ export default function DetailDomu() {
 
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6 max-w-full overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 w-full max-w-full overflow-hidden">
-          {/* Ľavý stĺpec - Galéria + Konfigurátor */}
+          {/* Ľavý stĺpec - Galéria + Konfigurátor (mobile order-1, desktop col-1 all rows) */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-4 w-full max-w-full overflow-hidden order-1"
+            className="space-y-4 w-full max-w-full overflow-hidden order-1 lg:col-start-1"
           >
             {/* Hlavný obrázok */}
             <div 
@@ -1250,17 +1250,16 @@ export default function DetailDomu() {
             )}
           </motion.div>
 
-          {/* Pravý stĺpec - Sidebar + Hypotéka + Info */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden order-2"
-          >
-            {/* Sidebar pre Ticabhouse/Prosto */}
-            {(isTicabhouse || isProstoHouse) && renderSidebarSummary()}
+          {/* Sidebar pre Ticabhouse/Prosto - mobile order-3, desktop col-2 row-1 sticky */}
+          {(isTicabhouse || isProstoHouse) && renderSidebarSummary() && (
+            <div className="w-full order-3 lg:order-none lg:col-start-2 lg:row-start-1 lg:sticky lg:top-20 lg:self-start" style={{ top: '80px' }}>
+              {renderSidebarSummary()}
+            </div>
+          )}
 
-            {/* Hypotekárny kalkulátor */}
-            {dom.kategoria !== "mobilne_domy" && (isTicabhouse || isProstoHouse) && (
+          {/* Hypotekárny kalkulátor - mobile order-4, desktop col-2 row-2 */}
+          {dom.kategoria !== "mobilne_domy" && (isTicabhouse || isProstoHouse) && (
+            <div className="w-full order-4 lg:order-none lg:col-start-2 lg:row-start-2">
               <HypotekaKalkulator 
                 cenaDoma={dom.zakladna_cena} 
                 dom={dom}
@@ -1287,9 +1286,15 @@ export default function DetailDomu() {
                   setZaklady("pasove");
                 } : null}
               />
-            )}
+            </div>
+          )}
 
-            {/* Informácie o dome */}
+          {/* Pravý stĺpec - Informácie - mobile order-5, desktop col-2 row-3+ */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="space-y-4 sm:space-y-6 lg:self-start w-full max-w-full overflow-hidden order-5 lg:order-none lg:col-start-2 lg:row-start-3"
+          >
             {/* Hlavička */}
             <div>
               {/* Mobilná verzia - cena hore */}
