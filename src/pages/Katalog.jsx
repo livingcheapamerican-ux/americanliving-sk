@@ -847,8 +847,8 @@ export default function Katalog() {
                             : "border-2 border-purple-500 hover:bg-purple-100 text-gray-800"
                         }`}
                       >
-                        <Grid3x3 className="w-3 h-3 sm:w-6 sm:h-6 mr-1" />
-                        <span className="truncate">3D</span>
+                        <Grid3x3 className="w-3 h-3 sm:w-6 sm:h-6 mr-0.5 sm:mr-1" />
+                        <span className="whitespace-nowrap">3D pôdorys</span>
                       </Button>
                     </motion.div>
                   </div>
