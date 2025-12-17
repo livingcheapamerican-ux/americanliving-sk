@@ -2610,14 +2610,6 @@ export default function DetailDomu() {
                   predajNehnutelnosti={predajNehnutelnosti}
                   setPredajNehnutelnosti={setPredajNehnutelnosti}
                   hladaniePozemku={hladaniePozemku}
-                  setHladaniePozemku={setHladaniePozemku}
-                  financneSluzby={financneSluzby}
-                  setFinancneSluzby={setFinancneSluzby}
-                  typStavby={typStavby}
-                  setTypStavby={setTypStavby}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
                   setIzolaciaNavysenie={setIzolaciaNavysenie}
                   zaklady={zaklady}
                   setZaklady={setZaklady}
