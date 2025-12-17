@@ -322,16 +322,16 @@ Deno.serve(async (req) => {
                 const icon = item.name === "HRUBÁ STAVBA" ? "🏗️" : 
                             item.name === "HOLODOM" ? "🔨" : 
                             item.name === "DOM NA KĽÚČ" ? "🔑" : "📋";
-                return `<tr class="section-row"><td colspan="2">\${icon} \${item.name}</td></tr>`;
+                return `<tr class="section-row"><td colspan="2">${icon} ${item.name}</td></tr>`;
               }
 
               const rowClass = item.selected ? 'selected-row' : 'not-selected-row';
               const baseClass = isBase ? 'base-row' : rowClass;
 
               return `
-                <tr class="\${baseClass}">
-                  <td>\${isBase ? '<strong>' + item.name + '</strong>' : item.name}</td>
-                  <td style="text-align: right;">\${isBase ? '<strong>' + formatPrice(item.price) + '</strong>' : (item.selected ? formatPrice(item.price) : '—')}</td>
+                <tr class="${baseClass}">
+                  <td>${isBase ? '<strong>' + item.name + '</strong>' : item.name}</td>
+                  <td style="text-align: right;">${isBase ? '<strong>' + formatPrice(item.price) + '</strong>' : (item.selected ? formatPrice(item.price) : '—')}</td>
                 </tr>
               `;
             }).join('') || ''}
