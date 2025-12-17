@@ -151,7 +151,7 @@ export default function HypotekaKalkulator({
 
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="bg-gray-100 p-2 rounded">
-              <p className="text-gray-600 mb-0.5">Celkom</p>
+              <p className="text-gray-600 mb-0.5 leading-tight">Celkom zaplatíte banke<br/>(istina + úroky)</p>
               <p className="font-bold text-gray-900">{Math.round(celkovaCena).toLocaleString('sk-SK')} €</p>
             </div>
             <div className="bg-gray-100 p-2 rounded">
