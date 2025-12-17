@@ -87,15 +87,26 @@ Deno.serve(async (req) => {
 
     console.log('📧 Odosielam email klientovi:', ponuka.klient_email);
     
-    // Odošli email cez Resend s kópiou pre firmu
-    const emailResult1 = await base44.asServiceRole.functions.invoke('sendEmailResend', {
-      to: ponuka.klient_email,
-      cc: 'info.americanliving@gmail.com',
-      subject: `Cenová ponuka #${ponuka.cislo_ponuky} - ${ponuka.dom_nazov}`,
-      html: klientEmail
+    const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
+    
+    // Odošli email klientovi
+    const response1 = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'American Living <info@americanliving.sk>',
+        to: ponuka.klient_email,
+        cc: 'info.americanliving@gmail.com',
+        subject: `Cenová ponuka #${ponuka.cislo_ponuky} - ${ponuka.dom_nazov}`,
+        html: klientEmail
+      })
     });
     
-    console.log('✅ Email klientovi odoslaný:', emailResult1);
+    const result1 = await response1.json();
+    console.log('✅ Email klientovi odoslaný:', result1);
 
     // Email pre predajcu
     const predajcaEmail = ponuka.predajca_email || user.email || 'info.americanliving@gmail.com';
@@ -136,13 +147,22 @@ Deno.serve(async (req) => {
 </html>
     `;
 
-    const emailResult2 = await base44.asServiceRole.functions.invoke('sendEmailResend', {
-      to: predajcaEmail,
-      subject: `📧 Cenová ponuka #${ponuka.cislo_ponuky} odoslaná - ${ponuka.klient_meno}`,
-      html: notifikaciaEmail
+    const response2 = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'American Living <info@americanliving.sk>',
+        to: predajcaEmail,
+        subject: `📧 Cenová ponuka #${ponuka.cislo_ponuky} odoslaná - ${ponuka.klient_meno}`,
+        html: notifikaciaEmail
+      })
     });
     
-    console.log('✅ Email predajcovi odoslaný:', emailResult2);
+    const result2 = await response2.json();
+    console.log('✅ Email predajcovi odoslaný:', result2);
 
     // Aktualizuj status ponuky
     await base44.asServiceRole.entities.CenovaPonuka.update(ponuka_id, {

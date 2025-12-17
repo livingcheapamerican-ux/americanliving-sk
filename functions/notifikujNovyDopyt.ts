@@ -74,13 +74,31 @@ Deno.serve(async (req) => {
     console.log('CC: info.americanliving@gmail.com');
     
     try {
-      const emailResult = await base44.asServiceRole.functions.invoke('sendEmailResend', {
+      const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
+      
+      const emailData = {
+        from: 'American Living <info@americanliving.sk>',
         to: emailTo,
         cc: emailTo !== 'info.americanliving@gmail.com' ? 'info.americanliving@gmail.com' : undefined,
         subject: `🏡 Nový dopyt: ${dopyt.klient_meno} - ${dopyt.dom_nazov || 'Všeobecný záujem'}`,
         html: emailBody
+      };
+
+      const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${RESEND_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(emailData)
       });
-      console.log('✅ Email odoslaný:', emailResult);
+
+      const result = await response.json();
+      console.log('✅ Email odoslaný:', result);
+      
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to send email');
+      }
     } catch (emailError) {
       console.error('❌ Chyba pri odosielaní emailu:', emailError);
       throw emailError;
