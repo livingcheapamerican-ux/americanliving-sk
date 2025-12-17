@@ -1519,9 +1519,9 @@ export default function DetailDomu() {
                   doprava={doprava}
                   setDoprava={setDoprava}
                   showOnlySummary={true}
-                  />
+                />
 
-                  {dom.kategoria !== "mobilne_domy" && (
+                {dom.kategoria !== "mobilne_domy" && (
                   <HypotekaKalkulator 
                     cenaDoma={dom.zakladna_cena} 
                     dom={dom}
@@ -1535,11 +1535,11 @@ export default function DetailDomu() {
                       setZaklady("pasove");
                     }}
                   />
-                  )}
-                  </div>
-                  )}
+                )}
+              </div>
+            )}
 
-                  {/* Pôdorysy */}
+            {/* Pôdorysy */}
             {dom.podorysy && dom.podorysy.length > 0 && (
               <Card className="p-3 sm:p-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">
@@ -2404,7 +2404,7 @@ export default function DetailDomu() {
 
               {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
               <div className="lg:hidden space-y-4">
-                <KonfiguratorFlatSmall
+                <KonfiguratorAFrame
                   dom={dom}
                   onReset={handleKonfiguratorReset}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -2422,6 +2422,8 @@ export default function DetailDomu() {
                   setIzolaciaNavysenie={setIzolaciaNavysenie}
                   zaklady={zaklady}
                   setZaklady={setZaklady}
+                  predlzenie={predlzenie}
+                  setPredlzenie={setPredlzenie}
                   vstupneDvere={vstupneDvere}
                   setVstupneDvere={setVstupneDvere}
                   elektroinstalacia={elektroinstalacia}
@@ -2471,27 +2473,27 @@ export default function DetailDomu() {
                   doprava={doprava}
                   setDoprava={setDoprava}
                   showOnlySummary={true}
+                />
+
+                {dom.kategoria !== "mobilne_domy" && (
+                  <HypotekaKalkulator 
+                    cenaDoma={dom.zakladna_cena} 
+                    dom={dom}
+                    user={user}
+                    aktualnaKonfiguracia={prostoKonfiguracia}
+                    onNastavA0Prvky={() => {
+                      setIzolaciaNavysenie("premium");
+                      setTepelneCerpadlo(true);
+                      setRekuperacia(true);
+                      setProjektA0(true);
+                      setZaklady("pasove");
+                    }}
                   />
+                )}
+                </div>
+                )}
 
-                  {dom.kategoria !== "mobilne_domy" && (
-                    <HypotekaKalkulator 
-                      cenaDoma={dom.zakladna_cena} 
-                      dom={dom}
-                      user={user}
-                      aktualnaKonfiguracia={prostoKonfiguracia}
-                      onNastavA0Prvky={() => {
-                        setIzolaciaNavysenie("premium");
-                        setTepelneCerpadlo(true);
-                        setRekuperacia(true);
-                        setProjektA0(true);
-                        setZaklady("pasove");
-                      }}
-                    />
-                  )}
-                  </div>
-                  )}
-
-                  {/* Štandardná výbava pre JAK Modules - presunute z pravej strany */}
+                {/* Štandardná výbava pre JAK Modules - presunute z pravej strany */}
             {isJAKModules && (
               <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">✔ {t('mainFeatures')}</h3>
