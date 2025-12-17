@@ -1761,12 +1761,7 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Konfigurátor pre Fjord - Wizard výber typu */}
-            {isProstoHouse && dom.nazov?.includes("Fjord") && (
-              <div className="hidden lg:block">
-              <KonfiguratorWizard 
-
-
+            {/* YouTube Video */}
             {dom.youtube_url && (
               <Card className="p-3 sm:p-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('videoPresentation')}</h3>
@@ -1862,10 +1857,10 @@ export default function DetailDomu() {
                   setMontaz={setLyonMontaz}
                   doprava={lyonDoprava}
                   setDoprava={setLyonDoprava}
-                />
+                  />
 
-                {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
-                <div className="lg:hidden space-y-4">
+                  {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+                  <div className="lg:hidden space-y-4">
                   <LyonSummaryPanelStandalone
                     predajNehnutelnosti={lyonPredajNehnutelnosti}
                   hladamPozemok={lyonHladamPozemok}
@@ -2088,8 +2083,8 @@ export default function DetailDomu() {
                   </div>
                   )}
 
-                  {/* Rozmery - presunute z pravej strany */}
-            {dom.podorysy && dom.podorysy.length > 0 && (
+                  {/* Pôdorysy */}
+                  {dom.podorysy && dom.podorysy.length > 0 && (
               <Card className="p-3 sm:p-4">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">
                   {dom.podorysy.length > 1 ? 'Pôdorysy' : 'Pôdorys'}
@@ -2805,51 +2800,7 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Pôdorysy */}
-            {dom.podorysy && dom.podorysy.length > 0 && (
-              <Card className="p-3 sm:p-4">
-                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">
-                  {dom.podorysy.length > 1 ? 'Pôdorysy' : 'Pôdorys'}
-                </h3>
-                <div className="space-y-2 sm:space-y-3">
-                  {dom.podorysy.map((podorysUrl, index) => (
-                    <div key={index} className="rounded-lg overflow-hidden bg-gray-50">
-                      <img
-                        src={podorysUrl}
-                        alt={`Pôdorys ${index + 1}`}
-                        className="w-full h-auto object-contain"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </Card>
-            )}
-
-            {/* Rozmery - presunute z pravej strany */}
-            {dom.rozmery && (
-              <Card className="p-3 sm:p-4">
-                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('outerDimensions')}</h3>
-                <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
-                  <div>
-                    <p className="text-xs text-gray-500 mb-1">{t('width')}</p>
-                    <p className="text-base sm:text-lg font-bold text-primary">{dom.rozmery.sirka} m</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 mb-1">{t('length')}</p>
-                    <p className="text-base sm:text-lg font-bold text-primary">{dom.rozmery.dlzka} m</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 mb-1">{t('height')}</p>
-                    <p className="text-base sm:text-lg font-bold text-primary">{dom.rozmery.vyska} m</p>
-                  </div>
-                </div>
-                {dom.vyska_stropu && (
-                  <p className="text-xs sm:text-sm text-gray-600 mt-2 sm:mt-3 text-center">
-                    {t('ceilingHeight')}: <span className="font-semibold">{dom.vyska_stropu}</span>
-                  </p>
-                )}
-              </Card>
-            )}
+          </motion.div>
 
           {/* Pravý stĺpec - Informácie */}
           <motion.div
