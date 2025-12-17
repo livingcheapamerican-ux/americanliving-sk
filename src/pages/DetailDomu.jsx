@@ -1462,7 +1462,7 @@ export default function DetailDomu() {
                   />
                 )}
               </div>
-              </>
+            </div>
             )}
 
             {/* Konfigurátor pre ostatné Prosto House domy */}
