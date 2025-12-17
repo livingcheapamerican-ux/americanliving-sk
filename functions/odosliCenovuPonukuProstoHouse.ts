@@ -418,8 +418,10 @@ Deno.serve(async (req) => {
 
     const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
     
+    console.log('📧 Posielam email klientovi:', klient_email);
+    
     // Odošli email klientovi
-    await fetch('https://api.resend.com/emails', {
+    const response1 = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
@@ -433,8 +435,18 @@ Deno.serve(async (req) => {
       })
     });
     
+    const result1 = await response1.json();
+    console.log('✅ Email klientovi:', result1);
+    
+    if (!response1.ok) {
+      console.error('❌ Chyba pri odosielaní emailu klientovi:', result1);
+      throw new Error(`Failed to send email to client: ${result1.message || 'Unknown error'}`);
+    }
+    
+    console.log('📧 Posielam kópiu na firemný email: info.americanliving@gmail.com');
+    
     // Odošli ROVNAKÚ ponuku na firemný email
-    await fetch('https://api.resend.com/emails', {
+    const response2 = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
@@ -456,6 +468,13 @@ Deno.serve(async (req) => {
         `
       })
     });
+    
+    const result2 = await response2.json();
+    console.log('✅ Email na firemný email:', result2);
+    
+    if (!response2.ok) {
+      console.error('❌ Chyba pri odosielaní kópie na firemný email:', result2);
+    }
 
     // Ulož do databázy
     const novaPonuka = await base44.asServiceRole.entities.CenovaPonuka.create({
