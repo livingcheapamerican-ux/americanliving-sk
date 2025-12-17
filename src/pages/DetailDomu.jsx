@@ -2525,6 +2525,96 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
+
+              {/* MOBILNÉ ZOBRAZENIE - Side panel a Hypotéka hneď pod konfigurátorom */}
+              <div className="lg:hidden space-y-4">
+                <KonfiguratorBarn48
+                  dom={dom}
+                  onReset={handleKonfiguratorReset}
+                  onConfigChange={(config) => setProstoKonfiguracia(config)}
+                  predajNehnutelnosti={predajNehnutelnosti}
+                  setPredajNehnutelnosti={setPredajNehnutelnosti}
+                  hladaniePozemku={hladaniePozemku}
+                  setHladaniePozemku={setHladaniePozemku}
+                  financneSluzby={financneSluzby}
+                  setFinancneSluzby={setFinancneSluzby}
+                  typStavby={typStavby}
+                  setTypStavby={setTypStavby}
+                  montazHolodomu={montazHolodomu}
+                  setMontazHolodomu={setMontazHolodomu}
+                  izolaciaNavysenie={izolaciaNavysenie}
+                  setIzolaciaNavysenie={setIzolaciaNavysenie}
+                  zaklady={zaklady}
+                  setZaklady={setZaklady}
+                  predlzenie={predlzenie}
+                  setPredlzenie={setPredlzenie}
+                  vstupneDvere={vstupneDvere}
+                  setVstupneDvere={setVstupneDvere}
+                  elektroinstalacia={elektroinstalacia}
+                  setElektroinstalacia={setElektroinstalacia}
+                  vodaKanalizacia={vodaKanalizacia}
+                  setVodaKanalizacia={setVodaKanalizacia}
+                  sanitaKomplet={sanitaKomplet}
+                  setSanitaKomplet={setSanitaKomplet}
+                  bojler={bojler}
+                  setBojler={setBojler}
+                  tepelneCerpadlo={tepelneCerpadlo}
+                  setTepelneCerpadlo={setTepelneCerpadlo}
+                  rekuperacia={rekuperacia}
+                  setRekuperacia={setRekuperacia}
+                  pripojkaSiete={pripojkaSiete}
+                  setPripojkaSiete={setPripojkaSiete}
+                  stresneOkno={stresneOkno}
+                  setStresneOkno={setStresneOkno}
+                  bocneOknoFixne={bocneOknoFixne}
+                  setBocneOknoFixne={setBocneOknoFixne}
+                  bocneOknoVyklopne90={bocneOknoVyklopne90}
+                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
+                  bocneOknoVyklopne55={bocneOknoVyklopne55}
+                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
+                  povrchokaOkien={povrchokaOkien}
+                  setPovrchokaOkien={setPovrchokaOkien}
+                  tonovaneSkla={tonovaneSkla}
+                  setTonovaneSkla={setTonovaneSkla}
+                  vonkajsiaFasada={vonkajsiaFasada}
+                  setVonkajsiaFasada={setVonkajsiaFasada}
+                  interierFinis={interierFinis}
+                  setInterierFinis={setInterierFinis}
+                  vnutornePodlahy={vnutornePodlahy}
+                  setVnutornePodlahy={setVnutornePodlahy}
+                  podlahovVykurovanie={podlahovVykurovanie}
+                  setPodlahovVykurovanie={setPodlahovVykurovanie}
+                  interieroveDvere={interieroveDvere}
+                  setInterieroveDvere={setInterieroveDvere}
+                  pergola={pergola}
+                  setPergola={setPergola}
+                  inziniering={inziniering}
+                  setInziniering={setInziniering}
+                  projektA0={projektA0}
+                  setProjektA0={setProjektA0}
+                  revizna={revizna}
+                  setRevizna={setRevizna}
+                  doprava={doprava}
+                  setDoprava={setDoprava}
+                  showOnlySummary={true}
+                />
+
+                {dom.kategoria !== "mobilne_domy" && (
+                  <HypotekaKalkulator 
+                    cenaDoma={dom.zakladna_cena} 
+                    dom={dom}
+                    user={user}
+                    aktualnaKonfiguracia={prostoKonfiguracia}
+                    onNastavA0Prvky={() => {
+                      setIzolaciaNavysenie("premium");
+                      setTepelneCerpadlo(true);
+                      setRekuperacia(true);
+                      setProjektA0(true);
+                      setZaklady("pasove");
+                    }}
+                  />
+                )}
+              </div>
             </div>
             )}
 
@@ -2844,6 +2934,32 @@ export default function DetailDomu() {
                 )}
               </div>
             </div>
+            )}
+
+            {/* Rozmery - presunute z pravej strany */}
+            {dom.rozmery && (
+              <Card className="p-3 sm:p-4">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('outerDimensions')}</h3>
+                <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">{t('width')}</p>
+                    <p className="text-base sm:text-lg font-bold text-primary">{dom.rozmery.sirka} m</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">{t('length')}</p>
+                    <p className="text-base sm:text-lg font-bold text-primary">{dom.rozmery.dlzka} m</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">{t('height')}</p>
+                    <p className="text-base sm:text-lg font-bold text-primary">{dom.rozmery.vyska} m</p>
+                  </div>
+                </div>
+                {dom.vyska_stropu && (
+                  <p className="text-xs sm:text-sm text-gray-600 mt-2 sm:mt-3 text-center">
+                    {t('ceilingHeight')}: <span className="font-semibold">{dom.vyska_stropu}</span>
+                  </p>
+                )}
+              </Card>
             )}
           </motion.div>
 
