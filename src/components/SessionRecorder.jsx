@@ -403,7 +403,10 @@ export default function SessionRecorder() {
               language_changes: languageChangesRef.current,
               engagement_score: engagementScore,
               session_tags: tags,
-              language: localStorage.getItem('language') || 'sk'
+              language: localStorage.getItem('language') || 'sk',
+              last_activity: new Date().toISOString(),
+              current_page: currentPage,
+              is_active: true
             };
 
             // Add current page to visited pages
