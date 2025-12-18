@@ -22,7 +22,7 @@ export default function AutoTestGemini() {
       for (let attempt = 1; attempt <= 5; attempt++) {
         try {
           console.log(`📡 Pokus ${attempt}/5...`);
-          const response = await base44.functions.invoke('testGeminiAPI', {});
+          const response = await base44.functions.invoke('testGeminiAPIHardcoded', {});
           
           if (response.data.success) {
             console.log('✅ Gemini API funguje!', response.data);
