@@ -2,40 +2,38 @@ import { GoogleGenerativeAI } from 'npm:@google/generative-ai@0.21.0';
 
 Deno.serve(async (req) => {
   try {
-    const apiKey = Deno.env.get("Gemini_PAID_pro") || "AIzaSyDI4UWtkRk6u-wAR-ZcPUZg2HGrfmvoy6I";
+    // HARDCODED API KEY PRE TESTING
+    const apiKey = "AIzaSyDI4UWtkRk6u-wAR-ZcPUZg2HGrfmvoy6I";
     
-    if (!apiKey) {
-      return Response.json({ 
-        success: false, 
-        error: "Gemini_PAID_pro nie je nastavený" 
-      }, { status: 200 });
-    }
-
-    console.log("Testing API Key...");
+    console.log("🔑 Using API Key:", apiKey.substring(0, 10) + "...");
 
     const genAI = new GoogleGenerativeAI(apiKey);
     
-    // Skúsime gemini-pro model (stabilný)
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    console.log("📡 Testing gemini-1.5-flash model...");
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    console.log("Sending request...");
+    console.log("✉️ Sending request...");
 
-    const result = await model.generateContent("Povedz len: OK");
+    const result = await model.generateContent("Reply with exactly: OK");
     const response = result.response;
     const text = response.text();
 
+    console.log("✅ SUCCESS! Response:", text);
+
     return Response.json({ 
       success: true, 
-      message: "✅ API kľúč funguje!",
-      testResponse: text
+      message: "✅ Gemini API kľúč je FUNKČNÝ!",
+      testResponse: text,
+      model: "gemini-1.5-flash"
     });
 
   } catch (error) {
-    console.error("Error:", error);
+    console.error("❌ ERROR:", error);
     return Response.json({ 
       success: false, 
       error: error.message || "Neznáma chyba",
-      details: error.toString()
+      details: error.toString(),
+      stack: error.stack
     }, { status: 200 });
   }
 });
