@@ -229,6 +229,7 @@ const translations = {
     twoD: "2D",
     threeD: "3D",
     floorPlan: "Pôdorys",
+    threeDFloorPlan: "3D pôdorys",
     galleryTitle: "Galérie",
     exteriorBrick: "Exteriér - Murovka",
     exteriorWoodMetal: "Exteriér - Drevo/Plech",
