@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
       success: true, 
       message: "✅ Gemini API kľúč FUNGUJE!",
       testResponse: text,
-      model: "gemini-pro"
+      model: "gemini-1.5-flash"
     });
 
   } catch (error) {
