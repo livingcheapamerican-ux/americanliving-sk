@@ -40,12 +40,15 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
     return sessions.filter(session => {
       if (!session.location_info?.latitude || !session.location_info?.longitude) return false;
 
+      if (timeFilter === "online") {
+        // Len aktívne sessions - bez časového obmedzenia
+        return session.is_active === true;
+      }
+
       const sessionDate = new Date(session.start_time);
 
       if (timeFilter === "today") {
         return sessionDate >= today;
-      } else if (timeFilter === "online") {
-        return session.is_active;
       } else if (timeFilter === "custom") {
         const selectedDate = new Date(customDate);
         const nextDay = new Date(selectedDate);
