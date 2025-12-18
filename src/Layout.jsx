@@ -26,6 +26,58 @@ const AutoSEOTrigger = React.lazy(() => import("./pages/AutoSEOTrigger"));
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t, language, setLanguage } = useLanguage();
 
+  // Globálna ochrana proti sťahovaniu obsahu
+  useEffect(() => {
+    const preventDownload = (e) => {
+      e.preventDefault();
+      return false;
+    };
+
+    const preventContextMenu = (e) => {
+      e.preventDefault();
+      return false;
+    };
+
+    const preventDragStart = (e) => {
+      e.preventDefault();
+      return false;
+    };
+
+    const preventSelectStart = (e) => {
+      if (e.target.tagName === 'IMG') {
+        e.preventDefault();
+        return false;
+      }
+    };
+
+    // Zakázať context menu
+    document.addEventListener('contextmenu', preventContextMenu);
+    
+    // Zakázať drag & drop obrázkov
+    document.addEventListener('dragstart', preventDragStart);
+    
+    // Zakázať označovanie obrázkov
+    document.addEventListener('selectstart', preventSelectStart);
+
+    // Zakázať F12, Ctrl+Shift+I, Ctrl+U
+    const preventDevTools = (e) => {
+      if (e.key === 'F12' || 
+          (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+          (e.ctrlKey && e.key === 'U')) {
+        e.preventDefault();
+        return false;
+      }
+    };
+    document.addEventListener('keydown', preventDevTools);
+
+    return () => {
+      document.removeEventListener('contextmenu', preventContextMenu);
+      document.removeEventListener('dragstart', preventDragStart);
+      document.removeEventListener('selectstart', preventSelectStart);
+      document.removeEventListener('keydown', preventDevTools);
+    };
+  }, []);
+
   const { data: user } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me()
