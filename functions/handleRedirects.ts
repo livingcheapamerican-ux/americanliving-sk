@@ -32,6 +32,14 @@ Deno.serve(async (req) => {
     return Response.redirect(`https://www.americanliving.sk${redirects[path]}`, 301);
   }
   
+  // Ak URL obsahuje znaky zo starej stránky, presmeruj na katalóg
+  const oldSitePatterns = ['/zna-p/', '/php', '.php', '/old/', '/archive/'];
+  const shouldRedirectToCatalog = oldSitePatterns.some(pattern => path.toLowerCase().includes(pattern));
+  
+  if (shouldRedirectToCatalog) {
+    return Response.redirect('https://www.americanliving.sk/katalog', 301);
+  }
+  
   // Ak nie, vráť info o dostupných redirectoch
   return Response.json({
     message: 'No redirect found for this path',

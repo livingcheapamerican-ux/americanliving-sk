@@ -32,8 +32,18 @@ export default function AutoRedirect() {
       '/contact': '/kontakt'
     };
     
+    // Presmeruj ak sa našiel redirect
     if (redirects[path]) {
       navigate(redirects[path], { replace: true });
+      return;
+    }
+    
+    // Ak URL obsahuje znaky zo starej stránky (napr. zna-p, php), presmeruj na katalóg
+    const oldSitePatterns = ['/zna-p/', '/php', '.php', '/old/', '/archive/'];
+    const shouldRedirectToCatalog = oldSitePatterns.some(pattern => path.includes(pattern));
+    
+    if (shouldRedirectToCatalog) {
+      navigate('/katalog', { replace: true });
     }
   }, [location.pathname, navigate]);
 
