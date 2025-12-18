@@ -116,7 +116,7 @@ const AutoSEOTrigger = React.lazy(() => import("./pages/AutoSEOTrigger"));
           --accent: #B8860B;
           --dark-brown: #3E2723;
         }
-        
+
         .bg-primary { background-color: var(--primary); }
         .text-primary { color: var(--primary); }
         .bg-secondary { background-color: var(--secondary); }
@@ -125,8 +125,25 @@ const AutoSEOTrigger = React.lazy(() => import("./pages/AutoSEOTrigger"));
         .text-accent { color: var(--accent); }
         .hover\\:bg-secondary:hover { background-color: var(--secondary); }
         .border-primary { border-color: var(--primary); }
-        
+
         html { scroll-behavior: smooth; }
+
+        /* Ochrana proti sťahovaniu obsahu */
+        img {
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          -webkit-user-drag: none;
+          -khtml-user-drag: none;
+          -moz-user-drag: none;
+          -o-user-drag: none;
+          pointer-events: auto;
+        }
+
+        * {
+          -webkit-touch-callout: none;
+        }
       `}</style>
 
       {/* Toast Container */}
