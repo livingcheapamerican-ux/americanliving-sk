@@ -72,7 +72,11 @@ export default function AutoRedirect() {
     );
     const isBase44Path = pathLower.includes('hide_badge') || pathLower.includes('server_url');
     
-    // Poznámka: 404 redirect je riešený v NotFound.js komponente
+    // Ak nie je platná stránka ani base44 path a nie je root, presmeruj na katalóg
+    if (!isValidPage && !isBase44Path && path !== '/' && path !== '') {
+      console.log(`🔄 AutoRedirect: ${path} -> /katalog`);
+      navigate('/katalog', { replace: true });
+    }
   }, [location.pathname, location.search, navigate]);
 
   return null;
