@@ -445,10 +445,13 @@ export default function SessionRecorder() {
     }, 3000);
   };
 
-  // Periodic save every 10 seconds
+  // Periodic save every 10 seconds + cleanup check
   useEffect(() => {
     const interval = setInterval(() => {
       scheduleSave();
+      
+      // Zavolaj cleanup funkciu na pozadí (neblokujúco)
+      base44.functions.invoke('cleanupInactiveSessions').catch(() => {});
     }, 10000);
 
     return () => clearInterval(interval);
