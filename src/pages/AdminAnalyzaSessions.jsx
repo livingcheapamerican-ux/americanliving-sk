@@ -36,6 +36,7 @@ import { format } from "date-fns";
 import { sk } from "date-fns/locale";
 import AnalyticsDashboard from "../components/analytics/AnalyticsDashboard";
 import HouseAnalyticsDashboard from "../components/analytics/HouseAnalyticsDashboard";
+import OnlineVisitorsMap from "../components/analytics/OnlineVisitorsMap";
 
 export default function AdminAnalyzaSessions() {
   const [filterEmail, setFilterEmail] = useState("");
@@ -45,6 +46,7 @@ export default function AdminAnalyzaSessions() {
   const [filterTag, setFilterTag] = useState("all");
   const [expandedSession, setExpandedSession] = useState(null);
   const [sortBy, setSortBy] = useState("created_date");
+  const [showMapModal, setShowMapModal] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -131,9 +133,21 @@ export default function AdminAnalyzaSessions() {
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">📊 Analytics & Sessions</h1>
-          <p className="text-gray-600">Komplexná analytika ako Google Analytics</p>
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">📊 Analytics & Sessions</h1>
+            <p className="text-gray-600">Komplexná analytika ako Google Analytics</p>
+          </div>
+          <Button
+            onClick={() => setShowMapModal(true)}
+            className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold shadow-lg"
+          >
+            <Globe className="w-5 h-5 mr-2" />
+            <div className="text-left">
+              <div className="text-xs opacity-80">Online teraz</div>
+              <div className="text-xl font-black">{stats.activeSessions}</div>
+            </div>
+          </Button>
         </div>
 
         <Tabs defaultValue="houses" className="mb-6">
@@ -883,6 +897,14 @@ export default function AdminAnalyzaSessions() {
             </div>
           </TabsContent>
         </Tabs>
+
+        {/* Online Visitors Map Modal */}
+        {showMapModal && (
+          <OnlineVisitorsMap
+            sessions={sessions}
+            onClose={() => setShowMapModal(false)}
+          />
+        )}
       </div>
     </div>
   );
