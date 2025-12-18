@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
@@ -888,10 +887,11 @@ export default function KonfiguratorFjord({
 
       {!showOnlySummary && (
         <FloatingPrice
-          totalPrice={totalPrice}
-          domName={dom?.nazov || 'Fjord'}
-          formatPrice={formatPrice}
+          price={totalPrice}
+          isVisible={true}
           onSendQuote={handleSendQuoteFromFloating}
+          dom={dom}
+          vyrobca="Prosto House"
         />
       )}
     </div>
