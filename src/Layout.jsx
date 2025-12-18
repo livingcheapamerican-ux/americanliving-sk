@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Toaster } from "sonner";
-const Chatbot = React.lazy(() => import("./components/Chatbot"));
+const Chatbot = React.lazy(() => import("./components/Chatbot.jsx"));
 const AIAsistent = React.lazy(() => import("./components/AIAsistent"));
 import CookieConsentBanner from "./components/CookieConsentBanner";
 import { LanguageProvider, useLanguage } from "./components/LanguageContext";
@@ -17,7 +17,7 @@ import UserTracking from "./components/UserTracking";
 import FloatingHouses from "./components/FloatingHouses";
 import InteractiveTour from "./components/InteractiveTour";
 import AutoRedirect from "./components/AutoRedirect";
-const SessionRecorder = React.lazy(() => import("./components/SessionRecorder"));
+const SessionRecorder = React.lazy(() => import("./components/SessionRecorder.jsx"));
 const AutoSEOTrigger = React.lazy(() => import("./pages/AutoSEOTrigger"));
 
       function LayoutContent({ children }) {
