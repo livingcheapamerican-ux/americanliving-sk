@@ -328,6 +328,11 @@ const AutoSEOTrigger = React.lazy(() => import("./pages/AutoSEOTrigger"));
                     <Languages className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
+                <Link to={createPageUrl("AdminTestGemini")}>
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Test Gemini API">
+                    <Zap className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                  </Button>
+                </Link>
                 </>
                 )}
             {isAdmin && (
