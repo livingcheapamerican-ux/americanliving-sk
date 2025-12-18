@@ -666,7 +666,7 @@ export default function DetailDomu() {
                         onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), dom.podorys_2d ? 1 : 0)}
                       >
                         <Grid2x2 className="mr-2 w-4 h-4" />
-                        {t('threeD')} {t('floorPlan')}
+                        {t('threeDFloorPlan')}
                       </Button>
                       <div 
                         className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
