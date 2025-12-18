@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, memo, useCallback } from "react";
+import { Helmet } from "react-helmet";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { debounce } from "lodash";
@@ -419,8 +420,113 @@ export default function Katalog() {
 
   const vyrobcovia = ["Ticab house", "Prosto House", "Domki z Gór"];
 
+  // Generovanie dynamických meta tagov
+  const generateMetaTags = () => {
+    let title = "Katalóg modulárnych a montovaných domov | American Living";
+    let description = "Komplexný katalóg modulárnych, montovaných a mobilných domov. Ticab house, Prosto House, Domki z Gór. Celoročné riešenia s energetickým certifikátom A0.";
+
+    if (kategoriaFilter === "rodinne_domy") {
+      title = "Rodinné modulárne domy | Katalóg | American Living";
+      description = "Široký výber rodinných modulárnych a montovaných domov. Energeticky úsporné riešenia s certifikátom A0. Kontaktujte nás pre viac informácií.";
+    } else if (kategoriaFilter === "mobilne_domy") {
+      title = "Mobilné domy a tiny house | Katalóg | American Living";
+      description = "Mobilné domy a tiny house riešenia. Kompaktné a cenovo dostupné bývanie. Prehliadnite si našu ponuku mobilných domov.";
+    }
+
+    if (vyrobcaFilter.length === 1) {
+      const vyrobca = vyrobcaFilter[0];
+      title = `${vyrobca} - Modulárne domy | American Living`;
+      description = `Oficiálny distribútor ${vyrobca}. Kvalitné modulárne domy s možnosťou konfigurácie. Kontaktujte nás pre cenovú ponuku.`;
+    }
+
+    if (typFilter.length === 1) {
+      const typMap = {
+        modularny: { title: "Modulárne domy", desc: "Modulárne domy s možnosťou flexibilnej konfigurácie" },
+        montovany: { title: "Montované domy", desc: "Rýchla montáž a energetická účinnosť montovaných domov" },
+        mobilny: { title: "Mobilné domy", desc: "Kompaktné mobilné domy ideálne ako víkendové chalupy" }
+      };
+      const typ = typMap[typFilter[0]];
+      if (typ) {
+        title = `${typ.title} | Katalóg | American Living`;
+        description = `${typ.desc}. Prehliadnite si našu ponuku a získajte cenovú ponuku.`;
+      }
+    }
+
+    if (hladanie) {
+      title = `Výsledky vyhľadávania: ${hladanie} | American Living`;
+      description = `Výsledky vyhľadávania pre "${hladanie}" v katalógu modulárnych a montovaných domov. ${zoradeneDomy.length} domov.`;
+    }
+
+    return { title, description };
+  };
+
+  const { title: metaTitle, description: metaDescription } = generateMetaTags();
+
+  // Generovanie Schema.org štruktúrovaných dát
+  const generateSchemaOrg = () => {
+    const items = zoradeneDomy.slice(0, 20).map((dom, index) => ({
+      "@type": "Product",
+      "position": index + 1,
+      "name": dom.nazov,
+      "image": dom.hlavny_obrazok || "",
+      "description": dom.popis || `${dom.nazov} - ${dom.vyrobca}. Zastavaná plocha: ${dom.zastavana_plocha} m²`,
+      "brand": {
+        "@type": "Brand",
+        "name": dom.vyrobca
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": dom.zakladna_cena,
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/InStock"
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Zastavaná plocha",
+          "value": `${dom.zastavana_plocha} m²`
+        },
+        dom.uzitkova_plocha ? {
+          "@type": "PropertyValue",
+          "name": "Úžitková plocha",
+          "value": `${dom.uzitkova_plocha} m²`
+        } : null,
+        dom.pocet_izieb ? {
+          "@type": "PropertyValue",
+          "name": "Počet izieb",
+          "value": dom.pocet_izieb
+        } : null,
+        {
+          "@type": "PropertyValue",
+          "name": "Typ domu",
+          "value": dom.typ_domu
+        }
+      ].filter(Boolean)
+    }));
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": items,
+      "numberOfItems": zoradeneDomy.length
+    };
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden max-w-full">
+      <Helmet>
+        <title>{metaTitle}</title>
+        <meta name="description" content={metaDescription} />
+        <meta property="og:title" content={metaTitle} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={metaTitle} />
+        <meta name="twitter:description" content={metaDescription} />
+        <script type="application/ld+json">
+          {JSON.stringify(generateSchemaOrg())}
+        </script>
+      </Helmet>
       {/* Header */}
       <section className="bg-gradient-to-br from-red-900 via-red-800 to-red-700 py-3 sm:py-12">
         <div className="container mx-auto px-4">
