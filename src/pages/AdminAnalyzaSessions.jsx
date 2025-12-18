@@ -63,6 +63,18 @@ export default function AdminAnalyzaSessions() {
     refetchInterval: 30000
   });
 
+  // Real-time online visitors
+  const { data: onlineVisitors } = useQuery({
+    queryKey: ['online-visitors-realtime'],
+    queryFn: async () => {
+      const response = await base44.functions.invoke('getRealTimeVisitors');
+      return response.data || { count: 0, sessions: [] };
+    },
+    initialData: { count: 0, sessions: [] },
+    enabled: isAdmin,
+    refetchInterval: 10000 // Update každých 10 sekúnd
+  });
+
   const { data: domy = [] } = useQuery({
     queryKey: ['domy-analytics'],
     queryFn: () => base44.entities.Dom.list(),
