@@ -64,18 +64,26 @@ export default function SEOEditor() {
     const targetWords = competitorData.average_word_count || 1500;
     const targetHeadings = competitorData.average_headings || 12;
     
-    // Word count (40 points)
-    if (wordCount >= targetWords * 0.9) score += 40;
-    else score += (wordCount / targetWords) * 40;
+    // Word count - 10 points for reaching target
+    if (wordCount >= targetWords * 0.9) score += 10;
     
     // Heading count (30 points)
     if (headingCount >= targetHeadings) score += 30;
     else score += (headingCount / targetHeadings) * 30;
     
-    // Keyword usage (30 points)
-    const targetKeywordCount = 5;
-    if (keywordCount >= targetKeywordCount) score += 30;
-    else score += (keywordCount / targetKeywordCount) * 30;
+    // Keyword usage - 5 points per recommended keyword used
+    if (competitorData.recommended_keywords) {
+      competitorData.recommended_keywords.forEach(kw => {
+        const count = (content.toLowerCase().match(new RegExp(kw.keyword.toLowerCase(), 'g')) || []).length;
+        if (count >= kw.target_count) {
+          score += 5;
+        }
+      });
+    }
+    
+    // Bonus points for well-structured content
+    if (metaTitle.length >= 50 && metaTitle.length <= 60) score += 5;
+    if (metaDescription.length >= 150 && metaDescription.length <= 160) score += 5;
     
     return Math.min(Math.round(score), 100);
   };

@@ -19,9 +19,26 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Project not found' }, { status: 404 });
     }
 
-    // Generate outline using LLM
-    const response = await base44.asServiceRole.integrations.Core.InvokeLLM({
-      prompt: `Generate a comprehensive SEO-optimized article outline for the keyword: "${project.target_keyword}"
+    // Generate outline using Gemini API
+    const apiKeys = [
+      "AIzaSyDI4UWtkRk6u-wAR-ZcPUZg2HGrfmvoy6I",
+      "AIzaSyCQAzitrr3FOwYo7_16A1-VnRe-0166r1o",
+      "AIzaSyCeROe3rvIIwgDvMMcRlAmwzS4MOwblnRg"
+    ];
+
+    let outline = null;
+    
+    for (const apiKey of apiKeys) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `Generate a comprehensive SEO-optimized article outline for the keyword: "${project.target_keyword}"
 
 Create an outline with:
 - An engaging introduction paragraph
@@ -30,13 +47,31 @@ Create an outline with:
 - Include a conclusion section
 
 Format the output as HTML with proper heading tags (<h2>, <h3>).
-Make it natural and engaging, not robotic.`,
-      add_context_from_internet: false
-    });
+Make it natural and engaging, not robotic.`
+              }]
+            }]
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          outline = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          console.log('✅ Outline generated');
+          break;
+        }
+      } catch (error) {
+        console.error(`❌ API key failed:`, error.message);
+        continue;
+      }
+    }
+
+    if (!outline) {
+      throw new Error('All API keys failed');
+    }
 
     return Response.json({ 
       success: true,
-      outline: response
+      outline: outline
     });
 
   } catch (error) {
