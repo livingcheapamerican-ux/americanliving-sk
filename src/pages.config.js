@@ -57,6 +57,7 @@ import KatalogModularneDomy from './pages/KatalogModularneDomy';
 import KatalogMontovaneDomy from './pages/KatalogMontovaneDomy';
 import KatalogMobilneDomy from './pages/KatalogMobilneDomy';
 import KatalogRodinneDomy from './pages/KatalogRodinneDomy';
+import AdminTestGemini from './pages/AdminTestGemini';
 import __Layout from './Layout.jsx';
 
 
@@ -120,6 +121,7 @@ export const PAGES = {
     "KatalogMontovaneDomy": KatalogMontovaneDomy,
     "KatalogMobilneDomy": KatalogMobilneDomy,
     "KatalogRodinneDomy": KatalogRodinneDomy,
+    "AdminTestGemini": AdminTestGemini,
 }
 
 export const pagesConfig = {
