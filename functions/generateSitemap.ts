@@ -16,6 +16,13 @@ Deno.serve(async (req) => {
     const staticPages = [
       { url: '/', priority: '1.0', changefreq: 'daily' },
       { url: '/katalog', priority: '1.0', changefreq: 'daily' },
+      { url: '/katalog-ticab-house', priority: '0.95', changefreq: 'daily' },
+      { url: '/katalog-prosto-house', priority: '0.95', changefreq: 'daily' },
+      { url: '/katalog-domki-z-gor', priority: '0.95', changefreq: 'daily' },
+      { url: '/katalog-modularne-domy', priority: '0.95', changefreq: 'daily' },
+      { url: '/katalog-montovane-domy', priority: '0.95', changefreq: 'daily' },
+      { url: '/katalog-mobilne-domy', priority: '0.95', changefreq: 'daily' },
+      { url: '/katalog-rodinne-domy', priority: '0.95', changefreq: 'daily' },
       { url: '/o-nas', priority: '0.8', changefreq: 'monthly' },
       { url: '/kontakt', priority: '0.8', changefreq: 'monthly' },
       { url: '/ako-to-funguje', priority: '0.7', changefreq: 'monthly' },
