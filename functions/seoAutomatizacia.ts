@@ -91,8 +91,14 @@ Deno.serve(async (req) => {
 
     let createdBlogs = 0;
     for (const topic of seoTopics) {
+      // Kontrola presného názvu alebo slug
       const exists = existingBlogs.some(blog => 
-        blog.nazov?.toLowerCase().includes(topic.keywords[0])
+        blog.nazov === topic.nazov || blog.slug === topic.nazov
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)/g, '')
       );
 
       if (!exists && createdBlogs < 1) {
