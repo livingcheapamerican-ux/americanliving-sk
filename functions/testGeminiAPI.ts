@@ -1,28 +1,48 @@
-import { GoogleGenerativeAI } from 'npm:@google/generative-ai@0.21.0';
-
 Deno.serve(async (req) => {
   try {
-    // HARDCODED API KEY PRE TESTING
     const apiKey = "AIzaSyDI4UWtkRk6u-wAR-ZcPUZg2HGrfmvoy6I";
     
-    console.log("🔑 Using API Key:", apiKey.substring(0, 10) + "...");
+    console.log("🔑 Testing API Key directly via REST...");
 
-    const genAI = new GoogleGenerativeAI(apiKey);
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
     
-    console.log("📡 Testing gemini-pro model...");
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const body = {
+      contents: [{
+        parts: [{
+          text: "Say OK"
+        }]
+      }]
+    };
 
-    console.log("✉️ Sending request...");
+    console.log("📡 Sending direct HTTP request...");
 
-    const result = await model.generateContent("Reply with exactly: OK");
-    const response = result.response;
-    const text = response.text();
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body)
+    });
 
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("❌ API Error:", data);
+      return Response.json({ 
+        success: false, 
+        error: data.error?.message || "API request failed",
+        details: JSON.stringify(data),
+        status: response.status
+      }, { status: 200 });
+    }
+
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+    
     console.log("✅ SUCCESS! Response:", text);
 
     return Response.json({ 
       success: true, 
-      message: "✅ Gemini API kľúč je FUNKČNÝ!",
+      message: "✅ Gemini API kľúč FUNGUJE!",
       testResponse: text,
       model: "gemini-pro"
     });
@@ -32,8 +52,7 @@ Deno.serve(async (req) => {
     return Response.json({ 
       success: false, 
       error: error.message || "Neznáma chyba",
-      details: error.toString(),
-      stack: error.stack
+      details: error.toString()
     }, { status: 200 });
   }
 });
