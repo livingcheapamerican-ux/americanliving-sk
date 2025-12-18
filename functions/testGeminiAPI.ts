@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
     for (const apiKeyInfo of apiKeys) {
       console.log(`\n🔑 Testing ${apiKeyInfo.name}...`);
 
-      const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKeyInfo.key}`;
+      const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${apiKeyInfo.key}`;
       
       const body = {
         contents: [{
@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
         : `❌ Žiadny z ${apiKeys.length} kľúčov nefunguje`,
       results: results,
       workingKeys: workingKeys.map(k => k.name),
-      model: "gemini-1.5-flash"
+      model: "gemini-2.0-flash"
     });
 
   } catch (error) {
