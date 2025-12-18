@@ -49,6 +49,7 @@ import AdminSEOAnalyzer from './pages/AdminSEOAnalyzer';
 import FAQ from './pages/FAQ';
 import ModularneDomyBratislava from './pages/ModularneDomyBratislava';
 import AutoSEOTrigger from './pages/AutoSEOTrigger';
+import NotFound from './pages/NotFound';
 import __Layout from './Layout.jsx';
 
 
@@ -104,6 +105,7 @@ export const PAGES = {
     "FAQ": FAQ,
     "ModularneDomyBratislava": ModularneDomyBratislava,
     "AutoSEOTrigger": AutoSEOTrigger,
+    "NotFound": NotFound,
 }
 
 export const pagesConfig = {
