@@ -137,7 +137,7 @@ Formát: Markdown`,
           kategoria: 'tipy',
           tagy: topic.keywords,
           publikovany: true,
-          datum_publikacie: new Date().toISOString(),
+          datum_publikacie: '2020-01-01T00:00:00.000Z',
           meta_title: topic.nazov.substring(0, 60),
           meta_description: topic.perex.substring(0, 160)
         });
