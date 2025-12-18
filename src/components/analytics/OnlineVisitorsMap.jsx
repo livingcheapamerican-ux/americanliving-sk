@@ -92,7 +92,7 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-7xl h-[90vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-gray-800 to-slate-900 text-white p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/20 rounded-lg">
               <Globe className="w-6 h-6" />
