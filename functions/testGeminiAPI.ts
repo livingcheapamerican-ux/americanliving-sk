@@ -8,17 +8,23 @@ Deno.serve(async (req) => {
       return Response.json({ 
         success: false, 
         error: "GEMINI_API_KEY nie je nastavený" 
-      }, { status: 500 });
+      }, { status: 200 });
     }
+
+    console.log("API Key exists, length:", apiKey.length);
 
     // Inicializuj Gemini AI
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
+    console.log("Model initialized, sending test request...");
+
     // Jednoduchý test
     const result = await model.generateContent("Ahoj! Napíš mi len jedno slovo: OK");
     const response = await result.response;
     const text = response.text();
+
+    console.log("Success! Response:", text);
 
     return Response.json({ 
       success: true, 
@@ -27,9 +33,11 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
+    console.error("Error details:", error);
     return Response.json({ 
       success: false, 
-      error: error.message 
-    }, { status: 500 });
+      error: error.message,
+      errorDetails: error.toString()
+    }, { status: 200 });
   }
 });
