@@ -22,20 +22,20 @@ export default function AutoRedirect() {
       '/regenerujprekladydefrssrhrel'
     ];
     
-    // Mapa starých URL na nové (kontroluj lowercase)
+    // Mapa starých URL na nové SEO-friendly stránky
     const redirectMap = {
-      'ticab-house': '/katalog?vyrobca=Ticab house',
-      'ticabhouse': '/katalog?vyrobca=Ticab house',
-      'prosto-house': '/katalog?vyrobca=Prosto House',
-      'prostohouse': '/katalog?vyrobca=Prosto House',
+      'ticab-house': '/katalogticabhouse',
+      'ticabhouse': '/katalogticabhouse',
+      'prosto-house': '/katalogprostohouse',
+      'prostohouse': '/katalogprostohouse',
       'jak-modules': '/katalog?vyrobca=JAK Modules',
       'jakmodules': '/katalog?vyrobca=JAK Modules',
-      'domki-z-gor': '/katalog?vyrobca=Domki z Gór',
-      'domkizgor': '/katalog?vyrobca=Domki z Gór',
-      'modularne-domy': '/katalog?typ=modularny',
-      'montovane-domy': '/katalog?typ=montovany',
-      'mobilne-domy': '/katalog?typ=mobilny',
-      'rodinne-domy': '/katalog?kategoria=rodinne_domy',
+      'domki-z-gor': '/katalogdomkizgor',
+      'domkizgor': '/katalogdomkizgor',
+      'modularne-domy': '/katalogmodularnedomy',
+      'montovane-domy': '/katalogmontovanedomy',
+      'mobilne-domy': '/katalogmobilnedomy',
+      'rodinne-domy': '/katalogrodinedomy',
       'cennik': '/katalog',
       'ceny': '/katalog',
       'ponuka': '/katalog',
@@ -72,11 +72,7 @@ export default function AutoRedirect() {
     );
     const isBase44Path = pathLower.includes('hide_badge') || pathLower.includes('server_url');
     
-    // Ak nie je platná stránka ani base44 path a nie je root, presmeruj na katalóg
-    if (!isValidPage && !isBase44Path && path !== '/' && path !== '') {
-      console.log(`🔄 AutoRedirect: ${path} -> /katalog`);
-      navigate('/katalog', { replace: true });
-    }
+    // Poznámka: 404 redirect je riešený v NotFound.js komponente
   }, [location.pathname, location.search, navigate]);
 
   return null;
