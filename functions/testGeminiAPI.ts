@@ -9,8 +9,8 @@ Deno.serve(async (req) => {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     
-    console.log("📡 Testing gemini-1.5-flash model...");
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    console.log("📡 Testing gemini-pro model...");
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     console.log("✉️ Sending request...");
 
