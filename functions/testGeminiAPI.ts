@@ -11,33 +11,31 @@ Deno.serve(async (req) => {
       }, { status: 200 });
     }
 
-    console.log("API Key exists, length:", apiKey.length);
+    console.log("Testing API Key...");
 
-    // Inicializuj Gemini AI
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
+    // Skúsime gemini-pro model (stabilný)
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-    console.log("Model initialized, sending test request...");
+    console.log("Sending request...");
 
-    // Jednoduchý test
-    const result = await model.generateContent("Ahoj! Napíš mi len jedno slovo: OK");
-    const response = await result.response;
+    const result = await model.generateContent("Povedz len: OK");
+    const response = result.response;
     const text = response.text();
-
-    console.log("Success! Response:", text);
 
     return Response.json({ 
       success: true, 
-      message: "API kľúč funguje správne!",
+      message: "✅ API kľúč funguje!",
       testResponse: text
     });
 
   } catch (error) {
-    console.error("Error details:", error);
+    console.error("Error:", error);
     return Response.json({ 
       success: false, 
-      error: error.message,
-      errorDetails: error.toString()
+      error: error.message || "Neznáma chyba",
+      details: error.toString()
     }, { status: 200 });
   }
 });
