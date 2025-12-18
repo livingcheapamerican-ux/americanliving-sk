@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from 'npm:@google/generative-ai@0.21.0';
 
 Deno.serve(async (req) => {
   try {
-    const apiKey = Deno.env.get("GEMINI_API_KEY");
+    const apiKey = Deno.env.get("GEMINI_PRO_API_KEY");
     
     if (!apiKey) {
       return Response.json({ 
