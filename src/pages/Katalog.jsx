@@ -848,7 +848,7 @@ export default function Katalog() {
                         }`}
                       >
                         <Grid3x3 className="w-3 h-3 sm:w-6 sm:h-6 mr-0.5 sm:mr-1" />
-                        <span className="whitespace-nowrap">3D pôdorys</span>
+                        <span className="whitespace-nowrap">{t('threeDFloorPlan')}</span>
                       </Button>
                     </motion.div>
                   </div>
