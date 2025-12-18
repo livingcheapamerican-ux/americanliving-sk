@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
       tepelneCerpadlo, rekuperacia, pripojkaSiete,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55,
       povrchokaOkien, tonovaneSkla, vonkajsiaFasada, interierFinis,
-      vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
+      vnutornePodlahy, podlahovVykurovanie, interieroveDvere, pergola,
       inziniering, projektA0, revizna, doprava, predlzenie,
       predajNehnutelnosti, hladaniePozemku, financneSluzby
     } = payload;
