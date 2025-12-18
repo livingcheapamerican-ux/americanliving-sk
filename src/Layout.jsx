@@ -19,6 +19,7 @@ import InteractiveTour from "./components/InteractiveTour";
 import AutoRedirect from "./components/AutoRedirect";
 const SessionRecorder = React.lazy(() => import("./components/SessionRecorder.jsx"));
 const AutoSEOTrigger = React.lazy(() => import("./pages/AutoSEOTrigger"));
+const AutoTestGemini = React.lazy(() => import("./components/AutoTestGemini"));
 
       function LayoutContent({ children }) {
   const location = useLocation();
@@ -647,6 +648,9 @@ const AutoSEOTrigger = React.lazy(() => import("./pages/AutoSEOTrigger"));
       </React.Suspense>
       <React.Suspense fallback={null}>
         <AutoSEOTrigger />
+      </React.Suspense>
+      <React.Suspense fallback={null}>
+        <AutoTestGemini />
       </React.Suspense>
       <div className="hidden md:block">
         <React.Suspense fallback={null}>
