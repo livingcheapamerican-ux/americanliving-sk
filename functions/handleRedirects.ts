@@ -4,6 +4,7 @@ Deno.serve(async (req) => {
   
   // Mapa starých URL na nové
   const redirects = {
+    '/zna-p/ticabhouse/': '/katalog?vyrobca=Ticab+house',
     '/ticab-house': '/katalog?vyrobca=Ticab+house',
     '/ticab-house/': '/katalog?vyrobca=Ticab+house',
     '/prosto-house': '/katalog?vyrobca=Prosto+House',
