@@ -660,7 +660,14 @@ export default function DetailDomu() {
                   )}
                   {dom.podorys_3d && (
                     <div>
-                      <p className="text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">{t('threeD')} {t('floorPlan')}</p>
+                      <Button
+                        variant="outline"
+                        className="w-full mb-1 sm:mb-2 text-xs sm:text-sm font-semibold border-2 border-primary hover:bg-primary hover:text-white"
+                        onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), dom.podorys_2d ? 1 : 0)}
+                      >
+                        <Grid2x2 className="mr-2 w-4 h-4" />
+                        {t('threeD')} {t('floorPlan')}
+                      </Button>
                       <div 
                         className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
                         onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), dom.podorys_2d ? 1 : 0)}
