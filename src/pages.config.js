@@ -50,6 +50,13 @@ import FAQ from './pages/FAQ';
 import ModularneDomyBratislava from './pages/ModularneDomyBratislava';
 import AutoSEOTrigger from './pages/AutoSEOTrigger';
 import NotFound from './pages/NotFound';
+import KatalogTicabHouse from './pages/KatalogTicabHouse';
+import KatalogProstoHouse from './pages/KatalogProstoHouse';
+import KatalogDomkiZGor from './pages/KatalogDomkiZGor';
+import KatalogModularneDomy from './pages/KatalogModularneDomy';
+import KatalogMontovaneDomy from './pages/KatalogMontovaneDomy';
+import KatalogMobilneDomy from './pages/KatalogMobilneDomy';
+import KatalogRodinneDomy from './pages/KatalogRodinneDomy';
 import __Layout from './Layout.jsx';
 
 
@@ -106,6 +113,13 @@ export const PAGES = {
     "ModularneDomyBratislava": ModularneDomyBratislava,
     "AutoSEOTrigger": AutoSEOTrigger,
     "NotFound": NotFound,
+    "KatalogTicabHouse": KatalogTicabHouse,
+    "KatalogProstoHouse": KatalogProstoHouse,
+    "KatalogDomkiZGor": KatalogDomkiZGor,
+    "KatalogModularneDomy": KatalogModularneDomy,
+    "KatalogMontovaneDomy": KatalogMontovaneDomy,
+    "KatalogMobilneDomy": KatalogMobilneDomy,
+    "KatalogRodinneDomy": KatalogRodinneDomy,
 }
 
 export const pagesConfig = {
