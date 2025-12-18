@@ -1,54 +1,80 @@
 Deno.serve(async (req) => {
   try {
-    const apiKey = "AIzaSyDI4UWtkRk6u-wAR-ZcPUZg2HGrfmvoy6I";
+    const apiKeys = [
+      { key: "AIzaSyDI4UWtkRk6u-wAR-ZcPUZg2HGrfmvoy6I", name: "Kľúč 1" },
+      { key: "AIzaSyCQAzitrr3FOwYo7_16A1-VnRe-0166r1o", name: "Kľúč 2" },
+      { key: "AIzaSyCeROe3rvIIwgDvMMcRlAmwzS4MOwblnRg", name: "Kľúč 3" }
+    ];
     
-    console.log("🔑 Testing API Key directly via REST...");
+    const results = [];
+    
+    for (const apiKeyInfo of apiKeys) {
+      console.log(`\n🔑 Testing ${apiKeyInfo.name}...`);
 
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-    
-    const body = {
-      contents: [{
-        parts: [{
-          text: "Say OK"
+      const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKeyInfo.key}`;
+      
+      const body = {
+        contents: [{
+          parts: [{
+            text: "Say OK"
+          }]
         }]
-      }]
-    };
+      };
 
-    console.log("📡 Sending direct HTTP request...");
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body)
+        });
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body)
-    });
+        const data = await response.json();
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      console.error("❌ API Error:", data);
-      return Response.json({ 
-        success: false, 
-        error: data.error?.message || "API request failed",
-        details: JSON.stringify(data),
-        status: response.status
-      }, { status: 200 });
+        if (response.ok) {
+          const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+          console.log(`✅ ${apiKeyInfo.name} FUNGUJE! Response:`, text);
+          results.push({
+            name: apiKeyInfo.name,
+            key: apiKeyInfo.key.substring(0, 15) + "...",
+            success: true,
+            response: text
+          });
+        } else {
+          console.error(`❌ ${apiKeyInfo.name} Error:`, data.error?.message);
+          results.push({
+            name: apiKeyInfo.name,
+            key: apiKeyInfo.key.substring(0, 15) + "...",
+            success: false,
+            error: data.error?.message || "API request failed"
+          });
+        }
+      } catch (error) {
+        console.error(`❌ ${apiKeyInfo.name} Exception:`, error.message);
+        results.push({
+          name: apiKeyInfo.name,
+          key: apiKeyInfo.key.substring(0, 15) + "...",
+          success: false,
+          error: error.message
+        });
+      }
     }
 
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+    const workingKeys = results.filter(r => r.success);
     
-    console.log("✅ SUCCESS! Response:", text);
-
     return Response.json({ 
-      success: true, 
-      message: "✅ Gemini API kľúč FUNGUJE!",
-      testResponse: text,
+      success: workingKeys.length > 0,
+      message: workingKeys.length > 0 
+        ? `✅ ${workingKeys.length} z ${apiKeys.length} kľúčov FUNGUJE!` 
+        : `❌ Žiadny z ${apiKeys.length} kľúčov nefunguje`,
+      results: results,
+      workingKeys: workingKeys.map(k => k.name),
       model: "gemini-1.5-flash"
     });
 
   } catch (error) {
-    console.error("❌ ERROR:", error);
+    console.error("❌ CRITICAL ERROR:", error);
     return Response.json({ 
       success: false, 
       error: error.message || "Neznáma chyba",
