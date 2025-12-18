@@ -254,7 +254,7 @@ export default function ONas() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-primary to-blue-700 text-white">
+      <section className="py-20 bg-gradient-to-br from-red-600 to-red-800 text-white">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
