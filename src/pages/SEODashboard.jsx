@@ -32,16 +32,26 @@ export default function SEODashboard() {
     mutationFn: async (data) => {
       const project = await base44.entities.SEOProject.create(data);
       
-      // Create placeholder competitor data
+      // Analyze SERP using Gemini API
+      const serpResponse = await base44.functions.invoke('analyzeSERP', {
+        target_keyword: data.target_keyword,
+        target_region: data.target_region
+      });
+
+      const analysis = serpResponse.data.analysis;
+
+      // Create competitor data from real analysis
       await base44.entities.SEOCompetitorData.create({
         project_id: project.id,
-        average_word_count: Math.floor(Math.random() * 1000) + 1000,
-        average_headings: Math.floor(Math.random() * 10) + 8,
-        recommended_keywords: [
-          { keyword: data.target_keyword, target_count: 5 },
-          { keyword: `${data.target_keyword} guide`, target_count: 3 },
-          { keyword: `best ${data.target_keyword}`, target_count: 2 }
-        ]
+        average_word_count: analysis.average_word_count,
+        average_headings: analysis.average_headings,
+        recommended_keywords: analysis.recommended_keywords
+      });
+
+      // Update project with targets
+      await base44.entities.SEOProject.update(project.id, {
+        target_word_count: analysis.average_word_count,
+        target_headings: analysis.average_headings
       });
 
       // Create empty document
