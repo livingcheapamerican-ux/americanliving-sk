@@ -46,6 +46,8 @@ import {
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import MarketingNotificationCenter from "../components/MarketingNotificationCenter";
+import CompetitorAnalysisSection from "../components/CompetitorAnalysisSection";
+import ScalingRecommendations from "../components/ScalingRecommendations";
 
 export default function AIMarketingInsights() {
   const [selectedInsight, setSelectedInsight] = useState(null);
@@ -1033,11 +1035,12 @@ export default function AIMarketingInsights() {
 
                 <CardContent className="p-6">
                   <Tabs defaultValue="sumar" className="w-full">
-                    <TabsList className="grid w-full grid-cols-5">
+                    <TabsList className="grid w-full grid-cols-6">
                       <TabsTrigger value="sumar">📋 Súhrn</TabsTrigger>
                       <TabsTrigger value="geo">🌍 Geografia</TabsTrigger>
                       <TabsTrigger value="konfig">⚙️ Konfigurátor</TabsTrigger>
                       <TabsTrigger value="kampane">🎯 Kampane</TabsTrigger>
+                      <TabsTrigger value="konkurencia">🎯 Konkurencia</TabsTrigger>
                       <TabsTrigger value="navod">📖 AI Návod</TabsTrigger>
                     </TabsList>
 
@@ -1243,6 +1246,11 @@ export default function AIMarketingInsights() {
                       </Card>
                     </TabsContent>
 
+                    {/* Konkurencia */}
+                    <TabsContent value="konkurencia" className="space-y-4">
+                      <CompetitorAnalysisSection konkurencnaAnalyza={insight.konkurencna_analyza} />
+                    </TabsContent>
+
                     {/* Konfigurátor */}
                     <TabsContent value="konfig" className="space-y-4">
                       {/* Fasády */}
@@ -1340,6 +1348,68 @@ export default function AIMarketingInsights() {
 
                     {/* Kampane */}
                     <TabsContent value="kampane" className="space-y-4">
+                      {/* Kreatívne varianty pre typy cieľovej skupiny */}
+                      {insight.behavioralna_segmentacia?.ai_predikcia_konverzie?.kreativne_varianty_pre_typy?.length > 0 && (
+                        <Card className="border-2 border-pink-200 bg-gradient-to-br from-pink-50 to-rose-50">
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <Sparkles className="w-5 h-5 text-pink-600" />
+                              🎨 Kreatívne varianty pre Facebook/Instagram podľa typu cieľovej skupiny
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            {insight.behavioralna_segmentacia.ai_predikcia_konverzie.kreativne_varianty_pre_typy.map((skupina, idx) => (
+                              <div key={idx} className="bg-white p-4 rounded-lg border-2 border-pink-300">
+                                <h4 className="font-bold text-lg mb-3 text-pink-900">
+                                  👥 {skupina.typ_skupiny}
+                                </h4>
+                                <div className="grid md:grid-cols-3 gap-3">
+                                  {skupina.varianty?.map((varianta, vIdx) => (
+                                    <Card key={vIdx} className="bg-gradient-to-br from-white to-pink-50">
+                                      <CardContent className="p-3">
+                                        <Badge className="mb-2 bg-pink-600 text-white">
+                                          Varianta {vIdx + 1}
+                                        </Badge>
+                                        <p className="font-semibold text-sm mb-2">{varianta.nazov}</p>
+
+                                        <div className="space-y-2 text-xs">
+                                          <div className="bg-blue-50 p-2 rounded">
+                                            <p className="font-semibold text-blue-800 mb-1">🖼️ Obrázok:</p>
+                                            <p className="text-gray-700">{varianta.obrazok_popis}</p>
+                                          </div>
+
+                                          {varianta.video_koncept && (
+                                            <div className="bg-purple-50 p-2 rounded">
+                                              <p className="font-semibold text-purple-800 mb-1">🎥 Video:</p>
+                                              <p className="text-gray-700">{varianta.video_koncept}</p>
+                                            </div>
+                                          )}
+
+                                          <div className="bg-green-50 p-2 rounded">
+                                            <p className="font-semibold text-green-800 mb-1">📝 Nadpis:</p>
+                                            <p className="text-gray-700 font-bold">{varianta.nadpis}</p>
+                                          </div>
+
+                                          <div className="bg-yellow-50 p-2 rounded">
+                                            <p className="font-semibold text-yellow-800 mb-1">✍️ Text:</p>
+                                            <p className="text-gray-700">{varianta.text}</p>
+                                          </div>
+
+                                          <div className="bg-orange-50 p-2 rounded">
+                                            <p className="font-semibold text-orange-800 mb-1">🔘 CTA:</p>
+                                            <p className="text-gray-700 font-bold">{varianta.cta}</p>
+                                          </div>
+                                        </div>
+                                      </CardContent>
+                                    </Card>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </CardContent>
+                        </Card>
+                      )}
+
                       {/* AI Predikcia Konverzie */}
                       {insight.behavioralna_segmentacia?.ai_predikcia_konverzie && (
                         <Card className="border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-purple-50">
@@ -1588,7 +1658,98 @@ export default function AIMarketingInsights() {
                         </CardContent>
                       </Card>
 
-                      {/* Google Ads */}
+                      {/* Google Ads - Špecifické A/B testy pre texty */}
+                      {insight.ab_testing_strategie?.google_ads_texty_testy?.length > 0 && (
+                        <Card className="border-2 border-teal-200 bg-teal-50/50">
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <Search className="w-5 h-5 text-teal-600" />
+                              🔤 Google Ads - A/B Testy Textov Reklám
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-3">
+                            {insight.ab_testing_strategie.google_ads_texty_testy.map((test, idx) => (
+                              <Card key={idx} className="bg-white border-2 border-teal-200">
+                                <CardContent className="p-4">
+                                  <p className="font-bold text-base mb-2">{test.nazov}</p>
+
+                                  <div className="bg-yellow-50 p-3 rounded-lg mb-3">
+                                    <p className="text-xs font-semibold text-yellow-800 mb-1">🔬 Hypotéza:</p>
+                                    <p className="text-sm text-gray-700">{test.hypoteza}</p>
+                                  </div>
+
+                                  <div className="grid grid-cols-2 gap-3 mb-3">
+                                    <div className="bg-blue-50 p-3 rounded border border-blue-300">
+                                      <p className="font-semibold text-xs mb-2 text-blue-800">Varianta A:</p>
+                                      <p className="text-sm font-bold mb-1">{test.varianta_a_nadpis}</p>
+                                      <p className="text-xs text-gray-600">{test.varianta_a_popis}</p>
+                                    </div>
+                                    <div className="bg-green-50 p-3 rounded border border-green-300">
+                                      <p className="font-semibold text-xs mb-2 text-green-800">Varianta B:</p>
+                                      <p className="text-sm font-bold mb-1">{test.varianta_b_nadpis}</p>
+                                      <p className="text-xs text-gray-600">{test.varianta_b_popis}</p>
+                                    </div>
+                                  </div>
+
+                                  <div className="bg-green-50 p-3 rounded-lg">
+                                    <p className="text-xs font-semibold text-green-800 mb-1">✅ Očakávaný výsledok:</p>
+                                    <p className="text-sm text-gray-700">{test.ocakavany_vysledok}</p>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            ))}
+                          </CardContent>
+                        </Card>
+                      )}
+
+                      {/* Google Ads - Špecifické A/B testy pre kreatívy */}
+                      {insight.ab_testing_strategie?.google_ads_kreativy_testy?.length > 0 && (
+                        <Card className="border-2 border-emerald-200 bg-emerald-50/50">
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <Search className="w-5 h-5 text-emerald-600" />
+                              🎨 Google Ads - A/B Testy Kreatívov
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-3">
+                            {insight.ab_testing_strategie.google_ads_kreativy_testy.map((test, idx) => (
+                              <Card key={idx} className="bg-white border-2 border-emerald-200">
+                                <CardContent className="p-4">
+                                  <p className="font-bold text-base mb-2">{test.nazov}</p>
+
+                                  <div className="bg-yellow-50 p-3 rounded-lg mb-3">
+                                    <p className="text-xs font-semibold text-yellow-800 mb-1">🔬 Hypotéza:</p>
+                                    <p className="text-sm text-gray-700">{test.hypoteza}</p>
+                                  </div>
+
+                                  <div className="grid grid-cols-2 gap-3 mb-3">
+                                    <div className="bg-blue-50 p-3 rounded border border-blue-300">
+                                      <p className="font-semibold text-xs mb-2 text-blue-800">Kreatív A:</p>
+                                      <p className="text-sm text-gray-700">{test.varianta_a_popis}</p>
+                                    </div>
+                                    <div className="bg-green-50 p-3 rounded border border-green-300">
+                                      <p className="font-semibold text-xs mb-2 text-green-800">Kreatív B:</p>
+                                      <p className="text-sm text-gray-700">{test.varianta_b_popis}</p>
+                                    </div>
+                                  </div>
+
+                                  <div className="bg-green-50 p-3 rounded-lg">
+                                    <p className="text-xs font-semibold text-green-800 mb-1">✅ Očakávaný výsledok:</p>
+                                    <p className="text-sm text-gray-700">{test.ocakavany_vysledok}</p>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            ))}
+                          </CardContent>
+                        </Card>
+                      )}
+
+                      {/* Scaling Odporúčania */}
+                      {insight.roi_predikcia?.scaling_odporucania && (
+                        <ScalingRecommendations scalingOdporucania={insight.roi_predikcia.scaling_odporucania} />
+                      )}
+
+                      {/* Google Ads - Pôvodné kampane */}
                       <Card className="border-2 border-green-200 bg-green-50/50">
                         <CardHeader>
                           <CardTitle className="flex items-center gap-2">

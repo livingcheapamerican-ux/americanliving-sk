@@ -376,16 +376,38 @@ COOKIES & POUŽÍVATEĽSKÉ PREFERENCIE:
 - Používatelia s dokončeným konfigurátorom: ${cookieData.konfigurator_usage}
 - Cenové preferencie: ${cookieData.cenove_rozlozenie_preferencie.do_50k} do 50k, ${cookieData.cenove_rozlozenie_preferencie['50k_100k']} 50-100k, ${cookieData.cenove_rozlozenie_preferencie['100k_150k']} 100-150k, ${cookieData.cenove_rozlozenie_preferencie.nad_150k} nad 150k
 
-Vytvor DETAILNÉ odporúčania v slovenčine obsahujúce:
+Vytvor ULTRA-DETAILNÉ odporúčania v slovenčine obsahujúce:
+
 1. Konkrétne nastavenia pre Facebook/Instagram kampane (cieľová skupina, záujmy, umiestnenia, formát, budget) + RETARGETING stratégie pomocou cookies
+
 2. Konkrétne nastavenia pre Google Ads (typ kampane, kľúčové slová, geografické cielenie, budget) + REMARKETING pomocou Google Ads cookies
+
 3. Hodnotenie vhodnosti pre TikTok
+
 4. Cookie-based RETARGETING stratégie (Lookalike audiences, Custom audiences, Retargeting pixels)
-5. A/B TESTOVACIE STRATÉGIE - navrhni minimálne 2 A/B testy pre Facebook a 2 pre Google Ads s KONKRÉTNYMI HYPOTÉZAMI a očakávanými výsledkami
-6. ROI PREDIKCIA - odhadni dosah, CTR, konverzie a ROI pre každú platformu + OPTIMÁLNE ROZDELENIE BUDGETU medzi Facebook a Google Ads pre maximalizáciu celkového ROI (percentuálne rozdelenie + zdôvodnenie + príklad s konkrétnymi číslami)
+
+5. A/B TESTOVACIE STRATÉGIE:
+   - Facebook: minimálne 2 A/B testy s KONKRÉTNYMI HYPOTÉZAMI
+   - Google Ads: 3 špecifické testy PRE TEXTY REKLÁM (nadpis, popis) + 3 testy PRE KREATÍVY (obrázky/video)
+
+6. ROI PREDIKCIA + OPTIMÁLNE ROZDELENIE BUDGETU + SCALING ODPORÚČANIA:
+   - Odhadni dosah, CTR, konverzie a ROI pre každú platformu
+   - Percentuálne rozdelenie budgetu medzi Facebook a Google Ads
+   - Príklad s konkrétnymi číslami
+   - SCALING PLÁNY pre obe platformy (ako zvyšovať budget bez straty efektivity)
+
 7. KREATÍVNE ODPORÚČANIA - navrhni 3 reklamné obrazky (popis), 3 reklamné texty (nadpis + text + CTA) a 2 video koncepty
+
 8. AI PREDIKCIA KONVERZIE - analyzuj ktorý typ používateľa (prieskumníci ${behavioralna.typ_navstevnika.prieskumnici}%, rozhodovatelia ${behavioralna.typ_navstevnika.rozhodovatelia}%, vracajúci sa ${behavioralna.typ_navstevnika.vracajuci_sa}%) má najvyššiu pravdepodobnosť konverzie a PREČO. Poskytni konkrétne odporúčania ako cieliť každý typ.
-9. Zrozumiteľný súhrn pre marketéra s presnými inštrukciami
+   - Pre KAŽDÝ TYP cieľovej skupiny navrhni 3 KONKRÉTNE KREATÍVNE VARIANTY (obrazok/video popis + nadpis + text + CTA)
+
+9. KONKURENČNÁ ANALÝZA:
+   - Identifikuj 3 hlavných online konkurentov na základe kľúčových slov: ${klucoveSlova.join(', ')}
+   - Pre každého konkurenta odhadni: mesačný budget, najčastejšie kanály, typické kreatívy
+   - Analyzuj ich silné a slabé stránky
+   - Definuj naše konkurenčné výhody a príležitosti
+
+10. Zrozumiteľný súhrn pre marketéra s presnými inštrukciami
 
 Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
 
@@ -467,6 +489,34 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
                       ocakavany_vysledok: { type: "string" }
                     }
                   }
+                },
+                google_ads_texty_testy: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      nazov: { type: "string" },
+                      hypoteza: { type: "string" },
+                      varianta_a_nadpis: { type: "string" },
+                      varianta_a_popis: { type: "string" },
+                      varianta_b_nadpis: { type: "string" },
+                      varianta_b_popis: { type: "string" },
+                      ocakavany_vysledok: { type: "string" }
+                    }
+                  }
+                },
+                google_ads_kreativy_testy: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      nazov: { type: "string" },
+                      hypoteza: { type: "string" },
+                      varianta_a_popis: { type: "string" },
+                      varianta_b_popis: { type: "string" },
+                      ocakavany_vysledok: { type: "string" }
+                    }
+                  }
                 }
               }
             },
@@ -512,6 +562,29 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
                       }
                     }
                   }
+                },
+                scaling_odporucania: {
+                  type: "object",
+                  properties: {
+                    facebook_scaling: {
+                      type: "object",
+                      properties: {
+                        aktualny_budget: { type: "string" },
+                        odporucany_scaling_plan: { type: "string" },
+                        maximalne_zvysenie: { type: "string" },
+                        varovanie: { type: "string" }
+                      }
+                    },
+                    google_ads_scaling: {
+                      type: "object",
+                      properties: {
+                        aktualny_budget: { type: "string" },
+                        odporucany_scaling_plan: { type: "string" },
+                        maximalne_zvysenie: { type: "string" },
+                        varovanie: { type: "string" }
+                      }
+                    }
+                  }
                 }
               }
             },
@@ -536,9 +609,54 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
                       ako_cielit: { type: "string" }
                     }
                   }
+                },
+                kreativne_varianty_pre_typy: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      typ_skupiny: { type: "string" },
+                      varianty: {
+                        type: "array",
+                        items: {
+                          type: "object",
+                          properties: {
+                            nazov: { type: "string" },
+                            obrazok_popis: { type: "string" },
+                            video_koncept: { type: "string" },
+                            nadpis: { type: "string" },
+                            text: { type: "string" },
+                            cta: { type: "string" }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
-              }
-            },
+                }
+                },
+                konkurencna_analyza: {
+                type: "object",
+                properties: {
+                hlavni_konkurenti: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      nazov: { type: "string" },
+                      odhadovany_budget_mesacne: { type: "string" },
+                      najcastejsie_kanaly: { type: "array", items: { type: "string" } },
+                      typicke_kreativy: { type: "string" },
+                      silne_stranky: { type: "array", items: { type: "string" } },
+                      slabe_stranky: { type: "array", items: { type: "string" } }
+                    }
+                  }
+                },
+                nase_konkurencne_vyhody: { type: "array", items: { type: "string" } },
+                prilezitosti: { type: "array", items: { type: "string" } },
+                sumar: { type: "string" }
+                }
+                },
             kreativne_odporucania: {
               type: "object",
               properties: {
@@ -657,11 +775,17 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
           ...behavioralna,
           ai_predikcia_konverzie: aiResponse.ai_predikcia_konverzie || {}
         },
-        ab_testing_strategie: aiResponse.ab_testing_strategie || {
-          facebook_testy: [],
-          google_ads_testy: []
+        ab_testing_strategie: {
+          facebook_testy: aiResponse.ab_testing_strategie?.facebook_testy || [],
+          google_ads_testy: aiResponse.ab_testing_strategie?.google_ads_testy || [],
+          google_ads_texty_testy: aiResponse.ab_testing_strategie?.google_ads_texty_testy || [],
+          google_ads_kreativy_testy: aiResponse.ab_testing_strategie?.google_ads_kreativy_testy || []
         },
-        roi_predikcia: aiResponse.roi_predikcia || {},
+        roi_predikcia: {
+          ...aiResponse.roi_predikcia,
+          scaling_odporucania: aiResponse.roi_predikcia?.scaling_odporucania || {}
+        },
+        konkurencna_analyza: aiResponse.konkurencna_analyza || {},
         kreativne_odporucania: aiResponse.kreativne_odporucania || {
           reklamne_obrazky: [],
           reklamne_texty: [],
