@@ -378,9 +378,9 @@ export default function LyonSummaryPanelStandalone({
           </Button>
         </div>
       </div>
-
-      {/* Modal */}
-      <LyonFinalSummaryModal
+    </Card>
+  );
+}
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         dom={dom}
