@@ -43,6 +43,7 @@ import {
   ResponsiveContainer 
 } from 'recharts';
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
 
 export default function AIMarketingInsights() {
   const [selectedInsight, setSelectedInsight] = useState(null);
@@ -128,27 +129,8 @@ export default function AIMarketingInsights() {
     }
   });
 
-  if (!isAdmin) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-        <Card className="p-8 max-w-md">
-          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <p className="text-gray-600 text-center">
-            Nemáte oprávnenie na prístup k tejto stránke.
-          </p>
-        </Card>
-      </div>
-    );
-  }
-
-  const getConfidenceColor = (score) => {
-    if (score >= 80) return 'bg-green-100 text-green-800';
-    if (score >= 60) return 'bg-yellow-100 text-yellow-800';
-    return 'bg-red-100 text-red-800';
-  };
-
   // Agregované dáta pre grafy
-  const aggregatedData = React.useMemo(() => {
+  const aggregatedData = (() => {
     if (!insights.length) return null;
 
     const countries = {};
@@ -211,9 +193,28 @@ export default function AIMarketingInsights() {
         { name: 'Nad 150k €', value: priceRanges.nad_150k }
       ]
     };
-  }, [insights]);
+  })();
 
   const COLORS = ['#8b5cf6', '#ec4899', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#8b5cf6'];
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+        <Card className="p-8 max-w-md">
+          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <p className="text-gray-600 text-center">
+            Nemáte oprávnenie na prístup k tejto stránke.
+          </p>
+        </Card>
+      </div>
+    );
+  }
+
+  const getConfidenceColor = (score) => {
+    if (score >= 80) return 'bg-green-100 text-green-800';
+    if (score >= 60) return 'bg-yellow-100 text-yellow-800';
+    return 'bg-red-100 text-red-800';
+  };
 
   // Export do CSV
   const exportToCSV = () => {
