@@ -113,21 +113,38 @@ export default function AIMarketingInsights() {
             <div className="flex gap-2">
               <Button
                 onClick={async () => {
-                  toast.info('🧪 Spúšťam DEBUG test...');
+                  toast.info('🔍 Kontrolujem dáta...');
                   try {
-                    const response = await base44.functions.invoke('testMarketingInsightsDebug');
-                    console.log('DEBUG výsledok:', response.data);
-                    toast.success('✅ Debug test úspešný! Pozri console.');
-                    await refetch();
+                    // Načítať verejné domy
+                    const domy = await base44.entities.Dom.filter({ verejny: true });
+
+                    // Načítať sessions
+                    const sessions = await base44.entities.UserSession.list('-created_date', 100);
+                    const nonAdminSessions = sessions.filter(s => 
+                      s.user_email !== 'living.cheap.american@gmail.com'
+                    );
+
+                    // Načítať insights
+                    const insights = await base44.entities.MarketingInsight.list();
+
+                    console.log('📊 KONTROLA DÁTA:', {
+                      verejne_domy: domy.length,
+                      sample_domy: domy.slice(0, 3).map(d => d.nazov),
+                      total_sessions: sessions.length,
+                      non_admin_sessions: nonAdminSessions.length,
+                      existing_insights: insights.length
+                    });
+
+                    toast.success(`📊 Verejných domov: ${domy.length}, Non-admin sessions: ${nonAdminSessions.length}, Insights: ${insights.length}`);
                   } catch (error) {
                     console.error('DEBUG chyba:', error);
-                    toast.error('❌ Debug test zlyhal: ' + error.message);
+                    toast.error('❌ Chyba: ' + error.message);
                   }
                 }}
                 variant="outline"
-                className="border-purple-300 text-purple-700"
+                className="border-blue-300 text-blue-700"
               >
-                🧪 Debug Test
+                🔍 Kontrola dát
               </Button>
               <Button
                 onClick={() => generateInsightsMutation.mutate()}

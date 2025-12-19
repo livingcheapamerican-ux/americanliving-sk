@@ -43,10 +43,14 @@ Deno.serve(async (req) => {
 
       // Filtrovať sessions pre tento dom
       const domSessions = sessions.filter(session => {
-        // Kontrola v pages_visited
+        // Kontrola v pages_visited - všetky možné URL formáty
         const visitedDom = session.pages_visited?.some(page => 
-          page.page_url?.includes(`/detail-domu?id=${dom.id}`) ||
-          page.page_url?.includes(`/detail-domu/${dom.slug}`)
+          page.page_url?.toLowerCase().includes(`/detail-domu?id=${dom.id}`) ||
+          page.page_url?.toLowerCase().includes(`/detail-domu/${dom.slug}`) ||
+          page.page_url?.toLowerCase().includes(`detaildomu?id=${dom.id}`) ||
+          page.page_url?.toLowerCase().includes(`detaildomu/${dom.slug}`) ||
+          page.page_url?.toLowerCase().includes(dom.slug) ||
+          page.page_name_sk?.includes(dom.nazov)
         );
         
         // Kontrola v dom_interactions
@@ -54,11 +58,16 @@ Deno.serve(async (req) => {
           interaction.dom_id === dom.id || interaction.dom_nazov === dom.nazov
         );
 
-        return visitedDom || interactedDom;
+        // Kontrola v konfigurator_interactions
+        const configuredDom = session.configurator_interactions?.some(interaction =>
+          interaction.dom_nazov === dom.nazov || interaction.dom_id === dom.id
+        );
+
+        return visitedDom || interactedDom || configuredDom;
       });
 
-      if (domSessions.length < 1) {
-        console.log(`⚠️ Nedostatok dát pre ${dom.nazov} (${domSessions.length} sessions), preskakujem...`);
+      if (domSessions.length < 3) {
+        console.log(`⚠️ Nedostatok dát pre ${dom.nazov} (${domSessions.length} sessions, min 3 potrebné), preskakujem...`);
         continue;
       }
       
