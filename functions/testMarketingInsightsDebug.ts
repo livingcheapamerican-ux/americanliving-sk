@@ -11,24 +11,37 @@ Deno.serve(async (req) => {
 
     console.log('🔍 DEBUG: Testujem marketing insights systém...');
 
-    // Test 1: Načítať domy
-    const domy = await base44.asServiceRole.entities.Dom.list();
-    console.log(`✅ Načítaných ${domy.length} domov`);
+    // Test 1: Načítať len verejné domy
+    const allDomy = await base44.asServiceRole.entities.Dom.list();
+    const domy = allDomy.filter(dom => dom.verejny === true);
+    console.log(`✅ Načítaných ${domy.length} verejných domov (z ${allDomy.length} celkovo)`);
 
-    // Test 2: Načítať sessions
-    const sessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 100);
-    console.log(`✅ Načítaných ${sessions.length} sessions`);
+    // Test 2: Načítať sessions bez adminov
+    const allSessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 100);
+    const sessions = allSessions.filter(session => {
+      if (session.user_email === 'living.cheap.american@gmail.com') return false;
+      if (session.is_authenticated && user && session.user_email === user.email) return false;
+      return true;
+    });
+    console.log(`✅ Načítaných ${sessions.length} sessions (vylúčených ${allSessions.length - sessions.length} admin sessions)`);
 
     // Test 3: Načítať preferencie
     const prefs = await base44.asServiceRole.entities.UserPreferences.list('', 100);
     console.log(`✅ Načítaných ${prefs.length} používateľských preferencií`);
 
     // Test 4: Skúsiť vytvoriť testovací insight
-    const testDom = domy[0];
+    const testDom = domy.find(d => d.verejny === true);
     if (!testDom) {
       return Response.json({
-        error: 'Žiadne domy nenájdené',
-        debug: { domy: domy.length, sessions: sessions.length, prefs: prefs.length }
+        error: 'Žiadne verejné domy nenájdené',
+        debug: { 
+          total_domy: allDomy.length, 
+          public_domy: domy.length, 
+          sessions: sessions.length, 
+          prefs: prefs.length,
+          sample_dom: allDomy[0]?.nazov,
+          is_public: allDomy[0]?.verejny
+        }
       });
     }
 
