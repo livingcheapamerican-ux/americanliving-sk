@@ -26,8 +26,22 @@ import {
   Smartphone,
   CheckCircle,
   AlertCircle,
-  Loader2
+  Loader2,
+  PieChart
 } from "lucide-react";
+import { 
+  BarChart, 
+  Bar, 
+  PieChart as RechartsPie, 
+  Pie, 
+  Cell, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip as RechartsTooltip, 
+  Legend, 
+  ResponsiveContainer 
+} from 'recharts';
 import { toast } from "sonner";
 
 export default function AIMarketingInsights() {
@@ -90,6 +104,74 @@ export default function AIMarketingInsights() {
     if (score >= 60) return 'bg-yellow-100 text-yellow-800';
     return 'bg-red-100 text-red-800';
   };
+
+  // Agregované dáta pre grafy
+  const aggregatedData = React.useMemo(() => {
+    if (!insights.length) return null;
+
+    const countries = {};
+    const cities = {};
+    const manufacturers = {};
+    const devices = { desktop: 0, mobile: 0, tablet: 0 };
+    const priceRanges = { do_50k: 0, '50k_100k': 0, '100k_150k': 0, nad_150k: 0 };
+
+    insights.forEach(insight => {
+      // Krajiny
+      insight.geograficke_cielenie?.top_krajiny?.forEach(k => {
+        countries[k.krajina] = (countries[k.krajina] || 0) + k.pocet_navstev;
+      });
+
+      // Mestá
+      insight.geograficke_cielenie?.top_mesta?.forEach(m => {
+        cities[m.mesto] = (cities[m.mesto] || 0) + m.pocet_navstev;
+      });
+
+      // Výrobcovia
+      manufacturers[insight.vyrobca] = (manufacturers[insight.vyrobca] || 0) + 1;
+
+      // Zariadenia
+      if (insight.zariadenia_a_platforma) {
+        devices.desktop += insight.zariadenia_a_platforma.desktop || 0;
+        devices.mobile += insight.zariadenia_a_platforma.mobile || 0;
+        devices.tablet += insight.zariadenia_a_platforma.tablet || 0;
+      }
+
+      // Cenové rozloženie
+      if (insight.konfigurator_preferencie?.cenove_rozlozenie) {
+        const cr = insight.konfigurator_preferencie.cenove_rozlozenie;
+        priceRanges.do_50k += cr.do_50k || 0;
+        priceRanges['50k_100k'] += cr['50k_100k'] || 0;
+        priceRanges['100k_150k'] += cr['100k_150k'] || 0;
+        priceRanges.nad_150k += cr.nad_150k || 0;
+      }
+    });
+
+    return {
+      countries: Object.entries(countries)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(([name, value]) => ({ name, value })),
+      cities: Object.entries(cities)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(([name, value]) => ({ name, value })),
+      manufacturers: Object.entries(manufacturers)
+        .map(([name, value]) => ({ name, value })),
+      devices: [
+        { name: 'Desktop', value: Math.round(devices.desktop / insights.length) },
+        { name: 'Mobile', value: Math.round(devices.mobile / insights.length) },
+        { name: 'Tablet', value: Math.round(devices.tablet / insights.length) }
+      ],
+      priceRanges: [
+        { name: 'Do 50k €', value: priceRanges.do_50k },
+        { name: '50-100k €', value: priceRanges['50k_100k'] },
+        { name: '100-150k €', value: priceRanges['100k_150k'] },
+        { name: 'Nad 150k €', value: priceRanges.nad_150k }
+      ]
+    };
+  }, [insights]);
+
+  const COLORS = ['#8b5cf6', '#ec4899', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#8b5cf6'];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 p-4 sm:p-6">
@@ -237,6 +319,152 @@ export default function AIMarketingInsights() {
             </Card>
           </div>
         </div>
+
+        {/* Vizualizácie a grafy */}
+        {!isLoading && insights.length > 0 && aggregatedData && (
+          <div className="mb-8 space-y-6">
+            <Card className="bg-white/80 backdrop-blur shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="w-6 h-6 text-purple-600" />
+                  Geografické rozloženie
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid lg:grid-cols-2 gap-6">
+                  {/* Top krajiny */}
+                  <div>
+                    <h4 className="text-sm font-semibold mb-4 flex items-center gap-2">
+                      <Globe className="w-4 h-4" />
+                      Top 10 krajín
+                    </h4>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={aggregatedData.countries}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
+                        <YAxis />
+                        <RechartsTooltip />
+                        <Bar dataKey="value" fill="#8b5cf6" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  {/* Top mestá */}
+                  <div>
+                    <h4 className="text-sm font-semibold mb-4 flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      Top 10 miest
+                    </h4>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={aggregatedData.cities}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
+                        <YAxis />
+                        <RechartsTooltip />
+                        <Bar dataKey="value" fill="#ec4899" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="grid lg:grid-cols-3 gap-6">
+              {/* Výrobcovia */}
+              <Card className="bg-white/80 backdrop-blur shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <PieChart className="w-5 h-5 text-indigo-600" />
+                    Rozloženie výrobcov
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <RechartsPie>
+                      <Pie
+                        data={aggregatedData.manufacturers}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {aggregatedData.manufacturers.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <RechartsTooltip />
+                    </RechartsPie>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+
+              {/* Zariadenia */}
+              <Card className="bg-white/80 backdrop-blur shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <Monitor className="w-5 h-5 text-blue-600" />
+                    Rozloženie zariadení
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <RechartsPie>
+                      <Pie
+                        data={aggregatedData.devices}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {aggregatedData.devices.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <RechartsTooltip />
+                    </RechartsPie>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+
+              {/* Cenové rozloženie */}
+              <Card className="bg-white/80 backdrop-blur shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <DollarSign className="w-5 h-5 text-green-600" />
+                    Cenové preferencie
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <RechartsPie>
+                      <Pie
+                        data={aggregatedData.priceRanges}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {aggregatedData.priceRanges.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <RechartsTooltip />
+                    </RechartsPie>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        )}
 
         {/* Insights List */}
         {isLoading ? (
