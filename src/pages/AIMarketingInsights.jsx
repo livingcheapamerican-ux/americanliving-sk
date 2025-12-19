@@ -48,13 +48,18 @@ export default function AIMarketingInsights() {
   });
 
   const generateInsightsMutation = useMutation({
-    mutationFn: () => base44.functions.invoke('generateMarketingInsights'),
-    onSuccess: () => {
+    mutationFn: () => {
+      toast.info('🚀 Spúšťam AI analýzu... Toto môže trvať 30-60 sekúnd.');
+      return base44.functions.invoke('generateMarketingInsights');
+    },
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['marketing-insights'] });
-      toast.success('✅ Marketingové poznatky úspešne vygenerované!');
+      const data = response?.data || {};
+      toast.success(`✅ Úspešne vygenerovaných ${data.insights_count || 0} poznatkov z ${data.analyzed_houses || 0} domov!`);
     },
     onError: (error) => {
-      toast.error('❌ Chyba pri generovaní poznatkov: ' + error.message);
+      console.error('Chyba pri generovaní:', error);
+      toast.error('❌ Chyba: ' + (error.response?.data?.error || error.message || 'Neznáma chyba'));
     }
   });
 
