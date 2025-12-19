@@ -53,6 +53,7 @@ export default function AdminAnalyzaSessions() {
   // Admin IP adresy na vylúčenie
   const ADMIN_IPS = [
     '109.230.104.122', // Admin IP
+    '2a02:c847:166:a899:f148:3f22:4df1:169', // Admin IPv6
   ];
   const ADMIN_EMAILS = ['living.cheap.american@gmail.com'];
 
