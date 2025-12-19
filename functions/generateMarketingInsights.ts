@@ -344,8 +344,8 @@ Deno.serve(async (req) => {
         dom.celorocny ? 'celoro čné bývanie' : 'rekreačné domy'
       ].filter(Boolean);
 
-      // Pripraviť dáta pre AI
-      const aiPrompt = `Analyzuj tieto marketingové dáta pre dom "${dom.nazov}" od výrobcu ${dom.vyrobca} a vytvor presné odporúčania pre reklamné kampane na sociálnych sieťach.
+      // Pripraviť rozšírený prompt pre AI
+      const aiPrompt = `Analyzuj tieto marketingové dáta pre dom "${dom.nazov}" od výrobcu ${dom.vyrobca} a vytvor komplexné odporúčania pre reklamné kampane.
 
 ZÁKLADNÉ DÁTA:
 - Počet zobrazení: ${stats.pocet_zobrazeni}
@@ -371,9 +371,12 @@ Vytvor DETAILNÉ odporúčania v slovenčine obsahujúce:
 2. Konkrétne nastavenia pre Google Ads (typ kampane, kľúčové slová, geografické cielenie, budget) + REMARKETING pomocou Google Ads cookies
 3. Hodnotenie vhodnosti pre TikTok
 4. Cookie-based RETARGETING stratégie (Lookalike audiences, Custom audiences, Retargeting pixels)
-5. Zrozumiteľný súhrn pre marketéra s presnými inštrukciami
+5. A/B TESTOVACIE STRATÉGIE - navrhni minimálne 2 A/B testy pre Facebook a 2 pre Google Ads (čo testovať, ako merať)
+6. ROI PREDIKCIA - odhadni dosah, CTR, konverzie a ROI pre každú platformu na základe týchto dát
+7. KREATÍVNE ODPORÚČANIA - navrhni 3 reklamné obrazky (popis), 3 reklamné texty (nadpis + text + CTA) a 2 video koncepty
+8. Zrozumiteľný súhrn pre marketéra s presnými inštrukciami
 
-Odpovedz iba v slovenčine s praktickými a konkrétnymi radami vrátane využitia cookies pre retargeting.`;
+Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
 
       console.log('🤖 Posielam dáta na AI analýzu...');
 
@@ -421,11 +424,98 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami vrátane využit
                 email_retargeting: { type: "string" }
               }
             },
+            ab_testing_strategie: {
+              type: "object",
+              properties: {
+                facebook_testy: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      nazov: { type: "string" },
+                      varianta_a: { type: "string" },
+                      varianta_b: { type: "string" },
+                      odporucany_budget: { type: "string" },
+                      meratelne_metriky: { type: "array", items: { type: "string" } }
+                    }
+                  }
+                },
+                google_ads_testy: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      nazov: { type: "string" },
+                      varianta_a: { type: "string" },
+                      varianta_b: { type: "string" },
+                      odporucany_budget: { type: "string" },
+                      meratelne_metriky: { type: "array", items: { type: "string" } }
+                    }
+                  }
+                }
+              }
+            },
+            roi_predikcia: {
+              type: "object",
+              properties: {
+                facebook_instagram_roi: {
+                  type: "object",
+                  properties: {
+                    odhadovany_dosah: { type: "number" },
+                    ocakavany_ctr: { type: "number" },
+                    predpokladane_konverzie: { type: "number" },
+                    roi_percento: { type: "number" },
+                    break_even_cas: { type: "string" }
+                  }
+                },
+                google_ads_roi: {
+                  type: "object",
+                  properties: {
+                    odhadovany_dosah: { type: "number" },
+                    ocakavany_ctr: { type: "number" },
+                    predpokladane_konverzie: { type: "number" },
+                    roi_percento: { type: "number" },
+                    break_even_cas: { type: "string" }
+                  }
+                },
+                celkova_roi_prognoza: { type: "string" }
+              }
+            },
+            kreativne_odporucania: {
+              type: "object",
+              properties: {
+                reklamne_obrazky: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      typ: { type: "string" },
+                      popis: { type: "string" },
+                      odporucany_obsah: { type: "string" }
+                    }
+                  }
+                },
+                reklamne_texty: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      platform: { type: "string" },
+                      nadpis: { type: "string" },
+                      text: { type: "string" },
+                      cta: { type: "string" }
+                    }
+                  }
+                },
+                video_koncepty: { type: "array", items: { type: "string" } },
+                najuspesnejsie_prvky: { type: "array", items: { type: "string" } }
+              }
+            },
             sumar: { type: "string" },
             detailny_navod: { type: "string" }
           }
         }
-      });
+        });
         console.log('✅ AI analýza dokončená');
       } catch (aiError) {
         console.error('❌ Chyba pri AI analýze:', aiError.message);
@@ -469,6 +559,10 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami vrátane využit
       ));
 
       // Vytvoriť insight objekt
+      const currentMieraKonverzie = stats.pocet_konfiguracii > 0 
+        ? Math.round((stats.pocet_konfiguracii / stats.pocet_zobrazeni) * 100) 
+        : 0;
+
       const insight = {
         dom_id: dom.id,
         dom_nazov: dom.nazov,
@@ -477,9 +571,7 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami vrátane využit
           pocet_zobrazeni: stats.pocet_zobrazeni,
           pocet_konfiguracii: stats.pocet_konfiguracii,
           priemerny_cas_na_stranke: stats.priemerny_cas,
-          miera_konverzie: stats.pocet_konfiguracii > 0 
-            ? Math.round((stats.pocet_konfiguracii / stats.pocet_zobrazeni) * 100) 
-            : 0
+          miera_konverzie: currentMieraKonverzie
         },
         geograficke_cielenie: {
           top_krajiny: topKrajiny,
@@ -503,33 +595,124 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami vrátane využit
           dokoncene_konfiguracie: cookieData.konfigurator_usage,
           cenove_preferencie: cookieData.cenove_rozlozenie_preferencie
         },
+        ab_testing_strategie: aiResponse.ab_testing_strategie || {
+          facebook_testy: [],
+          google_ads_testy: []
+        },
+        roi_predikcia: aiResponse.roi_predikcia || {},
+        kreativne_odporucania: aiResponse.kreativne_odporucania || {
+          reklamne_obrazky: [],
+          reklamne_texty: [],
+          video_koncepty: [],
+          najuspesnejsie_prvky: []
+        },
         sumar_odporucani: aiResponse.sumar || '',
         ai_generovany_text: aiResponse.detailny_navod || '',
         confidence_score: confidenceScore,
         pocet_analyzovanych_sessions: domSessions.length,
         datum_generovania: new Date().toISOString(),
-        posledna_aktualizacia: new Date().toISOString()
+        posledna_aktualizacia: new Date().toISOString(),
+        predchadzajuce_metriky: previousMetrics
       };
 
       insights.push(insight);
 
-      // Uložiť do databázy
-      // Najprv skontrolovať, či už existuje insight pre tento dom
-      const existingInsights = await base44.asServiceRole.entities.MarketingInsight.filter({ 
-        dom_id: dom.id 
-      });
-
+      // Uložiť do databázy a vytvoriť notifikácie
+      let savedInsight;
       if (existingInsights.length > 0) {
         // Aktualizovať existujúci
-        await base44.asServiceRole.entities.MarketingInsight.update(
+        savedInsight = await base44.asServiceRole.entities.MarketingInsight.update(
           existingInsights[0].id,
           insight
         );
         console.log(`✅ Aktualizovaný insight pre ${dom.nazov}`);
+
+        // Detekcia zmien a vytvorenie notifikácií
+        if (previousMetrics) {
+          // Pokles konverzie
+          if (previousMetrics.miera_konverzie > 0 && 
+              currentMieraKonverzie < previousMetrics.miera_konverzie * 0.8) {
+            await base44.asServiceRole.entities.MarketingNotification.create({
+              typ: 'zmena_konverzie',
+              dom_id: dom.id,
+              dom_nazov: dom.nazov,
+              title: `⚠️ Pokles konverzie: ${dom.nazov}`,
+              message: `Konverzia klesla z ${previousMetrics.miera_konverzie}% na ${currentMieraKonverzie}%`,
+              severity: 'warning',
+              metadata: {
+                stara_hodnota: previousMetrics.miera_konverzie,
+                nova_hodnota: currentMieraKonverzie,
+                pokles_percent: Math.round(((previousMetrics.miera_konverzie - currentMieraKonverzie) / previousMetrics.miera_konverzie) * 100)
+              }
+            });
+          }
+
+          // Nárast zobrazení
+          if (stats.pocet_zobrazeni > previousMetrics.pocet_zobrazeni * 1.5) {
+            await base44.asServiceRole.entities.MarketingNotification.create({
+              typ: 'zmena_zobrazeni',
+              dom_id: dom.id,
+              dom_nazov: dom.nazov,
+              title: `📈 Nárast zobrazení: ${dom.nazov}`,
+              message: `Zobrazenia vzrástli z ${previousMetrics.pocet_zobrazeni} na ${stats.pocet_zobrazeni}`,
+              severity: 'success',
+              metadata: {
+                stara_hodnota: previousMetrics.pocet_zobrazeni,
+                nova_hodnota: stats.pocet_zobrazeni,
+                narast_percent: Math.round(((stats.pocet_zobrazeni - previousMetrics.pocet_zobrazeni) / previousMetrics.pocet_zobrazeni) * 100)
+              }
+            });
+          }
+
+          // Nízka kvalita dát
+          if (confidenceScore < 40) {
+            await base44.asServiceRole.entities.MarketingNotification.create({
+              typ: 'nizka_kvalita',
+              dom_id: dom.id,
+              dom_nazov: dom.nazov,
+              title: `⚠️ Nízka kvalita dát: ${dom.nazov}`,
+              message: `Confidence skóre je len ${confidenceScore}%. Potrebných viac dát pre presné odporúčania.`,
+              severity: 'warning',
+              metadata: {
+                confidence_score: confidenceScore,
+                pocet_sessions: domSessions.length
+              }
+            });
+          }
+        }
       } else {
         // Vytvoriť nový
-        await base44.asServiceRole.entities.MarketingInsight.create(insight);
+        savedInsight = await base44.asServiceRole.entities.MarketingInsight.create(insight);
         console.log(`✅ Vytvorený nový insight pre ${dom.nazov}`);
+
+        // Notifikácia o novej analýze
+        await base44.asServiceRole.entities.MarketingNotification.create({
+          typ: 'nova_analyza',
+          dom_id: dom.id,
+          dom_nazov: dom.nazov,
+          title: `🎉 Nová AI analýza: ${dom.nazov}`,
+          message: `Úspešne vygenerovaná nová marketingová analýza s confidence ${confidenceScore}%`,
+          severity: 'success',
+          metadata: {
+            pocet_sessions: domSessions.length,
+            confidence_score: confidenceScore
+          }
+        });
+
+        // High quality insight
+        if (confidenceScore >= 80) {
+          await base44.asServiceRole.entities.MarketingNotification.create({
+            typ: 'vysoka_kvalita',
+            dom_id: dom.id,
+            dom_nazov: dom.nazov,
+            title: `✅ Vysoká kvalita dát: ${dom.nazov}`,
+            message: `Analýza má vysokú dôveryhodnosť ${confidenceScore}%. Odporúčania sú veľmi presné.`,
+            severity: 'success',
+            metadata: {
+              confidence_score: confidenceScore
+            }
+          });
+        }
       }
     }
 
