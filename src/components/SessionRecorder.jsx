@@ -98,6 +98,10 @@ export default function SessionRecorder() {
       sessionIdRef.current = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       sessionStartRef.current = new Date().toISOString();
       
+      // Detekcia vracajúceho sa klienta
+      const previousSessions = localStorage.getItem('user_previous_sessions');
+      const isReturning = !!previousSessions;
+      
       const urlParams = new URLSearchParams(window.location.search);
       const utmParams = {
         utm_source: urlParams.get('utm_source'),
@@ -110,12 +114,26 @@ export default function SessionRecorder() {
       const referrerUrl = document.referrer || 'direct';
       const referrerDomain = referrerUrl !== 'direct' ? new URL(referrerUrl).hostname : 'direct';
 
+      // Slovenské názvy stránok
+      const pageNamesMap = {
+        '/': 'Domovská stránka',
+        '/katalog': 'Katalóg domov',
+        '/detail-domu': 'Detail domu',
+        '/konfigurator': 'Konfigurátor',
+        '/kontakt': 'Kontakt',
+        '/o-nas': 'O nás',
+        '/blog': 'Blog',
+        '/faq': 'Často kladené otázky',
+        '/odporucanie-domov': 'AI Odporúčania domov'
+      };
+
       // Create session with location
       base44.entities.UserSession.create({
         session_id: sessionIdRef.current,
         user_email: user?.email || 'anonymous',
         user_name: user?.full_name || 'Anonymous',
         is_authenticated: !!user,
+        is_returning: isReturning,
         start_time: sessionStartRef.current,
         pages_visited: [],
         clicks: [],
@@ -141,8 +159,12 @@ export default function SessionRecorder() {
         },
         engagement_score: 0,
         is_active: true,
-        session_tags: []
+        session_tags: isReturning ? ['vracajuci_sa'] : []
       }).then(() => {
+        // Uložiť do localStorage pre budúce návštevy
+        const allSessions = JSON.parse(previousSessions || '[]');
+        allSessions.push(sessionIdRef.current);
+        localStorage.setItem('user_previous_sessions', JSON.stringify(allSessions.slice(-10)));
         // Fetch IP location
         fetch('https://ipapi.co/json/')
           .then(res => res.json())
@@ -265,11 +287,25 @@ export default function SessionRecorder() {
       const elementId = e.target.id || '';
       const elementClass = e.target.className || '';
       
+      const pageNamesMap = {
+        '/': 'Domovská stránka',
+        '/katalog': 'Katalóg domov',
+        '/detail-domu': 'Detail domu',
+        '/konfigurator': 'Konfigurátor',
+        '/kontakt': 'Kontakt',
+        '/o-nas': 'O nás',
+        '/blog': 'Blog',
+        '/faq': 'Často kladené otázky',
+        '/odporucanie-domov': 'AI Odporúčania domov'
+      };
+      const slovakPageName = pageNamesMap[window.location.pathname] || document.title;
+      
       clicksRef.current.push({
         element,
         text,
         timestamp: new Date().toISOString(),
         page_url: currentPage,
+        page_name_sk: slovakPageName,
         x_position: e.clientX,
         y_position: e.clientY,
         element_id: elementId,
@@ -373,15 +409,19 @@ export default function SessionRecorder() {
               (Math.max(...Object.values(scrollDepthRef.current)) || 0) / 2
             ));
 
-            // Auto tags
+            // Auto tags (slovenské názvy)
             const tags = [];
-            if (currentDuration < 10) tags.push('bounced');
-            else if (currentDuration > 300) tags.push('highly_engaged');
-            else if (currentDuration > 60) tags.push('engaged');
+            if (currentDuration < 10) tags.push('odrazeny');
+            else if (currentDuration > 300) tags.push('velmi_zaujaty');
+            else if (currentDuration > 60) tags.push('zaujaty');
             
-            if ((session.pages_visited?.length || 0) > 5) tags.push('explorer');
-            if (formInteractionsRef.current.some(f => f.completed)) tags.push('converted');
-            if (configuratorInteractionsRef.current.length > 5) tags.push('configurator_user');
+            // Pridať tag pre vracajúceho sa klienta
+            const previousSessions = localStorage.getItem('user_previous_sessions');
+            if (previousSessions) tags.push('vracajuci_sa');
+            
+            if ((session.pages_visited?.length || 0) > 5) tags.push('prieskumnik');
+            if (formInteractionsRef.current.some(f => f.completed)) tags.push('konvertoval');
+            if (configuratorInteractionsRef.current.length > 5) tags.push('pouzivatel_konfiguratora');
 
             const currentPage = window.location.pathname + window.location.search;
             const timeOnCurrentPage = pageStartTimeRef.current ? Math.round((Date.now() - pageStartTimeRef.current) / 1000) : 0;
@@ -415,9 +455,23 @@ export default function SessionRecorder() {
               const lastPage = existingPages[existingPages.length - 1];
               
               // Update last page or add new one
+              const pageNamesMap = {
+                '/': 'Domovská stránka',
+                '/katalog': 'Katalóg domov',
+                '/detail-domu': 'Detail domu',
+                '/konfigurator': 'Konfigurátor',
+                '/kontakt': 'Kontakt',
+                '/o-nas': 'O nás',
+                '/blog': 'Blog',
+                '/faq': 'Často kladené otázky',
+                '/odporucanie-domov': 'AI Odporúčania domov'
+              };
+              const slovakPageName = pageNamesMap[window.location.pathname] || document.title;
+              
               if (lastPage && lastPage.page_url === currentPage) {
                 lastPage.time_spent_seconds = timeOnCurrentPage;
                 lastPage.scroll_depth_percentage = scrollDepthRef.current[currentPage] || 0;
+                lastPage.page_name_sk = slovakPageName;
                 updates.pages_visited = existingPages;
               } else {
                 updates.pages_visited = [
@@ -425,6 +479,7 @@ export default function SessionRecorder() {
                   {
                     page_url: currentPage,
                     page_title: document.title,
+                    page_name_sk: slovakPageName,
                     timestamp: new Date(pageStartTimeRef.current).toISOString(),
                     time_spent_seconds: timeOnCurrentPage,
                     scroll_depth_percentage: scrollDepthRef.current[currentPage] || 0,

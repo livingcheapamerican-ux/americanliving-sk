@@ -133,11 +133,18 @@ export default function AdminAnalyzaSessions() {
   const getTagColor = (tag) => {
     const colors = {
       'bounced': 'bg-red-100 text-red-800',
+      'odrazeny': 'bg-red-100 text-red-800',
       'engaged': 'bg-blue-100 text-blue-800',
+      'zaujaty': 'bg-blue-100 text-blue-800',
       'highly_engaged': 'bg-purple-100 text-purple-800',
+      'velmi_zaujaty': 'bg-purple-100 text-purple-800',
       'explorer': 'bg-green-100 text-green-800',
+      'prieskumnik': 'bg-green-100 text-green-800',
       'converted': 'bg-yellow-100 text-yellow-800',
-      'configurator_user': 'bg-indigo-100 text-indigo-800'
+      'konvertoval': 'bg-yellow-100 text-yellow-800',
+      'configurator_user': 'bg-indigo-100 text-indigo-800',
+      'pouzivatel_konfiguratora': 'bg-indigo-100 text-indigo-800',
+      'vracajuci_sa': 'bg-teal-100 text-teal-800'
     };
     return colors[tag] || 'bg-gray-100 text-gray-800';
   };
@@ -468,11 +475,28 @@ export default function AdminAnalyzaSessions() {
                         {session.engagement_score > 70 && (
                           <Badge className="bg-purple-600 text-white text-xs">🔥 {session.engagement_score}</Badge>
                         )}
-                        {session.session_tags?.map(tag => (
-                          <Badge key={tag} className={`text-xs ${getTagColor(tag)}`}>
-                            {tag}
-                          </Badge>
-                        ))}
+                        {session.session_tags?.map(tag => {
+                          const tagLabels = {
+                            'bounced': 'Odrazený',
+                            'odrazeny': 'Odrazený',
+                            'engaged': 'Zaujatý',
+                            'zaujaty': 'Zaujatý',
+                            'highly_engaged': 'Veľmi zaujatý',
+                            'velmi_zaujaty': 'Veľmi zaujatý',
+                            'explorer': 'Prieskumník',
+                            'prieskumnik': 'Prieskumník',
+                            'converted': 'Konvertoval',
+                            'konvertoval': 'Konvertoval',
+                            'configurator_user': 'Používateľ konfiguratora',
+                            'pouzivatel_konfiguratora': 'Používateľ konfiguratora',
+                            'vracajuci_sa': '🔄 Vracajúci sa'
+                          };
+                          return (
+                            <Badge key={tag} className={`text-xs ${getTagColor(tag)}`}>
+                              {tagLabels[tag] || tag}
+                            </Badge>
+                          );
+                        })}
                       </div>
                       
                       <p className="text-sm text-gray-600 mb-3">{session.user_email}</p>
@@ -662,7 +686,7 @@ export default function AdminAnalyzaSessions() {
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2 mb-1">
                                     <Badge className="bg-blue-100 text-blue-800 text-xs">#{idx + 1}</Badge>
-                                    <p className="text-sm font-semibold text-gray-900">{page.page_title || page.page_url}</p>
+                                    <p className="text-sm font-semibold text-gray-900">{page.page_name_sk || page.page_title || page.page_url}</p>
                                   </div>
                                   <p className="text-xs text-gray-500 mb-2">{page.page_url}</p>
                                   <div className="flex items-center gap-4 text-xs text-gray-600">
@@ -708,12 +732,15 @@ export default function AdminAnalyzaSessions() {
                               <div className="flex items-center gap-2 flex-1">
                                 <Badge variant="outline" className="text-xs">{click.element}</Badge>
                                 <span className="text-gray-700 truncate max-w-md">{click.text}</span>
+                                {click.page_name_sk && (
+                                  <Badge className="bg-green-50 text-green-700 text-xs">📍 {click.page_name_sk}</Badge>
+                                )}
                                 {click.element_id && (
                                   <Badge className="bg-blue-50 text-blue-700 text-xs">#{click.element_id}</Badge>
                                 )}
                               </div>
                               <div className="flex items-center gap-3 text-gray-400">
-                                <span>pos: {click.x_position}, {click.y_position}</span>
+                                <span>poz: {click.x_position}, {click.y_position}</span>
                                 <span>{format(new Date(click.timestamp), 'HH:mm:ss')}</span>
                               </div>
                             </div>
