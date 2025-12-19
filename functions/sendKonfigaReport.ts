@@ -8,17 +8,17 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     
-    // 1. ZBER DÁT - posledných 24 hodín
+    // 1. ZBER DÁT - posledná hodina (hourly report)
     const now = new Date();
-    const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
     
-    // Získaj sessions za posledných 24h
-    const allSessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 500);
-    const recentSessions = allSessions.filter(s => new Date(s.created_date) >= yesterday);
+    // Získaj sessions za poslednú hodinu
+    const allSessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 200);
+    const recentSessions = allSessions.filter(s => new Date(s.created_date) >= oneHourAgo);
     
-    // Získaj dopyty (objednávky/inquiries) za 24h
-    const allDopyty = await base44.asServiceRole.entities.Dopyt.list('-created_date', 100);
-    const recentDopyty = allDopyty.filter(d => new Date(d.created_date) >= yesterday);
+    // Získaj dopyty (objednávky/inquiries) za poslednú hodinu
+    const allDopyty = await base44.asServiceRole.entities.Dopyt.list('-created_date', 50);
+    const recentDopyty = allDopyty.filter(d => new Date(d.created_date) >= oneHourAgo);
     
     // Získaj MarketingInsights
     const insights = await base44.asServiceRole.entities.MarketingInsight.list('-created_date', 10);
@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
     const report = {
       timestamp: now.toISOString().replace('T', ' ').substring(0, 19),
       source: "americanliving.sk",
-      period: "last_24h",
+      period: "last_hour",
       sales_data: {
         total_inquiries: recentDopyty.length,
         conversion_rate: parseFloat(conversionRate),
