@@ -41,9 +41,13 @@ export default function AIMarketingInsights() {
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
-  const { data: insights = [], isLoading } = useQuery({
+  const { data: insights = [], isLoading, refetch } = useQuery({
     queryKey: ['marketing-insights'],
-    queryFn: () => base44.entities.MarketingInsight.list('-posledna_aktualizacia'),
+    queryFn: async () => {
+      const data = await base44.entities.MarketingInsight.list('-posledna_aktualizacia');
+      console.log('✅ Načítané insights:', data.length, data);
+      return data;
+    },
     enabled: isAdmin
   });
 
@@ -52,9 +56,14 @@ export default function AIMarketingInsights() {
       toast.info('🚀 Spúšťam AI analýzu... Toto môže trvať 30-60 sekúnd.');
       return base44.functions.invoke('generateMarketingInsights');
     },
-    onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: ['marketing-insights'] });
+    onSuccess: async (response) => {
       const data = response?.data || {};
+      console.log('✅ Funkcia dokončená:', data);
+      
+      // Počkať 2 sekundy a manuálne načítať dáta
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      await refetch();
+      
       toast.success(`✅ Úspešne vygenerovaných ${data.insights_count || 0} poznatkov z ${data.analyzed_houses || 0} domov!`);
     },
     onError: (error) => {
