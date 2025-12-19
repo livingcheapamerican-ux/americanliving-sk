@@ -59,7 +59,13 @@ Based on typical top-ranking content for this keyword, provide realistic SEO rec
       "heading_count": <number>,
       "cta_buttons": ["Primary CTA", "Secondary CTA"],
       "strengths": ["What makes this page rank well"],
-      "opportunities": ["What we can do better"]
+      "opportunities": ["What we can do better"],
+      "estimated_monthly_traffic": <number>,
+      "estimated_backlinks": <number>,
+      "domain_authority": <number 0-100>,
+      "avg_time_on_page": <seconds>,
+      "bounce_rate": <percentage>,
+      "engagement_score": <number 0-100>
     }
   ]
 }

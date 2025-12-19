@@ -1,7 +1,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, TrendingUp, Target, MessageSquare, CheckCircle2, Lightbulb } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Trophy, TrendingUp, Target, MessageSquare, CheckCircle2, Lightbulb, Users, Link as LinkIcon, BarChart3, Clock, MousePointer } from "lucide-react";
 
 export default function CompetitorAnalysis({ competitors = [] }) {
   if (!competitors || competitors.length === 0) {
@@ -65,6 +66,74 @@ export default function CompetitorAnalysis({ competitors = [] }) {
                 <p className="text-xs text-gray-800 mt-1">{comp.h1_tag}</p>
               </div>
             </div>
+
+            {/* Traffic & Engagement Metrics */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-md p-3 border border-blue-200">
+                <p className="text-xs font-medium text-blue-700 flex items-center gap-1 mb-1">
+                  <Users className="w-3 h-3" />
+                  Monthly Traffic
+                </p>
+                <p className="text-lg font-bold text-blue-900">
+                  {comp.estimated_monthly_traffic?.toLocaleString() || "N/A"}
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-md p-3 border border-purple-200">
+                <p className="text-xs font-medium text-purple-700 flex items-center gap-1 mb-1">
+                  <LinkIcon className="w-3 h-3" />
+                  Backlinks
+                </p>
+                <p className="text-lg font-bold text-purple-900">
+                  {comp.estimated_backlinks?.toLocaleString() || "N/A"}
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-md p-3 border border-green-200">
+                <p className="text-xs font-medium text-green-700 flex items-center gap-1 mb-1">
+                  <BarChart3 className="w-3 h-3" />
+                  Domain Authority
+                </p>
+                <div className="flex items-center gap-2">
+                  <p className="text-lg font-bold text-green-900">
+                    {comp.domain_authority || "N/A"}
+                  </p>
+                  {comp.domain_authority && (
+                    <Progress value={comp.domain_authority} className="flex-1 h-2" />
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-md p-3 border border-orange-200">
+                <p className="text-xs font-medium text-orange-700 flex items-center gap-1 mb-1">
+                  <MousePointer className="w-3 h-3" />
+                  Engagement
+                </p>
+                <p className="text-lg font-bold text-orange-900">
+                  {comp.engagement_score || "N/A"}/100
+                </p>
+              </div>
+            </div>
+
+            {/* User Behavior */}
+            {(comp.avg_time_on_page || comp.bounce_rate) && (
+              <div className="grid grid-cols-2 gap-2">
+                {comp.avg_time_on_page && (
+                  <div className="flex items-center gap-2 text-xs">
+                    <Clock className="w-3 h-3 text-gray-500" />
+                    <span className="text-gray-600">Time on page:</span>
+                    <span className="font-semibold">{Math.floor(comp.avg_time_on_page / 60)}m {comp.avg_time_on_page % 60}s</span>
+                  </div>
+                )}
+                {comp.bounce_rate && (
+                  <div className="flex items-center gap-2 text-xs">
+                    <TrendingUp className="w-3 h-3 text-gray-500" />
+                    <span className="text-gray-600">Bounce rate:</span>
+                    <span className="font-semibold">{comp.bounce_rate}%</span>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* CTA Buttons */}
             {comp.cta_buttons && comp.cta_buttons.length > 0 && (
