@@ -40,9 +40,41 @@ export default function TypStavbySelector({
           <h3 className="text-2xl font-bold text-gray-800 mb-3">
             {t('buildingTypeQuestion')}
           </h3>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-600 max-w-2xl mx-auto mb-4">
             {t('buildingTypeDesc')}
           </p>
+          
+          {/* Výrazný CTA indikátor */}
+          <motion.div 
+            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl p-4 max-w-lg mx-auto shadow-lg"
+            animate={{ 
+              scale: [1, 1.02, 1],
+              boxShadow: [
+                "0 10px 25px rgba(59, 130, 246, 0.3)",
+                "0 15px 35px rgba(139, 92, 246, 0.4)",
+                "0 10px 25px rgba(59, 130, 246, 0.3)"
+              ]
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <div className="flex items-center justify-center gap-3">
+              <motion.div
+                animate={{ y: [0, -5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                👇
+              </motion.div>
+              <p className="text-sm sm:text-base font-bold">
+                {t('clickToStartConfigurator')}
+              </p>
+              <motion.div
+                animate={{ y: [0, -5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, delay: 0.2 }}
+              >
+                👇
+              </motion.div>
+            </div>
+          </motion.div>
         </motion.div>
 
         {/* Karty */}
@@ -54,13 +86,39 @@ export default function TypStavbySelector({
             transition={{ delay: 0.1 }}
             whileHover={{ scale: 1.02, y: -4 }}
             onClick={() => setTypStavby("rekreacna")}
-            className="cursor-pointer w-full"
+            className="cursor-pointer w-full relative"
           >
-            <Card className={`p-3 sm:p-6 h-full transition-all border-2 w-full ${
+            {/* Animovaný border efekt */}
+            <motion.div
+              className="absolute inset-0 rounded-lg"
+              animate={{
+                boxShadow: [
+                  "0 0 0 0 rgba(251, 191, 36, 0)",
+                  "0 0 0 8px rgba(251, 191, 36, 0.1)",
+                  "0 0 0 0 rgba(251, 191, 36, 0)"
+                ]
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            
+            <Card className={`p-3 sm:p-6 h-full transition-all border-2 w-full relative ${
               typStavby === "rekreacna" 
                 ? "border-amber-500 bg-amber-50 shadow-xl ring-2 ring-amber-300" 
                 : "border-gray-200 hover:border-amber-300 hover:shadow-lg"
             }`}>
+              {/* "Kliknite tu" badge */}
+              {!typStavby && (
+                <motion.div
+                  className="absolute -top-3 -right-3 bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-10"
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    rotate: [-5, 5, -5]
+                  }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                >
+                  {t('clickHere')} 👆
+                </motion.div>
+              )}
               <div className="flex items-start gap-4 mb-4">
                 <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
                   <TreePine className="w-7 h-7 text-amber-600" />
@@ -109,13 +167,39 @@ export default function TypStavbySelector({
             transition={{ delay: 0.2 }}
             whileHover={{ scale: 1.02, y: -4 }}
             onClick={() => setTypStavby("rodinny_dom")}
-            className="cursor-pointer w-full"
+            className="cursor-pointer w-full relative"
           >
-            <Card className={`p-3 sm:p-6 h-full transition-all border-2 w-full ${
+            {/* Animovaný border efekt */}
+            <motion.div
+              className="absolute inset-0 rounded-lg"
+              animate={{
+                boxShadow: [
+                  "0 0 0 0 rgba(34, 197, 94, 0)",
+                  "0 0 0 8px rgba(34, 197, 94, 0.1)",
+                  "0 0 0 0 rgba(34, 197, 94, 0)"
+                ]
+              }}
+              transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+            />
+            
+            <Card className={`p-3 sm:p-6 h-full transition-all border-2 w-full relative ${
               typStavby === "rodinny_dom" 
                 ? "border-green-500 bg-green-50 shadow-xl ring-2 ring-green-300" 
                 : "border-gray-200 hover:border-green-300 hover:shadow-lg"
             }`}>
+              {/* "Kliknite tu" badge */}
+              {!typStavby && (
+                <motion.div
+                  className="absolute -top-3 -right-3 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-10"
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    rotate: [5, -5, 5]
+                  }}
+                  transition={{ duration: 1, repeat: Infinity, delay: 0.3 }}
+                >
+                  {t('clickHere')} 👆
+                </motion.div>
+              )}
               <div className="flex items-start gap-4 mb-4">
                 <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
                   <Home className="w-7 h-7 text-green-600" />

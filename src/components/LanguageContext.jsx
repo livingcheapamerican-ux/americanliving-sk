@@ -237,6 +237,8 @@ const translations = {
     interiorDrywallGallery: "Interiér - Sadrokartón",
     buildingTypeQuestion: "Aký typ stavby plánujete?",
     buildingTypeDesc: "Vyberte si, či chcete rekreačnú stavbu (chata, záhradný domček) alebo rodinný dom s energetickým certifikátom A0 a možnosťou trvalého pobytu.",
+    clickToStartConfigurator: "Kliknite na typ stavby pre spustenie konfiguratora",
+    clickHere: "Kliknite tu",
     recreationalBuilding: "Rekreačná stavba",
     economicChoice: "Ekonomická voľba",
     cottage: "Chata, záhradný domček",
