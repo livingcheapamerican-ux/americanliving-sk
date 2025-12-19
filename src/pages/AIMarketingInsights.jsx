@@ -110,23 +110,43 @@ export default function AIMarketingInsights() {
                 </p>
               </div>
             </div>
-            <Button
-              onClick={() => generateInsightsMutation.mutate()}
-              disabled={generateInsightsMutation.isPending}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg"
-            >
-              {generateInsightsMutation.isPending ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Generujem...
-                </>
-              ) : (
-                <>
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Generovať nové poznatky
-                </>
-              )}
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={async () => {
+                  toast.info('🧪 Spúšťam DEBUG test...');
+                  try {
+                    const response = await base44.functions.invoke('testMarketingInsightsDebug');
+                    console.log('DEBUG výsledok:', response.data);
+                    toast.success('✅ Debug test úspešný! Pozri console.');
+                    await refetch();
+                  } catch (error) {
+                    console.error('DEBUG chyba:', error);
+                    toast.error('❌ Debug test zlyhal: ' + error.message);
+                  }
+                }}
+                variant="outline"
+                className="border-purple-300 text-purple-700"
+              >
+                🧪 Debug Test
+              </Button>
+              <Button
+                onClick={() => generateInsightsMutation.mutate()}
+                disabled={generateInsightsMutation.isPending}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg"
+              >
+                {generateInsightsMutation.isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Generujem...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    Generovať nové poznatky
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
 
           {/* Stats Cards */}
