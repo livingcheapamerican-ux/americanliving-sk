@@ -2,15 +2,76 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 // KONFIGURÁCIA
 const KONFIGA_ENDPOINT = Deno.env.get("KONFIGA_API_ENDPOINT") || "https://your-konfiga-app.base44.app/api/receive-report";
-const GEMINI_API_KEY = Deno.env.get("Gemini_PAID_pro");
+
+// Možné názvy API kľúčov pre Gemini
+const GEMINI_KEY_CANDIDATES = ['Gemini_PAID_pro', 'GEMINI_API_KEY', 'GOOGLE_API_KEY'];
+
+// Funkcia na testovanie API kľúča
+async function testGeminiKey(apiKey) {
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{ text: "Test connection. Reply with OK." }]
+          }]
+        })
+      }
+    );
+    
+    if (!response.ok) {
+      return false;
+    }
+    
+    const result = await response.json();
+    return result.candidates && result.candidates.length > 0;
+  } catch (error) {
+    console.error(`Test failed for key: ${error.message}`);
+    return false;
+  }
+}
+
+// Funkcia na nájdenie aktívneho kľúča
+async function findActiveGeminiKey() {
+  console.log('🔑 Key Rotator: Hľadám funkčný Gemini API kľúč...');
+  
+  for (const keyName of GEMINI_KEY_CANDIDATES) {
+    const apiKey = Deno.env.get(keyName);
+    
+    if (!apiKey) {
+      console.log(`⏭️  ${keyName}: Nie je nastavený`);
+      continue;
+    }
+    
+    console.log(`🧪 Testujem kľúč: ${keyName}...`);
+    const isValid = await testGeminiKey(apiKey);
+    
+    if (isValid) {
+      console.log(`✅ ÚSPECH! Používam kľúč: ${keyName}`);
+      return { keyName, apiKey };
+    } else {
+      console.log(`❌ ${keyName}: Nefunkčný alebo neplatný`);
+    }
+  }
+  
+  throw new Error('Žiadny funkčný Gemini API kľúč nenájdený!');
+}
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     
+    // KEY ROTATOR - nájdi aktívny kľúč
+    const { keyName: ACTIVE_KEY_NAME, apiKey: GEMINI_API_KEY } = await findActiveGeminiKey();
+    
     // 1. ZBER DÁT - posledná hodina (hourly report)
     const now = new Date();
     const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+    
+    console.log(`📊 Zbieram dáta za poslednú hodinu (od ${oneHourAgo.toISOString()})...`);
     
     // Získaj sessions za poslednú hodinu
     const allSessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 200);
@@ -22,6 +83,8 @@ Deno.serve(async (req) => {
     
     // Získaj MarketingInsights
     const insights = await base44.asServiceRole.entities.MarketingInsight.list('-created_date', 10);
+    
+    console.log(`✅ Načítané: ${recentSessions.length} sessions, ${recentDopyty.length} dopytov, ${insights.length} insights`);
     
     // Analytika návštevnosti
     const uniqueVisitors = new Set(recentSessions.map(s => s.user_email || s.location_info?.ip)).size;
@@ -60,6 +123,7 @@ Deno.serve(async (req) => {
       .map(([country, count]) => ({ country, visits: count }));
     
     // 2. TECH CHECK - kontrola dostupnosti hlavných stránok
+    console.log('🔍 Vykonávam technickú kontrolu stránok...');
     const baseUrl = "https://americanliving.sk";
     const pagesCheck = await Promise.allSettled([
       fetch(`${baseUrl}/`),
@@ -78,6 +142,8 @@ Deno.serve(async (req) => {
       contact: pagesCheck[2].status === 'fulfilled' && pagesCheck[2].value.status === 200,
       about: pagesCheck[3].status === 'fulfilled' && pagesCheck[3].value.status === 200
     };
+    
+    console.log(`🏥 Stav systému: ${healthStatus}`);
     
     // 3. PRÍPRAVA JSON BALÍKA
     const report = {
@@ -123,7 +189,10 @@ Deno.serve(async (req) => {
         .filter(e => e !== null)
     };
     
+    console.log('📦 Report pripravený:', JSON.stringify(report, null, 2));
+    
     // 4. ODOSLANIE DO KONFIGA AI
+    console.log(`📤 Odosielam report na: ${KONFIGA_ENDPOINT}`);
     const konfigaResponse = await fetch(KONFIGA_ENDPOINT, {
       method: 'POST',
       headers: {
@@ -137,7 +206,10 @@ Deno.serve(async (req) => {
       throw new Error(`Konfiga API error: ${konfigaResponse.status} ${konfigaResponse.statusText}`);
     }
     
-    // 5. VALIDÁCIA CEZ GEMINI API
+    console.log(`✅ Report úspešne odoslaný do Konfiga AI`);
+    
+    // 5. VALIDÁCIA CEZ GEMINI API (s aktívnym kľúčom)
+    console.log(`🔐 Validácia cez Gemini API (používam kľúč: ${ACTIVE_KEY_NAME})...`);
     const reportHash = await crypto.subtle.digest(
       'SHA-256',
       new TextEncoder().encode(JSON.stringify(report))
@@ -162,10 +234,12 @@ Deno.serve(async (req) => {
     );
     
     const geminiResult = await geminiValidation.json();
+    console.log(`✅ Gemini validácia úspešná`);
     
     return Response.json({
       success: true,
       report_sent: true,
+      active_key_used: ACTIVE_KEY_NAME,
       konfiga_status: konfigaResponse.status,
       report_hash: hashHex,
       gemini_validation: geminiResult.candidates?.[0]?.content?.parts?.[0]?.text || 'OK',
@@ -178,7 +252,7 @@ Deno.serve(async (req) => {
     });
     
   } catch (error) {
-    console.error('Error in sendKonfigaReport:', error);
+    console.error('❌ Error in sendKonfigaReport:', error);
     return Response.json({ 
       success: false,
       error: error.message,
