@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Home, Send, AlertCircle } from "lucide-react";
+import { Home, Send, Eye, AlertCircle } from "lucide-react";
+import LyonFinalSummaryModal from "./LyonFinalSummaryModal";
 import { useLanguage } from "./LanguageContext";
 
 export default function LyonSummaryPanelStandalone({ 
@@ -14,6 +15,7 @@ export default function LyonSummaryPanelStandalone({
   inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
   totalPrice, onSubmit, dom
 }) {
+  const [showModal, setShowModal] = useState(false);
   const { t } = useLanguage();
   const formatPrice = (price) => price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 
@@ -368,16 +370,68 @@ export default function LyonSummaryPanelStandalone({
       <div className="border-t-2 border-slate-700 bg-gradient-to-r from-blue-600 to-indigo-600 p-4">
         <p className="text-sm text-blue-100 mb-1">{t('totalPriceWithVAT') || 'Celková cena s DPH'}</p>
         <p className="text-3xl font-black text-white">{formatPrice(displayPrice)}</p>
-        <div className="mt-3">
+        <div className="mt-3 space-y-2">
+          <Button 
+            onClick={() => setShowModal(true)} 
+            className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold shadow-lg"
+          >
+            <Eye className="w-4 h-4 mr-2" />
+            {t('interested') || 'Ukáž môj dom'}
+          </Button>
           <Button 
             onClick={onSubmit} 
-            className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold shadow-lg"
+            variant="outline"
+            className="w-full bg-transparent border-2 border-white text-white hover:bg-white/10 font-bold"
           >
             <Send className="w-4 h-4 mr-2" />
             {t('sendInquiry') || 'Odoslať dopyt'}
           </Button>
         </div>
       </div>
+
+      {/* Modal */}
+      <LyonFinalSummaryModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        dom={dom}
+        ucel={ucel}
+        izolaciaStien={izolaciaStien}
+        izolaciaPodlahy={izolaciaPodlahy}
+        izolaciaStropu={izolaciaStropu}
+        tepelneCerpadlo={tepelneCerpadlo}
+        rekuperacia={rekuperacia}
+        pripravaNaRekuperaciu={pripravaNaRekuperaciu}
+        podlahovoKurenie={podlahovoKurenie}
+        pripravaNaKrb={pripravaNaKrb}
+        ochranaKachle={ochranaKachle}
+        klimatizacia={klimatizacia}
+        fasada={fasada}
+        strecha={strecha}
+        odkvapy={odkvapy}
+        okna={okna}
+        vchodoveDvere={vchodoveDvere}
+        obkladStien={obkladStien}
+        interieroveDvere={interieroveDvere}
+        elektro={elektro}
+        bleskozvod={bleskozvod}
+        prepat={prepat}
+        pripravaNaSolarnePanely={pripravaNaSolarnePanely}
+        sprchovyKut={sprchovyKut}
+        vana={vana}
+        bateria={bateria}
+        skrinka={skrinka}
+        stropKupelna={stropKupelna}
+        inziniering={inziniering}
+        projektACertifikacia={projektACertifikacia}
+        revizia={revizia}
+        zaklady={zaklady}
+        montaz={montaz}
+        doprava={doprava}
+        predajNehnutelnosti={predajNehnutelnosti}
+        chcemPozemok={hladamPozemok}
+        financneSluzby={financneSluzby}
+        totalPrice={displayPrice}
+      />
     </Card>
   );
 }
