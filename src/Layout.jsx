@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Toaster } from "sonner";
-const Chatbot = React.lazy(() => import("./components/Chatbot.jsx"));
-const AIAsistent = React.lazy(() => import("./components/AIAsistent"));
+import Chatbot from "./components/Chatbot";
+import AIAsistent from "./components/AIAsistent";
 import CookieConsentBanner from "./components/CookieConsentBanner";
 import { LanguageProvider, useLanguage } from "./components/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
@@ -17,9 +17,9 @@ import UserTracking from "./components/UserTracking";
 import FloatingHouses from "./components/FloatingHouses";
 import InteractiveTour from "./components/InteractiveTour";
 import AutoRedirect from "./components/AutoRedirect";
-const SessionRecorder = React.lazy(() => import("./components/SessionRecorder.jsx"));
-const AutoSEOTrigger = React.lazy(() => import("./pages/AutoSEOTrigger"));
-const AutoTestGemini = React.lazy(() => import("./components/AutoTestGemini"));
+import SessionRecorder from "./components/SessionRecorder";
+import AutoSEOTrigger from "./pages/AutoSEOTrigger";
+import AutoTestGemini from "./components/AutoTestGemini";
 
       function LayoutContent({ children }) {
   const location = useLocation();
@@ -643,19 +643,11 @@ const AutoTestGemini = React.lazy(() => import("./components/AutoTestGemini"));
       <UserTracking />
       <AutoRedirect />
       <InteractiveTour />
-      <React.Suspense fallback={null}>
-        <SessionRecorder />
-      </React.Suspense>
-      <React.Suspense fallback={null}>
-        <AutoSEOTrigger />
-      </React.Suspense>
-      <React.Suspense fallback={null}>
-        <AutoTestGemini />
-      </React.Suspense>
+      <SessionRecorder />
+      <AutoSEOTrigger />
+      <AutoTestGemini />
       <div className="hidden md:block">
-        <React.Suspense fallback={null}>
-          <Chatbot />
-        </React.Suspense>
+        <Chatbot />
       </div>
       </div>
       );
