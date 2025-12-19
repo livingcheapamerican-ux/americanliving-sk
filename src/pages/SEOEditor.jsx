@@ -13,6 +13,7 @@ import SEOScoreGauge from "../components/seo/SEOScoreGauge";
 import KeywordChecklist from "../components/seo/KeywordChecklist";
 import StructureGuide from "../components/seo/StructureGuide";
 import AIWritingAssistant from "../components/seo/AIWritingAssistant";
+import CompetitorAnalysis from "../components/seo/CompetitorAnalysis";
 
 export default function SEOEditor() {
   const location = useLocation();
@@ -206,6 +207,10 @@ export default function SEOEditor() {
               keywords={competitorData?.recommended_keywords || []}
               content={content}
             />
+          </div>
+
+          <div className="mt-6">
+            <CompetitorAnalysis competitors={competitorData?.top_competitors || []} />
           </div>
         </div>
       </div>

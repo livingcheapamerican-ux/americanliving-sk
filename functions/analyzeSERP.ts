@@ -47,10 +47,24 @@ Based on typical top-ranking content for this keyword, provide realistic SEO rec
     {"keyword": "main keyword", "target_count": 5},
     {"keyword": "related keyword 1", "target_count": 3},
     {"keyword": "related keyword 2", "target_count": 2}
+  ],
+  "top_competitors": [
+    {
+      "rank": 1,
+      "title": "Page title",
+      "meta_title": "SEO meta title (50-60 chars)",
+      "meta_description": "SEO meta description (150-160 chars)",
+      "h1_tag": "Main H1 heading",
+      "word_count": <number>,
+      "heading_count": <number>,
+      "cta_buttons": ["Primary CTA", "Secondary CTA"],
+      "strengths": ["What makes this page rank well"],
+      "opportunities": ["What we can do better"]
+    }
   ]
 }
 
-Provide realistic numbers based on what typically ranks for this type of content.`
+Provide 3 realistic competitors with detailed analysis of their meta tags, H1, CTAs, and actionable insights for our content.`
               }]
             }],
             generationConfig: {
