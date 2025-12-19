@@ -12,9 +12,10 @@ Deno.serve(async (req) => {
 
     console.log('🚀 Spúšťam generovanie AI Marketing Insights...');
 
-    // 1. Načítať všetky domy
-    const domy = await base44.asServiceRole.entities.Dom.list();
-    console.log(`📊 Načítaných ${domy.length} domov`);
+    // 1. Načítať len verejné domy
+    const allDomy = await base44.asServiceRole.entities.Dom.list();
+    const domy = allDomy.filter(dom => dom.verejny !== false);
+    console.log(`📊 Načítaných ${domy.length} verejných domov (z ${allDomy.length} celkovo)`);
 
     // 2. Načítať všetky sessions (posledných 1000)
     const sessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 1000);
