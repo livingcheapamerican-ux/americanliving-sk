@@ -48,6 +48,7 @@ import { Input } from "@/components/ui/input";
 import MarketingNotificationCenter from "../components/MarketingNotificationCenter";
 import CompetitorAnalysisSection from "../components/CompetitorAnalysisSection";
 import ScalingRecommendations from "../components/ScalingRecommendations";
+import KPIDashboard from "../components/KPIDashboard";
 
 export default function AIMarketingInsights() {
   const [selectedInsight, setSelectedInsight] = useState(null);
@@ -1034,15 +1035,21 @@ export default function AIMarketingInsights() {
                 </CardHeader>
 
                 <CardContent className="p-6">
-                  <Tabs defaultValue="sumar" className="w-full">
-                    <TabsList className="grid w-full grid-cols-6">
+                  <Tabs defaultValue="kpi" className="w-full">
+                    <TabsList className="grid w-full grid-cols-7">
+                      <TabsTrigger value="kpi">📊 KPI</TabsTrigger>
                       <TabsTrigger value="sumar">📋 Súhrn</TabsTrigger>
                       <TabsTrigger value="geo">🌍 Geografia</TabsTrigger>
                       <TabsTrigger value="konfig">⚙️ Konfigurátor</TabsTrigger>
                       <TabsTrigger value="kampane">🎯 Kampane</TabsTrigger>
-                      <TabsTrigger value="konkurencia">🎯 Konkurencia</TabsTrigger>
+                      <TabsTrigger value="konkurencia">🏆 Konkurencia</TabsTrigger>
                       <TabsTrigger value="navod">📖 AI Návod</TabsTrigger>
                     </TabsList>
+
+                    {/* KPI Predikcie */}
+                    <TabsContent value="kpi" className="space-y-4">
+                      <KPIDashboard kpiPredikcie={insight.kpi_predikcie} domNazov={insight.dom_nazov} />
+                    </TabsContent>
 
                     {/* Súhrn */}
                     <TabsContent value="sumar" className="space-y-4">

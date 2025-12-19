@@ -407,7 +407,33 @@ Vytvor ULTRA-DETAILNÉ odporúčania v slovenčine obsahujúce:
    - Analyzuj ich silné a slabé stránky
    - Definuj naše konkurenčné výhody a príležitosti
 
-10. Zrozumiteľný súhrn pre marketéra s presnými inštrukciami
+10. KPI PREDIKCIE A OPTIMALIZÁCIE:
+   CUSTOMER LIFETIME VALUE (CLV):
+   - Vypočítaj priemernú CLV pre tento dom
+   - CLV podľa segmentu: prieskumníci, rozhodovatelia, vracajúci sa (priemerná cena konfigurácie: ${priemernaKoncovaCena} €)
+   - Faktory ovplyvňujúce CLV (napr. počet návštev, čas na stránke, engagement)
+   - 3 konkrétne odporúčania ako zvýšiť CLV
+
+   CUSTOMER ACQUISITION COST (CAC):
+   - Odhadni celkové CAC pre tento dom (na základe priemerných CPC/CPM pre modulárne domy na Slovensku)
+   - CAC pre Facebook/Instagram, Google Ads, organický traffic
+   - Trend: rastúci/klesajúci/stabilný
+   - 3 konkrétne odporúčania ako znížiť CAC
+   - Vypočítaj optimálne CAC pre udržateľný rast
+
+   SALES VOLUME FORECAST:
+   - Predikcia predajov na nasledujúci mesiac (počet + hodnota v EUR)
+   - Predikcia na nasledujúci štvrťrok
+   - Analýza sezónnosti (najlepšie/najhoršie mesiace pre tento typ domu)
+   - Vplyv plánovaných marketingových aktivít
+   - Odporúčania na maximalizáciu predajov
+
+   CLV/CAC RATIO:
+   - Vypočítaj pomer CLV/CAC (ideálne >3)
+   - Hodnotenie: výborné/dobré/priemerne/zlé/kritické
+   - Odporúčané kroky na zlepšenie
+
+11. Zrozumiteľný súhrn pre marketéra s presnými inštrukciami
 
 Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
 
@@ -786,6 +812,7 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
           scaling_odporucania: aiResponse.roi_predikcia?.scaling_odporucania || {}
         },
         konkurencna_analyza: aiResponse.konkurencna_analyza || {},
+        kpi_predikcie: aiResponse.kpi_predikcie || {},
         kreativne_odporucania: aiResponse.kreativne_odporucania || {
           reklamne_obrazky: [],
           reklamne_texty: [],
