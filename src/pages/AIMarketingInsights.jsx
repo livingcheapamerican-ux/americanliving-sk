@@ -1,0 +1,628 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Sparkles,
+  TrendingUp,
+  MapPin,
+  Monitor,
+  Settings,
+  RefreshCw,
+  Facebook,
+  Instagram,
+  Search,
+  Target,
+  DollarSign,
+  Users,
+  Eye,
+  MousePointer,
+  BarChart3,
+  Zap,
+  Globe,
+  Smartphone,
+  CheckCircle,
+  AlertCircle,
+  Loader2
+} from "lucide-react";
+import { toast } from "sonner";
+
+export default function AIMarketingInsights() {
+  const [selectedInsight, setSelectedInsight] = useState(null);
+  const queryClient = useQueryClient();
+
+  const { data: user } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
+
+  const { data: insights = [], isLoading } = useQuery({
+    queryKey: ['marketing-insights'],
+    queryFn: () => base44.entities.MarketingInsight.list('-posledna_aktualizacia'),
+    enabled: isAdmin
+  });
+
+  const generateInsightsMutation = useMutation({
+    mutationFn: () => base44.functions.invoke('generateMarketingInsights'),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['marketing-insights'] });
+      toast.success('✅ Marketingové poznatky úspešne vygenerované!');
+    },
+    onError: (error) => {
+      toast.error('❌ Chyba pri generovaní poznatkov: ' + error.message);
+    }
+  });
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+        <Card className="p-8 max-w-md">
+          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <p className="text-gray-600 text-center">
+            Nemáte oprávnenie na prístup k tejto stránke.
+          </p>
+        </Card>
+      </div>
+    );
+  }
+
+  const getConfidenceColor = (score) => {
+    if (score >= 80) return 'bg-green-100 text-green-800';
+    if (score >= 60) return 'bg-yellow-100 text-yellow-800';
+    return 'bg-red-100 text-red-800';
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 p-4 sm:p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl shadow-lg">
+                <Sparkles className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  AI Marketing Insights
+                </h1>
+                <p className="text-gray-600">
+                  Automatická analýza a presné odporúčania pre reklamné kampane
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={() => generateInsightsMutation.mutate()}
+              disabled={generateInsightsMutation.isPending}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg"
+            >
+              {generateInsightsMutation.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Generujem...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Generovať nové poznatky
+                </>
+              )}
+            </Button>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Card className="bg-white/80 backdrop-blur">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-purple-100 rounded-lg">
+                    <BarChart3 className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Celkom poznatkov</p>
+                    <p className="text-2xl font-bold">{insights.length}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white/80 backdrop-blur">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-green-100 rounded-lg">
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Vysoká dôveryhodnosť</p>
+                    <p className="text-2xl font-bold">
+                      {insights.filter(i => i.confidence_score >= 80).length}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white/80 backdrop-blur">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <Eye className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Analyzovaných sessions</p>
+                    <p className="text-2xl font-bold">
+                      {insights.reduce((sum, i) => sum + (i.pocet_analyzovanych_sessions || 0), 0)}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white/80 backdrop-blur">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-orange-100 rounded-lg">
+                    <Target className="w-5 h-5 text-orange-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Priem. konverzia</p>
+                    <p className="text-2xl font-bold">
+                      {insights.length > 0
+                        ? Math.round(
+                            insights.reduce((sum, i) => 
+                              sum + (i.celkovy_zajem?.miera_konverzie || 0), 0
+                            ) / insights.length
+                          )
+                        : 0}%
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Insights List */}
+        {isLoading ? (
+          <Card className="p-12 text-center bg-white/80 backdrop-blur">
+            <Loader2 className="w-12 h-12 animate-spin text-purple-600 mx-auto mb-4" />
+            <p className="text-gray-600">Načítavam marketingové poznatky...</p>
+          </Card>
+        ) : insights.length === 0 ? (
+          <Card className="p-12 text-center bg-white/80 backdrop-blur">
+            <Sparkles className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Žiadne poznatky zatiaľ</h3>
+            <p className="text-gray-600 mb-4">
+              Kliknite na tlačidlo "Generovať nové poznatky" pre vytvorenie AI analýzy
+            </p>
+          </Card>
+        ) : (
+          <div className="grid gap-6">
+            {insights.map((insight) => (
+              <Card key={insight.id} className="overflow-hidden bg-white/80 backdrop-blur shadow-lg hover:shadow-xl transition-all">
+                {/* Header */}
+                <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 border-b">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <CardTitle className="text-2xl">{insight.dom_nazov}</CardTitle>
+                        <Badge className={getConfidenceColor(insight.confidence_score)}>
+                          Dôveryhodnosť: {insight.confidence_score}%
+                        </Badge>
+                        <Badge variant="outline">{insight.vyrobca}</Badge>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div className="flex items-center gap-2">
+                          <Eye className="w-4 h-4 text-gray-500" />
+                          <span>{insight.celkovy_zajem?.pocet_zobrazeni || 0} zobrazení</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Settings className="w-4 h-4 text-gray-500" />
+                          <span>{insight.celkovy_zajem?.pocet_konfiguracii || 0} konfigurácií</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Target className="w-4 h-4 text-gray-500" />
+                          <span>{insight.celkovy_zajem?.miera_konverzie || 0}% konverzia</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <BarChart3 className="w-4 h-4 text-gray-500" />
+                          <span>{insight.pocet_analyzovanych_sessions} sessions</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+
+                <CardContent className="p-6">
+                  <Tabs defaultValue="sumar" className="w-full">
+                    <TabsList className="grid w-full grid-cols-5">
+                      <TabsTrigger value="sumar">📋 Súhrn</TabsTrigger>
+                      <TabsTrigger value="geo">🌍 Geografia</TabsTrigger>
+                      <TabsTrigger value="konfig">⚙️ Konfigurátor</TabsTrigger>
+                      <TabsTrigger value="kampane">🎯 Kampane</TabsTrigger>
+                      <TabsTrigger value="navod">📖 AI Návod</TabsTrigger>
+                    </TabsList>
+
+                    {/* Súhrn */}
+                    <TabsContent value="sumar" className="space-y-4">
+                      <Card className="bg-gradient-to-br from-purple-50 to-pink-50">
+                        <CardHeader>
+                          <CardTitle className="text-lg flex items-center gap-2">
+                            <Sparkles className="w-5 h-5 text-purple-600" />
+                            AI Súhrn odporúčaní
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+                            {insight.sumar_odporucani || 'Generujem...'}
+                          </p>
+                        </CardContent>
+                      </Card>
+
+                      {/* Zariadenia */}
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="text-lg flex items-center gap-2">
+                            <Monitor className="w-5 h-5" />
+                            Zariadenia a platformy
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid grid-cols-3 gap-4 mb-4">
+                            <div className="text-center p-4 bg-blue-50 rounded-lg">
+                              <Monitor className="w-6 h-6 mx-auto mb-2 text-blue-600" />
+                              <p className="text-2xl font-bold">{insight.zariadenia_a_platforma?.desktop || 0}%</p>
+                              <p className="text-xs text-gray-600">Desktop</p>
+                            </div>
+                            <div className="text-center p-4 bg-green-50 rounded-lg">
+                              <Smartphone className="w-6 h-6 mx-auto mb-2 text-green-600" />
+                              <p className="text-2xl font-bold">{insight.zariadenia_a_platforma?.mobile || 0}%</p>
+                              <p className="text-xs text-gray-600">Mobile</p>
+                            </div>
+                            <div className="text-center p-4 bg-purple-50 rounded-lg">
+                              <Smartphone className="w-6 h-6 mx-auto mb-2 text-purple-600" />
+                              <p className="text-2xl font-bold">{insight.zariadenia_a_platforma?.tablet || 0}%</p>
+                              <p className="text-xs text-gray-600">Tablet</p>
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold mb-2">Odporúčané platformy:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {insight.zariadenia_a_platforma?.odporucane_platformy?.map((platform, idx) => (
+                                <Badge key={idx} className="bg-blue-100 text-blue-800">
+                                  {platform}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+
+                    {/* Geografia */}
+                    <TabsContent value="geo" className="space-y-4">
+                      <div className="grid md:grid-cols-3 gap-4">
+                        {/* Krajiny */}
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="text-sm flex items-center gap-2">
+                              <Globe className="w-4 h-4" />
+                              Top krajiny
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-2">
+                            {insight.geograficke_cielenie?.top_krajiny?.map((krajina, idx) => (
+                              <div key={idx} className="flex items-center justify-between">
+                                <span className="text-sm">{krajina.krajina}</span>
+                                <Badge variant="outline">{krajina.percento}%</Badge>
+                              </div>
+                            ))}
+                          </CardContent>
+                        </Card>
+
+                        {/* Regióny */}
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="text-sm flex items-center gap-2">
+                              <MapPin className="w-4 h-4" />
+                              Top regióny
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-2">
+                            {insight.geograficke_cielenie?.top_regiony?.map((region, idx) => (
+                              <div key={idx} className="flex items-center justify-between">
+                                <span className="text-sm">{region.region}</span>
+                                <Badge variant="outline">{region.percento}%</Badge>
+                              </div>
+                            ))}
+                          </CardContent>
+                        </Card>
+
+                        {/* Mestá */}
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="text-sm flex items-center gap-2">
+                              <MapPin className="w-4 h-4" />
+                              Top mestá
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-2">
+                            {insight.geograficke_cielenie?.top_mesta?.map((mesto, idx) => (
+                              <div key={idx} className="flex items-center justify-between">
+                                <span className="text-sm">{mesto.mesto}</span>
+                                <Badge variant="outline">{mesto.percento}%</Badge>
+                              </div>
+                            ))}
+                          </CardContent>
+                        </Card>
+                      </div>
+
+                      {/* Kľúčové slová */}
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="text-sm">🔑 Kľúčové slová pre cielenie</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="flex flex-wrap gap-2">
+                            {insight.klucove_slova?.map((slovo, idx) => (
+                              <Badge key={idx} className="bg-purple-100 text-purple-800">
+                                {slovo}
+                              </Badge>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+
+                    {/* Konfigurátor */}
+                    <TabsContent value="konfig" className="space-y-4">
+                      {/* Fasády */}
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="text-sm">🏠 Populárne fasády</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                          {insight.konfigurator_preferencie?.popularne_fasady?.map((fasada, idx) => (
+                            <div key={idx} className="flex items-center justify-between">
+                              <span className="text-sm">{fasada.typ}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-gray-500">{fasada.pocet}x</span>
+                                <Badge variant="outline">{fasada.percento}%</Badge>
+                              </div>
+                            </div>
+                          ))}
+                        </CardContent>
+                      </Card>
+
+                      {/* Interiéry */}
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="text-sm">🎨 Populárne interiéry</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                          {insight.konfigurator_preferencie?.popularne_interiery?.map((interier, idx) => (
+                            <div key={idx} className="flex items-center justify-between">
+                              <span className="text-sm">{interier.typ}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-gray-500">{interier.pocet}x</span>
+                                <Badge variant="outline">{interier.percento}%</Badge>
+                              </div>
+                            </div>
+                          ))}
+                        </CardContent>
+                      </Card>
+
+                      {/* Doplnky */}
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="text-sm">⚡ Populárne doplnky</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                          {insight.konfigurator_preferencie?.popularne_doplnky?.map((doplnok, idx) => (
+                            <div key={idx} className="flex items-center justify-between">
+                              <span className="text-sm">{doplnok.nazov}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-gray-500">{doplnok.pocet}x</span>
+                                <Badge variant="outline">{doplnok.percento}%</Badge>
+                              </div>
+                            </div>
+                          ))}
+                        </CardContent>
+                      </Card>
+
+                      {/* Cenové rozloženie */}
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="text-sm flex items-center gap-2">
+                            <DollarSign className="w-4 h-4" />
+                            Cenové rozloženie
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm">Do 50 000 €</span>
+                              <Badge>{insight.konfigurator_preferencie?.cenove_rozlozenie?.do_50k || 0}</Badge>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm">50 000 - 100 000 €</span>
+                              <Badge>{insight.konfigurator_preferencie?.cenove_rozlozenie?.["50k_100k"] || 0}</Badge>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm">100 000 - 150 000 €</span>
+                              <Badge>{insight.konfigurator_preferencie?.cenove_rozlozenie?.["100k_150k"] || 0}</Badge>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm">Nad 150 000 €</span>
+                              <Badge>{insight.konfigurator_preferencie?.cenove_rozlozenie?.nad_150k || 0}</Badge>
+                            </div>
+                            <div className="pt-3 border-t">
+                              <div className="flex items-center justify-between">
+                                <span className="font-semibold">Priemerná cena:</span>
+                                <Badge className="bg-green-100 text-green-800">
+                                  {(insight.konfigurator_preferencie?.priemerna_koncova_cena || 0).toLocaleString('sk-SK')} €
+                                </Badge>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+
+                    {/* Kampane */}
+                    <TabsContent value="kampane" className="space-y-4">
+                      {/* Facebook/Instagram */}
+                      <Card className="border-2 border-blue-200 bg-blue-50/50">
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <div className="flex gap-1">
+                              <Facebook className="w-5 h-5 text-blue-600" />
+                              <Instagram className="w-5 h-5 text-pink-600" />
+                            </div>
+                            Facebook & Instagram
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <div>
+                            <p className="text-sm font-semibold mb-1">🎯 Cieľová skupina:</p>
+                            <p className="text-sm text-gray-700">
+                              {insight.odporucania_kampane?.facebook_instagram?.cielova_skupina || 'N/A'}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold mb-2">💡 Záujmy:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {insight.odporucania_kampane?.facebook_instagram?.zaujmy?.map((zaujem, idx) => (
+                                <Badge key={idx} className="bg-blue-100 text-blue-800">{zaujem}</Badge>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold mb-2">📍 Umiestnenia:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {insight.odporucania_kampane?.facebook_instagram?.umiestnenia?.map((umiestnenie, idx) => (
+                                <Badge key={idx} variant="outline">{umiestnenie}</Badge>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold mb-2">🎨 Formát reklamy:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {insight.odporucania_kampane?.facebook_instagram?.format_reklamy?.map((format, idx) => (
+                                <Badge key={idx} className="bg-purple-100 text-purple-800">{format}</Badge>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="pt-2 border-t">
+                            <p className="text-sm font-semibold mb-1">💰 Odporúčaný budget:</p>
+                            <p className="text-sm text-gray-700">
+                              {insight.odporucania_kampane?.facebook_instagram?.budget_odporucanie || 'N/A'}
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Google Ads */}
+                      <Card className="border-2 border-green-200 bg-green-50/50">
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Search className="w-5 h-5 text-green-600" />
+                            Google Ads
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <div>
+                            <p className="text-sm font-semibold mb-1">📊 Typ kampane:</p>
+                            <Badge className="bg-green-100 text-green-800">
+                              {insight.odporucania_kampane?.google_ads?.typ_kampane || 'N/A'}
+                            </Badge>
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold mb-2">🔑 Kľúčové slová:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {insight.odporucania_kampane?.google_ads?.klucove_slova?.map((slovo, idx) => (
+                                <Badge key={idx} className="bg-green-100 text-green-800">{slovo}</Badge>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold mb-2">🌍 Geografické cielenie:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {insight.odporucania_kampane?.google_ads?.geograficke_cielenie?.map((geo, idx) => (
+                                <Badge key={idx} variant="outline">{geo}</Badge>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="pt-2 border-t">
+                            <p className="text-sm font-semibold mb-1">💰 Odporúčaný budget:</p>
+                            <p className="text-sm text-gray-700">
+                              {insight.odporucania_kampane?.google_ads?.budget_odporucanie || 'N/A'}
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* TikTok */}
+                      {insight.odporucania_kampane?.tiktok && (
+                        <Card className="border-2 border-purple-200 bg-purple-50/50">
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <Zap className="w-5 h-5 text-purple-600" />
+                              TikTok
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-2">
+                            <div>
+                              <p className="text-sm font-semibold mb-1">Vhodnosť:</p>
+                              <Badge className={
+                                insight.odporucania_kampane.tiktok.vhodnost?.toLowerCase().includes('vhodný')
+                                  ? 'bg-green-100 text-green-800'
+                                  : 'bg-red-100 text-red-800'
+                              }>
+                                {insight.odporucania_kampane.tiktok.vhodnost}
+                              </Badge>
+                            </div>
+                            <div>
+                              <p className="text-sm font-semibold mb-1">Dôvod:</p>
+                              <p className="text-sm text-gray-700">
+                                {insight.odporucania_kampane.tiktok.dovod}
+                              </p>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      )}
+                    </TabsContent>
+
+                    {/* AI Návod */}
+                    <TabsContent value="navod">
+                      <Card className="bg-gradient-to-br from-purple-50 to-pink-50">
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Sparkles className="w-5 h-5 text-purple-600" />
+                            Detailný AI návod pre marketéra
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="prose prose-sm max-w-none">
+                            <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
+                              {insight.ai_generovany_text || 'Generujem detailný návod...'}
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

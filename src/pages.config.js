@@ -61,6 +61,7 @@ import AdminTestGemini from './pages/AdminTestGemini';
 import AdminTestGeminiAuto from './pages/AdminTestGeminiAuto';
 import SEOEditor from './pages/SEOEditor';
 import AdminABTesting from './pages/AdminABTesting';
+import AIMarketingInsights from './pages/AIMarketingInsights';
 import __Layout from './Layout.jsx';
 
 
@@ -128,6 +129,7 @@ export const PAGES = {
     "AdminTestGeminiAuto": AdminTestGeminiAuto,
     "SEOEditor": SEOEditor,
     "AdminABTesting": AdminABTesting,
+    "AIMarketingInsights": AIMarketingInsights,
 }
 
 export const pagesConfig = {
