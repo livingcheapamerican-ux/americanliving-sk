@@ -66,8 +66,8 @@ Deno.serve(async (req) => {
         return visitedDom || interactedDom || configuredDom;
       });
 
-      if (domSessions.length < 3) {
-        console.log(`⚠️ Nedostatok dát pre ${dom.nazov} (${domSessions.length} sessions, min 3 potrebné), preskakujem...`);
+      if (domSessions.length < 1) {
+        console.log(`⚠️ Nedostatok dát pre ${dom.nazov} (${domSessions.length} sessions), preskakujem...`);
         continue;
       }
       
