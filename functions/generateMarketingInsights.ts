@@ -20,9 +20,13 @@ Deno.serve(async (req) => {
     const sessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 1000);
     console.log(`📊 Načítaných ${sessions.length} sessions`);
 
+    // 3. Načítať používateľské preferencie (cookies data)
+    const userPreferences = await base44.asServiceRole.entities.UserPreferences.list('', 1000);
+    console.log(`🍪 Načítaných ${userPreferences.length} používateľských preferencií`);
+
     const insights = [];
 
-    // 3. Pre každý dom vytvoriť analýzu
+    // 4. Pre každý dom vytvoriť analýzu
     for (const dom of domy) {
       console.log(`🏠 Analyzujem dom: ${dom.nazov}`);
 
@@ -48,6 +52,64 @@ Deno.serve(async (req) => {
       }
       
       console.log(`✅ Našiel som ${domSessions.length} sessions pre ${dom.nazov}`);
+
+      // Získať preferencie používateľov, ktorí prezerali tento dom
+      const domUserPreferences = userPreferences.filter(pref => 
+        pref.prehliadnute_domy?.some(d => d.dom_id === dom.id || d.dom_nazov === dom.nazov)
+      );
+      console.log(`🍪 Našiel som ${domUserPreferences.length} používateľských preferencií pre ${dom.nazov}`);
+
+      // Analýza cookies a preferencií
+      const cookieData = {
+        vracajuci_sa_pouzivatelia: domUserPreferences.filter(p => 
+          p.prehliadnute_domy?.length > 1
+        ).length,
+        oblubeni_vyrobcovia: {},
+        cenove_rozlozenie_preferencie: {
+          do_50k: 0,
+          '50k_100k': 0,
+          '100k_150k': 0,
+          nad_150k: 0
+        },
+        related_houses_viewed: {},
+        konfigurator_usage: domUserPreferences.filter(p => 
+          p.konfigurator_interakcie?.some(k => k.dokoncene)
+        ).length
+      };
+
+      // Analyzovať preferencie výrobcov
+      domUserPreferences.forEach(pref => {
+        pref.oblubene_vyrobcovia?.forEach(vyrobca => {
+          cookieData.oblubeni_vyrobcovia[vyrobca] = 
+            (cookieData.oblubeni_vyrobcovia[vyrobca] || 0) + 1;
+        });
+
+        // Cenové preferencie
+        if (pref.cenove_pasmo) {
+          if (pref.cenove_pasmo.max < 50000) cookieData.cenove_rozlozenie_preferencie.do_50k++;
+          else if (pref.cenove_pasmo.max < 100000) cookieData.cenove_rozlozenie_preferencie['50k_100k']++;
+          else if (pref.cenove_pasmo.max < 150000) cookieData.cenove_rozlozenie_preferencie['100k_150k']++;
+          else cookieData.cenove_rozlozenie_preferencie.nad_150k++;
+        }
+
+        // Súvisiace prezerané domy
+        pref.prehliadnute_domy?.forEach(house => {
+          if (house.dom_nazov !== dom.nazov) {
+            cookieData.related_houses_viewed[house.dom_nazov] = 
+              (cookieData.related_houses_viewed[house.dom_nazov] || 0) + 1;
+          }
+        });
+      });
+
+      const topRelatedHouses = Object.entries(cookieData.related_houses_viewed)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([nazov]) => nazov);
+
+      const topPreferredManufacturers = Object.entries(cookieData.oblubeni_vyrobcovia)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([vyrobca]) => vyrobca);
 
       // Zber štatistík
       const stats = {
@@ -260,7 +322,7 @@ Deno.serve(async (req) => {
       // Pripraviť dáta pre AI
       const aiPrompt = `Analyzuj tieto marketingové dáta pre dom "${dom.nazov}" od výrobcu ${dom.vyrobca} a vytvor presné odporúčania pre reklamné kampane na sociálnych sieťach.
 
-DÁTA:
+ZÁKLADNÉ DÁTA:
 - Počet zobrazení: ${stats.pocet_zobrazeni}
 - Počet konfigurácií: ${stats.pocet_konfiguracii}
 - Priemerný čas na stránke: ${stats.priemerny_cas}s
@@ -272,13 +334,21 @@ DÁTA:
 - Priemerná cena: ${konfPreferencie.priemerna_koncova_cena}€
 - Typ návštevníkov: ${behavioralna.typ_navstevnika.prieskumnici}% prieskumníci, ${behavioralna.typ_navstevnika.rozhodovatelia}% rozhodovatelia, ${behavioralna.typ_navstevnika.vracajuci_sa}% vracajúci sa
 
-Vytvor DETAILNÉ odporúčania v slovenčine obsahujúce:
-1. Konkrétne nastavenia pre Facebook/Instagram kampane (cieľová skupina, záujmy, umiestnenia, formát, budget)
-2. Konkrétne nastavenia pre Google Ads (typ kampane, kľúčové slová, geografické cielenie, budget)
-3. Hodnotenie vhodnosti pre TikTok
-4. Zrozumiteľný súhrn pre marketéra s presnými inštrukciami
+COOKIES & POUŽÍVATEĽSKÉ PREFERENCIE:
+- Vracajúci sa používatelia: ${cookieData.vracajuci_sa_pouzivatelia} (${domUserPreferences.length > 0 ? Math.round((cookieData.vracajuci_sa_pouzivatelia / domUserPreferences.length) * 100) : 0}%)
+- Top preferovaní výrobcovia: ${topPreferredManufacturers.join(', ') || 'žiadne dáta'}
+- Súvisiace prezerané domy: ${topRelatedHouses.join(', ') || 'žiadne'}
+- Používatelia s dokončeným konfigurátorom: ${cookieData.konfigurator_usage}
+- Cenové preferencie: ${cookieData.cenove_rozlozenie_preferencie.do_50k} do 50k, ${cookieData.cenove_rozlozenie_preferencie['50k_100k']} 50-100k, ${cookieData.cenove_rozlozenie_preferencie['100k_150k']} 100-150k, ${cookieData.cenove_rozlozenie_preferencie.nad_150k} nad 150k
 
-Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
+Vytvor DETAILNÉ odporúčania v slovenčine obsahujúce:
+1. Konkrétne nastavenia pre Facebook/Instagram kampane (cieľová skupina, záujmy, umiestnenia, formát, budget) + RETARGETING stratégie pomocou cookies
+2. Konkrétne nastavenia pre Google Ads (typ kampane, kľúčové slová, geografické cielenie, budget) + REMARKETING pomocou Google Ads cookies
+3. Hodnotenie vhodnosti pre TikTok
+4. Cookie-based RETARGETING stratégie (Lookalike audiences, Custom audiences, Retargeting pixels)
+5. Zrozumiteľný súhrn pre marketéra s presnými inštrukciami
+
+Odpovedz iba v slovenčine s praktickými a konkrétnymi radami vrátane využitia cookies pre retargeting.`;
 
       console.log('🤖 Posielam dáta na AI analýzu...');
 
@@ -316,6 +386,16 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
                 dovod: { type: "string" }
               }
             },
+            retargeting_strategie: {
+              type: "object",
+              properties: {
+                facebook_pixel: { type: "string" },
+                google_remarketing: { type: "string" },
+                lookalike_audiences: { type: "string" },
+                custom_audiences: { type: "string" },
+                email_retargeting: { type: "string" }
+              }
+            },
             sumar: { type: "string" },
             detailny_navod: { type: "string" }
           }
@@ -343,8 +423,15 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
             vhodnost: "Stredne vhodný",
             dovod: "Závisí od cieľovej skupiny"
           },
-          sumar: `Pre dom ${dom.nazov} odporúčame zamerať sa na ${topMesta[0]?.mesto || 'miestny trh'} s dôrazom na ${zariadenia.mobile > 50 ? 'mobilné' : 'desktop'} zariadenia.`,
-          detailny_navod: `Kompletný marketingový plán pre ${dom.nazov} sa generuje...`
+          retargeting_strategie: {
+            facebook_pixel: "Nastaviť Facebook Pixel pre sledovanie návštev a vytvorenie Custom Audiences",
+            google_remarketing: "Použiť Google Remarketing tag pre zobrazovanie reklám návštevníkom webu",
+            lookalike_audiences: "Vytvoriť Lookalike Audiences na základe konvertujúcich zákazníkov",
+            custom_audiences: "Segmentovať audiences podľa prezeraných domov a interakcií s konfigurátorom",
+            email_retargeting: "Retargetovať používateľov, ktorí zanechali email cez kontaktný formulár"
+          },
+          sumar: `Pre dom ${dom.nazov} odporúčame zamerať sa na ${topMesta[0]?.mesto || 'miestny trh'} s dôrazom na ${zariadenia.mobile > 50 ? 'mobilné' : 'desktop'} zariadenia a využiť retargeting pre ${cookieData.vracajuci_sa_pouzivatelia} vracajúcich sa používateľov.`,
+          detailny_navod: `Kompletný marketingový plán pre ${dom.nazov} vrátane retargeting stratégií sa generuje...`
         };
       }
 
@@ -381,7 +468,15 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
         odporucania_kampane: {
           facebook_instagram: aiResponse.facebook_instagram || {},
           google_ads: aiResponse.google_ads || {},
-          tiktok: aiResponse.tiktok || {}
+          tiktok: aiResponse.tiktok || {},
+          retargeting_strategie: aiResponse.retargeting_strategie || {}
+        },
+        cookie_analytics: {
+          vracajuci_sa_pouzivatelia: cookieData.vracajuci_sa_pouzivatelia,
+          top_preferovani_vyrobcovia: topPreferredManufacturers,
+          suvisiace_prezerane_domy: topRelatedHouses,
+          dokoncene_konfiguracie: cookieData.konfigurator_usage,
+          cenove_preferencie: cookieData.cenove_rozlozenie_preferencie
         },
         sumar_odporucani: aiResponse.sumar || '',
         ai_generovany_text: aiResponse.detailny_navod || '',
