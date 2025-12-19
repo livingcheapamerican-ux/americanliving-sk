@@ -328,11 +328,12 @@ export default function AdminAnalyzaSessions() {
                 className="w-full px-3 py-2 border rounded-md text-sm"
               >
                 <option value="all">Všetky</option>
-                <option value="bounced">Bounced</option>
-                <option value="engaged">Engaged</option>
-                <option value="highly_engaged">Vysoko angažovaný</option>
-                <option value="converted">Konvertovaný</option>
-                <option value="configurator_user">Konfigurátor</option>
+                <option value="odrazeny">Odrazený</option>
+                <option value="zaujaty">Zaujatý</option>
+                <option value="velmi_zaujaty">Veľmi zaujatý</option>
+                <option value="vracajuci_sa">🔄 Vracajúci sa</option>
+                <option value="konvertoval">Konvertoval</option>
+                <option value="pouzivatel_konfiguratora">Konfigurátor</option>
               </select>
             </div>
           </div>
@@ -357,8 +358,8 @@ export default function AdminAnalyzaSessions() {
           </div>
         </Card>
 
-        {/* Filters */}
-        <Card className="p-4 mb-6">
+        {/* Sessions List */}
+        <div className="space-y-3">
           <div className="flex items-center gap-2 mb-4">
             <Filter className="w-5 h-5 text-gray-600" />
             <h3 className="font-semibold text-gray-900">Filtre a vyhľadávanie</h3>
