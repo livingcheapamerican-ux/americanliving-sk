@@ -381,10 +381,11 @@ Vytvor DETAILNÉ odporúčania v slovenčine obsahujúce:
 2. Konkrétne nastavenia pre Google Ads (typ kampane, kľúčové slová, geografické cielenie, budget) + REMARKETING pomocou Google Ads cookies
 3. Hodnotenie vhodnosti pre TikTok
 4. Cookie-based RETARGETING stratégie (Lookalike audiences, Custom audiences, Retargeting pixels)
-5. A/B TESTOVACIE STRATÉGIE - navrhni minimálne 2 A/B testy pre Facebook a 2 pre Google Ads (čo testovať, ako merať)
-6. ROI PREDIKCIA - odhadni dosah, CTR, konverzie a ROI pre každú platformu na základe týchto dát
+5. A/B TESTOVACIE STRATÉGIE - navrhni minimálne 2 A/B testy pre Facebook a 2 pre Google Ads s KONKRÉTNYMI HYPOTÉZAMI a očakávanými výsledkami
+6. ROI PREDIKCIA - odhadni dosah, CTR, konverzie a ROI pre každú platformu + OPTIMÁLNE ROZDELENIE BUDGETU medzi Facebook a Google Ads pre maximalizáciu celkového ROI (percentuálne rozdelenie + zdôvodnenie + príklad s konkrétnymi číslami)
 7. KREATÍVNE ODPORÚČANIA - navrhni 3 reklamné obrazky (popis), 3 reklamné texty (nadpis + text + CTA) a 2 video koncepty
-8. Zrozumiteľný súhrn pre marketéra s presnými inštrukciami
+8. AI PREDIKCIA KONVERZIE - analyzuj ktorý typ používateľa (prieskumníci ${behavioralna.typ_navstevnika.prieskumnici}%, rozhodovatelia ${behavioralna.typ_navstevnika.rozhodovatelia}%, vracajúci sa ${behavioralna.typ_navstevnika.vracajuci_sa}%) má najvyššiu pravdepodobnosť konverzie a PREČO. Poskytni konkrétne odporúčania ako cieliť každý typ.
+9. Zrozumiteľný súhrn pre marketéra s presnými inštrukciami
 
 Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
 
@@ -446,7 +447,9 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
                       varianta_a: { type: "string" },
                       varianta_b: { type: "string" },
                       odporucany_budget: { type: "string" },
-                      meratelne_metriky: { type: "array", items: { type: "string" } }
+                      meratelne_metriky: { type: "array", items: { type: "string" } },
+                      hypoteza: { type: "string" },
+                      ocakavany_vysledok: { type: "string" }
                     }
                   }
                 },
@@ -459,7 +462,9 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
                       varianta_a: { type: "string" },
                       varianta_b: { type: "string" },
                       odporucany_budget: { type: "string" },
-                      meratelne_metriky: { type: "array", items: { type: "string" } }
+                      meratelne_metriky: { type: "array", items: { type: "string" } },
+                      hypoteza: { type: "string" },
+                      ocakavany_vysledok: { type: "string" }
                     }
                   }
                 }
@@ -488,7 +493,50 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
                     break_even_cas: { type: "string" }
                   }
                 },
-                celkova_roi_prognoza: { type: "string" }
+                celkova_roi_prognoza: { type: "string" },
+                optimalne_rozdelenie_budgetu: {
+                  type: "object",
+                  properties: {
+                    facebook_percent: { type: "number" },
+                    google_ads_percent: { type: "number" },
+                    zdovodnenie: { type: "string" },
+                    priklad_rozdelenia: {
+                      type: "object",
+                      properties: {
+                        celkovy_budget_mesacne: { type: "number" },
+                        facebook_eur: { type: "number" },
+                        google_ads_eur: { type: "number" },
+                        ocakavane_konverzie_facebook: { type: "number" },
+                        ocakavane_konverzie_google: { type: "number" },
+                        celkove_ocakavane_roi: { type: "number" }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            ai_predikcia_konverzie: {
+              type: "object",
+              properties: {
+                najpravdepodobnejsi_typ: { 
+                  type: "string",
+                  enum: ["prieskumnici", "rozhodovatelia", "vracajuci_sa"]
+                },
+                pravdepodobnost_konverzie: { type: "number" },
+                dovod: { type: "string" },
+                odporucania_pre_typ: { type: "string" },
+                detailna_analyza_typov: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      typ: { type: "string" },
+                      konverzna_pravdepodobnost: { type: "number" },
+                      charakteristiky: { type: "string" },
+                      ako_cielit: { type: "string" }
+                    }
+                  }
+                }
               }
             },
             kreativne_odporucania: {
@@ -604,6 +652,10 @@ Odpovedz iba v slovenčine s praktickými a konkrétnymi radami.`;
           suvisiace_prezerane_domy: topRelatedHouses,
           dokoncene_konfiguracie: cookieData.konfigurator_usage,
           cenove_preferencie: cookieData.cenove_rozlozenie_preferencie
+        },
+        behavioralna_segmentacia: {
+          ...behavioralna,
+          ai_predikcia_konverzie: aiResponse.ai_predikcia_konverzie || {}
         },
         ab_testing_strategie: aiResponse.ab_testing_strategie || {
           facebook_testy: [],

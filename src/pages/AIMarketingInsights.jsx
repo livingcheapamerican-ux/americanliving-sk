@@ -27,7 +27,8 @@ import {
   CheckCircle,
   AlertCircle,
   Loader2,
-  PieChart
+  PieChart,
+  Brain
 } from "lucide-react";
 import { 
   BarChart, 
@@ -1084,6 +1085,159 @@ export default function AIMarketingInsights() {
 
                     {/* Kampane */}
                     <TabsContent value="kampane" className="space-y-4">
+                      {/* AI Predikcia Konverzie */}
+                      {insight.behavioralna_segmentacia?.ai_predikcia_konverzie && (
+                        <Card className="border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-purple-50">
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <Brain className="w-5 h-5 text-indigo-600" />
+                              🧠 AI Predikcia Konverzie Používateľov
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            <div className="bg-white p-4 rounded-lg border-2 border-indigo-300">
+                              <div className="flex items-center justify-between mb-3">
+                                <h4 className="font-bold text-lg">Najpravdepodobnejší konvertujúci typ:</h4>
+                                <Badge className="bg-indigo-600 text-white text-lg px-4 py-2">
+                                  {insight.behavioralna_segmentacia.ai_predikcia_konverzie.najpravdepodobnejsi_typ}
+                                </Badge>
+                              </div>
+                              <div className="bg-indigo-50 p-3 rounded-lg mb-3">
+                                <p className="text-sm font-semibold mb-1">Pravdepodobnosť konverzie:</p>
+                                <div className="flex items-center gap-3">
+                                  <div className="flex-1 bg-gray-200 rounded-full h-4">
+                                    <div 
+                                      className="bg-gradient-to-r from-indigo-600 to-purple-600 h-4 rounded-full transition-all"
+                                      style={{ width: `${insight.behavioralna_segmentacia.ai_predikcia_konverzie.pravdepodobnost_konverzie}%` }}
+                                    />
+                                  </div>
+                                  <span className="text-xl font-bold text-indigo-700">
+                                    {insight.behavioralna_segmentacia.ai_predikcia_konverzie.pravdepodobnost_konverzie}%
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="bg-yellow-50 p-3 rounded-lg mb-3">
+                                <p className="text-sm font-semibold mb-1">💡 Dôvod:</p>
+                                <p className="text-sm text-gray-700">{insight.behavioralna_segmentacia.ai_predikcia_konverzie.dovod}</p>
+                              </div>
+                              <div className="bg-green-50 p-3 rounded-lg">
+                                <p className="text-sm font-semibold mb-1">🎯 Odporúčania pre cielenie:</p>
+                                <p className="text-sm text-gray-700">{insight.behavioralna_segmentacia.ai_predikcia_konverzie.odporucania_pre_typ}</p>
+                              </div>
+                            </div>
+
+                            {/* Detailná analýza všetkých typov */}
+                            {insight.behavioralna_segmentacia.ai_predikcia_konverzie.detailna_analyza_typov?.length > 0 && (
+                              <div>
+                                <h4 className="font-semibold mb-3">📊 Detailná analýza všetkých typov:</h4>
+                                <div className="space-y-2">
+                                  {insight.behavioralna_segmentacia.ai_predikcia_konverzie.detailna_analyza_typov.map((typ, idx) => (
+                                    <Card key={idx} className="bg-white">
+                                      <CardContent className="p-3">
+                                        <div className="flex items-center justify-between mb-2">
+                                          <h5 className="font-bold text-sm">{typ.typ}</h5>
+                                          <Badge className="bg-purple-100 text-purple-800">
+                                            {typ.konverzna_pravdepodobnost}% konverzia
+                                          </Badge>
+                                        </div>
+                                        <p className="text-xs text-gray-600 mb-2">
+                                          <span className="font-semibold">Charakteristiky:</span> {typ.charakteristiky}
+                                        </p>
+                                        <p className="text-xs text-gray-700 bg-blue-50 p-2 rounded">
+                                          <span className="font-semibold">Ako cieliť:</span> {typ.ako_cielit}
+                                        </p>
+                                      </CardContent>
+                                    </Card>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      )}
+
+                      {/* Optimálne Rozdelenie Budgetu */}
+                      {insight.roi_predikcia?.optimalne_rozdelenie_budgetu && (
+                        <Card className="border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-50">
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <DollarSign className="w-5 h-5 text-emerald-600" />
+                              💰 AI Optimalizácia Budgetu
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            <div className="bg-white p-4 rounded-lg border-2 border-emerald-300">
+                              <h4 className="font-bold mb-3">Odporúčané rozdelenie pre maximálne ROI:</h4>
+                              <div className="grid grid-cols-2 gap-4 mb-4">
+                                <div className="bg-blue-50 p-4 rounded-lg text-center">
+                                  <div className="flex items-center justify-center gap-2 mb-2">
+                                    <Facebook className="w-5 h-5 text-blue-600" />
+                                    <Instagram className="w-5 h-5 text-pink-600" />
+                                  </div>
+                                  <p className="text-3xl font-bold text-blue-700">
+                                    {insight.roi_predikcia.optimalne_rozdelenie_budgetu.facebook_percent}%
+                                  </p>
+                                  <p className="text-xs text-gray-600 mt-1">Facebook / Instagram</p>
+                                </div>
+                                <div className="bg-green-50 p-4 rounded-lg text-center">
+                                  <div className="flex items-center justify-center gap-2 mb-2">
+                                    <Search className="w-5 h-5 text-green-600" />
+                                  </div>
+                                  <p className="text-3xl font-bold text-green-700">
+                                    {insight.roi_predikcia.optimalne_rozdelenie_budgetu.google_ads_percent}%
+                                  </p>
+                                  <p className="text-xs text-gray-600 mt-1">Google Ads</p>
+                                </div>
+                              </div>
+
+                              <div className="bg-yellow-50 p-3 rounded-lg mb-3">
+                                <p className="text-sm font-semibold mb-1">📝 Zdôvodnenie:</p>
+                                <p className="text-sm text-gray-700">
+                                  {insight.roi_predikcia.optimalne_rozdelenie_budgetu.zdovodnenie}
+                                </p>
+                              </div>
+
+                              {insight.roi_predikcia.optimalne_rozdelenie_budgetu.priklad_rozdelenia && (
+                                <div className="bg-emerald-50 p-4 rounded-lg">
+                                  <p className="font-semibold text-sm mb-3">💡 Príklad s konkrétnymi číslami:</p>
+                                  <div className="grid grid-cols-2 gap-3 text-sm">
+                                    <div className="bg-white p-2 rounded">
+                                      <p className="text-xs text-gray-500">Celkový mesačný budget</p>
+                                      <p className="font-bold text-lg">
+                                        {insight.roi_predikcia.optimalne_rozdelenie_budgetu.priklad_rozdelenia.celkovy_budget_mesacne?.toLocaleString()} €
+                                      </p>
+                                    </div>
+                                    <div className="bg-white p-2 rounded">
+                                      <p className="text-xs text-gray-500">Očakávané ROI</p>
+                                      <p className="font-bold text-lg text-green-600">
+                                        {insight.roi_predikcia.optimalne_rozdelenie_budgetu.priklad_rozdelenia.celkove_ocakavane_roi}%
+                                      </p>
+                                    </div>
+                                    <div className="bg-blue-50 p-2 rounded">
+                                      <p className="text-xs text-gray-500">Facebook budget</p>
+                                      <p className="font-bold">
+                                        {insight.roi_predikcia.optimalne_rozdelenie_budgetu.priklad_rozdelenia.facebook_eur?.toLocaleString()} €
+                                      </p>
+                                      <p className="text-xs text-gray-600">
+                                        → {insight.roi_predikcia.optimalne_rozdelenie_budgetu.priklad_rozdelenia.ocakavane_konverzie_facebook} konverzií
+                                      </p>
+                                    </div>
+                                    <div className="bg-green-50 p-2 rounded">
+                                      <p className="text-xs text-gray-500">Google Ads budget</p>
+                                      <p className="font-bold">
+                                        {insight.roi_predikcia.optimalne_rozdelenie_budgetu.priklad_rozdelenia.google_ads_eur?.toLocaleString()} €
+                                      </p>
+                                      <p className="text-xs text-gray-600">
+                                        → {insight.roi_predikcia.optimalne_rozdelenie_budgetu.priklad_rozdelenia.ocakavane_konverzie_google} konverzií
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      )}
                       {/* Retargeting Stratégie */}
                       {insight.odporucania_kampane?.retargeting_strategie && (
                         <Card className="border-2 border-purple-200 bg-purple-50/50">
@@ -1252,13 +1406,13 @@ export default function AIMarketingInsights() {
 
                     {/* AI Návod */}
                     <TabsContent value="navod" className="space-y-4">
-                      {/* A/B Testing Stratégie */}
+                      {/* A/B Testing Stratégie s hypotézami */}
                       {insight.ab_testing_strategie && (
                         <Card className="border-2 border-purple-200 bg-purple-50/50">
                           <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                               <Zap className="w-5 h-5 text-purple-600" />
-                              A/B Testovacie Stratégie
+                              🧪 A/B Testovacie Stratégie s Hypotézami
                             </CardTitle>
                           </CardHeader>
                           <CardContent className="space-y-4">
@@ -1270,26 +1424,44 @@ export default function AIMarketingInsights() {
                               </h4>
                               <div className="space-y-3">
                                 {insight.ab_testing_strategie.facebook_testy?.map((test, idx) => (
-                                  <Card key={idx} className="bg-white">
-                                    <CardContent className="p-3">
-                                      <p className="font-semibold text-sm mb-1">{test.nazov}</p>
-                                      <div className="grid grid-cols-2 gap-2 mb-2">
-                                        <div className="bg-blue-50 p-2 rounded text-xs">
-                                          <p className="font-semibold">Varianta A:</p>
-                                          <p>{test.varianta_a}</p>
+                                  <Card key={idx} className="bg-white border-2 border-blue-200">
+                                    <CardContent className="p-4">
+                                      <p className="font-bold text-base mb-2">{test.nazov}</p>
+
+                                      {test.hypoteza && (
+                                        <div className="bg-yellow-50 p-3 rounded-lg mb-3">
+                                          <p className="text-xs font-semibold text-yellow-800 mb-1">🔬 Hypotéza:</p>
+                                          <p className="text-sm text-gray-700">{test.hypoteza}</p>
                                         </div>
-                                        <div className="bg-green-50 p-2 rounded text-xs">
-                                          <p className="font-semibold">Varianta B:</p>
-                                          <p>{test.varianta_b}</p>
+                                      )}
+
+                                      <div className="grid grid-cols-2 gap-2 mb-3">
+                                        <div className="bg-blue-50 p-3 rounded border border-blue-200">
+                                          <p className="font-semibold text-xs mb-1">Varianta A (Kontrolná):</p>
+                                          <p className="text-sm">{test.varianta_a}</p>
+                                        </div>
+                                        <div className="bg-green-50 p-3 rounded border border-green-200">
+                                          <p className="font-semibold text-xs mb-1">Varianta B (Testovaná):</p>
+                                          <p className="text-sm">{test.varianta_b}</p>
                                         </div>
                                       </div>
-                                      <p className="text-xs text-gray-600">Budget: {test.odporucany_budget}</p>
-                                      <div className="flex flex-wrap gap-1 mt-2">
-                                        {test.meratelne_metriky?.map((metrika, i) => (
-                                          <Badge key={i} variant="outline" className="text-xs">
-                                            {metrika}
-                                          </Badge>
-                                        ))}
+
+                                      {test.ocakavany_vysledok && (
+                                        <div className="bg-green-50 p-3 rounded-lg mb-2">
+                                          <p className="text-xs font-semibold text-green-800 mb-1">✅ Očakávaný výsledok:</p>
+                                          <p className="text-sm text-gray-700">{test.ocakavany_vysledok}</p>
+                                        </div>
+                                      )}
+
+                                      <div className="flex items-center justify-between">
+                                        <p className="text-xs text-gray-600">Budget: <span className="font-bold">{test.odporucany_budget}</span></p>
+                                        <div className="flex flex-wrap gap-1">
+                                          {test.meratelne_metriky?.map((metrika, i) => (
+                                            <Badge key={i} variant="outline" className="text-xs">
+                                              📊 {metrika}
+                                            </Badge>
+                                          ))}
+                                        </div>
                                       </div>
                                     </CardContent>
                                   </Card>
@@ -1305,26 +1477,44 @@ export default function AIMarketingInsights() {
                               </h4>
                               <div className="space-y-3">
                                 {insight.ab_testing_strategie.google_ads_testy?.map((test, idx) => (
-                                  <Card key={idx} className="bg-white">
-                                    <CardContent className="p-3">
-                                      <p className="font-semibold text-sm mb-1">{test.nazov}</p>
-                                      <div className="grid grid-cols-2 gap-2 mb-2">
-                                        <div className="bg-blue-50 p-2 rounded text-xs">
-                                          <p className="font-semibold">Varianta A:</p>
-                                          <p>{test.varianta_a}</p>
+                                  <Card key={idx} className="bg-white border-2 border-green-200">
+                                    <CardContent className="p-4">
+                                      <p className="font-bold text-base mb-2">{test.nazov}</p>
+
+                                      {test.hypoteza && (
+                                        <div className="bg-yellow-50 p-3 rounded-lg mb-3">
+                                          <p className="text-xs font-semibold text-yellow-800 mb-1">🔬 Hypotéza:</p>
+                                          <p className="text-sm text-gray-700">{test.hypoteza}</p>
                                         </div>
-                                        <div className="bg-green-50 p-2 rounded text-xs">
-                                          <p className="font-semibold">Varianta B:</p>
-                                          <p>{test.varianta_b}</p>
+                                      )}
+
+                                      <div className="grid grid-cols-2 gap-2 mb-3">
+                                        <div className="bg-blue-50 p-3 rounded border border-blue-200">
+                                          <p className="font-semibold text-xs mb-1">Varianta A (Kontrolná):</p>
+                                          <p className="text-sm">{test.varianta_a}</p>
+                                        </div>
+                                        <div className="bg-green-50 p-3 rounded border border-green-200">
+                                          <p className="font-semibold text-xs mb-1">Varianta B (Testovaná):</p>
+                                          <p className="text-sm">{test.varianta_b}</p>
                                         </div>
                                       </div>
-                                      <p className="text-xs text-gray-600">Budget: {test.odporucany_budget}</p>
-                                      <div className="flex flex-wrap gap-1 mt-2">
-                                        {test.meratelne_metriky?.map((metrika, i) => (
-                                          <Badge key={i} variant="outline" className="text-xs">
-                                            {metrika}
-                                          </Badge>
-                                        ))}
+
+                                      {test.ocakavany_vysledok && (
+                                        <div className="bg-green-50 p-3 rounded-lg mb-2">
+                                          <p className="text-xs font-semibold text-green-800 mb-1">✅ Očakávaný výsledok:</p>
+                                          <p className="text-sm text-gray-700">{test.ocakavany_vysledok}</p>
+                                        </div>
+                                      )}
+
+                                      <div className="flex items-center justify-between">
+                                        <p className="text-xs text-gray-600">Budget: <span className="font-bold">{test.odporucany_budget}</span></p>
+                                        <div className="flex flex-wrap gap-1">
+                                          {test.meratelne_metriky?.map((metrika, i) => (
+                                            <Badge key={i} variant="outline" className="text-xs">
+                                              📊 {metrika}
+                                            </Badge>
+                                          ))}
+                                        </div>
                                       </div>
                                     </CardContent>
                                   </Card>
