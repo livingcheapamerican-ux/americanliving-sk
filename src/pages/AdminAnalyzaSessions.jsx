@@ -45,6 +45,7 @@ export default function AdminAnalyzaSessions() {
   const [filterDevice, setFilterDevice] = useState("all");
   const [filterTag, setFilterTag] = useState("all");
   const [expandedSession, setExpandedSession] = useState(null);
+  const [expandedVisitor, setExpandedVisitor] = useState(null);
   const [sortBy, setSortBy] = useState("created_date");
   const [showMapModal, setShowMapModal] = useState(false);
   const [hideAdminSessions, setHideAdminSessions] = useState(true);
@@ -114,14 +115,73 @@ export default function AdminAnalyzaSessions() {
     return true;
   });
 
+  // Zoskupiť sessions podľa návštevníka (email ak prihlásený, inak IP)
+  const groupedVisitors = (() => {
+    const groups = {};
+    
+    filteredSessions.forEach(session => {
+      const visitorKey = session.user_email || session.location_info?.ip || session.session_id;
+      
+      if (!groups[visitorKey]) {
+        groups[visitorKey] = {
+          visitorKey,
+          displayName: session.user_name || session.user_email || `IP: ${session.location_info?.ip || 'Unknown'}`,
+          email: session.user_email,
+          ip: session.location_info?.ip,
+          sessions: [],
+          totalSessions: 0,
+          totalDuration: 0,
+          totalClicks: 0,
+          totalPages: 0,
+          conversions: 0,
+          isReturning: false,
+          firstVisit: session.start_time,
+          lastVisit: session.start_time,
+          commonDevice: session.device_info?.device_type,
+          commonLocation: session.location_info?.city ? `${session.location_info.city}, ${session.location_info.country_code}` : null,
+          avgEngagement: 0
+        };
+      }
+      
+      const group = groups[visitorKey];
+      group.sessions.push(session);
+      group.totalSessions++;
+      group.totalDuration += session.duration_seconds || 0;
+      group.totalClicks += session.clicks?.length || 0;
+      group.totalPages += session.pages_visited?.length || 0;
+      group.conversions += session.conversions?.length || 0;
+      
+      if (new Date(session.start_time) < new Date(group.firstVisit)) {
+        group.firstVisit = session.start_time;
+      }
+      if (new Date(session.start_time) > new Date(group.lastVisit)) {
+        group.lastVisit = session.start_time;
+      }
+      
+      group.isReturning = group.totalSessions > 1;
+    });
+    
+    // Vypočítať priemerný engagement
+    Object.values(groups).forEach(group => {
+      group.avgEngagement = Math.round(
+        group.sessions.reduce((acc, s) => acc + (s.engagement_score || 0), 0) / group.sessions.length
+      );
+    });
+    
+    return Object.values(groups).sort((a, b) => 
+      new Date(b.lastVisit) - new Date(a.lastVisit)
+    );
+  })();
+
   const stats = {
     totalSessions: filteredSessions.length,
     avgDuration: Math.round(filteredSessions.reduce((acc, s) => acc + (s.duration_seconds || 0), 0) / filteredSessions.length) || 0,
     totalClicks: filteredSessions.reduce((acc, s) => acc + (s.clicks?.length || 0), 0),
-    uniqueUsers: new Set(filteredSessions.map(s => s.user_email)).size,
+    uniqueUsers: groupedVisitors.length,
     activeSessions: filteredSessions.filter(s => s.is_active).length,
     avgEngagement: Math.round(filteredSessions.reduce((acc, s) => acc + (s.engagement_score || 0), 0) / filteredSessions.length) || 0,
-    conversions: filteredSessions.filter(s => s.conversions?.length > 0).length
+    conversions: filteredSessions.filter(s => s.conversions?.length > 0).length,
+    returningVisitors: groupedVisitors.filter(v => v.isReturning).length
   };
 
   const getDeviceIcon = (deviceType) => {
@@ -283,6 +343,18 @@ export default function AdminAnalyzaSessions() {
               </div>
             </div>
           </Card>
+
+          <Card className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-teal-100 rounded-lg">
+                <Users className="w-5 h-5 text-teal-600" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">Vracajúci</p>
+                <p className="text-2xl font-bold text-gray-900">{stats.returningVisitors}</p>
+              </div>
+            </div>
+          </Card>
         </div>
 
         {/* Filters */}
@@ -384,109 +456,90 @@ export default function AdminAnalyzaSessions() {
           </div>
         </Card>
 
-        {/* Sessions List */}
+        {/* Grouped Visitors List */}
         <div className="space-y-3">
           {isLoading ? (
             <Card className="p-8 text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-600 mx-auto mb-4"></div>
               <p className="text-gray-600">Načítavam sessions...</p>
             </Card>
-          ) : filteredSessions.length === 0 ? (
+          ) : groupedVisitors.length === 0 ? (
             <Card className="p-8 text-center">
               <Activity className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-600">Žiadne sessions nenájdené</p>
+              <p className="text-gray-600">Žiadni návštevníci nenájdení</p>
             </Card>
           ) : (
-            filteredSessions.map((session) => (
-              <Card key={session.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                {/* Session Header */}
+            groupedVisitors.map((visitor) => (
+              <Card key={visitor.visitorKey} className="overflow-hidden hover:shadow-lg transition-shadow">
+                {/* Visitor Header - agregované údaje */}
                 <div 
                   className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 cursor-pointer hover:from-blue-100 hover:to-indigo-100 transition-all"
-                  onClick={() => setExpandedSession(expandedSession === session.id ? null : session.id)}
+                  onClick={() => setExpandedVisitor(expandedVisitor === visitor.visitorKey ? null : visitor.visitorKey)}
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
-                        <h3 className="font-bold text-gray-900">{session.user_name || 'Anonymous'}</h3>
-                        {session.is_active && (
-                          <Badge className="bg-green-600 text-white text-xs animate-pulse">🟢 Aktívna</Badge>
+                        <h3 className="font-bold text-gray-900">{visitor.displayName}</h3>
+                        {visitor.isReturning && (
+                          <Badge className="bg-teal-600 text-white text-xs">🔄 Vracajúci sa ({visitor.totalSessions}×)</Badge>
                         )}
-                        {session.is_authenticated && (
-                          <Badge className="bg-blue-600 text-white text-xs">👤 Prihlásený</Badge>
+                        {visitor.sessions.some(s => s.is_active) && (
+                          <Badge className="bg-green-600 text-white text-xs animate-pulse">🟢 Online teraz</Badge>
                         )}
-                        {session.engagement_score > 70 && (
-                          <Badge className="bg-purple-600 text-white text-xs">🔥 {session.engagement_score}</Badge>
+                        {visitor.conversions > 0 && (
+                          <Badge className="bg-yellow-600 text-white text-xs">⭐ {visitor.conversions} konverzie</Badge>
                         )}
-                        {session.session_tags?.map(tag => {
-                          const tagLabels = {
-                            'bounced': 'Odrazený',
-                            'odrazeny': 'Odrazený',
-                            'engaged': 'Zaujatý',
-                            'zaujaty': 'Zaujatý',
-                            'highly_engaged': 'Veľmi zaujatý',
-                            'velmi_zaujaty': 'Veľmi zaujatý',
-                            'explorer': 'Prieskumník',
-                            'prieskumnik': 'Prieskumník',
-                            'converted': 'Konvertoval',
-                            'konvertoval': 'Konvertoval',
-                            'configurator_user': 'Používateľ konfiguratora',
-                            'pouzivatel_konfiguratora': 'Používateľ konfiguratora',
-                            'vracajuci_sa': '🔄 Vracajúci sa'
-                          };
-                          return (
-                            <Badge key={tag} className={`text-xs ${getTagColor(tag)}`}>
-                              {tagLabels[tag] || tag}
-                            </Badge>
-                          );
-                        })}
+                        {visitor.avgEngagement > 70 && (
+                          <Badge className="bg-purple-600 text-white text-xs">🔥 {visitor.avgEngagement}</Badge>
+                        )}
                       </div>
                       
-                      <p className="text-sm text-gray-600 mb-3">{session.user_email}</p>
+                      {visitor.email && <p className="text-sm text-gray-600 mb-2">{visitor.email}</p>}
+                      {visitor.ip && !visitor.email && (
+                        <p className="text-sm text-gray-600 mb-2 flex items-center gap-1">
+                          <Globe className="w-3 h-3" />
+                          IP: {visitor.ip}
+                        </p>
+                      )}
                       
-                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs text-gray-600">
+                      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 text-xs text-gray-600">
                         <div className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {format(new Date(session.start_time), 'dd.MM.yyyy HH:mm', { locale: sk })}
+                          <Activity className="w-3 h-3" />
+                          {visitor.totalSessions} návštev
                         </div>
                         <div className="flex items-center gap-1">
-                          <TrendingUp className="w-3 h-3" />
-                          {formatDuration(session.duration_seconds)}
+                          <Clock className="w-3 h-3" />
+                          {formatDuration(visitor.totalDuration)} celkom
                         </div>
                         <div className="flex items-center gap-1">
                           <Eye className="w-3 h-3" />
-                          {session.pages_visited?.length || 0} strán
+                          {visitor.totalPages} strán
                         </div>
                         <div className="flex items-center gap-1">
                           <MousePointer className="w-3 h-3" />
-                          {session.clicks?.length || 0} kliknutí
+                          {visitor.totalClicks} kliknutí
                         </div>
-                        <div className="flex items-center gap-1">
-                          {getDeviceIcon(session.device_info?.device_type)}
-                          {session.device_info?.device_type || 'unknown'}
-                        </div>
-                        {session.location_info?.city && (
+                        {visitor.commonDevice && (
+                          <div className="flex items-center gap-1">
+                            {getDeviceIcon(visitor.commonDevice)}
+                            {visitor.commonDevice}
+                          </div>
+                        )}
+                        {visitor.commonLocation && (
                           <div className="flex items-center gap-1">
                             <MapPin className="w-3 h-3" />
-                            {session.location_info.city}, {session.location_info.country_code}
+                            {visitor.commonLocation}
                           </div>
                         )}
-                        {session.device_info?.browser && (
-                          <div className="flex items-center gap-1">
-                            <Globe className="w-3 h-3" />
-                            {session.device_info.browser}
-                          </div>
-                        )}
-                        {session.errors_encountered?.length > 0 && (
-                          <div className="flex items-center gap-1 text-red-600">
-                            <AlertTriangle className="w-3 h-3" />
-                            {session.errors_encountered.length} chýb
-                          </div>
-                        )}
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          {format(new Date(visitor.lastVisit), 'dd.MM.yyyy HH:mm', { locale: sk })}
+                        </div>
                       </div>
                     </div>
 
                     <Button variant="ghost" size="sm">
-                      {expandedSession === session.id ? (
+                      {expandedVisitor === visitor.visitorKey ? (
                         <ChevronUp className="w-5 h-5" />
                       ) : (
                         <ChevronDown className="w-5 h-5" />
@@ -495,9 +548,107 @@ export default function AdminAnalyzaSessions() {
                   </div>
                 </div>
 
-                {/* Expanded Details */}
-                {expandedSession === session.id && (
-                  <div className="p-4 border-t space-y-4 bg-gray-50">
+                {/* Expanded - All Sessions for this Visitor */}
+                {expandedVisitor === visitor.visitorKey && (
+                  <div className="p-4 border-t bg-gray-50 space-y-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="font-bold text-gray-900 flex items-center gap-2">
+                        <Users className="w-5 h-5 text-blue-600" />
+                        História návštev ({visitor.totalSessions})
+                      </h4>
+                      <Badge className="bg-blue-100 text-blue-800">
+                        {format(new Date(visitor.firstVisit), 'dd.MM.yyyy', { locale: sk })} - {format(new Date(visitor.lastVisit), 'dd.MM.yyyy', { locale: sk })}
+                      </Badge>
+                    </div>
+
+                    {/* Individual Sessions */}
+                    <div className="space-y-3">
+                      {visitor.sessions.map((session, sessionIdx) => (
+                        <Card key={session.id} className="bg-white border-l-4 border-blue-400">
+                          {/* Individual Session Header */}
+                          <div 
+                            className="p-3 cursor-pointer hover:bg-gray-50 transition-all"
+                            onClick={() => setExpandedSession(expandedSession === session.id ? null : session.id)}
+                          >
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                                  <Badge className="bg-indigo-100 text-indigo-800 text-xs">
+                                    Návšteva #{sessionIdx + 1}
+                                  </Badge>
+                                  {session.is_active && (
+                                    <Badge className="bg-green-600 text-white text-xs animate-pulse">🟢 Aktívna</Badge>
+                                  )}
+                                  {session.engagement_score > 70 && (
+                                    <Badge className="bg-purple-600 text-white text-xs">🔥 {session.engagement_score}</Badge>
+                                  )}
+                                  {session.session_tags?.map(tag => {
+                                    const tagLabels = {
+                                      'bounced': 'Odrazený',
+                                      'odrazeny': 'Odrazený',
+                                      'engaged': 'Zaujatý',
+                                      'zaujaty': 'Zaujatý',
+                                      'highly_engaged': 'Veľmi zaujatý',
+                                      'velmi_zaujaty': 'Veľmi zaujatý',
+                                      'explorer': 'Prieskumník',
+                                      'prieskumnik': 'Prieskumník',
+                                      'converted': 'Konvertoval',
+                                      'konvertoval': 'Konvertoval',
+                                      'configurator_user': 'Používateľ konfiguratora',
+                                      'pouzivatel_konfiguratora': 'Používateľ konfiguratora',
+                                      'vracajuci_sa': '🔄 Vracajúci sa'
+                                    };
+                                    return (
+                                      <Badge key={tag} className={`text-xs ${getTagColor(tag)}`}>
+                                        {tagLabels[tag] || tag}
+                                      </Badge>
+                                    );
+                                  })}
+                                </div>
+                                
+                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs text-gray-600">
+                                  <div className="flex items-center gap-1">
+                                    <Clock className="w-3 h-3" />
+                                    {format(new Date(session.start_time), 'dd.MM.yyyy HH:mm', { locale: sk })}
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <TrendingUp className="w-3 h-3" />
+                                    {formatDuration(session.duration_seconds)}
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <Eye className="w-3 h-3" />
+                                    {session.pages_visited?.length || 0} strán
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <MousePointer className="w-3 h-3" />
+                                    {session.clicks?.length || 0} kliknutí
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    {getDeviceIcon(session.device_info?.device_type)}
+                                    {session.device_info?.device_type || 'unknown'}
+                                  </div>
+                                  {session.errors_encountered?.length > 0 && (
+                                    <div className="flex items-center gap-1 text-red-600">
+                                      <AlertTriangle className="w-3 h-3" />
+                                      {session.errors_encountered.length} chýb
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              <Button variant="ghost" size="sm">
+                                {expandedSession === session.id ? (
+                                  <ChevronUp className="w-4 h-4" />
+                                ) : (
+                                  <ChevronDown className="w-4 h-4" />
+                                )}
+                              </Button>
+                            </div>
+                          </div>
+
+                          {/* Expanded Session Details */}
+                          {expandedSession === session.id && (
+                            <div className="p-4 border-t space-y-4 bg-gray-100">
                     {/* Device & Tech Info */}
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
@@ -861,21 +1012,26 @@ export default function AdminAnalyzaSessions() {
                       </div>
                     )}
 
-                    {/* Raw Session Data */}
-                    <details className="bg-gray-900 p-4 rounded-lg">
-                      <summary className="cursor-pointer text-sm font-semibold text-green-400 mb-2">
-                        🔍 Kompletné Session Data (JSON)
-                      </summary>
-                      <pre className="text-xs overflow-auto max-h-96 text-green-400">
-                        {JSON.stringify(session, null, 2)}
-                      </pre>
-                    </details>
+                              {/* Raw Session Data */}
+                              <details className="bg-gray-900 p-4 rounded-lg">
+                                <summary className="cursor-pointer text-sm font-semibold text-green-400 mb-2">
+                                  🔍 Kompletné Session Data (JSON)
+                                </summary>
+                                <pre className="text-xs overflow-auto max-h-96 text-green-400">
+                                  {JSON.stringify(session, null, 2)}
+                                </pre>
+                              </details>
+                            </div>
+                          )}
+                        </Card>
+                      ))}
+                    </div>
                   </div>
                 )}
               </Card>
             ))
           )}
-            </div>
+        </div>
           </TabsContent>
         </Tabs>
 
