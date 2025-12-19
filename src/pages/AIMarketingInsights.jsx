@@ -52,6 +52,7 @@ export default function AIMarketingInsights() {
   const [filterDevice, setFilterDevice] = useState("all");
   const [filterCountry, setFilterCountry] = useState("all");
   const [filterHouse, setFilterHouse] = useState("all");
+  const [sortBy, setSortBy] = useState("sessions_desc");
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -71,31 +72,59 @@ export default function AIMarketingInsights() {
     enabled: isAdmin
   });
 
-  // Filtrované insights - vždy volať hooks v rovnakom poradí
-  const insights = allInsights.filter(insight => {
-    // Dátumový filter
-    if (dateFrom && new Date(insight.datum_generovania) < new Date(dateFrom)) return false;
-    if (dateTo && new Date(insight.datum_generovania) > new Date(dateTo + 'T23:59:59')) return false;
-    
-    // Filter zariadenia
-    if (filterDevice !== "all") {
-      const devicePercent = insight.zariadenia_a_platforma?.[filterDevice] || 0;
-      if (devicePercent < 30) return false; // Len domy kde je zariadenie dominantné
-    }
-    
-    // Filter krajiny
-    if (filterCountry !== "all") {
-      const hasCountry = insight.geograficke_cielenie?.top_krajiny?.some(
-        k => k.krajina === filterCountry
-      );
-      if (!hasCountry) return false;
-    }
-    
-    // Filter konkrétneho domu
-    if (filterHouse !== "all" && insight.dom_id !== filterHouse) return false;
-    
-    return true;
-  });
+  // Filtrované a zoradené insights
+  const insights = (() => {
+    const filtered = allInsights.filter(insight => {
+      // Dátumový filter
+      if (dateFrom && new Date(insight.datum_generovania) < new Date(dateFrom)) return false;
+      if (dateTo && new Date(insight.datum_generovania) > new Date(dateTo + 'T23:59:59')) return false;
+      
+      // Filter zariadenia
+      if (filterDevice !== "all") {
+        const devicePercent = insight.zariadenia_a_platforma?.[filterDevice] || 0;
+        if (devicePercent < 30) return false; // Len domy kde je zariadenie dominantné
+      }
+      
+      // Filter krajiny
+      if (filterCountry !== "all") {
+        const hasCountry = insight.geograficke_cielenie?.top_krajiny?.some(
+          k => k.krajina === filterCountry
+        );
+        if (!hasCountry) return false;
+      }
+      
+      // Filter konkrétneho domu
+      if (filterHouse !== "all" && insight.dom_id !== filterHouse) return false;
+      
+      return true;
+    });
+
+    // Zoradiť podľa vybraného kritéria
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case "sessions_desc":
+          return (b.pocet_analyzovanych_sessions || 0) - (a.pocet_analyzovanych_sessions || 0);
+        case "sessions_asc":
+          return (a.pocet_analyzovanych_sessions || 0) - (b.pocet_analyzovanych_sessions || 0);
+        case "conversion_desc":
+          return (b.celkovy_zajem?.miera_konverzie || 0) - (a.celkovy_zajem?.miera_konverzie || 0);
+        case "conversion_asc":
+          return (a.celkovy_zajem?.miera_konverzie || 0) - (b.celkovy_zajem?.miera_konverzie || 0);
+        case "confidence_desc":
+          return (b.confidence_score || 0) - (a.confidence_score || 0);
+        case "confidence_asc":
+          return (a.confidence_score || 0) - (b.confidence_score || 0);
+        case "views_desc":
+          return (b.celkovy_zajem?.pocet_zobrazeni || 0) - (a.celkovy_zajem?.pocet_zobrazeni || 0);
+        case "views_asc":
+          return (a.celkovy_zajem?.pocet_zobrazeni || 0) - (b.celkovy_zajem?.pocet_zobrazeni || 0);
+        default:
+          return 0;
+      }
+    });
+
+    return sorted;
+  })();
 
   // Unikátne krajiny a domy pre filtre
   const countries = (() => {
@@ -366,7 +395,7 @@ export default function AIMarketingInsights() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3">
               <div>
                 <label className="text-xs text-gray-600 mb-1 block">Dátum od</label>
                 <Input
@@ -424,6 +453,23 @@ export default function AIMarketingInsights() {
                   ))}
                 </select>
               </div>
+              <div>
+                <label className="text-xs text-gray-600 mb-1 block">Zoradiť podľa</label>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md text-sm"
+                >
+                  <option value="sessions_desc">📊 Sessions ↓</option>
+                  <option value="sessions_asc">📊 Sessions ↑</option>
+                  <option value="conversion_desc">🎯 Konverzia ↓</option>
+                  <option value="conversion_asc">🎯 Konverzia ↑</option>
+                  <option value="confidence_desc">✅ Dôveryhodnosť ↓</option>
+                  <option value="confidence_asc">✅ Dôveryhodnosť ↑</option>
+                  <option value="views_desc">👁️ Zobrazenia ↓</option>
+                  <option value="views_asc">👁️ Zobrazenia ↑</option>
+                </select>
+              </div>
             </div>
 
             <div className="flex items-center gap-2 mt-3">
@@ -436,12 +482,24 @@ export default function AIMarketingInsights() {
                   setFilterDevice("all");
                   setFilterCountry("all");
                   setFilterHouse("all");
+                  setSortBy("sessions_desc");
                 }}
               >
                 Vyčistiť filtre
               </Button>
               <Badge className="bg-purple-100 text-purple-800">
                 {insights.length} z {allInsights.length} insights
+              </Badge>
+              <Badge variant="outline" className="text-xs">
+                Zoradené: {
+                  sortBy === "sessions_desc" ? "Sessions ↓" :
+                  sortBy === "sessions_asc" ? "Sessions ↑" :
+                  sortBy === "conversion_desc" ? "Konverzia ↓" :
+                  sortBy === "conversion_asc" ? "Konverzia ↑" :
+                  sortBy === "confidence_desc" ? "Dôveryhodnosť ↓" :
+                  sortBy === "confidence_asc" ? "Dôveryhodnosť ↑" :
+                  sortBy === "views_desc" ? "Zobrazenia ↓" : "Zobrazenia ↑"
+                }
               </Badge>
             </div>
           </Card>
