@@ -250,6 +250,77 @@ export default function AIMarketingInsights() {
 
                     {/* Súhrn */}
                     <TabsContent value="sumar" className="space-y-4">
+                      {/* Cookie Analytics */}
+                      {insight.cookie_analytics && (
+                        <Card className="bg-gradient-to-br from-cyan-50 to-blue-50 border-2 border-cyan-200">
+                          <CardHeader>
+                            <CardTitle className="text-lg flex items-center gap-2">
+                              🍪 Cookie Analytics & Používateľské Preferencie
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-3">
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="bg-white p-3 rounded-lg">
+                                <p className="text-xs text-gray-500 mb-1">Vracajúci sa používatelia</p>
+                                <p className="text-2xl font-bold text-cyan-700">
+                                  {insight.cookie_analytics.vracajuci_sa_pouzivatelia}
+                                </p>
+                              </div>
+                              <div className="bg-white p-3 rounded-lg">
+                                <p className="text-xs text-gray-500 mb-1">Dokončené konfigurácie</p>
+                                <p className="text-2xl font-bold text-blue-700">
+                                  {insight.cookie_analytics.dokoncene_konfiguracie}
+                                </p>
+                              </div>
+                            </div>
+
+                            {insight.cookie_analytics.top_preferovani_vyrobcovia?.length > 0 && (
+                              <div>
+                                <p className="text-sm font-semibold mb-2">Top preferovaní výrobcovia:</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {insight.cookie_analytics.top_preferovani_vyrobcovia.map((vyrobca, idx) => (
+                                    <Badge key={idx} className="bg-cyan-100 text-cyan-800">
+                                      {vyrobca}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {insight.cookie_analytics.suvisiace_prezerane_domy?.length > 0 && (
+                              <div>
+                                <p className="text-sm font-semibold mb-2">Súvisiace prezerané domy:</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {insight.cookie_analytics.suvisiace_prezerane_domy.map((dom, idx) => (
+                                    <Badge key={idx} variant="outline" className="text-xs">
+                                      {dom}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            <div>
+                              <p className="text-sm font-semibold mb-2">Cenové preferencie používateľov:</p>
+                              <div className="grid grid-cols-2 gap-2">
+                                <div className="bg-white p-2 rounded text-xs">
+                                  Do 50k: <span className="font-bold">{insight.cookie_analytics.cenove_preferencie?.do_50k || 0}</span>
+                                </div>
+                                <div className="bg-white p-2 rounded text-xs">
+                                  50-100k: <span className="font-bold">{insight.cookie_analytics.cenove_preferencie?.['50k_100k'] || 0}</span>
+                                </div>
+                                <div className="bg-white p-2 rounded text-xs">
+                                  100-150k: <span className="font-bold">{insight.cookie_analytics.cenove_preferencie?.['100k_150k'] || 0}</span>
+                                </div>
+                                <div className="bg-white p-2 rounded text-xs">
+                                  Nad 150k: <span className="font-bold">{insight.cookie_analytics.cenove_preferencie?.nad_150k || 0}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      )}
+
                       <Card className="bg-gradient-to-br from-purple-50 to-pink-50">
                         <CardHeader>
                           <CardTitle className="text-lg flex items-center gap-2">
@@ -476,6 +547,50 @@ export default function AIMarketingInsights() {
 
                     {/* Kampane */}
                     <TabsContent value="kampane" className="space-y-4">
+                      {/* Retargeting Stratégie */}
+                      {insight.odporucania_kampane?.retargeting_strategie && (
+                        <Card className="border-2 border-purple-200 bg-purple-50/50">
+                          <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                              <Target className="w-5 h-5 text-purple-600" />
+                              🍪 Cookie-Based Retargeting Stratégie
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-3">
+                            <div>
+                              <p className="text-sm font-semibold mb-1">📍 Facebook Pixel:</p>
+                              <p className="text-sm text-gray-700">
+                                {insight.odporucania_kampane.retargeting_strategie.facebook_pixel}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-semibold mb-1">🔍 Google Remarketing:</p>
+                              <p className="text-sm text-gray-700">
+                                {insight.odporucania_kampane.retargeting_strategie.google_remarketing}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-semibold mb-1">👥 Lookalike Audiences:</p>
+                              <p className="text-sm text-gray-700">
+                                {insight.odporucania_kampane.retargeting_strategie.lookalike_audiences}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-semibold mb-1">🎯 Custom Audiences:</p>
+                              <p className="text-sm text-gray-700">
+                                {insight.odporucania_kampane.retargeting_strategie.custom_audiences}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-semibold mb-1">📧 Email Retargeting:</p>
+                              <p className="text-sm text-gray-700">
+                                {insight.odporucania_kampane.retargeting_strategie.email_retargeting}
+                              </p>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      )}
+
                       {/* Facebook/Instagram */}
                       <Card className="border-2 border-blue-200 bg-blue-50/50">
                         <CardHeader>
