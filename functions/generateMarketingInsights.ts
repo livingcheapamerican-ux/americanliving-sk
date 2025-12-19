@@ -14,12 +14,22 @@ Deno.serve(async (req) => {
 
     // 1. Načítať len verejné domy
     const allDomy = await base44.asServiceRole.entities.Dom.list();
-    const domy = allDomy.filter(dom => dom.verejny !== false);
+    const domy = allDomy.filter(dom => dom.verejny === true);
     console.log(`📊 Načítaných ${domy.length} verejných domov (z ${allDomy.length} celkovo)`);
 
-    // 2. Načítať všetky sessions (posledných 1000)
-    const sessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 1000);
-    console.log(`📊 Načítaných ${sessions.length} sessions`);
+    // 2. Načítať všetky sessions a vyfiltrovať admin sessions a konkrétnu IP
+    const allSessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 1000);
+    const sessions = allSessions.filter(session => {
+      // Vylúčiť admin a super_admin používateľov
+      if (session.user_email === 'living.cheap.american@gmail.com') return false;
+      if (session.is_authenticated && user && session.user_email === user.email) return false;
+      
+      // Môžete pridať ďalšie IP adresy na vylúčenie
+      // if (session.location_info?.ip === 'VASA_IP') return false;
+      
+      return true;
+    });
+    console.log(`📊 Načítaných ${sessions.length} sessions (po filtrovaní adminov: ${allSessions.length - sessions.length} vylúčených)`);
 
     // 3. Načítať používateľské preferencie (cookies data)
     const userPreferences = await base44.asServiceRole.entities.UserPreferences.list('', 1000);
