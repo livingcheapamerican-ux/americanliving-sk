@@ -55,6 +55,8 @@ export default function AIMarketingInsights() {
   const [filterCountry, setFilterCountry] = useState("all");
   const [filterHouse, setFilterHouse] = useState("all");
   const [sortBy, setSortBy] = useState("sessions_desc");
+  const [chartDrillDown, setChartDrillDown] = useState(null);
+  const [selectedManufacturer, setSelectedManufacturer] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -169,6 +171,9 @@ export default function AIMarketingInsights() {
     const manufacturers = {};
     const devices = { desktop: 0, mobile: 0, tablet: 0 };
     const priceRanges = { do_50k: 0, '50k_100k': 0, '100k_150k': 0, nad_150k: 0 };
+    const conversionRates = [];
+    const roiData = { facebook: [], google: [] };
+    const trafficSources = {};
 
     insights.forEach(insight => {
       // Krajiny
@@ -199,6 +204,38 @@ export default function AIMarketingInsights() {
         priceRanges['100k_150k'] += cr['100k_150k'] || 0;
         priceRanges.nad_150k += cr.nad_150k || 0;
       }
+
+      // Konverzné miery
+      if (insight.celkovy_zajem?.miera_konverzie) {
+        conversionRates.push({
+          dom: insight.dom_nazov,
+          vyrobca: insight.vyrobca,
+          konverzia: insight.celkovy_zajem.miera_konverzie,
+          zobrazenia: insight.celkovy_zajem.pocet_zobrazeni,
+          konfiguracie: insight.celkovy_zajem.pocet_konfiguracii
+        });
+      }
+
+      // ROI dáta
+      if (insight.roi_predikcia?.facebook_instagram_roi) {
+        roiData.facebook.push({
+          dom: insight.dom_nazov,
+          roi: insight.roi_predikcia.facebook_instagram_roi.roi_percento || 0,
+          konverzie: insight.roi_predikcia.facebook_instagram_roi.predpokladane_konverzie || 0
+        });
+      }
+      if (insight.roi_predikcia?.google_ads_roi) {
+        roiData.google.push({
+          dom: insight.dom_nazov,
+          roi: insight.roi_predikcia.google_ads_roi.roi_percento || 0,
+          konverzie: insight.roi_predikcia.google_ads_roi.predpokladane_konverzie || 0
+        });
+      }
+
+      // Traffic sources (platformy)
+      insight.zariadenia_a_platforma?.odporucane_platformy?.forEach(platform => {
+        trafficSources[platform] = (trafficSources[platform] || 0) + 1;
+      });
     });
 
     return {
@@ -222,7 +259,12 @@ export default function AIMarketingInsights() {
         { name: '50-100k €', value: priceRanges['50k_100k'] },
         { name: '100-150k €', value: priceRanges['100k_150k'] },
         { name: 'Nad 150k €', value: priceRanges.nad_150k }
-      ]
+      ],
+      conversionRates: conversionRates.sort((a, b) => b.konverzia - a.konverzia).slice(0, 10),
+      roiComparison: roiData,
+      trafficSources: Object.entries(trafficSources)
+        .sort((a, b) => b[1] - a[1])
+        .map(([name, value]) => ({ name, value }))
     };
   })();
 
@@ -579,15 +621,203 @@ export default function AIMarketingInsights() {
           </div>
         </div>
 
-        {/* Vizualizácie a grafy */}
+        {/* Pokročilé vizualizácie a grafy */}
         {!isLoading && insights.length > 0 && aggregatedData && (
           <div className="mb-8 space-y-6">
+            {/* Konverzné miery - Interaktívny graf */}
+            <Card className="bg-white/80 backdrop-blur shadow-lg">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Target className="w-6 h-6 text-purple-600" />
+                    📊 Konverzné miery podľa domov (kliknutím zobrazíte detail)
+                  </CardTitle>
+                  {chartDrillDown && (
+                    <Button size="sm" variant="outline" onClick={() => setChartDrillDown(null)}>
+                      ← Späť na prehľad
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={350}>
+                  <BarChart 
+                    data={aggregatedData.conversionRates}
+                    onClick={(data) => {
+                      if (data?.activePayload?.[0]?.payload) {
+                        setChartDrillDown(data.activePayload[0].payload);
+                      }
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="dom" angle={-45} textAnchor="end" height={100} />
+                    <YAxis label={{ value: 'Konverzia %', angle: -90, position: 'insideLeft' }} />
+                    <RechartsTooltip 
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          const data = payload[0].payload;
+                          return (
+                            <div className="bg-white p-3 border rounded-lg shadow-lg">
+                              <p className="font-bold">{data.dom}</p>
+                              <p className="text-sm text-gray-600">Výrobca: {data.vyrobca}</p>
+                              <p className="text-sm">Konverzia: <span className="font-bold text-purple-600">{data.konverzia}%</span></p>
+                              <p className="text-sm">Zobrazenia: {data.zobrazenia}</p>
+                              <p className="text-sm">Konfigurácie: {data.konfiguracie}</p>
+                              <p className="text-xs text-blue-600 mt-1">👆 Kliknite pre detail</p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar dataKey="konverzia" fill="#8b5cf6" cursor="pointer" />
+                  </BarChart>
+                </ResponsiveContainer>
+
+                {/* Drill-down detail */}
+                {chartDrillDown && (
+                  <div className="mt-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border-2 border-purple-200">
+                    <h4 className="font-bold text-lg mb-3">{chartDrillDown.dom}</h4>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="bg-white p-3 rounded-lg">
+                        <p className="text-xs text-gray-500">Konverzná miera</p>
+                        <p className="text-2xl font-bold text-purple-600">{chartDrillDown.konverzia}%</p>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg">
+                        <p className="text-xs text-gray-500">Zobrazenia</p>
+                        <p className="text-2xl font-bold text-blue-600">{chartDrillDown.zobrazenia}</p>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg">
+                        <p className="text-xs text-gray-500">Konfigurácie</p>
+                        <p className="text-2xl font-bold text-green-600">{chartDrillDown.konfiguracie}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* ROI Porovnanie - Interaktívny graf */}
             <Card className="bg-white/80 backdrop-blur shadow-lg">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="w-6 h-6 text-purple-600" />
-                  Geografické rozloženie
+                  <TrendingUp className="w-6 h-6 text-green-600" />
+                  💹 Porovnanie ROI: Facebook vs Google Ads
                 </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid lg:grid-cols-2 gap-6">
+                  {/* Facebook ROI */}
+                  <div>
+                    <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <Facebook className="w-4 h-4 text-blue-600" />
+                      Facebook / Instagram ROI
+                    </h4>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={aggregatedData.roiComparison.facebook.slice(0, 8)}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="dom" angle={-45} textAnchor="end" height={100} />
+                        <YAxis label={{ value: 'ROI %', angle: -90, position: 'insideLeft' }} />
+                        <RechartsTooltip 
+                          content={({ active, payload }) => {
+                            if (active && payload && payload.length) {
+                              const data = payload[0].payload;
+                              return (
+                                <div className="bg-white p-2 border rounded shadow-lg">
+                                  <p className="font-bold text-sm">{data.dom}</p>
+                                  <p className="text-xs">ROI: <span className="font-bold text-blue-600">{data.roi}%</span></p>
+                                  <p className="text-xs">Konverzie: {data.konverzie}</p>
+                                </div>
+                              );
+                            }
+                            return null;
+                          }}
+                        />
+                        <Bar dataKey="roi" fill="#3b82f6" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  {/* Google Ads ROI */}
+                  <div>
+                    <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                      <Search className="w-4 h-4 text-green-600" />
+                      Google Ads ROI
+                    </h4>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={aggregatedData.roiComparison.google.slice(0, 8)}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="dom" angle={-45} textAnchor="end" height={100} />
+                        <YAxis label={{ value: 'ROI %', angle: -90, position: 'insideLeft' }} />
+                        <RechartsTooltip 
+                          content={({ active, payload }) => {
+                            if (active && payload && payload.length) {
+                              const data = payload[0].payload;
+                              return (
+                                <div className="bg-white p-2 border rounded shadow-lg">
+                                  <p className="font-bold text-sm">{data.dom}</p>
+                                  <p className="text-xs">ROI: <span className="font-bold text-green-600">{data.roi}%</span></p>
+                                  <p className="text-xs">Konverzie: {data.konverzie}</p>
+                                </div>
+                              );
+                            }
+                            return null;
+                          }}
+                        />
+                        <Bar dataKey="roi" fill="#10b981" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Traffic Sources - Interaktívny */}
+            <Card className="bg-white/80 backdrop-blur shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Globe className="w-6 h-6 text-blue-600" />
+                  🌐 Odporúčané Traffic Sources (kliknutím filtrujete)
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart 
+                    data={aggregatedData.trafficSources}
+                    onClick={(data) => {
+                      if (data?.activePayload?.[0]?.payload) {
+                        const platform = data.activePayload[0].payload.name;
+                        toast.info(`Filtrované domy ktoré odporúčajú platformu: ${platform}`);
+                      }
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
+                    <YAxis />
+                    <RechartsTooltip />
+                    <Bar dataKey="value" fill="#06b6d4" cursor="pointer" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white/80 backdrop-blur shadow-lg">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="w-6 h-6 text-purple-600" />
+                    Geografické rozloženie
+                  </CardTitle>
+                  {selectedManufacturer && (
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      onClick={() => setSelectedManufacturer(null)}
+                    >
+                      Zobraziť všetkých výrobcov
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="grid lg:grid-cols-2 gap-6">
@@ -598,12 +828,21 @@ export default function AIMarketingInsights() {
                       Top 10 krajín
                     </h4>
                     <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={aggregatedData.countries}>
+                      <BarChart 
+                        data={aggregatedData.countries}
+                        onClick={(data) => {
+                          if (data?.activePayload?.[0]?.payload) {
+                            const country = data.activePayload[0].payload.name;
+                            setFilterCountry(country);
+                            toast.info(`Filtrované pre krajinu: ${country}`);
+                          }
+                        }}
+                      >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
                         <YAxis />
                         <RechartsTooltip />
-                        <Bar dataKey="value" fill="#8b5cf6" />
+                        <Bar dataKey="value" fill="#8b5cf6" cursor="pointer" />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -629,7 +868,7 @@ export default function AIMarketingInsights() {
             </Card>
 
             <div className="grid lg:grid-cols-3 gap-6">
-              {/* Výrobcovia */}
+              {/* Výrobcovia - klikací */}
               <Card className="bg-white/80 backdrop-blur shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-sm flex items-center gap-2">
@@ -649,6 +888,11 @@ export default function AIMarketingInsights() {
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="value"
+                        onClick={(data) => {
+                          setSelectedManufacturer(data.name);
+                          toast.info(`Filtrované pre výrobcu: ${data.name}`);
+                        }}
+                        cursor="pointer"
                       >
                         {aggregatedData.manufacturers.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -657,10 +901,15 @@ export default function AIMarketingInsights() {
                       <RechartsTooltip />
                     </RechartsPie>
                   </ResponsiveContainer>
+                  {selectedManufacturer && (
+                    <div className="mt-3 p-2 bg-purple-50 rounded text-sm text-center">
+                      Filtrované: <span className="font-bold">{selectedManufacturer}</span>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
-              {/* Zariadenia */}
+              {/* Zariadenia - klikací */}
               <Card className="bg-white/80 backdrop-blur shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-sm flex items-center gap-2">
@@ -680,6 +929,12 @@ export default function AIMarketingInsights() {
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="value"
+                        onClick={(data) => {
+                          const deviceMap = { 'Desktop': 'desktop', 'Mobile': 'mobile', 'Tablet': 'tablet' };
+                          setFilterDevice(deviceMap[data.name]);
+                          toast.info(`Filtrované pre zariadenie: ${data.name}`);
+                        }}
+                        cursor="pointer"
                       >
                         {aggregatedData.devices.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
