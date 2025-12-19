@@ -70,46 +70,42 @@ export default function AIMarketingInsights() {
     enabled: isAdmin
   });
 
-  // Filtrované insights
-  const insights = React.useMemo(() => {
-    return allInsights.filter(insight => {
-      // Dátumový filter
-      if (dateFrom && new Date(insight.datum_generovania) < new Date(dateFrom)) return false;
-      if (dateTo && new Date(insight.datum_generovania) > new Date(dateTo + 'T23:59:59')) return false;
-      
-      // Filter zariadenia
-      if (filterDevice !== "all") {
-        const devicePercent = insight.zariadenia_a_platforma?.[filterDevice] || 0;
-        if (devicePercent < 30) return false; // Len domy kde je zariadenie dominantné
-      }
-      
-      // Filter krajiny
-      if (filterCountry !== "all") {
-        const hasCountry = insight.geograficke_cielenie?.top_krajiny?.some(
-          k => k.krajina === filterCountry
-        );
-        if (!hasCountry) return false;
-      }
-      
-      // Filter konkrétneho domu
-      if (filterHouse !== "all" && insight.dom_id !== filterHouse) return false;
-      
-      return true;
-    });
-  }, [allInsights, dateFrom, dateTo, filterDevice, filterCountry, filterHouse]);
+  // Filtrované insights - vždy volať hooks v rovnakom poradí
+  const insights = allInsights.filter(insight => {
+    // Dátumový filter
+    if (dateFrom && new Date(insight.datum_generovania) < new Date(dateFrom)) return false;
+    if (dateTo && new Date(insight.datum_generovania) > new Date(dateTo + 'T23:59:59')) return false;
+    
+    // Filter zariadenia
+    if (filterDevice !== "all") {
+      const devicePercent = insight.zariadenia_a_platforma?.[filterDevice] || 0;
+      if (devicePercent < 30) return false; // Len domy kde je zariadenie dominantné
+    }
+    
+    // Filter krajiny
+    if (filterCountry !== "all") {
+      const hasCountry = insight.geograficke_cielenie?.top_krajiny?.some(
+        k => k.krajina === filterCountry
+      );
+      if (!hasCountry) return false;
+    }
+    
+    // Filter konkrétneho domu
+    if (filterHouse !== "all" && insight.dom_id !== filterHouse) return false;
+    
+    return true;
+  });
 
   // Unikátne krajiny a domy pre filtre
-  const countries = React.useMemo(() => {
+  const countries = (() => {
     const set = new Set();
     allInsights.forEach(i => {
       i.geograficke_cielenie?.top_krajiny?.forEach(k => set.add(k.krajina));
     });
     return Array.from(set).sort();
-  }, [allInsights]);
+  })();
 
-  const houses = React.useMemo(() => {
-    return allInsights.map(i => ({ id: i.dom_id, nazov: i.dom_nazov }));
-  }, [allInsights]);
+  const houses = allInsights.map(i => ({ id: i.dom_id, nazov: i.dom_nazov }));
 
   const generateInsightsMutation = useMutation({
     mutationFn: () => {
