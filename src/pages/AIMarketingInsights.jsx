@@ -46,6 +46,11 @@ import { toast } from "sonner";
 
 export default function AIMarketingInsights() {
   const [selectedInsight, setSelectedInsight] = useState(null);
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [filterDevice, setFilterDevice] = useState("all");
+  const [filterCountry, setFilterCountry] = useState("all");
+  const [filterHouse, setFilterHouse] = useState("all");
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -55,7 +60,7 @@ export default function AIMarketingInsights() {
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
-  const { data: insights = [], isLoading, refetch } = useQuery({
+  const { data: allInsights = [], isLoading, refetch } = useQuery({
     queryKey: ['marketing-insights'],
     queryFn: async () => {
       const data = await base44.entities.MarketingInsight.list('-posledna_aktualizacia');
@@ -64,6 +69,47 @@ export default function AIMarketingInsights() {
     },
     enabled: isAdmin
   });
+
+  // Filtrované insights
+  const insights = React.useMemo(() => {
+    return allInsights.filter(insight => {
+      // Dátumový filter
+      if (dateFrom && new Date(insight.datum_generovania) < new Date(dateFrom)) return false;
+      if (dateTo && new Date(insight.datum_generovania) > new Date(dateTo + 'T23:59:59')) return false;
+      
+      // Filter zariadenia
+      if (filterDevice !== "all") {
+        const devicePercent = insight.zariadenia_a_platforma?.[filterDevice] || 0;
+        if (devicePercent < 30) return false; // Len domy kde je zariadenie dominantné
+      }
+      
+      // Filter krajiny
+      if (filterCountry !== "all") {
+        const hasCountry = insight.geograficke_cielenie?.top_krajiny?.some(
+          k => k.krajina === filterCountry
+        );
+        if (!hasCountry) return false;
+      }
+      
+      // Filter konkrétneho domu
+      if (filterHouse !== "all" && insight.dom_id !== filterHouse) return false;
+      
+      return true;
+    });
+  }, [allInsights, dateFrom, dateTo, filterDevice, filterCountry, filterHouse]);
+
+  // Unikátne krajiny a domy pre filtre
+  const countries = React.useMemo(() => {
+    const set = new Set();
+    allInsights.forEach(i => {
+      i.geograficke_cielenie?.top_krajiny?.forEach(k => set.add(k.krajina));
+    });
+    return Array.from(set).sort();
+  }, [allInsights]);
+
+  const houses = React.useMemo(() => {
+    return allInsights.map(i => ({ id: i.dom_id, nazov: i.dom_nazov }));
+  }, [allInsights]);
 
   const generateInsightsMutation = useMutation({
     mutationFn: () => {
@@ -173,6 +219,64 @@ export default function AIMarketingInsights() {
 
   const COLORS = ['#8b5cf6', '#ec4899', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#8b5cf6'];
 
+  // Export do CSV
+  const exportToCSV = () => {
+    const headers = ['Dom', 'Výrobca', 'Zobrazenia', 'Konfigurácie', 'Konverzia %', 'Priemerný čas', 'Top krajina', 'Confidence'];
+    const rows = insights.map(i => [
+      i.dom_nazov,
+      i.vyrobca,
+      i.celkovy_zajem?.pocet_zobrazeni || 0,
+      i.celkovy_zajem?.pocet_konfiguracii || 0,
+      i.celkovy_zajem?.miera_konverzie || 0,
+      i.celkovy_zajem?.priemerny_cas_na_stranke || 0,
+      i.geograficke_cielenie?.top_krajiny?.[0]?.krajina || 'N/A',
+      i.confidence_score
+    ]);
+    
+    const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `marketing-insights-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    toast.success('CSV export úspešný!');
+  };
+
+  // Export do PDF pomocou jsPDF
+  const exportToPDF = async () => {
+    const { jsPDF } = await import('jspdf');
+    const doc = new jsPDF();
+    
+    doc.setFontSize(20);
+    doc.text('AI Marketing Insights Report', 20, 20);
+    doc.setFontSize(10);
+    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 30);
+    doc.text(`Total Insights: ${insights.length}`, 20, 35);
+    
+    let y = 45;
+    insights.forEach((insight, idx) => {
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
+      
+      doc.setFontSize(12);
+      doc.text(`${idx + 1}. ${insight.dom_nazov}`, 20, y);
+      doc.setFontSize(9);
+      y += 6;
+      doc.text(`Výrobca: ${insight.vyrobca} | Confidence: ${insight.confidence_score}%`, 25, y);
+      y += 5;
+      doc.text(`Zobrazenia: ${insight.celkovy_zajem?.pocet_zobrazeni || 0} | Konfigurácie: ${insight.celkovy_zajem?.pocet_konfiguracii || 0}`, 25, y);
+      y += 5;
+      doc.text(`Konverzia: ${insight.celkovy_zajem?.miera_konverzie || 0}% | Priemerný čas: ${insight.celkovy_zajem?.priemerny_cas_na_stranke || 0}s`, 25, y);
+      y += 8;
+    });
+    
+    doc.save(`marketing-insights-${new Date().toISOString().split('T')[0]}.pdf`);
+    toast.success('PDF export úspešný!');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
@@ -247,6 +351,103 @@ export default function AIMarketingInsights() {
               </Button>
             </div>
           </div>
+
+          {/* Filtre */}
+          <Card className="mb-6 p-4 bg-white/90 backdrop-blur">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Settings className="w-5 h-5 text-purple-600" />
+                <h3 className="font-semibold">Pokročilé filtre</h3>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button size="sm" variant="outline" onClick={exportToCSV}>
+                  📊 Export CSV
+                </Button>
+                <Button size="sm" variant="outline" onClick={exportToPDF}>
+                  📄 Export PDF
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+              <div>
+                <label className="text-xs text-gray-600 mb-1 block">Dátum od</label>
+                <Input
+                  type="date"
+                  value={dateFrom}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                  className="text-sm"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-600 mb-1 block">Dátum do</label>
+                <Input
+                  type="date"
+                  value={dateTo}
+                  onChange={(e) => setDateTo(e.target.value)}
+                  className="text-sm"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-600 mb-1 block">Zariadenie</label>
+                <select
+                  value={filterDevice}
+                  onChange={(e) => setFilterDevice(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md text-sm"
+                >
+                  <option value="all">Všetky</option>
+                  <option value="desktop">Desktop</option>
+                  <option value="mobile">Mobile</option>
+                  <option value="tablet">Tablet</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs text-gray-600 mb-1 block">Krajina</label>
+                <select
+                  value={filterCountry}
+                  onChange={(e) => setFilterCountry(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md text-sm"
+                >
+                  <option value="all">Všetky</option>
+                  {countries.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="text-xs text-gray-600 mb-1 block">Dom</label>
+                <select
+                  value={filterHouse}
+                  onChange={(e) => setFilterHouse(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md text-sm"
+                >
+                  <option value="all">Všetky domy</option>
+                  {houses.map(h => (
+                    <option key={h.id} value={h.id}>{h.nazov}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 mt-3">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  setDateFrom("");
+                  setDateTo("");
+                  setFilterDevice("all");
+                  setFilterCountry("all");
+                  setFilterHouse("all");
+                }}
+              >
+                Vyčistiť filtre
+              </Button>
+              <Badge className="bg-purple-100 text-purple-800">
+                {insights.length} z {allInsights.length} insights
+              </Badge>
+            </div>
+          </Card>
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
