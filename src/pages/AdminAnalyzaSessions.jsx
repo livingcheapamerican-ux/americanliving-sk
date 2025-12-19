@@ -47,6 +47,13 @@ export default function AdminAnalyzaSessions() {
   const [expandedSession, setExpandedSession] = useState(null);
   const [sortBy, setSortBy] = useState("created_date");
   const [showMapModal, setShowMapModal] = useState(false);
+  const [hideAdminSessions, setHideAdminSessions] = useState(true);
+
+  // Admin IP adresy na vylúčenie
+  const ADMIN_IPS = [
+    '109.230.104.122', // Admin IP
+  ];
+  const ADMIN_EMAILS = ['living.cheap.american@gmail.com'];
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -93,6 +100,12 @@ export default function AdminAnalyzaSessions() {
   }
 
   const filteredSessions = sessions.filter(session => {
+    // Filter admin sessions a IP
+    if (hideAdminSessions) {
+      if (ADMIN_EMAILS.includes(session.user_email)) return false;
+      if (session.location_info?.ip && ADMIN_IPS.includes(session.location_info.ip)) return false;
+    }
+    
     if (filterEmail && !session.user_email?.toLowerCase().includes(filterEmail.toLowerCase())) return false;
     if (filterDateFrom && new Date(session.start_time) < new Date(filterDateFrom)) return false;
     if (filterDateTo && new Date(session.start_time) > new Date(filterDateTo + 'T23:59:59')) return false;
@@ -352,9 +365,22 @@ export default function AdminAnalyzaSessions() {
             >
               Vyčistiť filtre
             </Button>
+            <Button
+              variant={hideAdminSessions ? "default" : "outline"}
+              size="sm"
+              onClick={() => setHideAdminSessions(!hideAdminSessions)}
+              className={hideAdminSessions ? "bg-purple-600 hover:bg-purple-700" : ""}
+            >
+              {hideAdminSessions ? "🔒 Admin skrytý" : "👁️ Zobraziť admin"}
+            </Button>
             <Badge className="bg-blue-100 text-blue-800">
               {filteredSessions.length} sessions
             </Badge>
+            {hideAdminSessions && (
+              <Badge className="bg-purple-100 text-purple-800">
+                Admin IP a email vylúčené
+              </Badge>
+            )}
           </div>
         </Card>
 

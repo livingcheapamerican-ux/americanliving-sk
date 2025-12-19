@@ -12,24 +12,29 @@ Deno.serve(async (req) => {
 
     console.log('🚀 Spúšťam generovanie AI Marketing Insights...');
 
+    // Admin IP adresy na vylúčenie
+    const ADMIN_IPS = [
+      '109.230.104.122', // Admin IP - pridajte ďalšie podľa potreby
+    ];
+
     // 1. Načítať len verejné domy
     const allDomy = await base44.asServiceRole.entities.Dom.list();
     const domy = allDomy.filter(dom => dom.verejny === true);
     console.log(`📊 Načítaných ${domy.length} verejných domov (z ${allDomy.length} celkovo)`);
 
-    // 2. Načítať všetky sessions a vyfiltrovať admin sessions a konkrétnu IP
+    // 2. Načítať všetky sessions a vyfiltrovať admin sessions a admin IP
     const allSessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 1000);
     const sessions = allSessions.filter(session => {
       // Vylúčiť admin a super_admin používateľov
       if (session.user_email === 'living.cheap.american@gmail.com') return false;
       if (session.is_authenticated && user && session.user_email === user.email) return false;
-      
-      // Môžete pridať ďalšie IP adresy na vylúčenie
-      // if (session.location_info?.ip === 'VASA_IP') return false;
-      
+
+      // Vylúčiť admin IP adresy
+      if (session.location_info?.ip && ADMIN_IPS.includes(session.location_info.ip)) return false;
+
       return true;
     });
-    console.log(`📊 Načítaných ${sessions.length} sessions (po filtrovaní adminov: ${allSessions.length - sessions.length} vylúčených)`);
+    console.log(`📊 Načítaných ${sessions.length} sessions (po filtrovaní adminov a admin IP: ${allSessions.length - sessions.length} vylúčených)`);
 
     // 3. Načítať používateľské preferencie (cookies data)
     const userPreferences = await base44.asServiceRole.entities.UserPreferences.list('', 1000);
