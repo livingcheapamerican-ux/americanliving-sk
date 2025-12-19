@@ -344,6 +344,16 @@ Deno.serve(async (req) => {
         dom.celorocny ? 'celoro čné bývanie' : 'rekreačné domy'
       ].filter(Boolean);
 
+      // Načítať predchádzajúce metriky pre detekciu zmien
+      const existingInsights = await base44.asServiceRole.entities.MarketingInsight.filter({ 
+        dom_id: dom.id 
+      });
+      const previousMetrics = existingInsights.length > 0 ? {
+        pocet_zobrazeni: existingInsights[0].celkovy_zajem?.pocet_zobrazeni || 0,
+        miera_konverzie: existingInsights[0].celkovy_zajem?.miera_konverzie || 0,
+        confidence_score: existingInsights[0].confidence_score || 0
+      } : null;
+
       // Pripraviť rozšírený prompt pre AI
       const aiPrompt = `Analyzuj tieto marketingové dáta pre dom "${dom.nazov}" od výrobcu ${dom.vyrobca} a vytvor komplexné odporúčania pre reklamné kampane.
 
