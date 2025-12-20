@@ -20,6 +20,7 @@ import AutoRedirect from "./components/AutoRedirect";
 import SessionRecorder from "./components/SessionRecorder";
 import AutoSEOTrigger from "./pages/AutoSEOTrigger";
 import AutoTestGemini from "./components/AutoTestGemini";
+import MetaPixel from "./components/MetaPixel";
 
       function LayoutContent({ children }) {
   const location = useLocation();
@@ -109,7 +110,7 @@ import AutoTestGemini from "./components/AutoTestGemini";
   ] : [];
   const isSuperAdmin = user?.super_admin === true;
 
-  // Meta Pixel Integration - Dynamic Injection
+  // Fetch Meta Pixel config
   const { data: pixelConfig } = useQuery({
     queryKey: ['meta-pixel-config'],
     queryFn: async () => {
@@ -118,47 +119,12 @@ import AutoTestGemini from "./components/AutoTestGemini";
     }
   });
 
-  useEffect(() => {
-    if (!pixelConfig?.metaPixelId) return;
-
-    // Define fbq stub function
-    (function(f,b,e,v,n,t,s) {
-      if(f.fbq) return;
-      n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq) f._fbq=n;
-      n.push=n;
-      n.loaded=!0;
-      n.version='2.0';
-      n.queue=[];
-      t=b.createElement(e);
-      t.async=!0;
-      t.src=v;
-      s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s);
-    })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-
-    // Initialize with dynamic ID
-    window.fbq('init', pixelConfig.metaPixelId);
-    window.fbq('track', 'PageView');
-  }, [pixelConfig]);
-
-  // Track page views on route change
-  useEffect(() => {
-    if (window.fbq) {
-      window.fbq('track', 'PageView');
-    }
-  }, [location.pathname]);
-
   const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png";
   const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {pixelConfig?.metaPixelId && (
-        <noscript>
-          <img height="1" width="1" style={{display: 'none'}} src={`https://www.facebook.com/tr?id=${pixelConfig.metaPixelId}&ev=PageView&noscript=1`} />
-        </noscript>
-      )}
+      <MetaPixel pixelId={pixelConfig?.metaPixelId} />
       <style>{`
         :root {
           --primary: #EF4444;
