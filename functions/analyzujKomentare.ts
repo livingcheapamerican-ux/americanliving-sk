@@ -15,8 +15,15 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Chýba comments_text parameter' }, { status: 400 });
     }
 
-    // Analyzuj komentáre
-    const analysisPrompt = `Analyzuj tieto komentáre z Facebook/Instagram kampane pre American Living (modulárne domy):
+    // Analyzuj komentáre s chain of thought
+    const analysisPrompt = `Analyzuj tieto komentáre z Facebook/Instagram kampane pre American Living (modulárne domy).
+
+🧠 CHAIN OF THOUGHT:
+1. Prečítaj všetky komentáre
+2. Identifikuj emócie a sentiment
+3. Zoskup podobné obavy/chvály
+4. Vygeneruj konkrétne poznatky
+5. Navrhni zmeny pre know-how
 
 KOMENTÁRE:
 ${comments_text}
@@ -39,8 +46,36 @@ Vráť JSON:
   "summary": "...(Krátky súhrn 2-3 vety)..."
 }`;
 
-    const analysis = await base44.integrations.Core.InvokeLLM({
-      prompt: analysisPrompt,
+    const apiKey = Deno.env.get("Gemini_PAID_pro");
+    let analysis;
+
+    if (apiKey) {
+      // Použij Gemini 1.5 Pro
+      const geminiResponse = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{ text: analysisPrompt }]
+            }],
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 2048,
+            }
+          })
+        }
+      );
+
+      if (geminiResponse.ok) {
+        const data = await geminiResponse.json();
+        const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+        const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
+        analysis = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
+      } else {
+        analysis = await base44.integrations.Core.InvokeLLM({
+          prompt: analysisPrompt,
       response_json_schema: {
         type: "object",
         properties: {
@@ -61,6 +96,31 @@ Vráť JSON:
         }
       }
     });
+      }
+    } else {
+      analysis = await base44.integrations.Core.InvokeLLM({
+        prompt: analysisPrompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            sentiment: { type: "string" },
+            positive_feedback: {
+              type: "array",
+              items: { type: "string" }
+            },
+            negative_feedback: {
+              type: "array",
+              items: { type: "string" }
+            },
+            learned_insights: {
+              type: "array",
+              items: { type: "string" }
+            },
+            summary: { type: "string" }
+          }
+        }
+      });
+    }
 
     // Ulož campaign performance
     const campaignRecord = await base44.asServiceRole.entities.CampaignPerformance.create({

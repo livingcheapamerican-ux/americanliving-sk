@@ -258,21 +258,29 @@ export default function Marketing() {
       const bouncedSessions = allSessions.filter(s => s.session_tags?.includes('bounced') || s.session_tags?.includes('odrazeny'));
       const bounceRate = allSessions.length > 0 ? ((bouncedSessions.length / allSessions.length) * 100).toFixed(1) : 0;
 
-      const prompt = `Si marketingový analytik. Na základe týchto dát vytvor krátky súhrn (max 150 slov):
+      const prompt = `Si marketingový analytik pre American Living (modulárne domy).
 
-Aktuálne dáta:
+🧠 CHAIN OF THOUGHT REASONING:
+Predtým než vytvoríš súhrn:
+1. Analyzuj psychológiu slovenského zákazníka
+2. Zváž aktuálnu sezónu a obdobie
+3. Simuluj 3 možné scenáre problému
+4. Vyber najlepšie riešenie
+
+📊 AKTUÁLNE DÁTA:
 - Celkový počet návštev tento týždeň: ${allSessions.length}
 - Najnavštevovanejší model: ${topDom?.nazov || 'N/A'} (${sortedDoms[0]?.[1] || 0} návštev)
 - Bounce rate: ${bounceRate}%
 - Konverzný pomer: ${conversionRate}%
 - Opustené košíky: ${abandonedCarts}
 
-Napíš:
+VYTVOR SÚHRN (max 150 slov):
 1. Ktorý model je "trending" a prečo
-2. Kde strácame zákazníkov (problém s bounce rate alebo opustenými košíkmi)
-3. Jedno konkrétne odporúčanie na zlepšenie
+2. Kde strácame zákazníkov
+3. Jedno konkrétne odporúčanie
+4. 🧠 Vysvetlenie logiky
 
-Odpoveď v slovenčine, používaj emotikonmi. Buď konkrétny a akčný.`;
+Slovenčina, emotikonmi, konkrétne a akčne.`;
 
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: prompt
@@ -312,22 +320,34 @@ Odpoveď v slovenčine, používaj emotikonmi. Buď konkrétny a akčný.`;
         return;
       }
 
-      const prompt = `Vytvor chytľavý Facebook príspevok (max 200 znakov) pre tento modulárny dom:
+      // Získaj know-how pravidlá pre lepší kontext
+      const topRules = brainRules.slice(0, 3).map(r => r.content_text).join('; ');
 
-Názov: ${topDom.nazov}
-Cena: ${topDom.zakladna_cena?.toLocaleString('sk-SK')} € s DPH
-Plocha: ${topDom.zastavana_plocha} m²
-Výrobca: ${topDom.vyrobca}
+      const prompt = `Vytvor chytľavý Facebook príspevok pre modulárny dom.
 
-Požiadavky:
-- Buď kreatívny a chytľavý
-- Použi emotikonmi
-- Zdôrazni výhody (rýchla montáž, moderný dizajn, energetická efektivita)
-- Zahrň call-to-action (napr. "Pozrite si viac na našom webe")
-- Text musí byť priateľský a motivačný
+🧠 CHAIN OF THOUGHT:
+1. Analyzuj slovenskú psychológiu (čo zákazníkov zaujíma)
+2. Zváž sezónnosť a aktuálne obdobie
+3. Aplikuj AIDA model a Social Proof
+4. Vyber najlepší psychologický trigger
+
+📊 DÁT O DOME:
+- Názov: ${topDom.nazov}
+- Cena: ${topDom.zakladna_cena?.toLocaleString('sk-SK')} € s DPH
+- Plocha: ${topDom.zastavana_plocha} m²
+- Výrobca: ${topDom.vyrobca}
+- Návštevnosť: ${sortedDoms[0]?.[1] || 0} zobrazení za 7 dní
+
+💡 NAŠE KNOW-HOW:
+${topRules}
+
+VYTVOR:
+- Text príspevku (max 200 znakov)
+- S emotikonmi, chytľavý, motivačný
+- Call-to-action
 - Slovenčina
 
-Odpoveď len textom príspevku, bez úvodzoviek.`;
+Odpoveď len textom príspevku.`;
 
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: prompt
@@ -413,6 +433,14 @@ Odpoveď len textom príspevku, bez úvodzoviek.`;
 
       const prompt = `Si AI marketingový riaditeľ pre American Living.
 
+🧠 CHAIN OF THOUGHT REASONING:
+Predtým než vytvoríš plán:
+1. Analyzuj psychológiu slovenského zákazníka
+2. Zváž sezónnosť a aktuálne obdobie roka
+3. Simuluj 3 rôzne scenáre kampaní
+4. Vyber najlepšiu stratégiu na základe know-how
+5. Vysvetli svoju logiku
+
 📊 DÁTA:
 - Mesačný budget: ${campaignBudget}€
 - TOP 3 trendy domy: ${topDomy.map(d => `${d.nazov} (${d.count} zobrazení)`).join(', ')}
@@ -432,7 +460,8 @@ Pre každý deň vytvor:
   "target_house": "...(názov domu)...",
   "platform": "Facebook/Instagram/TikTok",
   "budget": ...(koľko EUR na boosting),
-  "predicted_score": ...(0-100, odhadované skóre úspešnosti)
+  "predicted_score": ...(0-100, odhadované skóre úspešnosti),
+  "reasoning": "...(Prečo som zvolil tento prístup pre tento deň?)..."
 }
 
 PRAVIDLÁ:
@@ -440,8 +469,9 @@ PRAVIDLÁ:
 - Každý príspevok musí odkazovať na konkrétne know-how pravidlo
 - Rozdeľ budget rozumne (viac na najlepšie domy)
 - Rôzne platformy pre rôzne ciele
+- PRIDAJ reasoning pre každý príspevok
 
-Vráť JSON array (7 príspevkov).`;
+Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve takýto plán).`;
 
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: prompt,
@@ -472,7 +502,7 @@ Vráť JSON array (7 príspevkov).`;
       setWeeklyPlan(response.posts);
       
       // Uložiť do SocialPostQueue
-      for (const post of response.posts) {
+      for (const post of response.posts || []) {
         const targetDom = domy.find(d => d.nazov === post.target_house);
         await base44.entities.SocialPostQueue.create({
           platform: post.platform,
@@ -1480,7 +1510,7 @@ Vráť JSON array (7 príspevkov).`;
               </Card>
 
               {/* Týždenný plán - tabuľka */}
-              {weeklyPlan && weeklyPlan.length > 0 && (
+              {weeklyPlan && weeklyPlan.posts && weeklyPlan.posts.length > 0 && (
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -1489,8 +1519,21 @@ Vráť JSON array (7 príspevkov).`;
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
+                    {/* Overall Reasoning */}
+                    {weeklyPlan.overall_reasoning && (
+                      <div className="mb-6 bg-gradient-to-r from-purple-100 to-pink-100 p-4 rounded-lg border-2 border-purple-400">
+                        <h4 className="font-bold text-sm mb-2 text-purple-900 flex items-center gap-2">
+                          <Brain className="w-4 h-4" />
+                          🧠 PREČO SOM VYTVORIL PRÁVE TAKÝTO PLÁN?
+                        </h4>
+                        <p className="text-xs text-purple-800 whitespace-pre-line leading-relaxed">
+                          {weeklyPlan.overall_reasoning}
+                        </p>
+                      </div>
+                    )}
+
                     <div className="space-y-4">
-                      {weeklyPlan.map((post, index) => (
+                      {weeklyPlan.posts.map((post, index) => (
                         <Card key={index} className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-300">
                           <CardContent className="p-4">
                             <div className="flex items-start justify-between gap-4 mb-3">
@@ -1517,6 +1560,13 @@ Vráť JSON array (7 príspevkov).`;
                                 <strong>🧠 Psychologický princíp:</strong> {post.psychological_trigger}
                               </p>
                             </div>
+                            {post.reasoning && (
+                              <div className="bg-indigo-50 p-3 rounded border border-indigo-200 mt-2">
+                                <p className="text-xs text-indigo-900">
+                                  <strong>💭 Reasoning:</strong> {post.reasoning}
+                                </p>
+                              </div>
+                            )}
                             <div className="flex gap-2 mt-3">
                               <Button
                                 onClick={() => copyToClipboard(post.post_text)}
@@ -1560,7 +1610,7 @@ Vráť JSON array (7 príspevkov).`;
                     </div>
                     <div className="mt-6 bg-gray-100 p-4 rounded-lg">
                       <p className="text-sm font-bold text-gray-900">
-                        💰 Celkový týždenný budget: {weeklyPlan.reduce((acc, p) => acc + p.budget, 0)}€
+                        💰 Celkový týždenný budget: {weeklyPlan.posts.reduce((acc, p) => acc + p.budget, 0)}€
                       </p>
                       <p className="text-xs text-gray-600 mt-1">
                         Z celkového mesačného budgetu: {campaignBudget}€
