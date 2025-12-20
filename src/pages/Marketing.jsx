@@ -26,9 +26,14 @@ import {
   MessageSquare,
   TrendingDown,
   Plus,
-  Rocket
+  Rocket,
+  Settings,
+  CheckCircle,
+  XCircle,
+  Search
 } from "lucide-react";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { format, subDays, startOfDay, endOfDay, startOfWeek, endOfWeek } from "date-fns";
 import { sk } from "date-fns/locale";
@@ -63,6 +68,12 @@ export default function Marketing() {
   // Google Drive Assets
   const [driveLink, setDriveLink] = useState("");
   const [savingDriveLink, setSavingDriveLink] = useState(false);
+  
+  // Settings & API
+  const [showSettings, setShowSettings] = useState(false);
+  const [apiTestResult, setApiTestResult] = useState(null);
+  const [testingAPI, setTestingAPI] = useState(false);
+  const [loadingCompetitors, setLoadingCompetitors] = useState(false);
 
   // Admin IP adresy a emaily na vylúčenie
   const ADMIN_IPS = ['109.230.104.122', '2a02:c847:166:a899:f148:3f22:4df1:169'];
@@ -554,15 +565,133 @@ Vráť JSON array (7 príspevkov).`;
     }
   };
 
+  // Test Gemini API Connection
+  const testAPIConnection = async () => {
+    setTestingAPI(true);
+    try {
+      const response = await base44.functions.invoke('testGeminiConnection');
+      setApiTestResult(response.data);
+      if (response.data.success) {
+        toast.success('API pripojenie funguje!');
+      } else {
+        toast.error('API pripojenie zlyhalo');
+      }
+    } catch (error) {
+      setApiTestResult({ success: false, error: error.message });
+      toast.error('Chyba pri testovaní API');
+    } finally {
+      setTestingAPI(false);
+    }
+  };
+
+  // Automaticky nájdi slovenskú konkurenciu
+  const findCompetitors = async () => {
+    setLoadingCompetitors(true);
+    try {
+      const response = await base44.functions.invoke('findSlovakCompetitors');
+      toast.success(response.data.message);
+      refetchCompetitors();
+    } catch (error) {
+      toast.error('Chyba pri hľadaní konkurencie');
+    } finally {
+      setLoadingCompetitors(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-            <Brain className="w-10 h-10 text-purple-600" />
-            🤖 AI Marketingový Riaditeľ
-          </h1>
-          <p className="text-gray-600">Váš virtuálny kolega pre dátami poháňané rozhodnutia</p>
+        <div className="mb-8 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+              <Brain className="w-10 h-10 text-purple-600" />
+              🤖 AI Marketingový Riaditeľ
+            </h1>
+            <p className="text-gray-600">Váš virtuálny kolega pre dátami poháňané rozhodnutia</p>
+          </div>
+
+          {/* Settings Button */}
+          <Dialog open={showSettings} onOpenChange={setShowSettings}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="lg" className="flex items-center gap-2">
+                <Settings className="w-5 h-5" />
+                ⚙️ Nastavenia
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle className="text-2xl flex items-center gap-2">
+                  <Settings className="w-6 h-6 text-purple-600" />
+                  ⚙️ Nastavenia AI Marketéra
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-6">
+                {/* API Test */}
+                <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-purple-300">
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-lg mb-4">🔌 Gemini API Connection</h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Model: <strong>gemini-1.5-pro</strong> (Deep Reasoning)
+                    </p>
+                    <Button
+                      onClick={testAPIConnection}
+                      disabled={testingAPI}
+                      className="w-full bg-purple-600 hover:bg-purple-700 mb-3"
+                    >
+                      {testingAPI ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Testujem...
+                        </>
+                      ) : (
+                        <>
+                          <Zap className="w-4 h-4 mr-2" />
+                          TEST CONNECTION
+                        </>
+                      )}
+                    </Button>
+
+                    {apiTestResult && (
+                      <div className={`p-4 rounded-lg border-2 ${
+                        apiTestResult.success 
+                          ? 'bg-green-50 border-green-300' 
+                          : 'bg-red-50 border-red-300'
+                      }`}>
+                        <div className="flex items-center gap-2 mb-2">
+                          {apiTestResult.success ? (
+                            <>
+                              <CheckCircle className="w-5 h-5 text-green-600" />
+                              <span className="font-bold text-green-900">✅ API Connected (Deep Reasoning Active)</span>
+                            </>
+                          ) : (
+                            <>
+                              <XCircle className="w-5 h-5 text-red-600" />
+                              <span className="font-bold text-red-900">❌ Connection Failed</span>
+                            </>
+                          )}
+                        </div>
+                        {apiTestResult.success ? (
+                          <div className="text-xs text-green-800">
+                            <div>Model: {apiTestResult.model}</div>
+                            <div>Response: {apiTestResult.test_response}</div>
+                          </div>
+                        ) : (
+                          <div className="text-xs text-red-800">
+                            Error: {apiTestResult.error}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <div className="text-xs text-gray-500 bg-gray-100 p-4 rounded">
+                  <strong>ℹ️ Info:</strong> API kľúč je uložený v Secrets ako "Gemini_PAID_pro". 
+                  Systém automaticky používa gemini-1.5-pro pre pokročilé reasoning.
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
         <Tabs defaultValue="overview" className="mb-8">
@@ -906,6 +1035,16 @@ Vráť JSON array (7 príspevkov).`;
                             <strong>✅ Compliance:</strong> {creativeProject.compliance_check}
                           </p>
                         </div>
+
+                        {/* Reasoning sekcia */}
+                        {creativeProject.reasoning && (
+                          <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-4 rounded-lg border-2 border-purple-400">
+                            <h4 className="font-bold text-sm mb-2 text-purple-900">🧠 PREČO SOM SA TAKTO ROZHODOL?</h4>
+                            <p className="text-xs text-purple-800 whitespace-pre-line leading-relaxed">
+                              {creativeProject.reasoning}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -1191,6 +1330,31 @@ Vráť JSON array (7 príspevkov).`;
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
+                  {/* Automatický Slovak Market Watch */}
+                  <div className="mb-6 bg-gradient-to-r from-red-50 to-orange-50 p-4 rounded-lg border-2 border-red-300">
+                    <h4 className="font-bold text-sm mb-3 text-red-900">🕵️‍♂️ Slovak Market Watch</h4>
+                    <p className="text-xs text-gray-700 mb-3">
+                      AI automaticky nájde slovenských konkurentov a pridá ich do databázy
+                    </p>
+                    <Button
+                      onClick={findCompetitors}
+                      disabled={loadingCompetitors}
+                      className="w-full bg-red-600 hover:bg-red-700"
+                    >
+                      {loadingCompetitors ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          AI hľadá konkurentov...
+                        </>
+                      ) : (
+                        <>
+                          <Search className="w-4 h-4 mr-2" />
+                          🕵️‍♂️ Nájdi slovenskú konkurenciu
+                        </>
+                      )}
+                    </Button>
+                  </div>
+
                   <div className="space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>

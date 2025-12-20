@@ -73,8 +73,16 @@ Odpoveď vo formáte:
       prompt: dopytAnalysisPrompt
     });
 
-    // 7. Hlavná strategická analýza
+    // 7. Hlavná strategická analýza (s Chain of Thought)
     const strategicPrompt = `Si senior marketingový stratég pre firmu American Living, ktorá predáva modulárne domy.
+
+🧠 CHAIN OF THOUGHT REASONING:
+Predtým, než navrhneš riešenie, krok za krokom analyzuj problém:
+1. Zváž psychológiu slovenského zákazníka (obavy, túžby)
+2. Uvažuj o sezónnosti a aktuálnom období
+3. Simuluj v hlave 3 rôzne marketingové scenáre
+4. Vyber ten najlepší na základe dát z MarketingKnowHow
+5. Vysvetli PREČO si sa takto rozhodol
 
 📊 AKTUÁLNE DÁTA:
 - Celkový počet sessions: ${totalSessions}
@@ -121,11 +129,48 @@ DÔLEŽITÉ:
 - Buď priamy, akčný, bez zbytočných slov
 - Používaj emotikonmi
 - Odkazuj sa na naše know-how pravidlá
+- Na konci pridaj sekciu: "🧠 PREČO SOM SA TAKTO ROZHODOL?" (vysvetlenie reasoning procesu)
 - Slovenčina`;
 
-    const strategicBriefing = await base44.integrations.Core.InvokeLLM({
-      prompt: strategicPrompt
-    });
+    const apiKey = Deno.env.get("Gemini_PAID_pro");
+    let strategicBriefing;
+
+    if (apiKey) {
+      // Použij Gemini 1.5 Pro pre deep reasoning
+      const geminiResponse = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{ text: strategicPrompt }]
+            }],
+            generationConfig: {
+              temperature: 0.7,
+              topK: 40,
+              topP: 0.95,
+              maxOutputTokens: 2048,
+            }
+          })
+        }
+      );
+
+      if (geminiResponse.ok) {
+        const data = await geminiResponse.json();
+        strategicBriefing = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Chyba pri generovaní';
+      } else {
+        // Fallback na InvokeLLM
+        strategicBriefing = await base44.integrations.Core.InvokeLLM({
+          prompt: strategicPrompt
+        });
+      }
+    } else {
+      // Fallback na InvokeLLM
+      strategicBriefing = await base44.integrations.Core.InvokeLLM({
+        prompt: strategicPrompt
+      });
+    }
 
     return Response.json({
       success: true,

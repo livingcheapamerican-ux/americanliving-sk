@@ -70,6 +70,8 @@ Vytvor JSON objekt s týmito poľami:
   
   "compliance_check": "...(Či tento projekt dodržiava naše know-how pravidlá? Áno/Nie a prečo)...",
   
+  "reasoning": "...(🧠 Vysvetlenie: Prečo som zvolil tento prístup? Ako som analyzoval problém krok za krokom?)...",
+  
   "estimated_impact": {
     "predicted_reach": "...(Low/Medium/High)...",
     "target_audience": "...(Kto je cieľová skupina)...",
@@ -82,10 +84,43 @@ POŽIADAVKY:
 - Scenár musí byť VEĽMI detailný a konkrétny
 - Nezabudni na call-to-action
 - Odkaž sa na naše know-how pravidlá
+- PRIDAJ na koniec sekciu: "🧠 PREČO SOM SA TAKTO ROZHODOL?" (vysvetlenie reasoning)
 - Slovenčina`;
 
-    const response = await base44.integrations.Core.InvokeLLM({
-      prompt: prompt,
+    const apiKey = Deno.env.get("Gemini_PAID_pro");
+    let response;
+
+    if (apiKey) {
+      // Použij Gemini 1.5 Pro
+      const geminiResponse = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{ text: prompt }]
+            }],
+            generationConfig: {
+              temperature: 0.8,
+              topK: 40,
+              topP: 0.95,
+              maxOutputTokens: 3072,
+            }
+          })
+        }
+      );
+
+      if (geminiResponse.ok) {
+        const data = await geminiResponse.json();
+        const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+        // Parse JSON z odpovede
+        const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
+        response = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
+      } else {
+        // Fallback
+        response = await base44.integrations.Core.InvokeLLM({
+          prompt: prompt,
       response_json_schema: {
         type: "object",
         properties: {
@@ -118,11 +153,49 @@ POŽIADAVKY:
         }
       }
     });
+    } else {
+      response = await base44.integrations.Core.InvokeLLM({
+        prompt: prompt,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            improved_concept: { type: "string" },
+            detailed_scenario: { type: "string" },
+            production_guide: {
+              type: "object",
+              properties: {
+                lighting: { type: "string" },
+                music_style: { type: "string" },
+                camera_instructions: { type: "string" },
+                duration: { type: "string" },
+                key_message: { type: "string" }
+              }
+            },
+            visual_assets_reminder: { type: "string" },
+            compliance_check: { type: "string" },
+            estimated_impact: {
+              type: "object",
+              properties: {
+                predicted_reach: { type: "string" },
+                target_audience: { type: "string" },
+                psychological_triggers: {
+                  type: "array",
+                  items: { type: "string" }
+                },
+                aida_stage: { type: "string" }
+              }
+            },
+            reasoning: { type: "string" }
+          }
+        }
+      });
+    }
 
     return Response.json({
       success: true,
       project: response,
       drive_link: driveLink,
+      model_used: apiKey ? 'gemini-1.5-pro' : 'fallback',
       timestamp: new Date().toISOString()
     });
 
