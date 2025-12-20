@@ -77,6 +77,8 @@ export default function Marketing() {
   const [loadingCompetitors, setLoadingCompetitors] = useState(false);
   const [apiKey, setApiKey] = useState("");
   const [savingApiKey, setSavingApiKey] = useState(false);
+  const [diagnostics, setDiagnostics] = useState(null);
+  const [loadingDiagnostics, setLoadingDiagnostics] = useState(false);
 
   // Admin IP adresy a emaily na vylúčenie
   const ADMIN_IPS = ['109.230.104.122', '2a02:c847:166:a899:f148:3f22:4df1:169'];
@@ -836,6 +838,28 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
     }
   };
 
+  // Spustiť kompletnú diagnostiku
+  const runDiagnostics = async () => {
+    setLoadingDiagnostics(true);
+    try {
+      const response = await base44.functions.invoke('diagnostikaIntegracii');
+      setDiagnostics(response.data);
+      
+      if (response.data.summary.overall_status === 'success') {
+        toast.success('✅ Všetky integrácie fungujú správne!');
+      } else if (response.data.summary.overall_status === 'warning') {
+        toast.warning(`⚠️ Našli sa nejaké varovania (${response.data.summary.warnings})`);
+      } else {
+        toast.error(`❌ Našli sa problémy (${response.data.summary.failed} zlyhania)`);
+      }
+    } catch (error) {
+      toast.error('Chyba pri diagnostike: ' + error.message);
+      setDiagnostics({ error: error.message });
+    } finally {
+      setLoadingDiagnostics(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -1011,6 +1035,95 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
                           <div className="text-xs text-red-800">
                             <strong>Error:</strong> {apiTestResult.error}
                             <p className="mt-2 text-red-700">💡 Tip: Skontrolujte, či je API kľúč správny a či máte povolený prístup k gemini-1.5-pro modelu.</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Diagnostika Integrácií */}
+                <Card className="bg-gradient-to-br from-cyan-50 to-blue-50 border-cyan-300">
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                      <Zap className="w-5 h-5 text-cyan-600" />
+                      🔍 Kompletná Diagnostika Integrácií
+                    </h3>
+                    <p className="text-xs text-gray-600 mb-4">
+                      Otestuje všetky integrácie, API kľúče a OAuth pripojenia
+                    </p>
+                    <Button
+                      onClick={runDiagnostics}
+                      disabled={loadingDiagnostics}
+                      className="w-full bg-cyan-600 hover:bg-cyan-700 mb-3"
+                    >
+                      {loadingDiagnostics ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Spúšťam diagnostiku...
+                        </>
+                      ) : (
+                        <>
+                          <Zap className="w-4 h-4 mr-2" />
+                          🔍 Spustiť diagnostiku
+                        </>
+                      )}
+                    </Button>
+
+                    {diagnostics && (
+                      <div className="space-y-3">
+                        {/* Summary */}
+                        {diagnostics.summary && (
+                          <div className={`p-4 rounded-lg border-2 ${
+                            diagnostics.summary.overall_status === 'success' ? 'bg-green-50 border-green-300' :
+                            diagnostics.summary.overall_status === 'warning' ? 'bg-yellow-50 border-yellow-300' :
+                            'bg-red-50 border-red-300'
+                          }`}>
+                            <div className="flex items-center gap-2 mb-2">
+                              {diagnostics.summary.overall_status === 'success' ? (
+                                <CheckCircle className="w-5 h-5 text-green-600" />
+                              ) : diagnostics.summary.overall_status === 'warning' ? (
+                                <Brain className="w-5 h-5 text-yellow-600" />
+                              ) : (
+                                <XCircle className="w-5 h-5 text-red-600" />
+                              )}
+                              <span className="font-bold">
+                                Súhrn: {diagnostics.summary.success}✓ / {diagnostics.summary.failed}✗ / {diagnostics.summary.warnings}⚠️
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Detailné výsledky */}
+                        <div className="space-y-2 max-h-96 overflow-y-auto">
+                          {diagnostics.tests?.map((test, idx) => (
+                            <div key={idx} className={`p-3 rounded border text-xs ${
+                              test.status === 'success' ? 'bg-green-50 border-green-200' :
+                              test.status === 'warning' ? 'bg-yellow-50 border-yellow-200' :
+                              'bg-red-50 border-red-200'
+                            }`}>
+                              <div className="flex items-start justify-between gap-2 mb-1">
+                                <span className="font-bold">{test.name}</span>
+                                <Badge className={
+                                  test.status === 'success' ? 'bg-green-600' :
+                                  test.status === 'warning' ? 'bg-yellow-600' : 'bg-red-600'
+                                }>
+                                  {test.status}
+                                </Badge>
+                              </div>
+                              {test.result && <div className="text-gray-700">✓ {test.result}</div>}
+                              {test.message && <div className="text-gray-700">{test.message}</div>}
+                              {test.error && <div className="text-red-700">✗ {test.error}</div>}
+                              {test.suggestion && (
+                                <div className="text-blue-700 mt-1">💡 {test.suggestion}</div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+
+                        {diagnostics.error && (
+                          <div className="bg-red-50 p-3 rounded border border-red-200 text-xs text-red-800">
+                            <strong>Chyba:</strong> {diagnostics.error}
                           </div>
                         )}
                       </div>
