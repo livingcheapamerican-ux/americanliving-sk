@@ -31,15 +31,16 @@ import MetaPixel from "./components/MetaPixel";
         // Facebook Conversions API (Server-Side Tracking)
         useEffect(() => {
           const trackPageView = async () => {
+            console.log('🚀 CAPI Event Triggered via Server for:', location.pathname);
             try {
-              await base44.functions.invoke('sendCAPIEvent', {
+              const response = await base44.functions.invoke('sendCAPIEvent', {
                 event_name: 'PageView',
                 event_source_url: window.location.href,
                 user_data: {
                   client_user_agent: navigator.userAgent
                 }
               });
-              console.log('✅ CAPI PageView tracked:', location.pathname);
+              console.log('✅ CAPI Response:', response.data);
             } catch (error) {
               console.error('❌ CAPI tracking failed:', error);
             }
