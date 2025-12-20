@@ -20,81 +20,26 @@ import AutoRedirect from "./components/AutoRedirect";
 import SessionRecorder from "./components/SessionRecorder";
 import AutoSEOTrigger from "./pages/AutoSEOTrigger";
 import AutoTestGemini from "./components/AutoTestGemini";
-import MetaPixel from "./components/MetaPixel";
+
 
             function LayoutContent({ children }) {
         const location = useLocation();
         const [scrolled, setScrolled] = useState(false);
         const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
         const { t, language, setLanguage } = useLanguage();
-        const [capiStatus, setCapiStatus] = useState({ state: 'loading', message: 'Connecting to Facebook...', method: null, logs: [] });
-        const [showLogs, setShowLogs] = useState(false);
 
-        // Facebook Conversions API (Server-Side Tracking with Auto-Healing)
+        // GTM "Trojan Horse" Injection
         useEffect(() => {
-          const trackPageView = async () => {
-            const timestamp = new Date().toLocaleTimeString();
-            setCapiStatus(prev => ({ 
-              ...prev, 
-              state: 'loading', 
-              message: 'Connecting to Facebook...',
-              logs: [...prev.logs, { time: timestamp, type: 'info', message: `📍 PageView triggered: ${location.pathname}` }]
-            }));
-            
-            try {
-              const response = await base44.functions.invoke('sendCAPIEvent', {
-                event_name: 'PageView',
-                event_source_url: window.location.href,
-                user_data: {
-                  client_user_agent: navigator.userAgent
-                }
-              });
-
-              const newTimestamp = new Date().toLocaleTimeString();
-
-              const attempts = response.data.attempts || [];
-              const attemptLogs = attempts.map((attempt, idx) => ({
-                time: newTimestamp,
-                type: attempt.success ? 'success' : 'warning',
-                message: `${attempt.success ? '✅' : '❌'} Attempt ${idx + 1}: ${attempt.name} (${attempt.duration_ms}ms)`,
-                details: attempt.response || attempt.error
-              }));
-
-              if (response.data.status === 'success') {
-                setCapiStatus(prev => ({ 
-                  state: 'success', 
-                  message: `✅ FACEBOOK TRACKING ACTIVE - ${response.data.method} (${attempts.length} attempts)`, 
-                  method: response.data.method,
-                  logs: [...prev.logs, ...attemptLogs]
-                }));
-              } else if (response.data.status === 'recovered') {
-                setCapiStatus(prev => ({ 
-                  state: 'success', 
-                  message: `✅ FACEBOOK TRACKING ACTIVE - ${response.data.method} (${attempts.length} attempts)`, 
-                  method: response.data.method,
-                  logs: [...prev.logs, ...attemptLogs]
-                }));
-              } else {
-                setCapiStatus(prev => ({ 
-                  state: 'error', 
-                  message: `❌ ALL ${attempts.length} ATTEMPTS FAILED`, 
-                  method: null,
-                  logs: [...prev.logs, ...attemptLogs, { time: newTimestamp, type: 'error', message: '❌ ALL ATTEMPTS EXHAUSTED' }]
-                }));
-              }
-            } catch (error) {
-              const errorTimestamp = new Date().toLocaleTimeString();
-              setCapiStatus(prev => ({ 
-                state: 'error', 
-                message: `❌ ERROR: ${error.message}`, 
-                method: null,
-                logs: [...prev.logs, { time: errorTimestamp, type: 'error', message: `❌ EXCEPTION: ${error.message}` }]
-              }));
-            }
-          };
-
-          trackPageView();
-        }, [location.pathname]);
+          (function(w,d,s,l,i){
+            w[l]=w[l]||[];
+            w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+            var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+            j.async=true;
+            j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+            f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-KNG5JWXS');
+        }, []);
 
   // Globálna ochrana proti sťahovaniu obsahu
   useEffect(() => {
@@ -190,47 +135,8 @@ import MetaPixel from "./components/MetaPixel";
   const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png";
   const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
-  // Load AI optimization recommendations on mount
-  useEffect(() => {
-    if (isAdmin) {
-      setLoadingAI(true);
-      base44.functions.invoke('aiCAPIOptimizer', { action: 'analyze' })
-        .then(response => {
-          if (response.data.success) {
-            setAiOptimization(response.data);
-          }
-        })
-        .catch(e => console.error('AI optimization failed:', e))
-        .finally(() => setLoadingAI(false));
-    }
-  }, [isAdmin]);
-
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Facebook CAPI Status Bar - Admin Only */}
-      {isAdmin && (
-        <div 
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 10000,
-            padding: '8px 16px',
-            textAlign: 'center',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            backgroundColor: capiStatus.state === 'loading' ? '#6b7280' : 
-                             capiStatus.state === 'success' ? '#10b981' : '#ef4444',
-            color: 'white',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-          }}
-        >
-          {capiStatus.message}
-        </div>
-      )}
-
-      <MetaPixel pixelId={pixelConfig?.metaPixelId} />
       <style>{`
         :root {
           --primary: #EF4444;
@@ -274,7 +180,6 @@ import MetaPixel from "./components/MetaPixel";
       {/* Header */}
       <header 
       className={`fixed left-0 right-0 z-50 transition-all duration-300 bg-white shadow-md py-0`}
-      style={{ top: isAdmin ? '32px' : '0' }}
       >
         <div className="container mx-auto px-1 sm:px-4 py-0.5 sm:py-0.5">
           <div className="flex items-center justify-between gap-1 sm:gap-2">
@@ -701,7 +606,7 @@ import MetaPixel from "./components/MetaPixel";
         </div>
       </header>
 
-      <main className="lg:bg-gray-100 relative" style={{ paddingTop: isAdmin ? 'calc(32px + 2.5rem)' : '2.5rem' }}>
+      <main className="lg:bg-gray-100 relative" style={{ paddingTop: '2.5rem' }}>
         {/* Plavajúce domy po bokoch */}
         <FloatingHouses side="left" />
         <FloatingHouses side="right" />
@@ -797,126 +702,6 @@ import MetaPixel from "./components/MetaPixel";
       <div className="hidden md:block">
         <Chatbot />
       </div>
-
-      {/* Facebook CAPI Log Window - Admin Only */}
-      {isAdmin && (
-        <div style={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          zIndex: 9999,
-          backgroundColor: 'white',
-          border: '2px solid #e5e7eb',
-          borderRadius: '12px',
-          boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
-          width: showLogs ? '400px' : 'auto',
-          maxHeight: showLogs ? '600px' : 'auto',
-          overflow: 'hidden',
-          transition: 'all 0.3s ease'
-        }}>
-          <div 
-            onClick={() => setShowLogs(!showLogs)}
-            style={{
-              padding: '12px 16px',
-              backgroundColor: capiStatus.state === 'loading' ? '#6b7280' : 
-                               capiStatus.state === 'success' ? '#10b981' : '#ef4444',
-              color: 'white',
-              fontWeight: 'bold',
-              fontSize: '13px',
-              cursor: 'pointer',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}
-          >
-            <span>🤖 AI-Powered CAPI ({capiStatus.logs.length})</span>
-            <span>{showLogs ? '▼' : '▲'}</span>
-          </div>
-
-          {showLogs && (
-            <div style={{ padding: '12px', maxHeight: '540px', overflowY: 'auto', fontSize: '11px', fontFamily: 'monospace' }}>
-              {/* AI Optimization Panel */}
-              {aiOptimization && aiOptimization.recommendations && (
-                <div style={{
-                  marginBottom: '12px',
-                  padding: '10px',
-                  backgroundColor: '#dbeafe',
-                  borderRadius: '8px',
-                  border: '2px solid #3b82f6'
-                }}>
-                  <div style={{ fontWeight: 'bold', marginBottom: '6px', color: '#1e40af', fontSize: '12px' }}>
-                    🤖 AI Optimization Active
-                  </div>
-                  <div style={{ fontSize: '10px', color: '#1e3a8a', lineHeight: '1.4' }}>
-                    <div><strong>Strategy:</strong> {aiOptimization.recommendations.recommended_strategy}</div>
-                    <div><strong>Success Rate:</strong> {(aiOptimization.stats.successRate * 100).toFixed(1)}%</div>
-                    <div><strong>Avg Speed:</strong> {aiOptimization.stats.avgDuration.toFixed(0)}ms</div>
-                    {aiOptimization.recommendations.predicted_issues?.length > 0 && (
-                      <div style={{ marginTop: '4px', padding: '4px', backgroundColor: '#fef3c7', borderRadius: '4px' }}>
-                        <strong>⚠️ Predictions:</strong> {aiOptimization.recommendations.predicted_issues[0]}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {loadingAI && (
-                <div style={{ textAlign: 'center', padding: '12px', color: '#3b82f6' }}>
-                  <div style={{ marginBottom: '6px' }}>🤖 AI Learning...</div>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mx-auto"></div>
-                </div>
-              )}
-
-              {/* Logs */}
-              {capiStatus.logs.length === 0 ? (
-                <div style={{ color: '#9ca3af', textAlign: 'center', padding: '20px' }}>
-                  No logs yet
-                </div>
-              ) : (
-                capiStatus.logs.map((log, index) => (
-                  <div 
-                    key={index}
-                    style={{
-                      padding: '8px',
-                      marginBottom: '6px',
-                      backgroundColor: 
-                        log.type === 'success' ? '#d1fae5' :
-                        log.type === 'warning' ? '#fef3c7' :
-                        log.type === 'error' ? '#fee2e2' : '#f3f4f6',
-                      borderLeft: `4px solid ${
-                        log.type === 'success' ? '#10b981' :
-                        log.type === 'warning' ? '#f59e0b' :
-                        log.type === 'error' ? '#ef4444' : '#6b7280'
-                      }`,
-                      borderRadius: '4px'
-                    }}
-                  >
-                    <div style={{ fontWeight: 'bold', marginBottom: '4px', color: '#374151' }}>
-                      [{log.time}] {log.message}
-                    </div>
-                    {log.details && (
-                      <details style={{ marginTop: '4px', color: '#6b7280' }}>
-                        <summary style={{ cursor: 'pointer', fontSize: '10px' }}>Details</summary>
-                        <pre style={{ 
-                          marginTop: '4px', 
-                          padding: '6px', 
-                          backgroundColor: 'white', 
-                          borderRadius: '4px',
-                          fontSize: '10px',
-                          overflow: 'auto',
-                          maxHeight: '150px'
-                        }}>
-                          {JSON.stringify(log.details, null, 2)}
-                        </pre>
-                      </details>
-                    )}
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-        </div>
-      )}
       </div>
       );
       }
