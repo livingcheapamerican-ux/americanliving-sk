@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
 
     // Send to Facebook Conversions API
     const response = await fetch(
-      `https://graph.facebook.com/v19.0/${PIXEL_ID}/events?access_token=${FB_ACCESS_TOKEN}`,
+      `https://graph.facebook.com/v19.0/${PIXEL_ID}/events?access_token=${FB_ACCESS_TOKEN}&test_event_code=TEST96562`,
       {
         method: 'POST',
         headers: {
