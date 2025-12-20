@@ -63,6 +63,7 @@ import SEOEditor from './pages/SEOEditor';
 import AdminABTesting from './pages/AdminABTesting';
 import AIMarketingInsights from './pages/AIMarketingInsights';
 import Marketing from './pages/Marketing';
+import AdminPixelSettings from './pages/AdminPixelSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -132,6 +133,7 @@ export const PAGES = {
     "AdminABTesting": AdminABTesting,
     "AIMarketingInsights": AIMarketingInsights,
     "Marketing": Marketing,
+    "AdminPixelSettings": AdminPixelSettings,
 }
 
 export const pagesConfig = {
