@@ -22,11 +22,31 @@ import AutoSEOTrigger from "./pages/AutoSEOTrigger";
 import AutoTestGemini from "./components/AutoTestGemini";
 import MetaPixel from "./components/MetaPixel";
 
-      function LayoutContent({ children }) {
-  const location = useLocation();
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { t, language, setLanguage } = useLanguage();
+            function LayoutContent({ children }) {
+        const location = useLocation();
+        const [scrolled, setScrolled] = useState(false);
+        const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+        const { t, language, setLanguage } = useLanguage();
+
+        // Facebook Conversions API (Server-Side Tracking)
+        useEffect(() => {
+          const trackPageView = async () => {
+            try {
+              await base44.functions.invoke('sendCAPIEvent', {
+                event_name: 'PageView',
+                event_source_url: window.location.href,
+                user_data: {
+                  client_user_agent: navigator.userAgent
+                }
+              });
+              console.log('✅ CAPI PageView tracked:', location.pathname);
+            } catch (error) {
+              console.error('❌ CAPI tracking failed:', error);
+            }
+          };
+
+          trackPageView();
+        }, [location.pathname]);
 
   // Globálna ochrana proti sťahovaniu obsahu
   useEffect(() => {
