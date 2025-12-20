@@ -67,12 +67,6 @@ Deno.serve(async (req) => {
       throw fetchError;
     }
 
-    return Response.json({ 
-      success: true,
-      result: result,
-      message: 'Event sent to Facebook CAPI'
-    });
-
   } catch (error) {
     console.error('CAPI Function Error:', error);
     return Response.json({ 
