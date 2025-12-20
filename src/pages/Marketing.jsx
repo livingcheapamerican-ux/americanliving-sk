@@ -17,6 +17,10 @@ import { format, subDays, startOfDay, endOfDay, startOfWeek, endOfWeek } from "d
 import { sk } from "date-fns/locale";
 
 export default function Marketing() {
+  // Admin IP adresy a emaily na vylúčenie
+  const ADMIN_IPS = ['109.230.104.122', '2a02:c847:166:a899:f148:3f22:4df1:169'];
+  const ADMIN_EMAILS = ['living.cheap.american@gmail.com'];
+
   const { data: user } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me()
@@ -24,13 +28,23 @@ export default function Marketing() {
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
-  // Dnešné sessions
+  // Filtrovať admin sessions
+  const filterAdminSessions = (sessions) => {
+    return sessions.filter(s => {
+      if (ADMIN_EMAILS.includes(s.user_email)) return false;
+      if (s.location_info?.ip && ADMIN_IPS.includes(s.location_info.ip)) return false;
+      return true;
+    });
+  };
+
+  // Dnešné sessions (bez admin)
   const { data: todaySessions = [] } = useQuery({
     queryKey: ['today-sessions'],
     queryFn: async () => {
       const sessions = await base44.entities.UserSession.list('-created_date', 500);
+      const filtered = filterAdminSessions(sessions);
       const today = new Date();
-      return sessions.filter(s => {
+      return filtered.filter(s => {
         const sessionDate = new Date(s.created_date);
         return sessionDate >= startOfDay(today) && sessionDate <= endOfDay(today);
       });
@@ -53,10 +67,13 @@ export default function Marketing() {
     enabled: isAdmin
   });
 
-  // Všetky sessions pre výpočty
+  // Všetky sessions pre výpočty (bez admin)
   const { data: allSessions = [] } = useQuery({
     queryKey: ['all-sessions-marketing'],
-    queryFn: () => base44.entities.UserSession.list('-created_date', 1000),
+    queryFn: async () => {
+      const sessions = await base44.entities.UserSession.list('-created_date', 1000);
+      return filterAdminSessions(sessions);
+    },
     enabled: isAdmin
   });
 
@@ -87,7 +104,12 @@ export default function Marketing() {
     s.configurator_interactions?.length > 0 && (!s.conversions || s.conversions.length === 0)
   ).length;
 
-  // Graf - posledných 14 dní
+  // Unikátni návštevníci (podľa email alebo IP)
+  const uniqueVisitors = new Set(
+    todaySessions.map(s => s.user_email || s.location_info?.ip || s.session_id)
+  ).size;
+
+  // Graf - posledných 14 dní (unikátni návštevníci)
   const chartData = [];
   for (let i = 13; i >= 0; i--) {
     const date = subDays(new Date(), i);
@@ -98,9 +120,13 @@ export default function Marketing() {
       return sessionDate >= dayStart && sessionDate <= dayEnd;
     });
     
+    const uniqueVisitorsForDay = new Set(
+      daySessions.map(s => s.user_email || s.location_info?.ip || s.session_id)
+    ).size;
+    
     chartData.push({
       date: format(date, 'dd.MM', { locale: sk }),
-      visits: daySessions.length
+      visits: uniqueVisitorsForDay
     });
   }
 
@@ -120,8 +146,9 @@ export default function Marketing() {
                 <Users className="w-8 h-8 text-blue-600" />
                 <Badge className="bg-blue-600 text-white">Dnes</Badge>
               </div>
-              <p className="text-sm text-gray-600 mb-1">Dnešné návštevy</p>
-              <p className="text-4xl font-bold text-gray-900">{todaySessions.length}</p>
+              <p className="text-sm text-gray-600 mb-1">Unikátni návštevníci</p>
+              <p className="text-4xl font-bold text-gray-900">{uniqueVisitors}</p>
+              <p className="text-xs text-gray-500 mt-1">{todaySessions.length} sessions</p>
             </CardContent>
           </Card>
 
@@ -164,7 +191,7 @@ export default function Marketing() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="w-5 h-5 text-blue-600" />
-              Vývoj návštevnosti za posledných 14 dní
+              Vývoj unikátnych návštevníkov (14 dní)
             </CardTitle>
           </CardHeader>
           <CardContent>
