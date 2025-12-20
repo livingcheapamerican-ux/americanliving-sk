@@ -27,12 +27,19 @@ import MetaPixel from "./components/MetaPixel";
         const [scrolled, setScrolled] = useState(false);
         const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
         const { t, language, setLanguage } = useLanguage();
-        const [capiStatus, setCapiStatus] = useState({ state: 'loading', message: 'Connecting to Facebook...', method: null });
+        const [capiStatus, setCapiStatus] = useState({ state: 'loading', message: 'Connecting to Facebook...', method: null, logs: [] });
+        const [showLogs, setShowLogs] = useState(false);
 
         // Facebook Conversions API (Server-Side Tracking with Auto-Healing)
         useEffect(() => {
           const trackPageView = async () => {
-            setCapiStatus({ state: 'loading', message: 'Connecting to Facebook...', method: null });
+            const timestamp = new Date().toLocaleTimeString();
+            setCapiStatus(prev => ({ 
+              ...prev, 
+              state: 'loading', 
+              message: 'Connecting to Facebook...',
+              logs: [...prev.logs, { time: timestamp, type: 'info', message: `📍 PageView triggered: ${location.pathname}` }]
+            }));
             
             try {
               const response = await base44.functions.invoke('sendCAPIEvent', {
@@ -43,31 +50,41 @@ import MetaPixel from "./components/MetaPixel";
                 }
               });
 
+              const newTimestamp = new Date().toLocaleTimeString();
+
               if (response.data.status === 'success') {
-                setCapiStatus({ 
+                setCapiStatus(prev => ({ 
                   state: 'success', 
                   message: '✅ FACEBOOK TRACKING ACTIVE - Server Mode (Full Payload)', 
-                  method: 'full' 
-                });
+                  method: 'full',
+                  logs: [...prev.logs, { time: newTimestamp, type: 'success', message: '✅ SUCCESS: Full payload sent', details: response.data }]
+                }));
               } else if (response.data.status === 'recovered') {
-                setCapiStatus({ 
+                setCapiStatus(prev => ({ 
                   state: 'success', 
                   message: '✅ FACEBOOK TRACKING ACTIVE - Server Mode (Recovered)', 
-                  method: 'minimal' 
-                });
+                  method: 'minimal',
+                  logs: [...prev.logs, 
+                    { time: newTimestamp, type: 'warning', message: '⚠️ Full payload failed, retrying...', details: response.data.original_error },
+                    { time: newTimestamp, type: 'success', message: '✅ RECOVERED: Minimal payload sent', details: response.data }
+                  ]
+                }));
               } else {
-                setCapiStatus({ 
+                setCapiStatus(prev => ({ 
                   state: 'error', 
                   message: `❌ ERROR: ${JSON.stringify(response.data.details)}`, 
-                  method: null 
-                });
+                  method: null,
+                  logs: [...prev.logs, { time: newTimestamp, type: 'error', message: `❌ ERROR: ${JSON.stringify(response.data.details)}`, details: response.data }]
+                }));
               }
             } catch (error) {
-              setCapiStatus({ 
+              const errorTimestamp = new Date().toLocaleTimeString();
+              setCapiStatus(prev => ({ 
                 state: 'error', 
                 message: `❌ ERROR: ${error.message}`, 
-                method: null 
-              });
+                method: null,
+                logs: [...prev.logs, { time: errorTimestamp, type: 'error', message: `❌ EXCEPTION: ${error.message}` }]
+              }));
             }
           };
 
@@ -760,6 +777,99 @@ import MetaPixel from "./components/MetaPixel";
       <div className="hidden md:block">
         <Chatbot />
       </div>
+
+      {/* Facebook CAPI Log Window - Admin Only */}
+      {isAdmin && (
+        <div style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          zIndex: 9999,
+          backgroundColor: 'white',
+          border: '2px solid #e5e7eb',
+          borderRadius: '12px',
+          boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+          width: showLogs ? '400px' : 'auto',
+          maxHeight: showLogs ? '500px' : 'auto',
+          overflow: 'hidden',
+          transition: 'all 0.3s ease'
+        }}>
+          <div 
+            onClick={() => setShowLogs(!showLogs)}
+            style={{
+              padding: '12px 16px',
+              backgroundColor: capiStatus.state === 'loading' ? '#6b7280' : 
+                               capiStatus.state === 'success' ? '#10b981' : '#ef4444',
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: '13px',
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}
+          >
+            <span>📊 CAPI Log ({capiStatus.logs.length})</span>
+            <span>{showLogs ? '▼' : '▲'}</span>
+          </div>
+          
+          {showLogs && (
+            <div style={{
+              padding: '12px',
+              maxHeight: '440px',
+              overflowY: 'auto',
+              fontSize: '11px',
+              fontFamily: 'monospace'
+            }}>
+              {capiStatus.logs.length === 0 ? (
+                <div style={{ color: '#9ca3af', textAlign: 'center', padding: '20px' }}>
+                  No logs yet
+                </div>
+              ) : (
+                capiStatus.logs.map((log, index) => (
+                  <div 
+                    key={index}
+                    style={{
+                      padding: '8px',
+                      marginBottom: '6px',
+                      backgroundColor: 
+                        log.type === 'success' ? '#d1fae5' :
+                        log.type === 'warning' ? '#fef3c7' :
+                        log.type === 'error' ? '#fee2e2' : '#f3f4f6',
+                      borderLeft: `4px solid ${
+                        log.type === 'success' ? '#10b981' :
+                        log.type === 'warning' ? '#f59e0b' :
+                        log.type === 'error' ? '#ef4444' : '#6b7280'
+                      }`,
+                      borderRadius: '4px'
+                    }}
+                  >
+                    <div style={{ fontWeight: 'bold', marginBottom: '4px', color: '#374151' }}>
+                      [{log.time}] {log.message}
+                    </div>
+                    {log.details && (
+                      <details style={{ marginTop: '4px', color: '#6b7280' }}>
+                        <summary style={{ cursor: 'pointer', fontSize: '10px' }}>Details</summary>
+                        <pre style={{ 
+                          marginTop: '4px', 
+                          padding: '6px', 
+                          backgroundColor: 'white', 
+                          borderRadius: '4px',
+                          fontSize: '10px',
+                          overflow: 'auto',
+                          maxHeight: '150px'
+                        }}>
+                          {JSON.stringify(log.details, null, 2)}
+                        </pre>
+                      </details>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </div>
+      )}
       </div>
       );
       }
