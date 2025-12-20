@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -49,6 +48,21 @@ export default function Marketing() {
   const [campaignBudget, setCampaignBudget] = useState(500);
   const [weeklyPlan, setWeeklyPlan] = useState(null);
   const [loadingWeeklyPlan, setLoadingWeeklyPlan] = useState(false);
+  
+  // Kreatívne štúdio
+  const [rawIdea, setRawIdea] = useState("");
+  const [creativeProject, setCreativeProject] = useState(null);
+  const [loadingCreative, setLoadingCreative] = useState(false);
+  
+  // Analýza komentárov
+  const [commentsInput, setCommentsInput] = useState("");
+  const [campaignNameInput, setCampaignNameInput] = useState("");
+  const [commentsAnalysis, setCommentsAnalysis] = useState(null);
+  const [loadingComments, setLoadingComments] = useState(false);
+  
+  // Google Drive Assets
+  const [driveLink, setDriveLink] = useState("");
+  const [savingDriveLink, setSavingDriveLink] = useState(false);
 
   // Admin IP adresy a emaily na vylúčenie
   const ADMIN_IPS = ['109.230.104.122', '2a02:c847:166:a899:f148:3f22:4df1:169'];
@@ -144,6 +158,27 @@ export default function Marketing() {
     queryFn: () => base44.entities.SocialPostQueue.filter({ status: 'Queued' }, '-created_date', 20),
     enabled: isAdmin
   });
+
+  // Marketing Assets (Google Drive link)
+  const { data: assets = [], refetch: refetchAssets } = useQuery({
+    queryKey: ['marketing-assets'],
+    queryFn: () => base44.entities.MarketingAssets.filter({ active: true }),
+    enabled: isAdmin
+  });
+
+  // Campaign Performance
+  const { data: campaigns = [], refetch: refetchCampaigns } = useQuery({
+    queryKey: ['campaign-performance'],
+    queryFn: () => base44.entities.CampaignPerformance.list('-created_date', 10),
+    enabled: isAdmin
+  });
+
+  // Load existing drive link
+  React.useEffect(() => {
+    if (assets.length > 0) {
+      setDriveLink(assets[0].link);
+    }
+  }, [assets]);
 
   if (!isAdmin) {
     return (
@@ -451,6 +486,74 @@ Vráť JSON array (7 príspevkov).`;
     }
   };
 
+  // Vylepšiť nápad (Kreatívne Štúdio)
+  const improveIdea = async () => {
+    if (!rawIdea.trim()) {
+      toast.error('Napíšte svoj nápad');
+      return;
+    }
+    
+    setLoadingCreative(true);
+    try {
+      const response = await base44.functions.invoke('kreativneStudio', { raw_idea: rawIdea });
+      setCreativeProject(response.data.project);
+      toast.success('Projekt vygenerovaný!');
+    } catch (error) {
+      toast.error('Chyba pri generovaní projektu');
+    } finally {
+      setLoadingCreative(false);
+    }
+  };
+
+  // Analyzovať komentáre
+  const analyzeComments = async () => {
+    if (!commentsInput.trim()) {
+      toast.error('Vložte komentáre');
+      return;
+    }
+    
+    setLoadingComments(true);
+    try {
+      const response = await base44.functions.invoke('analyzujKomentare', { 
+        comments_text: commentsInput,
+        campaign_name: campaignNameInput 
+      });
+      setCommentsAnalysis(response.data.analysis);
+      toast.success(response.data.message);
+      setCommentsInput("");
+      setCampaignNameInput("");
+      refetchBrain();
+      refetchCampaigns();
+    } catch (error) {
+      toast.error('Chyba pri analýze komentárov');
+    } finally {
+      setLoadingComments(false);
+    }
+  };
+
+  // Uložiť Google Drive link
+  const saveDriveLink = async () => {
+    setSavingDriveLink(true);
+    try {
+      if (assets.length > 0) {
+        await base44.entities.MarketingAssets.update(assets[0].id, { link: driveLink });
+      } else {
+        await base44.entities.MarketingAssets.create({ 
+          asset_type: 'google_drive_link',
+          link: driveLink,
+          active: true,
+          description: 'Hlavný priečinok s fotkami a videami'
+        });
+      }
+      toast.success('Google Drive link uložený!');
+      refetchAssets();
+    } catch (error) {
+      toast.error('Chyba pri ukladaní');
+    } finally {
+      setSavingDriveLink(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -709,6 +812,141 @@ Vráť JSON array (7 príspevkov).`;
           {/* KARTA B: Stratégia a Mozog */}
           <TabsContent value="strategy">
             <div className="space-y-8">
+              {/* Kreatívne Štúdio */}
+              <Card className="bg-gradient-to-br from-pink-900 to-purple-900 text-white border-none shadow-2xl">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-2xl">
+                    <Lightbulb className="w-8 h-8" />
+                    💡 Kreatívne Štúdio
+                  </CardTitle>
+                  <p className="text-pink-200">Idea → Hotový produkčný plán</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="text-white text-lg mb-2 block">Váš surový nápad</Label>
+                      <Textarea
+                        value={rawIdea}
+                        onChange={(e) => setRawIdea(e.target.value)}
+                        placeholder="Napr. 'Chcem natočiť video o kuchyni v dome Fjord'"
+                        rows={3}
+                        className="text-gray-900"
+                      />
+                    </div>
+                    <Button
+                      onClick={improveIdea}
+                      disabled={loadingCreative}
+                      size="lg"
+                      className="w-full bg-gradient-to-r from-yellow-400 to-pink-500 hover:from-yellow-500 hover:to-pink-600 text-gray-900 font-bold"
+                    >
+                      {loadingCreative ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900 mr-2"></div>
+                          AI vytvára projekt...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="w-5 h-5 mr-2" />
+                          Vylepšiť môj nápad
+                        </>
+                      )}
+                    </Button>
+
+                    {creativeProject && (
+                      <div className="bg-white text-gray-900 p-6 rounded-lg space-y-4">
+                        <div>
+                          <h4 className="font-bold text-lg mb-2 text-purple-900">✨ Vylepšený koncept</h4>
+                          <p className="text-sm leading-relaxed">{creativeProject.improved_concept}</p>
+                        </div>
+
+                        <div className="bg-blue-50 p-4 rounded-lg border-2 border-blue-300">
+                          <h4 className="font-bold text-lg mb-2 text-blue-900">🎬 Detailný scenár</h4>
+                          <p className="text-sm whitespace-pre-line leading-relaxed">{creativeProject.detailed_scenario}</p>
+                        </div>
+
+                        <div className="bg-green-50 p-4 rounded-lg border-2 border-green-300">
+                          <h4 className="font-bold text-lg mb-3 text-green-900">🎥 Metodika výroby</h4>
+                          <div className="grid md:grid-cols-2 gap-3 text-sm">
+                            <div>
+                              <strong>💡 Svetlo:</strong> {creativeProject.production_guide.lighting}
+                            </div>
+                            <div>
+                              <strong>🎵 Hudba:</strong> {creativeProject.production_guide.music_style}
+                            </div>
+                            <div>
+                              <strong>📹 Kamera:</strong> {creativeProject.production_guide.camera_instructions}
+                            </div>
+                            <div>
+                              <strong>⏱️ Dĺžka:</strong> {creativeProject.production_guide.duration}
+                            </div>
+                          </div>
+                          <div className="mt-3 p-3 bg-yellow-100 rounded border border-yellow-300">
+                            <strong>🎯 Kľúčový odkaz:</strong> {creativeProject.production_guide.key_message}
+                          </div>
+                        </div>
+
+                        <div className="bg-purple-50 p-4 rounded-lg border-2 border-purple-300">
+                          <p className="text-sm font-medium">{creativeProject.visual_assets_reminder}</p>
+                        </div>
+
+                        <div className="bg-orange-50 p-4 rounded-lg border-2 border-orange-300">
+                          <h4 className="font-bold text-sm mb-2 text-orange-900">📊 Predikovaný dopad</h4>
+                          <div className="grid md:grid-cols-2 gap-2 text-xs">
+                            <div><strong>Dosah:</strong> {creativeProject.estimated_impact.predicted_reach}</div>
+                            <div><strong>Cieľovka:</strong> {creativeProject.estimated_impact.target_audience}</div>
+                            <div className="md:col-span-2">
+                              <strong>Psychologické triggery:</strong> {creativeProject.estimated_impact.psychological_triggers.join(', ')}
+                            </div>
+                            <div><strong>AIDA fáza:</strong> {creativeProject.estimated_impact.aida_stage}</div>
+                          </div>
+                        </div>
+
+                        <div className="bg-gray-100 p-3 rounded">
+                          <p className="text-xs text-gray-700">
+                            <strong>✅ Compliance:</strong> {creativeProject.compliance_check}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Dátový Trezor - Google Drive Assets */}
+              <Card className="border-cyan-300">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-cyan-600" />
+                    📂 Dátový Trezor (Google Drive Assets)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div>
+                      <Label>Link na Google Drive priečinok</Label>
+                      <Input
+                        value={driveLink}
+                        onChange={(e) => setDriveLink(e.target.value)}
+                        placeholder="https://drive.google.com/drive/folders/..."
+                      />
+                    </div>
+                    <Button
+                      onClick={saveDriveLink}
+                      disabled={savingDriveLink}
+                      className="w-full bg-cyan-600 hover:bg-cyan-700"
+                    >
+                      {savingDriveLink ? 'Ukladám...' : 'Uložiť link'}
+                    </Button>
+                    {driveLink && (
+                      <div className="bg-cyan-50 p-3 rounded border border-cyan-200">
+                        <p className="text-xs text-cyan-900">
+                          ✅ AI bude automaticky pripomínať tento link pri generovaní príspevkov
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
               {/* Deep Think Strategist */}
               <Card className="bg-gradient-to-br from-purple-900 to-indigo-900 text-white border-none shadow-2xl">
                 <CardHeader>
@@ -833,6 +1071,114 @@ Vráť JSON array (7 príspevkov).`;
                       </div>
                     ))}
                   </div>
+                </CardContent>
+              </Card>
+
+              {/* Analýza Komentárov (Feedback Loop) */}
+              <Card className="bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-300">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MessageSquare className="w-5 h-5 text-orange-600" />
+                    💬 Analyzuj Komentáre (Feedback Loop)
+                  </CardTitle>
+                  <p className="text-sm text-orange-700">AI sa učí z reakcií ľudí a aktualizuje know-how</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <Label>Názov kampane</Label>
+                      <Input
+                        value={campaignNameInput}
+                        onChange={(e) => setCampaignNameInput(e.target.value)}
+                        placeholder="Napr. 'Facebook - Video montáž Washington'"
+                      />
+                    </div>
+                    <div>
+                      <Label>Komentáre z Facebooku/Instagramu</Label>
+                      <Textarea
+                        value={commentsInput}
+                        onChange={(e) => setCommentsInput(e.target.value)}
+                        placeholder="Skopírujte sem všetky komentáre z príspevku..."
+                        rows={6}
+                      />
+                    </div>
+                    <Button
+                      onClick={analyzeComments}
+                      disabled={loadingComments}
+                      className="w-full bg-orange-600 hover:bg-orange-700"
+                    >
+                      {loadingComments ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          AI analyzuje...
+                        </>
+                      ) : (
+                        <>
+                          <Brain className="w-4 h-4 mr-2" />
+                          Analyzovať a naučiť sa
+                        </>
+                      )}
+                    </Button>
+
+                    {commentsAnalysis && (
+                      <div className="bg-white p-4 rounded-lg border-2 border-orange-300 space-y-3">
+                        <div>
+                          <h4 className="font-bold text-sm mb-2">📊 Sentiment</h4>
+                          <Badge className={
+                            commentsAnalysis.sentiment === 'Pozitívny' ? 'bg-green-600' :
+                            commentsAnalysis.sentiment === 'Negatívny' ? 'bg-red-600' : 'bg-gray-600'
+                          }>{commentsAnalysis.sentiment}</Badge>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-sm mb-2 text-green-700">✅ Čo sa páčilo</h4>
+                          <ul className="text-xs space-y-1">
+                            {commentsAnalysis.positive_feedback?.map((item, i) => (
+                              <li key={i} className="text-green-800">• {item}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-sm mb-2 text-red-700">❌ Čo vadilo</h4>
+                          <ul className="text-xs space-y-1">
+                            {commentsAnalysis.negative_feedback?.map((item, i) => (
+                              <li key={i} className="text-red-800">• {item}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="bg-purple-50 p-3 rounded border border-purple-300">
+                          <h4 className="font-bold text-sm mb-2 text-purple-900">🧠 Naučené poznatky (pridané do Know-How)</h4>
+                          <ul className="text-xs space-y-1">
+                            {commentsAnalysis.learned_insights?.map((item, i) => (
+                              <li key={i} className="text-purple-800">• {item}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* História kampaní */}
+                  {campaigns.length > 0 && (
+                    <div className="mt-6">
+                      <h4 className="font-semibold text-sm text-gray-700 mb-3">📈 História kampaní ({campaigns.length})</h4>
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {campaigns.map((camp) => (
+                          <div key={camp.id} className="bg-white border border-orange-200 p-3 rounded text-xs">
+                            <div className="font-bold text-gray-900 mb-1">{camp.campaign_name}</div>
+                            <p className="text-gray-600 mb-2">{camp.sentiment_summary}</p>
+                            <div className="flex gap-2 flex-wrap">
+                              <Badge className="bg-green-100 text-green-800">
+                                {camp.positive_feedback?.length || 0} pozitívnych
+                              </Badge>
+                              <Badge className="bg-red-100 text-red-800">
+                                {camp.negative_feedback?.length || 0} negatívnych
+                              </Badge>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
