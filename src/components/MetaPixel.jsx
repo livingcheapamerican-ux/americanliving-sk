@@ -5,41 +5,54 @@ export default function MetaPixel({ pixelId }) {
   const location = useLocation();
 
   useEffect(() => {
-    if (!pixelId) return;
-
-    // Initialize fbq stub function
-    if (!window.fbq) {
-      window.fbq = function() {
-        window.fbq.callMethod ? window.fbq.callMethod.apply(window.fbq, arguments) : window.fbq.queue.push(arguments);
-      };
-      window.fbq.push = window.fbq;
-      window.fbq.loaded = true;
-      window.fbq.version = '2.0';
-      window.fbq.queue = [];
+    if (!pixelId) {
+      console.warn('⚠️ Meta Pixel ID not set');
+      return;
     }
 
-    // Load the Pixel script
+    console.log('🔵 Meta Pixel initialization started for ID:', pixelId);
+
+    // Define fbq stub BEFORE loading script
+    if (!window.fbq) {
+      (function(f,b,e,v,n,t,s){
+        if(f.fbq) return;
+        n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq) f._fbq=n;
+        n.push=n;
+        n.loaded=!0;
+        n.version='2.0';
+        n.queue=[];
+      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+      console.log('✅ fbq stub function created');
+    }
+
+    // Load the Pixel script dynamically
     if (!document.getElementById('facebook-pixel-script')) {
       const script = document.createElement('script');
       script.id = 'facebook-pixel-script';
       script.async = true;
       script.src = 'https://connect.facebook.net/en_US/fbevents.js';
-      document.head.appendChild(script);
-
+      
       script.onload = () => {
-        console.log('✅ Meta Pixel script loaded');
+        console.log('✅ Meta Pixel script loaded from CDN');
         window.fbq('init', pixelId);
         window.fbq('track', 'PageView');
-        console.log(`✅ Meta Pixel initialized: ${pixelId}`);
+        console.log(`✅ Pixel initialized and PageView tracked for ID: ${pixelId}`);
       };
 
-      script.onerror = () => {
-        console.error('❌ Failed to load Meta Pixel script');
+      script.onerror = (error) => {
+        console.error('❌ Failed to load Meta Pixel script:', error);
       };
+
+      document.head.appendChild(script);
+      console.log('📌 Script element appended to document.head');
     } else {
-      // Script already loaded, just track
-      window.fbq('init', pixelId);
-      window.fbq('track', 'PageView');
+      // Script already exists, just init and track
+      if (window.fbq) {
+        window.fbq('init', pixelId);
+        window.fbq('track', 'PageView');
+        console.log(`✅ Re-initialized Pixel ID: ${pixelId}`);
+      }
     }
   }, [pixelId]);
 
