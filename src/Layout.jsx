@@ -101,12 +101,12 @@ import AutoTestGemini from "./components/AutoTestGemini";
     { name: t('contact'), path: createPageUrl("Kontakt"), icon: Phone },
   ];
 
+  const isActive = (path) => location.pathname === path;
+  const isAdmin = user?.role === 'admin';
+
   const adminNavItems = isAdmin ? [
     { name: '📊 Marketing', path: createPageUrl("Marketing"), icon: Activity }
   ] : [];
-
-  const isActive = (path) => location.pathname === path;
-  const isAdmin = user?.role === 'admin';
   const isSuperAdmin = user?.super_admin === true;
 
   const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png";
