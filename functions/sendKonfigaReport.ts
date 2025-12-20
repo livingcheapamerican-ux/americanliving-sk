@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 // KONFIGURÁCIA
-const KONFIGA_ENDPOINT = Deno.env.get("KONFIGA_API_ENDPOINT") || "https://your-konfiga-app.base44.app/api/receive-report";
+const KONFIGA_ENDPOINT = "https://api.base44.com/run/69048bed66f4e28ccb19e56/receiveMarketingData";
 
 Deno.serve(async (req) => {
   try {
@@ -139,7 +139,7 @@ Deno.serve(async (req) => {
     console.log('📦 Report pripravený:', JSON.stringify(report, null, 2));
     
     // 4. ODOSLANIE DO KONFIGA AI
-    console.log(`📤 Odosielam report na: ${KONFIGA_ENDPOINT}`);
+    console.log("Odosielam na URL: " + KONFIGA_ENDPOINT);
     const konfigaResponse = await fetch(KONFIGA_ENDPOINT, {
       method: 'POST',
       headers: {
