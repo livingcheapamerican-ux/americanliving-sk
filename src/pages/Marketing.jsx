@@ -424,6 +424,52 @@ Odpoveď len textom príspevku.`;
   const generateWeeklyPlan = async () => {
     setLoadingWeeklyPlan(true);
     try {
+      // BEHAVIORÁLNE CIELENIE - Analýza profilov klientov
+      const profiles = {
+        SENIOR_DOWNSIZING: { count: 0, sessions: [] },
+        START_MLADA_RODINA: { count: 0, sessions: [] },
+        INVESTOR_BYROKRACIA: { count: 0, sessions: [] }
+      };
+
+      allSessions.forEach(s => {
+        // PROFIL A: SENIOR / DOWNSIZING
+        const viewedExpensive = s.dom_interactions?.some(d => {
+          const dom = domy.find(h => h.id === d.dom_id);
+          return dom && dom.zakladna_cena > 80000;
+        });
+        const hasLongerSessions = (s.duration_seconds || 0) > 180;
+        if (viewedExpensive && hasLongerSessions) {
+          profiles.SENIOR_DOWNSIZING.count++;
+          profiles.SENIOR_DOWNSIZING.sessions.push(s);
+        }
+
+        // PROFIL B: ŠTART / MLADÁ RODINA
+        const viewedCheap = s.dom_interactions?.some(d => {
+          const dom = domy.find(h => h.id === d.dom_id);
+          return dom && dom.zakladna_cena < 60000;
+        });
+        const searchedFinancing = s.pages_visited?.some(p => 
+          p.page_url?.includes('financovanie') || p.page_url?.includes('cena')
+        );
+        if (viewedCheap || searchedFinancing) {
+          profiles.START_MLADA_RODINA.count++;
+          profiles.START_MLADA_RODINA.sessions.push(s);
+        }
+
+        // PROFIL C: INVESTOR / OBAVA Z BYROKRACIE
+        const readAboutPermits = s.pages_visited?.some(p => 
+          p.page_url?.includes('faq') || p.page_url?.includes('ako-to-funguje')
+        );
+        const highEngagement = (s.engagement_score || 0) > 60;
+        if (readAboutPermits && highEngagement) {
+          profiles.INVESTOR_BYROKRACIA.count++;
+          profiles.INVESTOR_BYROKRACIA.sessions.push(s);
+        }
+      });
+
+      const dominantProfile = Object.entries(profiles)
+        .sort((a, b) => b[1].count - a[1].count)[0][0];
+
       // Získaj top 3 trendy domy
       const domVisits = {};
       allSessions.forEach(s => {
@@ -440,32 +486,61 @@ Odpoveď len textom príspevku.`;
           return { id, nazov: dom?.nazov, count };
         });
 
-      // Získaj náhodné pravidlá z MarketingBrain
-      const randomRules = brainRules
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 5)
-        .map(r => `[${r.category}] ${r.content_text}`);
+      // Získaj VŠETKY pravidlá z MarketingBrain (vrátane nových)
+      const allKnowHow = brainRules.map(r => `[${r.category}] ${r.content_text}`).join('\n\n');
 
-      const prompt = `Si AI marketingový riaditeľ pre American Living.
+      const profileDescriptions = {
+        SENIOR_DOWNSIZING: {
+          description: 'SENIOR / DOWNSIZING (50+, veľký dom, vysoké náklady)',
+          problem: 'Vekový útes - uväznení vo veľkých domoch',
+          solution: 'Dom ako bankomat',
+          keywords: 'bezbariérovosť, žiadne opravy, hotovosť na účte, jednopodlažný, nízke náklady na vykurovanie'
+        },
+        START_MLADA_RODINA: {
+          description: 'ŠTART / MLADÁ RODINA (25-35, prvé bývanie)',
+          problem: 'Nedostupná hypotéka / Zombie trh',
+          solution: 'Štartovacie bývanie',
+          keywords: 'rýchlosť, nezávislosť od rodičov, nízke energie, dostupná cena, moderný štandard'
+        },
+        INVESTOR_BYROKRACIA: {
+          description: 'INVESTOR / OBAVA Z BYROKRACIE (analýza, obavy zo zákona)',
+          problem: 'Legislatívny stres',
+          solution: '9 bodov servisu',
+          keywords: 'vybavíme za vás, bez starostí, legálne a rýchlo, komplexná služba'
+        }
+      };
+
+      const targetProfile = profileDescriptions[dominantProfile];
+
+      const prompt = `Si AI marketingový riaditeľ pre American Living (modulárne domy).
 
 🧠 CHAIN OF THOUGHT REASONING:
 Predtým než vytvoríš plán:
 1. Analyzuj psychológiu slovenského zákazníka
-2. Zváž sezónnosť a aktuálne obdobie roka
+2. Zváž sezónnosť a aktuálne obdobie roka (december 2025)
 3. Simuluj 3 rôzne scenáre kampaní
 4. Vyber najlepšiu stratégiu na základe know-how
 5. Vysvetli svoju logiku
 
-📊 DÁTA:
+📊 DÁTA O TRHU A KLIENTOCH:
 - Mesačný budget: ${campaignBudget}€
 - TOP 3 trendy domy: ${topDomy.map(d => `${d.nazov} (${d.count} zobrazení)`).join(', ')}
+- DOMINANTNÝ PROFIL KLIENTOV: ${targetProfile.description}
+  → Problém: ${targetProfile.problem}
+  → Naše riešenie: ${targetProfile.solution}
+  → Kľúčové slová: ${targetProfile.keywords}
 
-💡 NAŠE KNOW-HOW (MUSÍŠ dodržať):
-${randomRules.join('\n')}
+📚 KOMPLETNÉ KNOW-HOW (MUSÍŠ DODRŽAŤ VŠETKO):
+${allKnowHow}
+
+🎯 BEHAVIORÁLNE CIELENIE:
+- SENIOR/DOWNSIZING: ${profiles.SENIOR_DOWNSIZING.count} klientov
+- ŠTART/RODINA: ${profiles.START_MLADA_RODINA.count} klientov  
+- INVESTOR/BYROKRACIA: ${profiles.INVESTOR_BYROKRACIA.count} klientov
 
 ---
 
-ÚLOHA: Vytvor TÝŽDENNÝ PLÁN KAMPANÍ (7 príspevkov).
+ÚLOHA: Vytvor TÝŽDENNÝ PLÁN KAMPANÍ (7 príspevkov) CIELENÉHO NA DOMINANTNÝ PROFIL: ${targetProfile.description}.
 
 Pre každý deň vytvor:
 {
@@ -484,9 +559,13 @@ PRAVIDLÁ:
 - Každý príspevok musí odkazovať na konkrétne know-how pravidlo
 - Rozdeľ budget rozumne (viac na najlepšie domy)
 - Rôzne platformy pre rôzne ciele
+- DODRŽUJ COMMUNICATION_RULES (Anti-depresia, empatia, nádejný tón)
+- APLIKUJ MARKET_REALITY_2025 (poznaj problém)
+- PONÚKAJ OUR_SOLUTION_USP (riešenie)
+- PRISPÔSOB KAMPAŇ DOMINANTNÉMU PROFILU (${targetProfile.description})
 - PRIDAJ reasoning pre každý príspevok
 
-Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve takýto plán).`;
+Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
 
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: prompt,
@@ -506,15 +585,23 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
                   budget: { type: "number" },
                   predicted_score: { type: "number" },
                   reasoning: { type: "string" }
-                  }
-                  }
-                  },
-                  overall_reasoning: { type: "string" }
-                  }
-                  }
-                  });
+                }
+              }
+            },
+            overall_reasoning: { type: "string" },
+            target_profile_used: { type: "string" }
+          }
+        }
+      });
 
-                  setWeeklyPlan(response);
+      setWeeklyPlan({
+        ...response,
+        behavioral_segmentation: {
+          dominant_profile: dominantProfile,
+          profile_counts: profiles,
+          target_description: targetProfile.description
+        }
+      });
       
       // Uložiť do SocialPostQueue
       for (const post of response.posts || []) {
@@ -1721,6 +1808,35 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
+                    {/* Behavioral Segmentation Info */}
+                    {weeklyPlan.behavioral_segmentation && (
+                      <div className="mb-6 bg-gradient-to-r from-blue-100 to-cyan-100 p-4 rounded-lg border-2 border-blue-400">
+                        <h4 className="font-bold text-sm mb-3 text-blue-900 flex items-center gap-2">
+                          <Users className="w-4 h-4" />
+                          🎯 BEHAVIORÁLNE CIELENIE
+                        </h4>
+                        <div className="grid grid-cols-3 gap-3 text-xs mb-3">
+                          <div className="bg-white p-2 rounded border border-blue-300">
+                            <div className="font-bold text-blue-900">SENIOR/DOWNSIZING</div>
+                            <div className="text-2xl font-black text-blue-600">{weeklyPlan.behavioral_segmentation.profile_counts.SENIOR_DOWNSIZING.count}</div>
+                          </div>
+                          <div className="bg-white p-2 rounded border border-green-300">
+                            <div className="font-bold text-green-900">ŠTART/RODINA</div>
+                            <div className="text-2xl font-black text-green-600">{weeklyPlan.behavioral_segmentation.profile_counts.START_MLADA_RODINA.count}</div>
+                          </div>
+                          <div className="bg-white p-2 rounded border border-orange-300">
+                            <div className="font-bold text-orange-900">INVESTOR</div>
+                            <div className="text-2xl font-black text-orange-600">{weeklyPlan.behavioral_segmentation.profile_counts.INVESTOR_BYROKRACIA.count}</div>
+                          </div>
+                        </div>
+                        <div className="bg-white p-3 rounded border-2 border-blue-500">
+                          <p className="text-xs text-blue-900">
+                            <strong>🎯 Cielíme na:</strong> {weeklyPlan.behavioral_segmentation.target_description}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Overall Reasoning */}
                     {weeklyPlan.overall_reasoning && (
                       <div className="mb-6 bg-gradient-to-r from-purple-100 to-pink-100 p-4 rounded-lg border-2 border-purple-400">
@@ -1731,6 +1847,13 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
                         <p className="text-xs text-purple-800 whitespace-pre-line leading-relaxed">
                           {weeklyPlan.overall_reasoning}
                         </p>
+                        {weeklyPlan.target_profile_used && (
+                          <div className="mt-3 bg-purple-200 p-2 rounded">
+                            <p className="text-xs text-purple-900">
+                              <strong>🎯 Profil:</strong> {weeklyPlan.target_profile_used}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     )}
 
