@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Helmet } from "react-helmet";
 import { createPageUrl } from "@/utils";
 import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload, ChevronDown, Sparkles, Languages, FileText as BlogIcon, Activity, Zap } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -110,7 +109,29 @@ import AutoTestGemini from "./components/AutoTestGemini";
   ] : [];
   const isSuperAdmin = user?.super_admin === true;
 
-  // Track page views on route change for Facebook Pixel
+  // Initialize Facebook Pixel once
+  useEffect(() => {
+    // Facebook Pixel Code
+    (function(f,b,e,v,n,t,s) {
+      if(f.fbq) return;
+      n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq) f._fbq=n;
+      n.push=n;
+      n.loaded=!0;
+      n.version='2.0';
+      n.queue=[];
+      t=b.createElement(e);
+      t.async=!0;
+      t.src=v;
+      s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s);
+    })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+
+    window.fbq('init', '1525927175478080');
+    window.fbq('track', 'PageView');
+  }, []);
+
+  // Track page views on route change
   useEffect(() => {
     if (window.fbq) {
       window.fbq('track', 'PageView');
@@ -122,25 +143,9 @@ import AutoTestGemini from "./components/AutoTestGemini";
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Helmet>
-        <script>
-          {`
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '1525927175478080');
-            fbq('track', 'PageView');
-          `}
-        </script>
-        <noscript>
-          {`<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1525927175478080&ev=PageView&noscript=1" />`}
-        </noscript>
-      </Helmet>
+      <noscript>
+        <img height="1" width="1" style={{display: 'none'}} src="https://www.facebook.com/tr?id=1525927175478080&ev=PageView&noscript=1" />
+      </noscript>
       <style>{`
         :root {
           --primary: #EF4444;
