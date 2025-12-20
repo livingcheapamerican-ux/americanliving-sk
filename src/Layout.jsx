@@ -697,7 +697,6 @@ import AutoTestGemini from "./components/AutoTestGemini";
       <AutoRedirect />
       <InteractiveTour />
       <SessionRecorder />
-      <AutoSEOTrigger />
       <AutoTestGemini />
       <div className="hidden md:block">
         <Chatbot />
