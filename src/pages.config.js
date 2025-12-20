@@ -64,6 +64,7 @@ import AdminABTesting from './pages/AdminABTesting';
 import AIMarketingInsights from './pages/AIMarketingInsights';
 import Marketing from './pages/Marketing';
 import AdminPixelSettings from './pages/AdminPixelSettings';
+import AdminPixelTest from './pages/AdminPixelTest';
 import __Layout from './Layout.jsx';
 
 
@@ -134,6 +135,7 @@ export const PAGES = {
     "AIMarketingInsights": AIMarketingInsights,
     "Marketing": Marketing,
     "AdminPixelSettings": AdminPixelSettings,
+    "AdminPixelTest": AdminPixelTest,
 }
 
 export const pagesConfig = {
