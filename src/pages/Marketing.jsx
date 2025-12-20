@@ -1279,8 +1279,8 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
             )}
           </CardContent>
         </Card>
-            </div>
-          </TabsContent>
+        </div>
+        </TabsContent>
 
           {/* KARTA B: Stratégia a Mozog */}
           <TabsContent value="strategy">
