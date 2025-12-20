@@ -27,11 +27,13 @@ import MetaPixel from "./components/MetaPixel";
         const [scrolled, setScrolled] = useState(false);
         const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
         const { t, language, setLanguage } = useLanguage();
+        const [capiStatus, setCapiStatus] = useState({ state: 'loading', message: 'Connecting to Facebook...', method: null });
 
-        // Facebook Conversions API (Server-Side Tracking)
+        // Facebook Conversions API (Server-Side Tracking with Auto-Healing)
         useEffect(() => {
           const trackPageView = async () => {
-            console.log('🚀 CAPI Event Triggered via Server for:', location.pathname);
+            setCapiStatus({ state: 'loading', message: 'Connecting to Facebook...', method: null });
+            
             try {
               const response = await base44.functions.invoke('sendCAPIEvent', {
                 event_name: 'PageView',
@@ -40,9 +42,32 @@ import MetaPixel from "./components/MetaPixel";
                   client_user_agent: navigator.userAgent
                 }
               });
-              console.log('✅ CAPI Response:', response.data);
+
+              if (response.data.status === 'success') {
+                setCapiStatus({ 
+                  state: 'success', 
+                  message: '✅ FACEBOOK TRACKING ACTIVE - Server Mode (Full Payload)', 
+                  method: 'full' 
+                });
+              } else if (response.data.status === 'recovered') {
+                setCapiStatus({ 
+                  state: 'success', 
+                  message: '✅ FACEBOOK TRACKING ACTIVE - Server Mode (Recovered)', 
+                  method: 'minimal' 
+                });
+              } else {
+                setCapiStatus({ 
+                  state: 'error', 
+                  message: `❌ ERROR: ${JSON.stringify(response.data.details)}`, 
+                  method: null 
+                });
+              }
             } catch (error) {
-              console.error('❌ CAPI tracking failed:', error);
+              setCapiStatus({ 
+                state: 'error', 
+                message: `❌ ERROR: ${error.message}`, 
+                method: null 
+              });
             }
           };
 
