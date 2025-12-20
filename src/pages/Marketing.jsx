@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   TrendingUp, 
   Users, 
@@ -10,13 +12,22 @@ import {
   Target,
   BarChart3,
   Calendar,
-  Sparkles
+  Sparkles,
+  Brain,
+  Zap,
+  Copy
 } from "lucide-react";
+import { toast } from "sonner";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { format, subDays, startOfDay, endOfDay, startOfWeek, endOfWeek } from "date-fns";
 import { sk } from "date-fns/locale";
 
 export default function Marketing() {
+  const [weeklyAnalysis, setWeeklyAnalysis] = useState("");
+  const [facebookPost, setFacebookPost] = useState("");
+  const [loadingAnalysis, setLoadingAnalysis] = useState(false);
+  const [loadingFbPost, setLoadingFbPost] = useState(false);
+
   // Admin IP adresy a emaily na vylúčenie
   const ADMIN_IPS = ['109.230.104.122', '2a02:c847:166:a899:f148:3f22:4df1:169'];
   const ADMIN_EMAILS = ['living.cheap.american@gmail.com'];
@@ -84,6 +95,13 @@ export default function Marketing() {
     enabled: isAdmin
   });
 
+  // Domy
+  const { data: domy = [] } = useQuery({
+    queryKey: ['domy-marketing'],
+    queryFn: () => base44.entities.Dom.list(),
+    enabled: isAdmin
+  });
+
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
@@ -129,6 +147,115 @@ export default function Marketing() {
       visits: uniqueVisitorsForDay
     });
   }
+
+  // AI Týždenná analýza
+  const generateWeeklyAnalysis = async () => {
+    setLoadingAnalysis(true);
+    try {
+      // Získaj trendy dom (najviac návštev)
+      const domVisits = {};
+      allSessions.forEach(s => {
+        s.dom_interactions?.forEach(interaction => {
+          const domId = interaction.dom_id;
+          domVisits[domId] = (domVisits[domId] || 0) + 1;
+        });
+      });
+
+      const sortedDoms = Object.entries(domVisits).sort((a, b) => b[1] - a[1]);
+      const topDomId = sortedDoms[0]?.[0];
+      const topDom = domy.find(d => d.id === topDomId);
+
+      // Bounce rate
+      const bouncedSessions = allSessions.filter(s => s.session_tags?.includes('bounced') || s.session_tags?.includes('odrazeny'));
+      const bounceRate = allSessions.length > 0 ? ((bouncedSessions.length / allSessions.length) * 100).toFixed(1) : 0;
+
+      const prompt = `Si marketingový analytik. Na základe týchto dát vytvor krátky súhrn (max 150 slov):
+
+Aktuálne dáta:
+- Celkový počet návštev tento týždeň: ${allSessions.length}
+- Najnavštevovanejší model: ${topDom?.nazov || 'N/A'} (${sortedDoms[0]?.[1] || 0} návštev)
+- Bounce rate: ${bounceRate}%
+- Konverzný pomer: ${conversionRate}%
+- Opustené košíky: ${abandonedCarts}
+
+Napíš:
+1. Ktorý model je "trending" a prečo
+2. Kde strácame zákazníkov (problém s bounce rate alebo opustenými košíkmi)
+3. Jedno konkrétne odporúčanie na zlepšenie
+
+Odpoveď v slovenčine, používaj emotikonmi. Buď konkrétny a akčný.`;
+
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: prompt
+      });
+
+      setWeeklyAnalysis(response);
+    } catch (error) {
+      toast.error('Chyba pri generovaní analýzy');
+    } finally {
+      setLoadingAnalysis(false);
+    }
+  };
+
+  // Generátor Facebook postu
+  const generateFacebookPost = async () => {
+    setLoadingFbPost(true);
+    try {
+      // Nájdi najnavštevovanejší dom za 7 dní
+      const weekStart = subDays(new Date(), 7);
+      const weekSessions = allSessions.filter(s => new Date(s.created_date) >= weekStart);
+      
+      const domVisits = {};
+      weekSessions.forEach(s => {
+        s.dom_interactions?.forEach(interaction => {
+          const domId = interaction.dom_id;
+          domVisits[domId] = (domVisits[domId] || 0) + 1;
+        });
+      });
+
+      const sortedDoms = Object.entries(domVisits).sort((a, b) => b[1] - a[1]);
+      const topDomId = sortedDoms[0]?.[0];
+      const topDom = domy.find(d => d.id === topDomId);
+
+      if (!topDom) {
+        toast.error('Nenašiel sa žiadny dom s návštevami');
+        setLoadingFbPost(false);
+        return;
+      }
+
+      const prompt = `Vytvor chytľavý Facebook príspevok (max 200 znakov) pre tento modulárny dom:
+
+Názov: ${topDom.nazov}
+Cena: ${topDom.zakladna_cena?.toLocaleString('sk-SK')} € s DPH
+Plocha: ${topDom.zastavana_plocha} m²
+Výrobca: ${topDom.vyrobca}
+
+Požiadavky:
+- Buď kreatívny a chytľavý
+- Použi emotikonmi
+- Zdôrazni výhody (rýchla montáž, moderný dizajn, energetická efektivita)
+- Zahrň call-to-action (napr. "Pozrite si viac na našom webe")
+- Text musí byť priateľský a motivačný
+- Slovenčina
+
+Odpoveď len textom príspevku, bez úvodzoviek.`;
+
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: prompt
+      });
+
+      setFacebookPost(response);
+    } catch (error) {
+      toast.error('Chyba pri generovaní postu');
+    } finally {
+      setLoadingFbPost(false);
+    }
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    toast.success('Skopírované do schránky!');
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -212,6 +339,101 @@ export default function Marketing() {
             </ResponsiveContainer>
           </CardContent>
         </Card>
+
+        {/* AI Marketingové Centrum */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <Brain className="w-6 h-6 text-purple-600" />
+            🤖 AI Marketingové Centrum
+          </h2>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Týždenná Analýza */}
+            <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-purple-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-purple-600" />
+                  📊 Týždenná Analýza
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Button
+                  onClick={generateWeeklyAnalysis}
+                  disabled={loadingAnalysis}
+                  className="w-full bg-purple-600 hover:bg-purple-700 mb-4"
+                >
+                  {loadingAnalysis ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Generujem...
+                    </>
+                  ) : (
+                    <>
+                      <Zap className="w-4 h-4 mr-2" />
+                      Vygeneruj analýzu
+                    </>
+                  )}
+                </Button>
+                
+                {weeklyAnalysis && (
+                  <div className="bg-white p-4 rounded-lg border-2 border-purple-300">
+                    <p className="text-sm text-gray-800 whitespace-pre-line leading-relaxed">
+                      {weeklyAnalysis}
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Generátor Obsahu */}
+            <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-blue-600" />
+                  📱 Generátor Obsahu
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Button
+                  onClick={generateFacebookPost}
+                  disabled={loadingFbPost}
+                  className="w-full bg-blue-600 hover:bg-blue-700 mb-4"
+                >
+                  {loadingFbPost ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Generujem...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Vygeneruj príspevok na Facebook
+                    </>
+                  )}
+                </Button>
+                
+                {facebookPost && (
+                  <div className="space-y-2">
+                    <Textarea
+                      value={facebookPost}
+                      readOnly
+                      rows={6}
+                      className="bg-white border-2 border-blue-300 text-sm"
+                    />
+                    <Button
+                      onClick={() => copyToClipboard(facebookPost)}
+                      variant="outline"
+                      className="w-full"
+                    >
+                      <Copy className="w-4 h-4 mr-2" />
+                      Kopírovať do schránky
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
 
         {/* Tabuľka Marketing Insights */}
         <Card>
