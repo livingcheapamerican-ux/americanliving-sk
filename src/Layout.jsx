@@ -52,29 +52,34 @@ import MetaPixel from "./components/MetaPixel";
 
               const newTimestamp = new Date().toLocaleTimeString();
 
+              const attempts = response.data.attempts || [];
+              const attemptLogs = attempts.map((attempt, idx) => ({
+                time: newTimestamp,
+                type: attempt.success ? 'success' : 'warning',
+                message: `${attempt.success ? '✅' : '❌'} Attempt ${idx + 1}: ${attempt.name} (${attempt.duration_ms}ms)`,
+                details: attempt.response || attempt.error
+              }));
+
               if (response.data.status === 'success') {
                 setCapiStatus(prev => ({ 
                   state: 'success', 
-                  message: '✅ FACEBOOK TRACKING ACTIVE - Server Mode (Full Payload)', 
-                  method: 'full',
-                  logs: [...prev.logs, { time: newTimestamp, type: 'success', message: '✅ SUCCESS: Full payload sent', details: response.data }]
+                  message: `✅ FACEBOOK TRACKING ACTIVE - ${response.data.method} (${attempts.length} attempts)`, 
+                  method: response.data.method,
+                  logs: [...prev.logs, ...attemptLogs]
                 }));
               } else if (response.data.status === 'recovered') {
                 setCapiStatus(prev => ({ 
                   state: 'success', 
-                  message: '✅ FACEBOOK TRACKING ACTIVE - Server Mode (Recovered)', 
-                  method: 'minimal',
-                  logs: [...prev.logs, 
-                    { time: newTimestamp, type: 'warning', message: '⚠️ Full payload failed, retrying...', details: response.data.original_error },
-                    { time: newTimestamp, type: 'success', message: '✅ RECOVERED: Minimal payload sent', details: response.data }
-                  ]
+                  message: `✅ FACEBOOK TRACKING ACTIVE - ${response.data.method} (${attempts.length} attempts)`, 
+                  method: response.data.method,
+                  logs: [...prev.logs, ...attemptLogs]
                 }));
               } else {
                 setCapiStatus(prev => ({ 
                   state: 'error', 
-                  message: `❌ ERROR: ${JSON.stringify(response.data.details)}`, 
+                  message: `❌ ALL ${attempts.length} ATTEMPTS FAILED`, 
                   method: null,
-                  logs: [...prev.logs, { time: newTimestamp, type: 'error', message: `❌ ERROR: ${JSON.stringify(response.data.details)}`, details: response.data }]
+                  logs: [...prev.logs, ...attemptLogs, { time: newTimestamp, type: 'error', message: '❌ ALL ATTEMPTS EXHAUSTED' }]
                 }));
               }
             } catch (error) {
