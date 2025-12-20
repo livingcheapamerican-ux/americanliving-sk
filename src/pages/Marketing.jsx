@@ -89,6 +89,29 @@ export default function Marketing() {
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
+  // Automatizácia - posledná a ďalšia analýza
+  const { data: lastAnalysis } = useQuery({
+    queryKey: ['last-daily-analysis'],
+    queryFn: async () => {
+      const analyses = await base44.entities.DailyMarketingAnalysis.list('-created_date', 1);
+      return analyses[0] || null;
+    },
+    enabled: isAdmin,
+    refetchInterval: 60000 // každú minútu
+  });
+
+  const runDailyRoutine = useMutation({
+    mutationFn: () => base44.functions.invoke('dailyMarketingRoutine'),
+    onSuccess: (response) => {
+      if (response.data.success) {
+        toast.success('✅ Denná rutina dokončená!');
+      }
+    },
+    onError: () => {
+      toast.error('Chyba pri spustení dennej rutiny');
+    }
+  });
+
   // Filtrovať admin sessions
   const filterAdminSessions = (sessions) => {
     return sessions.filter(s => {
@@ -774,16 +797,58 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex items-start justify-between gap-4">
-          <div>
+          <div className="flex-1">
             <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
               <Brain className="w-10 h-10 text-purple-600" />
               🤖 AI Marketingový Riaditeľ
             </h1>
             <p className="text-gray-600">Váš virtuálny kolega pre dátami poháňané rozhodnutia</p>
+
+            {/* Automatizácia Status */}
+            {lastAnalysis && (
+              <div className="mt-3 flex items-center gap-4 text-xs">
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${
+                    lastAnalysis.status === 'completed' ? 'bg-green-500 animate-pulse' :
+                    lastAnalysis.status === 'running' ? 'bg-yellow-500 animate-pulse' : 'bg-red-500'
+                  }`}></div>
+                  <span className="text-gray-600">
+                    Posledná analýza: <strong>{format(new Date(lastAnalysis.created_date), 'dd.MM.yyyy HH:mm', { locale: sk })}</strong>
+                    {lastAnalysis.status === 'completed' && ` (${lastAnalysis.execution_time_seconds?.toFixed(1)}s)`}
+                  </span>
+                </div>
+                <span className="text-gray-400">•</span>
+                <span className="text-gray-600">
+                  Ďalšia naplánovaná: <strong>Zajtra 07:00</strong>
+                </span>
+              </div>
+            )}
           </div>
 
-          {/* Settings Button */}
-          <Dialog open={showSettings} onOpenChange={setShowSettings}>
+          <div className="flex gap-2">
+            {/* Manual Run Button */}
+            <Button
+              onClick={() => runDailyRoutine.mutate()}
+              disabled={runDailyRoutine.isPending}
+              variant="outline"
+              size="lg"
+              className="flex items-center gap-2"
+            >
+              {runDailyRoutine.isPending ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-600"></div>
+                  Spúšťam...
+                </>
+              ) : (
+                <>
+                  <Rocket className="w-5 h-5" />
+                  ▶️ Spustiť teraz
+                </>
+              )}
+            </Button>
+
+            {/* Settings Button */}
+            <Dialog open={showSettings} onOpenChange={setShowSettings}>
             <DialogTrigger asChild>
               <Button variant="outline" size="lg" className="flex items-center gap-2">
                 <Settings className="w-5 h-5" />
@@ -929,6 +994,60 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
           {/* KARTA A: Prehľad a Výkon */}
           <TabsContent value="overview">
             <div className="space-y-8">
+
+        {/* Automatizácia Dashboard */}
+        {lastAnalysis && lastAnalysis.status === 'completed' && (
+          <Card className="mb-8 bg-gradient-to-br from-green-50 to-emerald-50 border-green-300">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Rocket className="w-5 h-5 text-green-600" />
+                ☕ Ranný Brífing (Automaticky vygenerovaný)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-4 mb-4">
+                <div className="bg-white p-3 rounded-lg border border-green-200">
+                  <p className="text-xs text-gray-600 mb-1">Analyzované včera</p>
+                  <p className="text-2xl font-bold text-green-900">
+                    {lastAnalysis.sessions_analyzed} sessions
+                  </p>
+                  <p className="text-xs text-gray-500">{lastAnalysis.dopyty_analyzed} dopytov</p>
+                </div>
+                <div className="bg-white p-3 rounded-lg border border-green-200">
+                  <p className="text-xs text-gray-600 mb-1">Čas vykonania</p>
+                  <p className="text-2xl font-bold text-green-900">
+                    {lastAnalysis.execution_time_seconds?.toFixed(1)}s
+                  </p>
+                  {lastAnalysis.competitors_updated && (
+                    <Badge className="bg-purple-600 text-white text-xs mt-1">Konkurencia aktualizovaná</Badge>
+                  )}
+                </div>
+              </div>
+
+              {lastAnalysis.draft_post && (
+                <div className="bg-white p-4 rounded-lg border-2 border-green-300 mb-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge className="bg-blue-600 text-white">{lastAnalysis.draft_post.platform}</Badge>
+                    <Badge variant="outline">{lastAnalysis.draft_post.target_house}</Badge>
+                  </div>
+                  <p className="text-sm text-gray-800 mb-2">{lastAnalysis.draft_post.post_text}</p>
+                  <p className="text-xs text-purple-700">🧠 {lastAnalysis.draft_post.psychological_trigger}</p>
+                </div>
+              )}
+
+              {lastAnalysis.strategic_briefing && (
+                <details className="bg-white p-3 rounded-lg border border-green-200">
+                  <summary className="cursor-pointer font-semibold text-sm text-green-900 mb-2">
+                    📋 Zobraziť celý strategický brífing
+                  </summary>
+                  <pre className="text-xs text-gray-700 whitespace-pre-wrap leading-relaxed mt-2">
+                    {lastAnalysis.strategic_briefing}
+                  </pre>
+                </details>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
