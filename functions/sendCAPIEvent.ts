@@ -25,30 +25,46 @@ Deno.serve(async (req) => {
         event_time: Math.floor(Date.now() / 1000),
         action_source: 'website',
         event_source_url: event_source_url || 'https://americanliving.sk',
-        user_data: user_data || {}
+        user_data: {
+          client_user_agent: user_data?.client_user_agent || 'Mozilla/5.0 (Compatible; Server-Side-Test)',
+          ...user_data
+        }
       }]
     };
 
     // Send to Facebook Conversions API
-    const response = await fetch(
-      `https://graph.facebook.com/v19.0/${PIXEL_ID}/events?access_token=${FB_ACCESS_TOKEN}&test_event_code=TEST96562`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(eventData)
+    try {
+      const response = await fetch(
+        `https://graph.facebook.com/v19.0/${PIXEL_ID}/events?access_token=${FB_ACCESS_TOKEN}&test_event_code=TEST96562`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(eventData)
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error('❌ Facebook CAPI Error Response:', JSON.stringify(result, null, 2));
+        return Response.json({ 
+          error: 'Failed to send event to Facebook',
+          details: result
+        }, { status: response.status });
       }
-    );
 
-    const result = await response.json();
-
-    if (!response.ok) {
-      console.error('Facebook CAPI Error:', result);
+      console.log('✅ Facebook CAPI Success:', result);
+      
       return Response.json({ 
-        error: 'Failed to send event to Facebook',
-        details: result
-      }, { status: response.status });
+        success: true,
+        result: result,
+        message: 'Event sent to Facebook CAPI'
+      });
+    } catch (fetchError) {
+      console.error('❌ Facebook API Request Failed:', fetchError.message);
+      throw fetchError;
     }
 
     return Response.json({ 
