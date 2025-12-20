@@ -109,6 +109,39 @@ import AutoTestGemini from "./components/AutoTestGemini";
   ] : [];
   const isSuperAdmin = user?.super_admin === true;
 
+  // Meta Pixel Integration - Dynamic Injection
+  const { data: pixelConfig } = useQuery({
+    queryKey: ['meta-pixel-config'],
+    queryFn: async () => {
+      const configs = await base44.entities.AppConfiguration.filter({ config_key: 'meta_pixel' });
+      return configs[0] || null;
+    }
+  });
+
+  useEffect(() => {
+    if (!pixelConfig?.metaPixelId) return;
+
+    // Define fbq stub function
+    (function(f,b,e,v,n,t,s) {
+      if(f.fbq) return;
+      n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq) f._fbq=n;
+      n.push=n;
+      n.loaded=!0;
+      n.version='2.0';
+      n.queue=[];
+      t=b.createElement(e);
+      t.async=!0;
+      t.src=v;
+      s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s);
+    })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+
+    // Initialize with dynamic ID
+    window.fbq('init', pixelConfig.metaPixelId);
+    window.fbq('track', 'PageView');
+  }, [pixelConfig]);
+
   // Track page views on route change
   useEffect(() => {
     if (window.fbq) {
@@ -121,10 +154,11 @@ import AutoTestGemini from "./components/AutoTestGemini";
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <script dangerouslySetInnerHTML={{__html: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init', '1525927175478080');fbq('track', 'PageView');`}} />
-      <noscript>
-        <img height="1" width="1" style={{display: 'none'}} src="https://www.facebook.com/tr?id=1525927175478080&ev=PageView&noscript=1" />
-      </noscript>
+      {pixelConfig?.metaPixelId && (
+        <noscript>
+          <img height="1" width="1" style={{display: 'none'}} src={`https://www.facebook.com/tr?id=${pixelConfig.metaPixelId}&ev=PageView&noscript=1`} />
+        </noscript>
+      )}
       <style>{`
         :root {
           --primary: #EF4444;
@@ -275,6 +309,11 @@ import AutoTestGemini from "./components/AutoTestGemini";
           <div className="hidden lg:flex items-center gap-1 xl:gap-2">
             {isAdmin && (
               <>
+                <Link to={createPageUrl("AdminPixelSettings")}>
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Meta Pixel">
+                    <Settings className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                  </Button>
+                </Link>
                 <Link to={createPageUrl("AdminAnalyzaSessions")}>
                   <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Analytics & Sessions">
                     <Activity className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
@@ -517,6 +556,14 @@ import AutoTestGemini from "./components/AutoTestGemini";
                   )}
                   {isAdmin && (
                   <>
+                    <Link
+                      to={createPageUrl("AdminPixelSettings")}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    >
+                      <Settings className="w-5 h-5" />
+                      Meta Pixel Settings
+                    </Link>
                     <Link
                       to={createPageUrl("AdminAnalyzaSessions")}
                       onClick={() => setMobileMenuOpen(false)}
