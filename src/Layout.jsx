@@ -190,6 +190,21 @@ import MetaPixel from "./components/MetaPixel";
   const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png";
   const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
+  // Load AI optimization recommendations on mount
+  useEffect(() => {
+    if (isAdmin) {
+      setLoadingAI(true);
+      base44.functions.invoke('aiCAPIOptimizer', { action: 'analyze' })
+        .then(response => {
+          if (response.data.success) {
+            setAiOptimization(response.data);
+          }
+        })
+        .catch(e => console.error('AI optimization failed:', e))
+        .finally(() => setLoadingAI(false));
+    }
+  }, [isAdmin]);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Facebook CAPI Status Bar - Admin Only */}
@@ -795,7 +810,7 @@ import MetaPixel from "./components/MetaPixel";
           borderRadius: '12px',
           boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
           width: showLogs ? '400px' : 'auto',
-          maxHeight: showLogs ? '500px' : 'auto',
+          maxHeight: showLogs ? '600px' : 'auto',
           overflow: 'hidden',
           transition: 'all 0.3s ease'
         }}>
@@ -814,18 +829,45 @@ import MetaPixel from "./components/MetaPixel";
               alignItems: 'center'
             }}
           >
-            <span>📊 CAPI Log ({capiStatus.logs.length})</span>
+            <span>🤖 AI-Powered CAPI ({capiStatus.logs.length})</span>
             <span>{showLogs ? '▼' : '▲'}</span>
           </div>
-          
+
           {showLogs && (
-            <div style={{
-              padding: '12px',
-              maxHeight: '440px',
-              overflowY: 'auto',
-              fontSize: '11px',
-              fontFamily: 'monospace'
-            }}>
+            <div style={{ padding: '12px', maxHeight: '540px', overflowY: 'auto', fontSize: '11px', fontFamily: 'monospace' }}>
+              {/* AI Optimization Panel */}
+              {aiOptimization && aiOptimization.recommendations && (
+                <div style={{
+                  marginBottom: '12px',
+                  padding: '10px',
+                  backgroundColor: '#dbeafe',
+                  borderRadius: '8px',
+                  border: '2px solid #3b82f6'
+                }}>
+                  <div style={{ fontWeight: 'bold', marginBottom: '6px', color: '#1e40af', fontSize: '12px' }}>
+                    🤖 AI Optimization Active
+                  </div>
+                  <div style={{ fontSize: '10px', color: '#1e3a8a', lineHeight: '1.4' }}>
+                    <div><strong>Strategy:</strong> {aiOptimization.recommendations.recommended_strategy}</div>
+                    <div><strong>Success Rate:</strong> {(aiOptimization.stats.successRate * 100).toFixed(1)}%</div>
+                    <div><strong>Avg Speed:</strong> {aiOptimization.stats.avgDuration.toFixed(0)}ms</div>
+                    {aiOptimization.recommendations.predicted_issues?.length > 0 && (
+                      <div style={{ marginTop: '4px', padding: '4px', backgroundColor: '#fef3c7', borderRadius: '4px' }}>
+                        <strong>⚠️ Predictions:</strong> {aiOptimization.recommendations.predicted_issues[0]}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {loadingAI && (
+                <div style={{ textAlign: 'center', padding: '12px', color: '#3b82f6' }}>
+                  <div style={{ marginBottom: '6px' }}>🤖 AI Learning...</div>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mx-auto"></div>
+                </div>
+              )}
+
+              {/* Logs */}
               {capiStatus.logs.length === 0 ? (
                 <div style={{ color: '#9ca3af', textAlign: 'center', padding: '20px' }}>
                   No logs yet
