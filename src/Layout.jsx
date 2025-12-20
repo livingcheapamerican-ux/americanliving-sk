@@ -101,6 +101,10 @@ import AutoTestGemini from "./components/AutoTestGemini";
     { name: t('contact'), path: createPageUrl("Kontakt"), icon: Phone },
   ];
 
+  const adminNavItems = isAdmin ? [
+    { name: '📊 Marketing', path: createPageUrl("Marketing"), icon: Activity }
+  ] : [];
+
   const isActive = (path) => location.pathname === path;
   const isAdmin = user?.role === 'admin';
   const isSuperAdmin = user?.super_admin === true;
@@ -213,7 +217,7 @@ import AutoTestGemini from "./components/AutoTestGemini";
             </div>
 
             <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1">
-              {navItems.map((item) => {
+              {[...navItems, ...adminNavItems].map((item) => {
                 const tourId = item.path === createPageUrl("Katalog") ? "nav-katalog"
                   : item.path === createPageUrl("OdporucanieDomov") ? "nav-ai"
                   : item.path === createPageUrl("ONas") ? "nav-onas"
@@ -400,8 +404,8 @@ import AutoTestGemini from "./components/AutoTestGemini";
                   />
                 </a>
               </div>
-              
-              {navItems.map((item) => (
+
+              {[...navItems, ...adminNavItems].map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
