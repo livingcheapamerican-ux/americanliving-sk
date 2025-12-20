@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
     if (geminiKey) {
       try {
         const geminiResponse = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${geminiKey}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -72,22 +72,22 @@ Deno.serve(async (req) => {
         if (geminiResponse.ok) {
           const data = await geminiResponse.json();
           diagnostics.tests.push({
-            name: 'Gemini API (gemini-1.5-pro)',
+            name: 'Gemini API (gemini-1.5-flash)',
             status: 'success',
             result: 'API kľúč funguje',
-            model: 'gemini-1.5-pro'
+            model: 'gemini-1.5-flash'
           });
         } else {
           const errorText = await geminiResponse.text();
           diagnostics.tests.push({
-            name: 'Gemini API (gemini-1.5-pro)',
+            name: 'Gemini API (gemini-1.5-flash)',
             status: 'failed',
             error: errorText.substring(0, 200)
           });
         }
       } catch (error) {
         diagnostics.tests.push({
-          name: 'Gemini API (gemini-1.5-pro)',
+          name: 'Gemini API (gemini-1.5-flash)',
           status: 'failed',
           error: error.message
         });

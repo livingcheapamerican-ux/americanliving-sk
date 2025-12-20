@@ -143,9 +143,9 @@ DÔLEŽITÉ:
 
     let strategicBriefing;
 
-    // Použij Gemini 1.5 Pro pre deep reasoning
+    // Použij Gemini 1.5 Flash pre deep reasoning
     const geminiResponse = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

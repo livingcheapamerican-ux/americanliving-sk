@@ -28,7 +28,7 @@ Deno.serve(async (req) => {
 
     // Test the API key
     const testResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${api_key}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${api_key}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
     if (!testResponse.ok) {
       return Response.json({ 
         success: false,
-        error: 'API kľúč je neplatný alebo nemá prístup k gemini-1.5-pro modelu'
+        error: 'API kľúč je neplatný alebo nemá prístup k gemini-1.5-flash modelu'
       }, { status: 400 });
     }
 
@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
       success: true,
       message: '✅ API kľúč overený! Nastavte ho prosím v Dashboard → Settings → Environment Variables ako "Gemini_PAID_pro"',
       validated: true,
-      model_access: 'gemini-1.5-pro',
+      model_access: 'gemini-1.5-flash',
       instructions: 'Prejdite do Dashboard → Settings → Environment Variables a pridajte: Name: Gemini_PAID_pro, Value: váš API kľúč'
     });
 
