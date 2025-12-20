@@ -109,6 +109,28 @@ import AutoTestGemini from "./components/AutoTestGemini";
   ] : [];
   const isSuperAdmin = user?.super_admin === true;
 
+  // Facebook Pixel
+  useEffect(() => {
+    // Facebook Pixel Code
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    window.fbq('init', '1525927175478080');
+    window.fbq('track', 'PageView');
+  }, []);
+
+  // Track page views on route change
+  useEffect(() => {
+    if (window.fbq) {
+      window.fbq('track', 'PageView');
+    }
+  }, [location.pathname]);
+
   const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png";
   const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
