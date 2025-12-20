@@ -170,26 +170,28 @@ import MetaPixel from "./components/MetaPixel";
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Facebook CAPI Status Bar */}
-      <div 
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 10000,
-          padding: '8px 16px',
-          textAlign: 'center',
-          fontSize: '12px',
-          fontWeight: 'bold',
-          backgroundColor: capiStatus.state === 'loading' ? '#6b7280' : 
-                           capiStatus.state === 'success' ? '#10b981' : '#ef4444',
-          color: 'white',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-        }}
-      >
-        {capiStatus.message}
-      </div>
+      {/* Facebook CAPI Status Bar - Admin Only */}
+      {isAdmin && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 10000,
+            padding: '8px 16px',
+            textAlign: 'center',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            backgroundColor: capiStatus.state === 'loading' ? '#6b7280' : 
+                             capiStatus.state === 'success' ? '#10b981' : '#ef4444',
+            color: 'white',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+          }}
+        >
+          {capiStatus.message}
+        </div>
+      )}
 
       <MetaPixel pixelId={pixelConfig?.metaPixelId} />
       <style>{`
@@ -235,7 +237,7 @@ import MetaPixel from "./components/MetaPixel";
       {/* Header */}
       <header 
       className={`fixed left-0 right-0 z-50 transition-all duration-300 bg-white shadow-md py-0`}
-      style={{ top: '32px' }}
+      style={{ top: isAdmin ? '32px' : '0' }}
       >
         <div className="container mx-auto px-1 sm:px-4 py-0.5 sm:py-0.5">
           <div className="flex items-center justify-between gap-1 sm:gap-2">
@@ -662,7 +664,7 @@ import MetaPixel from "./components/MetaPixel";
         </div>
       </header>
 
-      <main className="lg:bg-gray-100 relative" style={{ paddingTop: 'calc(32px + 2.5rem)' }}>
+      <main className="lg:bg-gray-100 relative" style={{ paddingTop: isAdmin ? 'calc(32px + 2.5rem)' : '2.5rem' }}>
         {/* Plavajúce domy po bokoch */}
         <FloatingHouses side="left" />
         <FloatingHouses side="right" />
