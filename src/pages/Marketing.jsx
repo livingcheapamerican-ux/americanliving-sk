@@ -489,17 +489,17 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
                   target_house: { type: "string" },
                   platform: { type: "string" },
                   budget: { type: "number" },
-                  predicted_score: { type: "number" }
-                }
-              },
-              required: ["den", "post_text", "psychological_trigger", "target_house", "platform", "budget", "predicted_score"]
-            }
-          },
-          required: ["posts"]
-        }
-      });
+                  predicted_score: { type: "number" },
+                  reasoning: { type: "string" }
+                  }
+                  }
+                  },
+                  overall_reasoning: { type: "string" }
+                  }
+                  }
+                  });
 
-      setWeeklyPlan(response.posts);
+                  setWeeklyPlan(response);
       
       // Uložiť do SocialPostQueue
       for (const post of response.posts || []) {
