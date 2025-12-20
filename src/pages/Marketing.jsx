@@ -711,22 +711,65 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
 
   // Uložiť Google Drive link
   const saveDriveLink = async () => {
+    if (!driveLink.trim()) {
+      toast.error('Zadajte Google Drive link');
+      return;
+    }
+
     setSavingDriveLink(true);
     try {
+      // Extract folder ID from Google Drive URL
+      const folderIdMatch = driveLink.match(/folders\/([a-zA-Z0-9_-]+)/);
+      if (!folderIdMatch) {
+        toast.error('Neplatný Google Drive link. Použite formát: https://drive.google.com/drive/folders/...');
+        setSavingDriveLink(false);
+        return;
+      }
+
+      const folderId = folderIdMatch[1];
+      
+      // Test prístupu k priečinku (rekurzívne, vrátane podpriečinkov)
+      toast.info('Testujem prístup k Google Drive priečinku...', { duration: 3000 });
+      
+      const response = await base44.functions.invoke('googleDrive', {
+        action: 'listFolderContents',
+        folderId: folderId,
+        recursive: 'true'
+      });
+
+      const files = response.data || [];
+      
+      if (files.length === 0) {
+        toast.warning('Priečinok je prázdny alebo neobsahuje obrázky. Link bude uložený.', { duration: 4000 });
+      } else {
+        toast.success(`✅ Prístup overený! Nájdených ${files.length} obrázkov (vrátane podpriečinkov)`, { duration: 5000 });
+      }
+
+      // Ulož link
       if (assets.length > 0) {
-        await base44.entities.MarketingAssets.update(assets[0].id, { link: driveLink });
+        await base44.entities.MarketingAssets.update(assets[0].id, { 
+          link: driveLink,
+          description: `Hlavný priečinok s fotkami a videami (${files.length} obrázkov)`
+        });
       } else {
         await base44.entities.MarketingAssets.create({ 
           asset_type: 'google_drive_link',
           link: driveLink,
           active: true,
-          description: 'Hlavný priečinok s fotkami a videami'
+          description: `Hlavný priečinok s fotkami a videami (${files.length} obrázkov)`
         });
       }
+      
       toast.success('Google Drive link uložený!');
       refetchAssets();
     } catch (error) {
-      toast.error('Chyba pri ukladaní');
+      if (error.response?.data?.needsAuth) {
+        toast.error('⚠️ Potrebujete autorizovať Google Drive v nastaveniach.', { duration: 5000 });
+      } else if (error.response?.data?.error?.includes('Token expired')) {
+        toast.error('Token vypršal. Prejdite do Admin Google Drive a znovu sa pripojte.', { duration: 5000 });
+      } else {
+        toast.error('Chyba pri overovaní prístupu: ' + (error.response?.data?.error || error.message));
+      }
     } finally {
       setSavingDriveLink(false);
     }
