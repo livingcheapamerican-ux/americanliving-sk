@@ -711,6 +711,40 @@ import MetaPixel from "./components/MetaPixel";
       <div className="hidden md:block">
         <Chatbot />
       </div>
+
+      {/* TEMPORARY TEST BUTTON FOR FACEBOOK CAPI */}
+      <button
+        onClick={async () => {
+          try {
+            const response = await base44.functions.invoke('sendCAPIEvent', {
+              event_name: 'PageView',
+              event_source_url: window.location.href,
+              user_data: {
+                client_user_agent: navigator.userAgent
+              }
+            });
+            alert('Server Signal SENT! Response: ' + JSON.stringify(response.data));
+          } catch (error) {
+            alert('ERROR: ' + error.message);
+          }
+        }}
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          zIndex: 9999,
+          backgroundColor: 'red',
+          color: 'white',
+          padding: '15px 20px',
+          borderRadius: '8px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          border: 'none',
+          boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
+        }}
+      >
+        TEST FACEBOOK CAPI
+      </button>
       </div>
       );
       }
