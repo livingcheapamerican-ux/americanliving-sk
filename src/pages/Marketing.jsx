@@ -30,7 +30,8 @@ import {
   Settings,
   CheckCircle,
   XCircle,
-  Search
+  Search,
+  Trophy
 } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -74,6 +75,8 @@ export default function Marketing() {
   const [apiTestResult, setApiTestResult] = useState(null);
   const [testingAPI, setTestingAPI] = useState(false);
   const [loadingCompetitors, setLoadingCompetitors] = useState(false);
+  const [apiKey, setApiKey] = useState("");
+  const [savingApiKey, setSavingApiKey] = useState(false);
 
   // Admin IP adresy a emaily na vylúčenie
   const ADMIN_IPS = ['109.230.104.122', '2a02:c847:166:a899:f148:3f22:4df1:169'];
@@ -371,11 +374,23 @@ Odpoveď len textom príspevku.`;
     setLoadingBriefing(true);
     try {
       const response = await base44.functions.invoke('deepThinkStrategist');
-      setStrategicBriefing(response.data.briefing);
-      setClientConcerns(response.data.client_concerns);
-      toast.success('Strategický brífing vygenerovaný!');
+      if (response.data.needs_api_key) {
+        toast.error('⚠️ Pre DeepThink analýzu vložte prosím API kľúč v nastaveniach.', {
+          duration: 5000
+        });
+        setShowSettings(true);
+      } else {
+        setStrategicBriefing(response.data.briefing);
+        setClientConcerns(response.data.client_concerns);
+        toast.success('✅ Strategický brífing vygenerovaný s gemini-1.5-pro!');
+      }
     } catch (error) {
-      toast.error('Chyba pri generovaní brífingu');
+      if (error.message?.includes('API kľúč')) {
+        toast.error('⚠️ Vložte API kľúč v nastaveniach', { duration: 5000 });
+        setShowSettings(true);
+      } else {
+        toast.error('Chyba pri generovaní brífingu');
+      }
     } finally {
       setLoadingBriefing(false);
     }
@@ -537,10 +552,22 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
     setLoadingCreative(true);
     try {
       const response = await base44.functions.invoke('kreativneStudio', { raw_idea: rawIdea });
-      setCreativeProject(response.data.project);
-      toast.success('Projekt vygenerovaný!');
+      if (response.data.needs_api_key) {
+        toast.error('⚠️ Pre Kreatívne Štúdio vložte prosím API kľúč v nastaveniach.', {
+          duration: 5000
+        });
+        setShowSettings(true);
+      } else {
+        setCreativeProject(response.data.project);
+        toast.success('✅ Projekt vygenerovaný s gemini-1.5-pro!');
+      }
     } catch (error) {
-      toast.error('Chyba pri generovaní projektu');
+      if (error.message?.includes('API kľúč')) {
+        toast.error('⚠️ Vložte API kľúč v nastaveniach', { duration: 5000 });
+        setShowSettings(true);
+      } else {
+        toast.error('Chyba pri generovaní projektu');
+      }
     } finally {
       setLoadingCreative(false);
     }
@@ -628,6 +655,34 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
     }
   };
 
+  // Uložiť API kľúč
+  const saveApiKey = async () => {
+    if (!apiKey.trim()) {
+      toast.error('Zadajte API kľúč');
+      return;
+    }
+    
+    setSavingApiKey(true);
+    try {
+      const response = await base44.functions.invoke('saveGeminiApiKey', { api_key: apiKey });
+      if (response.data.success) {
+        toast.success('✅ API kľúč validovaný!', {
+          description: response.data.instructions,
+          duration: 8000
+        });
+        setApiKey("");
+        // Automaticky spusti test connection
+        setTimeout(() => testAPIConnection(), 1000);
+      } else {
+        toast.error(response.data.error || 'Chyba pri validácii kľúča');
+      }
+    } catch (error) {
+      toast.error('Chyba pri validácii kľúča');
+    } finally {
+      setSavingApiKey(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -656,10 +711,61 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
                 </DialogTitle>
               </DialogHeader>
               <div className="space-y-6">
-                {/* API Test */}
-                <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-purple-300">
+                {/* API Key Input */}
+                <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-300">
                   <CardContent className="p-6">
-                    <h3 className="font-bold text-lg mb-4">🔌 Gemini API Connection</h3>
+                    <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                      <Settings className="w-5 h-5 text-indigo-600" />
+                      🔑 Google AI Studio API Key
+                    </h3>
+                    <p className="text-xs text-gray-600 mb-4">
+                      Získajte svoj kľúč na: <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline">aistudio.google.com/app/apikey</a>
+                    </p>
+                    <div className="space-y-3">
+                      <div>
+                        <Label className="text-sm font-semibold">API Key</Label>
+                        <Input
+                          type="password"
+                          value={apiKey}
+                          onChange={(e) => setApiKey(e.target.value)}
+                          placeholder="AIzaSy... (z aistudio.google.com)"
+                          className="font-mono text-sm"
+                        />
+                        <p className="text-xs text-gray-500 mt-2">
+                          💡 Kľúč začína "AIzaSy" a má prístup k gemini-1.5-pro modelu
+                        </p>
+                      </div>
+                      <Button
+                        onClick={saveApiKey}
+                        disabled={savingApiKey || !apiKey.trim()}
+                        className="w-full bg-indigo-600 hover:bg-indigo-700"
+                      >
+                        {savingApiKey ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            Validujem a ukladám...
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            Validovať a uložiť kľúč
+                          </>
+                        )}
+                      </Button>
+                      <div className="bg-blue-50 p-3 rounded border border-blue-200">
+                        <p className="text-xs text-blue-900">
+                          <strong>📍 Postup:</strong> Po validácii prejdite do Dashboard → Settings → Environment Variables 
+                          a nastavte: <code className="bg-blue-100 px-1">Gemini_PAID_pro</code>
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* API Test */}
+                <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-300">
+                  <CardContent className="p-6">
+                    <h3 className="font-bold text-lg mb-4">🔌 Gemini API Connection Test</h3>
                     <p className="text-sm text-gray-600 mb-4">
                       Model: <strong>gemini-1.5-pro</strong> (Deep Reasoning)
                     </p>
@@ -671,7 +777,7 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
                       {testingAPI ? (
                         <>
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          Testujem...
+                          Testujem pripojenie...
                         </>
                       ) : (
                         <>
@@ -701,13 +807,15 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
                           )}
                         </div>
                         {apiTestResult.success ? (
-                          <div className="text-xs text-green-800">
-                            <div>Model: {apiTestResult.model}</div>
-                            <div>Response: {apiTestResult.test_response}</div>
+                          <div className="text-xs text-green-800 space-y-1">
+                            <div><strong>Model:</strong> {apiTestResult.model}</div>
+                            <div><strong>Response:</strong> {apiTestResult.test_response}</div>
+                            <div className="pt-2 text-green-600 font-semibold">🚀 Systém je pripravený na Deep Reasoning!</div>
                           </div>
                         ) : (
                           <div className="text-xs text-red-800">
-                            Error: {apiTestResult.error}
+                            <strong>Error:</strong> {apiTestResult.error}
+                            <p className="mt-2 text-red-700">💡 Tip: Skontrolujte, či je API kľúč správny a či máte povolený prístup k gemini-1.5-pro modelu.</p>
                           </div>
                         )}
                       </div>
@@ -716,8 +824,8 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
                 </Card>
 
                 <div className="text-xs text-gray-500 bg-gray-100 p-4 rounded">
-                  <strong>ℹ️ Info:</strong> API kľúč je uložený v Secrets ako "Gemini_PAID_pro". 
-                  Systém automaticky používa gemini-1.5-pro pre pokročilé reasoning.
+                  <strong>ℹ️ Info:</strong> API kľúč je bezpečne uložený v Secrets ako "Gemini_PAID_pro". 
+                  Backend automaticky používa gemini-1.5-pro pre pokročilé reasoning.
                 </div>
               </div>
             </DialogContent>
@@ -979,6 +1087,10 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
                     💡 Kreatívne Štúdio
                   </CardTitle>
                   <p className="text-pink-200">Idea → Hotový produkčný plán</p>
+                  <div className="mt-2 flex items-center gap-2">
+                    <Badge className="bg-yellow-400 text-yellow-900">gemini-1.5-pro</Badge>
+                    <Badge className="bg-cyan-400 text-cyan-900">Production Ready</Badge>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -1124,6 +1236,10 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
                     🧠 Deep Think Strategist
                   </CardTitle>
                   <p className="text-purple-200">AI analýza všetkých dát → Konkrétne odporúčania</p>
+                  <div className="mt-2 flex items-center gap-2">
+                    <Badge className="bg-yellow-400 text-yellow-900">gemini-1.5-pro</Badge>
+                    <Badge className="bg-pink-400 text-pink-900">Chain of Thought</Badge>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <Button
@@ -1135,12 +1251,12 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
                     {loadingBriefing ? (
                       <>
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900 mr-2"></div>
-                        Analyzujem všetky dáta...
+                        Deep Reasoning prebieha...
                       </>
                     ) : (
                       <>
                         <Rocket className="w-5 h-5 mr-2" />
-                        Spustiť dennú analýzu
+                        🚀 Spustiť Deep Think Analýzu
                       </>
                     )}
                   </Button>
@@ -1360,29 +1476,38 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {/* Automatický Slovak Market Watch */}
-                  <div className="mb-6 bg-gradient-to-r from-red-50 to-orange-50 p-4 rounded-lg border-2 border-red-300">
-                    <h4 className="font-bold text-sm mb-3 text-red-900">🕵️‍♂️ Slovak Market Watch</h4>
-                    <p className="text-xs text-gray-700 mb-3">
-                      AI automaticky nájde slovenských konkurentov a pridá ich do databázy
+                  {/* Slovak Market Leaderboard */}
+                  <div className="mb-6 bg-gradient-to-r from-red-50 to-orange-50 p-4 rounded-lg border-2 border-red-300 shadow-lg">
+                    <h4 className="font-bold text-lg mb-2 text-red-900 flex items-center gap-2">
+                      <Search className="w-5 h-5" />
+                      🕵️‍♂️ Slovak Market Leaderboard
+                    </h4>
+                    <p className="text-xs text-gray-700 mb-4">
+                      AI automaticky nájde TOP 15 konkurentov <strong>ZORADENÝCH podľa online sily</strong> (Digital Power Rank)
                     </p>
                     <Button
                       onClick={findCompetitors}
                       disabled={loadingCompetitors}
-                      className="w-full bg-red-600 hover:bg-red-700"
+                      size="lg"
+                      className="w-full bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 font-bold"
                     >
                       {loadingCompetitors ? (
                         <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          AI hľadá konkurentov...
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                          AI analyzuje slovenský trh...
                         </>
                       ) : (
                         <>
-                          <Search className="w-4 h-4 mr-2" />
-                          🕵️‍♂️ Nájdi slovenskú konkurenciu
+                          <Brain className="w-5 h-5 mr-2" />
+                          🕵️‍♂️ Analyzuj a nájdi Top Konkurenciu
                         </>
                       )}
                     </Button>
+                    <div className="mt-3 bg-orange-100 p-3 rounded border border-orange-300">
+                      <p className="text-xs text-orange-900">
+                        💡 <strong>Výstup:</strong> Zoradený zoznam firiem s Digital Power Rank (#1 = najsilnejší), kľúčovou silnou stránkou a prázdnym poľom pre Link (doplníte si sami).
+                      </p>
+                    </div>
                   </div>
 
                   <div className="space-y-4">
@@ -1444,20 +1569,97 @@ Vráť JSON s "posts" array a "overall_reasoning" (prečo som vytvoril práve ta
                     </Button>
                   </div>
 
-                  {/* Zoznam konkurencie */}
-                  <div className="mt-6 space-y-2 max-h-96 overflow-y-auto">
-                    <h4 className="font-semibold text-sm text-gray-700 mb-3">👀 Sledované príspevky ({competitors.length})</h4>
-                    {competitors.map((comp) => (
-                      <div key={comp.id} className="bg-red-50 border border-red-200 p-3 rounded">
-                        <div className="flex items-start justify-between gap-2 mb-2">
-                          <div className="font-bold text-sm">{comp.competitor_name}</div>
-                          <Badge className="bg-red-600">{comp.platform}</Badge>
-                        </div>
-                        <p className="text-xs text-gray-700 mb-2 italic">"{comp.post_content.substring(0, 150)}..."</p>
-                        <p className="text-xs text-gray-600">💡 {comp.why_it_worked}</p>
-                        <Badge variant="outline" className="mt-2">Engagement: {comp.engagement_score}</Badge>
+                  {/* Zoznam konkurencie - Slovak Market Leaderboard */}
+                  <div className="mt-6 space-y-2 max-h-[600px] overflow-y-auto">
+                    <h4 className="font-semibold text-sm text-gray-700 mb-3 flex items-center gap-2">
+                      <Trophy className="w-4 h-4 text-yellow-600" />
+                      🏆 Slovak Market Leaderboard ({competitors.length})
+                    </h4>
+                    {competitors.length === 0 ? (
+                      <div className="text-center py-8 text-gray-500">
+                        <Eye className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                        <p className="text-sm">Zatiaľ žiadna konkurencia</p>
+                        <p className="text-xs mt-2">Kliknite na tlačidlo vyššie pre automatické nájdenie Top 15</p>
                       </div>
-                    ))}
+                    ) : (
+                      competitors.map((comp) => {
+                        // Extract rank from competitor_name if it starts with #
+                        const rankMatch = comp.competitor_name.match(/^#(\d+)/);
+                        const rank = rankMatch ? parseInt(rankMatch[1]) : null;
+                        const cleanName = comp.competitor_name.replace(/^#\d+\s*/, '');
+                        
+                        return (
+                          <div key={comp.id} className={`border-l-4 p-4 rounded-lg shadow-sm ${
+                            rank === 1 ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-500' :
+                            rank <= 3 ? 'bg-gradient-to-r from-orange-50 to-red-50 border-orange-500' :
+                            rank <= 5 ? 'bg-red-50 border-red-300' :
+                            'bg-red-50 border-red-200'
+                          }`}>
+                            <div className="flex items-start justify-between gap-3 mb-3">
+                              <div className="flex items-center gap-3">
+                                {rank && (
+                                  <div className={`flex items-center justify-center w-10 h-10 rounded-full font-black text-lg ${
+                                    rank === 1 ? 'bg-yellow-400 text-yellow-900' :
+                                    rank <= 3 ? 'bg-orange-400 text-orange-900' :
+                                    rank <= 5 ? 'bg-red-400 text-white' :
+                                    'bg-gray-400 text-white'
+                                  }`}>
+                                    #{rank}
+                                  </div>
+                                )}
+                                <div>
+                                  <div className="font-bold text-base text-gray-900">{cleanName}</div>
+                                  <Badge className="bg-red-600 text-white mt-1">{comp.platform}</Badge>
+                                </div>
+                              </div>
+                              <Badge className={`text-white ${
+                                comp.engagement_score >= 80 ? 'bg-green-600' :
+                                comp.engagement_score >= 60 ? 'bg-yellow-600' :
+                                'bg-gray-600'
+                              }`}>
+                                {comp.engagement_score}/100
+                              </Badge>
+                            </div>
+                            
+                            <div className="space-y-2 text-xs">
+                              {comp.why_it_worked && (
+                                <div className="bg-white/80 p-2 rounded border border-red-200">
+                                  <strong className="text-red-700">💪 Silná stránka:</strong>{' '}
+                                  <span className="text-gray-800">{comp.why_it_worked}</span>
+                                </div>
+                              )}
+                              
+                              {comp.post_content && !comp.post_content.includes('[Slovak Market Leaderboard]') && (
+                                <div className="bg-white/80 p-2 rounded border border-red-200">
+                                  <p className="text-gray-700 italic">"{comp.post_content.substring(0, 120)}..."</p>
+                                </div>
+                              )}
+                              
+                              {comp.post_content?.includes('[Slovak Market Leaderboard]') && (
+                                <div className="bg-white/80 p-2 rounded border border-red-200">
+                                  <p className="text-gray-700">{comp.post_content.replace('[Slovak Market Leaderboard]', '').trim()}</p>
+                                </div>
+                              )}
+
+                              {comp.psychological_trigger && comp.psychological_trigger !== 'Auto-discovered competitor' && (
+                                <div className="bg-purple-100 p-2 rounded border border-purple-300">
+                                  <strong className="text-purple-700">🎯 Pozícia:</strong>{' '}
+                                  <span className="text-purple-900">{comp.psychological_trigger}</span>
+                                </div>
+                              )}
+
+                              {comp.post_link === '' && (
+                                <div className="bg-yellow-100 p-2 rounded border border-yellow-300">
+                                  <p className="text-yellow-900">
+                                    📝 <strong>Link:</strong> <em>Doplňte si manuálne Facebook/Instagram URL</em>
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
                   </div>
                 </CardContent>
               </Card>

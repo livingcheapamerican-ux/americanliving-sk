@@ -9,6 +9,15 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Check if API key is set
+    const apiKey = Deno.env.get("Gemini_PAID_pro");
+    if (!apiKey) {
+      return Response.json({ 
+        error: '⚠️ Pre Kreatívne Štúdio vložte prosím API kľúč v nastaveniach.',
+        needs_api_key: true
+      }, { status: 400 });
+    }
+
     const { raw_idea } = await req.json();
 
     if (!raw_idea) {
@@ -87,11 +96,9 @@ POŽIADAVKY:
 - PRIDAJ na koniec sekciu: "🧠 PREČO SOM SA TAKTO ROZHODOL?" (vysvetlenie reasoning)
 - Slovenčina`;
 
-    const apiKey = Deno.env.get("Gemini_PAID_pro");
     let response;
 
-    if (apiKey) {
-      // Použij Gemini 1.5 Pro
+    // Použij Gemini 1.5 Pro
       const geminiResponse = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
         {
@@ -118,9 +125,8 @@ POŽIADAVKY:
         const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
         response = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
       } else {
-        // Fallback
-        response = await base44.integrations.Core.InvokeLLM({
-          prompt: prompt,
+        const errorData = await geminiResponse.text();
+        throw new Error(`Gemini API Error: ${errorData}`);
       response_json_schema: {
         type: "object",
         properties: {

@@ -9,6 +9,15 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Check if API key is set
+    const apiKey = Deno.env.get("Gemini_PAID_pro");
+    if (!apiKey) {
+      return Response.json({ 
+        error: '⚠️ Pre DeepThink analýzu vložte prosím API kľúč v nastaveniach.',
+        needs_api_key: true
+      }, { status: 400 });
+    }
+
     // 1. Získaj posledných 50 dopytov
     const dopyty = await base44.asServiceRole.entities.Dopyt.list('-created_date', 50);
     const dopytTexty = dopyty.map(d => ({
@@ -132,12 +141,10 @@ DÔLEŽITÉ:
 - Na konci pridaj sekciu: "🧠 PREČO SOM SA TAKTO ROZHODOL?" (vysvetlenie reasoning procesu)
 - Slovenčina`;
 
-    const apiKey = Deno.env.get("Gemini_PAID_pro");
     let strategicBriefing;
 
-    if (apiKey) {
-      // Použij Gemini 1.5 Pro pre deep reasoning
-      const geminiResponse = await fetch(
+    // Použij Gemini 1.5 Pro pre deep reasoning
+    const geminiResponse = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
         {
           method: 'POST',
@@ -160,22 +167,16 @@ DÔLEŽITÉ:
         const data = await geminiResponse.json();
         strategicBriefing = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Chyba pri generovaní';
       } else {
-        // Fallback na InvokeLLM
-        strategicBriefing = await base44.integrations.Core.InvokeLLM({
-          prompt: strategicPrompt
-        });
+        const errorData = await geminiResponse.text();
+        throw new Error(`Gemini API Error: ${errorData}`);
       }
-    } else {
-      // Fallback na InvokeLLM
-      strategicBriefing = await base44.integrations.Core.InvokeLLM({
-        prompt: strategicPrompt
-      });
-    }
 
     return Response.json({
       success: true,
       briefing: strategicBriefing,
       client_concerns: dopytAnalysis,
+      model_used: 'gemini-1.5-pro',
+      deep_reasoning: true,
       metrics: {
         totalSessions,
         conversionRate,
