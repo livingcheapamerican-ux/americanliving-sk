@@ -145,6 +145,27 @@ import MetaPixel from "./components/MetaPixel";
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Facebook CAPI Status Bar */}
+      <div 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 10000,
+          padding: '8px 16px',
+          textAlign: 'center',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          backgroundColor: capiStatus.state === 'loading' ? '#6b7280' : 
+                           capiStatus.state === 'success' ? '#10b981' : '#ef4444',
+          color: 'white',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        }}
+      >
+        {capiStatus.message}
+      </div>
+
       <MetaPixel pixelId={pixelConfig?.metaPixelId} />
       <style>{`
         :root {
@@ -188,7 +209,8 @@ import MetaPixel from "./components/MetaPixel";
 
       {/* Header */}
       <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white shadow-md py-0`}
+      className={`fixed left-0 right-0 z-50 transition-all duration-300 bg-white shadow-md py-0`}
+      style={{ top: '32px' }}
       >
         <div className="container mx-auto px-1 sm:px-4 py-0.5 sm:py-0.5">
           <div className="flex items-center justify-between gap-1 sm:gap-2">
@@ -615,7 +637,7 @@ import MetaPixel from "./components/MetaPixel";
         </div>
       </header>
 
-      <main className="pt-10 sm:pt-14 md:pt-16 lg:pt-20 lg:bg-gray-100 relative">
+      <main className="lg:bg-gray-100 relative" style={{ paddingTop: 'calc(32px + 2.5rem)' }}>
         {/* Plavajúce domy po bokoch */}
         <FloatingHouses side="left" />
         <FloatingHouses side="right" />
@@ -711,40 +733,6 @@ import MetaPixel from "./components/MetaPixel";
       <div className="hidden md:block">
         <Chatbot />
       </div>
-
-      {/* TEMPORARY TEST BUTTON FOR FACEBOOK CAPI */}
-      <button
-        onClick={async () => {
-          try {
-            const response = await base44.functions.invoke('sendCAPIEvent', {
-              event_name: 'PageView',
-              event_source_url: window.location.href,
-              user_data: {
-                client_user_agent: navigator.userAgent
-              }
-            });
-            alert('Server Signal SENT! Response: ' + JSON.stringify(response.data));
-          } catch (error) {
-            alert('ERROR: ' + error.message);
-          }
-        }}
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          zIndex: 9999,
-          backgroundColor: 'red',
-          color: 'white',
-          padding: '15px 20px',
-          borderRadius: '8px',
-          fontWeight: 'bold',
-          cursor: 'pointer',
-          border: 'none',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
-        }}
-      >
-        TEST FACEBOOK CAPI
-      </button>
       </div>
       );
       }
