@@ -982,6 +982,7 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
               </div>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
 
         <Tabs defaultValue="overview" className="mb-8">
