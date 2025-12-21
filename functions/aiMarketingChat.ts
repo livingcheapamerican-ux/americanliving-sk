@@ -558,7 +558,7 @@ PRAVIDLÁ:
     console.log('📏 Prompt length:', prompt.length);
     
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-002:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -613,7 +613,7 @@ PRAVIDLÁ:
       competitive_insights: aiResponse.competitive_insights,
       suggestions: aiResponse.suggestions || [],
       data_sources: aiResponse.data_sources || [],
-      model_used: 'gemini-1.5-pro'
+      model_used: 'gemini-1.5-pro-002'
     });
 
   } catch (error) {

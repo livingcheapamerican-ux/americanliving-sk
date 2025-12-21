@@ -145,7 +145,7 @@ DÔLEŽITÉ:
 
     // Použij Gemini 1.5 Pro pre maximálne reasoning
     const geminiResponse = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-002:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -175,7 +175,7 @@ DÔLEŽITÉ:
       success: true,
       briefing: strategicBriefing,
       client_concerns: dopytAnalysis,
-      model_used: 'gemini-1.5-pro',
+      model_used: 'gemini-1.5-pro-002',
       deep_reasoning: true,
       metrics: {
         totalSessions,
