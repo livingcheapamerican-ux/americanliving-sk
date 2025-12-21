@@ -263,7 +263,9 @@ PRAVIDLÁ:
     );
 
     if (!response.ok) {
-      throw new Error(`Gemini API error: ${response.statusText}`);
+      const errorBody = await response.text();
+      console.error('Gemini API Error:', response.status, errorBody);
+      throw new Error(`Gemini API error (${response.status}): ${errorBody}`);
     }
 
     const data = await response.json();
@@ -298,9 +300,26 @@ PRAVIDLÁ:
 
   } catch (error) {
     console.error('AI Marketing Chat error:', error);
+    console.error('Error stack:', error.stack);
+    
+    // Better error messages
+    let userMessage = '🤖 Ospravedlňujem sa, mal som technický problém.';
+    
+    if (error.message.includes('API kľúč') || error.message.includes('API key')) {
+      userMessage = '⚠️ Problém s Gemini API kľúčom. Skontroluj nastavenia.';
+    } else if (error.message.includes('429')) {
+      userMessage = '⏳ Príliš veľa požiadaviek. Počkaj chvíľu a skús znova.';
+    } else if (error.message.includes('quota')) {
+      userMessage = '💰 Gemini API limit dosiahnutý. Skontroluj Google Cloud console.';
+    }
+    
     return Response.json({ 
       error: error.message,
-      fallback_response: '🤖 Ospravedlňujem sa, mal som technický problém. Skús to prosím znova.'
+      fallback_response: userMessage,
+      debug_info: {
+        error_type: error.constructor.name,
+        has_api_key: !!Deno.env.get("Gemini_PAID_pro")
+      }
     }, { status: 500 });
   }
 });
