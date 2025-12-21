@@ -29,7 +29,7 @@ export default function AIMarketingChat({ onStrategyApproved }) {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, currentActivity]);
 
-  // Load chat history and add welcome message
+  // Load chat history and add welcome message (iba raz pri monte)
   useEffect(() => {
     const savedHistory = localStorage.getItem('ai_marketing_chat_history');
     const savedBudget = localStorage.getItem('monthly_marketing_budget');
@@ -39,12 +39,22 @@ export default function AIMarketingChat({ onStrategyApproved }) {
     }
     
     if (savedHistory) {
-      setMessages(JSON.parse(savedHistory));
-    } else {
-      setMessages([{
-        id: Date.now(),
-        role: 'assistant',
-        content: `👋 Ahoj! Som tvoj **AI Marketing Director** - centrálny mozog firmy.
+      try {
+        const parsed = JSON.parse(savedHistory);
+        if (parsed && parsed.length > 0) {
+          setMessages(parsed);
+          return;
+        }
+      } catch (e) {
+        console.error('Error loading chat history:', e);
+      }
+    }
+    
+    // Len ak nie je žiadna história, vytvor welcome message
+    setMessages([{
+      id: Date.now(),
+      role: 'assistant',
+      content: `👋 Ahoj! Som tvoj **AI Marketing Director** - centrálny mozog firmy.
 
 ✨ **Som tvoj osobný MARKETING MENTOR:**
 ✅ Sprevádzam ťa KROK-PO-KROKU cez celý proces
@@ -83,15 +93,24 @@ export default function AIMarketingChat({ onStrategyApproved }) {
     }
   }, []);
 
-  // Save history and budget
+  // Save history (len ak sa skutočne zmenili)
   useEffect(() => {
     if (messages.length > 0) {
-      localStorage.setItem('ai_marketing_chat_history', JSON.stringify(messages));
+      const savedHistory = localStorage.getItem('ai_marketing_chat_history');
+      const newHistory = JSON.stringify(messages);
+      if (savedHistory !== newHistory) {
+        localStorage.setItem('ai_marketing_chat_history', newHistory);
+      }
     }
   }, [messages]);
 
+  // Save budget (len pri zmene)
   useEffect(() => {
-    localStorage.setItem('monthly_marketing_budget', monthlyBudget.toString());
+    const saved = localStorage.getItem('monthly_marketing_budget');
+    const newValue = monthlyBudget.toString();
+    if (saved !== newValue) {
+      localStorage.setItem('monthly_marketing_budget', newValue);
+    }
   }, [monthlyBudget]);
 
   const sendMessage = async () => {
