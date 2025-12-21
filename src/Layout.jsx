@@ -406,12 +406,16 @@ import AutoTestGemini from "./components/AutoTestGemini";
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-3 -mr-2 hover:bg-gray-100 rounded-lg min-w-[44px] min-h-[44px] flex items-center justify-center"
+              onTouchStart={(e) => {
+                e.preventDefault();
+                setMobileMenuOpen(!mobileMenuOpen);
+              }}
+              className="lg:hidden p-4 hover:bg-gray-100 rounded-lg min-w-[56px] min-h-[56px] flex items-center justify-center active:bg-gray-200 touch-manipulation"
             >
               {mobileMenuOpen ? (
-                <X className="w-6 h-6 text-primary" />
+                <X className="w-7 h-7 text-primary" />
               ) : (
-                <Menu className="w-6 h-6 text-primary" />
+                <Menu className="w-7 h-7 text-primary" />
               )}
             </button>
           </div>
