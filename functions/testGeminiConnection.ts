@@ -20,13 +20,13 @@ Deno.serve(async (req) => {
 
     // Test connection
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{
-            parts: [{ text: "Test connection. Odpovedz len slovom 'Funguje'." }]
+            parts: [{ text: "Hello" }]
           }]
         })
       }
@@ -36,17 +36,17 @@ Deno.serve(async (req) => {
       const error = await response.text();
       return Response.json({ 
         success: false,
-        error: `Gemini API error: ${error}`
-      }, { status: 400 });
+        error: `API Error ${response.status}: ${error}`
+      }, { status: 200 });
     }
 
     const data = await response.json();
-    const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'OK';
 
     return Response.json({
       success: true,
       message: '✅ API Connected - Deep Reasoning Active',
-      model: 'gemini-1.5-flash',
+      model: 'gemini-1.5-pro',
       test_response: responseText,
       timestamp: new Date().toISOString()
     });
