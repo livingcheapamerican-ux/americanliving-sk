@@ -43,6 +43,22 @@ Deno.serve(async (req) => {
     // AUTOMATIC DATA COLLECTION - AI má prístup ku všetkému
     console.log('🤖 AI Marketér zbiera dáta...');
 
+    // Check available functions and connectors
+    const availableFunctions = [
+      'deepThinkStrategist', 'kreativneStudio', 'analyzujKomentare', 
+      'findSlovakCompetitors', 'dailyMarketingRoutine', 'generateMarketingInsights',
+      'aiCAPIOptimizer', 'sendCAPIEvent', 'getGTMDataForAI',
+      'analyzujDokument', 'porovnajDokumenty', 'googleDrive',
+      'uploadPDFToGoogleDrive', 'generateBlogImage', 'generateBlogSEO'
+    ];
+
+    const connectedServices = {
+      google_drive: true, // Already authorized
+      facebook_capi: !!Deno.env.get("FB_ACCESS_TOKEN"),
+      gemini_api: !!Deno.env.get("Gemini_PAID_pro"),
+      resend_email: !!Deno.env.get("RESEND_API_KEY")
+    };
+
     const [sessions, domy, dopyty, insights, brainRules, competitors, postQueue, campaigns, gtmData, documents, fotky, driveAssets, blogs, capiLogs] = await Promise.all([
       base44.asServiceRole.entities.UserSession.list('-created_date', 500),
       base44.asServiceRole.entities.Dom.list(),
@@ -138,6 +154,13 @@ Nie si len nástroj - si živý kolega s ktorým sa dá komunikovať, diskutova�
 - Zdôvodni svoje rozhodnutia
 - Ukáž svoj myšlienkový proces
 - Buď proaktívny a kreatívny
+- Využívaj dostupné funkcie a služby
+
+⚡ MÔŽEŠ VYUŽIŤ:
+- Google Drive (✅ pripojené) - nahrávanie PDF, fotiek
+- Facebook CAPI (✅ pripojené) - tracking eventov
+- Gemini API (✅ pripojené) - deep reasoning
+- Všetky backend funkcie pre analýzu, generovanie, tracking
 
 📊 AKTUÁLNE DÁTA (REAL-TIME):
 Sessions: ${totalSessions}
@@ -182,6 +205,12 @@ ${blogStats}
 Logs: ${capiStats.total} eventov
 Success Rate: ${capiStats.success_rate}%
 Avg Duration: ${capiStats.avg_duration}ms
+
+🔧 DOSTUPNÉ FUNKCIE:
+${availableFunctions.join(', ')}
+
+✅ PRIPOJENÉ SLUŽBY:
+${Object.entries(connectedServices).map(([k, v]) => `  ${k}: ${v ? '✓' : '✗'}`).join('\n')}
 ${historyContext}
 
 💬 OTÁZKA/POŽIADAVKA UŽÍVATEĽA:
