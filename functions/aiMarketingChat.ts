@@ -217,55 +217,78 @@ Formát: "Genre: [electronic/cinematic/pop], Mood: [energetic/calm], BPM: [120-1
 Príklad:
 "Epic cinematic electronic music, 130 BPM, powerful synth leads with deep bass, energetic drums, heavy reverb, dramatic build-up, no vocals, 60 seconds"
 
-📊 AKTUÁLNE DÁTA (REAL-TIME):
-Sessions: ${totalSessions}
-Konverzie: ${conversions} (${conversionRate}%)
-Top 5 domov: 
+📊 KOMPLETNÉ REAL-TIME DÁTA (MÁŠ PRÍSTUP KU VŠETKÉMU):
+
+🎯 SESSIONS & BEHAVIORAL DATA:
+- Celkom sessions: ${totalSessions}
+- Konverzie: ${conversions} (${conversionRate}%)
+- Bounce rate: ${sessions.filter(s => s.session_tags?.includes('bounced')).length} sessions
+- Avg engagement: ${(sessions.reduce((acc, s) => acc + (s.engagement_score || 0), 0) / totalSessions).toFixed(1)}
+- Device split: Mobile ${sessions.filter(s => s.device_info?.is_mobile).length}/${totalSessions}
+
+🏠 TOP 5 DOMOV (REAL-TIME ZÁUJEM):
 ${topDomy.map(d => `  - ${d.nazov}: ${d.views} zobrazení, ${d.cena}€`).join('\n')}
 
-GTM Data: ${gtmData ? `
-  - Hot price range: ${gtmData.hot_price_range}
-  - Mobile: ${gtmData.marketing_insights.mobile_percentage}%
-  - Bounce: ${gtmData.marketing_insights.bounce_rate}%
-  - Explorers: ${gtmData.behavioral_profiles.explorers}
-  - Deciders: ${gtmData.behavioral_profiles.deciders}
-` : 'Nedostupné'}
+📈 GOOGLE TAG MANAGER (TROJAN HORSE) - VŠETKY HIDDEN DATA:
+${gtmData ? `  - Hot price range: ${gtmData.hot_price_range}
+  - Mobile traffic: ${gtmData.marketing_insights.mobile_percentage}%
+  - Bounce rate: ${gtmData.marketing_insights.bounce_rate}%
+  - Form interactions: ${gtmData.marketing_insights.form_interactions}
+  - Avg session duration: ${gtmData.marketing_insights.avg_session_duration}s
+  - Behavioral profiles:
+    • Explorers: ${gtmData.behavioral_profiles.explorers}
+    • Deciders: ${gtmData.behavioral_profiles.deciders}
+    • Returners: ${gtmData.behavioral_profiles.returners}
+  - Most clicked houses: ${gtmData.marketing_insights.most_clicked_houses?.join(', ')}
+  - Scroll depth: ${gtmData.marketing_insights.avg_scroll_depth}%` : 'GTM nedostupné'}
 
-Recent Marketing Insights:
+🔍 MARKETING INSIGHTS (AI ANALÝZY):
 ${recentInsightsText}
+Celkom: ${insights.length} insights dostupných
 
-Know-How Rules: ${brainRules.length} pravidiel
-Konkurencia: ${competitors.length} konkurentov (top: ${competitors.slice(0, 3).map(c => c.competitor_name).join(', ')})
-Fronta príspevkov: ${postQueue.length} príspevkov
-Campaigns: ${campaigns.length} kampaní
+🧠 INTERNÉ KNOW-HOW (${brainRules.length} PRAVIDIEL):
+Top 5 priority rules:
+${brainRules.slice(0, 5).map(r => `  [${r.category}] ${r.content_text.substring(0, 80)}...`).join('\n')}
 
-📄 DOKUMENTY & ASSETS:
-Celkom: ${documentsCount.total} dokumentov
-Typy: ${Object.entries(documentsCount.by_type).map(([k, v]) => `${k}(${v})`).join(', ')}
-Výrobcovia: ${Object.entries(documentsCount.by_manufacturer).map(([k, v]) => `${k}(${v})`).join(', ')}
+👀 KONKURENCIA (${competitors.length} SLEDOVANÝCH):
+Top 3: ${competitors.slice(0, 3).map(c => `${c.competitor_name} (${c.engagement_score}/100)`).join(', ')}
 
-📸 FOTKY:
-Celkom: ${fotky.length} fotiek
-${Object.entries(fotkyByManufacturer).map(([k, v]) => `  ${k}: ${v} fotiek`).join('\n')}
+📤 SOCIÁLNE SIETE:
+- Fronta príspevkov: ${postQueue.length} príspevkov čaká na zverejnenie
+- Campaigns: ${campaigns.length} kampaní v histórii
+- FB/IG engagement: ${campaigns.reduce((acc, c) => acc + (c.link_clicks || 0), 0)} kliknutí celkom
 
-📂 GOOGLE DRIVE:
-${driveInfo}
+📄 DOKUMENTY & VIZUÁLNE ASSETS:
+- Dokumenty: ${documentsCount.total} (${Object.entries(documentsCount.by_type).map(([k, v]) => `${k}(${v})`).join(', ')})
+- Fotky: ${fotky.length} (${Object.entries(fotkyByManufacturer).map(([k, v]) => `${k}:${v}`).join(', ')})
+- Google Drive: ${driveAssets.length > 0 ? '✓ Pripojené' : '✗ Nepripojené'}
 
-📝 BLOG:
-Celkom: ${blogs.length} článkov
-Top 5:
-${blogStats}
+📝 CONTENT HUB:
+- Blog articles: ${blogs.length}
+- Top performing:
+${blogStats || '  Žiadne dáta'}
 
-🔌 FACEBOOK CAPI:
-Logs: ${capiStats.total} eventov
-Success Rate: ${capiStats.success_rate}%
-Avg Duration: ${capiStats.avg_duration}ms
+🔌 FACEBOOK PIXEL & CAPI (CONVERSION TRACKING):
+- Total events: ${capiStats.total}
+- Success rate: ${capiStats.success_rate}%
+- Avg latency: ${capiStats.avg_duration}ms
+- Most tracked: ${capiLogs.slice(0, 3).map(l => l.event_name).join(', ')}
 
-🔧 DOSTUPNÉ FUNKCIE:
+🛠️ BACKEND FUNKCIE (MÔŽEŠ POUŽIŤ):
 ${availableFunctions.join(', ')}
 
-✅ PRIPOJENÉ SLUŽBY:
-${Object.entries(connectedServices).map(([k, v]) => `  ${k}: ${v ? '✓' : '✗'}`).join('\n')}
+✅ PRIPOJENÉ INTEGRÁCIE:
+${Object.entries(connectedServices).map(([k, v]) => `  ${k}: ${v ? '✓ ACTIVE' : '✗ inactive'}`).join('\n')}
+
+💾 KOMPLETNÝ PRÍSTUP K DÁTAM:
+- UserSessions (behavioral tracking, clicks, scrolls, mouse movements)
+- GTM DataLayer (všetky eventy, produktové dáta, user properties)
+- Meta Pixel events (cez CAPI logs)
+- Marketing insights (AI generované analýzy pre každý dom)
+- Internal know-how (psychológia, predajné techniky)
+- Competitor posts & tactics
+- Blog analytics
+- Documents & visual assets
 ${historyContext}
 
 💬 OTÁZKA/POŽIADAVKA UŽÍVATEĽA:
@@ -374,8 +397,11 @@ PRAVIDLÁ:
       success: true,
       response: aiResponse.response,
       thinking_process: aiResponse.thinking_process,
+      market_analysis: aiResponse.market_analysis,
+      competitive_insights: aiResponse.competitive_insights,
       suggestions: aiResponse.suggestions || [],
-      data_sources: aiResponse.data_sources || []
+      data_sources: aiResponse.data_sources || [],
+      model_used: 'gemini-3-pro-preview'
     });
 
   } catch (error) {
