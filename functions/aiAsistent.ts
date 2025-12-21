@@ -19,8 +19,8 @@ Deno.serve(async (req) => {
       base44.asServiceRole.entities.Dokument.filter({ pre_chatbota: true })
     ]);
 
-    // Priprav kompaktné znalosti o domoch
-    const domyKnowledge = domy.filter(d => d.verejny !== false).map(d => ({
+    // Priprav kompaktné znalosti o domoch (VŠETKY, aj neverejné pre správnu identifikáciu)
+    const domyKnowledge = domy.map(d => ({
       nazov: d.nazov,
       vyrobca: d.vyrobca,
       typ: d.typ_domu,
@@ -97,6 +97,14 @@ ${JSON.stringify(dokumentyKnowledge, null, 2)}
 3. POUŽÍVAJ LEN SKUTOČNÉ NÁZVY Z DB:
    ❌ "Ticab Family L3" - NEEXISTUJE
    ✅ "${domyKnowledge[0]?.nazov}" - SKUTOČNÝ DOM
+   
+   ⚠️ KRITICKY DÔLEŽITÉ - VYHĽADÁVANIE DOMOV:
+   - Máš ${domyKnowledge.length} domov v databáze
+   - Všetky názvy: ${domyKnowledge.map(d => d.nazov).join(', ')}
+   - Pri hľadaní ignoruj diakritiku a veľké/malé písmená
+   - "lyon" = "Lyon" = "LYON"
+   - Ak používateľ spomenie "Lyon", "Washington", "Madison" - URČITE ich MÁME
+   - NIKDY nehovor že dom neexistuje, ak je v zozname vyššie!
 
 4. REALISTICKÉ CENY:
    • Vždy počítaj S ZÁKLADAMI
