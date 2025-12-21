@@ -19,8 +19,8 @@ Deno.serve(async (req) => {
       base44.asServiceRole.entities.Dokument.filter({ pre_chatbota: true })
     ]);
 
-    // Priprav kompaktné znalosti o domoch (VŠETKY, aj neverejné pre správnu identifikáciu)
-    const domyKnowledge = domy.map(d => ({
+    // Priprav kompaktné znalosti o domoch (len verejné)
+    const domyKnowledge = domy.filter(d => d.verejny !== false).map(d => ({
       nazov: d.nazov,
       vyrobca: d.vyrobca,
       typ: d.typ_domu,
@@ -95,16 +95,15 @@ ${JSON.stringify(dokumentyKnowledge, null, 2)}
    • Na kľúč = zakladna_cena + základy (8k€) + montáž (13k€) + prípojky (10k€) + legislatíva (5k€)
 
 3. POUŽÍVAJ LEN SKUTOČNÉ NÁZVY Z DB:
-   ❌ "Ticab Family L3" - NEEXISTUJE
-   ✅ "${domyKnowledge[0]?.nazov}" - SKUTOČNÝ DOM
    
-   ⚠️ KRITICKY DÔLEŽITÉ - VYHĽADÁVANIE DOMOV:
-   - Máš ${domyKnowledge.length} domov v databáze
-   - Všetky názvy: ${domyKnowledge.map(d => d.nazov).join(', ')}
+   📋 KOMPLETNÝ ZOZNAM VŠETKÝCH ${domyKnowledge.length} DOSTUPNÝCH DOMOV:
+   ${domyKnowledge.map(d => `• ${d.nazov} (${d.vyrobca}, ${d.cena}€, ${d.plocha}m²)`).join('\n   ')}
+   
+   ⚠️ KRITICKY DÔLEŽITÉ:
+   - Lyon, Washington, Madison - SÚ V PONUKE
+   - Vždy vyhľadaj názov v zozname vyššie
    - Pri hľadaní ignoruj diakritiku a veľké/malé písmená
-   - "lyon" = "Lyon" = "LYON"
-   - Ak používateľ spomenie "Lyon", "Washington", "Madison" - URČITE ich MÁME
-   - NIKDY nehovor že dom neexistuje, ak je v zozname vyššie!
+   - NIKDY nehovor "nemáme v ponuke" ak je dom v zozname!
 
 4. REALISTICKÉ CENY:
    • Vždy počítaj S ZÁKLADAMI
