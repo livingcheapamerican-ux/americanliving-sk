@@ -558,7 +558,7 @@ PRAVIDLÁ:
     console.log('📏 Prompt length:', prompt.length);
     
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -580,13 +580,25 @@ PRAVIDLÁ:
     if (!response.ok) {
       const errorBody = await response.text();
       console.error('Gemini API Error:', response.status, errorBody);
-      throw new Error(`Gemini API error (${response.status}): ${errorBody}`);
+      
+      // Graceful fallback - nepadaj celú aplikáciu
+      return Response.json({
+        success: false,
+        response: '😞 Prepáč, spojenie s AI zlyhalo. Skús to prosím znova o chvíľu.\n\n**Možné príčiny:**\n- Preťaženie API\n- Chyba modelu\n- Chyba siete\n\nSkús znova odoslať správu.',
+        error: `API Error ${response.status}`,
+        model_used: 'gemini-1.5-flash'
+      });
     }
 
     const data = await response.json();
     
     if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-      throw new Error('Gemini API nevrátilo validnú odpoveď. Skontroluj API kľúč.');
+      return Response.json({
+        success: false,
+        response: '😞 AI nevrátila odpoveď. Skús to prosím znova.\n\nMôže to byť dočasný problém s modelom.',
+        error: 'No response from AI',
+        model_used: 'gemini-1.5-flash'
+      });
     }
     
     let aiResponse;
@@ -594,7 +606,13 @@ PRAVIDLÁ:
       aiResponse = JSON.parse(data.candidates[0].content.parts[0].text);
     } catch (parseError) {
       console.error('JSON Parse Error:', data.candidates[0].content.parts[0].text);
-      throw new Error('AI odpoveď nie je validný JSON. Skús to znova.');
+      // Fallback - vráť aspoň textovú odpoveď
+      return Response.json({
+        success: false,
+        response: '😞 AI odpoveď má nesprávny formát. Skús to prosím znova.\n\n' + data.candidates[0].content.parts[0].text.substring(0, 500),
+        error: 'JSON Parse Error',
+        model_used: 'gemini-1.5-flash'
+      });
     }
 
     // Generate unique IDs for suggestions if not present
@@ -613,31 +631,36 @@ PRAVIDLÁ:
       competitive_insights: aiResponse.competitive_insights,
       suggestions: aiResponse.suggestions || [],
       data_sources: aiResponse.data_sources || [],
-      model_used: 'gemini-2.0-flash-exp'
+      model_used: 'gemini-1.5-flash'
     });
 
   } catch (error) {
     console.error('AI Marketing Chat error:', error);
     console.error('Error stack:', error.stack);
     
-    // Better error messages
-    let userMessage = '🤖 Ospravedlňujem sa, mal som technický problém.';
+    // Better error messages - NEPADAJ aplikáciu
+    let userMessage = '😞 Prepáč, spojenie s AI zlyhalo. Skús to prosím znova o chvíľu.';
     
     if (error.message.includes('API kľúč') || error.message.includes('API key')) {
-      userMessage = '⚠️ Problém s Gemini API kľúčom. Skontroluj nastavenia.';
+      userMessage = '⚠️ Problém s Gemini API kľúčom. Klikni na ⚙️ Settings a over API kľúč.';
     } else if (error.message.includes('429')) {
-      userMessage = '⏳ Príliš veľa požiadaviek. Počkaj chvíľu a skús znova.';
+      userMessage = '⏳ Príliš veľa požiadaviek. Počkaj 30 sekúnd a skús znova.';
     } else if (error.message.includes('quota')) {
       userMessage = '💰 Gemini API limit dosiahnutý. Skontroluj Google Cloud console.';
+    } else if (error.message.includes('fetch')) {
+      userMessage = '🌐 Problém so sieťou. Skontroluj internetové pripojenie.';
     }
     
+    // Vráť 200 s chybovou správou namiesto 500 - aby sa chat nezosypal
     return Response.json({ 
+      success: false,
+      response: userMessage + '\n\n**Technické detaily:**\n' + error.message,
       error: error.message,
-      fallback_response: userMessage,
+      model_used: 'gemini-1.5-flash',
       debug_info: {
         error_type: error.constructor.name,
         has_api_key: !!Deno.env.get("Gemini_PAID_pro")
       }
-    }, { status: 500 });
+    }, { status: 200 }); // 200 namiesto 500!
   }
 });

@@ -143,9 +143,9 @@ DÔLEŽITÉ:
 
     let strategicBriefing;
 
-    // Použij Gemini 2.0 Flash Exp pre maximálne reasoning
+    // Použij Gemini 1.5 Flash pre stabilné reasoning
     const geminiResponse = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -175,7 +175,7 @@ DÔLEŽITÉ:
       success: true,
       briefing: strategicBriefing,
       client_concerns: dopytAnalysis,
-      model_used: 'gemini-2.0-flash-exp',
+      model_used: 'gemini-1.5-flash',
       deep_reasoning: true,
       metrics: {
         totalSessions,
