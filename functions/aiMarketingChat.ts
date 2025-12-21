@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
     // AUTOMATIC DATA COLLECTION - AI má prístup ku všetkému
     console.log('🤖 AI Marketér zbiera dáta...');
 
-    const [sessions, domy, dopyty, insights, brainRules, competitors, postQueue, campaigns, gtmData] = await Promise.all([
+    const [sessions, domy, dopyty, insights, brainRules, competitors, postQueue, campaigns, gtmData, documents, fotky, driveAssets, blogs, capiLogs] = await Promise.all([
       base44.asServiceRole.entities.UserSession.list('-created_date', 500),
       base44.asServiceRole.entities.Dom.list(),
       base44.asServiceRole.entities.Dopyt.list('-created_date', 200),
@@ -52,7 +52,12 @@ Deno.serve(async (req) => {
       base44.asServiceRole.entities.CompetitorWatch.list('-engagement_score', 20),
       base44.asServiceRole.entities.SocialPostQueue.filter({ status: 'Queued' }),
       base44.asServiceRole.entities.CampaignPerformance.list('-created_date', 10),
-      base44.asServiceRole.functions.invoke('getGTMDataForAI').then(r => r.data.snapshot).catch(() => null)
+      base44.asServiceRole.functions.invoke('getGTMDataForAI').then(r => r.data.snapshot).catch(() => null),
+      base44.asServiceRole.entities.Dokument.list('-created_date', 100),
+      base44.asServiceRole.entities.Fotka.list('-created_date', 200),
+      base44.asServiceRole.entities.MarketingAssets.filter({ active: true }),
+      base44.asServiceRole.entities.BlogPost.filter({ published: true }),
+      base44.asServiceRole.entities.CAPILog.list('-created_date', 50)
     ]);
 
     // Calculate key metrics
@@ -80,6 +85,44 @@ Deno.serve(async (req) => {
     const recentInsightsText = insights.slice(0, 3).map(i => 
       `- ${i.dom_nazov}: ${i.celkovy_zajem?.pocet_zobrazeni || 0} zobrazení, ${i.celkovy_zajem?.miera_konverzie?.toFixed(2) || 0}% konverzia`
     ).join('\n');
+
+    // Documents & Assets summary
+    const documentsCount = {
+      total: documents.length,
+      by_type: documents.reduce((acc, d) => {
+        acc[d.typ] = (acc[d.typ] || 0) + 1;
+        return acc;
+      }, {}),
+      by_manufacturer: documents.reduce((acc, d) => {
+        acc[d.vyrobca] = (acc[d.vyrobca] || 0) + 1;
+        return acc;
+      }, {})
+    };
+
+    const fotkyByManufacturer = fotky.reduce((acc, f) => {
+      if (f.vyrobca) {
+        acc[f.vyrobca] = (acc[f.vyrobca] || 0) + 1;
+      }
+      return acc;
+    }, {});
+
+    const driveInfo = driveAssets.length > 0 
+      ? `Google Drive: ${driveAssets[0].link}\n  Popis: ${driveAssets[0].description}`
+      : 'Google Drive: Nie je pripojený';
+
+    const blogStats = blogs.slice(0, 5).map(b => 
+      `  - ${b.title}: ${b.views || 0} zobrazení`
+    ).join('\n');
+
+    const capiStats = {
+      total: capiLogs.length,
+      success_rate: capiLogs.length > 0 
+        ? (capiLogs.filter(l => l.success).length / capiLogs.length * 100).toFixed(1) 
+        : 0,
+      avg_duration: capiLogs.length > 0 
+        ? (capiLogs.reduce((acc, l) => acc + (l.duration_ms || 0), 0) / capiLogs.length).toFixed(0)
+        : 0
+    };
 
     // Chat history context
     const historyContext = chat_history && chat_history.length > 0 
@@ -114,9 +157,31 @@ Recent Marketing Insights:
 ${recentInsightsText}
 
 Know-How Rules: ${brainRules.length} pravidiel
-Konkurencia: ${competitors.length} konkurentov
+Konkurencia: ${competitors.length} konkurentov (top: ${competitors.slice(0, 3).map(c => c.competitor_name).join(', ')})
 Fronta príspevkov: ${postQueue.length} príspevkov
 Campaigns: ${campaigns.length} kampaní
+
+📄 DOKUMENTY & ASSETS:
+Celkom: ${documentsCount.total} dokumentov
+Typy: ${Object.entries(documentsCount.by_type).map(([k, v]) => `${k}(${v})`).join(', ')}
+Výrobcovia: ${Object.entries(documentsCount.by_manufacturer).map(([k, v]) => `${k}(${v})`).join(', ')}
+
+📸 FOTKY:
+Celkom: ${fotky.length} fotiek
+${Object.entries(fotkyByManufacturer).map(([k, v]) => `  ${k}: ${v} fotiek`).join('\n')}
+
+📂 GOOGLE DRIVE:
+${driveInfo}
+
+📝 BLOG:
+Celkom: ${blogs.length} článkov
+Top 5:
+${blogStats}
+
+🔌 FACEBOOK CAPI:
+Logs: ${capiStats.total} eventov
+Success Rate: ${capiStats.success_rate}%
+Avg Duration: ${capiStats.avg_duration}ms
 ${historyContext}
 
 💬 OTÁZKA/POŽIADAVKA UŽÍVATEĽA:
