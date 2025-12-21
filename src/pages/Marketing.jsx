@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import AIMarketingChat from "../components/AIMarketingChat";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -1141,12 +1142,24 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
           </div>
         </div>
 
-        <Tabs defaultValue="overview" className="mb-8">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="overview" className="text-sm sm:text-base">📊 Prehľad a Výkon</TabsTrigger>
-            <TabsTrigger value="strategy" className="text-sm sm:text-base">🧠 Stratégia a Mozog</TabsTrigger>
-            <TabsTrigger value="planner" className="text-sm sm:text-base">🚀 Plánovač Kampaní</TabsTrigger>
+        <Tabs defaultValue="chat" className="mb-8">
+          <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsTrigger value="chat" className="text-sm sm:text-base">💬 AI Partner</TabsTrigger>
+            <TabsTrigger value="overview" className="text-sm sm:text-base">📊 Prehľad</TabsTrigger>
+            <TabsTrigger value="strategy" className="text-sm sm:text-base">🧠 Stratégia</TabsTrigger>
+            <TabsTrigger value="planner" className="text-sm sm:text-base">🚀 Plánovač</TabsTrigger>
           </TabsList>
+
+          {/* NOVÁ KARTA: AI Chat Partner */}
+          <TabsContent value="chat">
+            <AIMarketingChat 
+              onStrategyApproved={(strategy) => {
+                console.log('Strategy approved:', strategy);
+                refetchQueue();
+                refetchBrain();
+              }}
+            />
+          </TabsContent>
 
           {/* KARTA A: Prehľad a Výkon */}
           <TabsContent value="overview">
