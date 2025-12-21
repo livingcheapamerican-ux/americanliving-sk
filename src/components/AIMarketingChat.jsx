@@ -307,7 +307,7 @@ Konzola (F12) má viac detailov.`,
                             {apiStatus.success ? (
                               <>
                                 <strong>✅ Pripojenie funguje!</strong><br />
-                                Model: gemini-1.5-flash<br />
+                                Model: gemini-pro<br />
                                 Response: {apiStatus.test_response}
                               </>
                             ) : (

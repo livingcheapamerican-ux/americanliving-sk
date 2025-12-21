@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
 
     // Test connection
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -45,8 +45,8 @@ Deno.serve(async (req) => {
 
     return Response.json({
       success: true,
-      message: '✅ API Connected - Stable Flash Model Active',
-      model: 'gemini-1.5-flash',
+      message: '✅ API Connected - Stable Model Active',
+      model: 'gemini-pro',
       test_response: responseText,
       timestamp: new Date().toISOString()
     });

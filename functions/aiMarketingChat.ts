@@ -558,7 +558,7 @@ PRAVIDLÁ:
     console.log('📏 Prompt length:', prompt.length);
     
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -586,7 +586,7 @@ PRAVIDLÁ:
         success: false,
         response: '😞 Prepáč, spojenie s AI zlyhalo. Skús to prosím znova o chvíľu.\n\n**Možné príčiny:**\n- Preťaženie API\n- Chyba modelu\n- Chyba siete\n\nSkús znova odoslať správu.',
         error: `API Error ${response.status}`,
-        model_used: 'gemini-1.5-flash'
+        model_used: 'gemini-pro'
       });
     }
 
@@ -597,7 +597,7 @@ PRAVIDLÁ:
         success: false,
         response: '😞 AI nevrátila odpoveď. Skús to prosím znova.\n\nMôže to byť dočasný problém s modelom.',
         error: 'No response from AI',
-        model_used: 'gemini-1.5-flash'
+        model_used: 'gemini-pro'
       });
     }
     
@@ -611,7 +611,7 @@ PRAVIDLÁ:
         success: false,
         response: '😞 AI odpoveď má nesprávny formát. Skús to prosím znova.\n\n' + data.candidates[0].content.parts[0].text.substring(0, 500),
         error: 'JSON Parse Error',
-        model_used: 'gemini-1.5-flash'
+        model_used: 'gemini-pro'
       });
     }
 
@@ -631,7 +631,7 @@ PRAVIDLÁ:
       competitive_insights: aiResponse.competitive_insights,
       suggestions: aiResponse.suggestions || [],
       data_sources: aiResponse.data_sources || [],
-      model_used: 'gemini-1.5-flash'
+      model_used: 'gemini-pro'
     });
 
   } catch (error) {
@@ -656,7 +656,7 @@ PRAVIDLÁ:
       success: false,
       response: userMessage + '\n\n**Technické detaily:**\n' + error.message,
       error: error.message,
-      model_used: 'gemini-1.5-flash',
+      model_used: 'gemini-pro',
       debug_info: {
         error_type: error.constructor.name,
         has_api_key: !!Deno.env.get("Gemini_PAID_pro")
