@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
       message: '✅ API kľúč uložený! Nastavte ho prosím v Dashboard → Settings → Environment Variables ako "Gemini_PAID_pro"',
       validated: false,
       force_saved: true,
-      model_access: 'gemini-1.5-pro-002',
+      model_access: 'gemini-1.5-pro',
       instructions: 'Prejdite do Dashboard → Settings → Environment Variables a pridajte: Name: Gemini_PAID_pro, Value: váš API kľúč. Potom kliknite "Test API" pre overenie.'
     });
 

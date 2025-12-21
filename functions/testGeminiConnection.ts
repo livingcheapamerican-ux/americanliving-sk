@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
 
     // Test connection
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-002:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
     return Response.json({
       success: true,
       message: '✅ API Connected - Deep Reasoning Active',
-      model: 'gemini-1.5-pro-002',
+      model: 'gemini-1.5-pro',
       test_response: responseText,
       timestamp: new Date().toISOString()
     });
