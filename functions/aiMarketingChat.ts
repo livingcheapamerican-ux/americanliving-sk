@@ -13,8 +13,8 @@ Deno.serve(async (req) => {
     try { body = await req.json(); } catch (e) {}
     const { user_message } = body;
 
-    // Používame "gemini-pro" - tento model funguje VŽDY a všade
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${MOJ_API_KLUC}`;
+    // ZMENA: Používame "gemini-1.5-flash" - toto je aktuálny kráľ stability
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${MOJ_API_KLUC}`;
 
     const systemPrompt = `Si marketingový expert. Odpovedaj stručne a slovensky. Otázka: "${user_message || 'Ahoj'}"`;
 
@@ -28,8 +28,7 @@ Deno.serve(async (req) => {
 
     if (!googleResponse.ok) {
         const errText = await googleResponse.text();
-        // Ak toto nastane, vypíše sa to priamo do chatu
-        return Response.json({ response: `❌ CHYBA GOOGLE: ${errText}` });
+        return Response.json({ response: `❌ CHYBA GOOGLE (Skús iný model): ${errText}` });
     }
 
     const googleData = await googleResponse.json();
@@ -37,7 +36,7 @@ Deno.serve(async (req) => {
 
     return Response.json({
         response: aiText,
-        thinking_process: "Používam Gemini Pro cez priame spojenie.",
+        thinking_process: "Bežím na Gemini 1.5 Flash ⚡",
         suggestions: [] 
     });
 
