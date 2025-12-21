@@ -98,9 +98,9 @@ POŽIADAVKY:
 
     let response;
 
-    // Použij Gemini 1.5 Flash
+    // Použij Gemini 3 Pro pre maximálne reasoning
       const geminiResponse = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -201,7 +201,7 @@ POŽIADAVKY:
       success: true,
       project: response,
       drive_link: driveLink,
-      model_used: apiKey ? 'gemini-1.5-pro' : 'fallback',
+      model_used: 'gemini-3-pro-preview',
       timestamp: new Date().toISOString()
     });
 
