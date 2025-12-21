@@ -59,7 +59,12 @@ Deno.serve(async (req) => {
       resend_email: !!Deno.env.get("RESEND_API_KEY")
     };
 
-    const [sessions, domy, dopyty, insights, brainRules, competitors, postQueue, campaigns, gtmData, documents, fotky, driveAssets, blogs, capiLogs] = await Promise.all([
+    console.log('📊 Začínam zbierať dáta z databázy...');
+    
+    let sessions, domy, dopyty, insights, brainRules, competitors, postQueue, campaigns, gtmData, documents, fotky, driveAssets, blogs, capiLogs;
+    
+    try {
+      [sessions, domy, dopyty, insights, brainRules, competitors, postQueue, campaigns, gtmData, documents, fotky, driveAssets, blogs, capiLogs] = await Promise.all([
       base44.asServiceRole.entities.UserSession.list('-created_date', 500),
       base44.asServiceRole.entities.Dom.list(),
       base44.asServiceRole.entities.Dopyt.list('-created_date', 200),
@@ -72,9 +77,15 @@ Deno.serve(async (req) => {
       base44.asServiceRole.entities.Dokument.list('-created_date', 100),
       base44.asServiceRole.entities.Fotka.list('-created_date', 200),
       base44.asServiceRole.entities.MarketingAssets.filter({ active: true }),
-      base44.asServiceRole.entities.BlogPost.filter({ published: true }),
-      base44.asServiceRole.entities.CAPILog.list('-created_date', 50)
+      base44.asServiceRole.entities.BlogPost.filter({ published: true }).catch(() => []),
+      base44.asServiceRole.entities.CAPILog.list('-created_date', 50).catch(() => [])
     ]);
+    
+    console.log('✅ Dáta získané úspešne');
+    } catch (dataError) {
+      console.error('❌ Chyba pri zbere dát:', dataError);
+      throw new Error(`Chyba pri zbere dát: ${dataError.message}`);
+    }
 
     // Calculate key metrics
     const totalSessions = sessions.length;
@@ -145,6 +156,9 @@ Deno.serve(async (req) => {
       ? `\n\n📚 HISTÓRIA KONVERZÁCIE:\n${chat_history.map(m => `${m.role === 'user' ? 'Ty' : 'Ja'}: ${m.content}`).join('\n')}`
       : '';
 
+    console.log('🎨 Zostavujem prompt pre Gemini...');
+    console.log('📝 API Key existuje:', !!GEMINI_API_KEY);
+    
     const prompt = `Si senior AI marketingový partner pre American Living (modulárne domy). 
 Nie si len nástroj - si živý kolega s ktorým sa dá komunikovať, diskutovať a plánovať stratégiu.
 
@@ -242,6 +256,9 @@ PRAVIDLÁ:
 - Odkazuj na konkrétne čísla z dát
 - Používaj slovenčinu s emotikonmi`;
 
+    console.log('📡 Volám Gemini API...');
+    console.log('📏 Prompt length:', prompt.length);
+    
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`,
       {
