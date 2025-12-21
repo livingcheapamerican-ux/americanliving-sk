@@ -273,43 +273,43 @@ ${historyContext}
 
 ---
 
-TVOJA ODPOVEĎ (JSON):
+TVOJA ODPOVEĎ - VRAŤ ČISTÝ JSON (bez markdown backticks):
 {
-  "thinking_process": "Tu ukáž HLBOKÝ myšlienkový proces - analýza trhu, konkurencie, psychológie, trendov",
-  "response": "Hlavná odpoveď - ako najlepší riaditeľ. Používaj emotikonmi, buď konkrétny, akčný, sebavedomý.",
-  "market_analysis": "Analýza aktuálnej trhovej situácie a konkurencie",
+  "thinking_process": "HLBOKÝ myšlienkový proces - analýza trhu, konkurencie, psychológie, trendov, dostupného rozpočtu",
+  "market_analysis": "Aktuálna trhová situácia - ceny, dopyt, sezónnosť, trendy",
+  "competitive_insights": "Čo robí konkurencia lepšie/horšie - ako ich predbehnem",
+  "response": "Hlavná odpoveď - ako najlepší riaditeľ. Emotikonmi, konkrétny, sebavedomý, akčný.",
   "suggestions": [
     {
-      "id": "unique_id",
-      "type": "Facebook Video / Instagram Reel / TikTok / YouTube / Story / Google Ads / Full Campaign",
+      "id": "suggestion_[timestamp]_[index]",
+      "type": "Facebook Video / Instagram Reel / TikTok / YouTube Shorts / Full Campaign",
       "title": "Názov kampane",
-      "description": "Čo presne urobiť",
-      "psychology": "Aký psychologický princíp používame",
-      "format": "Video/Carousel/Story/Post",
-      "visual_concept": "Detailný popis vizuálu (pre AI generovanie alebo produkciu)",
-      "video_script": "Shot-by-shot scenár ak je to video",
+      "description": "Čo presne urobiť step-by-step",
+      "psychology": "Psychologický trigger (scarcity/social proof/urgency/desire)",
+      "format": "Video/Carousel/Story/Reel",
+      "visual_concept": "Detailný opis vizuálu pre AI generovanie alebo produkciu",
+      "video_script": "Shot 1: [popis]\nShot 2: [popis]\n... (ak je video)",
       "audio_music": {
         "bpm": 120,
-        "mood": "energetic/calm/epic",
+        "mood": "energetic",
         "instruments": ["synth", "bass", "drums"],
-        "effects": ["reverb", "bass boost"],
-        "suno_prompt": "Presný prompt pre Suno AI"
+        "effects": ["heavy reverb", "bass boost"],
+        "suno_prompt": "Epic cinematic electronic music, 130 BPM, powerful synth with deep bass, energetic drums, heavy reverb, no vocals, 60 seconds"
       },
       "copy": {
-        "headline": "Titulok",
-        "body": "Text príspevku",
-        "cta": "Call to action"
+        "headline": "Chytľavý headline",
+        "body": "Text príspevku s emotikonmi",
+        "cta": "Silný call-to-action"
       },
-      "target_audience": "Presná demografia a záujmy",
+      "target_audience": "Vek, pohlavie, záujmy, správanie",
       "budget_allocation": 150,
       "platforms": ["Facebook", "Instagram"],
-      "expected_roi": "Predikcia ROI a dosahu",
-      "reasoning": "Prečo práve táto stratégia teraz",
+      "expected_roi": "Predikcia: X zobrazení, Y konverzií, Z% ROI",
+      "reasoning": "Prečo práve táto stratégia teraz funguje najlepšie",
       "impact_score": 85
     }
   ],
-  "competitive_insights": "Čo robí konkurencia a ako ich predbehnem",
-  "data_sources": ["Sessions", "GTM", "Facebook", "Instagram", "Konkurencia"]
+  "data_sources": ["Sessions", "GTM Data", "Facebook Analytics", "Konkurencia"]
 }
 
 PRAVIDLÁ:
