@@ -45,29 +45,38 @@ export default function AIMarketingChat({ onStrategyApproved }) {
         role: 'assistant',
         content: `👋 Ahoj! Som tvoj **AI Marketing Director** - centrálny mozog firmy.
 
-✨ **Moje superschopnosti:**
-✅ Real-time analýza všetkých dát (sessions, GTM, sociálne siete)
-✅ Prístup k Facebook & Instagram (lajky, komentáre, engagement)
-✅ Analýza TOP konkurencie v reálnom čase
-✅ Tvorba kompletných kampaní (video + hudba + copy)
-✅ Generovanie Suno AI promptov pre vlastnú hudbu
-✅ ROI optimalizácia podľa tvojho rozpočtu
-✅ Deep reasoning cez Gemini Pro
+✨ **Som tvoj osobný MARKETING MENTOR:**
+✅ Sprevádzam ťa KROK-PO-KROKU cez celý proces
+✅ Vysvetľujem všetky technické veci jednoducho
+✅ Dávam ti PRESNÉ NÁVODY kde kliknúť a co vyplniť
+✅ Učím ťa Facebook & Instagram reklamy od NULY
+✅ Kontrolujem či robíš kroky správne
+✅ Pomáham s formátmi, rozlíšeniami, nastaveniami
 
-🎬 **Čo všetko vytvorím:**
-- Idea & psychológia kampane
+🎬 **Komplexná tvorba kampane:**
+- Koncept & psychológia (prečo to funguje)
+- Technické specs (rozlíšenia, formáty, veľkosti)
 - Video scenár (shot-by-shot)
-- Suno prompt pre hudbu (BPM, mood, efekty)
-- Copy (headline, text, CTA)
-- Target audience & budget allocation
-- Predikcia ROI
+- Suno hudba (BPM, mood, efekty, prompt)
+- Copy (primary text, headline, CTA)
+- Targeting (vek, miesto, záujmy - PRESNÉ hodnoty)
+- Budget & Timeline
+- **KROK-PO-KROKU NÁVOD** kde v Ads Manageri kliknúť
+- Checklist pred publikovaním
 
-**Skús napríklad:**
-- "Vytvor kampaň na Washington dom s video + hudba"
-- "Analyzuj konkurenciu a navrhni protistratégiu"
-- "Aké posty fungujú najlepšie na Instagrame?"
+📚 **Viem všetko o FB/IG reklamách:**
+- Ako nastaviť Business Manager
+- Aké sú rozmery pre každý formát
+- Kde nájdem Ads Manager
+- Ako nastaviť pixel & tracking
+- Čo znamenajú metriky (CTR, CPM, ROAS)
 
-⚙️ Najprv klikni na ⚙️ Settings a nastav API kľúč. Potom som ready! 🚀`,
+**Začni napríklad:**
+- "Chcem vytvoriť prvú kampaň, pomôž mi od začiatku"
+- "Aké rozmery potrebujem pre Instagram Reel?"
+- "Vytvor kampaň na Washington + uč ma ako ju nastaviť"
+
+⚙️ Klikni na ⚙️ Settings, vlož API kľúč a môžeme začať! 🚀`,
         timestamp: new Date().toISOString()
       }]);
     }
@@ -256,10 +265,16 @@ Konzola (F12) má viac detailov.`,
                   <CardContent className="p-6">
                     <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
                       <Key className="w-5 h-5 text-indigo-600" />
-                      🔑 Gemini API Key (gemini-1.5-pro)
+                      🔑 Google AI Studio API Key
                     </h3>
+                    <p className="text-xs text-gray-600 mb-2">
+                      <strong>Krok 1:</strong> Choď na <a href="https://aistudio.google.com/app/apikey" target="_blank" className="text-indigo-600 underline font-semibold">aistudio.google.com/app/apikey</a>
+                    </p>
+                    <p className="text-xs text-gray-600 mb-2">
+                      <strong>Krok 2:</strong> Klikni "Create API Key" → Vyber existujúci projekt alebo vytvor nový
+                    </p>
                     <p className="text-xs text-gray-600 mb-4">
-                      Získajte kľúč na: <a href="https://aistudio.google.com/app/apikey" target="_blank" className="text-indigo-600 underline">aistudio.google.com/app/apikey</a>
+                      <strong>Krok 3:</strong> Skopíruj kľúč (začína "AIzaSy...") a vlož sem
                     </p>
                     <div className="space-y-3">
                       <div>
@@ -289,10 +304,26 @@ Konzola (F12) má viac detailov.`,
                       {apiStatus && (
                         <div className={`p-3 rounded ${apiStatus.success ? 'bg-green-100' : 'bg-red-100'}`}>
                           <p className={`text-xs ${apiStatus.success ? 'text-green-900' : 'text-red-900'}`}>
-                            {apiStatus.success ? `✅ ${apiStatus.test_response}` : `❌ ${apiStatus.error}`}
+                            {apiStatus.success ? (
+                              <>
+                                <strong>✅ Pripojenie funguje!</strong><br />
+                                Model: gemini-1.5-pro<br />
+                                Response: {apiStatus.test_response}
+                              </>
+                            ) : (
+                              <>
+                                <strong>❌ Chyba pripojenia</strong><br />
+                                {apiStatus.error}
+                              </>
+                            )}
                           </p>
                         </div>
                       )}
+                      <div className="bg-blue-50 p-3 rounded border border-blue-200 mt-3">
+                        <p className="text-xs text-blue-900">
+                          <strong>ℹ️ Po uložení:</strong> Prejdi do Dashboard → Settings → Environment Variables a over, že "Gemini_PAID_pro" je nastavený. Potom klikni "Test API" pre overenie.
+                        </p>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -488,6 +519,49 @@ Konzola (F12) má viac detailov.`,
                                 <p className="text-xs text-cyan-900"><strong>🎬 Video Scenár:</strong></p>
                                 <p className="text-xs text-cyan-700 whitespace-pre-line mt-1">{suggestion.video_script}</p>
                               </div>
+                            )}
+
+                            {suggestion.step_by_step_guide && (
+                              <details className="bg-gradient-to-r from-green-50 to-emerald-50 p-3 rounded-lg border-2 border-green-400 mb-2">
+                                <summary className="cursor-pointer font-bold text-sm text-green-900 flex items-center gap-2">
+                                  📋 KROK-PO-KROKU NÁVOD (Klikni pre rozbalenie)
+                                </summary>
+                                <div className="mt-3 space-y-3 text-xs">
+                                  {suggestion.step_by_step_guide.preparation && (
+                                    <div className="bg-white p-2 rounded border border-green-200">
+                                      <p className="font-bold text-green-900 mb-1">✅ Príprava:</p>
+                                      <ul className="list-disc pl-4 space-y-1 text-green-800">
+                                        {suggestion.step_by_step_guide.preparation.map((step, i) => (
+                                          <li key={i}>{step}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                  {suggestion.step_by_step_guide.ads_manager_setup && (
+                                    <div className="bg-white p-2 rounded border border-blue-200">
+                                      <p className="font-bold text-blue-900 mb-1">🎯 Ads Manager Setup:</p>
+                                      <ol className="list-decimal pl-4 space-y-1 text-blue-800">
+                                        {suggestion.step_by_step_guide.ads_manager_setup.map((step, i) => (
+                                          <li key={i}>{step}</li>
+                                        ))}
+                                      </ol>
+                                    </div>
+                                  )}
+                                  {suggestion.step_by_step_guide.targeting_exact_settings && (
+                                    <div className="bg-white p-2 rounded border border-purple-200">
+                                      <p className="font-bold text-purple-900 mb-1">🎯 Presné Targeting:</p>
+                                      <pre className="text-xs text-purple-800 font-mono bg-purple-50 p-2 rounded">
+                                        {JSON.stringify(suggestion.step_by_step_guide.targeting_exact_settings, null, 2)}
+                                      </pre>
+                                    </div>
+                                  )}
+                                  {suggestion.step_by_step_guide.what_to_do_next && (
+                                    <div className="bg-yellow-50 p-2 rounded border border-yellow-300">
+                                      <p className="text-yellow-900">💬 {suggestion.step_by_step_guide.what_to_do_next}</p>
+                                    </div>
+                                  )}
+                                </div>
+                              </details>
                             )}
                             
                             {suggestion.reasoning && (
