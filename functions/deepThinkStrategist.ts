@@ -171,6 +171,19 @@ DÔLEŽITÉ:
         throw new Error(`Gemini API Error: ${errorData}`);
       }
 
+    // Ulož do histórie
+    await base44.asServiceRole.entities.MarketingHistory.create({
+      action_type: 'daily_briefing',
+      title: `Denný brífing ${new Date().toLocaleDateString('sk-SK')}`,
+      description: strategicBriefing.substring(0, 200) + '...',
+      data: {
+        briefing: strategicBriefing,
+        metrics: { totalSessions, conversionRate, bounceRate, avgEngagement: avgEngagement.toFixed(1) }
+      },
+      user_email: user?.email,
+      status: 'completed'
+    });
+
     return Response.json({
       success: true,
       briefing: strategicBriefing,

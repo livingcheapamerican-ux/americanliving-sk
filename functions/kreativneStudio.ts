@@ -197,6 +197,16 @@ POŽIADAVKY:
       });
     }
 
+    // Ulož do histórie
+    await base44.asServiceRole.entities.MarketingHistory.create({
+      action_type: 'content_created',
+      title: `Kreatívny projekt: ${response.improved_concept?.substring(0, 50) || 'Nový projekt'}`,
+      description: response.detailed_scenario?.substring(0, 200) || raw_idea,
+      data: response,
+      user_email: user?.email,
+      status: 'completed'
+    });
+
     return Response.json({
       success: true,
       project: response,

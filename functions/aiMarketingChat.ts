@@ -13,18 +13,36 @@ Deno.serve(async (req) => {
 
     // 1. Inicializácia a príprava dát
     const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+
     let body = {};
     try { body = await req.json(); } catch (e) {}
-    
-    const { user_message, chat_history, monthly_budget } = body;
+
+    const { user_message, chat_history, monthly_budget, action } = body;
+
+    // Handling approval action
+    if (action === 'approve_suggestion') {
+      const { suggestion } = body;
+      await base44.asServiceRole.entities.MarketingHistory.create({
+        action_type: 'campaign_approved',
+        title: suggestion.title,
+        description: suggestion.description,
+        data: suggestion,
+        budget_allocated: suggestion.budget_allocation,
+        user_email: user?.email,
+        status: 'completed'
+      });
+      return Response.json({ success: true });
+    }
 
     // 2. Zber dát o firme (Aby AI nevarila z vody)
-    // Sťahujeme zoznam domov, posledné insighty a konkurenciu
-    const [domy, insights, competitors, sessions] = await Promise.all([
+    // Sťahujeme zoznam domov, posledné insighty, konkurenciu a históriu
+    const [domy, insights, competitors, sessions, history] = await Promise.all([
       base44.asServiceRole.entities.Dom.list().catch(() => []),
       base44.asServiceRole.entities.MarketingInsight.list('-created_date', 5).catch(() => []),
       base44.asServiceRole.entities.CompetitorWatch.list('-engagement_score', 3).catch(() => []),
-      base44.asServiceRole.entities.UserSession.list('-created_date', 50).catch(() => [])
+      base44.asServiceRole.entities.UserSession.list('-created_date', 50).catch(() => []),
+      base44.asServiceRole.entities.MarketingHistory.list('-created_date', 20).catch(() => [])
     ]);
 
     // 3. Vytvorenie kontextu pre AI (System Prompt)
@@ -35,6 +53,9 @@ Deno.serve(async (req) => {
     - Posledné marketingové zistenia: ${insights.map(i => i.summary).join('; ')}
     - Hlavná konkurencia: ${competitors.map(c => c.competitor_name).join(', ')}
     - Rozpočet na tento mesiac: ${monthly_budget || 1000} EUR
+
+    📜 HISTÓRIA MARKETINGOVÝCH AKCIÍ (Posledných ${history.length}):
+    ${history.map(h => `[${h.created_date.split('T')[0]}] ${h.action_type}: ${h.title} - ${h.description}`).join('\n')}
     `;
 
     const systemPrompt = `
@@ -56,6 +77,8 @@ Deno.serve(async (req) => {
     2. V texte 'response' používaj Markdown (tučné písmo, odrážky, emotikony).
     3. Ak navrhuješ kampaň, buď konkrétny (presné cielenie, texty reklám).
     4. Hovoriš po slovensky, profesionálne ale dynamicky.
+    5. VŽDY kontroluj históriu akcií - neopakuj to čo už bolo urobené!
+    6. Pri plánovaní zohľadni predchádzajúce kampane a stratégie.
 
     POŽADOVANÝ VÝSTUP (JSON):
     {
