@@ -1,46 +1,60 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
+/**
+ * OPRAVENÝ DIAGNOSTICKÝ NÁSTROJ
+ * Zisťuje dostupné modely a vypisuje ich do chatu.
+ */
 Deno.serve(async (req) => {
   try {
-    // ==========================================
-    // 🔑 MIESTO PRE TVOJ KĽÚČ
-    // Vlož sem kľúč medzi úvodzovky.
-    const MOJ_API_KLUC = "AIzaSyDI4UWtkRk6u-wAR-ZcPUZg2HGrfmvoy6I"; 
-    // ==========================================
+    // 1. VÁŠ KĽÚČ (Opravený podľa screenshotu na presné znenie)
+    const API_KEY = "AIzaSyDI4UwtkRk6u-wAR-ZcPUZg2HGrfmvoy6I"; 
 
-    const base44 = createClientFromRequest(req);
-    let body = {};
-    try { body = await req.json(); } catch (e) {}
-    const { user_message } = body;
+    // Endpoint pre zoznam modelov (GET request)
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`;
 
-    // ZMENA: Používame "gemini-1.5-flash" - toto je aktuálny kráľ stability
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${MOJ_API_KLUC}`;
-
-    const systemPrompt = `Si marketingový expert. Odpovedaj stručne a slovensky. Otázka: "${user_message || 'Ahoj'}"`;
-
-    const googleResponse = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: systemPrompt }] }]
-      })
+    // 2. SPOJENIE S GOOGLE
+    const response = await fetch(API_URL, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
     });
 
-    if (!googleResponse.ok) {
-        const errText = await googleResponse.text();
-        return Response.json({ response: `❌ CHYBA GOOGLE (Skús iný model): ${errText}` });
+    // 3. ODCHYTENIE CHYBY (Ak je zlý kľúč alebo blokovaný prístup)
+    if (!response.ok) {
+        const errorText = await response.text();
+        return Response.json({ 
+            response: `🔴 CHYBA SPOJENIA (HTTP ${response.status}):\n${errorText}` 
+        });
     }
 
-    const googleData = await googleResponse.json();
-    const aiText = googleData.candidates?.[0]?.content?.parts?.[0]?.text || "Žiadna odpoveď.";
+    const data = await response.json();
 
-    return Response.json({
-        response: aiText,
-        thinking_process: "Bežím na Gemini 1.5 Flash ⚡",
-        suggestions: [] 
-    });
+    // 4. GENEROWANIE ZOZNAMU
+    if (!data.models) {
+        return Response.json({ response: "⚠️ Google odpovedal (200 OK), ale zoznam modelov je prázdny." });
+    }
 
-  } catch (error) {
-    return Response.json({ response: `⚠️ KRITICKÁ CHYBA: ${error.message}` });
+    let report = "✅ **SPOJENIE FUNGUJE! TOTO SÚ VAŠE MODELY:**\n\n";
+    
+    // Hľadáme len modely, ktoré vedia písať text (generateContent)
+    const chatModels = data.models.filter(m => 
+        m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent")
+    );
+
+    if (chatModels.length === 0) {
+        report += "❌ Žiadne chatovacie modely (asi len embeddingy?)\n";
+    } else {
+        chatModels.forEach(model => {
+            // Toto je to, čo hľadáme (napr. 'models/gemini-1.5-flash')
+            report += `👉 ${model.name.replace('models/', '')}\n`; 
+        });
+    }
+    
+    report += "\n**INŠTRUKCIA:** Skopírujte tento zoznam a pošlite mi ho.";
+    
+    // Vrátime odpoveď v JSON formáte, ktorý Base44 vyžaduje
+    return Response.json({ response: report });
+
+  } catch (e) {
+    return Response.json({ response: `☠️ KRITICKÁ CHYBA SKRIPTU: ${e.toString()}` });
   }
 });
