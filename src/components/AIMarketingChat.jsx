@@ -21,6 +21,7 @@ export default function AIMarketingChat({ onStrategyApproved }) {
   const [testingAPI, setTestingAPI] = useState(false);
   const [apiStatus, setApiStatus] = useState(null);
   const [monthlyBudget, setMonthlyBudget] = useState(1000);
+  const [pendingSuggestions, setPendingSuggestions] = useState([]);
   const messagesEndRef = useRef(null);
 
   // Auto-scroll
@@ -128,12 +129,20 @@ export default function AIMarketingChat({ onStrategyApproved }) {
         thinking_process: response.data.thinking_process,
         market_analysis: response.data.market_analysis,
         competitive_insights: response.data.competitive_insights,
-        suggestions: response.data.suggestions,
         data_sources: response.data.data_sources,
         timestamp: new Date().toISOString()
       };
 
       setMessages(prev => [...prev, aiMessage]);
+
+      // Pridaj suggestions do samostatnej sekcie
+      if (response.data.suggestions && response.data.suggestions.length > 0) {
+        setPendingSuggestions(prev => [
+          ...prev,
+          ...response.data.suggestions.map(s => ({ ...s, messageId: aiMessage.id, timestamp: new Date().toISOString() }))
+        ]);
+      }
+
       setCurrentActivity(null);
 
     } catch (error) {
@@ -163,21 +172,16 @@ Konzola (F12) má viac detailov.`,
     }
   };
 
-  const approveSuggestion = async (suggestion, messageId) => {
+  const approveSuggestion = async (suggestion) => {
     try {
       await base44.functions.invoke('aiMarketingChat', {
         action: 'approve_suggestion',
-        suggestion: suggestion,
-        message_id: messageId
+        suggestion: suggestion
       });
 
       toast.success('🚀 Stratégia schválená a uložená!');
       
-      setMessages(prev => prev.map(msg => 
-        msg.id === messageId 
-          ? { ...msg, approved_suggestions: [...(msg.approved_suggestions || []), suggestion.id] }
-          : msg
-      ));
+      setPendingSuggestions(prev => prev.filter(s => s.id !== suggestion.id));
 
       if (onStrategyApproved) {
         onStrategyApproved(suggestion);
@@ -187,12 +191,8 @@ Konzola (F12) má viac detailov.`,
     }
   };
 
-  const rejectSuggestion = (suggestionId, messageId) => {
-    setMessages(prev => prev.map(msg => 
-      msg.id === messageId 
-        ? { ...msg, rejected_suggestions: [...(msg.rejected_suggestions || []), suggestionId] }
-        : msg
-    ));
+  const rejectSuggestion = (suggestionId) => {
+    setPendingSuggestions(prev => prev.filter(s => s.id !== suggestionId));
     toast.info('Návrh zamietnutý');
   };
 
@@ -235,7 +235,9 @@ Konzola (F12) má viac detailov.`,
   };
 
   return (
-    <Card className="h-[700px] flex flex-col bg-gradient-to-br from-purple-50 to-pink-50 border-purple-300">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      {/* Chat Panel */}
+      <Card className="lg:col-span-2 h-[900px] flex flex-col bg-gradient-to-br from-purple-50 to-pink-50 border-purple-300">
       <CardHeader className="border-b bg-gradient-to-r from-purple-900 to-indigo-900 text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -439,170 +441,22 @@ Konzola (F12) má viac detailov.`,
 
                   {/* Data Sources */}
                   {message.data_sources && message.data_sources.length > 0 && (
-                    <div className="mb-3 flex flex-wrap gap-1">
-                      {message.data_sources.map((source, idx) => (
-                        <Badge key={idx} variant="outline" className="text-xs flex items-center gap-1">
-                          <Eye className="w-3 h-3" />
-                          {source}
-                        </Badge>
-                      ))}
+                    <div className="mb-3">
+                      <h5 className="text-xs font-semibold text-purple-900 mb-2 flex items-center gap-1">
+                        <Eye className="w-3 h-3" />
+                        📊 Zdroje údajov:
+                      </h5>
+                      <div className="flex flex-wrap gap-1">
+                        {message.data_sources.map((source, idx) => (
+                          <Badge key={idx} variant="outline" className="text-xs">
+                            {source}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   )}
 
-                  {/* Suggestions */}
-                  {message.suggestions && message.suggestions.length > 0 && (
-                    <div className="space-y-3 mt-3 pt-3 border-t border-purple-200">
-                      <h4 className="font-bold text-sm text-purple-900 flex items-center gap-2">
-                        <Lightbulb className="w-4 h-4" />
-                        💡 Kampane & Stratégie:
-                      </h4>
-                      {message.suggestions.map((suggestion, idx) => {
-                        const isApproved = message.approved_suggestions?.includes(suggestion.id);
-                        const isRejected = message.rejected_suggestions?.includes(suggestion.id);
 
-                        return (
-                          <div
-                            key={idx}
-                            className={`p-3 rounded-lg border-2 ${
-                              isApproved ? 'bg-green-50 border-green-400' :
-                              isRejected ? 'bg-red-50 border-red-300 opacity-50' :
-                              'bg-blue-50 border-blue-300'
-                            }`}
-                          >
-                            <div className="flex items-start justify-between gap-2 mb-2">
-                              <div className="flex flex-wrap gap-1">
-                                <Badge className="bg-blue-600 text-white">{suggestion.type}</Badge>
-                                {suggestion.budget_allocation && (
-                                  <Badge className="bg-emerald-600 text-white">{suggestion.budget_allocation}€</Badge>
-                                )}
-                                {suggestion.impact_score && (
-                                  <Badge className={`${
-                                    suggestion.impact_score > 70 ? 'bg-green-600' :
-                                    suggestion.impact_score > 40 ? 'bg-yellow-600' : 'bg-gray-600'
-                                  } text-white`}>
-                                    {suggestion.impact_score}%
-                                  </Badge>
-                                )}
-                              </div>
-                            </div>
-                            
-                            <h5 className="font-bold text-sm text-gray-900 mb-2">{suggestion.title}</h5>
-                            <p className="text-xs text-gray-700 mb-2">{suggestion.description}</p>
-                            
-                            {suggestion.psychology && (
-                              <div className="bg-purple-50 p-2 rounded mb-2 border border-purple-200">
-                                <p className="text-xs text-purple-900"><strong>🧠 Psychológia:</strong> {suggestion.psychology}</p>
-                              </div>
-                            )}
-                            
-                            {suggestion.copy && (
-                              <div className="bg-blue-50 p-2 rounded mb-2 border border-blue-200">
-                                <p className="text-xs text-blue-900 font-semibold">{suggestion.copy.headline}</p>
-                                <p className="text-xs text-blue-700 mt-1">{suggestion.copy.body}</p>
-                                <p className="text-xs text-blue-800 mt-1 font-semibold">👉 {suggestion.copy.cta}</p>
-                              </div>
-                            )}
-                            
-                            {suggestion.audio_music?.suno_prompt && (
-                              <div className="bg-pink-50 p-2 rounded mb-2 border border-pink-200">
-                                <p className="text-xs text-pink-900 font-semibold mb-1">🎵 Suno AI Prompt:</p>
-                                <p className="text-xs text-pink-700 font-mono bg-white p-2 rounded">{suggestion.audio_music.suno_prompt}</p>
-                                <div className="grid grid-cols-2 gap-1 mt-2 text-xs text-pink-800">
-                                  <p><strong>BPM:</strong> {suggestion.audio_music.bpm}</p>
-                                  <p><strong>Mood:</strong> {suggestion.audio_music.mood}</p>
-                                </div>
-                              </div>
-                            )}
-
-                            {suggestion.video_script && (
-                              <div className="bg-cyan-50 p-2 rounded mb-2 border border-cyan-200">
-                                <p className="text-xs text-cyan-900"><strong>🎬 Video Scenár:</strong></p>
-                                <p className="text-xs text-cyan-700 whitespace-pre-line mt-1">{suggestion.video_script}</p>
-                              </div>
-                            )}
-
-                            {suggestion.step_by_step_guide && (
-                              <details className="bg-gradient-to-r from-green-50 to-emerald-50 p-3 rounded-lg border-2 border-green-400 mb-2">
-                                <summary className="cursor-pointer font-bold text-sm text-green-900 flex items-center gap-2">
-                                  📋 KROK-PO-KROKU NÁVOD (Klikni pre rozbalenie)
-                                </summary>
-                                <div className="mt-3 space-y-3 text-xs">
-                                  {suggestion.step_by_step_guide.preparation && (
-                                    <div className="bg-white p-2 rounded border border-green-200">
-                                      <p className="font-bold text-green-900 mb-1">✅ Príprava:</p>
-                                      <ul className="list-disc pl-4 space-y-1 text-green-800">
-                                        {suggestion.step_by_step_guide.preparation.map((step, i) => (
-                                          <li key={i}>{step}</li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  )}
-                                  {suggestion.step_by_step_guide.ads_manager_setup && (
-                                    <div className="bg-white p-2 rounded border border-blue-200">
-                                      <p className="font-bold text-blue-900 mb-1">🎯 Ads Manager Setup:</p>
-                                      <ol className="list-decimal pl-4 space-y-1 text-blue-800">
-                                        {suggestion.step_by_step_guide.ads_manager_setup.map((step, i) => (
-                                          <li key={i}>{step}</li>
-                                        ))}
-                                      </ol>
-                                    </div>
-                                  )}
-                                  {suggestion.step_by_step_guide.targeting_exact_settings && (
-                                    <div className="bg-white p-2 rounded border border-purple-200">
-                                      <p className="font-bold text-purple-900 mb-1">🎯 Presné Targeting:</p>
-                                      <pre className="text-xs text-purple-800 font-mono bg-purple-50 p-2 rounded">
-                                        {JSON.stringify(suggestion.step_by_step_guide.targeting_exact_settings, null, 2)}
-                                      </pre>
-                                    </div>
-                                  )}
-                                  {suggestion.step_by_step_guide.what_to_do_next && (
-                                    <div className="bg-yellow-50 p-2 rounded border border-yellow-300">
-                                      <p className="text-yellow-900">💬 {suggestion.step_by_step_guide.what_to_do_next}</p>
-                                    </div>
-                                  )}
-                                </div>
-                              </details>
-                            )}
-                            
-                            {suggestion.reasoning && (
-                              <p className="text-xs text-purple-700 italic mt-2">
-                                💭 {suggestion.reasoning}
-                              </p>
-                            )}
-
-                            {!isApproved && !isRejected && (
-                              <div className="flex gap-2 mt-3">
-                                <Button
-                                  size="sm"
-                                  onClick={() => approveSuggestion(suggestion, message.id)}
-                                  className="flex-1 bg-green-600 hover:bg-green-700 text-xs"
-                                >
-                                  <CheckCircle className="w-3 h-3 mr-1" />
-                                  Schváliť & Implementovať
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => rejectSuggestion(suggestion.id, message.id)}
-                                  className="flex-1 text-xs"
-                                >
-                                  <XCircle className="w-3 h-3 mr-1" />
-                                  Zamietnuť
-                                </Button>
-                              </div>
-                            )}
-
-                            {isApproved && (
-                              <div className="flex items-center gap-2 text-green-700 text-xs mt-2 font-semibold">
-                                <CheckCircle className="w-4 h-4" />
-                                ✅ Schválené a uložené do know-how!
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
 
                   <p className="text-xs text-gray-400 mt-2">
                     {new Date(message.timestamp).toLocaleTimeString('sk-SK')}
@@ -660,5 +514,90 @@ Konzola (F12) má viac detailov.`,
         </p>
       </div>
     </Card>
-  );
-}
+
+    {/* Campaigns & Suggestions Panel */}
+    <Card className="h-[900px] flex flex-col bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-300">
+    <CardHeader className="border-b bg-gradient-to-r from-blue-900 to-indigo-900 text-white">
+      <CardTitle className="text-lg flex items-center gap-2">
+        <Lightbulb className="w-5 h-5" />
+        💡 Kampane & Stratégie
+      </CardTitle>
+      <p className="text-xs text-blue-200">Čakajú na schválenie: {pendingSuggestions.length}</p>
+    </CardHeader>
+
+    <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
+      {pendingSuggestions.length === 0 ? (
+        <div className="text-center text-gray-500 mt-8">
+          <Sparkles className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+          <p className="text-sm">Žiadne kampane na schválenie</p>
+          <p className="text-xs mt-2">Kampane sa objavia po konverzácii s AI</p>
+        </div>
+      ) : (
+        pendingSuggestions.map((suggestion, idx) => (
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="p-3 rounded-lg border-2 bg-white border-blue-300 shadow-md"
+          >
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <div className="flex flex-wrap gap-1">
+                <Badge className="bg-blue-600 text-white">{suggestion.type}</Badge>
+                {suggestion.budget_allocation && (
+                  <Badge className="bg-emerald-600 text-white">{suggestion.budget_allocation}€</Badge>
+                )}
+                {suggestion.impact_score && (
+                  <Badge className={`${
+                    suggestion.impact_score > 70 ? 'bg-green-600' :
+                    suggestion.impact_score > 40 ? 'bg-yellow-600' : 'bg-gray-600'
+                  } text-white`}>
+                    {suggestion.impact_score}%
+                  </Badge>
+                )}
+              </div>
+            </div>
+
+            <h5 className="font-bold text-sm text-gray-900 mb-2">{suggestion.title}</h5>
+            <p className="text-xs text-gray-700 mb-2">{suggestion.description}</p>
+
+            {suggestion.psychology && (
+              <div className="bg-purple-50 p-2 rounded mb-2 border border-purple-200">
+                <p className="text-xs text-purple-900"><strong>🧠 Psychológia:</strong> {suggestion.psychology}</p>
+              </div>
+            )}
+
+            {suggestion.copy && (
+              <div className="bg-blue-50 p-2 rounded mb-2 border border-blue-200">
+                <p className="text-xs text-blue-900 font-semibold">{suggestion.copy.headline}</p>
+                <p className="text-xs text-blue-700 mt-1">{suggestion.copy.body}</p>
+                <p className="text-xs text-blue-800 mt-1 font-semibold">👉 {suggestion.copy.cta}</p>
+              </div>
+            )}
+
+            <div className="flex gap-2 mt-3">
+              <Button
+                size="sm"
+                onClick={() => approveSuggestion(suggestion)}
+                className="flex-1 bg-green-600 hover:bg-green-700 text-xs"
+              >
+                <CheckCircle className="w-3 h-3 mr-1" />
+                Schváliť
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => rejectSuggestion(suggestion.id)}
+                className="flex-1 text-xs"
+              >
+                <XCircle className="w-3 h-3 mr-1" />
+                Zamietnuť
+              </Button>
+            </div>
+          </motion.div>
+        ))
+      )}
+    </CardContent>
+    </Card>
+    </div>
+    );
+    }
