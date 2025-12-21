@@ -20,11 +20,42 @@ export default function AIMarketingChat({ onStrategyApproved }) {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, currentActivity]);
 
-  // Load chat history
+  // Load chat history and add welcome message
   useEffect(() => {
     const savedHistory = localStorage.getItem('ai_marketing_chat_history');
     if (savedHistory) {
       setMessages(JSON.parse(savedHistory));
+    } else {
+      // Add welcome message
+      setMessages([{
+        id: Date.now(),
+        role: 'assistant',
+        content: `👋 Ahoj! Som tvoj AI Marketingový Partner. 
+
+Mám priamy prístup k všetkým dátam:
+✅ Sessions a user behavior  
+✅ GTM dáta v reálnom čase
+✅ Všetky domy, ceny, parametre
+✅ Blogu a marketing insights
+✅ Konkurencia a kampane
+
+Nemusíš klikať na tlačidlá - ja si automaticky beriem čo potrebujem.
+
+**Čo môžem robiť:**
+- Analyzovať trendy a navrhovať stratégie
+- Vytvárať kampane na mieru
+- Hľadať príčiny problémov
+- Predpovedať úspešnosť nápadov
+
+**Skús napríklad:**
+- "Aký dom je teraz trending?"
+- "Navrhni kampaň na tento týždeň"
+- "Prečo klesá konverzia?"
+- "Vytvor post o Washington dome"
+
+O čom sa chceš porozprávať? 🚀`,
+        timestamp: new Date().toISOString()
+      }]);
     }
   }, []);
 
@@ -72,8 +103,27 @@ export default function AIMarketingChat({ onStrategyApproved }) {
       setCurrentActivity(null);
 
     } catch (error) {
-      toast.error('Chyba pri komunikácii s AI');
-      console.error(error);
+      console.error('AI Chat Error:', error);
+      
+      // Add error message to chat
+      const errorMessage = {
+        id: Date.now() + 1,
+        role: 'assistant',
+        content: `😞 Ospravedlňujem sa, mal som technický problém pri spracovaní tvojej správy.
+
+**Chyba:** ${error.message || 'Neznáma chyba'}
+
+**Čo skúsiť:**
+1. Skontroluj či je Gemini API kľúč správne nastavený v Settings
+2. Skús to znova o chvíľu
+3. Alebo skús inú otázku
+
+Ak problém pretrváva, skontroluj konzolu pre viac detailov.`,
+        timestamp: new Date().toISOString()
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+      toast.error('Chyba pri komunikácii s AI - pozri chat pre detaily');
       setCurrentActivity(null);
     } finally {
       setIsThinking(false);

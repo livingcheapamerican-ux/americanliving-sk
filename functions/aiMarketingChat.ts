@@ -173,7 +173,18 @@ PRAVIDLÁ:
     }
 
     const data = await response.json();
-    const aiResponse = JSON.parse(data.candidates[0].content.parts[0].text);
+    
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+      throw new Error('Gemini API nevrátilo validnú odpoveď. Skontroluj API kľúč.');
+    }
+    
+    let aiResponse;
+    try {
+      aiResponse = JSON.parse(data.candidates[0].content.parts[0].text);
+    } catch (parseError) {
+      console.error('JSON Parse Error:', data.candidates[0].content.parts[0].text);
+      throw new Error('AI odpoveď nie je validný JSON. Skús to znova.');
+    }
 
     // Generate unique IDs for suggestions if not present
     if (aiResponse.suggestions) {
