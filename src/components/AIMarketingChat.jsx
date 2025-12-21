@@ -88,9 +88,8 @@ export default function AIMarketingChat({ onStrategyApproved }) {
 - "Vytvor kampaň na Washington + uč ma ako ju nastaviť"
 
 ⚙️ Klikni na ⚙️ Settings, vlož API kľúč a môžeme začať! 🚀`,
-        timestamp: new Date().toISOString()
-      }]);
-    }
+      timestamp: new Date().toISOString()
+    }]);
   }, []);
 
   // Save history (len ak sa skutočne zmenili)
