@@ -2,8 +2,6 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 Deno.serve(async (req) => {
   try {
-    console.log('🔥 trackFacebookPageView called');
-    
     const base44 = createClientFromRequest(req);
     
     let body;
@@ -63,16 +61,7 @@ Deno.serve(async (req) => {
     // Fallback to a placeholder (Facebook will accept it but won't use it for targeting)
     if (!client_ip) {
       client_ip = '0.0.0.0';
-      console.warn('⚠️ Could not detect client IP, using fallback');
     }
-
-    console.log('📊 Tracking data:', {
-      pixel_id: FB_PIXEL_ID.substring(0, 8) + '...',
-      client_ip: client_ip,
-      user_agent: user_agent?.substring(0, 50) + '...',
-      url: event_source_url,
-      all_headers: Object.fromEntries(req.headers.entries())
-    });
 
     const event_time = Math.floor(Date.now() / 1000);
 
@@ -105,9 +94,6 @@ Deno.serve(async (req) => {
         }
       }]
     };
-
-    console.log('📤 Sending to Facebook API...');
-    console.log('📦 Payload:', JSON.stringify(payload, null, 2));
 
     const fbUrl = `https://graph.facebook.com/v19.0/${FB_PIXEL_ID}/events?access_token=${FB_ACCESS_TOKEN}`;
     
@@ -174,11 +160,6 @@ Deno.serve(async (req) => {
         fb_status_text: fbResponse.statusText
       }, { status: fbResponse.status });
     }
-
-    console.log('✅ Facebook API Success:', {
-      events_received: result.events_received,
-      fbtrace_id: result.fbtrace_id
-    });
 
     // Log success to CAPILog
     try {
