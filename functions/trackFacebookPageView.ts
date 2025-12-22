@@ -6,7 +6,18 @@ Deno.serve(async (req) => {
     
     const base44 = createClientFromRequest(req);
     
-    const { user_agent, event_source_url } = await req.json();
+    let body;
+    try {
+      body = await req.json();
+    } catch (e) {
+      console.error('❌ Failed to parse request body:', e);
+      return Response.json({ 
+        error: 'Invalid JSON body',
+        success: false 
+      }, { status: 400 });
+    }
+    
+    const { user_agent, event_source_url } = body;
 
     // Get secrets
     const FB_PIXEL_ID = Deno.env.get("FB_PIXEL_ID");
@@ -20,54 +31,122 @@ Deno.serve(async (req) => {
       }, { status: 400 });
     }
 
-    // Auto-detect client IP from request headers
-    const client_ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
-                      req.headers.get('x-real-ip') ||
-                      req.headers.get('cf-connecting-ip') ||
-                      '0.0.0.0';
+    // ROBUST IP DETECTION - Try multiple sources
+    let client_ip = null;
+    
+    // Try x-forwarded-for first (most common for proxied requests)
+    const forwardedFor = req.headers.get('x-forwarded-for');
+    if (forwardedFor) {
+      client_ip = forwardedFor.split(',')[0].trim();
+    }
+    
+    // Try other common headers
+    if (!client_ip) {
+      client_ip = req.headers.get('x-real-ip') ||
+                  req.headers.get('cf-connecting-ip') ||
+                  req.headers.get('x-client-ip') ||
+                  req.headers.get('true-client-ip');
+    }
+    
+    // Try socket remote address (Deno specific)
+    if (!client_ip) {
+      try {
+        const connInfo = req.socket?.remoteAddr;
+        if (connInfo && connInfo.hostname) {
+          client_ip = connInfo.hostname;
+        }
+      } catch (e) {
+        console.warn('Failed to get socket remote address:', e);
+      }
+    }
+    
+    // Fallback to a placeholder (Facebook will accept it but won't use it for targeting)
+    if (!client_ip) {
+      client_ip = '0.0.0.0';
+      console.warn('⚠️ Could not detect client IP, using fallback');
+    }
 
     console.log('📊 Tracking data:', {
       pixel_id: FB_PIXEL_ID.substring(0, 8) + '...',
       client_ip: client_ip,
       user_agent: user_agent?.substring(0, 50) + '...',
-      url: event_source_url
+      url: event_source_url,
+      all_headers: Object.fromEntries(req.headers.entries())
     });
 
     const event_time = Math.floor(Date.now() / 1000);
+
+    // Ensure we have required fields
+    if (!user_agent) {
+      console.error('❌ Missing user_agent');
+      return Response.json({ 
+        error: 'user_agent is required',
+        success: false 
+      }, { status: 400 });
+    }
+
+    if (!event_source_url) {
+      console.error('❌ Missing event_source_url');
+      return Response.json({ 
+        error: 'event_source_url is required',
+        success: false 
+      }, { status: 400 });
+    }
 
     const payload = {
       data: [{
         event_name: "PageView",
         event_time: event_time,
         action_source: "website",
-        event_source_url: event_source_url || "https://americanliving.sk",
+        event_source_url: event_source_url,
         user_data: {
           client_ip_address: client_ip,
           client_user_agent: user_agent
         }
       }],
-      test_event_code: "TEST56422",
-      access_token: FB_ACCESS_TOKEN
+      test_event_code: "TEST56422"
     };
 
     console.log('📤 Sending to Facebook API...');
+    console.log('📦 Payload:', JSON.stringify(payload, null, 2));
 
-    const response = await fetch(
-      `https://graph.facebook.com/v19.0/${FB_PIXEL_ID}/events`,
-      {
+    const fbUrl = `https://graph.facebook.com/v19.0/${FB_PIXEL_ID}/events?access_token=${FB_ACCESS_TOKEN}`;
+    
+    let fbResponse;
+    try {
+      fbResponse = await fetch(fbUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
-      }
-    );
+      });
+    } catch (fetchError) {
+      console.error('❌ Fetch error:', fetchError);
+      return Response.json({ 
+        error: 'Failed to connect to Facebook API: ' + fetchError.message,
+        success: false 
+      }, { status: 500 });
+    }
 
-    const result = await response.json();
+    let result;
+    try {
+      result = await fbResponse.json();
+    } catch (jsonError) {
+      console.error('❌ Failed to parse Facebook response:', jsonError);
+      const textResponse = await fbResponse.text();
+      console.error('Raw response:', textResponse);
+      return Response.json({ 
+        error: 'Invalid response from Facebook API',
+        raw_response: textResponse,
+        success: false 
+      }, { status: 500 });
+    }
 
-    if (!response.ok) {
+    if (!fbResponse.ok) {
       console.error('❌ Facebook API Error:', {
-        status: response.status,
+        status: fbResponse.status,
+        statusText: fbResponse.statusText,
         error: result
       });
       
@@ -84,11 +163,17 @@ Deno.serve(async (req) => {
         console.error('Failed to log error:', logError);
       }
       
+      // Return FULL error details to frontend
       return Response.json({ 
         success: false, 
         error: result.error?.message || 'Facebook API error',
-        details: result
-      }, { status: response.status });
+        error_code: result.error?.code,
+        error_type: result.error?.type,
+        error_subcode: result.error?.error_subcode,
+        full_error: result,
+        fb_status: fbResponse.status,
+        fb_status_text: fbResponse.statusText
+      }, { status: fbResponse.status });
     }
 
     console.log('✅ Facebook API Success:', {
@@ -96,7 +181,7 @@ Deno.serve(async (req) => {
       fbtrace_id: result.fbtrace_id
     });
 
-    // Log success to CAPILog (use service role to bypass auth requirements)
+    // Log success to CAPILog
     try {
       await base44.asServiceRole.entities.CAPILog.create({
         event_name: 'PageView',
@@ -105,7 +190,7 @@ Deno.serve(async (req) => {
         duration_ms: 0,
         payload_size: JSON.stringify(payload).length,
         user_data_fields: ['client_ip_address', 'client_user_agent'],
-        event_source_url: event_source_url || "https://americanliving.sk",
+        event_source_url: event_source_url,
         total_attempts: 1,
         timestamp: new Date().toISOString()
       });
@@ -116,13 +201,16 @@ Deno.serve(async (req) => {
     return Response.json({ 
       success: true,
       events_received: result.events_received || 1,
-      fbtrace_id: result.fbtrace_id
+      fbtrace_id: result.fbtrace_id,
+      client_ip_used: client_ip
     });
 
   } catch (error) {
-    console.error('❌ trackFacebookPageView Critical Error:', error.message);
+    console.error('❌ trackFacebookPageView Critical Error:', error);
+    console.error('Error stack:', error.stack);
     return Response.json({ 
       error: error.message,
+      error_stack: error.stack,
       success: false 
     }, { status: 500 });
   }
