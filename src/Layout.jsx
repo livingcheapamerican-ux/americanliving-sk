@@ -31,6 +31,9 @@ function LayoutContent({ children }) {
   useEffect(() => {
     const trackPageView = async () => {
       console.log("🔥 Triggering FB Server Event for: " + location.pathname);
+      console.log("📍 Full URL:", window.location.href);
+      console.log("🖥️ User Agent:", navigator.userAgent.substring(0, 50) + '...');
+      
       try {
         const response = await base44.functions.invoke('trackFacebookPageView', {
           user_agent: navigator.userAgent,
@@ -38,7 +41,11 @@ function LayoutContent({ children }) {
         });
         console.log("✅ FB Server Event Response:", response.data);
       } catch (error) {
-        console.error('❌ FB Server-Side Tracking Error:', error);
+        console.error('❌ FB Server-Side Tracking Error:', {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data
+        });
       }
     };
     
