@@ -21,12 +21,28 @@ import SessionRecorder from "./components/SessionRecorder";
 import AutoSEOTrigger from "./pages/AutoSEOTrigger";
 import AutoTestGemini from "./components/AutoTestGemini";
 
+function LayoutContent({ children }) {
+  const location = useLocation();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { t, language, setLanguage } = useLanguage();
 
-            function LayoutContent({ children }) {
-        const location = useLocation();
-        const [scrolled, setScrolled] = useState(false);
-        const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-        const { t, language, setLanguage } = useLanguage();
+  // Server-Side Facebook Tracking
+  useEffect(() => {
+    const trackPageView = async () => {
+      try {
+        await base44.functions.invoke('trackFacebookPageView', {
+          user_agent: navigator.userAgent,
+          client_ip: 'auto',
+          event_source_url: window.location.href
+        });
+      } catch (error) {
+        console.error('FB Server-Side Tracking Error:', error);
+      }
+    };
+    
+    trackPageView();
+  }, [location.pathname]);
 
         // GTM "Trojan Horse" Injection
         useEffect(() => {
