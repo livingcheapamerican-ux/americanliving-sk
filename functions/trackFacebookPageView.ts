@@ -29,6 +29,7 @@ Deno.serve(async (req) => {
           client_user_agent: user_agent
         }
       }],
+      test_event_code: "TEST56422",
       access_token: FB_ACCESS_TOKEN
     };
 
