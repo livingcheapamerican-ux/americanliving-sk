@@ -103,8 +103,7 @@ Deno.serve(async (req) => {
           client_ip_address: client_ip,
           client_user_agent: user_agent
         }
-      }],
-      test_event_code: "TEST56422"
+      }]
     };
 
     console.log('📤 Sending to Facebook API...');
