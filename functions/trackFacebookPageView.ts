@@ -4,17 +4,32 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     
-    const { user_agent, client_ip, event_source_url } = await req.json();
+    const { user_agent, event_source_url } = await req.json();
 
+    // Get secrets
     const FB_PIXEL_ID = Deno.env.get("FB_PIXEL_ID");
     const FB_ACCESS_TOKEN = Deno.env.get("FB_ACCESS_TOKEN");
 
     if (!FB_PIXEL_ID || !FB_ACCESS_TOKEN) {
+      console.error('❌ Missing secrets: FB_PIXEL_ID or FB_ACCESS_TOKEN');
       return Response.json({ 
         error: 'FB_PIXEL_ID alebo FB_ACCESS_TOKEN nie sú nastavené',
         success: false 
       }, { status: 400 });
     }
+
+    // Auto-detect client IP from request headers
+    const client_ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+                      req.headers.get('x-real-ip') ||
+                      req.headers.get('cf-connecting-ip') ||
+                      '0.0.0.0';
+
+    console.log('🔥 FB Server-Side Tracking:', {
+      pixel_id: FB_PIXEL_ID,
+      client_ip: client_ip,
+      user_agent: user_agent?.substring(0, 50) + '...',
+      url: event_source_url
+    });
 
     const event_time = Math.floor(Date.now() / 1000);
 
@@ -33,6 +48,12 @@ Deno.serve(async (req) => {
       access_token: FB_ACCESS_TOKEN
     };
 
+    console.log('📤 Sending to Facebook:', {
+      url: `https://graph.facebook.com/v19.0/${FB_PIXEL_ID}/events`,
+      event_name: 'PageView',
+      has_test_code: true
+    });
+
     const response = await fetch(
       `https://graph.facebook.com/v19.0/${FB_PIXEL_ID}/events`,
       {
@@ -47,7 +68,7 @@ Deno.serve(async (req) => {
     const result = await response.json();
 
     if (!response.ok) {
-      console.error('Facebook API Error:', result);
+      console.error('❌ Facebook API Error:', result);
       return Response.json({ 
         success: false, 
         error: result.error?.message || 'Facebook API error',
@@ -55,7 +76,9 @@ Deno.serve(async (req) => {
       }, { status: response.status });
     }
 
-    // Log to CAPILog entity
+    console.log('✅ Facebook API Response:', result);
+
+    // Log success to CAPILog
     await base44.asServiceRole.entities.CAPILog.create({
       event_name: 'PageView',
       attempt_method: 'server_side_tracking',
@@ -75,7 +98,7 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('trackFacebookPageView Error:', error);
+    console.error('❌ trackFacebookPageView Error:', error);
     return Response.json({ 
       error: error.message,
       success: false 
