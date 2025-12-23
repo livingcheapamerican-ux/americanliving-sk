@@ -235,16 +235,19 @@ Konzola (F12) má viac detailov.`,
   const testAPI = async () => {
     setTestingAPI(true);
     try {
-      const response = await base44.functions.invoke('testGeminiConnection');
+      const response = await base44.functions.invoke('testAIMarketingAPI');
+      console.log('Test response:', response.data);
       setApiStatus(response.data);
       if (response.data.success) {
-        toast.success('✅ Gemini API funguje!');
+        toast.success('✅ API funguje! Odpoveď: ' + response.data.test_response);
       } else {
-        toast.error('❌ API problém: ' + response.data.error);
+        toast.error('❌ API zlyhalo: ' + (response.data.error || 'Neznáma chyba'));
+        console.error('API Error details:', response.data);
       }
     } catch (error) {
+      console.error('Test error:', error);
       setApiStatus({ success: false, error: error.message });
-      toast.error('Chyba pri testovaní API');
+      toast.error('Chyba: ' + error.message);
     } finally {
       setTestingAPI(false);
     }
