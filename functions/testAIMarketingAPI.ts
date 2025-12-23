@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
     const testPrompt = "Ahoj, funguje AI?";
     
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
       success: true,
       message: '✅ API funguje perfektne!',
       test_response: aiResponse,
-      model: 'gemini-1.5-pro'
+      model: 'gemini-2.0-flash'
     });
 
   } catch (error) {
