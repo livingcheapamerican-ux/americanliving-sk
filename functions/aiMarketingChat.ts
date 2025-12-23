@@ -576,7 +576,7 @@ Pre **STRATÉGIE** musíš zahrnúť:
 🚀 TERAZ ODPOVEDZ NA UŽÍVATEĽOVU OTÁZKU!`;
 
     // 4. VOLANIE GEMINI 1.5 PRO (Stabilný production model)
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=${API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${API_KEY}`;
 
     const startTime = Date.now();
     const googleResponse = await fetch(url, {
