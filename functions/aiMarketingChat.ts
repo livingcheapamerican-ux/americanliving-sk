@@ -575,8 +575,8 @@ Pre **STRATÉGIE** musíš zahrnúť:
 
 🚀 TERAZ ODPOVEDZ NA UŽÍVATEĽOVU OTÁZKU!`;
 
-    // 4. VOLANIE GEMINI 2.0 (Pôvodné funkčné nastavenie)
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-thinking-exp:generateContent?key=${API_KEY}`;
+    // 4. VOLANIE GEMINI PRO (Overený funkčný model)
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
 
     const startTime = Date.now();
     const googleResponse = await fetch(url, {
@@ -639,7 +639,7 @@ Pre **STRATÉGIE** musíš zahrnúť:
     // Vrátime odpoveď
     return Response.json({
         ...aiContent,
-        model_used: 'gemini-2.0-flash-thinking-exp',
+        model_used: 'gemini-pro',
         api_call_duration_ms: apiCallDuration,
         estimated_cost_eur: estimatedCost.toFixed(6),
         timestamp: new Date().toISOString()
