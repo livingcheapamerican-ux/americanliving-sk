@@ -22,6 +22,7 @@ export default function AIMarketingChat({ onStrategyApproved }) {
   const [apiStatus, setApiStatus] = useState(null);
   const [monthlyBudget, setMonthlyBudget] = useState(1000);
   const [pendingSuggestions, setPendingSuggestions] = useState([]);
+  const [totalApiCost, setTotalApiCost] = useState(0);
   const messagesEndRef = useRef(null);
 
   // Auto-scroll
@@ -148,10 +149,17 @@ export default function AIMarketingChat({ onStrategyApproved }) {
         market_analysis: response.data.market_analysis,
         competitive_insights: response.data.competitive_insights,
         data_sources: response.data.data_sources,
+        api_cost: response.data.estimated_cost_eur,
+        api_duration: response.data.api_call_duration_ms,
         timestamp: new Date().toISOString()
       };
 
       setMessages(prev => [...prev, aiMessage]);
+
+      // Update total API cost
+      if (response.data.estimated_cost_eur) {
+        setTotalApiCost(prev => prev + parseFloat(response.data.estimated_cost_eur));
+      }
 
       // Pridaj suggestions do samostatnej sekcie
       if (response.data.suggestions && response.data.suggestions.length > 0) {
@@ -476,9 +484,16 @@ Konzola (F12) má viac detailov.`,
 
 
 
-                  <p className="text-xs text-gray-400 mt-2">
-                    {new Date(message.timestamp).toLocaleTimeString('sk-SK')}
-                  </p>
+                  <div className="flex justify-between items-center mt-2">
+                    <p className="text-xs text-gray-400">
+                      {new Date(message.timestamp).toLocaleTimeString('sk-SK')}
+                    </p>
+                    {message.api_cost && (
+                      <p className="text-xs text-green-600">
+                        💰 €{parseFloat(message.api_cost).toFixed(6)} | ⏱️ {message.api_duration}ms
+                      </p>
+                    )}
+                  </div>
                 </div>
               )}
             </motion.div>
@@ -527,9 +542,14 @@ Konzola (F12) má viac detailov.`,
             )}
           </Button>
         </div>
-        <p className="text-xs text-gray-500 mt-2">
-          🎬 Môžem vytvoriť video + hudbu + copy | 🎯 Rozpočet: {monthlyBudget}€/mesiac
-        </p>
+        <div className="flex justify-between items-center mt-2">
+          <p className="text-xs text-gray-500">
+            🎬 Môžem vytvoriť video + hudbu + copy | 🎯 Rozpočet: {monthlyBudget}€/mes.
+          </p>
+          <p className="text-xs text-green-600 font-semibold">
+            💰 API cost: €{totalApiCost.toFixed(4)}
+          </p>
+        </div>
       </div>
     </Card>
 

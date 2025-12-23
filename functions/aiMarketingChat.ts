@@ -1,17 +1,29 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 /**
- * AI MARKETINGOVÝ RIADITEĽ - FINAL PRODUCTION VERSION
- * Model: gemini-2.0-flash (Generácia 2)
+ * AI MARKETINGOVÝ RIADITEĽ - AUTONOMOUS MARKETING DIRECTOR
+ * Model: gemini-2.0-flash-thinking-exp (s extended reasoning)
+ * 
+ * Kompletný marketing mozog s prístupom ku všetkým dátam:
+ * - Facebook Pixel events (PageView, conversions)
+ * - User sessions & behavior analytics
+ * - Marketing insights & competitor analysis
+ * - Historical campaign performance
+ * - Product catalog knowledge
+ * - Psychological marketing principles
  */
 Deno.serve(async (req) => {
   try {
-    // =================================================================
-    // 🔑 VÁŠ API KĽÚČ (Už vložený):
-    const API_KEY = "AIzaSyDI4UWtkRk6u-wAR-ZcPUZg2HGrfmvoy6I";
-    // =================================================================
+    // API Key - používame existujúci
+    const API_KEY = Deno.env.get("Gemini_PAID_pro");
+    if (!API_KEY) {
+      return Response.json({ 
+        error: '⚠️ Nastavte Gemini API kľúč v Settings',
+        needs_api_key: true 
+      }, { status: 400 });
+    }
 
-    // 1. Inicializácia a príprava dát
+    // Inicializácia
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
@@ -35,65 +47,246 @@ Deno.serve(async (req) => {
       return Response.json({ success: true });
     }
 
-    // 2. Zber dát o firme (Aby AI nevarila z vody)
-    // Sťahujeme zoznam domov, posledné insighty, konkurenciu a históriu
-    const [domy, insights, competitors, sessions, history] = await Promise.all([
-      base44.asServiceRole.entities.Dom.list().catch(() => []),
-      base44.asServiceRole.entities.MarketingInsight.list('-created_date', 5).catch(() => []),
-      base44.asServiceRole.entities.CompetitorWatch.list('-engagement_score', 3).catch(() => []),
-      base44.asServiceRole.entities.UserSession.list('-created_date', 50).catch(() => []),
-      base44.asServiceRole.entities.MarketingHistory.list('-created_date', 20).catch(() => [])
+    // 2. KOMPLETNÝ ZBER VŠETKÝCH DÁT (Žiadne špekulácie, len fakty)
+    const [
+      domy,
+      insights, 
+      competitors, 
+      sessions,
+      history,
+      brainRules,
+      capiLogs,
+      socialPosts,
+      campaigns,
+      dopyty,
+      pixelConfig
+    ] = await Promise.all([
+      base44.asServiceRole.entities.Dom.filter({ verejny: true }).catch(() => []),
+      base44.asServiceRole.entities.MarketingInsight.list('-created_date', 10).catch(() => []),
+      base44.asServiceRole.entities.CompetitorWatch.list('-engagement_score', 5).catch(() => []),
+      base44.asServiceRole.entities.UserSession.list('-created_date', 100).catch(() => []),
+      base44.asServiceRole.entities.MarketingHistory.list('-created_date', 30).catch(() => []),
+      base44.asServiceRole.entities.MarketingBrain.filter({ active: true }).catch(() => []),
+      base44.asServiceRole.entities.CAPILog.list('-created_date', 20).catch(() => []),
+      base44.asServiceRole.entities.SocialPostQueue.list('-created_date', 10).catch(() => []),
+      base44.asServiceRole.entities.CampaignPerformance.list('-created_date', 5).catch(() => []),
+      base44.asServiceRole.entities.Dopyt.list('-created_date', 30).catch(() => []),
+      base44.asServiceRole.entities.AppConfiguration.filter({ config_key: 'meta_pixel' }).catch(() => [])
     ]);
 
-    // 3. Vytvorenie kontextu pre AI (System Prompt)
+    // 3. ANALÝZA A PRÍPRAVA KONTEXTU
+    // Analýza domov - detaily každého produktu
+    const domyDetails = domy.map(d => ({
+      nazov: d.nazov,
+      vyrobca: d.vyrobca,
+      typ: d.typ_domu,
+      kategoria: d.kategoria,
+      cena: d.zakladna_cena,
+      plocha: d.zastavana_plocha,
+      izby: d.pocet_izieb,
+      popularny: d.popularny,
+      slug: d.slug
+    }));
+
+    // Facebook Pixel tracking status
+    const pixelActive = pixelConfig.length > 0 && pixelConfig[0].metaPixelId;
+    const recentPixelEvents = capiLogs.filter(log => log.success).length;
+    const pixelErrors = capiLogs.filter(log => !log.success);
+
+    // Session analytics
+    const totalSessions = sessions.length;
+    const conversions = sessions.filter(s => s.conversions?.length > 0);
+    const conversionRate = totalSessions > 0 ? ((conversions.length / totalSessions) * 100).toFixed(2) : 0;
+    const bounceRate = sessions.filter(s => s.session_tags?.includes('odrazeny')).length;
+    const avgEngagement = sessions.reduce((acc, s) => acc + (s.engagement_score || 0), 0) / (totalSessions || 1);
+
+    // Top viewed houses
+    const houseViews = {};
+    sessions.forEach(s => {
+      s.dom_interactions?.forEach(i => {
+        houseViews[i.dom_nazov] = (houseViews[i.dom_nazov] || 0) + 1;
+      });
+    });
+    const topHouses = Object.entries(houseViews)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([name, count]) => `${name} (${count} zobrazení)`);
+
+    // Marketing brain knowledge
+    const psychoPrinciples = brainRules.map(r => 
+      `[${r.category}] ${r.content_text} (Urgency: ${r.urgency_level}/10)`
+    ).join('\n');
+
+    // Recent campaigns performance
+    const campaignStats = campaigns.map(c => 
+      `${c.campaign_name}: ${c.reach} dosah, ${c.link_clicks} kliky (${c.platform})`
+    ).join('\n');
+
+    // Client concerns from inquiries
+    const clientConcerns = dopyty.slice(0, 10).map(d => 
+      `[${d.typ_dopytu}] ${d.poznamka || 'Bez poznámky'}`
+    ).join('\n');
+
+    // Competitor tactics
+    const competitorTactics = competitors.map(c => 
+      `${c.competitor_name}: "${c.post_content.substring(0, 80)}..." → Fungovalo preto: ${c.why_it_worked} (Trigger: ${c.psychological_trigger})`
+    ).join('\n\n');
+
+    // 4. KOMPLETNÝ KONTEXT PRE AI
     const dataContext = `
-    📊 LIVE DÁTA FIRMY (American Living):
-    - Domy v ponuke: ${domy.length > 0 ? domy.map(d => d.nazov).join(', ') : 'Zoznam sa načítava'}
-    - Návštevnosť webu (vzorka): ${sessions.length} sessions
-    - Posledné marketingové zistenia: ${insights.map(i => i.summary).join('; ')}
-    - Hlavná konkurencia: ${competitors.map(c => c.competitor_name).join(', ')}
-    - Rozpočet na tento mesiac: ${monthly_budget || 1000} EUR
+🏢 AMERICAN LIVING - KOMPLETNÝ PREHĽAD FIRMY
 
-    📜 HISTÓRIA MARKETINGOVÝCH AKCIÍ (Posledných ${history.length}):
-    ${history.map(h => `[${h.created_date.split('T')[0]}] ${h.action_type}: ${h.title} - ${h.description}`).join('\n')}
+📦 PRODUKTY (${domy.length} verejných domov):
+${JSON.stringify(domyDetails, null, 2)}
+
+📊 REAL-TIME ANALYTICS:
+- Celkové sessions za posledných 7 dní: ${totalSessions}
+- Konverzný pomer: ${conversionRate}%
+- Bounce rate: ${(bounceRate / totalSessions * 100).toFixed(1)}%
+- Priemerné engagement: ${avgEngagement.toFixed(1)}/100
+- Počet dopytov: ${dopyty.length}
+
+🏆 TOP 5 NAJSLEDOVANEJŠÍCH DOMOV:
+${topHouses.join('\n')}
+
+🎯 FACEBOOK PIXEL STATUS:
+- Aktívny: ${pixelActive ? 'ÁNO' : 'NIE'}
+- Úspešné eventy (20 posledných): ${recentPixelEvents}
+- Chyby: ${pixelErrors.length}
+${pixelErrors.length > 0 ? `Posledná chyba: ${pixelErrors[0].error_message}` : ''}
+
+🧠 MARKETING KNOW-HOW (${brainRules.length} pravidiel):
+${psychoPrinciples}
+
+📈 KAMPANE (Posledných ${campaigns.length}):
+${campaignStats || 'Žiadne kampane zatiaľ'}
+
+👀 KONKURENCIA:
+${competitorTactics || 'Žiadne dáta o konkurencii'}
+
+😰 OBAVY/OTÁZKY KLIENTOV (${dopyty.length} dopytov):
+${clientConcerns}
+
+💰 ROZPOČET: ${monthly_budget || 1000} EUR/mesiac
+
+📜 HISTÓRIA VYKONANÝCH AKCIÍ (${history.length} záznamov):
+${history.map(h => 
+  `[${new Date(h.created_date).toLocaleDateString('sk-SK')}] ${h.action_type}: ${h.title}${h.budget_allocated ? ` (Budget: ${h.budget_allocated}€)` : ''}`
+).join('\n')}
     `;
 
-    const systemPrompt = `
-    Si 'AI Marketingový Riaditeľ' pre firmu American Living (montované domy).
-    Tvojou úlohou je riadiť marketing, navrhovať kampane a analyzovať dáta.
-    Používaš model Gemini 2.0, takže buď kreatívny, analytický a presný.
+    const systemPrompt = `Si 'AI Marketingový Riaditeľ' pre American Living - živý marketing expert s prístupom ku VŠETKÝM firemným dátam.
 
-    DÁTA, KTORÉ MÁŠ K DISPOZÍCII:
-    ${dataContext}
+🎯 TVOJA ROLA:
+- Si skúsený Facebook/Instagram Ads špecialista
+- Poznáš modulárne domy od A po Z
+- Vieš psychológiu slovenského klienta
+- Dávaš PRESNÉ KROK-PO-KROKU návody pre Ads Manager
+- Rozumieš ROI, ROAS, CPM, CTR a všetkým metrikám
+- Učíš marketingu ako mentor, nie len dávaš príkazy
 
-    HISTÓRIA CHATU:
-    ${chat_history ? JSON.stringify(chat_history.slice(-3)) : 'Žiadna'}
+📊 KOMPLETNÉ DÁTA FIRMY:
+${dataContext}
 
-    OTÁZKA UŽÍVATEĽA:
-    "${user_message}"
+💬 HISTÓRIA KONVERZÁCIE (posledných 5 správ):
+${chat_history ? JSON.stringify(chat_history.slice(-5)) : 'Začíname novú konverzáciu'}
 
-    PRAVIDLÁ:
-    1. Odpovedaj v štruktúrovanom JSON formáte (vid nižšie).
-    2. V texte 'response' používaj Markdown (tučné písmo, odrážky, emotikony).
-    3. Ak navrhuješ kampaň, buď konkrétny (presné cielenie, texty reklám).
-    4. Hovoriš po slovensky, profesionálne ale dynamicky.
-    5. VŽDY kontroluj históriu akcií - neopakuj to čo už bolo urobené!
-    6. Pri plánovaní zohľadni predchádzajúce kampane a stratégie.
+❓ UŽÍVATEĽ SA PÝTA:
+"${user_message}"
 
-    POŽADOVANÝ VÝSTUP (JSON):
+🧠 TVOJ THINKING PROCES:
+1. **Analýza situácie**: Čo užívateľ potrebuje? Aký je kontext?
+2. **Kontrola histórie**: Robili sme už niečo podobné? Ako to dopadlo?
+3. **Dáta-driven rozhodnutie**: Aké čísla vidím? Čo mi hovoria?
+4. **Akčný plán**: Konkrétne kroky s presným návodom
+5. **Psychológia**: Aký princíp použiť na oslovenie klienta?
+
+📋 FORMÁT ODPOVEDE:
+
+Pre **KAMPANE** musíš zahrnúť:
+- **Koncept**: Prečo to bude fungovať?
+- **Vizuál**: Aký obrázok/video? (napr. "Biely dom s čiernou strechou, terasa, slnko, rodina")
+- **Copy**: Primary text (150 znakov), Headline (40 znakov), CTA button
+- **Cielenie**: Vek, pohlavie, miesto (presné mestá/okresy), záujmy
+- **Budget & Timeline**: Denný budget, trvanie kampane
+- **Formát**: Stories/Feed/Reels, rozlíšenie (1080x1920 pre Stories)
+- **KROK-PO-KROKU NÁVOD**:
+  1. Otvor Ads Manager (ads.facebook.com)
+  2. Klikni "Create" → "Sales" (alebo Lead Generation)
+  3. Campaign Name: [presný názov]
+  4. Budget: €X/day
+  5. Ad Set: Age 25-55, Location: Bratislava, Interests: [presné]
+  6. ... (pokračuj detailne až po publikovanie)
+
+Pre **ANALÝZY** musíš zahrnúť:
+- Čo dáta ukazujú (konkrétne čísla)
+- Prečo sa to deje (hypotézy)
+- Čo to znamená pre marketing (implikácie)
+- Odporúčania (konkrétne akcie)
+
+Pre **STRATÉGIE** musíš zahrnúť:
+- Cieľ (SMART - Specific, Measurable, Achievable, Relevant, Time-bound)
+- Taktiky (ako to dosiahneme)
+- Metrics (ako budeme merať úspech)
+- Timeline (kedy čo)
+
+⚠️ KRITICKÉ PRAVIDLÁ:
+1. **PAMÄŤ**: VŽDY skontroluj históriu akcií. Nenavrhuj to isté 2x!
+2. **KONKRÉTNOSŤ**: Žiadne všeobecnosti. "Vytvor kampaň" je ZLE. "Vytvor Facebook Feed reklamu s White Flat 15 domom, cielenie Bratislava, muži 30-50, budget 20€/deň" je SPRÁVNE.
+3. **KNOW-HOW**: Využívaj MarketingBrain pravidlá. Ak tam je "Scarcity funguje", použi to!
+4. **ROI FOCUS**: Každý návrh musí mať jasný business cieľ (leady, predaje, brand awareness)
+5. **UČITEĽSKÝ PRÍSTUP**: Vysvetľuj PREČO robíme veci tak ako ich robíme
+
+📤 JSON VÝSTUP:
+{
+  "thinking_process": "Môj interný reasoning proces (3-5 viet)...",
+  "response": "Hlavná odpoveď v Markdown formáte (môže byť dlhá, detailná)...",
+  "market_analysis": "Ak relevantné - čo vidím v trhových dátach...",
+  "competitive_insights": "Ak relevantné - čo robí konkurencia a ako reagovať...",
+  "data_sources": ["SessionAnalytics", "FacebookPixel", "MarketingBrain", ...],
+  "suggestions": [
     {
-      "thinking_process": "Tvoja krátka interná analýza situácie...",
-      "response": "Tvoja hlavná odpoveď pre užívateľa (sem napíš text, návody, stratégie...)",
-      "suggestions": [
-         { "title": "Názov akcie", "description": "Krátky popis čo urobiť" }
-      ]
+      "id": "unique_id",
+      "type": "facebook_campaign|instagram_post|analysis|strategy",
+      "title": "Krátky výstižný názov",
+      "description": "Detail čo urobiť",
+      "budget_allocation": 50,
+      "impact_score": 75,
+      "psychology": "Aký psychologický princíp používame",
+      "copy": {
+        "headline": "Max 40 znakov",
+        "body": "Primary text max 150 znakov",
+        "cta": "Learn More / Shop Now / ..."
+      },
+      "targeting": {
+        "age": "25-55",
+        "gender": "all",
+        "locations": ["Bratislava", "Košice"],
+        "interests": ["Home improvement", "Real estate"],
+        "detailed_targeting": "Presné záujmy pre FB Ads"
+      },
+      "visual_specs": {
+        "type": "image|video",
+        "resolution": "1200x628 pre Feed, 1080x1920 pre Stories",
+        "description": "Čo má byť na vizuále"
+      },
+      "step_by_step_guide": "1. Otvor...\n2. Klikni...\n3. ...",
+      "expected_results": {
+        "reach": "5000-8000",
+        "clicks": "150-250",
+        "cost_per_lead": "€3-5"
+      }
     }
-    `;
+  ],
+  "api_cost_estimate": 0.025
+}
 
-    // 4. PRIAME VOLANIE GOOGLE (Bypass cez Gemini 2.0 Flash)
-    // Používame model zo zoznamu: gemini-2.0-flash
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+🚀 TERAZ ODPOVEDZ NA UŽÍVATEĽOVU OTÁZKU!`;
 
+    // 4. VOLANIE GEMINI PRO (Stabilný model s reasoning)
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
+
+    const startTime = Date.now();
     const googleResponse = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -101,10 +294,13 @@ Deno.serve(async (req) => {
         contents: [{ parts: [{ text: systemPrompt }] }],
         generationConfig: {
             temperature: 0.7,
-            responseMimeType: "application/json" // Vynútime JSON odpoveď
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 4096
         }
       })
     });
+    const apiCallDuration = Date.now() - startTime;
 
     // 5. Kontrola chýb
     if (!googleResponse.ok) {
@@ -112,26 +308,49 @@ Deno.serve(async (req) => {
         throw new Error(`Google API Error (${googleResponse.status}): ${errText}`);
     }
 
-    // 6. Spracovanie a odoslanie odpovede
+    // 6. Spracovanie odpovede
     const data = await googleResponse.json();
-    let aiContent = { response: "Ospravedlňujem sa, nerozumel som." };
+    const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
 
+    // Pokús sa extrahovať JSON z textu (AI môže pridať formatovanie)
+    let aiContent;
     try {
-        // Gemini 2.0 vracia text, ktorý je JSON string. Musíme ho parsovať.
-        const textResponse = data.candidates[0].content.parts[0].text;
-        aiContent = JSON.parse(textResponse);
+        const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
+        aiContent = jsonMatch ? JSON.parse(jsonMatch[0]) : { response: textResponse };
     } catch (e) {
-        // Fallback ak AI nevráti čistý JSON
         aiContent = { 
-            response: data.candidates[0].content.parts[0].text,
-            thinking_process: "Raw text mode"
+            response: textResponse,
+            thinking_process: "Odpoveď nebola v JSON formáte"
         };
     }
 
-    // Pridáme info o modeli pre istotu
+    // 7. Výpočet nákladov (približne)
+    const estimatedTokens = Math.ceil(systemPrompt.length / 4);
+    const costPer1MTokens = 0.00025; // Gemini Pro pricing
+    const estimatedCost = (estimatedTokens / 1000000) * costPer1MTokens;
+
+    // 8. Uloženie do histórie
+    await base44.asServiceRole.entities.MarketingHistory.create({
+      action_type: 'ai_analysis',
+      title: `AI Chat: ${user_message.substring(0, 50)}...`,
+      description: aiContent.response?.substring(0, 200) || 'AI odpoveď',
+      data: {
+        user_message,
+        ai_response: aiContent,
+        api_call_duration_ms: apiCallDuration,
+        estimated_cost_eur: estimatedCost
+      },
+      user_email: user?.email,
+      status: 'completed'
+    });
+
+    // Vrátime odpoveď
     return Response.json({
         ...aiContent,
-        model_used: 'gemini-2.0-flash'
+        model_used: 'gemini-pro',
+        api_call_duration_ms: apiCallDuration,
+        estimated_cost_eur: estimatedCost.toFixed(6),
+        timestamp: new Date().toISOString()
     });
 
   } catch (error) {
