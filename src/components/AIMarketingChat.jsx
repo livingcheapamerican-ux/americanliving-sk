@@ -536,7 +536,7 @@ Konzola (F12) má viac detailov.`,
                 sendMessage();
               }
             }}
-            placeholder="Napríklad: 'Vytvor video kampaň na Washington s vlastnou hudbou' alebo 'Analyzuj konkurenciu a navrhni protistratégiu'"
+            placeholder="Napríklad: 'Vytvor lead generation kampaň na White Flat 15' alebo 'Analyzuj hot leads a navrhni personalizované kroky' alebo 'Optimalizuj SEO pre dom Washington'"
             rows={3}
             disabled={isThinking}
           />
@@ -592,16 +592,30 @@ Konzola (F12) má viac detailov.`,
             animate={{ opacity: 1, x: 0 }}
             className={`p-3 rounded-lg border-2 shadow-md ${
               suggestion.type === 'price_strategy' 
-                ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-400' 
+                ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-400'
+              : suggestion.type === 'lead_gen_campaign'
+                ? 'bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-400'
+              : suggestion.type === 'behavioral_insight'
+                ? 'bg-gradient-to-br from-purple-50 to-pink-50 border-purple-400'
+              : suggestion.type === 'seo_optimization'
+                ? 'bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-400'
                 : 'bg-white border-blue-300'
             }`}
           >
             <div className="flex items-start justify-between gap-2 mb-2">
               <div className="flex flex-wrap gap-1">
                 <Badge className={`${
-                  suggestion.type === 'price_strategy' ? 'bg-green-600' : 'bg-blue-600'
+                  suggestion.type === 'price_strategy' ? 'bg-green-600' 
+                  : suggestion.type === 'lead_gen_campaign' ? 'bg-blue-600'
+                  : suggestion.type === 'behavioral_insight' ? 'bg-purple-600'
+                  : suggestion.type === 'seo_optimization' ? 'bg-orange-600'
+                  : 'bg-gray-600'
                 } text-white`}>
-                  {suggestion.type === 'price_strategy' ? '💰 Cenová Stratégia' : suggestion.type}
+                  {suggestion.type === 'price_strategy' ? '💰 Cenová Stratégia' 
+                  : suggestion.type === 'lead_gen_campaign' ? '🎯 Lead Generation'
+                  : suggestion.type === 'behavioral_insight' ? '👤 Behavioral Insights'
+                  : suggestion.type === 'seo_optimization' ? '🔍 SEO Optimalizácia'
+                  : suggestion.type}
                 </Badge>
                 {suggestion.budget_allocation && (
                   <Badge className="bg-emerald-600 text-white">{suggestion.budget_allocation}€</Badge>
@@ -617,7 +631,70 @@ Konzola (F12) má viac detailov.`,
               </div>
             </div>
 
-            {suggestion.type === 'price_strategy' ? (
+            {suggestion.type === 'lead_gen_campaign' ? (
+              <>
+                <h5 className="font-bold text-sm text-gray-900 mb-2">
+                  🎯 {suggestion.title}
+                </h5>
+                <div className="space-y-2 mb-3">
+                  <div className="bg-white p-2 rounded border">
+                    <p className="text-xs font-semibold">Dom: {suggestion.target_house_name}</p>
+                    <p className="text-xs">Platform: {suggestion.platform}</p>
+                  </div>
+                  <div className="bg-blue-50 p-2 rounded border border-blue-200">
+                    <p className="text-xs font-semibold">Copy:</p>
+                    <p className="text-xs mt-1">{suggestion.creative?.primary_text}</p>
+                  </div>
+                  <div className="bg-green-50 p-2 rounded border border-green-200">
+                    <p className="text-xs font-semibold">Očakávané výsledky:</p>
+                    <p className="text-xs">{suggestion.expected_results?.estimated_leads} leadov</p>
+                    <p className="text-xs">CPL: {suggestion.expected_results?.cost_per_lead}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Badge variant="outline">Budget: €{suggestion.budget?.daily}/deň</Badge>
+                    <Badge variant="outline">{suggestion.budget?.duration_days} dní</Badge>
+                  </div>
+                </div>
+              </>
+            ) : suggestion.type === 'behavioral_insight' ? (
+              <>
+                <h5 className="font-bold text-sm text-gray-900 mb-2">
+                  👤 {suggestion.title}
+                </h5>
+                <div className="space-y-2 mb-3">
+                  <div className="bg-purple-50 p-2 rounded border border-purple-200">
+                    <p className="text-xs font-semibold">Hot Leads: {suggestion.hot_leads_count}</p>
+                  </div>
+                  {suggestion.recommendations?.map((rec, idx) => (
+                    <div key={idx} className="bg-white p-2 rounded border">
+                      <p className="text-xs font-semibold">{rec.segment}</p>
+                      <p className="text-xs text-gray-600">{rec.action}</p>
+                      <p className="text-xs text-green-600">Očakávaná konverzia: {rec.expected_conversion}</p>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : suggestion.type === 'seo_optimization' ? (
+              <>
+                <h5 className="font-bold text-sm text-gray-900 mb-2">
+                  🔍 {suggestion.title}
+                </h5>
+                <div className="space-y-2 mb-3">
+                  <div className="bg-orange-50 p-2 rounded border border-orange-200">
+                    <p className="text-xs">Aktuálne: {suggestion.current_ranking}</p>
+                    <p className="text-xs font-semibold text-green-600">Cieľ: {suggestion.target_ranking}</p>
+                  </div>
+                  <div className="bg-white p-2 rounded border">
+                    <p className="text-xs font-semibold">Primary Keyword:</p>
+                    <p className="text-xs">{suggestion.keywords?.primary}</p>
+                  </div>
+                  <div className="bg-yellow-50 p-2 rounded border border-yellow-200">
+                    <p className="text-xs font-semibold">Očakávaný dopad:</p>
+                    <p className="text-xs">{suggestion.expected_impact}</p>
+                  </div>
+                </div>
+              </>
+            ) : suggestion.type === 'price_strategy' ? (
               <>
                 <h5 className="font-bold text-sm text-gray-900 mb-2">
                   💰 {suggestion.dom_nazov}
