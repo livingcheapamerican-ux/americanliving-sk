@@ -17,7 +17,6 @@ export default function AIMarketingChat({ onStrategyApproved }) {
   const [isThinking, setIsThinking] = useState(false);
   const [currentActivity, setCurrentActivity] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
-  const [apiKey, setApiKey] = useState("");
   const [testingAPI, setTestingAPI] = useState(false);
   const [apiStatus, setApiStatus] = useState(null);
   const [monthlyBudget, setMonthlyBudget] = useState(1000);
@@ -253,25 +252,7 @@ Konzola (F12) má viac detailov.`,
     }
   };
 
-  const saveAPI = async () => {
-    if (!apiKey.trim()) {
-      toast.error('Zadajte API kľúč');
-      return;
-    }
-    
-    try {
-      const response = await base44.functions.invoke('saveGeminiApiKey', { api_key: apiKey });
-      if (response.data.success) {
-        toast.success('✅ API kľúč validovaný a uložený!');
-        setApiKey("");
-        setTimeout(() => testAPI(), 1000);
-      } else {
-        toast.error(response.data.error || 'Chyba pri validácii');
-      }
-    } catch (error) {
-      toast.error('Chyba: ' + error.message);
-    }
-  };
+
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -301,71 +282,51 @@ Konzola (F12) má viac detailov.`,
                 </DialogTitle>
               </DialogHeader>
               <div className="space-y-6">
-                {/* API Key */}
+                {/* API Status */}
                 <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-300">
                   <CardContent className="p-6">
                     <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
                       <Key className="w-5 h-5 text-indigo-600" />
-                      🔑 Google AI Studio API Key
+                      🔑 Google Gemini API Status
                     </h3>
-                    <p className="text-xs text-gray-600 mb-2">
-                      <strong>Krok 1:</strong> Choď na <a href="https://aistudio.google.com/app/apikey" target="_blank" className="text-indigo-600 underline font-semibold">aistudio.google.com/app/apikey</a>
-                    </p>
-                    <p className="text-xs text-gray-600 mb-2">
-                      <strong>Krok 2:</strong> Klikni "Create API Key" → Vyber existujúci projekt alebo vytvor nový
-                    </p>
-                    <p className="text-xs text-gray-600 mb-4">
-                      <strong>Krok 3:</strong> Skopíruj kľúč (začína "AIzaSy...") a vlož sem
-                    </p>
-                    <div className="space-y-3">
-                      <div>
-                        <Label>API Key</Label>
-                        <Input
-                          type="password"
-                          value={apiKey}
-                          onChange={(e) => setApiKey(e.target.value)}
-                          placeholder="AIzaSy..."
-                          className="font-mono"
-                        />
-                      </div>
-                      <div className="flex gap-2">
-                        <Button onClick={saveAPI} className="flex-1 bg-indigo-600 hover:bg-indigo-700">
-                          <CheckCircle className="w-4 h-4 mr-2" />
-                          Uložiť kľúč
-                        </Button>
-                        <Button onClick={testAPI} disabled={testingAPI} className="flex-1 bg-purple-600 hover:bg-purple-700">
-                          {testingAPI ? (
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          ) : (
-                            <Zap className="w-4 h-4 mr-2" />
-                          )}
-                          Test API
-                        </Button>
-                      </div>
-                      {apiStatus && (
-                        <div className={`p-3 rounded ${apiStatus.success ? 'bg-green-100' : 'bg-red-100'}`}>
-                          <p className={`text-xs ${apiStatus.success ? 'text-green-900' : 'text-red-900'}`}>
-                            {apiStatus.success ? (
-                              <>
-                                <strong>✅ Pripojenie funguje!</strong><br />
-                                Model: gemini-pro<br />
-                                Response: {apiStatus.test_response}
-                              </>
-                            ) : (
-                              <>
-                                <strong>❌ Chyba pripojenia</strong><br />
-                                {apiStatus.error}
-                              </>
-                            )}
-                          </p>
-                        </div>
+
+                    <div className="bg-green-50 border border-green-300 p-4 rounded-lg mb-4">
+                      <p className="text-sm text-green-900 font-semibold mb-1">✅ API kľúč je nastavený</p>
+                      <p className="text-xs text-green-700">Secret "Gemini_PAID_pro" je nakonfigurovaný v Dashboard → Settings → Environment Variables</p>
+                    </div>
+
+                    <Button onClick={testAPI} disabled={testingAPI} className="w-full bg-purple-600 hover:bg-purple-700">
+                      {testingAPI ? (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      ) : (
+                        <Zap className="w-4 h-4 mr-2" />
                       )}
-                      <div className="bg-blue-50 p-3 rounded border border-blue-200 mt-3">
-                        <p className="text-xs text-blue-900">
-                          <strong>ℹ️ Po uložení:</strong> Prejdi do Dashboard → Settings → Environment Variables a over, že "Gemini_PAID_pro" je nastavený. Potom klikni "Test API" pre overenie.
+                      Test API Pripojenie
+                    </Button>
+
+                    {apiStatus && (
+                      <div className={`p-3 rounded mt-3 ${apiStatus.success ? 'bg-green-100' : 'bg-red-100'}`}>
+                        <p className={`text-xs ${apiStatus.success ? 'text-green-900' : 'text-red-900'}`}>
+                          {apiStatus.success ? (
+                            <>
+                              <strong>✅ Pripojenie funguje!</strong><br />
+                              Model: {apiStatus.model}<br />
+                              Response: {apiStatus.test_response}
+                            </>
+                          ) : (
+                            <>
+                              <strong>❌ Chyba pripojenia</strong><br />
+                              Status: {apiStatus.status}<br />
+                              Error: {apiStatus.error}<br /><br />
+                              {apiStatus.api_key_prefix && (
+                                <>API Key prefix: {apiStatus.api_key_prefix}<br /></>
+                              )}
+                              <strong>Riešenie:</strong> Over API kľúč v Dashboard → Settings → Environment Variables
+                            </>
+                          )}
                         </p>
                       </div>
-                    </div>
+                    )}
                   </CardContent>
                 </Card>
 
