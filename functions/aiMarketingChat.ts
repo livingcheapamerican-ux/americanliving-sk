@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
 
     const { user_message, chat_history, monthly_budget, action } = body;
 
-    // Handling approval action
+    // Handling approval actions
     if (action === 'approve_suggestion') {
       const { suggestion } = body;
       await base44.asServiceRole.entities.MarketingHistory.create({
@@ -44,6 +44,28 @@ Deno.serve(async (req) => {
         user_email: user?.email,
         status: 'completed'
       });
+      return Response.json({ success: true });
+    }
+
+    // Handling price strategy approval
+    if (action === 'approve_price_change') {
+      const { dom_id, new_price, reasoning } = body;
+      
+      // Update house price
+      await base44.asServiceRole.entities.Dom.update(dom_id, {
+        zakladna_cena: new_price
+      });
+      
+      // Log the change
+      await base44.asServiceRole.entities.MarketingHistory.create({
+        action_type: 'strategy_approved',
+        title: `Cenová úprava schválená`,
+        description: reasoning,
+        data: { dom_id, new_price, old_price: body.old_price },
+        user_email: user?.email,
+        status: 'completed'
+      });
+      
       return Response.json({ success: true });
     }
 
@@ -100,17 +122,25 @@ Deno.serve(async (req) => {
     const bounceRate = sessions.filter(s => s.session_tags?.includes('odrazeny')).length;
     const avgEngagement = sessions.reduce((acc, s) => acc + (s.engagement_score || 0), 0) / (totalSessions || 1);
 
-    // Top viewed houses
+    // Top viewed houses with conversion data
     const houseViews = {};
+    const houseConversions = {};
     sessions.forEach(s => {
       s.dom_interactions?.forEach(i => {
         houseViews[i.dom_nazov] = (houseViews[i.dom_nazov] || 0) + 1;
+        if (s.conversions?.length > 0) {
+          houseConversions[i.dom_nazov] = (houseConversions[i.dom_nazov] || 0) + 1;
+        }
       });
     });
     const topHouses = Object.entries(houseViews)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 5)
-      .map(([name, count]) => `${name} (${count} zobrazení)`);
+      .slice(0, 10)
+      .map(([name, count]) => {
+        const conv = houseConversions[name] || 0;
+        const convRate = ((conv / count) * 100).toFixed(1);
+        return `${name}: ${count} zobrazení, ${conv} konverzií (${convRate}%)`;
+      });
 
     // Marketing brain knowledge
     const psychoPrinciples = brainRules.map(r => 
@@ -146,8 +176,11 @@ ${JSON.stringify(domyDetails, null, 2)}
 - Priemerné engagement: ${avgEngagement.toFixed(1)}/100
 - Počet dopytov: ${dopyty.length}
 
-🏆 TOP 5 NAJSLEDOVANEJŠÍCH DOMOV:
+🏆 TOP 10 NAJSLEDOVANEJŠÍCH DOMOV (s konverziami):
 ${topHouses.join('\n')}
+
+💰 CENOVÁ ANALÝZA DOMOV:
+${domyDetails.map(d => `${d.nazov}: ${d.cena}€ (${d.vyrobca}, ${d.plocha}m², ${houseViews[d.nazov] || 0} zobrazení)`).join('\n')}
 
 🎯 FACEBOOK PIXEL STATUS:
 - Aktívny: ${pixelActive ? 'ÁNO' : 'NIE'}
@@ -178,12 +211,13 @@ ${history.map(h =>
     const systemPrompt = `Si 'AI Marketingový Riaditeľ' pre American Living - živý marketing expert s prístupom ku VŠETKÝM firemným dátam.
 
 🎯 TVOJA ROLA:
-- Si skúsený Facebook/Instagram Ads špecialista
+- Si skúsený Facebook/Instagram Ads špecialista + CENOVÝ STRATÉG
 - Poznáš modulárne domy od A po Z
 - Vieš psychológiu slovenského klienta
 - Dávaš PRESNÉ KROK-PO-KROKU návody pre Ads Manager
 - Rozumieš ROI, ROAS, CPM, CTR a všetkým metrikám
 - Učíš marketingu ako mentor, nie len dávaš príkazy
+- **NOVÁ SCHOPNOSŤ**: Navrhuješ dynamické cenové stratégie na základe dopytu, sezónnosti a konkurencie
 
 📊 KOMPLETNÉ DÁTA FIRMY:
 ${dataContext}
@@ -202,6 +236,20 @@ ${chat_history ? JSON.stringify(chat_history.slice(-5)) : 'Začíname novú konv
 5. **Psychológia**: Aký princíp použiť na oslovenie klienta?
 
 📋 FORMÁT ODPOVEDE:
+
+Pre **CENOVÉ STRATÉGIE** musíš zahrnúť:
+- **Dom**: Ktorý dom
+- **Súčasná cena**: Aktuálna cena v EUR
+- **Navrhovaná cena**: Nová cena (môže byť vyššia/nižšia)
+- **Zmena**: Percentuálna zmena
+- **Zdôvodnenie**: Prečo táto zmena? (dáta-driven reasoning)
+  - Analýza dopytu (koľko zobrazení, konverzií)
+  - Sezónnosť (napr. predvianočná ponuka, leto)
+  - Konkurencia (čo robia ostatní)
+  - Psychológia (anchor pricing, scarcity)
+- **Očakávaný dopad**: Ako to ovplyvní predaje
+- **Trvanie**: Krátkodobé (týždeň) / Dlhodobé (mesiac+)
+- **Typ**: Zľava / Zvýšenie / Prémium positioning
 
 Pre **KAMPANE** musíš zahrnúť:
 - **Koncept**: Prečo to bude fungovať?
@@ -247,7 +295,7 @@ Pre **STRATÉGIE** musíš zahrnúť:
   "suggestions": [
     {
       "id": "unique_id",
-      "type": "facebook_campaign|instagram_post|analysis|strategy",
+      "type": "facebook_campaign|instagram_post|analysis|strategy|price_strategy",
       "title": "Krátky výstižný názov",
       "description": "Detail čo urobiť",
       "budget_allocation": 50,
@@ -275,6 +323,25 @@ Pre **STRATÉGIE** musíš zahrnúť:
         "reach": "5000-8000",
         "clicks": "150-250",
         "cost_per_lead": "€3-5"
+      }
+    },
+    {
+      "type": "price_strategy",
+      "dom_id": "id_domu",
+      "dom_nazov": "Názov domu",
+      "current_price": 50000,
+      "suggested_price": 47500,
+      "change_percent": -5,
+      "reasoning": "Detailné zdôvodnenie založené na dátach...",
+      "expected_impact": "Zvýšenie konverzií o 15-20%",
+      "duration": "Krátkodobé (7 dní)",
+      "strategy_type": "Zľava",
+      "data_support": {
+        "views_last_30_days": 250,
+        "conversions_last_30_days": 3,
+        "current_conversion_rate": "1.2%",
+        "competitor_prices": [48000, 52000, 45000],
+        "seasonal_factor": "Predvianočná ponuka"
       }
     }
   ],

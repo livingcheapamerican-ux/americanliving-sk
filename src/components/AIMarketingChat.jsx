@@ -200,20 +200,30 @@ Konzola (F12) má viac detailov.`,
 
   const approveSuggestion = async (suggestion) => {
     try {
-      await base44.functions.invoke('aiMarketingChat', {
-        action: 'approve_suggestion',
-        suggestion: suggestion
-      });
+      if (suggestion.type === 'price_strategy') {
+        await base44.functions.invoke('aiMarketingChat', {
+          action: 'approve_price_change',
+          dom_id: suggestion.dom_id,
+          new_price: suggestion.suggested_price,
+          old_price: suggestion.current_price,
+          reasoning: suggestion.reasoning
+        });
+        toast.success('💰 Cenová úprava schválená a aplikovaná!');
+      } else {
+        await base44.functions.invoke('aiMarketingChat', {
+          action: 'approve_suggestion',
+          suggestion: suggestion
+        });
+        toast.success('🚀 Stratégia schválená a uložená!');
+      }
 
-      toast.success('🚀 Stratégia schválená a uložená!');
-      
       setPendingSuggestions(prev => prev.filter(s => s.id !== suggestion.id));
 
       if (onStrategyApproved) {
         onStrategyApproved(suggestion);
       }
     } catch (error) {
-      toast.error('Chyba pri schvaľovaní');
+      toast.error('Chyba pri schvaľovaní: ' + error.message);
     }
   };
 
@@ -558,17 +568,21 @@ Konzola (F12) má viac detailov.`,
     <CardHeader className="border-b bg-gradient-to-r from-blue-900 to-indigo-900 text-white">
       <CardTitle className="text-lg flex items-center gap-2">
         <Lightbulb className="w-5 h-5" />
-        💡 Kampane & Stratégie
+        💡 Kampane & Cenové Stratégie
       </CardTitle>
-      <p className="text-xs text-blue-200">Čakajú na schválenie: {pendingSuggestions.length}</p>
+      <p className="text-xs text-blue-200">
+        Čaká na schválenie: {pendingSuggestions.length} 
+        {pendingSuggestions.filter(s => s.type === 'price_strategy').length > 0 && 
+          ` (${pendingSuggestions.filter(s => s.type === 'price_strategy').length} cenových)`}
+      </p>
     </CardHeader>
 
     <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
       {pendingSuggestions.length === 0 ? (
         <div className="text-center text-gray-500 mt-8">
           <Sparkles className="w-12 h-12 mx-auto mb-3 text-gray-400" />
-          <p className="text-sm">Žiadne kampane na schválenie</p>
-          <p className="text-xs mt-2">Kampane sa objavia po konverzácii s AI</p>
+          <p className="text-sm">Žiadne návrhy na schválenie</p>
+          <p className="text-xs mt-2">Kampane a cenové stratégie sa objavia po konverzácii s AI</p>
         </div>
       ) : (
         pendingSuggestions.map((suggestion, idx) => (
@@ -576,11 +590,19 @@ Konzola (F12) má viac detailov.`,
             key={idx}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="p-3 rounded-lg border-2 bg-white border-blue-300 shadow-md"
+            className={`p-3 rounded-lg border-2 shadow-md ${
+              suggestion.type === 'price_strategy' 
+                ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-400' 
+                : 'bg-white border-blue-300'
+            }`}
           >
             <div className="flex items-start justify-between gap-2 mb-2">
               <div className="flex flex-wrap gap-1">
-                <Badge className="bg-blue-600 text-white">{suggestion.type}</Badge>
+                <Badge className={`${
+                  suggestion.type === 'price_strategy' ? 'bg-green-600' : 'bg-blue-600'
+                } text-white`}>
+                  {suggestion.type === 'price_strategy' ? '💰 Cenová Stratégia' : suggestion.type}
+                </Badge>
                 {suggestion.budget_allocation && (
                   <Badge className="bg-emerald-600 text-white">{suggestion.budget_allocation}€</Badge>
                 )}
@@ -595,8 +617,47 @@ Konzola (F12) má viac detailov.`,
               </div>
             </div>
 
-            <h5 className="font-bold text-sm text-gray-900 mb-2">{suggestion.title}</h5>
-            <p className="text-xs text-gray-700 mb-2">{suggestion.description}</p>
+            {suggestion.type === 'price_strategy' ? (
+              <>
+                <h5 className="font-bold text-sm text-gray-900 mb-2">
+                  💰 {suggestion.dom_nazov}
+                </h5>
+                <div className="space-y-2 mb-3">
+                  <div className="flex justify-between items-center bg-white p-2 rounded border">
+                    <span className="text-xs font-medium">Súčasná cena:</span>
+                    <span className="text-xs font-bold">{suggestion.current_price}€</span>
+                  </div>
+                  <div className="flex justify-between items-center bg-green-100 p-2 rounded border border-green-300">
+                    <span className="text-xs font-medium">Navrhovaná cena:</span>
+                    <span className="text-xs font-bold text-green-700">
+                      {suggestion.suggested_price}€
+                      <span className={`ml-2 ${suggestion.change_percent < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        ({suggestion.change_percent > 0 ? '+' : ''}{suggestion.change_percent}%)
+                      </span>
+                    </span>
+                  </div>
+                  <div className="bg-blue-50 p-2 rounded border border-blue-200">
+                    <p className="text-xs text-blue-900"><strong>Zdôvodnenie:</strong></p>
+                    <p className="text-xs text-blue-800 mt-1">{suggestion.reasoning}</p>
+                  </div>
+                  {suggestion.expected_impact && (
+                    <div className="bg-purple-50 p-2 rounded border border-purple-200">
+                      <p className="text-xs text-purple-900"><strong>Očakávaný dopad:</strong></p>
+                      <p className="text-xs text-purple-800 mt-1">{suggestion.expected_impact}</p>
+                    </div>
+                  )}
+                  <div className="flex gap-2 text-xs">
+                    <Badge variant="outline">{suggestion.duration || 'N/A'}</Badge>
+                    <Badge variant="outline">{suggestion.strategy_type || 'N/A'}</Badge>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <h5 className="font-bold text-sm text-gray-900 mb-2">{suggestion.title}</h5>
+                <p className="text-xs text-gray-700 mb-2">{suggestion.description}</p>
+              </>
+            )}
 
             {suggestion.psychology && (
               <div className="bg-purple-50 p-2 rounded mb-2 border border-purple-200">
