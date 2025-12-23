@@ -226,9 +226,21 @@ Konzola (F12) má viac detailov.`,
     }
   };
 
-  const rejectSuggestion = (suggestionId) => {
-    setPendingSuggestions(prev => prev.filter(s => s.id !== suggestionId));
-    toast.info('Návrh zamietnutý');
+  const rejectSuggestion = async (suggestion) => {
+    try {
+      await base44.asServiceRole.entities.MarketingHistory.create({
+        action_type: 'campaign_rejected',
+        title: suggestion.title || 'Zamietnutá stratégia',
+        description: suggestion.description || JSON.stringify(suggestion).substring(0, 200),
+        data: suggestion,
+        status: 'rejected',
+        user_email: user?.email
+      });
+      setPendingSuggestions(prev => prev.filter(s => s.id !== suggestion.id));
+      toast.info('Návrh zamietnutý a uložený do histórie');
+    } catch (error) {
+      toast.error('Chyba pri zamietaní: ' + error.message);
+    }
   };
 
   const testAPI = async () => {
@@ -726,7 +738,7 @@ Konzola (F12) má viac detailov.`,
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => rejectSuggestion(suggestion.id)}
+                onClick={() => rejectSuggestion(suggestion)}
                 className="flex-1 text-xs"
               >
                 <XCircle className="w-3 h-3 mr-1" />
