@@ -214,6 +214,13 @@ export default function Marketing() {
     enabled: isAdmin
   });
 
+  // Marketing History (for campaign tracking)
+  const { data: marketingHistory = [], refetch: refetchHistory } = useQuery({
+    queryKey: ['marketing-history'],
+    queryFn: () => base44.entities.MarketingHistory.list('-created_date', 100),
+    enabled: isAdmin
+  });
+
   // Load existing drive link
   React.useEffect(() => {
     if (assets.length > 0) {
@@ -1389,6 +1396,9 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
             </Card>
           </div>
         </div>
+
+        {/* História kampaní */}
+        <CampaignHistoryTable history={marketingHistory || []} />
 
         {/* Tabuľka Marketing Insights */}
         <Card>

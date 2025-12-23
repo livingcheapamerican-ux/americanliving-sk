@@ -209,9 +209,14 @@ Konzola (F12) má viac detailov.`,
         });
         toast.success('💰 Cenová úprava schválená a aplikovaná!');
       } else {
-        await base44.functions.invoke('aiMarketingChat', {
-          action: 'approve_suggestion',
-          suggestion: suggestion
+        await base44.asServiceRole.entities.MarketingHistory.create({
+          action_type: 'campaign_approved',
+          title: suggestion.title,
+          description: suggestion.description,
+          data: suggestion,
+          budget_allocated: suggestion.budget_allocation || suggestion.budget?.total,
+          user_email: user?.email,
+          status: 'completed'
         });
         toast.success('🚀 Stratégia schválená a uložená!');
       }
