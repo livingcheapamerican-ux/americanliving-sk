@@ -652,7 +652,7 @@ Pre **STRATÉGIE** musíš zahrnúť:
     // Vrátime odpoveď
     return Response.json({
         ...aiContent,
-        model_used: 'gemini-pro',
+        model_used: 'gemini-1.5-pro',
         api_call_duration_ms: apiCallDuration,
         estimated_cost_eur: estimatedCost.toFixed(6),
         timestamp: new Date().toISOString()
