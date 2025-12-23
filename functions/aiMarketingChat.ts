@@ -597,22 +597,35 @@ Pre **STRATÉGIE** musíš zahrnúť:
     // 5. Kontrola chýb
     if (!googleResponse.ok) {
         const errText = await googleResponse.text();
-        throw new Error(`Google API Error (${googleResponse.status}): ${errText}`);
+        console.error('Gemini API Error:', errText);
+        return Response.json({
+            response: `⚠️ **Gemini API Chyba:**\n\nStatus: ${googleResponse.status}\nDetail: ${errText}\n\n**Riešenie:**\n1. Over API kľúč v Settings (⚙️)\n2. Klikni "Test API" pre diagnostiku\n3. Kontaktuj support ak problém pretrváva`,
+            success: false,
+            api_error: errText,
+            api_status: googleResponse.status
+        }, { status: 200 });
     }
 
     // 6. Spracovanie odpovede
     const data = await googleResponse.json();
     const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
 
-    // Pokús sa extrahovať JSON z textu (AI môže pridať formatovanie)
+    // Pokús sa extrahovať JSON z textu
     let aiContent;
     try {
-        const jsonMatch = textResponse.match(/\{[\s\S]*\}/);
-        aiContent = jsonMatch ? JSON.parse(jsonMatch[0]) : { response: textResponse };
+        // Odstráň markdown code blocks ak existujú
+        let cleanText = textResponse.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+        const jsonMatch = cleanText.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+            aiContent = JSON.parse(jsonMatch[0]);
+        } else {
+            aiContent = { response: textResponse };
+        }
     } catch (e) {
+        console.error('JSON Parse Error:', e);
         aiContent = { 
             response: textResponse,
-            thinking_process: "Odpoveď nebola v JSON formáte"
+            thinking_process: "Odpoveď nebola v JSON formáte, zobrazujem raw text"
         };
     }
 
