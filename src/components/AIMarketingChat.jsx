@@ -11,7 +11,7 @@ import { Brain, Send, Sparkles, CheckCircle, Loader2, MessageSquare, AlertCircle
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
-export default function AIMarketingChat({ totalApiCost = 0, onStrategyApproved }) {
+export default function AIMarketingChat({ totalApiCost = 0, onStrategyApproved, onInputRefReady }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isThinking, setIsThinking] = useState(false);
@@ -22,6 +22,13 @@ export default function AIMarketingChat({ totalApiCost = 0, onStrategyApproved }
   const [monthlyBudget, setMonthlyBudget] = useState(1000);
   const [pendingSuggestions, setPendingSuggestions] = useState([]);
   const messagesEndRef = useRef(null);
+
+  // Expose setInput to parent
+  useEffect(() => {
+    if (onInputRefReady) {
+      onInputRefReady((text) => setInput(text));
+    }
+  }, [onInputRefReady]);
 
   // Auto-scroll
   useEffect(() => {
@@ -158,7 +165,12 @@ export default function AIMarketingChat({ totalApiCost = 0, onStrategyApproved }
       if (response.data.suggestions && response.data.suggestions.length > 0) {
         setPendingSuggestions(prev => [
           ...prev,
-          ...response.data.suggestions.map(s => ({ ...s, messageId: aiMessage.id, timestamp: new Date().toISOString() }))
+          ...response.data.suggestions.map(s => ({ 
+            ...s, 
+            messageId: aiMessage.id, 
+            timestamp: new Date().toISOString(),
+            id: `${Date.now()}_${Math.random()}` 
+          }))
         ]);
       }
 

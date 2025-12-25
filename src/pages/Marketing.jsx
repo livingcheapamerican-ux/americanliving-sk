@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import AIMarketingChat from "../components/AIMarketingChat";
 import CampaignHistoryTable from "../components/marketing/CampaignHistoryTable";
+import PersonalizedRecommendations from "../components/PersonalizedRecommendations";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,6 +50,7 @@ export default function Marketing() {
   const [strategicBriefing, setStrategicBriefing] = useState(null);
   const [loadingBriefing, setLoadingBriefing] = useState(false);
   const [clientConcerns, setClientConcerns] = useState("");
+  const [chatInputRef, setChatInputRef] = useState(null);
   
   // Form states
   const [newKnowHow, setNewKnowHow] = useState({ category: "Psychológia", content_text: "", urgency_level: 5 });
@@ -1170,15 +1172,28 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
 
           {/* NOVÁ KARTA: AI Chat Partner */}
           <TabsContent value="chat">
-            <AIMarketingChat 
-              totalApiCost={totalApiCost}
-              onStrategyApproved={(strategy) => {
-                console.log('Strategy approved:', strategy);
-                refetchQueue();
-                refetchBrain();
-                refetchHistory();
-              }}
-            />
+            <div className="space-y-4">
+              <PersonalizedRecommendations 
+                history={marketingHistory}
+                onRecommendationClick={(action) => {
+                  if (chatInputRef) {
+                    chatInputRef(action.replace('Spýtaj sa AI: ', '').replace(/"/g, ''));
+                    toast.info('Odporúčanie načítané do chatu');
+                  }
+                }}
+              />
+              
+              <AIMarketingChat 
+                totalApiCost={totalApiCost}
+                onInputRefReady={setChatInputRef}
+                onStrategyApproved={(strategy) => {
+                  console.log('Strategy approved:', strategy);
+                  refetchQueue();
+                  refetchBrain();
+                  refetchHistory();
+                }}
+              />
+            </div>
           </TabsContent>
 
           {/* KARTA A: Prehľad a Výkon */}

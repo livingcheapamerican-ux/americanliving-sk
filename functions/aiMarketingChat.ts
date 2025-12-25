@@ -47,6 +47,164 @@ Deno.serve(async (req) => {
       return Response.json({ success: true });
     }
 
+    // Generate complete FB/IG campaign
+    if (action === 'generate_complete_campaign') {
+      const { house_name, campaign_goal, target_budget } = body;
+
+      // Nájdi dom
+      const targetHouse = domy.find(d => d.nazov === house_name);
+      if (!targetHouse) {
+        return Response.json({ error: 'Dom nenájdený' }, { status: 404 });
+      }
+
+      // Analýza historical performance
+      const houseHistory = history.filter(h => 
+        h.data?.target_house_name === house_name || 
+        h.data?.dom_nazov === house_name
+      );
+
+      const avgPerformance = houseHistory.reduce((acc, h) => 
+        acc + (h.data?.predicted_conversion_score || h.data?.impact_score || 50), 0
+      ) / (houseHistory.length || 1);
+
+      // Behavioral insights pre tento dom
+      const houseSessions = sessions.filter(s => 
+        s.dom_interactions?.some(di => di.dom_nazov === house_name)
+      );
+
+      const avgEngagement = houseSessions.reduce((acc, s) => acc + (s.engagement_score || 0), 0) / (houseSessions.length || 1);
+      const configuratorUse = houseSessions.filter(s => s.configurator_interactions?.length > 0).length;
+
+      const campaignPrompt = `Vytvor KOMPLETNÚ Facebook/Instagram kampaň pre dom "${house_name}".
+
+    📊 HISTORICKÉ DÁTA:
+    - Priemerný performance score: ${avgPerformance.toFixed(1)}/100
+    - Engagement návštevníkov: ${avgEngagement.toFixed(1)}/100
+    - Použitie konfiguratora: ${configuratorUse}/${houseSessions.length} (${((configuratorUse/houseSessions.length)*100).toFixed(1)}%)
+    - Cena domu: ${targetHouse.zakladna_cena}€
+    - Plocha: ${targetHouse.zastavana_plocha}m²
+
+    🎯 CIEĽ KAMPANE: ${campaign_goal || 'Lead Generation'}
+    💰 BUDGET: ${target_budget || 500}€
+
+    VYTVOR:
+    {
+    "campaign_structure": {
+    "campaign_name": "...",
+    "objective": "LEAD_GENERATION|CONVERSIONS",
+    "campaign_budget_optimization": true|false
+    },
+    "ad_sets": [
+    {
+    "name": "...",
+    "daily_budget": ...,
+    "optimization_goal": "LEAD_GENERATION",
+    "targeting": {
+    "age_range": "25-55",
+    "gender": "all|male|female",
+    "locations": ["Bratislava", ...],
+    "interests": [...],
+    "detailed_targeting": "...",
+    "custom_audiences": [...] (ak existujú retargeting data)
+    },
+    "placements": ["facebook_feed", "instagram_stories", ...],
+    "schedule": {
+    "start_date": "YYYY-MM-DD",
+    "end_date": "YYYY-MM-DD"
+    }
+    }
+    ],
+    "creatives": [
+    {
+    "type": "image|video",
+    "visual_description": "Detailný popis obrázka/videa",
+    "resolution_specs": "1200x628, 1080x1920, ...",
+    "primary_text": "Max 125 znakov...",
+    "headline": "Max 40 znakov",
+    "description": "Max 30 znakov",
+    "cta_button": "LEARN_MORE|SIGN_UP|...",
+    "destination_url": "https://americanliving.sk/dom/${targetHouse.slug}"
+    }
+    ],
+    "lead_form": {
+    "name": "...",
+    "intro_message": "...",
+    "questions": [...],
+    "privacy_policy_url": "https://americanliving.sk/zasady-ochrany-osobnych-udajov",
+    "thank_you_message": "..."
+    },
+    "expected_kpis": {
+    "estimated_reach": "...",
+    "estimated_leads": "...",
+    "estimated_cpl": "€...",
+    "estimated_conversion_rate": "...%",
+    "roi_prediction": "...%"
+    },
+    "psychological_strategy": "...",
+    "testing_plan": {
+    "variants": [...],
+    "split_percentage": "50/50",
+    "success_metric": "CPL"
+    },
+    "step_by_step_setup": "1. ...\n2. ...\n..."
+    }`;
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: campaignPrompt }] }],
+            generationConfig: {
+              temperature: 0.8,
+              topK: 40,
+              topP: 0.95,
+              maxOutputTokens: 4096
+            }
+          })
+        }
+      );
+
+      if (!response.ok) {
+        return Response.json({ error: 'Gemini API Error' }, { status: 500 });
+      }
+
+      const data = await response.json();
+      const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+
+      let campaignData;
+      try {
+        const cleanText = textResponse.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+        const jsonMatch = cleanText.match(/\{[\s\S]*\}/);
+        campaignData = jsonMatch ? JSON.parse(jsonMatch[0]) : {};
+      } catch (e) {
+        return Response.json({ error: 'Failed to parse campaign data' }, { status: 500 });
+      }
+
+      // Uložiť do histórie
+      await base44.asServiceRole.entities.MarketingHistory.create({
+        action_type: 'campaign_approved',
+        title: `Kompletná kampaň: ${house_name}`,
+        description: campaignData.campaign_structure?.campaign_name || 'Auto-generated campaign',
+        data: {
+          ...campaignData,
+          type: 'complete_fb_campaign',
+          target_house_name: house_name,
+          generated_at: new Date().toISOString()
+        },
+        budget_allocated: target_budget || 500,
+        user_email: user?.email,
+        status: 'completed'
+      });
+
+      return Response.json({ 
+        success: true, 
+        campaign: campaignData,
+        message: 'Kompletná kampaň vygenerovaná a pripravená na export'
+      });
+    }
+
     // Handling price strategy approval
     if (action === 'approve_price_change') {
       const { dom_id, new_price, reasoning } = body;

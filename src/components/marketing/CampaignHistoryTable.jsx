@@ -3,10 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CheckCircle, XCircle, Eye, Clock, Filter, TrendingUp, DollarSign } from "lucide-react";
+import { CheckCircle, XCircle, Eye, Clock, Filter, TrendingUp, DollarSign, Download } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion } from "framer-motion";
 import moment from "moment";
+import CampaignExporter from "./CampaignExporter";
 
 export default function CampaignHistoryTable({ history }) {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -212,6 +213,17 @@ export default function CampaignHistoryTable({ history }) {
                 </div>
               </div>
 
+              {/* Export Section */}
+              {selectedItem.status === 'completed' && (selectedItem.data?.type === 'lead_gen_campaign' || selectedItem.data?.type === 'facebook_campaign') && (
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-300">
+                  <h4 className="font-semibold text-sm mb-3 text-blue-900 flex items-center gap-2">
+                    <Download className="w-4 h-4" />
+                    📤 Export do Ads Manager
+                  </h4>
+                  <CampaignExporter campaign={selectedItem.data} />
+                </div>
+              )}
+
               {/* Lead Gen Campaign Details */}
               {selectedItem.data?.type === 'lead_gen_campaign' && (
                 <>
@@ -273,6 +285,59 @@ export default function CampaignHistoryTable({ history }) {
                     <h4 className="font-semibold text-sm mb-2 text-purple-900">🎯 Očakávaný dopad</h4>
                     <p className="text-sm">{selectedItem.data.expected_impact}</p>
                   </div>
+                </>
+              )}
+
+              {/* Complete FB Campaign Details */}
+              {selectedItem.data?.type === 'complete_fb_campaign' && (
+                <>
+                  <div className="bg-gradient-to-r from-blue-100 to-purple-100 p-4 rounded-lg border-2 border-blue-400">
+                    <h4 className="font-semibold text-sm mb-3 text-blue-900">🎯 Štruktúra kampane</h4>
+                    <div className="space-y-2 text-sm">
+                      <p><strong>Názov:</strong> {selectedItem.data.campaign_structure?.campaign_name}</p>
+                      <p><strong>Objektív:</strong> {selectedItem.data.campaign_structure?.objective}</p>
+                      <p><strong>CBO:</strong> {selectedItem.data.campaign_structure?.campaign_budget_optimization ? 'Áno' : 'Nie'}</p>
+                    </div>
+                  </div>
+
+                  {selectedItem.data.ad_sets?.map((adSet, idx) => (
+                    <div key={idx} className="bg-cyan-50 p-4 rounded-lg border border-cyan-300">
+                      <h4 className="font-semibold text-sm mb-2 text-cyan-900">📱 Ad Set {idx + 1}: {adSet.name}</h4>
+                      <div className="space-y-2 text-xs">
+                        <p><strong>Budget:</strong> €{adSet.daily_budget}/deň</p>
+                        <p><strong>Vek:</strong> {adSet.targeting?.age_range}</p>
+                        <p><strong>Lokality:</strong> {adSet.targeting?.locations?.join(', ')}</p>
+                        <p><strong>Záujmy:</strong> {adSet.targeting?.interests?.join(', ')}</p>
+                        <p><strong>Placements:</strong> {adSet.placements?.join(', ')}</p>
+                      </div>
+                    </div>
+                  ))}
+
+                  {selectedItem.data.creatives?.map((creative, idx) => (
+                    <div key={idx} className="bg-purple-50 p-4 rounded-lg border border-purple-300">
+                      <h4 className="font-semibold text-sm mb-2 text-purple-900">🎨 Kreatíva {idx + 1}</h4>
+                      <div className="space-y-2 text-xs">
+                        <p><strong>Typ:</strong> {creative.type}</p>
+                        <p><strong>Visual:</strong> {creative.visual_description}</p>
+                        <p><strong>Rozlíšenie:</strong> {creative.resolution_specs}</p>
+                        <p><strong>Text:</strong> {creative.primary_text}</p>
+                        <p><strong>Headline:</strong> {creative.headline}</p>
+                        <p><strong>CTA:</strong> {creative.cta_button}</p>
+                      </div>
+                    </div>
+                  ))}
+
+                  {selectedItem.data.expected_kpis && (
+                    <div className="bg-green-50 p-4 rounded-lg border border-green-300">
+                      <h4 className="font-semibold text-sm mb-2 text-green-900">📊 Očakávané KPI</h4>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <p><strong>Dosah:</strong> {selectedItem.data.expected_kpis.estimated_reach}</p>
+                        <p><strong>Leady:</strong> {selectedItem.data.expected_kpis.estimated_leads}</p>
+                        <p><strong>CPL:</strong> {selectedItem.data.expected_kpis.estimated_cpl}</p>
+                        <p><strong>ROI:</strong> {selectedItem.data.expected_kpis.roi_prediction}</p>
+                      </div>
+                    </div>
+                  )}
                 </>
               )}
 
