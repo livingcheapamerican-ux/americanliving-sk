@@ -121,26 +121,38 @@ Deno.serve(async (req) => {
     let houseContext = "";
     if (foundHouse) {
       houseContext = `
-⚠️ DETEKOVANÝ DOM V SPRÁVE:
-Používateľ sa pýta pravdepodobne na: "${foundHouse.nazov}" (${foundHouse.vyrobca})
+🎯🎯🎯 AUTOMATICKY DETEKOVANÝ DOM V OTÁZKE POUŽÍVATEĽA 🎯🎯🎯
 
-ÚPLNÉ DETAILY TOHTO DOMU:
-- Názov: ${foundHouse.nazov}
-- Výrobca: ${foundHouse.vyrobca}
-- Typ: ${foundHouse.typ_domu}
-- Kategória: ${foundHouse.kategoria}
-- Základná cena: ${foundHouse.zakladna_cena}€
-- Zastavana plocha: ${foundHouse.zastavana_plocha}m²
-- Úžitková plocha: ${foundHouse.uzitkova_plocha}m²
-- Počet izieb: ${foundHouse.pocet_izieb || 'N/A'}
-- Počet modulov: ${foundHouse.pocet_modulov || 'N/A'}
-- Populárny: ${foundHouse.popularny ? 'ÁNO' : 'NIE'}
-- Popis: ${foundHouse.popis?.substring(0, 500) || 'N/A'}
-- Špecifikácia: ${foundHouse.specifikacia?.substring(0, 300) || 'N/A'}
+POUŽÍVATEĽ SA PÝTA NA DOM: "${foundHouse.nazov}"
 
-🔗 Link na detail: https://americanliving.sk/dom/${foundHouse.slug}
+✅✅✅ TENTO DOM EXISTUJE V NAŠEJ PONUKE! ✅✅✅
 
-KRITICKY DÔLEŽITÉ: Používaj PRESNE tento názov "${foundHouse.nazov}" v odpovedi!
+🏠 KOMPLETNÉ INFORMÁCIE O DOME "${foundHouse.nazov}":
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 Názov: ${foundHouse.nazov}
+🏭 Výrobca: ${foundHouse.vyrobca}
+🏗️ Typ: ${foundHouse.typ_domu}
+📂 Kategória: ${foundHouse.kategoria}
+💰 Základná cena: ${foundHouse.zakladna_cena}€
+📐 Zastavana plocha: ${foundHouse.zastavana_plocha}m²
+📏 Úžitková plocha: ${foundHouse.uzitkova_plocha}m²
+🛏️ Počet izieb: ${foundHouse.pocet_izieb || 'N/A'}
+📦 Počet modulov: ${foundHouse.pocet_modulov || 'N/A'}
+⭐ Populárny: ${foundHouse.popularny ? 'ÁNO' : 'NIE'}
+🔥 Celoro čný: ${foundHouse.celorocny ? 'ÁNO - má A0 certifikát' : 'NIE - rekreačná stavba'}
+🌡️ Energetický certifikát: ${foundHouse.energeticky_certifikat ? 'ÁNO (A0)' : 'NIE'}
+
+📝 Popis: ${foundHouse.popis?.substring(0, 500) || 'N/A'}
+⚙️ Špecifikácia: ${foundHouse.specifikacia?.substring(0, 500) || 'N/A'}
+
+🔗 Priamy link: https://americanliving.sk/dom/${foundHouse.slug}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚨🚨🚨 ABSOLÚTNE KRITICKÉ PRAVIDLO 🚨🚨🚨
+NIKDY nehovor "nemáme v ponuke" alebo "neviem o takom dome"!
+TENTO DOM "${foundHouse.nazov}" JE 100% V NAŠEJ PONUKE!
+Používaj ŤENTO DOM a informácie VÝLUČNE Z TOHTO BLOKU!
+🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨
       `;
     }
 
@@ -201,11 +213,13 @@ ${houseContext}
    📋 KOMPLETNÝ ZOZNAM VŠETKÝCH ${domyKnowledge.length} DOSTUPNÝCH DOMOV:
    ${domyKnowledge.map(d => `• ${d.nazov} (${d.vyrobca}, ${d.cena}€, ${d.plocha}m²)`).join('\n   ')}
    
-   ⚠️ KRITICKY DÔLEŽITÉ:
-   - Lyon, Washington, Madison - SÚ V PONUKE
-   - Vždy vyhľadaj názov v zozname vyššie
+   ⚠️ ABSOLÚTNE KRITICKÉ PRAVIDLÁ:
+   - VŠETKY domy v tomto zozname SÚ V PONUKE
+   - Lyon, Washington, Madison, White Flat, Washington, Fjord - VŠETKY SÚ V PONUKE
+   - Ak je dom DETEKOVANÝ v sekcii "AUTOMATICKY DETEKOVANÝ DOM", POUŽI TEN!
    - Pri hľadaní ignoruj diakritiku a veľké/malé písmená
-   - NIKDY nehovor "nemáme v ponuke" ak je dom v zozname!
+   - NIKDY NIKDY NIKDY nehovor "nemáme v ponuke" ak je dom v zozname alebo detekovaný!
+   - Ak vidíš sekciu "AUTOMATICKY DETEKOVANÝ DOM", odpovedaj NA ZÁKLADE TOHO DOMU!
 
 4. REALISTICKÉ CENY:
    • Vždy počítaj S ZÁKLADAMI
