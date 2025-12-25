@@ -79,6 +79,68 @@ Deno.serve(async (req) => {
       .map(d => d.poznamka || 'Otázka o dome')
       .join('\n');
 
+    // FUZZY SEARCH - Nájdi dom v správe používateľa
+    const findSimilarHouse = (query) => {
+      const normalizeText = (text) => text.toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9\s]/g, "");
+      
+      const normalizedQuery = normalizeText(query);
+      
+      // Hľadaj presný match
+      let bestMatch = domy.find(d => 
+        normalizeText(d.nazov).includes(normalizedQuery) ||
+        normalizedQuery.includes(normalizeText(d.nazov))
+      );
+      
+      // Ak nenašiel, skús similarity score
+      if (!bestMatch) {
+        const similarities = domy.map(d => {
+          const houseNameNorm = normalizeText(d.nazov);
+          const words = normalizedQuery.split(/\s+/);
+          const matchedWords = words.filter(w => houseNameNorm.includes(w) || w.includes(houseNameNorm));
+          return {
+            dom: d,
+            score: matchedWords.length / words.length
+          };
+        });
+        
+        const best = similarities.sort((a, b) => b.score - a.score)[0];
+        if (best && best.score > 0.3) {
+          bestMatch = best.dom;
+        }
+      }
+      
+      return bestMatch;
+    };
+
+    const foundHouse = findSimilarHouse(message);
+    let houseContext = "";
+    if (foundHouse) {
+      houseContext = `
+⚠️ DETEKOVANÝ DOM V SPRÁVE:
+Používateľ sa pýta pravdepodobne na: "${foundHouse.nazov}" (${foundHouse.vyrobca})
+
+ÚPLNÉ DETAILY TOHTO DOMU:
+- Názov: ${foundHouse.nazov}
+- Výrobca: ${foundHouse.vyrobca}
+- Typ: ${foundHouse.typ_domu}
+- Kategória: ${foundHouse.kategoria}
+- Základná cena: ${foundHouse.zakladna_cena}€
+- Zastavana plocha: ${foundHouse.zastavana_plocha}m²
+- Úžitková plocha: ${foundHouse.uzitkova_plocha}m²
+- Počet izieb: ${foundHouse.pocet_izieb || 'N/A'}
+- Počet modulov: ${foundHouse.pocet_modulov || 'N/A'}
+- Populárny: ${foundHouse.popularny ? 'ÁNO' : 'NIE'}
+- Popis: ${foundHouse.popis?.substring(0, 500) || 'N/A'}
+- Špecifikácia: ${foundHouse.specifikacia?.substring(0, 300) || 'N/A'}
+
+🔗 Link na detail: https://americanliving.sk/dom/${foundHouse.slug}
+
+KRITICKY DÔLEŽITÉ: Používaj PRESNE tento názov "${foundHouse.nazov}" v odpovedi!
+      `;
+    }
+
     // Systémový prompt pre AI asistenta
     const systemPrompt = `Si AI KONZULTANT pre American Living - distribútor modulárnych a montovaných domov.
 
@@ -111,6 +173,8 @@ ${brainRules.map(r => `[${r.category}] ${r.content_text}`).join('\n').substring(
 - Celkovo záujemcov: ${sessions.length}
 - Dopytov za posledných 7 dní: ${dopyty.length}
 - Marketing insights: ${insights.length} analýz
+
+${houseContext}
 
 ⚠️ KRITICKÉ PRAVIDLÁ:
 
