@@ -12,11 +12,15 @@ Deno.serve(async (req) => {
     const { message, context, history } = await req.json();
 
     // Načítaj všetky databázové entity pre knowledge base
-    const [domy, blogy, konfigTexty, dokumenty] = await Promise.all([
+    const [domy, blogy, konfigTexty, dokumenty, insights, sessions, dopyty, brainRules] = await Promise.all([
       base44.asServiceRole.entities.Dom.list(),
       base44.asServiceRole.entities.BlogPost.list(),
       base44.asServiceRole.entities.KonfiguratorText.list(),
-      base44.asServiceRole.entities.Dokument.filter({ pre_chatbota: true })
+      base44.asServiceRole.entities.Dokument.filter({ pre_chatbota: true }),
+      base44.asServiceRole.entities.MarketingInsight.list('-created_date', 5).catch(() => []),
+      base44.asServiceRole.entities.UserSession.list('-created_date', 30).catch(() => []),
+      base44.asServiceRole.entities.Dopyt.list('-created_date', 20).catch(() => []),
+      base44.asServiceRole.entities.MarketingBrain.filter({ active: true }).catch(() => [])
     ]);
 
     // Priprav kompaktné znalosti o domoch (len verejné)
@@ -59,14 +63,37 @@ Deno.serve(async (req) => {
       klucove_info: d.klúčové_informácie
     })).slice(0, 20);
 
+    // Analýza záujmu klientov
+    const topHouses = {};
+    sessions.forEach(s => {
+      s.dom_interactions?.forEach(i => {
+        topHouses[i.dom_nazov] = (topHouses[i.dom_nazov] || 0) + 1;
+      });
+    });
+    const topDomyNazvy = Object.entries(topHouses)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([nazov, count]) => `${nazov} (${count} záujemcov)`);
+
+    const castoKladeneOtazky = dopyty.slice(0, 10)
+      .map(d => d.poznamka || 'Otázka o dome')
+      .join('\n');
+
     // Systémový prompt pre AI asistenta
     const systemPrompt = `Si AI KONZULTANT pre American Living - distribútor modulárnych a montovaných domov.
 
 🎯 TVOJA ÚLOHA:
 Pomáhať zákazníkom nájsť ideálny dom, vysvetliť konfigurátor, kalkulovať hypotéku, poradiť s pozemkom a legislatívou.
+Si INTELIGENTNÝ ako Marketing Director - máš prístup ku všetkým firemným dátam.
 
 📚 DATABÁZA DOMOV (${domyKnowledge.length} modelov):
 ${JSON.stringify(domyKnowledge, null, 2)}
+
+🏆 TOP 5 NAJSLEDOVANEJŠÍCH DOMOV:
+${topDomyNazvy.join('\n')}
+
+❓ ČASTO KLADENÉ OTÁZKY KLIENTOV:
+${castoKladeneOtazky}
 
 📖 BLOGY A ČLÁNKY:
 ${JSON.stringify(blogyKnowledge.slice(0, 10), null, 2)}
@@ -76,6 +103,14 @@ ${JSON.stringify(konfigKnowledge.slice(0, 30), null, 2)}
 
 📄 KĽÚČOVÉ DOKUMENTY:
 ${JSON.stringify(dokumentyKnowledge, null, 2)}
+
+🧠 MARKETING KNOW-HOW:
+${brainRules.map(r => `[${r.category}] ${r.content_text}`).join('\n').substring(0, 1000)}
+
+📊 REAL-TIME DÁTA:
+- Celkovo záujemcov: ${sessions.length}
+- Dopytov za posledných 7 dní: ${dopyty.length}
+- Marketing insights: ${insights.length} analýz
 
 ⚠️ KRITICKÉ PRAVIDLÁ:
 
@@ -126,7 +161,7 @@ Odpovedaj v slovenčine, priateľsky, stručne, s emoji.`;
       content: msg.content
     }));
 
-    // Volaj Gemini API (rovnaký model ako Marketing Director)
+    // Volaj Gemini 2.0 Flash (rovnaký model ako Marketing Director)
     const GEMINI_API_KEY = Deno.env.get("Gemini_PAID_pro");
     if (!GEMINI_API_KEY) {
       throw new Error('Gemini API key not configured');
@@ -149,8 +184,9 @@ VÝSTUP (JSON):
   "action": "fill_form / navigate / explain"
 }`;
 
+    const startTime = Date.now();
     const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -160,11 +196,15 @@ VÝSTUP (JSON):
           }],
           generationConfig: {
             temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 2048,
             responseMimeType: "application/json"
           }
         })
       }
     );
+    const apiCallDuration = Date.now() - startTime;
 
     if (!geminiResponse.ok) {
       const errorText = await geminiResponse.text();
@@ -181,11 +221,18 @@ VÝSTUP (JSON):
       llmResponse = { response: textResponse };
     }
 
+    // Vypočítať náklady
+    const estimatedTokens = Math.ceil(fullPrompt.length / 4);
+    const costPer1MTokens = 0.00025;
+    const estimatedCost = (estimatedTokens / 1000000) * costPer1MTokens;
+
     return Response.json({
       response: llmResponse.response || "Prepáč, nerozumiem. Skús sa opýtať inak.",
       suggestion: llmResponse.suggestion || null,
       action: llmResponse.action || "explain",
-      model_used: 'gemini-pro'
+      model_used: 'gemini-2.0-flash',
+      api_call_duration_ms: apiCallDuration,
+      estimated_cost_eur: estimatedCost.toFixed(6)
     });
 
   } catch (error) {
