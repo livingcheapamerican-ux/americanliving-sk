@@ -54,9 +54,10 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
         // Ak je callback pre návrhy, použijeme ho
       }
     } catch (error) {
+      console.error('AI Asistent Error:', error);
       setMessages(prev => [...prev, { 
         role: "assistant", 
-        content: "Prepáč, nastala chyba. Skús to prosím znova." 
+        content: "😊 Prepáč, mám momentálne technické problémy. Skús to prosím o chvíľu.\n\nAk problém pretrváva, kontaktuj nás priamo na +421 905 138 124." 
       }]);
     } finally {
       setIsLoading(false);
