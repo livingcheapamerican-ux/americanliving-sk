@@ -221,6 +221,16 @@ export default function Marketing() {
     enabled: isAdmin
   });
 
+  // Vypočítať celkové API costs zo všetkých AI interakcií
+  const totalApiCost = React.useMemo(() => {
+    return marketingHistory.reduce((sum, record) => {
+      const cost = record.data?.api_call_duration_ms 
+        ? (record.data.estimated_cost_eur || 0)
+        : 0;
+      return sum + parseFloat(cost || 0);
+    }, 0);
+  }, [marketingHistory]);
+
   // Load existing drive link
   React.useEffect(() => {
     if (assets.length > 0) {
@@ -1161,10 +1171,12 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
           {/* NOVÁ KARTA: AI Chat Partner */}
           <TabsContent value="chat">
             <AIMarketingChat 
+              totalApiCost={totalApiCost}
               onStrategyApproved={(strategy) => {
                 console.log('Strategy approved:', strategy);
                 refetchQueue();
                 refetchBrain();
+                refetchHistory();
               }}
             />
           </TabsContent>

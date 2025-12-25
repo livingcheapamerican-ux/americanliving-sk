@@ -11,7 +11,7 @@ import { Brain, Send, Sparkles, CheckCircle, Loader2, MessageSquare, AlertCircle
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
-export default function AIMarketingChat({ onStrategyApproved }) {
+export default function AIMarketingChat({ totalApiCost = 0, onStrategyApproved }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isThinking, setIsThinking] = useState(false);
@@ -21,7 +21,6 @@ export default function AIMarketingChat({ onStrategyApproved }) {
   const [apiStatus, setApiStatus] = useState(null);
   const [monthlyBudget, setMonthlyBudget] = useState(1000);
   const [pendingSuggestions, setPendingSuggestions] = useState([]);
-  const [totalApiCost, setTotalApiCost] = useState(0);
   const messagesEndRef = useRef(null);
 
   // Auto-scroll
@@ -154,11 +153,6 @@ export default function AIMarketingChat({ onStrategyApproved }) {
       };
 
       setMessages(prev => [...prev, aiMessage]);
-
-      // Update total API cost
-      if (response.data.estimated_cost_eur) {
-        setTotalApiCost(prev => prev + parseFloat(response.data.estimated_cost_eur));
-      }
 
       // Pridaj suggestions do samostatnej sekcie
       if (response.data.suggestions && response.data.suggestions.length > 0) {
@@ -537,8 +531,8 @@ Konzola (F12) má viac detailov.`,
           <p className="text-xs text-gray-500">
             🎬 Môžem vytvoriť video + hudbu + copy | 🎯 Rozpočet: {monthlyBudget}€/mes.
           </p>
-          <p className="text-xs text-green-600 font-semibold">
-            💰 API cost: €{totalApiCost.toFixed(4)}
+          <p className="text-xs text-green-600 font-semibold" title="Celková cena všetkých AI interakcií (Chat, Deep Think, Kreatívne Štúdio, Analýzy)">
+            💰 Celkové API náklady: €{totalApiCost.toFixed(6)}
           </p>
         </div>
       </div>
