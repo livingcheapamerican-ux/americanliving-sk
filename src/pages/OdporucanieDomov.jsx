@@ -102,8 +102,23 @@ KRITICKÉ - UVEDENÁ CENA:
 - Každý dom má vlastný konfigurátor kde si klient môže poskladať presný dom podľa svojich požiadaviek
 - estimated_total_cost = odhadni realistickú cenu s bežnými doplnkami
 
-POVINNÉ: Odporuč domy z RÔZNYCH výrobcov (Prosto House, Ticab house, Domki z Gór) - vyraď JAK Modules!
-Odporuč len domy ktoré SÚ v databáze!`;
+POVINNÉ PRAVIDLÁ:
+- Odporuč domy z RÔZNYCH výrobcov (Prosto House, Ticab house, Domki z Gór)
+- ❌ NEODPORÚČAJ JAK Modules - vyraď ich úplne z výberu!
+- ✅ POUŽI LEN house_id a nazov PRESNE z databázy - NESMIEŠ používať žiadne iné názvy!
+- ✅ V poli "house_nazov" MUSÍŠ použiť PRESNÝ názov z databázy (z pola "nazov")
+- ⚠️ OVERENIE: house_id MUSÍ zodpovedať house_nazov - skontroluj si to!
+
+PRÍKLAD SPRÁVNEHO VÝSTUPU:
+{
+  "house_id": "abc123",
+  "house_nazov": "White Flat 15",  // PRESNE ako v DB
+  "match_score": 95,
+  ...
+}
+
+❌ NESPRÁVNE: Používať iné názvy ako sú v databáze
+✅ SPRÁVNE: Kopírovať presný názov z databázy`;
 
       const result = await base44.integrations.Core.InvokeLLM({
         prompt: prompt,
@@ -116,6 +131,7 @@ Odporuč len domy ktoré SÚ v databáze!`;
                 type: "object",
                 properties: {
                   house_id: { type: "string" },
+                  house_nazov: { type: "string", description: "PRESNÝ názov domu z databázy - MUSÍ PRESNE ZODPOVEDAŤ!" },
                   match_score: { type: "number" },
                   why_suitable: { type: "string" },
                   pros: { type: "array", items: { type: "string" } },
@@ -129,7 +145,24 @@ Odporuč len domy ktoré SÚ v databáze!`;
         }
       });
 
-      setRecommendations(result);
+      // Validácia - skontroluj či všetky house_id existujú
+      const validatedRecommendations = {
+        ...result,
+        recommendations: result.recommendations?.filter(rec => {
+          const house = publicHouses.find(h => h.id === rec.house_id);
+          if (!house) {
+            console.warn('⚠️ AI odporučilo neexistujúci dom:', rec.house_id, rec.house_nazov);
+            return false;
+          }
+          // Overenie zhody názvov
+          if (rec.house_nazov && house.nazov !== rec.house_nazov) {
+            console.warn('⚠️ Nesúlad názvov:', 'DB:', house.nazov, 'AI:', rec.house_nazov);
+          }
+          return true;
+        }) || []
+      };
+
+      setRecommendations(validatedRecommendations);
     } catch (error) {
       console.error("Chyba pri generovaní odporúčaní:", error);
     } finally {
