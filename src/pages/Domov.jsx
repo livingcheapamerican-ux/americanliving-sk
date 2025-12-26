@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
   ArrowRight, CheckCircle, Home, Zap, Clock, Shield, Euro,
-  FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings
+  FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings, LogIn
 } from "lucide-react";
 import { motion } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
@@ -197,6 +197,30 @@ export default function Domov() {
 
   return (
     <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16">
+      {/* Admin Login Box - zobrazí sa len pre neprihlásených */}
+      {!user && (
+        <div className="fixed bottom-6 left-6 z-50">
+          <Card className="bg-gradient-to-br from-indigo-600 to-purple-600 border-none shadow-2xl w-64">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Shield className="w-5 h-5 text-white" />
+                <h4 className="font-bold text-white">Admin prístup</h4>
+              </div>
+              <p className="text-xs text-white/90 mb-3">
+                Prihláste sa pre prístup k admin nástrojom
+              </p>
+              <Button
+                onClick={() => base44.auth.redirectToLogin(window.location.pathname)}
+                className="w-full bg-white text-indigo-700 hover:bg-gray-100 font-semibold"
+              >
+                <LogIn className="w-4 h-4 mr-2" />
+                Prihlásiť sa
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       {/* Admin Settings Panel */}
       {isAdmin && showSettings && (
         <div className="container mx-auto px-4 py-8">
