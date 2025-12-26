@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload, ChevronDown, Sparkles, Languages, FileText as BlogIcon, Activity, Zap } from "lucide-react";
+import { Home, Grid3x3, Phone, Info, Menu, X, Mail, Settings, FileText, Image, Brain, Upload, ChevronDown, Sparkles, Languages, FileText as BlogIcon, Activity, Zap, Users } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { AVAILABLE_LANGUAGES } from "./components/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -302,6 +302,11 @@ function LayoutContent({ children }) {
           <div className="hidden lg:flex items-center gap-1 xl:gap-2">
             {isAdmin && (
               <>
+                <Link to={createPageUrl("AdminUserManagement")}>
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Správa používateľov">
+                    <Users className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                  </Button>
+                </Link>
                 <Link to={createPageUrl("AdminPixelSettings")}>
                   <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Meta Pixel">
                     <Settings className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
@@ -558,6 +563,14 @@ function LayoutContent({ children }) {
                   )}
                   {isAdmin && (
                   <>
+                    <Link
+                      to={createPageUrl("AdminUserManagement")}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
+                    >
+                      <Users className="w-5 h-5" />
+                      Správa používateľov
+                    </Link>
                     <Link
                       to={createPageUrl("AdminPixelSettings")}
                       onClick={() => setMobileMenuOpen(false)}

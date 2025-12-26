@@ -218,6 +218,30 @@ export default function Domov() {
         </button>
       )}
 
+      {/* Admin Login Box */}
+      {!user && (
+        <div className="fixed bottom-6 left-6 z-50">
+          <Card className="bg-gradient-to-br from-indigo-600 to-purple-600 border-none shadow-2xl w-64">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Shield className="w-5 h-5 text-white" />
+                <h4 className="font-bold text-white">Admin prístup</h4>
+              </div>
+              <p className="text-xs text-white/90 mb-3">
+                Prihláste sa pre prístup k admin nástrojom
+              </p>
+              <Button
+                onClick={() => base44.auth.redirectToLogin(window.location.pathname)}
+                className="w-full bg-white text-indigo-700 hover:bg-gray-100 font-semibold"
+              >
+                <Key className="w-4 h-4 mr-2" />
+                Prihlásiť sa
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="relative h-[55vh] sm:h-[75vh] min-h-[320px] sm:min-h-[450px] overflow-hidden bg-gradient-to-br from-red-900 via-red-800 to-red-700">
         
