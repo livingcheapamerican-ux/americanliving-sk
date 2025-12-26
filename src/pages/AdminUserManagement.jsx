@@ -46,11 +46,19 @@ export default function AdminUserManagement() {
 
     setInviting(true);
     try {
-      await base44.users.inviteUser(newAdminEmail, "admin");
-      toast.success(`✅ Pozvánka odoslaná na ${newAdminEmail}`);
-      setNewAdminEmail("");
-      setShowInviteDialog(false);
-      queryClient.invalidateQueries(['all-users']);
+      const response = await base44.functions.invoke('inviteAdminUser', {
+        email: newAdminEmail,
+        role: "admin"
+      });
+
+      if (response.data.success) {
+        toast.success(`✅ Pozvánka odoslaná na ${newAdminEmail}`);
+        setNewAdminEmail("");
+        setShowInviteDialog(false);
+        queryClient.invalidateQueries(['all-users']);
+      } else {
+        toast.error(response.data.error || 'Chyba pri posielaní pozvánky');
+      }
     } catch (error) {
       toast.error('Chyba pri posielaní pozvánky: ' + error.message);
     } finally {
