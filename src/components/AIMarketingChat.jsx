@@ -205,6 +205,9 @@ Konzola (F12) má viac detailov.`,
 
   const approveSuggestion = async (suggestion) => {
     try {
+      // Získať aktuálneho usera
+      const currentUser = await base44.auth.me();
+      
       if (suggestion.type === 'price_strategy') {
         await base44.functions.invoke('aiMarketingChat', {
           action: 'approve_price_change',
@@ -215,13 +218,13 @@ Konzola (F12) má viac detailov.`,
         });
         toast.success('💰 Cenová úprava schválená a aplikovaná!');
       } else {
-        await base44.asServiceRole.entities.MarketingHistory.create({
+        await base44.entities.MarketingHistory.create({
           action_type: 'campaign_approved',
-          title: suggestion.title,
-          description: suggestion.description,
+          title: suggestion.title || 'Kampaň schválená',
+          description: suggestion.description || 'AI vygenerovaná kampaň',
           data: suggestion,
-          budget_allocated: suggestion.budget_allocation || suggestion.budget?.total,
-          user_email: user?.email,
+          budget_allocated: suggestion.budget_allocation || suggestion.budget?.total || 0,
+          user_email: currentUser?.email || 'unknown',
           status: 'completed'
         });
         toast.success('🚀 Stratégia schválená a uložená!');
@@ -233,23 +236,27 @@ Konzola (F12) má viac detailov.`,
         onStrategyApproved(suggestion);
       }
     } catch (error) {
+      console.error('Approve error:', error);
       toast.error('Chyba pri schvaľovaní: ' + error.message);
     }
   };
 
   const rejectSuggestion = async (suggestion) => {
     try {
-      await base44.asServiceRole.entities.MarketingHistory.create({
+      const currentUser = await base44.auth.me();
+      
+      await base44.entities.MarketingHistory.create({
         action_type: 'campaign_rejected',
         title: suggestion.title || 'Zamietnutá stratégia',
         description: suggestion.description || JSON.stringify(suggestion).substring(0, 200),
         data: suggestion,
         status: 'rejected',
-        user_email: user?.email
+        user_email: currentUser?.email || 'unknown'
       });
       setPendingSuggestions(prev => prev.filter(s => s.id !== suggestion.id));
       toast.info('Návrh zamietnutý a uložený do histórie');
     } catch (error) {
+      console.error('Reject error:', error);
       toast.error('Chyba pri zamietaní: ' + error.message);
     }
   };
