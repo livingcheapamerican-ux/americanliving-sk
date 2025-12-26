@@ -31,6 +31,124 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { sk } from "date-fns/locale";
 
+function CampaignMetricCard({ metric }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <Card 
+      className={`border-2 cursor-pointer transition-all hover:shadow-lg ${
+        metric.status === 'active' ? 'border-yellow-400 bg-yellow-50' : 'border-gray-200'
+      }`}
+      onClick={() => setExpanded(!expanded)}
+    >
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between mb-3">
+          <div>
+            <h5 className="font-bold text-sm mb-1">{metric.campaign_name}</h5>
+            <div className="flex gap-2">
+              <Badge className={
+                metric.platform === 'Facebook' ? 'bg-blue-600' :
+                metric.platform === 'Instagram' ? 'bg-pink-600' : 'bg-gray-600'
+              }>
+                {metric.platform}
+              </Badge>
+              <Badge variant="outline" className={
+                metric.status === 'active' ? 'border-green-500 text-green-700' :
+                metric.status === 'paused' ? 'border-yellow-500 text-yellow-700' :
+                'border-gray-500 text-gray-700'
+              }>
+                {metric.status === 'active' ? '🟢 Aktívna' :
+                 metric.status === 'paused' ? '⏸️ Pozastavená' : '✓ Dokončená'}
+              </Badge>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-xs text-gray-500">Cost</p>
+            <p className="text-xl font-bold text-orange-600">€{metric.cost}</p>
+          </div>
+        </div>
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-4 gap-2 text-xs">
+          <div className="bg-white p-2 rounded text-center">
+            <p className="text-gray-600">Dosah</p>
+            <p className="font-bold">{metric.reach?.toLocaleString() || 0}</p>
+          </div>
+          <div className="bg-white p-2 rounded text-center">
+            <p className="text-gray-600">CTR</p>
+            <p className="font-bold text-purple-600">{metric.ctr || 0}%</p>
+          </div>
+          <div className="bg-white p-2 rounded text-center">
+            <p className="text-gray-600">Conv.</p>
+            <p className="font-bold text-green-600">{metric.conversions || 0}</p>
+          </div>
+          <div className="bg-white p-2 rounded text-center">
+            <p className="text-gray-600">CPA</p>
+            <p className="font-bold text-orange-600">€{metric.cpa || 0}</p>
+          </div>
+        </div>
+
+        {/* Expanded Details */}
+        {expanded && (
+          <div className="mt-4 pt-4 border-t space-y-3">
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="bg-blue-50 p-2 rounded">
+                <p className="text-gray-600 mb-1">Zobrazenia</p>
+                <p className="font-bold">{metric.impressions?.toLocaleString() || 0}</p>
+              </div>
+              <div className="bg-purple-50 p-2 rounded">
+                <p className="text-gray-600 mb-1">CPC</p>
+                <p className="font-bold">€{metric.cpc || 0}</p>
+              </div>
+              <div className="bg-green-50 p-2 rounded">
+                <p className="text-gray-600 mb-1">CPM</p>
+                <p className="font-bold">€{metric.cpm || 0}</p>
+              </div>
+            </div>
+
+            {(metric.likes || metric.comments || metric.shares) && (
+              <div className="bg-pink-50 p-3 rounded border border-pink-200">
+                <p className="text-xs font-semibold text-pink-900 mb-2">💗 Engagement</p>
+                <div className="flex gap-4 text-xs">
+                  {metric.likes > 0 && (
+                    <div className="flex items-center gap-1">
+                      <Heart className="w-3 h-3 text-pink-600" />
+                      <span>{metric.likes}</span>
+                    </div>
+                  )}
+                  {metric.comments > 0 && (
+                    <div className="flex items-center gap-1">
+                      <MessageSquare className="w-3 h-3 text-blue-600" />
+                      <span>{metric.comments}</span>
+                    </div>
+                  )}
+                  {metric.shares > 0 && (
+                    <div className="flex items-center gap-1">
+                      <Share2 className="w-3 h-3 text-green-600" />
+                      <span>{metric.shares}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {metric.performance_notes && (
+              <div className="bg-gray-100 p-3 rounded text-xs">
+                <p className="font-semibold mb-1">📝 Poznámky:</p>
+                <p className="text-gray-700">{metric.performance_notes}</p>
+              </div>
+            )}
+
+            <div className="text-xs text-gray-500">
+              Posledná aktualizácia: {metric.last_updated ? format(new Date(metric.last_updated), 'dd.MM.yyyy HH:mm', { locale: sk }) : 'N/A'}
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function SocialMediaDashboard() {
   const [newMetric, setNewMetric] = useState({
     platform: "Facebook",
