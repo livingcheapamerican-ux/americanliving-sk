@@ -4,6 +4,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import AIMarketingChat from "../components/AIMarketingChat";
 import CampaignHistoryTable from "../components/marketing/CampaignHistoryTable";
 import PersonalizedRecommendations from "../components/PersonalizedRecommendations";
+import AutomatedCampaignsSection from "../components/marketing/AutomatedCampaignsSection";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -1163,11 +1164,12 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
         </div>
 
         <Tabs defaultValue="chat" className="mb-8">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
+          <TabsList className="grid w-full grid-cols-5 mb-8">
             <TabsTrigger value="chat" className="text-sm sm:text-base">💬 AI Partner</TabsTrigger>
             <TabsTrigger value="overview" className="text-sm sm:text-base">📊 Prehľad</TabsTrigger>
             <TabsTrigger value="strategy" className="text-sm sm:text-base">🧠 Stratégia</TabsTrigger>
             <TabsTrigger value="planner" className="text-sm sm:text-base">🚀 Plánovač</TabsTrigger>
+            <TabsTrigger value="automated" className="text-sm sm:text-base">⚡ Automatizácia</TabsTrigger>
           </TabsList>
 
           {/* NOVÁ KARTA: AI Chat Partner */}
@@ -2075,6 +2077,28 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
                       })
                     )}
                   </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* KARTA D: Automatizované Kampane */}
+          <TabsContent value="automated">
+            <div className="space-y-8">
+              <AutomatedCampaignsSection />
+              
+              <Card className="bg-gradient-to-br from-cyan-50 to-blue-50 border-cyan-300">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Brain className="w-5 h-5 text-cyan-600" />
+                    💡 Ako to funguje
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm text-gray-700 space-y-2">
+                  <p>✅ <strong>Vytvorte šablónu</strong> s názvom, typom a základnými parametrami</p>
+                  <p>✅ <strong>AI optimalizácia</strong> navrhne ideálny budget, cielenie a kreatívne pokyny na základe histórie</p>
+                  <p>✅ <strong>Použite šablónu</strong> v AI Marketing Chat napísaním: "Vytvor kampaň podľa šablóny [názov]"</p>
+                  <p>✅ <strong>AI doplní</strong> konkrétne domy, copy, vizuály a detaily</p>
                 </CardContent>
               </Card>
             </div>

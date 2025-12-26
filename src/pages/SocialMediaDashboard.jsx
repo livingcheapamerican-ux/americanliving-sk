@@ -24,8 +24,11 @@ import {
   RefreshCw,
   BarChart3,
   Users,
-  Zap
+  Zap,
+  Filter
 } from "lucide-react";
+import CampaignReportExport from "../components/marketing/CampaignReportExport";
+import GoogleAdsComparison from "../components/marketing/GoogleAdsComparison";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -160,6 +163,10 @@ export default function SocialMediaDashboard() {
     cost: 0
   });
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [filterPlatform, setFilterPlatform] = useState("all");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [filterDateFrom, setFilterDateFrom] = useState("");
+  const [filterDateTo, setFilterDateTo] = useState("");
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -233,6 +240,35 @@ export default function SocialMediaDashboard() {
 
   const activeCampaigns = metrics.filter(m => m.status === 'active');
 
+  // Apply filters
+  const filteredMetrics = metrics.filter(m => {
+    const platformMatch = filterPlatform === "all" || m.platform === filterPlatform;
+    const statusMatch = filterStatus === "all" || m.status === filterStatus;
+    
+    let dateMatch = true;
+    if (filterDateFrom && m.last_updated) {
+      dateMatch = dateMatch && new Date(m.last_updated) >= new Date(filterDateFrom);
+    }
+    if (filterDateTo && m.last_updated) {
+      dateMatch = dateMatch && new Date(m.last_updated) <= new Date(filterDateTo);
+    }
+    
+    return platformMatch && statusMatch && dateMatch;
+  });
+
+  // Filtered stats
+  const filteredStats = {
+    reach: filteredMetrics.reduce((sum, m) => sum + (m.reach || 0), 0),
+    impressions: filteredMetrics.reduce((sum, m) => sum + (m.impressions || 0), 0),
+    clicks: filteredMetrics.reduce((sum, m) => sum + (m.clicks || 0), 0),
+    conversions: filteredMetrics.reduce((sum, m) => sum + (m.conversions || 0), 0),
+    cost: filteredMetrics.reduce((sum, m) => sum + (m.cost || 0), 0),
+    avgCTR: filteredMetrics.length > 0 ? (filteredMetrics.reduce((sum, m) => sum + (parseFloat(m.ctr) || 0), 0) / filteredMetrics.length).toFixed(2) : 0,
+    avgCPA: filteredMetrics.reduce((sum, m) => sum + (m.conversions || 0), 0) > 0 
+      ? (filteredMetrics.reduce((sum, m) => sum + (m.cost || 0), 0) / filteredMetrics.reduce((sum, m) => sum + (m.conversions || 0), 0)).toFixed(2) 
+      : 0
+  };
+
   // Chart data - posledných 14 kampaní
   const performanceData = metrics.slice(0, 14).reverse().map(m => ({
     name: m.campaign_name.substring(0, 15) + '...',
@@ -260,6 +296,61 @@ export default function SocialMediaDashboard() {
               📊 Social Media Performance
             </h1>
             <p className="text-gray-600">Sledovanie výkonu kampaní na sociálnych sieťach</p>
+            
+            {/* Filters */}
+            <div className="mt-4 flex flex-wrap gap-3">
+              <div>
+                <Label className="text-xs">Platforma</Label>
+                <select
+                  value={filterPlatform}
+                  onChange={(e) => setFilterPlatform(e.target.value)}
+                  className="px-3 py-1.5 border rounded-md text-sm"
+                >
+                  <option value="all">Všetky</option>
+                  <option value="Facebook">Facebook</option>
+                  <option value="Instagram">Instagram</option>
+                  <option value="TikTok">TikTok</option>
+                  <option value="LinkedIn">LinkedIn</option>
+                </select>
+              </div>
+              <div>
+                <Label className="text-xs">Status</Label>
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  className="px-3 py-1.5 border rounded-md text-sm"
+                >
+                  <option value="all">Všetky</option>
+                  <option value="active">Aktívne</option>
+                  <option value="paused">Pozastavené</option>
+                  <option value="completed">Dokončené</option>
+                </select>
+              </div>
+              <div>
+                <Label className="text-xs">Od dátumu</Label>
+                <Input
+                  type="date"
+                  value={filterDateFrom}
+                  onChange={(e) => setFilterDateFrom(e.target.value)}
+                  className="text-sm"
+                />
+              </div>
+              <div>
+                <Label className="text-xs">Do dátumu</Label>
+                <Input
+                  type="date"
+                  value={filterDateTo}
+                  onChange={(e) => setFilterDateTo(e.target.value)}
+                  className="text-sm"
+                />
+              </div>
+              <div className="flex items-end">
+                <CampaignReportExport 
+                  campaigns={filteredMetrics} 
+                  filters={{ platform: filterPlatform, status: filterStatus, dateFrom: filterDateFrom, dateTo: filterDateTo }}
+                />
+              </div>
+            </div>
           </div>
           <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
             <DialogTrigger asChild>
@@ -355,6 +446,37 @@ export default function SocialMediaDashboard() {
             </DialogContent>
           </Dialog>
         </div>
+
+        {/* Filtered Stats Banner */}
+        {(filterPlatform !== "all" || filterStatus !== "all" || filterDateFrom || filterDateTo) && (
+          <Card className="mb-6 bg-gradient-to-r from-indigo-100 to-purple-100 border-indigo-400">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Filter className="w-5 h-5 text-indigo-700" />
+                <h3 className="font-bold text-indigo-900">📊 Filtrované štatistiky</h3>
+                <Badge className="bg-indigo-600 text-white">{filteredMetrics.length} kampaní</Badge>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                <div className="bg-white p-3 rounded border border-indigo-200">
+                  <p className="text-gray-600 text-xs mb-1">Celkový budget</p>
+                  <p className="text-2xl font-bold text-orange-600">€{filteredStats.cost.toFixed(2)}</p>
+                </div>
+                <div className="bg-white p-3 rounded border border-indigo-200">
+                  <p className="text-gray-600 text-xs mb-1">Konverzie</p>
+                  <p className="text-2xl font-bold text-green-600">{filteredStats.conversions}</p>
+                </div>
+                <div className="bg-white p-3 rounded border border-indigo-200">
+                  <p className="text-gray-600 text-xs mb-1">Priem. CPA</p>
+                  <p className="text-2xl font-bold text-purple-600">€{filteredStats.avgCPA}</p>
+                </div>
+                <div className="bg-white p-3 rounded border border-indigo-200">
+                  <p className="text-gray-600 text-xs mb-1">Priem. CTR</p>
+                  <p className="text-2xl font-bold text-blue-600">{filteredStats.avgCTR}%</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* KPI Overview Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -468,6 +590,9 @@ export default function SocialMediaDashboard() {
           </CardContent>
         </Card>
 
+        {/* Google Ads Comparison */}
+        <GoogleAdsComparison />
+
         {/* Performance Charts */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           {/* Campaign Performance Timeline */}
@@ -546,10 +671,16 @@ export default function SocialMediaDashboard() {
               </CardHeader>
               <CardContent className="max-h-[600px] overflow-y-auto">
                 <div className="space-y-3">
-                  {metrics.map((metric) => (
+                  {filteredMetrics.map((metric) => (
                     <CampaignMetricCard key={metric.id} metric={metric} />
                   ))}
                 </div>
+                {filteredMetrics.length === 0 && (
+                  <div className="text-center py-12 text-gray-500">
+                    <Filter className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+                    <p className="text-sm">Žiadne kampane nezodpovedajú filtrom</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
