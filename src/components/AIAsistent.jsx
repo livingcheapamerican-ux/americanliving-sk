@@ -30,7 +30,7 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if (!input || !input.trim() || isLoading) return;
 
     const userMessage = input.trim();
     setInput("");
@@ -212,7 +212,7 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
                       />
                       <Button
                         type="submit"
-                        disabled={isLoading || !input.trim()}
+                        disabled={isLoading || !input || !input.trim()}
                         className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                       >
                         <Send className="w-4 h-4" />
