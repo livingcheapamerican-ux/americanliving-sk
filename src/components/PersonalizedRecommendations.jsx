@@ -135,12 +135,129 @@ export default function PersonalizedRecommendations({ history, onRecommendationC
       });
     }
 
+    // Odporúčanie #8: Seasonal timing
+    if (approved.length > 5) {
+      const currentMonth = new Date().getMonth();
+      if (currentMonth === 11 || currentMonth === 0) { // Dec/Jan
+        newRecommendations.push({
+          id: 'seasonal_winter',
+          type: 'seasonal',
+          priority: 'high',
+          title: 'Zimná sezóna - Príprava na jar',
+          description: 'December a január sú ideálne na prípravu kampaní pre jarnú sezónu. Ľudia plánujú a zbierajú informácie.',
+          action: 'Spýtaj sa AI: "Vytvor stratégiu pre jarnú sezónu"',
+          impact: 82,
+          icon: Trophy
+        });
+      }
+    }
+
+    // Odporúčanie #9: Messenger chatbot
+    if (approved.length > 8 && !recentActivity.some(h => h.description?.includes('messenger') || h.description?.includes('chatbot'))) {
+      newRecommendations.push({
+        id: 'messenger_bot',
+        type: 'automation',
+        priority: 'medium',
+        title: 'Messenger Chatbot pre lead nurturing',
+        description: 'Automatizujte komunikáciu s leadmi cez Facebook Messenger. Zvýšte engagement o 60%.',
+        action: 'Spýtaj sa AI: "Navrhni Facebook Messenger chatbot stratégiu"',
+        impact: 78,
+        icon: Brain
+      });
+    }
+
+    // Odporúčanie #10: Influencer marketing
+    if (approved.length > 10 && !recentActivity.some(h => h.description?.includes('influencer'))) {
+      newRecommendations.push({
+        id: 'influencer_campaign',
+        type: 'strategy',
+        priority: 'medium',
+        title: 'Influencer marketing pre dôveryhodnosť',
+        description: 'Spolupráca s lokálnymi influencermi môže priniesť 2-3x lepší engagement ako klasické reklamy.',
+        action: 'Spýtaj sa AI: "Vytvor influencer marketing stratégiu pre naše domy"',
+        impact: 85,
+        icon: Target
+      });
+    }
+
+    // Odporúčanie #11: Email remarketing
+    if (conversions > 0 && !recentActivity.some(h => h.description?.includes('email') || h.description?.includes('remarketing'))) {
+      newRecommendations.push({
+        id: 'email_remarketing',
+        type: 'automation',
+        priority: 'high',
+        title: 'Email remarketing pre hot leads',
+        description: `Máte ${conversions} konverzií. Nastavte automatické email sekvencie pre follow-up a zvýšte predaj o 40%.`,
+        action: 'Spýtaj sa AI: "Vytvor email remarketing stratégiu pre našich leadov"',
+        impact: 87,
+        icon: Zap
+      });
+    }
+
+    // Odporúčanie #12: Instagram Reels
+    if (approved.length > 7 && !recentActivity.some(h => h.data?.platform?.includes('Instagram') && h.data?.creative?.type === 'video')) {
+      newRecommendations.push({
+        id: 'instagram_reels',
+        type: 'content',
+        priority: 'high',
+        title: 'Instagram Reels pre virálny obsah',
+        description: 'Reels majú 5x vyššiu organickú reach ako bežné posty. Ideálne pre showcase domov.',
+        action: 'Spýtaj sa AI: "Vytvor koncept pre Instagram Reels o našich domoch"',
+        impact: 92,
+        icon: Lightbulb
+      });
+    }
+
+    // Odporúčanie #13: Lookalike audiences expansion
+    if (hasLeadGenFocus && conversions > 20) {
+      newRecommendations.push({
+        id: 'lookalike_expansion',
+        type: 'optimization',
+        priority: 'high',
+        title: 'Rozšírenie Lookalike Audiences',
+        description: `Máte ${conversions} konverzií - dosť dát na vytvorenie Lookalike 2-3%. Rozšírte svoj dosah o 300%.`,
+        action: 'Spýtaj sa AI: "Vytvor stratégiu pre Lookalike Audiences expansion"',
+        impact: 89,
+        icon: TrendingUp
+      });
+    }
+
+    // Odporúčanie #14: Landing page optimalizácia
+    if (approved.length > 6) {
+      newRecommendations.push({
+        id: 'landing_optimization',
+        type: 'optimization',
+        priority: 'medium',
+        title: 'Optimalizácia landing page',
+        description: 'Zlepšite konverziu landing page o 50% pomocou AI analýzy user flow a A/B testov.',
+        action: 'Spýtaj sa AI: "Analyzuj našu landing page a navrhni optimalizácie"',
+        impact: 76,
+        icon: Target
+      });
+    }
+
+    // Odporúčanie #15: Carousel ads
+    if (approved.length > 5 && !recentActivity.some(h => h.data?.creative?.type === 'carousel')) {
+      newRecommendations.push({
+        id: 'carousel_ads',
+        type: 'content',
+        priority: 'medium',
+        title: 'Carousel reklamy pre viacero domov',
+        description: 'Carousel formát má 2x vyšší CTR. Ukážte 3-5 domov v jednej reklame.',
+        action: 'Spýtaj sa AI: "Vytvor carousel kampaň s našimi TOP domami"',
+        impact: 81,
+        icon: Lightbulb
+      });
+    }
+
     setRecommendations(newRecommendations.sort((a, b) => b.impact - a.impact));
   }, [history]);
 
   if (recommendations.length === 0) {
     return null;
   }
+
+  const approvedCount = history.filter(h => h.status === 'completed').length;
 
   return (
     <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-300">
@@ -150,10 +267,10 @@ export default function PersonalizedRecommendations({ history, onRecommendationC
           💡 Personalizované odporúčania pre vás
         </CardTitle>
         <p className="text-xs text-purple-700">
-          Na základe {history.filter(h => h.status === 'completed').length} schválených kampaní
+          Na základe {approvedCount} schválených kampaní • Zobrazených {recommendations.length} odporúčaní
         </p>
       </CardHeader>
-      <CardContent className="space-y-3 max-h-[800px] overflow-y-auto">
+      <CardContent className="space-y-3 max-h-[600px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin' }}>
         {recommendations.map((rec, idx) => (
           <motion.div
             key={rec.id}
