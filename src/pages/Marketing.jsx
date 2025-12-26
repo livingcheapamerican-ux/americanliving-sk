@@ -5,6 +5,8 @@ import AIMarketingChat from "../components/AIMarketingChat";
 import CampaignHistoryTable from "../components/marketing/CampaignHistoryTable";
 import PersonalizedRecommendations from "../components/PersonalizedRecommendations";
 import AutomatedCampaignsSection from "../components/marketing/AutomatedCampaignsSection";
+import UnifiedDashboard from "../components/marketing/UnifiedDashboard";
+import MarketingNotifications from "../components/marketing/MarketingNotifications";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -884,6 +886,7 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
+      <MarketingNotifications />
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex items-start justify-between gap-4">
           <div className="flex-1">
@@ -1163,14 +1166,20 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
           </div>
         </div>
 
-        <Tabs defaultValue="chat" className="mb-8">
-          <TabsList className="grid w-full grid-cols-5 mb-8">
+        <Tabs defaultValue="dashboard" className="mb-8">
+          <TabsList className="grid w-full grid-cols-6 mb-8">
+            <TabsTrigger value="dashboard" className="text-sm sm:text-base">🎯 Dashboard</TabsTrigger>
             <TabsTrigger value="chat" className="text-sm sm:text-base">💬 AI Partner</TabsTrigger>
             <TabsTrigger value="overview" className="text-sm sm:text-base">📊 Prehľad</TabsTrigger>
             <TabsTrigger value="strategy" className="text-sm sm:text-base">🧠 Stratégia</TabsTrigger>
             <TabsTrigger value="planner" className="text-sm sm:text-base">🚀 Plánovač</TabsTrigger>
             <TabsTrigger value="automated" className="text-sm sm:text-base">⚡ Automatizácia</TabsTrigger>
           </TabsList>
+
+          {/* Unified Dashboard */}
+          <TabsContent value="dashboard">
+            <UnifiedDashboard />
+          </TabsContent>
 
           {/* NOVÁ KARTA: AI Chat Partner */}
           <TabsContent value="chat">

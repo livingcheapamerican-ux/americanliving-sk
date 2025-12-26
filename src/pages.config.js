@@ -67,6 +67,7 @@ import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
 import SocialMediaDashboard from './pages/SocialMediaDashboard';
+import AdminUserManagement from './pages/AdminUserManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -140,6 +141,7 @@ export const PAGES = {
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
     "SocialMediaDashboard": SocialMediaDashboard,
+    "AdminUserManagement": AdminUserManagement,
 }
 
 export const pagesConfig = {
