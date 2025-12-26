@@ -181,13 +181,18 @@ export default function PersonalizedRecommendations({ history, onRecommendationC
     }
 
     // Odporúčanie #11: Email remarketing
-    if (conversions > 0 && !recentActivity.some(h => h.description?.includes('email') || h.description?.includes('remarketing'))) {
+    const totalConversions = approved.reduce((sum, h) => {
+      const convs = h.data?.conversions || h.data?.expected_results?.estimated_leads || 0;
+      return sum + (typeof convs === 'number' ? convs : 0);
+    }, 0);
+
+    if (totalConversions > 0 && !recentActivity.some(h => h.description?.includes('email') || h.description?.includes('remarketing'))) {
       newRecommendations.push({
         id: 'email_remarketing',
         type: 'automation',
         priority: 'high',
         title: 'Email remarketing pre hot leads',
-        description: `Máte ${conversions} konverzií. Nastavte automatické email sekvencie pre follow-up a zvýšte predaj o 40%.`,
+        description: `Máte údaje o konverziách. Nastavte automatické email sekvencie pre follow-up a zvýšte predaj o 40%.`,
         action: 'Spýtaj sa AI: "Vytvor email remarketing stratégiu pre našich leadov"',
         impact: 87,
         icon: Zap
