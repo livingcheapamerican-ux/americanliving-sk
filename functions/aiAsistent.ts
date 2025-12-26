@@ -271,6 +271,19 @@ ${houseContext}
    • Dopyt na dom: Skús identifikovať ktorý dom zaujíma, ponúkni konfigurátor
    • Cenová ponuka: Najprv zisti dom, potom konfiguráciu (fasáda, interiér, doplnky)
    • Po zozbieraní info navrhni: "Mám všetko, chceš aby som vyplnil formulár za teba?"
+   
+   FORMÁT POMOCI:
+   {
+     "response": "Odpoveď pre užívateľa...",
+     "suggestion": "konkrétny návrh",
+     "action": "fill_form",
+     "form_data": {
+       "meno": "...",
+       "email": "...",
+       "telefon": "...",
+       "poznamka": "..."
+     }
+   }
 
 4. REALISTICKÉ CENY:
    • Vždy počítaj S ZÁKLADAMI

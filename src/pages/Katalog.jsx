@@ -283,6 +283,8 @@ export default function Katalog() {
   const [dizajnFilter, setDizajnFilter] = useState("murovka"); // "murovka", "drevo", alebo "podorys3d"
   const [pocetModulovFilter, setPocetModulovFilter] = useState([]);
   const [portraitImages, setPortraitImages] = useState({});
+  const [energyCert, setEnergyCert] = useState('all');
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -400,8 +402,11 @@ export default function Katalog() {
       const cenaMatch = dom.zakladna_cena >= cenoveRozpatie[0] && dom.zakladna_cena <= cenoveRozpatie[1];
       const izbyMatch = pocetIziebFilter.length === 0 || (dom.pocet_izieb && pocetIziebFilter.includes(dom.pocet_izieb));
       const modulyMatch = pocetModulovFilter.length === 0 || (dom.pocet_modulov && pocetModulovFilter.includes(dom.pocet_modulov));
+      const energyMatch = energyCert === 'all' || 
+        (energyCert === 'a0' && dom.energeticky_certifikat) ||
+        (energyCert === 'no' && !dom.energeticky_certifikat);
       
-      return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch;
+      return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch && energyMatch;
     });
   }
 
@@ -849,6 +854,35 @@ export default function Katalog() {
                   </div>
                 </div>
 
+                {/* Pokročilé filtre */}
+                {showAdvancedFilters && (
+                  <div className="pt-3 border-t space-y-3">
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                      <label className="block text-xs font-semibold text-gray-700 mb-2">⚡ Energetická trieda</label>
+                      <Select value={energyCert} onValueChange={setEnergyCert}>
+                        <SelectTrigger className="h-7 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Všetky</SelectItem>
+                          <SelectItem value="a0">✅ A0 (celoročný)</SelectItem>
+                          <SelectItem value="no">❌ Bez certifikátu</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )}
+
+                {/* Toggle pre pokročilé */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full text-xs h-7"
+                  onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                >
+                  {showAdvancedFilters ? '− Menej filtrov' : '+ Pokročilé filtre'}
+                </Button>
+
                 {/* Reset */}
                 <Button
                   variant="outline"
@@ -866,6 +900,7 @@ export default function Katalog() {
                     setPocetIziebFilter([]);
                     setPocetModulovFilter([]);
                     setZoradenie("poradie");
+                    setEnergyCert('all');
                   }}>
                   Reset
                 </Button>
