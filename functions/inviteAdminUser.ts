@@ -21,7 +21,9 @@ Deno.serve(async (req) => {
     }
 
     // Use service role to invite user
-    await base44.users.inviteUser(email, role);
+    const result = await base44.asServiceRole.users.inviteUser(email, role);
+    
+    console.log('Invite result:', result);
 
     return Response.json({ 
       success: true,
