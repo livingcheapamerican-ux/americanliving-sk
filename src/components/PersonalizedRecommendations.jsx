@@ -153,7 +153,7 @@ export default function PersonalizedRecommendations({ history, onRecommendationC
           Na základe {history.filter(h => h.status === 'completed').length} schválených kampaní
         </p>
       </CardHeader>
-      <CardContent className="space-y-3 max-h-[800px] overflow-y-auto">
+      <CardContent className="space-y-3">
         {recommendations.map((rec, idx) => (
           <motion.div
             key={rec.id}
