@@ -214,13 +214,13 @@ export default function PersonalizedRecommendations({ history, onRecommendationC
     }
 
     // Odporúčanie #13: Lookalike audiences expansion
-    if (hasLeadGenFocus && conversions > 20) {
+    if (hasLeadGenFocus && totalConversions > 20) {
       newRecommendations.push({
         id: 'lookalike_expansion',
         type: 'optimization',
         priority: 'high',
         title: 'Rozšírenie Lookalike Audiences',
-        description: `Máte ${conversions} konverzií - dosť dát na vytvorenie Lookalike 2-3%. Rozšírte svoj dosah o 300%.`,
+        description: `Máte ${totalConversions} konverzií - dosť dát na vytvorenie Lookalike 2-3%. Rozšírte svoj dosah o 300%.`,
         action: 'Spýtaj sa AI: "Vytvor stratégiu pre Lookalike Audiences expansion"',
         impact: 89,
         icon: TrendingUp
