@@ -31,7 +31,7 @@ export default function PersonalizedRecommendations({ history, onRecommendationC
     const hasPriceFocus = campaignTypes['price_strategy'] > 2;
     const hasSEOFocus = campaignTypes['seo_optimization'] > 0;
 
-    // Generovať odporúčania - VŽDY zobraz všetky relevantné
+    // Generovať odporúčania
     const newRecommendations = [];
 
     // Odporúčanie #1: Pokročilé Lead Gen techniky
@@ -48,8 +48,8 @@ export default function PersonalizedRecommendations({ history, onRecommendationC
       });
     }
 
-    // Odporúčanie #2: A/B Testing - znížená podmienka
-    if (approved.length > 3 && !recentActivity.some(h => h.title?.includes('A/B test'))) {
+    // Odporúčanie #2: A/B Testing
+    if (approved.length > 8 && !recentActivity.some(h => h.title?.includes('A/B test'))) {
       newRecommendations.push({
         id: 'ab_testing',
         type: 'optimization',
@@ -62,8 +62,8 @@ export default function PersonalizedRecommendations({ history, onRecommendationC
       });
     }
 
-    // Odporúčanie #3: Retargeting stratégia - znížená podmienka
-    if (approved.length > 2 && !recentActivity.some(h => h.description?.includes('retargeting'))) {
+    // Odporúčanie #3: Retargeting stratégia
+    if (approved.length > 6 && !recentActivity.some(h => h.description?.includes('retargeting'))) {
       newRecommendations.push({
         id: 'retargeting',
         type: 'strategy',
@@ -76,8 +76,8 @@ export default function PersonalizedRecommendations({ history, onRecommendationC
       });
     }
 
-    // Odporúčanie #4: Video content - znížená podmienka
-    if (approved.length > 5 && !recentActivity.some(h => h.data?.creative?.type === 'video')) {
+    // Odporúčanie #4: Video content
+    if (approved.length > 10 && !recentActivity.some(h => h.data?.creative?.type === 'video')) {
       newRecommendations.push({
         id: 'video_content',
         type: 'content',
@@ -91,21 +91,24 @@ export default function PersonalizedRecommendations({ history, onRecommendationC
     }
 
     // Odporúčanie #5: Budget optimalizácia
-    if (avgBudget > 0 && approved.length > 3) {
-      newRecommendations.push({
-        id: 'budget_optimization',
-        type: 'optimization',
-        priority: 'medium',
-        title: 'Optimalizujte rozdelenie budgetu',
-        description: `Váš priemerný budget je ${avgBudget.toFixed(0)}€/kampaň. AI vie navrhnúť efektívnejšie rozdelenie na základe ROI dát.`,
-        action: 'Spýtaj sa AI: "Analyzuj môj budget a navrhni lepšie rozdelenie"',
-        impact: 70,
-        icon: TrendingUp
-      });
+    if (avgBudget > 0 && approved.length > 5) {
+      const budgetEfficiency = totalBudget / approved.length;
+      if (budgetEfficiency < 30) {
+        newRecommendations.push({
+          id: 'budget_optimization',
+          type: 'optimization',
+          priority: 'medium',
+          title: 'Optimalizujte rozdelenie budgetu',
+          description: `Váš priemerný budget je ${avgBudget.toFixed(0)}€/kampaň. AI vie navrhnúť efektívnejšie rozdelenie na základe ROI dát.`,
+          action: 'Spýtaj sa AI: "Analyzuj môj budget a navrhni lepšie rozdelenie"',
+          impact: 70,
+          icon: TrendingUp
+        });
+      }
     }
 
     // Odporúčanie #6: SEO + Paid Ads kombinácia
-    if (approved.length > 5) {
+    if (hasSEOFocus && hasLeadGenFocus) {
       newRecommendations.push({
         id: 'seo_paid_combo',
         type: 'strategy',
@@ -118,49 +121,7 @@ export default function PersonalizedRecommendations({ history, onRecommendationC
       });
     }
 
-    // Odporúčanie #7: Scaling stratégia
-    if (approved.length > 8) {
-      newRecommendations.push({
-        id: 'scaling',
-        type: 'strategy',
-        priority: 'high',
-        title: 'Scaling úspešných kampaní',
-        description: 'Máte solídne portfólio kampaní. Je čas škálovať najlepšie z nich 2-3x pre exponenciálny rast.',
-        action: 'Spýtaj sa AI: "Ktoré kampane mám škálovať a ako?"',
-        impact: 92,
-        icon: Rocket
-      });
-    }
-
-    // Odporúčanie #8: Instagram Stories
-    if (approved.length > 6 && !recentActivity.some(h => h.data?.platform === 'Instagram Stories')) {
-      newRecommendations.push({
-        id: 'instagram_stories',
-        type: 'content',
-        priority: 'medium',
-        title: 'Instagram Stories stratégia',
-        description: 'Stories majú 500M+ denných používateľov. Ideálne pre behind-the-scenes a urgentné ponuky.',
-        action: 'Spýtaj sa AI: "Vytvor Instagram Stories kampaň"',
-        impact: 78,
-        icon: Lightbulb
-      });
-    }
-
-    // Odporúčanie #9: Competitor Benchmarking
-    if (approved.length > 4) {
-      newRecommendations.push({
-        id: 'competitor_benchmark',
-        type: 'analysis',
-        priority: 'medium',
-        title: 'Porovnanie s konkurenciou',
-        description: 'Analyzujte svoje kampane vs. konkurencia. Kde ste lepší? Kde môžete zlepšiť?',
-        action: 'Spýtaj sa AI: "Porovnaj naše kampane s konkurenciou"',
-        impact: 73,
-        icon: Trophy
-      });
-    }
-
-    // Odporúčanie #10: Ak má málo schválených kampaní
+    // Odporúčanie #7: Ak má málo schválených kampaní
     if (approved.length < 3) {
       newRecommendations.push({
         id: 'get_started',
