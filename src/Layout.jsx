@@ -431,10 +431,6 @@ function LayoutContent({ children }) {
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              onTouchStart={(e) => {
-                e.preventDefault();
-                setMobileMenuOpen(!mobileMenuOpen);
-              }}
               className="lg:hidden p-4 hover:bg-gray-100 rounded-lg min-w-[56px] min-h-[56px] flex items-center justify-center active:bg-gray-200 touch-manipulation"
             >
               {mobileMenuOpen ? (
