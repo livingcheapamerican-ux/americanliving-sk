@@ -199,7 +199,7 @@ export default function Domov() {
     <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16">
       {/* Admin Login Box - zobrazí sa len pre neprihlásených */}
       {!user && (
-        <div className="fixed bottom-6 left-6 z-50">
+        <div className="hidden md:block fixed bottom-6 left-6 z-50">
           <Card className="bg-gradient-to-br from-indigo-600 to-purple-600 border-none shadow-2xl w-64">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-3">
