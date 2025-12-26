@@ -93,7 +93,7 @@ export default function Marketing() {
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
-    queryFn: () => base44.auth.me()
+    queryFn: () => base44.auth.me().catch(() => null)
   });
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;

@@ -24,6 +24,7 @@ import AdminTestGemini from './pages/AdminTestGemini';
 import AdminTestGeminiAuto from './pages/AdminTestGeminiAuto';
 import AdminUpdateTicabHouse from './pages/AdminUpdateTicabHouse';
 import AdminUploadFotiekDomov from './pages/AdminUploadFotiekDomov';
+import AdminUserManagement from './pages/AdminUserManagement';
 import AdminVerifikaciaUdajov from './pages/AdminVerifikaciaUdajov';
 import AdminWatermark from './pages/AdminWatermark';
 import AkoToFunguje from './pages/AkoToFunguje';
@@ -62,12 +63,11 @@ import RegenerujPreklady from './pages/RegenerujPreklady';
 import RegenerujPrekladyDeFrSrHrEl from './pages/RegenerujPrekladyDeFrSrHrEl';
 import SEODashboard from './pages/SEODashboard';
 import SEOEditor from './pages/SEOEditor';
+import SocialMediaDashboard from './pages/SocialMediaDashboard';
 import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
-import SocialMediaDashboard from './pages/SocialMediaDashboard';
-import AdminUserManagement from './pages/AdminUserManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -98,6 +98,7 @@ export const PAGES = {
     "AdminTestGeminiAuto": AdminTestGeminiAuto,
     "AdminUpdateTicabHouse": AdminUpdateTicabHouse,
     "AdminUploadFotiekDomov": AdminUploadFotiekDomov,
+    "AdminUserManagement": AdminUserManagement,
     "AdminVerifikaciaUdajov": AdminVerifikaciaUdajov,
     "AdminWatermark": AdminWatermark,
     "AkoToFunguje": AkoToFunguje,
@@ -136,12 +137,11 @@ export const PAGES = {
     "RegenerujPrekladyDeFrSrHrEl": RegenerujPrekladyDeFrSrHrEl,
     "SEODashboard": SEODashboard,
     "SEOEditor": SEOEditor,
+    "SocialMediaDashboard": SocialMediaDashboard,
     "SrovnaniDomu": SrovnaniDomu,
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
-    "SocialMediaDashboard": SocialMediaDashboard,
-    "AdminUserManagement": AdminUserManagement,
 }
 
 export const pagesConfig = {

@@ -14,20 +14,30 @@ export default function MarketingNotifications() {
   const [showPanel, setShowPanel] = useState(false);
   const queryClient = useQueryClient();
 
+  const { data: user } = useQuery({
+    queryKey: ['current-user-notifications'],
+    queryFn: () => base44.auth.me().catch(() => null)
+  });
+
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
+
   const { data: notifications = [] } = useQuery({
     queryKey: ['marketing-notifications'],
     queryFn: () => base44.entities.MarketingNotification.list('-created_date', 50),
-    refetchInterval: 60000 // každú minútu
+    refetchInterval: 60000, // každú minútu
+    enabled: isAdmin
   });
 
   const { data: socialMetrics = [] } = useQuery({
     queryKey: ['social-metrics-notifications'],
-    queryFn: () => base44.entities.SocialMediaMetrics.filter({ status: 'active' })
+    queryFn: () => base44.entities.SocialMediaMetrics.filter({ status: 'active' }),
+    enabled: isAdmin
   });
 
   const { data: googleAdsMetrics = [] } = useQuery({
     queryKey: ['google-ads-notifications'],
-    queryFn: () => base44.entities.GoogleAdsMetrics.filter({ status: 'active' })
+    queryFn: () => base44.entities.GoogleAdsMetrics.filter({ status: 'active' }),
+    enabled: isAdmin
   });
 
   const markAsRead = useMutation({
@@ -108,6 +118,10 @@ export default function MarketingNotifications() {
 
   const unreadNotifications = notifications.filter(n => !n.read);
   const readNotifications = notifications.filter(n => n.read);
+
+  if (!isAdmin) {
+    return null;
+  }
 
   return (
     <>

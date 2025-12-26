@@ -19,7 +19,7 @@ export default function AdminUserManagement() {
 
   const { data: currentUser } = useQuery({
     queryKey: ['current-user'],
-    queryFn: () => base44.auth.me()
+    queryFn: () => base44.auth.me().catch(() => null)
   });
 
   const { data: allUsers = [] } = useQuery({
