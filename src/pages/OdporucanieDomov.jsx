@@ -69,7 +69,7 @@ ${JSON.stringify(publicHouses.map(h => ({
 
 TVOJA ÚLOHA:
 1. Analyzuj preferencie klienta
-2. Vyber 3 najvhodnejšie domy z CELEJ databázy (Ticab house, Prosto House, JAK Modules, Domki z Gór)
+2. Vyber 3 najvhodnejšie domy z CELEJ databázy (TICAB HOUSE, PROSTO HOUSE, DOMKI Z GÓR - BEZ JAK Modules!)
 3. Pre každý dom vysvetli PREČO je vhodný (match s požiadavkami)
 4. Zoraď od najvhodnejšieho
 5. Uveď klady a potenciálne kompromisy
