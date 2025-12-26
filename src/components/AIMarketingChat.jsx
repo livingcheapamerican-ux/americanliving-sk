@@ -287,7 +287,7 @@ Konzola (F12) má viac detailov.`,
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
       {/* Chat Panel */}
-      <Card className="lg:col-span-2 h-[900px] flex flex-col bg-gradient-to-br from-purple-50 to-pink-50 border-purple-300">
+      <Card className="lg:col-span-2 h-[1260px] flex flex-col bg-gradient-to-br from-purple-50 to-pink-50 border-purple-300">
       <CardHeader className="border-b bg-gradient-to-r from-purple-900 to-indigo-900 text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -558,7 +558,7 @@ Konzola (F12) má viac detailov.`,
     </Card>
 
     {/* Campaigns & Suggestions Panel */}
-    <Card className="h-[900px] flex flex-col bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-300">
+    <Card className="h-[1260px] flex flex-col bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-300">
     <CardHeader className="border-b bg-gradient-to-r from-blue-900 to-indigo-900 text-white">
       <CardTitle className="text-lg flex items-center gap-2">
         <Lightbulb className="w-5 h-5" />
