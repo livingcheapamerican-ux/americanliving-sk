@@ -119,7 +119,7 @@ export default function AIMarketingChat({ totalApiCost = 0, onStrategyApproved, 
   }, [monthlyBudget]);
 
   const sendMessage = async () => {
-    if (!input.trim() || isThinking) return;
+    if (!input || !input.trim() || isThinking) return;
 
     const userMessage = {
       id: Date.now(),
@@ -529,7 +529,7 @@ Konzola (F12) má viac detailov.`,
           />
           <Button
             onClick={sendMessage}
-            disabled={isThinking || !input.trim()}
+            disabled={isThinking || !input || !input.trim()}
             className="bg-purple-600 hover:bg-purple-700"
           >
             {isThinking ? (
