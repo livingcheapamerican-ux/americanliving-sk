@@ -67,25 +67,35 @@ ${JSON.stringify(publicHouses.map(h => ({
 
 TVOJA ÚLOHA:
 1. Analyzuj preferencie klienta
-2. Vyber 3 najvhodnejšie domy z databázy
+2. Vyber 3 najvhodnejšie domy z CELEJ databázy (Ticab house, Prosto House, JAK Modules, Domki z Gór)
 3. Pre každý dom vysvetli PREČO je vhodný (match s požiadavkami)
 4. Zoraď od najvhodnejšieho
 5. Uveď klady a potenciálne kompromisy
 
-DÔLEŽITÉ PRAVIDLÁ:
+KRITICKÉ PRAVIDLÁ PRE VÝBER DOMOV:
+- MUSÍŠ vyberať z CELEJ databázy, nie len z modulárnych domov
+- Prosto House = MONTOVANÉ domy (nie modulárne!) - vysoká kvalita, ekologické
+- Ticab house = MODULÁRNE domy - rýchla montáž, prefabrikované moduly
+- JAK Modules = MODULÁRNE domy - luxusnejšie riešenia
+- Domki z Gór = MONTOVANÉ domy - tradičný štýl
+
+DÔLEŽITÉ ROZDIELY MEDZI VÝROBCAMI:
 - Počet izieb je MAXIMUM - dom s 4 izbami môže byť upravený na 3 izby
 - Rozpočet je orientačný - môžeš odporučiť aj o 10-15% drahší dom ak je výrazne lepší
-- Prosto House má dopravu ZDARMA
-- Ticab house má individuálnu dopravu
-- JAK Modules a Domki z Gór majú dopravu cca 8-10k€
-- A0 upgrade pre Ticab house stojí +15-20k€
+
+DOPRAVA A NÁKLADY:
+- Prosto House: doprava ZDARMA, montáž ~13k€, základy ~8k€, prípojky ~10k€
+- Ticab house: individuálna doprava, A0 upgrade +15-20k€, pásy 11.8k€
+- JAK Modules: doprava 8-10k€, montáž v cene
+- Domki z Gór: doprava 8-10k€, montáž v cene
 
 KRITICKÉ - UVEDENÁ CENA:
 - zakladna_cena = ZÁKLADNÁ CENA (BEZ A0, bez základov, bez montáže)
-- V "considerations" VŽDY uveď: "Zobrazená cena je základná. Pre kompletný dom s A0 certifikátom a všetkými nákladmi odporúčame použiť konfigurátor na detaile domu."
+- V "considerations" VŽDY uveď: "Zobrazená cena je základná. Pre kompletný dom na kľúč počítajte s nákladmi na základy, montáž, prípojky a legislatívu. Použite konfigurátor pre presnú kalkuláciu."
 - Každý dom má vlastný konfigurátor kde si klient môže poskladať presný dom podľa svojich požiadaviek
-- estimated_total_cost = odhadni realistickú cenu s bežnými doplnkami (A0 ak Ticab house, základy, montáž, doprava)
+- estimated_total_cost = odhadni realistickú cenu s bežnými doplnkami
 
+POVINNÉ: Odporuč domy z RÔZNYCH výrobcov aby klient videl všetky možnosti (Prosto House, Ticab house, JAK, Domki)!
 Odporuč len domy ktoré SÚ v databáze!`;
 
       const result = await base44.integrations.Core.InvokeLLM({

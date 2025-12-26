@@ -38,34 +38,11 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
     setIsLoading(true);
 
     try {
-      // Použiť priamy fetch pre neprihlásených používateľov
-      let response;
-      try {
-        // Skúsiť SDK najprv (pre prihlásených)
-        response = await base44.functions.invoke('aiAsistent', {
-          message: userMessage,
-          context,
-          history: messages.slice(-5)
-        });
-      } catch (sdkError) {
-        // Ak SDK zlyhá (neprihlásený), použiť priamy fetch
-        console.log('SDK call failed, using direct fetch for unauthenticated user');
-        const fetchResponse = await fetch('/api/functions/aiAsistent', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message: userMessage,
-            context,
-            history: messages.slice(-5)
-          })
-        });
-        
-        if (!fetchResponse.ok) {
-          throw new Error('API call failed');
-        }
-        
-        response = { data: await fetchResponse.json() };
-      }
+      const response = await base44.functions.invoke('aiAsistent', {
+        message: userMessage,
+        context,
+        history: messages.slice(-5)
+      });
 
       setMessages(prev => [...prev, { 
         role: "assistant", 
@@ -74,7 +51,7 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
       }]);
 
       if (response.data.suggestion && onSuggestion) {
-        // Ak je callback pre návrhy, použijeme ho
+        onSuggestion(response.data.suggestion);
       }
     } catch (error) {
       console.error('AI Asistent Error:', error);
