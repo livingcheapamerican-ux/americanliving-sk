@@ -20,10 +20,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Invalid role' }, { status: 400 });
     }
 
-    // Use service role to invite user
-    const result = await base44.asServiceRole.users.inviteUser(email, role);
-    
-    console.log('Invite result:', result);
+    // Invite user - Base44 automaticky posiela pozvánku emailom
+    await base44.users.inviteUser(email, role);
 
     return Response.json({ 
       success: true,
@@ -31,6 +29,10 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('Invite error:', error);
+    return Response.json({ 
+      error: error.message || 'Chyba pri posielaní pozvánky',
+      details: error.toString()
+    }, { status: 500 });
   }
 });
