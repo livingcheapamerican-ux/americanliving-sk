@@ -21,6 +21,7 @@ export default function OdporucanieDomov() {
     rooms: 3,
     purpose: "",
     style: "",
+    region: "",
     otherNeeds: ""
   });
   const [recommendations, setRecommendations] = useState(null);
@@ -37,8 +38,8 @@ export default function OdporucanieDomov() {
     setRecommendations(null);
 
     try {
-      // Filtrovať len verejné domy
-      const publicHouses = allHouses.filter(h => h.verejny !== false);
+      // Filtrovať len verejné domy a vylúčiť JAK Modules
+      const publicHouses = allHouses.filter(h => h.verejny !== false && h.vyrobca !== 'JAK Modules');
 
       const prompt = `Analyzuj nasledujúce preferencie klienta a odporuč 3 najvhodnejšie domy z databázy.
 
@@ -47,6 +48,7 @@ PREFERENCIE KLIENTA:
 - Počet izieb: ${preferences.rooms}
 - Účel: ${preferences.purpose || 'Neuviedol'}
 - Štýl/dizajn: ${preferences.style || 'Neuviedol'}
+- Región: ${preferences.region || 'Neuviedol'}
 - Ďalšie požiadavky: ${preferences.otherNeeds || 'Žiadne'}
 
 DATABÁZA DOMOV:
@@ -76,8 +78,8 @@ KRITICKÉ PRAVIDLÁ PRE VÝBER DOMOV:
 - MUSÍŠ vyberať z CELEJ databázy, nie len z modulárnych domov
 - Prosto House = MONTOVANÉ domy (nie modulárne!) - vysoká kvalita, ekologické
 - Ticab house = MODULÁRNE domy - rýchla montáž, prefabrikované moduly
-- JAK Modules = MODULÁRNE domy - luxusnejšie riešenia
 - Domki z Gór = MONTOVANÉ domy - tradičný štýl
+- ❌ NEODPORÚČAJ JAK Modules - vyraď ich z výberu
 
 DÔLEŽITÉ ROZDIELY MEDZI VÝROBCAMI:
 - Počet izieb je MAXIMUM - dom s 4 izbami môže byť upravený na 3 izby
@@ -86,8 +88,13 @@ DÔLEŽITÉ ROZDIELY MEDZI VÝROBCAMI:
 DOPRAVA A NÁKLADY:
 - Prosto House: doprava ZDARMA, montáž ~13k€, základy ~8k€, prípojky ~10k€
 - Ticab house: individuálna doprava, A0 upgrade +15-20k€, pásy 11.8k€
-- JAK Modules: doprava 8-10k€, montáž v cene
 - Domki z Gór: doprava 8-10k€, montáž v cene
+
+REGIONÁLNE ŠPECIFIKÁ (zohľadni v odporúčaní):
+- Bratislavský kraj: vyššie príjmy, preferencie moderných domov, dôraz na energetickú efektívnosť A0
+- Košický/Prešovský kraj: nižší rozpočet, tradičnejší štýl, Domki z Gór populárne
+- Horské oblasti: potreba kvalitnej izolácie, odolnosť proti snehu, Ticab house A0 vhodné
+- Nížiny: dôraz na chladenie, terasa/pergola, Prosto House s veľkými oknami
 
 KRITICKÉ - UVEDENÁ CENA:
 - zakladna_cena = ZÁKLADNÁ CENA (BEZ A0, bez základov, bez montáže)
@@ -95,7 +102,7 @@ KRITICKÉ - UVEDENÁ CENA:
 - Každý dom má vlastný konfigurátor kde si klient môže poskladať presný dom podľa svojich požiadaviek
 - estimated_total_cost = odhadni realistickú cenu s bežnými doplnkami
 
-POVINNÉ: Odporuč domy z RÔZNYCH výrobcov aby klient videl všetky možnosti (Prosto House, Ticab house, JAK, Domki)!
+POVINNÉ: Odporuč domy z RÔZNYCH výrobcov (Prosto House, Ticab house, Domki z Gór) - vyraď JAK Modules!
 Odporuč len domy ktoré SÚ v databáze!`;
 
       const result = await base44.integrations.Core.InvokeLLM({
@@ -220,6 +227,19 @@ Odporuč len domy ktoré SÚ v databáze!`;
                     value={preferences.style}
                     onChange={(e) => setPreferences({...preferences, style: e.target.value})}
                   />
+                </div>
+
+                {/* Región */}
+                <div>
+                  <Label className="text-base font-semibold mb-2 block">
+                    🌍 Región / Lokalita
+                  </Label>
+                  <Input
+                    placeholder="napr. Bratislava, Tatry, Košice..."
+                    value={preferences.region}
+                    onChange={(e) => setPreferences({...preferences, region: e.target.value})}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">AI zohľadní klimatické podmienky vášho regiónu</p>
                 </div>
 
                 {/* Ďalšie požiadavky */}
