@@ -44,14 +44,18 @@ export default function AIAsistent({ context = "general", onSuggestion = null })
         history: messages.slice(-5)
       });
 
-      setMessages(prev => [...prev, { 
-        role: "assistant", 
-        content: response.data.response,
-        suggestion: response.data.suggestion
-      }]);
+      if (response?.data?.response) {
+        setMessages(prev => [...prev, { 
+          role: "assistant", 
+          content: response.data.response,
+          suggestion: response.data.suggestion
+        }]);
 
-      if (response.data.suggestion && onSuggestion) {
-        onSuggestion(response.data.suggestion);
+        if (response.data.suggestion && onSuggestion) {
+          onSuggestion(response.data.suggestion);
+        }
+      } else {
+        throw new Error('Neplatná odpoveď z AI');
       }
     } catch (error) {
       console.error('AI Asistent Error:', error);
