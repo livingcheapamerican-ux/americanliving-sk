@@ -15,6 +15,15 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     
+    // Sync analytics data first
+    console.log('🔄 Triggering analytics sync...');
+    try {
+      await base44.asServiceRole.functions.invoke('syncAnalyticsData', {});
+      console.log('✅ Analytics sync completed');
+    } catch (syncError) {
+      console.error('⚠️ Analytics sync failed:', syncError.message);
+    }
+    
     // Service role - beží automaticky bez user autentifikácie
     const user = await base44.auth.me().catch(() => null);
     
