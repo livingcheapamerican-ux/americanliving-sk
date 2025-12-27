@@ -38,13 +38,8 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
     const now = Date.now();
     const activeThreshold = 5 * 60 * 1000; // 5 minút
 
-    // Filtrovať len Ticab House a Prosto House
-    const filteredDomy = domy.filter(dom => 
-      dom.vyrobca?.includes('Ticab') || dom.vyrobca?.includes('Prosto')
-    );
-
-    // Inicializácia pre filtrované domy
-    filteredDomy.forEach(dom => {
+    // Inicializácia pre VŠETKY domy
+    domy.forEach(dom => {
       stats[dom.id] = {
         dom,
         totalVisits: 0,
@@ -71,33 +66,22 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
 
     // Spracovanie sessions
     sessions.forEach(session => {
-      // Nájsť všetky návštevy detail stránok domov
+      // METÓDA 1: Zo stránok navštívených (DetailDomu)
       session.pages_visited?.forEach(page => {
-        if (page.page_url?.includes('DetailDomu') || page.page_url?.includes('/dom/')) {
-          // Extrahovať dom_id z URL alebo z dom_interactions
+        if (page.page_url?.includes('DetailDomu')) {
           const urlParams = new URLSearchParams(page.page_url.split('?')[1] || '');
-          let domId = urlParams.get('id');
-          
-          // Ak nemáme ID z URL, skúsiť dom_interactions
-          if (!domId && session.dom_interactions) {
-            const interaction = session.dom_interactions.find(di => 
-              page.page_url.includes(di.dom_id) || page.page_url.includes(di.dom_nazov?.replace(/\s/g, ''))
-            );
-            domId = interaction?.dom_id;
-          }
+          const domId = urlParams.get('id');
 
           if (domId && stats[domId]) {
             const stat = stats[domId];
             stat.totalVisits++;
-            stat.uniqueVisitors.add(session.user_email || session.session_id);
+            stat.uniqueVisitors.add(session.user_email || session.location_info?.ip || session.session_id);
             
-            const pageDuration = page.time_spent || 0;
-            if (pageDuration > 0) {
-              stat.totalTimeSpent += pageDuration;
-            }
+            const pageDuration = page.time_spent_seconds || 0;
+            stat.totalTimeSpent += pageDuration;
 
-            // Demografia pre túto návštevu
-            const deviceType = session.device_info?.device_type || 'unknown';
+            // Demografia
+            const deviceType = session.device_info?.device_type || 'desktop';
             if (stat.demographics.devices[deviceType] !== undefined) {
               stat.demographics.devices[deviceType]++;
             }
@@ -107,7 +91,6 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
               stat.demographics.locations[city] = (stat.demographics.locations[city] || 0) + 1;
             }
 
-            // Odhad veku
             const hour = new Date(session.start_time).getHours();
             let ageGroup = '35-44';
             if (hour >= 0 && hour < 6) ageGroup = '18-24';
@@ -118,18 +101,17 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
             
             stat.demographics.ageGroups[ageGroup]++;
 
-            // Bounce rate
-            if (session.duration_seconds < 10 && session.pages_visited?.length <= 1) {
+            // Bounce (krátka návšteva)
+            if (pageDuration < 10 && (session.pages_visited?.length || 0) <= 1) {
               stat.bounces++;
             }
 
-            // Aktívne sessions
+            // Aktívne teraz
             const lastActivity = new Date(session.last_activity || session.start_time).getTime();
             if (now - lastActivity < activeThreshold) {
               stat.activeNow++;
             }
 
-            // Visitor info
             stat.visitors.push({
               email: session.user_email || 'Anonymous',
               time: session.start_time,
@@ -141,15 +123,22 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
         }
       });
 
-      // Konfigurátor akcie
+      // METÓDA 2: Z dom_interactions (backup)
       session.dom_interactions?.forEach(interaction => {
-        if (!interaction.dom_id || !stats[interaction.dom_id]) return;
+        const domId = interaction.dom_id;
+        if (!domId || !stats[domId]) return;
 
-        if (interaction.action === 'configurator_open') {
-          stats[interaction.dom_id].configuratorStarts++;
+        const stat = stats[domId];
+
+        if (interaction.action === 'view' || interaction.action === 'detail_view') {
+          // Už bolo spočítané vyššie, len pridať konfigurátor
         }
-        if (interaction.action === 'configurator_complete') {
-          stats[interaction.dom_id].configuratorCompletions++;
+
+        if (interaction.action === 'configurator_open' || interaction.action?.includes('konfigurator')) {
+          stat.configuratorStarts++;
+        }
+        if (interaction.action === 'configurator_complete' || interaction.action === 'dopyt_odoslany') {
+          stat.configuratorCompletions++;
         }
       });
 

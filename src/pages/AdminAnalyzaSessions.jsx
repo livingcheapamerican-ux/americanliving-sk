@@ -37,6 +37,7 @@ import { sk } from "date-fns/locale";
 import AnalyticsDashboard from "../components/analytics/AnalyticsDashboard";
 import HouseAnalyticsDashboard from "../components/analytics/HouseAnalyticsDashboard";
 import OnlineVisitorsMap from "../components/analytics/OnlineVisitorsMap";
+import VisitorSegments from "../components/analytics/VisitorSegments";
 
 export default function AdminAnalyzaSessions() {
   const [filterEmail, setFilterEmail] = useState("");
@@ -49,6 +50,7 @@ export default function AdminAnalyzaSessions() {
   const [sortBy, setSortBy] = useState("created_date");
   const [showMapModal, setShowMapModal] = useState(false);
   const [hideAdminSessions, setHideAdminSessions] = useState(true);
+  const [selectedSegment, setSelectedSegment] = useState(null);
 
   // Admin IP adresy na vylúčenie
   const ADMIN_IPS = [
@@ -258,14 +260,26 @@ export default function AdminAnalyzaSessions() {
         </div>
 
         <Tabs defaultValue="houses" className="mb-6">
-          <TabsList className="grid w-full max-w-3xl grid-cols-3">
+          <TabsList className="grid w-full max-w-4xl grid-cols-4">
             <TabsTrigger value="houses">🏠 Analytika Domov</TabsTrigger>
-            <TabsTrigger value="dashboard">📈 Analytics Dashboard</TabsTrigger>
-            <TabsTrigger value="sessions">🔍 Detailné Sessions</TabsTrigger>
+            <TabsTrigger value="segments">🧠 Segmenty</TabsTrigger>
+            <TabsTrigger value="dashboard">📈 Dashboard</TabsTrigger>
+            <TabsTrigger value="sessions">🔍 Sessions</TabsTrigger>
           </TabsList>
 
           <TabsContent value="houses">
             <HouseAnalyticsDashboard sessions={filteredSessions} domy={domy} />
+          </TabsContent>
+
+          <TabsContent value="segments">
+            <VisitorSegments 
+              sessions={filteredSessions} 
+              domy={domy}
+              onSegmentSelect={(segmentKey) => {
+                setSelectedSegment(segmentKey);
+                // TODO: Apply segment filter
+              }}
+            />
           </TabsContent>
 
           <TabsContent value="dashboard">
