@@ -64,12 +64,12 @@ export default function AdminAnalyzaSessions() {
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
-  const { data: sessions = [], isLoading } = useQuery({
+  const { data: sessions = [], isLoading, refetch: refetchSessions } = useQuery({
     queryKey: ['user-sessions'],
     queryFn: () => base44.entities.UserSession.list('-created_date', 1000),
     initialData: [],
     enabled: isAdmin,
-    refetchInterval: 30000
+    refetchInterval: 15000 // Aktualizácia každých 15 sekúnd
   });
 
   // Real-time online visitors
@@ -226,21 +226,35 @@ export default function AdminAnalyzaSessions() {
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">📊 Analytics & Sessions</h1>
             <p className="text-gray-600">Komplexná analytika ako Google Analytics</p>
-          </div>
-          <Button
-            onClick={() => setShowMapModal(true)}
-            className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold shadow-lg"
-          >
-            <Globe className="w-5 h-5 mr-2" />
-            <div className="text-left">
-              <div className="text-xs opacity-80">Online teraz</div>
-              <div className="text-xl font-black">{onlineVisitors.count}</div>
+            <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              Automatická aktualizácia každých 15 sekúnd
             </div>
-          </Button>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => refetchSessions()}
+              variant="outline"
+              className="bg-cyan-50 border-cyan-300 hover:bg-cyan-100"
+            >
+              <Settings className="w-4 h-4 mr-2" />
+              🔄 Obnoviť
+            </Button>
+            <Button
+              onClick={() => setShowMapModal(true)}
+              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold shadow-lg"
+            >
+              <Globe className="w-5 h-5 mr-2" />
+              <div className="text-left">
+                <div className="text-xs opacity-80">Online teraz</div>
+                <div className="text-xl font-black">{onlineVisitors.count}</div>
+              </div>
+            </Button>
+          </div>
         </div>
 
         <Tabs defaultValue="houses" className="mb-6">
