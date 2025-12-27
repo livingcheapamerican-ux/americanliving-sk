@@ -298,8 +298,8 @@ export default function VisitorSegments({ sessions, domy, onSegmentSelect }) {
                   <div>
                     <h4 className="font-bold text-sm mb-2">Ukážka návštevníkov</h4>
                     <div className="space-y-1 max-h-40 overflow-y-auto">
-                      {segment.visitors.slice(0, 5).map((visitor, idx) => (
-                        <div key={idx} className="text-xs bg-gray-50 p-2 rounded flex items-center justify-between">
+                      {segment.visitors.slice(0, 5).map((visitor) => (
+                        <div key={visitor.id} className="text-xs bg-gray-50 p-2 rounded flex items-center justify-between">
                           <span className="font-medium">{visitor.email}</span>
                           <div className="flex items-center gap-2">
                             <Badge variant="outline">{visitor.sessions} návštev</Badge>

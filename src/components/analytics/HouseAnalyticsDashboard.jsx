@@ -420,7 +420,7 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
                     </h4>
                     <div className="grid md:grid-cols-5 gap-2">
                       {stat.topPhotos.map((photo, idx) => (
-                        <Card key={idx} className="p-2 text-xs">
+                        <Card key={`${stat.dom.id}-photo-${idx}`} className="p-2 text-xs">
                           <p className="font-semibold text-gray-700 truncate" title={photo.url}>
                             Fotka #{idx + 1}
                           </p>
@@ -467,7 +467,7 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
                     <h4 className="font-semibold text-gray-900 mb-3">Posledné návštevy</h4>
                     <div className="space-y-1 max-h-40 overflow-y-auto">
                       {stat.visitors.slice(-5).reverse().map((visitor, idx) => (
-                        <div key={idx} className="flex items-center justify-between text-xs bg-white p-2 rounded">
+                        <div key={`${stat.dom.id}-visitor-${visitor.time}-${idx}`} className="flex items-center justify-between text-xs bg-white p-2 rounded">
                           <span className="font-medium">{visitor.email}</span>
                           <span className="text-gray-500">{visitor.city}</span>
                           <span className="text-gray-500">{visitor.device}</span>
