@@ -121,6 +121,20 @@ export default function Marketing() {
     }
   });
 
+  const syncAnalytics = useMutation({
+    mutationFn: () => base44.functions.invoke('syncAnalyticsData'),
+    onSuccess: (response) => {
+      if (response.data.success) {
+        toast.success('✅ Analytics data aktualizované!', {
+          description: `${response.data.results.metrics_synced} metrík, ${response.data.results.campaigns_synced} kampaní`
+        });
+      }
+    },
+    onError: (error) => {
+      toast.error('Chyba pri synchronizácii analytics dát: ' + error.message);
+    }
+  });
+
   // Filtrovať admin sessions
   const filterAdminSessions = (sessions) => {
     return sessions.filter(s => {
@@ -918,6 +932,27 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
           </div>
 
           <div className="flex gap-2">
+            {/* Analytics Sync Button */}
+            <Button
+              onClick={() => syncAnalytics.mutate()}
+              disabled={syncAnalytics.isPending}
+              variant="outline"
+              size="lg"
+              className="flex items-center gap-2 bg-cyan-50 border-cyan-300 hover:bg-cyan-100"
+            >
+              {syncAnalytics.isPending ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-cyan-600"></div>
+                  Sťahujem dáta...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="w-5 h-5 text-cyan-600" />
+                  📊 Aktualizovať Analytics
+                </>
+              )}
+            </Button>
+
             {/* Manual Run Button */}
             <Button
               onClick={() => runDailyRoutine.mutate()}
