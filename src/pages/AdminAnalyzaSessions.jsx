@@ -244,6 +244,24 @@ export default function AdminAnalyzaSessions() {
           </div>
           <div className="flex gap-2">
             <Button
+              onClick={async () => {
+                try {
+                  const response = await base44.functions.invoke('backfillDomInteractions');
+                  if (response.data?.success) {
+                    alert(`✅ ${response.data.message}`);
+                    refetchSessions();
+                  }
+                } catch (error) {
+                  alert(`❌ Chyba: ${error.message}`);
+                }
+              }}
+              variant="outline"
+              className="bg-purple-50 border-purple-300 hover:bg-purple-100"
+            >
+              <Activity className="w-4 h-4 mr-2" />
+              🔄 Načítať staré dáta
+            </Button>
+            <Button
               onClick={() => refetchSessions()}
               variant="outline"
               className="bg-cyan-50 border-cyan-300 hover:bg-cyan-100"
