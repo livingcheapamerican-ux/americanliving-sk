@@ -19,6 +19,7 @@ import {
   ChevronUp,
   Download
 } from "lucide-react";
+import ConfiguratorFunnel from "./ConfiguratorFunnel";
 
 export default function HouseAnalyticsDashboard({ sessions, domy }) {
   const [expandedHouse, setExpandedHouse] = useState(null);
@@ -431,33 +432,14 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
                   </div>
                 )}
 
-                {/* Konfiguračné kroky */}
-                {Object.keys(stat.configurationSteps).length > 0 && (
+                {/* Konfiguračné kroky - Detailný Funnel */}
+                {stat.configuratorStarts > 0 && (
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      <Settings className="w-4 h-4" />
-                      Konfiguračné kroky (funnel)
+                    <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                      <Settings className="w-5 h-5 text-indigo-600" />
+                      ⚙️ Konfigurátor Funnel Analýza
                     </h4>
-                    <div className="space-y-2">
-                      {Object.entries(stat.configurationSteps)
-                        .sort((a, b) => b[1] - a[1])
-                        .map(([step, count]) => (
-                          <div key={step} className="flex items-center gap-3">
-                            <div className="flex-1">
-                              <div className="flex justify-between text-xs mb-1">
-                                <span className="font-medium">{step}</span>
-                                <span className="text-gray-500">{count} používateľov</span>
-                              </div>
-                              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full bg-blue-600"
-                                  style={{ width: `${(count / stat.configuratorStarts) * 100}%` }}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                    </div>
+                    <ConfiguratorFunnel sessions={sessions} dom={stat.dom} />
                   </div>
                 )}
 
