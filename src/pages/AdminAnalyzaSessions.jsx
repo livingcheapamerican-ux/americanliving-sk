@@ -108,8 +108,11 @@ export default function AdminAnalyzaSessions() {
     if (hideAdminSessions) {
       if (ADMIN_EMAILS.includes(session.user_email)) return false;
       if (session.location_info?.ip && ADMIN_IPS.includes(session.location_info.ip)) return false;
+      // Filter sessions z app.base44.com (admin rozhranie)
+      if (session.referrer && session.referrer.includes('app.base44.com')) return false;
+      if (session.referrer_domain && session.referrer_domain.includes('app.base44.com')) return false;
     }
-    
+
     if (filterEmail && !session.user_email?.toLowerCase().includes(filterEmail.toLowerCase())) return false;
     if (filterDateFrom && new Date(session.start_time) < new Date(filterDateFrom)) return false;
     if (filterDateTo && new Date(session.start_time) > new Date(filterDateTo + 'T23:59:59')) return false;

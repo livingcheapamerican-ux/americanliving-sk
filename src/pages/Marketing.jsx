@@ -141,6 +141,9 @@ export default function Marketing() {
     return sessions.filter(s => {
       if (ADMIN_EMAILS.includes(s.user_email)) return false;
       if (s.location_info?.ip && ADMIN_IPS.includes(s.location_info.ip)) return false;
+      // Filter sessions z app.base44.com (admin rozhranie)
+      if (s.referrer && s.referrer.includes('app.base44.com')) return false;
+      if (s.referrer_domain && s.referrer_domain.includes('app.base44.com')) return false;
       return true;
     });
   };
