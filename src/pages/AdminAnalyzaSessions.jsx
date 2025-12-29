@@ -71,7 +71,8 @@ export default function AdminAnalyzaSessions() {
     queryFn: () => base44.entities.UserSession.list('-created_date', 1000),
     initialData: [],
     enabled: isAdmin,
-    refetchInterval: 15000 // Aktualizácia každých 15 sekúnd
+    refetchInterval: 10000, // Aktualizácia každých 10 sekúnd
+    staleTime: 0 // Vždy refetch najnovšie dáta
   });
 
   // Real-time online visitors
@@ -83,7 +84,8 @@ export default function AdminAnalyzaSessions() {
     },
     initialData: { count: 0, sessions: [] },
     enabled: isAdmin,
-    refetchInterval: 10000 // Update každých 10 sekúnd
+    refetchInterval: 8000, // Update každých 8 sekúnd
+    staleTime: 0 // Vždy refetch
   });
 
   const { data: domy = [] } = useQuery({
