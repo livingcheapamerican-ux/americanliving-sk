@@ -204,6 +204,17 @@ export default function DetailDomu() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [lightboxOpen, lightboxImages]);
 
+  // Track dom view
+  useEffect(() => {
+    if (dom && window.trackDomInteraction) {
+      window.trackDomInteraction(dom.id, dom.nazov, 'view_start');
+      
+      return () => {
+        window.trackDomInteraction(dom.id, dom.nazov, 'view_end');
+      };
+    }
+  }, [dom]);
+
   // SEO Meta tags
   useEffect(() => {
     if (dom) {

@@ -562,10 +562,12 @@ export default function SessionRecorder() {
 
   // Expose global tracking functions for components
   useEffect(() => {
-    window.trackConfiguratorInteraction = (domNazov, action, optionSelected, price) => {
+    window.trackConfiguratorInteraction = (domId, domNazov, action, optionSelected, price, category) => {
       configuratorInteractionsRef.current.push({
+        dom_id: domId,
         dom_nazov: domNazov,
         action: action,
+        category: category,
         option_selected: optionSelected,
         price_at_time: price,
         timestamp: new Date().toISOString()
@@ -573,7 +575,7 @@ export default function SessionRecorder() {
       scheduleSave();
     };
 
-    window.trackDomInteraction = (domId, domNazov, action) => {
+    window.trackDomInteraction = (domId, domNazov, action, category) => {
       const existingInteraction = domInteractionsRef.current.find(
         i => i.dom_id === domId && i.action === action && !i.duration_seconds
       );
@@ -583,12 +585,19 @@ export default function SessionRecorder() {
           dom_id: domId,
           dom_nazov: domNazov,
           action: action,
+          category: category,
           timestamp: new Date().toISOString(),
           duration_seconds: 0
         });
-      } else if (action === 'view_end' && existingInteraction) {
-        const startTime = new Date(existingInteraction.timestamp).getTime();
-        existingInteraction.duration_seconds = Math.round((Date.now() - startTime) / 1000);
+      } else if (action === 'view_end') {
+        const viewStart = domInteractionsRef.current.find(
+          i => i.dom_id === domId && i.action === 'view_start' && !i.duration_seconds
+        );
+        if (viewStart) {
+          const startTime = new Date(viewStart.timestamp).getTime();
+          viewStart.duration_seconds = Math.round((Date.now() - startTime) / 1000);
+          viewStart.action = 'view'; // Change to 'view' after calculating duration
+        }
       }
       
       scheduleSave();
