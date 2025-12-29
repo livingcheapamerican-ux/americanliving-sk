@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
 import KonfiguratorLyon, { LyonSummaryPanel } from "./KonfiguratorLyon";
 import { useLanguage } from "./LanguageContext";
 import LyonFinalSummaryModal from "./LyonFinalSummaryModal";
