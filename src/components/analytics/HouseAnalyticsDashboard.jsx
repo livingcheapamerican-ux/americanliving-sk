@@ -69,12 +69,20 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
     sessions.forEach(session => {
       // METÓDA 1: Zo stránok navštívených (DetailDomu)
       session.pages_visited?.forEach(page => {
-        if (page.page_url?.includes('DetailDomu')) {
+        if (page.page_url?.includes('DetailDomu') || page.page_url?.includes('detail-domu')) {
           const urlParams = new URLSearchParams(page.page_url.split('?')[1] || '');
           const domId = urlParams.get('id');
+          const domSlug = urlParams.get('slug');
 
-          if (domId && stats[domId]) {
-            const stat = stats[domId];
+          // Nájdi dom buď podľa ID alebo slugu
+          let targetDomId = domId;
+          if (!targetDomId && domSlug) {
+            const domBySlug = domy.find(d => d.slug === domSlug);
+            targetDomId = domBySlug?.id;
+          }
+
+          if (targetDomId && stats[targetDomId]) {
+            const stat = stats[targetDomId];
             stat.totalVisits++;
             stat.uniqueVisitors.add(session.user_email || session.location_info?.ip || session.session_id);
             
@@ -124,15 +132,25 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
         }
       });
 
-      // METÓDA 2: Z dom_interactions (backup)
+      // METÓDA 2: Z dom_interactions (primárna metóda)
       session.dom_interactions?.forEach(interaction => {
         const domId = interaction.dom_id;
         if (!domId || !stats[domId]) return;
 
         const stat = stats[domId];
 
-        if (interaction.action === 'view' || interaction.action === 'detail_view') {
-          // Už bolo spočítané vyššie, len pridať konfigurátor
+        if (interaction.action === 'view') {
+          // Započítaj návštevu iba ak nebola už započítaná z pages_visited
+          const alreadyCounted = session.pages_visited?.some(p => {
+            const urlParams = new URLSearchParams(p.page_url?.split('?')[1] || '');
+            return urlParams.get('id') === domId;
+          });
+
+          if (!alreadyCounted) {
+            stat.totalVisits++;
+            stat.uniqueVisitors.add(session.user_email || session.location_info?.ip || session.session_id);
+            stat.totalTimeSpent += interaction.duration_seconds || 0;
+          }
         }
 
         if (interaction.action === 'configurator_open' || interaction.action?.includes('konfigurator')) {
