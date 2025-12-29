@@ -245,6 +245,7 @@ export default function AdminAnalyzaSessions() {
           <div className="flex gap-2">
             <Button
               onClick={async () => {
+                if (!confirm('Načítať späť interakcie domov zo starých sessions?')) return;
                 try {
                   const response = await base44.functions.invoke('backfillDomInteractions');
                   if (response.data?.success) {
@@ -260,6 +261,25 @@ export default function AdminAnalyzaSessions() {
             >
               <Activity className="w-4 h-4 mr-2" />
               🔄 Načítať staré dáta
+            </Button>
+            <Button
+              onClick={async () => {
+                if (!confirm('Doplniť GPS lokácie pre staré sessions? (môže trvať niekoľko minút)')) return;
+                try {
+                  const response = await base44.functions.invoke('enrichLocationData');
+                  if (response.data?.success) {
+                    alert(`✅ ${response.data.message}`);
+                    refetchSessions();
+                  }
+                } catch (error) {
+                  alert(`❌ Chyba: ${error.message}`);
+                }
+              }}
+              variant="outline"
+              className="bg-green-50 border-green-300 hover:bg-green-100"
+            >
+              <MapPin className="w-4 h-4 mr-2" />
+              📍 GPS lokácie
             </Button>
             <Button
               onClick={() => refetchSessions()}

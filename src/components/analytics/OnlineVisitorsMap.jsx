@@ -66,21 +66,62 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
   }, [sessions, timeFilter, customDate]);
 
   const locations = useMemo(() => {
-    return filteredSessions
+    // Skupina sessions podľa mesta pre presnejšie zobrazenie
+    const cityGroups = {};
+    
+    filteredSessions
       .filter(s => s.location_info?.latitude && s.location_info?.longitude)
-      .map(s => ({
-        latitude: s.location_info.latitude,
-        longitude: s.location_info.longitude,
-        city: s.location_info.city,
-        country: s.location_info.country,
-        user: s.user_name || 'Anonymous',
-        email: s.user_email,
-        device: s.device_info?.device_type,
-        browser: s.device_info?.browser,
-        isActive: s.is_active,
-        timestamp: s.start_time,
-        duration: s.duration_seconds
-      }));
+      .forEach(s => {
+        const cityKey = `${s.location_info.city}_${s.location_info.country}`;
+        if (!cityGroups[cityKey]) {
+          cityGroups[cityKey] = {
+            latitude: s.location_info.latitude,
+            longitude: s.location_info.longitude,
+            city: s.location_info.city,
+            country: s.location_info.country,
+            sessions: []
+          };
+        }
+        cityGroups[cityKey].sessions.push({
+          user: s.user_name || 'Anonymous',
+          email: s.user_email,
+          device: s.device_info?.device_type,
+          browser: s.device_info?.browser,
+          isActive: s.is_active,
+          timestamp: s.start_time,
+          duration: s.duration_seconds
+        });
+      });
+
+    // Rozmiestni návštevníkov z rovnakého mesta v malom okruhu
+    const result = [];
+    Object.values(cityGroups).forEach(group => {
+      const baseLat = group.latitude;
+      const baseLng = group.longitude;
+      
+      group.sessions.forEach((session, idx) => {
+        // Pridaj malý offset pre každú session v rovnakom meste
+        // Offset v rozmedzí ~500m
+        const offsetLat = (Math.random() - 0.5) * 0.005;
+        const offsetLng = (Math.random() - 0.5) * 0.005;
+        
+        result.push({
+          latitude: baseLat + offsetLat,
+          longitude: baseLng + offsetLng,
+          city: group.city,
+          country: group.country,
+          user: session.user,
+          email: session.email,
+          device: session.device,
+          browser: session.browser,
+          isActive: session.isActive,
+          timestamp: session.timestamp,
+          duration: session.duration
+        });
+      });
+    });
+    
+    return result;
   }, [filteredSessions]);
 
   const stats = {
