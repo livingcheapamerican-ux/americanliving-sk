@@ -525,6 +525,11 @@ export default function AnalyticsDashboard({ sessions }) {
             </div>
           ))}
         </div>
+        ) : (
+          <div className="text-center py-8 text-gray-400">
+            Žiadne dáta o domoch pre zvolený filter
+          </div>
+        )}
       </Card>
 
       {/* Top Stránky */}
