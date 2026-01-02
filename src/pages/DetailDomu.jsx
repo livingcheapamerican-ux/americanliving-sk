@@ -108,6 +108,9 @@ export default function DetailDomu() {
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [wizardKey, setWizardKey] = useState(0);
 
+  // Flying animation hook
+  const { animations, triggerAnimation } = useFlyingAnimation();
+
   // State pre Ticabhouse konfigurátor - predvolene REKREAČNÁ STAVBA (chata)
   const [lyonUcel, setLyonUcel] = useState("chata");
   const [lyonIzolaciaStien, setLyonIzolaciaStien] = useState("150mm");
@@ -3307,6 +3310,9 @@ export default function DetailDomu() {
 
       {/* Floating Price Display - len ak nie je JAK Modules */}
       {!isJAKModules && <FloatingPrice price={calculatedPrice} isVisible={showCalculator} />}
+
+      {/* Flying Animations Container */}
+      <FlyingAnimationContainer animations={animations} />
 
       {/* Lightbox */}
       {lightboxOpen && (
