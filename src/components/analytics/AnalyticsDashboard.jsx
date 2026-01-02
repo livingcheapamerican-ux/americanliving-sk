@@ -17,6 +17,48 @@ import {
 } from "lucide-react";
 
 export default function AnalyticsDashboard({ sessions }) {
+  const [timeRange, setTimeRange] = useState("today"); // today, week, month, custom
+  const [customStartDate, setCustomStartDate] = useState("");
+  const [customEndDate, setCustomEndDate] = useState("");
+  const [activeFilter, setActiveFilter] = useState("all"); // all, active, inactive
+  const [deviceFilter, setDeviceFilter] = useState("all"); // all, desktop, mobile, tablet
+
+  // Filter sessions based on selected criteria
+  const filteredSessions = useMemo(() => {
+    const now = new Date();
+    let startDate, endDate;
+
+    // Time range filtering
+    if (timeRange === "today") {
+      startDate = startOfDay(now);
+      endDate = endOfDay(now);
+    } else if (timeRange === "week") {
+      startDate = startOfWeek(now, { locale: sk });
+      endDate = endOfWeek(now, { locale: sk });
+    } else if (timeRange === "month") {
+      startDate = startOfMonth(now);
+      endDate = endOfMonth(now);
+    } else if (timeRange === "custom" && customStartDate && customEndDate) {
+      startDate = new Date(customStartDate);
+      endDate = endOfDay(new Date(customEndDate));
+    } else {
+      return sessions;
+    }
+
+    return sessions.filter(session => {
+      const sessionDate = new Date(session.start_time);
+      const inTimeRange = sessionDate >= startDate && sessionDate <= endDate;
+      
+      const matchesActive = activeFilter === "all" || 
+        (activeFilter === "active" && session.is_active) ||
+        (activeFilter === "inactive" && !session.is_active);
+      
+      const matchesDevice = deviceFilter === "all" || 
+        session.device_info?.device_type === deviceFilter;
+
+      return inTimeRange && matchesActive && matchesDevice;
+    });
+  }, [sessions, timeRange, customStartDate, customEndDate, activeFilter, deviceFilter]);
   const analytics = useMemo(() => {
     // Najnavštevovanejšie domy
     const domVisits = {};
@@ -180,7 +222,7 @@ export default function AnalyticsDashboard({ sessions }) {
       avgTimeByPage,
       configuratorStats
     };
-  }, [sessions]);
+  }, [filteredSessions]);
 
   const formatDuration = (seconds) => {
     if (!seconds) return '0s';
@@ -191,6 +233,229 @@ export default function AnalyticsDashboard({ sessions }) {
 
   return (
     <div className="space-y-6">
+      {/* Filters Section */}
+      <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="w-5 h-5 text-indigo-600" />
+            Filtre a časové obdobie
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Time Range Filters */}
+          <div>
+            <label className="text-sm font-semibold text-gray-700 mb-2 block">Časové obdobie</label>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                size="sm"
+                variant={timeRange === "today" ? "default" : "outline"}
+                onClick={() => setTimeRange("today")}
+                className={timeRange === "today" ? "bg-indigo-600" : ""}
+              >
+                <Calendar className="w-4 h-4 mr-2" />
+                Dnes
+              </Button>
+              <Button
+                size="sm"
+                variant={timeRange === "week" ? "default" : "outline"}
+                onClick={() => setTimeRange("week")}
+                className={timeRange === "week" ? "bg-indigo-600" : ""}
+              >
+                Tento týždeň
+              </Button>
+              <Button
+                size="sm"
+                variant={timeRange === "month" ? "default" : "outline"}
+                onClick={() => setTimeRange("month")}
+                className={timeRange === "month" ? "bg-indigo-600" : ""}
+              >
+                Tento mesiac
+              </Button>
+              <Button
+                size="sm"
+                variant={timeRange === "custom" ? "default" : "outline"}
+                onClick={() => setTimeRange("custom")}
+                className={timeRange === "custom" ? "bg-indigo-600" : ""}
+              >
+                Vlastné obdobie
+              </Button>
+            </div>
+            {timeRange === "custom" && (
+              <div className="flex gap-2 mt-3">
+                <input
+                  type="date"
+                  value={customStartDate}
+                  onChange={(e) => setCustomStartDate(e.target.value)}
+                  className="px-3 py-2 border rounded-md text-sm"
+                  placeholder="Od"
+                />
+                <input
+                  type="date"
+                  value={customEndDate}
+                  onChange={(e) => setCustomEndDate(e.target.value)}
+                  className="px-3 py-2 border rounded-md text-sm"
+                  placeholder="Do"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Active Status Filter */}
+          <div>
+            <label className="text-sm font-semibold text-gray-700 mb-2 block">Status</label>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant={activeFilter === "all" ? "default" : "outline"}
+                onClick={() => setActiveFilter("all")}
+                className={activeFilter === "all" ? "bg-indigo-600" : ""}
+              >
+                Všetky
+              </Button>
+              <Button
+                size="sm"
+                variant={activeFilter === "active" ? "default" : "outline"}
+                onClick={() => setActiveFilter("active")}
+                className={activeFilter === "active" ? "bg-green-600" : ""}
+              >
+                <Activity className="w-4 h-4 mr-2" />
+                Aktívne
+              </Button>
+              <Button
+                size="sm"
+                variant={activeFilter === "inactive" ? "default" : "outline"}
+                onClick={() => setActiveFilter("inactive")}
+              >
+                Neaktívne
+              </Button>
+            </div>
+          </div>
+
+          {/* Device Filter */}
+          <div>
+            <label className="text-sm font-semibold text-gray-700 mb-2 block">Zariadenie</label>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant={deviceFilter === "all" ? "default" : "outline"}
+                onClick={() => setDeviceFilter("all")}
+                className={deviceFilter === "all" ? "bg-indigo-600" : ""}
+              >
+                Všetky
+              </Button>
+              <Button
+                size="sm"
+                variant={deviceFilter === "desktop" ? "default" : "outline"}
+                onClick={() => setDeviceFilter("desktop")}
+              >
+                <Monitor className="w-4 h-4 mr-2" />
+                Desktop
+              </Button>
+              <Button
+                size="sm"
+                variant={deviceFilter === "mobile" ? "default" : "outline"}
+                onClick={() => setDeviceFilter("mobile")}
+              >
+                <Smartphone className="w-4 h-4 mr-2" />
+                Mobil
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Trend Charts */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Visits Trend */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-blue-600" />
+              Trend návštevnosti
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={250}>
+              <AreaChart data={trendData}>
+                <defs>
+                  <linearGradient id="colorVisits" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="displayDate" />
+                <YAxis />
+                <Tooltip />
+                <Area type="monotone" dataKey="visits" stroke="#3b82f6" fillOpacity={1} fill="url(#colorVisits)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        {/* Avg Duration Trend */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="w-5 h-5 text-purple-600" />
+              Priemerný čas na stránke
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={trendData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="displayDate" />
+                <YAxis />
+                <Tooltip formatter={(value) => `${value}s`} />
+                <Line type="monotone" dataKey="avgDuration" stroke="#9333ea" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        {/* Bounce Rate Trend */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Activity className="w-5 h-5 text-red-600" />
+              Bounce Rate
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={trendData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="displayDate" />
+                <YAxis />
+                <Tooltip formatter={(value) => `${value}%`} />
+                <Bar dataKey="bounceRate" fill="#ef4444" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        {/* Conversions Trend */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="w-5 h-5 text-green-600" />
+              Konverzie
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={trendData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="displayDate" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="conversions" fill="#10b981" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
       {/* Top Domy */}
       <Card className="p-6">
         <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
