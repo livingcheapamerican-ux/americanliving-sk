@@ -383,6 +383,7 @@ export default function AnalyticsDashboard({ sessions }) {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {trendData.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
               <AreaChart data={trendData}>
                 <defs>
@@ -398,6 +399,11 @@ export default function AnalyticsDashboard({ sessions }) {
                 <Area type="monotone" dataKey="visits" stroke="#3b82f6" fillOpacity={1} fill="url(#colorVisits)" />
               </AreaChart>
             </ResponsiveContainer>
+            ) : (
+              <div className="h-[250px] flex items-center justify-center text-gray-400">
+                Žiadne dáta pre zvolený filter
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -410,6 +416,7 @@ export default function AnalyticsDashboard({ sessions }) {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {trendData.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={trendData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -419,6 +426,11 @@ export default function AnalyticsDashboard({ sessions }) {
                 <Line type="monotone" dataKey="avgDuration" stroke="#9333ea" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
+            ) : (
+              <div className="h-[250px] flex items-center justify-center text-gray-400">
+                Žiadne dáta pre zvolený filter
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -431,6 +443,7 @@ export default function AnalyticsDashboard({ sessions }) {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {trendData.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={trendData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -440,6 +453,11 @@ export default function AnalyticsDashboard({ sessions }) {
                 <Bar dataKey="bounceRate" fill="#ef4444" />
               </BarChart>
             </ResponsiveContainer>
+            ) : (
+              <div className="h-[250px] flex items-center justify-center text-gray-400">
+                Žiadne dáta pre zvolený filter
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -452,6 +470,7 @@ export default function AnalyticsDashboard({ sessions }) {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {trendData.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={trendData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -461,6 +480,11 @@ export default function AnalyticsDashboard({ sessions }) {
                 <Bar dataKey="conversions" fill="#10b981" />
               </BarChart>
             </ResponsiveContainer>
+            ) : (
+              <div className="h-[250px] flex items-center justify-center text-gray-400">
+                Žiadne dáta pre zvolený filter
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -470,6 +494,7 @@ export default function AnalyticsDashboard({ sessions }) {
           <Home className="w-5 h-5 text-blue-600" />
           🏆 TOP 10 Najnavštevovanejších domov
         </h3>
+        {analytics.topDomy.length > 0 ? (
         <div className="space-y-3">
           {analytics.topDomy.map((dom, idx) => (
             <div key={dom.id} className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-white rounded-lg border hover:shadow-md transition-shadow">
@@ -508,6 +533,7 @@ export default function AnalyticsDashboard({ sessions }) {
           <BarChart3 className="w-5 h-5 text-green-600" />
           📄 TOP 10 Najnavštevovanejších stránok
         </h3>
+        {analytics.topPages.length > 0 ? (
         <div className="space-y-3">
           {analytics.topPages.map((page, idx) => (
             <div key={page.url} className="flex items-center justify-between p-3 bg-gradient-to-r from-green-50 to-white rounded-lg border">
@@ -535,6 +561,11 @@ export default function AnalyticsDashboard({ sessions }) {
             </div>
           ))}
         </div>
+        ) : (
+          <div className="text-center py-8 text-gray-400">
+            Žiadne dáta o stránkach pre zvolený filter
+          </div>
+        )}
       </Card>
 
       {/* Blog Analytics */}
@@ -568,6 +599,7 @@ export default function AnalyticsDashboard({ sessions }) {
             <Activity className="w-5 h-5 text-orange-600" />
             🌐 Zdroje návštevníkov
           </h3>
+          {analytics.topSources.length > 0 ? (
           <div className="space-y-2">
             {analytics.topSources.map((source) => (
               <div key={source.source} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -579,6 +611,11 @@ export default function AnalyticsDashboard({ sessions }) {
               </div>
             ))}
           </div>
+          ) : (
+            <div className="text-center py-8 text-gray-400">
+              Žiadne dáta
+            </div>
+          )}
         </Card>
 
         {/* Zariadenia */}
@@ -588,48 +625,57 @@ export default function AnalyticsDashboard({ sessions }) {
             📱 Rozloženie zariadení
           </h3>
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">💻 Desktop</span>
-              <div className="flex items-center gap-2">
-                <div className="w-32 bg-gray-200 rounded-full h-3">
-                  <div 
-                    className="bg-teal-600 h-3 rounded-full transition-all" 
-                    style={{ width: `${(analytics.deviceStats.desktop / filteredSessions.length) * 100}%` }}
-                  />
+            {filteredSessions.length > 0 ? (
+              <>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">💻 Desktop</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-32 bg-gray-200 rounded-full h-3">
+                      <div 
+                        className="bg-teal-600 h-3 rounded-full transition-all" 
+                        style={{ width: `${(analytics.deviceStats.desktop / filteredSessions.length) * 100}%` }}
+                      />
+                    </div>
+                    <Badge className="bg-teal-100 text-teal-800">{analytics.deviceStats.desktop}</Badge>
+                  </div>
                 </div>
-                <Badge className="bg-teal-100 text-teal-800">{analytics.deviceStats.desktop}</Badge>
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">📱 Mobil</span>
-              <div className="flex items-center gap-2">
-                <div className="w-32 bg-gray-200 rounded-full h-3">
-                  <div 
-                    className="bg-blue-600 h-3 rounded-full transition-all" 
-                    style={{ width: `${(analytics.deviceStats.mobile / filteredSessions.length) * 100}%` }}
-                  />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">📱 Mobil</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-32 bg-gray-200 rounded-full h-3">
+                      <div 
+                        className="bg-blue-600 h-3 rounded-full transition-all" 
+                        style={{ width: `${(analytics.deviceStats.mobile / filteredSessions.length) * 100}%` }}
+                      />
+                    </div>
+                    <Badge className="bg-blue-100 text-blue-800">{analytics.deviceStats.mobile}</Badge>
+                  </div>
                 </div>
-                <Badge className="bg-blue-100 text-blue-800">{analytics.deviceStats.mobile}</Badge>
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">📲 Tablet</span>
-              <div className="flex items-center gap-2">
-                <div className="w-32 bg-gray-200 rounded-full h-3">
-                  <div 
-                    className="bg-purple-600 h-3 rounded-full transition-all" 
-                    style={{ width: `${(analytics.deviceStats.tablet / filteredSessions.length) * 100}%` }}
-                  />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">📲 Tablet</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-32 bg-gray-200 rounded-full h-3">
+                      <div 
+                        className="bg-purple-600 h-3 rounded-full transition-all" 
+                        style={{ width: `${(analytics.deviceStats.tablet / filteredSessions.length) * 100}%` }}
+                      />
+                    </div>
+                    <Badge className="bg-purple-100 text-purple-800">{analytics.deviceStats.tablet}</Badge>
+                  </div>
                 </div>
-                <Badge className="bg-purple-100 text-purple-800">{analytics.deviceStats.tablet}</Badge>
+              </>
+            ) : (
+              <div className="text-center py-8 text-gray-400">
+                Žiadne dáta
               </div>
-            </div>
+            )}
           </div>
         </Card>
 
         {/* Top krajiny */}
         <Card className="p-6">
           <h3 className="text-lg font-bold mb-4">🌍 TOP 5 Krajín</h3>
+          {analytics.topCountries.length > 0 ? (
           <div className="space-y-2">
             {analytics.topCountries.map((country, idx) => (
               <div key={country.country} className="flex items-center justify-between p-2 bg-gray-50 rounded">
@@ -641,6 +687,11 @@ export default function AnalyticsDashboard({ sessions }) {
               </div>
             ))}
           </div>
+          ) : (
+            <div className="text-center py-8 text-gray-400">
+              Žiadne dáta
+            </div>
+          )}
         </Card>
 
         {/* Konfigurátor Stats */}
