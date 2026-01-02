@@ -1,6 +1,7 @@
-import React, { useMemo } from "react";
-import { Card } from "@/components/ui/card";
+import React, { useMemo, useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -13,8 +14,15 @@ import {
   Settings,
   BarChart3,
   PieChart,
-  Activity
+  Activity,
+  Calendar,
+  Filter,
+  Monitor,
+  Smartphone
 } from "lucide-react";
+import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { format, startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns";
+import { sk } from "date-fns/locale";
 
 export default function AnalyticsDashboard({ sessions }) {
   const [timeRange, setTimeRange] = useState("today"); // today, week, month, custom
@@ -65,7 +73,7 @@ export default function AnalyticsDashboard({ sessions }) {
     const domTimes = {};
     const domConfiguratorUse = {};
     
-    sessions.forEach(session => {
+    filteredSessions.forEach(session => {
       session.dom_interactions?.forEach(interaction => {
         const domId = interaction.dom_id;
         const domNazov = interaction.dom_nazov;
@@ -96,7 +104,7 @@ export default function AnalyticsDashboard({ sessions }) {
 
     // Najčítanejšie stránky
     const pageVisits = {};
-    sessions.forEach(session => {
+    filteredSessions.forEach(session => {
       session.pages_visited?.forEach(page => {
         if (!pageVisits[page.page_url]) {
           pageVisits[page.page_url] = { 
@@ -135,7 +143,7 @@ export default function AnalyticsDashboard({ sessions }) {
 
     // Zdroje návštevníkov
     const trafficSources = {};
-    sessions.forEach(session => {
+    filteredSessions.forEach(session => {
       const source = session.referrer_domain || 'direct';
       if (!trafficSources[source]) {
         trafficSources[source] = { source, count: 0, conversions: 0 };
@@ -152,14 +160,14 @@ export default function AnalyticsDashboard({ sessions }) {
 
     // Zariadenia
     const deviceStats = {
-      desktop: sessions.filter(s => s.device_info?.device_type === 'desktop').length,
-      mobile: sessions.filter(s => s.device_info?.device_type === 'mobile').length,
-      tablet: sessions.filter(s => s.device_info?.device_type === 'tablet').length
+      desktop: filteredSessions.filter(s => s.device_info?.device_type === 'desktop').length,
+      mobile: filteredSessions.filter(s => s.device_info?.device_type === 'mobile').length,
+      tablet: filteredSessions.filter(s => s.device_info?.device_type === 'tablet').length
     };
 
     // Krajiny
     const countries = {};
-    sessions.forEach(session => {
+    filteredSessions.forEach(session => {
       const country = session.location_info?.country || 'Neznáma';
       countries[country] = (countries[country] || 0) + 1;
     });
@@ -171,7 +179,7 @@ export default function AnalyticsDashboard({ sessions }) {
 
     // Konverzie
     const conversionsByType = {};
-    sessions.forEach(session => {
+    filteredSessions.forEach(session => {
       session.conversions?.forEach(conv => {
         const type = conv.type || 'unknown';
         conversionsByType[type] = (conversionsByType[type] || 0) + 1;
@@ -180,7 +188,7 @@ export default function AnalyticsDashboard({ sessions }) {
 
     // Časové rozloženie návštev (hodiny)
     const hourlyVisits = Array(24).fill(0);
-    sessions.forEach(session => {
+    filteredSessions.forEach(session => {
       const hour = new Date(session.start_time).getHours();
       hourlyVisits[hour]++;
     });
@@ -199,7 +207,7 @@ export default function AnalyticsDashboard({ sessions }) {
       completionRate: 0
     };
 
-    sessions.forEach(session => {
+    filteredSessions.forEach(session => {
       if (session.configurator_interactions?.length > 0) {
         configuratorStats.totalInteractions += session.configurator_interactions.length;
         configuratorStats.uniqueUsers.add(session.user_email);
@@ -586,7 +594,7 @@ export default function AnalyticsDashboard({ sessions }) {
                 <div className="w-32 bg-gray-200 rounded-full h-3">
                   <div 
                     className="bg-teal-600 h-3 rounded-full transition-all" 
-                    style={{ width: `${(analytics.deviceStats.desktop / sessions.length) * 100}%` }}
+                    style={{ width: `${(analytics.deviceStats.desktop / filteredSessions.length) * 100}%` }}
                   />
                 </div>
                 <Badge className="bg-teal-100 text-teal-800">{analytics.deviceStats.desktop}</Badge>
@@ -598,7 +606,7 @@ export default function AnalyticsDashboard({ sessions }) {
                 <div className="w-32 bg-gray-200 rounded-full h-3">
                   <div 
                     className="bg-blue-600 h-3 rounded-full transition-all" 
-                    style={{ width: `${(analytics.deviceStats.mobile / sessions.length) * 100}%` }}
+                    style={{ width: `${(analytics.deviceStats.mobile / filteredSessions.length) * 100}%` }}
                   />
                 </div>
                 <Badge className="bg-blue-100 text-blue-800">{analytics.deviceStats.mobile}</Badge>
@@ -610,7 +618,7 @@ export default function AnalyticsDashboard({ sessions }) {
                 <div className="w-32 bg-gray-200 rounded-full h-3">
                   <div 
                     className="bg-purple-600 h-3 rounded-full transition-all" 
-                    style={{ width: `${(analytics.deviceStats.tablet / sessions.length) * 100}%` }}
+                    style={{ width: `${(analytics.deviceStats.tablet / filteredSessions.length) * 100}%` }}
                   />
                 </div>
                 <Badge className="bg-purple-100 text-purple-800">{analytics.deviceStats.tablet}</Badge>
