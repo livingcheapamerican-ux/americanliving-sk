@@ -34,6 +34,7 @@ import KonfiguratorTicabhouse from "../components/KonfiguratorTicabhouse";
 
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
+import { FlyingAnimationContainer, useFlyingAnimation } from "../components/FlyingAnimation";
 
 
 export default function DetailDomu() {
