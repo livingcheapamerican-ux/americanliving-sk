@@ -21,6 +21,13 @@ import {
 } from "lucide-react";
 import ConfiguratorFunnel from "./ConfiguratorFunnel";
 
+const formatDuration = (seconds) => {
+  if (!seconds) return '0s';
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.round(seconds % 60);
+  return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+};
+
 export default function HouseAnalyticsDashboard({ sessions, domy }) {
   const [expandedHouse, setExpandedHouse] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -211,11 +218,11 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
         .map(([url, count]) => ({ url, count }));
     });
 
-    return Object.values(stats);
-  }, [sessions, domy]);
+    return Object.values(stats).filter(stat => stat.totalVisits > 0 || stat.configuratorStarts > 0);
+    }, [sessions, domy]);
 
-  // Filtrovanie a triedenie
-  const filteredStats = useMemo(() => {
+    // Filtrovanie a triedenie
+    const filteredStats = useMemo(() => {
     let filtered = houseStats.filter(stat => 
       stat.dom.nazov?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       stat.dom.vyrobca?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -232,15 +239,9 @@ export default function HouseAnalyticsDashboard({ sessions, domy }) {
     });
 
     return filtered;
-  }, [houseStats, searchQuery, sortBy]);
+    }, [houseStats, searchQuery, sortBy]);
 
-  const formatDuration = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
-  };
-
-  const exportToCSV = () => {
+    const exportToCSV = () => {
     const headers = ['Dom', 'Vyrobca', 'Navstevy', 'Unikatni', 'Priem cas', 'Konf start', 'Konf dokoncene', 'Konverzia %', 'Bounce %'];
     const rows = filteredStats.map(stat => [
       stat.dom.nazov,
