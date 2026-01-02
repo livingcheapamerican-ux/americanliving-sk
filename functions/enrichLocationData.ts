@@ -9,40 +9,47 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Načítaj všetky sessions bez location_info
-    const sessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 5000);
+    // Spracuj maximálne 50 sessions naraz (kvôli rate limit)
+    const BATCH_SIZE = 50;
+    const sessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 1000);
+    
+    // Filter - len sessions bez GPS
+    const sessionsToProcess = sessions
+      .filter(s => !s.location_info?.latitude)
+      .filter(s => s.device_info?.ip || s.location_info?.ip)
+      .slice(0, BATCH_SIZE);
     
     let updatedCount = 0;
     let skippedCount = 0;
     let errorCount = 0;
+    let rateLimitHit = false;
 
-    for (const session of sessions) {
-      // Skip ak už má location_info
-      if (session.location_info?.latitude) {
-        skippedCount++;
-        continue;
-      }
-
-      // Skip ak nemá IP adresu
-      if (!session.device_info?.ip && !session.location_info?.ip) {
-        skippedCount++;
-        continue;
-      }
-
+    for (const session of sessionsToProcess) {
       const ip = session.device_info?.ip || session.location_info?.ip;
 
       try {
-        // Získaj location z IP adresy
+        // Získaj location z IP adresy s rate limit protection
+        await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5s medzi každým requestom
+        
         const response = await fetch(`https://ipapi.co/${ip}/json/`);
+        
+        if (response.status === 429) {
+          // Rate limit exceeded - stop processing
+          rateLimitHit = true;
+          break;
+        }
         
         if (!response.ok) {
           errorCount++;
-          // Rate limit - čakaj 1 sekundu
-          await new Promise(resolve => setTimeout(resolve, 1000));
           continue;
         }
 
         const data = await response.json();
+
+        if (data.error) {
+          errorCount++;
+          continue;
+        }
 
         if (data.latitude && data.longitude) {
           await base44.asServiceRole.entities.UserSession.update(session.id, {
@@ -62,22 +69,23 @@ Deno.serve(async (req) => {
           errorCount++;
         }
 
-        // Rate limit protection
-        await new Promise(resolve => setTimeout(resolve, 300));
-
       } catch (error) {
         console.error(`Error for IP ${ip}:`, error);
         errorCount++;
-        await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
 
+    const remainingCount = sessions.filter(s => !s.location_info?.latitude).length - sessionsToProcess.length;
+
     return Response.json({
       success: true,
-      message: `Spracovaných ${sessions.length} sessions: ${updatedCount} aktualizovaných, ${skippedCount} preskočených, ${errorCount} chýb.`,
+      message: rateLimitHit 
+        ? `⚠️ Rate limit - spracovaných ${updatedCount} sessions. Počkajte 5 minút a spustite znova.`
+        : `✅ ${updatedCount} aktualizovaných, ${errorCount} chýb. ${remainingCount > 0 ? `Zostáva ${remainingCount} - spustite znova.` : 'Hotovo!'}`,
       updatedCount,
-      skippedCount,
-      errorCount
+      errorCount,
+      rateLimitHit,
+      remainingCount
     });
 
   } catch (error) {
