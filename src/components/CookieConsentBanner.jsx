@@ -200,23 +200,23 @@ export default function CookieConsentBanner() {
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
-          className="absolute bottom-0 left-0 right-0 pointer-events-auto"
+          className="absolute bottom-0 left-0 right-0 pointer-events-auto pb-safe"
         >
           <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 shadow-2xl">
-            <div className="max-w-7xl mx-auto px-6 py-8 md:py-12">
-              <div className="flex flex-col md:flex-row gap-8 items-center">
-                <div className="flex-shrink-0">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 md:py-12">
+              <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-center">
+                <div className="flex-shrink-0 hidden md:block">
                   <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center shadow-lg animate-pulse">
                     <Cookie className="w-10 h-10 md:w-12 md:h-12 text-blue-800" />
                   </div>
                 </div>
 
                 <div className="flex-grow text-center md:text-left">
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                  <h3 className="text-lg md:text-3xl font-bold text-white mb-2 md:mb-3">
                     🍪 Používame cookies pre najlepší zážitok
                   </h3>
-                  <p className="text-base md:text-lg text-blue-100 mb-4 leading-relaxed">
-                    Pomôžte nám zlepšovať naše služby a získajte personalizovaný obsah. Súhlaste s cookies pre plný prístup k všetkým funkciám.
+                  <p className="text-sm md:text-lg text-blue-100 mb-3 md:mb-4 leading-relaxed">
+                    Pomôžte nám zlepšovať naše služby a získajte personalizovaný obsah.
                   </p>
                   <div className="flex flex-wrap gap-3 text-xs md:text-sm justify-center md:justify-start">
                     <Link
@@ -235,26 +235,26 @@ export default function CookieConsentBanner() {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-4 w-full md:w-auto md:min-w-[280px]">
+                <div className="flex flex-col gap-3 w-full md:w-auto md:min-w-[280px]">
                   <Button
                     onClick={handleAcceptAll}
                     size="lg"
-                    className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold text-lg py-6 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all"
+                    className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold text-base md:text-lg py-4 md:py-6 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all"
                   >
                     ✓ Prijať všetky cookies
                   </Button>
                   
-                  <div className="flex gap-2 justify-center">
+                  <div className="flex gap-3 justify-center text-sm md:text-xs">
                     <button
                       onClick={handleRejectAll}
-                      className="text-xs text-blue-300 hover:text-white underline"
+                      className="text-blue-300 hover:text-white underline py-2 px-3"
                     >
                       Odmietnuť
                     </button>
-                    <span className="text-blue-400 text-xs">|</span>
+                    <span className="text-blue-400">|</span>
                     <button
                       onClick={() => setShowSettings(true)}
-                      className="text-xs text-blue-300 hover:text-white underline"
+                      className="text-blue-300 hover:text-white underline py-2 px-3"
                     >
                       Nastavenia
                     </button>
