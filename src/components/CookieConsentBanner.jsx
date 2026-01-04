@@ -203,46 +203,38 @@ export default function CookieConsentBanner() {
           className="absolute bottom-0 left-0 right-0 pointer-events-auto pb-safe"
         >
           <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 shadow-2xl">
-            {/* MOBILE LAYOUT - Ultra compact */}
-            <div className="md:hidden px-3 py-2">
-              <div className="flex flex-col gap-2">
-                {/* Accept button - large and prominent */}
-                <Button
-                  onClick={handleAcceptAll}
-                  size="lg"
-                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold text-base py-3.5 shadow-xl"
+            {/* MOBILE LAYOUT - Minimal, everything visible */}
+            <div className="md:hidden px-2 py-1.5">
+              {/* Accept button - FIRST and clear */}
+              <Button
+                onClick={handleAcceptAll}
+                className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-bold text-sm py-2.5 shadow-lg mb-1"
+              >
+                ✓ Prijať cookies
+              </Button>
+              
+              {/* Secondary options - single compact line */}
+              <div className="flex gap-1.5 justify-center items-center text-[10px]">
+                <button
+                  onClick={handleRejectAll}
+                  className="text-blue-300 hover:text-white underline"
                 >
-                  ✓ Prijať všetky cookies
-                </Button>
-                
-                {/* Compact text */}
-                <p className="text-xs text-blue-200 text-center leading-tight">
-                  🍪 Používame cookies pre lepší zážitok
-                </p>
-
-                {/* Secondary options - compact row */}
-                <div className="flex gap-2 justify-center text-xs">
-                  <button
-                    onClick={handleRejectAll}
-                    className="text-blue-300 hover:text-white underline py-1"
-                  >
-                    Odmietnuť
-                  </button>
-                  <span className="text-blue-400">•</span>
-                  <button
-                    onClick={() => setShowSettings(true)}
-                    className="text-blue-300 hover:text-white underline py-1"
-                  >
-                    Nastavenia
-                  </button>
-                  <span className="text-blue-400">•</span>
-                  <Link
-                    to={createPageUrl("ZasadyPouzivaniaCookies")}
-                    className="text-blue-300 hover:text-white underline py-1"
-                  >
-                    Info
-                  </Link>
-                </div>
+                  Odmietnuť
+                </button>
+                <span className="text-blue-400">•</span>
+                <button
+                  onClick={() => setShowSettings(true)}
+                  className="text-blue-300 hover:text-white underline"
+                >
+                  Nastavenia
+                </button>
+                <span className="text-blue-400">•</span>
+                <Link
+                  to={createPageUrl("ZasadyPouzivaniaCookies")}
+                  className="text-blue-300 hover:text-white underline"
+                >
+                  Info
+                </Link>
               </div>
             </div>
 
