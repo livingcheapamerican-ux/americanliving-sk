@@ -203,10 +203,10 @@ export default function CookieConsentBanner() {
           className="absolute bottom-0 left-0 right-0 pointer-events-auto pb-safe"
         >
           <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 shadow-2xl">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 md:py-12">
-              <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-center">
-                {/* Buttons first on mobile (order-1), last on desktop (order-3) */}
-                <div className="flex flex-col gap-3 w-full md:w-auto md:min-w-[280px] order-1 md:order-3">
+            <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3 md:py-12">
+              <div className="flex flex-col md:flex-row gap-3 md:gap-8 items-center">
+                {/* Buttons - Always first visually */}
+                <div className="flex flex-col gap-2 w-full md:w-auto md:min-w-[280px] md:order-3">
                   <Button
                     onClick={handleAcceptAll}
                     size="lg"
@@ -215,39 +215,56 @@ export default function CookieConsentBanner() {
                     ✓ Prijať všetky cookies
                   </Button>
                   
-                  <div className="flex gap-3 justify-center text-sm md:text-xs">
+                  <div className="flex gap-2 justify-center text-xs">
                     <button
                       onClick={handleRejectAll}
-                      className="text-blue-300 hover:text-white underline py-2 px-3"
+                      className="text-blue-300 hover:text-white underline py-1 px-2"
                     >
                       Odmietnuť
                     </button>
                     <span className="text-blue-400">|</span>
                     <button
                       onClick={() => setShowSettings(true)}
-                      className="text-blue-300 hover:text-white underline py-2 px-3"
+                      className="text-blue-300 hover:text-white underline py-1 px-2"
                     >
                       Nastavenia
                     </button>
                   </div>
+                  
+                  {/* GDPR links on mobile - directly under buttons */}
+                  <div className="flex flex-wrap gap-2 text-xs justify-center md:hidden mt-1">
+                    <Link
+                      to={createPageUrl("ZasadyPouzivaniaCookies")}
+                      className="text-blue-200 hover:text-white underline"
+                    >
+                      Cookies
+                    </Link>
+                    <span className="text-blue-400">•</span>
+                    <Link
+                      to={createPageUrl("ZasadyOchranyOsobnychUdajov")}
+                      className="text-blue-200 hover:text-white underline"
+                    >
+                      GDPR
+                    </Link>
+                  </div>
                 </div>
 
-                {/* Cookie icon - hidden on mobile (order-2), shown on desktop */}
-                <div className="flex-shrink-0 hidden md:block order-2 md:order-1">
+                {/* Cookie icon - hidden on mobile, shown on desktop */}
+                <div className="flex-shrink-0 hidden md:block md:order-1">
                   <div className="w-20 h-20 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center shadow-lg animate-pulse">
                     <Cookie className="w-10 h-10 md:w-12 md:h-12 text-blue-800" />
                   </div>
                 </div>
 
-                {/* Text content - second on mobile (order-3), middle on desktop (order-2) */}
-                <div className="flex-grow text-center md:text-left order-3 md:order-2">
-                  <h3 className="text-lg md:text-3xl font-bold text-white mb-2 md:mb-3">
+                {/* Text content - hidden on mobile, shown on desktop */}
+                <div className="flex-grow text-left hidden md:block md:order-2">
+                  <h3 className="text-3xl font-bold text-white mb-3">
                     🍪 Používame cookies pre najlepší zážitok
                   </h3>
-                  <p className="text-sm md:text-lg text-blue-100 mb-3 md:mb-4 leading-relaxed">
+                  <p className="text-lg text-blue-100 mb-4 leading-relaxed">
                     Pomôžte nám zlepšovať naše služby a získajte personalizovaný obsah.
                   </p>
-                  <div className="flex flex-wrap gap-3 text-xs md:text-sm justify-center md:justify-start">
+                  <div className="flex flex-wrap gap-3 text-sm justify-start">
                     <Link
                       to={createPageUrl("ZasadyPouzivaniaCookies")}
                       className="text-blue-200 hover:text-white underline"
