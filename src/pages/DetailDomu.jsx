@@ -21,7 +21,7 @@ import KonfiguratorFlatDouble from "../components/KonfiguratorFlatDouble";
 import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
 import KonfiguratorWizard from "../components/KonfiguratorWizard";
 import KonfiguratorFjord from "../components/KonfiguratorFjord";
-import KonfiguratorNord from "../components/KonfiguratorNord";
+import KonfiguratorNord from "../components/KonfiguratorNord.jsx";
 import KonfiguratorProstoHouse from "../components/KonfiguratorProstoHouse";
 import KonfiguratorFlat72 from "../components/KonfiguratorFlat72";
 import KonfiguratorAFrame from "../components/KonfiguratorAFrame";
