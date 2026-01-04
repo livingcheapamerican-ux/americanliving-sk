@@ -34,7 +34,6 @@ import KonfiguratorTicabhouse from "../components/KonfiguratorTicabhouse";
 
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
-import { FlyingAnimationContainer, useFlyingAnimation } from "../components/FlyingAnimation";
 
 
 export default function DetailDomu() {
@@ -107,9 +106,6 @@ export default function DetailDomu() {
   const [swipeStart, setSwipeStart] = useState(null);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [wizardKey, setWizardKey] = useState(0);
-
-  // Flying animation hook
-  const { animations, triggerAnimation } = useFlyingAnimation();
 
   // State pre Ticabhouse konfigurátor - predvolene REKREAČNÁ STAVBA (chata)
   const [lyonUcel, setLyonUcel] = useState("chata");
@@ -3310,9 +3306,6 @@ export default function DetailDomu() {
 
       {/* Floating Price Display - len ak nie je JAK Modules */}
       {!isJAKModules && <FloatingPrice price={calculatedPrice} isVisible={showCalculator} />}
-
-      {/* Flying Animations Container */}
-      <FlyingAnimationContainer animations={animations} />
 
       {/* Lightbox */}
       {lightboxOpen && (
