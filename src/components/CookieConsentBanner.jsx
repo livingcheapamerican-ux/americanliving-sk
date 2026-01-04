@@ -195,112 +195,134 @@ export default function CookieConsentBanner() {
           )}
         </AnimatePresence>
 
-        {/* Main Banner - Oversized & Eye-catching */}
+        {/* Main Banner - Large Overlay */}
         <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
-          className="absolute bottom-0 left-0 right-0 pointer-events-auto pb-safe"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="absolute inset-0 flex items-center justify-center p-4 pointer-events-auto"
         >
-          <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 shadow-2xl">
-            {/* MOBILE LAYOUT - Minimal, everything visible */}
-            <div className="md:hidden px-2 py-1.5">
-              {/* Accept button - FIRST and clear */}
-              <Button
-                onClick={handleAcceptAll}
-                className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-bold text-sm py-2.5 shadow-lg mb-1"
-              >
-                ✓ Prijať cookies
-              </Button>
-              
-              {/* Secondary options - single compact line */}
-              <div className="flex gap-1.5 justify-center items-center text-[10px]">
-                <button
-                  onClick={handleRejectAll}
-                  className="text-blue-300 hover:text-white underline"
+          <div className="w-full max-w-4xl bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 rounded-3xl shadow-2xl overflow-hidden">
+            
+            {/* MOBILE LAYOUT */}
+            <div className="md:hidden p-6">
+              <div className="text-center mb-6">
+                <div className="w-20 h-20 mx-auto mb-4 bg-white rounded-full flex items-center justify-center shadow-lg animate-bounce">
+                  <Cookie className="w-10 h-10 text-blue-800" />
+                </div>
+                <h2 className="text-2xl font-black text-white mb-3">
+                  🍪 Používame cookies
+                </h2>
+                <p className="text-base text-blue-100 leading-relaxed mb-4">
+                  Táto webová stránka používa cookies na zlepšenie vášho zážitku, analýzu návštevnosti a personalizáciu obsahu. Súhlasom s cookies nám pomáhate poskytovať lepšie služby prispôsobené vašim potrebám.
+                </p>
+                <p className="text-sm text-blue-200">
+                  Viac informácií nájdete v našich{" "}
+                  <Link to={createPageUrl("ZasadyPouzivaniaCookies")} className="underline font-semibold">
+                    Zásadách cookies
+                  </Link>
+                  {" "}a{" "}
+                  <Link to={createPageUrl("ZasadyOchranyOsobnychUdajov")} className="underline font-semibold">
+                    Ochrane osobných údajov
+                  </Link>.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <Button
+                  onClick={handleAcceptAll}
+                  size="lg"
+                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold text-lg py-6 shadow-xl"
                 >
-                  Odmietnuť
-                </button>
-                <span className="text-blue-400">•</span>
-                <button
-                  onClick={() => setShowSettings(true)}
-                  className="text-blue-300 hover:text-white underline"
-                >
-                  Nastavenia
-                </button>
-                <span className="text-blue-400">•</span>
-                <Link
-                  to={createPageUrl("ZasadyPouzivaniaCookies")}
-                  className="text-blue-300 hover:text-white underline"
-                >
-                  Info
-                </Link>
+                  ✓ Prijať všetky cookies
+                </Button>
+                
+                <div className="flex gap-3">
+                  <Button
+                    onClick={handleRejectAll}
+                    variant="outline"
+                    className="flex-1 bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  >
+                    Odmietnuť
+                  </Button>
+                  <Button
+                    onClick={() => setShowSettings(true)}
+                    variant="outline"
+                    className="flex-1 bg-white/10 border-white/30 text-white hover:bg-white/20"
+                  >
+                    Nastavenia
+                  </Button>
+                </div>
               </div>
             </div>
 
-            {/* DESKTOP LAYOUT - Full version */}
-            <div className="hidden md:block max-w-7xl mx-auto px-6 py-12">
-              <div className="flex flex-row gap-8 items-center">
-                {/* Cookie icon */}
+            {/* DESKTOP LAYOUT */}
+            <div className="hidden md:block p-12">
+              <div className="flex gap-8 items-start mb-8">
                 <div className="flex-shrink-0">
-                  <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg animate-pulse">
-                    <Cookie className="w-12 h-12 text-blue-800" />
+                  <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                    <Cookie className="w-16 h-16 text-blue-800" />
                   </div>
                 </div>
 
-                {/* Text content */}
-                <div className="flex-grow text-left">
-                  <h3 className="text-3xl font-bold text-white mb-3">
+                <div className="flex-1">
+                  <h2 className="text-4xl font-black text-white mb-4">
                     🍪 Používame cookies pre najlepší zážitok
-                  </h3>
-                  <p className="text-lg text-blue-100 mb-4 leading-relaxed">
-                    Pomôžte nám zlepšovať naše služby a získajte personalizovaný obsah.
+                  </h2>
+                  <p className="text-xl text-blue-100 leading-relaxed mb-6">
+                    Táto webová stránka používa cookies na zlepšenie vášho zážitku pri prehliadaní, analýzu návštevnosti a personalizáciu obsahu. 
+                    Súhlasom s používaním cookies nám pomáhate poskytovať lepšie služby prispôsobené vašim potrebám a záujmom.
                   </p>
-                  <div className="flex flex-wrap gap-3 text-sm">
+                  <p className="text-base text-blue-200 mb-4">
+                    Cookies nám umožňujú zapamätať si vaše preferencie, sledovať výkonnosť našej stránky a zobrazovať relevantný obsah. 
+                    Vaše súkromie je pre nás dôležité - všetky údaje spracovávame v súlade s GDPR.
+                  </p>
+                  <div className="flex flex-wrap gap-4 text-base">
                     <Link
                       to={createPageUrl("ZasadyPouzivaniaCookies")}
-                      className="text-blue-200 hover:text-white underline"
+                      className="text-blue-200 hover:text-white underline font-semibold"
                     >
-                      Zásady cookies
+                      📄 Zásady používania cookies
                     </Link>
                     <span className="text-blue-400">•</span>
                     <Link
                       to={createPageUrl("ZasadyOchranyOsobnychUdajov")}
-                      className="text-blue-200 hover:text-white underline"
+                      className="text-blue-200 hover:text-white underline font-semibold"
                     >
-                      GDPR
+                      🔒 Ochrana osobných údajov (GDPR)
                     </Link>
                   </div>
                 </div>
+              </div>
 
-                {/* Buttons */}
-                <div className="flex flex-col gap-3 min-w-[280px]">
+              <div className="flex gap-4">
+                <Button
+                  onClick={handleAcceptAll}
+                  size="lg"
+                  className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold text-xl py-8 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all"
+                >
+                  ✓ Prijať všetky cookies
+                </Button>
+                
+                <div className="flex flex-col gap-3">
                   <Button
-                    onClick={handleAcceptAll}
-                    size="lg"
-                    className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold text-lg py-6 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all"
+                    onClick={handleRejectAll}
+                    variant="outline"
+                    className="bg-white/10 border-white/30 text-white hover:bg-white/20 px-8"
                   >
-                    ✓ Prijať všetky cookies
+                    Odmietnuť všetky
                   </Button>
-                  
-                  <div className="flex gap-3 justify-center text-sm">
-                    <button
-                      onClick={handleRejectAll}
-                      className="text-blue-300 hover:text-white underline py-2 px-3"
-                    >
-                      Odmietnuť
-                    </button>
-                    <span className="text-blue-400">|</span>
-                    <button
-                      onClick={() => setShowSettings(true)}
-                      className="text-blue-300 hover:text-white underline py-2 px-3"
-                    >
-                      Nastavenia
-                    </button>
-                  </div>
+                  <Button
+                    onClick={() => setShowSettings(true)}
+                    variant="outline"
+                    className="bg-white/10 border-white/30 text-white hover:bg-white/20 px-8"
+                  >
+                    ⚙️ Nastavenia
+                  </Button>
                 </div>
               </div>
             </div>
+
           </div>
         </motion.div>
       </div>
