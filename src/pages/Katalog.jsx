@@ -303,9 +303,10 @@ export default function Katalog() {
   }, []);
 
   // Synchronizovať filtre s URL - len po inicializácii
+  const lastUrlRef = React.useRef("");
   useEffect(() => {
     if (!isInitialized) return;
-    
+
     const params = new URLSearchParams();
     if (kategoriaFilter !== "vsetky") params.set("kategoria", kategoriaFilter);
     if (vyrobcaFilter.length > 0) params.set("vyrobca", vyrobcaFilter.join(','));
@@ -321,13 +322,13 @@ export default function Katalog() {
     if (zoradenie !== "plocha_zostupne") params.set("zoradenie", zoradenie);
 
     const newSearch = params.toString();
-    const currentSearch = location.search.substring(1);
-    
-    // KRITICKÉ: Len ak sa URL skutočne zmenil, updatni ho
-    if (newSearch !== currentSearch) {
+
+    // Porovnaj s posledným nastaveným URL, nie s aktuálnym location.search
+    if (newSearch !== lastUrlRef.current) {
+      lastUrlRef.current = newSearch;
       navigate(`${location.pathname}${newSearch ? `?${newSearch}` : ""}`, { replace: true });
     }
-  }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie, location.pathname, location.search, navigate]);
+  }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie, location.pathname]);
 
   const { data: allDomy = [], isLoading, error } = useQuery({
     queryKey: ['domy-katalog'],
