@@ -293,10 +293,8 @@ export default function KonfiguratorWizard({
       return <KonfiguratorFlatDouble {...commonProps} />;
     } else if (useFlat72Prices) {
       return <KonfiguratorFlat72 {...commonProps} />;
-    } else if (useNordPrices) {
+    } else if (useNordPrices || useFjordPrices || useProstoHousePrices) {
       return <KonfiguratorProstoHouse {...commonProps} />;
-    } else if (useFjordPrices) {
-      return <KonfiguratorFjord {...commonProps} />;
     } else {
       return <KonfiguratorProstoHouse {...commonProps} />;
     }
