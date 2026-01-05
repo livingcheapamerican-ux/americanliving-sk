@@ -83,8 +83,41 @@ export default function KonfiguratorProstoHouse({
     return text?.tooltip || defaultText;
   };
 
-  // Cenník - Prosto House ceny
-  const CENY = {
+  // Cenník - dynamický podľa domu
+  const isNord = dom?.nazov?.includes("Nord");
+  
+  const CENY = isNord ? {
+    // NORD cenník (103m²)
+    montaz: { nie: 0, ano: 12210 },
+    predlzenie: { 0: 0, 1.2: 0, 2.4: 0, 3.6: 0, 4.8: 0 },
+    dvere: { ziadne: 0, kovove: 720, plastove: 660 },
+    izolacia: { standard: 0, zvysena: 3990, premium: 7980 },
+    elektroinstalacia: 4710,
+    vodaKanalizacia: 1905,
+    sanitaKomplet: 1169,
+    bojler: 264,
+    tepelneCerpadlo: 4011,
+    rekuperacia: 1995,
+    zaklady: { bez: 0, skrutky: 5608, doska: 10794, pasove: 10742 },
+    pripojkaSiete: 1501,
+    inziniering: 2592,
+    projektA0: 3500,
+    interierFinis: { ziadne: 0, drevo: 11510, sadrokarton: 13186 },
+    vonkajsiaFasada: { standard: 0, suchana: 9421 },
+    povrchokaOkien: 2175,
+    vnutornePodlahy: 2393,
+    podlahovVykurovanie: 3913,
+    interieroveDvere: 180,
+    tonovaneSkla: 761,
+    doprava: 0,
+    revizna: 501,
+    stresneOkno: 760,
+    bocneOknoFixne: 501,
+    bocneOknoVyklopne90: 540,
+    bocneOknoVyklopne55: 225,
+    pergola: 1673
+  } : {
+    // PROSTO HOUSE štandardné ceny
     montaz: { nie: 0, ano: 9225 },
     predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
@@ -233,6 +266,7 @@ export default function KonfiguratorProstoHouse({
     items.push({ name: t('floors') + " - " + t('floorsLaminate'), price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
     items.push({ name: t('floorHeatingFull'), price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
     items.push({ name: `${t('interiorDoors')} (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere, section: "kluc", selected: interieroveDvere > 0 });
+    if (pergola && CENY.pergola) items.push({ name: t('pergola'), price: CENY.pergola, section: "kluc", selected: true });
     
     items.push({ name: t('engineeringFull'), price: inziniering ? CENY.inziniering : 0, section: "docs", selected: inziniering });
     items.push({ name: t('projectA0Full'), price: projektA0 ? CENY.projektA0 : 0, section: "docs", selected: projektA0 });
@@ -587,7 +621,7 @@ export default function KonfiguratorProstoHouse({
                       onClick={(e) => { if (interierFinis !== "drevo") triggerAnimation("drevo", e.currentTarget); setInterierFinis("drevo"); }}
                       title={t('interiorWood')}
                       subtitle={t('woodCladding')}
-                      price="+ 8 200 €"
+                      price={`+ ${isNord ? '11 510' : '8 200'} €`}
                       isPriced={true}
                       t={t}
                       isAdmin={false}
@@ -598,7 +632,7 @@ export default function KonfiguratorProstoHouse({
                       onClick={(e) => { if (interierFinis !== "sadrokarton") triggerAnimation("sadrokarton", e.currentTarget); setInterierFinis("sadrokarton"); }}
                       title={t('interiorDrywall')}
                       subtitle={t('plaster')}
-                      price="+ 9 430 €"
+                      price={`+ ${isNord ? '13 186' : '9 430'} €`}
                       isPriced={true}
                       t={t}
                       isAdmin={false}
@@ -615,7 +649,7 @@ export default function KonfiguratorProstoHouse({
                       onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); setElektroinstalacia(!elektroinstalacia); }}
                       title={t('electrical')}
                       subtitle={t('wiring')}
-                      price="+ 3 900 €"
+                      price={`+ ${isNord ? '4 710' : '3 900'} €`}
                       isPriced={true}
                       t={t}
                       isAdmin={false}
@@ -626,7 +660,7 @@ export default function KonfiguratorProstoHouse({
                       onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); setVodaKanalizacia(!vodaKanalizacia); }}
                       title={t('water')}
                       subtitle={t('wiring')}
-                      price="+ 1 150 €"
+                      price={`+ ${isNord ? '1 905' : '1 150'} €`}
                       isPriced={true}
                       t={t}
                       isAdmin={false}
@@ -665,7 +699,7 @@ export default function KonfiguratorProstoHouse({
                       onClick={(e) => { if (!tepelneCerpadlo) triggerAnimation("klimatizacia", e.currentTarget); setTepelneCerpadlo(!tepelneCerpadlo); }}
                       title={t('heatPump')}
                       subtitle={t('units5')}
-                      price="+ 3 321 €"
+                      price={`+ ${isNord ? '4 011' : '3 321'} €`}
                       isPriced={true}
                       isA0={true}
                       t={t}
@@ -676,8 +710,8 @@ export default function KonfiguratorProstoHouse({
                       selected={rekuperacia}
                       onClick={(e) => { if (!rekuperacia) triggerAnimation("rekuperacia", e.currentTarget); setRekuperacia(!rekuperacia); }}
                       title={t('recuperation')}
-                      subtitle="3 ks"
-                      price="+ 1 600 €"
+                      subtitle={isNord ? t('units5') : "3 ks"}
+                      price={`+ ${isNord ? '1 995' : '1 600'} €`}
                       isPriced={true}
                       isA0={true}
                       t={t}
@@ -701,7 +735,7 @@ export default function KonfiguratorProstoHouse({
                     onClick={(e) => { if (!povrchokaOkien) triggerAnimation("oknoAntracit", e.currentTarget); setPovrchokaOkien(!povrchokaOkien); }}
                     title={t('lamination')}
                     subtitle={t('laminationAnthracite')}
-                    price="+ 1 450 €"
+                    price={`+ ${isNord ? '2 175' : '1 450'} €`}
                     isPriced={true}
                     t={t}
                     isAdmin={false}
@@ -712,7 +746,7 @@ export default function KonfiguratorProstoHouse({
                     onClick={(e) => { if (!tonovaneSkla) triggerAnimation("oknoTonovane", e.currentTarget); setTonovaneSkla(!tonovaneSkla); }}
                     title={t('tintedGlass')}
                     subtitle={t('solarGlass')}
-                    price="+ 700 €"
+                    price={`+ ${isNord ? '761' : '700'} €`}
                     isPriced={true}
                     t={t}
                     isAdmin={false}
@@ -755,7 +789,7 @@ export default function KonfiguratorProstoHouse({
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-1.5">
                     {[
                       { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: "760 €" },
-                      { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: "500 €" },
+                      { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: isNord ? "501 €" : "500 €" },
                       { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: "540 €" },
                       { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: "225 €" }
                     ].map((opt, idx) => (
@@ -827,7 +861,7 @@ export default function KonfiguratorProstoHouse({
                       onClick={(e) => { if (vonkajsiaFasada !== "suchana") triggerAnimation("fasadaSuchana", e.currentTarget); setVonkajsiaFasada("suchana"); }}
                       title={t('facadeStucco')}
                       subtitle={t('whitePlaster')}
-                      price="+ 6 371 €"
+                      price={`+ ${isNord ? '9 421' : '6 371'} €`}
                       isPriced={true}
                       t={t}
                       isAdmin={false}
@@ -839,7 +873,7 @@ export default function KonfiguratorProstoHouse({
                     onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); setVnutornePodlahy(!vnutornePodlahy); }}
                     title={t('floors')}
                     subtitle={t('floorsLaminate')}
-                    price="+ 1 750 €"
+                    price={`+ ${isNord ? '2 393' : '1 750'} €`}
                     isPriced={true}
                     t={t}
                     isAdmin={false}
@@ -850,11 +884,22 @@ export default function KonfiguratorProstoHouse({
                     onClick={(e) => { if (!podlahovVykurovanie) triggerAnimation("podlahovVykurovanie", e.currentTarget); setPodlahovVykurovanie(!podlahovVykurovanie); }}
                     title={t('floorHeating')}
                     subtitle={t('wifiThermostat')}
-                    price="+ 3 960 €"
+                    price={`+ ${isNord ? '3 913' : '3 960'} €`}
                     isPriced={true}
                     t={t}
                     isAdmin={false}
                   />
+
+                  {isNord && <EditableTile
+                    selected={pergola}
+                    onClick={(e) => { if (!pergola) triggerAnimation("pergola", e.currentTarget); setPergola(!pergola); }}
+                    title={t('pergola')}
+                    subtitle={t('terrace')}
+                    price="+ 1 673 €"
+                    isPriced={true}
+                    t={t}
+                    isAdmin={false}
+                  />}
 
                 </div>
 
@@ -936,7 +981,7 @@ export default function KonfiguratorProstoHouse({
                     onClick={() => setRevizna(!revizna)}
                     title={t('revision')}
                     subtitle={t('documentation')}
-                    price="+ 1 000 €"
+                    price={`+ ${isNord ? '501' : '1 000'} €`}
                     isPriced={true}
                     t={t}
                     isAdmin={false}
