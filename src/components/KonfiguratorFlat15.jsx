@@ -581,7 +581,7 @@ export default function KonfiguratorFlat15({
 
   return (
     <div className="mt-8 relative">
-      <FlyingAnimationContainer animations={animations} />
+      {!showOnlySummary && <FlyingAnimationContainer animations={animations} />}
       {!showOnlySummary && <FloatingPrice 
         price={totalPrice} 
         isVisible={true} 
