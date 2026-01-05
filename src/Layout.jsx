@@ -24,21 +24,7 @@ function LayoutContent({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t, language, setLanguage } = useLanguage();
 
-  // Server-Side Facebook Tracking
-  useEffect(() => {
-    const trackPageView = async () => {
-      try {
-        await base44.functions.invoke('trackFacebookPageView', {
-          user_agent: navigator.userAgent,
-          event_source_url: window.location.href
-        });
-      } catch (error) {
-        // Silently fail - tracking should not disrupt user experience
-      }
-    };
-    
-    trackPageView();
-  }, [location.pathname]);
+
 
         // GTM "Trojan Horse" Injection
         useEffect(() => {
