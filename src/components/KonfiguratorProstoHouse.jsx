@@ -177,6 +177,7 @@ export default function KonfiguratorProstoHouse({
     if (tonovaneSkla) total += CENY.tonovaneSkla;
     if (doprava) total += CENY.doprava;
     if (revizna) total += CENY.revizna;
+    if (pergola && CENY.pergola) total += CENY.pergola;
     
     total += stresneOkno * CENY.stresneOkno;
     total += bocneOknoFixne * CENY.bocneOknoFixne;
@@ -188,7 +189,7 @@ export default function KonfiguratorProstoHouse({
       vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia,
       zaklady, pripojkaSiete, inziniering, projektA0, interierFinis,
       vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, podlahovVykurovanie,
-      interieroveDvere, tonovaneSkla, doprava, revizna,
+      interieroveDvere, tonovaneSkla, doprava, revizna, pergola,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE]);
 
   const a0Odporucania = useMemo(() => {
@@ -719,7 +720,7 @@ export default function KonfiguratorProstoHouse({
                     />
                   </div>
 
-                  <EditableTile
+                  {!isNord && <EditableTile
                     selected={pripojkaSiete}
                     onClick={(e) => { if (!pripojkaSiete) triggerAnimation("siete", e.currentTarget); setPripojkaSiete(!pripojkaSiete); }}
                     title={t('gridConnection')}
@@ -728,7 +729,18 @@ export default function KonfiguratorProstoHouse({
                     isPriced={true}
                     t={t}
                     isAdmin={false}
-                  />
+                  />}
+
+                  {isNord && <EditableTile
+                    selected={pripojkaSiete}
+                    onClick={(e) => { if (!pripojkaSiete) triggerAnimation("siete", e.currentTarget); setPripojkaSiete(!pripojkaSiete); }}
+                    title={t('gridConnection')}
+                    subtitle={t('connection')}
+                    price="+ 1 501 €"
+                    isPriced={true}
+                    t={t}
+                    isAdmin={false}
+                  />}
 
                   <EditableTile
                     selected={povrchokaOkien}
