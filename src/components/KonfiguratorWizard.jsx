@@ -14,7 +14,7 @@ import KonfiguratorFlat15 from "../components/KonfiguratorFlat15";
 import KonfiguratorFlatDouble from "../components/KonfiguratorFlatDouble";
 import KonfiguratorFlat72 from "../components/KonfiguratorFlat72";
 import KonfiguratorFjord from "../components/KonfiguratorFjord";
-import KonfiguratorNord from "../components/KonfiguratorNord";
+import KonfiguratorNord from "../components/KonfiguratorNord.jsx";
 import KonfiguratorProstoHouse from "../components/KonfiguratorProstoHouse";
 import KonfiguratorAFrame from "../components/KonfiguratorAFrame";
 import KonfiguratorBarn48 from "../components/KonfiguratorBarn48";
