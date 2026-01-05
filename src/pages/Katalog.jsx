@@ -236,34 +236,15 @@ export default function Katalog() {
   const { t } = useLanguage();
 
   
-  // Funkcia na parsovanie URL parametrov
-  const getInitialFilters = () => {
-    const params = new URLSearchParams(location.search);
-    return {
-      kategoria: params.get("kategoria") || "vsetky",
-      vyrobca: params.get("vyrobca") || "",
-      typ: params.get("typ") || "",
-      plocha_min: parseInt(params.get("plocha_min")) || 0,
-      plocha_max: parseInt(params.get("plocha_max")) || 500,
-      uzitkova_min: parseInt(params.get("uzitkova_min")) || 0,
-      uzitkova_max: parseInt(params.get("uzitkova_max")) || 500,
-      hladanie: params.get("hladanie") || "",
-      cena_min: parseInt(params.get("cena_min")) || 0,
-      cena_max: parseInt(params.get("cena_max")) || 500000,
-      izby: params.get("izby") || "",
-      zoradenie: params.get("zoradenie") || "plocha_zostupne"
-    };
-  };
 
-  const initialFilters = getInitialFilters();
 
-  const [kategoriaFilter, setKategoriaFilter] = useState(initialFilters.kategoria);
-  const [vyrobcaFilter, setVyrobcaFilter] = useState(initialFilters.vyrobca ? initialFilters.vyrobca.split(',') : []);
-  const [typFilter, setTypFilter] = useState(initialFilters.typ ? initialFilters.typ.split(',') : []);
-  const [plocharozsah, setPlocharozsah] = useState([0, initialFilters.plocha_max || 200]);
-  const [uzitkovaRozsah, setUzitkovaRozsah] = useState([0, initialFilters.uzitkova_max || 200]);
-  const [hladanie, setHladanie] = useState(initialFilters.hladanie);
-  const [hladanieInput, setHladanieInput] = useState(initialFilters.hladanie);
+  const [kategoriaFilter, setKategoriaFilter] = useState("vsetky");
+  const [vyrobcaFilter, setVyrobcaFilter] = useState([]);
+  const [typFilter, setTypFilter] = useState([]);
+  const [plocharozsah, setPlocharozsah] = useState([0, 200]);
+  const [uzitkovaRozsah, setUzitkovaRozsah] = useState([0, 200]);
+  const [hladanie, setHladanie] = useState("");
+  const [hladanieInput, setHladanieInput] = useState("");
 
   // Debounced search
   const debouncedSetHladanie = useMemo(
@@ -275,11 +256,10 @@ export default function Katalog() {
     debouncedSetHladanie(hladanieInput);
     return () => debouncedSetHladanie.cancel();
   }, [hladanieInput, debouncedSetHladanie]);
-  const [cenoveRozpatie, setCenoveRozpatie] = useState([0, initialFilters.cena_max || 300000]);
-  const [pocetIziebFilter, setPocetIziebFilter] = useState(initialFilters.izby ? initialFilters.izby.split(',').map(Number) : []);
-  const [zoradenie, setZoradenie] = useState(initialFilters.zoradenie);
+  const [cenoveRozpatie, setCenoveRozpatie] = useState([0, 300000]);
+  const [pocetIziebFilter, setPocetIziebFilter] = useState([]);
+  const [zoradenie, setZoradenie] = useState("poradie");
   const [vybraneNaSrovnanie, setVybraneNaSrovnanie] = useState([]);
-  const [isInitialized, setIsInitialized] = useState(false);
   const [dizajnFilter, setDizajnFilter] = useState("murovka"); // "murovka", "drevo", alebo "podorys3d"
   const [pocetModulovFilter, setPocetModulovFilter] = useState([]);
   const [portraitImages, setPortraitImages] = useState({});
@@ -297,19 +277,10 @@ export default function Katalog() {
   const isSuperAdmin = user?.super_admin === true;
   const canManage = isAdmin || isSuperAdmin;
 
-  // Označiť ako inicializované po prvom renderovaní
-  useEffect(() => {
-    setIsInitialized(true);
-  }, []);
-
-  // URL synchronizácia - úplne vypnutá aby nedochádzalo k loopom
-  // Filtre fungujú lokálne bez URL synchronizácie
-
   const { data: allDomy = [], isLoading, error } = useQuery({
     queryKey: ['domy-katalog'],
     queryFn: async () => {
       const result = await base44.entities.Dom.list('poradie', 200);
-      console.log('✅ Načítané domy:', result?.length);
       return result || [];
     },
     staleTime: 300000,

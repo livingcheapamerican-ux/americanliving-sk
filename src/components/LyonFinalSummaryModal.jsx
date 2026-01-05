@@ -131,25 +131,17 @@ export default function LyonFinalSummaryModal({
   // Získať galérie na základe mapovaných pravidiel
   const getMatchedGalleries = () => {
     if (!dom?.galerie) {
-      console.log('❌ Dom nemá galérie');
       return [];
     }
-    
-    console.log('🏠 Dom galérie:', dom.galerie);
-    console.log('🎨 Fasada:', fasada);
-    console.log('🪵 Obklad stien:', obkladStien);
     
     const matchedGalleries = [];
     
     // Ak nie je nastavenie, použij default logiku
     if (!aktivneNastavenie?.mapovanie_fotiek_ticabhouse || aktivneNastavenie.mapovanie_fotiek_ticabhouse.length === 0) {
-      console.log('📋 Používam default pravidlá');
-      
       // VŽDY zobraz exteriér
       if (fasada === "omietka") {
         // Ak je šúchaná omietka, zobraz murovka galériu
         const murovkaGaleria = dom.galerie?.find(g => g.typ === "exterier_murovka");
-        console.log('🧱 Hľadám murovka galériu:', murovkaGaleria);
         if (murovkaGaleria?.fotky?.length > 0) {
           matchedGalleries.push({
             nazov: "Exteriér - Murovka",
@@ -159,7 +151,6 @@ export default function LyonFinalSummaryModal({
       } else {
         // Pre VŠETKY ostatné fasády (drevo_smrek, smrekovec, falcované, thermowood) - vždy drevo/plech galériu
         const drevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
-        console.log('🪵 Hľadám drevo/plech galériu pre fasádu:', fasada, drevoGaleria);
         if (drevoGaleria?.fotky?.length > 0) {
           matchedGalleries.push({
             nazov: "Exteriér - Drevo/Plech",
@@ -227,7 +218,6 @@ export default function LyonFinalSummaryModal({
       } else {
         // Pre všetky ostatné fasády vrátane drevo_smrek
         const drevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
-        console.log('🪵 Fallback - pridávam drevo/plech galériu pre fasádu:', fasada, drevoGaleria);
         if (drevoGaleria?.fotky?.length > 0) {
           matchedGalleries.unshift({
             nazov: "Exteriér - Drevo/Plech",
@@ -237,12 +227,10 @@ export default function LyonFinalSummaryModal({
       }
     }
     
-    console.log('✅ Matched galleries:', matchedGalleries);
     return matchedGalleries;
   };
 
   const matchedGalleries = getMatchedGalleries();
-  console.log('📸 Final matched galleries:', matchedGalleries);
 
   // Kontrola či je konfigurácia A0
   const isA0Configuration = () => {
