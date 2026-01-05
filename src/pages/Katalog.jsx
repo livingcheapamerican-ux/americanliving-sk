@@ -302,33 +302,8 @@ export default function Katalog() {
     setIsInitialized(true);
   }, []);
 
-  // Synchronizovať filtre s URL - len po inicializácii
-  const lastUrlRef = React.useRef("");
-  useEffect(() => {
-    if (!isInitialized) return;
-
-    const params = new URLSearchParams();
-    if (kategoriaFilter !== "vsetky") params.set("kategoria", kategoriaFilter);
-    if (vyrobcaFilter.length > 0) params.set("vyrobca", vyrobcaFilter.join(','));
-    if (typFilter.length > 0) params.set("typ", typFilter.join(','));
-    if (plocharozsah[0] !== 0) params.set("plocha_min", plocharozsah[0].toString());
-    if (plocharozsah[1] !== 200) params.set("plocha_max", plocharozsah[1].toString());
-    if (uzitkovaRozsah[0] !== 0) params.set("uzitkova_min", uzitkovaRozsah[0].toString());
-    if (uzitkovaRozsah[1] !== 200) params.set("uzitkova_max", uzitkovaRozsah[1].toString());
-    if (hladanie) params.set("hladanie", hladanie);
-    if (cenoveRozpatie[0] !== 0) params.set("cena_min", cenoveRozpatie[0].toString());
-    if (cenoveRozpatie[1] !== 200000) params.set("cena_max", cenoveRozpatie[1].toString());
-    if (pocetIziebFilter.length > 0) params.set("izby", pocetIziebFilter.join(','));
-    if (zoradenie !== "plocha_zostupne") params.set("zoradenie", zoradenie);
-
-    const newSearch = params.toString();
-
-    // Porovnaj s posledným nastaveným URL, nie s aktuálnym location.search
-    if (newSearch !== lastUrlRef.current) {
-      lastUrlRef.current = newSearch;
-      navigate(`${location.pathname}${newSearch ? `?${newSearch}` : ""}`, { replace: true });
-    }
-  }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie, location.pathname]);
+  // URL synchronizácia - úplne vypnutá aby nedochádzalo k loopom
+  // Filtre fungujú lokálne bez URL synchronizácie
 
   const { data: allDomy = [], isLoading, error } = useQuery({
     queryKey: ['domy-katalog'],

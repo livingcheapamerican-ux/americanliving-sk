@@ -734,7 +734,6 @@ function LayoutContent({ children }) {
       </footer>
 
       <CookieConsentBanner />
-      <InteractiveTour />
       <div className="hidden md:block">
         <Chatbot />
       </div>
