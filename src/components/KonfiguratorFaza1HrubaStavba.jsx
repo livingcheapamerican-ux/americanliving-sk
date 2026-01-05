@@ -146,16 +146,7 @@ export default function KonfiguratorFaza1HrubaStavba({
   useFlatSmallPrices = false
   }) {
   
-  const phaseRef = React.useRef(null);
 
-  // Scroll to phase on mount (mobile only)
-  React.useEffect(() => {
-    if (phaseRef.current && window.innerWidth < 768) {
-      setTimeout(() => {
-        phaseRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
-    }
-  }, []);
   // Ceny pre Flat 1,5
   const FLAT15_CENY = {
     montaz: 13470,
@@ -238,7 +229,6 @@ export default function KonfiguratorFaza1HrubaStavba({
 
   return (
     <motion.div
-      ref={phaseRef}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
