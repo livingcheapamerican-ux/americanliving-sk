@@ -214,7 +214,7 @@ Deno.serve(async (req) => {
     .badge { display: inline-block; background: #10b981; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-top: 8px; }
     .badge.blue { background: #3b82f6; }
     .image-container { position: relative; margin: 20px 0; border-radius: 8px; overflow: hidden; }
-    .image-container img { width: 100%; height: auto; display: block; }
+    .image-container img { width: 100%; height: auto; display: block; max-width: 100%; }
     .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255,255,255,0.3); font-size: 32px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); pointer-events: none; }
     .price-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
     .price-table th { background: #EF4444; color: white; padding: 12px; text-align: left; font-size: 13px; }
@@ -227,7 +227,7 @@ Deno.serve(async (req) => {
     .total-price .amount { font-size: 36px; font-weight: bold; margin-top: 5px; }
     .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0; }
     .gallery-item { position: relative; border-radius: 8px; overflow: hidden; }
-    .gallery-item img { width: 100%; height: 200px; object-fit: cover; }
+    .gallery-item img { width: 100%; height: auto; min-height: 200px; object-fit: cover; display: block; max-width: 100%; }
     .gallery-caption { background: #f3f4f6; padding: 8px; text-align: center; font-size: 11px; color: #6b7280; }
     .footer { background: #111827; color: #9ca3af; padding: 30px; text-align: center; font-size: 12px; }
     .footer a { color: #60a5fa; text-decoration: none; }
