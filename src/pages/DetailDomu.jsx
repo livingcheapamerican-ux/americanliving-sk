@@ -21,6 +21,7 @@ import KonfiguratorFlatDouble from "../components/KonfiguratorFlatDouble";
 import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
 import KonfiguratorWizard from "../components/KonfiguratorWizard";
 import KonfiguratorFjord from "../components/KonfiguratorFjord";
+import KonfiguratorNord from "../components/KonfiguratorNord";
 import KonfiguratorProstoHouse from "../components/KonfiguratorProstoHouse";
 import KonfiguratorFlat72 from "../components/KonfiguratorFlat72";
 import KonfiguratorAFrame from "../components/KonfiguratorAFrame";
@@ -2406,7 +2407,7 @@ export default function DetailDomu() {
             {/* Floating panel pre Nord */}
             {isProstoHouse && dom.nazov?.includes("Nord") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorProstoHouse
+                <KonfiguratorNord
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
@@ -2421,8 +2422,6 @@ export default function DetailDomu() {
                   setIzolaciaNavysenie={setIzolaciaNavysenie}
                   zaklady={zaklady}
                   setZaklady={setZaklady}
-                  predlzenie={predlzenie}
-                  setPredlzenie={setPredlzenie}
                   vstupneDvere={vstupneDvere}
                   setVstupneDvere={setVstupneDvere}
                   elektroinstalacia={elektroinstalacia}

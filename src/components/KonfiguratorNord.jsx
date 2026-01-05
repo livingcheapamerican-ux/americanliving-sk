@@ -2,41 +2,145 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { useQuery } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { 
-  Send, AlertTriangle, Check, Calculator, RotateCcw,
-  Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
+  Send, AlertTriangle, Check, RotateCcw,
+  Plug, Droplets, ThermometerSun, Wind, FileText,
   Zap, ShowerHead, Flame, Cable, Paintbrush, Home, Truck, Sun, DoorOpen,
-  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, Building2
+  Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, TreePine, Building2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Input } from "@/components/ui/input";
 import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
-import EditableTile from "./EditableTile";
 import FloatingPrice from "./FloatingPrice";
+import { base44 } from "@/api/base44Client";
 
-export default function KonfiguratorProstoHouse({ 
+// Dlaždica s tooltip
+const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [hoverTimer, setHoverTimer] = useState(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const tileRef = useRef(null);
+
+  const updateTooltipPosition = () => {
+    if (tileRef.current) {
+      const rect = tileRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
+      const tooltipHeight = 80;
+      
+      let top, left;
+      const centerY = viewportHeight / 2;
+      if (rect.bottom < centerY) {
+        top = rect.bottom + 10;
+      } else {
+        top = Math.max(rect.top - tooltipHeight - 10, 60);
+      }
+      
+      left = viewportWidth / 2;
+      setTooltipPosition({ top, left });
+    }
+  };
+
+  const handleMouseEnter = () => {
+    const timer = setTimeout(() => {
+      updateTooltipPosition();
+      setShowTooltip(true);
+      setTimeout(() => setShowTooltip(false), 3000);
+    }, 2000);
+    setHoverTimer(timer);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimer) clearTimeout(hoverTimer);
+    setShowTooltip(false);
+  };
+
+  React.useEffect(() => {
+    if (showTooltip) {
+      const handleScroll = () => updateTooltipPosition();
+      window.addEventListener('scroll', handleScroll, true);
+      return () => window.removeEventListener('scroll', handleScroll, true);
+    }
+  }, [showTooltip]);
+
+  return (
+    <motion.div
+      ref={tileRef}
+      whileHover={{ scale: 1.02, y: -2 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`relative p-2 sm:p-4 rounded-lg sm:rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+        selected 
+          ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
+          : isA0 
+            ? "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
+            : `bg-white border-2 border-gray-200 ${hoverBorder} hover:shadow-md`
+      }`}
+    >
+      {isA0 && (
+        <Badge className="absolute top-0.5 left-0.5 sm:top-1 sm:left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[6px] sm:text-[8px] px-1 sm:px-1.5 z-10">
+          <Sparkles className="w-1.5 h-1.5 sm:w-2 sm:h-2 mr-0.5" />A0
+        </Badge>
+      )}
+      
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            className="absolute top-1 right-1 sm:top-2 sm:right-2 z-20 pointer-events-none"
+          >
+            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
+              <Check className="w-3 h-3 sm:w-4 sm:h-4 text-white stroke-[3]" />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <Icon className={`w-5 h-5 sm:w-10 sm:h-10 mb-1 sm:mb-2 ${selected ? iconSelectedColor : iconColor}`} />
+      <span className={`font-semibold text-gray-800 text-[10px] sm:text-sm leading-tight`}>{title}</span>
+      <span className={`text-[8px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1 leading-tight`}>{subtitle}</span>
+      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>{price}</span>
+
+      {showTooltip && tooltip && ReactDOM.createPortal(
+        <motion.div
+          initial={{ opacity: 0, y: -5 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -5 }}
+          className="fixed z-[9999] max-w-[85vw] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
+          style={{
+            top: tooltipPosition.top,
+            left: Math.min(Math.max(tooltipPosition.left, 135), window.innerWidth - 135),
+            transform: 'translateX(-50%)'
+          }}
+        >
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900" />
+          {tooltip}
+        </motion.div>,
+        document.body
+      )}
+    </motion.div>
+  );
+};
+
+export default function KonfiguratorNord({ 
   dom,
   onReset,
   onConfigChange,
-  dynamicTexts = null,
   predajNehnutelnosti, setPredajNehnutelnosti,
   hladaniePozemku, setHladaniePozemku,
   financneSluzby, setFinancneSluzby,
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
-  predlzenie, setPredlzenie,
   vstupneDvere, setVstupneDvere,
   elektroinstalacia, setElektroinstalacia,
   vodaKanalizacia, setVodaKanalizacia,
@@ -65,60 +169,46 @@ export default function KonfiguratorProstoHouse({
   showOnlyPhase = null,
   typStavby = ""
 }) {
-  const BASE_PRICE = dom?.zakladna_cena || 0;
+  const BASE_PRICE = dom?.zakladna_cena || 56900;
 
   const { animations, triggerAnimation } = useFlyingAnimation();
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
-  // Načítanie dynamických textov pre tooltips
-  const { data: konfiguratorTexts } = useQuery({
-    queryKey: ['konfigurator-texts-prosto'],
-    queryFn: () => base44.entities.KonfiguratorText.filter({ vyrobca: 'Prosto House' }),
-    initialData: []
-  });
-
-  const getTooltip = (polozkaId, defaultText) => {
-    if (!konfiguratorTexts || konfiguratorTexts.length === 0) return defaultText;
-    const text = konfiguratorTexts.find(t => t.polozka_id === polozkaId);
-    return text?.tooltip || defaultText;
-  };
-
-  // Cenník - Prosto House ceny
+  // NORD CENNÍK - FIXNÉ CENY (95m²)
   const CENY = {
-    montaz: { nie: 0, ano: 9225 },
-    predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
+    montaz: { nie: 0, ano: 12210 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 },
-    elektroinstalacia: 3900,
-    vodaKanalizacia: 1150,
+    izolacia: { standard: 0, zvysena: 3990, premium: 7980 },
+    elektroinstalacia: 4710,
+    vodaKanalizacia: 1905,
     sanitaKomplet: 1169,
     bojler: 264,
-    tepelneCerpadlo: 3321,
-    rekuperacia: 1600,
-    zaklady: { bez: 0, skrutky: 4751, doska: 9633, pasove: 11823 },
+    tepelneCerpadlo: 4011,
+    rekuperacia: 1995,
+    zaklady: { bez: 0, skrutky: 5608, doska: 10794, pasove: 10742 },
     pripojkaSiete: 1501,
     inziniering: 2592,
     projektA0: 3500,
-    interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 9430 },
-    vonkajsiaFasada: { standard: 0, suchana: 6371 },
-    povrchokaOkien: 1450,
-    vnutornePodlahy: 1750,
-    podlahovVykurovanie: 3960,
+    interierFinis: { ziadne: 0, drevo: 11510, sadrokarton: 13186 },
+    vonkajsiaFasada: { standard: 0, suchana: 9421 },
+    povrchokaOkien: 2175,
+    vnutornePodlahy: 2393,
+    podlahovVykurovanie: 3913,
     interieroveDvere: 180,
-    tonovaneSkla: 700,
+    tonovaneSkla: 761,
     doprava: 0,
-    revizna: 1000,
+    revizna: 501,
     stresneOkno: 760,
-    bocneOknoFixne: 500,
+    bocneOknoFixne: 501,
     bocneOknoVyklopne90: 540,
-    bocneOknoVyklopne55: 225
+    bocneOknoVyklopne55: 225,
+    pergola: 1673
   };
 
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
 
     total += CENY.montaz[montazHolodomu];
-    total += CENY.predlzenie[predlzenie] || 0;
     total += CENY.dvere[vstupneDvere];
     total += CENY.izolacia[izolaciaNavysenie];
     
@@ -141,6 +231,7 @@ export default function KonfiguratorProstoHouse({
     if (vnutornePodlahy) total += CENY.vnutornePodlahy;
     if (podlahovVykurovanie) total += CENY.podlahovVykurovanie;
     total += interieroveDvere * CENY.interieroveDvere;
+    if (pergola) total += CENY.pergola;
     if (tonovaneSkla) total += CENY.tonovaneSkla;
     if (doprava) total += CENY.doprava;
     if (revizna) total += CENY.revizna;
@@ -151,23 +242,23 @@ export default function KonfiguratorProstoHouse({
     total += bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55;
     
     return total;
-  }, [montazHolodomu, predlzenie, vstupneDvere, izolaciaNavysenie, elektroinstalacia, 
+  }, [montazHolodomu, vstupneDvere, izolaciaNavysenie, elektroinstalacia, 
       vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia,
       zaklady, pripojkaSiete, inziniering, projektA0, interierFinis,
       vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, podlahovVykurovanie,
-      interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE]);
+      pergola, interieroveDvere, tonovaneSkla, doprava, revizna,
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55]);
 
   const a0Odporucania = useMemo(() => {
     if (!projektA0) return null;
     
     const chybajuce = [];
-    if (izolaciaNavysenie !== "premium" && izolaciaNavysenie !== "ultra") chybajuce.push(t("a0RecInsulation"));
-    if (!tepelneCerpadlo) chybajuce.push(t("a0RecHeatPump"));
-    if (!rekuperacia) chybajuce.push(t("a0RecRecuperation"));
+    if (izolaciaNavysenie !== "premium") chybajuce.push("Premium izolácia (250mm steny, 300mm strecha)");
+    if (!tepelneCerpadlo) chybajuce.push("Tepelné čerpadlo / Klimatizácia");
+    if (!rekuperacia) chybajuce.push("Rekuperácia");
     
     return chybajuce.length > 0 ? chybajuce : null;
-  }, [projektA0, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, t]);
+  }, [projektA0, izolaciaNavysenie, tepelneCerpadlo, rekuperacia]);
 
   const formatPrice = (price) => price.toLocaleString('sk-SK') + " €";
 
@@ -191,19 +282,15 @@ export default function KonfiguratorProstoHouse({
     
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
-    if (predlzenie > 0) {
-      items.push({ name: `${t('extension')} +${predlzenie}m`, price: CENY.predlzenie[predlzenie] || 0, section: "hruba", selected: true });
-    }
-    
-    const izolaciaLabel = izolaciaNavysenie === "ultra" ? t('insulationUltra') : izolaciaNavysenie === "premium" ? t('insulationPremium') : izolaciaNavysenie === "zvysena" ? t('insulationEnhanced') : t('insulationStd');
-    const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
+    const izolaciaLabel = izolaciaNavysenie === "premium" ? t('insulationPremium') + " (250/300mm)" : izolaciaNavysenie === "zvysena" ? t('insulationEnhanced') + " (200/250mm)" : t('insulationStd');
+    const izolaciaPrice = izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
     items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" });
     
     const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? t('foundationsScrews') : t('foundationsLabel');
     const zakladyPrice = zaklady === "pasove" ? CENY.zaklady.pasove : zaklady === "doska" ? CENY.zaklady.doska : zaklady === "skrutky" ? CENY.zaklady.skrutky : 0;
     items.push({ name: zakladyLabel, price: zakladyPrice, section: "hruba", selected: zaklady !== "bez" });
     
-    const interierLabel = interierFinis === "drevo" ? t('interiorWood') : interierFinis === "sadrokarton" ? t('interiorDrywall') : t('interiorNone');
+    const interierLabel = interierFinis === "drevo" ? t('interiorWood') : interierFinis === "sadrokarton" ? t('interiorDrywall') : t('interiorFinish');
     const interierPrice = interierFinis === "drevo" ? CENY.interierFinis.drevo : interierFinis === "sadrokarton" ? CENY.interierFinis.sadrokarton : 0;
     items.push({ name: interierLabel, price: interierPrice, section: "holodom", selected: interierFinis !== "ziadne" });
 
@@ -233,6 +320,7 @@ export default function KonfiguratorProstoHouse({
     items.push({ name: t('floors') + " - " + t('floorsLaminate'), price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
     items.push({ name: t('floorHeatingFull'), price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
     items.push({ name: `${t('interiorDoors')} (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere, section: "kluc", selected: interieroveDvere > 0 });
+    if (pergola) items.push({ name: t('pergola'), price: CENY.pergola, section: "kluc", selected: true });
     
     items.push({ name: t('engineeringFull'), price: inziniering ? CENY.inziniering : 0, section: "docs", selected: inziniering });
     items.push({ name: t('projectA0Full'), price: projektA0 ? CENY.projektA0 : 0, section: "docs", selected: projektA0 });
@@ -241,11 +329,11 @@ export default function KonfiguratorProstoHouse({
     
     return items;
   }, [predajNehnutelnosti, hladaniePozemku, financneSluzby,
-      montazHolodomu, predlzenie, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
+      montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
-      interieroveDvere, inziniering, projektA0, revizna, doprava, language, BASE_PRICE, t]);
+      interieroveDvere, inziniering, projektA0, revizna, doprava, pergola, t]);
 
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
@@ -303,6 +391,7 @@ export default function KonfiguratorProstoHouse({
       setVnutornePodlahy(false);
       setPodlahovVykurovanie(false);
       setInterieroveDvere(0);
+      setPergola(false);
       setTonovaneSkla(false);
       setDoprava(false);
       setRevizna(true);
@@ -310,23 +399,22 @@ export default function KonfiguratorProstoHouse({
       setBocneOknoFixne(0);
       setBocneOknoVyklopne90(0);
       setBocneOknoVyklopne55(0);
-      setPredlzenie?.(0);
     }
   };
 
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
-    <div className={`relative flex items-center gap-1 sm:gap-3 p-1.5 sm:p-3 bg-gradient-to-r ${color}`}>
-      <div className="relative flex items-center justify-center w-6 h-6 sm:w-10 sm:h-10 bg-white/90 rounded-md sm:rounded-xl shadow-lg flex-shrink-0">
-        <Icon className="w-3 h-3 sm:w-5 sm:h-5 text-gray-800" />
+    <div className={`relative flex items-center gap-2 sm:gap-4 p-3 sm:p-5 bg-gradient-to-r ${color}`}>
+      <div className="relative flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 bg-white/90 rounded-xl sm:rounded-2xl shadow-lg flex-shrink-0">
+        <Icon className="w-5 h-5 sm:w-7 sm:h-7 text-gray-800" />
       </div>
       <div className="relative flex-1 min-w-0">
-        <div className="flex items-center gap-1 sm:gap-2 mb-0.5">
-          <span className="inline-flex items-center justify-center px-1 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[8px] sm:text-xs font-bold uppercase tracking-wider">
+        <div className="flex items-center gap-2 sm:gap-3 mb-0.5 sm:mb-1">
+          <span className="inline-flex items-center justify-center px-2 sm:px-3 py-0.5 bg-white/90 rounded-full text-gray-800 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
             {t('phase')} {step}
           </span>
         </div>
-        <h3 className="text-xs sm:text-lg font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
-        {subtitle && <p className="text-white text-[9px] sm:text-xs mt-0.5 truncate drop-shadow-md">{subtitle}</p>}
+        <h3 className="text-lg sm:text-2xl font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
+        {subtitle && <p className="text-white text-xs sm:text-sm mt-0.5 sm:mt-1 truncate drop-shadow-md">{subtitle}</p>}
       </div>
     </div>
   );
@@ -339,7 +427,7 @@ export default function KonfiguratorProstoHouse({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-green-900 text-xs font-bold uppercase tracking-wider mb-0.5">{t('yourConfiguration')}</p>
-                <h3 className="text-base font-black text-gray-900">{dom?.nazov || 'Prosto House'}</h3>
+                <h3 className="text-base font-black text-gray-900">{dom?.nazov || 'Nord'}</h3>
               </div>
             </div>
           </div>
@@ -355,31 +443,6 @@ export default function KonfiguratorProstoHouse({
             tepelneCerpadlo={tepelneCerpadlo}
             rekuperacia={rekuperacia}
             projektA0={projektA0}
-            montazHolodomu={montazHolodomu}
-            zaklady={zaklady}
-            predlzenie={predlzenie}
-            vstupneDvere={vstupneDvere}
-            elektroinstalacia={elektroinstalacia}
-            vodaKanalizacia={vodaKanalizacia}
-            sanitaKomplet={sanitaKomplet}
-            bojler={bojler}
-            pripojkaSiete={pripojkaSiete}
-            stresneOkno={stresneOkno}
-            bocneOknoFixne={bocneOknoFixne}
-            bocneOknoVyklopne90={bocneOknoVyklopne90}
-            bocneOknoVyklopne55={bocneOknoVyklopne55}
-            povrchokaOkien={povrchokaOkien}
-            tonovaneSkla={tonovaneSkla}
-            interierFinis={interierFinis}
-            vnutornePodlahy={vnutornePodlahy}
-            podlahovVykurovanie={podlahovVykurovanie}
-            interieroveDvere={interieroveDvere}
-            inziniering={inziniering}
-            revizna={revizna}
-            doprava={doprava}
-            predajNehnutelnosti={predajNehnutelnosti}
-            hladaniePozemku={hladaniePozemku}
-            financneSluzby={financneSluzby}
           />
 
           <div className="px-2 py-1 max-h-[65vh] overflow-y-auto">
@@ -387,10 +450,10 @@ export default function KonfiguratorProstoHouse({
               const isBase = item.section === "base";
               const prevItem = selectedItems[index - 1];
               const showServicesDivider = item.section === "services" && (!prevItem || prevItem.section === "base");
-              const showHrubaDivider = item.section === "hruba" && (!['hruba', 'services', 'base'].includes(prevItem?.section));
-              const showHolodomDivider = item.section === "holodom" && (!['holodom', 'hruba', 'services', 'base'].includes(prevItem?.section));
-              const showKlucDivider = item.section === "kluc" && (!['kluc', 'holodom', 'hruba', 'services', 'base'].includes(prevItem?.section));
-              const showDocsDivider = item.section === "docs" && (!['docs', 'kluc', 'holodom', 'hruba', 'services', 'base'].includes(prevItem?.section));
+              const showHrubaDivider = item.section === "hruba" && (prevItem?.section !== "hruba" && prevItem?.section !== "services");
+              const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
+              const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
+              const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
 
               return (
                 <React.Fragment key={index}>
@@ -503,7 +566,7 @@ export default function KonfiguratorProstoHouse({
         rekuperacia, pripojkaSiete, stresneOkno, bocneOknoFixne, bocneOknoVyklopne90,
         bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, vonkajsiaFasada,
         interierFinis, vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
-        inziniering, projektA0, revizna, doprava, predlzenie,
+        pergola, inziniering, projektA0, revizna, doprava, predlzenie: 0,
         predajNehnutelnosti, hladaniePozemku, financneSluzby
       });
       return response;
@@ -514,18 +577,18 @@ export default function KonfiguratorProstoHouse({
   };
 
   return (
-    <div className="mt-4 sm:mt-8 relative overflow-x-hidden">
+    <div className="mt-8 relative">
       <FlyingAnimationContainer animations={animations} />
-      <FloatingPrice 
+      {!showOnlySummary && <FloatingPrice 
         price={totalPrice} 
         isVisible={true} 
         onSendQuote={handleSendQuoteFromFloating}
         dom={dom}
         vyrobca="Prosto House"
-      />
+      />}
 
-      <div className="w-full max-w-full overflow-hidden">
-        <div className="space-y-3 sm:space-y-6">
+      <div>
+        <div className="space-y-6">
 
           {showHruba && (
             <KonfiguratorFaza1HrubaStavba 
@@ -535,10 +598,8 @@ export default function KonfiguratorProstoHouse({
               setIzolaciaNavysenie={setIzolaciaNavysenie}
               zaklady={zaklady}
               setZaklady={setZaklady}
-              predlzenie={predlzenie}
-              setPredlzenie={setPredlzenie}
               triggerAnimation={triggerAnimation}
-              useProstoHousePrices={true}
+              useNordPrices={true}
             />
           )}
 
@@ -562,170 +623,219 @@ export default function KonfiguratorProstoHouse({
                 color="from-blue-600 to-indigo-600"
                 step="2"
               />
-              <div className="p-1.5 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
-                <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
+              <div className="p-3 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
-                  <div className="col-span-1 sm:col-span-3 grid grid-cols-3 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-blue-600 rounded-lg sm:rounded-xl bg-blue-100/70 shadow-xl">
-                    <p className="col-span-3 text-[8px] sm:text-[10px] font-bold text-blue-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
-                      <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">1</span>
+                  <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-2 sm:gap-3 p-4 border-[5px] border-blue-600 rounded-2xl bg-blue-100/70 shadow-xl">
+                    <p className="col-span-3 text-[10px] sm:text-xs font-bold text-blue-700 -mb-1 flex items-center gap-1">
+                      <span className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">1</span>
                       {t('interiorFinish')} ({t('selectOne')})
                     </p>
-                    <EditableTile
+                    <Tile
                       selected={interierFinis === "ziadne"}
                       onClick={() => setInterierFinis("ziadne")}
+                      icon={Home}
+                      iconColor="text-gray-400"
+                      iconSelectedColor="text-blue-600"
                       title={t('interiorNone')}
                       subtitle={t('shellConstruction')}
-                      price="0 €"
+                      price="+ 0 €"
                       isPriced={false}
-                      isIncluded={true}
-                      t={t}
-                      isAdmin={false}
+                      tooltip={t('interiorNone')}
                     />
 
-                    <EditableTile
+                    <Tile
                       selected={interierFinis === "drevo"}
                       onClick={(e) => { if (interierFinis !== "drevo") triggerAnimation("drevo", e.currentTarget); setInterierFinis("drevo"); }}
+                      icon={Home}
+                      iconColor="text-amber-600"
+                      iconSelectedColor="text-blue-600"
                       title={t('interiorWood')}
                       subtitle={t('woodCladding')}
-                      price="+ 8 200 €"
+                      price="+ 11 510 €"
                       isPriced={true}
-                      t={t}
-                      isAdmin={false}
+                      tooltip={t('interiorWood')}
                     />
 
-                    <EditableTile
+                    <Tile
                       selected={interierFinis === "sadrokarton"}
                       onClick={(e) => { if (interierFinis !== "sadrokarton") triggerAnimation("sadrokarton", e.currentTarget); setInterierFinis("sadrokarton"); }}
+                      icon={Home}
+                      iconColor="text-gray-500"
+                      iconSelectedColor="text-blue-600"
                       title={t('interiorDrywall')}
                       subtitle={t('plaster')}
-                      price="+ 9 430 €"
+                      price="+ 13 186 €"
                       isPriced={true}
-                      t={t}
-                      isAdmin={false}
+                      tooltip={t('interiorDrywall')}
                     />
                   </div>
 
-                  <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-yellow-500 rounded-lg sm:rounded-xl bg-yellow-100/70 shadow-xl">
-                    <p className="col-span-2 text-[8px] sm:text-[10px] font-bold text-yellow-800 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
-                      <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">2</span>
+                  <div className="col-span-2 sm:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] border-yellow-500 rounded-2xl bg-yellow-100/70 shadow-xl">
+                    <p className="col-span-2 text-[10px] sm:text-xs font-bold text-yellow-800 -mb-1 flex items-center gap-1">
+                      <span className="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
                       {t('electrical')} & {t('water')}
                     </p>
-                    <EditableTile
+                    <Tile
                       selected={elektroinstalacia}
                       onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); setElektroinstalacia(!elektroinstalacia); }}
+                      icon={Zap}
+                      iconColor="text-yellow-500"
+                      iconSelectedColor="text-yellow-600"
                       title={t('electrical')}
                       subtitle={t('wiring')}
-                      price="+ 3 900 €"
+                      price="+ 4 710 €"
                       isPriced={true}
-                      t={t}
-                      isAdmin={false}
+                      selectedBg="bg-yellow-100"
+                      selectedBorder="border-yellow-500"
+                      selectedRing="ring-yellow-300"
+                      hoverBorder="hover:border-yellow-300"
+                      tooltip={t('electricalFull')}
                     />
 
-                    <EditableTile
+                    <Tile
                       selected={vodaKanalizacia}
                       onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); setVodaKanalizacia(!vodaKanalizacia); }}
+                      icon={Droplets}
+                      iconColor="text-blue-400"
+                      iconSelectedColor="text-blue-600"
                       title={t('water')}
                       subtitle={t('wiring')}
-                      price="+ 1 150 €"
+                      price="+ 1 905 €"
                       isPriced={true}
-                      t={t}
-                      isAdmin={false}
+                      tooltip={t('waterFull')}
                     />
 
-                    <EditableTile
+                    <Tile
                       selected={sanitaKomplet}
                       onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); setSanitaKomplet(!sanitaKomplet); }}
+                      icon={ShowerHead}
+                      iconColor="text-blue-400"
+                      iconSelectedColor="text-blue-600"
                       title={t('sanitary')}
                       subtitle={t('complete')}
                       price="+ 1 169 €"
                       isPriced={true}
-                      t={t}
-                      isAdmin={false}
+                      tooltip={t('sanitaryFull')}
                     />
 
-                    <EditableTile
+                    <Tile
                       selected={bojler}
                       onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }}
+                      icon={Flame}
+                      iconColor="text-orange-400"
+                      iconSelectedColor="text-orange-600"
                       title={t('boiler')}
                       subtitle={t('boilerElectric')}
                       price="+ 264 €"
                       isPriced={true}
-                      t={t}
-                      isAdmin={false}
+                      selectedBg="bg-orange-100"
+                      selectedBorder="border-orange-500"
+                      selectedRing="ring-orange-300"
+                      hoverBorder="hover:border-orange-300"
+                      tooltip={t('boiler')}
                     />
                   </div>
 
-                  <div className="col-span-1 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-green-600 rounded-lg sm:rounded-xl bg-green-100/70 shadow-xl">
-                    <p className="col-span-2 text-[8px] sm:text-xs font-bold text-green-800 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
-                      <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-green-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">3</span>
+                  <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] border-green-600 rounded-2xl bg-green-100/70 shadow-xl">
+                    <p className="col-span-2 text-xs font-bold text-green-800 -mb-1 flex items-center gap-1">
+                      <span className="w-5 h-5 sm:w-6 sm:h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">3</span>
                       {t('heatPump')} & {t('recuperation')} (A0)
                     </p>
-                    <EditableTile
+                    <Tile
                       selected={tepelneCerpadlo}
                       onClick={(e) => { if (!tepelneCerpadlo) triggerAnimation("klimatizacia", e.currentTarget); setTepelneCerpadlo(!tepelneCerpadlo); }}
+                      icon={ThermometerSun}
+                      iconColor="text-red-500"
+                      iconSelectedColor="text-green-600"
                       title={t('heatPump')}
                       subtitle={t('units5')}
-                      price="+ 3 321 €"
+                      price="+ 4 011 €"
                       isPriced={true}
                       isA0={true}
-                      t={t}
-                      isAdmin={false}
+                      selectedBg="bg-green-100"
+                      selectedBorder="border-green-500"
+                      selectedRing="ring-green-300"
+                      tooltip={t('heatPumpFull')}
                     />
 
-                    <EditableTile
+                    <Tile
                       selected={rekuperacia}
                       onClick={(e) => { if (!rekuperacia) triggerAnimation("rekuperacia", e.currentTarget); setRekuperacia(!rekuperacia); }}
+                      icon={Wind}
+                      iconColor="text-cyan-500"
+                      iconSelectedColor="text-green-600"
                       title={t('recuperation')}
-                      subtitle="3 ks"
-                      price="+ 1 600 €"
+                      subtitle={t('units5')}
+                      price="+ 1 995 €"
                       isPriced={true}
                       isA0={true}
-                      t={t}
-                      isAdmin={false}
+                      selectedBg="bg-green-100"
+                      selectedBorder="border-green-500"
+                      selectedRing="ring-green-300"
+                      tooltip={t('recuperation')}
                     />
                   </div>
 
-                  <EditableTile
+                  <Tile
                     selected={pripojkaSiete}
                     onClick={(e) => { if (!pripojkaSiete) triggerAnimation("siete", e.currentTarget); setPripojkaSiete(!pripojkaSiete); }}
+                    icon={Cable}
+                    iconColor="text-gray-400"
+                    iconSelectedColor="text-gray-700"
                     title={t('gridConnection')}
                     subtitle={t('connection')}
                     price="+ 1 501 €"
                     isPriced={true}
-                    t={t}
-                    isAdmin={false}
+                    selectedBg="bg-gray-200"
+                    selectedBorder="border-gray-500"
+                    selectedRing="ring-gray-300"
+                    hoverBorder="hover:border-gray-400"
+                    tooltip={t('gridConnectionFull')}
                   />
 
-                  <EditableTile
+                  <Tile
                     selected={povrchokaOkien}
                     onClick={(e) => { if (!povrchokaOkien) triggerAnimation("oknoAntracit", e.currentTarget); setPovrchokaOkien(!povrchokaOkien); }}
+                    icon={Square}
+                    iconColor="text-slate-400"
+                    iconSelectedColor="text-slate-700"
                     title={t('lamination')}
                     subtitle={t('laminationAnthracite')}
-                    price="+ 1 450 €"
+                    price="+ 2 175 €"
                     isPriced={true}
-                    t={t}
-                    isAdmin={false}
+                    selectedBg="bg-slate-200"
+                    selectedBorder="border-slate-600"
+                    selectedRing="ring-slate-300"
+                    hoverBorder="hover:border-slate-400"
+                    tooltip={t('lamination')}
                   />
 
-                  <EditableTile
+                  <Tile
                     selected={tonovaneSkla}
                     onClick={(e) => { if (!tonovaneSkla) triggerAnimation("oknoTonovane", e.currentTarget); setTonovaneSkla(!tonovaneSkla); }}
+                    icon={Sun}
+                    iconColor="text-amber-400"
+                    iconSelectedColor="text-amber-600"
                     title={t('tintedGlass')}
                     subtitle={t('solarGlass')}
-                    price="+ 700 €"
+                    price="+ 761 €"
                     isPriced={true}
-                    t={t}
-                    isAdmin={false}
+                    selectedBg="bg-amber-100"
+                    selectedBorder="border-amber-500"
+                    selectedRing="ring-amber-300"
+                    hoverBorder="hover:border-amber-300"
+                    tooltip={t('tintedGlass')}
                   />
 
                 </div>
 
-                <div className="mt-2 sm:mt-3 p-1.5 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
-                  <p className="text-[8px] sm:text-xs font-bold text-gray-700 mb-1.5 sm:mb-2 flex items-center gap-1">
-                    <DoorOpen className="w-2.5 h-2.5 sm:w-4 sm:h-4 text-blue-600" />
+                <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
+                  <p className="text-xs sm:text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                    <DoorOpen className="w-4 h-4 text-blue-600" />
                     {t('entryDoor')}
                   </p>
-                  <div className="grid grid-cols-3 gap-1 sm:gap-1.5">
+                  <div className="grid grid-cols-3 gap-2">
                     {[
                       { value: "ziadne", label: t('doorStandard'), price: "0 €" },
                       { value: "kovove", label: t('doorMetal'), price: "+ 720 €" },
@@ -736,43 +846,43 @@ export default function KonfiguratorProstoHouse({
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => setVstupneDvere(opt.value)}
-                        className={`p-1.5 sm:p-3 rounded-md sm:rounded-lg cursor-pointer text-center transition-all ${
+                        className={`p-2 sm:p-3 rounded-lg cursor-pointer text-center transition-all ${
                           vstupneDvere === opt.value 
                             ? "bg-blue-100 border-2 border-blue-500" 
                             : "bg-gray-50 border-2 border-gray-200 hover:border-blue-300"
                         }`}
                       >
-                        <span className="font-medium text-gray-800 text-[9px] sm:text-sm block">{opt.label}</span>
-                        <span className={`text-[8px] sm:text-xs ${opt.value === "ziadne" ? "text-gray-400" : "text-green-600 font-bold"}`}>{opt.price}</span>
+                        <span className="font-medium text-gray-800 text-xs sm:text-sm block">{opt.label}</span>
+                        <span className={`text-[10px] sm:text-xs ${opt.value === "ziadne" ? "text-gray-400" : "text-green-600 font-bold"}`}>{opt.price}</span>
                       </motion.div>
                     ))}
                   </div>
 
-                  <p className="text-[8px] sm:text-xs font-bold text-gray-700 mt-2 sm:mt-3 mb-1.5 sm:mb-2 flex items-center gap-1">
-                    <Square className="w-2.5 h-2.5 sm:w-4 sm:h-4 text-blue-600" />
+                  <p className="text-xs sm:text-sm font-bold text-gray-700 mt-4 mb-3 flex items-center gap-2">
+                    <Square className="w-4 h-4 text-blue-600" />
                     {t('additionalWindows')}
                   </p>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-1.5">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {[
                       { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: "760 €" },
-                      { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: "500 €" },
+                      { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: "501 €" },
                       { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: "540 €" },
                       { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: "225 €" }
                     ].map((opt, idx) => (
-                      <div key={idx} className={`p-1.5 sm:p-3 rounded-md sm:rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
-                        <span className="font-medium text-gray-800 text-[8px] sm:text-xs block mb-0.5 sm:mb-1 leading-tight">{opt.label}</span>
-                        <div className="flex items-center justify-center gap-0.5 sm:gap-1">
+                      <div key={idx} className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
+                        <span className="font-medium text-gray-800 text-[10px] sm:text-xs block mb-1">{opt.label}</span>
+                        <div className="flex items-center justify-center gap-1">
                           <button 
                             onClick={() => opt.setter(Math.max(0, opt.state - 1))}
-                            className="w-5 h-5 sm:w-6 sm:h-6 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-xs sm:text-sm"
+                            className="w-6 h-6 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm"
                           >−</button>
-                          <span className="w-4 sm:w-6 text-center font-bold text-xs sm:text-sm">{opt.state}</span>
+                          <span className="w-6 text-center font-bold text-sm">{opt.state}</span>
                           <button 
                             onClick={() => opt.setter(opt.state + 1)}
-                            className="w-5 h-5 sm:w-6 sm:h-6 rounded bg-blue-500 hover:bg-blue-600 text-white font-bold text-xs sm:text-sm"
+                            className="w-6 h-6 rounded bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm"
                           >+</button>
                         </div>
-                        <span className="text-green-600 font-bold text-[8px] sm:text-[10px] block mt-0.5 sm:mt-1 text-center">× {opt.price}</span>
+                        <span className="text-green-600 font-bold text-[10px] block mt-1 text-center">× {opt.price}</span>
                       </div>
                     ))}
                   </div>
@@ -802,80 +912,120 @@ export default function KonfiguratorProstoHouse({
                 color="from-emerald-600 to-teal-600"
                 step="3"
               />
-              <div className="p-1.5 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
-                <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
+              <div className="p-3 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
-                  <div className={`col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] rounded-lg sm:rounded-xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
-                    <p className={`col-span-2 text-[8px] sm:text-[10px] font-bold -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
-                      <span className={`w-3.5 h-3.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
+                  <div className={`col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] rounded-2xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
+                    <p className={`col-span-2 text-[10px] sm:text-xs font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
+                      <span className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
                       {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
                     </p>
-                    <EditableTile
+                    <Tile
                       selected={vonkajsiaFasada === "standard"}
                       onClick={() => setVonkajsiaFasada("standard")}
+                      icon={Paintbrush}
+                      iconColor="text-amber-500"
+                      iconSelectedColor="text-emerald-600"
                       title={t('facadeWoodMetal')}
-                      subtitle="Drevo / Plech"
-                      price="0 €"
+                      subtitle={t('facadeStandard')}
+                      price="+ 0 €"
                       isPriced={false}
-                      isIncluded={true}
-                      t={t}
-                      isAdmin={false}
+                      selectedBg="bg-emerald-100"
+                      selectedBorder="border-emerald-500"
+                      selectedRing="ring-emerald-300"
+                      hoverBorder="hover:border-emerald-300"
+                      tooltip={t('facadeWoodMetal')}
                     />
 
-                    <EditableTile
+                    <Tile
                       selected={vonkajsiaFasada === "suchana"}
                       onClick={(e) => { if (vonkajsiaFasada !== "suchana") triggerAnimation("fasadaSuchana", e.currentTarget); setVonkajsiaFasada("suchana"); }}
+                      icon={Paintbrush}
+                      iconColor="text-orange-400"
+                      iconSelectedColor="text-emerald-600"
                       title={t('facadeStucco')}
                       subtitle={t('whitePlaster')}
-                      price="+ 6 371 €"
+                      price="+ 9 421 €"
                       isPriced={true}
-                      t={t}
-                      isAdmin={false}
+                      selectedBg="bg-emerald-100"
+                      selectedBorder="border-emerald-500"
+                      selectedRing="ring-emerald-300"
+                      hoverBorder="hover:border-emerald-300"
+                      tooltip={t('facadeStucco')}
                     />
                   </div>
 
-                  <EditableTile
+                  <Tile
                     selected={vnutornePodlahy}
                     onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); setVnutornePodlahy(!vnutornePodlahy); }}
+                    icon={Square}
+                    iconColor="text-amber-500"
+                    iconSelectedColor="text-emerald-600"
                     title={t('floors')}
                     subtitle={t('floorsLaminate')}
-                    price="+ 1 750 €"
+                    price="+ 2 393 €"
                     isPriced={true}
-                    t={t}
-                    isAdmin={false}
+                    selectedBg="bg-emerald-100"
+                    selectedBorder="border-emerald-500"
+                    selectedRing="ring-emerald-300"
+                    hoverBorder="hover:border-emerald-300"
+                    tooltip={t('floors')}
                   />
 
-                  <EditableTile
+                  <Tile
                     selected={podlahovVykurovanie}
                     onClick={(e) => { if (!podlahovVykurovanie) triggerAnimation("podlahovVykurovanie", e.currentTarget); setPodlahovVykurovanie(!podlahovVykurovanie); }}
+                    icon={Flame}
+                    iconColor="text-orange-400"
+                    iconSelectedColor="text-orange-600"
                     title={t('floorHeating')}
                     subtitle={t('wifiThermostat')}
-                    price="+ 3 960 €"
+                    price="+ 3 913 €"
                     isPriced={true}
-                    t={t}
-                    isAdmin={false}
+                    selectedBg="bg-orange-100"
+                    selectedBorder="border-orange-500"
+                    selectedRing="ring-orange-300"
+                    hoverBorder="hover:border-orange-300"
+                    tooltip={t('floorHeatingFull')}
+                  />
+
+                  <Tile
+                    selected={pergola}
+                    onClick={(e) => { if (!pergola) triggerAnimation("pergola", e.currentTarget); setPergola(!pergola); }}
+                    icon={TreePine}
+                    iconColor="text-green-500"
+                    iconSelectedColor="text-emerald-600"
+                    title={t('pergola')}
+                    subtitle={t('terrace')}
+                    price="+ 1 673 €"
+                    isPriced={true}
+                    selectedBg="bg-emerald-100"
+                    selectedBorder="border-emerald-500"
+                    selectedRing="ring-emerald-300"
+                    hoverBorder="hover:border-emerald-300"
+                    tooltip={t('pergola')}
                   />
 
                 </div>
 
-                <div className="mt-2 sm:mt-3 p-1.5 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
+                <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <DoorOpen className="w-3 h-3 sm:w-5 sm:h-5 text-emerald-600" />
+                    <div className="flex items-center gap-2">
+                      <DoorOpen className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-600" />
                       <div>
-                        <span className="font-semibold text-gray-800 text-[8px] sm:text-xs">{t('interiorDoors')}</span>
-                        <span className="text-green-600 font-bold text-[8px] sm:text-[10px] ml-1">× 180 €</span>
+                        <span className="font-semibold text-gray-800 text-xs sm:text-sm">{t('interiorDoors')}</span>
+                        <span className="text-green-600 font-bold text-xs ml-2">× 180 €</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                       <button 
                         onClick={() => setInterieroveDvere(Math.max(0, interieroveDvere - 1))}
-                        className="w-5 h-5 sm:w-7 sm:h-7 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-xs sm:text-sm"
+                        className="w-8 h-8 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-lg"
                       >−</button>
-                      <span className="w-4 sm:w-6 text-center font-bold text-xs sm:text-sm">{interieroveDvere}</span>
+                      <span className="w-8 text-center font-bold text-lg">{interieroveDvere}</span>
                       <button 
                         onClick={() => setInterieroveDvere(interieroveDvere + 1)}
-                        className="w-5 h-5 sm:w-7 sm:h-7 rounded bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm"
+                        className="w-8 h-8 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg"
                       >+</button>
                     </div>
                   </div>
@@ -905,63 +1055,85 @@ export default function KonfiguratorProstoHouse({
                 color="from-purple-600 to-violet-600"
                 step="4"
               />
-              <div className="p-1.5 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
-                <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
+              <div className="p-3 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
                   
-                  <EditableTile
+                  <Tile
                     selected={inziniering}
                     onClick={(e) => { if (!inziniering) triggerAnimation("inziniering", e.currentTarget); setInziniering(!inziniering); }}
+                    icon={FileText}
+                    iconColor="text-purple-400"
+                    iconSelectedColor="text-purple-600"
                     title={t('engineering')}
                     subtitle={t('buildingPermit')}
                     price="+ 2 592 €"
                     isPriced={true}
-                    t={t}
-                    isAdmin={false}
+                    selectedBg="bg-purple-100"
+                    selectedBorder="border-purple-500"
+                    selectedRing="ring-purple-300"
+                    hoverBorder="hover:border-purple-300"
+                    tooltip={t('engineeringFull')}
                   />
 
-                  <EditableTile
+                  <Tile
                     selected={projektA0}
                     onClick={(e) => { if (!projektA0) triggerAnimation("projektant", e.currentTarget); setProjektA0(!projektA0); }}
+                    icon={FileCheck}
+                    iconColor="text-green-500"
+                    iconSelectedColor="text-green-600"
                     title={t('projectA0')}
                     subtitle={t('certification')}
                     price="+ 3 500 €"
                     isPriced={true}
                     isA0={true}
-                    t={t}
-                    isAdmin={false}
+                    selectedBg="bg-green-100"
+                    selectedBorder="border-green-500"
+                    selectedRing="ring-green-300"
+                    tooltip={t('projectA0Full')}
                   />
 
-                  <EditableTile
+                  <Tile
                     selected={revizna}
                     onClick={() => setRevizna(!revizna)}
+                    icon={FileText}
+                    iconColor="text-gray-400"
+                    iconSelectedColor="text-purple-600"
                     title={t('revision')}
                     subtitle={t('documentation')}
-                    price="+ 1 000 €"
+                    price="+ 501 €"
                     isPriced={true}
-                    t={t}
-                    isAdmin={false}
+                    selectedBg="bg-purple-100"
+                    selectedBorder="border-purple-500"
+                    selectedRing="ring-purple-300"
+                    hoverBorder="hover:border-purple-300"
+                    tooltip={t('revisionFull')}
                   />
 
-                  <EditableTile
+                  <Tile
                     selected={doprava}
                     onClick={(e) => { if (!doprava) triggerAnimation("doprava", e.currentTarget); setDoprava(!doprava); }}
+                    icon={Truck}
+                    iconColor="text-purple-400"
+                    iconSelectedColor="text-purple-600"
                     title={t('transport')}
                     subtitle={t('transportFull')}
-                    price="0 €"
+                    price="+ 0 €"
                     isPriced={false}
-                    isIncluded={true}
-                    t={t}
-                    isAdmin={false}
+                    selectedBg="bg-purple-100"
+                    selectedBorder="border-purple-500"
+                    selectedRing="ring-purple-300"
+                    hoverBorder="hover:border-purple-300"
+                    tooltip={t('transport')}
                   />
 
                 </div>
 
                 {a0Odporucania && (
-                  <div className="mt-2 sm:mt-4 p-2 sm:p-4 bg-amber-50 border-2 border-amber-300 rounded-lg sm:rounded-xl">
-                    <div className="flex items-start gap-1.5 sm:gap-3">
-                      <AlertTriangle className="w-3 h-3 sm:w-5 sm:h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div className="mt-4 p-3 sm:p-4 bg-amber-50 border-2 border-amber-300 rounded-xl">
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-bold text-amber-800 mb-1 text-[9px] sm:text-sm">{t('a0Recommendations')}</p>
+                        <p className="font-bold text-amber-800 mb-1 text-xs sm:text-sm">{t('a0Recommendations')}</p>
                         <ul className="space-y-0.5">
                           {a0Odporucania.map((item, index) => (
                             <li key={index} className="text-amber-700 flex items-center gap-1 text-[10px] sm:text-xs">
@@ -976,10 +1148,10 @@ export default function KonfiguratorProstoHouse({
                 )}
 
                 {projektA0 && !a0Odporucania && (
-                  <div className="mt-2 sm:mt-4 p-2 sm:p-4 bg-green-50 border-2 border-green-300 rounded-lg sm:rounded-xl">
-                    <div className="flex items-center gap-1.5 sm:gap-2">
-                      <CheckCircle className="w-3 h-3 sm:w-5 sm:h-5 text-green-600" />
-                      <p className="font-bold text-green-800 text-[9px] sm:text-sm">{t('configMeetsA0')}</p>
+                  <div className="mt-4 p-3 sm:p-4 bg-green-50 border-2 border-green-300 rounded-xl">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+                      <p className="font-bold text-green-800 text-xs sm:text-sm">{t('configMeetsA0')}</p>
                     </div>
                   </div>
                 )}
@@ -1001,27 +1173,27 @@ export default function KonfiguratorProstoHouse({
                   <div className="absolute bottom-10 left-10 w-32 h-32 bg-emerald-400 rounded-full blur-3xl"></div>
                 </div>
 
-                <div className="relative p-3 sm:p-8 md:p-10">
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 sm:gap-8">
+                <div className="relative p-4 sm:p-8 md:p-10">
+                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-8">
                     <div className="flex-1">
-                      <p className="text-green-400 text-[9px] sm:text-sm font-semibold uppercase tracking-wider mb-1 sm:mb-2">{t('yourConfiguration')}</p>
-                      <h3 className="text-base sm:text-3xl font-bold text-white mb-1 sm:mb-2">{dom?.nazov || 'Prosto House'}</h3>
-                      <p className="text-slate-400 text-[10px] sm:text-base mb-3 sm:mb-4">{t('completeCalculation')}</p>
+                      <p className="text-green-400 text-[10px] sm:text-sm font-semibold uppercase tracking-wider mb-1 sm:mb-2">{t('yourConfiguration')}</p>
+                      <h3 className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">{dom?.nazov || 'Nord'}</h3>
+                      <p className="text-slate-400 text-xs sm:text-base mb-4">{t('completeCalculation')}</p>
                       {projektA0 && !a0Odporucania && (
-                        <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[9px] sm:text-sm py-0.5 sm:py-1.5 px-1.5 sm:px-4 shadow-lg shadow-green-500/30">✓ {t('meetsA0')}</Badge>
+                        <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] sm:text-sm py-1 sm:py-1.5 px-2 sm:px-4 shadow-lg shadow-green-500/30">✓ {t('meetsA0')}</Badge>
                       )}
                     
-                      <div className="mt-3 sm:mt-6 bg-slate-800/50 rounded-lg sm:rounded-xl p-2 sm:p-4 border border-slate-700/50 max-h-[250px] sm:max-h-[300px] overflow-y-auto">
-                        <p className="text-slate-400 text-[9px] sm:text-xs font-semibold uppercase tracking-wider mb-2 sm:mb-3">{t('selectedItems')}</p>
+                      <div className="mt-4 sm:mt-6 bg-slate-800/50 rounded-xl p-3 sm:p-4 border border-slate-700/50 max-h-[300px] overflow-y-auto">
+                        <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">{t('selectedItems')}</p>
                         <div className="space-y-1">
                           {selectedItems.map((item, index) => {
                             const isBase = item.section === "base";
                             const prevItem = selectedItems[index - 1];
                             const showServicesDivider = item.section === "services" && (!prevItem || prevItem.section === "base");
-                            const showHrubaDivider = item.section === "hruba" && (!['hruba', 'services', 'base'].includes(prevItem?.section));
-                            const showHolodomDivider = item.section === "holodom" && (!['holodom', 'hruba', 'services', 'base'].includes(prevItem?.section));
-                            const showKlucDivider = item.section === "kluc" && (!['kluc', 'holodom', 'hruba', 'services', 'base'].includes(prevItem?.section));
-                            const showDocsDivider = item.section === "docs" && (!['docs', 'kluc', 'holodom', 'hruba', 'services', 'base'].includes(prevItem?.section));
+                            const showHrubaDivider = item.section === "hruba" && (prevItem?.section !== "hruba" && prevItem?.section !== "services");
+                            const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
+                            const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
+                            const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
                             
                             return (
                               <React.Fragment key={index}>
@@ -1077,21 +1249,21 @@ export default function KonfiguratorProstoHouse({
                         </div>
                       </div>
                     </div>
-                    <div className="text-right p-2 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-lg sm:rounded-2xl border border-green-500/20 lg:min-w-[280px]">
-                      <p className="text-slate-400 mb-1 sm:mb-2 text-[9px] sm:text-sm">{t('totalWithVAT')}</p>
-                      <p className="text-2xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
+                    <div className="text-right p-3 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl sm:rounded-2xl border border-green-500/20 lg:min-w-[280px]">
+                      <p className="text-slate-400 mb-1 sm:mb-2 text-[10px] sm:text-sm">{t('totalWithVAT')}</p>
+                      <p className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
                         {formatPrice(totalPrice)}
                       </p>
                     </div>
                   </div>
 
-                  <div className="mt-4 sm:mt-10 pt-3 sm:pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center">
+                  <div className="mt-6 sm:mt-10 pt-4 sm:pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                     <Button 
                       size="lg" 
                       onClick={() => setShowContactModal(true)}
-                      className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-xs sm:text-lg px-4 sm:px-12 py-3 sm:py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
+                      className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
                     >
-                      <Send className="mr-1.5 sm:mr-3 w-3.5 h-3.5 sm:w-6 sm:h-6" />
+                      <Send className="mr-2 sm:mr-3 w-4 h-4 sm:w-6 sm:h-6" />
                       {t('interestedInConfig')}
                     </Button>
                   </div>
@@ -1107,31 +1279,6 @@ export default function KonfiguratorProstoHouse({
                     tepelneCerpadlo={tepelneCerpadlo}
                     rekuperacia={rekuperacia}
                     projektA0={projektA0}
-                    montazHolodomu={montazHolodomu}
-                    zaklady={zaklady}
-                    predlzenie={predlzenie}
-                    vstupneDvere={vstupneDvere}
-                    elektroinstalacia={elektroinstalacia}
-                    vodaKanalizacia={vodaKanalizacia}
-                    sanitaKomplet={sanitaKomplet}
-                    bojler={bojler}
-                    pripojkaSiete={pripojkaSiete}
-                    stresneOkno={stresneOkno}
-                    bocneOknoFixne={bocneOknoFixne}
-                    bocneOknoVyklopne90={bocneOknoVyklopne90}
-                    bocneOknoVyklopne55={bocneOknoVyklopne55}
-                    povrchokaOkien={povrchokaOkien}
-                    tonovaneSkla={tonovaneSkla}
-                    interierFinis={interierFinis}
-                    vnutornePodlahy={vnutornePodlahy}
-                    podlahovVykurovanie={podlahovVykurovanie}
-                    interieroveDvere={interieroveDvere}
-                    inziniering={inziniering}
-                    revizna={revizna}
-                    doprava={doprava}
-                    predajNehnutelnosti={predajNehnutelnosti}
-                    hladaniePozemku={hladaniePozemku}
-                    financneSluzby={financneSluzby}
                   />
                 </div>
               </div>
