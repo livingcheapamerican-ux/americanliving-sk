@@ -738,7 +738,6 @@ function LayoutContent({ children }) {
       <AutoRedirect />
       <InteractiveTour />
       <SessionRecorder />
-      <AutoTestGemini />
       <div className="hidden md:block">
         <Chatbot />
       </div>
