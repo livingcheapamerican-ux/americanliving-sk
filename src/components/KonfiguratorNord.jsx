@@ -169,7 +169,7 @@ export default function KonfiguratorNord({
   showOnlyPhase = null,
   typStavby = ""
 }) {
-  const BASE_PRICE = dom?.zakladna_cena || 56900;
+  const BASE_PRICE = dom?.zakladna_cena || 49500;
 
   const { animations, triggerAnimation } = useFlyingAnimation();
   const { t } = useLanguage();
