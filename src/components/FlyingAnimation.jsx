@@ -32,7 +32,7 @@ const FLYING_ITEMS = {
   doprava: "🚚", // kamión
 };
 
-export default function FlyingAnimation({ 
+function FlyingAnimation({ 
   trigger, 
   type, 
   startPosition, 
