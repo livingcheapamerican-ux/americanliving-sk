@@ -161,18 +161,33 @@ export default function DetailDomu() {
   const { data: dom, isLoading, error } = useQuery({
     queryKey: ['dom-detail', domId, domSlug],
     queryFn: async () => {
-      if (domSlug) {
-        const domy = await base44.entities.Dom.filter({ slug: domSlug });
-        return domy && domy.length > 0 ? domy[0] : null;
+      try {
+        // Načítame všetky domy
+        const allDomy = await base44.entities.Dom.list();
+        
+        if (!allDomy || allDomy.length === 0) {
+          return null;
+        }
+        
+        // Hľadáme podľa slug
+        if (domSlug) {
+          return allDomy.find(d => d.slug === domSlug) || null;
+        }
+        
+        // Hľadáme podľa ID
+        if (domId) {
+          return allDomy.find(d => d.id === domId) || null;
+        }
+        
+        return null;
+      } catch (err) {
+        console.error('Error loading dom:', err);
+        return null;
       }
-      if (domId) {
-        const domy = await base44.entities.Dom.filter({ id: domId });
-        return domy && domy.length > 0 ? domy[0] : null;
-      }
-      return null;
     },
     enabled: !!domId || !!domSlug,
     staleTime: 300000,
+    gcTime: 600000,
     retry: 1,
   });
 
