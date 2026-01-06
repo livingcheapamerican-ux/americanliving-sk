@@ -13,13 +13,16 @@ export default function AutoRedirect() {
     // Zoznam platných stránok v aplikácii (case-insensitive)
     const validPages = [
       '/', '/domov', '/katalog', '/o-nas', '/kontakt', '/blog', '/faq',
-      '/detaildomu', '/srovnanidomu', '/odporucaniemodomov',
+      '/detail-domu', '/srovnani-domu', '/odporucanie-domov',
       '/adminanalyzasessions', '/adminseoanalyzer', '/adminanalyzadomov',
       '/adminspravadomov', '/adminuploadfotiekdomov', '/adminprekladydomov',
       '/admingenerujobrazkyoblogov', '/adminprekladyblogov', '/adminprekladykonfiguratora',
       '/adminwatermark', '/adminmigracfiafotiek', '/adminblog', '/blogdetail',
       '/admindokumenty', '/admingoogledrive', '/testanalyzakonfiguratora',
-      '/regenerujprekladydefrssrhrel'
+      '/regenerujprekladydefrssrhrel', '/katalogticabhouse', '/katalogprostohouse',
+      '/katalogdomkizgor', '/katalogmodularnedomy', '/katalogmontovanedomy',
+      '/katalogmobilnedomy', '/katalogrodinedomy', '/marketing', '/aimiarketinginsights',
+      '/socialmediadashboard', '/adminpixelsettings', '/adminusermanagement'
     ];
     
     // Mapa starých URL na nové SEO-friendly stránky
