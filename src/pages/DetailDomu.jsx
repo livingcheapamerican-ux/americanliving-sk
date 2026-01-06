@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -35,7 +34,7 @@ import KonfiguratorTicabhouse from "../components/KonfiguratorTicabhouse";
 
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
-import { FlyingAnimationContainer, useFlyingAnimation } from "../components/FlyingAnimation";
+import { FlyingAnimationContainer, useFlyingAnimation } from "../components/FlyingAnimation.jsx";
 
 
 export default function DetailDomu() {
