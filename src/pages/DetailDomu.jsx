@@ -158,51 +158,39 @@ export default function DetailDomu() {
   const isSuperAdmin = user?.super_admin === true;
   const canManage = isAdmin || isSuperAdmin;
 
-  const { data: dom, isLoading, error } = useQuery({
-    queryKey: ['dom-detail', domId, domSlug],
-    queryFn: async () => {
-      console.log('🔍 DetailDomu queryFn START', { domId, domSlug });
-      
-      try {
-        // Načítame VŠETKY domy naraz
-        const allDomy = await base44.entities.Dom.list();
-        console.log('📦 Loaded all domy:', allDomy?.length || 0);
-        
-        if (!allDomy || allDomy.length === 0) {
-          console.warn('⚠️ No domy found in database');
-          return null;
-        }
-        
-        // Hľadáme podľa slug
-        if (domSlug) {
-          console.log('🔎 Searching by slug:', domSlug);
-          const foundBySlug = allDomy.find(d => d.slug === domSlug);
-          console.log(foundBySlug ? '✅ Found by slug:' : '❌ NOT found by slug:', foundBySlug?.nazov);
-          return foundBySlug || null;
-        }
-        
-        // Hľadáme podľa ID
-        if (domId) {
-          console.log('🔎 Searching by ID:', domId, 'Type:', typeof domId);
-          console.log('📋 Sample IDs from DB:', allDomy.slice(0, 3).map(d => ({ id: d.id, type: typeof d.id, nazov: d.nazov })));
-          
-          const foundById = allDomy.find(d => String(d.id) === String(domId));
-          console.log(foundById ? '✅ Found by ID:' : '❌ NOT found by ID:', foundById?.nazov);
-          return foundById || null;
-        }
-        
-        console.warn('⚠️ No domId or domSlug provided');
-        return null;
-      } catch (err) {
-        console.error('❌ Error in queryFn:', err);
-        throw err;
-      }
-    },
-    enabled: !!domId || !!domSlug,
-    staleTime: 60000,
-    gcTime: 300000,
-    retry: 1,
+  // Načítame všetky domy pomocou globálneho query
+  const { data: allDomy = [] } = useQuery({
+    queryKey: ['domy-katalog'],
+    queryFn: () => base44.entities.Dom.list('poradie', 200),
+    staleTime: 300000,
+    gcTime: 600000,
   });
+
+  // Nájdeme konkrétny dom z načítaných domov
+  const dom = useMemo(() => {
+    console.log('🔍 Finding dom from', allDomy?.length, 'domy. domId:', domId, 'domSlug:', domSlug);
+    
+    if (!allDomy || allDomy.length === 0) {
+      console.warn('⚠️ No domy loaded yet');
+      return null;
+    }
+    
+    if (domSlug) {
+      const found = allDomy.find(d => d.slug === domSlug);
+      console.log(found ? '✅ Found by slug:' : '❌ Not found by slug:', found?.nazov);
+      return found || null;
+    }
+    
+    if (domId) {
+      const found = allDomy.find(d => String(d.id) === String(domId));
+      console.log(found ? '✅ Found by id:' : '❌ Not found by id:', domId, found?.nazov);
+      return found || null;
+    }
+    
+    return null;
+  }, [allDomy, domId, domSlug]);
+
+  const isLoading = !allDomy || allDomy.length === 0;
 
   // Scroll na vrch pri načítaní stránky
   useEffect(() => {
