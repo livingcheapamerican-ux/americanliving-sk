@@ -365,20 +365,7 @@ export default function KonfiguratorFlatDouble({
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
 
-  // Poslať konfiguráciu do rodičovského komponentu
-  useEffect(() => {
-    if (onConfigChange) {
-      onConfigChange({
-        celkovaCena: totalPrice,
-        izolaciaNavysenie,
-        tepelneCerpadlo,
-        rekuperacia,
-        projektA0,
-        montazHolodomu,
-        zaklady
-      });
-    }
-  }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady, onConfigChange]);
+  // ODSTRÁNENÉ: useEffect pre onConfigChange spôsoboval infinite loop
 
   // Get width of Interiér finiš panel
   useEffect(() => {
