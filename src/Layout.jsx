@@ -14,7 +14,7 @@ import CookieConsentBanner from "./components/CookieConsentBanner";
 import { LanguageProvider, useLanguage } from "./components/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
 import UserTracking from "./components/UserTracking";
-import FloatingHouses from "./components/FloatingHouses";
+
 import InteractiveTour from "./components/InteractiveTour";
 
 import SessionRecorder from "./components/SessionRecorder";
@@ -648,10 +648,6 @@ function LayoutContent({ children }) {
       </header>
 
       <main className="lg:bg-gray-100 relative" style={{ paddingTop: '2.5rem' }}>
-        {/* Plavajúce domy po bokoch */}
-        <FloatingHouses side="left" />
-        <FloatingHouses side="right" />
-
         <div className="lg:max-w-[1200px] xl:max-w-[1400px] lg:mx-auto bg-white lg:shadow-xl min-h-screen relative z-20">
           {children}
         </div>
