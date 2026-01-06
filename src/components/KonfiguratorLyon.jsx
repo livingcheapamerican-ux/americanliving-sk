@@ -306,118 +306,118 @@ export default function KonfiguratorLyon(props = {}) {
   const [chcemPozemok, setChcemPozemok] = useState(props.chcemPozemok || false);
   const [financneSluzby, setFinancneSluzby] = useState(props.financneSluzby || false);
 
-  // Synchronizovať state s props ak sa props zmenia
+  // Synchronizovať state s props ak sa props zmenia - pridané props dependency
   React.useEffect(() => {
     if (props.setUcel) props.setUcel(ucel);
-  }, [ucel]);
+  }, [ucel, props.setUcel]);
   React.useEffect(() => {
     if (props.setIzolaciaStien) props.setIzolaciaStien(izolaciaStien);
-  }, [izolaciaStien]);
+  }, [izolaciaStien, props.setIzolaciaStien]);
   React.useEffect(() => {
     if (props.setIzolaciaPodlahy) props.setIzolaciaPodlahy(izolaciaPodlahy);
-  }, [izolaciaPodlahy]);
+  }, [izolaciaPodlahy, props.setIzolaciaPodlahy]);
   React.useEffect(() => {
     if (props.setIzolaciaStropu) props.setIzolaciaStropu(izolaciaStropu);
-  }, [izolaciaStropu]);
+  }, [izolaciaStropu, props.setIzolaciaStropu]);
   React.useEffect(() => {
     if (props.setTepelneCerpadlo) props.setTepelneCerpadlo(tepelneCerpadlo);
-  }, [tepelneCerpadlo]);
+  }, [tepelneCerpadlo, props.setTepelneCerpadlo]);
   React.useEffect(() => {
     if (props.setRekuperacia) props.setRekuperacia(rekuperacia);
-  }, [rekuperacia]);
+  }, [rekuperacia, props.setRekuperacia]);
   React.useEffect(() => {
     if (props.setPripravaNaRekuperaciu) props.setPripravaNaRekuperaciu(pripravaNaRekuperaciu);
-  }, [pripravaNaRekuperaciu]);
+  }, [pripravaNaRekuperaciu, props.setPripravaNaRekuperaciu]);
   React.useEffect(() => {
     if (props.setPodlahovoKurenie) props.setPodlahovoKurenie(podlahovoKurenie);
-  }, [podlahovoKurenie]);
+  }, [podlahovoKurenie, props.setPodlahovoKurenie]);
   React.useEffect(() => {
     if (props.setKlimatizacia) props.setKlimatizacia(klimatizacia);
-  }, [klimatizacia]);
+  }, [klimatizacia, props.setKlimatizacia]);
   React.useEffect(() => {
     if (props.setPripravaNaKrb) props.setPripravaNaKrb(pripravaNaKrb);
-  }, [pripravaNaKrb]);
+  }, [pripravaNaKrb, props.setPripravaNaKrb]);
   React.useEffect(() => {
     if (props.setPripravaNaSolarnePanely) props.setPripravaNaSolarnePanely(pripravaNaSolarnePanely);
-  }, [pripravaNaSolarnePanely]);
+  }, [pripravaNaSolarnePanely, props.setPripravaNaSolarnePanely]);
   React.useEffect(() => {
     if (props.setOchranaKachle) props.setOchranaKachle(ochranaKachle);
-  }, [ochranaKachle]);
+  }, [ochranaKachle, props.setOchranaKachle]);
   React.useEffect(() => {
     if (props.setFasada) props.setFasada(fasada);
-  }, [fasada]);
+  }, [fasada, props.setFasada]);
   React.useEffect(() => {
     if (props.setStrecha) props.setStrecha(strecha);
-  }, [strecha]);
+  }, [strecha, props.setStrecha]);
   React.useEffect(() => {
     if (props.setOdkvapy) props.setOdkvapy(odkvapy);
-  }, [odkvapy]);
+  }, [odkvapy, props.setOdkvapy]);
   React.useEffect(() => {
     if (props.setOkna) props.setOkna(okna);
-  }, [okna]);
+  }, [okna, props.setOkna]);
   React.useEffect(() => {
     if (props.setVchodoveDvere) props.setVchodoveDvere(vchodoveDvere);
-  }, [vchodoveDvere]);
+  }, [vchodoveDvere, props.setVchodoveDvere]);
   React.useEffect(() => {
     if (props.setObkladStien) props.setObkladStien(obkladStien);
-  }, [obkladStien]);
+  }, [obkladStien, props.setObkladStien]);
   React.useEffect(() => {
     if (props.setPodlaha) props.setPodlaha(podlaha);
-  }, [podlaha]);
+  }, [podlaha, props.setPodlaha]);
   React.useEffect(() => {
     if (props.setInterieroveDvere) props.setInterieroveDvere(interieroveDvere);
-  }, [interieroveDvere]);
+  }, [interieroveDvere, props.setInterieroveDvere]);
   React.useEffect(() => {
     if (props.setElektro) props.setElektro(elektro);
-  }, [elektro]);
+  }, [elektro, props.setElektro]);
   React.useEffect(() => {
     if (props.setBleskozvod) props.setBleskozvod(bleskozvod);
-  }, [bleskozvod]);
+  }, [bleskozvod, props.setBleskozvod]);
   React.useEffect(() => {
     if (props.setPrepat) props.setPrepat(prepat);
-  }, [prepat]);
+  }, [prepat, props.setPrepat]);
   React.useEffect(() => {
     if (props.setSprchovyKut) props.setSprchovyKut(sprchovyKut);
-  }, [sprchovyKut]);
+  }, [sprchovyKut, props.setSprchovyKut]);
   React.useEffect(() => {
     if (props.setVana) props.setVana(vana);
-  }, [vana]);
+  }, [vana, props.setVana]);
   React.useEffect(() => {
     if (props.setBateria) props.setBateria(bateria);
-  }, [bateria]);
+  }, [bateria, props.setBateria]);
   React.useEffect(() => {
     if (props.setSkrinka) props.setSkrinka(skrinka);
-  }, [skrinka]);
+  }, [skrinka, props.setSkrinka]);
   React.useEffect(() => {
     if (props.setStropKupelna) props.setStropKupelna(stropKupelna);
-  }, [stropKupelna]);
+  }, [stropKupelna, props.setStropKupelna]);
   React.useEffect(() => {
     if (props.setInziniering) props.setInziniering(inziniering);
-  }, [inziniering]);
+  }, [inziniering, props.setInziniering]);
   React.useEffect(() => {
     if (props.setProjektACertifikacia) props.setProjektACertifikacia(projektACertifikacia);
-  }, [projektACertifikacia]);
+  }, [projektACertifikacia, props.setProjektACertifikacia]);
   React.useEffect(() => {
     if (props.setRevizia) props.setRevizia(revizia);
-  }, [revizia]);
+  }, [revizia, props.setRevizia]);
   React.useEffect(() => {
     if (props.setZaklady) props.setZaklady(zaklady);
-  }, [zaklady]);
+  }, [zaklady, props.setZaklady]);
   React.useEffect(() => {
     if (props.setMontaz) props.setMontaz(montaz);
-  }, [montaz]);
+  }, [montaz, props.setMontaz]);
   React.useEffect(() => {
     if (props.setDoprava) props.setDoprava(doprava);
-  }, [doprava]);
+  }, [doprava, props.setDoprava]);
   React.useEffect(() => {
     if (props.setPredajNehnutelnosti) props.setPredajNehnutelnosti(predajNehnutelnosti);
-  }, [predajNehnutelnosti]);
+  }, [predajNehnutelnosti, props.setPredajNehnutelnosti]);
   React.useEffect(() => {
     if (props.setChcemPozemok) props.setChcemPozemok(chcemPozemok);
-  }, [chcemPozemok]);
+  }, [chcemPozemok, props.setChcemPozemok]);
   React.useEffect(() => {
     if (props.setFinancneSluzby) props.setFinancneSluzby(financneSluzby);
-  }, [financneSluzby]);
+  }, [financneSluzby, props.setFinancneSluzby]);
 
   const CENY = props.CENY || {
     izolacia_stien_200mm: 1799.16,
