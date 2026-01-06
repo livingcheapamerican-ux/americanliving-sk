@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,7 @@ import {
   Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, TreePine, Building2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
+
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
@@ -171,7 +170,6 @@ export default function KonfiguratorFlatSmall({
 }) {
   const BASE_PRICE = dom?.zakladna_cena || 19500;
 
-  const { animations, triggerAnimation } = useFlyingAnimation();
   const { t } = useLanguage();
 
   // FLAT SMALL CENNÍK - FIXNÉ CENY (extrahované z obrázkov - december 2025)
@@ -585,7 +583,6 @@ export default function KonfiguratorFlatSmall({
 
   return (
     <div className="mt-8 relative">
-      <FlyingAnimationContainer animations={animations} />
       <FloatingPrice 
         price={totalPrice} 
         isVisible={true} 
@@ -605,8 +602,7 @@ export default function KonfiguratorFlatSmall({
               setIzolaciaNavysenie={setIzolaciaNavysenie}
               zaklady={zaklady}
               setZaklady={setZaklady}
-              triggerAnimation={triggerAnimation}
-              useAFramePrices={true}
+              useFlatSmallPrices={true}
             />
           )}
 

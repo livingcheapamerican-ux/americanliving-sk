@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,7 @@ import {
   Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, TreePine, Building2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
+
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
@@ -172,7 +171,6 @@ export default function KonfiguratorBarnDouble({
 }) {
   const BASE_PRICE = dom?.zakladna_cena || 36900;
 
-  const { animations, triggerAnimation } = useFlyingAnimation();
   const { t } = useLanguage();
 
   // BARN DOUBLE CENNÍK - FIXNÉ CENY (extrahované z priložených obrázkov - december 2025)
@@ -566,7 +564,6 @@ export default function KonfiguratorBarnDouble({
 
   return (
     <div className="mt-8 relative">
-      <FlyingAnimationContainer animations={animations} />
       <FloatingPrice 
         price={totalPrice} 
         isVisible={true} 
@@ -588,7 +585,6 @@ export default function KonfiguratorBarnDouble({
               setZaklady={setZaklady}
               predlzenie={predlzenie}
               setPredlzenie={setPredlzenie}
-              triggerAnimation={triggerAnimation}
               useBarnDoublePrices={true}
             />
           )}
