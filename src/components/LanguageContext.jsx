@@ -1298,6 +1298,17 @@ const translations = {
     needQuickAnswer: "Brauchen Sie eine schnelle Antwort?",
     callOrEmail: "Rufen Sie uns direkt an oder senden Sie eine E-Mail. Wir beantworten gerne alle Ihre Fragen.",
     
+    // Configurator phases
+    phase: "Phase",
+    phase1: "Rohbau",
+    phase1Subtitle: "Konstruktion, Isolierung und Fundamente",
+    phase2: "Rohhaus",
+    phase2Subtitle: "Strukturmontage und technische Installationen",
+    phase3: "Schlüsselfertiges Haus",
+    phase3Subtitle: "Innenausbau und Abschlussarbeiten",
+    phase4: "Dokumentation und Dienstleistungen",
+    phase4Subtitle: "Projektdokumentation, Genehmigungen und Transport",
+    
     // Configuration options
     assembly: "Rohbau-Montage",
     assemblyYes: "Mit Montage",
@@ -1455,6 +1466,18 @@ const translations = {
     basePriceIncludesRecreational: "Der Grundpreis umfasst die komplette Standardausstattung für Freizeitgebäude. Möglichkeit zur Aufrüstung auf ein Familienhaus mit A0-Zertifikat im Konfigurator.",
     gl24ModularHouse: "Modulhaus aus GL24-Leimholz – Kombination aus Eleganz, Komfort und Innovation.",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Erstellen Sie Ihr Preisangebot für Ihr Haus",
+    noHiddenFees: "Ohne versteckte Gebühren",
+    newBadge: "NEU",
+    viewHousesInDifferentColors: "Sehen Sie sich Häuser in verschiedenen Fassadenfarben an",
+    selectAdditionalServices: "Wählen Sie zusätzliche Dienstleistungen (optional):",
+    sellPreviousProperty: "Verkauf der bisherigen Immobilie",
+    sellPreviousPropertyDesc: "Unsere besten Immobilienexperten werden sich um Sie kümmern.",
+    findLand: "Ich möchte ein Grundstück für mein Haus",
+    findLandDesc: "Wir helfen Ihnen, das ideale Grundstück zu finden.",
+    financialServices: "Finanzdienstleistungen - Kredite/Versicherungen",
+    financialServicesDesc: "Unsere besten Finanzexperten werden sich um Sie kümmern und Ihnen nicht nur bei der Finanzierung Ihres Eigenheims helfen, sondern auch in schwierigen finanziellen Zeiten zur Seite stehen.",
     terrace: "Terrasse",
     
     // DetailDomu specific
@@ -1886,6 +1909,15 @@ const translations = {
     needQuickAnswer: "Brauchen Sie eine schnelle Antwort?",
     callOrEmail: "Rufen Sie uns direkt an oder senden Sie eine E-Mail. Wir beantworten gerne alle Ihre Fragen.",
     
+    // Happy Wife konfigurator - EN
+    floorHeatingIncluded: "Floor heating included in price (ground floor + bathroom on upper floor)",
+    projectEnergyClassification: "Project: Project (possibility of energy classification)",
+    fullyAssembledInterior: "Fully assembled interior (furniture design)",
+    interiorSelectionFromSamples: "Interior selection based on provided sample catalog",
+    bathroomIncluded: "Bathroom included in price (ground floor + upper floor)",
+    kitchenIncluded: "Kitchen included in price (furniture + backsplash)",
+    acPreparationIncluded: "Air conditioning: Preparation included in price (ground floor + upper floor)",
+    
     name: "Vollständiger Name",
     email: "E-Mail",
     phone: "Telefon",
@@ -2276,6 +2308,17 @@ const translations = {
     needQuickAnswer: "Besoin d'une réponse rapide?",
     callOrEmail: "Appelez-nous directement ou envoyez un e-mail. Nous serons heureux de répondre à toutes vos questions.",
     
+    // Configurator phases
+    phase: "Phase",
+    phase1: "Gros œuvre",
+    phase1Subtitle: "Construction, isolation et fondations",
+    phase2: "Maison coque",
+    phase2Subtitle: "Assemblage de structure et installations techniques",
+    phase3: "Maison clé en main",
+    phase3Subtitle: "Finitions intérieures et travaux d'achèvement",
+    phase4: "Documentation et services",
+    phase4Subtitle: "Documentation de projet, permis et transport",
+    
     // Configuration options
     assembly: "Assemblage gros œuvre",
     assemblyYes: "Avec assemblage",
@@ -2433,6 +2476,18 @@ const translations = {
     basePriceIncludesRecreational: "Le prix de base comprend l'équipement standard complet pour bâtiment de loisirs. Possibilité de mise à niveau vers une maison familiale avec certificat A0 dans le configurateur.",
     gl24ModularHouse: "Maison modulaire en bois lamellé-collé GL24 – combinaison d'élégance, de confort et d'innovation.",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Créez votre offre de prix pour votre maison",
+    noHiddenFees: "Sans frais cachés",
+    newBadge: "NOUVEAU",
+    viewHousesInDifferentColors: "Consultez les maisons dans différentes couleurs de façade",
+    selectAdditionalServices: "Sélectionnez des services supplémentaires (facultatif):",
+    sellPreviousProperty: "Vente du bien immobilier précédent",
+    sellPreviousPropertyDesc: "Nos meilleurs experts immobiliers s'occuperont de vous.",
+    findLand: "Je veux un terrain pour ma maison",
+    findLandDesc: "Nous vous aiderons à trouver le terrain idéal.",
+    financialServices: "Services financiers - prêts/assurances",
+    financialServicesDesc: "Nos meilleurs experts financiers s'occuperont de vous et vous aideront non seulement à financer votre logement, mais vous tendront également la main dans les moments financiers difficiles.",
     terrace: "Terrasse",
     transportAndAssembly: "Transport et assemblage",
     houseConfiguredAsRecreational: "Maison configurée comme bâtiment de loisirs",
@@ -3205,6 +3260,17 @@ const translations = {
     needQuickAnswer: "Треба вам брз одговор?",
     callOrEmail: "Позовите нас директно или пошаљите е-пошту. Радо ћемо одговорити на сва ваша питања.",
     
+    // Configurator phases
+    phase: "Фаза",
+    phase1: "Груби радови",
+    phase1Subtitle: "Конструкција, изолација и темељи",
+    phase2: "Кућа у сировом стању",
+    phase2Subtitle: "Монтажа структуре и техничке инсталације",
+    phase3: "Кућа под кључ",
+    phase3Subtitle: "Унутрашње завршне и завршне радове",
+    phase4: "Документација и услуге",
+    phase4Subtitle: "Пројектна документација, дозволе и транспорт",
+    
     // Configuration options
     assembly: "Монтажа грубих радова",
     assemblyYes: "Са монтажом",
@@ -3362,6 +3428,18 @@ const translations = {
     basePriceIncludesRecreational: "Основна цена укључује комплетну стандардну опрему за рекреативну зграду. Опција надоградње на Породичну кућу са А0 сертификатом у конфигуратору.",
     gl24ModularHouse: "Модуларна кућа од лепљеног дрвета GL24 – комбинација елеганције, удобности и иновације.",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Саставите своју ценовну понуду за вашу кућу",
+    noHiddenFees: "Без скривених трошкова",
+    newBadge: "НОВО",
+    viewHousesInDifferentColors: "Погледајте куће у различитим бојама фасаде",
+    selectAdditionalServices: "Изаберите додатне услуге (опционо):",
+    sellPreviousProperty: "Продаја претходне некретнине",
+    sellPreviousPropertyDesc: "Наши најбољи стручњаци за некретнине ће се посветити вама.",
+    findLand: "Желим земљиште за своју кућу",
+    findLandDesc: "Помоћи ћемо вам да пронађете идеално земљиште.",
+    financialServices: "Финансијске услуге - кредити/осигурање",
+    financialServicesDesc: "Наши најбољи финансијски стручњаци ће се посветити вама и помоћи вам не само у финансирању вашег становања, већ ће вам пружити руку и у тешким финансијским тренуцима.",
     terrace: "Тераса",
     transportAndAssembly: "Транспорт и монтажа",
     houseConfiguredAsRecreational: "Кућа конфигурисана као рекреативна зграда",
@@ -3994,6 +4072,18 @@ const translations = {
     description: "Opis",
     specification: "Specifikacija",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Sastavite svoju cjenovnu ponudu za vašu kuću",
+    noHiddenFees: "Bez skrivenih troškova",
+    newBadge: "NOVO",
+    viewHousesInDifferentColors: "Pogledajte kuće u različitim bojama fasade",
+    selectAdditionalServices: "Odaberite dodatne usluge (opcionalno):",
+    sellPreviousProperty: "Prodaja prethodne nekretnine",
+    sellPreviousPropertyDesc: "Naši najbolji stručnjaci za nekretnine pobrinut će se za vas.",
+    findLand: "Želim zemljište za svoju kuću",
+    findLandDesc: "Pomoći ćemo vam pronaći idealno zemljište.",
+    financialServices: "Financijske usluge - krediti/osiguranje",
+    financialServicesDesc: "Naši najbolji financijski stručnjaci pobrinut će se za vas i pomoći vam ne samo s financiranjem vašeg stanovanja, već i pružiti ruku pomoći u teškim financijskim trenucima.",
     terrace: "Terasa",
     
     // Building type selection
@@ -4197,6 +4287,17 @@ const translations = {
     needQuickAnswer: "Treba vam brz odgovor?",
     callOrEmail: "Nazovite nas izravno ili pošaljite e-poštu. Rado ćemo odgovoriti na sva vaša pitanja.",
     
+    // Configurator phases
+    phase: "Faza",
+    phase1: "Grubi radovi",
+    phase1Subtitle: "Konstrukcija, izolacija i temelji",
+    phase2: "Kuća u sirovom stanju",
+    phase2Subtitle: "Montaža strukture i tehničke instalacije",
+    phase3: "Kuća pod ključ",
+    phase3Subtitle: "Unutarnje završne i završne radove",
+    phase4: "Dokumentacija i usluge",
+    phase4Subtitle: "Projektna dokumentacija, dozvole i transport",
+    
     // Configuration options
     assembly: "Montaža grubih radova",
     assemblyYes: "S montažom",
@@ -4353,6 +4454,12 @@ const translations = {
     assemblyKitPaintingNotIncluded: "Cijena bojanja fasade nije uključena u osnovnu ponudu, određuje se naknadno prema stvarno obojanoj površini.",
     basePriceIncludesRecreational: "Osnovna cijena uključuje kompletnu standardnu opremu za rekreacijsku zgradu. Opcija nadogradnje na Obiteljsku kuću s A0 certifikatom u konfiguratoru.",
     gl24ModularHouse: "Modularna kuća od lijepljenog drva GL24 – kombinacija elegancije, udobnosti i inovacije.",
+    
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Sastavite svoju cjenovnu ponudu za vašu kuću",
+    noHiddenFees: "Bez skrivenih troškova",
+    newBadge: "NOVO",
+    viewHousesInDifferentColors: "Pogledajte kuće u različitim bojama fasade",
     
     // DetailDomu specific
     twoD: "2D",
@@ -5353,6 +5460,10 @@ const translations = {
     assemblyKitPaintingNotIncluded: "Η τιμή της βαφής της πρόσοψης δεν περιλαμβάνεται στην βασική προσφορά, καθορίζεται επιπλέον ανάλογα με την πραγματικά βαμμένη επιφάνεια.",
     basePriceIncludesRecreational: "Η βασική τιμή περιλαμβάνει πλήρη στάνταρ εξοπλισμό για ψυχαγωγικό κτίριο. Επιλογή αναβάθμισης σε Οικογενειακή κατοικία με πιστοποιητικό A0 στον διαμορφωτή.",
     gl24ModularHouse: "Αρθρωτό σπίτι από κολλητό ξύλο GL24 – συνδυασμός κομψότητας, άνεσης και καινοτομίας.",
+    
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Δημιουργήστε την προσφορά τιμής για το σπίτι σας",
+    noHiddenFees: "Χωρίς κρυφές χρεώσεις",
     
     // DetailDomu specific
     twoD: "2D",
@@ -6554,6 +6665,10 @@ const translations = {
     description: "Description",
     specification: "Specification",
     
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Create your price offer for your house",
+    noHiddenFees: "No hidden fees",
+    
     // Building type selection
     selectBuildingType: "Select building type",
     recreationalHouse: "Recreational building",
@@ -6743,73 +6858,6 @@ const translations = {
     sending: "Sending...",
     needQuickAnswer: "Need a quick answer?",
     callOrEmail: "Call us directly or send an email. We'll be happy to answer all your questions.",
-    
-    faq: "FAQ",
-    faqTitle: "Frequently Asked Questions",
-    faqSubtitle: "Answers to the most common questions about modular and prefab houses",
-    faqSearchPlaceholder: "Search in questions...",
-    faqCategoryGeneral: "General",
-    faqCategoryPrice: "Prices and financing",
-    faqCategoryDelivery: "Delivery and assembly",
-    faqCategoryConstruction: "Construction",
-    faqCategoryWarranty: "Warranty and service",
-    faqCategoryEnergy: "Energy and savings",
-    faqNoResults: "No results found",
-    faqStillHaveQuestions: "Still have questions?",
-    faqContactUs: "Don't hesitate to contact us by phone or email. We'll be happy to help.",
-    
-    faq1Q: "What is a modular house?",
-    faq1A: "A modular house is a modern type of house manufactured in a factory as complete modules and then transported and placed on a prepared site. The advantage is speed of construction and high quality due to controlled production environment.",
-    faq2Q: "What's the difference between modular and prefab house?",
-    faq2A: "A modular house comes as complete modules that are just placed and connected. A prefab house comes as a set of construction elements that are assembled on-site. We offer both types.",
-    faq3Q: "Do I need a building permit?",
-    faq3A: "Yes, a family house requires a building permit. We'll help you with the entire process including the project and obtaining the permit. For recreational buildings, rules may differ based on size and purpose.",
-    
-    faq4Q: "What is the total price of the house?",
-    faq4A: "The total price depends on configuration, size and choice of extras. In our configurator you can see the exact price including all selected items. Base prices start from approx. 30,000 EUR.",
-    faq5Q: "Is mortgage financing possible?",
-    faq5A: "Yes, our houses can be financed with a regular mortgage. We work with financial advisors who will help you choose the most advantageous loan.",
-    faq6Q: "Are all costs included in the prices?",
-    faq6A: "In the configurator you can see a detailed breakdown of all items. The base price contains the house in the selected configuration. Transport, assembly, foundations and connections are calculated separately according to the specific conditions of your plot.",
-    
-    faq7Q: "How long does house delivery take?",
-    faq7A: "House production usually takes 60-90 days from order confirmation. Transport and assembly takes another 1-3 days. Total time from order to move-in is approximately 3-4 months.",
-    faq8Q: "How does assembly work?",
-    faq8A: "Modular houses are placed using a crane truck on prepared foundations. Assembly takes 1-2 days. Prefab houses are assembled on-site, assembly takes 5-10 days depending on size.",
-    faq9Q: "What foundations are needed?",
-    faq9A: "It depends on house type and soil conditions. We offer ground screws, concrete footings, foundation slab or strip foundations. After geodetic analysis of your plot we'll recommend the most suitable solution.",
-    
-    faq10Q: "Can the house be customized?",
-    faq10A: "Yes, we offer wide customization options - from room layout, through material selection to colors and extras. Everything can be set in the configurator or consulted with our experts.",
-    faq11Q: "What is the lifespan of a modular house?",
-    faq11A: "With proper maintenance, a modular house has a lifespan of more than 80 years, same as a traditional brick house. The construction is certified and meets all EU standards.",
-    faq12Q: "Are the houses suitable for year-round living?",
-    faq12A: "Yes, all our houses are designed for year-round living with quality insulation. We also offer configurations with A0 energy certificate for minimal heating costs.",
-    
-    faq13Q: "What warranty do you provide?",
-    faq13A: "We provide standard 5-year warranty on construction and 2 years on technologies. Manufacturers provide additional warranties on individual components.",
-    faq14Q: "Who takes care of service and maintenance?",
-    faq14A: "We offer regular maintenance and service. However, you can do most routine tasks yourself, similar to a traditional house. We're available for technical problems.",
-    
-    faq15Q: "What are the heating costs?",
-    faq15A: "Thanks to quality insulation and the possibility of installing a heat pump, heating costs are low. A house with A0 certificate has annual costs of approximately 200-400 EUR for 80-100 m².",
-    faq16Q: "Can I get an A0 energy certificate?",
-    faq16A: "Yes, in the configurator you can select all necessary components to achieve energy class A0 - enhanced insulation, heat pump, recuperation and quality windows.",
-    
-    modularHomesBratislava: "Modular Homes Bratislava",
-    modularHomesBratislavaSubtitle: "Fast construction of quality modular houses in Bratislava and surroundings",
-    modularHomesBratislavaMetaDesc: "Modular houses in Bratislava - fast construction, direct prices from manufacturer, comprehensive services. More than 700 completed houses. Contact us at +421 905 138 124",
-    whyModularHomesBratislava: "Why modular homes in Bratislava?",
-    bratislavaIntro1: "Bratislava and its surroundings are ideal for modular houses. High real estate prices and land shortage make modular construction a fast and affordable solution.",
-    bratislavaIntro2: "Our modular houses can be built on most plots in Bratislava region, including districts like Rača, Vajnory, Záhorská Bystrica and others.",
-    bratislavaFast: "Your house can be ready in 3-4 months from order. Ideal solution for quick move-in.",
-    affordablePrices: "Affordable solution",
-    bratislavaPrice: "Direct prices from manufacturer without markup. You save up to 30% compared to traditional construction in Bratislava.",
-    quickDelivery: "Quick delivery",
-    bratislavaDelivery: "Express delivery to Bratislava. Assembly takes only 1-2 days.",
-    popularModelsBratislava: "Popular models for Bratislava",
-    interestedInModularHome: "Interested in a modular home in Bratislava?",
-    contactUsBratislava: "Contact us and we'll arrange a non-binding consultation directly on your plot.",
   },
   
   hu: {
@@ -7538,6 +7586,10 @@ const translations = {
     ceilingHeight: "Belmagasság",
     description: "Leírás",
     specification: "Specifikáció",
+    
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Állítsa össze árajánlatát házához",
+    noHiddenFees: "Rejtett költségek nélkül",
     
     // Building type selection
     selectBuildingType: "Válassza ki az épület típusát",
@@ -8332,6 +8384,15 @@ const translations = {
     needQuickAnswer: "Potrzebujesz szybkiej odpowiedzi?",
     callOrEmail: "Zadzwoń bezpośrednio lub napisz email. Chętnie odpowiemy na wszystkie pytania.",
     
+    // Happy Wife konfigurator - PL
+    floorHeatingIncluded: "Ogrzewanie podłogowe w cenie (parter + łazienka na piętrze)",
+    projectEnergyClassification: "Projekt: Projekt (możliwość klasyfikacji energetycznej)",
+    fullyAssembledInterior: "Pełne wykończenie wnętrza (projekt mebli)",
+    interiorSelectionFromSamples: "Wybór wnętrza na podstawie dostarczonego katalogu wzorów",
+    bathroomIncluded: "Łazienka w cenie (parter + piętro)",
+    kitchenIncluded: "Kuchnia w cenie (meble + ściana)",
+    acPreparationIncluded: "Klimatyzacja: Przygotowanie w cenie (parter + piętro)",
+    
     name: "Imię i nazwisko",
     email: "Email",
     phone: "Telefon",
@@ -8398,6 +8459,10 @@ const translations = {
     ceilingHeight: "Wysokość sufitu",
     description: "Opis",
     specification: "Specyfikacja",
+    
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Stwórz swoją ofertę cenową dla domu",
+    noHiddenFees: "Bez ukrytych opłat",
     
     // Building type selection
     selectBuildingType: "Wybierz typ budynku",
@@ -9233,6 +9298,15 @@ const translations = {
     needQuickAnswer: "Потрібна швидка відповідь?",
     callOrEmail: "Зателефонуйте безпосередньо або напишіть email. Ми з радістю відповімо на всі ваші питання.",
     
+    // Happy Wife konfigurator - UK
+    floorHeatingIncluded: "Підлогове опалення в ціні (перший поверх + ванна на другому поверсі)",
+    projectEnergyClassification: "Проект: Проект (можливість енергетичної класифікації)",
+    fullyAssembledInterior: "Повністю зібраний інтер'єр (дизайн меблів)",
+    interiorSelectionFromSamples: "Вибір інтер'єру на основі наданого каталогу зразків",
+    bathroomIncluded: "Ванна кімната в ціні (перший поверх + другий поверх)",
+    kitchenIncluded: "Кухня в ціні (меблі + фартух)",
+    acPreparationIncluded: "Кондиціонування: Підготовка в ціні (перший поверх + другий поверх)",
+    
     name: "Повне ім'я",
     email: "Email",
     phone: "Телефон",
@@ -9299,6 +9373,10 @@ const translations = {
     ceilingHeight: "Висота стелі",
     description: "Опис",
     specification: "Специфікація",
+    
+    // Konfigurátor Wizard
+    createYourPriceOffer: "Складіть свою цінову пропозицію для вашого дому",
+    noHiddenFees: "Без прихованих платежів",
     
     // Building type selection
     selectBuildingType: "Виберіть тип будівлі",

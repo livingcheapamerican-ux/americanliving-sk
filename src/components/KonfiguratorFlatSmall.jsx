@@ -1,9 +1,9 @@
+
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
 import { 
   Send, AlertTriangle, Check, RotateCcw,
   Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
@@ -11,6 +11,7 @@ import {
   Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, TreePine, Building2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";

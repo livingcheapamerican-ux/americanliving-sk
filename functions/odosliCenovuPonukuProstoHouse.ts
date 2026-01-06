@@ -144,7 +144,7 @@ Deno.serve(async (req) => {
     .info-box ul { margin: 0; padding-left: 20px; color: #047857; }
     .info-box li { margin: 5px 0; font-size: 14px; }
     
-    .house-img { width: 100%; max-height: 400px; object-fit: contain; background: #f9fafb; border-radius: 8px; margin: 15px 0; }
+    .house-img { width: 100%; max-height: 400px; height: auto; object-fit: contain; background: #f9fafb; border-radius: 8px; margin: 15px 0; display: block; max-width: 100%; }
     .img-wrapper { position: relative; }
     .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255,255,255,0.3); font-size: 48px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); pointer-events: none; }
     
@@ -157,13 +157,13 @@ Deno.serve(async (req) => {
     .not-selected-row { color: #dc2626; text-decoration: line-through; }
     .base-row { background: #dbeafe !important; font-weight: bold; color: #1e40af; }
     
-    .total-box { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 25px; border-radius: 12px; text-align: center; margin: 30px 0; }
-    .total-box .label { font-size: 16px; opacity: 0.9; }
-    .total-box .amount { font-size: 42px; font-weight: bold; margin-top: 10px; }
+    .total-box { background: #10b981; color: white; padding: 25px; border-radius: 12px; text-align: center; margin: 30px 0; }
+    .total-box .label { font-size: 16px; color: white; font-weight: bold; }
+    .total-box .amount { font-size: 42px; font-weight: bold; margin-top: 10px; color: white; }
     
     .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
     .gallery-item { position: relative; border-radius: 8px; overflow: hidden; }
-    .gallery-item img { width: 100%; height: 200px; object-fit: cover; }
+    .gallery-item img { width: 100%; height: auto; min-height: 200px; object-fit: cover; display: block; max-width: 100%; }
     .gallery-caption { background: #f3f4f6; padding: 8px; text-align: center; font-size: 12px; color: #6b7280; }
     
     .footer { background: #111827; color: #9ca3af; padding: 30px; text-align: center; font-size: 13px; }

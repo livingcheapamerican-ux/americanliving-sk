@@ -321,20 +321,13 @@ export default function Katalog() {
     if (zoradenie !== "plocha_zostupne") params.set("zoradenie", zoradenie);
 
     const newSearch = params.toString();
+    const currentSearch = location.search.substring(1);
     
-    // KRITICKÉ: Porovnaj len hodnoty, nie celú location.search (môže obsahovať iné parametre)
-    const currentParams = new URLSearchParams(location.search);
-    const currentKategoria = currentParams.get("kategoria") || "vsetky";
-    const currentVyrobca = currentParams.get("vyrobca") || "";
-    const currentTyp = currentParams.get("typ") || "";
-    
-    // Porovnaj iba relevantné parametre
-    const shouldUpdate = newSearch !== currentParams.toString();
-    
-    if (shouldUpdate) {
+    // KRITICKÉ: Len ak sa URL skutočne zmenil, updatni ho
+    if (newSearch !== currentSearch) {
       navigate(`${location.pathname}${newSearch ? `?${newSearch}` : ""}`, { replace: true });
     }
-  }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie, navigate]);
+  }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie, location.pathname, location.search, navigate]);
 
   const { data: allDomy = [], isLoading, error } = useQuery({
     queryKey: ['domy-katalog'],

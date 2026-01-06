@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import KonfiguratorLyon from "./KonfiguratorLyon";
+import KonfiguratorLyon, { LyonSummaryPanel } from "./KonfiguratorLyon";
 import { useLanguage } from "./LanguageContext";
 import LyonFinalSummaryModal from "./LyonFinalSummaryModal";
 import FloatingPrice from "./FloatingPrice";
@@ -135,7 +135,7 @@ export default function LyonKonfiguratorWrapper(props) {
     ...(props.dom?.konfigurator_ceny || {})
   };
 
-  const totalPrice = useMemo(() => {
+  const totalPrice = React.useMemo(() => {
     if (!CENY) return BASE_PRICE;
     let total = BASE_PRICE;
     
@@ -213,7 +213,21 @@ export default function LyonKonfiguratorWrapper(props) {
     setShowSummaryModal(true);
   };
 
-  // Odstrániť useEffect pre onConfigChange - spôsobovalo infinite loop
+  // Poslať totalPrice späť do rodičovského komponentu
+  React.useEffect(() => {
+    if (props.onConfigChange) {
+      props.onConfigChange({
+        celkovaCena: totalPrice,
+        izolaciaStien,
+        izolaciaPodlahy,
+        izolaciaStropu,
+        tepelneCerpadlo,
+        rekuperacia,
+        projektACertifikacia,
+        zaklady
+      });
+    }
+  }, [totalPrice, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia, projektACertifikacia, zaklady, props.onConfigChange]);
 
   const allProps = {
     dom: props.dom,
