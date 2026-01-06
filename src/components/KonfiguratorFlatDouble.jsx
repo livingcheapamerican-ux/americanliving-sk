@@ -508,7 +508,7 @@ export default function KonfiguratorFlatDouble({
                 const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
 
                 return (
-                  <React.Fragment key={index}>
+                  <div key={index}>
                     {showServicesDivider && (
                       <div className="py-0.5">
                         <div className="border-t border-cyan-400"></div>
@@ -560,7 +560,7 @@ export default function KonfiguratorFlatDouble({
                       {item.selected ? formatPrice(item.price) : '—'}
                     </span>
                     </div>
-                  </React.Fragment>
+                  </div>
                 );
               })}
             </div>
@@ -1274,7 +1274,7 @@ export default function KonfiguratorFlatDouble({
                       const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
                       
                       return (
-                        <React.Fragment key={index}>
+                        <div key={index}>
                           {showServicesDivider && (
                             <div className="py-1.5">
                               <div className="flex items-center gap-2">
@@ -1321,7 +1321,7 @@ export default function KonfiguratorFlatDouble({
                               {item.selected ? formatPrice(item.price) : 'NIE'}
                             </span>
                           </div>
-                        </React.Fragment>
+                        </div>
                       );
                     })}
                   </div>
