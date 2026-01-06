@@ -75,18 +75,13 @@ export default function UserTracking() {
   const startTime = useRef(Date.now());
 
   useEffect(() => {
-    // Reset start time for new page
-    startTime.current = Date.now();
-    
     // Track page view
     trackEvent("page_view");
 
     // Track time spent on page when leaving
     return () => {
       const timeSpent = Math.round((Date.now() - startTime.current) / 1000);
-      if (timeSpent > 0) {
-        trackEvent("page_view", { time_spent: timeSpent });
-      }
+      trackEvent("page_view", { time_spent: timeSpent });
     };
   }, [location.pathname, location.search]);
 
