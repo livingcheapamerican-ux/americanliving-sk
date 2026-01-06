@@ -19,7 +19,7 @@ import InteractiveTour from "./components/InteractiveTour";
 import AutoRedirect from "./components/AutoRedirect";
 import SessionRecorder from "./components/SessionRecorder";
 import AutoSEOTrigger from "./pages/AutoSEOTrigger";
-import AutoTestGemini from "./components/AutoTestGemini";
+
 
 function LayoutContent({ children }) {
   const location = useLocation();
@@ -738,7 +738,7 @@ function LayoutContent({ children }) {
       <AutoRedirect />
       <InteractiveTour />
       <SessionRecorder />
-      <AutoTestGemini />
+
       <div className="hidden md:block">
         <Chatbot />
       </div>
