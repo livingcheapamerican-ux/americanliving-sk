@@ -2441,7 +2441,7 @@ export default function DetailDomu() {
                 </div>
                 )}
 
-            {/* Floating panel pre Nord */}
+                {/* Floating panel pre Nord */}
             {isProstoHouse && dom.nazov?.includes("Nord") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                 <Suspense fallback={<KonfiguratorLoading />}>
