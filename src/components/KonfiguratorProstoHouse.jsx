@@ -263,7 +263,7 @@ export default function KonfiguratorProstoHouse({
         zaklady
       });
     }
-  }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady, onConfigChange]);
+  }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady]);
 
   useEffect(() => {
     const updateWidth = () => {
