@@ -1,9 +1,9 @@
-
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
 import { 
   Send, AlertTriangle, Check, RotateCcw,
   Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
