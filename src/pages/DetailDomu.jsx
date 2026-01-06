@@ -1586,6 +1586,7 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
+              </Suspense>
             )}
 
             {/* Konfigurátor pre Flat Small - Wizard */}
