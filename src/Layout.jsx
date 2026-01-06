@@ -16,7 +16,7 @@ import LanguageSelector from "./components/LanguageSelector";
 import UserTracking from "./components/UserTracking";
 import FloatingHouses from "./components/FloatingHouses";
 import InteractiveTour from "./components/InteractiveTour";
-import AutoRedirect from "./components/AutoRedirect";
+
 import SessionRecorder from "./components/SessionRecorder";
 import AutoSEOTrigger from "./pages/AutoSEOTrigger";
 
@@ -735,7 +735,7 @@ function LayoutContent({ children }) {
 
       <CookieConsentBanner />
       <UserTracking />
-      <AutoRedirect />
+
       <InteractiveTour />
       <SessionRecorder />
 
