@@ -21,11 +21,10 @@ export default function MetaPixel({ pixelId }) {
       s.parentNode.insertBefore(t,s)
     }(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
 
-    if (!window._fbPixelInitialized) {
-      window.fbq('init', pixelId);
-      window._fbPixelInitialized = true;
-    }
+    window.fbq('init', pixelId);
     window.fbq('track', 'PageView');
+
+    console.log('✅ Meta Pixel initialized:', pixelId);
   }, [pixelId]);
 
   // Track page changes

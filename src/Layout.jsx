@@ -16,7 +16,10 @@ import LanguageSelector from "./components/LanguageSelector";
 import UserTracking from "./components/UserTracking";
 import FloatingHouses from "./components/FloatingHouses";
 import InteractiveTour from "./components/InteractiveTour";
+import AutoRedirect from "./components/AutoRedirect";
+import SessionRecorder from "./components/SessionRecorder";
 import AutoSEOTrigger from "./pages/AutoSEOTrigger";
+import AutoTestGemini from "./components/AutoTestGemini";
 
 function LayoutContent({ children }) {
   const location = useLocation();
@@ -24,7 +27,21 @@ function LayoutContent({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t, language, setLanguage } = useLanguage();
 
-
+  // Server-Side Facebook Tracking
+  useEffect(() => {
+    const trackPageView = async () => {
+      try {
+        await base44.functions.invoke('trackFacebookPageView', {
+          user_agent: navigator.userAgent,
+          event_source_url: window.location.href
+        });
+      } catch (error) {
+        // Silently fail - tracking should not disrupt user experience
+      }
+    };
+    
+    trackPageView();
+  }, [location.pathname]);
 
         // GTM "Trojan Horse" Injection
         useEffect(() => {
@@ -717,10 +734,14 @@ function LayoutContent({ children }) {
       </footer>
 
       <CookieConsentBanner />
+      <UserTracking />
+      <AutoRedirect />
+      <InteractiveTour />
+      <SessionRecorder />
+      <AutoTestGemini />
       <div className="hidden md:block">
         <Chatbot />
       </div>
-      <UserTracking />
       </div>
       );
       }

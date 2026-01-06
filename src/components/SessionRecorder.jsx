@@ -88,25 +88,15 @@ export default function SessionRecorder() {
     };
   };
 
-  // Initialize session ONCE using localStorage
+  // Initialize session ONCE
+  const initOnceRef = useRef(false);
   useEffect(() => {
-    // Check if session already exists in localStorage
-    const existingSessionId = localStorage.getItem('current_session_id');
-    const existingSessionStart = localStorage.getItem('current_session_start');
+    if (initOnceRef.current) return; // Already initialized
+    initOnceRef.current = true;
     
-    if (existingSessionId && existingSessionStart) {
-      // Resume existing session
-      sessionIdRef.current = existingSessionId;
-      sessionStartRef.current = existingSessionStart;
-      return;
-    }
-    
-    // Create new session only if none exists
     if (!sessionIdRef.current) {
       sessionIdRef.current = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       sessionStartRef.current = new Date().toISOString();
-      localStorage.setItem('current_session_id', sessionIdRef.current);
-      localStorage.setItem('current_session_start', sessionStartRef.current);
       
       // Detekcia vracajúceho sa klienta
       const previousSessions = localStorage.getItem('user_previous_sessions');
@@ -391,10 +381,10 @@ export default function SessionRecorder() {
     };
   }, [location.pathname]);
 
-  // Save session data (throttled every 30 seconds to reduce API calls)
+  // Save session data (throttled every 5 seconds)
   const scheduleSave = () => {
     const now = Date.now();
-    if (now - lastSaveRef.current < 30000 && saveTimeoutRef.current) {
+    if (now - lastSaveRef.current < 5000 && saveTimeoutRef.current) {
       return; // Too soon, wait for scheduled save
     }
 
@@ -510,11 +500,14 @@ export default function SessionRecorder() {
     }, 3000);
   };
 
-  // Periodic save every 60 seconds (reduced from 10s to save API calls)
+  // Periodic save every 10 seconds + cleanup check
   useEffect(() => {
     const interval = setInterval(() => {
       scheduleSave();
-    }, 60000);
+      
+      // Zavolaj cleanup funkciu na pozadí (neblokujúco)
+      base44.functions.invoke('cleanupInactiveSessions').catch(() => {});
+    }, 10000);
 
     return () => clearInterval(interval);
   }, []);
@@ -536,10 +529,6 @@ export default function SessionRecorder() {
   // End session on unload
   useEffect(() => {
     const handleBeforeUnload = () => {
-      // Clear localStorage session
-      localStorage.removeItem('current_session_id');
-      localStorage.removeItem('current_session_start');
-      
       if (sessionIdRef.current && lastPageRef.current && pageStartTimeRef.current) {
         const timeSpent = Math.round((Date.now() - pageStartTimeRef.current) / 1000);
         

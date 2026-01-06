@@ -222,7 +222,7 @@ Deno.serve(async (req) => {
     .price-table tr:nth-child(even) { background: #f9fafb; }
     .price-table .category { background: #f3f4f6; font-weight: bold; color: #EF4444; }
     .price-table .strikethrough { color: #9ca3af; text-decoration: line-through; }
-    .total-price { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 20px; border-radius: 8px; text-align: center; margin: 30px 0; }
+    .total-price { background: #EF4444; color: white; padding: 20px; border-radius: 8px; text-align: center; margin: 30px 0; }
     .total-price .label { font-size: 14px; opacity: 0.9; }
     .total-price .amount { font-size: 36px; font-weight: bold; margin-top: 5px; }
     .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0; }

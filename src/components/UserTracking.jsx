@@ -75,10 +75,15 @@ export default function UserTracking() {
   const startTime = useRef(Date.now());
 
   useEffect(() => {
-    // Track page view once per pathname change (without search params to avoid duplicates)
+    // Track page view
     trackEvent("page_view");
-    startTime.current = Date.now();
-  }, [location.pathname]);
+
+    // Track time spent on page when leaving
+    return () => {
+      const timeSpent = Math.round((Date.now() - startTime.current) / 1000);
+      trackEvent("page_view", { time_spent: timeSpent });
+    };
+  }, [location.pathname, location.search]);
 
   return null;
 }
