@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
+
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
@@ -174,7 +174,6 @@ export default function KonfiguratorFjord({
   typStavby = ""
 }) {
   const BASE_PRICE = dom?.zakladna_cena || 0;
-  const { animations, triggerAnimation } = useFlyingAnimation();
   const { t } = useLanguage();
 
   // Cenník pre Fjord podľa obrázkov
@@ -574,7 +573,6 @@ export default function KonfiguratorFjord({
 
   return (
     <div className="mt-8 relative">
-      <FlyingAnimationContainer animations={animations} />
 
       <div>
         <div className="space-y-6">
@@ -587,7 +585,6 @@ export default function KonfiguratorFjord({
               setIzolaciaNavysenie={setIzolaciaNavysenie}
               zaklady={zaklady}
               setZaklady={setZaklady}
-              triggerAnimation={triggerAnimation}
             />
           )}
 

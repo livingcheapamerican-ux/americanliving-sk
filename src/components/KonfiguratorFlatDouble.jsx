@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
+
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
@@ -185,8 +185,6 @@ export default function KonfiguratorFlatDouble({
   // Základná cena - dynamická z objektu domu
   const BASE_PRICE = dom?.zakladna_cena || 59900;
 
-  // Flying animation hook
-  const { animations, triggerAnimation } = useFlyingAnimation();
   const { t } = useLanguage();
 
   // FLAT DOUBLE CENNÍK - FIXNÉ CENY (142m²)
@@ -634,8 +632,6 @@ export default function KonfiguratorFlatDouble({
 
   return (
     <div className="mt-8 relative">
-      {/* Flying animations container */}
-      <FlyingAnimationContainer animations={animations} />
       {!showOnlySummary && <FloatingPrice 
         price={totalPrice} 
         isVisible={true} 
@@ -655,7 +651,6 @@ export default function KonfiguratorFlatDouble({
             setIzolaciaNavysenie={setIzolaciaNavysenie}
             zaklady={zaklady}
             setZaklady={setZaklady}
-            triggerAnimation={triggerAnimation}
             useFlat15Prices={false}
             useFlatDoublePrices={true}
           />

@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { useFlyingAnimation, FlyingAnimationContainer } from "./FlyingAnimation";
+
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
@@ -67,7 +67,6 @@ export default function KonfiguratorProstoHouse({
 }) {
   const BASE_PRICE = dom?.zakladna_cena || 0;
 
-  const { animations, triggerAnimation } = useFlyingAnimation();
   const { t, language } = useLanguage();
 
   // Načítanie dynamických textov pre tooltips
@@ -515,7 +514,6 @@ export default function KonfiguratorProstoHouse({
 
   return (
     <div className="mt-4 sm:mt-8 relative overflow-x-hidden">
-      <FlyingAnimationContainer animations={animations} />
       <FloatingPrice 
         price={totalPrice} 
         isVisible={true} 
@@ -537,7 +535,6 @@ export default function KonfiguratorProstoHouse({
               setZaklady={setZaklady}
               predlzenie={predlzenie}
               setPredlzenie={setPredlzenie}
-              triggerAnimation={triggerAnimation}
               useProstoHousePrices={true}
             />
           )}
