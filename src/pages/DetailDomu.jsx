@@ -158,39 +158,23 @@ export default function DetailDomu() {
   const isSuperAdmin = user?.super_admin === true;
   const canManage = isAdmin || isSuperAdmin;
 
-  // Načítame všetky domy pomocou globálneho query
-  const { data: allDomy = [] } = useQuery({
-    queryKey: ['domy-katalog'],
-    queryFn: () => base44.entities.Dom.list('poradie', 200),
-    staleTime: 300000,
-    gcTime: 600000,
-  });
-
-  // Nájdeme konkrétny dom z načítaných domov
-  const dom = useMemo(() => {
-    console.log('🔍 Finding dom from', allDomy?.length, 'domy. domId:', domId, 'domSlug:', domSlug);
-    
-    if (!allDomy || allDomy.length === 0) {
-      console.warn('⚠️ No domy loaded yet');
+  const { data: dom, isLoading, error } = useQuery({
+    queryKey: ['dom-detail', domId, domSlug],
+    queryFn: async () => {
+      if (domSlug) {
+        const domy = await base44.entities.Dom.filter({ slug: domSlug });
+        return domy && domy.length > 0 ? domy[0] : null;
+      }
+      if (domId) {
+        const domy = await base44.entities.Dom.filter({ id: domId });
+        return domy && domy.length > 0 ? domy[0] : null;
+      }
       return null;
-    }
-    
-    if (domSlug) {
-      const found = allDomy.find(d => d.slug === domSlug);
-      console.log(found ? '✅ Found by slug:' : '❌ Not found by slug:', found?.nazov);
-      return found || null;
-    }
-    
-    if (domId) {
-      const found = allDomy.find(d => String(d.id) === String(domId));
-      console.log(found ? '✅ Found by id:' : '❌ Not found by id:', domId, found?.nazov);
-      return found || null;
-    }
-    
-    return null;
-  }, [allDomy, domId, domSlug]);
-
-  const isLoading = !allDomy || allDomy.length === 0;
+    },
+    enabled: !!domId || !!domSlug,
+    staleTime: 300000,
+    retry: 1,
+  });
 
   // Scroll na vrch pri načítaní stránky
   useEffect(() => {
