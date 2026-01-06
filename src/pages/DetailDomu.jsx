@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -34,6 +35,7 @@ import KonfiguratorTicabhouse from "../components/KonfiguratorTicabhouse";
 
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
+import { FlyingAnimationContainer, useFlyingAnimation } from "../components/FlyingAnimation";
 
 
 export default function DetailDomu() {
@@ -106,6 +108,9 @@ export default function DetailDomu() {
   const [swipeStart, setSwipeStart] = useState(null);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [wizardKey, setWizardKey] = useState(0);
+
+  // Flying animation hook
+  const { animations, triggerAnimation } = useFlyingAnimation();
 
   // State pre Ticabhouse konfigurátor - predvolene REKREAČNÁ STAVBA (chata)
   const [lyonUcel, setLyonUcel] = useState("chata");
@@ -385,7 +390,6 @@ export default function DetailDomu() {
   const isTicabhouse = dom?.vyrobca === "Ticab house";
   const isJAKModules = dom?.vyrobca === "JAK Modules";
 
-  // Typy galérií pre zobrazenie
   const getGaleriaLabel = (typ) => {
     const labels = {
       "exterier_drevo_plech": `🏠 ${t('exteriorWoodMetal')}`,
@@ -1802,11 +1806,7 @@ export default function DetailDomu() {
                 </div>
               </Card>
             )}
-
-
-
-
-                          </motion.div>
+          </motion.div>
 
           {/* Pravý stĺpec - Informácie */}
           <motion.div
@@ -3306,6 +3306,9 @@ export default function DetailDomu() {
 
       {/* Floating Price Display - len ak nie je JAK Modules */}
       {!isJAKModules && <FloatingPrice price={calculatedPrice} isVisible={showCalculator} />}
+
+      {/* Flying Animations Container */}
+      <FlyingAnimationContainer animations={animations} />
 
       {/* Lightbox */}
       {lightboxOpen && (
