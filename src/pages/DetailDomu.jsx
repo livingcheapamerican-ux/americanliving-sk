@@ -3044,6 +3044,7 @@ export default function DetailDomu() {
                   setDoprava={setDoprava}
                   showOnlySummary={true}
                 />
+                </Suspense>
               </div>
             )}
 
