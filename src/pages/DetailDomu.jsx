@@ -2438,8 +2438,8 @@ export default function DetailDomu() {
                 showOnlySummary={true}
                 />
                 </Suspense>
-                </div>
-                )}
+              </div>
+            )}}
 
                 {/* Floating panel pre Nord */}
             {isProstoHouse && dom.nazov?.includes("Nord") && (
