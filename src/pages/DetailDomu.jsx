@@ -158,22 +158,44 @@ export default function DetailDomu() {
   const isSuperAdmin = user?.super_admin === true;
   const canManage = isAdmin || isSuperAdmin;
 
+  console.log('🔍 DetailDomu - URL params:', { domId, domSlug });
+
   const { data: dom, isLoading, error } = useQuery({
     queryKey: ['dom-detail', domId, domSlug],
     queryFn: async () => {
+      console.log('📡 Fetching dom - ID:', domId, 'Slug:', domSlug);
+      
+      // Načítame VŠETKY domy
+      const allDomy = await base44.entities.Dom.list();
+      console.log('📦 Načítané domy celkom:', allDomy?.length);
+      
+      if (!allDomy || allDomy.length === 0) {
+        console.error('❌ Žiadne domy v databáze!');
+        return null;
+      }
+      
+      let foundDom = null;
+      
+      // Hľadáme podľa slug
       if (domSlug) {
-        const result = await base44.entities.Dom.filter({ slug: domSlug });
-        return result?.[0] || null;
+        foundDom = allDomy.find(d => d.slug === domSlug);
+        console.log(foundDom ? '✅ Nájdené podľa slug' : '❌ Nenájdené podľa slug', domSlug);
       }
-      if (domId) {
-        const result = await base44.entities.Dom.filter({ id: domId });
-        return result?.[0] || null;
+      
+      // Hľadáme podľa ID
+      if (!foundDom && domId) {
+        foundDom = allDomy.find(d => d.id === domId);
+        console.log(foundDom ? '✅ Nájdené podľa ID' : '❌ Nenájdené podľa ID', domId);
       }
-      return null;
+      
+      if (foundDom) {
+        console.log('🏠 Dom načítaný:', foundDom.nazov);
+      }
+      
+      return foundDom || null;
     },
     enabled: !!domId || !!domSlug,
-    staleTime: 300000,
-    retry: 2,
+    retry: 1,
   });
 
   // Scroll na vrch pri načítaní stránky
