@@ -1126,3 +1126,5 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
       </div>
   );
 }
+
+// Force rebuild - export component explicitly
