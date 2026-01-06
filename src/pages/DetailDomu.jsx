@@ -1313,7 +1313,6 @@ export default function DetailDomu() {
             {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
               <LyonKonfiguratorWrapper
                 dom={dom}
-                onConfigChange={(config) => setTicabKonfiguracia(config)}
                 ucel={lyonUcel}
                 setUcel={setLyonUcel}
                 izolaciaStien={lyonIzolaciaStien}

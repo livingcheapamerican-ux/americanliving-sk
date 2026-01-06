@@ -213,21 +213,7 @@ export default function LyonKonfiguratorWrapper(props) {
     setShowSummaryModal(true);
   };
 
-  // Poslať totalPrice späť do rodičovského komponentu
-  useEffect(() => {
-    if (props.onConfigChange) {
-      props.onConfigChange({
-        celkovaCena: totalPrice,
-        izolaciaStien,
-        izolaciaPodlahy,
-        izolaciaStropu,
-        tepelneCerpadlo,
-        rekuperacia,
-        projektACertifikacia,
-        zaklady
-      });
-    }
-  }, [totalPrice, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia, projektACertifikacia, zaklady]);
+  // Odstrániť useEffect pre onConfigChange - spôsobovalo infinite loop
 
   const allProps = {
     dom: props.dom,
