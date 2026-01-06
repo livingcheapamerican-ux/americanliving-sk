@@ -91,14 +91,13 @@ export default function SessionRecorder() {
   // Initialize session ONCE
   const initOnceRef = useRef(false);
   useEffect(() => {
-    if (initOnceRef.current) return; // Already initialized
+    if (initOnceRef.current) return;
     initOnceRef.current = true;
     
     if (!sessionIdRef.current) {
       sessionIdRef.current = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       sessionStartRef.current = new Date().toISOString();
       
-      // Detekcia vracajúceho sa klienta
       const previousSessions = localStorage.getItem('user_previous_sessions');
       const isReturning = !!previousSessions;
       
@@ -114,7 +113,6 @@ export default function SessionRecorder() {
       const referrerUrl = document.referrer || 'direct';
       const referrerDomain = referrerUrl !== 'direct' ? new URL(referrerUrl).hostname : 'direct';
 
-      // Slovenské názvy stránok
       const pageNamesMap = {
         '/': 'Domovská stránka',
         '/katalog': 'Katalóg domov',
@@ -127,7 +125,6 @@ export default function SessionRecorder() {
         '/odporucanie-domov': 'AI Odporúčania domov'
       };
 
-      // Create session with location
       base44.entities.UserSession.create({
         session_id: sessionIdRef.current,
         user_email: user?.email || 'anonymous',
@@ -161,11 +158,10 @@ export default function SessionRecorder() {
         is_active: true,
         session_tags: isReturning ? ['vracajuci_sa'] : []
       }).then(() => {
-        // Uložiť do localStorage pre budúce návštevy
         const allSessions = JSON.parse(previousSessions || '[]');
         allSessions.push(sessionIdRef.current);
         localStorage.setItem('user_previous_sessions', JSON.stringify(allSessions.slice(-10)));
-        // Fetch IP location
+        
         fetch('https://ipapi.co/json/')
           .then(res => res.json())
           .then(data => {
@@ -190,7 +186,6 @@ export default function SessionRecorder() {
           .catch(() => {});
       }).catch(err => console.log('Session create error:', err));
 
-      // Track JS errors
       window.addEventListener('error', (e) => {
         errorsRef.current.push({
           error_message: e.message,
@@ -201,7 +196,6 @@ export default function SessionRecorder() {
         scheduleSave();
       });
 
-      // Track language changes
       const originalSetItem = localStorage.setItem;
       localStorage.setItem = function(key, value) {
         if (key === 'language') {
@@ -218,7 +212,7 @@ export default function SessionRecorder() {
         originalSetItem.apply(this, arguments);
       };
     }
-  }, []); // Empty deps - init only once!
+  }, []);
 
   // Track page changes
   useEffect(() => {
@@ -229,7 +223,6 @@ export default function SessionRecorder() {
       const timeSpent = Math.round((Date.now() - pageStartTimeRef.current) / 1000);
       const maxScrollForPage = scrollDepthRef.current[lastPageRef.current] || 0;
       
-      // Determine exit type
       let exitType = 'navigation';
       if (timeSpent < 3) exitType = 'bounce';
       else if (maxScrollForPage < 25) exitType = 'shallow';
@@ -241,18 +234,13 @@ export default function SessionRecorder() {
     lastPageRef.current = currentPage;
     pageStartTimeRef.current = Date.now();
 
-    // Track page load performance
     if (window.performance) {
       setTimeout(() => {
         const perfData = window.performance.timing;
         const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
-        if (pageLoadTime > 0) {
-          // Will be aggregated in scheduleSave
-        }
       }, 0);
     }
 
-    // Track scroll with detailed events
     let maxScroll = 0;
     const scrollMilestones = [25, 50, 75, 90, 100];
     const reachedMilestones = new Set();
@@ -266,7 +254,6 @@ export default function SessionRecorder() {
         maxScroll = scrollPercentage;
         scrollDepthRef.current[currentPage] = maxScroll;
         
-        // Track milestone events
         scrollMilestones.forEach(milestone => {
           if (scrollPercentage >= milestone && !reachedMilestones.has(milestone)) {
             reachedMilestones.add(milestone);
@@ -280,7 +267,6 @@ export default function SessionRecorder() {
       }
     };
 
-    // Track clicks with position
     const handleClick = (e) => {
       const element = e.target.tagName;
       const text = e.target.textContent?.substring(0, 100) || '';
@@ -315,13 +301,11 @@ export default function SessionRecorder() {
       scheduleSave();
     };
 
-    // Track mouse movements for heatmap (sampled)
     let mouseMoveCount = 0;
     const handleMouseMove = (e) => {
       mouseMovementsRef.current++;
       mouseMoveCount++;
       
-      // Sample every 50th movement for heatmap
       if (mouseMoveCount % 50 === 0) {
         mouseHeatmapRef.current.push({
           x: e.clientX,
@@ -329,14 +313,12 @@ export default function SessionRecorder() {
           page_url: currentPage
         });
         
-        // Limit heatmap data size
         if (mouseHeatmapRef.current.length > 500) {
           mouseHeatmapRef.current = mouseHeatmapRef.current.slice(-500);
         }
       }
     };
 
-    // Track form interactions
     const handleFormFocus = (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
         const form = e.target.closest('form');
@@ -385,7 +367,7 @@ export default function SessionRecorder() {
   const scheduleSave = () => {
     const now = Date.now();
     if (now - lastSaveRef.current < 5000 && saveTimeoutRef.current) {
-      return; // Too soon, wait for scheduled save
+      return;
     }
 
     if (saveTimeoutRef.current) {
@@ -401,7 +383,6 @@ export default function SessionRecorder() {
             const session = sessions[0];
             const currentDuration = Math.round((Date.now() - new Date(session.start_time).getTime()) / 1000);
             
-            // Calculate engagement score
             const engagementScore = Math.min(100, Math.round(
               (currentDuration / 60) * 10 +
               (clicksRef.current.length) * 2 +
@@ -409,13 +390,11 @@ export default function SessionRecorder() {
               (Math.max(...Object.values(scrollDepthRef.current)) || 0) / 2
             ));
 
-            // Auto tags (slovenské názvy)
             const tags = [];
             if (currentDuration < 10) tags.push('odrazeny');
             else if (currentDuration > 300) tags.push('velmi_zaujaty');
             else if (currentDuration > 60) tags.push('zaujaty');
             
-            // Pridať tag pre vracajúceho sa klienta
             const previousSessions = localStorage.getItem('user_previous_sessions');
             if (previousSessions) tags.push('vracajuci_sa');
             
@@ -449,12 +428,10 @@ export default function SessionRecorder() {
               is_active: true
             };
 
-            // Add current page to visited pages
             if (lastPageRef.current) {
               const existingPages = session.pages_visited || [];
               const lastPage = existingPages[existingPages.length - 1];
               
-              // Update last page or add new one
               const pageNamesMap = {
                 '/': 'Domovská stránka',
                 '/katalog': 'Katalóg domov',
@@ -500,14 +477,11 @@ export default function SessionRecorder() {
     }, 3000);
   };
 
-  // Periodic save every 10 seconds + cleanup check
+  // Periodic save every 30 seconds (ZMENENÉ z 10 na 30)
   useEffect(() => {
     const interval = setInterval(() => {
       scheduleSave();
-      
-      // Zavolaj cleanup funkciu na pozadí (neblokujúco)
-      base44.functions.invoke('cleanupInactiveSessions').catch(() => {});
-    }, 10000);
+    }, 30000);
 
     return () => clearInterval(interval);
   }, []);
@@ -560,7 +534,7 @@ export default function SessionRecorder() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, []);
 
-  // Expose global tracking functions for components
+  // Expose global tracking functions
   useEffect(() => {
     window.trackConfiguratorInteraction = (domId, domNazov, action, optionSelected, price, category) => {
       configuratorInteractionsRef.current.push({
@@ -596,7 +570,7 @@ export default function SessionRecorder() {
         if (viewStart) {
           const startTime = new Date(viewStart.timestamp).getTime();
           viewStart.duration_seconds = Math.round((Date.now() - startTime) / 1000);
-          viewStart.action = 'view'; // Change to 'view' after calculating duration
+          viewStart.action = 'view';
         }
       }
       
