@@ -637,7 +637,7 @@ export default function KonfiguratorAFrame({
 
                     <Tile
                       selected={interierFinis === "drevo"}
-                      onClick={(e) => { if (interierFinis !== "drevo") triggerAnimation("drevo", e.currentTarget); setInterierFinis("drevo"); }}
+                      onClick={() => setInterierFinis("drevo")}
                       icon={Home}
                       iconColor="text-amber-600"
                       iconSelectedColor="text-blue-600"
@@ -650,7 +650,7 @@ export default function KonfiguratorAFrame({
 
                     <Tile
                       selected={interierFinis === "sadrokarton"}
-                      onClick={(e) => { if (interierFinis !== "sadrokarton") triggerAnimation("sadrokarton", e.currentTarget); setInterierFinis("sadrokarton"); }}
+                      onClick={() => setInterierFinis("sadrokarton")}
                       icon={Home}
                       iconColor="text-gray-500"
                       iconSelectedColor="text-blue-600"
@@ -669,7 +669,7 @@ export default function KonfiguratorAFrame({
                     </p>
                     <Tile
                       selected={elektroinstalacia}
-                      onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); setElektroinstalacia(!elektroinstalacia); }}
+                      onClick={() => setElektroinstalacia(!elektroinstalacia)}
                       icon={Zap}
                       iconColor="text-yellow-500"
                       iconSelectedColor="text-yellow-600"
@@ -686,7 +686,7 @@ export default function KonfiguratorAFrame({
 
                     <Tile
                       selected={vodaKanalizacia}
-                      onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); setVodaKanalizacia(!vodaKanalizacia); }}
+                      onClick={() => setVodaKanalizacia(!vodaKanalizacia)}
                       icon={Droplets}
                       iconColor="text-blue-400"
                       iconSelectedColor="text-blue-600"
@@ -699,7 +699,7 @@ export default function KonfiguratorAFrame({
 
                     <Tile
                       selected={sanitaKomplet}
-                      onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); setSanitaKomplet(!sanitaKomplet); }}
+                      onClick={() => setSanitaKomplet(!sanitaKomplet)}
                       icon={ShowerHead}
                       iconColor="text-blue-400"
                       iconSelectedColor="text-blue-600"
@@ -712,7 +712,7 @@ export default function KonfiguratorAFrame({
 
                     <Tile
                       selected={bojler}
-                      onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }}
+                      onClick={() => setBojler(!bojler)}
                       icon={Flame}
                       iconColor="text-orange-400"
                       iconSelectedColor="text-orange-600"
@@ -735,7 +735,7 @@ export default function KonfiguratorAFrame({
                     </p>
                     <Tile
                       selected={tepelneCerpadlo}
-                      onClick={(e) => { if (!tepelneCerpadlo) triggerAnimation("klimatizacia", e.currentTarget); setTepelneCerpadlo(!tepelneCerpadlo); }}
+                      onClick={() => setTepelneCerpadlo(!tepelneCerpadlo)}
                       icon={ThermometerSun}
                       iconColor="text-red-500"
                       iconSelectedColor="text-green-600"
@@ -752,7 +752,7 @@ export default function KonfiguratorAFrame({
 
                     <Tile
                       selected={rekuperacia}
-                      onClick={(e) => { if (!rekuperacia) triggerAnimation("rekuperacia", e.currentTarget); setRekuperacia(!rekuperacia); }}
+                      onClick={() => setRekuperacia(!rekuperacia)}
                       icon={Wind}
                       iconColor="text-cyan-500"
                       iconSelectedColor="text-green-600"
@@ -770,7 +770,7 @@ export default function KonfiguratorAFrame({
 
                   <Tile
                     selected={pripojkaSiete}
-                    onClick={(e) => { if (!pripojkaSiete) triggerAnimation("siete", e.currentTarget); setPripojkaSiete(!pripojkaSiete); }}
+                    onClick={() => setPripojkaSiete(!pripojkaSiete)}
                     icon={Cable}
                     iconColor="text-gray-400"
                     iconSelectedColor="text-gray-700"
@@ -787,7 +787,7 @@ export default function KonfiguratorAFrame({
 
                   <Tile
                     selected={povrchokaOkien}
-                    onClick={(e) => { if (!povrchokaOkien) triggerAnimation("oknoAntracit", e.currentTarget); setPovrchokaOkien(!povrchokaOkien); }}
+                    onClick={() => setPovrchokaOkien(!povrchokaOkien)}
                     icon={Square}
                     iconColor="text-slate-400"
                     iconSelectedColor="text-slate-700"
@@ -804,7 +804,7 @@ export default function KonfiguratorAFrame({
 
                   <Tile
                     selected={tonovaneSkla}
-                    onClick={(e) => { if (!tonovaneSkla) triggerAnimation("oknoTonovane", e.currentTarget); setTonovaneSkla(!tonovaneSkla); }}
+                    onClick={() => setTonovaneSkla(!tonovaneSkla)}
                     icon={Sun}
                     iconColor="text-amber-400"
                     iconSelectedColor="text-amber-600"
@@ -915,7 +915,7 @@ export default function KonfiguratorAFrame({
 
                   <Tile
                     selected={vnutornePodlahy}
-                    onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); setVnutornePodlahy(!vnutornePodlahy); }}
+                    onClick={() => setVnutornePodlahy(!vnutornePodlahy)}
                     icon={Square}
                     iconColor="text-amber-500"
                     iconSelectedColor="text-emerald-600"
@@ -932,7 +932,7 @@ export default function KonfiguratorAFrame({
 
                   <Tile
                     selected={podlahovVykurovanie}
-                    onClick={(e) => { if (!podlahovVykurovanie) triggerAnimation("podlahovVykurovanie", e.currentTarget); setPodlahovVykurovanie(!podlahovVykurovanie); }}
+                    onClick={() => setPodlahovVykurovanie(!podlahovVykurovanie)}
                     icon={Flame}
                     iconColor="text-orange-400"
                     iconSelectedColor="text-orange-600"
@@ -994,7 +994,7 @@ export default function KonfiguratorAFrame({
                   
                   <Tile
                     selected={inziniering}
-                    onClick={(e) => { if (!inziniering) triggerAnimation("inziniering", e.currentTarget); setInziniering(!inziniering); }}
+                    onClick={() => setInziniering(!inziniering)}
                     icon={FileText}
                     iconColor="text-purple-400"
                     iconSelectedColor="text-purple-600"
@@ -1011,7 +1011,7 @@ export default function KonfiguratorAFrame({
 
                   <Tile
                     selected={projektA0}
-                    onClick={(e) => { if (!projektA0) triggerAnimation("projektant", e.currentTarget); setProjektA0(!projektA0); }}
+                    onClick={() => setProjektA0(!projektA0)}
                     icon={FileCheck}
                     iconColor="text-green-500"
                     iconSelectedColor="text-green-600"
@@ -1045,7 +1045,7 @@ export default function KonfiguratorAFrame({
 
                   <Tile
                     selected={doprava}
-                    onClick={(e) => { if (!doprava) triggerAnimation("doprava", e.currentTarget); setDoprava(!doprava); }}
+                    onClick={() => setDoprava(!doprava)}
                     icon={Truck}
                     iconColor="text-purple-400"
                     iconSelectedColor="text-purple-600"
