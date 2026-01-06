@@ -15,10 +15,7 @@ import { LanguageProvider, useLanguage } from "./components/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
 import UserTracking from "./components/UserTracking";
 
-import InteractiveTour from "./components/InteractiveTour";
 
-import SessionRecorder from "./components/SessionRecorder";
-import AutoSEOTrigger from "./pages/AutoSEOTrigger";
 
 
 function LayoutContent({ children }) {
@@ -730,10 +727,6 @@ function LayoutContent({ children }) {
       </footer>
 
       <CookieConsentBanner />
-      <UserTracking />
-
-      <InteractiveTour />
-      <SessionRecorder />
 
       <div className="hidden md:block">
         <Chatbot />
