@@ -33,11 +33,13 @@ import AutoRegeneraciaPrekladov from './pages/AutoRegeneraciaPrekladov';
 import AutoSEOTrigger from './pages/AutoSEOTrigger';
 import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
+import DetailDomu from './pages/DetailDomu';
 import Domov from './pages/Domov';
 import FAQ from './pages/FAQ';
 import GaleriaRealizacii from './pages/GaleriaRealizacii';
 import Home from './pages/Home';
 import InteraktivnyKonfigurator from './pages/InteraktivnyKonfigurator';
+import Katalog from './pages/Katalog';
 import KatalogDomkiZGor from './pages/KatalogDomkiZGor';
 import KatalogMobilneDomy from './pages/KatalogMobilneDomy';
 import KatalogModularneDomy from './pages/KatalogModularneDomy';
@@ -66,8 +68,6 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
-import Katalog from './pages/Katalog';
-import DetailDomu from './pages/DetailDomu';
 import __Layout from './Layout.jsx';
 
 
@@ -107,11 +107,13 @@ export const PAGES = {
     "AutoSEOTrigger": AutoSEOTrigger,
     "Blog": Blog,
     "BlogDetail": BlogDetail,
+    "DetailDomu": DetailDomu,
     "Domov": Domov,
     "FAQ": FAQ,
     "GaleriaRealizacii": GaleriaRealizacii,
     "Home": Home,
     "InteraktivnyKonfigurator": InteraktivnyKonfigurator,
+    "Katalog": Katalog,
     "KatalogDomkiZGor": KatalogDomkiZGor,
     "KatalogMobilneDomy": KatalogMobilneDomy,
     "KatalogModularneDomy": KatalogModularneDomy,
@@ -140,8 +142,6 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
-    "Katalog": Katalog,
-    "DetailDomu": DetailDomu,
 }
 
 export const pagesConfig = {

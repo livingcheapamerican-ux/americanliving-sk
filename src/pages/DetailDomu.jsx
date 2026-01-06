@@ -158,21 +158,33 @@ export default function DetailDomu() {
   const isSuperAdmin = user?.super_admin === true;
   const canManage = isAdmin || isSuperAdmin;
 
-  const { data: dom, isLoading } = useQuery({
-    queryKey: ['dom-detail', domId, domSlug],
+  // Použijeme rovnaké query ako katalóg pre zdieľanú cache
+  const { data: allDomy = [], isLoading } = useQuery({
+    queryKey: ['domy-katalog'],
     queryFn: async () => {
-      if (domSlug) {
-        const results = await base44.entities.Dom.filter({ slug: domSlug });
-        return results && results.length > 0 ? results[0] : null;
-      }
-      if (domId) {
-        const results = await base44.entities.Dom.filter({ id: domId });
-        return results && results.length > 0 ? results[0] : null;
-      }
-      return null;
+      const result = await base44.entities.Dom.list('poradie', 200);
+      return result || [];
     },
-    enabled: !!domId || !!domSlug,
+    staleTime: 300000,
+    gcTime: 600000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
+
+  // Nájdeme konkrétny dom v pamäti
+  const dom = useMemo(() => {
+    if (!allDomy || allDomy.length === 0) return null;
+    
+    if (domSlug) {
+      return allDomy.find(d => d.slug === domSlug) || null;
+    }
+    
+    if (domId) {
+      return allDomy.find(d => d.id === domId) || null;
+    }
+    
+    return null;
+  }, [allDomy, domId, domSlug]);
 
   // Scroll na vrch pri načítaní stránky
   useEffect(() => {
