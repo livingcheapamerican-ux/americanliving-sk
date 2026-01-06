@@ -158,21 +158,28 @@ export default function DetailDomu() {
   const isSuperAdmin = user?.super_admin === true;
   const canManage = isAdmin || isSuperAdmin;
 
-  const { data: dom, isLoading } = useQuery({
+  const { data: dom, isLoading, error } = useQuery({
     queryKey: ['dom-detail', domId, domSlug],
     queryFn: async () => {
+      console.log('🔍 Loading dom with:', { domId, domSlug });
+      
       if (domSlug) {
         const domy = await base44.entities.Dom.filter({ slug: domSlug });
-        return domy[0] || null;
+        console.log('📦 Loaded by slug:', domy);
+        return domy && domy.length > 0 ? domy[0] : null;
       }
       if (domId) {
-        const domy = await base44.entities.Dom.filter({ id: domId });
-        return domy[0] || null;
+        const domy = await base44.entities.Dom.list();
+        console.log('📦 All domy:', domy?.length, 'Looking for ID:', domId);
+        const foundDom = domy?.find(d => d.id === domId);
+        console.log('✅ Found dom:', foundDom);
+        return foundDom || null;
       }
       return null;
     },
     enabled: !!domId || !!domSlug,
     staleTime: 300000,
+    retry: false,
   });
 
   // Scroll na vrch pri načítaní stránky
