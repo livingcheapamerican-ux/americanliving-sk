@@ -911,6 +911,7 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
+              </Suspense>
             )}
 
             {/* Konfigurátor pre Fjord - Wizard výber typu */}
@@ -1055,6 +1056,7 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
+              </Suspense>
             )}
 
             {/* Konfigurátor pre Flat 72 - Wizard */}
@@ -1127,6 +1129,7 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
+              </Suspense>
             )}
 
             {/* Konfigurátor pre ostatné Prosto House domy */}
@@ -1201,6 +1204,7 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
+              </Suspense>
             )}
 
             {/* Pôdorysy */}
@@ -1506,6 +1510,7 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
+              </Suspense>
             )}
 
             {/* Konfigurátor pre Barn 48 - Wizard - PO POPISE */}
@@ -1652,6 +1657,7 @@ export default function DetailDomu() {
                 doprava={doprava}
                 setDoprava={setDoprava}
               />
+              </Suspense>
             )}
 
             {/* Konfigurátor pre A-Frame - Wizard - PO POPISE */}
@@ -2500,6 +2506,7 @@ export default function DetailDomu() {
                   setDoprava={setDoprava}
                   showOnlySummary={true}
                 />
+                </Suspense>
               </div>
             )}
 
@@ -2651,6 +2658,7 @@ export default function DetailDomu() {
                   setDoprava={setDoprava}
                   showOnlySummary={true}
                 />
+                </Suspense>
               </div>
             )}
 
@@ -2728,6 +2736,7 @@ export default function DetailDomu() {
                   setDoprava={setDoprava}
                   showOnlySummary={true}
                 />
+                </Suspense>
               </div>
             )}
 
@@ -2805,6 +2814,7 @@ export default function DetailDomu() {
                   setDoprava={setDoprava}
                   showOnlySummary={true}
                 />
+                </Suspense>
               </div>
             )}
 
@@ -2880,6 +2890,7 @@ export default function DetailDomu() {
                   setDoprava={setDoprava}
                   showOnlySummary={true}
                 />
+                </Suspense>
               </div>
             )}
 
@@ -2955,6 +2966,7 @@ export default function DetailDomu() {
                   setDoprava={setDoprava}
                   showOnlySummary={true}
                 />
+                </Suspense>
               </div>
             )}
 
@@ -3108,6 +3120,7 @@ export default function DetailDomu() {
                   setDoprava={setDoprava}
                   showOnlySummary={true}
                 />
+                </Suspense>
               </div>
             )}
 
