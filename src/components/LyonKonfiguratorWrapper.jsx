@@ -227,7 +227,7 @@ export default function LyonKonfiguratorWrapper(props) {
         zaklady
       });
     }
-  }, [totalPrice, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia, projektACertifikacia, zaklady, props.onConfigChange]);
+  }, [totalPrice, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo, rekuperacia, projektACertifikacia, zaklady]);
 
   const allProps = {
     dom: props.dom,
