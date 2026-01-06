@@ -581,7 +581,7 @@ export default function KonfiguratorProstoHouse({
 
                     <EditableTile
                       selected={interierFinis === "drevo"}
-                      onClick={(e) => { if (interierFinis !== "drevo") triggerAnimation("drevo", e.currentTarget); setInterierFinis("drevo"); }}
+                      onClick={() => setInterierFinis("drevo")}
                       title={t('interiorWood')}
                       subtitle={t('woodCladding')}
                       price="+ 8 200 €"
@@ -592,7 +592,7 @@ export default function KonfiguratorProstoHouse({
 
                     <EditableTile
                       selected={interierFinis === "sadrokarton"}
-                      onClick={(e) => { if (interierFinis !== "sadrokarton") triggerAnimation("sadrokarton", e.currentTarget); setInterierFinis("sadrokarton"); }}
+                      onClick={() => setInterierFinis("sadrokarton")}
                       title={t('interiorDrywall')}
                       subtitle={t('plaster')}
                       price="+ 9 430 €"
@@ -609,7 +609,7 @@ export default function KonfiguratorProstoHouse({
                     </p>
                     <EditableTile
                       selected={elektroinstalacia}
-                      onClick={(e) => { if (!elektroinstalacia) triggerAnimation("elektro", e.currentTarget); setElektroinstalacia(!elektroinstalacia); }}
+                      onClick={() => setElektroinstalacia(!elektroinstalacia)}
                       title={t('electrical')}
                       subtitle={t('wiring')}
                       price="+ 3 900 €"
@@ -620,7 +620,7 @@ export default function KonfiguratorProstoHouse({
 
                     <EditableTile
                       selected={vodaKanalizacia}
-                      onClick={(e) => { if (!vodaKanalizacia) triggerAnimation("voda", e.currentTarget); setVodaKanalizacia(!vodaKanalizacia); }}
+                      onClick={() => setVodaKanalizacia(!vodaKanalizacia)}
                       title={t('water')}
                       subtitle={t('wiring')}
                       price="+ 1 150 €"
@@ -631,7 +631,7 @@ export default function KonfiguratorProstoHouse({
 
                     <EditableTile
                       selected={sanitaKomplet}
-                      onClick={(e) => { if (!sanitaKomplet) triggerAnimation("sanita", e.currentTarget); setSanitaKomplet(!sanitaKomplet); }}
+                      onClick={() => setSanitaKomplet(!sanitaKomplet)}
                       title={t('sanitary')}
                       subtitle={t('complete')}
                       price="+ 1 169 €"
@@ -642,7 +642,7 @@ export default function KonfiguratorProstoHouse({
 
                     <EditableTile
                       selected={bojler}
-                      onClick={(e) => { if (!bojler) triggerAnimation("bojler", e.currentTarget); setBojler(!bojler); }}
+                      onClick={() => setBojler(!bojler)}
                       title={t('boiler')}
                       subtitle={t('boilerElectric')}
                       price="+ 264 €"
@@ -659,7 +659,7 @@ export default function KonfiguratorProstoHouse({
                     </p>
                     <EditableTile
                       selected={tepelneCerpadlo}
-                      onClick={(e) => { if (!tepelneCerpadlo) triggerAnimation("klimatizacia", e.currentTarget); setTepelneCerpadlo(!tepelneCerpadlo); }}
+                      onClick={() => setTepelneCerpadlo(!tepelneCerpadlo)}
                       title={t('heatPump')}
                       subtitle={t('units5')}
                       price="+ 3 321 €"
@@ -671,7 +671,7 @@ export default function KonfiguratorProstoHouse({
 
                     <EditableTile
                       selected={rekuperacia}
-                      onClick={(e) => { if (!rekuperacia) triggerAnimation("rekuperacia", e.currentTarget); setRekuperacia(!rekuperacia); }}
+                      onClick={() => setRekuperacia(!rekuperacia)}
                       title={t('recuperation')}
                       subtitle="3 ks"
                       price="+ 1 600 €"
@@ -684,7 +684,7 @@ export default function KonfiguratorProstoHouse({
 
                   <EditableTile
                     selected={pripojkaSiete}
-                    onClick={(e) => { if (!pripojkaSiete) triggerAnimation("siete", e.currentTarget); setPripojkaSiete(!pripojkaSiete); }}
+                    onClick={() => setPripojkaSiete(!pripojkaSiete)}
                     title={t('gridConnection')}
                     subtitle={t('connection')}
                     price="+ 1 501 €"
@@ -695,7 +695,7 @@ export default function KonfiguratorProstoHouse({
 
                   <EditableTile
                     selected={povrchokaOkien}
-                    onClick={(e) => { if (!povrchokaOkien) triggerAnimation("oknoAntracit", e.currentTarget); setPovrchokaOkien(!povrchokaOkien); }}
+                    onClick={() => setPovrchokaOkien(!povrchokaOkien)}
                     title={t('lamination')}
                     subtitle={t('laminationAnthracite')}
                     price="+ 1 450 €"
@@ -706,7 +706,7 @@ export default function KonfiguratorProstoHouse({
 
                   <EditableTile
                     selected={tonovaneSkla}
-                    onClick={(e) => { if (!tonovaneSkla) triggerAnimation("oknoTonovane", e.currentTarget); setTonovaneSkla(!tonovaneSkla); }}
+                    onClick={() => setTonovaneSkla(!tonovaneSkla)}
                     title={t('tintedGlass')}
                     subtitle={t('solarGlass')}
                     price="+ 700 €"
@@ -821,7 +821,7 @@ export default function KonfiguratorProstoHouse({
 
                     <EditableTile
                       selected={vonkajsiaFasada === "suchana"}
-                      onClick={(e) => { if (vonkajsiaFasada !== "suchana") triggerAnimation("fasadaSuchana", e.currentTarget); setVonkajsiaFasada("suchana"); }}
+                      onClick={() => setVonkajsiaFasada("suchana")}
                       title={t('facadeStucco')}
                       subtitle={t('whitePlaster')}
                       price="+ 6 371 €"
@@ -833,7 +833,7 @@ export default function KonfiguratorProstoHouse({
 
                   <EditableTile
                     selected={vnutornePodlahy}
-                    onClick={(e) => { if (!vnutornePodlahy) triggerAnimation("podlaha", e.currentTarget); setVnutornePodlahy(!vnutornePodlahy); }}
+                    onClick={() => setVnutornePodlahy(!vnutornePodlahy)}
                     title={t('floors')}
                     subtitle={t('floorsLaminate')}
                     price="+ 1 750 €"
@@ -844,7 +844,7 @@ export default function KonfiguratorProstoHouse({
 
                   <EditableTile
                     selected={podlahovVykurovanie}
-                    onClick={(e) => { if (!podlahovVykurovanie) triggerAnimation("podlahovVykurovanie", e.currentTarget); setPodlahovVykurovanie(!podlahovVykurovanie); }}
+                    onClick={() => setPodlahovVykurovanie(!podlahovVykurovanie)}
                     title={t('floorHeating')}
                     subtitle={t('wifiThermostat')}
                     price="+ 3 960 €"
@@ -907,7 +907,7 @@ export default function KonfiguratorProstoHouse({
                   
                   <EditableTile
                     selected={inziniering}
-                    onClick={(e) => { if (!inziniering) triggerAnimation("inziniering", e.currentTarget); setInziniering(!inziniering); }}
+                    onClick={() => setInziniering(!inziniering)}
                     title={t('engineering')}
                     subtitle={t('buildingPermit')}
                     price="+ 2 592 €"
@@ -918,7 +918,7 @@ export default function KonfiguratorProstoHouse({
 
                   <EditableTile
                     selected={projektA0}
-                    onClick={(e) => { if (!projektA0) triggerAnimation("projektant", e.currentTarget); setProjektA0(!projektA0); }}
+                    onClick={() => setProjektA0(!projektA0)}
                     title={t('projectA0')}
                     subtitle={t('certification')}
                     price="+ 3 500 €"
@@ -941,7 +941,7 @@ export default function KonfiguratorProstoHouse({
 
                   <EditableTile
                     selected={doprava}
-                    onClick={(e) => { if (!doprava) triggerAnimation("doprava", e.currentTarget); setDoprava(!doprava); }}
+                    onClick={() => setDoprava(!doprava)}
                     title={t('transport')}
                     subtitle={t('transportFull')}
                     price="0 €"
