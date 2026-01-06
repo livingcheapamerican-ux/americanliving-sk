@@ -600,7 +600,6 @@ export default function KonfiguratorFlat15({
               setIzolaciaNavysenie={setIzolaciaNavysenie}
               zaklady={zaklady}
               setZaklady={setZaklady}
-              triggerAnimation={triggerAnimation}
               useFlat15Prices={true}
             />
           )}
