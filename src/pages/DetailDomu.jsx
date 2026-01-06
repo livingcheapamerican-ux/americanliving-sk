@@ -186,11 +186,6 @@ export default function DetailDomu() {
     return null;
   }, [allDomy, domId, domSlug]);
 
-  // Scroll na vrch pri načítaní stránky
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [domId, domSlug]);
-
   // Keyboard navigation for lightbox
   useEffect(() => {
     if (!lightboxOpen) return;
