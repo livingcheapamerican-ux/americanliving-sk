@@ -306,118 +306,118 @@ export default function KonfiguratorLyon(props = {}) {
   const [chcemPozemok, setChcemPozemok] = useState(props.chcemPozemok || false);
   const [financneSluzby, setFinancneSluzby] = useState(props.financneSluzby || false);
 
-  // Synchronizovať state s props ak sa props zmenia - pridané props dependency
+  // Synchronizovať state s props - POZOR: nepoužívať props.setter v dependencies!
   React.useEffect(() => {
     if (props.setUcel) props.setUcel(ucel);
-  }, [ucel, props.setUcel]);
+  }, [ucel]);
   React.useEffect(() => {
     if (props.setIzolaciaStien) props.setIzolaciaStien(izolaciaStien);
-  }, [izolaciaStien, props.setIzolaciaStien]);
+  }, [izolaciaStien]);
   React.useEffect(() => {
     if (props.setIzolaciaPodlahy) props.setIzolaciaPodlahy(izolaciaPodlahy);
-  }, [izolaciaPodlahy, props.setIzolaciaPodlahy]);
+  }, [izolaciaPodlahy]);
   React.useEffect(() => {
     if (props.setIzolaciaStropu) props.setIzolaciaStropu(izolaciaStropu);
-  }, [izolaciaStropu, props.setIzolaciaStropu]);
+  }, [izolaciaStropu]);
   React.useEffect(() => {
     if (props.setTepelneCerpadlo) props.setTepelneCerpadlo(tepelneCerpadlo);
-  }, [tepelneCerpadlo, props.setTepelneCerpadlo]);
+  }, [tepelneCerpadlo]);
   React.useEffect(() => {
     if (props.setRekuperacia) props.setRekuperacia(rekuperacia);
-  }, [rekuperacia, props.setRekuperacia]);
+  }, [rekuperacia]);
   React.useEffect(() => {
     if (props.setPripravaNaRekuperaciu) props.setPripravaNaRekuperaciu(pripravaNaRekuperaciu);
-  }, [pripravaNaRekuperaciu, props.setPripravaNaRekuperaciu]);
+  }, [pripravaNaRekuperaciu]);
   React.useEffect(() => {
     if (props.setPodlahovoKurenie) props.setPodlahovoKurenie(podlahovoKurenie);
-  }, [podlahovoKurenie, props.setPodlahovoKurenie]);
+  }, [podlahovoKurenie]);
   React.useEffect(() => {
     if (props.setKlimatizacia) props.setKlimatizacia(klimatizacia);
-  }, [klimatizacia, props.setKlimatizacia]);
+  }, [klimatizacia]);
   React.useEffect(() => {
     if (props.setPripravaNaKrb) props.setPripravaNaKrb(pripravaNaKrb);
-  }, [pripravaNaKrb, props.setPripravaNaKrb]);
+  }, [pripravaNaKrb]);
   React.useEffect(() => {
     if (props.setPripravaNaSolarnePanely) props.setPripravaNaSolarnePanely(pripravaNaSolarnePanely);
-  }, [pripravaNaSolarnePanely, props.setPripravaNaSolarnePanely]);
+  }, [pripravaNaSolarnePanely]);
   React.useEffect(() => {
     if (props.setOchranaKachle) props.setOchranaKachle(ochranaKachle);
-  }, [ochranaKachle, props.setOchranaKachle]);
+  }, [ochranaKachle]);
   React.useEffect(() => {
     if (props.setFasada) props.setFasada(fasada);
-  }, [fasada, props.setFasada]);
+  }, [fasada]);
   React.useEffect(() => {
     if (props.setStrecha) props.setStrecha(strecha);
-  }, [strecha, props.setStrecha]);
+  }, [strecha]);
   React.useEffect(() => {
     if (props.setOdkvapy) props.setOdkvapy(odkvapy);
-  }, [odkvapy, props.setOdkvapy]);
+  }, [odkvapy]);
   React.useEffect(() => {
     if (props.setOkna) props.setOkna(okna);
-  }, [okna, props.setOkna]);
+  }, [okna]);
   React.useEffect(() => {
     if (props.setVchodoveDvere) props.setVchodoveDvere(vchodoveDvere);
-  }, [vchodoveDvere, props.setVchodoveDvere]);
+  }, [vchodoveDvere]);
   React.useEffect(() => {
     if (props.setObkladStien) props.setObkladStien(obkladStien);
-  }, [obkladStien, props.setObkladStien]);
+  }, [obkladStien]);
   React.useEffect(() => {
     if (props.setPodlaha) props.setPodlaha(podlaha);
-  }, [podlaha, props.setPodlaha]);
+  }, [podlaha]);
   React.useEffect(() => {
     if (props.setInterieroveDvere) props.setInterieroveDvere(interieroveDvere);
-  }, [interieroveDvere, props.setInterieroveDvere]);
+  }, [interieroveDvere]);
   React.useEffect(() => {
     if (props.setElektro) props.setElektro(elektro);
-  }, [elektro, props.setElektro]);
+  }, [elektro]);
   React.useEffect(() => {
     if (props.setBleskozvod) props.setBleskozvod(bleskozvod);
-  }, [bleskozvod, props.setBleskozvod]);
+  }, [bleskozvod]);
   React.useEffect(() => {
     if (props.setPrepat) props.setPrepat(prepat);
-  }, [prepat, props.setPrepat]);
+  }, [prepat]);
   React.useEffect(() => {
     if (props.setSprchovyKut) props.setSprchovyKut(sprchovyKut);
-  }, [sprchovyKut, props.setSprchovyKut]);
+  }, [sprchovyKut]);
   React.useEffect(() => {
     if (props.setVana) props.setVana(vana);
-  }, [vana, props.setVana]);
+  }, [vana]);
   React.useEffect(() => {
     if (props.setBateria) props.setBateria(bateria);
-  }, [bateria, props.setBateria]);
+  }, [bateria]);
   React.useEffect(() => {
     if (props.setSkrinka) props.setSkrinka(skrinka);
-  }, [skrinka, props.setSkrinka]);
+  }, [skrinka]);
   React.useEffect(() => {
     if (props.setStropKupelna) props.setStropKupelna(stropKupelna);
-  }, [stropKupelna, props.setStropKupelna]);
+  }, [stropKupelna]);
   React.useEffect(() => {
     if (props.setInziniering) props.setInziniering(inziniering);
-  }, [inziniering, props.setInziniering]);
+  }, [inziniering]);
   React.useEffect(() => {
     if (props.setProjektACertifikacia) props.setProjektACertifikacia(projektACertifikacia);
-  }, [projektACertifikacia, props.setProjektACertifikacia]);
+  }, [projektACertifikacia]);
   React.useEffect(() => {
     if (props.setRevizia) props.setRevizia(revizia);
-  }, [revizia, props.setRevizia]);
+  }, [revizia]);
   React.useEffect(() => {
     if (props.setZaklady) props.setZaklady(zaklady);
-  }, [zaklady, props.setZaklady]);
+  }, [zaklady]);
   React.useEffect(() => {
     if (props.setMontaz) props.setMontaz(montaz);
-  }, [montaz, props.setMontaz]);
+  }, [montaz]);
   React.useEffect(() => {
     if (props.setDoprava) props.setDoprava(doprava);
-  }, [doprava, props.setDoprava]);
+  }, [doprava]);
   React.useEffect(() => {
     if (props.setPredajNehnutelnosti) props.setPredajNehnutelnosti(predajNehnutelnosti);
-  }, [predajNehnutelnosti, props.setPredajNehnutelnosti]);
+  }, [predajNehnutelnosti]);
   React.useEffect(() => {
     if (props.setChcemPozemok) props.setChcemPozemok(chcemPozemok);
-  }, [chcemPozemok, props.setChcemPozemok]);
+  }, [chcemPozemok]);
   React.useEffect(() => {
     if (props.setFinancneSluzby) props.setFinancneSluzby(financneSluzby);
-  }, [financneSluzby, props.setFinancneSluzby]);
+  }, [financneSluzby]);
 
   const CENY = props.CENY || {
     izolacia_stien_200mm: 1799.16,

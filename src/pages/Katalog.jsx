@@ -321,10 +321,17 @@ export default function Katalog() {
     if (zoradenie !== "plocha_zostupne") params.set("zoradenie", zoradenie);
 
     const newSearch = params.toString();
-    const currentSearch = location.search.substring(1);
     
-    // KRITICKÉ: Len ak sa URL skutočne zmenil, updatni ho
-    if (newSearch !== currentSearch) {
+    // KRITICKÉ: Porovnaj len hodnoty, nie celú location.search (môže obsahovať iné parametre)
+    const currentParams = new URLSearchParams(location.search);
+    const currentKategoria = currentParams.get("kategoria") || "vsetky";
+    const currentVyrobca = currentParams.get("vyrobca") || "";
+    const currentTyp = currentParams.get("typ") || "";
+    
+    // Porovnaj iba relevantné parametre
+    const shouldUpdate = newSearch !== currentParams.toString();
+    
+    if (shouldUpdate) {
       navigate(`${location.pathname}${newSearch ? `?${newSearch}` : ""}`, { replace: true });
     }
   }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie, navigate]);
