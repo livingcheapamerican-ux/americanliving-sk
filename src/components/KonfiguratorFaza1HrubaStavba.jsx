@@ -134,7 +134,6 @@ export default function KonfiguratorFaza1HrubaStavba({
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
   predlzenie, setPredlzenie,
-  triggerAnimation,
   useNordPrices = false,
   useFlat15Prices = false,
   useFlatDoublePrices = false,
@@ -289,7 +288,7 @@ export default function KonfiguratorFaza1HrubaStavba({
 
               <Tile
                 selected={montazHolodomu === "ano"}
-                onClick={(e) => { if (montazHolodomu !== "ano") triggerAnimation?.("montaz", e.currentTarget); setMontazHolodomu("ano"); }}
+                onClick={() => setMontazHolodomu("ano")}
                 icon={Wrench}
                 iconColor="text-amber-400"
                 iconSelectedColor="text-amber-600"
@@ -357,7 +356,7 @@ export default function KonfiguratorFaza1HrubaStavba({
 
               <Tile
                 selected={izolaciaNavysenie === "zvysena"}
-                onClick={(e) => { if (izolaciaNavysenie !== "zvysena") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("zvysena"); }}
+                onClick={() => setIzolaciaNavysenie("zvysena")}
                 icon={ThermometerSun}
                 iconColor="text-orange-400"
                 iconSelectedColor="text-amber-600"
@@ -370,7 +369,7 @@ export default function KonfiguratorFaza1HrubaStavba({
 
               <Tile
                 selected={izolaciaNavysenie === "premium"}
-                onClick={(e) => { if (izolaciaNavysenie !== "premium") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("premium"); }}
+                onClick={() => setIzolaciaNavysenie("premium")}
                 icon={ThermometerSun}
                 iconColor="text-green-500"
                 iconSelectedColor="text-green-600"
@@ -388,7 +387,7 @@ export default function KonfiguratorFaza1HrubaStavba({
               {(useNordPrices || useProstoHousePrices || useFlat72Prices || useAFramePrices || useBarn48Prices || useFlatSmallPrices) && (
                 <Tile
                   selected={izolaciaNavysenie === "ultra"}
-                  onClick={(e) => { if (izolaciaNavysenie !== "ultra") triggerAnimation?.("izolacia", e.currentTarget); setIzolaciaNavysenie("ultra"); }}
+                  onClick={() => setIzolaciaNavysenie("ultra")}
                   icon={ThermometerSun}
                   iconColor="text-green-600"
                   iconSelectedColor="text-green-700"
@@ -426,7 +425,7 @@ export default function KonfiguratorFaza1HrubaStavba({
 
               <Tile
                 selected={zaklady === "skrutky"}
-                onClick={(e) => { if (zaklady !== "skrutky") triggerAnimation?.("skrutky", e.currentTarget); setZaklady("skrutky"); }}
+                onClick={() => setZaklady("skrutky")}
                 icon={Landmark}
                 iconColor="text-amber-400"
                 iconSelectedColor="text-amber-600"
@@ -439,7 +438,7 @@ export default function KonfiguratorFaza1HrubaStavba({
 
               <Tile
                 selected={zaklady === "doska"}
-                onClick={(e) => { if (zaklady !== "doska") triggerAnimation?.("beton", e.currentTarget); setZaklady("doska"); }}
+                onClick={() => setZaklady("doska")}
                 icon={Landmark}
                 iconColor="text-orange-400"
                 iconSelectedColor="text-amber-600"
@@ -452,7 +451,7 @@ export default function KonfiguratorFaza1HrubaStavba({
 
               <Tile
                 selected={zaklady === "pasove"}
-                onClick={(e) => { if (zaklady !== "pasove") triggerAnimation?.("beton", e.currentTarget); setZaklady("pasove"); }}
+                onClick={() => setZaklady("pasove")}
                 icon={Landmark}
                 iconColor="text-orange-500"
                 iconSelectedColor="text-amber-600"
