@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, Suspense, lazy } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useLocation } from "react-router-dom";
@@ -9,31 +9,37 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Home, Maximize2, Zap, CheckCircle, Phone, Mail, Settings, AlertCircle, Boxes, Grid2x2, Layers, Edit, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCcw, Hammer, Caravan, Package, Droplets, Landmark, Share2, Facebook } from "lucide-react";
 import { motion } from "framer-motion";
-import PriceCalculator from "../components/PriceCalculator";
 import ImageWithWatermark from "../components/ImageWithWatermark";
 import HypotekaKalkulator from "../components/HypotekaKalkulator";
-import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
 import FloatingPrice from "../components/FloatingPrice";
 import DomGalerieManager from "../components/admin/DomGalerieManager";
-import KonfiguratorFlat15 from "../components/KonfiguratorFlat15";
-import KonfiguratorFlatDouble from "../components/KonfiguratorFlatDouble";
-
-import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
-import KonfiguratorWizard from "../components/KonfiguratorWizard";
-import KonfiguratorFjord from "../components/KonfiguratorFjord";
-import KonfiguratorNord from "../components/KonfiguratorNord";
-import KonfiguratorProstoHouse from "../components/KonfiguratorProstoHouse";
-import KonfiguratorFlat72 from "../components/KonfiguratorFlat72";
-import KonfiguratorAFrame from "../components/KonfiguratorAFrame";
-import KonfiguratorBarn48 from "../components/KonfiguratorBarn48";
-import KonfiguratorBarnDouble from "../components/KonfiguratorBarnDouble";
-import KonfiguratorFlatSmall from "../components/KonfiguratorFlatSmall";
-import LyonKonfiguratorWrapper from "../components/LyonKonfiguratorWrapper";
-import LyonSummaryPanelStandalone from "../components/LyonSummaryPanelStandalone";
-import KonfiguratorTicabhouse from "../components/KonfiguratorTicabhouse";
 
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
+
+// Lazy loading pre veľké konfigurátor komponenty
+const KonfiguratorFlat15 = lazy(() => import("../components/KonfiguratorFlat15"));
+const KonfiguratorFlatDouble = lazy(() => import("../components/KonfiguratorFlatDouble"));
+const KonfiguratorWizard = lazy(() => import("../components/KonfiguratorWizard"));
+const KonfiguratorFjord = lazy(() => import("../components/KonfiguratorFjord"));
+const KonfiguratorNord = lazy(() => import("../components/KonfiguratorNord"));
+const KonfiguratorProstoHouse = lazy(() => import("../components/KonfiguratorProstoHouse"));
+const KonfiguratorFlat72 = lazy(() => import("../components/KonfiguratorFlat72"));
+const KonfiguratorAFrame = lazy(() => import("../components/KonfiguratorAFrame"));
+const KonfiguratorBarn48 = lazy(() => import("../components/KonfiguratorBarn48"));
+const KonfiguratorBarnDouble = lazy(() => import("../components/KonfiguratorBarnDouble"));
+const KonfiguratorFlatSmall = lazy(() => import("../components/KonfiguratorFlatSmall"));
+const LyonKonfiguratorWrapper = lazy(() => import("../components/LyonKonfiguratorWrapper"));
+const LyonSummaryPanelStandalone = lazy(() => import("../components/LyonSummaryPanelStandalone"));
+const KonfiguratorTicabhouse = lazy(() => import("../components/KonfiguratorTicabhouse"));
+
+// Loading komponent pre Suspense
+const KonfiguratorLoading = () => (
+  <Card className="p-8 text-center">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-primary mx-auto mb-4"></div>
+    <p className="text-gray-600">Načítavam konfigurátor...</p>
+  </Card>
+);
 
 
 export default function DetailDomu() {
@@ -763,7 +769,8 @@ export default function DetailDomu() {
 
             {/* Wizard pre Flat 1,5 - ľavá strana */}
             {isProstoHouse && (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) && (
-              <KonfiguratorWizard
+              <Suspense fallback={<KonfiguratorLoading />}>
+                <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
                 useFlat15Prices={true}
@@ -836,7 +843,8 @@ export default function DetailDomu() {
 
             {/* Konfigurátor - Wizard krok po kroku pre Flat Double (ale nie Flat 1,5) */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
-              <KonfiguratorWizard 
+              <Suspense fallback={<KonfiguratorLoading />}>
+                <KonfiguratorWizard 
                 key={wizardKey}
                 dom={dom}
                 useFlatDoublePrices={true}
@@ -907,7 +915,8 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Fjord - Wizard výber typu */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
-              <KonfiguratorWizard 
+              <Suspense fallback={<KonfiguratorLoading />}>
+                <KonfiguratorWizard 
                 key={wizardKey}
                 dom={dom}
                 useFjordPrices={true}
@@ -978,7 +987,8 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Nord - vlastné ceny */}
             {isProstoHouse && dom.nazov?.includes("Nord") && (
-              <KonfiguratorWizard
+              <Suspense fallback={<KonfiguratorLoading />}>
+                <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
                 useNordPrices={true}
@@ -1049,7 +1059,8 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Flat 72 - Wizard */}
             {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
-              <KonfiguratorWizard
+              <Suspense fallback={<KonfiguratorLoading />}>
+                <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
                 useFlat72Prices={true}
@@ -1120,7 +1131,8 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre ostatné Prosto House domy */}
             {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("Flat Small") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && !dom.nazov?.includes("Barn") && (
-              <KonfiguratorWizard
+              <Suspense fallback={<KonfiguratorLoading />}>
+                <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
                 useProstoHousePrices={true}
@@ -1228,7 +1240,8 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre ostatné Ticabhouse domy (okrem Lyon a Tiny House) */}
             {isTicabhouse && !dom.nazov?.toLowerCase().includes("lyon") && !dom.nazov?.toLowerCase().includes("tiny house") && (
-              <KonfiguratorTicabhouse 
+              <Suspense fallback={<KonfiguratorLoading />}>
+                <KonfiguratorTicabhouse 
                 dom={dom} 
                 isAdmin={isAdmin}
                 onConfigChange={(config) => setTicabKonfiguracia(config)}
@@ -1307,11 +1320,13 @@ export default function DetailDomu() {
                 doprava={lyonDoprava}
                 setDoprava={setLyonDoprava}
               />
+              </Suspense>
             )}
 
             {/* Konfigurátor pre Lyon (Ticab house) */}
             {isTicabhouse && dom.nazov?.toLowerCase().includes("lyon") && (
-              <LyonKonfiguratorWrapper
+              <Suspense fallback={<KonfiguratorLoading />}>
+                <LyonKonfiguratorWrapper
                 dom={dom}
                 ucel={lyonUcel}
                 setUcel={setLyonUcel}
@@ -1388,6 +1403,7 @@ export default function DetailDomu() {
                 financneSluzby={lyonFinancneSluzby}
                 setFinancneSluzby={setLyonFinancneSluzby}
               />
+              </Suspense>
             )}
 
             {/* Rozmery - presunute z pravej strany */}
@@ -1420,7 +1436,8 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Barn Double - Wizard - PO POPISE */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && dom.nazov?.toLowerCase().includes("double") && (
-              <KonfiguratorWizard
+              <Suspense fallback={<KonfiguratorLoading />}>
+                <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
                 useBarnDoublePrices={true}
@@ -1493,7 +1510,8 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Barn 48 - Wizard - PO POPISE */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && !dom.nazov?.toLowerCase().includes("double") && (
-              <KonfiguratorWizard
+              <Suspense fallback={<KonfiguratorLoading />}>
+                <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
                 useBarn48Prices={true}
@@ -1566,7 +1584,8 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre Flat Small - Wizard */}
             {isProstoHouse && dom.nazov?.includes("Flat Small") && (
-              <KonfiguratorWizard
+              <Suspense fallback={<KonfiguratorLoading />}>
+                <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
                 useFlatSmallPrices={true}
@@ -1637,7 +1656,8 @@ export default function DetailDomu() {
 
             {/* Konfigurátor pre A-Frame - Wizard - PO POPISE */}
             {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && !dom.nazov?.includes("Barn") && (
-              <KonfiguratorWizard
+              <Suspense fallback={<KonfiguratorLoading />}>
+                <KonfiguratorWizard
                 key={wizardKey}
                 dom={dom}
                 useAFramePrices={true}
@@ -2341,7 +2361,8 @@ export default function DetailDomu() {
             {/* Floating panel s cenami pre Flat 1,5 - pravá strana */}
             {isProstoHouse && (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorFlat15
+                <Suspense fallback={<KonfiguratorLoading />}>
+                  <KonfiguratorFlat15
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
                 predajNehnutelnosti={predajNehnutelnosti}
@@ -2406,13 +2427,15 @@ export default function DetailDomu() {
                 setDoprava={setDoprava}
                 showOnlySummary={true}
                 />
+                </Suspense>
                 </div>
                 )}
 
             {/* Floating panel pre Nord */}
             {isProstoHouse && dom.nazov?.includes("Nord") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorNord
+                <Suspense fallback={<KonfiguratorLoading />}>
+                  <KonfiguratorNord
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
@@ -2485,7 +2508,8 @@ export default function DetailDomu() {
             {/* Floating panel pre Fjord */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorFjord
+                <Suspense fallback={<KonfiguratorLoading />}>
+                  <KonfiguratorFjord
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
@@ -2558,7 +2582,8 @@ export default function DetailDomu() {
             {/* Floating panel pre Flat 72 */}
             {isProstoHouse && dom.nazov?.includes("Flat, 72m²") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorFlat72
+                <Suspense fallback={<KonfiguratorLoading />}>
+                  <KonfiguratorFlat72
                   dom={dom}
                   onReset={handleKonfiguratorReset}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -2632,7 +2657,8 @@ export default function DetailDomu() {
             {/* Floating panel pre Barn Double */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && dom.nazov?.toLowerCase().includes("double") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorBarnDouble
+                <Suspense fallback={<KonfiguratorLoading />}>
+                  <KonfiguratorBarnDouble
                   dom={dom}
                   onReset={handleKonfiguratorReset}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -2708,7 +2734,8 @@ export default function DetailDomu() {
             {/* Floating panel pre Barn 48 */}
             {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && !dom.nazov?.toLowerCase().includes("double") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorBarn48
+                <Suspense fallback={<KonfiguratorLoading />}>
+                  <KonfiguratorBarn48
                   dom={dom}
                   onReset={handleKonfiguratorReset}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -2784,7 +2811,8 @@ export default function DetailDomu() {
             {/* Floating panel pre Flat Double */}
             {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorFlatDouble 
+                <Suspense fallback={<KonfiguratorLoading />}>
+                  <KonfiguratorFlatDouble 
                   dom={dom}
                   onReset={handleKonfiguratorReset}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -2858,7 +2886,8 @@ export default function DetailDomu() {
             {/* Floating panel pre Flat Small */}
             {isProstoHouse && dom.nazov?.includes("Flat Small") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorFlatSmall
+                <Suspense fallback={<KonfiguratorLoading />}>
+                  <KonfiguratorFlatSmall
                   dom={dom}
                   onReset={handleKonfiguratorReset}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -2932,7 +2961,8 @@ export default function DetailDomu() {
             {/* Floating panel pre A-Frame */}
             {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && !dom.nazov?.includes("Barn") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '600px' }}>
-                <KonfiguratorAFrame
+                <Suspense fallback={<KonfiguratorLoading />}>
+                  <KonfiguratorAFrame
                   dom={dom}
                   onReset={handleKonfiguratorReset}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -3010,7 +3040,8 @@ export default function DetailDomu() {
             {/* Floating panel pre ostatné Prosto House domy */}
             {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("Flat Small") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && !dom.nazov?.includes("Barn") && (
               <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorProstoHouse 
+                <Suspense fallback={<KonfiguratorLoading />}>
+                  <KonfiguratorProstoHouse 
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
                   predajNehnutelnosti={predajNehnutelnosti}
@@ -3184,7 +3215,8 @@ export default function DetailDomu() {
             {isTicabhouse && !dom.nazov?.toLowerCase().includes("tiny house") && (
               <div className="space-y-4">
                 <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                  <LyonSummaryPanelStandalone
+                  <Suspense fallback={<KonfiguratorLoading />}>
+                    <LyonSummaryPanelStandalone
                   predajNehnutelnosti={lyonPredajNehnutelnosti}
                   hladamPozemok={lyonHladamPozemok}
                   financneSluzby={lyonFinancneSluzby}
@@ -3226,7 +3258,7 @@ export default function DetailDomu() {
                   totalPrice={ticabKonfiguracia?.celkovaCena || dom.zakladna_cena}
                   onSubmit={() => alert("Odoslanie dopytu - funkcia bude implementovaná")}
                   />
-
+                  </Suspense>
                 </div>
 
                 {/* Upozornenie pod sidebarom */}
