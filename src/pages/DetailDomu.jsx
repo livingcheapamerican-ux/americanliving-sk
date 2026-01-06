@@ -169,11 +169,32 @@ export default function DetailDomu() {
         return domy && domy.length > 0 ? domy[0] : null;
       }
       if (domId) {
-        const domy = await base44.entities.Dom.list();
-        console.log('📦 All domy:', domy?.length, 'Looking for ID:', domId);
-        const foundDom = domy?.find(d => d.id === domId);
-        console.log('✅ Found dom:', foundDom);
-        return foundDom || null;
+        try {
+          // Najprv skúsime filter s ID
+          const filtered = await base44.entities.Dom.filter({ id: domId });
+          console.log('📦 Filter result:', filtered);
+          if (filtered && filtered.length > 0) {
+            console.log('✅ Found by filter:', filtered[0]);
+            return filtered[0];
+          }
+          
+          // Fallback: načítame všetky a nájdeme podľa ID
+          const allDomy = await base44.entities.Dom.list();
+          console.log('📦 All domy:', allDomy?.length);
+          console.log('🔎 First 3 IDs:', allDomy?.slice(0, 3).map(d => ({ id: d.id, nazov: d.nazov })));
+          console.log('🎯 Looking for:', domId, 'Type:', typeof domId);
+          
+          const foundDom = allDomy?.find(d => {
+            console.log('Comparing:', d.id, '===', domId, '→', d.id === domId);
+            return d.id === domId;
+          });
+          
+          console.log('✅ Found dom:', foundDom?.nazov || 'NOT FOUND');
+          return foundDom || null;
+        } catch (err) {
+          console.error('❌ Error loading dom:', err);
+          return null;
+        }
       }
       return null;
     },
