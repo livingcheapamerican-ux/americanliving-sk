@@ -161,46 +161,47 @@ export default function DetailDomu() {
   const { data: dom, isLoading, error } = useQuery({
     queryKey: ['dom-detail', domId, domSlug],
     queryFn: async () => {
-      console.log('🔍 Loading dom with:', { domId, domSlug });
+      console.log('🔍 DetailDomu queryFn START', { domId, domSlug });
       
-      if (domSlug) {
-        const domy = await base44.entities.Dom.filter({ slug: domSlug });
-        console.log('📦 Loaded by slug:', domy);
-        return domy && domy.length > 0 ? domy[0] : null;
-      }
-      if (domId) {
-        try {
-          // Najprv skúsime filter s ID
-          const filtered = await base44.entities.Dom.filter({ id: domId });
-          console.log('📦 Filter result:', filtered);
-          if (filtered && filtered.length > 0) {
-            console.log('✅ Found by filter:', filtered[0]);
-            return filtered[0];
-          }
-          
-          // Fallback: načítame všetky a nájdeme podľa ID
-          const allDomy = await base44.entities.Dom.list();
-          console.log('📦 All domy:', allDomy?.length);
-          console.log('🔎 First 3 IDs:', allDomy?.slice(0, 3).map(d => ({ id: d.id, nazov: d.nazov })));
-          console.log('🎯 Looking for:', domId, 'Type:', typeof domId);
-          
-          const foundDom = allDomy?.find(d => {
-            console.log('Comparing:', d.id, '===', domId, '→', d.id === domId);
-            return d.id === domId;
-          });
-          
-          console.log('✅ Found dom:', foundDom?.nazov || 'NOT FOUND');
-          return foundDom || null;
-        } catch (err) {
-          console.error('❌ Error loading dom:', err);
+      try {
+        // Načítame VŠETKY domy naraz
+        const allDomy = await base44.entities.Dom.list();
+        console.log('📦 Loaded all domy:', allDomy?.length || 0);
+        
+        if (!allDomy || allDomy.length === 0) {
+          console.warn('⚠️ No domy found in database');
           return null;
         }
+        
+        // Hľadáme podľa slug
+        if (domSlug) {
+          console.log('🔎 Searching by slug:', domSlug);
+          const foundBySlug = allDomy.find(d => d.slug === domSlug);
+          console.log(foundBySlug ? '✅ Found by slug:' : '❌ NOT found by slug:', foundBySlug?.nazov);
+          return foundBySlug || null;
+        }
+        
+        // Hľadáme podľa ID
+        if (domId) {
+          console.log('🔎 Searching by ID:', domId, 'Type:', typeof domId);
+          console.log('📋 Sample IDs from DB:', allDomy.slice(0, 3).map(d => ({ id: d.id, type: typeof d.id, nazov: d.nazov })));
+          
+          const foundById = allDomy.find(d => String(d.id) === String(domId));
+          console.log(foundById ? '✅ Found by ID:' : '❌ NOT found by ID:', foundById?.nazov);
+          return foundById || null;
+        }
+        
+        console.warn('⚠️ No domId or domSlug provided');
+        return null;
+      } catch (err) {
+        console.error('❌ Error in queryFn:', err);
+        throw err;
       }
-      return null;
     },
     enabled: !!domId || !!domSlug,
-    staleTime: 300000,
-    retry: false,
+    staleTime: 60000,
+    gcTime: 300000,
+    retry: 1,
   });
 
   // Scroll na vrch pri načítaní stránky
