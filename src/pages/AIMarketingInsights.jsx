@@ -49,6 +49,7 @@ import MarketingNotificationCenter from "../components/MarketingNotificationCent
 import CompetitorAnalysisSection from "../components/CompetitorAnalysisSection";
 import ScalingRecommendations from "../components/ScalingRecommendations";
 import KPIDashboard from "../components/KPIDashboard";
+import FloatingHouses from "../components/FloatingHouses";
 
 export default function AIMarketingInsights() {
   const [selectedInsight, setSelectedInsight] = useState(null);
@@ -352,6 +353,8 @@ export default function AIMarketingInsights() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 p-4 sm:p-6">
+      <FloatingHouses side="left" />
+      <FloatingHouses side="right" />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">

@@ -13,12 +13,13 @@ export default function FloatingHouses({ side = "left" }) {
     staleTime: 300000,
   });
 
-  // Len verejné domy od Ticabhouse a Prosto House s titulnou fotkou
+  // Len verejné domy od Ticabhouse a Prosto House s titulnou fotkou (bez mobilných domov)
   const domy = useMemo(() => {
     return allDomy
       .filter(d => 
         d.hlavny_obrazok &&
-        (d.vyrobca === "Ticab house" || d.vyrobca === "Prosto House")
+        (d.vyrobca === "Ticab house" || d.vyrobca === "Prosto House") &&
+        d.kategoria !== "mobilne_domy"
       );
   }, [allDomy]);
 
