@@ -12,6 +12,7 @@ import {
 import { motion } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
 import { useLanguage } from "../components/LanguageContext";
+import FloatingHouses from "../components/FloatingHouses";
 
 const DEFAULT_HERO_IMAGES = [
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80",
@@ -197,6 +198,8 @@ export default function Domov() {
 
   return (
     <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16">
+      <FloatingHouses side="left" />
+      <FloatingHouses side="right" />
       {/* Admin Login Box - zobrazí sa len pre neprihlásených */}
       {!user && (
         <div className="hidden md:block fixed bottom-6 left-6 z-50">
