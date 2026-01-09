@@ -1103,7 +1103,6 @@ export default function AdminAnalyzaSessions() {
               </Card>
             ))
           )}
-        </div>
           </TabsContent>
         </Tabs>
 
