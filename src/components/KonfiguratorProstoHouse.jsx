@@ -660,10 +660,12 @@ export default function KonfiguratorProstoHouse({
                       onClick={() => setInterierFinis("drevo")}
                       title={t('interiorWood')}
                       subtitle={t('woodCladding')}
-                      price="+ 8 200 €"
+                      price={`+ ${CENY.interierFinis.drevo.toLocaleString('sk-SK')} €`}
                       isPriced={true}
                       t={t}
-                      isAdmin={false}
+                      isAdmin={isAdmin}
+                      priceKey="interierFinis_drevo"
+                      onPriceChange={handlePriceChange}
                     />
 
                     <EditableTile
@@ -671,10 +673,12 @@ export default function KonfiguratorProstoHouse({
                       onClick={() => setInterierFinis("sadrokarton")}
                       title={t('interiorDrywall')}
                       subtitle={t('plaster')}
-                      price="+ 9 430 €"
+                      price={`+ ${CENY.interierFinis.sadrokarton.toLocaleString('sk-SK')} €`}
                       isPriced={true}
                       t={t}
-                      isAdmin={false}
+                      isAdmin={isAdmin}
+                      priceKey="interierFinis_sadrokarton"
+                      onPriceChange={handlePriceChange}
                     />
                   </div>
 
@@ -688,10 +692,12 @@ export default function KonfiguratorProstoHouse({
                       onClick={() => setElektroinstalacia(!elektroinstalacia)}
                       title={t('electrical')}
                       subtitle={t('wiring')}
-                      price="+ 3 900 €"
+                      price={`+ ${CENY.elektroinstalacia.toLocaleString('sk-SK')} €`}
                       isPriced={true}
                       t={t}
-                      isAdmin={false}
+                      isAdmin={isAdmin}
+                      priceKey="elektroinstalacia"
+                      onPriceChange={handlePriceChange}
                     />
 
                     <EditableTile
@@ -699,10 +705,12 @@ export default function KonfiguratorProstoHouse({
                       onClick={() => setVodaKanalizacia(!vodaKanalizacia)}
                       title={t('water')}
                       subtitle={t('wiring')}
-                      price="+ 1 150 €"
+                      price={`+ ${CENY.vodaKanalizacia.toLocaleString('sk-SK')} €`}
                       isPriced={true}
                       t={t}
-                      isAdmin={false}
+                      isAdmin={isAdmin}
+                      priceKey="vodaKanalizacia"
+                      onPriceChange={handlePriceChange}
                     />
 
                     <EditableTile
@@ -710,10 +718,12 @@ export default function KonfiguratorProstoHouse({
                       onClick={() => setSanitaKomplet(!sanitaKomplet)}
                       title={t('sanitary')}
                       subtitle={t('complete')}
-                      price="+ 1 169 €"
+                      price={`+ ${CENY.sanitaKomplet.toLocaleString('sk-SK')} €`}
                       isPriced={true}
                       t={t}
-                      isAdmin={false}
+                      isAdmin={isAdmin}
+                      priceKey="sanitaKomplet"
+                      onPriceChange={handlePriceChange}
                     />
 
                     <EditableTile
@@ -721,10 +731,12 @@ export default function KonfiguratorProstoHouse({
                       onClick={() => setBojler(!bojler)}
                       title={t('boiler')}
                       subtitle={t('boilerElectric')}
-                      price="+ 264 €"
+                      price={`+ ${CENY.bojler.toLocaleString('sk-SK')} €`}
                       isPriced={true}
                       t={t}
-                      isAdmin={false}
+                      isAdmin={isAdmin}
+                      priceKey="bojler"
+                      onPriceChange={handlePriceChange}
                     />
                   </div>
 
@@ -738,11 +750,13 @@ export default function KonfiguratorProstoHouse({
                       onClick={() => setTepelneCerpadlo(!tepelneCerpadlo)}
                       title={t('heatPump')}
                       subtitle={t('units5')}
-                      price="+ 3 321 €"
+                      price={`+ ${CENY.tepelneCerpadlo.toLocaleString('sk-SK')} €`}
                       isPriced={true}
                       isA0={true}
                       t={t}
-                      isAdmin={false}
+                      isAdmin={isAdmin}
+                      priceKey="tepelneCerpadlo"
+                      onPriceChange={handlePriceChange}
                     />
 
                     <EditableTile
@@ -750,11 +764,13 @@ export default function KonfiguratorProstoHouse({
                       onClick={() => setRekuperacia(!rekuperacia)}
                       title={t('recuperation')}
                       subtitle="3 ks"
-                      price="+ 1 600 €"
+                      price={`+ ${CENY.rekuperacia.toLocaleString('sk-SK')} €`}
                       isPriced={true}
                       isA0={true}
                       t={t}
-                      isAdmin={false}
+                      isAdmin={isAdmin}
+                      priceKey="rekuperacia"
+                      onPriceChange={handlePriceChange}
                     />
                   </div>
 
@@ -763,10 +779,12 @@ export default function KonfiguratorProstoHouse({
                     onClick={() => setPripojkaSiete(!pripojkaSiete)}
                     title={t('gridConnection')}
                     subtitle={t('connection')}
-                    price="+ 1 501 €"
+                    price={`+ ${CENY.pripojkaSiete.toLocaleString('sk-SK')} €`}
                     isPriced={true}
                     t={t}
-                    isAdmin={false}
+                    isAdmin={isAdmin}
+                    priceKey="pripojkaSiete"
+                    onPriceChange={handlePriceChange}
                   />
 
                   <EditableTile
@@ -774,10 +792,12 @@ export default function KonfiguratorProstoHouse({
                     onClick={() => setPovrchokaOkien(!povrchokaOkien)}
                     title={t('lamination')}
                     subtitle={t('laminationAnthracite')}
-                    price="+ 1 450 €"
+                    price={`+ ${CENY.povrchokaOkien.toLocaleString('sk-SK')} €`}
                     isPriced={true}
                     t={t}
-                    isAdmin={false}
+                    isAdmin={isAdmin}
+                    priceKey="povrchokaOkien"
+                    onPriceChange={handlePriceChange}
                   />
 
                   <EditableTile
@@ -785,10 +805,12 @@ export default function KonfiguratorProstoHouse({
                     onClick={() => setTonovaneSkla(!tonovaneSkla)}
                     title={t('tintedGlass')}
                     subtitle={t('solarGlass')}
-                    price="+ 700 €"
+                    price={`+ ${CENY.tonovaneSkla.toLocaleString('sk-SK')} €`}
                     isPriced={true}
                     t={t}
-                    isAdmin={false}
+                    isAdmin={isAdmin}
+                    priceKey="tonovaneSkla"
+                    onPriceChange={handlePriceChange}
                   />
 
                 </div>
@@ -845,7 +867,16 @@ export default function KonfiguratorProstoHouse({
                             className="w-5 h-5 sm:w-6 sm:h-6 rounded bg-blue-500 hover:bg-blue-600 text-white font-bold text-xs sm:text-sm"
                           >+</button>
                         </div>
-                        <span className="text-green-600 font-bold text-[8px] sm:text-[10px] block mt-0.5 sm:mt-1 text-center">× {opt.price}</span>
+                        <span className="text-green-600 font-bold text-[8px] sm:text-[10px] block mt-0.5 sm:mt-1 text-center">
+                          × {opt.label === t('roofWindow') 
+                            ? CENY.stresneOkno.toLocaleString('sk-SK') + ' €'
+                            : opt.label === `${t('fixedWindow')} 90×205`
+                            ? CENY.bocneOknoFixne.toLocaleString('sk-SK') + ' €'
+                            : opt.label === `${t('tiltWindow')} 90×205`
+                            ? CENY.bocneOknoVyklopne90.toLocaleString('sk-SK') + ' €'
+                            : CENY.bocneOknoVyklopne55.toLocaleString('sk-SK') + ' €'
+                          }
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -900,10 +931,12 @@ export default function KonfiguratorProstoHouse({
                       onClick={() => setVonkajsiaFasada("suchana")}
                       title={t('facadeStucco')}
                       subtitle={t('whitePlaster')}
-                      price="+ 6 371 €"
+                      price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`}
                       isPriced={true}
                       t={t}
-                      isAdmin={false}
+                      isAdmin={isAdmin}
+                      priceKey="vonkajsiaFasada_suchana"
+                      onPriceChange={handlePriceChange}
                     />
                   </div>
 
@@ -912,10 +945,12 @@ export default function KonfiguratorProstoHouse({
                     onClick={() => setVnutornePodlahy(!vnutornePodlahy)}
                     title={t('floors')}
                     subtitle={t('floorsLaminate')}
-                    price="+ 1 750 €"
+                    price={`+ ${CENY.vnutornePodlahy.toLocaleString('sk-SK')} €`}
                     isPriced={true}
                     t={t}
-                    isAdmin={false}
+                    isAdmin={isAdmin}
+                    priceKey="vnutornePodlahy"
+                    onPriceChange={handlePriceChange}
                   />
 
                   <EditableTile
@@ -923,10 +958,12 @@ export default function KonfiguratorProstoHouse({
                     onClick={() => setPodlahovVykurovanie(!podlahovVykurovanie)}
                     title={t('floorHeating')}
                     subtitle={t('wifiThermostat')}
-                    price="+ 3 960 €"
+                    price={`+ ${CENY.podlahovVykurovanie.toLocaleString('sk-SK')} €`}
                     isPriced={true}
                     t={t}
-                    isAdmin={false}
+                    isAdmin={isAdmin}
+                    priceKey="podlahovVykurovanie"
+                    onPriceChange={handlePriceChange}
                   />
 
                 </div>
@@ -937,7 +974,7 @@ export default function KonfiguratorProstoHouse({
                       <DoorOpen className="w-3 h-3 sm:w-5 sm:h-5 text-emerald-600" />
                       <div>
                         <span className="font-semibold text-gray-800 text-[8px] sm:text-xs">{t('interiorDoors')}</span>
-                        <span className="text-green-600 font-bold text-[8px] sm:text-[10px] ml-1">× 180 €</span>
+                        <span className="text-green-600 font-bold text-[8px] sm:text-[10px] ml-1">× {CENY.interieroveDvere.toLocaleString('sk-SK')} €</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-1">
@@ -986,10 +1023,12 @@ export default function KonfiguratorProstoHouse({
                     onClick={() => setInziniering(!inziniering)}
                     title={t('engineering')}
                     subtitle={t('buildingPermit')}
-                    price="+ 2 592 €"
+                    price={`+ ${CENY.inziniering.toLocaleString('sk-SK')} €`}
                     isPriced={true}
                     t={t}
-                    isAdmin={false}
+                    isAdmin={isAdmin}
+                    priceKey="inziniering"
+                    onPriceChange={handlePriceChange}
                   />
 
                   <EditableTile
@@ -997,11 +1036,13 @@ export default function KonfiguratorProstoHouse({
                     onClick={() => setProjektA0(!projektA0)}
                     title={t('projectA0')}
                     subtitle={t('certification')}
-                    price="+ 3 500 €"
+                    price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`}
                     isPriced={true}
                     isA0={true}
                     t={t}
-                    isAdmin={false}
+                    isAdmin={isAdmin}
+                    priceKey="projektA0"
+                    onPriceChange={handlePriceChange}
                   />
 
                   <EditableTile
@@ -1009,10 +1050,12 @@ export default function KonfiguratorProstoHouse({
                     onClick={() => setRevizna(!revizna)}
                     title={t('revision')}
                     subtitle={t('documentation')}
-                    price="+ 1 000 €"
+                    price={`+ ${CENY.revizna.toLocaleString('sk-SK')} €`}
                     isPriced={true}
                     t={t}
-                    isAdmin={false}
+                    isAdmin={isAdmin}
+                    priceKey="revizna"
+                    onPriceChange={handlePriceChange}
                   />
 
                   <EditableTile
