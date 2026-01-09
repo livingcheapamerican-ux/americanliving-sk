@@ -89,8 +89,8 @@ export default function KonfiguratorProstoHouse({
     return text?.tooltip || defaultText;
   };
 
-  // Cenník - Prosto House ceny
-  const CENY = {
+  // Cenník - Prosto House ceny (DEFAULT hodnoty)
+  const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 9225 },
     predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
@@ -118,6 +118,75 @@ export default function KonfiguratorProstoHouse({
     bocneOknoFixne: 500,
     bocneOknoVyklopne90: 540,
     bocneOknoVyklopne55: 225
+  };
+
+  // Načítať custom ceny z databázy pre tento konkrétny dom
+  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
+
+  // Funkcia na získanie ceny - preferuje custom ceny pred default
+  const getPrice = (key) => {
+    if (customCeny[key] !== undefined && customCeny[key] !== null) {
+      return customCeny[key];
+    }
+    return DEFAULT_CENY[key];
+  };
+
+  // Cenník - s možnosťou override z databázy
+  const CENY = {
+    montaz: { nie: 0, ano: getPrice('montaz_ano') ?? DEFAULT_CENY.montaz.ano },
+    predlzenie: DEFAULT_CENY.predlzenie,
+    dvere: { 
+      ziadne: 0, 
+      kovove: getPrice('dvere_kovove') ?? DEFAULT_CENY.dvere.kovove, 
+      plastove: getPrice('dvere_plastove') ?? DEFAULT_CENY.dvere.plastove 
+    },
+    izolacia: DEFAULT_CENY.izolacia,
+    elektroinstalacia: getPrice('elektroinstalacia') ?? DEFAULT_CENY.elektroinstalacia,
+    vodaKanalizacia: getPrice('vodaKanalizacia') ?? DEFAULT_CENY.vodaKanalizacia,
+    sanitaKomplet: getPrice('sanitaKomplet') ?? DEFAULT_CENY.sanitaKomplet,
+    bojler: getPrice('bojler') ?? DEFAULT_CENY.bojler,
+    tepelneCerpadlo: getPrice('tepelneCerpadlo') ?? DEFAULT_CENY.tepelneCerpadlo,
+    rekuperacia: getPrice('rekuperacia') ?? DEFAULT_CENY.rekuperacia,
+    zaklady: DEFAULT_CENY.zaklady,
+    pripojkaSiete: getPrice('pripojkaSiete') ?? DEFAULT_CENY.pripojkaSiete,
+    inziniering: getPrice('inziniering') ?? DEFAULT_CENY.inziniering,
+    projektA0: getPrice('projektA0') ?? DEFAULT_CENY.projektA0,
+    interierFinis: { 
+      ziadne: 0, 
+      drevo: getPrice('interierFinis_drevo') ?? DEFAULT_CENY.interierFinis.drevo, 
+      sadrokarton: getPrice('interierFinis_sadrokarton') ?? DEFAULT_CENY.interierFinis.sadrokarton 
+    },
+    vonkajsiaFasada: { 
+      standard: 0, 
+      suchana: getPrice('vonkajsiaFasada_suchana') ?? DEFAULT_CENY.vonkajsiaFasada.suchana 
+    },
+    povrchokaOkien: getPrice('povrchokaOkien') ?? DEFAULT_CENY.povrchokaOkien,
+    vnutornePodlahy: getPrice('vnutornePodlahy') ?? DEFAULT_CENY.vnutornePodlahy,
+    podlahovVykurovanie: getPrice('podlahovVykurovanie') ?? DEFAULT_CENY.podlahovVykurovanie,
+    interieroveDvere: getPrice('interieroveDvere') ?? DEFAULT_CENY.interieroveDvere,
+    tonovaneSkla: getPrice('tonovaneSkla') ?? DEFAULT_CENY.tonovaneSkla,
+    doprava: getPrice('doprava') ?? DEFAULT_CENY.doprava,
+    revizna: getPrice('revizna') ?? DEFAULT_CENY.revizna,
+    stresneOkno: getPrice('stresneOkno') ?? DEFAULT_CENY.stresneOkno,
+    bocneOknoFixne: getPrice('bocneOknoFixne') ?? DEFAULT_CENY.bocneOknoFixne,
+    bocneOknoVyklopne90: getPrice('bocneOknoVyklopne90') ?? DEFAULT_CENY.bocneOknoVyklopne90,
+    bocneOknoVyklopne55: getPrice('bocneOknoVyklopne55') ?? DEFAULT_CENY.bocneOknoVyklopne55
+  };
+
+  // Funkcia na uloženie zmenenej ceny do databázy
+  const handlePriceChange = async (priceKey, newPrice) => {
+    try {
+      await base44.functions.invoke('updateProstoHousePrice', {
+        dom_id: dom.id,
+        price_key: priceKey,
+        new_price: newPrice
+      });
+      // Aktualizovať lokálny stav - refetch dom
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating price:', error);
+      alert('Chyba pri ukladaní ceny: ' + error.message);
+    }
   };
 
   const totalPrice = useMemo(() => {
