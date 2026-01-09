@@ -69,6 +69,13 @@ export default function KonfiguratorProstoHouse({
 
   const { t, language } = useLanguage();
 
+  const { data: user } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
+
   // Načítanie dynamických textov pre tooltips
   const { data: konfiguratorTexts } = useQuery({
     queryKey: ['konfigurator-texts-prosto'],
