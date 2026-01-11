@@ -232,6 +232,39 @@ export default function AnalyticsDashboard({ sessions }) {
     };
   }, [filteredSessions]);
 
+  // Trend data - agregácia dát podľa dní
+  const trendData = useMemo(() => {
+    const dailyData = {};
+    
+    filteredSessions.forEach(session => {
+      const dateKey = format(new Date(session.start_time), 'yyyy-MM-dd');
+      
+      if (!dailyData[dateKey]) {
+        dailyData[dateKey] = {
+          date: dateKey,
+          displayDate: format(new Date(session.start_time), 'dd.MM', { locale: sk }),
+          visits: 0,
+          totalDuration: 0,
+          bounces: 0,
+          conversions: 0
+        };
+      }
+      
+      dailyData[dateKey].visits++;
+      dailyData[dateKey].totalDuration += session.duration_seconds || 0;
+      if (session.pages_visited?.length === 1) dailyData[dateKey].bounces++;
+      if (session.conversions?.length > 0) dailyData[dateKey].conversions++;
+    });
+    
+    return Object.values(dailyData)
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .map(d => ({
+        ...d,
+        avgDuration: d.visits > 0 ? Math.round(d.totalDuration / d.visits) : 0,
+        bounceRate: d.visits > 0 ? Math.round((d.bounces / d.visits) * 100) : 0
+      }));
+  }, [filteredSessions]);
+
   const formatDuration = (seconds) => {
     if (!seconds) return '0s';
     const mins = Math.floor(seconds / 60);
