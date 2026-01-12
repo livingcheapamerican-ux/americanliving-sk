@@ -112,8 +112,9 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
     mutationFn: ({ domId, newPrices }) => 
       base44.entities.Dom.update(domId, { konfigurator_ceny: newPrices }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dom', dom.id] });
-      toast.success('Cena aktualizovaná');
+      queryClient.invalidateQueries({ queryKey: ['dom-detail'] });
+      toast.success('Cena aktualizovaná - obnovujem stránku...');
+      setTimeout(() => window.location.reload(), 500);
     }
   });
 
