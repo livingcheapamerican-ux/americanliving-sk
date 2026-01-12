@@ -176,13 +176,18 @@ export default function KonfiguratorProstoHouse({
   // Funkcia na uloženie zmenenej ceny do databázy
   const handlePriceChange = async (priceKey, newPrice) => {
     try {
-      await base44.functions.invoke('updateProstoHousePrice', {
+      const response = await base44.functions.invoke('updateProstoHousePrice', {
         dom_id: dom.id,
         price_key: priceKey,
         new_price: newPrice
       });
-      // Aktualizovať lokálny stav - refetch dom
-      window.location.reload();
+      
+      if (response?.data?.success) {
+        alert('Cena aktualizovaná - obnovujem stránku...');
+        setTimeout(() => window.location.reload(), 300);
+      } else {
+        throw new Error(response?.data?.error || 'Neznáma chyba');
+      }
     } catch (error) {
       console.error('Error updating price:', error);
       alert('Chyba pri ukladaní ceny: ' + error.message);
