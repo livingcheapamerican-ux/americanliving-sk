@@ -320,7 +320,8 @@ export default function KonfiguratorWizard({
             onContinue={handleNext}
           />
         );
-      case 1:
+      default:
+        // Po výbere typu stavby zobrazíme všetky fázy naraz
         return (
           <div className="space-y-4">
             <Card className={`p-4 ${typStavby === "rodinny_dom" ? "bg-green-50 border-green-200" : "bg-amber-50 border-amber-200"}`}>
@@ -335,36 +336,35 @@ export default function KonfiguratorWizard({
               </div>
             </Card>
             
-            <KonfiguratorFaza1HrubaStavba
-              montazHolodomu={montazHolodomu}
-              setMontazHolodomu={setMontazHolodomu}
-              izolaciaNavysenie={izolaciaNavysenie}
-              setIzolaciaNavysenie={setIzolaciaNavysenie}
-              zaklady={zaklady}
-              setZaklady={setZaklady}
-              predlzenie={predlzenie}
-              setPredlzenie={setPredlzenie}
-              useNordPrices={useNordPrices}
-              useFlat15Prices={useFlat15Prices}
-              useFlatDoublePrices={useFlatDoublePrices}
-              useFlat72Prices={useFlat72Prices}
-              useProstoHousePrices={useProstoHousePrices}
-              useFjordPrices={useFjordPrices}
-              useAFramePrices={useAFramePrices}
-              useBarn48Prices={useBarn48Prices}
-              useBarnDoublePrices={useBarnDoublePrices}
-              useFlatSmallPrices={useFlatSmallPrices}
-            />
+            {/* Všetky fázy pod sebou */}
+            <div className="space-y-6">
+              <KonfiguratorFaza1HrubaStavba
+                montazHolodomu={montazHolodomu}
+                setMontazHolodomu={setMontazHolodomu}
+                izolaciaNavysenie={izolaciaNavysenie}
+                setIzolaciaNavysenie={setIzolaciaNavysenie}
+                zaklady={zaklady}
+                setZaklady={setZaklady}
+                predlzenie={predlzenie}
+                setPredlzenie={setPredlzenie}
+                useNordPrices={useNordPrices}
+                useFlat15Prices={useFlat15Prices}
+                useFlatDoublePrices={useFlatDoublePrices}
+                useFlat72Prices={useFlat72Prices}
+                useProstoHousePrices={useProstoHousePrices}
+                useFjordPrices={useFjordPrices}
+                useAFramePrices={useAFramePrices}
+                useBarn48Prices={useBarn48Prices}
+                useBarnDoublePrices={useBarnDoublePrices}
+                useFlatSmallPrices={useFlatSmallPrices}
+              />
+              
+              {getKonfigurator("holodom")}
+              {getKonfigurator("kluc")}
+              {getKonfigurator("docs")}
+            </div>
           </div>
         );
-      case 2:
-        return getKonfigurator("holodom");
-      case 3:
-        return getKonfigurator("kluc");
-      case 4:
-        return getKonfigurator("docs");
-      default:
-        return null;
     }
   };
 
@@ -438,34 +438,10 @@ export default function KonfiguratorWizard({
             {t('back')}
           </Button>
 
-          {!isStepValid && (
-            <div className="flex items-center gap-2 text-red-600 text-sm">
-              <AlertTriangle className="w-4 h-4" />
-              {currentStep === 3 && !useAFramePrices && t('facadeRequired')}
-            </div>
-          )}
-
-          {currentStep < steps.length - 1 ? (
-            <Button
-              onClick={handleNext}
-              disabled={!isStepValid}
-              className={`px-6 ${
-                isStepValid
-                  ? typStavby === "rodinny_dom"
-                    ? "bg-green-600 hover:bg-green-700"
-                    : "bg-amber-600 hover:bg-amber-700"
-                  : "bg-gray-300"
-              }`}
-            >
-              {t('nextStep')}
-              <ChevronRight className="ml-2 w-4 h-4" />
-            </Button>
-          ) : (
-            <div className="text-green-600 font-semibold flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
-              {t('configurationComplete')}
-            </div>
-          )}
+          <div className="text-green-600 font-semibold flex items-center gap-2">
+            <CheckCircle className="w-5 h-5" />
+            {t('configurationComplete')}
+          </div>
         </div>
       )}
     </div>
