@@ -378,7 +378,7 @@ export default function LyonSummaryPanelStandalone({
             className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold shadow-lg py-6 text-sm"
           >
             <Send className="w-5 h-5 mr-2" />
-            Pošli mi cenovú ponuku a ukáž môj dom
+            {t('sendQuoteAndShowHouse') || 'Pošli mi cenovú ponuku a ukáž môj dom'}
           </Button>
         </div>
       </div>

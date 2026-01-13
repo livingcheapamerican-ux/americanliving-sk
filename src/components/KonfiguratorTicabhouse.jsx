@@ -1120,7 +1120,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           <FloatingPrice 
             price={totalPrice} 
             isVisible={true} 
-            buttonText="Pošli mi cenovú ponuku a ukáž môj dom"
+            buttonText={t('sendQuoteAndShowHouse') || 'Pošli mi cenovú ponuku a ukáž môj dom'}
             onSendQuote={async (contactData) => {
               try {
                 const response = await base44.functions.invoke('odosliCenovuPonukuLyonEmail', {
@@ -1161,7 +1161,7 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
             <FloatingPrice 
               price={totalPrice} 
               isVisible={true} 
-              buttonText="Poslať ponuku"
+              buttonText={t('sendQuoteAndShowHouse') || 'Poslať ponuku'}
               onSendQuote={async (contactData) => {
                 try {
                   const response = await base44.functions.invoke('odosliCenovuPonukuLyonEmail', {

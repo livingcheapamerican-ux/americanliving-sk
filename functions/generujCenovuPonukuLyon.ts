@@ -684,40 +684,52 @@ Deno.serve(async (req) => {
         doc.setFontSize(8);
         doc.setFont(undefined, 'normal');
         doc.setTextColor(100, 100, 100);
-        const maxFotky = Math.min(2, galeria.fotky.length);
-        doc.text(removeDiacritics(`${maxFotky} z ${galeria.fotky.length} fotiek`), 25, yPos);
+        doc.text(removeDiacritics(`${galeria.fotky.length} fotiek`), 25, yPos);
         yPos += 7;
 
-        // Vložiť max 2 fotky na galériu s malým rozlíšením
-        for (let i = 0; i < maxFotky; i++) {
+        // Vložiť fotky na celú stranu v plnom rozlíšení
+        for (let i = 0; i < galeria.fotky.length; i++) {
           if (yPos > pageHeight - 75) {
             doc.addPage();
             yPos = 20;
           }
 
           try {
-            const imgWidth = 85;
-            const imgHeight = 60;
-            const xPos = 20 + (i % 2) * 92;
+            // Plná veľkosť obrázkov - jedna fotka na stranu pre lepšiu kvalitu
+            const maxWidth = pageWidth - 40;
+            const maxHeight = pageHeight - yPos - 30;
+            
+            // Pre každú fotku pridaj novú stranu ak je potrebné
+            if (i > 0) {
+              doc.addPage();
+              yPos = 20;
+            }
 
-            if (i % 2 === 0 && i > 0) yPos += 68;
-
-            // Stiahni a vlož obrázok s nízkou kvalitou (FAST komprimácia)
             const imageData = await fetchImageAsBase64(galeria.fotky[i]);
             if (imageData) {
-              doc.addImage(imageData.base64, imageData.format, xPos, yPos, imgWidth, imgHeight, undefined, 'FAST');
+              // Zisti správny pomer strán obrázka
+              const img = new Image();
+              img.src = imageData.base64;
+              
+              // Vypočítaj rozmery zachovávajúc pomer strán
+              let imgWidth = maxWidth;
+              let imgHeight = (maxWidth * 3) / 4; // Predpokladaný pomer 4:3
+              
+              // Ak je výška príliš veľká, zmenši podľa výšky
+              if (imgHeight > maxHeight) {
+                imgHeight = maxHeight;
+                imgWidth = (imgHeight * 4) / 3;
+              }
+              
+              const xPos = (pageWidth - imgWidth) / 2; // Centruj horizontálne
+              
+              doc.addImage(imageData.base64, imageData.format, xPos, yPos, imgWidth, imgHeight);
 
-              // Watermark text
-              doc.setFontSize(10);
-              doc.setFont(undefined, 'bold');
-              doc.setTextColor(200, 200, 200);
-              doc.text('American Living', xPos + imgWidth/2, yPos + imgHeight/2, { align: 'center' });
-
-              // Popis
-              doc.setFontSize(7);
+              // Popis pod obrázkom
+              doc.setFontSize(9);
               doc.setFont(undefined, 'normal');
               doc.setTextColor(80, 80, 80);
-              doc.text(removeDiacritics(`${galeria.nazov} - Fotka ${i + 1}`), xPos + imgWidth/2, yPos + imgHeight + 4, { align: 'center' });
+              doc.text(removeDiacritics(`${galeria.nazov} - Fotka ${i + 1}`), pageWidth/2, yPos + imgHeight + 6, { align: 'center' });
             }
           } catch (e) {
             console.error('Chyba pri vkladani fotky:', galeria.fotky[i], e);
