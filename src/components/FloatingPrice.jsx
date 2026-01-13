@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 
-export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyrobca }) {
+export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyrobca, buttonText, hidePrice, mobileOnly }) {
   const [showContactModal, setShowContactModal] = useState(false);
   const [formData, setFormData] = useState({ meno: "", email: "", telefon: "", obec: "", poznamka: "" });
   const [sending, setSending] = useState(false);
@@ -59,12 +59,12 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
   return (
     <>
       <AnimatePresence>
-        {isVisible && (
+        {isVisible && !hidePrice && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="md:hidden fixed bottom-20 right-2 z-40 pointer-events-auto"
+            className={mobileOnly ? "md:hidden fixed bottom-20 right-2 z-40 pointer-events-auto" : "md:hidden fixed bottom-20 right-2 z-40 pointer-events-auto"}
           >
             <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl shadow-2xl border-2 border-white/50 overflow-hidden">
               <div className="px-3 py-2">
@@ -82,13 +82,22 @@ export default function FloatingPrice({ price, isVisible, onSendQuote, dom, vyro
               </div>
               <Button 
                 onClick={() => setShowContactModal(true)}
-                className="w-full bg-white/20 hover:bg-white/30 text-white font-bold border-t border-white/30 rounded-none rounded-b-xl py-2 h-auto"
+                className="w-full bg-white/20 hover:bg-white/30 text-white font-bold border-t border-white/30 rounded-none rounded-b-xl py-2 h-auto text-xs"
               >
                 <Send className="w-3 h-3 mr-1.5" />
-                Pošli ponuku
+                {buttonText || 'Pošli ponuku'}
               </Button>
             </div>
           </motion.div>
+        )}
+        {isVisible && hidePrice && (
+          <Button 
+            onClick={() => setShowContactModal(true)}
+            className={`${mobileOnly ? 'block md:hidden' : 'w-full'} bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-xl text-xs h-9 px-4 rounded-xl`}
+          >
+            <Send className="w-3 h-3 mr-1.5" />
+            {buttonText || 'Pošli ponuku'}
+          </Button>
         )}
       </AnimatePresence>
 
