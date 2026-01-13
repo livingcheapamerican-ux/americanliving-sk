@@ -600,32 +600,6 @@ export default function KonfiguratorFlat72({
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
   const showFinale = !showOnlyPhase || showOnlyPhase === "finale";
 
-  // Ak nie je vybraný typ stavby, zobraz selector
-  if (!typStavby && setTypStavby) {
-    return (
-      <TypStavbySelector
-        typStavby={typStavby}
-        setTypStavby={(typ) => {
-          setTypStavby(typ);
-          // Automatické nastavenie pre rodinný dom A0
-          if (typ === "rodinny_dom") {
-            setIzolaciaNavysenie?.("premium");
-            setTepelneCerpadlo(true);
-            setRekuperacia(true);
-            setProjektA0(true);
-          }
-        }}
-        predajNehnutelnosti={predajNehnutelnosti}
-        setPredajNehnutelnosti={setPredajNehnutelnosti}
-        hladaniePozemku={hladaniePozemku}
-        setHladaniePozemku={setHladaniePozemku}
-        financneSluzby={financneSluzby}
-        setFinancneSluzby={setFinancneSluzby}
-        onContinue={() => {}}
-      />
-    );
-  }
-
   const handleSendQuoteFromFloating = async (contactData) => {
     try {
       const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
