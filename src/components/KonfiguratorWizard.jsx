@@ -304,68 +304,26 @@ export default function KonfiguratorWizard({
   };
 
   const renderCurrentStep = () => {
-    switch (currentStep) {
-      case 0:
-        return (
-          <TypStavbySelector
-            key={language}
-            typStavby={typStavby} 
-            setTypStavby={handleTypStavbyChange}
-            predajNehnutelnosti={predajNehnutelnosti}
-            setPredajNehnutelnosti={setPredajNehnutelnosti}
-            hladaniePozemku={hladaniePozemku}
-            setHladaniePozemku={setHladaniePozemku}
-            financneSluzby={financneSluzby}
-            setFinancneSluzby={setFinancneSluzby}
-            onContinue={handleNext}
-          />
-        );
-      case 1:
-        return (
-          <div className="space-y-4">
-            <Card className={`p-4 ${typStavby === "rodinny_dom" ? "bg-green-50 border-green-200" : "bg-amber-50 border-amber-200"}`}>
-              <div className="flex items-center gap-3">
-                <Info className={`w-5 h-5 ${typStavby === "rodinny_dom" ? "text-green-600" : "text-amber-600"}`} />
-                <p className={`text-sm font-medium ${typStavby === "rodinny_dom" ? "text-green-800" : "text-amber-800"}`}>
-                  {typStavby === "rodinny_dom" 
-                    ? t('a0Recommendation')
-                    : t('meetsRecreationalParams')
-                  }
-                </p>
-              </div>
-            </Card>
-            
-            <KonfiguratorFaza1HrubaStavba
-              montazHolodomu={montazHolodomu}
-              setMontazHolodomu={setMontazHolodomu}
-              izolaciaNavysenie={izolaciaNavysenie}
-              setIzolaciaNavysenie={setIzolaciaNavysenie}
-              zaklady={zaklady}
-              setZaklady={setZaklady}
-              predlzenie={predlzenie}
-              setPredlzenie={setPredlzenie}
-              useNordPrices={useNordPrices}
-              useFlat15Prices={useFlat15Prices}
-              useFlatDoublePrices={useFlatDoublePrices}
-              useFlat72Prices={useFlat72Prices}
-              useProstoHousePrices={useProstoHousePrices}
-              useFjordPrices={useFjordPrices}
-              useAFramePrices={useAFramePrices}
-              useBarn48Prices={useBarn48Prices}
-              useBarnDoublePrices={useBarnDoublePrices}
-              useFlatSmallPrices={useFlatSmallPrices}
-            />
-          </div>
-        );
-      case 2:
-        return getKonfigurator("holodom");
-      case 3:
-        return getKonfigurator("kluc");
-      case 4:
-        return getKonfigurator("docs");
-      default:
-        return null;
+    // Ak už je vybraný typ stavby, zobraz všetky fázy naraz
+    if (currentStep === 0) {
+      return (
+        <TypStavbySelector
+          key={language}
+          typStavby={typStavby} 
+          setTypStavby={handleTypStavbyChange}
+          predajNehnutelnosti={predajNehnutelnosti}
+          setPredajNehnutelnosti={setPredajNehnutelnosti}
+          hladaniePozemku={hladaniePozemku}
+          setHladaniePozemku={setHladaniePozemku}
+          financneSluzby={financneSluzby}
+          setFinancneSluzby={setFinancneSluzby}
+          onContinue={handleNext}
+        />
+      );
     }
+    
+    // Zobraz všetky fázy naraz (bez showOnlyPhase)
+    return getKonfigurator(null);
   };
 
   return (
@@ -406,14 +364,7 @@ export default function KonfiguratorWizard({
         </div>
       )}
 
-      {currentStep > 0 && (
-        <StepIndicator 
-          currentStep={currentStep} 
-          totalSteps={steps.length} 
-          steps={steps}
-          typStavby={typStavby}
-        />
-      )}
+
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -428,7 +379,7 @@ export default function KonfiguratorWizard({
       </AnimatePresence>
 
       {currentStep > 0 && (
-        <div className="flex justify-between items-center pt-6 border-t">
+        <div className="flex justify-start items-center pt-6 border-t">
           <Button
             variant="outline"
             onClick={handleBack}
@@ -437,35 +388,6 @@ export default function KonfiguratorWizard({
             <ChevronLeft className="mr-2 w-4 h-4" />
             {t('back')}
           </Button>
-
-          {!isStepValid && (
-            <div className="flex items-center gap-2 text-red-600 text-sm">
-              <AlertTriangle className="w-4 h-4" />
-              {currentStep === 3 && !useAFramePrices && t('facadeRequired')}
-            </div>
-          )}
-
-          {currentStep < steps.length - 1 ? (
-            <Button
-              onClick={handleNext}
-              disabled={!isStepValid}
-              className={`px-6 ${
-                isStepValid
-                  ? typStavby === "rodinny_dom"
-                    ? "bg-green-600 hover:bg-green-700"
-                    : "bg-amber-600 hover:bg-amber-700"
-                  : "bg-gray-300"
-              }`}
-            >
-              {t('nextStep')}
-              <ChevronRight className="ml-2 w-4 h-4" />
-            </Button>
-          ) : (
-            <div className="text-green-600 font-semibold flex items-center gap-2">
-              <CheckCircle className="w-5 h-5" />
-              {t('configurationComplete')}
-            </div>
-          )}
         </div>
       )}
     </div>
