@@ -632,12 +632,9 @@ Deno.serve(async (req) => {
       if (dom.podorys_2d) podorysy.push({ url: dom.podorys_2d, label: '2D podorys' });
       if (dom.podorys_3d) podorysy.push({ url: dom.podorys_3d, label: '3D podorys' });
 
-      const imgWidth = 85;
-      const imgHeight = 100;
-
+      // Každý pôdorys na vlastnú stranu v plnej veľkosti
       for (let i = 0; i < podorysy.length; i++) {
-        const xPos = 20 + (i % 2) * 92;
-        if (i === 2) {
+        if (i > 0) {
           doc.addPage();
           yPos = 20;
         }
@@ -645,17 +642,32 @@ Deno.serve(async (req) => {
         const imageData = await fetchImageAsBase64(podorysy[i].url);
         if (imageData) {
           try {
+            // Plná šírka strany s okrajmi
+            const maxWidth = pageWidth - 40;
+            const maxHeight = pageHeight - yPos - 30;
+            
+            // Vypočítaj rozmery zachovávajúc pomer strán (pôdorysy sú zvyčajne širšie ako vysoké)
+            let imgWidth = maxWidth;
+            let imgHeight = maxWidth * 0.6; // Typický pomer pre pôdorysy
+            
+            // Ak je výška príliš veľká, zmenši podľa výšky
+            if (imgHeight > maxHeight) {
+              imgHeight = maxHeight;
+              imgWidth = imgHeight / 0.6;
+            }
+            
+            const xPos = (pageWidth - imgWidth) / 2; // Centruj horizontálne
+            
             doc.addImage(imageData.base64, imageData.format, xPos, yPos, imgWidth, imgHeight);
-            doc.setFontSize(9);
+            
+            doc.setFontSize(10);
             doc.setTextColor(100, 100, 100);
-            doc.text(podorysy[i].label, xPos + imgWidth/2, yPos + imgHeight + 5, { align: 'center' });
+            doc.text(removeDiacritics(podorysy[i].label), pageWidth/2, yPos + imgHeight + 6, { align: 'center' });
           } catch (e) {
             console.error('Chyba pri vkladani podorysu:', e);
           }
         }
       }
-
-      yPos += imgHeight + 15;
     }
 
     // Galérie s fotkami - nová stránka (max 2 fotky z každej galérie pre malý PDF)
