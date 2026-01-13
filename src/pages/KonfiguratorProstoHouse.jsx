@@ -470,11 +470,11 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
 
               <Button
                 size="lg"
-                className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold text-lg py-6"
+                className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold text-lg py-6 shadow-lg"
                 onClick={() => setShowFormular(true)}
               >
-                Požiadať o cenovú ponuku
-                <CheckCircle className="ml-2 w-5 h-5" />
+                <Send className="mr-2 w-5 h-5" />
+                Ukáž môj dom a pošli mi cenovú ponuku
               </Button>
             </Card>
           </div>
@@ -598,10 +598,11 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
               </div>
               <Button
                 size="lg"
-                className="bg-secondary hover:bg-secondary/90"
+                className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg"
                 onClick={() => setShowFormular(true)}
               >
-                Požiadať o ponuku
+                <Send className="mr-2 w-4 h-4" />
+                Ukáž môj dom a pošli mi cenovú ponuku
               </Button>
             </div>
           </div>
