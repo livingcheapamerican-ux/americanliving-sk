@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Home, Send, Eye, AlertCircle } from "lucide-react";
 import LyonFinalSummaryModal from "./LyonFinalSummaryModal";
 import { useLanguage } from "./LanguageContext";
+import { base44 } from "@/api/base44Client";
+import FloatingPrice from "./FloatingPrice";
 
 export default function LyonSummaryPanelStandalone({ 
   predajNehnutelnosti, hladamPozemok, financneSluzby,
@@ -370,21 +372,13 @@ export default function LyonSummaryPanelStandalone({
       <div className="border-t-2 border-slate-700 bg-gradient-to-r from-blue-600 to-indigo-600 p-4">
         <p className="text-sm text-blue-100 mb-1">{t('totalPriceWithVAT') || 'Celková cena s DPH'}</p>
         <p className="text-3xl font-black text-white">{formatPrice(displayPrice)}</p>
-        <div className="mt-3 space-y-2">
+        <div className="mt-3">
           <Button 
             onClick={() => setShowModal(true)} 
-            className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold shadow-lg"
+            className="w-full bg-white text-blue-600 hover:bg-blue-50 font-bold shadow-lg py-6 text-sm"
           >
-            <Eye className="w-4 h-4 mr-2" />
-            {t('interested') || 'Ukáž môj dom'}
-          </Button>
-          <Button 
-            onClick={onSubmit} 
-            variant="outline"
-            className="w-full bg-transparent border-2 border-white text-white hover:bg-white/10 font-bold"
-          >
-            <Send className="w-4 h-4 mr-2" />
-            {t('sendInquiry') || 'Odoslať dopyt'}
+            <Send className="w-5 h-5 mr-2" />
+            Pošli mi cenovú ponuku a ukáž môj dom
           </Button>
         </div>
       </div>

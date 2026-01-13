@@ -1108,19 +1108,87 @@ export default function KonfiguratorTicabhouse({ dom, isAdmin, onConfigChange, p
           </Card>
         </div>
 
+        {/* FÁZA 12 - Záverečné CTA */}
+        <Card className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-300 shadow-lg">
+          <h3 className="text-lg font-bold text-green-900 mb-3 flex items-center gap-2">
+            <span className="flex items-center justify-center w-7 h-7 rounded-full bg-green-600 text-white text-base mr-1">12</span>
+            ✅ {t('readyToStart') || 'Pripravení začať?'}
+          </h3>
+          <p className="text-sm text-gray-700 mb-4">
+            {t('finalPhaseDesc') || 'Vybrali ste si svoju konfiguráciu. Pošleme Vám podrobnú cenovú ponuku a vizualizáciu Vášho domu.'}
+          </p>
+          <FloatingPrice 
+            price={totalPrice} 
+            isVisible={true} 
+            buttonText="Pošli mi cenovú ponuku a ukáž môj dom"
+            onSendQuote={async (contactData) => {
+              try {
+                const response = await base44.functions.invoke('odosliCenovuPonukuLyonEmail', {
+                  dom,
+                  klientData: contactData,
+                  konfiguraciaData: {
+                    ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo,
+                    rekuperacia, pripravaNaRekuperaciu, podlahovoKurenie, pripravaNaKrb,
+                    ochranaKachle, klimatizacia, fasada, strecha, odkvapy, okna, vchodoveDvere,
+                    obkladStien, podlaha: "laminat", interieroveDvere, elektro, bleskozvod, prepat,
+                    pripravaNaSolarnePanely, sprchovyKut, vana, bateria, skrinka, stropKupelna,
+                    inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
+                    predajNehnutelnosti, hladamPozemok, financneSluzby,
+                    totalPrice
+                  }
+                });
+                return response;
+              } catch (error) {
+                console.error('Error sending quote:', error);
+                throw error;
+              }
+            }}
+            dom={dom}
+            vyrobca="Ticab house"
+            hidePrice={true}
+          />
+        </Card>
+
         {/* Sticky Footer - len pre mobil */}
         <div className="xl:hidden sticky bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white p-3 shadow-2xl z-50 mt-4 rounded-t-2xl border-t-4 border-white/20">
           <div className="flex justify-between items-center gap-3">
             <div className="flex-1">
-              <p className="text-[10px] text-white/70 mb-0.5">{t('priceWillBeCalculated') || 'Cena bude vypočítaná'}</p>
+              <p className="text-[10px] text-white/70 mb-0.5">{t('totalPrice') || 'Celková cena'}</p>
               <p className="text-xl sm:text-2xl font-black text-white drop-shadow-lg">
-                {t('configurator') || 'Konfigurátor'}
+                {formatPrice(totalPrice)}
               </p>
             </div>
-            <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-xl text-xs sm:text-sm h-9 sm:h-10 px-4 sm:px-6 rounded-xl">
-              <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-              {t('interested') || 'Mám záujem'}
-            </Button>
+            <FloatingPrice 
+              price={totalPrice} 
+              isVisible={true} 
+              buttonText="Poslať ponuku"
+              onSendQuote={async (contactData) => {
+                try {
+                  const response = await base44.functions.invoke('odosliCenovuPonukuLyonEmail', {
+                    dom,
+                    klientData: contactData,
+                    konfiguraciaData: {
+                      ucel, izolaciaStien, izolaciaPodlahy, izolaciaStropu, tepelneCerpadlo,
+                      rekuperacia, pripravaNaRekuperaciu, podlahovoKurenie, pripravaNaKrb,
+                      ochranaKachle, klimatizacia, fasada, strecha, odkvapy, okna, vchodoveDvere,
+                      obkladStien, podlaha: "laminat", interieroveDvere, elektro, bleskozvod, prepat,
+                      pripravaNaSolarnePanely, sprchovyKut, vana, bateria, skrinka, stropKupelna,
+                      inziniering, projektACertifikacia, revizia, zaklady, montaz, doprava,
+                      predajNehnutelnosti, hladamPozemok, financneSluzby,
+                      totalPrice
+                    }
+                  });
+                  return response;
+                } catch (error) {
+                  console.error('Error sending quote:', error);
+                  throw error;
+                }
+              }}
+              dom={dom}
+              vyrobca="Ticab house"
+              hidePrice={true}
+              mobileOnly={true}
+            />
           </div>
         </div>
       </div>
