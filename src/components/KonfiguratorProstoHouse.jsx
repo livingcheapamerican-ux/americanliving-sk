@@ -566,6 +566,7 @@ export default function KonfiguratorProstoHouse({
   const showHolodom = !showOnlyPhase || showOnlyPhase === "holodom";
   const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
+  const showFinale = !showOnlyPhase || showOnlyPhase === "finale";
 
   const handleSendQuoteFromFloating = async (contactData) => {
     try {
@@ -601,6 +602,7 @@ export default function KonfiguratorProstoHouse({
         onSendQuote={handleSendQuoteFromFloating}
         dom={dom}
         vyrobca="Prosto House"
+        buttonText={t('showHouseAndSendQuote')}
       />
 
       <div className="w-full max-w-full overflow-hidden">
@@ -1258,8 +1260,72 @@ export default function KonfiguratorProstoHouse({
               </div>
             </Card>
           </motion.div>}
+
+          {showFinale && <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500">
+              <div className="p-6 sm:p-8 text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-10 h-10 text-white" />
+                  </div>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3">{t('readyToStart')}</h3>
+                <p className="text-white/90 mb-6 text-sm sm:text-base">{t('finalPhaseDesc')}</p>
+                <Button 
+                  size="lg" 
+                  onClick={() => setShowContactModal(true)}
+                  className="bg-white text-green-600 hover:bg-gray-100 font-bold text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-7 shadow-2xl transition-all hover:scale-105"
+                >
+                  <Send className="mr-2 sm:mr-3 w-5 h-5 sm:w-6 sm:h-6" />
+                  {t('showHouseAndSendQuote')}
+                </Button>
+              </div>
+            </Card>
+          </motion.div>}
         </div>
       </div>
+
+      <KonfiguratorContactModal
+        isOpen={showContactModal}
+        onClose={() => setShowContactModal(false)}
+        dom={dom}
+        totalPrice={totalPrice}
+        selectedItems={selectedItems}
+        vonkajsiaFasada={vonkajsiaFasada}
+        izolaciaNavysenie={izolaciaNavysenie}
+        tepelneCerpadlo={tepelneCerpadlo}
+        rekuperacia={rekuperacia}
+        projektA0={projektA0}
+        montazHolodomu={montazHolodomu}
+        zaklady={zaklady}
+        predlzenie={predlzenie}
+        vstupneDvere={vstupneDvere}
+        elektroinstalacia={elektroinstalacia}
+        vodaKanalizacia={vodaKanalizacia}
+        sanitaKomplet={sanitaKomplet}
+        bojler={bojler}
+        pripojkaSiete={pripojkaSiete}
+        stresneOkno={stresneOkno}
+        bocneOknoFixne={bocneOknoFixne}
+        bocneOknoVyklopne90={bocneOknoVyklopne90}
+        bocneOknoVyklopne55={bocneOknoVyklopne55}
+        povrchokaOkien={povrchokaOkien}
+        tonovaneSkla={tonovaneSkla}
+        interierFinis={interierFinis}
+        vnutornePodlahy={vnutornePodlahy}
+        podlahovVykurovanie={podlahovVykurovanie}
+        interieroveDvere={interieroveDvere}
+        inziniering={inziniering}
+        revizna={revizna}
+        doprava={doprava}
+        predajNehnutelnosti={predajNehnutelnosti}
+        hladaniePozemku={hladaniePozemku}
+        financneSluzby={financneSluzby}
+      />
     </div>
   );
 }
