@@ -570,6 +570,7 @@ export default function KonfiguratorFjord({
   const showHolodom = !showOnlyPhase || showOnlyPhase === "holodom";
   const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
+  const showFinale = !showOnlyPhase || showOnlyPhase === "finale";
 
   return (
     <div className="mt-8 relative">
@@ -875,6 +876,54 @@ export default function KonfiguratorFjord({
                       projektA0={projektA0}
                     />
                   </div>
+                </div>
+              </Card>
+            </motion.div>
+          )}
+
+          {showFinale && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }}>
+              <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500">
+                <div className="p-4 sm:p-6 text-center">
+                  <div className="flex justify-center mb-3">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 rounded-full flex items-center justify-center">
+                      <CheckCircle className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                    </div>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('readyToStart')}</h3>
+                  <p className="text-white/90 mb-4 text-xs sm:text-sm">{t('finalPhaseDesc')}</p>
+                  <Button 
+                    size="lg" 
+                    onClick={() => setShowContactModal(true)}
+                    className="bg-white text-green-600 hover:bg-gray-100 font-bold text-sm sm:text-base px-6 sm:px-10 py-4 sm:py-5 shadow-2xl transition-all hover:scale-105"
+                  >
+                    <Send className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
+                    {t('showHouseAndSendQuote')}
+                  </Button>
+                </div>
+              </Card>
+            </motion.div>
+          )}
+
+          {showFinale && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.5 }}>
+              <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500">
+                <div className="p-4 sm:p-6 text-center">
+                  <div className="flex justify-center mb-3">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 rounded-full flex items-center justify-center">
+                      <CheckCircle className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                    </div>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('readyToStart')}</h3>
+                  <p className="text-white/90 mb-4 text-xs sm:text-sm">{t('finalPhaseDesc')}</p>
+                  <Button 
+                    size="lg" 
+                    onClick={() => setShowContactModal(true)}
+                    className="bg-white text-green-600 hover:bg-gray-100 font-bold text-sm sm:text-base px-6 sm:px-10 py-4 sm:py-5 shadow-2xl transition-all hover:scale-105"
+                  >
+                    <Send className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
+                    {t('showHouseAndSendQuote')}
+                  </Button>
                 </div>
               </Card>
             </motion.div>

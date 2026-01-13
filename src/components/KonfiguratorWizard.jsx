@@ -119,10 +119,9 @@ export default function KonfiguratorWizard({
   const [currentStep, setCurrentStep] = useState(0);
   const { t, language } = useLanguage();
 
-  // Vždy začať od kroku 0 pri mount
+  // Pri mount nastaviť na krok 0 (zobrazenie všetkého)
   React.useEffect(() => {
     setCurrentStep(0);
-    if (setTypStavby) setTypStavby("");
   }, []);
 
   // Keď sa zmení typ stavby, nastaviť predvolené hodnoty
@@ -148,6 +147,7 @@ export default function KonfiguratorWizard({
     { label: t('phase2'), icon: Hammer },
     { label: t('phase3'), icon: Key },
     { label: t('documentation'), icon: FileText },
+    { label: t('finale'), icon: CheckCircle },
   ];
 
   const isStepValid = useMemo(() => {
@@ -277,7 +277,8 @@ export default function KonfiguratorWizard({
       revizna, setRevizna,
       doprava, setDoprava,
       showOnlySummary: false,
-      showOnlyPhase: phase
+      showOnlyPhase: phase,
+      typStavby
     };
 
     if (useFlatSmallPrices) {
@@ -304,68 +305,68 @@ export default function KonfiguratorWizard({
   };
 
   const renderCurrentStep = () => {
-    switch (currentStep) {
-      case 0:
-        return (
-          <TypStavbySelector
-            key={language}
-            typStavby={typStavby} 
-            setTypStavby={handleTypStavbyChange}
-            predajNehnutelnosti={predajNehnutelnosti}
-            setPredajNehnutelnosti={setPredajNehnutelnosti}
-            hladaniePozemku={hladaniePozemku}
-            setHladaniePozemku={setHladaniePozemku}
-            financneSluzby={financneSluzby}
-            setFinancneSluzby={setFinancneSluzby}
-            onContinue={handleNext}
-          />
-        );
-      default:
-        // Po výbere typu stavby zobrazíme všetky fázy naraz
-        return (
-          <div className="space-y-4">
-            <Card className={`p-4 ${typStavby === "rodinny_dom" ? "bg-green-50 border-green-200" : "bg-amber-50 border-amber-200"}`}>
-              <div className="flex items-center gap-3">
-                <Info className={`w-5 h-5 ${typStavby === "rodinny_dom" ? "text-green-600" : "text-amber-600"}`} />
-                <p className={`text-sm font-medium ${typStavby === "rodinny_dom" ? "text-green-800" : "text-amber-800"}`}>
-                  {typStavby === "rodinny_dom" 
-                    ? t('a0Recommendation')
-                    : t('meetsRecreationalParams')
-                  }
-                </p>
-              </div>
-            </Card>
-            
-            {/* Všetky fázy pod sebou */}
-            <div className="space-y-6">
-              <KonfiguratorFaza1HrubaStavba
-                montazHolodomu={montazHolodomu}
-                setMontazHolodomu={setMontazHolodomu}
-                izolaciaNavysenie={izolaciaNavysenie}
-                setIzolaciaNavysenie={setIzolaciaNavysenie}
-                zaklady={zaklady}
-                setZaklady={setZaklady}
-                predlzenie={predlzenie}
-                setPredlzenie={setPredlzenie}
-                useNordPrices={useNordPrices}
-                useFlat15Prices={useFlat15Prices}
-                useFlatDoublePrices={useFlatDoublePrices}
-                useFlat72Prices={useFlat72Prices}
-                useProstoHousePrices={useProstoHousePrices}
-                useFjordPrices={useFjordPrices}
-                useAFramePrices={useAFramePrices}
-                useBarn48Prices={useBarn48Prices}
-                useBarnDoublePrices={useBarnDoublePrices}
-                useFlatSmallPrices={useFlatSmallPrices}
-              />
-              
-              {getKonfigurator("holodom")}
-              {getKonfigurator("kluc")}
-              {getKonfigurator("docs")}
+    // Vždy zobrazíme všetko - aj výber typu stavby aj všetky fázy naraz
+    return (
+      <div className="space-y-4">
+        {/* Typ stavby - vždy zobrazený */}
+        <TypStavbySelector
+          key={language}
+          typStavby={typStavby} 
+          setTypStavby={handleTypStavbyChange}
+          predajNehnutelnosti={predajNehnutelnosti}
+          setPredajNehnutelnosti={setPredajNehnutelnosti}
+          hladaniePozemku={hladaniePozemku}
+          setHladaniePozemku={setHladaniePozemku}
+          financneSluzby={financneSluzby}
+          setFinancneSluzby={setFinancneSluzby}
+          onContinue={null}
+        />
+        
+        {/* Info badge ak je vybraný typ stavby */}
+        {typStavby && (
+          <Card className={`p-4 ${typStavby === "rodinny_dom" ? "bg-green-50 border-green-200" : "bg-amber-50 border-amber-200"}`}>
+            <div className="flex items-center gap-3">
+              <Info className={`w-5 h-5 ${typStavby === "rodinny_dom" ? "text-green-600" : "text-amber-600"}`} />
+              <p className={`text-sm font-medium ${typStavby === "rodinny_dom" ? "text-green-800" : "text-amber-800"}`}>
+                {typStavby === "rodinny_dom" 
+                  ? t('a0Recommendation')
+                  : t('meetsRecreationalParams')
+                }
+              </p>
             </div>
-          </div>
-        );
-    }
+          </Card>
+        )}
+        
+        {/* Všetky fázy pod sebou - vždy zobrazené */}
+        <div className="space-y-6">
+          <KonfiguratorFaza1HrubaStavba
+            montazHolodomu={montazHolodomu}
+            setMontazHolodomu={setMontazHolodomu}
+            izolaciaNavysenie={izolaciaNavysenie}
+            setIzolaciaNavysenie={setIzolaciaNavysenie}
+            zaklady={zaklady}
+            setZaklady={setZaklady}
+            predlzenie={predlzenie}
+            setPredlzenie={setPredlzenie}
+            useNordPrices={useNordPrices}
+            useFlat15Prices={useFlat15Prices}
+            useFlatDoublePrices={useFlatDoublePrices}
+            useFlat72Prices={useFlat72Prices}
+            useProstoHousePrices={useProstoHousePrices}
+            useFjordPrices={useFjordPrices}
+            useAFramePrices={useAFramePrices}
+            useBarn48Prices={useBarn48Prices}
+            useBarnDoublePrices={useBarnDoublePrices}
+            useFlatSmallPrices={useFlatSmallPrices}
+          />
+          
+          {getKonfigurator("holodom")}
+          {getKonfigurator("kluc")}
+          {getKonfigurator("docs")}
+          {getKonfigurator("finale")}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -406,15 +407,6 @@ export default function KonfiguratorWizard({
         </div>
       )}
 
-      {currentStep > 0 && (
-        <StepIndicator 
-          currentStep={currentStep} 
-          totalSteps={steps.length} 
-          steps={steps}
-          typStavby={typStavby}
-        />
-      )}
-
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}
@@ -426,24 +418,6 @@ export default function KonfiguratorWizard({
           {renderCurrentStep()}
         </motion.div>
       </AnimatePresence>
-
-      {currentStep > 0 && (
-        <div className="flex justify-between items-center pt-6 border-t">
-          <Button
-            variant="outline"
-            onClick={handleBack}
-            className="px-6"
-          >
-            <ChevronLeft className="mr-2 w-4 h-4" />
-            {t('back')}
-          </Button>
-
-          <div className="text-green-600 font-semibold flex items-center gap-2">
-            <CheckCircle className="w-5 h-5" />
-            {t('configurationComplete')}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
