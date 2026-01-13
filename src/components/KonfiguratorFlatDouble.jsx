@@ -580,7 +580,7 @@ export default function KonfiguratorFlatDouble({
                     className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg text-xs h-8"
                   >
                     <Send className="mr-1.5 w-3.5 h-3.5" />
-                    {t('interested')}
+                    {t('showHouseAndSendQuote')}
                   </Button>
                 <Button 
                     size="sm" 
@@ -638,6 +638,7 @@ export default function KonfiguratorFlatDouble({
         onSendQuote={handleSendQuoteFromFloating}
         dom={dom}
         vyrobca="Prosto House"
+        buttonText={t('showHouseAndSendQuote')}
       />}
 
       <div>
@@ -1342,7 +1343,7 @@ export default function KonfiguratorFlatDouble({
                 className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
               >
                 <Send className="mr-2 sm:mr-3 w-4 h-4 sm:w-6 sm:h-6" />
-                {t('interestedInConfig')}
+                {t('showHouseAndSendQuote')}
               </Button>
             </div>
 

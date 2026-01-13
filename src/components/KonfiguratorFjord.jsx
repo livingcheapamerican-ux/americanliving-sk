@@ -548,7 +548,7 @@ export default function KonfiguratorFjord({
                 className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg text-xs h-8"
               >
                 <Send className="mr-1.5 w-3.5 h-3.5" />
-                {t('interested')}
+                {t('showHouseAndSendQuote')}
               </Button>
               <Button 
                 size="sm" 
@@ -858,7 +858,7 @@ export default function KonfiguratorFjord({
                         className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-xs sm:text-sm px-4 sm:px-8 py-3 sm:py-4 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
                       >
                         <Send className="mr-1.5 sm:mr-2 w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        {t('interestedInConfig')}
+                        {t('showHouseAndSendQuote')}
                       </Button>
                     </div>
 
@@ -889,6 +889,7 @@ export default function KonfiguratorFjord({
           onSendQuote={handleSendQuoteFromFloating}
           dom={dom}
           vyrobca="Prosto House"
+          buttonText={t('showHouseAndSendQuote')}
         />
       )}
     </div>
