@@ -932,14 +932,28 @@ export default function KonfiguratorFjord({
       </div>
 
       {!showOnlySummary && (
-        <FloatingPrice
-          price={totalPrice}
-          isVisible={true}
-          onSendQuote={handleSendQuoteFromFloating}
-          dom={dom}
-          vyrobca="Prosto House"
-          buttonText={t('showHouseAndSendQuote')}
-        />
+        <>
+          <FloatingPrice
+            price={totalPrice}
+            isVisible={true}
+            onSendQuote={handleSendQuoteFromFloating}
+            dom={dom}
+            vyrobca="Prosto House"
+            buttonText={t('showHouseAndSendQuote')}
+          />
+          <KonfiguratorContactModal
+            isOpen={showContactModal}
+            onClose={() => setShowContactModal(false)}
+            dom={dom}
+            totalPrice={totalPrice}
+            selectedItems={selectedItems}
+            vonkajsiaFasada={vonkajsiaFasada}
+            izolaciaNavysenie={izolaciaNavysenie}
+            tepelneCerpadlo={tepelneCerpadlo}
+            rekuperacia={rekuperacia}
+            projektA0={projektA0}
+          />
+        </>
       )}
     </div>
   );

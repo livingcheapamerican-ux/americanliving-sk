@@ -1314,6 +1314,19 @@ export default function KonfiguratorFlat15({
           </motion.div>}
         </div>
       </div>
+
+      <KonfiguratorContactModal
+        isOpen={showContactModal}
+        onClose={() => setShowContactModal(false)}
+        dom={dom}
+        totalPrice={totalPrice}
+        selectedItems={selectedItems}
+        vonkajsiaFasada={vonkajsiaFasada}
+        izolaciaNavysenie={izolaciaNavysenie}
+        tepelneCerpadlo={tepelneCerpadlo}
+        rekuperacia={rekuperacia}
+        projektA0={projektA0}
+      />
     </div>
   );
 }
