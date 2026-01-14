@@ -13,6 +13,8 @@ export default function AdminCennik() {
   const [isUploading, setIsUploading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [selectedDom, setSelectedDom] = useState(null);
+  const [editedPrices, setEditedPrices] = useState({});
+  const [isSaving, setIsSaving] = useState(false);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -330,13 +332,20 @@ export default function AdminCennik() {
                 );
               }
 
-              const handleManualPriceChange = async (key, newValue) => {
+              const handlePriceEdit = (key, newValue) => {
+                setEditedPrices(prev => ({ ...prev, [key]: newValue }));
+              };
+
+              const handleSaveSinglePrice = async (key) => {
+                const newValue = editedPrices[key];
                 const numValue = parseFloat(newValue);
+                
                 if (isNaN(numValue)) {
                   toast.error('Neplatná cena');
                   return;
                 }
 
+                setIsSaving(true);
                 try {
                   const updatedPrices = { ...ceny, [key]: numValue };
                   const updateData = isTicab
@@ -344,32 +353,109 @@ export default function AdminCennik() {
                     : { konfigurator_custom_ceny_prosto_house: updatedPrices };
 
                   await base44.entities.Dom.update(dom.id, updateData);
-                  toast.success(`Cena ${key} aktualizovaná na ${numValue} €`);
+                  toast.success(`Cena ${key} aktualizovaná na ${numValue.toLocaleString('sk-SK')} €`);
+                  
+                  // Vyčistiť editedPrices pre túto položku
+                  setEditedPrices(prev => {
+                    const newPrices = { ...prev };
+                    delete newPrices[key];
+                    return newPrices;
+                  });
                   
                   // Invalidovať cache
                   setTimeout(() => window.location.reload(), 500);
                 } catch (error) {
                   toast.error('Chyba pri ukladaní: ' + error.message);
+                } finally {
+                  setIsSaving(false);
+                }
+              };
+
+              const handleSaveAllPrices = async () => {
+                if (Object.keys(editedPrices).length === 0) {
+                  toast.error('Žiadne zmeny na uloženie');
+                  return;
+                }
+
+                setIsSaving(true);
+                try {
+                  const updatedPrices = { ...ceny };
+                  
+                  for (const [key, value] of Object.entries(editedPrices)) {
+                    const numValue = parseFloat(value);
+                    if (!isNaN(numValue)) {
+                      updatedPrices[key] = numValue;
+                    }
+                  }
+
+                  const updateData = isTicab
+                    ? { konfigurator_ceny: updatedPrices }
+                    : { konfigurator_custom_ceny_prosto_house: updatedPrices };
+
+                  await base44.entities.Dom.update(dom.id, updateData);
+                  toast.success(`Uložených ${Object.keys(editedPrices).length} zmien cien!`);
+                  
+                  setEditedPrices({});
+                  setTimeout(() => window.location.reload(), 500);
+                } catch (error) {
+                  toast.error('Chyba pri ukladaní: ' + error.message);
+                } finally {
+                  setIsSaving(false);
                 }
               };
 
               return (
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
-                  {Object.entries(ceny).map(([key, value]) => (
-                    <div key={key} className="bg-gray-50 p-3 rounded-lg border border-gray-200 hover:border-blue-400 transition-all">
-                      <p className="text-xs font-mono text-gray-600 mb-2">{key}</p>
-                      <div className="flex items-center gap-2">
-                        <Input
-                          type="number"
-                          step="0.01"
-                          defaultValue={value}
-                          onBlur={(e) => handleManualPriceChange(key, e.target.value)}
-                          className="text-sm font-bold"
-                        />
-                        <span className="text-xs text-gray-500 whitespace-nowrap">€</span>
+                <div>
+                  {Object.keys(editedPrices).length > 0 && (
+                    <div className="mb-4 p-4 bg-blue-50 border-2 border-blue-400 rounded-lg flex items-center justify-between">
+                      <div>
+                        <p className="font-bold text-blue-900">Máte {Object.keys(editedPrices).length} neuložených zmien</p>
+                        <p className="text-xs text-blue-700">Kliknite na "Uložiť všetky" alebo uložte jednotlivo</p>
                       </div>
+                      <Button
+                        onClick={handleSaveAllPrices}
+                        disabled={isSaving}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold"
+                      >
+                        {isSaving ? 'Ukladám...' : 'Uložiť všetky zmeny'}
+                      </Button>
                     </div>
-                  ))}
+                  )}
+                  
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
+                    {Object.entries(ceny).map(([key, value]) => {
+                      const hasChanges = editedPrices[key] !== undefined;
+                      const currentValue = hasChanges ? editedPrices[key] : value;
+                      
+                      return (
+                        <div key={key} className={`p-3 rounded-lg border-2 transition-all ${
+                          hasChanges ? 'bg-yellow-50 border-yellow-400' : 'bg-gray-50 border-gray-200 hover:border-blue-400'
+                        }`}>
+                          <p className="text-xs font-mono text-gray-600 mb-2">{key}</p>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={currentValue}
+                              onChange={(e) => handlePriceEdit(key, e.target.value)}
+                              className="text-sm font-bold"
+                            />
+                            <span className="text-xs text-gray-500">€</span>
+                            {hasChanges && (
+                              <Button
+                                size="sm"
+                                onClick={() => handleSaveSinglePrice(key)}
+                                disabled={isSaving}
+                                className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 h-8"
+                              >
+                                ✓
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               );
             })()}
