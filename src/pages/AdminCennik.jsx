@@ -383,14 +383,7 @@ export default function AdminCennik() {
                 : dom.konfigurator_custom_ceny_prosto_house || {};
 
               const isTicab = dom.vyrobca === 'Ticab house';
-
-              if (Object.keys(ceny).length === 0) {
-                return (
-                  <p className="text-gray-500 text-sm">
-                    Tento dom nemá nastavené vlastné ceny, používajú sa predvolené hodnoty.
-                  </p>
-                );
-              }
+              const zakladnaCena = dom.zakladna_cena || 0;
 
               const handlePriceEdit = (key, newValue) => {
                 setEditedPrices(prev => ({ ...prev, [key]: newValue }));
