@@ -396,6 +396,10 @@ export default function AdminCennik() {
                 setEditedPrices(prev => ({ ...prev, [key]: newValue }));
               };
 
+              const handleBasePriceEdit = (newValue) => {
+                setEditedPrices(prev => ({ ...prev, '__zakladna_cena__': newValue }));
+              };
+
               const handleSaveSinglePrice = async (key) => {
                 const newValue = editedPrices[key];
                 const numValue = parseFloat(newValue);
@@ -407,13 +411,20 @@ export default function AdminCennik() {
 
                 setIsSaving(true);
                 try {
-                  const updatedPrices = { ...ceny, [key]: numValue };
-                  const updateData = isTicab
-                    ? { konfigurator_ceny: updatedPrices }
-                    : { konfigurator_custom_ceny_prosto_house: updatedPrices };
+                  if (key === '__zakladna_cena__') {
+                    // Uložiť základnú cenu
+                    await base44.entities.Dom.update(dom.id, { zakladna_cena: numValue });
+                    toast.success(`Základná cena aktualizovaná na ${numValue.toLocaleString('sk-SK')} €`);
+                  } else {
+                    // Uložiť cenu položky
+                    const updatedPrices = { ...ceny, [key]: numValue };
+                    const updateData = isTicab
+                      ? { konfigurator_ceny: updatedPrices }
+                      : { konfigurator_custom_ceny_prosto_house: updatedPrices };
 
-                  await base44.entities.Dom.update(dom.id, updateData);
-                  toast.success(`Cena ${key} aktualizovaná na ${numValue.toLocaleString('sk-SK')} €`);
+                    await base44.entities.Dom.update(dom.id, updateData);
+                    toast.success(`Cena ${key} aktualizovaná na ${numValue.toLocaleString('sk-SK')} €`);
+                  }
                   
                   // Vyčistiť editedPrices pre túto položku
                   setEditedPrices(prev => {
@@ -440,17 +451,28 @@ export default function AdminCennik() {
                 setIsSaving(true);
                 try {
                   const updatedPrices = { ...ceny };
+                  const updateData = {};
                   
                   for (const [key, value] of Object.entries(editedPrices)) {
                     const numValue = parseFloat(value);
-                    if (!isNaN(numValue)) {
+                    if (isNaN(numValue)) continue;
+
+                    if (key === '__zakladna_cena__') {
+                      updateData.zakladna_cena = numValue;
+                    } else {
                       updatedPrices[key] = numValue;
                     }
                   }
 
-                  const updateData = isTicab
-                    ? { konfigurator_ceny: updatedPrices }
-                    : { konfigurator_custom_ceny_prosto_house: updatedPrices };
+                  // Pridať ceny položiek
+                  if (Object.keys(updatedPrices).length > Object.keys(ceny).length || 
+                      JSON.stringify(updatedPrices) !== JSON.stringify(ceny)) {
+                    if (isTicab) {
+                      updateData.konfigurator_ceny = updatedPrices;
+                    } else {
+                      updateData.konfigurator_custom_ceny_prosto_house = updatedPrices;
+                    }
+                  }
 
                   await base44.entities.Dom.update(dom.id, updateData);
                   toast.success(`Uložených ${Object.keys(editedPrices).length} zmien cien!`);
@@ -466,6 +488,49 @@ export default function AdminCennik() {
 
               return (
                 <div>
+                  {/* Header s názvom domu a základnou cenou */}
+                  <div className="mb-4 p-4 bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-lg">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-xl font-bold text-gray-800">{dom.nazov}</h3>
+                      <Badge className="bg-purple-600 text-white">
+                        {dom.vyrobca}
+                      </Badge>
+                    </div>
+                    
+                    {/* Základná cena domu (iba pre Ticab house) */}
+                    {isTicab && (
+                      <div className="bg-white p-4 rounded-lg border-2 border-purple-300">
+                        <p className="text-sm font-semibold text-gray-600 mb-2">
+                          💰 Základná cena domu v konfigurátoře
+                        </p>
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs text-gray-500 w-20">Aktuálna:</span>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            value={editedPrices['__zakladna_cena__'] !== undefined ? editedPrices['__zakladna_cena__'] : zakladnaCena}
+                            onChange={(e) => handleBasePriceEdit(e.target.value)}
+                            className="text-lg font-bold text-purple-700 flex-1"
+                          />
+                          <span className="text-sm text-gray-500 font-bold">€</span>
+                          {editedPrices['__zakladna_cena__'] !== undefined && (
+                            <Button
+                              size="sm"
+                              onClick={() => handleSaveSinglePrice('__zakladna_cena__')}
+                              disabled={isSaving}
+                              className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 h-10"
+                            >
+                              ✓ Uložiť
+                            </Button>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-500 mt-2">
+                          K tejto cene sa pripočítavajú všetky vybrané položky v konfigurátoře
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
                   {Object.keys(editedPrices).length > 0 && (
                     <div className="mb-4 p-4 bg-blue-50 border-2 border-blue-400 rounded-lg flex items-center justify-between">
                       <div>
@@ -481,6 +546,13 @@ export default function AdminCennik() {
                       </Button>
                     </div>
                   )}
+
+                  {/* Tabuľka s cenami položiek konfiguratora */}
+                  <div className="mb-4">
+                    <h4 className="text-lg font-bold text-gray-700 mb-3">
+                      📋 Ceny položiek v konfigurátoře ({Object.keys(ceny).length} položiek)
+                    </h4>
+                  </div>
                   
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
                     {Object.entries(ceny).map(([key, value]) => {
