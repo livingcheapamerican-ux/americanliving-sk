@@ -15,6 +15,8 @@ export default function AdminCennik() {
   const [selectedDom, setSelectedDom] = useState(null);
   const [editedPrices, setEditedPrices] = useState({});
   const [isSaving, setIsSaving] = useState(false);
+  const [selectedVyrobca, setSelectedVyrobca] = useState(null);
+  const [excelPrices, setExcelPrices] = useState(null);
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -59,8 +61,8 @@ export default function AdminCennik() {
       return;
     }
 
-    if (!selectedDom) {
-      toast.error('Prosím vyberte dom, pre ktorý chcete aktualizovať ceny');
+    if (!selectedVyrobca) {
+      toast.error('Prosím vyberte výrobcu');
       return;
     }
 
@@ -72,15 +74,16 @@ export default function AdminCennik() {
 
       toast.success('Súbor nahraný, analyzujem...');
 
-      // 2. Zavolať backend funkciu na analýzu a aktualizáciu
-      const response = await base44.functions.invoke('updateCennikFromExcel', {
+      // 2. Zavolať backend funkciu len na analýzu (bez ukladania)
+      const response = await base44.functions.invoke('analyzeCennikFromExcel', {
         file_url: fileUrl,
-        dom_id: selectedDom
+        vyrobca: selectedVyrobca
       });
 
       if (response.data.success) {
+        setExcelPrices(response.data.parsed_prices);
         setAnalysisResult(response.data);
-        toast.success(`Úspešne aktualizovaných ${response.data.updated_count} cien!`);
+        toast.success(`Načítaných ${response.data.found_count} položiek z Excelu`);
       } else {
         throw new Error(response.data.error || 'Neznáma chyba');
       }
@@ -89,6 +92,38 @@ export default function AdminCennik() {
       toast.error('Chyba pri spracovaní: ' + error.message);
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleApplyPricesToDom = async () => {
+    if (!excelPrices || !selectedDom) {
+      toast.error('Najprv analyzujte Excel a vyberte dom');
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const dom = domy.find(d => d.id === selectedDom);
+      const isTicab = dom.vyrobca === 'Ticab house';
+
+      const existingPrices = isTicab 
+        ? (dom.konfigurator_ceny || {})
+        : (dom.konfigurator_custom_ceny_prosto_house || {});
+
+      const updatedPrices = { ...existingPrices, ...excelPrices };
+
+      const updateData = isTicab
+        ? { konfigurator_ceny: updatedPrices }
+        : { konfigurator_custom_ceny_prosto_house: updatedPrices };
+
+      await base44.entities.Dom.update(dom.id, updateData);
+      
+      toast.success(`Ceny aplikované na ${dom.nazov}!`);
+      setTimeout(() => window.location.reload(), 1000);
+    } catch (error) {
+      toast.error('Chyba pri aplikovaní cien: ' + error.message);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -163,32 +198,27 @@ export default function AdminCennik() {
               Nahrať Master tabuľku
             </h2>
 
-            {/* Výber domu */}
+            {/* Výber výrobcu */}
             <div className="mb-4">
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                1. Vyberte dom:
+                1. Vyberte výrobcu:
               </label>
-              <select
-                value={selectedDom || ''}
-                onChange={(e) => setSelectedDom(e.target.value)}
-                className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-              >
-                <option value="">-- Vyberte dom --</option>
-                <optgroup label="Ticab house">
-                  {ticabDomy.map(dom => (
-                    <option key={dom.id} value={dom.id}>
-                      {dom.nazov} (Ticab house)
-                    </option>
-                  ))}
-                </optgroup>
-                <optgroup label="Prosto House">
-                  {prostoDomy.map(dom => (
-                    <option key={dom.id} value={dom.id}>
-                      {dom.nazov} (Prosto House)
-                    </option>
-                  ))}
-                </optgroup>
-              </select>
+              <div className="grid grid-cols-2 gap-3">
+                <Button
+                  onClick={() => setSelectedVyrobca('Ticab house')}
+                  variant={selectedVyrobca === 'Ticab house' ? 'default' : 'outline'}
+                  className={`h-16 text-base font-bold ${selectedVyrobca === 'Ticab house' ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
+                >
+                  🏠 Ticab house
+                </Button>
+                <Button
+                  onClick={() => setSelectedVyrobca('Prosto House')}
+                  variant={selectedVyrobca === 'Prosto House' ? 'default' : 'outline'}
+                  className={`h-16 text-base font-bold ${selectedVyrobca === 'Prosto House' ? 'bg-purple-600 hover:bg-purple-700' : ''}`}
+                >
+                  🏡 Prosto House
+                </Button>
+              </div>
             </div>
 
             {/* File upload */}
@@ -218,21 +248,51 @@ export default function AdminCennik() {
 
             <Button
               onClick={handleUploadAndAnalyze}
-              disabled={!selectedFile || !selectedDom || isUploading}
+              disabled={!selectedFile || !selectedVyrobca || isUploading}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3"
             >
               {isUploading ? (
                 <>
                   <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
-                  Spracovávam...
+                  Analyzujem...
                 </>
               ) : (
                 <>
-                  <Upload className="w-5 h-5 mr-2" />
-                  Nahrať a aktualizovať ceny
+                  <FileSpreadsheet className="w-5 h-5 mr-2" />
+                  Analyzovať Excel súbor
                 </>
               )}
             </Button>
+
+            {/* Aplikovať ceny na konkrétny dom */}
+            {excelPrices && (
+              <div className="mt-4">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  3. Vyberte dom pre aplikovanie cien:
+                </label>
+                <select
+                  value={selectedDom || ''}
+                  onChange={(e) => setSelectedDom(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 mb-3"
+                >
+                  <option value="">-- Vyberte dom --</option>
+                  {selectedVyrobca === 'Ticab house' && ticabDomy.map(dom => (
+                    <option key={dom.id} value={dom.id}>{dom.nazov}</option>
+                  ))}
+                  {selectedVyrobca === 'Prosto House' && prostoDomy.map(dom => (
+                    <option key={dom.id} value={dom.id}>{dom.nazov}</option>
+                  ))}
+                </select>
+                
+                <Button
+                  onClick={handleApplyPricesToDom}
+                  disabled={!selectedDom || isSaving}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3"
+                >
+                  {isSaving ? 'Ukladám...' : 'Aplikovať ceny na vybraný dom'}
+                </Button>
+              </div>
+            )}
 
             {/* Formát Excel súboru */}
             <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
@@ -426,13 +486,20 @@ export default function AdminCennik() {
                     {Object.entries(ceny).map(([key, value]) => {
                       const hasChanges = editedPrices[key] !== undefined;
                       const currentValue = hasChanges ? editedPrices[key] : value;
+                      const newPriceFromExcel = excelPrices?.[key];
+                      const hasDifference = newPriceFromExcel !== undefined && newPriceFromExcel !== value;
                       
                       return (
                         <div key={key} className={`p-3 rounded-lg border-2 transition-all ${
-                          hasChanges ? 'bg-yellow-50 border-yellow-400' : 'bg-gray-50 border-gray-200 hover:border-blue-400'
+                          hasChanges ? 'bg-yellow-50 border-yellow-400' : 
+                          hasDifference ? 'bg-blue-50 border-blue-400' :
+                          'bg-gray-50 border-gray-200 hover:border-blue-400'
                         }`}>
                           <p className="text-xs font-mono text-gray-600 mb-2">{key}</p>
-                          <div className="flex items-center gap-2">
+                          
+                          {/* Aktuálna cena */}
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-xs text-gray-500 w-16">Aktuálna:</span>
                             <Input
                               type="number"
                               step="0.01"
@@ -452,6 +519,21 @@ export default function AdminCennik() {
                               </Button>
                             )}
                           </div>
+
+                          {/* Nová cena z Excelu */}
+                          {newPriceFromExcel !== undefined && (
+                            <div className="flex items-center gap-2 pt-2 border-t border-gray-200">
+                              <span className="text-xs font-bold text-blue-700 w-16">Nová:</span>
+                              <span className={`text-sm font-bold flex-1 ${hasDifference ? 'text-blue-700' : 'text-gray-500'}`}>
+                                {newPriceFromExcel.toLocaleString('sk-SK')} €
+                              </span>
+                              {hasDifference && (
+                                <Badge className="bg-blue-600 text-white text-xs">
+                                  {newPriceFromExcel > value ? '↑' : '↓'}
+                                </Badge>
+                              )}
+                            </div>
+                          )}
                         </div>
                       );
                     })}
