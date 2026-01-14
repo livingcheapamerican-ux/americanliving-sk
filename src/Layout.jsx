@@ -118,6 +118,9 @@ function LayoutContent({ children }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const isActive = (path) => location.pathname === path;
+  const isAdmin = user?.role === 'admin';
+
   const navItems = [
     { name: t('home'), path: createPageUrl("Domov"), icon: Home },
     ...(isAdmin ? [{ name: '💰 Cenník', path: createPageUrl("AdminCennik"), icon: Grid3x3 }] : []),
@@ -127,9 +130,6 @@ function LayoutContent({ children }) {
     { name: t('blog'), path: createPageUrl("Blog"), icon: BlogIcon },
     { name: t('contact'), path: createPageUrl("Kontakt"), icon: Phone },
   ];
-
-  const isActive = (path) => location.pathname === path;
-  const isAdmin = user?.role === 'admin';
 
   const adminNavItems = isAdmin ? [
     { name: '📊 Marketing', path: createPageUrl("Marketing"), icon: Activity }
