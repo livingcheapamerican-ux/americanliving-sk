@@ -120,6 +120,7 @@ function LayoutContent({ children }) {
 
   const navItems = [
     { name: t('home'), path: createPageUrl("Domov"), icon: Home },
+    ...(isAdmin ? [{ name: '💰 Cenník', path: createPageUrl("AdminCennik"), icon: Grid3x3 }] : []),
     { name: t('catalog'), path: createPageUrl("Katalog"), icon: Grid3x3 },
     { name: t('aiRecommendations'), path: createPageUrl("OdporucanieDomov"), icon: Sparkles },
     { name: t('about'), path: createPageUrl("ONas"), icon: Info },

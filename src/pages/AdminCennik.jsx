@@ -320,6 +320,8 @@ export default function AdminCennik() {
                 ? dom.konfigurator_ceny || {}
                 : dom.konfigurator_custom_ceny_prosto_house || {};
 
+              const isTicab = dom.vyrobca === 'Ticab house';
+
               if (Object.keys(ceny).length === 0) {
                 return (
                   <p className="text-gray-500 text-sm">
@@ -328,12 +330,44 @@ export default function AdminCennik() {
                 );
               }
 
+              const handleManualPriceChange = async (key, newValue) => {
+                const numValue = parseFloat(newValue);
+                if (isNaN(numValue)) {
+                  toast.error('Neplatná cena');
+                  return;
+                }
+
+                try {
+                  const updatedPrices = { ...ceny, [key]: numValue };
+                  const updateData = isTicab
+                    ? { konfigurator_ceny: updatedPrices }
+                    : { konfigurator_custom_ceny_prosto_house: updatedPrices };
+
+                  await base44.entities.Dom.update(dom.id, updateData);
+                  toast.success(`Cena ${key} aktualizovaná na ${numValue} €`);
+                  
+                  // Invalidovať cache
+                  setTimeout(() => window.location.reload(), 500);
+                } catch (error) {
+                  toast.error('Chyba pri ukladaní: ' + error.message);
+                }
+              };
+
               return (
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
                   {Object.entries(ceny).map(([key, value]) => (
-                    <div key={key} className="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                      <p className="text-xs font-mono text-gray-600 mb-1">{key}</p>
-                      <p className="text-lg font-bold text-gray-900">{value.toLocaleString('sk-SK')} €</p>
+                    <div key={key} className="bg-gray-50 p-3 rounded-lg border border-gray-200 hover:border-blue-400 transition-all">
+                      <p className="text-xs font-mono text-gray-600 mb-2">{key}</p>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="number"
+                          step="0.01"
+                          defaultValue={value}
+                          onBlur={(e) => handleManualPriceChange(key, e.target.value)}
+                          className="text-sm font-bold"
+                        />
+                        <span className="text-xs text-gray-500 whitespace-nowrap">€</span>
+                      </div>
                     </div>
                   ))}
                 </div>
