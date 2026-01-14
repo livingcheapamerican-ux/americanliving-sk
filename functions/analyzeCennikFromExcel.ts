@@ -50,16 +50,32 @@ Deno.serve(async (req) => {
 
     for (let i = startRow; i < data.length; i++) {
       const row = data[i];
-      if (!row || row.length < 2) {
+      
+      // Preskočiť prázdne riadky
+      if (!row || row.length < 2 || (!row[0] && !row[1])) {
         skippedCount++;
         continue;
       }
 
-      const polozkaKey = String(row[0]).trim();
-      const cena = parseFloat(row[1]);
+      const polozkaKey = row[0] ? String(row[0]).trim() : '';
+      const cenaValue = row[1];
+      
+      // Detailná validácia
+      if (!polozkaKey) {
+        errors.push(`Riadok ${i + 1}: Chýba názov položky (stĺpec A je prázdny)`);
+        skippedCount++;
+        continue;
+      }
 
-      if (!polozkaKey || isNaN(cena)) {
-        errors.push(`Riadok ${i + 1}: Neplatný kľúč alebo cena`);
+      const cena = parseFloat(cenaValue);
+      if (isNaN(cena)) {
+        errors.push(`Riadok ${i + 1}: Neplatná cena pre "${polozkaKey}" (hodnota: "${cenaValue}")`);
+        skippedCount++;
+        continue;
+      }
+
+      if (cena < 0) {
+        errors.push(`Riadok ${i + 1}: Záporná cena pre "${polozkaKey}" (${cena})`);
         skippedCount++;
         continue;
       }
@@ -68,6 +84,8 @@ Deno.serve(async (req) => {
     }
 
     console.log('Rozpoznaných položiek:', Object.keys(parsedPrices).length);
+    console.log('Preskočených riadkov:', skippedCount);
+    console.log('Chýb:', errors.length);
 
     return Response.json({
       success: true,

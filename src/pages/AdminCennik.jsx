@@ -95,9 +95,25 @@ export default function AdminCennik() {
     }
   };
 
-  const handleApplyPricesToDom = async () => {
+  const handleApplyPricesToDom = () => {
     if (!excelPrices || !selectedDom) {
       toast.error('Najprv analyzujte Excel a vyberte dom');
+      return;
+    }
+
+    // Len nastaviť nové ceny do editedPrices pre zobrazenie (bez uloženia)
+    setEditedPrices(excelPrices);
+    toast.success('Nové ceny načítané! Skontrolujte ich a kliknite na "Final save cien" pre uloženie.');
+  };
+
+  const handleFinalSave = async () => {
+    if (!selectedDom) {
+      toast.error('Najprv vyberte dom');
+      return;
+    }
+
+    if (Object.keys(editedPrices).length === 0) {
+      toast.error('Žiadne ceny na uloženie');
       return;
     }
 
@@ -110,18 +126,36 @@ export default function AdminCennik() {
         ? (dom.konfigurator_ceny || {})
         : (dom.konfigurator_custom_ceny_prosto_house || {});
 
-      const updatedPrices = { ...existingPrices, ...excelPrices };
+      // Merge existujúce ceny s novými
+      const updatedPrices = { ...existingPrices };
+      
+      for (const [key, value] of Object.entries(editedPrices)) {
+        const numValue = parseFloat(value);
+        if (!isNaN(numValue) && key !== '__zakladna_cena__') {
+          updatedPrices[key] = numValue;
+        }
+      }
 
       const updateData = isTicab
         ? { konfigurator_ceny: updatedPrices }
         : { konfigurator_custom_ceny_prosto_house: updatedPrices };
 
+      // Ak je upravená základná cena, pridať ju tiež
+      if (editedPrices['__zakladna_cena__']) {
+        const basePriceNum = parseFloat(editedPrices['__zakladna_cena__']);
+        if (!isNaN(basePriceNum)) {
+          updateData.zakladna_cena = basePriceNum;
+        }
+      }
+
       await base44.entities.Dom.update(dom.id, updateData);
       
-      toast.success(`Ceny aplikované na ${dom.nazov}!`);
+      toast.success(`✅ Ceny natrvalo uložené pre ${dom.nazov}!`);
+      setEditedPrices({});
+      setExcelPrices(null);
       setTimeout(() => window.location.reload(), 1000);
     } catch (error) {
-      toast.error('Chyba pri aplikovaní cien: ' + error.message);
+      toast.error('Chyba pri ukladaní: ' + error.message);
     } finally {
       setIsSaving(false);
     }
@@ -307,10 +341,9 @@ export default function AdminCennik() {
               <div className="mt-4">
                 <Button
                   onClick={handleApplyPricesToDom}
-                  disabled={isSaving}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3"
+                  className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3"
                 >
-                  {isSaving ? 'Ukladám...' : `Aplikovať nové ceny na ${domy.find(d => d.id === selectedDom)?.nazov}`}
+                  📋 Načítať nové ceny do tabuľky (bez uloženia)
                 </Button>
               </div>
             )}
@@ -343,11 +376,11 @@ export default function AdminCennik() {
                 {/* Súhrn */}
                 <div className="grid grid-cols-3 gap-4">
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200 text-center">
-                    <p className="text-2xl font-black text-green-700">{analysisResult.updated_count}</p>
-                    <p className="text-xs text-gray-600">Aktualizovaných</p>
+                    <p className="text-2xl font-black text-green-700">{analysisResult.found_count || 0}</p>
+                    <p className="text-xs text-gray-600">Načítaných</p>
                   </div>
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 text-center">
-                    <p className="text-2xl font-black text-blue-700">{analysisResult.skipped_count}</p>
+                    <p className="text-2xl font-black text-blue-700">{analysisResult.skipped_count || 0}</p>
                     <p className="text-xs text-gray-600">Preskočených</p>
                   </div>
                   <div className="bg-red-50 p-4 rounded-lg border border-red-200 text-center">
@@ -356,12 +389,12 @@ export default function AdminCennik() {
                   </div>
                 </div>
 
-                {/* Detail aktualizovaných položiek */}
-                {analysisResult.updated_prices && (
+                {/* Detail načítaných položiek */}
+                {analysisResult.parsed_prices && Object.keys(analysisResult.parsed_prices).length > 0 && (
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200 max-h-64 overflow-y-auto">
-                    <h3 className="font-bold text-green-900 mb-2">✅ Aktualizované položky:</h3>
+                    <h3 className="font-bold text-green-900 mb-2">✅ Načítané položky z Excelu ({Object.keys(analysisResult.parsed_prices).length}):</h3>
                     <div className="space-y-1 text-xs">
-                      {Object.entries(analysisResult.updated_prices).map(([key, value]) => (
+                      {Object.entries(analysisResult.parsed_prices).map(([key, value]) => (
                         <div key={key} className="flex justify-between items-center bg-white p-2 rounded">
                           <span className="font-mono text-gray-700">{key}</span>
                           <span className="font-bold text-green-700">{value.toLocaleString('sk-SK')} €</span>
@@ -371,15 +404,27 @@ export default function AdminCennik() {
                   </div>
                 )}
 
-                {/* Chyby */}
+                {/* Chyby - detailne */}
                 {analysisResult.errors && analysisResult.errors.length > 0 && (
-                  <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-                    <h3 className="font-bold text-red-900 mb-2">⚠️ Chyby:</h3>
+                  <div className="bg-red-50 p-4 rounded-lg border-2 border-red-300 max-h-64 overflow-y-auto">
+                    <h3 className="font-bold text-red-900 mb-2">⚠️ Chyby pri spracovaní ({analysisResult.errors.length}):</h3>
                     <ul className="space-y-1 text-xs text-red-700">
                       {analysisResult.errors.map((error, i) => (
-                        <li key={i}>• {error}</li>
+                        <li key={i} className="bg-white p-2 rounded border border-red-200">
+                          <span className="font-bold text-red-800">Riadok {i + 1}:</span> {error}
+                        </li>
                       ))}
                     </ul>
+                  </div>
+                )}
+                
+                {/* Preskočené položky - info */}
+                {analysisResult.skipped_count > 0 && (
+                  <div className="bg-yellow-50 p-4 rounded-lg border-2 border-yellow-300">
+                    <h3 className="font-bold text-yellow-900 mb-2">ℹ️ Preskočených {analysisResult.skipped_count} riadkov</h3>
+                    <p className="text-xs text-yellow-800">
+                      Tieto riadky boli preskočené, pretože neobsahovali platné údaje (prázdne riadky, chýbajúce hodnoty alebo neplatná cena).
+                    </p>
                   </div>
                 )}
               </div>
@@ -546,18 +591,31 @@ export default function AdminCennik() {
                   </div>
 
                   {Object.keys(editedPrices).length > 0 && (
-                    <div className="mb-4 p-4 bg-blue-50 border-2 border-blue-400 rounded-lg flex items-center justify-between">
-                      <div>
-                        <p className="font-bold text-blue-900">Máte {Object.keys(editedPrices).length} neuložených zmien</p>
-                        <p className="text-xs text-blue-700">Kliknite na "Uložiť všetky" alebo uložte jednotlivo</p>
+                    <div className="mb-4 p-6 bg-gradient-to-r from-red-50 to-orange-50 border-4 border-red-400 rounded-xl shadow-lg">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-xl font-black text-red-900 mb-1">
+                            🔥 {Object.keys(editedPrices).length} neuložených zmien cien
+                          </p>
+                          <p className="text-sm text-red-700 font-semibold">
+                            Kliknite na "FINAL SAVE CIEN" pre natrvalo uloženie do konfiguratora!
+                          </p>
+                        </div>
+                        <Button
+                          onClick={handleFinalSave}
+                          disabled={isSaving}
+                          className="bg-red-600 hover:bg-red-700 text-white font-black text-lg px-8 py-6 h-auto shadow-xl"
+                        >
+                          {isSaving ? '⏳ Ukladám...' : '💾 FINAL SAVE CIEN'}
+                        </Button>
                       </div>
-                      <Button
-                        onClick={handleSaveAllPrices}
-                        disabled={isSaving}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold"
-                      >
-                        {isSaving ? 'Ukladám...' : 'Uložiť všetky zmeny'}
-                      </Button>
+                      
+                      <div className="mt-4 p-3 bg-white rounded-lg border-2 border-red-200">
+                        <p className="text-xs text-gray-700">
+                          <strong>⚠️ Upozornenie:</strong> Po kliknutí na "FINAL SAVE CIEN" sa všetky nové ceny natrvalo uložia 
+                          do konfiguratora pre <strong>{dom.nazov}</strong> a budú viditeľné pre všetkých používateľov.
+                        </p>
+                      </div>
                     </div>
                   )}
 
