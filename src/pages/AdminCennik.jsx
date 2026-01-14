@@ -190,6 +190,67 @@ export default function AdminCennik() {
           </div>
         </Card>
 
+        {/* Výber výrobcu a domu */}
+        <Card className="p-6 mb-6 bg-white border-2 border-purple-300 shadow-lg">
+          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <Home className="w-6 h-6 text-purple-600" />
+            Vyberte dom pre správu cien
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Výber výrobcu */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                1. Výrobca:
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  onClick={() => {
+                    setSelectedVyrobca('Ticab house');
+                    setSelectedDom(null);
+                  }}
+                  variant={selectedVyrobca === 'Ticab house' ? 'default' : 'outline'}
+                  className={`h-14 text-sm font-bold ${selectedVyrobca === 'Ticab house' ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
+                >
+                  🏠 Ticab house
+                </Button>
+                <Button
+                  onClick={() => {
+                    setSelectedVyrobca('Prosto House');
+                    setSelectedDom(null);
+                  }}
+                  variant={selectedVyrobca === 'Prosto House' ? 'default' : 'outline'}
+                  className={`h-14 text-sm font-bold ${selectedVyrobca === 'Prosto House' ? 'bg-purple-600 hover:bg-purple-700' : ''}`}
+                >
+                  🏡 Prosto House
+                </Button>
+              </div>
+            </div>
+
+            {/* Výber domu */}
+            {selectedVyrobca && (
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  2. Dom:
+                </label>
+                <select
+                  value={selectedDom || ''}
+                  onChange={(e) => setSelectedDom(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 h-14"
+                >
+                  <option value="">-- Vyberte dom --</option>
+                  {selectedVyrobca === 'Ticab house' && ticabDomy.map(dom => (
+                    <option key={dom.id} value={dom.id}>{dom.nazov}</option>
+                  ))}
+                  {selectedVyrobca === 'Prosto House' && prostoDomy.map(dom => (
+                    <option key={dom.id} value={dom.id}>{dom.nazov}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+        </Card>
+
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Nahrávanie súboru */}
           <Card className="p-6 bg-white border-2 border-gray-200 shadow-lg">
@@ -197,29 +258,6 @@ export default function AdminCennik() {
               <Upload className="w-6 h-6 text-purple-600" />
               Nahrať Master tabuľku
             </h2>
-
-            {/* Výber výrobcu */}
-            <div className="mb-4">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                1. Vyberte výrobcu:
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                <Button
-                  onClick={() => setSelectedVyrobca('Ticab house')}
-                  variant={selectedVyrobca === 'Ticab house' ? 'default' : 'outline'}
-                  className={`h-16 text-base font-bold ${selectedVyrobca === 'Ticab house' ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
-                >
-                  🏠 Ticab house
-                </Button>
-                <Button
-                  onClick={() => setSelectedVyrobca('Prosto House')}
-                  variant={selectedVyrobca === 'Prosto House' ? 'default' : 'outline'}
-                  className={`h-16 text-base font-bold ${selectedVyrobca === 'Prosto House' ? 'bg-purple-600 hover:bg-purple-700' : ''}`}
-                >
-                  🏡 Prosto House
-                </Button>
-              </div>
-            </div>
 
             {/* File upload */}
             <div className="mb-4">
@@ -264,32 +302,15 @@ export default function AdminCennik() {
               )}
             </Button>
 
-            {/* Aplikovať ceny na konkrétny dom */}
-            {excelPrices && (
+            {/* Aplikovať ceny na vybraný dom */}
+            {excelPrices && selectedDom && (
               <div className="mt-4">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  3. Vyberte dom pre aplikovanie cien:
-                </label>
-                <select
-                  value={selectedDom || ''}
-                  onChange={(e) => setSelectedDom(e.target.value)}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 mb-3"
-                >
-                  <option value="">-- Vyberte dom --</option>
-                  {selectedVyrobca === 'Ticab house' && ticabDomy.map(dom => (
-                    <option key={dom.id} value={dom.id}>{dom.nazov}</option>
-                  ))}
-                  {selectedVyrobca === 'Prosto House' && prostoDomy.map(dom => (
-                    <option key={dom.id} value={dom.id}>{dom.nazov}</option>
-                  ))}
-                </select>
-                
                 <Button
                   onClick={handleApplyPricesToDom}
-                  disabled={!selectedDom || isSaving}
+                  disabled={isSaving}
                   className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3"
                 >
-                  {isSaving ? 'Ukladám...' : 'Aplikovať ceny na vybraný dom'}
+                  {isSaving ? 'Ukladám...' : `Aplikovať nové ceny na ${domy.find(d => d.id === selectedDom)?.nazov}`}
                 </Button>
               </div>
             )}
@@ -586,19 +607,23 @@ export default function AdminCennik() {
                           </div>
 
                           {/* Nová cena z Excelu */}
-                          {newPriceFromExcel !== undefined && (
-                            <div className="flex items-center gap-2 pt-2 border-t border-gray-200">
-                              <span className="text-xs font-bold text-blue-700 w-16">Nová:</span>
-                              <span className={`text-sm font-bold flex-1 ${hasDifference ? 'text-blue-700' : 'text-gray-500'}`}>
-                                {newPriceFromExcel.toLocaleString('sk-SK')} €
-                              </span>
-                              {hasDifference && (
-                                <Badge className="bg-blue-600 text-white text-xs">
-                                  {newPriceFromExcel > value ? '↑' : '↓'}
-                                </Badge>
-                              )}
-                            </div>
-                          )}
+                          <div className="flex items-center gap-2 pt-2 border-t border-gray-200">
+                           <span className="text-xs font-bold text-blue-700 w-16">Nová:</span>
+                           {newPriceFromExcel !== undefined ? (
+                             <>
+                               <span className={`text-sm font-bold flex-1 ${hasDifference ? 'text-blue-700' : 'text-gray-500'}`}>
+                                 {newPriceFromExcel.toLocaleString('sk-SK')} €
+                               </span>
+                               {hasDifference && (
+                                 <Badge className="bg-blue-600 text-white text-xs">
+                                   {newPriceFromExcel > value ? '↑' : '↓'}
+                                 </Badge>
+                               )}
+                             </>
+                           ) : (
+                             <span className="text-sm text-gray-400 flex-1">0 €</span>
+                           )}
+                          </div>
                         </div>
                       );
                     })}
