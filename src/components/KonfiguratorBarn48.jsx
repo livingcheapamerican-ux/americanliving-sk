@@ -171,7 +171,7 @@ export default function KonfiguratorBarn48({
 }) {
   const BASE_PRICE = dom?.zakladna_cena || 0;
 
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   // BARN 48 CENNÍK - FIXNÉ CENY (extrahované z fotiek)
   const CENY = {
@@ -575,8 +575,6 @@ export default function KonfiguratorBarn48({
   const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
   const showFinale = !showOnlyPhase || showOnlyPhase === "finale";
-
-  const { t, language } = useLanguage();
 
   return (
     <div className="mt-8 relative">

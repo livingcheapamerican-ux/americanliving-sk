@@ -171,7 +171,7 @@ export default function KonfiguratorAFrame({
 }) {
   const BASE_PRICE = dom?.zakladna_cena || 0;
 
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   // A-FRAME CENNÍK - FIXNÉ CENY (extrahované z obrázkov)
   const CENY = {
@@ -575,8 +575,6 @@ export default function KonfiguratorAFrame({
   const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
   const showFinale = !showOnlyPhase || showOnlyPhase === "finale";
-
-  const { t, language } = useLanguage();
 
   return (
     <div className="mt-8 relative">

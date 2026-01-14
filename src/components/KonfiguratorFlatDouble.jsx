@@ -185,7 +185,7 @@ export default function KonfiguratorFlatDouble({
   // Základná cena - dynamická z objektu domu
   const BASE_PRICE = dom?.zakladna_cena || 59900;
 
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   // FLAT DOUBLE CENNÍK - FIXNÉ CENY (142m²)
   const CENY = {
@@ -607,7 +607,6 @@ export default function KonfiguratorFlatDouble({
 
   const handleSendQuoteFromFloating = async (contactData) => {
     try {
-      const { t, language } = useLanguage();
       const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
         dom_id: dom?.id,
         klient_meno: contactData.meno,

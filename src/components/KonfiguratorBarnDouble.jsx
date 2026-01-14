@@ -171,7 +171,7 @@ export default function KonfiguratorBarnDouble({
 }) {
   const BASE_PRICE = dom?.zakladna_cena || 36900;
 
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   // BARN DOUBLE CENNÍK - FIXNÉ CENY (extrahované z priložených obrázkov - december 2025)
   const CENY = {
@@ -563,8 +563,6 @@ export default function KonfiguratorBarnDouble({
   const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
   const showFinale = !showOnlyPhase || showOnlyPhase === "finale";
-
-  const { t, language } = useLanguage();
 
   return (
     <div className="mt-8 relative">

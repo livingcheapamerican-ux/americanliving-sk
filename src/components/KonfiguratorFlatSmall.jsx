@@ -170,7 +170,7 @@ export default function KonfiguratorFlatSmall({
 }) {
   const BASE_PRICE = dom?.zakladna_cena || 19500;
 
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   // FLAT SMALL CENNÍK - FIXNÉ CENY (extrahované z obrázkov - december 2025)
   const CENY = {
@@ -582,8 +582,6 @@ export default function KonfiguratorFlatSmall({
   const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
   const showFinale = !showOnlyPhase || showOnlyPhase === "finale";
-
-  const { t, language } = useLanguage();
 
   return (
     <div className="mt-8 relative">
