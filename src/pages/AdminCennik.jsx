@@ -443,7 +443,10 @@ export default function AdminCennik() {
                 {/* Detail načítaných položiek */}
                 {analysisResult.parsed_prices && Object.keys(analysisResult.parsed_prices).length > 0 && (
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200 max-h-64 overflow-y-auto">
-                    <h3 className="font-bold text-green-900 mb-2">✅ Načítané položky z Excelu ({Object.keys(analysisResult.parsed_prices).length}):</h3>
+                    <h3 className="font-bold text-green-900 mb-2">
+                      ✅ Načítané ceny pre dom "{domy.find(d => d.id === selectedDom)?.nazov}" 
+                      (riadok {analysisResult.dom_row}, {Object.keys(analysisResult.parsed_prices).length} položiek z {analysisResult.total_polozky}):
+                    </h3>
                     <div className="space-y-1 text-xs">
                       {Object.entries(analysisResult.parsed_prices).map(([key, value]) => (
                         <div key={key} className="flex justify-between items-center bg-white p-2 rounded">
