@@ -510,14 +510,14 @@ export default function AdminCennik() {
                 ? (dom.konfigurator_skryte_polozky || [])
                 : (dom.prosto_skryte_polozky || []);
               
-              // Inicializovať hiddenItems ak ešte nie sú
-              if (Object.keys(hiddenItems).length === 0) {
+              // Inicializovať hiddenItems v useEffect
+              React.useEffect(() => {
                 const initialHidden = {};
                 existingHidden.forEach(key => {
                   initialHidden[key] = true;
                 });
                 setHiddenItems(initialHidden);
-              }
+              }, [selectedDom]);
 
               // Získať fázy pre aktuálneho výrobcu
               const FAZY = isTicab ? TICAB_FAZY : PROSTO_FAZY;
