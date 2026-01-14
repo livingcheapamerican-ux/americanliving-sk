@@ -607,6 +607,7 @@ export default function KonfiguratorFlatDouble({
 
   const handleSendQuoteFromFloating = async (contactData) => {
     try {
+      const { t, language } = useLanguage();
       const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
         dom_id: dom?.id,
         klient_meno: contactData.meno,
@@ -622,7 +623,8 @@ export default function KonfiguratorFlatDouble({
         bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, vonkajsiaFasada,
         interierFinis, vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
         pergola, inziniering, projektA0, revizna, doprava, predlzenie: 0,
-        predajNehnutelnosti, hladaniePozemku, financneSluzby
+        predajNehnutelnosti, hladaniePozemku, financneSluzby,
+        language: language
       });
       return response;
     } catch (error) {
@@ -1348,19 +1350,6 @@ export default function KonfiguratorFlatDouble({
               </Button>
             </div>
 
-            {/* Contact Modal */}
-            <KonfiguratorContactModal
-              isOpen={showContactModal}
-              onClose={() => setShowContactModal(false)}
-              dom={dom}
-              totalPrice={totalPrice}
-              selectedItems={selectedItems}
-              vonkajsiaFasada={vonkajsiaFasada}
-              izolaciaNavysenie={izolaciaNavysenie}
-              tepelneCerpadlo={tepelneCerpadlo}
-              rekuperacia={rekuperacia}
-              projektA0={projektA0}
-            />
           </div>
         </div>
         </Card>
@@ -1396,6 +1385,57 @@ export default function KonfiguratorFlatDouble({
         </motion.div>}
         </div>
         </div>
+
+      {!showOnlySummary && (
+        <>
+          <FloatingPrice
+            price={totalPrice}
+            isVisible={true}
+            onSendQuote={handleSendQuoteFromFloating}
+            dom={dom}
+            vyrobca="Prosto House"
+            buttonText={t('showHouseAndSendQuote')}
+          />
+          <KonfiguratorContactModal
+            isOpen={showContactModal}
+            onClose={() => setShowContactModal(false)}
+            dom={dom}
+            totalPrice={totalPrice}
+            selectedItems={selectedItems}
+            vonkajsiaFasada={vonkajsiaFasada}
+            izolaciaNavysenie={izolaciaNavysenie}
+            tepelneCerpadlo={tepelneCerpadlo}
+            rekuperacia={rekuperacia}
+            projektA0={projektA0}
+            montazHolodomu={montazHolodomu}
+            zaklady={zaklady}
+            predlzenie={0}
+            vstupneDvere={vstupneDvere}
+            elektroinstalacia={elektroinstalacia}
+            vodaKanalizacia={vodaKanalizacia}
+            sanitaKomplet={sanitaKomplet}
+            bojler={bojler}
+            pripojkaSiete={pripojkaSiete}
+            stresneOkno={stresneOkno}
+            bocneOknoFixne={bocneOknoFixne}
+            bocneOknoVyklopne90={bocneOknoVyklopne90}
+            bocneOknoVyklopne55={bocneOknoVyklopne55}
+            povrchokaOkien={povrchokaOkien}
+            tonovaneSkla={tonovaneSkla}
+            interierFinis={interierFinis}
+            vnutornePodlahy={vnutornePodlahy}
+            podlahovVykurovanie={podlahovVykurovanie}
+            interieroveDvere={interieroveDvere}
+            pergola={pergola}
+            inziniering={inziniering}
+            revizna={revizna}
+            doprava={doprava}
+            predajNehnutelnosti={predajNehnutelnosti}
+            hladaniePozemku={hladaniePozemku}
+            financneSluzby={financneSluzby}
+          />
+        </>
+      )}
         </div>
         );
         }

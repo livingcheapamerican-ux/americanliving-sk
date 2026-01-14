@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Send, CheckCircle, Package, Hammer, Key, FileText, Sparkles, FileDown, Mail } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { useLanguage } from "./LanguageContext";
 
 export default function KonfiguratorContactModal({ 
   isOpen, 
@@ -47,6 +48,8 @@ export default function KonfiguratorContactModal({
   const [generatingPDF, setGeneratingPDF] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [previewHtml, setPreviewHtml] = useState("");
+
+  const { t, language } = useLanguage();
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -157,7 +160,8 @@ export default function KonfiguratorContactModal({
         povrchokaOkien, tonovaneSkla, vonkajsiaFasada, interierFinis,
         vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
         inziniering, projektA0, revizna, doprava, predlzenie,
-        predajNehnutelnosti, hladaniePozemku, financneSluzby
+        predajNehnutelnosti, hladaniePozemku, financneSluzby,
+        language: language
       });
       
       setPreviewHtml(response.data.html);
@@ -199,7 +203,7 @@ export default function KonfiguratorContactModal({
         predajNehnutelnosti, hladaniePozemku, financneSluzby
       });
       
-      toast.success('✓ Cenová ponuka odoslaná na email');
+      toast.success('✓ ' + t('quoteSentSuccess'));
       setSubmitted(true);
       setTimeout(() => {
         setSubmitted(false);
@@ -236,7 +240,7 @@ export default function KonfiguratorContactModal({
             <div className="lg:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-6 text-white">
               <DialogHeader className="mb-4">
                 <DialogTitle className="text-xl sm:text-2xl font-bold text-white">
-                  Vaša konfigurácia
+                  {t('yourConfiguration')}
                 </DialogTitle>
               </DialogHeader>
 
@@ -249,7 +253,7 @@ export default function KonfiguratorContactModal({
                 />
                 <div className="absolute top-2 left-2">
                   <Badge className={`${vonkajsiaFasada === "suchana" ? "bg-orange-500" : "bg-amber-600"} text-white text-xs`}>
-                    {vonkajsiaFasada === "suchana" ? "Škúchaná fasáda" : "Drevený obklad"}
+                    {vonkajsiaFasada === "suchana" ? t('facadeStucco') : t('facadeWoodMetal')}
                   </Badge>
                 </div>
               </div>
@@ -273,25 +277,25 @@ export default function KonfiguratorContactModal({
                       {showHrubaDivider && (
                         <div className="flex items-center gap-2 py-1 mt-2">
                           <Package className="w-3 h-3 text-amber-400" />
-                          <span className="text-[10px] font-bold text-amber-400 uppercase">Hrubá stavba</span>
+                          <span className="text-[10px] font-bold text-amber-400 uppercase">{t('roughConstruction')}</span>
                         </div>
                       )}
                       {showHolodomDivider && (
                         <div className="flex items-center gap-2 py-1 mt-2">
                           <Hammer className="w-3 h-3 text-blue-400" />
-                          <span className="text-[10px] font-bold text-blue-400 uppercase">Holodom</span>
+                          <span className="text-[10px] font-bold text-blue-400 uppercase">{t('holodomLabel')}</span>
                         </div>
                       )}
                       {showKlucDivider && (
                         <div className="flex items-center gap-2 py-1 mt-2">
                           <Key className="w-3 h-3 text-emerald-400" />
-                          <span className="text-[10px] font-bold text-emerald-400 uppercase">Dom na kľúč</span>
+                          <span className="text-[10px] font-bold text-emerald-400 uppercase">{t('turnkeyLabel')}</span>
                         </div>
                       )}
                       {showDocsDivider && (
                         <div className="flex items-center gap-2 py-1 mt-2">
                           <FileText className="w-3 h-3 text-purple-400" />
-                          <span className="text-[10px] font-bold text-purple-400 uppercase">Dokumentácia</span>
+                          <span className="text-[10px] font-bold text-purple-400 uppercase">{t('documentationLabel')}</span>
                         </div>
                       )}
                       {item.selected && (
@@ -313,15 +317,15 @@ export default function KonfiguratorContactModal({
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-5 h-5 text-green-400" />
                     <div>
-                      <p className="text-green-400 font-bold text-sm">✓ Spĺňa podmienky A0</p>
-                      <p className="text-green-300/80 text-xs">Rodinný dom s energetickým certifikátom</p>
+                      <p className="text-green-400 font-bold text-sm">✓ {t('meetsA0Conditions')}</p>
+                      <p className="text-green-300/80 text-xs">{t('familyHouseWithCert')}</p>
                     </div>
                   </div>
                 ) : projektA0 && a0Missing.length > 0 ? (
                   <div>
                     <div className="flex items-center gap-2 mb-2">
                       <Sparkles className="w-4 h-4 text-amber-400" />
-                      <p className="text-amber-400 font-bold text-sm">Pre A0 chýba:</p>
+                      <p className="text-amber-400 font-bold text-sm">{t('forA0Missing')}:</p>
                     </div>
                     <ul className="text-amber-300/80 text-xs space-y-0.5 ml-6">
                       {a0Missing.map((item, i) => <li key={i}>• {item}</li>)}
@@ -331,8 +335,8 @@ export default function KonfiguratorContactModal({
                   <div className="flex items-center gap-2">
                     <Package className="w-5 h-5 text-blue-400" />
                     <div>
-                      <p className="text-blue-400 font-bold text-sm">Rekreačná stavba</p>
-                      <p className="text-blue-300/80 text-xs">Chata / záhradný domček</p>
+                      <p className="text-blue-400 font-bold text-sm">{t('recreationalBuilding')}</p>
+                      <p className="text-blue-300/80 text-xs">{t('cottageOrGardenHouse')}</p>
                     </div>
                   </div>
                 )}
@@ -341,7 +345,7 @@ export default function KonfiguratorContactModal({
               {/* Celková cena */}
               <div className="mt-3 p-3 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30">
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-300 text-sm">Celkom s DPH</span>
+                  <span className="text-slate-300 text-sm">{t('totalWithVAT')}</span>
                   <span className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
                     {formatPrice(totalPrice)}
                   </span>
@@ -352,69 +356,69 @@ export default function KonfiguratorContactModal({
             {/* Pravá strana - Formulár */}
             <div className="lg:w-1/2 p-4 sm:p-6">
               <h3 className="text-xl font-bold text-gray-800 mb-4">
-                Kontaktné údaje
+                {t('contactDetails')}
               </h3>
               <p className="text-gray-600 text-sm mb-6">
-                Vyplňte formulár a my vás budeme kontaktovať s podrobnou ponukou.
+                {t('fillFormWeContact')}
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="meno">Meno a priezvisko *</Label>
+                  <Label htmlFor="meno">{t('fullName')} *</Label>
                   <Input
                     id="meno"
                     required
                     value={formData.meno}
                     onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
-                    placeholder="Ján Novák"
+                    placeholder={t('fullNamePlaceholder')}
                     className="mt-1 !text-gray-900 placeholder:text-gray-500"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="email">Email *</Label>
+                  <Label htmlFor="email">{t('email')} *</Label>
                   <Input
                     id="email"
                     type="email"
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="jan.novak@email.sk"
+                    placeholder={t('emailPlaceholder')}
                     className="mt-1 !text-gray-900 placeholder:text-gray-500"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="telefon">Telefón *</Label>
+                  <Label htmlFor="telefon">{t('phone')} *</Label>
                   <Input
                     id="telefon"
                     required
                     value={formData.telefon}
                     onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
-                    placeholder="+421 900 123 456"
+                    placeholder={t('phonePlaceholder')}
                     className="mt-1 !text-gray-900 placeholder:text-gray-500"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="obec">Obec / Mesto (kde bude dom stáť) *</Label>
+                  <Label htmlFor="obec">{t('cityLocation')} *</Label>
                   <Input
                     id="obec"
                     required
                     value={formData.obec}
                     onChange={(e) => setFormData({ ...formData, obec: e.target.value })}
-                    placeholder="napr. Bratislava, Košice..."
+                    placeholder={t('cityPlaceholder')}
                     className="mt-1 !text-gray-900 placeholder:text-gray-500"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="poznamka">Poznámka (voliteľné)</Label>
+                  <Label htmlFor="poznamka">{t('note')} ({t('optional')})</Label>
                   <Textarea
                     id="poznamka"
                     value={formData.poznamka}
                     onChange={(e) => setFormData({ ...formData, poznamka: e.target.value })}
-                    placeholder="Máte otázky alebo špeciálne požiadavky?"
+                    placeholder={t('notePlaceholder')}
                     rows={3}
                     className="mt-1 !text-gray-900 placeholder:text-gray-500"
                   />
@@ -431,7 +435,7 @@ export default function KonfiguratorContactModal({
                         className="w-full border-2 border-blue-500 text-blue-600 hover:bg-blue-50"
                       >
                         <Mail className="mr-2 w-4 h-4" />
-                        Náhľad cenovej ponuky
+                        {t('quotePreview')}
                       </Button>
                     )}
                     <Button
@@ -442,7 +446,7 @@ export default function KonfiguratorContactModal({
                       className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold"
                     >
                       <Mail className="mr-2 w-5 h-5" />
-                      {generatingPDF ? 'Odosiela sa...' : 'Poslať cenovú ponuku'}
+                      {generatingPDF ? t('sending') : t('sendQuote')}
                     </Button>
                     <Button
                       type="submit"
@@ -452,11 +456,11 @@ export default function KonfiguratorContactModal({
                       disabled={createDopytMutation.isPending}
                     >
                       {createDopytMutation.isPending ? (
-                        "Odosiela sa..."
+                        t('sending')
                       ) : (
                         <>
                           <Send className="mr-2 w-5 h-5" />
-                          Poslať nezáväzný dopyt
+                          {t('sendInquiry')}
                         </>
                       )}
                     </Button>
@@ -469,11 +473,11 @@ export default function KonfiguratorContactModal({
                     disabled={createDopytMutation.isPending}
                   >
                     {createDopytMutation.isPending ? (
-                      "Odosiela sa..."
+                      t('sending')
                     ) : (
                       <>
                         <Send className="mr-2 w-5 h-5" />
-                        Poslať cenovú ponuku
+                        {t('sendQuote')}
                       </>
                     )}
                   </Button>
@@ -491,11 +495,10 @@ export default function KonfiguratorContactModal({
               <CheckCircle className="w-10 h-10 text-green-600" />
             </div>
             <h3 className="text-2xl font-bold text-gray-800 mb-4">
-              Ďakujeme za váš záujem!
+              {t('thankYouForInterest')}
             </h3>
             <p className="text-gray-600 leading-relaxed">
-              Vaša konfigurácia bola úspešne odoslaná. Ozveme sa vám čo najskôr, 
-              zvyčajne do 24 hodín.
+              {t('configSentSuccessfully')}
             </p>
           </motion.div>
         )}

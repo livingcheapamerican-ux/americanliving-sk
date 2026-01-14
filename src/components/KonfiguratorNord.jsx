@@ -432,7 +432,8 @@ export default function KonfiguratorNord({
         bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, vonkajsiaFasada,
         interierFinis, vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
         pergola, inziniering, projektA0, revizna, doprava, predlzenie: 0,
-        predajNehnutelnosti, hladaniePozemku, financneSluzby
+        predajNehnutelnosti, hladaniePozemku, financneSluzby,
+        language: language
       });
       return response;
     } catch (error) {

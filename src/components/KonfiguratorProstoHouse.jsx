@@ -585,7 +585,8 @@ export default function KonfiguratorProstoHouse({
         bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, vonkajsiaFasada,
         interierFinis, vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
         inziniering, projektA0, revizna, doprava, predlzenie,
-        predajNehnutelnosti, hladaniePozemku, financneSluzby
+        predajNehnutelnosti, hladaniePozemku, financneSluzby,
+        language: language
       });
       return response;
     } catch (error) {
