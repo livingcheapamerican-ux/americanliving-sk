@@ -60,6 +60,27 @@ export default function AdminCennik() {
   const [selectedVyrobca, setSelectedVyrobca] = useState(null);
   const [excelPrices, setExcelPrices] = useState(null);
 
+  // Načítať skryté položky pri zmene vybraného domu
+  React.useEffect(() => {
+    if (selectedDom && domy.data) {
+      const dom = domy.data.find(d => d.id === selectedDom);
+      if (dom) {
+        const isTicab = dom.vyrobca === 'Ticab house';
+        const existingHidden = isTicab 
+          ? (dom.konfigurator_skryte_polozky || [])
+          : (dom.prosto_skryte_polozky || []);
+        
+        const initialHidden = {};
+        existingHidden.forEach(key => {
+          initialHidden[key] = true;
+        });
+        setHiddenItems(initialHidden);
+      }
+    } else {
+      setHiddenItems({});
+    }
+  }, [selectedDom]);
+
   const { data: user } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me()
@@ -509,15 +530,6 @@ export default function AdminCennik() {
               const existingHidden = isTicab 
                 ? (dom.konfigurator_skryte_polozky || [])
                 : (dom.prosto_skryte_polozky || []);
-              
-              // Inicializovať hiddenItems v useEffect
-              React.useEffect(() => {
-                const initialHidden = {};
-                existingHidden.forEach(key => {
-                  initialHidden[key] = true;
-                });
-                setHiddenItems(initialHidden);
-              }, [selectedDom]);
 
               // Získať fázy pre aktuálneho výrobcu
               const FAZY = isTicab ? TICAB_FAZY : PROSTO_FAZY;
