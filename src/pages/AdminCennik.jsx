@@ -8,12 +8,54 @@ import { Badge } from "@/components/ui/badge";
 import { Upload, FileSpreadsheet, AlertCircle, CheckCircle, Home, DollarSign, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
+// Mapovanie položiek na fázy
+const TICAB_FAZY = {
+  'Hrubá stavba': [
+    'izolacia_stien_200mm', 'izolacia_stien_250mm', 'izolacia_podlahy_200mm', 
+    'izolacia_stropu_200mm', 'zaklady_vruty', 'zaklady_patky', 'zaklady_pasove'
+  ],
+  'Holodom': [
+    'tepelne_cerpadlo', 'pripravaNaRekuperaciu', 'rekuperacia', 'podlahove_kurenie',
+    'klimatizacia', 'pripravaKrb', 'ochranaKachle', 'fasada_omietka', 'fasada_smrekovec',
+    'fasada_falcovane', 'fasada_thermowood', 'strecha_falcovane', 'odkvapy', 
+    'dvere_kovove', 'okna_standard', 'okna_premium'
+  ],
+  'Na kľúč': [
+    'obklad_smrek_bez_uzlov', 'obklad_sadrokarton_tapeta', 'obklad_osb_panel',
+    'dvere_posuvne', 'elektro_cz', 'elektro_ge', 'bleskozvod', 'prepat',
+    'pripravaNaSolarnePanely', 'sprchovyKut', 'vana', 'bateria', 'skrinka',
+    'strop_kupelna_sadrokarton', 'kuchynskaLinka', 'spotrebice'
+  ],
+  'Dokumentácia': [
+    'inziniering', 'projektACertifikacia', 'revizia', 'montaz', 'doprava'
+  ]
+};
+
+const PROSTO_FAZY = {
+  'Hrubá stavba': [
+    'zaklady_ano', 'hruba_stavba'
+  ],
+  'Holodom': [
+    'montaz_ano', 'elektroinstalacia', 'vodaKanalizacia', 'tepelneCerpadlo',
+    'rekuperacia', 'vonkajsiaFasada_suchana', 'vonkajsiaFasada_smrekovec',
+    'vonkajsiaFasada_larcova', 'povrchokaOkien'
+  ],
+  'Na kľúč': [
+    'interierFinis_drevo', 'interierFinish_sadrokarton', 'vnutornePodlahy',
+    'sanitaKomplet', 'bojler', 'kuchynskaLinka', 'dvere_interierove'
+  ],
+  'Dokumentácia': [
+    'projektovaDokumentacia', 'stavebnePovolenie', 'doprava'
+  ]
+};
+
 export default function AdminCennik() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [selectedDom, setSelectedDom] = useState(null);
   const [editedPrices, setEditedPrices] = useState({});
+  const [hiddenItems, setHiddenItems] = useState({});
   const [isSaving, setIsSaving] = useState(false);
   const [selectedVyrobca, setSelectedVyrobca] = useState(null);
   const [excelPrices, setExcelPrices] = useState(null);
@@ -112,8 +154,8 @@ export default function AdminCennik() {
       return;
     }
 
-    if (Object.keys(editedPrices).length === 0) {
-      toast.error('Žiadne ceny na uloženie');
+    if (Object.keys(editedPrices).length === 0 && Object.keys(hiddenItems).length === 0) {
+      toast.error('Žiadne zmeny na uloženie');
       return;
     }
 
@@ -126,7 +168,7 @@ export default function AdminCennik() {
         ? (dom.konfigurator_ceny || {})
         : (dom.konfigurator_custom_ceny_prosto_house || {});
 
-      // Merge existujúce ceny s novými
+      // Merge len zmenené ceny (editedPrices obsahuje len tie čo boli zmenené)
       const updatedPrices = { ...existingPrices };
       
       for (const [key, value] of Object.entries(editedPrices)) {
@@ -148,10 +190,19 @@ export default function AdminCennik() {
         }
       }
 
+      // Uložiť skryté položky
+      const skrytePolozky = Object.keys(hiddenItems).filter(key => hiddenItems[key]);
+      if (isTicab) {
+        updateData.konfigurator_skryte_polozky = skrytePolozky;
+      } else {
+        updateData.prosto_skryte_polozky = skrytePolozky;
+      }
+
       await base44.entities.Dom.update(dom.id, updateData);
       
-      toast.success(`✅ Ceny natrvalo uložené pre ${dom.nazov}!`);
+      toast.success(`✅ Ceny a viditeľnosť natrvalo uložené pre ${dom.nazov}!`);
       setEditedPrices({});
+      setHiddenItems({});
       setExcelPrices(null);
       setTimeout(() => window.location.reload(), 1000);
     } catch (error) {
@@ -450,6 +501,23 @@ export default function AdminCennik() {
 
               const isTicab = dom.vyrobca === 'Ticab house';
               const zakladnaCena = dom.zakladna_cena || 0;
+              
+              // Načítať skryté položky
+              const existingHidden = isTicab 
+                ? (dom.konfigurator_skryte_polozky || [])
+                : (dom.prosto_skryte_polozky || []);
+              
+              // Inicializovať hiddenItems ak ešte nie sú
+              if (Object.keys(hiddenItems).length === 0) {
+                const initialHidden = {};
+                existingHidden.forEach(key => {
+                  initialHidden[key] = true;
+                });
+                setHiddenItems(initialHidden);
+              }
+
+              // Získať fázy pre aktuálneho výrobcu
+              const FAZY = isTicab ? TICAB_FAZY : PROSTO_FAZY;
 
               const handlePriceEdit = (key, newValue) => {
                 setEditedPrices(prev => ({ ...prev, [key]: newValue }));
@@ -457,6 +525,13 @@ export default function AdminCennik() {
 
               const handleBasePriceEdit = (newValue) => {
                 setEditedPrices(prev => ({ ...prev, '__zakladna_cena__': newValue }));
+              };
+
+              const handleToggleVisibility = (key) => {
+                setHiddenItems(prev => ({
+                  ...prev,
+                  [key]: !prev[key]
+                }));
               };
 
               const handleSaveSinglePrice = async (key) => {
@@ -590,12 +665,12 @@ export default function AdminCennik() {
                     )}
                   </div>
 
-                  {Object.keys(editedPrices).length > 0 && (
+                  {(Object.keys(editedPrices).length > 0 || Object.keys(hiddenItems).length > 0) && (
                     <div className="mb-4 p-6 bg-gradient-to-r from-red-50 to-orange-50 border-4 border-red-400 rounded-xl shadow-lg">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-xl font-black text-red-900 mb-1">
-                            🔥 {Object.keys(editedPrices).length} neuložených zmien cien
+                            🔥 {Object.keys(editedPrices).length} zmien cien + {Object.keys(hiddenItems).filter(k => hiddenItems[k] !== existingHidden.includes(k)).length} zmien viditeľnosti
                           </p>
                           <p className="text-sm text-red-700 font-semibold">
                             Kliknite na "FINAL SAVE CIEN" pre natrvalo uloženie do konfiguratora!
@@ -612,75 +687,89 @@ export default function AdminCennik() {
                       
                       <div className="mt-4 p-3 bg-white rounded-lg border-2 border-red-200">
                         <p className="text-xs text-gray-700">
-                          <strong>⚠️ Upozornenie:</strong> Po kliknutí na "FINAL SAVE CIEN" sa všetky nové ceny natrvalo uložia 
-                          do konfiguratora pre <strong>{dom.nazov}</strong> a budú viditeľné pre všetkých používateľov.
+                          <strong>⚠️ Upozornenie:</strong> Po kliknutí na "FINAL SAVE CIEN" sa všetky zmeny natrvalo uložia 
+                          do konfiguratora pre <strong>{dom.nazov}</strong> a budú viditeľné pre verejnosť.
                         </p>
                       </div>
                     </div>
                   )}
 
-                  {/* Tabuľka s cenami položiek konfiguratora */}
-                  <div className="mb-4">
-                    <h4 className="text-lg font-bold text-gray-700 mb-3">
-                      📋 Ceny položiek v konfigurátoře ({Object.keys(ceny).length} položiek)
-                    </h4>
-                  </div>
-                  
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
-                    {Object.entries(ceny).map(([key, value]) => {
-                      const hasChanges = editedPrices[key] !== undefined;
-                      const currentValue = hasChanges ? editedPrices[key] : value;
-                      const newPriceFromExcel = excelPrices?.[key];
-                      const hasDifference = newPriceFromExcel !== undefined && newPriceFromExcel !== value;
-                      
-                      return (
-                        <div key={key} className={`p-3 rounded-lg border-2 transition-all ${
-                          hasChanges ? 'bg-yellow-50 border-yellow-400' : 
-                          hasDifference ? 'bg-blue-50 border-blue-400' :
-                          'bg-gray-50 border-gray-200 hover:border-blue-400'
-                        }`}>
-                          <p className="text-xs font-mono text-gray-600 mb-2">{key}</p>
-                          
-                          {/* Aktuálna cena */}
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xs text-gray-500 w-16">Aktuálna:</span>
-                            <Input
-                              type="number"
-                              step="0.01"
-                              value={currentValue}
-                              onChange={(e) => handlePriceEdit(key, e.target.value)}
-                              className="text-sm font-bold"
-                            />
-                            <span className="text-xs text-gray-500">€</span>
-                            {hasChanges && (
-                              <Button
-                                size="sm"
-                                onClick={() => handleSaveSinglePrice(key)}
-                                disabled={isSaving}
-                                className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 h-8"
-                              >
-                                ✓
-                              </Button>
-                            )}
-                          </div>
+                  {/* Tabuľka s cenami položiek konfiguratora - zoskupené podľa fáz */}
+                  <div className="space-y-6">
+                    {Object.entries(FAZY).map(([fazaNazov, fazaPolozky]) => {
+                      const polozkyVoFaze = Object.entries(ceny).filter(([key]) => fazaPolozky.includes(key));
 
-                          {/* Nová cena z Excelu */}
-                          <div className="flex items-center gap-2 pt-2 border-t border-gray-200">
-                           <span className="text-xs font-bold text-blue-700 w-16">Nová:</span>
-                           {newPriceFromExcel !== undefined ? (
-                             <>
-                               <span className={`text-sm font-bold flex-1 ${hasDifference ? 'text-blue-700' : 'text-gray-500'}`}>
-                                 {newPriceFromExcel.toLocaleString('sk-SK')} €
-                               </span>
-                               {hasDifference && (
-                                 <Badge className="bg-blue-600 text-white text-xs">
-                                   {newPriceFromExcel > value ? '↑' : '↓'}
-                                 </Badge>
-                               )}
-                             </>
-                           ) : (
-                             <span className="text-sm text-gray-400 flex-1">0 €</span>
-                           )}
+                      if (polozkyVoFaze.length === 0) return null;
+
+                      return (
+                        <div key={fazaNazov} className="border-2 border-purple-200 rounded-lg p-4 bg-gradient-to-r from-purple-50 to-blue-50">
+                          <h4 className="text-lg font-bold text-purple-900 mb-4 flex items-center gap-2">
+                            🏗️ {fazaNazov} ({polozkyVoFaze.length} položiek)
+                          </h4>
+
+                          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            {polozkyVoFaze.map(([key, value]) => {
+                              const hasChanges = editedPrices[key] !== undefined;
+                              const currentValue = hasChanges ? editedPrices[key] : value;
+                              const newPriceFromExcel = excelPrices?.[key];
+                              const hasDifference = newPriceFromExcel !== undefined && newPriceFromExcel !== value;
+                              const isHidden = hiddenItems[key] || false;
+
+                              return (
+                                <div key={key} className={`p-3 rounded-lg border-2 transition-all ${
+                                  isHidden ? 'bg-gray-100 border-gray-400 opacity-60' :
+                                  hasChanges ? 'bg-yellow-50 border-yellow-400' : 
+                                  hasDifference ? 'bg-blue-50 border-blue-400' :
+                                  'bg-white border-gray-200 hover:border-blue-400'
+                                }`}>
+                                  <div className="flex items-center justify-between mb-2">
+                                    <p className="text-xs font-mono text-gray-600 flex-1">{key}</p>
+                                    <Button
+                                      size="sm"
+                                      variant={isHidden ? "default" : "outline"}
+                                      onClick={() => handleToggleVisibility(key)}
+                                      className={`px-2 py-1 h-6 text-xs ${isHidden ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'} text-white`}
+                                      title={isHidden ? 'Skryté pre verejnosť' : 'Viditeľné pre verejnosť'}
+                                    >
+                                      {isHidden ? '👁️‍🗨️' : '👁️'}
+                                    </Button>
+                                  </div>
+
+                                  {/* Aktuálna cena */}
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className="text-xs text-gray-500 w-16">Aktuálna:</span>
+                                    <Input
+                                      type="number"
+                                      step="0.01"
+                                      value={currentValue}
+                                      onChange={(e) => handlePriceEdit(key, e.target.value)}
+                                      className="text-sm font-bold"
+                                      disabled={isHidden}
+                                    />
+                                    <span className="text-xs text-gray-500">€</span>
+                                  </div>
+
+                                  {/* Nová cena z Excelu */}
+                                  <div className="flex items-center gap-2 pt-2 border-t border-gray-200">
+                                    <span className="text-xs font-bold text-blue-700 w-16">Nová:</span>
+                                    {newPriceFromExcel !== undefined ? (
+                                      <>
+                                        <span className={`text-sm font-bold flex-1 ${hasDifference ? 'text-blue-700' : 'text-gray-500'}`}>
+                                          {newPriceFromExcel.toLocaleString('sk-SK')} €
+                                        </span>
+                                        {hasDifference && (
+                                          <Badge className="bg-blue-600 text-white text-xs">
+                                            {newPriceFromExcel > value ? '↑' : '↓'}
+                                          </Badge>
+                                        )}
+                                      </>
+                                    ) : (
+                                      <span className="text-sm text-gray-400 flex-1">0 €</span>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       );
