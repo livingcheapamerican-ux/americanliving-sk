@@ -25,6 +25,13 @@ import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
 import EditableTile from "./EditableTile";
 import FloatingPrice from "./FloatingPrice";
 
+// Konštantné mapovanie farieb pre sekcie - predchádza blikaniu
+const SECTION_COLORS = {
+  "2": "from-blue-600 to-indigo-600",
+  "3": "from-emerald-600 to-teal-600",
+  "4": "from-purple-600 to-violet-600"
+};
+
 export default function KonfiguratorProstoHouse({ 
   dom,
   onReset,
@@ -394,17 +401,8 @@ export default function KonfiguratorProstoHouse({
     }
   };
 
-  const getColorClasses = (step) => {
-    const colorMap = {
-      "2": "from-blue-600 to-indigo-600",
-      "3": "from-emerald-600 to-teal-600",
-      "4": "from-purple-600 to-violet-600"
-    };
-    return colorMap[step] || "from-blue-600 to-indigo-600";
-  };
-
   const SectionHeader = ({ icon: Icon, title, subtitle, step }) => {
-    const colorClass = getColorClasses(step);
+    const colorClass = SECTION_COLORS[step] || "from-blue-600 to-indigo-600";
     
     return (
       <div className={`relative flex items-center gap-1 sm:gap-3 p-1.5 sm:p-3 bg-gradient-to-r ${colorClass}`}>

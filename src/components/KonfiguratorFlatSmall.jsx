@@ -17,6 +17,13 @@ import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
 import FloatingPrice from "./FloatingPrice";
 import { base44 } from "@/api/base44Client";
 
+// Konštantné mapovanie farieb pre sekcie - predchádza blikaniu
+const SECTION_COLORS = {
+  "2": "from-blue-600 to-indigo-600",
+  "3": "from-emerald-600 to-teal-600",
+  "4": "from-purple-600 to-violet-600"
+};
+
 // Dlaždica s tooltip a malou fajkou v rohu
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -383,23 +390,11 @@ export default function KonfiguratorFlatSmall({
     }
   };
 
-  const getColorClasses = (step) => {
-    const colorMap = {
-      "2": "from-blue-600 to-indigo-600",
-      "3": "from-emerald-600 to-teal-600",
-      "4": "from-purple-600 to-violet-600"
-    };
-    return colorMap[step] || "from-blue-600 to-indigo-600";
-  };
-
   const SectionHeader = ({ icon: Icon, title, subtitle, step }) => {
-    const colorClass = getColorClasses(step);
+    const colorClass = SECTION_COLORS[step] || "from-blue-600 to-indigo-600";
     
     return (
-      <motion.div 
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+      <div 
         className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${colorClass} overflow-hidden`}
       >
         <div className="absolute inset-0 opacity-10">
@@ -418,9 +413,9 @@ export default function KonfiguratorFlatSmall({
           </div>
           <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight">{title}</h3>
           {subtitle && <p className="text-white/80 text-[10px] sm:text-xs mt-0.5">{subtitle}</p>}
-        </div>
-      </motion.div>
-    );
+          </div>
+          </div>
+          );
   };
 
   const handleSendQuoteFromFloating = async (contactData) => {
