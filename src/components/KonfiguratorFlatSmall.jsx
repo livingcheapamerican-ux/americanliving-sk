@@ -383,46 +383,45 @@ export default function KonfiguratorFlatSmall({
     }
   };
 
-  const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
-    <motion.div 
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${color} overflow-hidden`}
-    >
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-1/2 w-24 h-24 bg-white rounded-full blur-2xl"></div>
-      </div>
-      
+  const getColorClasses = (step) => {
+    const colorMap = {
+      "2": "from-blue-600 to-indigo-600",
+      "3": "from-emerald-600 to-teal-600",
+      "4": "from-purple-600 to-violet-600"
+    };
+    return colorMap[step] || "from-blue-600 to-indigo-600";
+  };
+
+  const SectionHeader = ({ icon: Icon, title, subtitle, step }) => {
+    const colorClass = getColorClasses(step);
+    
+    return (
       <motion.div 
-        className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white/5"
-        animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-      />
-      
-      <motion.div 
-        whileHover={{ scale: 1.1, rotate: 5 }}
-        className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white/25 backdrop-blur-sm rounded-lg sm:rounded-xl shadow-lg border border-white/20"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${colorClass} overflow-hidden`}
       >
-        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-      </motion.div>
-      <div className="relative flex-1">
-        <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
-          <motion.span 
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring" }}
-            className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider"
-          >
-            {t('phase')} {step}
-          </motion.span>
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-1/2 w-24 h-24 bg-white rounded-full blur-2xl"></div>
         </div>
-        <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight">{title}</h3>
-        {subtitle && <p className="text-white/80 text-[10px] sm:text-xs mt-0.5">{subtitle}</p>}
-      </div>
-    </motion.div>
-  );
+        
+        <div className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white/25 backdrop-blur-sm rounded-lg sm:rounded-xl shadow-lg border border-white/20">
+          <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+        </div>
+        <div className="relative flex-1">
+          <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
+            <span className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/20 backdrop-blur-sm rounded-full text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-wider">
+              {t('phase')} {step}
+            </span>
+          </div>
+          <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight">{title}</h3>
+          {subtitle && <p className="text-white/80 text-[10px] sm:text-xs mt-0.5">{subtitle}</p>}
+        </div>
+      </motion.div>
+    );
+  };
 
   const handleSendQuoteFromFloating = async (contactData) => {
     try {
@@ -619,7 +618,6 @@ export default function KonfiguratorFlatSmall({
                 icon={Hammer} 
                 title={t('phase2')} 
                 subtitle={t('phase2Subtitle')}
-                color="from-blue-600 to-indigo-600"
                 step="2"
               />
               <div className="p-3 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
@@ -649,11 +647,11 @@ export default function KonfiguratorFlatSmall({
                       icon={Home}
                       iconColor="text-amber-600"
                       iconSelectedColor="text-blue-600"
-                      title="Obklad drevom"
-                      subtitle="Montáž priečky"
+                      title={t('interiorWood')}
+                      subtitle={t('woodCladding')}
                       price={`+ ${CENY.interierFinis.drevo.toLocaleString('sk-SK')} €`}
                       isPriced={true}
-                      tooltip="Obklad drevom"
+                      tooltip={t('interiorWood')}
                     />
 
                     <Tile
@@ -662,11 +660,11 @@ export default function KonfiguratorFlatSmall({
                       icon={Home}
                       iconColor="text-gray-500"
                       iconSelectedColor="text-blue-600"
-                      title="Sadrokartón"
-                      subtitle="Montáž priečky"
+                      title={t('interiorDrywall')}
+                      subtitle={t('plaster')}
                       price={`+ ${CENY.interierFinis.sadrokarton.toLocaleString('sk-SK')} €`}
                       isPriced={true}
-                      tooltip="Sadrokartón"
+                      tooltip={t('interiorDrywall')}
                     />
                   </div>
 
@@ -711,11 +709,11 @@ export default function KonfiguratorFlatSmall({
                       icon={ShowerHead}
                       iconColor="text-blue-400"
                       iconSelectedColor="text-blue-600"
-                      title="Sanita komplet"
+                      title={t('sanitary')}
                       subtitle={t('complete')}
                       price={`+ ${CENY.sanitaKomplet.toLocaleString('sk-SK')} €`}
                       isPriced={true}
-                      tooltip="Sanita komplet"
+                      tooltip={t('sanitaryFull')}
                     />
 
                     <Tile
@@ -782,7 +780,7 @@ export default function KonfiguratorFlatSmall({
                     icon={Cable}
                     iconColor="text-gray-400"
                     iconSelectedColor="text-gray-700"
-                    title="Pripojenie na siete"
+                    title={t('gridConnection')}
                     subtitle={t('connection')}
                     price={`+ ${CENY.pripojkaSiete.toLocaleString('sk-SK')} €`}
                     isPriced={true}
@@ -790,7 +788,7 @@ export default function KonfiguratorFlatSmall({
                     selectedBorder="border-gray-500"
                     selectedRing="ring-gray-300"
                     hoverBorder="hover:border-gray-400"
-                    tooltip="Pripojenie na inžinierske siete"
+                    tooltip={t('gridConnectionFull')}
                   />
 
                   <Tile
@@ -799,7 +797,7 @@ export default function KonfiguratorFlatSmall({
                     icon={Square}
                     iconColor="text-slate-400"
                     iconSelectedColor="text-slate-700"
-                    title="Povrch okien Antracit"
+                    title={t('lamination')}
                     subtitle={t('laminationAnthracite')}
                     price={`+ ${CENY.povrchokaOkien.toLocaleString('sk-SK')} €`}
                     isPriced={true}
@@ -837,8 +835,8 @@ export default function KonfiguratorFlatSmall({
                   <div className="grid grid-cols-3 gap-1.5">
                     {[
                       { value: "ziadne", label: t('doorStandard'), price: "0 €" },
-                      { value: "kovove", label: "Kovové s 2 zámkami", price: `+ ${CENY.dvere.kovove.toLocaleString('sk-SK')} €` },
-                      { value: "plastove", label: "Plastovo-kovové dvere", price: `+ ${CENY.dvere.plastove.toLocaleString('sk-SK')} €` }
+                      { value: "kovove", label: t('doorMetal'), price: `+ ${CENY.dvere.kovove.toLocaleString('sk-SK')} €` },
+                      { value: "plastove", label: t('doorPlastic'), price: `+ ${CENY.dvere.plastove.toLocaleString('sk-SK')} €` }
                     ].map((opt) => (
                       <motion.div
                         key={opt.value}
@@ -864,9 +862,9 @@ export default function KonfiguratorFlatSmall({
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                     {[
                       { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: `${CENY.stresneOkno.toLocaleString('sk-SK')} €` },
-                      { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `Fixné 90×205`, price: `${CENY.bocneOknoFixne.toLocaleString('sk-SK')} €` },
-                      { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `Vyklopné 90×205`, price: `${CENY.bocneOknoVyklopne90.toLocaleString('sk-SK')} €` },
-                      { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `Vyklopné 55×90`, price: `${CENY.bocneOknoVyklopne55.toLocaleString('sk-SK')} €` }
+                      { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: `${CENY.bocneOknoFixne.toLocaleString('sk-SK')} €` },
+                      { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: `${CENY.bocneOknoVyklopne90.toLocaleString('sk-SK')} €` },
+                      { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: `${CENY.bocneOknoVyklopne55.toLocaleString('sk-SK')} €` }
                     ].map((opt, idx) => (
                       <div key={idx} className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
                         <span className="font-medium text-gray-800 text-[10px] sm:text-xs block mb-1">{opt.label}</span>
@@ -901,7 +899,6 @@ export default function KonfiguratorFlatSmall({
                 icon={Key} 
                 title={t('phase3')} 
                 subtitle={t('phase3Subtitle')}
-                color="from-emerald-600 to-teal-600"
                 step="3"
               />
               <div className="p-3 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
@@ -918,15 +915,15 @@ export default function KonfiguratorFlatSmall({
                       icon={Home}
                       iconColor="text-emerald-600"
                       iconSelectedColor="text-emerald-700"
-                      title="Drevo / Falcovaný plech"
-                      subtitle="Súčasť základnej ceny"
+                      title={t('facadeWoodMetal')}
+                      subtitle={t('includedInBasePrice')}
                       price="+ 0 €"
                       isPriced={false}
                       selectedBg="bg-emerald-100"
                       selectedBorder="border-emerald-500"
                       selectedRing="ring-emerald-300"
                       hoverBorder="hover:border-emerald-300"
-                      tooltip="Štandardná fasáda - súčasť základnej ceny"
+                      tooltip={t('facadeWoodMetal')}
                     />
 
                     <Tile
@@ -935,15 +932,15 @@ export default function KonfiguratorFlatSmall({
                       icon={Paintbrush}
                       iconColor="text-blue-500"
                       iconSelectedColor="text-emerald-700"
-                      title="Šúchaná fasáda"
-                      subtitle="Individuálne"
+                      title={t('facadeStucco')}
+                      subtitle={t('whitePlaster')}
                       price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`}
                       isPriced={true}
                       selectedBg="bg-emerald-100"
                       selectedBorder="border-emerald-500"
                       selectedRing="ring-emerald-300"
                       hoverBorder="hover:border-emerald-300"
-                      tooltip="Šúchaná fasáda - individuálne"
+                      tooltip={t('facadeStucco')}
                     />
                   </div>
 
@@ -953,7 +950,7 @@ export default function KonfiguratorFlatSmall({
                     icon={Square}
                     iconColor="text-amber-500"
                     iconSelectedColor="text-emerald-600"
-                    title="Vnútorné podlahy"
+                    title={t('floors')}
                     subtitle={t('floorsLaminate')}
                     price={`+ ${CENY.vnutornePodlahy.toLocaleString('sk-SK')} €`}
                     isPriced={true}
@@ -970,7 +967,7 @@ export default function KonfiguratorFlatSmall({
                     icon={Flame}
                     iconColor="text-orange-400"
                     iconSelectedColor="text-orange-600"
-                    title="Podlahové vykurovanie"
+                    title={t('floorHeating')}
                     subtitle={t('wifiThermostat')}
                     price={`+ ${CENY.podlahovVykurovanie.toLocaleString('sk-SK')} €`}
                     isPriced={true}
@@ -1020,7 +1017,6 @@ export default function KonfiguratorFlatSmall({
                 icon={FileText} 
                 title={t('phase4')} 
                 subtitle={t('phase4Subtitle')}
-                color="from-purple-600 to-violet-600"
                 step="4"
               />
               <div className="p-3 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
@@ -1049,7 +1045,7 @@ export default function KonfiguratorFlatSmall({
                     icon={FileCheck}
                     iconColor="text-green-500"
                     iconSelectedColor="text-green-600"
-                    title="Projektant, Energ. certifikácia"
+                    title={t('projectA0')}
                     subtitle={t('certification')}
                     price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`}
                     isPriced={true}
@@ -1066,7 +1062,7 @@ export default function KonfiguratorFlatSmall({
                     icon={FileText}
                     iconColor="text-gray-400"
                     iconSelectedColor="text-purple-600"
-                    title="Kompletná revízna dokumentácia"
+                    title={t('revision')}
                     subtitle={t('documentation')}
                     price={`+ ${CENY.revizna.toLocaleString('sk-SK')} €`}
                     isPriced={true}
@@ -1084,7 +1080,7 @@ export default function KonfiguratorFlatSmall({
                     iconColor="text-purple-400"
                     iconSelectedColor="text-purple-600"
                     title={t('transport')}
-                    subtitle="Zadarmo"
+                    subtitle={t('free')}
                     price="+ 0 €"
                     isPriced={false}
                     selectedBg="bg-purple-100"
