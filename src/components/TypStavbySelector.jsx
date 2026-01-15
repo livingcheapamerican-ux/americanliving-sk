@@ -65,7 +65,7 @@ export default function TypStavbySelector({
                 👇
               </motion.div>
               <p className="text-sm sm:text-base font-bold">
-                {t('clickToStartConfigurator')}
+                {t('clickBuildingTypeToStart') || t('clickToStartConfigurator') || 'Kliknite na typ stavby pre spustenie konfiguratora'}
               </p>
               <motion.div
                 animate={{ y: [0, -5, 0] }}
