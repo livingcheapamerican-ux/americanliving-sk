@@ -53,33 +53,9 @@ export default function AdminCennik() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
-  const [selectedDom, setSelectedDom] = useState(null);
-  const [editedPrices, setEditedPrices] = useState({});
-  const [hiddenItems, setHiddenItems] = useState({});
   const [isSaving, setIsSaving] = useState(false);
-  const [selectedVyrobca, setSelectedVyrobca] = useState(null);
-  const [excelPrices, setExcelPrices] = useState(null);
 
-  // Načítať skryté položky pri zmene vybraného domu
-  React.useEffect(() => {
-    if (selectedDom && domy.data) {
-      const dom = domy.data.find(d => d.id === selectedDom);
-      if (dom) {
-        const isTicab = dom.vyrobca === 'Ticab house';
-        const existingHidden = isTicab 
-          ? (dom.konfigurator_skryte_polozky || [])
-          : (dom.prosto_skryte_polozky || []);
-        
-        const initialHidden = {};
-        existingHidden.forEach(key => {
-          initialHidden[key] = true;
-        });
-        setHiddenItems(initialHidden);
-      }
-    } else {
-      setHiddenItems({});
-    }
-  }, [selectedDom]);
+
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -124,42 +100,22 @@ export default function AdminCennik() {
       return;
     }
 
-    if (!selectedVyrobca) {
-      toast.error('Prosím vyberte výrobcu');
-      return;
-    }
-
-    if (!selectedDom) {
-      toast.error('Prosím najprv vyberte dom - musíme vedieť, ktorý riadok v Exceli čítať');
-      return;
-    }
-
     setIsUploading(true);
     try {
-      const dom = domy.find(d => d.id === selectedDom);
-      if (!dom) {
-        toast.error('Dom sa nenašiel');
-        setIsUploading(false);
-        return;
-      }
-
-      // 1. Najprv nahrať súbor
+      // 1. Nahrať súbor
       const uploadResponse = await base44.integrations.Core.UploadFile({ file: selectedFile });
       const fileUrl = uploadResponse.file_url;
 
-      toast.success('Súbor nahraný, analyzujem...');
+      toast.success('Súbor nahraný, analyzujem všetky domy...');
 
-      // 2. Zavolať backend funkciu len na analýzu (bez ukladania)
+      // 2. Zavolať backend funkciu - hromadné spracovanie
       const response = await base44.functions.invoke('analyzeCennikFromExcel', {
-        file_url: fileUrl,
-        vyrobca: selectedVyrobca,
-        domNazov: dom.nazov
+        file_url: fileUrl
       });
 
       if (response.data.success) {
-        setExcelPrices(response.data.parsed_prices);
         setAnalysisResult(response.data);
-        toast.success(`Načítaných ${response.data.found_count} položiek z Excelu`);
+        toast.success(`✅ Nájdených ${response.data.found} domov, ${response.data.not_found} nenájdených`);
       } else {
         throw new Error(response.data.error || 'Neznáma chyba');
       }
@@ -171,83 +127,66 @@ export default function AdminCennik() {
     }
   };
 
-  const handleApplyPricesToDom = () => {
-    if (!excelPrices || !selectedDom) {
-      toast.error('Najprv analyzujte Excel a vyberte dom');
+  const handleBulkSave = async () => {
+    if (!analysisResult || !analysisResult.results) {
+      toast.error('Najprv analyzujte Excel');
       return;
     }
 
-    // Len nastaviť nové ceny do editedPrices pre zobrazenie (bez uloženia)
-    setEditedPrices(excelPrices);
-    toast.success('Nové ceny načítané! Skontrolujte ich a kliknite na "Final save cien" pre uloženie.');
-  };
-
-  const handleFinalSave = async () => {
-    if (!selectedDom) {
-      toast.error('Najprv vyberte dom');
-      return;
-    }
-
-    if (Object.keys(editedPrices).length === 0 && Object.keys(hiddenItems).length === 0) {
-      toast.error('Žiadne zmeny na uloženie');
+    const readyDoms = analysisResult.results.filter(r => r.status === 'ready');
+    if (readyDoms.length === 0) {
+      toast.error('Žiadne domy na uloženie');
       return;
     }
 
     setIsSaving(true);
     try {
-      const dom = domy.find(d => d.id === selectedDom);
-      const isTicab = dom.vyrobca === 'Ticab house';
+      let successCount = 0;
+      let errorCount = 0;
 
-      const existingPrices = isTicab 
-        ? (dom.konfigurator_ceny || {})
-        : (dom.konfigurator_custom_ceny_prosto_house || {});
+      for (const domResult of readyDoms) {
+        try {
+          const isTicab = domResult.vyrobca === 'Ticab house';
+          const updateData = {};
 
-      // Merge len zmenené ceny (editedPrices obsahuje len tie čo boli zmenené)
-      const updatedPrices = { ...existingPrices };
-      
-      for (const [key, value] of Object.entries(editedPrices)) {
-        const numValue = parseFloat(value);
-        if (!isNaN(numValue) && key !== '__zakladna_cena__') {
-          updatedPrices[key] = numValue;
+          // Aktualizovať konfigurátor ceny
+          if (Object.keys(domResult.parsed_prices).length > 0) {
+            if (isTicab) {
+              updateData.konfigurator_ceny = domResult.parsed_prices;
+            } else {
+              updateData.konfigurator_custom_ceny_prosto_house = domResult.parsed_prices;
+            }
+          }
+
+          // Aktualizovať základné údaje
+          if (domResult.base_data.zakladna_cena) {
+            updateData.zakladna_cena = domResult.base_data.zakladna_cena;
+          }
+          if (domResult.base_data.zastavana_plocha) {
+            updateData.zastavana_plocha = domResult.base_data.zastavana_plocha;
+          }
+          if (domResult.base_data.uzitkova_plocha) {
+            updateData.uzitkova_plocha = domResult.base_data.uzitkova_plocha;
+          }
+
+          await base44.entities.Dom.update(domResult.dom_id, updateData);
+          successCount++;
+        } catch (error) {
+          console.error(`Chyba pri ukladaní ${domResult.dom}:`, error);
+          errorCount++;
         }
       }
 
-      const updateData = isTicab
-        ? { konfigurator_ceny: updatedPrices }
-        : { konfigurator_custom_ceny_prosto_house: updatedPrices };
-
-      // Ak je upravená základná cena, pridať ju tiež
-      if (editedPrices['__zakladna_cena__']) {
-        const basePriceNum = parseFloat(editedPrices['__zakladna_cena__']);
-        if (!isNaN(basePriceNum)) {
-          updateData.zakladna_cena = basePriceNum;
-        }
-      }
-
-      // Uložiť skryté položky
-      const skrytePolozky = Object.keys(hiddenItems).filter(key => hiddenItems[key]);
-      if (isTicab) {
-        updateData.konfigurator_skryte_polozky = skrytePolozky;
-      } else {
-        updateData.prosto_skryte_polozky = skrytePolozky;
-      }
-
-      await base44.entities.Dom.update(dom.id, updateData);
-      
-      toast.success(`✅ Ceny a viditeľnosť natrvalo uložené pre ${dom.nazov}!`);
-      setEditedPrices({});
-      setHiddenItems({});
-      setExcelPrices(null);
-      setTimeout(() => window.location.reload(), 1000);
+      toast.success(`✅ Uložených ${successCount} domov! ${errorCount > 0 ? `${errorCount} chýb.` : ''}`);
+      setTimeout(() => window.location.reload(), 2000);
     } catch (error) {
-      toast.error('Chyba pri ukladaní: ' + error.message);
+      toast.error('Chyba pri hromadnom ukladaní: ' + error.message);
     } finally {
       setIsSaving(false);
     }
   };
 
-  const ticabDomy = domy.filter(d => d.vyrobca === 'Ticab house');
-  const prostoDomy = domy.filter(d => d.vyrobca === 'Prosto House');
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 p-4 sm:p-8">
@@ -309,66 +248,7 @@ export default function AdminCennik() {
           </div>
         </Card>
 
-        {/* Výber výrobcu a domu */}
-        <Card className="p-6 mb-6 bg-white border-2 border-purple-300 shadow-lg">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <Home className="w-6 h-6 text-purple-600" />
-            Vyberte dom pre správu cien
-          </h2>
 
-          <div className="grid md:grid-cols-2 gap-4">
-            {/* Výber výrobcu */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                1. Výrobca:
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                <Button
-                  onClick={() => {
-                    setSelectedVyrobca('Ticab house');
-                    setSelectedDom(null);
-                  }}
-                  variant={selectedVyrobca === 'Ticab house' ? 'default' : 'outline'}
-                  className={`h-14 text-sm font-bold ${selectedVyrobca === 'Ticab house' ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
-                >
-                  🏠 Ticab house
-                </Button>
-                <Button
-                  onClick={() => {
-                    setSelectedVyrobca('Prosto House');
-                    setSelectedDom(null);
-                  }}
-                  variant={selectedVyrobca === 'Prosto House' ? 'default' : 'outline'}
-                  className={`h-14 text-sm font-bold ${selectedVyrobca === 'Prosto House' ? 'bg-purple-600 hover:bg-purple-700' : ''}`}
-                >
-                  🏡 Prosto House
-                </Button>
-              </div>
-            </div>
-
-            {/* Výber domu */}
-            {selectedVyrobca && (
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  2. Dom:
-                </label>
-                <select
-                  value={selectedDom || ''}
-                  onChange={(e) => setSelectedDom(e.target.value)}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:ring-2 focus:ring-purple-200 h-14"
-                >
-                  <option value="">-- Vyberte dom --</option>
-                  {selectedVyrobca === 'Ticab house' && ticabDomy.map(dom => (
-                    <option key={dom.id} value={dom.id}>{dom.nazov}</option>
-                  ))}
-                  {selectedVyrobca === 'Prosto House' && prostoDomy.map(dom => (
-                    <option key={dom.id} value={dom.id}>{dom.nazov}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-          </div>
-        </Card>
 
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Nahrávanie súboru */}
@@ -381,7 +261,7 @@ export default function AdminCennik() {
             {/* File upload */}
             <div className="mb-4">
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                3. Nahrajte Excel súbor s cenami:
+                Nahrajte Master Excel tabuľku so všetkými domami:
               </label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-all">
                 <input
@@ -403,17 +283,9 @@ export default function AdminCennik() {
               </div>
             </div>
 
-            {!selectedDom && (
-              <div className="mb-3 p-3 bg-yellow-50 border-2 border-yellow-400 rounded-lg">
-                <p className="text-sm font-semibold text-yellow-900">
-                  ⚠️ Najprv vyberte dom v kroku 2!
-                </p>
-              </div>
-            )}
-            
             <Button
               onClick={handleUploadAndAnalyze}
-              disabled={!selectedFile || !selectedVyrobca || !selectedDom || isUploading}
+              disabled={!selectedFile || isUploading}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3"
             >
               {isUploading ? (
@@ -429,17 +301,7 @@ export default function AdminCennik() {
               )}
             </Button>
 
-            {/* Aplikovať ceny na vybraný dom */}
-            {excelPrices && selectedDom && (
-              <div className="mt-4">
-                <Button
-                  onClick={handleApplyPricesToDom}
-                  className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3"
-                >
-                  📋 Načítať nové ceny do tabuľky (bez uloženia)
-                </Button>
-              </div>
-            )}
+
 
             {/* Formát Excel súboru */}
             <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
@@ -459,7 +321,7 @@ export default function AdminCennik() {
               Výsledok aktualizácie
             </h2>
 
-            {!analysisResult ? (
+{!analysisResult ? (
               <div className="text-center py-12 text-gray-400">
                 <FileSpreadsheet className="w-16 h-16 mx-auto mb-4 opacity-50" />
                 <p>Nahrajte súbor pre zobrazenie výsledkov</p>
@@ -469,58 +331,71 @@ export default function AdminCennik() {
                 {/* Súhrn */}
                 <div className="grid grid-cols-3 gap-4">
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200 text-center">
-                    <p className="text-2xl font-black text-green-700">{analysisResult.found_count || 0}</p>
-                    <p className="text-xs text-gray-600">Načítaných</p>
-                  </div>
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 text-center">
-                    <p className="text-2xl font-black text-blue-700">{analysisResult.skipped_count || 0}</p>
-                    <p className="text-xs text-gray-600">Preskočených</p>
+                    <p className="text-2xl font-black text-green-700">{analysisResult.found || 0}</p>
+                    <p className="text-xs text-gray-600">Nájdených domov</p>
                   </div>
                   <div className="bg-red-50 p-4 rounded-lg border border-red-200 text-center">
-                    <p className="text-2xl font-black text-red-700">{analysisResult.errors?.length || 0}</p>
-                    <p className="text-xs text-gray-600">Chýb</p>
+                    <p className="text-2xl font-black text-red-700">{analysisResult.not_found || 0}</p>
+                    <p className="text-xs text-gray-600">Nenájdených</p>
+                  </div>
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 text-center">
+                    <p className="text-2xl font-black text-blue-700">{analysisResult.total_rows || 0}</p>
+                    <p className="text-xs text-gray-600">Celkom riadkov</p>
                   </div>
                 </div>
 
-                {/* Detail načítaných položiek */}
-                {analysisResult.parsed_prices && Object.keys(analysisResult.parsed_prices).length > 0 && (
-                  <div className="bg-green-50 p-4 rounded-lg border border-green-200 max-h-64 overflow-y-auto">
-                    <h3 className="font-bold text-green-900 mb-2">
-                      ✅ Načítané ceny pre dom "{domy.find(d => d.id === selectedDom)?.nazov}" 
-                      (riadok {analysisResult.dom_row}, {Object.keys(analysisResult.parsed_prices).length} položiek z {analysisResult.total_polozky}):
-                    </h3>
-                    <div className="space-y-1 text-xs">
-                      {Object.entries(analysisResult.parsed_prices).map(([key, value]) => (
-                        <div key={key} className="flex justify-between items-center bg-white p-2 rounded">
-                          <span className="font-mono text-gray-700">{key}</span>
-                          <span className="font-bold text-green-700">{value.toLocaleString('sk-SK')} €</span>
-                        </div>
-                      ))}
-                    </div>
+                {/* Tabuľka výsledkov */}
+                <div className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden">
+                  <div className="max-h-96 overflow-y-auto">
+                    <table className="w-full text-sm">
+                      <thead className="bg-gray-100 sticky top-0">
+                        <tr>
+                          <th className="px-4 py-3 text-left font-bold">Dom</th>
+                          <th className="px-4 py-3 text-left font-bold">Výrobca</th>
+                          <th className="px-4 py-3 text-center font-bold">Status</th>
+                          <th className="px-4 py-3 text-center font-bold">Zmeny</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {analysisResult.results.map((result, idx) => (
+                          <tr key={idx} className={`border-t ${result.status === 'ready' ? 'bg-green-50' : 'bg-red-50'}`}>
+                            <td className="px-4 py-3 font-medium">{result.dom}</td>
+                            <td className="px-4 py-3 text-gray-600">{result.vyrobca || '—'}</td>
+                            <td className="px-4 py-3 text-center">
+                              {result.status === 'ready' ? (
+                                <Badge className="bg-green-600 text-white">✓ Pripravený</Badge>
+                              ) : (
+                                <Badge className="bg-red-600 text-white">✗ Nenájdený</Badge>
+                              )}
+                            </td>
+                            <td className="px-4 py-3 text-center font-bold text-blue-700">{result.changes}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                )}
+                </div>
 
-                {/* Chyby - detailne */}
-                {analysisResult.errors && analysisResult.errors.length > 0 && (
-                  <div className="bg-red-50 p-4 rounded-lg border-2 border-red-300 max-h-64 overflow-y-auto">
-                    <h3 className="font-bold text-red-900 mb-2">⚠️ Chyby pri spracovaní ({analysisResult.errors.length}):</h3>
-                    <ul className="space-y-1 text-xs text-red-700">
-                      {analysisResult.errors.map((error, i) => (
-                        <li key={i} className="bg-white p-2 rounded border border-red-200">
-                          <span className="font-bold text-red-800">Riadok {i + 1}:</span> {error}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                
-                {/* Preskočené položky - info */}
-                {analysisResult.skipped_count > 0 && (
-                  <div className="bg-yellow-50 p-4 rounded-lg border-2 border-yellow-300">
-                    <h3 className="font-bold text-yellow-900 mb-2">ℹ️ Preskočených {analysisResult.skipped_count} riadkov</h3>
-                    <p className="text-xs text-yellow-800">
-                      Tieto riadky boli preskočené, pretože neobsahovali platné údaje (prázdne riadky, chýbajúce hodnoty alebo neplatná cena).
-                    </p>
+                {/* Tlačidlo hromadného uloženia */}
+                {analysisResult.found > 0 && (
+                  <div className="bg-gradient-to-r from-red-50 to-orange-50 border-4 border-red-400 rounded-xl p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xl font-black text-red-900 mb-1">
+                          🔥 Pripravených {analysisResult.found} domov na uloženie
+                        </p>
+                        <p className="text-sm text-red-700 font-semibold">
+                          Kliknite na tlačidlo pre hromadné uloženie všetkých cien!
+                        </p>
+                      </div>
+                      <Button
+                        onClick={handleBulkSave}
+                        disabled={isSaving}
+                        className="bg-red-600 hover:bg-red-700 text-white font-black text-lg px-8 py-6 h-auto shadow-xl"
+                      >
+                        {isSaving ? '⏳ Ukladám...' : '💾 ULOŽIŤ VŠETKY CENY'}
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -528,8 +403,8 @@ export default function AdminCennik() {
           </Card>
         </div>
 
-        {/* Aktuálne ceny pre vybraný dom */}
-        {selectedDom && (
+        {/* Starý kód pre jednotlivé ceny bol odstránený - teraz hromadné spracovanie */}
+        {false && (
           <Card className="p-6 mt-6 bg-white border-2 border-gray-200 shadow-lg">
             <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
               <Home className="w-6 h-6 text-purple-600" />
