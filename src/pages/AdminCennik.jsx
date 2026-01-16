@@ -138,9 +138,21 @@ export default function AdminCennik() {
       toast.success('Súbor nahraný, analyzujem...');
 
       // 2. Zavolať backend funkciu len na analýzu (bez ukladania)
+      if (!selectedDom) {
+        toast.error('Prosím najprv vyberte dom');
+        return;
+      }
+      
+      const dom = domy.find(d => d.id === selectedDom);
+      if (!dom) {
+        toast.error('Dom sa nenašiel');
+        return;
+      }
+
       const response = await base44.functions.invoke('analyzeCennikFromExcel', {
         file_url: fileUrl,
-        vyrobca: selectedVyrobca
+        vyrobca: selectedVyrobca,
+        domNazov: dom.nazov
       });
 
       if (response.data.success) {
@@ -392,7 +404,7 @@ export default function AdminCennik() {
 
             <Button
               onClick={handleUploadAndAnalyze}
-              disabled={!selectedFile || !selectedVyrobca || isUploading}
+              disabled={!selectedFile || !selectedVyrobca || !selectedDom || isUploading}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3"
             >
               {isUploading ? (
