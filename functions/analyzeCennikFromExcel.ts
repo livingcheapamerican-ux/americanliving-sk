@@ -59,24 +59,30 @@ Deno.serve(async (req) => {
 
     // Hlavičky sú v riadku 2 (index 1)
     const headers = data[1];
+    console.log('📋 RAW Hlavičky:', headers);
     console.log('📋 Prvých 10 hlavičiek:', headers.slice(0, 10));
 
-    // DYNAMICKY NÁJSŤ INDEX STĹPCA S NÁZVOM DOMU
+    // ROBUSTNEJŠIE HĽADANIE STĹPCA "model" (case-insensitive, obsahuje)
     const INDEX_NAZOV = headers.findIndex(h => 
-      h && (h.toString().trim().toLowerCase() === 'model' || 
-            h.toString().trim().toLowerCase() === 'názov' ||
-            h.toString().trim().toLowerCase() === 'nazov' ||
-            h.toString().trim().toLowerCase() === 'dom')
+      h && h.toString().toLowerCase().includes('model')
     );
     
     if (INDEX_NAZOV === -1) {
+      console.error('❌ Nenašiel sa stĺpec obsahujúci "model"');
       return Response.json({ 
         success: false, 
-        error: 'Nenašiel sa stĺpec "model" v hlavičkách. Skontrolujte Excel súbor.' 
+        error: 'Nenašiel sa stĺpec "model" v hlavičkách.',
+        debug: {
+          headers: headers,
+          firstRow: data[0] || null,
+          secondRow: data[1] || null,
+          thirdRow: data[2] || null
+        }
       });
     }
     
     console.log(`✅ Stĺpec 'model' nájdený na indexe: ${INDEX_NAZOV}`);
+    console.log(`🧪 Test prvého riadku dát: Názov domu = "${data[2] ? data[2][INDEX_NAZOV] : 'N/A'}"`);
 
     // MAPOVACIA TABUĽKA - Excel názov stĺpca -> databázový kľúč a Label
     const COLUMN_MAPPING = {
