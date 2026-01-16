@@ -19,13 +19,32 @@ Deno.serve(async (req) => {
       }, { status: 400 });
     }
 
+    // Helper funkcia pre normalizáciu stringov
+    const normalizeString = (str) => {
+      if (!str) return '';
+      return str
+        .toString()
+        .trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Odstráni diakritiku
+        .replace(/\s+/g, ' '); // Nahradí viacnásobné medzery jednou
+    };
+
     // Načítať všetky domy z databázy
     const allDomy = await base44.asServiceRole.entities.Dom.list();
+    console.log(`📊 Načítaných ${allDomy.length} domov z databázy`);
+    
+    // Debug: Vypísať prvých 5 domov z DB
+    console.log('🏠 Prvých 5 domov v DB:', allDomy.slice(0, 5).map(d => d.nazov));
+    
     const domyMap = new Map();
     allDomy.forEach(dom => {
-      const key = dom.nazov.trim().toLowerCase();
+      const key = normalizeString(dom.nazov);
       domyMap.set(key, dom);
     });
+    
+    console.log(`✅ Vytvorená mapa ${domyMap.size} domov`);
 
     // Stiahnuť Excel súbor
     const fileResponse = await fetch(file_url);
@@ -155,24 +174,59 @@ Deno.serve(async (req) => {
     
     for (let rowIndex = 2; rowIndex < data.length; rowIndex++) {
       const row = data[rowIndex];
-      const domNazov = row[1]; // Stĺpec B
       
+      // Debug prvých 5 riadkov
+      if (rowIndex < 7) {
+        console.log(`📝 Excel riadok ${rowIndex + 1}:`);
+        console.log(`  - Stĺpec A (index 0): "${row[0]}"`);
+        console.log(`  - Stĺpec B (index 1): "${row[1]}"`);
+        console.log(`  - Stĺpec C (index 2): "${row[2]}"`);
+      }
+      
+      let domNazov = row[1]; // Stĺpec B
+      
+      // Ak je stĺpec B prázdny, skús stĺpec A
       if (!domNazov || domNazov.toString().trim() === '') {
-        continue; // Preskočiť prázdne riadky
+        if (row[0] && row[0].toString().trim() !== '') {
+          console.warn(`⚠️ Riadok ${rowIndex + 1}: Názov domu nájdený v stĺpci A namiesto B!`);
+          domNazov = row[0];
+        } else {
+          continue; // Preskočiť prázdne riadky
+        }
       }
 
-      const domKey = domNazov.toString().trim().toLowerCase();
+      const originalNazov = domNazov.toString().trim();
+      const domKey = normalizeString(domNazov);
       const dom = domyMap.get(domKey);
 
       if (!dom) {
+        // Nájsť 3 najpodobnejšie názvy pre nápovedu
+        const allKeys = Array.from(domyMap.keys());
+        const podobne = allKeys
+          .map(key => ({
+            key,
+            similarity: key.includes(domKey.substring(0, 5)) ? 1 : 0
+          }))
+          .filter(x => x.similarity > 0)
+          .slice(0, 3)
+          .map(x => domyMap.get(x.key).nazov);
+        
+        const message = podobne.length > 0 
+          ? `Nenájdený. Podobné v DB: ${podobne.join(', ')}`
+          : 'Dom sa nenašiel v databáze';
+        
+        console.log(`❌ Riadok ${rowIndex + 1}: "${originalNazov}" (normalized: "${domKey}") -> ${message}`);
+        
         results.push({
-          dom: domNazov.toString().trim(),
+          dom: originalNazov,
           status: 'not_found',
           changes: 0,
-          message: 'Dom sa nenašiel v databáze'
+          message: message
         });
         continue;
       }
+      
+      console.log(`✅ Riadok ${rowIndex + 1}: "${originalNazov}" -> Nájdený: ${dom.nazov}`);
 
       // Parsovať ceny pre tento dom
       const parsedPrices = {};
