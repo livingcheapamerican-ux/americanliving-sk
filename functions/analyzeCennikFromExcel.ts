@@ -210,49 +210,59 @@ Deno.serve(async (req) => {
         ? (dom.konfigurator_ceny || {})
         : (dom.konfigurator_custom_ceny_prosto_house || {});
 
-      // Porovnať ceny
+      // Porovnať ceny (s error handlingom)
       const polozky = [];
       
       for (const [excelHeader, mapping] of Object.entries(COLUMN_MAPPING)) {
-        const dbKey = mapping.key;
-        const colIndex = columnIndexMap.get(dbKey);
-        
-        if (colIndex === undefined) continue;
-        
-        const cellValue = row[colIndex];
-        
-        // Prázdna bunka = ignorovať
-        if (cellValue === null || cellValue === undefined || cellValue === '') {
-          continue;
+        try {
+          const dbKey = mapping.key;
+          const colIndex = columnIndexMap.get(dbKey);
+          
+          if (colIndex === undefined) continue;
+          
+          const cellValue = row[colIndex];
+          
+          // Prázdna bunka = ignorovať
+          if (cellValue === null || cellValue === undefined || cellValue === '') {
+            continue;
+          }
+
+          // Konverzia na číslo (s try-catch)
+          let newPrice = 0;
+          try {
+            if (typeof cellValue === 'number') {
+              newPrice = cellValue;
+            } else {
+              const strValue = cellValue.toString().replace(/[€\s]/g, '').replace(',', '.');
+              newPrice = parseFloat(strValue);
+            }
+
+            if (isNaN(newPrice) || newPrice < 0) {
+              newPrice = 0;
+            }
+          } catch (e) {
+            console.warn(`⚠️ Chyba pri parsovaní ceny pre ${dbKey}:`, e);
+            newPrice = 0;
+          }
+
+          // Získať starú cenu
+          const oldPrice = dbKey.startsWith('__') 
+            ? (dom[dbKey.replace(/__/g, '')] || 0)
+            : (currentPrices[dbKey] || 0);
+
+          const isChanged = Math.abs(oldPrice - newPrice) > 0.01;
+
+          polozky.push({
+            key: dbKey,
+            label: mapping.label,
+            oldPrice: oldPrice,
+            newPrice: newPrice,
+            isChanged: isChanged
+          });
+        } catch (error) {
+          console.warn(`⚠️ Chyba pri spracovaní položky ${mapping?.label}:`, error.message);
+          // Pokračovať ďalej, neukladať túto položku
         }
-
-        // Konverzia na číslo
-        let newPrice;
-        if (typeof cellValue === 'number') {
-          newPrice = cellValue;
-        } else {
-          const strValue = cellValue.toString().replace(/[€\s]/g, '').replace(',', '.');
-          newPrice = parseFloat(strValue);
-        }
-
-        if (isNaN(newPrice) || newPrice < 0) {
-          continue;
-        }
-
-        // Získať starú cenu
-        const oldPrice = dbKey.startsWith('__') 
-          ? (dom[dbKey.replace(/__/g, '')] || 0)
-          : (currentPrices[dbKey] || 0);
-
-        const isChanged = Math.abs(oldPrice - newPrice) > 0.01;
-
-        polozky.push({
-          key: dbKey,
-          label: mapping.label,
-          oldPrice: oldPrice,
-          newPrice: newPrice,
-          isChanged: isChanged
-        });
       }
 
       results.push({

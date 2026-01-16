@@ -65,24 +65,27 @@ export default function AdminCennik() {
         file_url: fileUrl
       });
 
+      console.log('📊 Backend response:', response.data);
+      setAnalysisResult(response.data);
+
       if (response.data.success) {
-        setAnalysisResult(response.data);
-        
         // Predvyplniť editedPrices novými cenami z Excelu
         const initialEdits = {};
-        response.data.results.forEach(domResult => {
-          if (domResult.status === 'ready') {
-            initialEdits[domResult.domId] = {};
-            domResult.polozky.forEach(polozka => {
-              initialEdits[domResult.domId][polozka.key] = polozka.newPrice;
-            });
-          }
-        });
+        if (response.data.results) {
+          response.data.results.forEach(domResult => {
+            if (domResult.status === 'ready') {
+              initialEdits[domResult.domId] = {};
+              domResult.polozky.forEach(polozka => {
+                initialEdits[domResult.domId][polozka.key] = polozka.newPrice;
+              });
+            }
+          });
+        }
         setEditedPrices(initialEdits);
         
-        toast.success(`✅ Nájdených ${response.data.found} domov, ${response.data.not_found} nenájdených`);
+        toast.success(`✅ Nájdených ${response.data.found || 0} domov, ${response.data.not_found || 0} nenájdených`);
       } else {
-        throw new Error(response.data.error || 'Neznáma chyba');
+        toast.error(`❌ ${response.data.error || 'Neznáma chyba pri analýze'}`);
       }
     } catch (error) {
       console.error('Chyba:', error);
@@ -274,8 +277,18 @@ export default function AdminCennik() {
           </Button>
         </Card>
 
-        {/* Results Section */}
+        {/* Debug Output Section */}
         {analysisResult && (
+          <Card className="p-4 mb-6 bg-gray-100 border-2 border-gray-300">
+            <h3 className="text-sm font-bold text-gray-700 mb-2">🐛 DEBUG: Surový výstup zo servera</h3>
+            <pre className="text-xs bg-white p-3 rounded border overflow-auto max-h-64">
+              {JSON.stringify(analysisResult, null, 2)}
+            </pre>
+          </Card>
+        )}
+
+        {/* Results Section */}
+        {analysisResult && analysisResult.success && (
           <div className="space-y-6">
             {/* Summary Stats */}
             <div className="grid grid-cols-3 gap-4">
@@ -301,8 +314,14 @@ export default function AdminCennik() {
                 📋 Kontrola a úprava cien
               </h2>
 
-              <Accordion type="multiple" className="space-y-2">
-                {analysisResult.results
+              {!analysisResult.results || analysisResult.results.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
+                  <p className="text-lg font-semibold">Žiadne dáta na zobrazenie</p>
+                  <p className="text-sm mt-2">Skontrolujte DEBUG výstup vyššie</p>
+                </div>
+              ) : (
+                <Accordion type="multiple" className="space-y-2">
+                  {analysisResult.results
                   .filter(r => r.status === 'ready')
                   .map((domResult) => {
                     const domEdits = editedPrices[domResult.domId] || {};
@@ -414,7 +433,7 @@ export default function AdminCennik() {
             </Card>
 
             {/* Bulk Save All */}
-            {analysisResult.found > 0 && (
+            {analysisResult.success && analysisResult.found > 0 && (
               <div className="bg-gradient-to-r from-red-50 to-orange-50 border-4 border-red-400 rounded-xl p-6 shadow-xl">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                   <div>
