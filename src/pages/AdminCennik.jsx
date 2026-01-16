@@ -414,11 +414,12 @@ export default function AdminCennik() {
                         </AccordionContent>
                       </AccordionItem>
                     );
-                  })}
-              </Accordion>
+                    })}
+                    </Accordion>
+                    )}
 
-              {/* Not found houses */}
-              {analysisResult.results.filter(r => r.status === 'not_found').length > 0 && (
+                    {/* Not found houses */}
+                    {analysisResult.results && analysisResult.results.filter(r => r.status === 'not_found').length > 0 && (
                 <div className="mt-6 p-4 bg-red-50 border-2 border-red-200 rounded-lg">
                   <h3 className="font-bold text-red-900 mb-2">❌ Nenájdené domy v databáze:</h3>
                   <ul className="space-y-1 text-sm">
