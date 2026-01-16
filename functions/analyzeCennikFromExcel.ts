@@ -31,15 +31,30 @@ Deno.serve(async (req) => {
         .replace(/\s+/g, ' ');
     };
 
-    // Načítať všetky domy z databázy
+    // Načítať VŠETKY domy z databázy (bez filtra)
     const allDomy = await base44.asServiceRole.entities.Dom.list();
     console.log(`📊 Načítaných ${allDomy.length} domov z databázy`);
     
-    const domyMap = new Map();
-    allDomy.forEach(dom => {
-      const key = normalizeString(dom.nazov);
-      domyMap.set(key, dom);
-    });
+    if (allDomy.length > 0) {
+      console.log(`🏠 Prvé 3 domy v DB: "${allDomy[0]?.nazov}", "${allDomy[1]?.nazov}", "${allDomy[2]?.nazov}"`);
+    }
+    
+    // Fuzzy match funkcia
+    const findDomByName = (excelName) => {
+      const normalized = normalizeString(excelName);
+      
+      // 1. Presná zhoda
+      let found = allDomy.find(d => normalizeString(d.nazov) === normalized);
+      if (found) return found;
+      
+      // 2. Excel názov obsahuje DB názov alebo naopak
+      found = allDomy.find(d => {
+        const dbN = normalizeString(d.nazov);
+        return dbN.includes(normalized) || normalized.includes(dbN);
+      });
+      
+      return found || null;
+    };
 
     // Stiahnuť Excel súbor
     const fileResponse = await fetch(file_url);
@@ -186,6 +201,7 @@ Deno.serve(async (req) => {
 
     // Spracovať každý riadok
     const results = [];
+    let notFoundCount = 0;
     
     for (let rowIndex = 2; rowIndex < data.length; rowIndex++) {
       const row = data[rowIndex];
@@ -196,10 +212,14 @@ Deno.serve(async (req) => {
       }
 
       const originalNazov = domNazov.toString().trim();
-      const domKey = normalizeString(domNazov);
-      const dom = domyMap.get(domKey);
+      const dom = findDomByName(originalNazov);
 
       if (!dom) {
+        notFoundCount++;
+        if (notFoundCount <= 5) {
+          console.warn(`❌ Nenájdený match pre Excel: "${originalNazov}". Prvé 3 domy v DB: "${allDomy[0]?.nazov}", "${allDomy[1]?.nazov}", "${allDomy[2]?.nazov}"`);
+        }
+        
         results.push({
           domId: null,
           domNazov: originalNazov,
@@ -209,6 +229,8 @@ Deno.serve(async (req) => {
         });
         continue;
       }
+      
+      console.log(`✅ Našiel som match: Excel="${originalNazov}" -> DB="${dom.nazov}"`);
 
       // Získať aktuálne ceny z DB
       const isTicab = dom.vyrobca === 'Ticab house';
