@@ -129,8 +129,20 @@ export default function AdminCennik() {
       return;
     }
 
+    if (!selectedDom) {
+      toast.error('Prosím najprv vyberte dom - musíme vedieť, ktorý riadok v Exceli čítať');
+      return;
+    }
+
     setIsUploading(true);
     try {
+      const dom = domy.find(d => d.id === selectedDom);
+      if (!dom) {
+        toast.error('Dom sa nenašiel');
+        setIsUploading(false);
+        return;
+      }
+
       // 1. Najprv nahrať súbor
       const uploadResponse = await base44.integrations.Core.UploadFile({ file: selectedFile });
       const fileUrl = uploadResponse.file_url;
@@ -138,17 +150,6 @@ export default function AdminCennik() {
       toast.success('Súbor nahraný, analyzujem...');
 
       // 2. Zavolať backend funkciu len na analýzu (bez ukladania)
-      if (!selectedDom) {
-        toast.error('Prosím najprv vyberte dom');
-        return;
-      }
-      
-      const dom = domy.find(d => d.id === selectedDom);
-      if (!dom) {
-        toast.error('Dom sa nenašiel');
-        return;
-      }
-
       const response = await base44.functions.invoke('analyzeCennikFromExcel', {
         file_url: fileUrl,
         vyrobca: selectedVyrobca,
@@ -380,7 +381,7 @@ export default function AdminCennik() {
             {/* File upload */}
             <div className="mb-4">
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                2. Nahrajte Excel súbor s cenami:
+                3. Nahrajte Excel súbor s cenami:
               </label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-all">
                 <input
@@ -402,6 +403,14 @@ export default function AdminCennik() {
               </div>
             </div>
 
+            {!selectedDom && (
+              <div className="mb-3 p-3 bg-yellow-50 border-2 border-yellow-400 rounded-lg">
+                <p className="text-sm font-semibold text-yellow-900">
+                  ⚠️ Najprv vyberte dom v kroku 2!
+                </p>
+              </div>
+            )}
+            
             <Button
               onClick={handleUploadAndAnalyze}
               disabled={!selectedFile || !selectedVyrobca || !selectedDom || isUploading}
