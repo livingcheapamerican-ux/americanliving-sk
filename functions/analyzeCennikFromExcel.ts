@@ -64,6 +64,26 @@ Deno.serve(async (req) => {
 
     // Hlavičky sú v riadku 2 (index 1)
     const headers = data[1];
+    
+    console.log('📋 Prvých 10 hlavičiek:', headers.slice(0, 10));
+
+    // DYNAMICKY NÁJSŤ INDEX STĹPCA S NÁZVOM DOMU
+    const INDEX_NAZOV = headers.findIndex(h => 
+      h && (h.toString().trim().toLowerCase() === 'model' || 
+            h.toString().trim().toLowerCase() === 'názov' ||
+            h.toString().trim().toLowerCase() === 'nazov' ||
+            h.toString().trim().toLowerCase() === 'dom')
+    );
+    
+    if (INDEX_NAZOV === -1) {
+      return Response.json({ 
+        success: false, 
+        error: 'Nenašiel sa stĺpec "model" v hlavičkách. Skontrolujte Excel súbor.' 
+      });
+    }
+    
+    console.log(`✅ Stĺpec 'model' (názov domu) nájdený na indexe: ${INDEX_NAZOV}`);
+    console.log(`🧪 Test prvého riadku dát: Názov domu = "${data[2] ? data[2][INDEX_NAZOV] : 'N/A'}"`);
 
     // MAPOVACIA TABUĽKA - Excel názov stĺpca -> databázový kľúč
     const COLUMN_MAPPING = {
@@ -150,24 +170,38 @@ Deno.serve(async (req) => {
       'Doprava': 'doprava'
     };
 
-    // Nájsť indexy "Falcované panely"
-    const falcovanePanelyIndexes = [];
+    // DYNAMICKÉ MAPOVANIE - Nájsť indexy pre všetky stĺpce
+    const columnMap = new Map(); // header -> index
     headers.forEach((header, index) => {
-      if (header && header.toString().trim() === 'Falcované panely') {
-        falcovanePanelyIndexes.push(index);
+      if (header && header.toString().trim() !== '') {
+        const headerStr = header.toString().trim();
+        
+        // Uložiť index pre každú hlavičku
+        if (!columnMap.has(headerStr)) {
+          columnMap.set(headerStr, []);
+        }
+        columnMap.get(headerStr).push(index);
       }
     });
-
+    
+    console.log(`📊 Našiel som ${columnMap.size} unikátnych hlavičiek`);
+    
+    // Nájsť indexy "Falcované panely" (môže byť duplicitné)
+    const falcovanePanelyIndexes = columnMap.get('Falcované panely') || [];
+    console.log(`🔍 "Falcované panely" na indexoch: ${falcovanePanelyIndexes.join(', ')}`);
+    
     // Nájsť indexy pre elektro varianty (ak existujú duplicity)
     const elektroMapping = new Map();
-    let elektroStartIndex = -1;
-    headers.forEach((header, index) => {
-      if (header === 'SK Štandard' && index > 30) elektroStartIndex = index;
-      if (header === 'Štandard +' && index > 30 && elektroStartIndex !== -1) {
-        elektroMapping.set(elektroStartIndex, 'elektro_cz');
-        elektroMapping.set(index, 'elektro_ge');
-      }
-    });
+    const skStandardIndexes = columnMap.get('SK Štandard') || [];
+    const standardPlusIndexes = columnMap.get('Štandard +') || [];
+    
+    // Ak sú duplicity, použiť kontextové mapovanie
+    if (skStandardIndexes.length > 1) {
+      elektroMapping.set(skStandardIndexes[1], 'elektro_cz'); // Druhý výskyt
+    }
+    if (standardPlusIndexes.length > 1) {
+      elektroMapping.set(standardPlusIndexes[1], 'elektro_ge'); // Druhý výskyt
+    }
 
     // Spracovať každý riadok (od index 2 = riadok 3)
     const results = [];
@@ -175,24 +209,20 @@ Deno.serve(async (req) => {
     for (let rowIndex = 2; rowIndex < data.length; rowIndex++) {
       const row = data[rowIndex];
       
+      // Použiť DYNAMICKÝ INDEX pre názov domu
+      let domNazov = row[INDEX_NAZOV];
+      
       // Debug prvých 5 riadkov
       if (rowIndex < 7) {
         console.log(`📝 Excel riadok ${rowIndex + 1}:`);
-        console.log(`  - Stĺpec A (index 0): "${row[0]}"`);
-        console.log(`  - Stĺpec B (index 1): "${row[1]}"`);
-        console.log(`  - Stĺpec C (index 2): "${row[2]}"`);
+        console.log(`  - Index 0: "${row[0]}"`);
+        console.log(`  - Index 1: "${row[1]}"`);
+        console.log(`  - Index ${INDEX_NAZOV} (model): "${domNazov}"`);
       }
       
-      let domNazov = row[1]; // Stĺpec B
-      
-      // Ak je stĺpec B prázdny, skús stĺpec A
+      // Ak je názov prázdny, preskočiť
       if (!domNazov || domNazov.toString().trim() === '') {
-        if (row[0] && row[0].toString().trim() !== '') {
-          console.warn(`⚠️ Riadok ${rowIndex + 1}: Názov domu nájdený v stĺpci A namiesto B!`);
-          domNazov = row[0];
-        } else {
-          continue; // Preskočiť prázdne riadky
-        }
+        continue;
       }
 
       const originalNazov = domNazov.toString().trim();
@@ -234,17 +264,20 @@ Deno.serve(async (req) => {
       let changeCount = 0;
 
       headers.forEach((header, colIndex) => {
-        if (!header || colIndex < 2) return;
+        if (!header) return;
         
         const headerStr = header.toString().trim();
+        if (headerStr === '' || colIndex === INDEX_NAZOV) return; // Preskočiť prázdne a názov domu
+        
         let dbKey = COLUMN_MAPPING[headerStr];
         
         // Špeciálne spracovanie "Falcované panely"
         if (headerStr === 'Falcované panely') {
-          const currentIndex = falcovanePanelyIndexes.indexOf(colIndex);
-          if (currentIndex === 0) {
+          const allIndexes = falcovanePanelyIndexes;
+          const currentPosition = allIndexes.indexOf(colIndex);
+          if (currentPosition === 0) {
             dbKey = 'fasada_falcovane';
-          } else if (currentIndex === 1) {
+          } else if (currentPosition === 1) {
             dbKey = 'strecha_falcovane';
           }
         }
