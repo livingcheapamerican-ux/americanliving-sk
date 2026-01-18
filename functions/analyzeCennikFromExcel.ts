@@ -42,7 +42,6 @@ Deno.serve(async (req) => {
       "Bez rekuperácie": "rekuperacia_bez",
       "Príprava na rekuperáciu": "pripravaNaRekuperaciu",
       "Rekuperácia": "rekuperacia",
-      "Podlahové kúrenie": "podlahove_kurenie",
       "Príprava na krb": "pripravaKrb",
       "Ochrana na kachle": "ochranaKachle",
       "Príprava na klimatizáciu": "klimatizacia",
@@ -59,16 +58,13 @@ Deno.serve(async (req) => {
       "Anthracit": "odkvapy_farba_antracit",
       "Hnede": "odkvapy_farba_hneda",
 
-      // Okná a Dvere
+      // Dvere
       "Kovovo-plastové dvere": "dvere_kovovo_plastove",
       "Kovové dvere": "dvere_kovove",
       "Krídlové dvere": "interier_dvere_kridlove",
       "Posuvné dvere": "dvere_posuvne",
-      "Štandard": "okna_standard",
-      "Štandard +": "okna_standard_plus",
-      "SK Štandard": "okna_sk_standard",
 
-      // Interiér (Pozor na preklep "Sadrokatron"!)
+      // Interiér
       "Smrek": "interier_obklad_smrek",
       "Smrek bez uzlov": "obklad_smrek_bez_uzlov",
       "Sadrokatron + tapeta + malovka": "obklad_sadrokarton_tapeta",
@@ -77,7 +73,10 @@ Deno.serve(async (req) => {
       "Strop - vzor dreva biely": "strop_drevo_biale",
       "Sadrokartón + tapeta, maľba": "strop_kupelna_sadrokarton",
 
-      // Elektro
+      // Elektroinštalácia (OPRAVENÉ - nie okná!)
+      "Štandard": "elektro_eu",
+      "SK Štandard": "elektro_cz",
+      "Štandard +": "elektro_ge",
       "Bleskozvod": "bleskozvod",
       "Prepäťová ochrana": "prepat",
       "Príprava na solárne panely": "pripravaNaSolarnePanely",
@@ -91,7 +90,7 @@ Deno.serve(async (req) => {
       "Skrinka s umývadlom": "skrinka",
       "Zavesená toaleta Geberit": "wc_geberit",
 
-      // Základy (Pozor na medzery!)
+      // Základy
       "Bez  základov": "zaklady_bez",
       "Zemné vruty": "zaklady_vruty",
       "Betónová pätky": "zaklady_patky",
@@ -130,17 +129,22 @@ Deno.serve(async (req) => {
 
     console.log('✅ Model column found at index:', modelColIndex);
 
-    // Vytvor mapu: Header -> Index (s podporou duplicít pre "Falcované panely")
+    // Vytvor mapu: Header -> Index (s podporou duplicít)
     const columnIndexMap = {};
     const falcovanePanelyIndexes = [];
+    const podlahoveKurenieIndexes = [];
 
     headerRow.forEach((header, idx) => {
       if (!header) return;
       const headerStr = header.toString().trim();
 
-      // Špeciálny handling pre "Falcované panely" (duplicita)
+      // Špeciálny handling pre duplicity
       if (headerStr === "Falcované panely") {
         falcovanePanelyIndexes.push(idx);
+        return;
+      }
+      if (headerStr === "Podlahové kúrenie") {
+        podlahoveKurenieIndexes.push(idx);
         return;
       }
 
@@ -151,15 +155,23 @@ Deno.serve(async (req) => {
       }
     });
 
-    // Aplikuj duplicity "Falcované panely"
+    // Aplikuj duplicity "Falcované panely" (1. = fasáda, 2. = strecha)
     if (falcovanePanelyIndexes.length >= 2) {
-      columnIndexMap["fasada_falcovane"] = falcovanePanelyIndexes[0]; // prvý výskyt
-      columnIndexMap["strecha_falcovane"] = falcovanePanelyIndexes[1]; // druhý výskyt
+      columnIndexMap["fasada_falcovane"] = falcovanePanelyIndexes[0];
+      columnIndexMap["strecha_falcovane"] = falcovanePanelyIndexes[1];
       console.log(`✅ Falcované panely: fasada=${falcovanePanelyIndexes[0]}, strecha=${falcovanePanelyIndexes[1]}`);
     } else if (falcovanePanelyIndexes.length === 1) {
-      // Ak je len jeden, mapuj na fasádu (safe fallback)
       columnIndexMap["fasada_falcovane"] = falcovanePanelyIndexes[0];
       console.log(`⚠️ Len jeden "Falcované panely" nájdený, mapujem na fasádu`);
+    }
+
+    // Aplikuj duplicity "Podlahové kúrenie" (1. = správna cena, 2. = ignoruj)
+    if (podlahoveKurenieIndexes.length >= 1) {
+      columnIndexMap["podlahove_kurenie"] = podlahoveKurenieIndexes[0]; // PRVÝ výskyt
+      console.log(`✅ Podlahové kúrenie: použijem index ${podlahoveKurenieIndexes[0]} (prvý výskyt)`);
+      if (podlahoveKurenieIndexes.length > 1) {
+        console.log(`⚠️ Ignorujem druhý výskyt "Podlahové kúrenie" na indexe ${podlahoveKurenieIndexes[1]}`);
+      }
     }
 
     console.log('📊 Column index map:', columnIndexMap);
