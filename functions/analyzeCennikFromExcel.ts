@@ -167,11 +167,18 @@ Deno.serve(async (req) => {
     // === 2. NAČÍTAJ VŠETKY DOMY Z DB ===
     const allDomy = await base44.asServiceRole.entities.Dom.list();
     console.log(`🏠 Loaded ${allDomy.length} houses from DB`);
+    
+    // 🔍 DEBUGGING - Vypíš názvy domov v DB
+    console.log("DEBUG: Názvy v DB:", allDomy.map(d => d.nazov).join(", "));
 
-    // Normalizačná funkcia
+    // Super-Fuzzy Normalizačná funkcia
     const normalize = (str) => {
       if (!str) return '';
-      return str.toString().toLowerCase().trim().replace(/\s+/g, '');
+      return str.toString()
+        .toLowerCase()
+        .replace(/model/gi, '') // Odstráň slovo "model"
+        .replace(/\s+/g, '')     // Odstráň všetky medzery
+        .trim();
     };
 
     // === 3. SPRACUJ KAŽDÝ RIADOK EXCELU (od indexu 2) ===
@@ -186,21 +193,29 @@ Deno.serve(async (req) => {
       const modelName = row[modelColIndex];
       if (!modelName) continue;
 
-      const normalizedModelName = normalize(modelName);
-      console.log(`\n🔍 Processing row ${rowIdx}: "${modelName}" (normalized: "${normalizedModelName}")`);
+      const normalizedExcelName = normalize(modelName);
+      console.log(`\n🔍 Processing row ${rowIdx}: "${modelName}" (normalized: "${normalizedExcelName}")`);
 
-      // Fuzzy match - nájdi dom v DB
-      const matchedDom = allDomy.find(dom => 
-        normalize(dom.nazov) === normalizedModelName
-      );
+      // Super-Fuzzy match - nájdi dom v DB (includes obojstranne)
+      const matchedDom = allDomy.find(dom => {
+        const normalizedDbName = normalize(dom.nazov);
+        return normalizedDbName.includes(normalizedExcelName) || normalizedExcelName.includes(normalizedDbName);
+      });
 
       if (!matchedDom) {
-        console.log(`❌ Dom "${modelName}" nenájdený v DB`);
+        console.log(`❌ Dom "${modelName}" nenájdený v DB (hľadal som: "${normalizedExcelName}")`);
         results.push({
           domNazov: modelName,
           status: 'not_found',
           vyrobca: null,
-          polozky: []
+          polozky: [
+            {
+              label: "🔍 Debug: Prečo nenájdený?",
+              oldPrice: `Hľadal som: "${normalizedExcelName}"`,
+              newPrice: `Nenašiel som zhodu v ${allDomy.length} domoch`,
+              isChanged: false
+            }
+          ]
         });
         notFoundCount++;
         continue;
