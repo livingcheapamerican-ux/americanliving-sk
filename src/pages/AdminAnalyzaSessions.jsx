@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
@@ -67,14 +67,61 @@ export default function AdminAnalyzaSessions() {
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
-  const { data: sessions = [], isLoading, refetch: refetchSessions } = useQuery({
-    queryKey: ['user-sessions'],
-    queryFn: () => base44.entities.UserSession.list('-created_date', 1000),
-    initialData: [],
-    enabled: isAdmin,
-    refetchInterval: 10000, // Aktualizácia každých 10 sekúnd
-    staleTime: 0 // Vždy refetch najnovšie dáta
-  });
+  const [sessions, setSessions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Načítať počiatočné dáta
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    const fetchInitialSessions = async () => {
+      try {
+        const data = await base44.entities.UserSession.list('-created_date', 1000);
+        setSessions(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('❌ Error loading sessions:', error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchInitialSessions();
+  }, [isAdmin]);
+
+  // Real-time subscription na UserSession
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    console.log('🔴 Subscribing to UserSession real-time updates...');
+
+    const unsubscribe = base44.entities.UserSession.subscribe((event) => {
+      console.log('🔔 UserSession event:', event.type, event.id);
+
+      setSessions(prevSessions => {
+        if (event.type === 'create') {
+          console.log('✅ New session created:', event.data.session_id);
+          return [event.data, ...prevSessions];
+        } else if (event.type === 'update') {
+          console.log('📝 Session updated:', event.data.session_id);
+          return prevSessions.map(s => s.id === event.id ? event.data : s);
+        } else if (event.type === 'delete') {
+          console.log('🗑️ Session deleted:', event.id);
+          return prevSessions.filter(s => s.id !== event.id);
+        }
+        return prevSessions;
+      });
+    });
+
+    return () => {
+      console.log('🔴 Unsubscribing from UserSession...');
+      unsubscribe();
+    };
+  }, [isAdmin]);
+
+  const refetchSessions = async () => {
+    const data = await base44.entities.UserSession.list('-created_date', 1000);
+    setSessions(data);
+  };
 
   // Real-time online visitors
   const { data: onlineVisitors } = useQuery({
