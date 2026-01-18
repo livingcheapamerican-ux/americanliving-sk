@@ -40,11 +40,18 @@ Deno.serve(async (req) => {
     };
 
     // === MAPOVACIA TABUĽKA (Excel Row Name -> JSON Key) ===
+    // PIVOT TABLE FORMAT: Riadky obsahujú názvy položiek, stĺpce modely
     const ROW_MAPPING = {
       // Základ
       "Základná cena sady": "zakladna_cena",
       "S montážou": "montaz",
-      "Predĺženie 1,2m": "predlzenie_1_2m",
+      
+      // Rozmery (podľa požiadavky - formát "+X,X m")
+      "+1,2 m": "predlzenie_1_2m",
+      "+2,4 m": "predlzenie_2_4m",
+      "+3,6 m": "predlzenie_3_6m",
+      "+4,8 m": "predlzenie_4_8m",
+      "Predĺženie 1,2m": "predlzenie_1_2m", // Fallback
       "Predĺženie 2,4m": "predlzenie_2_4m",
       "Predĺženie 3,6m": "predlzenie_3_6m",
       "Predĺženie 4,8m": "predlzenie_4_8m",
@@ -78,8 +85,9 @@ Deno.serve(async (req) => {
       "Tep. Čerpadlo": "tepelne_cerpadlo",
       "Rekuperácia": "rekuperacia",
       "Podl. Kúrenie": "podlahove_kurenie",
+      "Podl.": "podlahove_kurenie", // Alias
 
-      // Okná a Dvere
+      // Okná a Dvere (Checkbox)
       "Laminácia farby okien": "laminacia_okien",
       "Tónované sklá": "tonovanie_skla",
       "Kovové s 2 zámkami": "dvere_kovove",
@@ -89,7 +97,7 @@ Deno.serve(async (req) => {
       "Výkl. 90x205": "okno_vyklopne_90_205",
       "Výkl. 55x90": "okno_vyklopne_55_90",
 
-      // Služby
+      // Služby (Checkbox)
       "Podlahy laminát": "podlahy_laminat",
       "Inžiniering": "inziniering",
       "Projektant": "projektACertifikacia",
@@ -97,6 +105,8 @@ Deno.serve(async (req) => {
       "Siete": "siete",
       "Doprava": "doprava"
     };
+
+    console.log('🗺️ ROW_MAPPING initialized with', Object.keys(ROW_MAPPING).length, 'keys');
 
     // === 1. IDENTIFIKUJ HLAVIČKY (Riadok 0 = Header) ===
     const headerRow = data[0];
