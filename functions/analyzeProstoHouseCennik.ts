@@ -197,63 +197,54 @@ Deno.serve(async (req) => {
     let unmappedRowsCount = 0;
     const unmappedRowNames = [];
 
-    console.log(`\n🔄 Starting PRECISE row processing (${data.length - 1} rows)...`);
-    console.log(`📍 Hľadám názvy položiek v stĺpcoch B (index 1) a C (index 2)`);
+    console.log(`\n🔄 Starting DEEP ROW SCAN (${data.length - 1} rows)...`);
+    console.log(`📍 Scanning first 5 columns of each row for keywords`);
 
     for (let rowIdx = 1; rowIdx < data.length; rowIdx++) {
       const row = data[rowIdx];
       if (!row || row.length === 0) continue;
 
-      // Skenuj stĺpce B (1) a C (2) a skombinuj ich obsah
-      const colB = row[1] ? row[1].toString().trim() : '';
-      const colC = row[2] ? row[2].toString().trim() : '';
+      // DEEP SCAN: Skombinuj prvých 5 buniek riadku
+      const rowCells = [];
+      for (let colIdx = 0; colIdx < 5 && colIdx < row.length; colIdx++) {
+        const cell = row[colIdx];
+        if (cell && cell.toString().trim() !== '') {
+          rowCells.push(cell.toString().trim());
+        }
+      }
       
-      // Skombinuj texty z oboch stĺpcov
-      const combinedText = [colB, colC].filter(t => t).join(' ');
+      if (rowCells.length === 0) continue;
       
-      if (!combinedText) continue;
-      
-      const sourceColumn = colB ? 1 : 2;
-      const rowNameStr = combinedText;
+      // Kombinovaný text pre hľadanie
+      const combinedText = rowCells.join(' ');
+      const combinedLower = combinedText.toLowerCase();
 
-      // PRESNÉ MAPOVANIE s kombinovaným textom
+      // PARTIAL MATCH search cez všetky mapované frázy
       let jsonKey = null;
       let matchedLabel = null;
 
-      // 1. Pokus: Presná zhoda s celým kombinovaným textom
-      if (ROW_MAPPING[rowNameStr]) {
-        jsonKey = ROW_MAPPING[rowNameStr];
-        matchedLabel = rowNameStr;
-      } else {
-        // 2. Pokus: Presná zhoda len s colB alebo colC
-        if (ROW_MAPPING[colB]) {
-          jsonKey = ROW_MAPPING[colB];
-          matchedLabel = colB;
-        } else if (ROW_MAPPING[colC]) {
-          jsonKey = ROW_MAPPING[colC];
-          matchedLabel = colC;
-        } else {
-          // 3. Pokus: Partial match (obsahuje)
-          for (const [excelLabel, key] of Object.entries(ROW_MAPPING)) {
-            if (rowNameStr.includes(excelLabel) || excelLabel.includes(rowNameStr)) {
-              jsonKey = key;
-              matchedLabel = excelLabel;
-              break;
-            }
-          }
+      for (const [excelLabel, key] of Object.entries(ROW_MAPPING)) {
+        const labelLower = excelLabel.toLowerCase();
+        
+        // Hľadaj partial match (case insensitive)
+        if (combinedLower.includes(labelLower)) {
+          jsonKey = key;
+          matchedLabel = excelLabel;
+          break;
         }
       }
 
       if (!jsonKey) {
         unmappedRowsCount++;
         if (unmappedRowNames.length < 10) {
-          unmappedRowNames.push(`"${colB} | ${colC}" (row ${rowIdx})`);
+          unmappedRowNames.push(`"${rowCells.join(' | ')}" (row ${rowIdx})`);
         }
         continue;
       }
 
       mappedRowsCount++;
-      console.log(`\n✅ Row ${rowIdx} [B:"${colB}" C:"${colC}"]: "${matchedLabel}" -> ${jsonKey}`);
+      console.log(`\n✅ Row ${rowIdx}: Found "${matchedLabel}" -> ${jsonKey}`);
+      console.log(`   Raw cells: [${rowCells.join(', ')}]`);
 
       // Extrahuj hodnoty pre každý model
       for (const [modelKey, modelInfo] of Object.entries(modelColumns)) {
@@ -264,17 +255,21 @@ Deno.serve(async (req) => {
         // Spracuj hodnotu
         let finalValue = null;
         if (cellValue !== null && cellValue !== undefined && cellValue !== '') {
-          const cellStr = cellValue.toString().toLowerCase();
-          if (cellStr.includes('nie je') || cellStr === 'nan') {
+          const cellStr = cellValue.toString().trim();
+          
+          // Odstráň medzery z čísiel (napr. "20 900" -> "20900")
+          const cleanedStr = cellStr.replace(/\s+/g, '');
+          
+          if (cellStr.toLowerCase().includes('nie je') || cleanedStr.toLowerCase() === 'nan') {
             console.log(`    ⏭️ Skipped (nie je/NaN)`);
             finalValue = null;
           } else {
-            const num = parseFloat(cellValue);
+            const num = parseFloat(cleanedStr);
             if (!isNaN(num)) {
               finalValue = num;
               console.log(`    ✓ Parsed: ${finalValue} ${finalValue === 0 ? '(V cene)' : '€'}`);
             } else {
-              console.log(`    ✗ Not a number`);
+              console.log(`    ✗ Not a number: "${cleanedStr}"`);
             }
           }
         } else {
@@ -283,7 +278,7 @@ Deno.serve(async (req) => {
 
         // Ulož do mapy
         mappingResults[modelKey].items[jsonKey] = {
-          source: rowNameStr,
+          source: matchedLabel,
           value: finalValue,
           isZero: finalValue === 0,
           isEmpty: finalValue === null
