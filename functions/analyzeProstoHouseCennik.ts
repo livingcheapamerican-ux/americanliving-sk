@@ -30,10 +30,36 @@ Deno.serve(async (req) => {
       console.log(`  Row ${idx}:`, row.slice(0, 5), '...');
     });
 
-    // === ABSOLÚTNE SÚRADNICE (MATRIX COORDINATES) ===
+    // === DVE SADY SÚRADNÍC (SMALL FILE vs MATRIX) ===
     
-    // STĹPCE (X-OS) - Každý model má pevný index
-    const MODEL_COLUMNS = {
+    // SCENÁR A: SMALL FILE (Price.csv, < 40 riadkov)
+    const SMALL_FILE_COLUMNS = {
+      barn_house: 3,
+      double_barn: 9,
+      a_frame: 12,
+      flat_small: 15,
+      flathouse_2_2: 18,
+      flat_1_5: 24,
+      double_flat: 27,
+      nord: 30,
+      fjord: 33
+    };
+
+    const SMALL_FILE_ROWS = {
+      zakladna_cena: 2,
+      montaz: 3,
+      zaklady_vruty: 4,
+      laminacia_okien: 5,
+      tonovanie_skla: 6,
+      interier_drevo: 7,
+      elektro_rozvody: 8,
+      voda: 9,
+      podlahy_laminat: 10,
+      dvere_kovove: 11
+    };
+
+    // SCENÁR B: MATRIX (Sheet1.csv, >= 40 riadkov)
+    const MATRIX_COLUMNS = {
       barn_house: 4,
       double_barn: 6,
       a_frame: 8,
@@ -45,36 +71,24 @@ Deno.serve(async (req) => {
       fjord: 22
     };
 
-    // RIADKY (Y-OS) - Každá položka má pevný index
-    const ITEM_ROWS = {
-      // Základné ceny
+    const MATRIX_ROWS = {
       zakladna_cena: 2,
       montaz: 7,
-      
-      // Rozmery (Predĺženie)
       predlzenie_1_2m: 10,
       predlzenie_2_4m: 11,
       predlzenie_3_6m: 12,
       predlzenie_4_8m: 13,
-      
-      // Izolácia
       izolacia_standard: 15,
       izolacia_zvysena: 16,
       izolacia_premium: 17,
       izolacia_extra: 18,
-      
-      // Základy
       zaklady_bez: 20,
       zaklady_vruty: 21,
       zaklady_doska: 22,
       zaklady_pasove: 23,
-      
-      // Interiér
       interier_bez: 26,
       interier_drevo: 27,
       interier_sadrokarton: 28,
-      
-      // Technológie
       elektro_rozvody: 30,
       voda: 31,
       sanita: 32,
@@ -82,9 +96,6 @@ Deno.serve(async (req) => {
       tepelne_cerpadlo: 35,
       rekuperacia: 36,
       siete: 37,
-      podlahove_kurenie: 54,
-      
-      // Okná a Dvere
       laminacia_okien: 38,
       tonovanie_skla: 39,
       dvere_standard: 41,
@@ -94,34 +105,40 @@ Deno.serve(async (req) => {
       okno_fix_90_205: 46,
       okno_vyklopne_90_205: 47,
       okno_vyklopne_55_90: 48,
-      
-      // Fasáda a Služby
       fasada_standard: 51,
       fasada_omietka: 52,
       podlahy_laminat: 53,
+      podlahove_kurenie: 54,
       inziniering: 56,
       projektACertifikacia: 57,
       revizia: 58,
       doprava: 59
     };
 
-    console.log('📐 Absolute coordinates initialized:');
-    console.log(`   Models: ${Object.keys(MODEL_COLUMNS).length}`);
-    console.log(`   Items: ${Object.keys(ITEM_ROWS).length}`);
+    console.log('📐 Dual coordinate sets initialized:');
+    console.log(`   SMALL_FILE: ${Object.keys(SMALL_FILE_COLUMNS).length} models, ${Object.keys(SMALL_FILE_ROWS).length} items`);
+    console.log(`   MATRIX: ${Object.keys(MATRIX_COLUMNS).length} models, ${Object.keys(MATRIX_ROWS).length} items`);
 
-    // === 1. SMART FORMAT DETECTION ===
+    // === 1. AUTO-DETECT FILE SIZE ===
     const rowCount = data.length;
-    const detectedFormat = rowCount > 40 ? 'MATRIX' : 'LIST';
+    const detectedMode = rowCount < 40 ? 'SMALL_FILE' : 'MATRIX';
     
-    console.log(`🔍 Format detection:`);
+    // Vyber správne súradnice
+    const MODEL_COLUMNS = detectedMode === 'SMALL_FILE' ? SMALL_FILE_COLUMNS : MATRIX_COLUMNS;
+    const ITEM_ROWS = detectedMode === 'SMALL_FILE' ? SMALL_FILE_ROWS : MATRIX_ROWS;
+    
+    console.log(`🔍 Auto-detection:`);
     console.log(`   Rows: ${rowCount}`);
-    console.log(`   Detected: ${detectedFormat}`);
+    console.log(`   Mode: ${detectedMode}`);
     console.log(`   Columns: ${data[0]?.length || 0}`);
+    console.log(`   Will use ${Object.keys(MODEL_COLUMNS).length} models, ${Object.keys(ITEM_ROWS).length} items`);
 
-    // === 2. EXTRACT DATA (FORMAT-SPECIFIC) ===
+    // === 2. EXTRACT DATA USING SELECTED COORDINATES ===
     const mappingResults = {};
     let processedCells = 0;
     
+    console.log(`\n🔄 ${detectedMode} MODE: Reading using absolute coordinates...`);
+
     // Funkcia na čítanie a konverziu bunky
     const readCell = (row, col) => {
       if (row >= data.length || !data[row] || col >= data[row].length) {
@@ -145,128 +162,27 @@ Deno.serve(async (req) => {
       return isNaN(num) ? null : num;
     };
 
-    if (detectedFormat === 'MATRIX') {
-      // === SCENÁR A: MATICA (Absolútne súradnice) ===
-      console.log(`\n🔄 MATRIX MODE: Reading using absolute coordinates...`);
-
-      for (const [modelKey, colIdx] of Object.entries(MODEL_COLUMNS)) {
-        console.log(`\n📦 ${modelKey} (col ${colIdx})...`);
-        
-        mappingResults[modelKey] = { excelName: modelKey, items: {} };
-        
-        for (const [itemKey, rowIdx] of Object.entries(ITEM_ROWS)) {
-          const value = readCell(rowIdx, colIdx);
-          const finalValue = (itemKey.startsWith('predlzenie_') && value === 0) ? null : value;
-          
-          mappingResults[modelKey].items[itemKey] = {
-            source: `[${rowIdx},${colIdx}]`,
-            value: finalValue,
-            isZero: finalValue === 0,
-            isEmpty: finalValue === null
-          };
-          
-          if (finalValue !== null) processedCells++;
-        }
-      }
+    // Iteruj cez každý model
+    for (const [modelKey, colIdx] of Object.entries(MODEL_COLUMNS)) {
+      console.log(`\n📦 ${modelKey} (col ${colIdx})...`);
       
-    } else {
-      // === SCENÁR B: ZOZNAM (Vyhľadávanie textu) ===
-      console.log(`\n🔄 LIST MODE: Searching for text patterns...`);
-
-      // Mapa textov na položky
-      const LIST_SEARCH_PATTERNS = {
-        'komplekt pre montáž': 'zakladna_cena',
-        'montážne práce': 'montaz',
-        'základ': 'zaklady_vruty',
-        'laminácia': 'laminacia_okien',
-        'tónovanie': 'tonovanie_skla',
-        'montáž priečok': 'interier_drevo',
-        'základná elektro': 'elektro_rozvody',
-        'montáž vodovodného': 'voda',
-        'vnútorné podlahy': 'podlahy_laminat',
-        'kovové vstupné': 'dvere_kovove',
-        'strešné okno': 'stresne_okno'
-      };
-
-      // Nájdi header row (row 1 alebo 2)
-      let headerRow = null;
-      let headerRowIdx = -1;
+      mappingResults[modelKey] = { excelName: modelKey, items: {} };
       
-      for (let i = 1; i <= 2 && i < data.length; i++) {
-        const row = data[i];
-        const combinedText = row.slice(1).join(' ').toLowerCase();
-        if (combinedText.includes('barn') || combinedText.includes('flat')) {
-          headerRow = row;
-          headerRowIdx = i;
-          break;
-        }
-      }
-
-      if (!headerRow) {
-        console.log('⚠️ LIST format: Header not found, using row 1');
-        headerRow = data[1];
-        headerRowIdx = 1;
-      }
-
-      console.log(`📋 Header detected at row ${headerRowIdx}`);
-
-      // Mapuj modely z headeru
-      const listModelColumns = {};
-      headerRow.forEach((cell, idx) => {
-        if (idx === 0 || !cell) return;
-        const cellLower = cell.toString().toLowerCase();
+      // Iteruj cez každú položku
+      for (const [itemKey, rowIdx] of Object.entries(ITEM_ROWS)) {
+        const value = readCell(rowIdx, colIdx);
         
-        if (cellLower.includes('barn') && cellLower.includes('light')) listModelColumns['barn_house'] = idx;
-        else if (cellLower.includes('double barn')) listModelColumns['double_barn'] = idx;
-        else if (cellLower.includes('a frame')) listModelColumns['a_frame'] = idx;
-        else if (cellLower.includes('flat small')) listModelColumns['flat_small'] = idx;
-        else if (cellLower.includes('2,2') || cellLower.includes('2.2')) listModelColumns['flathouse_2_2'] = idx;
-        else if (cellLower.includes('1,5') || cellLower.includes('1.5')) listModelColumns['flat_1_5'] = idx;
-        else if (cellLower.includes('doubleflat')) listModelColumns['double_flat'] = idx;
-        else if (cellLower.includes('nord')) listModelColumns['nord'] = idx;
-        else if (cellLower.includes('fjord')) listModelColumns['fjord'] = idx;
-      });
-
-      console.log(`📦 Found ${Object.keys(listModelColumns).length} models in LIST format`);
-
-      // Inicializuj results
-      for (const modelKey of Object.keys(listModelColumns)) {
-        mappingResults[modelKey] = { excelName: modelKey, items: {} };
-      }
-
-      // Hľadaj položky v stĺpci 1
-      for (let rowIdx = headerRowIdx + 1; rowIdx < data.length; rowIdx++) {
-        const row = data[rowIdx];
-        if (!row || row.length === 0) continue;
-
-        const rowText = (row[1] || '').toString().toLowerCase();
+        // ŠPECIÁLNA LOGIKA: Predĺženie s cenou 0 -> null (len pre MATRIX)
+        const finalValue = (detectedMode === 'MATRIX' && itemKey.startsWith('predlzenie_') && value === 0) ? null : value;
         
-        // Matchuj pattern
-        let foundKey = null;
-        for (const [pattern, key] of Object.entries(LIST_SEARCH_PATTERNS)) {
-          if (rowText.includes(pattern)) {
-            foundKey = key;
-            break;
-          }
-        }
-
-        if (!foundKey) continue;
-
-        console.log(`✅ Row ${rowIdx}: "${rowText}" -> ${foundKey}`);
-
-        // Načítaj hodnoty pre modely
-        for (const [modelKey, colIdx] of Object.entries(listModelColumns)) {
-          const value = readCell(rowIdx, colIdx);
-          
-          mappingResults[modelKey].items[foundKey] = {
-            source: `row ${rowIdx}`,
-            value: value,
-            isZero: value === 0,
-            isEmpty: value === null
-          };
-          
-          if (value !== null) processedCells++;
-        }
+        mappingResults[modelKey].items[itemKey] = {
+          source: `[${rowIdx},${colIdx}]`,
+          value: finalValue,
+          isZero: finalValue === 0,
+          isEmpty: finalValue === null
+        };
+        
+        if (finalValue !== null) processedCells++;
       }
     }
 
@@ -274,10 +190,11 @@ Deno.serve(async (req) => {
 
     // === 3. VYTVOR DEBUG REPORT ===
     const summary = {
-      detected_format: detectedFormat,
+      detected_mode: detectedMode,
       imported_models: Object.keys(mappingResults),
       total_rows: rowCount,
-      processed_cells: processedCells
+      processed_cells: processedCells,
+      coordinate_set: detectedMode === 'SMALL_FILE' ? 'Price.csv layout' : 'Sheet1.csv layout'
     };
 
     const details = {};
