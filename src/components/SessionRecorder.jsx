@@ -125,6 +125,8 @@ export default function SessionRecorder() {
         '/odporucanie-domov': 'AI Odporúčania domov'
       };
 
+      console.log('🟢 SessionRecorder: Inicializujem novú session', sessionIdRef.current);
+      
       base44.entities.UserSession.create({
         session_id: sessionIdRef.current,
         user_email: user?.email || 'anonymous',
@@ -469,8 +471,14 @@ export default function SessionRecorder() {
             base44.entities.UserSession.update(session.id, updates)
               .then(() => {
                 lastSaveRef.current = Date.now();
+                console.log('✅ SessionRecorder: Session uložená', {
+                  session_id: sessionIdRef.current,
+                  duration: currentDuration,
+                  engagement_score: engagementScore,
+                  clicks: clicksRef.current.length
+                });
               })
-              .catch(err => console.log('Session update error:', err));
+              .catch(err => console.log('❌ Session update error:', err));
           }
         })
         .catch(err => console.log('Session fetch error:', err));

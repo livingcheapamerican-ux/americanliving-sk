@@ -10,11 +10,14 @@ import "leaflet/dist/leaflet.css";
 
 function AutoFitBounds({ locations }) {
   const map = useMap();
+  const hasAutoFittedRef = React.useRef(false);
 
   React.useEffect(() => {
-    if (locations.length > 0) {
+    // Auto-fit sa vykoná len raz pri prvom načítaní
+    if (locations.length > 0 && !hasAutoFittedRef.current) {
       const bounds = locations.map(loc => [loc.latitude, loc.longitude]);
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 6 });
+      hasAutoFittedRef.current = true;
     }
   }, [locations, map]);
 
