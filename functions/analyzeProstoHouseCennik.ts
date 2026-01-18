@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
       "Doprava": "doprava"
     };
 
-    // === 1. IDENTIFIKUJ HLAVIČKY (Riadok 1) ===
+    // === 1. IDENTIFIKUJ HLAVIČKY (Riadok 0 = Header) ===
     const headerRow = data[0];
     if (!headerRow) {
       return Response.json({ 
@@ -107,14 +107,25 @@ Deno.serve(async (req) => {
       });
     }
 
-    console.log('📋 Header row:', headerRow);
+    console.log('📋 Header row (full):', headerRow);
 
     // Nájdi indexy pre povolené modely
+    // Index 0 = názvy položiek (ignoruj)
+    // Index 1+ = jednotlivé modely
     const modelColumns = {};
     const ignoredColumns = [];
 
     headerRow.forEach((header, idx) => {
-      if (!header || idx === 0) return; // Skip prvý stĺpec (názvy riadkov)
+      if (idx === 0) {
+        console.log(`📌 Column 0: "${header}" (názvy položiek - skip)`);
+        return; // Skip prvý stĺpec (názvy riadkov)
+      }
+      
+      if (!header) {
+        console.log(`⚠️ Empty header at index ${idx}`);
+        return;
+      }
+      
       const headerStr = header.toString().trim();
       
       if (ALLOWED_MODELS[headerStr]) {
@@ -156,12 +167,20 @@ Deno.serve(async (req) => {
       if (!rowName) continue;
 
       const rowNameStr = rowName.toString().trim();
+      
+      // Debug pre prvé riadky
+      if (rowIdx <= 5) {
+        console.log(`📝 Row ${rowIdx}: "${rowNameStr}"`);
+      }
+      
       const jsonKey = ROW_MAPPING[rowNameStr];
 
       if (!jsonKey) {
-        console.log(`⏭️ Ignorujem riadok: "${rowNameStr}" (nemá mapovanie)`);
+        // Tichý skip pre nenamapované riadky (môže byť veľa)
         continue;
       }
+      
+      console.log(`✅ Mapujem riadok "${rowNameStr}" -> ${jsonKey}`);
 
       // Extrahuj hodnoty pre každý model
       for (const [modelKey, modelInfo] of Object.entries(modelColumns)) {
