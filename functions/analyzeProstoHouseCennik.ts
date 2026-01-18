@@ -197,54 +197,54 @@ Deno.serve(async (req) => {
     let unmappedRowsCount = 0;
     const unmappedRowNames = [];
 
-    console.log(`\n🔄 Starting DEEP ROW SCAN (${data.length - 1} rows)...`);
-    console.log(`📍 Scanning first 5 columns of each row for keywords`);
+    console.log(`\n🔄 Starting COLUMN-SPECIFIC SCAN (${data.length - 1} rows)...`);
+    console.log(`📍 Základná cena: Stĺpec 1 (B) | Varianty: Stĺpec 3 (D)`);
 
     for (let rowIdx = 1; rowIdx < data.length; rowIdx++) {
       const row = data[rowIdx];
       if (!row || row.length === 0) continue;
 
-      // DEEP SCAN: Skombinuj prvých 5 buniek riadku
-      const rowCells = [];
-      for (let colIdx = 0; colIdx < 5 && colIdx < row.length; colIdx++) {
-        const cell = row[colIdx];
-        if (cell && cell.toString().trim() !== '') {
-          rowCells.push(cell.toString().trim());
-        }
-      }
+      // Prečítaj stĺpce B (1) a D (3)
+      const colB = row[1] ? row[1].toString().trim() : '';
+      const colD = row[3] ? row[3].toString().trim() : '';
       
-      if (rowCells.length === 0) continue;
-      
-      // Kombinovaný text pre hľadanie
-      const combinedText = rowCells.join(' ');
-      const combinedLower = combinedText.toLowerCase();
-
-      // PARTIAL MATCH search cez všetky mapované frázy
       let jsonKey = null;
       let matchedLabel = null;
-
-      for (const [excelLabel, key] of Object.entries(ROW_MAPPING)) {
-        const labelLower = excelLabel.toLowerCase();
+      let sourceColumn = -1;
+      
+      // STRATÉGIA 1: Hľadaj "Základná cena" v stĺpci B (1)
+      if (colB.toLowerCase().includes('základná cena')) {
+        jsonKey = 'zakladna_cena';
+        matchedLabel = 'Základná cena sady';
+        sourceColumn = 1;
+      }
+      // STRATÉGIA 2: Hľadaj všetky varianty v stĺpci D (3)
+      else if (colD) {
+        const colDLower = colD.toLowerCase();
         
-        // Hľadaj partial match (case insensitive)
-        if (combinedLower.includes(labelLower)) {
-          jsonKey = key;
-          matchedLabel = excelLabel;
-          break;
+        for (const [excelLabel, key] of Object.entries(ROW_MAPPING)) {
+          if (key === 'zakladna_cena') continue; // Skip, už sme riešili
+          
+          const labelLower = excelLabel.toLowerCase();
+          if (colDLower.includes(labelLower)) {
+            jsonKey = key;
+            matchedLabel = excelLabel;
+            sourceColumn = 3;
+            break;
+          }
         }
       }
 
       if (!jsonKey) {
         unmappedRowsCount++;
         if (unmappedRowNames.length < 10) {
-          unmappedRowNames.push(`"${rowCells.join(' | ')}" (row ${rowIdx})`);
+          unmappedRowNames.push(`B:"${colB}" | D:"${colD}" (row ${rowIdx})`);
         }
         continue;
       }
 
       mappedRowsCount++;
-      console.log(`\n✅ Row ${rowIdx}: Found "${matchedLabel}" -> ${jsonKey}`);
-      console.log(`   Raw cells: [${rowCells.join(', ')}]`);
+      console.log(`\n✅ Row ${rowIdx} [col ${sourceColumn === 1 ? 'B' : 'D'}]: "${matchedLabel}" -> ${jsonKey}`);
 
       // Extrahuj hodnoty pre každý model
       for (const [modelKey, modelInfo] of Object.entries(modelColumns)) {
@@ -266,8 +266,16 @@ Deno.serve(async (req) => {
           } else {
             const num = parseFloat(cleanedStr);
             if (!isNaN(num)) {
-              finalValue = num;
-              console.log(`    ✓ Parsed: ${finalValue} ${finalValue === 0 ? '(V cene)' : '€'}`);
+              // ŠPECIÁLNA LOGIKA PRE PREDĹŽENIE:
+              // Ak je položka predĺženie a cena je 0, nastav null (nie 0)
+              // aby sa položka nezobrazila v konfigurátore
+              if (jsonKey.startsWith('predlzenie_') && num === 0) {
+                finalValue = null;
+                console.log(`    🚫 Predĺženie s cenou 0 -> null (skryté)`);
+              } else {
+                finalValue = num;
+                console.log(`    ✓ Parsed: ${finalValue} ${finalValue === 0 ? '(V cene)' : '€'}`);
+              }
             } else {
               console.log(`    ✗ Not a number: "${cleanedStr}"`);
             }
@@ -342,7 +350,7 @@ Deno.serve(async (req) => {
     console.log('\n📋 CHECKLIST:', JSON.stringify(checklist, null, 2));
     console.log('\n🔒 TICAB INTEGRITY:', JSON.stringify(ticabIntegrityReport, null, 2));
 
-    // Výpis KOMPLETNÝCH dát pre barn_house
+    // Výpis KOMPLETNÝCH dát pre barn_house a flat_small
     if (mappingResults.barn_house) {
       console.log(`\n🏠 BARN HOUSE - KOMPLETNÝ JSON NÁHĽAD:`);
       const barnHouseData = {};
@@ -352,6 +360,16 @@ Deno.serve(async (req) => {
         }
       }
       console.log(JSON.stringify(barnHouseData, null, 2));
+    }
+    
+    if (mappingResults.flat_small) {
+      console.log(`\n🏠 FLAT SMALL - KOMPLETNÝ JSON NÁHĽAD (Check predĺženie = null):`);
+      const flatSmallData = {};
+      for (const [key, item] of Object.entries(mappingResults.flat_small.items)) {
+        // Zobraz aj null hodnoty pre debug predĺžení
+        flatSmallData[key] = item.value;
+      }
+      console.log(JSON.stringify(flatSmallData, null, 2));
     }
     console.log('\n' + '='.repeat(60));
 
