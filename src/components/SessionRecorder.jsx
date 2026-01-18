@@ -22,7 +22,7 @@ export default function SessionRecorder() {
   const saveTimeoutRef = useRef(null);
   const lastSaveRef = useRef(Date.now());
 
-  const { data: user } = useQuery({
+  const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me().catch(() => null)
   });
@@ -88,10 +88,12 @@ export default function SessionRecorder() {
     };
   };
 
-  // Initialize session ONCE
+  // Initialize session ONCE - ale počkaj na user
   const initOnceRef = useRef(false);
   useEffect(() => {
     if (initOnceRef.current) return;
+    if (userLoading) return; // Počkaj kým sa user načíta
+    
     initOnceRef.current = true;
     
     if (!sessionIdRef.current) {
@@ -214,7 +216,7 @@ export default function SessionRecorder() {
         originalSetItem.apply(this, arguments);
       };
     }
-  }, []);
+  }, [userLoading, user]);
 
   // Track page changes
   useEffect(() => {
