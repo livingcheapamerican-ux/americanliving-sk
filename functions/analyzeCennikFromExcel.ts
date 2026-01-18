@@ -6,316 +6,299 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
-    if (user?.role !== 'admin') {
-      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+    if (!user || user.role !== 'admin') {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { file_url } = await req.json();
 
     if (!file_url) {
-      return Response.json({ 
-        success: false, 
-        error: 'Chybajúci parameter: file_url je povinný' 
-      }, { status: 400 });
+      return Response.json({ error: 'file_url is required' }, { status: 400 });
     }
 
-    // Helper funkcia pre normalizáciu stringov
-    const normalizeString = (str) => {
-      if (!str) return '';
-      return str
-        .toString()
-        .trim()
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/\s+/g, ' ');
-    };
-
-    // Načítať VŠETKY domy z databázy (bez filtra)
-    const allDomy = await base44.asServiceRole.entities.Dom.list();
-    console.log(`📊 Načítaných ${allDomy.length} domov z databázy`);
-    
-    if (allDomy.length > 0) {
-      console.log(`🏠 Prvé 3 domy v DB: "${allDomy[0]?.nazov}", "${allDomy[1]?.nazov}", "${allDomy[2]?.nazov}"`);
-    }
-    
-    // Fuzzy match funkcia
-    const findDomByName = (excelName) => {
-      const normalized = normalizeString(excelName);
-      
-      // 1. Presná zhoda
-      let found = allDomy.find(d => normalizeString(d.nazov) === normalized);
-      if (found) return found;
-      
-      // 2. Excel názov obsahuje DB názov alebo naopak
-      found = allDomy.find(d => {
-        const dbN = normalizeString(d.nazov);
-        return dbN.includes(normalized) || normalized.includes(dbN);
-      });
-      
-      return found || null;
-    };
-
-    // Stiahnuť Excel súbor
-    const fileResponse = await fetch(file_url);
-    const arrayBuffer = await fileResponse.arrayBuffer();
-    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-    
+    console.log('📥 Downloading Excel from:', file_url);
+    const excelResponse = await fetch(file_url);
+    const arrayBuffer = await excelResponse.arrayBuffer();
+    const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+    const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-    if (data.length < 3) {
-      return Response.json({ 
-        success: false, 
-        error: 'Excel súbor musí mať aspoň 3 riadky (hlavička v riadku 2, dáta od riadku 3)' 
-      });
-    }
+    console.log('📊 Excel loaded, rows:', data.length);
 
-    // Hlavičky sú v riadku 2 (index 1)
-    const headers = data[1];
-    console.log('📋 RAW Hlavičky:', headers);
-    console.log('📋 Prvých 10 hlavičiek:', headers.slice(0, 10));
-
-    // ROBUSTNEJŠIE HĽADANIE STĹPCA "model" (case-insensitive, obsahuje)
-    const INDEX_NAZOV = headers.findIndex(h => 
-      h && h.toString().toLowerCase().includes('model')
-    );
-    
-    if (INDEX_NAZOV === -1) {
-      console.error('❌ Nenašiel sa stĺpec obsahujúci "model"');
-      return Response.json({ 
-        success: false, 
-        error: 'Nenašiel sa stĺpec "model" v hlavičkách.',
-        debug: {
-          headers: headers,
-          firstRow: data[0] || null,
-          secondRow: data[1] || null,
-          thirdRow: data[2] || null
-        }
-      });
-    }
-    
-    console.log(`✅ Stĺpec 'model' nájdený na indexe: ${INDEX_NAZOV}`);
-    console.log(`🧪 Test prvého riadku dát: Názov domu = "${data[2] ? data[2][INDEX_NAZOV] : 'N/A'}"`);
-
-    // MAPOVACIA TABUĽKA - Excel názov stĺpca -> databázový kľúč a Label
+    // === MAPOVACIA TABUĽKA (Excel Header -> DB Key) ===
     const COLUMN_MAPPING = {
-      'Cena základnej konfigurácie': { key: '__zakladna_cena__', label: 'Základná cena' },
-      'zastavana plocha m2': { key: '__zastavana_plocha__', label: 'Zastavaná plocha' },
-      'uzitkova plocha m2': { key: '__uzitkova_plocha__', label: 'Úžitková plocha' },
-      
-      'Steny 150mm': { key: 'izolacia_stien_150mm', label: 'Izolácia stien 150mm' },
-      'Steny 200mm': { key: 'izolacia_stien_200mm', label: 'Izolácia stien 200mm' },
-      'Steny 250mm': { key: 'izolacia_stien_250mm', label: 'Izolácia stien 250mm' },
-      'Izolácia podlahy 200mm': { key: 'izolacia_podlahy_200mm', label: 'Izolácia podlahy 200mm' },
-      'Izolácia stropu 200mm': { key: 'izolacia_stropu_200mm', label: 'Izolácia stropu 200mm' },
-      
-      'Príprava pre konvektory': { key: 'priprava_konvektory', label: 'Príprava pre konvektory' },
-      'Tepelné čerpadlo': { key: 'tepelne_cerpadlo', label: 'Tepelné čerpadlo' },
-      'Bez rekuperácie': { key: 'rekuperacia_bez', label: 'Bez rekuperácie' },
-      'Príprava na rekuperáciu': { key: 'pripravaNaRekuperaciu', label: 'Príprava na rekuperáciu' },
-      'Rekuperácia': { key: 'rekuperacia', label: 'Rekuperácia' },
-      'Podlahové kúrenie': { key: 'podlahove_kurenie', label: 'Podlahové kúrenie' },
-      'Príprava na krb': { key: 'pripravaKrb', label: 'Príprava na krb' },
-      'Ochrana na kachle': { key: 'ochranaKachle', label: 'Ochrana na kachle' },
-      'Príprava na klimatizáciu': { key: 'klimatizacia', label: 'Príprava na klimatizáciu' },
-      
-      'Drevo Smrek': { key: 'fasada_smrek', label: 'Fasáda - Smrek' },
-      'Šúchaná omietka': { key: 'fasada_omietka', label: 'Šúchaná omietka' },
-      'Smrekovec': { key: 'fasada_smrekovec', label: 'Fasáda - Smrekovec' },
-      'Thermowood': { key: 'fasada_thermowood', label: 'Fasáda - Thermowood' },
-      'Korugovaný plech': { key: 'fasada_korugovany', label: 'Korugovaný plech' },
-      
-      'Bez odkapov': { key: 'odkvapy_bez', label: 'Bez odkapov' },
-      'Odkvapy': { key: 'odkvapy', label: 'Odkvapy' },
-      'Biele': { key: 'odkvapy_farba_biela', label: 'Odkvapy - Biele' },
-      'Anthracit': { key: 'odkvapy_farba_antracit', label: 'Odkvapy - Anthracit' },
-      'Hnede': { key: 'odkvapy_farba_hneda', label: 'Odkvapy - Hnedé' },
-      
-      'Kovovo-plastové dvere': { key: 'dvere_kovovo_plastove', label: 'Kovovo-plastové dvere' },
-      'Kovové dvere': { key: 'dvere_kovove', label: 'Kovové dvere' },
-      'Krídlové dvere': { key: 'interier_dvere_kridlove', label: 'Krídlové dvere' },
-      'Posuvné dvere': { key: 'dvere_posuvne', label: 'Posuvné dvere' },
-      'Štandard': { key: 'okna_standard', label: 'Okná - Štandard' },
-      'Štandard +': { key: 'okna_standard_plus', label: 'Okná - Štandard+' },
-      'SK Štandard': { key: 'okna_sk_standard', label: 'Okná - SK Štandard' },
-      
-      'Smrek': { key: 'interier_obklad_smrek', label: 'Interiér - Smrek' },
-      'Smrek bez uzlov': { key: 'obklad_smrek_bez_uzlov', label: 'Smrek bez uzlov' },
-      'Sadrokatron + tapeta + malovka': { key: 'obklad_sadrokarton_tapeta', label: 'Sadrokartón + tapeta' },
-      'OSB + laminátový panel': { key: 'obklad_osb_panel', label: 'OSB + laminát' },
-      'Laminát': { key: 'podlaha_laminat', label: 'Laminátová podlaha' },
-      'Strop - vzor dreva biely': { key: 'strop_drevo_biele', label: 'Strop biely' },
-      'Sadrokartón + tapeta, maľba': { key: 'strop_kupelna_sadrokarton', label: 'Strop kúpeľňa sadrokartón' },
-      
-      'Bleskozvod': { key: 'bleskozvod', label: 'Bleskozvod' },
-      'Prepäťová ochrana': { key: 'prepat', label: 'Prepäťová ochrana' },
-      'Príprava na solárne panely': { key: 'pripravaNaSolarnePanely', label: 'Príprava na solárne panely' },
-      
-      'Sprcha': { key: 'kupelna_sprcha', label: 'Sprcha' },
-      'Sprcha Radaway': { key: 'sprchovyKut', label: 'Sprcha Radaway' },
-      'Sprcha Radaway s obkladom': { key: 'kupelna_sprcha_radaway_obklad', label: 'Sprcha Radaway s obkladom' },
-      'Batéria štandard, Grohe': { key: 'bateria', label: 'Batéria Grohe' },
-      'Vaňa': { key: 'vana', label: 'Vaňa' },
-      'Skrinka s umývadlom': { key: 'skrinka', label: 'Skrinka s umývadlom' },
-      'Zavesená toaleta Geberit': { key: 'wc_geberit', label: 'WC Geberit' },
-      
-      'Bez  základov': { key: 'zaklady_bez', label: 'Bez základov' },
-      'Zemné vruty': { key: 'zaklady_vruty', label: 'Zemné vruty' },
-      'Betónová pätky': { key: 'zaklady_patky', label: 'Betónové pätky' },
-      'Pásové betónové': { key: 'zaklady_pasove', label: 'Pásové základy' },
-      
-      'Inžiniering': { key: 'inziniering', label: 'Inžiniering' },
-      'Projekt + Certifikácia': { key: 'projektACertifikacia', label: 'Projekt + Certifikácia' },
-      'Revízna dokumentácia': { key: 'revizia', label: 'Revízna dokumentácia' },
-      'Montáž domu a pripojenie k sieťam': { key: 'montaz', label: 'Montáž' },
-      'Doprava': { key: 'doprava', label: 'Doprava' }
+      // Základ
+      "Cena základnej konfigurácie": "zakladna_cena",
+
+      // Izolácia
+      "Steny 150mm": "izolacia_stien_150mm",
+      "Steny 200mm": "izolacia_stien_200mm",
+      "Steny 250mm": "izolacia_stien_250mm",
+
+      // Vykurovanie
+      "Príprava pre konvektory": "priprava_konvektory",
+      "Tepelné čerpadlo": "tepelne_cerpadlo",
+      "Bez rekuperácie": "rekuperacia_bez",
+      "Príprava na rekuperáciu": "pripravaNaRekuperaciu",
+      "Rekuperácia": "rekuperacia",
+      "Podlahové kúrenie": "podlahove_kurenie",
+      "Príprava na krb": "pripravaKrb",
+      "Ochrana na kachle": "ochranaKachle",
+      "Príprava na klimatizáciu": "klimatizacia",
+
+      // Fasáda & Strecha
+      "Drevo Smrek": "fasada_smrek",
+      "Šúchaná omietka": "fasada_omietka",
+      "Smrekovec": "fasada_smrekovec",
+      "Thermowood": "fasada_thermowood",
+      "Korugovaný plech": "fasada_korugovany",
+      "Bez odkapov": "odkvapy_bez",
+      "Odkvapy": "odkvapy",
+      "Biele": "odkvapy_farba_biela",
+      "Anthracit": "odkvapy_farba_antracit",
+      "Hnede": "odkvapy_farba_hneda",
+
+      // Okná a Dvere
+      "Kovovo-plastové dvere": "dvere_kovovo_plastove",
+      "Kovové dvere": "dvere_kovove",
+      "Krídlové dvere": "interier_dvere_kridlove",
+      "Posuvné dvere": "dvere_posuvne",
+      "Štandard": "okna_standard",
+      "Štandard +": "okna_standard_plus",
+      "SK Štandard": "okna_sk_standard",
+
+      // Interiér (Pozor na preklep "Sadrokatron"!)
+      "Smrek": "interier_obklad_smrek",
+      "Smrek bez uzlov": "obklad_smrek_bez_uzlov",
+      "Sadrokatron + tapeta + malovka": "obklad_sadrokarton_tapeta",
+      "OSB + laminátový panel": "obklad_osb_panel",
+      "Laminát": "podlaha_laminat",
+      "Strop - vzor dreva biely": "strop_drevo_biale",
+      "Sadrokartón + tapeta, maľba": "strop_kupelna_sadrokarton",
+
+      // Elektro
+      "Bleskozvod": "bleskozvod",
+      "Prepäťová ochrana": "prepat",
+      "Príprava na solárne panely": "pripravaNaSolarnePanely",
+
+      // Kúpeľňa
+      "Sprcha": "kupelna_sprcha",
+      "Sprcha Radaway": "sprchovyKut",
+      "Sprcha Radaway s obkladom": "kupelna_sprcha_radaway_obklad",
+      "Batéria štandard, Grohe": "bateria",
+      "Vaňa": "vana",
+      "Skrinka s umývadlom": "skrinka",
+      "Zavesená toaleta Geberit": "wc_geberit",
+
+      // Základy (Pozor na medzery!)
+      "Bez  základov": "zaklady_bez",
+      "Zemné vruty": "zaklady_vruty",
+      "Betónová pätky": "zaklady_patky",
+      "Pásové betónové": "zaklady_pasove",
+
+      // Služby
+      "Inžiniering": "inziniering",
+      "Projekt + Certifikácia": "projektACertifikacia",
+      "Revízna dokumentácia": "revizia",
+      "Montáž domu a pripojenie k sieťam": "montaz",
+      "Doprava": "doprava"
     };
 
-    // DYNAMICKÉ MAPOVANIE stĺpcov
-    const columnIndexMap = new Map(); // dbKey -> colIndex
+    // === 1. IDENTIFIKUJ HLAVIČKY (Riadok 2, Index 1) ===
+    const headerRow = data[1]; // Riadok 2
+    if (!headerRow) {
+      return Response.json({ 
+        success: false, 
+        error: 'Hlavičkový riadok (index 1) neexistuje v Exceli' 
+      });
+    }
+
+    console.log('📋 Header row:', headerRow);
+
+    // Nájdi index pre stĺpec "model"
+    const modelColIndex = headerRow.findIndex(h => 
+      h && h.toString().toLowerCase().trim() === 'model'
+    );
+
+    if (modelColIndex === -1) {
+      return Response.json({ 
+        success: false, 
+        error: 'Stĺpec "model" nenájdený v hlavičke' 
+      });
+    }
+
+    console.log('✅ Model column found at index:', modelColIndex);
+
+    // Vytvor mapu: Header -> Index (s podporou duplicít pre "Falcované panely")
+    const columnIndexMap = {};
     const falcovanePanelyIndexes = [];
-    
-    headers.forEach((header, index) => {
+
+    headerRow.forEach((header, idx) => {
       if (!header) return;
       const headerStr = header.toString().trim();
-      
-      if (headerStr === 'Falcované panely') {
-        falcovanePanelyIndexes.push(index);
+
+      // Špeciálny handling pre "Falcované panely" (duplicita)
+      if (headerStr === "Falcované panely") {
+        falcovanePanelyIndexes.push(idx);
+        return;
       }
-      
-      const mapping = COLUMN_MAPPING[headerStr];
-      if (mapping) {
-        columnIndexMap.set(mapping.key, index);
+
+      // Nájdi príslušný DB kľúč z mapovacej tabuľky
+      const dbKey = COLUMN_MAPPING[headerStr];
+      if (dbKey) {
+        columnIndexMap[dbKey] = idx;
       }
     });
 
-    // Spracovať "Falcované panely"
+    // Aplikuj duplicity "Falcované panely"
     if (falcovanePanelyIndexes.length >= 2) {
-      columnIndexMap.set('fasada_falcovane', falcovanePanelyIndexes[0]);
-      columnIndexMap.set('strecha_falcovane', falcovanePanelyIndexes[1]);
+      columnIndexMap["fasada_falcovane"] = falcovanePanelyIndexes[0]; // prvý výskyt
+      columnIndexMap["strecha_falcovane"] = falcovanePanelyIndexes[1]; // druhý výskyt
+      console.log(`✅ Falcované panely: fasada=${falcovanePanelyIndexes[0]}, strecha=${falcovanePanelyIndexes[1]}`);
+    } else if (falcovanePanelyIndexes.length === 1) {
+      // Ak je len jeden, mapuj na fasádu (safe fallback)
+      columnIndexMap["fasada_falcovane"] = falcovanePanelyIndexes[0];
+      console.log(`⚠️ Len jeden "Falcované panely" nájdený, mapujem na fasádu`);
     }
 
-    console.log(`✅ Namapovaných ${columnIndexMap.size} stĺpcov`);
+    console.log('📊 Column index map:', columnIndexMap);
 
-    // Spracovať každý riadok
+    // === 2. NAČÍTAJ VŠETKY DOMY Z DB ===
+    const allDomy = await base44.asServiceRole.entities.Dom.list();
+    console.log(`🏠 Loaded ${allDomy.length} houses from DB`);
+
+    // Normalizačná funkcia
+    const normalize = (str) => {
+      if (!str) return '';
+      return str.toString().toLowerCase().trim().replace(/\s+/g, '');
+    };
+
+    // === 3. SPRACUJ KAŽDÝ RIADOK EXCELU (od indexu 2) ===
     const results = [];
+    let foundCount = 0;
     let notFoundCount = 0;
-    
-    for (let rowIndex = 2; rowIndex < data.length; rowIndex++) {
-      const row = data[rowIndex];
-      const domNazov = row[INDEX_NAZOV];
-      
-      if (!domNazov || domNazov.toString().trim() === '') {
-        continue;
-      }
 
-      const originalNazov = domNazov.toString().trim();
-      const dom = findDomByName(originalNazov);
+    for (let rowIdx = 2; rowIdx < data.length; rowIdx++) {
+      const row = data[rowIdx];
+      if (!row || row.length === 0) continue;
 
-      if (!dom) {
-        notFoundCount++;
-        if (notFoundCount <= 5) {
-          console.warn(`❌ Nenájdený match pre Excel: "${originalNazov}". Prvé 3 domy v DB: "${allDomy[0]?.nazov}", "${allDomy[1]?.nazov}", "${allDomy[2]?.nazov}"`);
-        }
-        
+      const modelName = row[modelColIndex];
+      if (!modelName) continue;
+
+      const normalizedModelName = normalize(modelName);
+      console.log(`\n🔍 Processing row ${rowIdx}: "${modelName}" (normalized: "${normalizedModelName}")`);
+
+      // Fuzzy match - nájdi dom v DB
+      const matchedDom = allDomy.find(dom => 
+        normalize(dom.nazov) === normalizedModelName
+      );
+
+      if (!matchedDom) {
+        console.log(`❌ Dom "${modelName}" nenájdený v DB`);
         results.push({
-          domId: null,
-          domNazov: originalNazov,
-          vyrobca: null,
+          domNazov: modelName,
           status: 'not_found',
+          vyrobca: null,
           polozky: []
         });
+        notFoundCount++;
         continue;
       }
-      
-      console.log(`✅ Našiel som match: Excel="${originalNazov}" -> DB="${dom.nazov}"`);
 
-      // Získať aktuálne ceny z DB
-      const isTicab = dom.vyrobca === 'Ticab house';
-      const currentPrices = isTicab 
-        ? (dom.konfigurator_ceny || {})
-        : (dom.konfigurator_custom_ceny_prosto_house || {});
+      console.log(`✅ Matched: "${modelName}" -> DB: "${matchedDom.nazov}" (ID: ${matchedDom.id})`);
+      foundCount++;
 
-      // Porovnať ceny (s error handlingom)
+      // Zisti či je Ticab alebo Prosto
+      const isTicab = matchedDom.vyrobca === 'Ticab house';
+      const existingPrices = isTicab 
+        ? (matchedDom.konfigurator_ceny || {})
+        : (matchedDom.konfigurator_custom_ceny_prosto_house || {});
+
+      console.log(`🏷️ ${matchedDom.vyrobca} - Existujúce ceny:`, Object.keys(existingPrices).length);
+
+      // === 4. EXTRAHUJ CENY Z RIADKU ===
       const polozky = [];
-      
-      for (const [excelHeader, mapping] of Object.entries(COLUMN_MAPPING)) {
-        try {
-          const dbKey = mapping.key;
-          const colIndex = columnIndexMap.get(dbKey);
-          
-          if (colIndex === undefined) continue;
-          
-          const cellValue = row[colIndex];
-          
-          // Prázdna bunka = ignorovať
-          if (cellValue === null || cellValue === undefined || cellValue === '') {
-            continue;
-          }
 
-          // Konverzia na číslo (s try-catch)
-          let newPrice = 0;
-          try {
-            if (typeof cellValue === 'number') {
-              newPrice = cellValue;
-            } else {
-              const strValue = cellValue.toString().replace(/[€\s]/g, '').replace(',', '.');
-              newPrice = parseFloat(strValue);
-            }
+      // Aplikuj logiku DPH pre každý kľúč
+      const applyDPH = (value) => {
+        if (value === null || value === undefined || value === '') return null;
+        const num = parseFloat(value);
+        if (isNaN(num)) return null;
+        if (num === 0) return 0; // V cene, neprip počítavaj DPH
+        return Math.round(num * 1.23 * 100) / 100; // Pripočítaj 23% DPH
+      };
 
-            if (isNaN(newPrice) || newPrice < 0) {
-              newPrice = 0;
-            }
-          } catch (e) {
-            console.warn(`⚠️ Chyba pri parsovaní ceny pre ${dbKey}:`, e);
-            newPrice = 0;
-          }
+      // Prejdi všetky mapované stĺpce
+      for (const [dbKey, colIdx] of Object.entries(columnIndexMap)) {
+        const cellValue = row[colIdx];
+        const newPrice = applyDPH(cellValue);
+        
+        if (newPrice === null) continue; // Prázdna bunka, ignoruj
 
-          // Získať starú cenu
-          const oldPrice = dbKey.startsWith('__') 
-            ? (dom[dbKey.replace(/__/g, '')] || 0)
-            : (currentPrices[dbKey] || 0);
+        const oldPrice = existingPrices[dbKey] || 0;
+        const isChanged = newPrice !== oldPrice;
 
-          const isChanged = Math.abs(oldPrice - newPrice) > 0.01;
+        // Vytvor label z Excel headeru (nájdi spätné mapovanie)
+        const excelHeader = Object.keys(COLUMN_MAPPING).find(h => COLUMN_MAPPING[h] === dbKey);
+        let label = excelHeader || dbKey;
 
+        // Špeciálne labely pre duplicitné "Falcované panely"
+        if (dbKey === "fasada_falcovane") label = "Falcované panely (Fasáda)";
+        if (dbKey === "strecha_falcovane") label = "Falcované panely (Strecha)";
+
+        polozky.push({
+          key: dbKey,
+          label: label,
+          oldPrice: oldPrice,
+          newPrice: newPrice,
+          isChanged: isChanged
+        });
+      }
+
+      // Pridaj základnú cenu (ak existuje)
+      const zakladnaCenaIdx = columnIndexMap["zakladna_cena"];
+      if (zakladnaCenaIdx !== undefined) {
+        const zakladnaCena = applyDPH(row[zakladnaCenaIdx]);
+        if (zakladnaCena !== null) {
           polozky.push({
-            key: dbKey,
-            label: mapping.label,
-            oldPrice: oldPrice,
-            newPrice: newPrice,
-            isChanged: isChanged
+            key: "__zakladna_cena",
+            label: "Základná cena",
+            oldPrice: matchedDom.zakladna_cena || 0,
+            newPrice: zakladnaCena,
+            isChanged: zakladnaCena !== matchedDom.zakladna_cena
           });
-        } catch (error) {
-          console.warn(`⚠️ Chyba pri spracovaní položky ${mapping?.label}:`, error.message);
-          // Pokračovať ďalej, neukladať túto položku
         }
       }
 
+      const changesCount = polozky.filter(p => p.isChanged).length;
+      console.log(`📊 Položky: ${polozky.length}, Zmeny: ${changesCount}`);
+
       results.push({
-        domId: dom.id,
-        domNazov: dom.nazov,
-        vyrobca: dom.vyrobca,
+        domId: matchedDom.id,
+        domNazov: matchedDom.nazov,
+        vyrobca: matchedDom.vyrobca,
         status: 'ready',
-        changesCount: polozky.filter(p => p.isChanged).length,
-        polozky: polozky
+        polozky: polozky,
+        changesCount: changesCount
       });
     }
+
+    console.log(`\n✅ SUMMARY: Found ${foundCount}, Not found ${notFoundCount}`);
 
     return Response.json({
       success: true,
-      results: results,
-      total: results.length,
-      found: results.filter(r => r.status === 'ready').length,
-      not_found: results.filter(r => r.status === 'not_found').length
+      found: foundCount,
+      not_found: notFoundCount,
+      results: results
     });
 
   } catch (error) {
-    console.error('Error in analyzeCennikFromExcel:', error);
+    console.error('❌ Error:', error);
     return Response.json({ 
       success: false, 
-      error: error.message 
+      error: error.message,
+      stack: error.stack 
     }, { status: 500 });
   }
 });
