@@ -221,33 +221,6 @@ export default function SessionRecorder() {
       sessionIdRef.current = null; // Reset aby sa mohlo skúsiť znova
     });
 
-      window.addEventListener('error', (e) => {
-        errorsRef.current.push({
-          error_message: e.message,
-          error_stack: e.error?.stack || '',
-          timestamp: new Date().toISOString(),
-          page_url: window.location.pathname
-        });
-        scheduleSave();
-      });
-
-      const originalSetItem = localStorage.setItem;
-      localStorage.setItem = function(key, value) {
-        if (key === 'language') {
-          const oldLang = localStorage.getItem('language');
-          if (oldLang && oldLang !== value) {
-            languageChangesRef.current.push({
-              from: oldLang,
-              to: value,
-              timestamp: new Date().toISOString()
-            });
-            scheduleSave();
-          }
-        }
-        originalSetItem.apply(this, arguments);
-      };
-    }
-
     // Attach global event listeners
     window.addEventListener('error', (e) => {
       errorsRef.current.push({
