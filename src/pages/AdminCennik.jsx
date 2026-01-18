@@ -302,7 +302,7 @@ export default function AdminCennik() {
               </div>
               <div className="bg-blue-50 p-4 rounded-lg border-2 border-blue-200 text-center">
                 <p className="text-3xl font-black text-blue-700">
-                  {analysisResult.results.reduce((sum, r) => sum + (r.changesCount || 0), 0)}
+                  {analysisResult.results?.reduce((sum, r) => sum + (r.changesCount || 0), 0) || 0}
                 </p>
                 <p className="text-sm text-gray-600">Celkový počet zmien</p>
               </div>
