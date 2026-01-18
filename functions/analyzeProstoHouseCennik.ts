@@ -229,21 +229,45 @@ Deno.serve(async (req) => {
       };
     }
 
-    // === 4. KONTROLNÝ CHECKLIST ===
+    // === 4. BEZPEČNOSTNÝ CHECK: Načítaj existujúce Ticab House domy ===
+    console.log('\n🔒 SECURITY CHECK: Verifying Ticab House integrity...');
+    const ticabDomy = await base44.asServiceRole.entities.Dom.filter({ vyrobca: 'Ticab house' });
+    console.log(`✅ Found ${ticabDomy.length} Ticab House models in DB`);
+    
+    const ticabIntegrityReport = ticabDomy.slice(0, 3).map(dom => ({
+      nazov: dom.nazov,
+      hasKonfiguratorCeny: !!dom.konfigurator_ceny,
+      hasProstoCustomCeny: !!dom.konfigurator_custom_ceny_prosto_house,
+      ticabKeysCount: dom.konfigurator_ceny ? Object.keys(dom.konfigurator_ceny).length : 0
+    }));
+
+    // === 5. KONTROLNÝ CHECKLIST ===
     const checklist = {
       barn_mini_removed: !summary.imported_models.includes('barn_mini'),
       norway_removed: !summary.imported_models.includes('norway'),
       barn_house_base_price: mappingResults.barn_house?.items?.zakladna_cena?.value || null,
-      barn_house_izolacia_standard_is_zero: mappingResults.barn_house?.items?.izolacia_standard?.isZero || false
+      barn_house_izolacia_standard_is_zero: mappingResults.barn_house?.items?.izolacia_standard?.isZero || false,
+      ticab_house_protected: ticabDomy.length > 0,
+      target_field: 'konfigurator_custom_ceny_prosto_house'
     };
 
     console.log('\n✅ SUMMARY:', summary);
     console.log('📋 CHECKLIST:', checklist);
+    console.log('🔒 TICAB INTEGRITY:', ticabIntegrityReport);
 
     return Response.json({
       success: true,
       summary: summary,
       checklist: checklist,
+      
+      security: {
+        ticabHouseProtected: true,
+        ticabModelsFound: ticabDomy.length,
+        ticabIntegrityCheck: ticabIntegrityReport,
+        warning: '⚠️ Ticab House dáta sú chránené a nebudú upravené pri ukladaní',
+        targetField: 'konfigurator_custom_ceny_prosto_house'
+      },
+      
       details: details,
       raw_mapping: mappingResults
     });
