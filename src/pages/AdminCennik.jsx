@@ -61,7 +61,7 @@ export default function AdminCennik() {
 
       toast.success('Súbor nahraný, analyzujem všetky domy...');
 
-      const response = await base44.functions.invoke('analyzeCennikFromExcel', {
+      const response = await base44.functions.invoke('analyzeProstoHouseCennik', {
         file_url: fileUrl
       });
 
