@@ -21,7 +21,6 @@ export default function SessionRecorder() {
   const languageChangesRef = useRef([]);
   const saveTimeoutRef = useRef(null);
   const lastSaveRef = useRef(Date.now());
-  const isInitialized = useRef(false);
 
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['current-user'],
@@ -90,121 +89,137 @@ export default function SessionRecorder() {
     };
   };
 
-  // Initialize session
+  // Initialize session ONCE per page load
   useEffect(() => {
-    if (isInitialized.current || userLoading) {
-      console.log('⏸️ SessionRecorder: Čakám...', { isInitialized: isInitialized.current, userLoading });
+    // Skip if already has session ID or still loading user
+    if (sessionIdRef.current || userLoading) {
+      if (userLoading) {
+        console.log('⏸️ SessionRecorder: Čakám na načítanie user...');
+      }
       return;
     }
     
-    console.log('🚀 SessionRecorder: Spúšťam inicializáciu...', { user: user?.email || 'anonymous' });
-    isInitialized.current = true;
+    console.log('🚀 SessionRecorder: START - Inicializujem novú session', { 
+      user: user?.email || 'anonymous',
+      url: window.location.href
+    });
     
-    if (!sessionIdRef.current) {
-      sessionIdRef.current = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      sessionStartRef.current = new Date().toISOString();
+    // Create new session
+    const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    sessionIdRef.current = newSessionId;
+    sessionStartRef.current = new Date().toISOString();
+    
+    console.log('🆕 SessionRecorder: Nové Session ID vytvorené:', sessionIdRef.current);
+    
+    const previousSessions = localStorage.getItem('user_previous_sessions');
+    const isReturning = !!previousSessions;
+    
+    console.log('📜 Previous sessions:', previousSessions ? JSON.parse(previousSessions).length : 0);
       
-      console.log('🆕 SessionRecorder: Vytváram novú session', sessionIdRef.current);
-      
-      const previousSessions = localStorage.getItem('user_previous_sessions');
-      const isReturning = !!previousSessions;
-      
-      const urlParams = new URLSearchParams(window.location.search);
-      const utmParams = {
-        utm_source: urlParams.get('utm_source'),
-        utm_medium: urlParams.get('utm_medium'),
-        utm_campaign: urlParams.get('utm_campaign'),
-        utm_term: urlParams.get('utm_term'),
-        utm_content: urlParams.get('utm_content')
-      };
-      
-      console.log('📊 UTM Parametre:', utmParams);
+    const urlParams = new URLSearchParams(window.location.search);
+    const utmParams = {
+      utm_source: urlParams.get('utm_source'),
+      utm_medium: urlParams.get('utm_medium'),
+      utm_campaign: urlParams.get('utm_campaign'),
+      utm_term: urlParams.get('utm_term'),
+      utm_content: urlParams.get('utm_content')
+    };
+    
+    console.log('📊 UTM Parametre detegované:', utmParams);
 
-      const referrerUrl = document.referrer || 'direct';
-      const referrerDomain = referrerUrl !== 'direct' ? new URL(referrerUrl).hostname : 'direct';
+    const referrerUrl = document.referrer || 'direct';
+    const referrerDomain = referrerUrl !== 'direct' ? new URL(referrerUrl).hostname : 'direct';
+    
+    console.log('🔗 Referrer info:', { referrerUrl, referrerDomain });
 
-      const pageNamesMap = {
-        '/': 'Domovská stránka',
-        '/katalog': 'Katalóg domov',
-        '/detail-domu': 'Detail domu',
-        '/konfigurator': 'Konfigurátor',
-        '/kontakt': 'Kontakt',
-        '/o-nas': 'O nás',
-        '/blog': 'Blog',
-        '/faq': 'Často kladené otázky',
-        '/odporucanie-domov': 'AI Odporúčania domov'
-      };
+    const pageNamesMap = {
+      '/': 'Domovská stránka',
+      '/katalog': 'Katalóg domov',
+      '/detail-domu': 'Detail domu',
+      '/konfigurator': 'Konfigurátor',
+      '/kontakt': 'Kontakt',
+      '/o-nas': 'O nás',
+      '/blog': 'Blog',
+      '/faq': 'Často kladené otázky',
+      '/odporucanie-domov': 'AI Odporúčania domov'
+    };
 
-      base44.entities.UserSession.create({
+    console.log('💾 SessionRecorder: Ukladám novú session do databázy...');
+
+    base44.entities.UserSession.create({
+      session_id: sessionIdRef.current,
+      user_email: user?.email || 'anonymous',
+      user_name: user?.full_name || 'Anonymous',
+      is_authenticated: !!user,
+      is_returning: isReturning,
+      start_time: sessionStartRef.current,
+      pages_visited: [],
+      clicks: [],
+      scroll_events: [],
+      scroll_depth: {},
+      mouse_movements: 0,
+      mouse_heatmap_data: [],
+      form_interactions: [],
+      configurator_interactions: [],
+      dom_interactions: [],
+      errors_encountered: [],
+      language_changes: [],
+      device_info: getDeviceInfo(),
+      referrer: referrerUrl,
+      referrer_domain: referrerDomain,
+      utm_params: utmParams,
+      conversions: [],
+      language: localStorage.getItem('language') || 'sk',
+      performance_metrics: {
+        avg_page_load_time: 0,
+        slow_pages: [],
+        total_ajax_calls: 0
+      },
+      engagement_score: 0,
+      is_active: true,
+      session_tags: isReturning ? ['vracajuci_sa'] : []
+    }).then((created) => {
+      console.log('✅ SessionRecorder: Session ÚSPEŠNE vytvorená v DB!', {
         session_id: sessionIdRef.current,
-        user_email: user?.email || 'anonymous',
-        user_name: user?.full_name || 'Anonymous',
-        is_authenticated: !!user,
-        is_returning: isReturning,
-        start_time: sessionStartRef.current,
-        pages_visited: [],
-        clicks: [],
-        scroll_events: [],
-        scroll_depth: {},
-        mouse_movements: 0,
-        mouse_heatmap_data: [],
-        form_interactions: [],
-        configurator_interactions: [],
-        dom_interactions: [],
-        errors_encountered: [],
-        language_changes: [],
-        device_info: getDeviceInfo(),
-        referrer: referrerUrl,
-        referrer_domain: referrerDomain,
+        created_id: created?.id,
+        user: user?.email || 'anonymous',
         utm_params: utmParams,
-        conversions: [],
-        language: localStorage.getItem('language') || 'sk',
-        performance_metrics: {
-          avg_page_load_time: 0,
-          slow_pages: [],
-          total_ajax_calls: 0
-        },
-        engagement_score: 0,
-        is_active: true,
-        session_tags: isReturning ? ['vracajuci_sa'] : []
-      }).then((created) => {
-        console.log('✅ SessionRecorder: Session ÚSPEŠNE vytvorená a uložená v DB!', {
-          session_id: sessionIdRef.current,
-          user: user?.email || 'anonymous',
-          utm_params: utmParams,
-          referrer: referrerUrl
-        });
-        
-        const allSessions = JSON.parse(previousSessions || '[]');
-        allSessions.push(sessionIdRef.current);
-        localStorage.setItem('user_previous_sessions', JSON.stringify(allSessions.slice(-10)));
-        
-        fetch('https://ipapi.co/json/')
-          .then(res => res.json())
-          .then(data => {
-            base44.entities.UserSession.filter({ session_id: sessionIdRef.current })
-              .then(sessions => {
-                if (sessions.length > 0) {
-                  base44.entities.UserSession.update(sessions[0].id, {
-                    location_info: {
-                      ip: data.ip,
-                      country: data.country_name,
-                      country_code: data.country_code,
-                      region: data.region,
-                      city: data.city,
-                      timezone: data.timezone,
-                      latitude: data.latitude,
-                      longitude: data.longitude
-                    }
-                  }).then(() => console.log('📍 Location info updated'));
-                }
-              });
-          })
-          .catch(err => console.log('⚠️ Location fetch failed:', err));
-      }).catch(err => {
-        console.error('❌ SessionRecorder: Chyba pri vytváraní session:', err);
-        isInitialized.current = false; // Umožni retry
+        referrer: referrerUrl,
+        timestamp: new Date().toISOString()
       });
+      
+      const allSessions = JSON.parse(previousSessions || '[]');
+      allSessions.push(sessionIdRef.current);
+      localStorage.setItem('user_previous_sessions', JSON.stringify(allSessions.slice(-10)));
+      
+      // Fetch location info
+      fetch('https://ipapi.co/json/')
+        .then(res => res.json())
+        .then(data => {
+          console.log('📍 Location info získaná:', data.city, data.country_code);
+          base44.entities.UserSession.filter({ session_id: sessionIdRef.current })
+            .then(sessions => {
+              if (sessions.length > 0) {
+                base44.entities.UserSession.update(sessions[0].id, {
+                  location_info: {
+                    ip: data.ip,
+                    country: data.country_name,
+                    country_code: data.country_code,
+                    region: data.region,
+                    city: data.city,
+                    timezone: data.timezone,
+                    latitude: data.latitude,
+                    longitude: data.longitude
+                  }
+                }).then(() => console.log('✅ Location info uložená do DB'));
+              }
+            });
+        })
+        .catch(err => console.log('⚠️ Location fetch failed:', err));
+    }).catch(err => {
+      console.error('❌ CRITICAL: SessionRecorder vytvorenie zlyhalo!', err);
+      sessionIdRef.current = null; // Reset aby sa mohlo skúsiť znova
+    });
 
       window.addEventListener('error', (e) => {
         errorsRef.current.push({
@@ -233,15 +248,45 @@ export default function SessionRecorder() {
       };
     }
 
-    return () => {
-      // Cleanup on unmount
+    // Attach global event listeners
+    window.addEventListener('error', (e) => {
+      errorsRef.current.push({
+        error_message: e.message,
+        error_stack: e.error?.stack || '',
+        timestamp: new Date().toISOString(),
+        page_url: window.location.pathname
+      });
+      scheduleSave();
+    });
+
+    const originalSetItem = localStorage.setItem;
+    localStorage.setItem = function(key, value) {
+      if (key === 'language') {
+        const oldLang = localStorage.getItem('language');
+        if (oldLang && oldLang !== value) {
+          languageChangesRef.current.push({
+            from: oldLang,
+            to: value,
+            timestamp: new Date().toISOString()
+          });
+          scheduleSave();
+        }
+      }
+      originalSetItem.apply(this, arguments);
     };
   }, [user, userLoading]);
 
   // Track page changes
   useEffect(() => {
+    if (!sessionIdRef.current) {
+      console.log('⚠️ Page change tracking: Session ešte nie je inicializovaná');
+      return;
+    }
+
     const currentPage = window.location.pathname + window.location.search;
     const currentTitle = document.title;
+    
+    console.log('📄 Page change detegovaná:', currentPage);
     
     if (lastPageRef.current && pageStartTimeRef.current) {
       const timeSpent = Math.round((Date.now() - pageStartTimeRef.current) / 1000);
@@ -389,6 +434,11 @@ export default function SessionRecorder() {
 
   // Save session data (throttled every 5 seconds)
   const scheduleSave = () => {
+    if (!sessionIdRef.current) {
+      console.log('⚠️ scheduleSave: Session ID neexistuje, nemôžem uložiť');
+      return;
+    }
+
     const now = Date.now();
     if (now - lastSaveRef.current < 5000 && saveTimeoutRef.current) {
       return;
@@ -399,7 +449,12 @@ export default function SessionRecorder() {
     }
 
     saveTimeoutRef.current = setTimeout(() => {
-      if (!sessionIdRef.current) return;
+      if (!sessionIdRef.current) {
+        console.log('⚠️ scheduleSave timeout: Session ID je null');
+        return;
+      }
+
+      console.log('💾 Ukladám session update...', sessionIdRef.current);
 
       base44.entities.UserSession.filter({ session_id: sessionIdRef.current })
         .then(sessions => {
