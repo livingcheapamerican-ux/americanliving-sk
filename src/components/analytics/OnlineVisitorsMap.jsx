@@ -27,6 +27,8 @@ function AutoFitBounds({ locations }) {
 export default function OnlineVisitorsMap({ sessions, onClose }) {
   const [timeFilter, setTimeFilter] = useState("today");
   const [customDate, setCustomDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [dateFrom, setDateFrom] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [dateTo, setDateTo] = useState(format(new Date(), 'yyyy-MM-dd'));
 
   const getDeviceIcon = (deviceType) => {
     switch(deviceType) {
@@ -52,6 +54,11 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
 
       if (timeFilter === "today") {
         return sessionDate >= today;
+      } else if (timeFilter === "range") {
+        const fromDate = new Date(dateFrom);
+        const toDate = new Date(dateTo);
+        toDate.setHours(23, 59, 59, 999); // Koniec dňa
+        return sessionDate >= fromDate && sessionDate <= toDate;
       } else if (timeFilter === "custom") {
         const selectedDate = new Date(customDate);
         const nextDay = new Date(selectedDate);
@@ -66,7 +73,7 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
       }
       return true;
     });
-  }, [sessions, timeFilter, customDate]);
+  }, [sessions, timeFilter, customDate, dateFrom, dateTo]);
 
   const locations = useMemo(() => {
     // Skupina sessions podľa mesta pre presnejšie zobrazenie
@@ -190,19 +197,34 @@ export default function OnlineVisitorsMap({ sessions, onClose }) {
             </Button>
             <Button
               size="sm"
-              variant={timeFilter === "custom" ? "default" : "outline"}
-              onClick={() => setTimeFilter("custom")}
+              variant={timeFilter === "range" ? "default" : "outline"}
+              onClick={() => setTimeFilter("range")}
+              className={timeFilter === "range" ? "bg-indigo-600 hover:bg-indigo-700" : ""}
             >
-              <Clock className="w-4 h-4 mr-2" />
-              Vlastný dátum
+              <Calendar className="w-4 h-4 mr-2" />
+              Rozsah dátumov
             </Button>
-            {timeFilter === "custom" && (
-              <input
-                type="date"
-                value={customDate}
-                onChange={(e) => setCustomDate(e.target.value)}
-                className="px-3 py-1 border rounded-md text-sm"
-              />
+            {timeFilter === "range" && (
+              <>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-600">Od:</span>
+                  <input
+                    type="date"
+                    value={dateFrom}
+                    onChange={(e) => setDateFrom(e.target.value)}
+                    className="px-3 py-1 border rounded-md text-sm"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-600">Do:</span>
+                  <input
+                    type="date"
+                    value={dateTo}
+                    onChange={(e) => setDateTo(e.target.value)}
+                    className="px-3 py-1 border rounded-md text-sm"
+                  />
+                </div>
+              </>
             )}
           </div>
 
