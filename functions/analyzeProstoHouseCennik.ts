@@ -30,282 +30,169 @@ Deno.serve(async (req) => {
       console.log(`  Row ${idx}:`, row.slice(0, 5), '...');
     });
 
-    // === WHITELIST MODELOV (Fuzzy Matching) ===
-    const MODEL_FUZZY_PATTERNS = [
-      { pattern: /barn\s*house/i, id: "barn_house" },
-      { pattern: /double\s*barn/i, id: "double_barn" },
-      { pattern: /aframe/i, id: "a_frame" },
-      { pattern: /a\s*frame/i, id: "a_frame" },
-      { pattern: /flat\s*small/i, id: "flat_small" },
-      { pattern: /flat\s*house.*2[,.]2/i, id: "flathouse_2_2" },
-      { pattern: /flat\s*1[,.]5/i, id: "flat_1_5" },
-      { pattern: /double\s*flat/i, id: "double_flat" },
-      { pattern: /nord\s*house/i, id: "nord" },
-      { pattern: /nord$/i, id: "nord" },
-      { pattern: /fjord/i, id: "fjord" }
-    ];
-
-    // === MAPOVACIA TABUĽKA (Excel Row Name -> JSON Key) ===
-    // PRESNÉ MAPOVANIE - Hľadať v stĺpcoch B alebo C
-    const ROW_MAPPING = {
-      // Základ
-      "Základná cena sady (svojpomocná montáž)": "zakladna_cena",
-      "Základná cena sady": "zakladna_cena",
-      "S montážou": "montaz",
-
-      // Rozmery (Predĺženie)
-      "+1,2 m": "predlzenie_1_2m",
-      "+2,4 m": "predlzenie_2_4m",
-      "+3,6 m": "predlzenie_3_6m",
-      "+4,8 m": "predlzenie_4_8m",
-
-      // Izolácia (Radio)
-      "Celoročná izolácia": "izolacia_standard",
-      "Zvýšená izolácia": "izolacia_zvysena",
-      "Prémium izolácia": "izolacia_premium",
-      "Extra izolácia": "izolacia_extra",
-
-      // Základy (Radio)
-      "Bez základov": "zaklady_bez",
-      "Pilóty/Pätky": "zaklady_vruty",
-      "Základová doska": "zaklady_doska",
-      "Pásové základy": "zaklady_pasove",
-
-      // Interiér (Radio)
-      "Bez interiéru": "interier_bez",
-      "Drevo": "interier_drevo",
-      "Sadrokartón": "interier_sadrokarton",
-
-      // Fasáda (Radio)
-      "Štadardná": "fasada_standard",
-      "Šúchaná fasáda": "fasada_omietka",
-
-      // Inštalácie (Checkbox)
-      "Elektro rozvody": "elektro_rozvody",
-      "Voda": "voda",
-      "Sanita": "sanita",
-      "Bojler": "bojler",
-
-      // Technológie (Checkbox)
-      "Tep. Čerpadlo": "tepelne_cerpadlo",
-      "Rekuperácia": "rekuperacia",
-      "Podl. Kúrenie": "podlahove_kurenie",
-      "Podl.": "podlahove_kurenie",
-
-      // Okná a Dvere (Checkbox)
-      "Laminácia farby okien": "laminacia_okien",
-      "Tónované sklá": "tonovanie_skla",
-      "Kovové s 2 zámkami": "dvere_kovove",
-      "Plastovo-kovové": "dvere_plastove",
-      "Strešné": "stresne_okno",
-      "Fixné 90x205": "okno_fix_90_205",
-      "Výkl. 90x205": "okno_vyklopne_90_205",
-      "Výkl. 55x90": "okno_vyklopne_55_90",
-
-      // Služby (Checkbox)
-      "Podlahy laminát": "podlahy_laminat",
-      "Inžiniering": "inziniering",
-      "Projektant": "projektACertifikacia",
-      "Revízie": "revizia",
-      "Siete": "siete",
-      "Doprava": "doprava"
+    // === ABSOLÚTNE SÚRADNICE (MATRIX COORDINATES) ===
+    
+    // STĹPCE (X-OS) - Každý model má pevný index
+    const MODEL_COLUMNS = {
+      barn_house: 4,
+      double_barn: 6,
+      a_frame: 8,
+      flat_small: 10,
+      flathouse_2_2: 12,
+      flat_1_5: 16,
+      double_flat: 18,
+      nord: 20,
+      fjord: 22
     };
 
-    console.log('🗺️ ROW_MAPPING initialized with', Object.keys(ROW_MAPPING).length, 'keys');
+    // RIADKY (Y-OS) - Každá položka má pevný index
+    const ITEM_ROWS = {
+      // Základné ceny
+      zakladna_cena: 2,
+      montaz: 7,
+      
+      // Rozmery (Predĺženie)
+      predlzenie_1_2m: 10,
+      predlzenie_2_4m: 11,
+      predlzenie_3_6m: 12,
+      predlzenie_4_8m: 13,
+      
+      // Izolácia
+      izolacia_standard: 15,
+      izolacia_zvysena: 16,
+      izolacia_premium: 17,
+      izolacia_extra: 18,
+      
+      // Základy
+      zaklady_bez: 20,
+      zaklady_vruty: 21,
+      zaklady_doska: 22,
+      zaklady_pasove: 23,
+      
+      // Interiér
+      interier_bez: 26,
+      interier_drevo: 27,
+      interier_sadrokarton: 28,
+      
+      // Technológie
+      elektro_rozvody: 30,
+      voda: 31,
+      sanita: 32,
+      bojler: 33,
+      tepelne_cerpadlo: 35,
+      rekuperacia: 36,
+      siete: 37,
+      podlahove_kurenie: 54,
+      
+      // Okná a Dvere
+      laminacia_okien: 38,
+      tonovanie_skla: 39,
+      dvere_standard: 41,
+      dvere_kovove: 42,
+      dvere_plastove: 43,
+      stresne_okno: 45,
+      okno_fix_90_205: 46,
+      okno_vyklopne_90_205: 47,
+      okno_vyklopne_55_90: 48,
+      
+      // Fasáda a Služby
+      fasada_standard: 51,
+      fasada_omietka: 52,
+      podlahy_laminat: 53,
+      inziniering: 56,
+      projektACertifikacia: 57,
+      revizia: 58,
+      doprava: 59
+    };
 
-    // === 1. IDENTIFIKUJ HLAVIČKY (Riadok 0 = Header) ===
-    const headerRow = data[0];
-    if (!headerRow) {
-      return Response.json({ 
-        success: false, 
-        error: 'Hlavičkový riadok neexistuje v Exceli' 
-      });
-    }
+    console.log('📐 Absolute coordinates initialized:');
+    console.log(`   Models: ${Object.keys(MODEL_COLUMNS).length}`);
+    console.log(`   Items: ${Object.keys(ITEM_ROWS).length}`);
 
-    console.log('📋 Header row (full):', headerRow);
-
-    // Nájdi indexy pre povolené modely
-    // Index 0 = názvy položiek (ignoruj)
-    // Index 1+ = jednotlivé modely
-    const modelColumns = {};
-    const ignoredColumns = [];
-
-    headerRow.forEach((header, idx) => {
-      if (idx === 0) {
-        console.log(`📌 Column 0: "${header}" (názvy položiek - skip)`);
-        return; // Skip prvý stĺpec (názvy riadkov)
-      }
-
-      if (!header) {
-        console.log(`⚠️ Empty header at index ${idx}`);
-        return;
-      }
-
-      const headerStr = header.toString().trim();
-
-      // Fuzzy matching - hľadaj prvý pattern, ktorý sa zhoduje
-      let matchedModel = null;
-      for (const { pattern, id } of MODEL_FUZZY_PATTERNS) {
-        if (pattern.test(headerStr)) {
-          matchedModel = id;
-          break;
-        }
-      }
-
-      if (matchedModel) {
-        modelColumns[matchedModel] = {
-          index: idx,
-          excelName: headerStr
-        };
-        console.log(`✅ Model "${headerStr}" -> ${matchedModel} (index ${idx})`);
-      } else {
-        ignoredColumns.push(headerStr);
-        console.log(`⏭️ Ignorujem stĺpec: "${headerStr}"`);
-      }
-    });
-
-    console.log('\n📊 Header analysis complete:');
-    console.log(`  ✅ Found models: ${Object.keys(modelColumns).length}`);
-    console.log(`  ⏭️  Ignored columns: ${ignoredColumns.length}`);
+    // === 1. VALIDATE DATA DIMENSIONS ===
+    const requiredRows = Math.max(...Object.values(ITEM_ROWS)) + 1;
+    const requiredCols = Math.max(...Object.values(MODEL_COLUMNS)) + 1;
     
-    if (Object.keys(modelColumns).length === 0) {
-      console.log('❌ ERROR: No allowed models found in header!');
-      console.log('Available headers:', headerRow);
-      return Response.json({ 
-        success: false, 
-        error: 'Nenašli sa žiadne povolené modely v hlavičke',
-        debug: {
-          headerRow: headerRow,
-          expectedPatterns: MODEL_FUZZY_PATTERNS.map(p => p.id)
-        }
+    console.log(`📐 Matrix validation:`);
+    console.log(`   Required: ${requiredRows} rows x ${requiredCols} cols`);
+    console.log(`   Available: ${data.length} rows x ${data[0]?.length || 0} cols`);
+    
+    if (data.length < requiredRows) {
+      return Response.json({
+        success: false,
+        error: `Excel má len ${data.length} riadkov, potrebujeme aspoň ${requiredRows}`
       });
     }
 
-    // === 2. PRESNÉ MAPOVANIE POLOŽIEK (Stĺpce B alebo C) ===
+    // === 2. EXTRACT DATA USING ABSOLUTE COORDINATES ===
     const mappingResults = {};
+    let processedCells = 0;
+    
+    console.log(`\n🔄 Reading data using absolute coordinates...`);
 
-    // Inicializuj výsledky pre každý model
-    for (const [modelKey, modelInfo] of Object.entries(modelColumns)) {
+    // Funkcia na čítanie a konverziu bunky
+    const readCell = (row, col) => {
+      if (row >= data.length || !data[row] || col >= data[row].length) {
+        return null;
+      }
+      
+      const cellValue = data[row][col];
+      
+      if (cellValue === null || cellValue === undefined || cellValue === '') {
+        return null;
+      }
+      
+      const cellStr = cellValue.toString().trim();
+      
+      // Odstráň medzery z čísiel
+      const cleanedStr = cellStr.replace(/\s+/g, '');
+      
+      if (cellStr.toLowerCase().includes('nie je') || cleanedStr.toLowerCase() === 'nan') {
+        return null;
+      }
+      
+      const num = parseFloat(cleanedStr);
+      return isNaN(num) ? null : num;
+    };
+
+    // Iteruj cez každý model
+    for (const [modelKey, colIdx] of Object.entries(MODEL_COLUMNS)) {
+      console.log(`\n📦 Processing ${modelKey} (column ${colIdx})...`);
+      
       mappingResults[modelKey] = {
-        excelName: modelInfo.excelName,
+        excelName: modelKey,
         items: {}
       };
-    }
-
-    // Prejdi všetky riadky (od indexu 1, pretože 0 je hlavička)
-    let mappedRowsCount = 0;
-    let unmappedRowsCount = 0;
-    const unmappedRowNames = [];
-
-    console.log(`\n🔄 Starting COLUMN-SPECIFIC SCAN (${data.length - 1} rows)...`);
-    console.log(`📍 Základná cena: Stĺpec 1 (B) | Varianty: Stĺpec 3 (D)`);
-
-    for (let rowIdx = 1; rowIdx < data.length; rowIdx++) {
-      const row = data[rowIdx];
-      if (!row || row.length === 0) continue;
-
-      // Prečítaj stĺpce B (1) a D (3)
-      const colB = row[1] ? row[1].toString().trim() : '';
-      const colD = row[3] ? row[3].toString().trim() : '';
       
-      let jsonKey = null;
-      let matchedLabel = null;
-      let sourceColumn = -1;
-      
-      // STRATÉGIA 1: Hľadaj "Základná cena" v stĺpci B (1)
-      if (colB.toLowerCase().includes('základná cena')) {
-        jsonKey = 'zakladna_cena';
-        matchedLabel = 'Základná cena sady';
-        sourceColumn = 1;
-      }
-      // STRATÉGIA 2: Hľadaj všetky varianty v stĺpci D (3)
-      else if (colD) {
-        const colDLower = colD.toLowerCase();
+      // Iteruj cez každú položku
+      for (const [itemKey, rowIdx] of Object.entries(ITEM_ROWS)) {
+        const value = readCell(rowIdx, colIdx);
         
-        for (const [excelLabel, key] of Object.entries(ROW_MAPPING)) {
-          if (key === 'zakladna_cena') continue; // Skip, už sme riešili
-          
-          const labelLower = excelLabel.toLowerCase();
-          if (colDLower.includes(labelLower)) {
-            jsonKey = key;
-            matchedLabel = excelLabel;
-            sourceColumn = 3;
-            break;
-          }
-        }
-      }
-
-      if (!jsonKey) {
-        unmappedRowsCount++;
-        if (unmappedRowNames.length < 10) {
-          unmappedRowNames.push(`B:"${colB}" | D:"${colD}" (row ${rowIdx})`);
-        }
-        continue;
-      }
-
-      mappedRowsCount++;
-      console.log(`\n✅ Row ${rowIdx} [col ${sourceColumn === 1 ? 'B' : 'D'}]: "${matchedLabel}" -> ${jsonKey}`);
-
-      // Extrahuj hodnoty pre každý model
-      for (const [modelKey, modelInfo] of Object.entries(modelColumns)) {
-        const cellValue = row[modelInfo.index];
-
-        console.log(`  📍 ${modelKey} [col ${modelInfo.index}]: raw value = "${cellValue}"`);
-
-        // Spracuj hodnotu
-        let finalValue = null;
-        if (cellValue !== null && cellValue !== undefined && cellValue !== '') {
-          const cellStr = cellValue.toString().trim();
-          
-          // Odstráň medzery z čísiel (napr. "20 900" -> "20900")
-          const cleanedStr = cellStr.replace(/\s+/g, '');
-          
-          if (cellStr.toLowerCase().includes('nie je') || cleanedStr.toLowerCase() === 'nan') {
-            console.log(`    ⏭️ Skipped (nie je/NaN)`);
-            finalValue = null;
-          } else {
-            const num = parseFloat(cleanedStr);
-            if (!isNaN(num)) {
-              // ŠPECIÁLNA LOGIKA PRE PREDĹŽENIE:
-              // Ak je položka predĺženie a cena je 0, nastav null (nie 0)
-              // aby sa položka nezobrazila v konfigurátore
-              if (jsonKey.startsWith('predlzenie_') && num === 0) {
-                finalValue = null;
-                console.log(`    🚫 Predĺženie s cenou 0 -> null (skryté)`);
-              } else {
-                finalValue = num;
-                console.log(`    ✓ Parsed: ${finalValue} ${finalValue === 0 ? '(V cene)' : '€'}`);
-              }
-            } else {
-              console.log(`    ✗ Not a number: "${cleanedStr}"`);
-            }
-          }
-        } else {
-          console.log(`    ⚠️ Empty cell (null)`);
-        }
-
-        // Ulož do mapy
-        mappingResults[modelKey].items[jsonKey] = {
-          source: matchedLabel,
+        // ŠPECIÁLNA LOGIKA: Predĺženie s cenou 0 -> null
+        const finalValue = (itemKey.startsWith('predlzenie_') && value === 0) ? null : value;
+        
+        mappingResults[modelKey].items[itemKey] = {
+          source: `[${rowIdx},${colIdx}]`,
           value: finalValue,
           isZero: finalValue === 0,
           isEmpty: finalValue === null
         };
+        
+        if (finalValue !== null) {
+          processedCells++;
+        }
       }
     }
 
-    console.log(`\n📊 Row processing complete:`);
-    console.log(`  ✅ Mapped rows: ${mappedRowsCount}`);
-    console.log(`  ⏭️  Unmapped rows: ${unmappedRowsCount}`);
-    if (unmappedRowNames.length > 0) {
-      console.log(`  📝 Sample unmapped rows:`, unmappedRowNames);
-    }
+    console.log(`\n📊 Coordinate extraction complete:`);
+    console.log(`  ✅ Processed cells with values: ${processedCells}`);
+    console.log(`  📐 Total coordinates checked: ${Object.keys(MODEL_COLUMNS).length * Object.keys(ITEM_ROWS).length}`);
 
     // === 3. VYTVOR DEBUG REPORT ===
     const summary = {
-      imported_models: Object.keys(modelColumns),
-      ignored_columns: ignoredColumns,
-      total_items_mapped: Object.keys(ROW_MAPPING).length
+      imported_models: Object.keys(MODEL_COLUMNS),
+      total_items: Object.keys(ITEM_ROWS).length,
+      method: 'absolute_coordinates'
     };
 
     const details = {};
@@ -335,10 +222,14 @@ Deno.serve(async (req) => {
 
     // === 5. KONTROLNÝ CHECKLIST ===
     const checklist = {
-      barn_mini_removed: !summary.imported_models.includes('barn_mini'),
-      norway_removed: !summary.imported_models.includes('norway'),
-      barn_house_base_price: mappingResults.barn_house?.items?.zakladna_cena?.value || null,
-      barn_house_izolacia_standard_is_zero: mappingResults.barn_house?.items?.izolacia_standard?.isZero || false,
+      barn_house_zakladna_cena: mappingResults.barn_house?.items?.zakladna_cena?.value || null,
+      barn_house_montaz: mappingResults.barn_house?.items?.montaz?.value || null,
+      barn_house_fasada_omietka: mappingResults.barn_house?.items?.fasada_omietka?.value || null,
+      expected_values: {
+        zakladna_cena: 20900,
+        montaz: 4875,
+        fasada_omietka: 4321
+      },
       ticab_house_protected: ticabDomy.length > 0,
       target_field: 'konfigurator_custom_ceny_prosto_house'
     };
