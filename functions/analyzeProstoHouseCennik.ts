@@ -46,21 +46,18 @@ Deno.serve(async (req) => {
     ];
 
     // === MAPOVACIA TABUĽKA (Excel Row Name -> JSON Key) ===
-    // PIVOT TABLE FORMAT: Riadky obsahujú názvy položiek, stĺpce modely
+    // PRESNÉ MAPOVANIE - Hľadať v stĺpcoch B alebo C
     const ROW_MAPPING = {
       // Základ
+      "Základná cena sady (svojpomocná montáž)": "zakladna_cena",
       "Základná cena sady": "zakladna_cena",
       "S montážou": "montaz",
-      
-      // Rozmery (podľa požiadavky - formát "+X,X m")
+
+      // Rozmery (Predĺženie)
       "+1,2 m": "predlzenie_1_2m",
       "+2,4 m": "predlzenie_2_4m",
       "+3,6 m": "predlzenie_3_6m",
       "+4,8 m": "predlzenie_4_8m",
-      "Predĺženie 1,2m": "predlzenie_1_2m", // Fallback
-      "Predĺženie 2,4m": "predlzenie_2_4m",
-      "Predĺženie 3,6m": "predlzenie_3_6m",
-      "Predĺženie 4,8m": "predlzenie_4_8m",
 
       // Izolácia (Radio)
       "Celoročná izolácia": "izolacia_standard",
@@ -83,15 +80,17 @@ Deno.serve(async (req) => {
       "Štadardná": "fasada_standard",
       "Šúchaná fasáda": "fasada_omietka",
 
-      // Technológie (Checkbox)
+      // Inštalácie (Checkbox)
       "Elektro rozvody": "elektro_rozvody",
       "Voda": "voda",
       "Sanita": "sanita",
       "Bojler": "bojler",
+
+      // Technológie (Checkbox)
       "Tep. Čerpadlo": "tepelne_cerpadlo",
       "Rekuperácia": "rekuperacia",
       "Podl. Kúrenie": "podlahove_kurenie",
-      "Podl.": "podlahove_kurenie", // Alias
+      "Podl.": "podlahove_kurenie",
 
       // Okná a Dvere (Checkbox)
       "Laminácia farby okien": "laminacia_okien",
@@ -183,7 +182,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // === 2. AGRESÍVNE VYHĽADÁVANIE V RIADKOCH (Fuzzy Row Search) ===
+    // === 2. PRESNÉ MAPOVANIE POLOŽIEK (Stĺpce B alebo C) ===
     const mappingResults = {};
 
     // Inicializuj výsledky pre každý model
@@ -199,51 +198,62 @@ Deno.serve(async (req) => {
     let unmappedRowsCount = 0;
     const unmappedRowNames = [];
 
-    console.log(`\n🔄 Starting AGGRESSIVE row processing (${data.length - 1} rows)...`);
+    console.log(`\n🔄 Starting PRECISE row processing (${data.length - 1} rows)...`);
+    console.log(`📍 Hľadám názvy položiek prioritne v stĺpci B (index 1) alebo C (index 2)`);
 
     for (let rowIdx = 1; rowIdx < data.length; rowIdx++) {
       const row = data[rowIdx];
       if (!row || row.length === 0) continue;
 
-      // AGRESÍVNE VYHĽADÁVANIE: Skontroluj stĺpce 0-4
+      // Hľadaj názov položky v stĺpci B (index 1) alebo C (index 2)
       let rowNameStr = null;
       let sourceColumn = -1;
 
-      for (let colIdx = 0; colIdx <= 4 && colIdx < row.length; colIdx++) {
-        const cellValue = row[colIdx];
-        if (cellValue && cellValue.toString().trim() !== '') {
-          rowNameStr = cellValue.toString().trim();
-          sourceColumn = colIdx;
-          break; // Použiť prvý neprázdny text
+      // Priorita: Stĺpec B (index 1), potom C (index 2), potom A (index 0)
+      const priorityColumns = [1, 2, 0];
+
+      for (const colIdx of priorityColumns) {
+        if (colIdx < row.length) {
+          const cellValue = row[colIdx];
+          if (cellValue && cellValue.toString().trim() !== '') {
+            rowNameStr = cellValue.toString().trim();
+            sourceColumn = colIdx;
+            break;
+          }
         }
       }
 
       if (!rowNameStr) continue;
 
-      // Case-insensitive fuzzy matching pre položky
+      // PRESNÉ MAPOVANIE (s partial match fallback)
       let jsonKey = null;
       let matchedLabel = null;
 
-      const rowNameLower = rowNameStr.toLowerCase();
-
-      for (const [excelLabel, key] of Object.entries(ROW_MAPPING)) {
-        if (rowNameLower.includes(excelLabel.toLowerCase()) || excelLabel.toLowerCase().includes(rowNameLower)) {
-          jsonKey = key;
-          matchedLabel = excelLabel;
-          break;
+      // 1. Pokus: Presná zhoda
+      if (ROW_MAPPING[rowNameStr]) {
+        jsonKey = ROW_MAPPING[rowNameStr];
+        matchedLabel = rowNameStr;
+      } else {
+        // 2. Pokus: Partial match (obsahuje)
+        for (const [excelLabel, key] of Object.entries(ROW_MAPPING)) {
+          if (rowNameStr.includes(excelLabel) || excelLabel.includes(rowNameStr)) {
+            jsonKey = key;
+            matchedLabel = excelLabel;
+            break;
+          }
         }
       }
 
       if (!jsonKey) {
         unmappedRowsCount++;
         if (unmappedRowNames.length < 10) {
-          unmappedRowNames.push(`"${rowNameStr}" (col ${sourceColumn})`);
+          unmappedRowNames.push(`"${rowNameStr}" (col ${String.fromCharCode(65 + sourceColumn)})`);
         }
         continue;
       }
 
       mappedRowsCount++;
-      console.log(`\n✅ Row ${rowIdx} [col ${sourceColumn}]: "${rowNameStr}" -> ${jsonKey} (matched: "${matchedLabel}")`);
+      console.log(`\n✅ Row ${rowIdx} [col ${String.fromCharCode(65 + sourceColumn)}]: "${rowNameStr}" -> ${jsonKey}`);
 
       // Extrahuj hodnoty pre každý model
       for (const [modelKey, modelInfo] of Object.entries(modelColumns)) {
@@ -257,17 +267,18 @@ Deno.serve(async (req) => {
           const cellStr = cellValue.toString().toLowerCase();
           if (cellStr.includes('nie je') || cellStr === 'nan') {
             console.log(`    ⏭️ Skipped (nie je/NaN)`);
+            finalValue = null;
           } else {
             const num = parseFloat(cellValue);
             if (!isNaN(num)) {
               finalValue = num;
-              console.log(`    ✓ Parsed as number: ${finalValue}`);
+              console.log(`    ✓ Parsed: ${finalValue} ${finalValue === 0 ? '(V cene)' : '€'}`);
             } else {
-              console.log(`    ✗ Not a valid number`);
+              console.log(`    ✗ Not a number`);
             }
           }
         } else {
-          console.log(`    ⚠️ Empty cell`);
+          console.log(`    ⚠️ Empty cell (null)`);
         }
 
         // Ulož do mapy
@@ -335,17 +346,17 @@ Deno.serve(async (req) => {
     console.log('\n✅ SUMMARY:', JSON.stringify(summary, null, 2));
     console.log('\n📋 CHECKLIST:', JSON.stringify(checklist, null, 2));
     console.log('\n🔒 TICAB INTEGRITY:', JSON.stringify(ticabIntegrityReport, null, 2));
-    
-    // Výpis vzorky dát pre prvý model
-    const firstModel = Object.keys(mappingResults)[0];
-    if (firstModel) {
-      console.log(`\n🔍 Sample data for ${firstModel}:`);
-      const sampleItems = Object.entries(mappingResults[firstModel].items)
-        .filter(([_, item]) => item.value !== null)
-        .slice(0, 10);
-      sampleItems.forEach(([key, item]) => {
-        console.log(`  ${key}: ${item.value} (${item.source})`);
-      });
+
+    // Výpis KOMPLETNÝCH dát pre barn_house
+    if (mappingResults.barn_house) {
+      console.log(`\n🏠 BARN HOUSE - KOMPLETNÝ JSON NÁHĽAD:`);
+      const barnHouseData = {};
+      for (const [key, item] of Object.entries(mappingResults.barn_house.items)) {
+        if (item.value !== null) {
+          barnHouseData[key] = item.value;
+        }
+      }
+      console.log(JSON.stringify(barnHouseData, null, 2));
     }
     console.log('\n' + '='.repeat(60));
 
