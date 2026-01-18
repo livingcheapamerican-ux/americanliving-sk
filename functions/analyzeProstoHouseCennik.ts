@@ -171,13 +171,12 @@ Deno.serve(async (req) => {
     if (Object.keys(modelColumns).length === 0) {
       console.log('❌ ERROR: No allowed models found in header!');
       console.log('Available headers:', headerRow);
-      console.log('Looking for:', Object.keys(ALLOWED_MODELS));
       return Response.json({ 
         success: false, 
         error: 'Nenašli sa žiadne povolené modely v hlavičke',
         debug: {
           headerRow: headerRow,
-          allowedModels: Object.keys(ALLOWED_MODELS)
+          expectedPatterns: MODEL_FUZZY_PATTERNS.map(p => p.id)
         }
       });
     }
@@ -199,47 +198,48 @@ Deno.serve(async (req) => {
     const unmappedRowNames = [];
 
     console.log(`\n🔄 Starting PRECISE row processing (${data.length - 1} rows)...`);
-    console.log(`📍 Hľadám názvy položiek prioritne v stĺpci B (index 1) alebo C (index 2)`);
+    console.log(`📍 Hľadám názvy položiek v stĺpcoch B (index 1) a C (index 2)`);
 
     for (let rowIdx = 1; rowIdx < data.length; rowIdx++) {
       const row = data[rowIdx];
       if (!row || row.length === 0) continue;
 
-      // Hľadaj názov položky v stĺpci B (index 1) alebo C (index 2)
-      let rowNameStr = null;
-      let sourceColumn = -1;
+      // Skenuj stĺpce B (1) a C (2) a skombinuj ich obsah
+      const colB = row[1] ? row[1].toString().trim() : '';
+      const colC = row[2] ? row[2].toString().trim() : '';
+      
+      // Skombinuj texty z oboch stĺpcov
+      const combinedText = [colB, colC].filter(t => t).join(' ');
+      
+      if (!combinedText) continue;
+      
+      const sourceColumn = colB ? 1 : 2;
+      const rowNameStr = combinedText;
 
-      // Priorita: Stĺpec B (index 1), potom C (index 2), potom A (index 0)
-      const priorityColumns = [1, 2, 0];
-
-      for (const colIdx of priorityColumns) {
-        if (colIdx < row.length) {
-          const cellValue = row[colIdx];
-          if (cellValue && cellValue.toString().trim() !== '') {
-            rowNameStr = cellValue.toString().trim();
-            sourceColumn = colIdx;
-            break;
-          }
-        }
-      }
-
-      if (!rowNameStr) continue;
-
-      // PRESNÉ MAPOVANIE (s partial match fallback)
+      // PRESNÉ MAPOVANIE s kombinovaným textom
       let jsonKey = null;
       let matchedLabel = null;
 
-      // 1. Pokus: Presná zhoda
+      // 1. Pokus: Presná zhoda s celým kombinovaným textom
       if (ROW_MAPPING[rowNameStr]) {
         jsonKey = ROW_MAPPING[rowNameStr];
         matchedLabel = rowNameStr;
       } else {
-        // 2. Pokus: Partial match (obsahuje)
-        for (const [excelLabel, key] of Object.entries(ROW_MAPPING)) {
-          if (rowNameStr.includes(excelLabel) || excelLabel.includes(rowNameStr)) {
-            jsonKey = key;
-            matchedLabel = excelLabel;
-            break;
+        // 2. Pokus: Presná zhoda len s colB alebo colC
+        if (ROW_MAPPING[colB]) {
+          jsonKey = ROW_MAPPING[colB];
+          matchedLabel = colB;
+        } else if (ROW_MAPPING[colC]) {
+          jsonKey = ROW_MAPPING[colC];
+          matchedLabel = colC;
+        } else {
+          // 3. Pokus: Partial match (obsahuje)
+          for (const [excelLabel, key] of Object.entries(ROW_MAPPING)) {
+            if (rowNameStr.includes(excelLabel) || excelLabel.includes(rowNameStr)) {
+              jsonKey = key;
+              matchedLabel = excelLabel;
+              break;
+            }
           }
         }
       }
@@ -247,13 +247,13 @@ Deno.serve(async (req) => {
       if (!jsonKey) {
         unmappedRowsCount++;
         if (unmappedRowNames.length < 10) {
-          unmappedRowNames.push(`"${rowNameStr}" (col ${String.fromCharCode(65 + sourceColumn)})`);
+          unmappedRowNames.push(`"${colB} | ${colC}" (row ${rowIdx})`);
         }
         continue;
       }
 
       mappedRowsCount++;
-      console.log(`\n✅ Row ${rowIdx} [col ${String.fromCharCode(65 + sourceColumn)}]: "${rowNameStr}" -> ${jsonKey}`);
+      console.log(`\n✅ Row ${rowIdx} [B:"${colB}" C:"${colC}"]: "${matchedLabel}" -> ${jsonKey}`);
 
       // Extrahuj hodnoty pre každý model
       for (const [modelKey, modelInfo] of Object.entries(modelColumns)) {
