@@ -92,8 +92,12 @@ export default function SessionRecorder() {
 
   // Initialize session
   useEffect(() => {
-    if (isInitialized.current || userLoading) return;
+    if (isInitialized.current || userLoading) {
+      console.log('⏸️ SessionRecorder: Čakám...', { isInitialized: isInitialized.current, userLoading });
+      return;
+    }
     
+    console.log('🚀 SessionRecorder: Spúšťam inicializáciu...', { user: user?.email || 'anonymous' });
     isInitialized.current = true;
     
     if (!sessionIdRef.current) {
@@ -113,6 +117,8 @@ export default function SessionRecorder() {
         utm_term: urlParams.get('utm_term'),
         utm_content: urlParams.get('utm_content')
       };
+      
+      console.log('📊 UTM Parametre:', utmParams);
 
       const referrerUrl = document.referrer || 'direct';
       const referrerDomain = referrerUrl !== 'direct' ? new URL(referrerUrl).hostname : 'direct';
@@ -162,7 +168,12 @@ export default function SessionRecorder() {
         is_active: true,
         session_tags: isReturning ? ['vracajuci_sa'] : []
       }).then((created) => {
-        console.log('✅ SessionRecorder: Session vytvorená v DB', sessionIdRef.current);
+        console.log('✅ SessionRecorder: Session ÚSPEŠNE vytvorená a uložená v DB!', {
+          session_id: sessionIdRef.current,
+          user: user?.email || 'anonymous',
+          utm_params: utmParams,
+          referrer: referrerUrl
+        });
         
         const allSessions = JSON.parse(previousSessions || '[]');
         allSessions.push(sessionIdRef.current);
