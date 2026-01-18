@@ -21,10 +21,12 @@ export default function SessionRecorder() {
   const languageChangesRef = useRef([]);
   const saveTimeoutRef = useRef(null);
   const lastSaveRef = useRef(Date.now());
+  const isInitialized = useRef(false);
 
   const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['current-user'],
-    queryFn: () => base44.auth.me().catch(() => null)
+    queryFn: () => base44.auth.me().catch(() => null),
+    staleTime: Infinity
   });
 
   // Detect device info
@@ -88,17 +90,17 @@ export default function SessionRecorder() {
     };
   };
 
-  // Initialize session ONCE - ale počkaj na user
-  const initOnceRef = useRef(false);
+  // Initialize session
   useEffect(() => {
-    if (initOnceRef.current) return;
-    if (userLoading) return; // Počkaj kým sa user načíta
+    if (isInitialized.current || userLoading) return;
     
-    initOnceRef.current = true;
+    isInitialized.current = true;
     
     if (!sessionIdRef.current) {
       sessionIdRef.current = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       sessionStartRef.current = new Date().toISOString();
+      
+      console.log('🆕 SessionRecorder: Vytváram novú session', sessionIdRef.current);
       
       const previousSessions = localStorage.getItem('user_previous_sessions');
       const isReturning = !!previousSessions;
@@ -127,8 +129,6 @@ export default function SessionRecorder() {
         '/odporucanie-domov': 'AI Odporúčania domov'
       };
 
-      console.log('🟢 SessionRecorder: Inicializujem novú session', sessionIdRef.current);
-      
       base44.entities.UserSession.create({
         session_id: sessionIdRef.current,
         user_email: user?.email || 'anonymous',
@@ -161,7 +161,9 @@ export default function SessionRecorder() {
         engagement_score: 0,
         is_active: true,
         session_tags: isReturning ? ['vracajuci_sa'] : []
-      }).then(() => {
+      }).then((created) => {
+        console.log('✅ SessionRecorder: Session vytvorená v DB', sessionIdRef.current);
+        
         const allSessions = JSON.parse(previousSessions || '[]');
         allSessions.push(sessionIdRef.current);
         localStorage.setItem('user_previous_sessions', JSON.stringify(allSessions.slice(-10)));
@@ -183,12 +185,15 @@ export default function SessionRecorder() {
                       latitude: data.latitude,
                       longitude: data.longitude
                     }
-                  });
+                  }).then(() => console.log('📍 Location info updated'));
                 }
               });
           })
-          .catch(() => {});
-      }).catch(err => console.log('Session create error:', err));
+          .catch(err => console.log('⚠️ Location fetch failed:', err));
+      }).catch(err => {
+        console.error('❌ SessionRecorder: Chyba pri vytváraní session:', err);
+        isInitialized.current = false; // Umožni retry
+      });
 
       window.addEventListener('error', (e) => {
         errorsRef.current.push({
@@ -216,7 +221,11 @@ export default function SessionRecorder() {
         originalSetItem.apply(this, arguments);
       };
     }
-  }, [userLoading, user]);
+
+    return () => {
+      // Cleanup on unmount
+    };
+  }, [user, userLoading]);
 
   // Track page changes
   useEffect(() => {
@@ -473,14 +482,14 @@ export default function SessionRecorder() {
             base44.entities.UserSession.update(session.id, updates)
               .then(() => {
                 lastSaveRef.current = Date.now();
-                console.log('✅ SessionRecorder: Session uložená', {
-                  session_id: sessionIdRef.current,
+                console.log('💾 Session saved:', sessionIdRef.current, {
                   duration: currentDuration,
-                  engagement_score: engagementScore,
-                  clicks: clicksRef.current.length
+                  engagement: engagementScore,
+                  clicks: clicksRef.current.length,
+                  pages: updates.pages_visited?.length || 0
                 });
               })
-              .catch(err => console.log('❌ Session update error:', err));
+              .catch(err => console.error('❌ Session update error:', err));
           }
         })
         .catch(err => console.log('Session fetch error:', err));
