@@ -30,18 +30,20 @@ Deno.serve(async (req) => {
       console.log(`  Row ${idx}:`, row.slice(0, 5), '...');
     });
 
-    // === WHITELIST MODELOV ===
-    const ALLOWED_MODELS = {
-      "Barn House": "barn_house",
-      "Double Barn": "double_barn",
-      "A frame": "a_frame",
-      "Flat Small": "flat_small",
-      "FlatHouse 2,2": "flathouse_2_2",
-      "Flat 1,5": "flat_1_5",
-      "DoubleFlat": "double_flat",
-      "Nord": "nord",
-      "Fjord": "fjord"
-    };
+    // === WHITELIST MODELOV (Fuzzy Matching) ===
+    const MODEL_FUZZY_PATTERNS = [
+      { pattern: /barn\s*house/i, id: "barn_house" },
+      { pattern: /double\s*barn/i, id: "double_barn" },
+      { pattern: /aframe/i, id: "a_frame" },
+      { pattern: /a\s*frame/i, id: "a_frame" },
+      { pattern: /flat\s*small/i, id: "flat_small" },
+      { pattern: /flat\s*house.*2[,.]2/i, id: "flathouse_2_2" },
+      { pattern: /flat\s*1[,.]5/i, id: "flat_1_5" },
+      { pattern: /double\s*flat/i, id: "double_flat" },
+      { pattern: /nord\s*house/i, id: "nord" },
+      { pattern: /nord$/i, id: "nord" },
+      { pattern: /fjord/i, id: "fjord" }
+    ];
 
     // === MAPOVACIA TABUĽKA (Excel Row Name -> JSON Key) ===
     // PIVOT TABLE FORMAT: Riadky obsahujú názvy položiek, stĺpce modely
@@ -134,20 +136,29 @@ Deno.serve(async (req) => {
         console.log(`📌 Column 0: "${header}" (názvy položiek - skip)`);
         return; // Skip prvý stĺpec (názvy riadkov)
       }
-      
+
       if (!header) {
         console.log(`⚠️ Empty header at index ${idx}`);
         return;
       }
-      
+
       const headerStr = header.toString().trim();
-      
-      if (ALLOWED_MODELS[headerStr]) {
-        modelColumns[ALLOWED_MODELS[headerStr]] = {
+
+      // Fuzzy matching - hľadaj prvý pattern, ktorý sa zhoduje
+      let matchedModel = null;
+      for (const { pattern, id } of MODEL_FUZZY_PATTERNS) {
+        if (pattern.test(headerStr)) {
+          matchedModel = id;
+          break;
+        }
+      }
+
+      if (matchedModel) {
+        modelColumns[matchedModel] = {
           index: idx,
           excelName: headerStr
         };
-        console.log(`✅ Model "${headerStr}" -> ${ALLOWED_MODELS[headerStr]} (index ${idx})`);
+        console.log(`✅ Model "${headerStr}" -> ${matchedModel} (index ${idx})`);
       } else {
         ignoredColumns.push(headerStr);
         console.log(`⏭️ Ignorujem stĺpec: "${headerStr}"`);
@@ -172,7 +183,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // === 2. SPRACUJ RIADKY A VYTVOR MAPPING ===
+    // === 2. AGRESÍVNE VYHĽADÁVANIE V RIADKOCH (Fuzzy Row Search) ===
     const mappingResults = {};
 
     // Inicializuj výsledky pre každý model
@@ -187,46 +198,73 @@ Deno.serve(async (req) => {
     let mappedRowsCount = 0;
     let unmappedRowsCount = 0;
     const unmappedRowNames = [];
-    
-    console.log(`\n🔄 Starting row processing (${data.length - 1} rows)...`);
-    
+
+    console.log(`\n🔄 Starting AGGRESSIVE row processing (${data.length - 1} rows)...`);
+
     for (let rowIdx = 1; rowIdx < data.length; rowIdx++) {
       const row = data[rowIdx];
       if (!row || row.length === 0) continue;
 
-      const rowName = row[0]; // Prvý stĺpec = názov položky
-      if (!rowName) continue;
+      // AGRESÍVNE VYHĽADÁVANIE: Skontroluj stĺpce 0-4
+      let rowNameStr = null;
+      let sourceColumn = -1;
 
-      const rowNameStr = rowName.toString().trim();
-      
-      const jsonKey = ROW_MAPPING[rowNameStr];
+      for (let colIdx = 0; colIdx <= 4 && colIdx < row.length; colIdx++) {
+        const cellValue = row[colIdx];
+        if (cellValue && cellValue.toString().trim() !== '') {
+          rowNameStr = cellValue.toString().trim();
+          sourceColumn = colIdx;
+          break; // Použiť prvý neprázdny text
+        }
+      }
+
+      if (!rowNameStr) continue;
+
+      // Case-insensitive fuzzy matching pre položky
+      let jsonKey = null;
+      let matchedLabel = null;
+
+      const rowNameLower = rowNameStr.toLowerCase();
+
+      for (const [excelLabel, key] of Object.entries(ROW_MAPPING)) {
+        if (rowNameLower.includes(excelLabel.toLowerCase()) || excelLabel.toLowerCase().includes(rowNameLower)) {
+          jsonKey = key;
+          matchedLabel = excelLabel;
+          break;
+        }
+      }
 
       if (!jsonKey) {
         unmappedRowsCount++;
-        if (unmappedRowNames.length < 10) { // Zbieraj prvých 10
-          unmappedRowNames.push(rowNameStr);
+        if (unmappedRowNames.length < 10) {
+          unmappedRowNames.push(`"${rowNameStr}" (col ${sourceColumn})`);
         }
         continue;
       }
-      
+
       mappedRowsCount++;
-      console.log(`\n✅ Row ${rowIdx}: "${rowNameStr}" -> ${jsonKey}`);
+      console.log(`\n✅ Row ${rowIdx} [col ${sourceColumn}]: "${rowNameStr}" -> ${jsonKey} (matched: "${matchedLabel}")`);
 
       // Extrahuj hodnoty pre každý model
       for (const [modelKey, modelInfo] of Object.entries(modelColumns)) {
         const cellValue = row[modelInfo.index];
-        
+
         console.log(`  📍 ${modelKey} [col ${modelInfo.index}]: raw value = "${cellValue}"`);
-        
+
         // Spracuj hodnotu
         let finalValue = null;
         if (cellValue !== null && cellValue !== undefined && cellValue !== '') {
-          const num = parseFloat(cellValue);
-          if (!isNaN(num)) {
-            finalValue = num;
-            console.log(`    ✓ Parsed as number: ${finalValue}`);
+          const cellStr = cellValue.toString().toLowerCase();
+          if (cellStr.includes('nie je') || cellStr === 'nan') {
+            console.log(`    ⏭️ Skipped (nie je/NaN)`);
           } else {
-            console.log(`    ✗ Not a valid number`);
+            const num = parseFloat(cellValue);
+            if (!isNaN(num)) {
+              finalValue = num;
+              console.log(`    ✓ Parsed as number: ${finalValue}`);
+            } else {
+              console.log(`    ✗ Not a valid number`);
+            }
           }
         } else {
           console.log(`    ⚠️ Empty cell`);
