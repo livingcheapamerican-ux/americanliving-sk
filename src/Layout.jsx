@@ -14,6 +14,7 @@ import CookieConsentBanner from "./components/CookieConsentBanner";
 import { LanguageProvider, useLanguage } from "./components/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
 import UserTracking from "./components/UserTracking";
+import SessionRecorder from "./components/SessionRecorder";
 
 
 
@@ -728,6 +729,7 @@ function LayoutContent({ children }) {
       </footer>
 
       <CookieConsentBanner />
+      <SessionRecorder />
 
       <div className="hidden md:block">
         <Chatbot />
