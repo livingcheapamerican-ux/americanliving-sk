@@ -25,6 +25,10 @@ Deno.serve(async (req) => {
     const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
     console.log('📊 Excel loaded, rows:', data.length);
+    console.log('📊 First 3 rows preview:');
+    data.slice(0, 3).forEach((row, idx) => {
+      console.log(`  Row ${idx}:`, row.slice(0, 5), '...');
+    });
 
     // === WHITELIST MODELOV ===
     const ALLOWED_MODELS = {
@@ -150,10 +154,21 @@ Deno.serve(async (req) => {
       }
     });
 
+    console.log('\n📊 Header analysis complete:');
+    console.log(`  ✅ Found models: ${Object.keys(modelColumns).length}`);
+    console.log(`  ⏭️  Ignored columns: ${ignoredColumns.length}`);
+    
     if (Object.keys(modelColumns).length === 0) {
+      console.log('❌ ERROR: No allowed models found in header!');
+      console.log('Available headers:', headerRow);
+      console.log('Looking for:', Object.keys(ALLOWED_MODELS));
       return Response.json({ 
         success: false, 
-        error: 'Nenašli sa žiadne povolené modely v hlavičke' 
+        error: 'Nenašli sa žiadne povolené modely v hlavičke',
+        debug: {
+          headerRow: headerRow,
+          allowedModels: Object.keys(ALLOWED_MODELS)
+        }
       });
     }
 
@@ -169,6 +184,12 @@ Deno.serve(async (req) => {
     }
 
     // Prejdi všetky riadky (od indexu 1, pretože 0 je hlavička)
+    let mappedRowsCount = 0;
+    let unmappedRowsCount = 0;
+    const unmappedRowNames = [];
+    
+    console.log(`\n🔄 Starting row processing (${data.length - 1} rows)...`);
+    
     for (let rowIdx = 1; rowIdx < data.length; rowIdx++) {
       const row = data[rowIdx];
       if (!row || row.length === 0) continue;
@@ -178,31 +199,37 @@ Deno.serve(async (req) => {
 
       const rowNameStr = rowName.toString().trim();
       
-      // Debug pre prvé riadky
-      if (rowIdx <= 5) {
-        console.log(`📝 Row ${rowIdx}: "${rowNameStr}"`);
-      }
-      
       const jsonKey = ROW_MAPPING[rowNameStr];
 
       if (!jsonKey) {
-        // Tichý skip pre nenamapované riadky (môže byť veľa)
+        unmappedRowsCount++;
+        if (unmappedRowNames.length < 10) { // Zbieraj prvých 10
+          unmappedRowNames.push(rowNameStr);
+        }
         continue;
       }
       
-      console.log(`✅ Mapujem riadok "${rowNameStr}" -> ${jsonKey}`);
+      mappedRowsCount++;
+      console.log(`\n✅ Row ${rowIdx}: "${rowNameStr}" -> ${jsonKey}`);
 
       // Extrahuj hodnoty pre každý model
       for (const [modelKey, modelInfo] of Object.entries(modelColumns)) {
         const cellValue = row[modelInfo.index];
+        
+        console.log(`  📍 ${modelKey} [col ${modelInfo.index}]: raw value = "${cellValue}"`);
         
         // Spracuj hodnotu
         let finalValue = null;
         if (cellValue !== null && cellValue !== undefined && cellValue !== '') {
           const num = parseFloat(cellValue);
           if (!isNaN(num)) {
-            finalValue = num; // Necháme číslo ako je (bez DPH, pretože už je v Exceli)
+            finalValue = num;
+            console.log(`    ✓ Parsed as number: ${finalValue}`);
+          } else {
+            console.log(`    ✗ Not a valid number`);
           }
+        } else {
+          console.log(`    ⚠️ Empty cell`);
         }
 
         // Ulož do mapy
@@ -212,11 +239,14 @@ Deno.serve(async (req) => {
           isZero: finalValue === 0,
           isEmpty: finalValue === null
         };
-
-        if (finalValue !== null) {
-          console.log(`📝 ${modelKey}.${jsonKey} = ${finalValue} (from "${rowNameStr}")`);
-        }
       }
+    }
+
+    console.log(`\n📊 Row processing complete:`);
+    console.log(`  ✅ Mapped rows: ${mappedRowsCount}`);
+    console.log(`  ⏭️  Unmapped rows: ${unmappedRowsCount}`);
+    if (unmappedRowNames.length > 0) {
+      console.log(`  📝 Sample unmapped rows:`, unmappedRowNames);
     }
 
     // === 3. VYTVOR DEBUG REPORT ===
@@ -261,9 +291,25 @@ Deno.serve(async (req) => {
       target_field: 'konfigurator_custom_ceny_prosto_house'
     };
 
-    console.log('\n✅ SUMMARY:', summary);
-    console.log('📋 CHECKLIST:', checklist);
-    console.log('🔒 TICAB INTEGRITY:', ticabIntegrityReport);
+    console.log('\n' + '='.repeat(60));
+    console.log('📊 FINAL REPORT');
+    console.log('='.repeat(60));
+    console.log('\n✅ SUMMARY:', JSON.stringify(summary, null, 2));
+    console.log('\n📋 CHECKLIST:', JSON.stringify(checklist, null, 2));
+    console.log('\n🔒 TICAB INTEGRITY:', JSON.stringify(ticabIntegrityReport, null, 2));
+    
+    // Výpis vzorky dát pre prvý model
+    const firstModel = Object.keys(mappingResults)[0];
+    if (firstModel) {
+      console.log(`\n🔍 Sample data for ${firstModel}:`);
+      const sampleItems = Object.entries(mappingResults[firstModel].items)
+        .filter(([_, item]) => item.value !== null)
+        .slice(0, 10);
+      sampleItems.forEach(([key, item]) => {
+        console.log(`  ${key}: ${item.value} (${item.source})`);
+      });
+    }
+    console.log('\n' + '='.repeat(60));
 
     return Response.json({
       success: true,
