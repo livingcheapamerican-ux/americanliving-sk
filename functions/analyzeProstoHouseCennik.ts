@@ -91,21 +91,6 @@ Deno.serve(async (req) => {
       },
       "flat_1_5": {
         data: {
-          zakladna_cena: 31700, montaz: 7925,
-          izolacia_standard: 0, izolacia_zvysena: 2950, izolacia_premium: 5900, izolacia_extra: 11063,
-          zaklady_bez: 0, zaklady_vruty: 3100, zaklady_doska: 14000, zaklady_pasove: 8500,
-          interier_bez: 0, interier_drevo: 8200, interier_sadrokarton: 8815,
-          elektro_rozvody: 3900, voda: 1150, sanita: 1169, bojler: 246,
-          tepelne_cerpadlo: 1600, rekuperacia: 3321, podlahove_kurenie: 3960,
-          laminacia_okien: 1550, tonovanie_skla: 680,
-          dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
-          stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
-          fasada_standard: 0, fasada_omietka: 8499, podlahy_laminat: 1680,
-          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
-        }
-      },
-      "double_flat": {
-        data: {
           zakladna_cena: 44900, montaz: 13470,
           izolacia_standard: 0, izolacia_zvysena: 4400, izolacia_premium: 8800, izolacia_extra: 16500,
           zaklady_bez: 0, zaklady_vruty: 6348, zaklady_doska: 14000, zaklady_pasove: 12000,
@@ -116,6 +101,21 @@ Deno.serve(async (req) => {
           dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
           stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
           fasada_standard: 0, fasada_omietka: 10384, podlahy_laminat: 2640,
+          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
+        }
+      },
+      "double_flat": {
+        data: {
+          zakladna_cena: 59900, montaz: 17970,
+          izolacia_standard: 0, izolacia_zvysena: 5800, izolacia_premium: 1160, izolacia_extra: 21750,
+          zaklady_bez: 0, zaklady_vruty: 8141, zaklady_doska: 18000, zaklady_pasove: 15500,
+          interier_bez: 0, interier_drevo: 16400, interier_sadrokarton: 19475,
+          elektro_rozvody: 7400, voda: 2380, sanita: 1169, bojler: 246,
+          tepelne_cerpadlo: 2700, rekuperacia: 5535, podlahove_kurenie: 5525,
+          laminacia_okien: 3100, tonovanie_skla: 1300,
+          dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
+          stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
+          fasada_standard: 0, fasada_omietka: 12841, podlahy_laminat: 3350,
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
@@ -140,13 +140,13 @@ Deno.serve(async (req) => {
         display: "Fjord",
         allowExtension: false,
         data: {
-          zakladna_cena: 59900, montaz: 17970,
-          izolacia_standard: 0, izolacia_zvysena: 5800, izolacia_premium: 11600, izolacia_extra: 21750,
-          zaklady_bez: 0, zaklady_vruty: 8141, zaklady_doska: 18000, zaklady_pasove: 15500,
-          interier_bez: 0, interier_drevo: 16400, interier_sadrokarton: 19475,
-          elektro_rozvody: 7400, voda: 2380, sanita: 1169, bojler: 246,
-          tepelne_cerpadlo: 2700, rekuperacia: 5535, podlahove_kurenie: 5525,
-          laminacia_okien: 3100, tonovanie_skla: 1300,
+          zakladna_cena: 59000, montaz: 17700,
+          izolacia_standard: 0, izolacia_zvysena: 5660, izolacia_premium: 9106, izolacia_extra: 0,
+          zaklady_bez: 0, zaklady_vruty: 9500, zaklady_doska: 18000, zaklady_pasove: 15500,
+          interier_bez: 0, interier_drevo: 18000, interier_sadrokarton: 19900,
+          elektro_rozvody: 7800, voda: 3650, sanita: 1169, bojler: 246,
+          tepelne_cerpadlo: 3600, rekuperacia: 7749, podlahove_kurenie: 5525,
+          laminacia_okien: 3400, tonovanie_skla: 1550,
           dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
           stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
           fasada_standard: 0, fasada_omietka: 12841, podlahy_laminat: 3350,
