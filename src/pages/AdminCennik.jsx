@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ export default function AdminCennik() {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [editedPrices, setEditedPrices] = useState({}); // { domId: { key: newPrice } }
   const [isSaving, setIsSaving] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
     queryKey: ['current-user'],
@@ -179,6 +180,7 @@ export default function AdminCennik() {
       if (baseData.uzitkova_plocha) updateData.uzitkova_plocha = baseData.uzitkova_plocha;
 
       await base44.entities.Dom.update(domResult.domId, updateData);
+      queryClient.invalidateQueries({ queryKey: ['houses'] });
       toast.success(`✅ Ceny uložené pre ${domResult.domNazov}!`);
 
       // Aktualizovať analysisResult s uloženými hodnotami
@@ -279,9 +281,9 @@ export default function AdminCennik() {
       }
     }
 
+    queryClient.invalidateQueries({ queryKey: ['houses'] });
     toast.success(`✅ Uložených ${successCount} domov! ${errorCount > 0 ? `${errorCount} chýb.` : ''}`);
     setIsSaving(false);
-    setTimeout(() => window.location.reload(), 2000);
   };
 
   return (
