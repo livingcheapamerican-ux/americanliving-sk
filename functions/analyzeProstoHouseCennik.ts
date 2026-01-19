@@ -166,8 +166,8 @@ Deno.serve(async (req) => {
       let matchedKey = null;
 
       // INTELIGENTNÉ PÁROVANIE (Keyword Matching)
-      // 1. Špeciálne prípady - Flat 72 a Flathouse 2.2 = Flathouse 2.7 ceny
-      if (dbName.includes("72")) matchedKey = "flathouse_2_7";
+      // 1. Špeciálne prípady - Flat 72 = DoubleFlat ceny (stĺpec O)
+      if (dbName.includes("72")) matchedKey = "double_flat";
       else if ((dbName.includes("flathouse") || dbName.includes("flat")) && (dbName.includes("2.2") || dbName.includes("2,2"))) {
         matchedKey = "flathouse_2_7";
       }

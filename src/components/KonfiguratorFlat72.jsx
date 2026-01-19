@@ -181,32 +181,32 @@ export default function KonfiguratorFlat72({
   showOnlySummary = false,
   showOnlyPhase = null
 }) {
-  const BASE_PRICE = dom?.zakladna_cena || 44900;
+  const BASE_PRICE = dom?.zakladna_cena || 59900;
   const { t, language } = useLanguage();
 
-  // DEFAULT ceny (Flathouse 2.7 = Flat 72)
+  // DEFAULT ceny (DoubleFlat - stĺpec O)
   const DEFAULT_CENY = {
-    montaz: { nie: 0, ano: 13470 },
+    montaz: { nie: 0, ano: 16400 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 4400, premium: 8800, ultra: 16500 },
-    elektroinstalacia: 5200,
-    vodaKanalizacia: 2100,
+    izolacia: { standard: 0, zvysena: 5800, premium: 11600, ultra: 21750 },
+    elektroinstalacia: 7400,
+    vodaKanalizacia: 2380,
     sanitaKomplet: 1169,
     bojler: 246,
-    tepelneCerpadlo: 2200,
-    rekuperacia: 4428,
-    zaklady: { bez: 0, skrutky: 6348, doska: 14000, pasove: 12000 },
-    pripojkaSiete: 1500,
+    tepelneCerpadlo: 2700,
+    rekuperacia: 5535,
+    zaklady: { bez: 0, skrutky: 8141, doska: 18000, pasove: 15500 },
+    pripojkaSiete: 1501,
     inziniering: 2590,
     projektA0: 3500,
-    interierFinis: { ziadne: 0, drevo: 12700, sadrokarton: 14545 },
-    vonkajsiaFasada: { standard: 0, suchana: 8499 },
-    povrchokaOkien: 2400,
-    vnutornePodlahy: 2640,
-    podlahovVykurovanie: 4316,
+    interierFinis: { ziadne: 0, drevo: 16400, sadrokarton: 19475 },
+    vonkajsiaFasada: { standard: 0, suchana: 12841 },
+    povrchokaOkien: 3100,
+    vnutornePodlahy: 3350,
+    podlahovVykurovanie: 5525,
     pergola: 972,
     interieroveDvere: 180,
-    tonovaneSkla: 840,
+    tonovaneSkla: 1300,
     doprava: 0,
     revizna: 1000,
     stresneOkno: 760,
