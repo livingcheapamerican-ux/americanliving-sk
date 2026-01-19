@@ -166,10 +166,11 @@ Deno.serve(async (req) => {
       let matchedKey = null;
 
       // INTELIGENTNÉ PÁROVANIE (Keyword Matching)
-      // 1. Špeciálne prípady (User Requests)
-      if (dbName.includes("72")) matchedKey = "flathouse_2_7";
+      // 1. Špeciálne prípady - Flathouse 2.2 (72m²) = Flathouse 2.7 ceny
+      if ((dbName.includes("flathouse") || dbName.includes("flat")) && (dbName.includes("2.2") || dbName.includes("2,2"))) {
+        matchedKey = "flathouse_2_7";
+      }
       else if (dbName.includes("2.7") || dbName.includes("2,7")) matchedKey = "flathouse_2_7";
-      else if (dbName.includes("2.2") || dbName.includes("2,2")) matchedKey = null; // Ignorovať
       
       // 2. Štandardné modely
       else if (dbName.includes("double") && dbName.includes("barn")) matchedKey = "double_barn";
