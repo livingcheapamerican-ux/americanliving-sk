@@ -181,32 +181,32 @@ export default function KonfiguratorFlat72({
   showOnlySummary = false,
   showOnlyPhase = null
 }) {
-  const BASE_PRICE = dom?.zakladna_cena || 27800;
+  const BASE_PRICE = dom?.zakladna_cena || 44900;
   const { t, language } = useLanguage();
 
   // DEFAULT ceny (Flathouse 2.7 = Flat 72)
   const DEFAULT_CENY = {
-    montaz: { nie: 0, ano: 6950 },
+    montaz: { nie: 0, ano: 13470 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 2500, premium: 5000, ultra: 9375 },
-    elektroinstalacia: 3900,
-    vodaKanalizacia: 1150,
+    izolacia: { standard: 0, zvysena: 4400, premium: 8800, ultra: 16500 },
+    elektroinstalacia: 5200,
+    vodaKanalizacia: 2100,
     sanitaKomplet: 1169,
     bojler: 246,
-    tepelneCerpadlo: 1600,
-    rekuperacia: 3321,
-    zaklady: { bez: 0, skrutky: 3100, doska: 10000, pasove: 8500 },
+    tepelneCerpadlo: 2200,
+    rekuperacia: 4428,
+    zaklady: { bez: 0, skrutky: 6348, doska: 14000, pasove: 12000 },
     pripojkaSiete: 1500,
     inziniering: 2590,
     projektA0: 3500,
-    interierFinis: { ziadne: 0, drevo: 7600, sadrokarton: 8830 },
+    interierFinis: { ziadne: 0, drevo: 12700, sadrokarton: 14545 },
     vonkajsiaFasada: { standard: 0, suchana: 8499 },
-    povrchokaOkien: 1550,
-    vnutornePodlahy: 1680,
-    podlahovVykurovanie: 3960,
+    povrchokaOkien: 2400,
+    vnutornePodlahy: 2640,
+    podlahovVykurovanie: 4316,
     pergola: 972,
     interieroveDvere: 180,
-    tonovaneSkla: 680,
+    tonovaneSkla: 840,
     doprava: 0,
     revizna: 1000,
     stresneOkno: 760,

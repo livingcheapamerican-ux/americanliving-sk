@@ -76,16 +76,16 @@ Deno.serve(async (req) => {
       },
       "flathouse_2_7": {
         data: {
-          zakladna_cena: 27800, montaz: 6950,
-          izolacia_standard: 0, izolacia_zvysena: 2500, izolacia_premium: 5000, izolacia_extra: 9375,
-          zaklady_bez: 0, zaklady_vruty: 3100, zaklady_doska: 10000, zaklady_pasove: 8500,
-          interier_bez: 0, interier_drevo: 7600, interier_sadrokarton: 8830,
-          elektro_rozvody: 3900, voda: 1150, sanita: 1169, bojler: 246,
-          tepelne_cerpadlo: 1600, rekuperacia: 3321, podlahove_kurenie: 3960,
-          laminacia_okien: 1550, tonovanie_skla: 680,
+          zakladna_cena: 44900, montaz: 13470,
+          izolacia_standard: 0, izolacia_zvysena: 4400, izolacia_premium: 8800, izolacia_extra: 16500,
+          zaklady_bez: 0, zaklady_vruty: 6348, zaklady_doska: 14000, zaklady_pasove: 12000,
+          interier_bez: 0, interier_drevo: 12700, interier_sadrokarton: 14545,
+          elektro_rozvody: 5200, voda: 2100, sanita: 1169, bojler: 246,
+          tepelne_cerpadlo: 2200, rekuperacia: 4428, podlahove_kurenie: 4316,
+          laminacia_okien: 2400, tonovanie_skla: 840,
           dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
           stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
-          fasada_standard: 0, fasada_omietka: 8499, podlahy_laminat: 1680,
+          fasada_standard: 0, fasada_omietka: 8499, podlahy_laminat: 2640,
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
