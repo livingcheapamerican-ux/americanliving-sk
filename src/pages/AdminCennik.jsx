@@ -180,7 +180,38 @@ export default function AdminCennik() {
 
       await base44.entities.Dom.update(domResult.domId, updateData);
       toast.success(`✅ Ceny uložené pre ${domResult.domNazov}!`);
-      
+
+      // Aktualizovať analysisResult s uloženými hodnotami
+      setAnalysisResult(prevResult => {
+        if (!prevResult) return prevResult;
+
+        const updatedResults = prevResult.results.map(dr => {
+          if (dr.domId === domResult.domId) {
+            const updatedPolozky = dr.polozky.map(polozka => {
+              const savedValue = editedPrices[domResult.domId]?.[polozka.key];
+              const newOldPrice = savedValue !== undefined ? parseFloat(savedValue) : polozka.oldPrice;
+
+              return {
+                ...polozka,
+                oldPrice: newOldPrice,
+                isChanged: newOldPrice !== polozka.newPrice
+              };
+            });
+            return {
+              ...dr,
+              polozky: updatedPolozky,
+              changesCount: updatedPolozky.filter(p => p.isChanged).length
+            };
+          }
+          return dr;
+        });
+
+        return {
+          ...prevResult,
+          results: updatedResults
+        };
+      });
+
       // Vyčistiť edity pre tento dom
       setEditedPrices(prev => {
         const newEdits = { ...prev };
