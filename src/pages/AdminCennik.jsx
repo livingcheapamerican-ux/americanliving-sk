@@ -10,8 +10,7 @@ import { Upload, FileSpreadsheet, AlertCircle, Save, CheckCircle, RefreshCw, Arr
 import { toast } from "sonner";
 
 export default function AdminCennik() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [editedPrices, setEditedPrices] = useState({}); // { domId: { key: newPrice } }
   const [isSaving, setIsSaving] = useState(false);
@@ -35,41 +34,18 @@ export default function AdminCennik() {
     );
   }
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls') && !file.name.endsWith('.csv')) {
-        toast.error('Prosím nahrajte Excel súbor (.xlsx, .xls alebo .csv)');
-        return;
-      }
-      setSelectedFile(file);
-      setAnalysisResult(null);
-      setEditedPrices({});
-    }
-  };
-
-  const handleUploadAndAnalyze = async () => {
-    if (!selectedFile) {
-      toast.error('Prosím najprv vyberte Excel súbor');
-      return;
-    }
-
-    setIsUploading(true);
+  const handleAnalyze = async () => {
+    setIsAnalyzing(true);
     try {
-      const uploadResponse = await base44.integrations.Core.UploadFile({ file: selectedFile });
-      const fileUrl = uploadResponse.file_url;
+      toast.info('Analyzujem hardcoded ceny...');
 
-      toast.success('Súbor nahraný, analyzujem všetky domy...');
-
-      const response = await base44.functions.invoke('analyzeProstoHouseCennik', {
-        file_url: fileUrl
-      });
+      const response = await base44.functions.invoke('analyzeProstoHouseCennik', {});
 
       console.log('📊 Backend response:', response.data);
       setAnalysisResult(response.data);
 
       if (response.data.success) {
-        // Predvyplniť editedPrices novými cenami z Excelu
+        // Predvyplniť editedPrices novými cenami
         const initialEdits = {};
         if (response.data.results) {
           response.data.results.forEach(domResult => {
@@ -89,9 +65,9 @@ export default function AdminCennik() {
       }
     } catch (error) {
       console.error('Chyba:', error);
-      toast.error('Chyba pri spracovaní: ' + error.message);
+      toast.error('Chyba pri analýze: ' + error.message);
     } finally {
-      setIsUploading(false);
+      setIsAnalyzing(false);
     }
   };
 
@@ -230,40 +206,26 @@ export default function AdminCennik() {
           </p>
         </div>
 
-        {/* Upload Section */}
+        {/* Analyze Section */}
         <Card className="p-6 mb-6 bg-white border-2 border-gray-200 shadow-lg">
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <Upload className="w-6 h-6 text-purple-600" />
-            Nahrať Master Cenník
+            <FileSpreadsheet className="w-6 h-6 text-purple-600" />
+            Hardcoded Master Cenník
           </h2>
 
-          <div className="mb-4">
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-all">
-              <input
-                type="file"
-                accept=".xlsx,.xls,.csv"
-                onChange={handleFileChange}
-                className="hidden"
-                id="file-upload"
-              />
-              <label htmlFor="file-upload" className="cursor-pointer">
-                <FileSpreadsheet className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-600 mb-1">
-                  {selectedFile ? selectedFile.name : 'Kliknite alebo pretiahnite Excel súbor'}
-                </p>
-                <p className="text-xs text-gray-400">
-                  Podporované: .xlsx, .xls, .csv
-                </p>
-              </label>
-            </div>
+          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-800">
+              <strong>ℹ️ Bez Excelu:</strong> Master ceny sú hardcoded priamo v backend funkcii.
+              Kliknite na tlačidlo pre porovnanie s aktuálnymi cenami v databáze.
+            </p>
           </div>
 
           <Button
-            onClick={handleUploadAndAnalyze}
-            disabled={!selectedFile || isUploading}
+            onClick={handleAnalyze}
+            disabled={isAnalyzing}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3"
           >
-            {isUploading ? (
+            {isAnalyzing ? (
               <>
                 <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
                 Analyzujem...
@@ -271,7 +233,7 @@ export default function AdminCennik() {
             ) : (
               <>
                 <FileSpreadsheet className="w-5 h-5 mr-2" />
-                Analyzovať Master Tabuľku
+                Analyzovať Hardcoded Ceny
               </>
             )}
           </Button>

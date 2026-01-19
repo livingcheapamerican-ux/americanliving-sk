@@ -9,13 +9,12 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 1. HARDCODED MASTER DÁTA (Zdroj: Sheet1.csv + User DB Dump)
-    // Kľúč = ID domu v databáze
+    // 1. HARDCODED MASTER DÁTA - ZDROJ PRAVDY
     const MASTER_PRICES = {
       // Barn House
       "691763198889980646c05872": {
-        modelKey: "barn_house",
-        allowExtension: true, // Povolené predĺženie
+        nazov: "Barn House",
+        allowExtension: true,
         data: {
           zakladna_cena: 20900, montaz: 4875,
           predlzenie_1_2m: 3300, predlzenie_2_4m: 6606, predlzenie_3_6m: 9900, predlzenie_4_8m: 15880,
@@ -33,8 +32,8 @@ Deno.serve(async (req) => {
       },
       // Double Barn
       "6917631a8889980646c05875": {
-        modelKey: "double_barn",
-        allowExtension: true, // Povolené predĺženie
+        nazov: "Double Barn",
+        allowExtension: true,
         data: {
           zakladna_cena: 36900, montaz: 9225,
           predlzenie_1_2m: 6600, predlzenie_2_4m: 13200, predlzenie_3_6m: 19800, predlzenie_4_8m: 26400,
@@ -52,8 +51,8 @@ Deno.serve(async (req) => {
       },
       // A-Frame
       "6917631b8889980646c05878": {
-        modelKey: "a_frame",
-        allowExtension: true, // Povolené predĺženie
+        nazov: "A-Frame",
+        allowExtension: true,
         data: {
           zakladna_cena: 22700, montaz: 5675,
           predlzenie_1_2m: 3550, predlzenie_2_4m: 7100, predlzenie_3_6m: 10650, predlzenie_4_8m: 14200,
@@ -71,8 +70,8 @@ Deno.serve(async (req) => {
       },
       // Flat Small
       "6917631c8889980646c0587b": {
-        modelKey: "flat_small",
-        allowExtension: false, // Bez predĺženia
+        nazov: "Flat Small",
+        allowExtension: false,
         data: {
           zakladna_cena: 19500, montaz: 4875,
           izolacia_standard: 0, izolacia_zvysena: 1400, izolacia_premium: 2800, izolacia_extra: 5250,
@@ -89,8 +88,8 @@ Deno.serve(async (req) => {
       },
       // FlatHouse 2.2
       "6917631e8889980646c0587e": {
-        modelKey: "flathouse_2_2",
-        allowExtension: false, // Bez predĺženia
+        nazov: "FlatHouse 2.2",
+        allowExtension: false,
         data: {
           zakladna_cena: 27800, montaz: 6950,
           izolacia_standard: 0, izolacia_zvysena: 2500, izolacia_premium: 5000, izolacia_extra: 9375,
@@ -105,10 +104,10 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      // Flat 1.5 (Flat 72m²)
-      "6916ec94c11aacdd15248f2f": {
-        modelKey: "flat_1_5",
-        allowExtension: false, // Bez predĺženia
+      // Flat 1.5
+      "6917631f8889980646c05881": {
+        nazov: "Flat 1.5",
+        allowExtension: false,
         data: {
           zakladna_cena: 31700, montaz: 7925,
           izolacia_standard: 0, izolacia_zvysena: 2950, izolacia_premium: 5900, izolacia_extra: 11063,
@@ -125,8 +124,8 @@ Deno.serve(async (req) => {
       },
       // Double Flat
       "691763208889980646c05884": {
-        modelKey: "double_flat",
-        allowExtension: false, // Bez predĺženia
+        nazov: "Double Flat",
+        allowExtension: false,
         data: {
           zakladna_cena: 44900, montaz: 13470,
           izolacia_standard: 0, izolacia_zvysena: 4400, izolacia_premium: 8800, izolacia_extra: 16500,
@@ -143,8 +142,8 @@ Deno.serve(async (req) => {
       },
       // Nord
       "691763218889980646c05887": {
-        modelKey: "nord",
-        allowExtension: false, // Bez predĺženia
+        nazov: "Nord",
+        allowExtension: false,
         data: {
           zakladna_cena: 59900, montaz: 17970,
           izolacia_standard: 0, izolacia_zvysena: 5800, izolacia_premium: 11600, izolacia_extra: 21750,
@@ -161,8 +160,8 @@ Deno.serve(async (req) => {
       },
       // Fjord
       "691763228889980646c0588a": {
-        modelKey: "fjord",
-        allowExtension: false, // Bez predĺženia
+        nazov: "Fjord",
+        allowExtension: false,
         data: {
           zakladna_cena: 49500, montaz: 14850,
           izolacia_standard: 0, izolacia_zvysena: 3200, izolacia_premium: 6400, izolacia_extra: 12000,
@@ -183,7 +182,7 @@ Deno.serve(async (req) => {
     let foundCount = 0;
     let notFoundCount = 0;
 
-    // 2. Iterujeme cez definované ID
+    // 2. Porovnanie hardcoded cien s databázou
     for (const [domId, modelInfo] of Object.entries(MASTER_PRICES)) {
       try {
         // Získame dom priamo podľa ID
@@ -196,10 +195,9 @@ Deno.serve(async (req) => {
 
           // Porovnanie každej položky
           for (const [key, newValue] of Object.entries(modelInfo.data)) {
-            // Filter predĺženia (Extension Logic)
+            // Predĺženie len pre Barn House, Double Barn a A-Frame
             if (key.startsWith('predlzenie_') && !modelInfo.allowExtension) {
-              // Ignorujeme položky predĺženia pre domy bez predĺženia
-              continue; 
+              continue;
             }
 
             const oldValue = currentPrices[key] !== undefined ? currentPrices[key] : 0;
