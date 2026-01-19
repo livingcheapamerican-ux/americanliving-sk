@@ -10,8 +10,9 @@ Deno.serve(async (req) => {
     }
 
     // 1. HARDCODED MASTER DÁTA - ZDROJ PRAVDY
-    const MASTER_PRICES = {
-      "barn_house": {
+    const MASTER_DATA = {
+      "barnhouse": {
+        display: "Barn House",
         allowExtension: true,
         data: {
           zakladna_cena: 20900, montaz: 4875,
@@ -28,7 +29,8 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
         }
       },
-      "double_barn": {
+      "doublebarn": {
+        display: "Double Barn",
         allowExtension: true,
         data: {
           zakladna_cena: 36900, montaz: 9225,
@@ -45,7 +47,8 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      "a_frame": {
+      "aframe": {
+        display: "A-Frame",
         allowExtension: true,
         data: {
           zakladna_cena: 22700, montaz: 5675,
@@ -62,7 +65,8 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
         }
       },
-      "flat_small": {
+      "flatsmall": {
+        display: "Flat Small",
         allowExtension: false,
         data: {
           zakladna_cena: 19500, montaz: 4875,
@@ -78,7 +82,8 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
         }
       },
-      "flathouse_2_2": {
+      "flathouse22": {
+        display: "Flat House 2.2",
         allowExtension: false,
         data: {
           zakladna_cena: 27800, montaz: 6950,
@@ -94,7 +99,8 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      "flat_1_5": {
+      "flat15": {
+        display: "Flat 1.5",
         allowExtension: false,
         data: {
           zakladna_cena: 31700, montaz: 7925,
@@ -110,7 +116,8 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      "double_flat": {
+      "doubleflat": {
+        display: "Double Flat",
         allowExtension: false,
         data: {
           zakladna_cena: 44900, montaz: 13470,
@@ -127,6 +134,7 @@ Deno.serve(async (req) => {
         }
       },
       "nord": {
+        display: "Nord",
         allowExtension: false,
         data: {
           zakladna_cena: 59900, montaz: 17970,
@@ -143,6 +151,7 @@ Deno.serve(async (req) => {
         }
       },
       "fjord": {
+        display: "Fjord",
         allowExtension: false,
         data: {
           zakladna_cena: 49500, montaz: 14850,
@@ -160,17 +169,10 @@ Deno.serve(async (req) => {
       }
     };
 
-    // 2. Mapovanie názvov domov na kľúče
-    const NAME_TO_KEY = {
-      "Barn House": "barn_house",
-      "Double Barn": "double_barn",
-      "A-Frame": "a_frame",
-      "Flat Small": "flat_small",
-      "FlatHouse 2.2": "flathouse_2_2",
-      "Flat 1.5": "flat_1_5",
-      "Double Flat": "double_flat",
-      "Nord": "nord",
-      "Fjord": "fjord"
+    // 2. Normalizačná funkcia
+    const normalize = (str) => {
+      if (!str) return "";
+      return str.toString().toLowerCase().replace(/[\s\-\._]/g, "");
     };
 
     const results = [];
@@ -179,13 +181,13 @@ Deno.serve(async (req) => {
     // 3. Načítanie všetkých domov z databázy
     const allDoms = await base44.asServiceRole.entities.Dom.filter({});
 
-    // 4. Iterácia cez nájdené domy
+    // 4. Iterácia a párovanie cez normalizované názvy
     for (const dom of allDoms) {
-      const modelKey = NAME_TO_KEY[dom.nazov];
+      const domSlug = normalize(dom.nazov);
+      const modelInfo = MASTER_DATA[domSlug];
 
-      if (modelKey && MASTER_PRICES[modelKey]) {
+      if (modelInfo) {
         foundCount++;
-        const modelInfo = MASTER_PRICES[modelKey];
         const currentPrices = dom.konfigurator_custom_ceny_prosto_house || {};
         const polozky = [];
 
@@ -218,6 +220,14 @@ Deno.serve(async (req) => {
           changesCount: polozky.filter(p => p.isChanged).length
         });
       }
+    }
+
+    // 5. Ak sa nenašiel žiaden dom
+    if (foundCount === 0) {
+      return Response.json({ 
+        success: false, 
+        error: "Nenašli sa žiadne domy Prosto House. Skontrolujte názvy v databáze."
+      }, { status: 404 });
     }
 
     return Response.json({
