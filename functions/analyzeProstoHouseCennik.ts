@@ -189,7 +189,7 @@ Deno.serve(async (req) => {
         let currentPrices = dom.konfigurator_custom_ceny_prosto_house;
         
         if (!currentPrices || Object.keys(currentPrices).length === 0) {
-          currentPrices = dom.konfigurator_ceny || dom.custom_ceny || {};
+          currentPrices = dom.konfigurator_ceny || {};
         }
 
         const polozky = [];
@@ -200,7 +200,15 @@ Deno.serve(async (req) => {
         for (const [key, newValue] of Object.entries(modelInfo.data)) {
           if (key.startsWith('predlzenie_') && !allowExtension) continue;
 
-          const oldValue = currentPrices[key] !== undefined ? currentPrices[key] : 0;
+          // Načítanie aktuálnej ceny: priorita konfigurátor, fallback na base fields
+          let oldValue = currentPrices[key];
+          
+          if (oldValue === undefined || oldValue === null) {
+            // Fallback na základné polia entity
+            if (key === 'zakladna_cena') oldValue = dom.zakladna_cena || 0;
+            else oldValue = 0;
+          }
+          
           polozky.push({
             key: key,
             label: key.replace(/_/g, ' ').replace(/(^\w)/, c => c.toUpperCase()),
