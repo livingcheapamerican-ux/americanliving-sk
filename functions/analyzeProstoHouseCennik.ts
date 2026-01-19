@@ -140,8 +140,9 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      "nord": {
-        display: "Nord",
+      // Nord
+      "691763218889980646c05887": {
+        nazov: "Nord",
         allowExtension: false,
         data: {
           zakladna_cena: 59900, montaz: 17970,
