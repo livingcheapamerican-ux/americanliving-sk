@@ -173,9 +173,9 @@ export default function KonfiguratorBarn48({
 
   const { t, language } = useLanguage();
 
-  // BARN 48 CENNÍK - FIXNÉ CENY (extrahované z fotiek)
+  // BARN 48 CENNÍK - FIXNÉ CENY (Gemini analýza)
   const CENY = {
-    montaz: { nie: 0, ano: 5225 },
+    montaz: { nie: 0, ano: 4875 },
     predlzenie: { 0: 0, 1.2: 3300, 2.4: 6606, 3.6: 9900, 4.8: 15880 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
     izolacia: { standard: 0, zvysena: 1400, premium: 2800, ultra: 5250 },
@@ -183,18 +183,18 @@ export default function KonfiguratorBarn48({
     vodaKanalizacia: 980,
     sanitaKomplet: 1169,
     bojler: 246,
-    tepelneCerpadlo: 2214,
-    rekuperacia: 1000,
-    zaklady: { bez: 0, skrutky: 3077, doska: 6782, pasove: 6595 },
+    tepelneCerpadlo: 1100,
+    rekuperacia: 2214,
+    zaklady: { bez: 0, skrutky: 3077, doska: 6595, pasove: 6782 },
     pripojkaSiete: 1500,
-    inziniering: 2592,
+    inziniering: 2590,
     projektA0: 3500,
     interierFinis: { ziadne: 0, drevo: 4100, sadrokarton: 4715 },
-    vonkajsiaFasada: { standard: 0, suchana: 4312 },
+    vonkajsiaFasada: { standard: 0, suchana: 4321 },
     povrchokaOkien: 790,
-    vnutornePodlahy: 890,
+    vnutornePodlahy: 850,
     podlahovVykurovanie: 2819,
-    interieroveDvere: 180,
+    interieroveDvere: 0,
     tonovaneSkla: 375,
     doprava: 0,
     revizna: 500,
