@@ -9,10 +9,11 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 1. HARDCODED MASTER DÁTA - ZDROJ PRAVDY
-    const MASTER_DATA = {
-      "barnhouse": {
-        display: "Barn House",
+    // 1. HARDCODED MASTER DÁTA - ZDROJ PRAVDY (s presnými ID z databázy)
+    const MASTER_DB_MAPPING = {
+      // Barn House
+      "691763198889980646c05872": {
+        nazov: "Barn House",
         allowExtension: true,
         data: {
           zakladna_cena: 20900, montaz: 4875,
