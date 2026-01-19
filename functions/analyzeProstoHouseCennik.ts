@@ -186,13 +186,6 @@ Deno.serve(async (req) => {
         foundCount++;
         const modelInfo = MASTER_DATA[matchedKey];
         
-        // DIAGNOSTIKA: HĽADÁME CENY KDEKOĽVEK
-        let currentPrices = dom.konfigurator_custom_ceny_prosto_house;
-        
-        if (!currentPrices || Object.keys(currentPrices).length === 0) {
-          currentPrices = dom.konfigurator_ceny || {};
-        }
-
         const polozky = [];
         
         // Filter pre predĺženie (Povolené len pre Barn, Double, A-Frame)
@@ -201,13 +194,28 @@ Deno.serve(async (req) => {
         for (const [key, newValue] of Object.entries(modelInfo.data)) {
           if (key.startsWith('predlzenie_') && !allowExtension) continue;
 
-          // Načítanie aktuálnej ceny: priorita konfigurátor, fallback na base fields
-          let oldValue = currentPrices[key];
+          // Hľadanie aktuálnej ceny vo viacerých poliach
+          let oldValue = null;
           
-          if (oldValue === undefined || oldValue === null) {
-            // Fallback na základné polia entity
-            if (key === 'zakladna_cena') oldValue = dom.zakladna_cena || 0;
-            else oldValue = 0;
+          // 1. Priorita: konfigurator_custom_ceny_prosto_house
+          if (dom.konfigurator_custom_ceny_prosto_house?.[key] !== undefined) {
+            oldValue = dom.konfigurator_custom_ceny_prosto_house[key];
+          }
+          // 2. Fallback: konfigurator_ceny
+          else if (dom.konfigurator_ceny?.[key] !== undefined) {
+            oldValue = dom.konfigurator_ceny[key];
+          }
+          // 3. Fallback: custom_ceny
+          else if (dom.custom_ceny?.[key] !== undefined) {
+            oldValue = dom.custom_ceny[key];
+          }
+          // 4. Špeciálny fallback pre zakladna_cena
+          else if (key === 'zakladna_cena' && dom.zakladna_cena !== undefined) {
+            oldValue = dom.zakladna_cena;
+          }
+          // 5. Default: 0
+          else {
+            oldValue = 0;
           }
           
           polozky.push({
@@ -225,7 +233,12 @@ Deno.serve(async (req) => {
           vyrobca: "Prosto House",
           status: "ready",
           polozky: polozky,
-          debug_raw_data: JSON.stringify(currentPrices),
+          debug_raw_data: JSON.stringify({
+            konfigurator_custom_ceny_prosto_house: dom.konfigurator_custom_ceny_prosto_house || {},
+            konfigurator_ceny: dom.konfigurator_ceny || {},
+            custom_ceny: dom.custom_ceny || {},
+            zakladna_cena: dom.zakladna_cena
+          }),
           changesCount: polozky.filter(p => p.isChanged).length
         });
       } else {
