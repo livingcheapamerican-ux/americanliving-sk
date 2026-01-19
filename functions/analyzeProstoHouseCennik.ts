@@ -157,28 +157,28 @@ Deno.serve(async (req) => {
 
     const results = [];
     let foundCount = 0;
-    
-    // DEBUG POLE: Tu uložíme všetky názvy domov, ktoré nájdeme v DB
-    const debugDBNames = [];
+    const unmatched = [];
 
     const allDoms = await base44.asServiceRole.entities.Dom.filter({});
 
     for (const dom of allDoms) {
-      const name = dom.nazov || "";
-      debugDBNames.push({ id: dom.id, name: name });
-
-      // INTELIGENTNÉ PÁROVANIE (Keyword Matching)
+      const dbName = (dom.nazov || "").toLowerCase();
       let matchedKey = null;
 
-      if (name.includes("Double") && name.includes("Barn")) matchedKey = "double_barn";
-      else if (name.includes("Barn")) matchedKey = "barn_house";
-      else if (name.includes("Frame")) matchedKey = "a_frame";
-      else if (name.includes("Small") || name.includes("72")) matchedKey = "flat_small";
-      else if (name.includes("2.2")) matchedKey = "flathouse_2_2";
-      else if (name.includes("1.5")) matchedKey = "flat_1_5";
-      else if (name.includes("Double") && name.includes("Flat")) matchedKey = "double_flat";
-      else if (name.includes("Nord")) matchedKey = "nord";
-      else if (name.includes("Fjord")) matchedKey = "fjord";
+      // INTELIGENTNÉ PÁROVANIE (Keyword Matching)
+      // 1. Špeciálne prípady (User Requests)
+      if (dbName.includes("72")) matchedKey = "flathouse_2_2";
+      else if (dbName.includes("2.2") || dbName.includes("2,2")) matchedKey = "flathouse_2_2";
+      
+      // 2. Štandardné modely
+      else if (dbName.includes("double") && dbName.includes("barn")) matchedKey = "double_barn";
+      else if (dbName.includes("barn")) matchedKey = "barn_house";
+      else if (dbName.includes("frame")) matchedKey = "a_frame";
+      else if (dbName.includes("double") && dbName.includes("flat")) matchedKey = "double_flat";
+      else if (dbName.includes("small")) matchedKey = "flat_small";
+      else if (dbName.includes("1.5") || dbName.includes("1,5")) matchedKey = "flat_1_5";
+      else if (dbName.includes("nord")) matchedKey = "nord";
+      else if (dbName.includes("fjord")) matchedKey = "fjord";
 
       // Ak sme našli zhodu
       if (matchedKey && MASTER_DATA[matchedKey]) {
@@ -211,6 +211,8 @@ Deno.serve(async (req) => {
           polozky: polozky,
           changesCount: polozky.filter(p => p.isChanged).length
         });
+      } else {
+        unmatched.push(dom.nazov);
       }
     }
 
@@ -218,7 +220,7 @@ Deno.serve(async (req) => {
       success: true,
       found: foundCount,
       results: results,
-      debug_db_scan: debugDBNames
+      debug_unmatched: unmatched
     });
 
   } catch (error) {
