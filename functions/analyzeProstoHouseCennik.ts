@@ -200,24 +200,20 @@ Deno.serve(async (req) => {
           let oldValue = null;
           
           // 1. Priorita: konfigurator_custom_ceny_prosto_house
-          if (dom.konfigurator_custom_ceny_prosto_house?.[key] !== undefined) {
+          if (dom.konfigurator_custom_ceny_prosto_house?.[key] !== undefined && dom.konfigurator_custom_ceny_prosto_house[key] !== null) {
             oldValue = dom.konfigurator_custom_ceny_prosto_house[key];
           }
           // 2. Fallback: konfigurator_ceny
-          else if (dom.konfigurator_ceny?.[key] !== undefined) {
+          else if (dom.konfigurator_ceny?.[key] !== undefined && dom.konfigurator_ceny[key] !== null) {
             oldValue = dom.konfigurator_ceny[key];
           }
-          // 3. Fallback: custom_ceny
-          else if (dom.custom_ceny?.[key] !== undefined) {
-            oldValue = dom.custom_ceny[key];
-          }
-          // 4. Špeciálny fallback pre zakladna_cena
-          else if (key === 'zakladna_cena' && dom.zakladna_cena !== undefined) {
+          // 3. Špeciálny fallback pre zakladna_cena
+          else if (key === 'zakladna_cena' && dom.zakladna_cena !== undefined && dom.zakladna_cena !== null) {
             oldValue = dom.zakladna_cena;
           }
-          // 5. Default: 0
+          // 4. Default: použiť master data ako aktuálnu cenu (ak ešte nebolo nič nastavené)
           else {
-            oldValue = 0;
+            oldValue = newValue;
           }
           
           polozky.push({
