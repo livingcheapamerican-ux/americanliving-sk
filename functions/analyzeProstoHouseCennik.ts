@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
         }
       },
-      "flathouse_2_2": {
+      "flathouse_2_7": {
         data: {
           zakladna_cena: 27800, montaz: 6950,
           izolacia_standard: 0, izolacia_zvysena: 2500, izolacia_premium: 5000, izolacia_extra: 9375,
@@ -167,8 +167,9 @@ Deno.serve(async (req) => {
 
       // INTELIGENTNÉ PÁROVANIE (Keyword Matching)
       // 1. Špeciálne prípady (User Requests)
-      if (dbName.includes("72")) matchedKey = "flathouse_2_2";
-      else if (dbName.includes("2.2") || dbName.includes("2,2")) matchedKey = "flathouse_2_2";
+      if (dbName.includes("72")) matchedKey = "flathouse_2_7";
+      else if (dbName.includes("2.7") || dbName.includes("2,7")) matchedKey = "flathouse_2_7";
+      else if (dbName.includes("2.2") || dbName.includes("2,2")) matchedKey = null; // Ignorovať
       
       // 2. Štandardné modely
       else if (dbName.includes("double") && dbName.includes("barn")) matchedKey = "double_barn";
