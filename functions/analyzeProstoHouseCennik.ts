@@ -49,8 +49,9 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      "aframe": {
-        display: "A-Frame",
+      // A-Frame
+      "6917631b8889980646c05878": {
+        nazov: "A-Frame",
         allowExtension: true,
         data: {
           zakladna_cena: 22700, montaz: 5675,
