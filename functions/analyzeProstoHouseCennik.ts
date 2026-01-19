@@ -9,11 +9,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 1. HARDCODED MASTER DÁTA - ZDROJ PRAVDY (s presnými ID z databázy)
-    const MASTER_DB_MAPPING = {
-      // Barn House
-      "691763198889980646c05872": {
-        nazov: "Barn House",
+    // 1. MASTER DÁTA (Kľúče sú normalizované názvy - lowercase, bez medzier/bodiek)
+    const MASTER_PRICES = {
+      "barnhouse": {
+        display: "Barn House",
         allowExtension: true,
         data: {
           zakladna_cena: 20900, montaz: 4875,
@@ -30,9 +29,8 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
         }
       },
-      // Double Barn
-      "6917631a8889980646c05875": {
-        nazov: "Double Barn",
+      "doublebarn": {
+        display: "Double Barn",
         allowExtension: true,
         data: {
           zakladna_cena: 36900, montaz: 9225,
@@ -49,9 +47,8 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      // A-Frame
-      "6917631b8889980646c05878": {
-        nazov: "A-Frame",
+      "aframe": {
+        display: "A-Frame",
         allowExtension: true,
         data: {
           zakladna_cena: 22700, montaz: 5675,
@@ -68,9 +65,8 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
         }
       },
-      // Flat Small
-      "6917631c8889980646c0587b": {
-        nazov: "Flat Small",
+      "flatsmall": {
+        display: "Flat Small",
         allowExtension: false,
         data: {
           zakladna_cena: 19500, montaz: 4875,
@@ -86,9 +82,8 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
         }
       },
-      // FlatHouse 2.2
-      "6917631e8889980646c0587e": {
-        nazov: "FlatHouse 2.2",
+      "flathouse22": {
+        display: "FlatHouse 2.2",
         allowExtension: false,
         data: {
           zakladna_cena: 27800, montaz: 6950,
@@ -104,9 +99,8 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      // Flat 1.5
-      "6917631f8889980646c05881": {
-        nazov: "Flat 1.5",
+      "flat15": {
+        display: "Flat 1.5",
         allowExtension: false,
         data: {
           zakladna_cena: 31700, montaz: 7925,
@@ -122,9 +116,8 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      // Double Flat
-      "691763208889980646c05884": {
-        nazov: "Double Flat",
+      "doubleflat": {
+        display: "Double Flat",
         allowExtension: false,
         data: {
           zakladna_cena: 44900, montaz: 13470,
@@ -140,9 +133,8 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      // Nord
-      "691763218889980646c05887": {
-        nazov: "Nord",
+      "nord": {
+        display: "Nord",
         allowExtension: false,
         data: {
           zakladna_cena: 59900, montaz: 17970,
@@ -158,9 +150,8 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      // Fjord
-      "691763228889980646c0588a": {
-        nazov: "Fjord",
+      "fjord": {
+        display: "Fjord",
         allowExtension: false,
         data: {
           zakladna_cena: 49500, montaz: 14850,
@@ -176,6 +167,12 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       }
+    };
+
+    // 2. Normalizácia názvu - odstráni medzery, bodky, špeciálne znaky
+    const normalize = (name) => {
+      if (!name) return "";
+      return name.toString().toLowerCase().replace(/[^a-z0-9]/g, "");
     };
 
     const results = [];
