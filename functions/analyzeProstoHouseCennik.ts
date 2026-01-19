@@ -30,8 +30,9 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
         }
       },
-      "doublebarn": {
-        display: "Double Barn",
+      // Double Barn
+      "6917631a8889980646c05875": {
+        nazov: "Double Barn",
         allowExtension: true,
         data: {
           zakladna_cena: 36900, montaz: 9225,
