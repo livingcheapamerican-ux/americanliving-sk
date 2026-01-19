@@ -86,8 +86,9 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
         }
       },
-      "flathouse22": {
-        display: "Flat House 2.2",
+      // FlatHouse 2.2
+      "6917631e8889980646c0587e": {
+        nazov: "FlatHouse 2.2",
         allowExtension: false,
         data: {
           zakladna_cena: 27800, montaz: 6950,
