@@ -122,8 +122,9 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      "doubleflat": {
-        display: "Double Flat",
+      // Double Flat
+      "691763208889980646c05884": {
+        nazov: "Double Flat",
         allowExtension: false,
         data: {
           zakladna_cena: 44900, montaz: 13470,
