@@ -181,40 +181,87 @@ export default function KonfiguratorFlat72({
   showOnlySummary = false,
   showOnlyPhase = null
 }) {
-  // Základná cena - dynamická z objektu domu
-  const BASE_PRICE = dom?.zakladna_cena || 49900;
+  const BASE_PRICE = dom?.zakladna_cena || 27800;
+  const { t, language } = useLanguage();
 
-  const { t } = useLanguage();
-
-  // FLAT 72 CENNÍK - FIXNÉ CENY (72m²) - extrahované z obrázkov
-  const CENY = {
-    montaz: { nie: 0, ano: 7925 },
+  // DEFAULT ceny (Flathouse 2.7 = Flat 72)
+  const DEFAULT_CENY = {
+    montaz: { nie: 0, ano: 6950 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 2950, premium: 5900, ultra: 11063 },
+    izolacia: { standard: 0, zvysena: 2500, premium: 5000, ultra: 9375 },
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
     bojler: 246,
-    tepelneCerpadlo: 3321,
-    rekuperacia: 1600,
-    zaklady: { bez: 0, skrutky: 4428, doska: 11849, pasove: 11184 },
-    pripojkaSiete: 1501,
-    inziniering: 2592,
+    tepelneCerpadlo: 1600,
+    rekuperacia: 3321,
+    zaklady: { bez: 0, skrutky: 3100, doska: 10000, pasove: 8500 },
+    pripojkaSiete: 1500,
+    inziniering: 2590,
     projektA0: 3500,
-    interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 8815 },
-    vonkajsiaFasada: { standard: 0, drevo_plech: 499, suchana: 8090 },
-    povrchokaOkien: 1950,
+    interierFinis: { ziadne: 0, drevo: 7600, sadrokarton: 8830 },
+    vonkajsiaFasada: { standard: 0, suchana: 8499 },
+    povrchokaOkien: 1550,
     vnutornePodlahy: 1680,
     podlahovVykurovanie: 3960,
     pergola: 972,
     interieroveDvere: 180,
     tonovaneSkla: 680,
     doprava: 0,
-    revizna: 500,
+    revizna: 1000,
     stresneOkno: 760,
-    bocneOknoFixne: 450,
+    bocneOknoFixne: 500,
     bocneOknoVyklopne90: 540,
     bocneOknoVyklopne55: 225
+  };
+
+  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
+  const getPrice = (key) => {
+    if (customCeny[key] !== undefined && customCeny[key] !== null) {
+      return customCeny[key];
+    }
+    return DEFAULT_CENY[key];
+  };
+
+  const CENY = {
+    montaz: { nie: 0, ano: getPrice('montaz') ?? DEFAULT_CENY.montaz.ano },
+    dvere: { 
+      ziadne: 0, 
+      kovove: getPrice('dvere_kovove') ?? DEFAULT_CENY.dvere.kovove, 
+      plastove: getPrice('dvere_plastove') ?? DEFAULT_CENY.dvere.plastove 
+    },
+    izolacia: DEFAULT_CENY.izolacia,
+    elektroinstalacia: getPrice('elektro_rozvody') ?? DEFAULT_CENY.elektroinstalacia,
+    vodaKanalizacia: getPrice('voda') ?? DEFAULT_CENY.vodaKanalizacia,
+    sanitaKomplet: getPrice('sanita') ?? DEFAULT_CENY.sanitaKomplet,
+    bojler: getPrice('bojler') ?? DEFAULT_CENY.bojler,
+    tepelneCerpadlo: getPrice('tepelne_cerpadlo') ?? DEFAULT_CENY.tepelneCerpadlo,
+    rekuperacia: getPrice('rekuperacia') ?? DEFAULT_CENY.rekuperacia,
+    zaklady: DEFAULT_CENY.zaklady,
+    pripojkaSiete: getPrice('siete') ?? DEFAULT_CENY.pripojkaSiete,
+    inziniering: getPrice('inziniering') ?? DEFAULT_CENY.inziniering,
+    projektA0: getPrice('projektACertifikacia') ?? DEFAULT_CENY.projektA0,
+    interierFinis: { 
+      ziadne: 0, 
+      drevo: getPrice('interier_drevo') ?? DEFAULT_CENY.interierFinis.drevo, 
+      sadrokarton: getPrice('interier_sadrokarton') ?? DEFAULT_CENY.interierFinis.sadrokarton 
+    },
+    vonkajsiaFasada: { 
+      standard: 0, 
+      suchana: getPrice('fasada_omietka') ?? DEFAULT_CENY.vonkajsiaFasada.suchana 
+    },
+    povrchokaOkien: getPrice('laminacia_okien') ?? DEFAULT_CENY.povrchokaOkien,
+    vnutornePodlahy: getPrice('podlahy_laminat') ?? DEFAULT_CENY.vnutornePodlahy,
+    podlahovVykurovanie: getPrice('podlahove_kurenie') ?? DEFAULT_CENY.podlahovVykurovanie,
+    pergola: DEFAULT_CENY.pergola,
+    interieroveDvere: DEFAULT_CENY.interieroveDvere,
+    tonovaneSkla: getPrice('tonovanie_skla') ?? DEFAULT_CENY.tonovaneSkla,
+    doprava: getPrice('doprava') ?? DEFAULT_CENY.doprava,
+    revizna: getPrice('revizia') ?? DEFAULT_CENY.revizna,
+    stresneOkno: getPrice('stresne_okno') ?? DEFAULT_CENY.stresneOkno,
+    bocneOknoFixne: getPrice('okno_fix_90_205') ?? DEFAULT_CENY.bocneOknoFixne,
+    bocneOknoVyklopne90: getPrice('okno_vyklopne_90_205') ?? DEFAULT_CENY.bocneOknoVyklopne90,
+    bocneOknoVyklopne55: getPrice('okno_vyklopne_55_90') ?? DEFAULT_CENY.bocneOknoVyklopne55
   };
 
   // Výpočet celkovej ceny
