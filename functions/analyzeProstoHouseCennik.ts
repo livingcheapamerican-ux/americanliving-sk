@@ -184,7 +184,14 @@ Deno.serve(async (req) => {
       if (matchedKey && MASTER_DATA[matchedKey]) {
         foundCount++;
         const modelInfo = MASTER_DATA[matchedKey];
-        const currentPrices = dom.konfigurator_custom_ceny_prosto_house || {};
+        
+        // DIAGNOSTIKA: HĽADÁME CENY KDEKOĽVEK
+        let currentPrices = dom.konfigurator_custom_ceny_prosto_house;
+        
+        if (!currentPrices || Object.keys(currentPrices).length === 0) {
+          currentPrices = dom.konfigurator_ceny || dom.custom_ceny || {};
+        }
+
         const polozky = [];
         
         // Filter pre predĺženie (Povolené len pre Barn, Double, A-Frame)
@@ -209,6 +216,7 @@ Deno.serve(async (req) => {
           vyrobca: "Prosto House",
           status: "ready",
           polozky: polozky,
+          debug_raw_data: JSON.stringify(currentPrices),
           changesCount: polozky.filter(p => p.isChanged).length
         });
       } else {
