@@ -196,28 +196,38 @@ Deno.serve(async (req) => {
         for (const [key, newValue] of Object.entries(modelInfo.data)) {
           if (key.startsWith('predlzenie_') && !allowExtension) continue;
 
+          // Špeciálne base fields, ktoré sa ukladajú priamo do entity (nie do konfigurátor polí)
+          const isBaseField = ['zakladna_cena', 'zastavana_plocha', 'uzitkova_plocha'].includes(key);
+          const actualKey = isBaseField ? `__${key}` : key;
+
           // Hľadanie aktuálnej ceny vo viacerých poliach
           let oldValue = null;
           
-          // 1. Priorita: konfigurator_custom_ceny_prosto_house
-          if (dom.konfigurator_custom_ceny_prosto_house?.[key] !== undefined && dom.konfigurator_custom_ceny_prosto_house[key] !== null) {
-            oldValue = dom.konfigurator_custom_ceny_prosto_house[key];
-          }
-          // 2. Fallback: konfigurator_ceny
-          else if (dom.konfigurator_ceny?.[key] !== undefined && dom.konfigurator_ceny[key] !== null) {
-            oldValue = dom.konfigurator_ceny[key];
-          }
-          // 3. Špeciálny fallback pre zakladna_cena
-          else if (key === 'zakladna_cena' && dom.zakladna_cena !== undefined && dom.zakladna_cena !== null) {
-            oldValue = dom.zakladna_cena;
-          }
-          // 4. Default: použiť master data ako aktuálnu cenu (ak ešte nebolo nič nastavené)
-          else {
-            oldValue = newValue;
+          if (isBaseField) {
+            // Pre base fields čítame z hlavných polí entity
+            if (dom[key] !== undefined && dom[key] !== null) {
+              oldValue = dom[key];
+            } else {
+              oldValue = newValue;
+            }
+          } else {
+            // Pre konfigurátor položky
+            // 1. Priorita: konfigurator_custom_ceny_prosto_house
+            if (dom.konfigurator_custom_ceny_prosto_house?.[key] !== undefined && dom.konfigurator_custom_ceny_prosto_house[key] !== null) {
+              oldValue = dom.konfigurator_custom_ceny_prosto_house[key];
+            }
+            // 2. Fallback: konfigurator_ceny
+            else if (dom.konfigurator_ceny?.[key] !== undefined && dom.konfigurator_ceny[key] !== null) {
+              oldValue = dom.konfigurator_ceny[key];
+            }
+            // 3. Default: použiť master data ako aktuálnu cenu
+            else {
+              oldValue = newValue;
+            }
           }
           
           polozky.push({
-            key: key,
+            key: actualKey,
             label: key.replace(/_/g, ' ').replace(/(^\w)/, c => c.toUpperCase()),
             oldPrice: oldValue,
             newPrice: newValue,
