@@ -11,9 +11,7 @@ Deno.serve(async (req) => {
 
     // 1. HARDCODED MASTER DÁTA - ZDROJ PRAVDY
     const MASTER_PRICES = {
-      // Barn House
-      "691763198889980646c05872": {
-        nazov: "Barn House",
+      "barn_house": {
         allowExtension: true,
         data: {
           zakladna_cena: 20900, montaz: 4875,
@@ -30,9 +28,7 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
         }
       },
-      // Double Barn
-      "6917631a8889980646c05875": {
-        nazov: "Double Barn",
+      "double_barn": {
         allowExtension: true,
         data: {
           zakladna_cena: 36900, montaz: 9225,
@@ -49,9 +45,7 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      // A-Frame
-      "6917631b8889980646c05878": {
-        nazov: "A-Frame",
+      "a_frame": {
         allowExtension: true,
         data: {
           zakladna_cena: 22700, montaz: 5675,
@@ -68,9 +62,7 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
         }
       },
-      // Flat Small
-      "6917631c8889980646c0587b": {
-        nazov: "Flat Small",
+      "flat_small": {
         allowExtension: false,
         data: {
           zakladna_cena: 19500, montaz: 4875,
@@ -86,9 +78,7 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
         }
       },
-      // FlatHouse 2.2
-      "6917631e8889980646c0587e": {
-        nazov: "FlatHouse 2.2",
+      "flathouse_2_2": {
         allowExtension: false,
         data: {
           zakladna_cena: 27800, montaz: 6950,
@@ -104,9 +94,7 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      // Flat 1.5
-      "6917631f8889980646c05881": {
-        nazov: "Flat 1.5",
+      "flat_1_5": {
         allowExtension: false,
         data: {
           zakladna_cena: 31700, montaz: 7925,
@@ -122,9 +110,7 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      // Double Flat
-      "691763208889980646c05884": {
-        nazov: "Double Flat",
+      "double_flat": {
         allowExtension: false,
         data: {
           zakladna_cena: 44900, montaz: 13470,
@@ -140,9 +126,7 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      // Nord
-      "691763218889980646c05887": {
-        nazov: "Nord",
+      "nord": {
         allowExtension: false,
         data: {
           zakladna_cena: 59900, montaz: 17970,
@@ -158,9 +142,7 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      // Fjord
-      "691763228889980646c0588a": {
-        nazov: "Fjord",
+      "fjord": {
         allowExtension: false,
         data: {
           zakladna_cena: 49500, montaz: 14850,
@@ -178,68 +160,62 @@ Deno.serve(async (req) => {
       }
     };
 
+    // 2. Mapovanie názvov domov na kľúče
+    const NAME_TO_KEY = {
+      "Barn House": "barn_house",
+      "Double Barn": "double_barn",
+      "A-Frame": "a_frame",
+      "Flat Small": "flat_small",
+      "FlatHouse 2.2": "flathouse_2_2",
+      "Flat 1.5": "flat_1_5",
+      "Double Flat": "double_flat",
+      "Nord": "nord",
+      "Fjord": "fjord"
+    };
+
     const results = [];
     let foundCount = 0;
-    let notFoundCount = 0;
 
-    // 2. Porovnanie hardcoded cien s databázou
-    for (const [domId, modelInfo] of Object.entries(MASTER_PRICES)) {
-      try {
-        // Získame dom priamo podľa ID
-        const existingDom = await base44.asServiceRole.entities.Dom.get(domId);
-        
-        if (existingDom) {
-          foundCount++;
-          const currentPrices = existingDom.konfigurator_custom_ceny_prosto_house || {};
-          const polozky = [];
+    // 3. Načítanie všetkých domov z databázy
+    const allDoms = await base44.asServiceRole.entities.Dom.filter({});
 
-          // Porovnanie každej položky
-          for (const [key, newValue] of Object.entries(modelInfo.data)) {
-            // Predĺženie len pre Barn House, Double Barn a A-Frame
-            if (key.startsWith('predlzenie_') && !modelInfo.allowExtension) {
-              continue;
-            }
+    // 4. Iterácia cez nájdené domy
+    for (const dom of allDoms) {
+      const modelKey = NAME_TO_KEY[dom.nazov];
 
-            const oldValue = currentPrices[key] !== undefined ? currentPrices[key] : 0;
-            const isChanged = oldValue !== newValue;
-            
-            const label = key.replace(/_/g, ' ').replace(/(^\w)/, c => c.toUpperCase());
+      if (modelKey && MASTER_PRICES[modelKey]) {
+        foundCount++;
+        const modelInfo = MASTER_PRICES[modelKey];
+        const currentPrices = dom.konfigurator_custom_ceny_prosto_house || {};
+        const polozky = [];
 
-            polozky.push({
-              key: key,
-              label: label,
-              oldPrice: oldValue,
-              newPrice: newValue,
-              isChanged: isChanged
-            });
+        for (const [key, newValue] of Object.entries(modelInfo.data)) {
+          // Predĺženie len pre povolené modely
+          if (key.startsWith('predlzenie_') && !modelInfo.allowExtension) {
+            continue;
           }
 
-          results.push({
-            domId: domId,
-            domNazov: existingDom.nazov,
-            vyrobca: "Prosto House",
-            status: "ready",
-            polozky: polozky,
-            changesCount: polozky.filter(p => p.isChanged).length
-          });
+          const oldValue = currentPrices[key] !== undefined ? currentPrices[key] : 0;
+          const isChanged = oldValue !== newValue;
+          
+          const label = key.replace(/_/g, ' ').replace(/(^\w)/, c => c.toUpperCase());
 
-        } else {
-          notFoundCount++;
-          results.push({ 
-            domId, 
-            domNazov: "Unknown",
-            status: "not_found", 
-            vyrobca: "Prosto House" 
+          polozky.push({
+            key: key,
+            label: label,
+            oldPrice: oldValue,
+            newPrice: newValue,
+            isChanged: isChanged
           });
         }
-      } catch (e) {
-        console.error(`Chyba pri spracovaní ${domId}:`, e);
-        notFoundCount++;
-        results.push({ 
-          domId, 
-          domNazov: "Error",
-          status: "error", 
-          error: e.message 
+
+        results.push({
+          domId: dom.id,
+          domNazov: dom.nazov,
+          vyrobca: "Prosto House",
+          status: "ready",
+          polozky: polozky,
+          changesCount: polozky.filter(p => p.isChanged).length
         });
       }
     }
