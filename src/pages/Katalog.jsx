@@ -330,7 +330,7 @@ export default function Katalog() {
   }, [isInitialized, kategoriaFilter, vyrobcaFilter, typFilter, plocharozsah, uzitkovaRozsah, hladanie, cenoveRozpatie, pocetIziebFilter, zoradenie, location.pathname, location.search, navigate]);
 
   const { data: allDomy = [], isLoading, error } = useQuery({
-    queryKey: ['domy-katalog'],
+    queryKey: ['houses'],
     queryFn: async () => {
       const result = await base44.entities.Dom.list('poradie', 200);
       console.log('✅ Načítané domy:', result?.length);
@@ -345,14 +345,14 @@ export default function Katalog() {
   const deleteDomMutation = useMutation({
     mutationFn: (domId) => base44.entities.Dom.delete(domId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['domy-katalog'] });
+      queryClient.invalidateQueries({ queryKey: ['houses'] });
     },
   });
 
   const toggleVerejnyMutation = useMutation({
     mutationFn: ({ domId, verejny }) => base44.entities.Dom.update(domId, { verejny }),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['domy-katalog'] });
+      queryClient.invalidateQueries({ queryKey: ['houses'] });
       toast.success(variables.verejny ? 'Dom je teraz verejný' : 'Dom je teraz skrytý');
     },
   });
