@@ -76,17 +76,17 @@ Deno.serve(async (req) => {
       },
       "flathouse_2_7": {
         data: {
-          zakladna_cena: 44900, montaz: 13470,
-          izolacia_standard: 0, izolacia_zvysena: 4400, izolacia_premium: 8800, izolacia_extra: 16500,
-          zaklady_bez: 0, zaklady_vruty: 6348, zaklady_doska: 14000, zaklady_pasove: 12000,
-          interier_bez: 0, interier_drevo: 12700, interier_sadrokarton: 14545,
-          elektro_rozvody: 5200, voda: 2100, sanita: 1169, bojler: 246,
-          tepelne_cerpadlo: 2200, rekuperacia: 4428, podlahove_kurenie: 4316,
-          laminacia_okien: 2400, tonovanie_skla: 840,
+          zakladna_cena: 49900, montaz: 14850,
+          izolacia_standard: 0, izolacia_zvysena: 5800, izolacia_premium: 11600, izolacia_extra: 21750,
+          zaklady_bez: 0, zaklady_vruty: 8141, zaklady_doska: 18000, zaklady_pasove: 15500,
+          interier_bez: 0, interier_drevo: 16400, interier_sadrokarton: 19475,
+          elektro_rozvody: 7400, voda: 2380, sanita: 1169, bojler: 246,
+          tepelne_cerpadlo: 2700, rekuperacia: 5535, podlahove_kurenie: 5525,
+          laminacia_okien: 3100, tonovanie_skla: 1300,
           dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
           stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
-          fasada_standard: 0, fasada_omietka: 8499, podlahy_laminat: 2640,
-          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
+          fasada_standard: 0, fasada_omietka: 12841, podlahy_laminat: 3350,
+          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1501, doprava: 0
         }
       },
       "flat_1_5": {
@@ -166,8 +166,8 @@ Deno.serve(async (req) => {
       let matchedKey = null;
 
       // INTELIGENTNÉ PÁROVANIE (Keyword Matching)
-      // 1. Špeciálne prípady - Flat 72 = DoubleFlat ceny (stĺpec O)
-      if (dbName.includes("72")) matchedKey = "double_flat";
+      // 1. Špeciálne prípady - Flat 72 = Flathouse 2.7 ceny (stĺpec O)
+      if (dbName.includes("72")) matchedKey = "flathouse_2_7";
       else if ((dbName.includes("flathouse") || dbName.includes("flat")) && (dbName.includes("2.2") || dbName.includes("2,2"))) {
         matchedKey = "flathouse_2_7";
       }

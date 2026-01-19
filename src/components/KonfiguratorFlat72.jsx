@@ -181,12 +181,12 @@ export default function KonfiguratorFlat72({
   showOnlySummary = false,
   showOnlyPhase = null
 }) {
-  const BASE_PRICE = dom?.zakladna_cena || 59900;
+  const BASE_PRICE = dom?.zakladna_cena || 49900;
   const { t, language } = useLanguage();
 
-  // DEFAULT ceny (DoubleFlat - stĺpec O)
+  // DEFAULT ceny (Flathouse 2.7 - stĺpec O)
   const DEFAULT_CENY = {
-    montaz: { nie: 0, ano: 16400 },
+    montaz: { nie: 0, ano: 14850 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
     izolacia: { standard: 0, zvysena: 5800, premium: 11600, ultra: 21750 },
     elektroinstalacia: 7400,
