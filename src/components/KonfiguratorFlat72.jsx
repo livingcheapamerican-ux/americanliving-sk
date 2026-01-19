@@ -195,7 +195,7 @@ export default function KonfiguratorFlat72({
     bojler: 246,
     tepelneCerpadlo: 1600,
     rekuperacia: 3321,
-    zaklady: { bez: 0, skrutky: 3100, doska: 14000, pasove: 8500 },
+    zaklady: { bez: 0, skrutky: 3100, doska: 10000, pasove: 8500 },
     pripojkaSiete: 1500,
     inziniering: 2590,
     projektA0: 3500,

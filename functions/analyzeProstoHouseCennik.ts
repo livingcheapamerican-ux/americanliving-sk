@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
         data: {
           zakladna_cena: 31700, montaz: 7925,
           izolacia_standard: 0, izolacia_zvysena: 2950, izolacia_premium: 5900, izolacia_extra: 11063,
-          zaklady_bez: 0, zaklady_vruty: 3100, zaklady_doska: 14000, zaklady_pasove: 8500,
+          zaklady_bez: 0, zaklady_vruty: 3100, zaklady_doska: 10000, zaklady_pasove: 8500,
           interier_bez: 0, interier_drevo: 8200, interier_sadrokarton: 8815,
           elektro_rozvody: 3900, voda: 1150, sanita: 1169, bojler: 246,
           tepelne_cerpadlo: 1600, rekuperacia: 3321, podlahove_kurenie: 3960,
