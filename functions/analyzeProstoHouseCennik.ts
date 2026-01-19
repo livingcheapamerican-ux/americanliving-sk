@@ -177,68 +177,61 @@ Deno.serve(async (req) => {
 
     const results = [];
     let foundCount = 0;
-    let notFoundCount = 0;
 
-    // 2. Iterácia cez páry [ID, MASTER_DATA]
-    for (const [domId, modelInfo] of Object.entries(MASTER_DB_MAPPING)) {
-      try {
-        // Získame dom priamo podľa ID
-        const existingDom = await base44.asServiceRole.entities.Dom.get(domId);
-        
-        if (existingDom) {
-          foundCount++;
-          const currentPrices = existingDom.konfigurator_custom_ceny_prosto_house || {};
-          const polozky = [];
+    // 3. Načítame všetky domy z databázy
+    const allDoms = await base44.asServiceRole.entities.Dom.filter({});
 
-          // Porovnanie každej položky
-          for (const [key, newValue] of Object.entries(modelInfo.data)) {
-            // Predĺženie len pre Barn House, Double Barn a A-Frame
-            if (key.startsWith('predlzenie_') && !modelInfo.allowExtension) {
-              continue;
-            }
+    // 4. Prejdeme všetky domy a hľadáme zhody podľa názvu
+    for (const dom of allDoms) {
+      const slug = normalize(dom.nazov);
+      const masterInfo = MASTER_PRICES[slug];
 
-            const oldValue = currentPrices[key] !== undefined ? currentPrices[key] : 0;
-            const isChanged = oldValue !== newValue;
-            
-            const label = key.replace(/_/g, ' ').replace(/(^\w)/, c => c.toUpperCase());
+      // Ak sme našli zhodu názvu v cenníku
+      if (masterInfo) {
+        foundCount++;
+        const currentPrices = dom.konfigurator_custom_ceny_prosto_house || {};
+        const polozky = [];
 
-            polozky.push({
-              key: key,
-              label: label,
-              oldPrice: oldValue,
-              newPrice: newValue,
-              isChanged: isChanged
-            });
+        for (const [key, newValue] of Object.entries(masterInfo.data)) {
+          // Predĺženie len pre Barn House, Double Barn a A-Frame
+          if (key.startsWith('predlzenie_') && !masterInfo.allowExtension) {
+            continue;
           }
 
-          results.push({
-            domId: domId,
-            domNazov: existingDom.nazov,
-            vyrobca: "Prosto House",
-            status: "ready",
-            polozky: polozky,
-            changesCount: polozky.filter(p => p.isChanged).length
-          });
+          const oldValue = currentPrices[key] !== undefined ? currentPrices[key] : 0;
+          const isChanged = oldValue !== newValue;
+          
+          const label = key.replace(/_/g, ' ').replace(/(^\w)/, c => c.toUpperCase());
 
-        } else {
-          notFoundCount++;
-          results.push({ 
-            domId, 
-            domNazov: modelInfo.nazov,
-            status: "not_found", 
-            vyrobca: "Prosto House" 
+          polozky.push({
+            key: key,
+            label: label,
+            oldPrice: oldValue,
+            newPrice: newValue,
+            isChanged: isChanged
           });
         }
-      } catch (e) {
-        console.error(`Chyba pri spracovaní ${domId}:`, e);
-        notFoundCount++;
-        results.push({ 
-          domId, 
-          domNazov: modelInfo.nazov,
-          status: "error", 
-          error: e.message 
+
+        results.push({
+          domId: dom.id,
+          domNazov: dom.nazov,
+          vyrobca: "Prosto House",
+          status: "ready",
+          polozky: polozky,
+          changesCount: polozky.filter(p => p.isChanged).length
         });
       }
+    }
+
+    // 5. Ak sa nenašiel žiaden dom
+    if (foundCount === 0) {
+      return Response.json({
+        success: true,
+        found: 0,
+        not_found: 0,
+        results: [],
+        warning: "Nenašli sa žiadne domy so zhodným názvom. Skontrolujte či máte v DB domy ako 'Barn House', 'Double Barn' atď."
+      });
     }
 
     return Response.json({
