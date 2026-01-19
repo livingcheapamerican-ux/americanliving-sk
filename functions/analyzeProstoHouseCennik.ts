@@ -68,8 +68,9 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
         }
       },
-      "flatsmall": {
-        display: "Flat Small",
+      // Flat Small
+      "6917631c8889980646c0587b": {
+        nazov: "Flat Small",
         allowExtension: false,
         data: {
           zakladna_cena: 19500, montaz: 4875,
