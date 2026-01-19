@@ -173,37 +173,37 @@ export default function KonfiguratorFlat15({
   showOnlyPhase = null,
   typStavby = ""
 }) {
-  const BASE_PRICE = dom?.zakladna_cena || 59900;
+  const BASE_PRICE = dom?.zakladna_cena || 44900;
 
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
-  // FLAT 1,5 CENNÍK - FIXNÉ CENY (105m²)
+  // FLAT 1,5 CENNÍK - FIXNÉ CENY (Gemini analýza - 105m²)
   const CENY = {
     montaz: { nie: 0, ano: 13470 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 4400, premium: 8799 },
+    izolacia: { standard: 0, zvysena: 4400, premium: 8800, ultra: 16500 },
     elektroinstalacia: 5200,
     vodaKanalizacia: 2100,
     sanitaKomplet: 1169,
-    bojler: 264,
-    tepelneCerpadlo: 4428,
-    rekuperacia: 2200,
-    zaklady: { bez: 0, skrutky: 6189, doska: 11909, pasove: 11860 },
-    pripojkaSiete: 1501,
-    inziniering: 2592,
+    bojler: 246,
+    tepelneCerpadlo: 2200,
+    rekuperacia: 4428,
+    zaklady: { bez: 0, skrutky: 6348, doska: 14000, pasove: 12000 },
+    pripojkaSiete: 1500,
+    inziniering: 2590,
     projektA0: 3500,
     interierFinis: { ziadne: 0, drevo: 12700, sadrokarton: 14545 },
-    vonkajsiaFasada: { standard: 0, suchana: 10395 },
+    vonkajsiaFasada: { standard: 0, suchana: 10384 },
     povrchokaOkien: 2400,
     vnutornePodlahy: 2640,
     podlahovVykurovanie: 4316,
-    pergola: 1845,
-    interieroveDvere: 180,
+    pergola: 0,
+    interieroveDvere: 0,
     tonovaneSkla: 840,
     doprava: 0,
-    revizna: 501,
+    revizna: 1000,
     stresneOkno: 760,
-    bocneOknoFixne: 501,
+    bocneOknoFixne: 500,
     bocneOknoVyklopne90: 540,
     bocneOknoVyklopne55: 225
   };
