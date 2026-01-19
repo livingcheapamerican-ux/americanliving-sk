@@ -174,37 +174,86 @@ export default function KonfiguratorNord({
   typStavby = ""
 }) {
   const BASE_PRICE = dom?.zakladna_cena || 0;
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
-  // Cenník pre Nord podľa obrázkov
-  const CENY = {
+  // DEFAULT ceny (Nord)
+  const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 14850 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
     izolacia: { standard: 0, zvysena: 3200, premium: 6400, ultra: 12000 },
-    elektroinstalacia: 6850,
-    vodaKanalizacia: 2925,
+    elektroinstalacia: 3900,
+    vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
     bojler: 246,
-    tepelneCerpadlo: 5070,
-    rekuperacia: 2400,
-    zaklady: { bez: 0, skrutky: 7656, doska: 12461, pasove: 8967 },
+    tepelneCerpadlo: 1600,
+    rekuperacia: 3321,
+    zaklady: { bez: 0, skrutky: 7655, doska: 13000, pasove: 11500 },
     pripojkaSiete: 1501,
-    inziniering: 2592,
+    inziniering: 2590,
     projektA0: 3500,
-    interierFinis: { ziadne: 0, drevo: 13800, sadrokarton: 16040 },
-    vonkajsiaFasada: { standard: 0, suchana: 10395 },
-    povrchokaOkien: 2500,
-    vnutornePodlahy: 2410,
-    podlahovVykurovanie: 4825,
+    interierFinis: { ziadne: 0, drevo: 9800, sadrokarton: 11655 },
+    vonkajsiaFasada: { standard: 0, suchana: 9507 },
+    povrchokaOkien: 2100,
+    vnutornePodlahy: 1577,
+    podlahovVykurovanie: 3913,
     pergola: 1845,
     interieroveDvere: 180,
-    tonovaneSkla: 1050,
+    tonovaneSkla: 840,
     doprava: 0,
     revizna: 1000,
     stresneOkno: 760,
-    bocneOknoFixne: 501,
+    bocneOknoFixne: 500,
     bocneOknoVyklopne90: 540,
     bocneOknoVyklopne55: 225
+  };
+
+  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
+  const getPrice = (key) => {
+    if (customCeny[key] !== undefined && customCeny[key] !== null) {
+      return customCeny[key];
+    }
+    return DEFAULT_CENY[key];
+  };
+
+  const CENY = {
+    montaz: { nie: 0, ano: getPrice('montaz') ?? DEFAULT_CENY.montaz.ano },
+    dvere: { 
+      ziadne: 0, 
+      kovove: getPrice('dvere_kovove') ?? DEFAULT_CENY.dvere.kovove, 
+      plastove: getPrice('dvere_plastove') ?? DEFAULT_CENY.dvere.plastove 
+    },
+    izolacia: DEFAULT_CENY.izolacia,
+    elektroinstalacia: getPrice('elektroinstalacia') ?? DEFAULT_CENY.elektroinstalacia,
+    vodaKanalizacia: getPrice('vodaKanalizacia') ?? DEFAULT_CENY.vodaKanalizacia,
+    sanitaKomplet: getPrice('sanitaKomplet') ?? DEFAULT_CENY.sanitaKomplet,
+    bojler: getPrice('bojler') ?? DEFAULT_CENY.bojler,
+    tepelneCerpadlo: getPrice('tepelneCerpadlo') ?? DEFAULT_CENY.tepelneCerpadlo,
+    rekuperacia: getPrice('rekuperacia') ?? DEFAULT_CENY.rekuperacia,
+    zaklady: DEFAULT_CENY.zaklady,
+    pripojkaSiete: getPrice('pripojkaSiete') ?? DEFAULT_CENY.pripojkaSiete,
+    inziniering: getPrice('inziniering') ?? DEFAULT_CENY.inziniering,
+    projektA0: getPrice('projektA0') ?? DEFAULT_CENY.projektA0,
+    interierFinis: { 
+      ziadne: 0, 
+      drevo: getPrice('interier_drevo') ?? DEFAULT_CENY.interierFinis.drevo, 
+      sadrokarton: getPrice('interier_sadrokarton') ?? DEFAULT_CENY.interierFinis.sadrokarton 
+    },
+    vonkajsiaFasada: { 
+      standard: 0, 
+      suchana: getPrice('fasada_omietka') ?? DEFAULT_CENY.vonkajsiaFasada.suchana 
+    },
+    povrchokaOkien: getPrice('laminacia_okien') ?? DEFAULT_CENY.povrchokaOkien,
+    vnutornePodlahy: getPrice('podlahy_laminat') ?? DEFAULT_CENY.vnutornePodlahy,
+    podlahovVykurovanie: getPrice('podlahove_kurenie') ?? DEFAULT_CENY.podlahovVykurovanie,
+    pergola: DEFAULT_CENY.pergola,
+    interieroveDvere: DEFAULT_CENY.interieroveDvere,
+    tonovaneSkla: getPrice('tonovanie_skla') ?? DEFAULT_CENY.tonovaneSkla,
+    doprava: getPrice('doprava') ?? DEFAULT_CENY.doprava,
+    revizna: getPrice('revizia') ?? DEFAULT_CENY.revizna,
+    stresneOkno: getPrice('stresne_okno') ?? DEFAULT_CENY.stresneOkno,
+    bocneOknoFixne: getPrice('okno_fix_90_205') ?? DEFAULT_CENY.bocneOknoFixne,
+    bocneOknoVyklopne90: getPrice('okno_vyklopne_90_205') ?? DEFAULT_CENY.bocneOknoVyklopne90,
+    bocneOknoVyklopne55: getPrice('okno_vyklopne_55_90') ?? DEFAULT_CENY.bocneOknoVyklopne55
   };
 
   // Výpočet celkovej ceny
