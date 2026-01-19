@@ -158,8 +158,9 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      "fjord": {
-        display: "Fjord",
+      // Fjord
+      "691763228889980646c0588a": {
+        nazov: "Fjord",
         allowExtension: false,
         data: {
           zakladna_cena: 49500, montaz: 14850,
