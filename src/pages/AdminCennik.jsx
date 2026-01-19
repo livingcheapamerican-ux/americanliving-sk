@@ -10,7 +10,9 @@ import { Upload, FileSpreadsheet, AlertCircle, Save, CheckCircle, RefreshCw, Arr
 import { toast } from "sonner";
 
 export default function AdminCennik() {
+  const [selectedFile, setSelectedFile] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [editedPrices, setEditedPrices] = useState({}); // { domId: { key: newPrice } }
   const [isSaving, setIsSaving] = useState(false);
@@ -34,10 +36,23 @@ export default function AdminCennik() {
     );
   }
 
-  const handleAnalyze = async () => {
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls') && !file.name.endsWith('.csv')) {
+        toast.error('Prosím nahrajte Excel súbor (.xlsx, .xls alebo .csv)');
+        return;
+      }
+      setSelectedFile(file);
+      setAnalysisResult(null);
+      setEditedPrices({});
+    }
+  };
+
+  const handleAnalyzeProstoHouse = async () => {
     setIsAnalyzing(true);
     try {
-      toast.info('Analyzujem hardcoded ceny...');
+      toast.info('Analyzujem Prosto House hardcoded ceny...');
 
       const response = await base44.functions.invoke('analyzeProstoHouseCennik', {});
 
@@ -68,6 +83,52 @@ export default function AdminCennik() {
       toast.error('Chyba pri analýze: ' + error.message);
     } finally {
       setIsAnalyzing(false);
+    }
+  };
+
+  const handleUploadAndAnalyzeTicabHouse = async () => {
+    if (!selectedFile) {
+      toast.error('Prosím najprv vyberte Excel súbor');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const uploadResponse = await base44.integrations.Core.UploadFile({ file: selectedFile });
+      const fileUrl = uploadResponse.file_url;
+
+      toast.success('Súbor nahraný, analyzujem TicabHouse domy...');
+
+      const response = await base44.functions.invoke('analyzeCennikFromExcel', {
+        file_url: fileUrl
+      });
+
+      console.log('📊 Backend response:', response.data);
+      setAnalysisResult(response.data);
+
+      if (response.data.success) {
+        const initialEdits = {};
+        if (response.data.results) {
+          response.data.results.forEach(domResult => {
+            if (domResult.status === 'ready') {
+              initialEdits[domResult.domId] = {};
+              domResult.polozky.forEach(polozka => {
+                initialEdits[domResult.domId][polozka.key] = polozka.newPrice;
+              });
+            }
+          });
+        }
+        setEditedPrices(initialEdits);
+        
+        toast.success(`✅ Nájdených ${response.data.found || 0} domov, ${response.data.not_found || 0} nenájdených`);
+      } else {
+        toast.error(`❌ ${response.data.error || 'Neznáma chyba pri analýze'}`);
+      }
+    } catch (error) {
+      console.error('Chyba:', error);
+      toast.error('Chyba pri spracovaní: ' + error.message);
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -206,11 +267,11 @@ export default function AdminCennik() {
           </p>
         </div>
 
-        {/* Analyze Section */}
-        <Card className="p-6 mb-6 bg-white border-2 border-gray-200 shadow-lg">
+        {/* Prosto House - Hardcoded */}
+        <Card className="p-6 mb-6 bg-white border-2 border-blue-200 shadow-lg">
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <FileSpreadsheet className="w-6 h-6 text-purple-600" />
-            Hardcoded Master Cenník
+            <FileSpreadsheet className="w-6 h-6 text-blue-600" />
+            Prosto House - Hardcoded Cenník
           </h2>
 
           <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
@@ -221,19 +282,66 @@ export default function AdminCennik() {
           </div>
 
           <Button
-            onClick={handleAnalyze}
+            onClick={handleAnalyzeProstoHouse}
             disabled={isAnalyzing}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3"
           >
             {isAnalyzing ? (
               <>
                 <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
-                Analyzujem...
+                Analyzujem Prosto House...
               </>
             ) : (
               <>
                 <FileSpreadsheet className="w-5 h-5 mr-2" />
-                Analyzovať Hardcoded Ceny
+                Analyzovať Prosto House
+              </>
+            )}
+          </Button>
+        </Card>
+
+        {/* TicabHouse - Excel Upload */}
+        <Card className="p-6 mb-6 bg-white border-2 border-purple-200 shadow-lg">
+          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <Upload className="w-6 h-6 text-purple-600" />
+            TicabHouse - Nahrať Excel Cenník
+          </h2>
+
+          <div className="mb-4">
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-all">
+              <input
+                type="file"
+                accept=".xlsx,.xls,.csv"
+                onChange={handleFileChange}
+                className="hidden"
+                id="file-upload"
+              />
+              <label htmlFor="file-upload" className="cursor-pointer">
+                <FileSpreadsheet className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                <p className="text-sm text-gray-600 mb-1">
+                  {selectedFile ? selectedFile.name : 'Kliknite alebo pretiahnite Excel súbor'}
+                </p>
+                <p className="text-xs text-gray-400">
+                  Podporované: .xlsx, .xls, .csv
+                </p>
+              </label>
+            </div>
+          </div>
+
+          <Button
+            onClick={handleUploadAndAnalyzeTicabHouse}
+            disabled={!selectedFile || isUploading}
+            className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold py-3"
+          >
+            {isUploading ? (
+              <>
+                <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
+                Analyzujem TicabHouse...
+              </>
+            ) : (
+              <>
+                <FileSpreadsheet className="w-5 h-5 mr-2" />
+                Analyzovať TicabHouse Excel
               </>
             )}
           </Button>
