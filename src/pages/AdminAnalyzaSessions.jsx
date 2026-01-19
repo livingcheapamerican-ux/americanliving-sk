@@ -137,10 +137,11 @@ export default function AdminAnalyzaSessions() {
   });
 
   const { data: domy = [] } = useQuery({
-    queryKey: ['domy-analytics'],
+    queryKey: ['houses'],
     queryFn: () => base44.entities.Dom.list(),
     initialData: [],
-    enabled: isAdmin
+    enabled: isAdmin,
+    refetchInterval: 15000
   });
 
   if (!isAdmin) {
