@@ -104,8 +104,9 @@ Deno.serve(async (req) => {
           inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
         }
       },
-      "flat15": {
-        display: "Flat 1.5",
+      // Flat 1.5
+      "6917631f8889980646c05881": {
+        nazov: "Flat 1.5",
         allowExtension: false,
         data: {
           zakladna_cena: 31700, montaz: 7925,
