@@ -176,7 +176,7 @@ export default function KonfiguratorNord({
   const BASE_PRICE = dom?.zakladna_cena || 0;
   const { t, language } = useLanguage();
 
-  // DEFAULT ceny (Nord)
+  // DEFAULT ceny (Nord - Gemini analýza)
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 14850 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
@@ -188,7 +188,7 @@ export default function KonfiguratorNord({
     tepelneCerpadlo: 1600,
     rekuperacia: 3321,
     zaklady: { bez: 0, skrutky: 7655, doska: 13000, pasove: 11500 },
-    pripojkaSiete: 1501,
+    pripojkaSiete: 1500,
     inziniering: 2590,
     projektA0: 3500,
     interierFinis: { ziadne: 0, drevo: 9800, sadrokarton: 11655 },
@@ -196,8 +196,8 @@ export default function KonfiguratorNord({
     povrchokaOkien: 2100,
     vnutornePodlahy: 1577,
     podlahovVykurovanie: 3913,
-    pergola: 1845,
-    interieroveDvere: 180,
+    pergola: 0,
+    interieroveDvere: 0,
     tonovaneSkla: 840,
     doprava: 0,
     revizna: 1000,
