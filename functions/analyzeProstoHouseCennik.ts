@@ -256,6 +256,7 @@ Deno.serve(async (req) => {
             label: key.replace(/_/g, ' ').replace(/(^\w)/, c => c.toUpperCase()),
             oldPrice: oldValue,
             newPrice: newValue,
+            finalPrice: newValue,
             isChanged: oldValue !== newValue
           });
         }
