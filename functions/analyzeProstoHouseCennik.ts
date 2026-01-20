@@ -32,6 +32,7 @@ Deno.serve(async (req) => {
         data: {
           zakladnaCena: 36900,
           montaz_nie: 0, montaz_ano: 9225,
+          predlzenie_1_2m: 6600, predlzenie_2_4m: 13200, predlzenie_3_6m: 19800, predlzenie_4_8m: 26400,
           dvere_ziadne: 0, dvere_kovove: 720, dvere_plastove: 660,
           izolacia_standard: 0, izolacia_zvysena: 2700, izolacia_premium: 5400, izolacia_ultra: 10125,
           elektroinstalacia: 3900,
