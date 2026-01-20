@@ -195,7 +195,7 @@ export default function KonfiguratorFaza1HrubaStavba({
   const FJORD_CENY = {
     montaz: 17700,
     izolacia: { zvysena: 5799, premium: 11200, ultra: 0 },
-    zaklady: { skrutky: 8140, doska: 17946, pasove: 21079 }
+    zaklady: { skrutky: 7655, doska: 13000, pasove: 11500 }
   };
 
   // Ceny pre Barn 48
