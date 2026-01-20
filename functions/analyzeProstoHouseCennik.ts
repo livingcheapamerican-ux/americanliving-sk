@@ -239,20 +239,25 @@ Deno.serve(async (req) => {
       let matchedKey = null;
 
       // INTELIGENTNÉ PÁROVANIE (Keyword Matching)
-      // 1. Špeciálne prípady - Flat 72 = Flathouse 2.7 ceny (stĺpec O)
-      if (dbName.includes("72")) matchedKey = "flathouse_2_7";
+      // 1. Priorita: Barn modely (pred numerickými kontrolami)
+      if (dbName.includes("double") && dbName.includes("barn")) matchedKey = "double_barn";
+      else if (dbName.includes("barn")) matchedKey = "barn_house";
+      
+      // 2. A-Frame
+      else if (dbName.includes("frame")) matchedKey = "a_frame";
+      
+      // 3. Flat modely s numerickými hodnotami
+      else if (dbName.includes("double") && dbName.includes("flat")) matchedKey = "double_flat";
+      else if (dbName.includes("1.5") || dbName.includes("1,5")) matchedKey = "flat_1_5";
+      else if (dbName.includes("small")) matchedKey = "flat_small";
+      
+      // 4. Flathouse 2.7 (Flat 72m²)
+      else if (dbName.includes("72") || dbName.includes("2.7") || dbName.includes("2,7")) matchedKey = "flathouse_2_7";
       else if ((dbName.includes("flathouse") || dbName.includes("flat")) && (dbName.includes("2.2") || dbName.includes("2,2"))) {
         matchedKey = "flathouse_2_7";
       }
-      else if (dbName.includes("2.7") || dbName.includes("2,7")) matchedKey = "flathouse_2_7";
       
-      // 2. Štandardné modely
-      else if (dbName.includes("double") && dbName.includes("barn")) matchedKey = "double_barn";
-      else if (dbName.includes("barn")) matchedKey = "barn_house";
-      else if (dbName.includes("frame")) matchedKey = "a_frame";
-      else if (dbName.includes("double") && dbName.includes("flat")) matchedKey = "double_flat";
-      else if (dbName.includes("small")) matchedKey = "flat_small";
-      else if (dbName.includes("1.5") || dbName.includes("1,5")) matchedKey = "flat_1_5";
+      // 5. Ostatné modely
       else if (dbName.includes("nord")) matchedKey = "nord";
       else if (dbName.includes("fjord")) matchedKey = "fjord";
 
