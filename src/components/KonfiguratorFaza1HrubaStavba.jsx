@@ -150,9 +150,29 @@ export default function KonfiguratorFaza1HrubaStavba({
     }
   }, []);
 
-  // Používa getPrice z parent komponentu, fallback na lokálny getPrice ak nie je dostupný
-  const getPriceForTile = getPrice || ((key) => {
-    const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
+  // Priame mapovanie cien zo základného cenníka
+  const getPriceForTile = (key) => {
+    if (getPrice) {
+      // Mapovanie klúčov z Fázy 1 do klúčov z DEFAULT_CENY
+      const keyMap = {
+        'montaz': 'montaz_ano',
+        'izolacia_zvysena': 'izolacia_zvysena',
+        'izolacia_premium': 'izolacia_premium', 
+        'izolacia_ultra': 'izolacia_ultra',
+        'zaklady_skrutky': 'zaklady_skrutky',
+        'zaklady_doska': 'zaklady_doska',
+        'zaklady_pasove': 'zaklady_pasove',
+        'predlzenie_1_2': 'predlzenie_1_2',
+        'predlzenie_2_4': 'predlzenie_2_4',
+        'predlzenie_3_6': 'predlzenie_3_6',
+        'predlzenie_4_8': 'predlzenie_4_8'
+      };
+      const mappedKey = keyMap[key];
+      if (mappedKey) {
+        return getPrice(mappedKey);
+      }
+    }
+    // Fallback na DEFAULT_CENY
     const DEFAULT_CENY = {
       montaz: 9225,
       predlzenie_1_2: 6600,
@@ -166,11 +186,8 @@ export default function KonfiguratorFaza1HrubaStavba({
       zaklady_doska: 9633,
       zaklady_pasove: 11823
     };
-    if (customCeny[key] !== undefined && customCeny[key] !== null) {
-      return customCeny[key];
-    }
     return DEFAULT_CENY[key] || 0;
-  });
+  };
 
   // Informácia či model podporuje ultra izoláciu (Fjord nemá ultra)
   const hasUltraInsulation = dom?.nazov !== "Fjord";
