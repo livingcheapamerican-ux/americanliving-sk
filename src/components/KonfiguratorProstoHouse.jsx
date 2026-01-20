@@ -841,8 +841,8 @@ export default function KonfiguratorProstoHouse({
                   <div className="grid grid-cols-3 gap-1 sm:gap-1.5">
                     {[
                       { value: "ziadne", label: t('doorStandard'), price: "0 €" },
-                      { value: "kovove", label: t('doorMetal'), price: "+ 720 €" },
-                      { value: "plastove", label: t('doorPlastic'), price: "+ 660 €" }
+                      { value: "kovove", label: t('doorMetal'), price: `+ ${CENY.dvere.kovove.toLocaleString('sk-SK')} €` },
+                      { value: "plastove", label: t('doorPlastic'), price: `+ ${CENY.dvere.plastove.toLocaleString('sk-SK')} €` }
                     ].map((opt) => (
                       <motion.div
                         key={opt.value}
@@ -867,10 +867,10 @@ export default function KonfiguratorProstoHouse({
                   </p>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-1.5">
                     {[
-                      { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: "760 €" },
-                      { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: "500 €" },
-                      { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: "540 €" },
-                      { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: "225 €" }
+                      { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: `${CENY.stresneOkno.toLocaleString('sk-SK')} €` },
+                      { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: `${CENY.bocneOknoFixne.toLocaleString('sk-SK')} €` },
+                      { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: `${CENY.bocneOknoVyklopne90.toLocaleString('sk-SK')} €` },
+                      { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: `${CENY.bocneOknoVyklopne55.toLocaleString('sk-SK')} €` }
                     ].map((opt, idx) => (
                       <div key={idx} className={`p-1.5 sm:p-3 rounded-md sm:rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
                         <span className="font-medium text-gray-800 text-[8px] sm:text-xs block mb-0.5 sm:mb-1 leading-tight">{opt.label}</span>
