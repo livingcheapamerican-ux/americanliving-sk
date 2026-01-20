@@ -74,7 +74,8 @@ Deno.serve(async (req) => {
           dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
           stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
           fasada_standard: 0, fasada_omietka: 4742, podlahy_laminat: 840,
-          inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
+          inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0,
+          interierove_dvere: 0, pergola: 0
         }
       },
       "flathouse_2_7": {
