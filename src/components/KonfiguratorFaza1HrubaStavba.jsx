@@ -173,15 +173,15 @@ export default function KonfiguratorFaza1HrubaStavba({
   const FLAT72_CENY = {
     montaz: 7925,
     izolacia: { zvysena: 2950, premium: 5900, ultra: 11063 },
-    zaklady: { skrutky: 4428, doska: 11849, pasove: 11184 }
+    zaklady: { skrutky: 3100, doska: 10000, pasove: 8500 }
   };
 
   // Ceny pre A-Frame
   const AFRAME_CENY = {
     montaz: 5675,
-    predlzenie: { 1.2: 3550, 2.4: 7100, 3.6: 10649, 4.8: 14189 },
-    izolacia: { zvysena: 1600, premium: 3200, ultra: 6000 },
-    zaklady: { skrutky: 3348, doska: 6795, pasove: 7130 }
+    predlzenie: { 1.2: 3300, 2.4: 6606, 3.6: 9900, 4.8: 15880 },
+    izolacia: { zvysena: 1400, premium: 2800, ultra: 5250 },
+    zaklady: { skrutky: 3077, doska: 6782, pasove: 6595 }
   };
 
   // Ceny pre Barn 48
@@ -205,14 +205,14 @@ export default function KonfiguratorFaza1HrubaStavba({
     montaz: 9225,
     predlzenie: { 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
     izolacia: { zvysena: 2700, premium: 5400, ultra: 10125 },
-    zaklady: { skrutky: 4751, doska: 9633, pasove: 11823 }
+    zaklady: { skrutky: 3400, doska: 7500, pasove: 6500 }
   };
 
   // Ceny pre Flat Small - skutočné ceny (zhodné s floating panelom)
   const FLATSMALL_CENY = {
-    montaz: { nie: 0, ano: 4874 },
-    izolacia: { zvysena: 1397, premium: 2800, ultra: 5250 },
-    zaklady: { skrutky: 2808, doska: 5950, pasove: 6319 }
+    montaz: { nie: 0, ano: 4875 },
+    izolacia: { zvysena: 1400, premium: 2800, ultra: 5250 },
+    zaklady: { skrutky: 2808, doska: 6000, pasove: 5000 }
   };
 
   const { t } = useLanguage();
@@ -310,10 +310,10 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   {[
                     { value: 0, label: "Bez predĺženia", price: "0 €" },
-                    { value: 1.2, label: "+1,2 m", price: useBarn48Prices ? `+ ${BARN48_CENY.predlzenie[1.2].toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.predlzenie[1.2].toLocaleString('sk-SK')} €` : "+ 6 600 €" },
-                    { value: 2.4, label: "+2,4 m", price: useBarn48Prices ? `+ ${BARN48_CENY.predlzenie[2.4].toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.predlzenie[2.4].toLocaleString('sk-SK')} €` : "+ 13 200 €" },
-                    { value: 3.6, label: "+3,6 m", price: useBarn48Prices ? `+ ${BARN48_CENY.predlzenie[3.6].toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.predlzenie[3.6].toLocaleString('sk-SK')} €` : "+ 19 800 €" },
-                    { value: 4.8, label: "+4,8 m", price: useBarn48Prices ? `+ ${BARN48_CENY.predlzenie[4.8].toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.predlzenie[4.8].toLocaleString('sk-SK')} €` : "+ 26 400 €" }
+                    { value: 1.2, label: "+1,2 m", price: useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.predlzenie[1.2].toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.predlzenie[1.2].toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.predlzenie[1.2].toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.predlzenie[1.2].toLocaleString('sk-SK')} €` : "+ 6 600 €" },
+                    { value: 2.4, label: "+2,4 m", price: useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.predlzenie[2.4].toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.predlzenie[2.4].toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.predlzenie[2.4].toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.predlzenie[2.4].toLocaleString('sk-SK')} €` : "+ 13 200 €" },
+                    { value: 3.6, label: "+3,6 m", price: useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.predlzenie[3.6].toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.predlzenie[3.6].toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.predlzenie[3.6].toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.predlzenie[3.6].toLocaleString('sk-SK')} €` : "+ 19 800 €" },
+                    { value: 4.8, label: "+4,8 m", price: useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.predlzenie[4.8].toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.predlzenie[4.8].toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.predlzenie[4.8].toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.predlzenie[4.8].toLocaleString('sk-SK')} €` : "+ 26 400 €" }
                   ].map((opt) => (
                     <motion.div
                       key={opt.value}
