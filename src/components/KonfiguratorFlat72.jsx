@@ -695,9 +695,7 @@ export default function KonfiguratorFlat72({
             setIzolaciaNavysenie={setIzolaciaNavysenie}
             zaklady={zaklady}
             setZaklady={setZaklady}
-            useFlat15Prices={false}
-            useFlatDoublePrices={false}
-            useFlat72Prices={true}
+            dom={dom}
           />
         )}
 

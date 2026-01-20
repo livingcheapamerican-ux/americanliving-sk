@@ -637,7 +637,7 @@ export default function KonfiguratorNord({
               setIzolaciaNavysenie={setIzolaciaNavysenie}
               zaklady={zaklady}
               setZaklady={setZaklady}
-              useNordPrices={true}
+              dom={dom}
             />
           )}
 

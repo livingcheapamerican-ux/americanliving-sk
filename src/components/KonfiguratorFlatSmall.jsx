@@ -646,7 +646,7 @@ export default function KonfiguratorFlatSmall({
               setIzolaciaNavysenie={setIzolaciaNavysenie}
               zaklady={zaklady}
               setZaklady={setZaklady}
-              useFlatSmallPrices={true}
+              dom={dom}
             />
           )}
 

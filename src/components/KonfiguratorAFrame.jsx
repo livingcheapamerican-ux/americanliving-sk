@@ -668,7 +668,7 @@ export default function KonfiguratorAFrame({
               setZaklady={setZaklady}
               predlzenie={predlzenie}
               setPredlzenie={setPredlzenie}
-              useAFramePrices={true}
+              dom={dom}
             />
           )}
 

@@ -656,7 +656,7 @@ export default function KonfiguratorBarnDouble({
               setZaklady={setZaklady}
               predlzenie={predlzenie}
               setPredlzenie={setPredlzenie}
-              useBarnDoublePrices={true}
+              dom={dom}
             />
           )}
 

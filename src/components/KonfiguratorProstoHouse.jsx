@@ -630,7 +630,7 @@ export default function KonfiguratorProstoHouse({
               setZaklady={setZaklady}
               predlzenie={predlzenie}
               setPredlzenie={setPredlzenie}
-              useProstoHousePrices={true}
+              dom={dom}
             />
           )}
 
