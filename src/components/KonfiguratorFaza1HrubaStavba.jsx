@@ -149,52 +149,30 @@ export default function KonfiguratorFaza1HrubaStavba({
     }
   }, []);
 
-  // DEFAULT CENY podľa modelu domu
-  const DEFAULT_CENY_MAP = {
-    'Prosto House': { montaz: 9225, izolacia_zvysena: 2700, izolacia_premium: 5400, izolacia_ultra: 10125, zaklady_skrutky: 4751, zaklady_doska: 9633, zaklady_pasove: 11823, predlzenie_1_2: 6600, predlzenie_2_4: 13200, predlzenie_3_6: 19800, predlzenie_4_8: 26400 },
-    'Nord': { montaz: 14850, izolacia_zvysena: 3200, izolacia_premium: 6400, izolacia_ultra: 12000, zaklady_skrutky: 7655, zaklady_doska: 13000, zaklady_pasove: 11500 },
-    'Fjord': { montaz: 17700, izolacia_zvysena: 5660, izolacia_premium: 9106, zaklady_skrutky: 7655, zaklady_doska: 13000, zaklady_pasove: 11500 },
-    'A-Frame': { montaz: 5675, izolacia_zvysena: 1400, izolacia_premium: 2800, izolacia_ultra: 5250, zaklady_skrutky: 3077, zaklady_doska: 6782, zaklady_pasove: 6595, predlzenie_1_2: 3300, predlzenie_2_4: 6606, predlzenie_3_6: 9900, predlzenie_4_8: 15880 },
-    'Barn 48': { montaz: 5225, izolacia_zvysena: 1400, izolacia_premium: 2800, izolacia_ultra: 5250, zaklady_skrutky: 3077, zaklady_doska: 6782, zaklady_pasove: 6595, predlzenie_1_2: 3300, predlzenie_2_4: 6606, predlzenie_3_6: 9900, predlzenie_4_8: 15880 },
-    'Barn Double': { montaz: 9225, izolacia_zvysena: 2700, izolacia_premium: 5400, izolacia_ultra: 10125, zaklady_skrutky: 3400, zaklady_doska: 7500, zaklady_pasove: 6500, predlzenie_1_2: 6600, predlzenie_2_4: 13200, predlzenie_3_6: 19800, predlzenie_4_8: 26400 },
-    'Flat 1.5': { montaz: 13470, izolacia_zvysena: 4400, izolacia_premium: 8799, zaklady_skrutky: 6189, zaklady_doska: 11909, zaklady_pasove: 11860 },
-    'Flat Double': { montaz: 17970, izolacia_zvysena: 5799, izolacia_premium: 11600, zaklady_skrutky: 8140, zaklady_doska: 17946, zaklady_pasove: 21079 },
-    'Flat 72': { montaz: 7925, izolacia_zvysena: 2950, izolacia_premium: 5900, izolacia_ultra: 11063, zaklady_skrutky: 3100, zaklady_doska: 10000, zaklady_pasove: 8500 },
-    'Flat Small': { montaz: 4875, izolacia_zvysena: 1400, izolacia_premium: 2800, izolacia_ultra: 5250, zaklady_skrutky: 2808, zaklady_doska: 6000, zaklady_pasove: 5000 }
-  };
-
-  // Načítať custom ceny z databázy alebo use parent's CENY
-  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
-  
-  // Fallback na default ceny z KonfiguratorProstoHouse
-  const DEFAULT_FALLBACK = {
+  // CENY - presne tie isté ako v KonfiguratorProstoHouse DEFAULT_CENY
+  const DEFAULT_CENY = {
     montaz: 9225,
+    predlzenie_1_2: 6600,
+    predlzenie_2_4: 13200,
+    predlzenie_3_6: 19800,
+    predlzenie_4_8: 26400,
     izolacia_zvysena: 2700,
     izolacia_premium: 5400,
     izolacia_ultra: 10125,
     zaklady_skrutky: 4751,
     zaklady_doska: 9633,
-    zaklady_pasove: 11823,
-    predlzenie_1_2: 6600,
-    predlzenie_2_4: 13200,
-    predlzenie_3_6: 19800,
-    predlzenie_4_8: 26400
+    zaklady_pasove: 11823
   };
-  
-  const defaultCeny = dom?.nazov ? DEFAULT_CENY_MAP[dom.nazov] : DEFAULT_FALLBACK;
+
+  // Načítať custom ceny z databázy
+  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
   
   // Funkcia na získanie ceny - preferuje custom ceny pred default
   const getPrice = (key) => {
-    // Skúsiť z customCeny (databáza)
-    if (customCeny[key] !== undefined && customCeny[key] !== null && customCeny[key] !== 0) {
+    if (customCeny[key] !== undefined && customCeny[key] !== null) {
       return customCeny[key];
     }
-    // Potom z default mapy pre daný model
-    if (defaultCeny && defaultCeny[key] !== undefined && defaultCeny[key] !== null) {
-      return defaultCeny[key];
-    }
-    // Fallback
-    return 0;
+    return DEFAULT_CENY[key] || 0;
   };
 
   // Informácia či model podporuje ultra izoláciu (Fjord nemá ultra)
