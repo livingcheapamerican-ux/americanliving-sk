@@ -188,7 +188,7 @@ export default function KonfiguratorFaza1HrubaStavba({
   const NORD_CENY = {
     montaz: 14850,
     izolacia: { zvysena: 3200, premium: 6400, ultra: 12000 },
-    zaklady: { skrutky: 6189, doska: 11909, pasove: 11860 }
+    zaklady: { skrutky: 7655, doska: 13000, pasove: 11500 }
   };
 
   // Ceny pre Fjord
@@ -219,7 +219,7 @@ export default function KonfiguratorFaza1HrubaStavba({
     montaz: 9225,
     predlzenie: { 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
     izolacia: { zvysena: 2700, premium: 5400, ultra: 10125 },
-    zaklady: { skrutky: 3400, doska: 7500, pasove: 6500 }
+    zaklady: { skrutky: 4751, doska: 9633, pasove: 11823 }
   };
 
   // Ceny pre Flat Small - skutočné ceny (zhodné s floating panelom)
