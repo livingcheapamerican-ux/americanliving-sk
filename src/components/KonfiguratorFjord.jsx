@@ -176,8 +176,8 @@ export default function KonfiguratorFjord({
   const BASE_PRICE = dom?.zakladna_cena || 0;
   const { t } = useLanguage();
 
-  // Cenník pre Fjord (z databázy)
-  const CENY = {
+  // DEFAULT CENY
+  const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 17700 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
     izolacia: { standard: 0, zvysena: 5660, premium: 9106 },
@@ -205,6 +205,66 @@ export default function KonfiguratorFjord({
     bocneOknoFixne: 500,
     bocneOknoVyklopne90: 540,
     bocneOknoVyklopne55: 225
+  };
+
+  // Načítať custom ceny z databázy
+  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
+  
+  const getPrice = (key) => {
+    if (customCeny[key] !== undefined && customCeny[key] !== null) {
+      return customCeny[key];
+    }
+    return DEFAULT_CENY[key];
+  };
+
+  // CENY - s možnosťou override z databázy
+  const CENY = {
+    montaz: { nie: 0, ano: getPrice('montaz_ano') ?? DEFAULT_CENY.montaz.ano },
+    dvere: { 
+      ziadne: 0, 
+      kovove: getPrice('dvere_kovove') ?? DEFAULT_CENY.dvere.kovove, 
+      plastove: getPrice('dvere_plastove') ?? DEFAULT_CENY.dvere.plastove 
+    },
+    izolacia: { 
+      standard: 0, 
+      zvysena: getPrice('izolacia_zvysena') ?? DEFAULT_CENY.izolacia.zvysena, 
+      premium: getPrice('izolacia_premium') ?? DEFAULT_CENY.izolacia.premium 
+    },
+    elektroinstalacia: getPrice('elektroinstalacia') ?? DEFAULT_CENY.elektroinstalacia,
+    vodaKanalizacia: getPrice('vodaKanalizacia') ?? DEFAULT_CENY.vodaKanalizacia,
+    sanitaKomplet: getPrice('sanitaKomplet') ?? DEFAULT_CENY.sanitaKomplet,
+    bojler: getPrice('bojler') ?? DEFAULT_CENY.bojler,
+    tepelneCerpadlo: getPrice('tepelneCerpadlo') ?? DEFAULT_CENY.tepelneCerpadlo,
+    rekuperacia: getPrice('rekuperacia') ?? DEFAULT_CENY.rekuperacia,
+    zaklady: { 
+      bez: 0, 
+      skrutky: getPrice('zaklady_skrutky') ?? DEFAULT_CENY.zaklady.skrutky, 
+      doska: getPrice('zaklady_doska') ?? DEFAULT_CENY.zaklady.doska, 
+      pasove: getPrice('zaklady_pasove') ?? DEFAULT_CENY.zaklady.pasove 
+    },
+    pripojkaSiete: getPrice('pripojkaSiete') ?? DEFAULT_CENY.pripojkaSiete,
+    inziniering: getPrice('inziniering') ?? DEFAULT_CENY.inziniering,
+    projektA0: getPrice('projektA0') ?? DEFAULT_CENY.projektA0,
+    interierFinis: { 
+      ziadne: 0, 
+      drevo: getPrice('interierFinis_drevo') ?? DEFAULT_CENY.interierFinis.drevo, 
+      sadrokarton: getPrice('interierFinis_sadrokarton') ?? DEFAULT_CENY.interierFinis.sadrokarton 
+    },
+    vonkajsiaFasada: { 
+      standard: 0, 
+      suchana: getPrice('vonkajsiaFasada_suchana') ?? DEFAULT_CENY.vonkajsiaFasada.suchana 
+    },
+    povrchokaOkien: getPrice('povrchokaOkien') ?? DEFAULT_CENY.povrchokaOkien,
+    vnutornePodlahy: getPrice('vnutornePodlahy') ?? DEFAULT_CENY.vnutornePodlahy,
+    podlahovVykurovanie: getPrice('podlahovVykurovanie') ?? DEFAULT_CENY.podlahovVykurovanie,
+    interieroveDvere: getPrice('interieroveDvere') ?? DEFAULT_CENY.interieroveDvere,
+    tonovaneSkla: getPrice('tonovaneSkla') ?? DEFAULT_CENY.tonovaneSkla,
+    doprava: getPrice('doprava') ?? DEFAULT_CENY.doprava,
+    revizna: getPrice('revizna') ?? DEFAULT_CENY.revizna,
+    stresneOkno: getPrice('stresneOkno') ?? DEFAULT_CENY.stresneOkno,
+    bocneOknoFixne: getPrice('bocneOknoFixne') ?? DEFAULT_CENY.bocneOknoFixne,
+    bocneOknoVyklopne90: getPrice('bocneOknoVyklopne90') ?? DEFAULT_CENY.bocneOknoVyklopne90,
+    bocneOknoVyklopne55: getPrice('bocneOknoVyklopne55') ?? DEFAULT_CENY.bocneOknoVyklopne55
   };
 
   // Výpočet celkovej ceny
