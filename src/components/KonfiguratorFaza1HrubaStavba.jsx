@@ -184,6 +184,20 @@ export default function KonfiguratorFaza1HrubaStavba({
     zaklady: { skrutky: 3077, doska: 6782, pasove: 6595 }
   };
 
+  // Ceny pre Nord
+  const NORD_CENY = {
+    montaz: 14850,
+    izolacia: { zvysena: 3200, premium: 6400, ultra: 12000 },
+    zaklady: { skrutky: 7656, doska: 12461, pasove: 8967 }
+  };
+
+  // Ceny pre Fjord
+  const FJORD_CENY = {
+    montaz: 17700,
+    izolacia: { zvysena: 5799, premium: 11200, ultra: 0 },
+    zaklady: { skrutky: 7305, doska: 13000, pasove: 8250 }
+  };
+
   // Ceny pre Barn 48
   const BARN48_CENY = {
     montaz: 5225,
@@ -294,7 +308,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('assemblyYes')}
                 subtitle={t('phase1')}
-                price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.montaz.ano.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.montaz.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.montaz.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.montaz.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.montaz.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.montaz.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.montaz.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.montaz.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 14 850 €" : "+ 17 700 €"}
+                price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.montaz.ano.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.montaz.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.montaz.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.montaz.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.montaz.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.montaz.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.montaz.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.montaz.toLocaleString('sk-SK')} €` : useNordPrices ? `+ ${NORD_CENY.montaz.toLocaleString('sk-SK')} €` : `+ ${FJORD_CENY.montaz.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('assemblyNote')}
               />
@@ -362,7 +376,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={useFlatSmallPrices ? "200mm" : useFlat72Prices ? "200mm" : useProstoHousePrices ? "200mm" : useFlatDoublePrices ? "200/250mm" : useFlat15Prices ? "200/250mm" : useNordPrices ? "200mm" : t('insulationEnhanced')}
                 subtitle={useFlatSmallPrices ? "200mm" : useFlat72Prices ? "200mm" : useProstoHousePrices ? "200mm" : useFlatDoublePrices ? "200/250mm" : useFlat15Prices ? "200/250mm" : useNordPrices ? "200mm" : t('insulationEnhancedDesc')}
-                price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 3 200 €" : "+ 5 799 €"}
+                price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : useNordPrices ? `+ ${NORD_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €` : `+ ${FJORD_CENY.izolacia.zvysena.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('insulationEnhancedDesc')}
               />
@@ -375,7 +389,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-green-600"
                 title={useFlatSmallPrices ? "250mm" : useFlat72Prices ? "250mm" : useProstoHousePrices ? "250mm" : useFlatDoublePrices ? "250/300mm" : useFlat15Prices ? "250/300mm" : useNordPrices ? "250mm" : t('insulationPremium')}
                 subtitle={useFlatSmallPrices ? "250mm" : useFlat72Prices ? "250mm" : useProstoHousePrices ? "250mm" : useFlatDoublePrices ? "250/300mm" : useFlat15Prices ? "250/300mm" : useNordPrices ? "250mm" : t('insulationPremiumDesc')}
-                price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 6 400 €" : "+ 11 200 €"}
+                price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : useNordPrices ? `+ ${NORD_CENY.izolacia.premium.toLocaleString('sk-SK')} €` : `+ ${FJORD_CENY.izolacia.premium.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 isA0={true}
                 selectedBg="bg-green-100"
@@ -393,7 +407,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                   iconSelectedColor="text-green-700"
                   title={useFlatSmallPrices ? "300mm" : useFlat72Prices ? "300mm" : useProstoHousePrices ? "300mm" : "Éxtra izolácia"}
                   subtitle="300mm"
-                  price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : "+ 12 000 €"}
+                  price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : useNordPrices ? `+ ${NORD_CENY.izolacia.ultra.toLocaleString('sk-SK')} €` : `+ ${FJORD_CENY.izolacia.ultra.toLocaleString('sk-SK')} €`}
                   isPriced={true}
                   isA0={true}
                   selectedBg="bg-green-100"
@@ -431,7 +445,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={useFlatSmallPrices || useFlat72Prices || useProstoHousePrices || useFlat15Prices || useFlatDoublePrices || useBarn48Prices ? "Pilóty/Pätky" : t('foundationsScrews')}
                 subtitle={t('groundFootings')}
-                price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 7 656 €" : "+ 8 140 €"}
+                price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : useNordPrices ? `+ ${NORD_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` : `+ ${FJORD_CENY.zaklady.skrutky.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('foundationsScrews')}
               />
@@ -444,7 +458,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsSlab')}
                 subtitle={t('foundationSlab')}
-                price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 12 461 €" : "+ 12 000 €"}
+                price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : useNordPrices ? `+ ${NORD_CENY.zaklady.doska.toLocaleString('sk-SK')} €` : `+ ${FJORD_CENY.zaklady.doska.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('foundationsSlab')}
               />
@@ -457,7 +471,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsStrip')}
                 subtitle={t('stripFound')}
-                price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useNordPrices ? "+ 8 967 €" : "+ 21 079 €"}
+                price={useFlatSmallPrices ? `+ ${FLATSMALL_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useBarnDoublePrices ? `+ ${BARNDOUBLE_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useBarn48Prices ? `+ ${BARN48_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useAFramePrices ? `+ ${AFRAME_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useFlat72Prices ? `+ ${FLAT72_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useProstoHousePrices ? `+ ${PROSTO_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useFlatDoublePrices ? `+ ${FLATDOUBLE_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useFlat15Prices ? `+ ${FLAT15_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : useNordPrices ? `+ ${NORD_CENY.zaklady.pasove.toLocaleString('sk-SK')} €` : `+ ${FJORD_CENY.zaklady.pasove.toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('foundationsStrip')}
               />
