@@ -173,29 +173,29 @@ export default function KonfiguratorBarnDouble({
 
   const { t, language } = useLanguage();
 
-  // BARN DOUBLE CENNÍK (z databázy)
+  // BARN DOUBLE CENNÍK - OPRAVENÉ CENY
   const CENY = {
     montaz: { nie: 0, ano: 9225 },
     predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 2950, premium: 5900, ultra: 11063 },
+    izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 },
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
     bojler: 246,
     tepelneCerpadlo: 1600,
     rekuperacia: 3321,
-    zaklady: { bez: 0, skrutky: 3100, doska: 10000, pasove: 8500 },
+    zaklady: { bez: 0, skrutky: 3400, doska: 7500, pasove: 6500 },
     pripojkaSiete: 1500,
     inziniering: 2590,
     projektA0: 3500,
-    interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 8815 },
-    vonkajsiaFasada: { standard: 0, suchana: 8499 },
-    povrchokaOkien: 1550,
-    vnutornePodlahy: 1680,
+    interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 9430 },
+    vonkajsiaFasada: { standard: 0, suchana: 6371 },
+    povrchokaOkien: 1450,
+    vnutornePodlahy: 1750,
     podlahovVykurovanie: 3960,
     interieroveDvere: 250,
-    tonovaneSkla: 680,
+    tonovaneSkla: 700,
     doprava: 0,
     revizna: 1000,
     stresneOkno: 760,
@@ -960,7 +960,7 @@ export default function KonfiguratorBarnDouble({
                       selectedBorder="border-emerald-500"
                       selectedRing="ring-emerald-300"
                       hoverBorder="hover:border-emerald-300"
-                      tooltip="Šúchaná fasáda - biela omietka s DPH (6 671€)"
+                      tooltip="Šúchaná fasáda - biela omietka"
                     />
                   </div>
 
