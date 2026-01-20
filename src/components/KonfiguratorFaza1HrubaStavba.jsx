@@ -163,16 +163,38 @@ export default function KonfiguratorFaza1HrubaStavba({
     'Flat Small': { montaz: 4875, izolacia_zvysena: 1400, izolacia_premium: 2800, izolacia_ultra: 5250, zaklady_skrutky: 2808, zaklady_doska: 6000, zaklady_pasove: 5000 }
   };
 
-  // Načítať custom ceny z databázy
+  // Načítať custom ceny z databázy alebo use parent's CENY
   const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
-  const defaultCeny = DEFAULT_CENY_MAP[dom?.nazov] || {};
+  
+  // Fallback na default ceny z KonfiguratorProstoHouse
+  const DEFAULT_FALLBACK = {
+    montaz: 9225,
+    izolacia_zvysena: 2700,
+    izolacia_premium: 5400,
+    izolacia_ultra: 10125,
+    zaklady_skrutky: 4751,
+    zaklady_doska: 9633,
+    zaklady_pasove: 11823,
+    predlzenie_1_2: 6600,
+    predlzenie_2_4: 13200,
+    predlzenie_3_6: 19800,
+    predlzenie_4_8: 26400
+  };
+  
+  const defaultCeny = dom?.nazov ? DEFAULT_CENY_MAP[dom.nazov] : DEFAULT_FALLBACK;
   
   // Funkcia na získanie ceny - preferuje custom ceny pred default
   const getPrice = (key) => {
-    if (customCeny[key] !== undefined && customCeny[key] !== null) {
+    // Skúsiť z customCeny (databáza)
+    if (customCeny[key] !== undefined && customCeny[key] !== null && customCeny[key] !== 0) {
       return customCeny[key];
     }
-    return defaultCeny[key] || 0;
+    // Potom z default mapy pre daný model
+    if (defaultCeny && defaultCeny[key] !== undefined && defaultCeny[key] !== null) {
+      return defaultCeny[key];
+    }
+    // Fallback
+    return 0;
   };
 
   // Informácia či model podporuje ultra izoláciu (Fjord nemá ultra)
