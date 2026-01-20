@@ -709,7 +709,7 @@ export default function KonfiguratorFjord({
                         <DoorOpen className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
                         <div>
                           <span className="font-semibold text-gray-800 text-[10px] sm:text-xs">{t('interiorDoors')}</span>
-                          <span className="text-green-600 font-bold text-[10px] ml-1.5">× 180 €</span>
+                          <span className="text-green-600 font-bold text-[10px] ml-1.5">× {CENY.interieroveDvere.toLocaleString('sk-SK')} €</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-1.5">
