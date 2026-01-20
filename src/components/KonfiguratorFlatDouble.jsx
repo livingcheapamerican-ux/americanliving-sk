@@ -208,7 +208,7 @@ export default function KonfiguratorFlatDouble({
     vnutornePodlahy: 3351,
     podlahovVykurovanie: 5525,
     pergola: 1845,
-    interieroveDvere: 180,
+    interieroveDvere: 250,
     tonovaneSkla: 1300,
     doprava: 0,
     revizna: 1000,

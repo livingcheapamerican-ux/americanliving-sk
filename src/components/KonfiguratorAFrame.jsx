@@ -194,7 +194,7 @@ export default function KonfiguratorAFrame({
     povrchokaOkien: 790,
     vnutornePodlahy: 890,
     podlahovVykurovanie: 2819,
-    interieroveDvere: 180,
+    interieroveDvere: 250,
     tonovaneSkla: 375,
     doprava: 0,
     revizna: 500,

@@ -198,7 +198,7 @@ export default function KonfiguratorFlatSmall({
     povrchokaOkien: 750,
     vnutornePodlahy: 840,
     podlahovVykurovanie: 2819,
-    interieroveDvere: 180,
+    interieroveDvere: 250,
     tonovaneSkla: 340,
     doprava: 0,
     revizna: 500,

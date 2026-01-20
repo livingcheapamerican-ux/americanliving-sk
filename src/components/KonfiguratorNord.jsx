@@ -197,7 +197,7 @@ export default function KonfiguratorNord({
     vnutornePodlahy: 1577,
     podlahovVykurovanie: 3913,
     pergola: 1845,
-    interieroveDvere: 180,
+    interieroveDvere: 250,
     tonovaneSkla: 840,
     doprava: 0,
     revizna: 1000,

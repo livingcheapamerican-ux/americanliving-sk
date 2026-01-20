@@ -197,7 +197,7 @@ export default function KonfiguratorFjord({
     vnutornePodlahy: 4200,
     podlahovVykurovanie: 6101,
     pergola: 1845,
-    interieroveDvere: 180,
+    interieroveDvere: 250,
     tonovaneSkla: 1550,
     doprava: 0,
     revizna: 1000,

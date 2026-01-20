@@ -194,7 +194,7 @@ export default function KonfiguratorBarnDouble({
     povrchokaOkien: 1450,
     vnutornePodlahy: 1750,
     podlahovVykurovanie: 3960,
-    interieroveDvere: 0,
+    interieroveDvere: 250,
     tonovaneSkla: 700,
     doprava: 0,
     revizna: 1000,
