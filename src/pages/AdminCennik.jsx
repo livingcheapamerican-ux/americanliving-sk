@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Upload, FileSpreadsheet, AlertCircle, Save, CheckCircle, RefreshCw, ArrowUpCircle, ArrowDownCircle } from "lucide-react";
+import { Upload, FileSpreadsheet, AlertCircle, Save, CheckCircle, RefreshCw, ArrowUpCircle, ArrowDownCircle, Search } from "lucide-react";
 import { toast } from "sonner";
 
 export default function AdminCennik() {
@@ -16,6 +16,8 @@ export default function AdminCennik() {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [editedPrices, setEditedPrices] = useState({}); // { domId: { key: newPrice } }
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeepChecking, setIsDeepChecking] = useState(false);
+  const [deepCheckResult, setDeepCheckResult] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: user } = useQuery({
@@ -47,6 +49,37 @@ export default function AdminCennik() {
       setSelectedFile(file);
       setAnalysisResult(null);
       setEditedPrices({});
+    }
+  };
+
+  const handleDeepCheck = async () => {
+    setIsDeepChecking(true);
+    setDeepCheckResult(null);
+    try {
+      toast.info('🔍 Spúšťam hlbkovú kontrolu konfigurátorov...');
+
+      const response = await base44.functions.invoke('deepCheckKonfiguratory', {});
+
+      console.log('🔍 Deep Check Result:', response.data);
+      setDeepCheckResult(response.data);
+
+      if (response.data.success) {
+        const { summary } = response.data;
+        if (summary.errors === 0 && summary.warnings === 0) {
+          toast.success(`✅ ${summary.status}`);
+        } else if (summary.errors > 0) {
+          toast.error(`❌ Nájdené ${summary.errors} chyby a ${summary.warnings} varovaní!`);
+        } else {
+          toast.warning(`⚠️ Nájdené ${summary.warnings} varovaní!`);
+        }
+      } else {
+        toast.error(`❌ ${response.data.error || 'Neznáma chyba pri kontrole'}`);
+      }
+    } catch (error) {
+      console.error('Chyba:', error);
+      toast.error('Chyba pri hlbkovej kontrole: ' + error.message);
+    } finally {
+      setIsDeepChecking(false);
     }
   };
 
@@ -316,23 +349,43 @@ export default function AdminCennik() {
             </p>
           </div>
 
-          <Button
-            onClick={handleAnalyzeProstoHouse}
-            disabled={isAnalyzing}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3"
-          >
-            {isAnalyzing ? (
-              <>
-                <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
-                Analyzujem Prosto House...
-              </>
-            ) : (
-              <>
-                <FileSpreadsheet className="w-5 h-5 mr-2" />
-                Analyzovať Prosto House
-              </>
-            )}
-          </Button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Button
+              onClick={handleAnalyzeProstoHouse}
+              disabled={isAnalyzing}
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3"
+            >
+              {isAnalyzing ? (
+                <>
+                  <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
+                  Analyzujem...
+                </>
+              ) : (
+                <>
+                  <FileSpreadsheet className="w-5 h-5 mr-2" />
+                  Analyzovať Prosto House
+                </>
+              )}
+            </Button>
+
+            <Button
+              onClick={handleDeepCheck}
+              disabled={isDeepChecking}
+              className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-3"
+            >
+              {isDeepChecking ? (
+                <>
+                  <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
+                  Kontrolujem...
+                </>
+              ) : (
+                <>
+                  <Search className="w-5 h-5 mr-2" />
+                  Hlboká Kontrola Chýb
+                </>
+              )}
+            </Button>
+          </div>
         </Card>
 
         {/* TicabHouse - Excel Upload */}
@@ -381,6 +434,96 @@ export default function AdminCennik() {
             )}
           </Button>
         </Card>
+
+        {/* Deep Check Result */}
+        {deepCheckResult && (
+          <Card className="p-6 mb-6 bg-white border-2 border-red-300 shadow-lg">
+            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Search className="w-6 h-6 text-red-600" />
+              Výsledok Hlbkovej Kontroly
+            </h2>
+
+            {/* Summary */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+              <div className="bg-blue-50 p-3 rounded-lg border-2 border-blue-200 text-center">
+                <p className="text-2xl font-black text-blue-700">{deepCheckResult.summary?.totalDoms || 0}</p>
+                <p className="text-xs text-gray-600">Domov</p>
+              </div>
+              <div className="bg-gray-50 p-3 rounded-lg border-2 border-gray-200 text-center">
+                <p className="text-2xl font-black text-gray-700">{deepCheckResult.summary?.totalChecks || 0}</p>
+                <p className="text-xs text-gray-600">Kontrol</p>
+              </div>
+              <div className="bg-red-50 p-3 rounded-lg border-2 border-red-200 text-center">
+                <p className="text-2xl font-black text-red-700">{deepCheckResult.summary?.errors || 0}</p>
+                <p className="text-xs text-gray-600">Chýb</p>
+              </div>
+              <div className="bg-yellow-50 p-3 rounded-lg border-2 border-yellow-200 text-center">
+                <p className="text-2xl font-black text-yellow-700">{deepCheckResult.summary?.warnings || 0}</p>
+                <p className="text-xs text-gray-600">Varovaní</p>
+              </div>
+            </div>
+
+            {/* Status */}
+            <div className={`p-4 rounded-lg mb-4 ${
+              deepCheckResult.summary?.errors === 0 && deepCheckResult.summary?.warnings === 0 
+                ? 'bg-green-50 border-2 border-green-300' 
+                : deepCheckResult.summary?.errors > 0 
+                  ? 'bg-red-50 border-2 border-red-300'
+                  : 'bg-yellow-50 border-2 border-yellow-300'
+            }`}>
+              <p className="text-lg font-bold text-center">
+                {deepCheckResult.summary?.status}
+              </p>
+            </div>
+
+            {/* Errors */}
+            {deepCheckResult.errors && deepCheckResult.errors.length > 0 && (
+              <div className="mb-4">
+                <h3 className="font-bold text-red-900 mb-2 flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5" />
+                  Chyby ({deepCheckResult.errors.length})
+                </h3>
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {deepCheckResult.errors.map((error, idx) => (
+                    <div key={idx} className="bg-red-50 border border-red-200 rounded p-3 text-sm">
+                      <p className="font-bold text-red-900">{error.dom}</p>
+                      <p className="text-red-700">{error.message}</p>
+                      {error.priceKey && <p className="text-xs text-red-600 mt-1">Položka: {error.priceKey}</p>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Warnings */}
+            {deepCheckResult.warnings && deepCheckResult.warnings.length > 0 && (
+              <div className="mb-4">
+                <h3 className="font-bold text-yellow-900 mb-2">Varovania ({deepCheckResult.warnings.length})</h3>
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {deepCheckResult.warnings.map((warning, idx) => (
+                    <div key={idx} className="bg-yellow-50 border border-yellow-200 rounded p-3 text-sm">
+                      <p className="font-bold text-yellow-900">{warning.dom}</p>
+                      <p className="text-yellow-700">{warning.message}</p>
+                      {warning.priceKey && <p className="text-xs text-yellow-600 mt-1">Položka: {warning.priceKey}</p>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Recommendations */}
+            {deepCheckResult.recommendations && (
+              <div className="bg-blue-50 border border-blue-200 rounded p-4">
+                <h3 className="font-bold text-blue-900 mb-2">💡 Odporúčania</h3>
+                <ul className="space-y-1 text-sm text-blue-800">
+                  {deepCheckResult.recommendations.map((rec, idx) => (
+                    <li key={idx}>{rec}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </Card>
+        )}
 
         {/* Debug Output Section */}
         {analysisResult && (
