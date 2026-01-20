@@ -68,7 +68,8 @@ export default function AdminCennik() {
             if (domResult.status === 'ready') {
               initialEdits[domResult.domId] = {};
               domResult.polozky.forEach(polozka => {
-                initialEdits[domResult.domId][polozka.key] = polozka.newPrice;
+                // Použiť finalPrice ak existuje, inak newPrice
+                initialEdits[domResult.domId][polozka.key] = polozka.finalPrice !== undefined ? polozka.finalPrice : polozka.newPrice;
               });
             }
           });
@@ -114,7 +115,8 @@ export default function AdminCennik() {
             if (domResult.status === 'ready') {
               initialEdits[domResult.domId] = {};
               domResult.polozky.forEach(polozka => {
-                initialEdits[domResult.domId][polozka.key] = polozka.newPrice;
+                // Použiť finalPrice ak existuje, inak newPrice
+                initialEdits[domResult.domId][polozka.key] = polozka.finalPrice !== undefined ? polozka.finalPrice : polozka.newPrice;
               });
             }
           });
