@@ -188,14 +188,14 @@ export default function KonfiguratorFaza1HrubaStavba({
   const NORD_CENY = {
     montaz: 14850,
     izolacia: { zvysena: 3200, premium: 6400, ultra: 12000 },
-    zaklady: { skrutky: 7656, doska: 12461, pasove: 8967 }
+    zaklady: { skrutky: 6189, doska: 11909, pasove: 11860 }
   };
 
   // Ceny pre Fjord
   const FJORD_CENY = {
     montaz: 17700,
     izolacia: { zvysena: 5799, premium: 11200, ultra: 0 },
-    zaklady: { skrutky: 7305, doska: 13000, pasove: 8250 }
+    zaklady: { skrutky: 8140, doska: 17946, pasove: 21079 }
   };
 
   // Ceny pre Barn 48
