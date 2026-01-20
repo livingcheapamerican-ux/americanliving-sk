@@ -187,7 +187,7 @@ export default function KonfiguratorFjord({
     bojler: 246,
     tepelneCerpadlo: 7749,
     rekuperacia: 3600,
-    zaklady: { bez: 0, skrutky: 7656, doska: 12461, pasove: 8967 },
+    zaklady: { bez: 0, skrutky: 7655, doska: 13000, pasove: 11500 },
     pripojkaSiete: 1500,
     inziniering: 2592,
     projektA0: 3500,

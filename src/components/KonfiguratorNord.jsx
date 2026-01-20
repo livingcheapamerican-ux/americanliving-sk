@@ -187,7 +187,7 @@ export default function KonfiguratorNord({
     bojler: 246,
     tepelneCerpadlo: 1600,
     rekuperacia: 3321,
-    zaklady: { bez: 0, skrutky: 7656, doska: 12461, pasove: 8967 },
+    zaklady: { bez: 0, skrutky: 7655, doska: 13000, pasove: 11500 },
     pripojkaSiete: 1501,
     inziniering: 2590,
     projektA0: 3500,
