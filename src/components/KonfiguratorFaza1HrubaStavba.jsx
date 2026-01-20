@@ -194,7 +194,7 @@ export default function KonfiguratorFaza1HrubaStavba({
   // Ceny pre Fjord
   const FJORD_CENY = {
     montaz: 17700,
-    izolacia: { zvysena: 5799, premium: 11200, ultra: 0 },
+    izolacia: { zvysena: 5660, premium: 9106, ultra: 0 },
     zaklady: { skrutky: 7655, doska: 13000, pasove: 11500 }
   };
 
