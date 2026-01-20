@@ -178,7 +178,7 @@ export default function KonfiguratorFlatSmall({
   const BASE_PRICE = dom?.zakladna_cena || 19500;
   const { t, language } = useLanguage();
 
-  // DEFAULT ceny (Flat Small - Gemini analýza)
+  // DEFAULT ceny (Flat Small)
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 4875 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
@@ -190,7 +190,7 @@ export default function KonfiguratorFlatSmall({
     tepelneCerpadlo: 600,
     rekuperacia: 1105,
     zaklady: { bez: 0, skrutky: 2808, doska: 6000, pasove: 5000 },
-    pripojkaSiete: 1500,
+    pripojkaSiete: 1501,
     inziniering: 2590,
     projektA0: 3500,
     interierFinis: { ziadne: 0, drevo: 3800, sadrokarton: 4414 },
@@ -198,7 +198,7 @@ export default function KonfiguratorFlatSmall({
     povrchokaOkien: 750,
     vnutornePodlahy: 840,
     podlahovVykurovanie: 2819,
-    interieroveDvere: 0,
+    interieroveDvere: 180,
     tonovaneSkla: 340,
     doprava: 0,
     revizna: 500,

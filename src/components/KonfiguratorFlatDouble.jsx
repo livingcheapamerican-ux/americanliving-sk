@@ -187,35 +187,35 @@ export default function KonfiguratorFlatDouble({
 
   const { t, language } = useLanguage();
 
-  // FLAT DOUBLE CENNÍK - FIXNÉ CENY (Gemini analýza - 142m²)
+  // FLAT DOUBLE CENNÍK - FIXNÉ CENY (142m²)
   const CENY = {
     montaz: { nie: 0, ano: 17970 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 5800, premium: 1160, ultra: 21750 },
+    izolacia: { standard: 0, zvysena: 5799, premium: 11600 },
     elektroinstalacia: 7400,
     vodaKanalizacia: 2380,
     sanitaKomplet: 1169,
     bojler: 246,
-    tepelneCerpadlo: 2700,
-    rekuperacia: 5535,
-    zaklady: { bez: 0, skrutky: 8141, doska: 18000, pasove: 15500 },
-    pripojkaSiete: 1500,
-    inziniering: 2590,
+    tepelneCerpadlo: 5535,
+    rekuperacia: 2700,
+    zaklady: { bez: 0, skrutky: 8140, doska: 17946, pasove: 21079 },
+    pripojkaSiete: 1501,
+    inziniering: 2592,
     projektA0: 3500,
     interierFinis: { ziadne: 0, drevo: 16400, sadrokarton: 19475 },
     vonkajsiaFasada: { standard: 0, suchana: 12841 },
     povrchokaOkien: 3100,
-    vnutornePodlahy: 3350,
+    vnutornePodlahy: 3351,
     podlahovVykurovanie: 5525,
-    pergola: 0,
-    interieroveDvere: 0,
+    pergola: 1845,
+    interieroveDvere: 180,
     tonovaneSkla: 1300,
     doprava: 0,
     revizna: 1000,
     stresneOkno: 760,
-    bocneOknoFixne: 500,
+    bocneOknoFixne: 501,
     bocneOknoVyklopne90: 540,
-    bocneOknoVyklopne55: 225
+    bocneOknoVyklopne55: 325
   };
 
   // Výpočet celkovej ceny

@@ -176,33 +176,33 @@ export default function KonfiguratorFjord({
   const BASE_PRICE = dom?.zakladna_cena || 0;
   const { t } = useLanguage();
 
-  // Cenník pre Fjord (Gemini analýza)
+  // Cenník pre Fjord podľa obrázkov
   const CENY = {
     montaz: { nie: 0, ano: 17700 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 5660, premium: 9106, ultra: 0 },
-    elektroinstalacia: 7800,
-    vodaKanalizacia: 3650,
+    izolacia: { standard: 0, zvysena: 5799, premium: 11200 },
+    elektroinstalacia: 7799,
+    vodaKanalizacia: 3649,
     sanitaKomplet: 1169,
     bojler: 246,
-    tepelneCerpadlo: 3600,
-    rekuperacia: 7749,
-    zaklady: { bez: 0, skrutky: 9500, doska: 18000, pasove: 15500 },
+    tepelneCerpadlo: 7749,
+    rekuperacia: 3600,
+    zaklady: { bez: 0, skrutky: 8140, doska: 12000, pasove: 21079 },
     pripojkaSiete: 1500,
-    inziniering: 2590,
+    inziniering: 2592,
     projektA0: 3500,
-    interierFinis: { ziadne: 0, drevo: 18000, sadrokarton: 19900 },
-    vonkajsiaFasada: { standard: 0, suchana: 12841 },
+    interierFinis: { ziadne: 0, drevo: 16400, sadrokarton: 21075 },
+    vonkajsiaFasada: { standard: 0, suchana: 12213 },
     povrchokaOkien: 3400,
-    vnutornePodlahy: 3350,
-    podlahovVykurovanie: 5525,
-    pergola: 0,
-    interieroveDvere: 0,
+    vnutornePodlahy: 4200,
+    podlahovVykurovanie: 6101,
+    pergola: 1845,
+    interieroveDvere: 180,
     tonovaneSkla: 1550,
     doprava: 0,
     revizna: 1000,
     stresneOkno: 760,
-    bocneOknoFixne: 500,
+    bocneOknoFixne: 501,
     bocneOknoVyklopne90: 540,
     bocneOknoVyklopne55: 225
   };

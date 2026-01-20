@@ -173,28 +173,28 @@ export default function KonfiguratorBarnDouble({
 
   const { t, language } = useLanguage();
 
-  // BARN DOUBLE CENNÍK - FIXNÉ CENY (Gemini analýza)
+  // BARN DOUBLE CENNÍK - FIXNÉ CENY (extrahované z priložených obrázkov - december 2025)
   const CENY = {
     montaz: { nie: 0, ano: 9225 },
-    predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
+    predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19801, 4.8: 26401 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
     izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 },
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
     bojler: 246,
-    tepelneCerpadlo: 1600,
-    rekuperacia: 3321,
-    zaklady: { bez: 0, skrutky: 3400, doska: 11000, pasove: 10000 },
-    pripojkaSiete: 1500,
-    inziniering: 2590,
+    tepelneCerpadlo: 3321,
+    rekuperacia: 1600,
+    zaklady: { bez: 0, skrutky: 4751, doska: 9633, pasove: 11823 },
+    pripojkaSiete: 1501,
+    inziniering: 2592,
     projektA0: 3500,
-    interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 9430 },
-    vonkajsiaFasada: { standard: 0, suchana: 6371 },
+    interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 9450 },
+    vonkajsiaFasada: { standard: 0, suchana: 6671 },
     povrchokaOkien: 1450,
     vnutornePodlahy: 1750,
     podlahovVykurovanie: 3960,
-    interieroveDvere: 0,
+    interieroveDvere: 180,
     tonovaneSkla: 700,
     doprava: 0,
     revizna: 1000,

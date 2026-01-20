@@ -24,7 +24,8 @@ Deno.serve(async (req) => {
           dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
           stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
           fasada_standard: 0, fasada_omietka: 4321, podlahy_laminat: 850,
-          inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
+          inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0,
+          interierove_dvere: 0, pergola: 0
         }
       },
       "double_barn": {
@@ -40,7 +41,8 @@ Deno.serve(async (req) => {
           dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
           stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
           fasada_standard: 0, fasada_omietka: 6371, podlahy_laminat: 1750,
-          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
+          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0,
+          interierove_dvere: 0, pergola: 0
         }
       },
       "a_frame": {
@@ -56,7 +58,8 @@ Deno.serve(async (req) => {
           dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
           stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
           fasada_standard: 0, fasada_omietka: 2414, podlahy_laminat: 980,
-          inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0
+          inziniering: 2590, projektACertifikacia: 3500, revizia: 500, siete: 1500, doprava: 0,
+          interierove_dvere: 0, pergola: 0
         }
       },
       "flat_small": {
@@ -86,7 +89,24 @@ Deno.serve(async (req) => {
           dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
           stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
           fasada_standard: 0, fasada_omietka: 8499, podlahy_laminat: 1680,
-          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
+          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0,
+          interierove_dvere: 0, pergola: 0
+        }
+      },
+      "flathouse_2_2": {
+        data: {
+          zakladna_cena: 27800, montaz: 6950,
+          izolacia_standard: 0, izolacia_zvysena: 2500, izolacia_premium: 5000, izolacia_extra: 9375,
+          zaklady_bez: 0, zaklady_vruty: 3100, zaklady_doska: 10000, zaklady_pasove: 8500,
+          interier_bez: 0, interier_drevo: 7600, interier_sadrokarton: 8830,
+          elektro_rozvody: 3900, voda: 1150, sanita: 1169, bojler: 246,
+          tepelne_cerpadlo: 1600, rekuperacia: 3321, podlahove_kurenie: 3960,
+          laminacia_okien: 1550, tonovanie_skla: 680,
+          dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
+          stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
+          fasada_standard: 0, fasada_omietka: 8499, podlahy_laminat: 1680,
+          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0,
+          interierove_dvere: 0, pergola: 0
         }
       },
       "flat_1_5": {
@@ -101,7 +121,8 @@ Deno.serve(async (req) => {
           dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
           stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
           fasada_standard: 0, fasada_omietka: 10384, podlahy_laminat: 2640,
-          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
+          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0,
+          interierove_dvere: 0, pergola: 0
         }
       },
       "double_flat": {
@@ -116,7 +137,8 @@ Deno.serve(async (req) => {
           dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
           stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
           fasada_standard: 0, fasada_omietka: 12841, podlahy_laminat: 3350,
-          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
+          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0,
+          interierove_dvere: 0, pergola: 0
         }
       },
       "nord": {
@@ -133,7 +155,8 @@ Deno.serve(async (req) => {
           dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
           stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
           fasada_standard: 0, fasada_omietka: 9507, podlahy_laminat: 1577,
-          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
+          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0,
+          interierove_dvere: 0, pergola: 0
         }
       },
       "fjord": {
@@ -150,7 +173,8 @@ Deno.serve(async (req) => {
           dvere_standard: 0, dvere_kovove: 720, dvere_plastove: 660,
           stresne_okno: 760, okno_fix_90_205: 500, okno_vyklopne_90_205: 540, okno_vyklopne_55_90: 225,
           fasada_standard: 0, fasada_omietka: 12841, podlahy_laminat: 3350,
-          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0
+          inziniering: 2590, projektACertifikacia: 3500, revizia: 1000, siete: 1500, doprava: 0,
+          interierove_dvere: 0, pergola: 0
         }
       }
     };
