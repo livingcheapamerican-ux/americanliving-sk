@@ -176,7 +176,7 @@ export default function KonfiguratorFjord({
   const BASE_PRICE = dom?.zakladna_cena || 0;
   const { t } = useLanguage();
 
-  // Cenník pre Fjord podľa obrázkov
+  // Cenník pre Fjord (z databázy)
   const CENY = {
     montaz: { nie: 0, ano: 17700 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },

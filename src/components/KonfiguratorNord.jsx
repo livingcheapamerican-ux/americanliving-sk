@@ -176,7 +176,7 @@ export default function KonfiguratorNord({
   const BASE_PRICE = dom?.zakladna_cena || 0;
   const { t, language } = useLanguage();
 
-  // DEFAULT ceny (Nord)
+  // DEFAULT ceny (Nord - z databázy)
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 14850 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },

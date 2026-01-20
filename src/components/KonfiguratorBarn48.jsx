@@ -173,7 +173,7 @@ export default function KonfiguratorBarn48({
 
   const { t, language } = useLanguage();
 
-  // BARN 48 CENNÍK - FIXNÉ CENY (extrahované z fotiek)
+  // BARN 48 CENNÍK (z databázy)
   const CENY = {
     montaz: { nie: 0, ano: 5225 },
     predlzenie: { 0: 0, 1.2: 3300, 2.4: 6606, 3.6: 9900, 4.8: 15880 },

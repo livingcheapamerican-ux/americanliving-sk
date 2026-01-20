@@ -177,7 +177,7 @@ export default function KonfiguratorFlat15({
 
   const { t } = useLanguage();
 
-  // FLAT 1,5 CENNÍK - FIXNÉ CENY (105m²)
+  // FLAT 1,5 CENNÍK (105m² - z databázy)
   const CENY = {
     montaz: { nie: 0, ano: 13470 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },

@@ -178,7 +178,7 @@ export default function KonfiguratorFlatSmall({
   const BASE_PRICE = dom?.zakladna_cena || 19500;
   const { t, language } = useLanguage();
 
-  // DEFAULT ceny (Flat Small)
+  // DEFAULT ceny (Flat Small - z databázy)
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 4875 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },

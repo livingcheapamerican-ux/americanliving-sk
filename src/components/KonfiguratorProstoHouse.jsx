@@ -96,7 +96,7 @@ export default function KonfiguratorProstoHouse({
     return text?.tooltip || defaultText;
   };
 
-  // Cenník - Prosto House ceny (DEFAULT hodnoty)
+  // Cenník - Prosto House (DEFAULT hodnoty z databázy)
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 9225 },
     predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
@@ -105,9 +105,9 @@ export default function KonfiguratorProstoHouse({
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
-    bojler: 264,
-    tepelneCerpadlo: 3321,
-    rekuperacia: 1600,
+    bojler: 246,
+    tepelneCerpadlo: 1600,
+    rekuperacia: 3321,
     zaklady: { bez: 0, skrutky: 4751, doska: 9633, pasove: 11823 },
     pripojkaSiete: 1501,
     inziniering: 2592,

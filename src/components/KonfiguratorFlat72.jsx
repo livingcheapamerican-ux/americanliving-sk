@@ -184,7 +184,7 @@ export default function KonfiguratorFlat72({
   const BASE_PRICE = dom?.zakladna_cena || 31700;
   const { t, language } = useLanguage();
 
-  // DEFAULT ceny (Flathouse 2.7 - stĺpec O)
+  // DEFAULT ceny (Flat 72 - z databázy)
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 7925 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },

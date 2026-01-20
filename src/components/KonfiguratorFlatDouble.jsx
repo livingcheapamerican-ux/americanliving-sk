@@ -187,7 +187,7 @@ export default function KonfiguratorFlatDouble({
 
   const { t, language } = useLanguage();
 
-  // FLAT DOUBLE CENNÍK - FIXNÉ CENY (142m²)
+  // FLAT DOUBLE CENNÍK (142m² - z databázy)
   const CENY = {
     montaz: { nie: 0, ano: 17970 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
