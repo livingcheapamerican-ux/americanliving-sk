@@ -465,10 +465,10 @@ export default function AdminCennik() {
                               </thead>
                               <tbody>
                                 {domResult.polozky.map((polozka) => {
-                                  const finalPrice = domEdits[polozka.key] !== undefined 
-                                    ? domEdits[polozka.key] 
-                                    : polozka.oldPrice;
-                                  const isManuallyEdited = domEdits[polozka.key] !== undefined && domEdits[polozka.key] !== polozka.oldPrice;
+                                 const finalPrice = domEdits[polozka.key] !== undefined 
+                                   ? domEdits[polozka.key] 
+                                   : (polozka.finalPrice !== undefined ? polozka.finalPrice : polozka.newPrice);
+                                 const isManuallyEdited = domEdits[polozka.key] !== undefined && domEdits[polozka.key] !== polozka.newPrice;
                                   
                                   return (
                                     <tr 
