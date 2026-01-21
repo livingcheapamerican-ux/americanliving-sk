@@ -6,18 +6,37 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { 
-  Check, Wrench, ThermometerSun, Landmark, Package, Sparkles, Maximize
+  Check, Wrench, ThermometerSun, Landmark, Package, Sparkles, Maximize, Pencil
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "./LanguageContext";
-import EditableTile from "./EditableTile";
 
 // Dlaždica s tooltip a veľkou fajkou
-const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-amber-100", selectedBorder = "border-amber-500", selectedRing = "ring-amber-300" }) => {
+const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-amber-100", selectedBorder = "border-amber-500", selectedRing = "ring-amber-300", isAdmin = false, priceKey, onPriceChange }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [hoverTimer, setHoverTimer] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editPrice, setEditPrice] = useState(price);
   const tileRef = useRef(null);
+
+  const handleEditClick = (e) => {
+    e.stopPropagation();
+    setIsEditing(true);
+    const priceNum = price.replace(/[^0-9]/g, '');
+    setEditPrice(priceNum);
+  };
+
+  const handleSavePrice = async () => {
+    if (!onPriceChange) return;
+    try {
+      const newPrice = parseFloat(editPrice);
+      await onPriceChange(priceKey, newPrice);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error saving price:', error);
+    }
+  };
 
   const updateTooltipPosition = () => {
     if (tileRef.current) {
@@ -107,7 +126,34 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       <Icon className={`w-5 h-5 sm:w-10 sm:h-10 mb-1 sm:mb-2 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
       <span className={`font-semibold text-gray-800 text-[10px] sm:text-sm leading-tight ${selected ? "opacity-30" : ""}`}>{title}</span>
       <span className={`text-[8px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1 leading-tight ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
-      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2 ${selected ? "opacity-30" : ""}`}>{price}</span>
+      <div className={`flex items-center gap-1 justify-center ${selected ? "opacity-30" : ""}`}>
+        {isEditing && isPriced ? (
+          <input
+            type="number"
+            value={editPrice}
+            onChange={(e) => setEditPrice(e.target.value)}
+            onBlur={handleSavePrice}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSavePrice();
+              if (e.key === 'Escape') setIsEditing(false);
+            }}
+            className="w-12 px-1 py-0.5 text-xs border rounded text-gray-800"
+            autoFocus
+            onClick={(e) => e.stopPropagation()}
+          />
+        ) : (
+          <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>{price}</span>
+        )}
+        {isAdmin && isPriced && !selected && (
+          <button
+            onClick={handleEditClick}
+            className="ml-1 p-0.5 hover:bg-amber-200 rounded transition-all"
+            title="Edituj cenu"
+          >
+            <Pencil className="w-3 h-3 text-amber-700" />
+          </button>
+        )}
+      </div>
 
       {/* Tooltip - rendered via portal */}
       {showTooltip && tooltip && ReactDOM.createPortal(
@@ -282,55 +328,71 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <span className="w-5 h-5 sm:w-6 sm:h-6 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
                 {t('insulation')} ({t('selectOne')})
               </p>
-              <EditableTile
+              <Tile
                 selected={izolaciaNavysenie === "standard"}
                 onClick={() => setIzolaciaNavysenie("standard")}
+                icon={ThermometerSun}
+                iconColor="text-gray-400"
+                iconSelectedColor="text-amber-600"
                 title={t('insulationStandard')}
                 subtitle="150/200mm"
                 price="0 €"
                 isPriced={false}
-                isIncluded={true}
-                t={t}
-                isAdmin={false}
+                tooltip={t('insulationStandardDesc')}
               />
 
-              <EditableTile
+              <Tile
                 selected={izolaciaNavysenie === "zvysena"}
                 onClick={() => setIzolaciaNavysenie("zvysena")}
+                icon={ThermometerSun}
+                iconColor="text-orange-400"
+                iconSelectedColor="text-amber-600"
                 title={t('insulationEnhanced')}
                 subtitle={t('insulationEnhancedDesc')}
                 price={`+ ${(cennik?.izolacia?.zvysena || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
-                t={t}
+                tooltip={t('insulationEnhancedDesc')}
                 isAdmin={isAdmin}
                 priceKey="izolacia_zvysena"
                 onPriceChange={onPriceChange}
               />
 
-              <EditableTile
+              <Tile
                 selected={izolaciaNavysenie === "premium"}
                 onClick={() => setIzolaciaNavysenie("premium")}
+                icon={ThermometerSun}
+                iconColor="text-green-500"
+                iconSelectedColor="text-green-600"
                 title={t('insulationPremium')}
                 subtitle={t('insulationPremiumDesc')}
                 price={`+ ${(cennik?.izolacia?.premium || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 isA0={true}
-                t={t}
+                selectedBg="bg-green-100"
+                selectedBorder="border-green-500"
+                selectedRing="ring-green-300"
+                tooltip={t('insulationPremiumDesc')}
                 isAdmin={isAdmin}
                 priceKey="izolacia_premium"
                 onPriceChange={onPriceChange}
               />
 
               {hasUltraInsulation && (
-                <EditableTile
+                <Tile
                   selected={izolaciaNavysenie === "ultra"}
                   onClick={() => setIzolaciaNavysenie("ultra")}
+                  icon={ThermometerSun}
+                  iconColor="text-green-600"
+                  iconSelectedColor="text-green-700"
                   title="300mm"
                   subtitle="Ultra izolácia"
                   price={`+ ${(cennik?.izolacia?.ultra || 0).toLocaleString('sk-SK')} €`}
                   isPriced={true}
                   isA0={true}
-                  t={t}
+                  selectedBg="bg-green-100"
+                  selectedBorder="border-green-500"
+                  selectedRing="ring-green-300"
+                  tooltip="Maximálna izolácia 300mm pre extra energetickú efektívnosť"
                   isAdmin={isAdmin}
                   priceKey="izolacia_ultra"
                   onPriceChange={onPriceChange}
@@ -344,52 +406,62 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <span className="w-5 h-5 sm:w-6 sm:h-6 bg-orange-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">3</span>
                 {t('foundations')} ({t('selectOne')})
               </p>
-              <EditableTile
+              <Tile
                 selected={zaklady === "bez"}
                 onClick={() => setZaklady("bez")}
+                icon={Landmark}
+                iconColor="text-gray-400"
+                iconSelectedColor="text-amber-600"
                 title={t('foundationsNone')}
                 subtitle={t('own')}
                 price="0 €"
                 isPriced={false}
-                isIncluded={true}
-                t={t}
-                isAdmin={false}
+                tooltip={t('foundationsNone')}
               />
 
-              <EditableTile
+              <Tile
                 selected={zaklady === "skrutky"}
                 onClick={() => setZaklady("skrutky")}
+                icon={Landmark}
+                iconColor="text-amber-400"
+                iconSelectedColor="text-amber-600"
                 title="Pilóty/Pätky"
                 subtitle={t('groundFootings')}
                 price={`+ ${(cennik?.zaklady?.skrutky || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
-                t={t}
+                tooltip={t('foundationsScrews')}
                 isAdmin={isAdmin}
                 priceKey="zaklady_skrutky"
                 onPriceChange={onPriceChange}
               />
 
-              <EditableTile
+              <Tile
                 selected={zaklady === "doska"}
                 onClick={() => setZaklady("doska")}
+                icon={Landmark}
+                iconColor="text-orange-400"
+                iconSelectedColor="text-amber-600"
                 title={t('foundationsSlab')}
                 subtitle={t('foundationSlab')}
                 price={`+ ${(cennik?.zaklady?.doska || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
-                t={t}
+                tooltip={t('foundationsSlab')}
                 isAdmin={isAdmin}
                 priceKey="zaklady_doska"
                 onPriceChange={onPriceChange}
               />
 
-              <EditableTile
+              <Tile
                 selected={zaklady === "pasove"}
                 onClick={() => setZaklady("pasove")}
+                icon={Landmark}
+                iconColor="text-orange-500"
+                iconSelectedColor="text-amber-600"
                 title={t('foundationsStrip')}
                 subtitle={t('stripFound')}
                 price={`+ ${(cennik?.zaklady?.pasove || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
-                t={t}
+                tooltip={t('foundationsStrip')}
                 isAdmin={isAdmin}
                 priceKey="zaklady_pasove"
                 onPriceChange={onPriceChange}
