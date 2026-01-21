@@ -114,19 +114,23 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
   return (
     <motion.div
       ref={tileRef}
-      whileHover={{ scale: 1.02, y: -2 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ scale: 1.08, y: -6 }}
+      whileTap={{ scale: 0.93 }}
+      transition={{ type: "spring", stiffness: 400, damping: 10 }}
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative p-3 sm:p-5 rounded-xl sm:rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center min-h-[140px] sm:min-h-[160px] justify-center ${
+      className={`relative p-3 sm:p-5 rounded-xl sm:rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center min-h-[140px] sm:min-h-[160px] justify-center overflow-hidden group ${
         selected 
-          ? `${selectedBg} border-2 ${selectedBorder} shadow-lg ring-2 ${selectedRing}` 
+          ? `${selectedBg} border-2 ${selectedBorder} shadow-2xl ring-2 ${selectedRing} bg-opacity-90` 
           : isA0 
-            ? "bg-green-50 border-2 border-green-400 hover:border-green-500 hover:shadow-md"
-            : "bg-white border-2 border-gray-300 hover:border-amber-400 hover:shadow-lg"
+            ? "bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-400 shadow-lg hover:shadow-xl hover:border-green-500"
+            : "bg-gradient-to-br from-white to-gray-50 border-2 border-gray-300 shadow-md hover:shadow-xl hover:border-amber-400"
       }`}
     >
+      {/* Animated background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/0 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      
       {isA0 && (
         <Badge className="absolute top-0.5 left-0.5 sm:top-1 sm:left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[6px] sm:text-[8px] px-1 sm:px-1.5 z-10">
           <Sparkles className="w-1.5 h-1.5 sm:w-2 sm:h-2 mr-0.5" />A0
