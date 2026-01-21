@@ -256,14 +256,10 @@ export default function KonfiguratorFaza1HrubaStavba({
   
   // Modernný SectionHeader s animáciami
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
-    <motion.div 
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={`relative flex items-center gap-2 sm:gap-4 p-3 sm:p-5 bg-gradient-to-r ${color} overflow-hidden`}
-    >
+    <div className={`relative flex items-center gap-2 sm:gap-4 p-3 sm:p-5 bg-gradient-to-r ${color} overflow-hidden`}>
       {/* Animated background effect */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-2 right-2 w-20 h-20 bg-white rounded-full blur-2xl opacity-10"></div>
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-2 right-2 w-20 h-20 bg-white rounded-full blur-2xl"></div>
       </div>
       
       <motion.div 
@@ -287,7 +283,7 @@ export default function KonfiguratorFaza1HrubaStavba({
         <h3 className="text-base sm:text-2xl font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
         {subtitle && <p className="text-white/90 text-[11px] sm:text-sm mt-1 truncate drop-shadow-md">{subtitle}</p>}
       </div>
-    </motion.div>
+    </div>
   );
 
   return (
