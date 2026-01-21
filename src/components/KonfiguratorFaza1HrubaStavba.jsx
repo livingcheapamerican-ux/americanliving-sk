@@ -98,29 +98,30 @@ export default function KonfiguratorFaza1HrubaStavba({
               {t('assembly')}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <EditableTile
+              <Tile
                 selected={montaz === "sam"}
                 onClick={() => setMontaz("sam")}
+                icon={Wrench}
+                iconColor="text-gray-400"
+                iconSelectedColor="text-orange-600"
                 title={t('assemblySelf')}
                 subtitle={t('assemblyYourself')}
                 price="0 €"
                 isPriced={false}
-                isIncluded={true}
-                t={t}
-                isAdmin={false}
+                tooltip={t('assemblySelfFull')}
               />
 
-              <EditableTile
+              <Tile
                 selected={montaz === "dodavatel"}
                 onClick={() => setMontaz("dodavatel")}
+                icon={Wrench}
+                iconColor="text-blue-500"
+                iconSelectedColor="text-blue-700"
                 title={t('assemblySupplier')}
                 subtitle={t('assemblyIncluded')}
                 price={`+ ${getPrice('montaz_dodavatel').toLocaleString('sk-SK')} €`}
                 isPriced={true}
-                t={t}
-                isAdmin={isAdmin}
-                priceKey="montaz_dodavatel"
-                onPriceChange={handlePriceChange}
+                tooltip={t('assemblySupplierFull')}
               />
             </div>
           </div>
@@ -132,29 +133,38 @@ export default function KonfiguratorFaza1HrubaStavba({
               {t('extension')}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <EditableTile
+              <Tile
                 selected={pristavba === "bez"}
                 onClick={() => setPristavba("bez")}
+                icon={Box}
+                iconColor="text-gray-400"
+                iconSelectedColor="text-gray-700"
                 title={t('extensionNone')}
                 subtitle={t('standardSize')}
                 price="0 €"
                 isPriced={false}
-                isIncluded={true}
-                t={t}
-                isAdmin={false}
+                selectedBg="bg-gray-100"
+                selectedBorder="border-gray-500"
+                selectedRing="ring-gray-300"
+                hoverBorder="hover:border-gray-300"
+                tooltip={t('extensionNone')}
               />
 
-              <EditableTile
+              <Tile
                 selected={pristavba === "s_pristavbou"}
                 onClick={() => setPristavba("s_pristavbou")}
+                icon={Building}
+                iconColor="text-indigo-500"
+                iconSelectedColor="text-indigo-700"
                 title={t('extensionWith')}
                 subtitle={t('extensionAdditional')}
                 price={`+ ${getPrice('pristavba').toLocaleString('sk-SK')} €`}
                 isPriced={true}
-                t={t}
-                isAdmin={isAdmin}
-                priceKey="pristavba"
-                onPriceChange={handlePriceChange}
+                selectedBg="bg-indigo-100"
+                selectedBorder="border-indigo-500"
+                selectedRing="ring-indigo-300"
+                hoverBorder="hover:border-indigo-300"
+                tooltip={t('extensionWithFull')}
               />
             </div>
           </div>
@@ -166,42 +176,55 @@ export default function KonfiguratorFaza1HrubaStavba({
               {t('insulation')}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <EditableTile
+              <Tile
                 selected={izolaciaTloustka === "15cm"}
                 onClick={() => setIzolaciaTloustka("15cm")}
+                icon={Home}
+                iconColor="text-green-400"
+                iconSelectedColor="text-green-700"
                 title={t('insulation15cm')}
                 subtitle={t('standard')}
                 price="0 €"
                 isPriced={false}
-                isIncluded={true}
-                t={t}
-                isAdmin={false}
+                selectedBg="bg-green-100"
+                selectedBorder="border-green-500"
+                selectedRing="ring-green-300"
+                hoverBorder="hover:border-green-300"
+                tooltip={t('insulation15cmFull')}
               />
 
-              <EditableTile
+              <Tile
                 selected={izolaciaTloustka === "20cm"}
                 onClick={() => setIzolaciaTloustka("20cm")}
+                icon={Home}
+                iconColor="text-emerald-500"
+                iconSelectedColor="text-emerald-700"
                 title={t('insulation20cm')}
                 subtitle={t('betterInsulation')}
                 price={`+ ${getPrice('izolacia_20cm').toLocaleString('sk-SK')} €`}
                 isPriced={true}
-                t={t}
-                isAdmin={isAdmin}
-                priceKey="izolacia_20cm"
-                onPriceChange={handlePriceChange}
+                selectedBg="bg-emerald-100"
+                selectedBorder="border-emerald-500"
+                selectedRing="ring-emerald-300"
+                hoverBorder="hover:border-emerald-300"
+                tooltip={t('insulation20cmFull')}
               />
 
-              <EditableTile
+              <Tile
                 selected={izolaciaTloustka === "25cm"}
                 onClick={() => setIzolaciaTloustka("25cm")}
+                icon={Home}
+                iconColor="text-teal-500"
+                iconSelectedColor="text-teal-700"
                 title={t('insulation25cm')}
                 subtitle={t('bestInsulation')}
                 price={`+ ${getPrice('izolacia_25cm').toLocaleString('sk-SK')} €`}
                 isPriced={true}
-                t={t}
-                isAdmin={isAdmin}
-                priceKey="izolacia_25cm"
-                onPriceChange={handlePriceChange}
+                selectedBg="bg-teal-100"
+                selectedBorder="border-teal-500"
+                selectedRing="ring-teal-300"
+                hoverBorder="hover:border-teal-300"
+                tooltip={t('insulation25cmFull')}
               />
             </div>
           </div>
@@ -213,29 +236,38 @@ export default function KonfiguratorFaza1HrubaStavba({
               {t('foundations')}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <EditableTile
+              <Tile
                 selected={zakladyTyp === "standard"}
                 onClick={() => setZakladyTyp("standard")}
+                icon={Box}
+                iconColor="text-slate-400"
+                iconSelectedColor="text-slate-700"
                 title={t('foundationStandard')}
                 subtitle={t('includedInPrice')}
                 price="0 €"
                 isPriced={false}
-                isIncluded={true}
-                t={t}
-                isAdmin={false}
+                selectedBg="bg-slate-100"
+                selectedBorder="border-slate-500"
+                selectedRing="ring-slate-300"
+                hoverBorder="hover:border-slate-300"
+                tooltip={t('foundationStandardFull')}
               />
 
-              <EditableTile
+              <Tile
                 selected={zakladyTyp === "frostfree"}
                 onClick={() => setZakladyTyp("frostfree")}
+                icon={Home}
+                iconColor="text-cyan-500"
+                iconSelectedColor="text-cyan-700"
                 title={t('foundationFrostFree')}
                 subtitle={t('betterSolution')}
                 price={`+ ${getPrice('zaklady_frostfree').toLocaleString('sk-SK')} €`}
                 isPriced={true}
-                t={t}
-                isAdmin={isAdmin}
-                priceKey="zaklady_frostfree"
-                onPriceChange={handlePriceChange}
+                selectedBg="bg-cyan-100"
+                selectedBorder="border-cyan-500"
+                selectedRing="ring-cyan-300"
+                hoverBorder="hover:border-cyan-300"
+                tooltip={t('foundationFrostFreeFull')}
               />
             </div>
           </div>
