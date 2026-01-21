@@ -221,7 +221,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('assemblyNo')}
                 subtitle={t('onlyKit')}
-                price="+ 0 €"
+                price="0 €"
                 isPriced={false}
                 tooltip={t('assemblyNote')}
               />
@@ -249,11 +249,11 @@ export default function KonfiguratorFaza1HrubaStavba({
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   {[
-                    { value: 0, label: "Bez predĺženia", price: "0 €" },
-                    { value: 1.2, label: "+1,2 m", price: `+ ${(cennik?.predlzenie?.[1.2] || 0).toLocaleString('sk-SK')} €` },
-                    { value: 2.4, label: "+2,4 m", price: `+ ${(cennik?.predlzenie?.[2.4] || 0).toLocaleString('sk-SK')} €` },
-                    { value: 3.6, label: "+3,6 m", price: `+ ${(cennik?.predlzenie?.[3.6] || 0).toLocaleString('sk-SK')} €` },
-                    { value: 4.8, label: "+4,8 m", price: `+ ${(cennik?.predlzenie?.[4.8] || 0).toLocaleString('sk-SK')} €` }
+                    { value: 0, label: "Bez predĺženia", price: "0 €", basePrice: 0 },
+                    { value: 1.2, label: "+1,2 m", price: `+ ${(cennik?.predlzenie?.[1.2] || 0).toLocaleString('sk-SK')} €`, basePrice: cennik?.predlzenie?.[1.2] || 0 },
+                    { value: 2.4, label: "+2,4 m", price: `+ ${(cennik?.predlzenie?.[2.4] || 0).toLocaleString('sk-SK')} €`, basePrice: cennik?.predlzenie?.[2.4] || 0 },
+                    { value: 3.6, label: "+3,6 m", price: `+ ${(cennik?.predlzenie?.[3.6] || 0).toLocaleString('sk-SK')} €`, basePrice: cennik?.predlzenie?.[3.6] || 0 },
+                    { value: 4.8, label: "+4,8 m", price: `+ ${(cennik?.predlzenie?.[4.8] || 0).toLocaleString('sk-SK')} €`, basePrice: cennik?.predlzenie?.[4.8] || 0 }
                   ].map((opt) => (
                     <motion.div
                       key={opt.value}
@@ -268,7 +268,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                     >
                       <Maximize className={`w-5 h-5 mx-auto mb-1 ${predlzenie === opt.value ? "text-indigo-600" : "text-gray-400"}`} />
                       <span className="font-medium text-gray-800 text-xs block">{opt.label}</span>
-                      <span className={`text-xs ${opt.value === 0 ? "text-gray-400" : "text-green-600 font-bold"}`}>
+                      <span className={`text-xs ${opt.basePrice === 0 ? "text-gray-400" : "text-green-600 font-bold"}`}>
                         {opt.price}
                       </span>
                     </motion.div>
@@ -291,7 +291,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('insulationStandard')}
                 subtitle="150/200mm"
-                price="+ 0 €"
+                price="0 €"
                 isPriced={false}
                 tooltip={t('insulationStandardDesc')}
               />
@@ -360,7 +360,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsNone')}
                 subtitle={t('own')}
-                price="+ 0 €"
+                price="0 €"
                 isPriced={false}
                 tooltip={t('foundationsNone')}
               />
