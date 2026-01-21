@@ -41,8 +41,12 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
     try {
       const newPrice = parseFloat(editPrice);
       if (!isNaN(newPrice)) {
+        console.log('Saving price:', priceKey, newPrice);
         await onPriceChange(priceKey, newPrice);
-        // Editing mode will turn off automatically when price prop updates
+        // Wait a bit for server response, then exit edit mode
+        setTimeout(() => {
+          setIsEditing(false);
+        }, 300);
       }
     } catch (error) {
       console.error('Error saving price:', error);
