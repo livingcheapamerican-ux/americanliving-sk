@@ -25,7 +25,7 @@ import { base44 } from "@/api/base44Client";
 
 import { useQuery } from "@tanstack/react-query";
 
-// Modernná dlaždica s lepšou vizuálnou hierarchiou a animáciami
+// Dlaždica s tooltip a veľkou fajkou
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300", isAdmin = false, priceKey, onPriceChange }) => {
    const [showTooltip, setShowTooltip] = useState(false);
    const [hoverTimer, setHoverTimer] = useState(null);
@@ -90,34 +90,23 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
   return (
     <motion.div
       ref={tileRef}
-      whileHover={{ scale: 1.05, y: -4 }}
-      whileTap={{ scale: 0.95 }}
-      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+      whileHover={{ scale: 1.02, y: -2 }}
+      whileTap={{ scale: 0.98 }}
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative p-2 sm:p-3 rounded-lg sm:rounded-xl cursor-pointer transition-all flex flex-col items-center text-center overflow-hidden group ${
+      className={`relative p-1.5 sm:p-2.5 rounded-md sm:rounded-lg cursor-pointer transition-all flex flex-col items-center text-center ${
         selected 
-          ? `${selectedBg} border-2 ${selectedBorder} shadow-2xl ring-2 ${selectedRing} bg-opacity-80` 
+          ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
           : isA0 
-            ? "bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-400 shadow-lg hover:shadow-xl hover:border-green-500"
-            : `bg-gradient-to-br from-white to-gray-50 border-2 border-gray-300 shadow-md hover:shadow-lg ${hoverBorder} hover:border-opacity-100`
+            ? "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
+            : `bg-white border-2 border-gray-200 ${hoverBorder} hover:shadow-md`
       }`}
     >
-      {/* Animated background gradient on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-      
       {isA0 && (
-        <motion.div
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Badge className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white text-[7px] sm:text-[9px] px-2 sm:px-2.5 py-0.5 z-10 shadow-lg font-bold tracking-wider">
-            <Sparkles className="w-2 h-2 sm:w-2.5 sm:h-2.5 mr-1" />
-            A0
-          </Badge>
-        </motion.div>
+        <Badge className="absolute top-0.5 left-0.5 sm:top-1 sm:left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[6px] sm:text-[8px] px-1 sm:px-1.5 z-10">
+          <Sparkles className="w-1.5 h-1.5 sm:w-2 sm:h-2 mr-0.5" />A0
+        </Badge>
       )}
       
       <AnimatePresence>
@@ -126,68 +115,58 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 500 }}
-            className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20 pointer-events-none"
+            className="absolute top-1 right-1 sm:top-2 sm:right-2 z-20 pointer-events-none"
           >
-            <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/50">
-              <Check className="w-4 h-4 sm:w-5 sm:h-5 text-white stroke-[3]" />
+            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
+              <Check className="w-3 h-3 sm:w-4 sm:h-4 text-white stroke-[3]" />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <motion.div
-        animate={{ y: selected ? 0 : 0 }}
-        className="relative z-10 flex flex-col items-center gap-1"
-      >
-        <div className={`p-1.5 sm:p-2 rounded-lg transition-all ${selected ? "bg-white/30" : "bg-white/0 group-hover:bg-white/20"}`}>
-          <Icon className={`w-5 h-5 sm:w-7 sm:h-7 transition-colors ${selected ? iconSelectedColor : iconColor}`} />
-        </div>
-        <span className={`font-bold text-[10px] sm:text-xs leading-tight transition-colors ${selected ? "text-gray-900" : "text-gray-800"}`}>{title}</span>
-        <span className={`text-[8px] sm:text-[11px] transition-colors ${selected ? "text-gray-700" : "text-gray-600"}`}>{subtitle}</span>
-        <div className={`flex items-center gap-1.5 justify-center mt-1 sm:mt-2`}>
-          {isEditing && isPriced ? (
-            <input
-              type="number"
-              value={editPrice}
-              onChange={(e) => setEditPrice(e.target.value)}
-              onBlur={handleSavePrice}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleSavePrice();
-                if (e.key === 'Escape') setIsEditing(false);
-              }}
-              className="w-20 px-2 py-1 text-xs border-2 border-amber-300 rounded-lg text-gray-800 font-semibold focus:outline-none focus:border-amber-500"
-              autoFocus
-              onClick={(e) => e.stopPropagation()}
-            />
-          ) : (
-            <span className={`text-[10px] sm:text-[12px] font-bold transition-colors ${isPriced ? "text-green-600" : "text-gray-400"}`}>{price}</span>
-          )}
-          {isAdmin && isPriced && priceKey && !isEditing && (
-            <motion.button 
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              className="p-0.5 hover:bg-amber-200 rounded transition-all active:scale-95" 
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsEditing(true);
-                const priceNum = price.replace(/[^0-9]/g, '');
-                setEditPrice(priceNum);
-              }}
-              title="Edituj cenu"
-            >
-              <Pencil className="w-4 h-4 text-amber-600 stroke-[2.5]" />
-            </motion.button>
-          )}
-        </div>
-      </motion.div>
+      <Icon className={`w-4 h-4 sm:w-6 sm:h-6 mb-0.5 sm:mb-1 ${selected ? iconSelectedColor : iconColor}`} />
+       <span className={`font-semibold text-gray-800 text-[9px] sm:text-xs leading-tight`}>{title}</span>
+       <span className={`text-[7px] sm:text-[10px] text-gray-500 mt-0.5 leading-tight`}>{subtitle}</span>
+       <div className={`flex items-center gap-1 justify-center mt-0.5 sm:mt-1`}>
+         {isEditing && isPriced ? (
+           <input
+             type="number"
+             value={editPrice}
+             onChange={(e) => setEditPrice(e.target.value)}
+             onBlur={handleSavePrice}
+             onKeyDown={(e) => {
+               if (e.key === 'Enter') handleSavePrice();
+               if (e.key === 'Escape') setIsEditing(false);
+             }}
+             className="w-16 px-1 py-0.5 text-xs border rounded text-gray-800"
+             autoFocus
+             onClick={(e) => e.stopPropagation()}
+           />
+         ) : (
+           <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[8px] sm:text-[10px]`}>{price}</span>
+         )}
+         {isAdmin && isPriced && priceKey && !isEditing && (
+              <button 
+                className="ml-1 p-0.5 hover:bg-amber-200 rounded transition-all hover:scale-110 active:scale-95" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsEditing(true);
+                  const priceNum = price.replace(/[^0-9]/g, '');
+                  setEditPrice(priceNum);
+                }}
+                title="Edituj cenu"
+              >
+                <Pencil className="w-4 h-4 text-amber-600 stroke-[2.5]" />
+              </button>
+            )}
+       </div>
 
       {showTooltip && tooltip && ReactDOM.createPortal(
         <motion.div
-          initial={{ opacity: 0, y: -10, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -10, scale: 0.9 }}
-          className="fixed z-[9999] max-w-[85vw] w-64 p-4 bg-gradient-to-br from-gray-900 to-gray-800 text-white text-xs rounded-xl shadow-2xl pointer-events-none border border-gray-700"
+          initial={{ opacity: 0, y: -5 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -5 }}
+          className="fixed z-[9999] max-w-[85vw] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
           style={{
             top: tooltipPosition.top,
             left: Math.min(Math.max(tooltipPosition.left, 135), window.innerWidth - 135),
@@ -566,38 +545,20 @@ export default function KonfiguratorFjord({
   };
 
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
-    <motion.div 
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={`relative flex items-center gap-2 sm:gap-4 p-3 sm:p-5 bg-gradient-to-r ${color} overflow-hidden`}
-    >
-      {/* Animated background effect */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-2 right-2 w-20 h-20 bg-white rounded-full blur-2xl opacity-10"></div>
+    <div className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${color}`}>
+      <div className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white/90 rounded-lg sm:rounded-xl shadow-lg flex-shrink-0">
+        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-800" />
       </div>
-      
-      <motion.div 
-        className="relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-white/20 rounded-2xl backdrop-blur-sm shadow-xl flex-shrink-0 border border-white/30"
-        whileHover={{ scale: 1.1, rotate: 5 }}
-      >
-        <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white drop-shadow-lg" />
-      </motion.div>
-      
       <div className="relative flex-1 min-w-0">
-        <div className="flex items-center gap-2 sm:gap-3 mb-1">
-          <motion.span 
-            className="inline-flex items-center justify-center px-2.5 sm:px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-white/30"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2 }}
-          >
+        <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
+          <span className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[9px] sm:text-xs font-bold uppercase tracking-wider">
             {t('phase')} {step}
-          </motion.span>
+          </span>
         </div>
-        <h3 className="text-base sm:text-2xl font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
-        {subtitle && <p className="text-white/90 text-[11px] sm:text-sm mt-1 truncate drop-shadow-md">{subtitle}</p>}
+        <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
+        {subtitle && <p className="text-white text-[10px] sm:text-xs mt-0.5 truncate drop-shadow-md">{subtitle}</p>}
       </div>
-    </motion.div>
+    </div>
   );
 
   const handleSendQuoteFromFloating = async (contactData) => {
@@ -782,15 +743,15 @@ export default function KonfiguratorFjord({
 
           {showHolodom && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
-                <Card className="overflow-hidden border-0 shadow-xl bg-white">
+                <Card className="overflow-hidden border-2 border-blue-300 shadow-lg">
                   <SectionHeader 
                     icon={Hammer} 
                     title={t('phase2')} 
                     subtitle={t('phase2Subtitle')}
-                    color="from-blue-600 via-blue-500 to-indigo-600"
+                    color="from-blue-600 to-indigo-600"
                     step="2"
                   />
-                  <div className="p-3 sm:p-5 bg-gradient-to-b from-blue-50/80 via-white to-white">
+                  <div className="p-2 sm:p-3 bg-gradient-to-b from-blue-50/50 to-white">
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
 
                     <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-blue-600 rounded-xl bg-blue-100/70 shadow-xl">
@@ -876,9 +837,9 @@ export default function KonfiguratorFjord({
 
           {showKluc && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}>
-              <Card className="overflow-hidden border-0 shadow-xl bg-white">
-                <SectionHeader icon={Key} title={t('phase3')} subtitle={t('phase3Subtitle')} color="from-emerald-600 via-emerald-500 to-teal-600" step="3" />
-                <div className="p-3 sm:p-5 bg-gradient-to-b from-emerald-50/80 via-white to-white">
+              <Card className="overflow-hidden border-2 border-emerald-300 shadow-lg">
+                <SectionHeader icon={Key} title={t('phase3')} subtitle={t('phase3Subtitle')} color="from-emerald-600 to-teal-600" step="3" />
+                <div className="p-2 sm:p-3 bg-gradient-to-b from-emerald-50/50 to-white">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
                     <div className={`col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] rounded-xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
                       <p className={`col-span-2 text-[9px] sm:text-[10px] font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
@@ -916,9 +877,9 @@ export default function KonfiguratorFjord({
 
           {showDocs && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }}>
-              <Card className="overflow-hidden border-0 shadow-xl bg-white">
-                <SectionHeader icon={FileText} title={t('phase4')} subtitle={t('phase4Subtitle')} color="from-purple-600 via-purple-500 to-violet-600" step="4" />
-                <div className="p-3 sm:p-5 bg-gradient-to-b from-purple-50/80 via-white to-white">
+              <Card className="overflow-hidden border-2 border-purple-300 shadow-lg">
+                <SectionHeader icon={FileText} title={t('phase4')} subtitle={t('phase4Subtitle')} color="from-purple-600 to-violet-600" step="4" />
+                <div className="p-2 sm:p-3 bg-gradient-to-b from-purple-50/50 to-white">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
                     <Tile selected={inziniering} onClick={() => setInziniering(!inziniering)} icon={FileCheck} iconColor="text-purple-600" iconSelectedColor="text-purple-800" title={t('engineering')} subtitle={t('buildingPermit')} price={`+ ${CENY.inziniering.toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="inziniering" onPriceChange={handlePriceChange} />
                     <Tile selected={projektA0} onClick={() => setProjektA0(!projektA0)} icon={FileText} iconColor="text-purple-600" iconSelectedColor="text-purple-800" title={t('projectA0')} subtitle={t('certification')} price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} isAdmin={isAdmin} priceKey="projektA0" onPriceChange={handlePriceChange} />
@@ -960,15 +921,15 @@ export default function KonfiguratorFjord({
 
           {!showOnlyPhase && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }}>
-              <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+              <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-slate-50 via-white to-slate-50">
                 <div className="relative">
-                  <div className="absolute top-0 left-0 right-0 h-1 sm:h-2 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
-                  <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-green-500 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-0 left-0 w-72 h-72 bg-teal-500 rounded-full blur-3xl"></div>
+                  <div className="absolute top-0 left-0 right-0 h-0.5 sm:h-1 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
+                  <div className="absolute inset-0 opacity-5">
+                    <div className="absolute top-10 right-10 w-40 h-40 bg-green-400 rounded-full blur-3xl"></div>
+                    <div className="absolute bottom-10 left-10 w-32 h-32 bg-emerald-400 rounded-full blur-3xl"></div>
                   </div>
 
-                  <div className="relative p-4 sm:p-6 md:p-8">
+                  <div className="relative p-3 sm:p-5 md:p-6">
                     <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 sm:gap-5">
                       <div className="flex-1">
                         <p className="text-green-400 text-[9px] sm:text-xs font-semibold uppercase tracking-wider mb-1">{t('yourConfiguration')}</p>

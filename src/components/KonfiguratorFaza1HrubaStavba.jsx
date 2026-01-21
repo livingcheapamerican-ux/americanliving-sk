@@ -114,60 +114,44 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
   return (
     <motion.div
       ref={tileRef}
-      whileHover={{ scale: 1.08, y: -6 }}
-      whileTap={{ scale: 0.93 }}
-      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+      whileHover={{ scale: 1.02, y: -2 }}
+      whileTap={{ scale: 0.98 }}
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative p-3 sm:p-5 rounded-xl sm:rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center min-h-[140px] sm:min-h-[160px] justify-center overflow-hidden group ${
+      className={`relative p-3 sm:p-5 rounded-xl sm:rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center min-h-[140px] sm:min-h-[160px] justify-center ${
         selected 
-          ? `${selectedBg} border-2 ${selectedBorder} shadow-2xl ring-2 ${selectedRing} bg-opacity-90` 
+          ? `${selectedBg} border-2 ${selectedBorder} shadow-lg ring-2 ${selectedRing}` 
           : isA0 
-            ? "bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-400 shadow-lg hover:shadow-xl hover:border-green-500"
-            : "bg-gradient-to-br from-white to-gray-50 border-2 border-gray-300 shadow-md hover:shadow-xl hover:border-amber-400"
+            ? "bg-green-50 border-2 border-green-400 hover:border-green-500 hover:shadow-md"
+            : "bg-white border-2 border-gray-300 hover:border-amber-400 hover:shadow-lg"
       }`}
     >
-      {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/0 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-      
       {isA0 && (
-        <motion.div
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Badge className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white text-[7px] sm:text-[9px] px-2 sm:px-2.5 py-0.5 z-10 shadow-lg font-bold tracking-wider">
-            <Sparkles className="w-2 h-2 sm:w-2.5 sm:h-2.5 mr-1" />
-            A0
-          </Badge>
-        </motion.div>
+        <Badge className="absolute top-0.5 left-0.5 sm:top-1 sm:left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[6px] sm:text-[8px] px-1 sm:px-1.5 z-10">
+          <Sparkles className="w-1.5 h-1.5 sm:w-2 sm:h-2 mr-0.5" />A0
+        </Badge>
       )}
       
-      {/* Animovaná zelená fajka */}
+      {/* Veľká zelená fajka cez celú dlaždicu */}
       <AnimatePresence>
         {selected && (
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 500 }}
             className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
           >
-            <div className="w-12 h-12 sm:w-24 sm:h-24 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center shadow-2xl shadow-green-500/50">
-              <Check className="w-7 h-7 sm:w-16 sm:h-16 text-white stroke-[3]" />
+            <div className="w-10 h-10 sm:w-20 sm:h-20 rounded-full bg-green-500/90 flex items-center justify-center shadow-lg">
+              <Check className="w-6 h-6 sm:w-14 sm:h-14 text-white stroke-[3]" />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <motion.div className="relative z-10 flex flex-col items-center gap-1">
-        <div className={`p-1.5 sm:p-2 rounded-lg transition-all ${selected ? "bg-white/30" : "bg-white/0 group-hover:bg-white/20"}`}>
-          <Icon className={`w-6 h-6 sm:w-8 sm:h-8 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
-        </div>
-        <span className={`font-bold text-gray-800 text-[11px] sm:text-sm leading-snug transition-opacity ${selected ? "opacity-30" : ""}`}>{title}</span>
-        <span className={`text-[8px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1 leading-snug transition-opacity ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
-      </motion.div>
+      <Icon className={`w-6 h-6 sm:w-11 sm:h-11 mb-2 sm:mb-3 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
+      <span className={`font-bold text-gray-800 text-[11px] sm:text-sm leading-snug ${selected ? "opacity-30" : ""}`}>{title}</span>
+      <span className={`text-[8px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1 leading-snug ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
       <div className={`flex items-center gap-1 justify-center relative`}>
         {isEditing && isPriced ? (
           <div className="flex items-center gap-0.5">
@@ -209,10 +193,10 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       {/* Tooltip - rendered via portal */}
       {showTooltip && tooltip && ReactDOM.createPortal(
         <motion.div
-          initial={{ opacity: 0, y: -10, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -10, scale: 0.9 }}
-          className="fixed z-[9999] max-w-[85vw] w-64 p-4 bg-gradient-to-br from-gray-900 to-gray-800 text-white text-xs rounded-xl shadow-2xl pointer-events-none border border-gray-700"
+          initial={{ opacity: 0, y: -5 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -5 }}
+          className="fixed z-[9999] max-w-[85vw] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
           style={{
             top: tooltipPosition.top + 'px',
             left: tooltipPosition.left + 'px',
@@ -254,40 +238,22 @@ export default function KonfiguratorFaza1HrubaStavba({
   const hasUltraInsulation = dom?.nazov !== "Fjord";
   const hasPredlzenie = setPredlzenie && (dom?.nazov === "Prosto House" || dom?.nazov === "A-Frame" || dom?.nazov === "Barn 48" || dom?.nazov === "Barn Double");
   
-  // Modernný SectionHeader s animáciami
+  // Sekcia Header komponenta bez animácií
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
-    <motion.div 
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={`relative flex items-center gap-2 sm:gap-4 p-3 sm:p-5 bg-gradient-to-r ${color} overflow-hidden`}
-    >
-      {/* Animated background effect */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-2 right-2 w-20 h-20 bg-white rounded-full blur-2xl opacity-10"></div>
+    <div className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${color}`}>
+      <div className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white/90 rounded-lg sm:rounded-xl shadow-lg flex-shrink-0">
+        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-800" />
       </div>
-      
-      <motion.div 
-        className="relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-white/20 rounded-2xl backdrop-blur-sm shadow-xl flex-shrink-0 border border-white/30"
-        whileHover={{ scale: 1.1, rotate: 5 }}
-      >
-        <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white drop-shadow-lg" />
-      </motion.div>
-      
       <div className="relative flex-1 min-w-0">
-        <div className="flex items-center gap-2 sm:gap-3 mb-1">
-          <motion.span 
-            className="inline-flex items-center justify-center px-2.5 sm:px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-white/30"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2 }}
-          >
+        <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
+          <span className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[9px] sm:text-xs font-bold uppercase tracking-wider">
             {t('phase')} {step}
-          </motion.span>
+          </span>
         </div>
-        <h3 className="text-base sm:text-2xl font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
-        {subtitle && <p className="text-white/90 text-[11px] sm:text-sm mt-1 truncate drop-shadow-md">{subtitle}</p>}
+        <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
+        {subtitle && <p className="text-white text-[10px] sm:text-xs mt-0.5 truncate drop-shadow-md">{subtitle}</p>}
       </div>
-    </motion.div>
+    </div>
   );
 
   return (
