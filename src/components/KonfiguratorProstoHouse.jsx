@@ -135,8 +135,8 @@ export default function KonfiguratorProstoHouse({
     // Ak je key null, ide o jednoduchú hodnotu (napr. elektroinstalacia)
     if (key === null) {
       const customValue = customCeny[category];
-      // Použiť custom hodnotu len ak nie je 0, undefined ani null
-      if (customValue !== undefined && customValue !== null && customValue !== 0) {
+      // Použiť custom hodnotu ak existuje (vrátane 0, pokiaľ je explicitne zadaná)
+      if (customValue !== undefined && customValue !== null) {
         return customValue;
       }
       return DEFAULT_CENY[category] ?? 0;
@@ -144,8 +144,11 @@ export default function KonfiguratorProstoHouse({
     
     // Ide o vnorený objekt (napr. montaz.ano)
     const customCategory = customCeny[category];
-    if (customCategory && customCategory[key] !== undefined && customCategory[key] !== null && customCategory[key] !== 0) {
-      return customCategory[key];
+    if (customCategory && typeof customCategory === 'object') {
+      // Skontroluj či existuje konkrétna hodnota pre daný kľúč
+      if (customCategory[key] !== undefined && customCategory[key] !== null) {
+        return customCategory[key];
+      }
     }
     
     // Fallback na default hodnotu
