@@ -699,9 +699,6 @@ export default function KonfiguratorAFrame({
               predlzenie={predlzenie}
               setPredlzenie={setPredlzenie}
               dom={dom}
-              cennik={CENY}
-              isAdmin={isAdmin}
-              handlePriceChange={handlePriceChange}
             />
           )}
 
