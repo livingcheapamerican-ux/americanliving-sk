@@ -19,7 +19,6 @@ import { Input } from "@/components/ui/input";
 
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
-import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
 import FloatingPrice from "./FloatingPrice";
 import { base44 } from "@/api/base44Client";
 import EditableTile from "./EditableTile";
@@ -673,20 +672,7 @@ export default function KonfiguratorFjord({
       <div>
         <div className="space-y-6">
 
-          {showHruba && (
-            <KonfiguratorFaza1HrubaStavba 
-              montazHolodomu={montazHolodomu}
-              setMontazHolodomu={setMontazHolodomu}
-              izolaciaNavysenie={izolaciaNavysenie}
-              setIzolaciaNavysenie={setIzolaciaNavysenie}
-              zaklady={zaklady}
-              setZaklady={setZaklady}
-              dom={dom}
-              cennik={CENY}
-              isAdmin={isAdmin}
-              onPriceChange={handlePriceChange}
-            />
-          )}
+
 
           {showHolodom && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
