@@ -83,6 +83,12 @@ export default function KonfiguratorProstoHouse({
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
+  console.log('=== ADMIN CHECK ===');
+  console.log('user:', user);
+  console.log('user.role:', user?.role);
+  console.log('user.super_admin:', user?.super_admin);
+  console.log('isAdmin:', isAdmin);
+
   // Načítanie dynamických textov pre tooltips
   const { data: konfiguratorTexts } = useQuery({
     queryKey: ['konfigurator-texts-prosto'],
