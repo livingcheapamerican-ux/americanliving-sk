@@ -144,25 +144,30 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         </motion.div>
       )}
       
-      {/* Veľká zelená fajka cez celú dlaždicu */}
+      {/* Animovaná zelená fajka */}
       <AnimatePresence>
         {selected && (
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 500 }}
             className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
           >
-            <div className="w-10 h-10 sm:w-20 sm:h-20 rounded-full bg-green-500/90 flex items-center justify-center shadow-lg">
-              <Check className="w-6 h-6 sm:w-14 sm:h-14 text-white stroke-[3]" />
+            <div className="w-12 h-12 sm:w-24 sm:h-24 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center shadow-2xl shadow-green-500/50">
+              <Check className="w-7 h-7 sm:w-16 sm:h-16 text-white stroke-[3]" />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <Icon className={`w-6 h-6 sm:w-11 sm:h-11 mb-2 sm:mb-3 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
-      <span className={`font-bold text-gray-800 text-[11px] sm:text-sm leading-snug ${selected ? "opacity-30" : ""}`}>{title}</span>
-      <span className={`text-[8px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1 leading-snug ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
+      <motion.div className="relative z-10 flex flex-col items-center gap-1">
+        <div className={`p-1.5 sm:p-2 rounded-lg transition-all ${selected ? "bg-white/30" : "bg-white/0 group-hover:bg-white/20"}`}>
+          <Icon className={`w-6 h-6 sm:w-8 sm:h-8 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
+        </div>
+        <span className={`font-bold text-gray-800 text-[11px] sm:text-sm leading-snug transition-opacity ${selected ? "opacity-30" : ""}`}>{title}</span>
+        <span className={`text-[8px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1 leading-snug transition-opacity ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
+      </motion.div>
       <div className={`flex items-center gap-1 justify-center relative`}>
         {isEditing && isPriced ? (
           <div className="flex items-center gap-0.5">
