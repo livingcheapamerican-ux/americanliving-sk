@@ -16,6 +16,8 @@ import { useLanguage } from "./LanguageContext";
 import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
 import FloatingPrice from "./FloatingPrice";
 import { base44 } from "@/api/base44Client";
+import EditableTile from "./EditableTile";
+import { useQuery } from "@tanstack/react-query";
 
 // Dlaždica s tooltip a malou fajkou v rohu
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
@@ -172,6 +174,33 @@ export default function KonfiguratorBarnDouble({
   const BASE_PRICE = dom?.zakladna_cena || 36900;
 
   const { t, language } = useLanguage();
+
+  const { data: user } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const isAdmin = user?.role === 'admin' || user?.super_admin === true;
+
+  const handlePriceChange = async (priceKey, newPrice) => {
+    try {
+      const response = await base44.functions.invoke('updateProstoHousePrice', {
+        dom_id: dom.id,
+        price_key: priceKey,
+        new_price: newPrice
+      });
+      
+      if (response?.data?.success) {
+        alert('Cena aktualizovaná - obnovujem stránku...');
+        setTimeout(() => window.location.reload(), 300);
+      } else {
+        throw new Error(response?.data?.error || 'Neznáma chyba');
+      }
+    } catch (error) {
+      console.error('Error updating price:', error);
+      alert('Chyba pri ukladaní ceny: ' + error.message);
+    }
+  };
 
   // DEFAULT CENY
   const DEFAULT_CENY = {
@@ -715,44 +744,9 @@ export default function KonfiguratorBarnDouble({
                       <span className="w-4 h-4 sm:w-5 sm:h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">1</span>
                       {t('interiorFinish')} ({t('selectOne')})
                     </p>
-                    <Tile
-                      selected={interierFinis === "ziadne"}
-                      onClick={() => setInterierFinis("ziadne")}
-                      icon={Home}
-                      iconColor="text-gray-400"
-                      iconSelectedColor="text-blue-600"
-                      title={t('interiorNone')}
-                      subtitle={t('shellConstruction')}
-                      price="+ 0 €"
-                      isPriced={false}
-                      tooltip={t('interiorNone')}
-                    />
-
-                    <Tile
-                      selected={interierFinis === "drevo"}
-                      onClick={() => setInterierFinis("drevo")}
-                      icon={Home}
-                      iconColor="text-amber-600"
-                      iconSelectedColor="text-blue-600"
-                      title={t('interiorWood')}
-                      subtitle={t('woodCladding')}
-                      price={`+ ${CENY.interierFinis.drevo.toLocaleString('sk-SK')} €`}
-                      isPriced={true}
-                      tooltip={t('interiorWood')}
-                    />
-
-                    <Tile
-                      selected={interierFinis === "sadrokarton"}
-                      onClick={() => setInterierFinis("sadrokarton")}
-                      icon={Home}
-                      iconColor="text-gray-500"
-                      iconSelectedColor="text-blue-600"
-                      title={t('interiorDrywall')}
-                      subtitle={t('plaster')}
-                      price={`+ ${CENY.interierFinis.sadrokarton.toLocaleString('sk-SK')} €`}
-                      isPriced={true}
-                      tooltip={t('interiorDrywall')}
-                    />
+                    <EditableTile selected={interierFinis === "ziadne"} onClick={() => setInterierFinis("ziadne")} title={t('interiorNone')} subtitle={t('shellConstruction')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
+                    <EditableTile selected={interierFinis === "drevo"} onClick={() => setInterierFinis("drevo")} title={t('interiorWood')} subtitle={t('woodCladding')} price={`+ ${CENY.interierFinis.drevo.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interierFinis_drevo" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={interierFinis === "sadrokarton"} onClick={() => setInterierFinis("sadrokarton")} title={t('interiorDrywall')} subtitle={t('plaster')} price={`+ ${CENY.interierFinis.sadrokarton.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interierFinis_sadrokarton" onPriceChange={handlePriceChange} />
                   </div>
 
                   <div className="col-span-2 sm:col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-yellow-500 rounded-xl bg-yellow-100/70 shadow-xl">
@@ -760,65 +754,10 @@ export default function KonfiguratorBarnDouble({
                       <span className="w-4 h-4 sm:w-5 sm:h-5 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">2</span>
                       {t('electrical')} & {t('water')}
                     </p>
-                    <Tile
-                      selected={elektroinstalacia}
-                      onClick={() => setElektroinstalacia(!elektroinstalacia)}
-                      icon={Zap}
-                      iconColor="text-yellow-500"
-                      iconSelectedColor="text-yellow-600"
-                      title={t('electrical')}
-                      subtitle={t('wiring')}
-                      price={`+ ${CENY.elektroinstalacia.toLocaleString('sk-SK')} €`}
-                      isPriced={true}
-                      selectedBg="bg-yellow-100"
-                      selectedBorder="border-yellow-500"
-                      selectedRing="ring-yellow-300"
-                      hoverBorder="hover:border-yellow-300"
-                      tooltip={t('electricalFull')}
-                    />
-
-                    <Tile
-                      selected={vodaKanalizacia}
-                      onClick={() => setVodaKanalizacia(!vodaKanalizacia)}
-                      icon={Droplets}
-                      iconColor="text-blue-400"
-                      iconSelectedColor="text-blue-600"
-                      title={t('water')}
-                      subtitle={t('wiring')}
-                      price={`+ ${CENY.vodaKanalizacia.toLocaleString('sk-SK')} €`}
-                      isPriced={true}
-                      tooltip={t('waterFull')}
-                    />
-
-                    <Tile
-                      selected={sanitaKomplet}
-                      onClick={() => setSanitaKomplet(!sanitaKomplet)}
-                      icon={ShowerHead}
-                      iconColor="text-blue-400"
-                      iconSelectedColor="text-blue-600"
-                      title={t('sanitary')}
-                      subtitle={t('complete')}
-                      price={`+ ${CENY.sanitaKomplet.toLocaleString('sk-SK')} €`}
-                      isPriced={true}
-                      tooltip={t('sanitaryFull')}
-                    />
-
-                    <Tile
-                      selected={bojler}
-                      onClick={() => setBojler(!bojler)}
-                      icon={Flame}
-                      iconColor="text-orange-400"
-                      iconSelectedColor="text-orange-600"
-                      title={t('boiler')}
-                      subtitle={t('boilerElectric')}
-                      price={`+ ${CENY.bojler.toLocaleString('sk-SK')} €`}
-                      isPriced={true}
-                      selectedBg="bg-orange-100"
-                      selectedBorder="border-orange-500"
-                      selectedRing="ring-orange-300"
-                      hoverBorder="hover:border-orange-300"
-                      tooltip={t('boiler')}
-                    />
+                    <EditableTile selected={elektroinstalacia} onClick={() => setElektroinstalacia(!elektroinstalacia)} title={t('electrical')} subtitle={t('wiring')} price={`+ ${CENY.elektroinstalacia.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="elektroinstalacia" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={vodaKanalizacia} onClick={() => setVodaKanalizacia(!vodaKanalizacia)} title={t('water')} subtitle={t('wiring')} price={`+ ${CENY.vodaKanalizacia.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vodaKanalizacia" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={sanitaKomplet} onClick={() => setSanitaKomplet(!sanitaKomplet)} title={t('sanitary')} subtitle={t('complete')} price={`+ ${CENY.sanitaKomplet.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="sanitaKomplet" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={bojler} onClick={() => setBojler(!bojler)} title={t('boiler')} subtitle={t('boilerElectric')} price={`+ ${CENY.bojler.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="bojler" onPriceChange={handlePriceChange} />
                   </div>
 
                   <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-green-600 rounded-xl bg-green-100/70 shadow-xl">
@@ -826,91 +765,13 @@ export default function KonfiguratorBarnDouble({
                       <span className="w-4 h-4 sm:w-5 sm:h-5 bg-green-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">3</span>
                       {t('heatPump')} & {t('recuperation')} (A0)
                     </p>
-                    <Tile
-                      selected={tepelneCerpadlo}
-                      onClick={() => setTepelneCerpadlo(!tepelneCerpadlo)}
-                      icon={ThermometerSun}
-                      iconColor="text-red-500"
-                      iconSelectedColor="text-green-600"
-                      title={t('heatPump')}
-                      subtitle="1× vonk. / 3× vn."
-                      price={`+ ${CENY.tepelneCerpadlo.toLocaleString('sk-SK')} €`}
-                      isPriced={true}
-                      isA0={true}
-                      selectedBg="bg-green-100"
-                      selectedBorder="border-green-500"
-                      selectedRing="ring-green-300"
-                      tooltip={t('heatPumpFull')}
-                    />
-
-                    <Tile
-                      selected={rekuperacia}
-                      onClick={() => setRekuperacia(!rekuperacia)}
-                      icon={Wind}
-                      iconColor="text-cyan-500"
-                      iconSelectedColor="text-green-600"
-                      title={t('recuperation')}
-                      subtitle="3 ks"
-                      price={`+ ${CENY.rekuperacia.toLocaleString('sk-SK')} €`}
-                      isPriced={true}
-                      isA0={true}
-                      selectedBg="bg-green-100"
-                      selectedBorder="border-green-500"
-                      selectedRing="ring-green-300"
-                      tooltip={t('recuperation')}
-                    />
+                    <EditableTile selected={tepelneCerpadlo} onClick={() => setTepelneCerpadlo(!tepelneCerpadlo)} title={t('heatPump')} subtitle="1× vonk. / 3× vn." price={`+ ${CENY.tepelneCerpadlo.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="tepelneCerpadlo" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={rekuperacia} onClick={() => setRekuperacia(!rekuperacia)} title={t('recuperation')} subtitle="3 ks" price={`+ ${CENY.rekuperacia.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="rekuperacia" onPriceChange={handlePriceChange} />
                   </div>
 
-                  <Tile
-                    selected={pripojkaSiete}
-                    onClick={() => setPripojkaSiete(!pripojkaSiete)}
-                    icon={Cable}
-                    iconColor="text-gray-400"
-                    iconSelectedColor="text-gray-700"
-                    title={t('gridConnection')}
-                    subtitle={t('connection')}
-                    price={`+ ${CENY.pripojkaSiete.toLocaleString('sk-SK')} €`}
-                    isPriced={true}
-                    selectedBg="bg-gray-200"
-                    selectedBorder="border-gray-500"
-                    selectedRing="ring-gray-300"
-                    hoverBorder="hover:border-gray-400"
-                    tooltip={t('gridConnectionFull')}
-                  />
-
-                  <Tile
-                    selected={povrchokaOkien}
-                    onClick={() => setPovrchokaOkien(!povrchokaOkien)}
-                    icon={Square}
-                    iconColor="text-slate-400"
-                    iconSelectedColor="text-slate-700"
-                    title={t('lamination')}
-                    subtitle={t('laminationAnthracite')}
-                    price={`+ ${CENY.povrchokaOkien.toLocaleString('sk-SK')} €`}
-                    isPriced={true}
-                    selectedBg="bg-slate-200"
-                    selectedBorder="border-slate-600"
-                    selectedRing="ring-slate-300"
-                    hoverBorder="hover:border-slate-400"
-                    tooltip={t('lamination')}
-                  />
-
-                  <Tile
-                    selected={tonovaneSkla}
-                    onClick={() => setTonovaneSkla(!tonovaneSkla)}
-                    icon={Sun}
-                    iconColor="text-amber-400"
-                    iconSelectedColor="text-amber-600"
-                    title={t('tintedGlass')}
-                    subtitle={t('solarGlass')}
-                    price={`+ ${CENY.tonovaneSkla.toLocaleString('sk-SK')} €`}
-                    isPriced={true}
-                    selectedBg="bg-amber-100"
-                    selectedBorder="border-amber-500"
-                    selectedRing="ring-amber-300"
-                    hoverBorder="hover:border-amber-300"
-                    tooltip={t('tintedGlass')}
-                  />
+                  <EditableTile selected={pripojkaSiete} onClick={() => setPripojkaSiete(!pripojkaSiete)} title={t('gridConnection')} subtitle={t('connection')} price={`+ ${CENY.pripojkaSiete.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="pripojkaSiete" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={povrchokaOkien} onClick={() => setPovrchokaOkien(!povrchokaOkien)} title={t('lamination')} subtitle={t('laminationAnthracite')} price={`+ ${CENY.povrchokaOkien.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="povrchokaOkien" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={tonovaneSkla} onClick={() => setTonovaneSkla(!tonovaneSkla)} title={t('tintedGlass')} subtitle={t('solarGlass')} price={`+ ${CENY.tonovaneSkla.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="tonovaneSkla" onPriceChange={handlePriceChange} />
 
                 </div>
 
@@ -1032,39 +893,8 @@ export default function KonfiguratorBarnDouble({
                     />
                   </div>
 
-                  <Tile
-                    selected={vnutornePodlahy}
-                    onClick={() => setVnutornePodlahy(!vnutornePodlahy)}
-                    icon={Square}
-                    iconColor="text-amber-500"
-                    iconSelectedColor="text-emerald-600"
-                    title={t('floors')}
-                    subtitle={t('floorsLaminate')}
-                    price={`+ ${CENY.vnutornePodlahy.toLocaleString('sk-SK')} €`}
-                    isPriced={true}
-                    selectedBg="bg-emerald-100"
-                    selectedBorder="border-emerald-500"
-                    selectedRing="ring-emerald-300"
-                    hoverBorder="hover:border-emerald-300"
-                    tooltip={t('floors')}
-                  />
-
-                  <Tile
-                    selected={podlahovVykurovanie}
-                    onClick={() => setPodlahovVykurovanie(!podlahovVykurovanie)}
-                    icon={Flame}
-                    iconColor="text-orange-400"
-                    iconSelectedColor="text-orange-600"
-                    title={t('floorHeating')}
-                    subtitle={t('wifiThermostat')}
-                    price={`+ ${CENY.podlahovVykurovanie.toLocaleString('sk-SK')} €`}
-                    isPriced={true}
-                    selectedBg="bg-orange-100"
-                    selectedBorder="border-orange-500"
-                    selectedRing="ring-orange-300"
-                    hoverBorder="hover:border-orange-300"
-                    tooltip={t('floorHeatingFull')}
-                  />
+                  <EditableTile selected={vnutornePodlahy} onClick={() => setVnutornePodlahy(!vnutornePodlahy)} title={t('floors')} subtitle={t('floorsLaminate')} price={`+ ${CENY.vnutornePodlahy.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vnutornePodlahy" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={podlahovVykurovanie} onClick={() => setPodlahovVykurovanie(!podlahovVykurovanie)} title={t('floorHeating')} subtitle={t('wifiThermostat')} price={`+ ${CENY.podlahovVykurovanie.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="podlahovVykurovanie" onPriceChange={handlePriceChange} />
 
                 </div>
 
@@ -1111,73 +941,10 @@ export default function KonfiguratorBarnDouble({
               <div className="p-3 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
                   
-                  <Tile
-                    selected={inziniering}
-                    onClick={() => setInziniering(!inziniering)}
-                    icon={FileText}
-                    iconColor="text-purple-400"
-                    iconSelectedColor="text-purple-600"
-                    title={t('engineering')}
-                    subtitle={t('buildingPermit')}
-                    price={`+ ${CENY.inziniering.toLocaleString('sk-SK')} €`}
-                    isPriced={true}
-                    selectedBg="bg-purple-100"
-                    selectedBorder="border-purple-500"
-                    selectedRing="ring-purple-300"
-                    hoverBorder="hover:border-purple-300"
-                    tooltip={t('engineeringFull')}
-                  />
-
-                  <Tile
-                    selected={projektA0}
-                    onClick={() => setProjektA0(!projektA0)}
-                    icon={FileCheck}
-                    iconColor="text-green-500"
-                    iconSelectedColor="text-green-600"
-                    title={t('projectA0')}
-                    subtitle={t('certification')}
-                    price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`}
-                    isPriced={true}
-                    isA0={true}
-                    selectedBg="bg-green-100"
-                    selectedBorder="border-green-500"
-                    selectedRing="ring-green-300"
-                    tooltip={t('projectA0Full')}
-                  />
-
-                  <Tile
-                    selected={revizna}
-                    onClick={() => setRevizna(!revizna)}
-                    icon={FileText}
-                    iconColor="text-gray-400"
-                    iconSelectedColor="text-purple-600"
-                    title={t('revision')}
-                    subtitle={t('documentation')}
-                    price={`+ ${CENY.revizna.toLocaleString('sk-SK')} €`}
-                    isPriced={true}
-                    selectedBg="bg-purple-100"
-                    selectedBorder="border-purple-500"
-                    selectedRing="ring-purple-300"
-                    hoverBorder="hover:border-purple-300"
-                    tooltip={t('revisionFull')}
-                  />
-
-                  <Tile
-                    selected={doprava}
-                    onClick={() => setDoprava(!doprava)}
-                    icon={Truck}
-                    iconColor="text-purple-400"
-                    iconSelectedColor="text-purple-600"
-                    title={t('transport')}
-                    subtitle="Zadarmo"
-                    price="+ 0 €"
-                    isPriced={false}
-                    selectedBg="bg-purple-100"
-                    selectedBorder="border-purple-500"
-                    selectedRing="ring-purple-300"
-                    hoverBorder="hover:border-purple-300"
-                    tooltip={t('transport')}
-                  />
+                  <EditableTile selected={inziniering} onClick={() => setInziniering(!inziniering)} title={t('engineering')} subtitle={t('buildingPermit')} price={`+ ${CENY.inziniering.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="inziniering" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={projektA0} onClick={() => setProjektA0(!projektA0)} title={t('projectA0')} subtitle={t('certification')} price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="projektA0" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={revizna} onClick={() => setRevizna(!revizna)} title={t('revision')} subtitle={t('documentation')} price={`+ ${CENY.revizna.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="revizna" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={doprava} onClick={() => setDoprava(!doprava)} title={t('transport')} subtitle="Zadarmo" price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
 
                 </div>
 
