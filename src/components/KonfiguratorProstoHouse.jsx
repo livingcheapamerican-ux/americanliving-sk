@@ -172,6 +172,12 @@ export default function KonfiguratorProstoHouse({
     return defaultValue;
   };
 
+  console.log('=== DIAGNOSTIKA CENNÍKA ===');
+  console.log('customCeny:', customCeny);
+  console.log('getPrice("montaz", "ano"):', getPrice('montaz', 'ano'));
+  console.log('getPrice("izolacia", "zvysena"):', getPrice('izolacia', 'zvysena'));
+  console.log('getPrice("zaklady", "skrutky"):', getPrice('zaklady', 'skrutky'));
+
   // Cenník - s možnosťou override z databázy
   const CENY = {
     montaz: { nie: 0, ano: getPrice('montaz', 'ano') },
