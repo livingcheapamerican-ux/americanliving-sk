@@ -403,9 +403,14 @@ export default function KonfiguratorFaza1HrubaStavba({
             </motion.div>
 
             {/* Základy - skupina */}
-            <div className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-4 border-[5px] border-orange-600 rounded-2xl bg-orange-100/70 shadow-xl">
-              <p className="col-span-2 sm:col-span-4 text-[10px] sm:text-xs font-bold text-orange-700 -mb-1 flex items-center gap-1">
-                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-orange-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">3</span>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.25 }}
+              className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-4 sm:p-5 border-[3px] sm:border-[4px] border-orange-500 rounded-2xl bg-gradient-to-br from-orange-100/80 to-orange-50/60 shadow-xl"
+            >
+              <p className="col-span-2 sm:col-span-4 text-[10px] sm:text-xs font-bold text-orange-800 -mb-1 flex items-center gap-2">
+                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-orange-600 to-red-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold shadow-lg">3</span>
                 {t('foundations')} ({t('selectOne')})
               </p>
               <Tile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} icon={Landmark} iconColor="text-orange-600" iconSelectedColor="text-orange-800" title={t('foundationsNone')} subtitle={t('own')} price="0 €" isPriced={false} isAdmin={isAdmin} />
