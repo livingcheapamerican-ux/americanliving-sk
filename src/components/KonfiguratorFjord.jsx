@@ -266,7 +266,7 @@ export default function KonfiguratorFjord({
   };
 
   // Načítať custom ceny z databázy
-  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
+  const customCeny = dom?.konfigurator_ceny || {};
   
   const getPrice = (key) => {
     if (customCeny[key] !== undefined && customCeny[key] !== null) {
