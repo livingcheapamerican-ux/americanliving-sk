@@ -279,8 +279,8 @@ export default function KonfiguratorFjord({
     return DEFAULT_CENY[key];
   };
 
-  // CENY - s možnosťou override z databázy
-  const CENY = {
+  // CENY - s možnosťou override z databázy (memo-ované!)
+  const CENY = useMemo(() => ({
     montaz: { nie: 0, ano: getPrice('montaz_ano') ?? DEFAULT_CENY.montaz.ano },
     dvere: { 
       ziadne: 0, 
@@ -327,7 +327,7 @@ export default function KonfiguratorFjord({
     bocneOknoFixne: getPrice('bocneOknoFixne') ?? DEFAULT_CENY.bocneOknoFixne,
     bocneOknoVyklopne90: getPrice('bocneOknoVyklopne90') ?? DEFAULT_CENY.bocneOknoVyklopne90,
     bocneOknoVyklopne55: getPrice('bocneOknoVyklopne55') ?? DEFAULT_CENY.bocneOknoVyklopne55
-  };
+  }), [customCeny]);
 
   // Funkcia na uloženie zmenenej ceny do databázy
   const handlePriceChange = async (priceKey, newPrice) => {
