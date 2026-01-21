@@ -18,8 +18,6 @@ import FloatingPrice from "./FloatingPrice";
 import { base44 } from "@/api/base44Client";
 import EditableTile from "./EditableTile";
 import { useQuery } from "@tanstack/react-query";
-import EditableTile from "./EditableTile";
-import { useQuery } from "@tanstack/react-query";
 
 // Dlaždica s tooltip a malou fajkou v rohu
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
@@ -701,6 +699,9 @@ export default function KonfiguratorAFrame({
               predlzenie={predlzenie}
               setPredlzenie={setPredlzenie}
               dom={dom}
+              cennik={CENY}
+              isAdmin={isAdmin}
+              handlePriceChange={handlePriceChange}
             />
           )}
 
