@@ -99,12 +99,12 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative p-2 sm:p-4 rounded-lg sm:rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+      className={`relative p-3 sm:p-5 rounded-xl sm:rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center min-h-[140px] sm:min-h-[160px] justify-center ${
         selected 
-          ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
+          ? `${selectedBg} border-2 ${selectedBorder} shadow-lg ring-2 ${selectedRing}` 
           : isA0 
-            ? "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
-            : "bg-white border-2 border-gray-200 hover:border-amber-300 hover:shadow-md"
+            ? "bg-green-50 border-2 border-green-400 hover:border-green-500 hover:shadow-md"
+            : "bg-white border-2 border-gray-300 hover:border-amber-400 hover:shadow-lg"
       }`}
     >
       {isA0 && (
