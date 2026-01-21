@@ -156,7 +156,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
                 }}
                 title="Edituj cenu"
               >
-                <Pencil className="w-3 h-3 text-amber-700 stroke-2" />
+                <Pencil className="w-4 h-4 text-amber-600 stroke-[2.5]" />
               </button>
             )}
        </div>
