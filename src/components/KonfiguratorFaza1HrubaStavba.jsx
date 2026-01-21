@@ -150,18 +150,6 @@ export default function KonfiguratorFaza1HrubaStavba({
     }
   }, []);
 
-  // Helper funkcia - bezpečne získa cenu z cenníka
-  const getPrice = (path) => {
-    if (!cennik) return 0;
-    const keys = path.split('.');
-    let value = cennik;
-    for (const key of keys) {
-      value = value?.[key];
-      if (value === undefined || value === null) return 0;
-    }
-    return typeof value === 'number' ? value : 0;
-  };
-
   // Informácia či model podporuje ultra izoláciu (Fjord nemá ultra)
   const hasUltraInsulation = dom?.nazov !== "Fjord";
   const hasPredlzenie = setPredlzenie && (dom?.nazov === "Prosto House" || dom?.nazov === "A-Frame" || dom?.nazov === "Barn 48" || dom?.nazov === "Barn Double");
@@ -243,7 +231,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('assemblyYes')}
                 subtitle={t('phase1')}
-                price={`+ ${getPrice('montaz.ano').toLocaleString('sk-SK')} €`}
+                price={`+ ${(cennik?.montaz?.ano || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('assemblyNote')}
               />
@@ -259,10 +247,10 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   {[
                     { value: 0, label: "Bez predĺženia", basePrice: 0 },
-                    { value: 1.2, label: "+1,2 m", basePrice: getPrice('predlzenie.1.2') },
-                    { value: 2.4, label: "+2,4 m", basePrice: getPrice('predlzenie.2.4') },
-                    { value: 3.6, label: "+3,6 m", basePrice: getPrice('predlzenie.3.6') },
-                    { value: 4.8, label: "+4,8 m", basePrice: getPrice('predlzenie.4.8') }
+                    { value: 1.2, label: "+1,2 m", basePrice: cennik?.predlzenie?.[1.2] || 0 },
+                    { value: 2.4, label: "+2,4 m", basePrice: cennik?.predlzenie?.[2.4] || 0 },
+                    { value: 3.6, label: "+3,6 m", basePrice: cennik?.predlzenie?.[3.6] || 0 },
+                    { value: 4.8, label: "+4,8 m", basePrice: cennik?.predlzenie?.[4.8] || 0 }
                   ].map((opt) => (
                     <motion.div
                       key={opt.value}
@@ -313,7 +301,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('insulationEnhanced')}
                 subtitle={t('insulationEnhancedDesc')}
-                price={`+ ${getPrice('izolacia.zvysena').toLocaleString('sk-SK')} €`}
+                price={`+ ${(cennik?.izolacia?.zvysena || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('insulationEnhancedDesc')}
               />
@@ -326,7 +314,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-green-600"
                 title={t('insulationPremium')}
                 subtitle={t('insulationPremiumDesc')}
-                price={`+ ${getPrice('izolacia.premium').toLocaleString('sk-SK')} €`}
+                price={`+ ${(cennik?.izolacia?.premium || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 isA0={true}
                 selectedBg="bg-green-100"
@@ -344,7 +332,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                   iconSelectedColor="text-green-700"
                   title="300mm"
                   subtitle="Ultra izolácia"
-                  price={`+ ${getPrice('izolacia.ultra').toLocaleString('sk-SK')} €`}
+                  price={`+ ${(cennik?.izolacia?.ultra || 0).toLocaleString('sk-SK')} €`}
                   isPriced={true}
                   isA0={true}
                   selectedBg="bg-green-100"
@@ -382,7 +370,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title="Pilóty/Pätky"
                 subtitle={t('groundFootings')}
-                price={`+ ${getPrice('zaklady.skrutky').toLocaleString('sk-SK')} €`}
+                price={`+ ${(cennik?.zaklady?.skrutky || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('foundationsScrews')}
               />
@@ -395,7 +383,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsSlab')}
                 subtitle={t('foundationSlab')}
-                price={`+ ${getPrice('zaklady.doska').toLocaleString('sk-SK')} €`}
+                price={`+ ${(cennik?.zaklady?.doska || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('foundationsSlab')}
               />
@@ -408,7 +396,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsStrip')}
                 subtitle={t('stripFound')}
-                price={`+ ${getPrice('zaklady.pasove').toLocaleString('sk-SK')} €`}
+                price={`+ ${(cennik?.zaklady?.pasove || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('foundationsStrip')}
               />
