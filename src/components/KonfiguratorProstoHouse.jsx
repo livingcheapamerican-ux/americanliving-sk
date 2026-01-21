@@ -76,17 +76,19 @@ export default function KonfiguratorProstoHouse({
 
   const { t, language } = useLanguage();
 
-  const { data: user } = useQuery({
+  const { data: user, isLoading: userLoading, error: userError } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me()
   });
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
-  console.log('=== ADMIN CHECK ===');
+  console.log('=== USER QUERY STATE ===');
   console.log('user:', user);
-  console.log('user.role:', user?.role);
-  console.log('user.super_admin:', user?.super_admin);
+  console.log('userLoading:', userLoading);
+  console.log('userError:', userError);
+  console.log('user?.role:', user?.role);
+  console.log('user?.super_admin:', user?.super_admin);
   console.log('isAdmin:', isAdmin);
 
   // Načítanie dynamických textov pre tooltips
