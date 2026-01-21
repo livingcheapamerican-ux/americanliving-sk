@@ -373,7 +373,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title="Pilóty/Pätky"
                 subtitle={t('groundFootings')}
-                price={`+ ${getPriceForTile('zaklady_skrutky').toLocaleString('sk-SK')} €`}
+                price={`+ ${(cennik?.zaklady?.skrutky || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('foundationsScrews')}
               />
@@ -386,7 +386,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsSlab')}
                 subtitle={t('foundationSlab')}
-                price={`+ ${getPriceForTile('zaklady_doska').toLocaleString('sk-SK')} €`}
+                price={`+ ${(cennik?.zaklady?.doska || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('foundationsSlab')}
               />
@@ -399,7 +399,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsStrip')}
                 subtitle={t('stripFound')}
-                price={`+ ${getPriceForTile('zaklady_pasove').toLocaleString('sk-SK')} €`}
+                price={`+ ${(cennik?.zaklady?.pasove || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('foundationsStrip')}
               />
