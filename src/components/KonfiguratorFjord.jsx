@@ -328,15 +328,16 @@ export default function KonfiguratorFjord({
   // Funkcia na uloženie zmenenej ceny do databázy
   const handlePriceChange = async (priceKey, newPrice) => {
     try {
-      const response = await base44.functions.invoke('updateProstoHousePrice', {
+      const response = await base44.functions.invoke('updateFjordPrice', {
         dom_id: dom.id,
         price_key: priceKey,
         new_price: newPrice
       });
       
       if (response?.data?.success) {
-        alert('Cena aktualizovaná - obnovujem stránku...');
-        setTimeout(() => window.location.reload(), 300);
+        console.log('Cena aktualizovaná:', priceKey, newPrice);
+        // Obnovit stránku - cena sa zmení
+        setTimeout(() => window.location.reload(), 500);
       } else {
         throw new Error(response?.data?.error || 'Neznáma chyba');
       }
