@@ -135,7 +135,7 @@ export default function KonfiguratorFaza1HrubaStavba({
   zaklady, setZaklady,
   predlzenie, setPredlzenie,
   dom,
-  getPrice
+  cennik
   }) {
   
   const phaseRef = React.useRef(null);
@@ -150,43 +150,26 @@ export default function KonfiguratorFaza1HrubaStavba({
     }
   }, []);
 
-  // Priame mapovanie cien zo základného cenníka
+  // Získanie ceny z cenníka (s fallback)
   const getPriceForTile = (key) => {
-    if (getPrice) {
-      // Mapovanie klúčov z Fázy 1 do klúčov z DEFAULT_CENY
-      const keyMap = {
-        'montaz': 'montaz_ano',
-        'izolacia_zvysena': 'izolacia_zvysena',
-        'izolacia_premium': 'izolacia_premium', 
-        'izolacia_ultra': 'izolacia_ultra',
-        'zaklady_skrutky': 'zaklady_skrutky',
-        'zaklady_doska': 'zaklady_doska',
-        'zaklady_pasove': 'zaklady_pasove',
-        'predlzenie_1_2': 'predlzenie_1_2',
-        'predlzenie_2_4': 'predlzenie_2_4',
-        'predlzenie_3_6': 'predlzenie_3_6',
-        'predlzenie_4_8': 'predlzenie_4_8'
-      };
-      const mappedKey = keyMap[key];
-      if (mappedKey) {
-        return getPrice(mappedKey);
-      }
-    }
-    // Fallback na DEFAULT_CENY
-    const DEFAULT_CENY = {
-      montaz: 9225,
-      predlzenie_1_2: 6600,
-      predlzenie_2_4: 13200,
-      predlzenie_3_6: 19800,
-      predlzenie_4_8: 26400,
-      izolacia_zvysena: 2700,
-      izolacia_premium: 5400,
-      izolacia_ultra: 10125,
-      zaklady_skrutky: 4751,
-      zaklady_doska: 9633,
-      zaklady_pasove: 11823
+    if (!cennik) return 0;
+    
+    // Mapovanie klúčov
+    const priceMap = {
+      'montaz': cennik.montaz?.ano || 0,
+      'izolacia_zvysena': cennik.izolacia?.zvysena || 0,
+      'izolacia_premium': cennik.izolacia?.premium || 0,
+      'izolacia_ultra': cennik.izolacia?.ultra || 0,
+      'zaklady_skrutky': cennik.zaklady?.skrutky || 0,
+      'zaklady_doska': cennik.zaklady?.doska || 0,
+      'zaklady_pasove': cennik.zaklady?.pasove || 0,
+      'predlzenie_1_2': cennik.predlzenie?.[1.2] || 0,
+      'predlzenie_2_4': cennik.predlzenie?.[2.4] || 0,
+      'predlzenie_3_6': cennik.predlzenie?.[3.6] || 0,
+      'predlzenie_4_8': cennik.predlzenie?.[4.8] || 0
     };
-    return DEFAULT_CENY[key] || 0;
+    
+    return priceMap[key] || 0;
   };
 
   // Informácia či model podporuje ultra izoláciu (Fjord nemá ultra)

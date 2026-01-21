@@ -631,7 +631,7 @@ export default function KonfiguratorProstoHouse({
               predlzenie={predlzenie}
               setPredlzenie={setPredlzenie}
               dom={dom}
-              getPrice={getPrice}
+              cennik={CENY}
             />
           )}
 
