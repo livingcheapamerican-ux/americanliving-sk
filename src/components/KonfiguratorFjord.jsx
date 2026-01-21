@@ -327,24 +327,33 @@ export default function KonfiguratorFjord({
 
   // Funkcia na uloženie zmenenej ceny do databázy
   const handlePriceChange = async (priceKey, newPrice) => {
-    try {
-      const response = await base44.functions.invoke('updateFjordPrice', {
-        dom_id: dom.id,
-        price_key: priceKey,
-        new_price: newPrice
-      });
-      
-      if (response?.data?.success) {
-        console.log('Cena aktualizovaná:', priceKey, newPrice);
-        // Obnovit stránku - cena sa zmení
-        setTimeout(() => window.location.reload(), 500);
-      } else {
-        throw new Error(response?.data?.error || 'Neznáma chyba');
+    return new Promise((resolve, reject) => {
+      try {
+        base44.functions.invoke('updateFjordPrice', {
+          dom_id: dom.id,
+          price_key: priceKey,
+          new_price: newPrice
+        }).then(response => {
+          if (response?.data?.success) {
+            console.log('Cena aktualizovaná:', priceKey, newPrice);
+            setTimeout(() => {
+              window.location.reload();
+              resolve();
+            }, 500);
+          } else {
+            throw new Error(response?.data?.error || 'Neznáma chyba');
+          }
+        }).catch(error => {
+          console.error('Error updating price:', error);
+          alert('Chyba pri ukladaní ceny: ' + error.message);
+          reject(error);
+        });
+      } catch (error) {
+        console.error('Error updating price:', error);
+        alert('Chyba pri ukladaní ceny: ' + error.message);
+        reject(error);
       }
-    } catch (error) {
-      console.error('Error updating price:', error);
-      alert('Chyba pri ukladaní ceny: ' + error.message);
-    }
+    });
   };
 
   // Výpočet celkovej ceny
