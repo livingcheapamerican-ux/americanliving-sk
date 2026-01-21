@@ -130,10 +130,12 @@ export default function KonfiguratorProstoHouse({
   // Načítať custom ceny z databázy pre tento konkrétny dom
   const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
 
-  // Funkcia na získanie ceny - preferuje custom ceny pred default
+  // Funkcia na získanie ceny - preferuje custom ceny pred default, ignoruje 0
   const getPrice = (key) => {
-    if (customCeny[key] !== undefined && customCeny[key] !== null) {
-      return customCeny[key];
+    const customValue = customCeny[key];
+    // Použiť custom hodnotu len ak je definovaná, nie null a nie 0
+    if (customValue !== undefined && customValue !== null && customValue !== 0) {
+      return customValue;
     }
     return DEFAULT_CENY[key];
   };
