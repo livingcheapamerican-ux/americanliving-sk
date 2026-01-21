@@ -146,15 +146,15 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         ) : (
           <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>{price}</span>
         )}
-        {isAdmin && isPriced && !selected && (
-          <button
-            onClick={handleEditClick}
-            className="ml-1 p-0.5 hover:bg-amber-200 rounded transition-all"
-            title="Edituj cenu"
-          >
-            <Pencil className="w-3 h-3 text-amber-700" />
-          </button>
-        )}
+        {isAdmin && isPriced && !isEditing && (
+           <button
+             onClick={handleEditClick}
+             className="ml-1 p-0.5 hover:bg-amber-200 rounded transition-all hover:scale-110 active:scale-95"
+             title="Edituj cenu"
+           >
+             <Pencil className="w-4 h-4 text-amber-600 stroke-[2.5]" />
+           </button>
+         )}
       </div>
 
       {/* Tooltip - rendered via portal */}
