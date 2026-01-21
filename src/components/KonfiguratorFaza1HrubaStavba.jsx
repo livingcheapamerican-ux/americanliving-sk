@@ -11,6 +11,9 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "./LanguageContext";
 
+// Import EditableTile pre admin price editing
+import EditableTile from "./EditableTile";
+
 // Dlaždica s tooltip a veľkou fajkou
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-amber-100", selectedBorder = "border-amber-500", selectedRing = "ring-amber-300", isAdmin = false, priceKey, onPriceChange }) => {
   const [showTooltip, setShowTooltip] = useState(false);
