@@ -960,15 +960,15 @@ export default function KonfiguratorFjord({
 
           {!showOnlyPhase && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }}>
-              <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-slate-50 via-white to-slate-50">
+              <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
                 <div className="relative">
-                  <div className="absolute top-0 left-0 right-0 h-0.5 sm:h-1 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
-                  <div className="absolute inset-0 opacity-5">
-                    <div className="absolute top-10 right-10 w-40 h-40 bg-green-400 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-10 left-10 w-32 h-32 bg-emerald-400 rounded-full blur-3xl"></div>
+                  <div className="absolute top-0 left-0 right-0 h-1 sm:h-2 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
+                  <div className="absolute inset-0 opacity-10">
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-green-500 rounded-full blur-3xl"></div>
+                    <div className="absolute bottom-0 left-0 w-72 h-72 bg-teal-500 rounded-full blur-3xl"></div>
                   </div>
 
-                  <div className="relative p-3 sm:p-5 md:p-6">
+                  <div className="relative p-4 sm:p-6 md:p-8">
                     <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-3 sm:gap-5">
                       <div className="flex-1">
                         <p className="text-green-400 text-[9px] sm:text-xs font-semibold uppercase tracking-wider mb-1">{t('yourConfiguration')}</p>
