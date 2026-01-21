@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
-import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
+
 import EditableTile from "./EditableTile";
 import FloatingPrice from "./FloatingPrice";
 
@@ -680,18 +680,217 @@ export default function KonfiguratorProstoHouse({
         <div className="space-y-3 sm:space-y-6">
 
           {showHruba && (
-            <KonfiguratorFaza1HrubaStavba 
-              montazHolodomu={montazHolodomu}
-              setMontazHolodomu={setMontazHolodomu}
-              izolaciaNavysenie={izolaciaNavysenie}
-              setIzolaciaNavysenie={setIzolaciaNavysenie}
-              zaklady={zaklady}
-              setZaklady={setZaklady}
-              predlzenie={predlzenie}
-              setPredlzenie={setPredlzenie}
-              dom={dom}
-              cennik={CENY}
-            />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Card className="overflow-hidden border-2 border-amber-300 shadow-lg">
+                <SectionHeader 
+                  icon={Package} 
+                  title={t('phase1')} 
+                  subtitle={t('phase1Subtitle')}
+                  step="1"
+                />
+                <div className="p-1.5 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
+                  <p className="text-[10px] sm:text-xs text-red-600 mb-3 text-center">* {t('assemblyNote')}</p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
+
+                    {/* Montáž - skupina */}
+                    <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-amber-600 rounded-lg sm:rounded-xl bg-amber-100/70 shadow-xl">
+                      <p className="col-span-2 text-[8px] sm:text-[10px] font-bold text-amber-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
+                        <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-amber-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">1</span>
+                        {t('assembly')} ({t('selectOne')})
+                      </p>
+
+                      <EditableTile
+                        selected={montazHolodomu === "nie"}
+                        onClick={() => setMontazHolodomu("nie")}
+                        title={t('assemblyNo')}
+                        subtitle={t('onlyKit')}
+                        price="0 €"
+                        isPriced={false}
+                        isIncluded={true}
+                        t={t}
+                        isAdmin={false}
+                      />
+
+                      <EditableTile
+                        selected={montazHolodomu === "ano"}
+                        onClick={() => setMontazHolodomu("ano")}
+                        title={t('assemblyYes')}
+                        subtitle={t('phase1')}
+                        price={`+ ${CENY.montaz.ano.toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="montaz_ano"
+                        onPriceChange={handlePriceChange}
+                      />
+                    </div>
+
+                    {/* Predĺženie */}
+                    {predlzenie !== undefined && (
+                      <div className="col-span-1 sm:col-span-3 lg:col-span-4 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-indigo-600 rounded-lg sm:rounded-xl bg-indigo-100/70 shadow-xl">
+                        <p className="text-[8px] sm:text-xs font-bold text-indigo-700 mb-2 flex items-center gap-1">
+                          <span className="w-3.5 h-3.5 sm:w-6 sm:h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-xs font-extrabold">+</span>
+                          Predĺženie dĺžky domu (v násobkoch 1,2m)
+                        </p>
+                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-1 sm:gap-2">
+                          {[
+                            { value: 0, label: "Bez predĺženia", price: 0 },
+                            { value: 1.2, label: "+1,2 m", price: CENY.predlzenie[1.2] },
+                            { value: 2.4, label: "+2,4 m", price: CENY.predlzenie[2.4] },
+                            { value: 3.6, label: "+3,6 m", price: CENY.predlzenie[3.6] },
+                            { value: 4.8, label: "+4,8 m", price: CENY.predlzenie[4.8] }
+                          ].map((opt) => (
+                            <motion.div
+                              key={opt.value}
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                              onClick={() => setPredlzenie(opt.value)}
+                              className={`p-1.5 sm:p-3 rounded-md sm:rounded-lg cursor-pointer text-center transition-all ${
+                                predlzenie === opt.value 
+                                  ? "bg-indigo-200 border-2 border-indigo-600 shadow-lg" 
+                                  : "bg-white border-2 border-gray-200 hover:border-indigo-300"
+                              }`}
+                            >
+                              <Maximize className={`w-3 h-3 sm:w-5 sm:h-5 mx-auto mb-0.5 sm:mb-1 ${predlzenie === opt.value ? "text-indigo-600" : "text-gray-400"}`} />
+                              <span className="font-medium text-gray-800 text-[9px] sm:text-xs block">{opt.label}</span>
+                              <span className={`text-[8px] sm:text-xs ${opt.price === 0 ? "text-gray-400" : "text-green-600 font-bold"}`}>
+                                {opt.price > 0 ? `+ ${opt.price.toLocaleString('sk-SK')} €` : '0 €'}
+                              </span>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Izolácia - skupina */}
+                    <div className="col-span-1 sm:col-span-2 lg:col-span-2 grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-cyan-600 rounded-lg sm:rounded-xl bg-cyan-100/70 shadow-xl">
+                      <p className="col-span-2 sm:col-span-4 text-[8px] sm:text-[10px] font-bold text-cyan-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
+                        <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">2</span>
+                        {t('insulation')} ({t('selectOne')})
+                      </p>
+
+                      <EditableTile
+                        selected={izolaciaNavysenie === "standard"}
+                        onClick={() => setIzolaciaNavysenie("standard")}
+                        title={t('insulationStandard')}
+                        subtitle="150/200mm"
+                        price="0 €"
+                        isPriced={false}
+                        isIncluded={true}
+                        t={t}
+                        isAdmin={false}
+                      />
+
+                      <EditableTile
+                        selected={izolaciaNavysenie === "zvysena"}
+                        onClick={() => setIzolaciaNavysenie("zvysena")}
+                        title={t('insulationEnhanced')}
+                        subtitle={t('insulationEnhancedDesc')}
+                        price={`+ ${CENY.izolacia.zvysena.toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="izolacia_zvysena"
+                        onPriceChange={handlePriceChange}
+                      />
+
+                      <EditableTile
+                        selected={izolaciaNavysenie === "premium"}
+                        onClick={() => setIzolaciaNavysenie("premium")}
+                        title={t('insulationPremium')}
+                        subtitle={t('insulationPremiumDesc')}
+                        price={`+ ${CENY.izolacia.premium.toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        isA0={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="izolacia_premium"
+                        onPriceChange={handlePriceChange}
+                      />
+
+                      <EditableTile
+                        selected={izolaciaNavysenie === "ultra"}
+                        onClick={() => setIzolaciaNavysenie("ultra")}
+                        title="300mm"
+                        subtitle="Ultra izolácia"
+                        price={`+ ${CENY.izolacia.ultra.toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        isA0={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="izolacia_ultra"
+                        onPriceChange={handlePriceChange}
+                      />
+                    </div>
+
+                    {/* Základy - skupina */}
+                    <div className="col-span-1 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-orange-600 rounded-lg sm:rounded-xl bg-orange-100/70 shadow-xl">
+                      <p className="col-span-2 sm:col-span-4 text-[8px] sm:text-[10px] font-bold text-orange-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
+                        <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-orange-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">3</span>
+                        {t('foundations')} ({t('selectOne')})
+                      </p>
+
+                      <EditableTile
+                        selected={zaklady === "bez"}
+                        onClick={() => setZaklady("bez")}
+                        title={t('foundationsNone')}
+                        subtitle={t('own')}
+                        price="0 €"
+                        isPriced={false}
+                        isIncluded={true}
+                        t={t}
+                        isAdmin={false}
+                      />
+
+                      <EditableTile
+                        selected={zaklady === "skrutky"}
+                        onClick={() => setZaklady("skrutky")}
+                        title="Pilóty/Pätky"
+                        subtitle={t('groundFootings')}
+                        price={`+ ${CENY.zaklady.skrutky.toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="zaklady_skrutky"
+                        onPriceChange={handlePriceChange}
+                      />
+
+                      <EditableTile
+                        selected={zaklady === "doska"}
+                        onClick={() => setZaklady("doska")}
+                        title={t('foundationsSlab')}
+                        subtitle={t('foundationSlab')}
+                        price={`+ ${CENY.zaklady.doska.toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="zaklady_doska"
+                        onPriceChange={handlePriceChange}
+                      />
+
+                      <EditableTile
+                        selected={zaklady === "pasove"}
+                        onClick={() => setZaklady("pasove")}
+                        title={t('foundationsStrip')}
+                        subtitle={t('stripFound')}
+                        price={`+ ${CENY.zaklady.pasove.toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="zaklady_pasove"
+                        onPriceChange={handlePriceChange}
+                      />
+                    </div>
+
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
           )}
 
           {showHolodom && <motion.div
