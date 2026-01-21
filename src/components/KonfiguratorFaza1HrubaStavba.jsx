@@ -304,7 +304,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('insulationEnhanced')}
                 subtitle={t('insulationEnhancedDesc')}
-                price={`+ ${getPriceForTile('izolacia_zvysena').toLocaleString('sk-SK')} €`}
+                price={`+ ${(cennik?.izolacia?.zvysena || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 tooltip={t('insulationEnhancedDesc')}
               />
@@ -317,7 +317,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-green-600"
                 title={t('insulationPremium')}
                 subtitle={t('insulationPremiumDesc')}
-                price={`+ ${getPriceForTile('izolacia_premium').toLocaleString('sk-SK')} €`}
+                price={`+ ${(cennik?.izolacia?.premium || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
                 isA0={true}
                 selectedBg="bg-green-100"
@@ -335,7 +335,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                   iconSelectedColor="text-green-700"
                   title="300mm"
                   subtitle="Ultra izolácia"
-                  price={`+ ${getPriceForTile('izolacia_ultra').toLocaleString('sk-SK')} €`}
+                  price={`+ ${(cennik?.izolacia?.ultra || 0).toLocaleString('sk-SK')} €`}
                   isPriced={true}
                   isA0={true}
                   selectedBg="bg-green-100"
