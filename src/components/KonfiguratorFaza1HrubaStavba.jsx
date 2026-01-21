@@ -132,9 +132,16 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/0 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       
       {isA0 && (
-        <Badge className="absolute top-0.5 left-0.5 sm:top-1 sm:left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[6px] sm:text-[8px] px-1 sm:px-1.5 z-10">
-          <Sparkles className="w-1.5 h-1.5 sm:w-2 sm:h-2 mr-0.5" />A0
-        </Badge>
+        <motion.div
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <Badge className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white text-[7px] sm:text-[9px] px-2 sm:px-2.5 py-0.5 z-10 shadow-lg font-bold tracking-wider">
+            <Sparkles className="w-2 h-2 sm:w-2.5 sm:h-2.5 mr-1" />
+            A0
+          </Badge>
+        </motion.div>
       )}
       
       {/* Veľká zelená fajka cez celú dlaždicu */}
