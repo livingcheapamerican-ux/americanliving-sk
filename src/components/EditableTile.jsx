@@ -117,18 +117,22 @@ export default function EditableTile({
                 price
               )}
             </span>
-            {isAdmin && isPriced && priceKey && (
+            {isAdmin && isPriced && priceKey && !selected && (
               <Button 
                 size="icon" 
                 variant="ghost" 
-                className="h-5 w-5 bg-blue-100 hover:bg-blue-200" 
+                className="h-6 w-6 bg-blue-100 hover:bg-blue-200 flex-shrink-0" 
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsEditing(true);
                 }}
+                title="Edituj cenu"
               >
-                <Edit2 className="h-3 w-3 text-blue-600" />
+                <Edit2 className="h-4 w-4 text-blue-600" />
               </Button>
+            )}
+            {isAdmin && isPriced && priceKey && selected && (
+              <span className="text-[9px] text-gray-500">({title})</span>
             )}
           </div>
         )}
