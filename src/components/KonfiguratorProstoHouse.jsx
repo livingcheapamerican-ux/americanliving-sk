@@ -132,27 +132,42 @@ export default function KonfiguratorProstoHouse({
 
   // Funkcia na získanie ceny - podporuje aj vnorené objekty z databázy
   const getPrice = (category, key = null) => {
-    // Ak je key null, ide o jednoduchú hodnotu (napr. elektroinstalacia)
+    console.log(`[getPrice] category: ${category}, key: ${key}`);
+    
+    // Jednoduchá hodnota (napr. elektroinstalacia)
     if (key === null) {
       const customValue = customCeny[category];
-      // Použiť custom hodnotu ak existuje (vrátane 0, pokiaľ je explicitne zadaná)
+      console.log(`[getPrice] Simple value - customValue:`, customValue);
+      
+      // Ak existuje custom hodnota (aj 0), použijeme ju
       if (customValue !== undefined && customValue !== null) {
+        console.log(`[getPrice] Using custom value: ${customValue}`);
         return customValue;
       }
-      return DEFAULT_CENY[category] ?? 0;
+      
+      const defaultValue = DEFAULT_CENY[category] ?? 0;
+      console.log(`[getPrice] Using default value: ${defaultValue}`);
+      return defaultValue;
     }
     
-    // Ide o vnorený objekt (napr. montaz.ano)
+    // Vnorený objekt (napr. montaz.ano, predlzenie.1.2)
     const customCategory = customCeny[category];
+    console.log(`[getPrice] Nested - customCategory:`, customCategory);
+    
     if (customCategory && typeof customCategory === 'object') {
-      // Skontroluj či existuje konkrétna hodnota pre daný kľúč
-      if (customCategory[key] !== undefined && customCategory[key] !== null) {
-        return customCategory[key];
+      const customValue = customCategory[key];
+      console.log(`[getPrice] Nested value - customValue:`, customValue);
+      
+      // Ak existuje konkrétna hodnota (aj 0), použijeme ju
+      if (customValue !== undefined && customValue !== null) {
+        console.log(`[getPrice] Using nested custom value: ${customValue}`);
+        return customValue;
       }
     }
     
-    // Fallback na default hodnotu
-    return DEFAULT_CENY[category]?.[key] ?? 0;
+    const defaultValue = DEFAULT_CENY[category]?.[key] ?? 0;
+    console.log(`[getPrice] Using nested default value: ${defaultValue}`);
+    return defaultValue;
   };
 
   // Cenník - s možnosťou override z databázy
