@@ -129,9 +129,9 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         )}
       </AnimatePresence>
 
-      <Icon className={`w-5 h-5 sm:w-10 sm:h-10 mb-1 sm:mb-2 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
-      <span className={`font-semibold text-gray-800 text-[10px] sm:text-sm leading-tight ${selected ? "opacity-30" : ""}`}>{title}</span>
-      <span className={`text-[8px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1 leading-tight ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
+      <Icon className={`w-6 h-6 sm:w-11 sm:h-11 mb-2 sm:mb-3 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
+      <span className={`font-bold text-gray-800 text-[11px] sm:text-sm leading-snug ${selected ? "opacity-30" : ""}`}>{title}</span>
+      <span className={`text-[8px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1 leading-snug ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
       <div className={`flex items-center gap-1 justify-center relative`}>
         {isEditing && isPriced ? (
           <div className="flex items-center gap-0.5">
