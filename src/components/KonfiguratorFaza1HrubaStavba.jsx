@@ -29,12 +29,16 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
     setEditPrice(priceNum);
   };
 
-  const handleSavePrice = async () => {
+  const handleSavePrice = async (e) => {
+    if (e) e.stopPropagation();
     if (!onPriceChange) return;
     try {
       const newPrice = parseFloat(editPrice);
-      await onPriceChange(priceKey, newPrice);
-      setIsEditing(false);
+      if (!isNaN(newPrice)) {
+        await onPriceChange(priceKey, newPrice);
+        setEditPrice((newPrice).toLocaleString('sk-SK')); // Update display
+        setIsEditing(false);
+      }
     } catch (error) {
       console.error('Error saving price:', error);
     }
