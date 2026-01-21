@@ -209,10 +209,10 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       {/* Tooltip - rendered via portal */}
       {showTooltip && tooltip && ReactDOM.createPortal(
         <motion.div
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -5 }}
-          className="fixed z-[9999] max-w-[85vw] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
+          initial={{ opacity: 0, y: -10, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -10, scale: 0.9 }}
+          className="fixed z-[9999] max-w-[85vw] w-64 p-4 bg-gradient-to-br from-gray-900 to-gray-800 text-white text-xs rounded-xl shadow-2xl pointer-events-none border border-gray-700"
           style={{
             top: tooltipPosition.top + 'px',
             left: tooltipPosition.left + 'px',
