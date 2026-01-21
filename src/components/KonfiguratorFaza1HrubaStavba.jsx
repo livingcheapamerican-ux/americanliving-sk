@@ -234,8 +234,8 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('assemblyYes')}
                 subtitle={t('phase1')}
-                price={cennik?.montaz?.ano > 0 ? `+ ${(cennik.montaz.ano).toLocaleString('sk-SK')} €` : '0 €'}
-                isPriced={cennik?.montaz?.ano > 0}
+                price={`+ ${((cennik?.montaz?.ano && cennik.montaz.ano > 0) ? cennik.montaz.ano : 9225).toLocaleString('sk-SK')} €`}
+                isPriced={true}
                 tooltip={t('assemblyNote')}
               />
             </div>
@@ -250,10 +250,10 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   {[
                     { value: 0, label: "Bez predĺženia", basePrice: 0 },
-                    { value: 1.2, label: "+1,2 m", basePrice: cennik?.predlzenie?.[1.2] || 0 },
-                    { value: 2.4, label: "+2,4 m", basePrice: cennik?.predlzenie?.[2.4] || 0 },
-                    { value: 3.6, label: "+3,6 m", basePrice: cennik?.predlzenie?.[3.6] || 0 },
-                    { value: 4.8, label: "+4,8 m", basePrice: cennik?.predlzenie?.[4.8] || 0 }
+                    { value: 1.2, label: "+1,2 m", basePrice: (cennik?.predlzenie?.[1.2] && cennik.predlzenie[1.2] > 0) ? cennik.predlzenie[1.2] : 6600 },
+                    { value: 2.4, label: "+2,4 m", basePrice: (cennik?.predlzenie?.[2.4] && cennik.predlzenie[2.4] > 0) ? cennik.predlzenie[2.4] : 13200 },
+                    { value: 3.6, label: "+3,6 m", basePrice: (cennik?.predlzenie?.[3.6] && cennik.predlzenie[3.6] > 0) ? cennik.predlzenie[3.6] : 19800 },
+                    { value: 4.8, label: "+4,8 m", basePrice: (cennik?.predlzenie?.[4.8] && cennik.predlzenie[4.8] > 0) ? cennik.predlzenie[4.8] : 26400 }
                   ].map((opt) => (
                     <motion.div
                       key={opt.value}
@@ -304,8 +304,8 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('insulationEnhanced')}
                 subtitle={t('insulationEnhancedDesc')}
-                price={cennik?.izolacia?.zvysena > 0 ? `+ ${(cennik.izolacia.zvysena).toLocaleString('sk-SK')} €` : '0 €'}
-                isPriced={cennik?.izolacia?.zvysena > 0}
+                price={`+ ${((cennik?.izolacia?.zvysena && cennik.izolacia.zvysena > 0) ? cennik.izolacia.zvysena : 2700).toLocaleString('sk-SK')} €`}
+                isPriced={true}
                 tooltip={t('insulationEnhancedDesc')}
               />
 
@@ -317,8 +317,8 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-green-600"
                 title={t('insulationPremium')}
                 subtitle={t('insulationPremiumDesc')}
-                price={cennik?.izolacia?.premium > 0 ? `+ ${(cennik.izolacia.premium).toLocaleString('sk-SK')} €` : '0 €'}
-                isPriced={cennik?.izolacia?.premium > 0}
+                price={`+ ${((cennik?.izolacia?.premium && cennik.izolacia.premium > 0) ? cennik.izolacia.premium : 5400).toLocaleString('sk-SK')} €`}
+                isPriced={true}
                 isA0={true}
                 selectedBg="bg-green-100"
                 selectedBorder="border-green-500"
@@ -335,8 +335,8 @@ export default function KonfiguratorFaza1HrubaStavba({
                   iconSelectedColor="text-green-700"
                   title="300mm"
                   subtitle="Ultra izolácia"
-                  price={cennik?.izolacia?.ultra > 0 ? `+ ${(cennik.izolacia.ultra).toLocaleString('sk-SK')} €` : '0 €'}
-                  isPriced={cennik?.izolacia?.ultra > 0}
+                  price={`+ ${((cennik?.izolacia?.ultra && cennik.izolacia.ultra > 0) ? cennik.izolacia.ultra : 10125).toLocaleString('sk-SK')} €`}
+                  isPriced={true}
                   isA0={true}
                   selectedBg="bg-green-100"
                   selectedBorder="border-green-500"
@@ -373,8 +373,8 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title="Pilóty/Pätky"
                 subtitle={t('groundFootings')}
-                price={cennik?.zaklady?.skrutky > 0 ? `+ ${(cennik.zaklady.skrutky).toLocaleString('sk-SK')} €` : '0 €'}
-                isPriced={cennik?.zaklady?.skrutky > 0}
+                price={`+ ${((cennik?.zaklady?.skrutky && cennik.zaklady.skrutky > 0) ? cennik.zaklady.skrutky : 4751).toLocaleString('sk-SK')} €`}
+                isPriced={true}
                 tooltip={t('foundationsScrews')}
               />
 
@@ -386,8 +386,8 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsSlab')}
                 subtitle={t('foundationSlab')}
-                price={cennik?.zaklady?.doska > 0 ? `+ ${(cennik.zaklady.doska).toLocaleString('sk-SK')} €` : '0 €'}
-                isPriced={cennik?.zaklady?.doska > 0}
+                price={`+ ${((cennik?.zaklady?.doska && cennik.zaklady.doska > 0) ? cennik.zaklady.doska : 9633).toLocaleString('sk-SK')} €`}
+                isPriced={true}
                 tooltip={t('foundationsSlab')}
               />
 
@@ -399,8 +399,8 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsStrip')}
                 subtitle={t('stripFound')}
-                price={cennik?.zaklady?.pasove > 0 ? `+ ${(cennik.zaklady.pasove).toLocaleString('sk-SK')} €` : '0 €'}
-                isPriced={cennik?.zaklady?.pasove > 0}
+                price={`+ ${((cennik?.zaklady?.pasove && cennik.zaklady.pasove > 0) ? cennik.zaklady.pasove : 11823).toLocaleString('sk-SK')} €`}
+                isPriced={true}
                 tooltip={t('foundationsStrip')}
               />
             </div>
