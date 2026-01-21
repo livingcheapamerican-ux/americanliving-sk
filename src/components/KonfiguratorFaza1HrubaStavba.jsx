@@ -149,8 +149,8 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
               onClick={(e) => e.stopPropagation()}
             />
             <button
-              onClick={handleSavePrice}
-              className="px-1.5 py-1 bg-green-500 hover:bg-green-600 text-white text-xs font-bold rounded transition-all"
+              onClick={(e) => handleSavePrice(e)}
+              className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs font-bold rounded transition-all active:scale-95"
               title="Uložiť cenu"
             >
               ✓
