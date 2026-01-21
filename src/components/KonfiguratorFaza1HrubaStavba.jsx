@@ -128,7 +128,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       <Icon className={`w-5 h-5 sm:w-10 sm:h-10 mb-1 sm:mb-2 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
       <span className={`font-semibold text-gray-800 text-[10px] sm:text-sm leading-tight ${selected ? "opacity-30" : ""}`}>{title}</span>
       <span className={`text-[8px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1 leading-tight ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
-      <div className={`flex items-center gap-1 justify-center`}>
+      <div className={`flex items-center gap-1 justify-center relative`}>
         {isEditing && isPriced ? (
           <input
             type="number"
@@ -146,15 +146,15 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         ) : (
           <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>{price}</span>
         )}
-        {isAdmin && isPriced && !isEditing && (
-           <button
-             onClick={handleEditClick}
-             className="ml-1 p-0.5 hover:bg-amber-200 rounded transition-all hover:scale-110 active:scale-95"
-             title="Edituj cenu"
-           >
-             <Pencil className="w-4 h-4 text-amber-600 stroke-[2.5]" />
-           </button>
-         )}
+        {isPriced && !isEditing && (
+          <button
+            onClick={handleEditClick}
+            className="ml-1 p-0.5 hover:bg-amber-200 rounded transition-all hover:scale-110 active:scale-95"
+            title="Edituj cenu"
+          >
+            <Pencil className="w-4 h-4 text-amber-600 stroke-[2.5]" />
+          </button>
+        )}
       </div>
 
       {/* Tooltip - rendered via portal */}
