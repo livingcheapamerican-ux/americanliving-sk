@@ -132,7 +132,9 @@ export default function KonfiguratorProstoHouse({
 
   // Funkcia na získanie ceny - podporuje aj vnorené objekty z databázy
   const getPrice = (category, key = null) => {
-    console.log(`[getPrice] category: ${category}, key: ${key}`);
+    console.log(`[getPrice] START - category: ${category}, key: ${key}`);
+    console.log(`[getPrice] DEFAULT_CENY:`, DEFAULT_CENY);
+    console.log(`[getPrice] DEFAULT_CENY[${category}]:`, DEFAULT_CENY[category]);
     
     // Jednoduchá hodnota (napr. elektroinstalacia)
     if (key === null) {
@@ -154,6 +156,7 @@ export default function KonfiguratorProstoHouse({
     // Vnorený objekt (napr. montaz.ano, predlzenie.1.2)
     const customCategory = customCeny[category];
     console.log(`[getPrice] Nested - customCategory:`, customCategory);
+    console.log(`[getPrice] DEFAULT_CENY[${category}][${key}]:`, DEFAULT_CENY[category]?.[key]);
     
     if (customCategory && typeof customCategory === 'object') {
       const customValue = customCategory[key];
@@ -168,7 +171,7 @@ export default function KonfiguratorProstoHouse({
     }
     
     const defaultValue = DEFAULT_CENY[category]?.[key] ?? 0;
-    console.log(`[getPrice] Using nested default value: ${defaultValue}`);
+    console.log(`[getPrice] FINAL - Using nested default value: ${defaultValue}`);
     return defaultValue;
   };
 
