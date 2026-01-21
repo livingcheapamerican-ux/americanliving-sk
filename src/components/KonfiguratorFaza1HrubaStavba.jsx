@@ -42,11 +42,11 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       const newPrice = parseFloat(editPrice);
       if (!isNaN(newPrice)) {
         await onPriceChange(priceKey, newPrice);
-        setEditPrice((newPrice).toLocaleString('sk-SK')); // Update display
-        setIsEditing(false);
+        // Editing mode will turn off automatically when price prop updates
       }
     } catch (error) {
       console.error('Error saving price:', error);
+      setIsEditing(false);
     }
   };
 
