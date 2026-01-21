@@ -254,22 +254,40 @@ export default function KonfiguratorFaza1HrubaStavba({
   const hasUltraInsulation = dom?.nazov !== "Fjord";
   const hasPredlzenie = setPredlzenie && (dom?.nazov === "Prosto House" || dom?.nazov === "A-Frame" || dom?.nazov === "Barn 48" || dom?.nazov === "Barn Double");
   
-  // Sekcia Header komponenta bez animácií
+  // Modernný SectionHeader s animáciami
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
-    <div className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${color}`}>
-      <div className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white/90 rounded-lg sm:rounded-xl shadow-lg flex-shrink-0">
-        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-800" />
+    <motion.div 
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={`relative flex items-center gap-2 sm:gap-4 p-3 sm:p-5 bg-gradient-to-r ${color} overflow-hidden`}
+    >
+      {/* Animated background effect */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-2 right-2 w-20 h-20 bg-white rounded-full blur-2xl opacity-10"></div>
       </div>
+      
+      <motion.div 
+        className="relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-white/20 rounded-2xl backdrop-blur-sm shadow-xl flex-shrink-0 border border-white/30"
+        whileHover={{ scale: 1.1, rotate: 5 }}
+      >
+        <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white drop-shadow-lg" />
+      </motion.div>
+      
       <div className="relative flex-1 min-w-0">
-        <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
-          <span className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[9px] sm:text-xs font-bold uppercase tracking-wider">
+        <div className="flex items-center gap-2 sm:gap-3 mb-1">
+          <motion.span 
+            className="inline-flex items-center justify-center px-2.5 sm:px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-white/30"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2 }}
+          >
             {t('phase')} {step}
-          </span>
+          </motion.span>
         </div>
-        <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
-        {subtitle && <p className="text-white text-[10px] sm:text-xs mt-0.5 truncate drop-shadow-md">{subtitle}</p>}
+        <h3 className="text-base sm:text-2xl font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
+        {subtitle && <p className="text-white/90 text-[11px] sm:text-sm mt-1 truncate drop-shadow-md">{subtitle}</p>}
       </div>
-    </div>
+    </motion.div>
   );
 
   return (
