@@ -340,11 +340,16 @@ export default function KonfiguratorFaza1HrubaStavba({
 
             {/* Predĺženie domu - len pre modely ktoré to podporujú */}
             {hasPredlzenie && (
-              <div className="col-span-2 sm:col-span-3 lg:col-span-4 p-4 border-[5px] border-indigo-600 rounded-2xl bg-indigo-100/70 shadow-xl">
-                <p className="text-xs font-bold text-indigo-700 mb-3 flex items-center gap-1">
-                  <span className="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xs font-extrabold">+</span>
-                  Predĺženie dĺžky domu (v násobkoch 1,2m)
-                </p>
+             <motion.div 
+               initial={{ opacity: 0, scale: 0.95 }}
+               animate={{ opacity: 1, scale: 1 }}
+               transition={{ delay: 0.15 }}
+               className="col-span-2 sm:col-span-3 lg:col-span-4 p-4 sm:p-5 border-[3px] sm:border-[4px] border-indigo-500 rounded-2xl bg-gradient-to-br from-indigo-100/80 to-indigo-50/60 shadow-xl"
+             >
+               <p className="text-xs font-bold text-indigo-800 mb-3 flex items-center gap-2">
+                 <span className="w-6 h-6 bg-gradient-to-br from-indigo-600 to-blue-600 text-white rounded-full flex items-center justify-center text-xs font-extrabold shadow-lg">+</span>
+                 Predĺženie dĺžky domu (v násobkoch 1,2m)
+               </p>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   {[
                     { value: 0, label: "Bez predĺženia", basePrice: 0 },
