@@ -916,9 +916,9 @@ export default function KonfiguratorFjord({
 
           {showDocs && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }}>
-              <Card className="overflow-hidden border-2 border-purple-300 shadow-lg">
-                <SectionHeader icon={FileText} title={t('phase4')} subtitle={t('phase4Subtitle')} color="from-purple-600 to-violet-600" step="4" />
-                <div className="p-2 sm:p-3 bg-gradient-to-b from-purple-50/50 to-white">
+              <Card className="overflow-hidden border-0 shadow-xl bg-white">
+                <SectionHeader icon={FileText} title={t('phase4')} subtitle={t('phase4Subtitle')} color="from-purple-600 via-purple-500 to-violet-600" step="4" />
+                <div className="p-3 sm:p-5 bg-gradient-to-b from-purple-50/80 via-white to-white">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
                     <Tile selected={inziniering} onClick={() => setInziniering(!inziniering)} icon={FileCheck} iconColor="text-purple-600" iconSelectedColor="text-purple-800" title={t('engineering')} subtitle={t('buildingPermit')} price={`+ ${CENY.inziniering.toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="inziniering" onPriceChange={handlePriceChange} />
                     <Tile selected={projektA0} onClick={() => setProjektA0(!projektA0)} icon={FileText} iconColor="text-purple-600" iconSelectedColor="text-purple-800" title={t('projectA0')} subtitle={t('certification')} price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} isAdmin={isAdmin} priceKey="projektA0" onPriceChange={handlePriceChange} />
