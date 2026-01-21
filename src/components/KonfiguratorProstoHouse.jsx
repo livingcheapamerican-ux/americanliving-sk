@@ -326,7 +326,8 @@ export default function KonfiguratorProstoHouse({
     if (hladaniePozemku) items.push({ name: t('wantLandForHouse'), price: 0, section: "services", selected: true });
     if (financneSluzby) items.push({ name: t('financialServicesLoans'), price: 0, section: "services", selected: true });
     
-    items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
+    const montazLabel = montazHolodomu === "ano" ? t('shellAssembly') : t('assemblyNo');
+    items.push({ name: montazLabel, price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: true });
     
     if (predlzenie > 0) {
       items.push({ name: `${t('extension')} +${predlzenie}m`, price: CENY.predlzenie[predlzenie] || 0, section: "hruba", selected: true });
@@ -334,11 +335,11 @@ export default function KonfiguratorProstoHouse({
     
     const izolaciaLabel = izolaciaNavysenie === "ultra" ? t('insulationUltra') : izolaciaNavysenie === "premium" ? t('insulationPremium') : izolaciaNavysenie === "zvysena" ? t('insulationEnhanced') : t('insulationStd');
     const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
-    items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" });
+    items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: true });
     
-    const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? t('foundationsScrews') : t('foundationsLabel');
+    const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? t('foundationsScrews') : t('foundationsNone');
     const zakladyPrice = zaklady === "pasove" ? CENY.zaklady.pasove : zaklady === "doska" ? CENY.zaklady.doska : zaklady === "skrutky" ? CENY.zaklady.skrutky : 0;
-    items.push({ name: zakladyLabel, price: zakladyPrice, section: "hruba", selected: zaklady !== "bez" });
+    items.push({ name: zakladyLabel, price: zakladyPrice, section: "hruba", selected: true });
     
     const interierLabel = interierFinis === "drevo" ? t('interiorWood') : interierFinis === "sadrokarton" ? t('interiorDrywall') : t('interiorNone');
     const interierPrice = interierFinis === "drevo" ? CENY.interierFinis.drevo : interierFinis === "sadrokarton" ? CENY.interierFinis.sadrokarton : 0;
