@@ -150,28 +150,8 @@ export default function KonfiguratorFaza1HrubaStavba({
     }
   }, []);
 
-  // Získanie ceny z cenníka - cenník už je spracovaný (CENY objekt z rodiča)
-  const getPriceForTile = (key) => {
-    if (!cennik) return 0;
-    
-    // Cenník je už spracovaný objekt CENY z KonfiguratorProstoHouse
-    // kde cennik.montaz.ano je už finálna číselná hodnota
-    const priceMap = {
-      'montaz': cennik.montaz?.ano ?? 0,
-      'izolacia_zvysena': cennik.izolacia?.zvysena ?? 0,
-      'izolacia_premium': cennik.izolacia?.premium ?? 0,
-      'izolacia_ultra': cennik.izolacia?.ultra ?? 0,
-      'zaklady_skrutky': cennik.zaklady?.skrutky ?? 0,
-      'zaklady_doska': cennik.zaklady?.doska ?? 0,
-      'zaklady_pasove': cennik.zaklady?.pasove ?? 0,
-      'predlzenie_1_2': cennik.predlzenie?.[1.2] ?? 0,
-      'predlzenie_2_4': cennik.predlzenie?.[2.4] ?? 0,
-      'predlzenie_3_6': cennik.predlzenie?.[3.6] ?? 0,
-      'predlzenie_4_8': cennik.predlzenie?.[4.8] ?? 0
-    };
-    
-    return priceMap[key] ?? 0;
-  };
+  // Cenník je už CENY objekt z rodiča (KonfiguratorProstoHouse) s finálnymi cenami
+  // Vrátime priamo cenu alebo 0 ako fallback
 
   // Informácia či model podporuje ultra izoláciu (Fjord nemá ultra)
   const hasUltraInsulation = dom?.nazov !== "Fjord";
