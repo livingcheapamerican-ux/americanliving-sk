@@ -12,7 +12,7 @@ import {
   Send, AlertTriangle, Check, Calculator, RotateCcw,
   Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
   Zap, ShowerHead, Flame, Cable, Paintbrush, Home, Truck, Sun, DoorOpen,
-  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, Building2
+  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, Building2, Pencil
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -26,11 +26,13 @@ import EditableTile from "./EditableTile";
 import { useQuery } from "@tanstack/react-query";
 
 // Dlaždica s tooltip a veľkou fajkou
-const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [hoverTimer, setHoverTimer] = useState(null);
-  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
-  const tileRef = useRef(null);
+const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300", isAdmin = false, priceKey, onPriceChange }) => {
+   const [showTooltip, setShowTooltip] = useState(false);
+   const [hoverTimer, setHoverTimer] = useState(null);
+   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+   const [isEditing, setIsEditing] = useState(false);
+   const [editPrice, setEditPrice] = useState(price);
+   const tileRef = useRef(null);
 
   const updateTooltipPosition = () => {
     if (tileRef.current) {
@@ -74,6 +76,17 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
     }
   }, [showTooltip]);
 
+  const handleSavePrice = async () => {
+    if (!onPriceChange) return;
+    try {
+      const newPrice = parseFloat(editPrice);
+      await onPriceChange(priceKey, newPrice);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error saving price:', error);
+    }
+  };
+
   return (
     <motion.div
       ref={tileRef}
@@ -112,9 +125,41 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       </AnimatePresence>
 
       <Icon className={`w-4 h-4 sm:w-6 sm:h-6 mb-0.5 sm:mb-1 ${selected ? iconSelectedColor : iconColor}`} />
-      <span className={`font-semibold text-gray-800 text-[9px] sm:text-xs leading-tight`}>{title}</span>
-      <span className={`text-[7px] sm:text-[10px] text-gray-500 mt-0.5 leading-tight`}>{subtitle}</span>
-      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[8px] sm:text-[10px] mt-0.5 sm:mt-1`}>{price}</span>
+       <span className={`font-semibold text-gray-800 text-[9px] sm:text-xs leading-tight`}>{title}</span>
+       <span className={`text-[7px] sm:text-[10px] text-gray-500 mt-0.5 leading-tight`}>{subtitle}</span>
+       <div className={`flex items-center gap-1 justify-center mt-0.5 sm:mt-1`}>
+         {isEditing && isPriced ? (
+           <input
+             type="number"
+             value={editPrice}
+             onChange={(e) => setEditPrice(e.target.value)}
+             onBlur={handleSavePrice}
+             onKeyDown={(e) => {
+               if (e.key === 'Enter') handleSavePrice();
+               if (e.key === 'Escape') setIsEditing(false);
+             }}
+             className="w-16 px-1 py-0.5 text-xs border rounded text-gray-800"
+             autoFocus
+             onClick={(e) => e.stopPropagation()}
+           />
+         ) : (
+           <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[8px] sm:text-[10px]`}>{price}</span>
+         )}
+         {isAdmin && isPriced && priceKey && (
+           <button 
+             className="ml-1 p-0.5 hover:bg-amber-200 rounded transition-all hover:scale-110" 
+             onClick={(e) => {
+               e.stopPropagation();
+               setIsEditing(true);
+               const priceNum = price.replace(/[^0-9]/g, '');
+               setEditPrice(priceNum);
+             }}
+             title="Edituj cenu"
+           >
+             <Pencil className="w-3 h-3 text-amber-700" />
+           </button>
+         )}
+       </div>
 
       {showTooltip && tooltip && ReactDOM.createPortal(
         <motion.div
