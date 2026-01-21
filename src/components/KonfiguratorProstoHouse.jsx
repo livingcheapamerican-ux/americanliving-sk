@@ -96,33 +96,24 @@ export default function KonfiguratorProstoHouse({
     return text?.tooltip || defaultText;
   };
 
-  // Cenník - Prosto House (DEFAULT hodnoty z databázy) - ploché kľúče
+  // Cenník - Prosto House (DEFAULT hodnoty)
   const DEFAULT_CENY = {
-    montaz_ano: 9225,
-    predlzenie_1_2: 6600,
-    predlzenie_2_4: 13200,
-    predlzenie_3_6: 19800,
-    predlzenie_4_8: 26400,
-    dvere_kovove: 720,
-    dvere_plastove: 660,
-    izolacia_zvysena: 2700,
-    izolacia_premium: 5400,
-    izolacia_ultra: 10125,
-    zaklady_skrutky: 4751,
-    zaklady_doska: 9633,
-    zaklady_pasove: 11823,
+    montaz: { nie: 0, ano: 9225 },
+    predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
+    dvere: { ziadne: 0, kovove: 720, plastove: 660 },
+    izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 },
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
     bojler: 246,
     tepelneCerpadlo: 1600,
     rekuperacia: 3321,
+    zaklady: { bez: 0, skrutky: 4751, doska: 9633, pasove: 11823 },
     pripojkaSiete: 1501,
     inziniering: 2592,
     projektA0: 3500,
-    interierFinis_drevo: 8200,
-    interierFinis_sadrokarton: 9430,
-    vonkajsiaFasada_suchana: 6371,
+    interierFinis: { ziadne: 0, drevo: 8200, sadrokarton: 9430 },
+    vonkajsiaFasada: { standard: 0, suchana: 6371 },
     povrchokaOkien: 1450,
     vnutornePodlahy: 1750,
     podlahovVykurovanie: 3960,
@@ -139,37 +130,47 @@ export default function KonfiguratorProstoHouse({
   // Načítať custom ceny z databázy pre tento konkrétny dom
   const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
 
-  // Funkcia na získanie ceny - preferuje custom ceny pred default
-  const getPrice = (key) => {
-    const customValue = customCeny[key];
-    // Použiť custom hodnotu len ak je definovaná a nie null
-    if (customValue !== undefined && customValue !== null) {
-      return customValue;
+  // Funkcia na získanie ceny - podporuje aj vnorené objekty z databázy
+  const getPrice = (category, key = null) => {
+    // Ak je key null, ide o jednoduchú hodnotu (napr. elektroinstalacia)
+    if (key === null) {
+      const customValue = customCeny[category];
+      if (customValue !== undefined && customValue !== null) {
+        return customValue;
+      }
+      return DEFAULT_CENY[category] ?? 0;
     }
+    
+    // Ide o vnorený objekt (napr. montaz.ano)
+    const customCategory = customCeny[category];
+    if (customCategory && customCategory[key] !== undefined && customCategory[key] !== null) {
+      return customCategory[key];
+    }
+    
     // Fallback na default hodnotu
-    return DEFAULT_CENY[key] ?? 0;
+    return DEFAULT_CENY[category]?.[key] ?? 0;
   };
 
   // Cenník - s možnosťou override z databázy
   const CENY = {
-    montaz: { nie: 0, ano: getPrice('montaz_ano') },
+    montaz: { nie: 0, ano: getPrice('montaz', 'ano') },
     predlzenie: { 
       0: 0, 
-      1.2: getPrice('predlzenie_1_2'), 
-      2.4: getPrice('predlzenie_2_4'), 
-      3.6: getPrice('predlzenie_3_6'), 
-      4.8: getPrice('predlzenie_4_8') 
+      1.2: getPrice('predlzenie', 1.2), 
+      2.4: getPrice('predlzenie', 2.4), 
+      3.6: getPrice('predlzenie', 3.6), 
+      4.8: getPrice('predlzenie', 4.8) 
     },
     dvere: { 
       ziadne: 0, 
-      kovove: getPrice('dvere_kovove'), 
-      plastove: getPrice('dvere_plastove') 
+      kovove: getPrice('dvere', 'kovove'), 
+      plastove: getPrice('dvere', 'plastove') 
     },
     izolacia: { 
       standard: 0, 
-      zvysena: getPrice('izolacia_zvysena'), 
-      premium: getPrice('izolacia_premium'), 
-      ultra: getPrice('izolacia_ultra') 
+      zvysena: getPrice('izolacia', 'zvysena'), 
+      premium: getPrice('izolacia', 'premium'), 
+      ultra: getPrice('izolacia', 'ultra') 
     },
     elektroinstalacia: getPrice('elektroinstalacia'),
     vodaKanalizacia: getPrice('vodaKanalizacia'),
@@ -179,21 +180,21 @@ export default function KonfiguratorProstoHouse({
     rekuperacia: getPrice('rekuperacia'),
     zaklady: { 
       bez: 0, 
-      skrutky: getPrice('zaklady_skrutky'), 
-      doska: getPrice('zaklady_doska'), 
-      pasove: getPrice('zaklady_pasove') 
+      skrutky: getPrice('zaklady', 'skrutky'), 
+      doska: getPrice('zaklady', 'doska'), 
+      pasove: getPrice('zaklady', 'pasove') 
     },
     pripojkaSiete: getPrice('pripojkaSiete'),
     inziniering: getPrice('inziniering'),
     projektA0: getPrice('projektA0'),
     interierFinis: { 
       ziadne: 0, 
-      drevo: getPrice('interierFinis_drevo'), 
-      sadrokarton: getPrice('interierFinis_sadrokarton') 
+      drevo: getPrice('interierFinis', 'drevo'), 
+      sadrokarton: getPrice('interierFinis', 'sadrokarton') 
     },
     vonkajsiaFasada: { 
       standard: 0, 
-      suchana: getPrice('vonkajsiaFasada_suchana') 
+      suchana: getPrice('vonkajsiaFasada', 'suchana') 
     },
     povrchokaOkien: getPrice('povrchokaOkien'),
     vnutornePodlahy: getPrice('vnutornePodlahy'),
