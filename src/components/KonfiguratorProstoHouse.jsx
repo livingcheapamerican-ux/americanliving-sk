@@ -141,20 +141,36 @@ export default function KonfiguratorProstoHouse({
   // Cenník - s možnosťou override z databázy
   const CENY = {
     montaz: { nie: 0, ano: getPrice('montaz_ano') ?? DEFAULT_CENY.montaz.ano },
-    predlzenie: DEFAULT_CENY.predlzenie,
+    predlzenie: { 
+      0: 0, 
+      1.2: getPrice('predlzenie_1_2') ?? DEFAULT_CENY.predlzenie[1.2], 
+      2.4: getPrice('predlzenie_2_4') ?? DEFAULT_CENY.predlzenie[2.4], 
+      3.6: getPrice('predlzenie_3_6') ?? DEFAULT_CENY.predlzenie[3.6], 
+      4.8: getPrice('predlzenie_4_8') ?? DEFAULT_CENY.predlzenie[4.8] 
+    },
     dvere: { 
       ziadne: 0, 
       kovove: getPrice('dvere_kovove') ?? DEFAULT_CENY.dvere.kovove, 
       plastove: getPrice('dvere_plastove') ?? DEFAULT_CENY.dvere.plastove 
     },
-    izolacia: DEFAULT_CENY.izolacia,
+    izolacia: { 
+      standard: 0, 
+      zvysena: getPrice('izolacia_zvysena') ?? DEFAULT_CENY.izolacia.zvysena, 
+      premium: getPrice('izolacia_premium') ?? DEFAULT_CENY.izolacia.premium, 
+      ultra: getPrice('izolacia_ultra') ?? DEFAULT_CENY.izolacia.ultra 
+    },
     elektroinstalacia: getPrice('elektroinstalacia') ?? DEFAULT_CENY.elektroinstalacia,
     vodaKanalizacia: getPrice('vodaKanalizacia') ?? DEFAULT_CENY.vodaKanalizacia,
     sanitaKomplet: getPrice('sanitaKomplet') ?? DEFAULT_CENY.sanitaKomplet,
     bojler: getPrice('bojler') ?? DEFAULT_CENY.bojler,
     tepelneCerpadlo: getPrice('tepelneCerpadlo') ?? DEFAULT_CENY.tepelneCerpadlo,
     rekuperacia: getPrice('rekuperacia') ?? DEFAULT_CENY.rekuperacia,
-    zaklady: DEFAULT_CENY.zaklady,
+    zaklady: { 
+      bez: 0, 
+      skrutky: getPrice('zaklady_skrutky') ?? DEFAULT_CENY.zaklady.skrutky, 
+      doska: getPrice('zaklady_doska') ?? DEFAULT_CENY.zaklady.doska, 
+      pasove: getPrice('zaklady_pasove') ?? DEFAULT_CENY.zaklady.pasove 
+    },
     pripojkaSiete: getPrice('pripojkaSiete') ?? DEFAULT_CENY.pripojkaSiete,
     inziniering: getPrice('inziniering') ?? DEFAULT_CENY.inziniering,
     projektA0: getPrice('projektA0') ?? DEFAULT_CENY.projektA0,
