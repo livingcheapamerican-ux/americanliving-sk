@@ -377,7 +377,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                     </motion.div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {/* Izolácia - skupina */}
