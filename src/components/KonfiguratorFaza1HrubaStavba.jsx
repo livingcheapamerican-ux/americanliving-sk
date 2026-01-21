@@ -333,10 +333,10 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <span className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-amber-600 to-orange-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold shadow-lg">1</span>
                 {t('assembly')} ({t('selectOne')})
               </p>
-              <Tile selected={montazHolodomu === "nie"} onClick={() => setMontazHolodomu("nie")} icon={Wrench} iconColor="text-amber-600" iconSelectedColor="text-amber-800" title={t('assemblyNo')} subtitle={t('onlyKit')} price="0 €" isPriced={false} isAdmin={isAdmin} />
+              <Tile selected={montazHolodomu === "nie"} onClick={() => setMontazHolodomu("nie")} icon={Wrench} iconColor="text-amber-600" iconSelectedColor="text-amber-800" title={t('assemblyNo')} subtitle={t('onlyKit')} price="0 €" isPriced={false} isAdmin={isAdmin} selectedBg="bg-amber-100" selectedBorder="border-amber-600" selectedRing="ring-amber-300" />
 
-              <Tile selected={montazHolodomu === "ano"} onClick={() => setMontazHolodomu("ano")} icon={Check} iconColor="text-amber-600" iconSelectedColor="text-amber-800" title={t('assemblyYes')} subtitle={t('phase1')} price={`+ ${(cennik?.montaz?.ano || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="montaz_ano" onPriceChange={onPriceChange} />
-            </div>
+              <Tile selected={montazHolodomu === "ano"} onClick={() => setMontazHolodomu("ano")} icon={Check} iconColor="text-amber-600" iconSelectedColor="text-amber-800" title={t('assemblyYes')} subtitle={t('phase1')} price={`+ ${(cennik?.montaz?.ano || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="montaz_ano" onPriceChange={onPriceChange} selectedBg="bg-amber-100" selectedBorder="border-amber-600" selectedRing="ring-amber-300" />
+            </motion.div>
 
             {/* Predĺženie domu - len pre modely ktoré to podporujú */}
             {hasPredlzenie && (
