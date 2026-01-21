@@ -713,7 +713,7 @@ export default function KonfiguratorProstoHouse({
                         isPriced={false}
                         isIncluded={true}
                         t={t}
-                        isAdmin={false}
+                        isAdmin={isAdmin}
                       />
 
                       <EditableTile
