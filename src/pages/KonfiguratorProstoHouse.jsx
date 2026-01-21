@@ -65,8 +65,10 @@ export default function KonfiguratorProstoHouse() {
     },
   });
 
-  // Cenník podľa HTML konfigurátorov (VŠETKY HODNOTY SÚ BEZ DPH)
-  const cennik = {
+  // Načítať cenník z databázy (fallback na defaults ak neexistuje)
+  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
+  
+  const DEFAULT_CENNIK = {
     montaz: {
       48: 4614,
       72: 7524,
@@ -74,7 +76,7 @@ export default function KonfiguratorProstoHouse() {
       108: 9664,
       142: 12091
     },
-    vstupne_dvere: {
+    vstupne_dviere: {
       kovove: 480,
       plastkovo_kovove: 440,
       standardne: 0
@@ -106,6 +108,62 @@ export default function KonfiguratorProstoHouse() {
     fotovoltaika: 12000,
     projektova_dok: 2107,
     energeticky_cert: 3500
+  };
+
+  const getPrice = (category, key = null) => {
+    if (key === null) {
+      const customValue = customCeny[category];
+      if (customValue !== undefined && customValue !== null && customValue !== 0) {
+        return customValue;
+      }
+      return DEFAULT_CENNIK[category] ?? 0;
+    }
+    
+    const customCategory = customCeny[category];
+    if (customCategory && typeof customCategory === 'object') {
+      const customValue = customCategory[key];
+      if (customValue !== undefined && customValue !== null && customValue !== 0) {
+        return customValue;
+      }
+    }
+    
+    return DEFAULT_CENNIK[category]?.[key] ?? 0;
+  };
+
+  const cennik = {
+    montaz: DEFAULT_CENNIK.montaz,
+    vstupne_dvery: {
+      kovove: getPrice('vstupne_dviere', 'kovove'),
+      plastkovo_kovove: getPrice('vstupne_dviere', 'plastkovo_kovove'),
+      standardne: 0
+    },
+    zaklady: {
+      skrutky: getPrice('zaklady', 'skrutky'),
+      pasove: getPrice('zaklady', 'pasove'),
+      doska: getPrice('zaklady', 'doska'),
+      bez: 0
+    },
+    fasada: {
+      smrekovec: getPrice('fasada', 'smrekovec'),
+      termicky_upravene_drevo: getPrice('fasada', 'termicky_upravene_drevo'),
+      kompozit: getPrice('fasada', 'kompozit'),
+      standard: 0
+    },
+    okna: {
+      hlinikove: getPrice('okna', 'hlinikove'),
+      standard: 0
+    },
+    izolacie: getPrice('izolacie'),
+    elektroinst: getPrice('elektroinst'),
+    vodoinst: getPrice('vodoinst'),
+    kanalizacia: getPrice('kanalizacia'),
+    vytranie: getPrice('vytranie'),
+    podkrovie: getPrice('podkrovie'),
+    zateplenie_extra: getPrice('zateplenie_extra'),
+    tepelne_cerpadlo: getPrice('tepelne_cerpadlo'),
+    fotovoltaika: getPrice('fotovoltaika'),
+    projektova_dok: getPrice('projektova_dok'),
+    energeticky_cert: getPrice('energeticky_cert')
   };
 
   const vypocitatCenu = () => {
