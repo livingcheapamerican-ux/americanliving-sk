@@ -22,6 +22,12 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
   const [editPrice, setEditPrice] = useState(price);
   const tileRef = useRef(null);
 
+  // Sleduj zmeny v price prop a resetni editing
+  React.useEffect(() => {
+    setEditPrice(price);
+    setIsEditing(false);
+  }, [price]);
+
   const handleEditClick = (e) => {
     e.stopPropagation();
     setIsEditing(true);
