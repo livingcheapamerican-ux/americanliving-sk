@@ -13,24 +13,46 @@ import { useLanguage } from "./LanguageContext";
 import { base44 } from "@/api/base44Client";
 import EditableTile from "./EditableTile";
 
-// Tile komponent - odstraňujem, používame EditableTile
+// Tile komponenta - stále ju ponechávame pre možné použitie inde
+const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
 
-const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
-  <div className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${color}`}>
-    <div className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white/90 rounded-lg sm:rounded-xl shadow-lg flex-shrink-0">
-      <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-800" />
-    </div>
-    <div className="relative flex-1 min-w-0">
-      <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
-        <span className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[9px] sm:text-xs font-bold uppercase tracking-wider">
-          {step}
-        </span>
-      </div>
-      <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
-      {subtitle && <p className="text-white text-[10px] sm:text-xs mt-0.5 truncate drop-shadow-md">{subtitle}</p>}
-    </div>
-  </div>
-);
+  return (
+    <motion.div
+      whileHover={{ scale: 1.02, y: -2 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+      className={`relative p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center ${
+        selected 
+          ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
+          : isA0 
+            ? "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
+            : `bg-white border-2 border-gray-200 ${hoverBorder} hover:shadow-md`
+      }`}
+    >
+      {selected && (
+        <div className="absolute top-2 right-2 z-10">
+          <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
+            <X className="w-4 h-4 text-white stroke-[3]" />
+          </div>
+        </div>
+      )}
+
+      <Icon className={`w-10 h-10 mb-2 ${selected ? iconSelectedColor : iconColor}`} />
+      <span className={`font-semibold text-gray-800 text-sm leading-tight`}>{title}</span>
+      <span className={`text-xs text-gray-500 mt-1 leading-tight`}>{subtitle}</span>
+      <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-xs mt-2`}>{price}</span>
+
+      {showTooltip && tooltip && (
+        <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl z-50 pointer-events-none">
+          {tooltip}
+        </div>
+      )}
+    </motion.div>
+  );
+};
 
 export default function KonfiguratorFaza1HrubaStavba({
   dom,
@@ -58,13 +80,15 @@ export default function KonfiguratorFaza1HrubaStavba({
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-        <SectionHeader
-          icon={Hammer}
-          title={t('phase1Title')}
-          subtitle={t('phase1Subtitle')}
-          color="from-orange-500 to-red-500"
-          step={t('step') + " 1"}
-        />
+        <div className="bg-gradient-to-r from-orange-500 to-red-500 p-4">
+          <div className="flex items-center gap-3">
+            <Hammer className="w-8 h-8 text-white" />
+            <div>
+              <h3 className="text-xl font-bold text-white">{t('phase1')}</h3>
+              <p className="text-white/90 text-sm">{t('phase1Subtitle')}</p>
+            </div>
+          </div>
+        </div>
 
         <div className="p-6 space-y-6">
           {/* Montáž */}
