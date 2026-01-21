@@ -128,7 +128,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       <Icon className={`w-5 h-5 sm:w-10 sm:h-10 mb-1 sm:mb-2 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
       <span className={`font-semibold text-gray-800 text-[10px] sm:text-sm leading-tight ${selected ? "opacity-30" : ""}`}>{title}</span>
       <span className={`text-[8px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1 leading-tight ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
-      <div className={`flex items-center gap-1 justify-center ${selected ? "opacity-30" : ""}`}>
+      <div className={`flex items-center gap-1 justify-center`}>
         {isEditing && isPriced ? (
           <input
             type="number"
