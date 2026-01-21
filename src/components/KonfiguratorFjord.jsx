@@ -266,7 +266,11 @@ export default function KonfiguratorFjord({
   };
 
   // Načítať custom ceny z databázy
-  const customCeny = dom?.konfigurator_ceny || {};
+  const [customCeny, setCustomCeny] = useState(dom?.konfigurator_ceny || {});
+  
+  useEffect(() => {
+    setCustomCeny(dom?.konfigurator_ceny || {});
+  }, [dom?.konfigurator_ceny]);
   
   const getPrice = (key) => {
     if (customCeny[key] !== undefined && customCeny[key] !== null) {
