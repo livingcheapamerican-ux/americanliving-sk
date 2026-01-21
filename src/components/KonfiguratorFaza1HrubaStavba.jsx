@@ -138,12 +138,6 @@ export default function KonfiguratorFaza1HrubaStavba({
   cennik
   }) {
   
-  console.log('=== KonfiguratorFaza1HrubaStavba CENNÍK ===', cennik);
-  console.log('montaz.ano:', cennik?.montaz?.ano);
-  console.log('izolacia.zvysena:', cennik?.izolacia?.zvysena);
-  console.log('izolacia.premium:', cennik?.izolacia?.premium);
-  console.log('zaklady.skrutky:', cennik?.zaklady?.skrutky);
-  
   const phaseRef = React.useRef(null);
   const { t } = useLanguage();
 
@@ -156,8 +150,17 @@ export default function KonfiguratorFaza1HrubaStavba({
     }
   }, []);
 
-  // Cenník je už CENY objekt z rodiča (KonfiguratorProstoHouse) s finálnymi cenami
-  // Vrátime priamo cenu alebo 0 ako fallback
+  // Helper funkcia - bezpečne získa cenu z cenníka
+  const getPrice = (path) => {
+    if (!cennik) return 0;
+    const keys = path.split('.');
+    let value = cennik;
+    for (const key of keys) {
+      value = value?.[key];
+      if (value === undefined || value === null) return 0;
+    }
+    return typeof value === 'number' ? value : 0;
+  };
 
   // Informácia či model podporuje ultra izoláciu (Fjord nemá ultra)
   const hasUltraInsulation = dom?.nazov !== "Fjord";
