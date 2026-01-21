@@ -25,7 +25,7 @@ import { base44 } from "@/api/base44Client";
 
 import { useQuery } from "@tanstack/react-query";
 
-// Dlaždica s tooltip a veľkou fajkou
+// Modernná dlaždica s lepšou vizuálnou hierarchiou a animáciami
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300", isAdmin = false, priceKey, onPriceChange }) => {
    const [showTooltip, setShowTooltip] = useState(false);
    const [hoverTimer, setHoverTimer] = useState(null);
@@ -90,23 +90,34 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
   return (
     <motion.div
       ref={tileRef}
-      whileHover={{ scale: 1.02, y: -2 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ scale: 1.05, y: -4 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: "spring", stiffness: 400, damping: 10 }}
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative p-1.5 sm:p-2.5 rounded-md sm:rounded-lg cursor-pointer transition-all flex flex-col items-center text-center ${
+      className={`relative p-2 sm:p-3 rounded-lg sm:rounded-xl cursor-pointer transition-all flex flex-col items-center text-center overflow-hidden group ${
         selected 
-          ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
+          ? `${selectedBg} border-2 ${selectedBorder} shadow-2xl ring-2 ${selectedRing} bg-opacity-80` 
           : isA0 
-            ? "bg-green-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md"
-            : `bg-white border-2 border-gray-200 ${hoverBorder} hover:shadow-md`
+            ? "bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-400 shadow-lg hover:shadow-xl hover:border-green-500"
+            : `bg-gradient-to-br from-white to-gray-50 border-2 border-gray-300 shadow-md hover:shadow-lg ${hoverBorder} hover:border-opacity-100`
       }`}
     >
+      {/* Animated background gradient on hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      
       {isA0 && (
-        <Badge className="absolute top-0.5 left-0.5 sm:top-1 sm:left-1 bg-gradient-to-r from-green-500 to-emerald-600 text-[6px] sm:text-[8px] px-1 sm:px-1.5 z-10">
-          <Sparkles className="w-1.5 h-1.5 sm:w-2 sm:h-2 mr-0.5" />A0
-        </Badge>
+        <motion.div
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <Badge className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white text-[7px] sm:text-[9px] px-2 sm:px-2.5 py-0.5 z-10 shadow-lg font-bold tracking-wider">
+            <Sparkles className="w-2 h-2 sm:w-2.5 sm:h-2.5 mr-1" />
+            A0
+          </Badge>
+        </motion.div>
       )}
       
       <AnimatePresence>
@@ -115,58 +126,68 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            className="absolute top-1 right-1 sm:top-2 sm:right-2 z-20 pointer-events-none"
+            transition={{ type: "spring", stiffness: 500 }}
+            className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20 pointer-events-none"
           >
-            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
-              <Check className="w-3 h-3 sm:w-4 sm:h-4 text-white stroke-[3]" />
+            <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/50">
+              <Check className="w-4 h-4 sm:w-5 sm:h-5 text-white stroke-[3]" />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <Icon className={`w-4 h-4 sm:w-6 sm:h-6 mb-0.5 sm:mb-1 ${selected ? iconSelectedColor : iconColor}`} />
-       <span className={`font-semibold text-gray-800 text-[9px] sm:text-xs leading-tight`}>{title}</span>
-       <span className={`text-[7px] sm:text-[10px] text-gray-500 mt-0.5 leading-tight`}>{subtitle}</span>
-       <div className={`flex items-center gap-1 justify-center mt-0.5 sm:mt-1`}>
-         {isEditing && isPriced ? (
-           <input
-             type="number"
-             value={editPrice}
-             onChange={(e) => setEditPrice(e.target.value)}
-             onBlur={handleSavePrice}
-             onKeyDown={(e) => {
-               if (e.key === 'Enter') handleSavePrice();
-               if (e.key === 'Escape') setIsEditing(false);
-             }}
-             className="w-16 px-1 py-0.5 text-xs border rounded text-gray-800"
-             autoFocus
-             onClick={(e) => e.stopPropagation()}
-           />
-         ) : (
-           <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[8px] sm:text-[10px]`}>{price}</span>
-         )}
-         {isAdmin && isPriced && priceKey && !isEditing && (
-              <button 
-                className="ml-1 p-0.5 hover:bg-amber-200 rounded transition-all hover:scale-110 active:scale-95" 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsEditing(true);
-                  const priceNum = price.replace(/[^0-9]/g, '');
-                  setEditPrice(priceNum);
-                }}
-                title="Edituj cenu"
-              >
-                <Pencil className="w-4 h-4 text-amber-600 stroke-[2.5]" />
-              </button>
-            )}
-       </div>
+      <motion.div
+        animate={{ y: selected ? 0 : 0 }}
+        className="relative z-10 flex flex-col items-center gap-1"
+      >
+        <div className={`p-1.5 sm:p-2 rounded-lg transition-all ${selected ? "bg-white/30" : "bg-white/0 group-hover:bg-white/20"}`}>
+          <Icon className={`w-5 h-5 sm:w-7 sm:h-7 transition-colors ${selected ? iconSelectedColor : iconColor}`} />
+        </div>
+        <span className={`font-bold text-[10px] sm:text-xs leading-tight transition-colors ${selected ? "text-gray-900" : "text-gray-800"}`}>{title}</span>
+        <span className={`text-[8px] sm:text-[11px] transition-colors ${selected ? "text-gray-700" : "text-gray-600"}`}>{subtitle}</span>
+        <div className={`flex items-center gap-1.5 justify-center mt-1 sm:mt-2`}>
+          {isEditing && isPriced ? (
+            <input
+              type="number"
+              value={editPrice}
+              onChange={(e) => setEditPrice(e.target.value)}
+              onBlur={handleSavePrice}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSavePrice();
+                if (e.key === 'Escape') setIsEditing(false);
+              }}
+              className="w-20 px-2 py-1 text-xs border-2 border-amber-300 rounded-lg text-gray-800 font-semibold focus:outline-none focus:border-amber-500"
+              autoFocus
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            <span className={`text-[10px] sm:text-[12px] font-bold transition-colors ${isPriced ? "text-green-600" : "text-gray-400"}`}>{price}</span>
+          )}
+          {isAdmin && isPriced && priceKey && !isEditing && (
+            <motion.button 
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+              className="p-0.5 hover:bg-amber-200 rounded transition-all active:scale-95" 
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsEditing(true);
+                const priceNum = price.replace(/[^0-9]/g, '');
+                setEditPrice(priceNum);
+              }}
+              title="Edituj cenu"
+            >
+              <Pencil className="w-4 h-4 text-amber-600 stroke-[2.5]" />
+            </motion.button>
+          )}
+        </div>
+      </motion.div>
 
       {showTooltip && tooltip && ReactDOM.createPortal(
         <motion.div
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -5 }}
-          className="fixed z-[9999] max-w-[85vw] w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
+          initial={{ opacity: 0, y: -10, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -10, scale: 0.9 }}
+          className="fixed z-[9999] max-w-[85vw] w-64 p-4 bg-gradient-to-br from-gray-900 to-gray-800 text-white text-xs rounded-xl shadow-2xl pointer-events-none border border-gray-700"
           style={{
             top: tooltipPosition.top,
             left: Math.min(Math.max(tooltipPosition.left, 135), window.innerWidth - 135),
