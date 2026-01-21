@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { useLanguage } from "./LanguageContext";
 import { base44 } from "@/api/base44Client";
-import EditableTile from "./EditableTile";
 
 // Tile komponenta - stále ju ponechávame pre možné použitie inde
 const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-blue-100", selectedBorder = "border-blue-500", selectedRing = "ring-blue-300", hoverBorder = "hover:border-blue-300" }) => {
