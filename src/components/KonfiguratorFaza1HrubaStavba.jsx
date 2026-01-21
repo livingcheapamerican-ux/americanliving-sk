@@ -130,19 +130,28 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       <span className={`text-[8px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1 leading-tight ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
       <div className={`flex items-center gap-1 justify-center relative`}>
         {isEditing && isPriced ? (
-          <input
-            type="number"
-            value={editPrice}
-            onChange={(e) => setEditPrice(e.target.value)}
-            onBlur={handleSavePrice}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleSavePrice();
-              if (e.key === 'Escape') setIsEditing(false);
-            }}
-            className="w-12 px-1 py-0.5 text-xs border rounded text-gray-800"
-            autoFocus
-            onClick={(e) => e.stopPropagation()}
-          />
+          <div className="flex items-center gap-0.5">
+            <input
+              type="number"
+              value={editPrice}
+              onChange={(e) => setEditPrice(e.target.value)}
+              onBlur={handleSavePrice}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSavePrice();
+                if (e.key === 'Escape') setIsEditing(false);
+              }}
+              className="w-16 px-1.5 py-1 text-xs border-2 border-green-500 rounded bg-white text-gray-800 font-semibold"
+              autoFocus
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button
+              onClick={handleSavePrice}
+              className="px-1.5 py-1 bg-green-500 hover:bg-green-600 text-white text-xs font-bold rounded transition-all"
+              title="Uložiť cenu"
+            >
+              ✓
+            </button>
+          </div>
         ) : (
           <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>{price}</span>
         )}
