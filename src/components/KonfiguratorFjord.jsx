@@ -145,20 +145,20 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
          ) : (
            <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[8px] sm:text-[10px]`}>{price}</span>
          )}
-         {isAdmin && isPriced && priceKey && (
-           <button 
-             className="ml-1 p-0.5 hover:bg-amber-200 rounded transition-all hover:scale-110" 
-             onClick={(e) => {
-               e.stopPropagation();
-               setIsEditing(true);
-               const priceNum = price.replace(/[^0-9]/g, '');
-               setEditPrice(priceNum);
-             }}
-             title="Edituj cenu"
-           >
-             <Pencil className="w-3 h-3 text-amber-700" />
-           </button>
-         )}
+         {isAdmin && isPriced && priceKey && !isEditing && (
+              <button 
+                className="ml-1 p-0.5 hover:bg-amber-200 rounded transition-all hover:scale-110 active:scale-95" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsEditing(true);
+                  const priceNum = price.replace(/[^0-9]/g, '');
+                  setEditPrice(priceNum);
+                }}
+                title="Edituj cenu"
+              >
+                <Pencil className="w-3 h-3 text-amber-700 stroke-2" />
+              </button>
+            )}
        </div>
 
       {showTooltip && tooltip && ReactDOM.createPortal(
