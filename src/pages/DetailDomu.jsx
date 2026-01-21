@@ -18,7 +18,7 @@ import DomGalerieManager from "../components/admin/DomGalerieManager";
 import KonfiguratorFlat15 from "../components/KonfiguratorFlat15";
 import KonfiguratorFlatDouble from "../components/KonfiguratorFlatDouble";
 
-
+import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
 import KonfiguratorWizard from "../components/KonfiguratorWizard";
 import KonfiguratorFjord from "../components/KonfiguratorFjord";
 import KonfiguratorNord from "../components/KonfiguratorNord";
