@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Edit2, Check, X } from "lucide-react";
+import { Edit2, Check, X, Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function EditableTile({ 
@@ -117,19 +117,17 @@ export default function EditableTile({
                 price
               )}
             </span>
-            {isAdmin && isPriced && priceKey && !selected && (
-              <Button 
-                size="icon" 
-                variant="ghost" 
-                className="h-6 w-6 bg-blue-100 hover:bg-blue-200 flex-shrink-0" 
+            {isAdmin && isPriced && priceKey && (
+              <button 
+                className="ml-1 p-1 hover:bg-amber-200 rounded transition-all hover:scale-110" 
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsEditing(true);
                 }}
                 title="Edituj cenu"
               >
-                <Edit2 className="h-4 w-4 text-blue-600" />
-              </Button>
+                <Pencil className="w-4 h-4 text-amber-700" />
+              </button>
             )}
             {isAdmin && isPriced && priceKey && selected && (
               <span className="text-[9px] text-gray-500">({title})</span>
