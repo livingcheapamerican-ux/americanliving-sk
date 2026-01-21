@@ -876,9 +876,9 @@ export default function KonfiguratorFjord({
 
           {showKluc && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}>
-              <Card className="overflow-hidden border-2 border-emerald-300 shadow-lg">
-                <SectionHeader icon={Key} title={t('phase3')} subtitle={t('phase3Subtitle')} color="from-emerald-600 to-teal-600" step="3" />
-                <div className="p-2 sm:p-3 bg-gradient-to-b from-emerald-50/50 to-white">
+              <Card className="overflow-hidden border-0 shadow-xl bg-white">
+                <SectionHeader icon={Key} title={t('phase3')} subtitle={t('phase3Subtitle')} color="from-emerald-600 via-emerald-500 to-teal-600" step="3" />
+                <div className="p-3 sm:p-5 bg-gradient-to-b from-emerald-50/80 via-white to-white">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
                     <div className={`col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] rounded-xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
                       <p className={`col-span-2 text-[9px] sm:text-[10px] font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
