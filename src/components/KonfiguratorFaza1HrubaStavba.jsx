@@ -413,14 +413,14 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <span className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-orange-600 to-red-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold shadow-lg">3</span>
                 {t('foundations')} ({t('selectOne')})
               </p>
-              <Tile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} icon={Landmark} iconColor="text-orange-600" iconSelectedColor="text-orange-800" title={t('foundationsNone')} subtitle={t('own')} price="0 €" isPriced={false} isAdmin={isAdmin} />
+              <Tile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} icon={Landmark} iconColor="text-orange-600" iconSelectedColor="text-orange-800" title={t('foundationsNone')} subtitle={t('own')} price="0 €" isPriced={false} isAdmin={isAdmin} selectedBg="bg-orange-100" selectedBorder="border-orange-600" selectedRing="ring-orange-300" />
 
-              <Tile selected={zaklady === "skrutky"} onClick={() => setZaklady("skrutky")} icon={Landmark} iconColor="text-orange-600" iconSelectedColor="text-orange-800" title="Pilóty/Pätky" subtitle={t('groundFootings')} price={`+ ${(cennik?.zaklady?.skrutky || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_skrutky" onPriceChange={onPriceChange} />
+              <Tile selected={zaklady === "skrutky"} onClick={() => setZaklady("skrutky")} icon={Landmark} iconColor="text-orange-600" iconSelectedColor="text-orange-800" title="Pilóty/Pätky" subtitle={t('groundFootings')} price={`+ ${(cennik?.zaklady?.skrutky || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_skrutky" onPriceChange={onPriceChange} selectedBg="bg-orange-100" selectedBorder="border-orange-600" selectedRing="ring-orange-300" />
 
-              <Tile selected={zaklady === "doska"} onClick={() => setZaklady("doska")} icon={Landmark} iconColor="text-orange-600" iconSelectedColor="text-orange-800" title={t('foundationsSlab')} subtitle={t('foundationSlab')} price={`+ ${(cennik?.zaklady?.doska || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_doska" onPriceChange={onPriceChange} />
+              <Tile selected={zaklady === "doska"} onClick={() => setZaklady("doska")} icon={Landmark} iconColor="text-orange-600" iconSelectedColor="text-orange-800" title={t('foundationsSlab')} subtitle={t('foundationSlab')} price={`+ ${(cennik?.zaklady?.doska || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_doska" onPriceChange={onPriceChange} selectedBg="bg-orange-100" selectedBorder="border-orange-600" selectedRing="ring-orange-300" />
 
-              <Tile selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} icon={Landmark} iconColor="text-orange-600" iconSelectedColor="text-orange-800" title={t('foundationsStrip')} subtitle={t('stripFound')} price={`+ ${(cennik?.zaklady?.pasove || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_pasove" onPriceChange={onPriceChange} />
-            </div>
+              <Tile selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} icon={Landmark} iconColor="text-orange-600" iconSelectedColor="text-orange-800" title={t('foundationsStrip')} subtitle={t('stripFound')} price={`+ ${(cennik?.zaklady?.pasove || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_pasove" onPriceChange={onPriceChange} selectedBg="bg-orange-100" selectedBorder="border-orange-600" selectedRing="ring-orange-300" />
+            </motion.div>
 
           </div>
         </div>
