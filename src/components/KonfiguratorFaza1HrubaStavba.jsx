@@ -234,8 +234,8 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('assemblyYes')}
                 subtitle={t('phase1')}
-                price={`+ ${(cennik?.montaz?.ano || 0).toLocaleString('sk-SK')} €`}
-                isPriced={true}
+                price={cennik?.montaz?.ano > 0 ? `+ ${(cennik.montaz.ano).toLocaleString('sk-SK')} €` : '0 €'}
+                isPriced={cennik?.montaz?.ano > 0}
                 tooltip={t('assemblyNote')}
               />
             </div>
@@ -249,11 +249,11 @@ export default function KonfiguratorFaza1HrubaStavba({
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   {[
-                    { value: 0, label: "Bez predĺženia", price: "0 €", basePrice: 0 },
-                    { value: 1.2, label: "+1,2 m", price: `+ ${(cennik?.predlzenie?.[1.2] || 0).toLocaleString('sk-SK')} €`, basePrice: cennik?.predlzenie?.[1.2] || 0 },
-                    { value: 2.4, label: "+2,4 m", price: `+ ${(cennik?.predlzenie?.[2.4] || 0).toLocaleString('sk-SK')} €`, basePrice: cennik?.predlzenie?.[2.4] || 0 },
-                    { value: 3.6, label: "+3,6 m", price: `+ ${(cennik?.predlzenie?.[3.6] || 0).toLocaleString('sk-SK')} €`, basePrice: cennik?.predlzenie?.[3.6] || 0 },
-                    { value: 4.8, label: "+4,8 m", price: `+ ${(cennik?.predlzenie?.[4.8] || 0).toLocaleString('sk-SK')} €`, basePrice: cennik?.predlzenie?.[4.8] || 0 }
+                    { value: 0, label: "Bez predĺženia", basePrice: 0 },
+                    { value: 1.2, label: "+1,2 m", basePrice: cennik?.predlzenie?.[1.2] || 0 },
+                    { value: 2.4, label: "+2,4 m", basePrice: cennik?.predlzenie?.[2.4] || 0 },
+                    { value: 3.6, label: "+3,6 m", basePrice: cennik?.predlzenie?.[3.6] || 0 },
+                    { value: 4.8, label: "+4,8 m", basePrice: cennik?.predlzenie?.[4.8] || 0 }
                   ].map((opt) => (
                     <motion.div
                       key={opt.value}
@@ -269,7 +269,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                       <Maximize className={`w-5 h-5 mx-auto mb-1 ${predlzenie === opt.value ? "text-indigo-600" : "text-gray-400"}`} />
                       <span className="font-medium text-gray-800 text-xs block">{opt.label}</span>
                       <span className={`text-xs ${opt.basePrice === 0 ? "text-gray-400" : "text-green-600 font-bold"}`}>
-                        {opt.price}
+                        {opt.basePrice > 0 ? `+ ${opt.basePrice.toLocaleString('sk-SK')} €` : '0 €'}
                       </span>
                     </motion.div>
                   ))}
@@ -304,8 +304,8 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('insulationEnhanced')}
                 subtitle={t('insulationEnhancedDesc')}
-                price={`+ ${(cennik?.izolacia?.zvysena || 0).toLocaleString('sk-SK')} €`}
-                isPriced={true}
+                price={cennik?.izolacia?.zvysena > 0 ? `+ ${(cennik.izolacia.zvysena).toLocaleString('sk-SK')} €` : '0 €'}
+                isPriced={cennik?.izolacia?.zvysena > 0}
                 tooltip={t('insulationEnhancedDesc')}
               />
 
@@ -317,8 +317,8 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-green-600"
                 title={t('insulationPremium')}
                 subtitle={t('insulationPremiumDesc')}
-                price={`+ ${(cennik?.izolacia?.premium || 0).toLocaleString('sk-SK')} €`}
-                isPriced={true}
+                price={cennik?.izolacia?.premium > 0 ? `+ ${(cennik.izolacia.premium).toLocaleString('sk-SK')} €` : '0 €'}
+                isPriced={cennik?.izolacia?.premium > 0}
                 isA0={true}
                 selectedBg="bg-green-100"
                 selectedBorder="border-green-500"
@@ -335,8 +335,8 @@ export default function KonfiguratorFaza1HrubaStavba({
                   iconSelectedColor="text-green-700"
                   title="300mm"
                   subtitle="Ultra izolácia"
-                  price={`+ ${(cennik?.izolacia?.ultra || 0).toLocaleString('sk-SK')} €`}
-                  isPriced={true}
+                  price={cennik?.izolacia?.ultra > 0 ? `+ ${(cennik.izolacia.ultra).toLocaleString('sk-SK')} €` : '0 €'}
+                  isPriced={cennik?.izolacia?.ultra > 0}
                   isA0={true}
                   selectedBg="bg-green-100"
                   selectedBorder="border-green-500"
@@ -373,8 +373,8 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title="Pilóty/Pätky"
                 subtitle={t('groundFootings')}
-                price={`+ ${(cennik?.zaklady?.skrutky || 0).toLocaleString('sk-SK')} €`}
-                isPriced={true}
+                price={cennik?.zaklady?.skrutky > 0 ? `+ ${(cennik.zaklady.skrutky).toLocaleString('sk-SK')} €` : '0 €'}
+                isPriced={cennik?.zaklady?.skrutky > 0}
                 tooltip={t('foundationsScrews')}
               />
 
@@ -386,8 +386,8 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsSlab')}
                 subtitle={t('foundationSlab')}
-                price={`+ ${(cennik?.zaklady?.doska || 0).toLocaleString('sk-SK')} €`}
-                isPriced={true}
+                price={cennik?.zaklady?.doska > 0 ? `+ ${(cennik.zaklady.doska).toLocaleString('sk-SK')} €` : '0 €'}
+                isPriced={cennik?.zaklady?.doska > 0}
                 tooltip={t('foundationsSlab')}
               />
 
@@ -399,8 +399,8 @@ export default function KonfiguratorFaza1HrubaStavba({
                 iconSelectedColor="text-amber-600"
                 title={t('foundationsStrip')}
                 subtitle={t('stripFound')}
-                price={`+ ${(cennik?.zaklady?.pasove || 0).toLocaleString('sk-SK')} €`}
-                isPriced={true}
+                price={cennik?.zaklady?.pasove > 0 ? `+ ${(cennik.zaklady.pasove).toLocaleString('sk-SK')} €` : '0 €'}
+                isPriced={cennik?.zaklady?.pasove > 0}
                 tooltip={t('foundationsStrip')}
               />
             </div>
