@@ -139,8 +139,9 @@ export default function KonfiguratorProstoHouse({
       const customValue = customCeny[category];
       console.log(`[getPrice] Simple value - customValue:`, customValue);
       
-      // Ak existuje custom hodnota (aj 0), použijeme ju
-      if (customValue !== undefined && customValue !== null) {
+      // Ak existuje custom hodnota A NIE JE 0, použijeme ju
+      // Explicitné nuly ignorujeme a použijeme defaultnú hodnotu
+      if (customValue !== undefined && customValue !== null && customValue !== 0) {
         console.log(`[getPrice] Using custom value: ${customValue}`);
         return customValue;
       }
@@ -158,8 +159,9 @@ export default function KonfiguratorProstoHouse({
       const customValue = customCategory[key];
       console.log(`[getPrice] Nested value - customValue:`, customValue);
       
-      // Ak existuje konkrétna hodnota (aj 0), použijeme ju
-      if (customValue !== undefined && customValue !== null) {
+      // Ak existuje konkrétna hodnota A NIE JE 0, použijeme ju
+      // Explicitné nuly ignorujeme a použijeme defaultnú hodnotu
+      if (customValue !== undefined && customValue !== null && customValue !== 0) {
         console.log(`[getPrice] Using nested custom value: ${customValue}`);
         return customValue;
       }
