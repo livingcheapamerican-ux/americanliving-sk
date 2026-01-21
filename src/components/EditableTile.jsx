@@ -124,17 +124,11 @@ export default function EditableTile({
                 className="h-5 w-5 bg-blue-100 hover:bg-blue-200" 
                 onClick={(e) => {
                   e.stopPropagation();
-                  console.log('Edit clicked for:', priceKey);
                   setIsEditing(true);
                 }}
               >
                 <Edit2 className="h-3 w-3 text-blue-600" />
               </Button>
-            )}
-            {(isAdmin || isPriced || priceKey) && (
-              <div className="text-[8px] text-red-500 mt-1">
-                Debug: admin={String(isAdmin)} priced={String(isPriced)} key={priceKey}
-              </div>
             )}
           </div>
         )}
