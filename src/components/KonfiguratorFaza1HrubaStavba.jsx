@@ -259,26 +259,30 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <span className="w-5 h-5 sm:w-6 sm:h-6 bg-amber-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">1</span>
                 {t('assembly')} ({t('selectOne')})
               </p>
-              <EditableTile
+              <Tile
                 selected={montazHolodomu === "nie"}
                 onClick={() => setMontazHolodomu("nie")}
+                icon={Wrench}
+                iconColor="text-gray-400"
+                iconSelectedColor="text-amber-600"
                 title={t('assemblyNo')}
                 subtitle={t('onlyKit')}
                 price="0 €"
                 isPriced={false}
-                isIncluded={true}
-                t={t}
-                isAdmin={false}
+                tooltip={t('assemblyNote')}
               />
 
-              <EditableTile
+              <Tile
                 selected={montazHolodomu === "ano"}
                 onClick={() => setMontazHolodomu("ano")}
+                icon={Wrench}
+                iconColor="text-amber-400"
+                iconSelectedColor="text-amber-600"
                 title={t('assemblyYes')}
                 subtitle={t('phase1')}
                 price={`+ ${(cennik?.montaz?.ano || 0).toLocaleString('sk-SK')} €`}
                 isPriced={true}
-                t={t}
+                tooltip={t('assemblyNote')}
                 isAdmin={isAdmin}
                 priceKey="montaz_ano"
                 onPriceChange={onPriceChange}
