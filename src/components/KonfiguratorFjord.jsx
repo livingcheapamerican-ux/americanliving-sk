@@ -782,15 +782,15 @@ export default function KonfiguratorFjord({
 
           {showHolodom && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
-                <Card className="overflow-hidden border-2 border-blue-300 shadow-lg">
+                <Card className="overflow-hidden border-0 shadow-xl bg-white">
                   <SectionHeader 
                     icon={Hammer} 
                     title={t('phase2')} 
                     subtitle={t('phase2Subtitle')}
-                    color="from-blue-600 to-indigo-600"
+                    color="from-blue-600 via-blue-500 to-indigo-600"
                     step="2"
                   />
-                  <div className="p-2 sm:p-3 bg-gradient-to-b from-blue-50/50 to-white">
+                  <div className="p-3 sm:p-5 bg-gradient-to-b from-blue-50/80 via-white to-white">
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
 
                     <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-blue-600 rounded-xl bg-blue-100/70 shadow-xl">
