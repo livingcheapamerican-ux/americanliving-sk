@@ -262,9 +262,9 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <span className="w-5 h-5 sm:w-6 sm:h-6 bg-amber-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">1</span>
                 {t('assembly')} ({t('selectOne')})
               </p>
-              <Tile selected={montazHolodomu === "nie"} onClick={() => setMontazHolodomu("nie")} icon={Wrench} iconColor="text-gray-400" iconSelectedColor="text-amber-600" title={t('assemblyNo')} subtitle={t('onlyKit')} price="0 €" isPriced={false} isAdmin={isAdmin} />
+              <EditableTile selected={montazHolodomu === "nie"} onClick={() => setMontazHolodomu("nie")} title={t('assemblyNo')} subtitle={t('onlyKit')} price="0 €" isPriced={false} isAdmin={isAdmin} />
 
-              <Tile selected={montazHolodomu === "ano"} onClick={() => setMontazHolodomu("ano")} icon={Wrench} iconColor="text-amber-400" iconSelectedColor="text-amber-600" title={t('assemblyYes')} subtitle={t('phase1')} price={`+ ${(cennik?.montaz?.ano || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="montaz_ano" onPriceChange={onPriceChange} />
+              <EditableTile selected={montazHolodomu === "ano"} onClick={() => setMontazHolodomu("ano")} title={t('assemblyYes')} subtitle={t('phase1')} price={`+ ${(cennik?.montaz?.ano || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="montaz_ano" onPriceChange={onPriceChange} />
             </div>
 
             {/* Predĺženie domu - len pre modely ktoré to podporujú */}
@@ -310,14 +310,14 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <span className="w-5 h-5 sm:w-6 sm:h-6 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
                 {t('insulation')} ({t('selectOne')})
               </p>
-              <Tile selected={izolaciaNavysenie === "standard"} onClick={() => setIzolaciaNavysenie("standard")} icon={ThermometerSun} iconColor="text-gray-400" iconSelectedColor="text-amber-600" title={t('insulationStandard')} subtitle="150/200mm" price="0 €" isPriced={false} isAdmin={isAdmin} />
+              <EditableTile selected={izolaciaNavysenie === "standard"} onClick={() => setIzolaciaNavysenie("standard")} title={t('insulationStandard')} subtitle="150/200mm" price="0 €" isPriced={false} isAdmin={isAdmin} />
 
-              <Tile selected={izolaciaNavysenie === "zvysena"} onClick={() => setIzolaciaNavysenie("zvysena")} icon={ThermometerSun} iconColor="text-orange-400" iconSelectedColor="text-amber-600" title={t('insulationEnhanced')} subtitle={t('insulationEnhancedDesc')} price={`+ ${(cennik?.izolacia?.zvysena || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="izolacia_zvysena" onPriceChange={onPriceChange} />
+              <EditableTile selected={izolaciaNavysenie === "zvysena"} onClick={() => setIzolaciaNavysenie("zvysena")} title={t('insulationEnhanced')} subtitle={t('insulationEnhancedDesc')} price={`+ ${(cennik?.izolacia?.zvysena || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="izolacia_zvysena" onPriceChange={onPriceChange} />
 
-              <Tile selected={izolaciaNavysenie === "premium"} onClick={() => setIzolaciaNavysenie("premium")} icon={ThermometerSun} iconColor="text-green-500" iconSelectedColor="text-green-600" title={t('insulationPremium')} subtitle={t('insulationPremiumDesc')} price={`+ ${(cennik?.izolacia?.premium || 0).toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} isAdmin={isAdmin} priceKey="izolacia_premium" onPriceChange={onPriceChange} />
+              <EditableTile selected={izolaciaNavysenie === "premium"} onClick={() => setIzolaciaNavysenie("premium")} title={t('insulationPremium')} subtitle={t('insulationPremiumDesc')} price={`+ ${(cennik?.izolacia?.premium || 0).toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} isAdmin={isAdmin} priceKey="izolacia_premium" onPriceChange={onPriceChange} />
 
               {hasUltraInsulation && (
-                <Tile selected={izolaciaNavysenie === "ultra"} onClick={() => setIzolaciaNavysenie("ultra")} icon={ThermometerSun} iconColor="text-green-600" iconSelectedColor="text-green-700" title="300mm" subtitle="Ultra izolácia" price={`+ ${(cennik?.izolacia?.ultra || 0).toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} isAdmin={isAdmin} priceKey="izolacia_ultra" onPriceChange={onPriceChange} />
+                <EditableTile selected={izolaciaNavysenie === "ultra"} onClick={() => setIzolaciaNavysenie("ultra")} title="300mm" subtitle="Ultra izolácia" price={`+ ${(cennik?.izolacia?.ultra || 0).toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} isAdmin={isAdmin} priceKey="izolacia_ultra" onPriceChange={onPriceChange} />
               )}
             </div>
 
@@ -327,13 +327,13 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <span className="w-5 h-5 sm:w-6 sm:h-6 bg-orange-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">3</span>
                 {t('foundations')} ({t('selectOne')})
               </p>
-              <Tile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} icon={Landmark} iconColor="text-gray-400" iconSelectedColor="text-amber-600" title={t('foundationsNone')} subtitle={t('own')} price="0 €" isPriced={false} isAdmin={isAdmin} />
+              <EditableTile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} title={t('foundationsNone')} subtitle={t('own')} price="0 €" isPriced={false} isAdmin={isAdmin} />
 
-              <Tile selected={zaklady === "skrutky"} onClick={() => setZaklady("skrutky")} icon={Landmark} iconColor="text-amber-400" iconSelectedColor="text-amber-600" title="Pilóty/Pätky" subtitle={t('groundFootings')} price={`+ ${(cennik?.zaklady?.skrutky || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_skrutky" onPriceChange={onPriceChange} />
+              <EditableTile selected={zaklady === "skrutky"} onClick={() => setZaklady("skrutky")} title="Pilóty/Pätky" subtitle={t('groundFootings')} price={`+ ${(cennik?.zaklady?.skrutky || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_skrutky" onPriceChange={onPriceChange} />
 
-              <Tile selected={zaklady === "doska"} onClick={() => setZaklady("doska")} icon={Landmark} iconColor="text-orange-400" iconSelectedColor="text-amber-600" title={t('foundationsSlab')} subtitle={t('foundationSlab')} price={`+ ${(cennik?.zaklady?.doska || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_doska" onPriceChange={onPriceChange} />
+              <EditableTile selected={zaklady === "doska"} onClick={() => setZaklady("doska")} title={t('foundationsSlab')} subtitle={t('foundationSlab')} price={`+ ${(cennik?.zaklady?.doska || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_doska" onPriceChange={onPriceChange} />
 
-              <Tile selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} icon={Landmark} iconColor="text-orange-500" iconSelectedColor="text-amber-600" title={t('foundationsStrip')} subtitle={t('stripFound')} price={`+ ${(cennik?.zaklady?.pasove || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_pasove" onPriceChange={onPriceChange} />
+              <EditableTile selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} title={t('foundationsStrip')} subtitle={t('stripFound')} price={`+ ${(cennik?.zaklady?.pasove || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_pasove" onPriceChange={onPriceChange} />
             </div>
 
           </div>
