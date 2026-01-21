@@ -154,22 +154,23 @@ export default function KonfiguratorFaza1HrubaStavba({
   const getPriceForTile = (key) => {
     if (!cennik) return 0;
     
-    // Mapovanie klúčov
+    // Mapovanie klúčov - cenník má vnorené objekty
     const priceMap = {
-      'montaz': cennik.montaz?.ano || 0,
-      'izolacia_zvysena': cennik.izolacia?.zvysena || 0,
-      'izolacia_premium': cennik.izolacia?.premium || 0,
-      'izolacia_ultra': cennik.izolacia?.ultra || 0,
-      'zaklady_skrutky': cennik.zaklady?.skrutky || 0,
-      'zaklady_doska': cennik.zaklady?.doska || 0,
-      'zaklady_pasove': cennik.zaklady?.pasove || 0,
-      'predlzenie_1_2': cennik.predlzenie?.[1.2] || 0,
-      'predlzenie_2_4': cennik.predlzenie?.[2.4] || 0,
-      'predlzenie_3_6': cennik.predlzenie?.[3.6] || 0,
-      'predlzenie_4_8': cennik.predlzenie?.[4.8] || 0
+      'montaz': cennik.montaz?.ano ?? 0,
+      'izolacia_zvysena': cennik.izolacia?.zvysena ?? 0,
+      'izolacia_premium': cennik.izolacia?.premium ?? 0,
+      'izolacia_ultra': cennik.izolacia?.ultra ?? 0,
+      'zaklady_skrutky': cennik.zaklady?.skrutky ?? 0,
+      'zaklady_doska': cennik.zaklady?.doska ?? 0,
+      'zaklady_pasove': cennik.zaklady?.pasove ?? 0,
+      'predlzenie_1_2': cennik.predlzenie?.[1.2] ?? 0,
+      'predlzenie_2_4': cennik.predlzenie?.[2.4] ?? 0,
+      'predlzenie_3_6': cennik.predlzenie?.[3.6] ?? 0,
+      'predlzenie_4_8': cennik.predlzenie?.[4.8] ?? 0
     };
     
-    return priceMap[key] || 0;
+    const result = priceMap[key];
+    return result !== undefined ? result : 0;
   };
 
   // Informácia či model podporuje ultra izoláciu (Fjord nemá ultra)
