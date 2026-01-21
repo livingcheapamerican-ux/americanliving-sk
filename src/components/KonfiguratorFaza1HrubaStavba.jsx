@@ -323,9 +323,14 @@ export default function KonfiguratorFaza1HrubaStavba({
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
             {/* Montáž - skupina */}
-            <div className="col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] border-amber-600 rounded-2xl bg-amber-100/70 shadow-xl">
-              <p className="col-span-2 text-[10px] sm:text-xs font-bold text-amber-700 -mb-1 flex items-center gap-1">
-                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-amber-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">1</span>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1 }}
+              className="col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 sm:p-5 border-[3px] sm:border-[4px] border-amber-500 rounded-2xl bg-gradient-to-br from-amber-100/80 to-amber-50/60 shadow-xl"
+            >
+              <p className="col-span-2 text-[10px] sm:text-xs font-bold text-amber-800 -mb-1 flex items-center gap-2">
+                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-amber-600 to-orange-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold shadow-lg">1</span>
                 {t('assembly')} ({t('selectOne')})
               </p>
               <Tile selected={montazHolodomu === "nie"} onClick={() => setMontazHolodomu("nie")} icon={Wrench} iconColor="text-amber-600" iconSelectedColor="text-amber-800" title={t('assemblyNo')} subtitle={t('onlyKit')} price="0 €" isPriced={false} isAdmin={isAdmin} />
