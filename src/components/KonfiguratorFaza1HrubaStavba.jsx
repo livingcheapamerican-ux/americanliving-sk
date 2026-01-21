@@ -138,6 +138,12 @@ export default function KonfiguratorFaza1HrubaStavba({
   cennik
   }) {
   
+  console.log('=== KonfiguratorFaza1HrubaStavba CENNÍK ===', cennik);
+  console.log('montaz.ano:', cennik?.montaz?.ano);
+  console.log('izolacia.zvysena:', cennik?.izolacia?.zvysena);
+  console.log('izolacia.premium:', cennik?.izolacia?.premium);
+  console.log('zaklady.skrutky:', cennik?.zaklady?.skrutky);
+  
   const phaseRef = React.useRef(null);
   const { t } = useLanguage();
 
