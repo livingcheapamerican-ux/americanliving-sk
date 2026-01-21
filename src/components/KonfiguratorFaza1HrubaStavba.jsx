@@ -259,10 +259,10 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   {[
                     { value: 0, label: "Bez predĺženia", basePrice: 0 },
-                    { value: 1.2, label: "+1,2 m", basePrice: cennik?.predlzenie?.[1.2] || 0 },
-                    { value: 2.4, label: "+2,4 m", basePrice: cennik?.predlzenie?.[2.4] || 0 },
-                    { value: 3.6, label: "+3,6 m", basePrice: cennik?.predlzenie?.[3.6] || 0 },
-                    { value: 4.8, label: "+4,8 m", basePrice: cennik?.predlzenie?.[4.8] || 0 }
+                    { value: 1.2, label: "+1,2 m", basePrice: getPrice('predlzenie.1.2') },
+                    { value: 2.4, label: "+2,4 m", basePrice: getPrice('predlzenie.2.4') },
+                    { value: 3.6, label: "+3,6 m", basePrice: getPrice('predlzenie.3.6') },
+                    { value: 4.8, label: "+4,8 m", basePrice: getPrice('predlzenie.4.8') }
                   ].map((opt) => (
                     <motion.div
                       key={opt.value}
