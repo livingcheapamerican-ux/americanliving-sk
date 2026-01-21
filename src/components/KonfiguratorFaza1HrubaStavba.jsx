@@ -250,10 +250,10 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                   {[
                     { value: 0, label: "Bez predĺženia", price: "0 €" },
-                    { value: 1.2, label: "+1,2 m", price: `+ ${getPriceForTile('predlzenie_1_2').toLocaleString('sk-SK')} €` },
-                    { value: 2.4, label: "+2,4 m", price: `+ ${getPriceForTile('predlzenie_2_4').toLocaleString('sk-SK')} €` },
-                    { value: 3.6, label: "+3,6 m", price: `+ ${getPriceForTile('predlzenie_3_6').toLocaleString('sk-SK')} €` },
-                    { value: 4.8, label: "+4,8 m", price: `+ ${getPriceForTile('predlzenie_4_8').toLocaleString('sk-SK')} €` }
+                    { value: 1.2, label: "+1,2 m", price: `+ ${(cennik?.predlzenie?.[1.2] || 0).toLocaleString('sk-SK')} €` },
+                    { value: 2.4, label: "+2,4 m", price: `+ ${(cennik?.predlzenie?.[2.4] || 0).toLocaleString('sk-SK')} €` },
+                    { value: 3.6, label: "+3,6 m", price: `+ ${(cennik?.predlzenie?.[3.6] || 0).toLocaleString('sk-SK')} €` },
+                    { value: 4.8, label: "+4,8 m", price: `+ ${(cennik?.predlzenie?.[4.8] || 0).toLocaleString('sk-SK')} €` }
                   ].map((opt) => (
                     <motion.div
                       key={opt.value}
