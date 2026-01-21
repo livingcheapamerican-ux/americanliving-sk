@@ -37,16 +37,26 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
 
   const handleSavePrice = async (e) => {
     if (e) e.stopPropagation();
-    if (!onPriceChange) return;
+    console.log('handleSavePrice called', { priceKey, editPrice, hasOnPriceChange: !!onPriceChange });
+    
+    if (!onPriceChange) {
+      console.error('onPriceChange je undefined!');
+      return;
+    }
+    
     try {
       const newPrice = parseFloat(editPrice);
+      console.log('Parsed price:', newPrice);
+      
       if (!isNaN(newPrice)) {
-        console.log('Saving price:', priceKey, newPrice);
+        console.log('Calling onPriceChange with:', priceKey, newPrice);
         await onPriceChange(priceKey, newPrice);
-        // Wait a bit for server response, then exit edit mode
-        setTimeout(() => {
-          setIsEditing(false);
-        }, 300);
+        console.log('onPriceChange completed');
+        
+        // Exit edit mode after successful save
+        setIsEditing(false);
+      } else {
+        console.error('Invalid price:', editPrice);
       }
     } catch (error) {
       console.error('Error saving price:', error);
