@@ -717,13 +717,13 @@ export default function KonfiguratorNord({
                       />
                     </div>
 
-                    {/* Izolácia - skupina */}
+                    {/* Izolácia - skupina 2 */}
                     <div className="col-span-1 sm:col-span-3 lg:col-span-4 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-cyan-600 rounded-lg sm:rounded-xl bg-cyan-100/70 shadow-xl">
                       <p className="text-[8px] sm:text-[10px] font-bold text-cyan-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1 mb-2">
                         <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">2</span>
                         {t('insulation')} ({t('selectOne')})
                       </p>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2">
+                      <div className="grid grid-cols-3 gap-1 sm:gap-2">
                         <EditableTile
                           selected={izolaciaNavysenie === "standard"}
                           onClick={() => setIzolaciaNavysenie("standard")}
@@ -762,21 +762,28 @@ export default function KonfiguratorNord({
                           priceKey="izolacia_premium"
                           onPriceChange={handlePriceChange}
                         />
-
-                        <EditableTile
-                          selected={izolaciaNavysenie === "ultra"}
-                          onClick={() => setIzolaciaNavysenie("ultra")}
-                          title="Ultra 300mm"
-                          subtitle={t('insulationUltraDesc')}
-                          price={`+ ${(CENY.izolacia?.ultra || 12000).toLocaleString('sk-SK')} €`}
-                          isPriced={true}
-                          isA0={true}
-                          t={t}
-                          isAdmin={isAdmin}
-                          priceKey="izolacia_extra"
-                          onPriceChange={handlePriceChange}
-                        />
                       </div>
+                    </div>
+
+                    {/* Ultra izolácia - skupina 2.5 */}
+                    <div className="col-span-1 sm:col-span-3 lg:col-span-4 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-purple-600 rounded-lg sm:rounded-xl bg-purple-100/70 shadow-xl">
+                      <p className="text-[8px] sm:text-[10px] font-bold text-purple-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1 mb-2">
+                        <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-purple-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">2.5</span>
+                        {t('insulationUltra')} ⭐
+                      </p>
+                      <EditableTile
+                        selected={izolaciaNavysenie === "ultra"}
+                        onClick={() => setIzolaciaNavysenie("ultra")}
+                        title="Ultra 300mm"
+                        subtitle={t('insulationUltraDesc')}
+                        price={`+ ${(CENY.izolacia?.ultra || 12000).toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        isA0={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="izolacia_extra"
+                        onPriceChange={handlePriceChange}
+                      />
                     </div>
 
                     {/* Základy - skupina */}
