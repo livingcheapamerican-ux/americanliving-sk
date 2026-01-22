@@ -355,21 +355,22 @@ export default function KonfiguratorFaza1HrubaStavba({
               />
 
               <Tile 
-              selected={montazHolodomu === "ano"} 
-              onClick={() => setMontazHolodomu("ano")} 
-              icon={Check} 
-              iconColor="text-amber-600" 
-              iconSelectedColor="text-amber-800" 
-              title={t('assemblyYes')} 
-              subtitle={t('phase1')} 
-              price={`+ ${(cennik?.montaz?.ano || 0).toLocaleString('sk-SK')} €`} 
-              isPriced={true} 
-              isAdmin={isAdmin} 
-              priceKey="montaz_ano" 
-              onPriceChange={onPriceChange} 
-              selectedBg="bg-amber-100" 
-              selectedBorder="border-amber-600" 
-              selectedRing="ring-amber-300" 
+                key={`montaz_ano_${cennik?.montaz?.ano}`}
+                selected={montazHolodomu === "ano"} 
+                onClick={() => setMontazHolodomu("ano")} 
+                icon={Check} 
+                iconColor="text-amber-600" 
+                iconSelectedColor="text-amber-800" 
+                title={t('assemblyYes')} 
+                subtitle={t('phase1')} 
+                price={`+ ${(cennik?.montaz?.ano || 0).toLocaleString('sk-SK')} €`} 
+                isPriced={true} 
+                isAdmin={isAdmin} 
+                priceKey="montaz_ano" 
+                onPriceChange={onPriceChange} 
+                selectedBg="bg-amber-100" 
+                selectedBorder="border-amber-600" 
+                selectedRing="ring-amber-300" 
               />
             </motion.div>
 
@@ -443,6 +444,7 @@ export default function KonfiguratorFaza1HrubaStavba({
               />
 
               <Tile 
+                key={`izolacia_zvysena_${cennik?.izolacia?.zvysena}`}
                 selected={izolaciaNavysenie === "zvysena"} 
                 onClick={() => setIzolaciaNavysenie("zvysena")} 
                 icon={ThermometerSun} 
@@ -461,6 +463,7 @@ export default function KonfiguratorFaza1HrubaStavba({
               />
 
               <Tile 
+                key={`izolacia_premium_${cennik?.izolacia?.premium}`}
                 selected={izolaciaNavysenie === "premium"} 
                 onClick={() => setIzolaciaNavysenie("premium")} 
                 icon={ThermometerSun} 
@@ -481,6 +484,7 @@ export default function KonfiguratorFaza1HrubaStavba({
 
               {hasUltraInsulation && (
                 <Tile 
+                  key={`izolacia_ultra_${cennik?.izolacia?.ultra}`}
                   selected={izolaciaNavysenie === "ultra"} 
                   onClick={() => setIzolaciaNavysenie("ultra")} 
                   icon={ThermometerSun} 
@@ -529,6 +533,7 @@ export default function KonfiguratorFaza1HrubaStavba({
               />
 
               <Tile 
+                key={`zaklady_skrutky_${cennik?.zaklady?.skrutky}`}
                 selected={zaklady === "skrutky"} 
                 onClick={() => setZaklady("skrutky")} 
                 icon={Landmark} 
@@ -547,6 +552,7 @@ export default function KonfiguratorFaza1HrubaStavba({
               />
 
               <Tile 
+                key={`zaklady_doska_${cennik?.zaklady?.doska}`}
                 selected={zaklady === "doska"} 
                 onClick={() => setZaklady("doska")} 
                 icon={Landmark} 
@@ -565,6 +571,7 @@ export default function KonfiguratorFaza1HrubaStavba({
               />
 
               <Tile 
+                key={`zaklady_pasove_${cennik?.zaklady?.pasove}`}
                 selected={zaklady === "pasove"} 
                 onClick={() => setZaklady("pasove")} 
                 icon={Landmark} 
