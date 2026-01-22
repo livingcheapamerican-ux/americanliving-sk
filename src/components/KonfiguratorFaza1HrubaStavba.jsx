@@ -256,7 +256,19 @@ export default function KonfiguratorFaza1HrubaStavba({
                     price="+ 9 106 €"
                     isA0={true}
                   />
-
+                  {hasUltraInsulation && (
+                    <Tile 
+                      selected={izolaciaNavysenie === "ultra"} 
+                      onClick={() => setIzolaciaNavysenie("ultra")} 
+                      icon={ThermometerSun} 
+                      iconColor="text-cyan-600" 
+                      iconSelectedColor="text-cyan-800" 
+                      title="Ultra 300mm" 
+                      subtitle={t('insulationUltraDesc')}
+                      price="+ 11 063 €"
+                      isA0={true}
+                    />
+                  )}
               </div>
             </div>
 
