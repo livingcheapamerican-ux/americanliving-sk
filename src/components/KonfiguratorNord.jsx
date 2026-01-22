@@ -141,13 +141,20 @@ export default function KonfiguratorNord({
   dom,
   onReset: parentOnReset,
   onConfigChange,
-  predajNehnutelnosti: _predajNehnutelnosti, setPredajNehnutelnosti: _setPredajNehnutelnosti,
-  hladaniePozemku: _hladaniePozemku, setHladaniePozemku: _setHladaniePozemku,
-  financneSluzby: _financneSluzby, setFinancneSluzby: _setFinancneSluzby,
-  montazHolodomu: _montazHolodomu, setMontazHolodomu: _setMontazHolodomu,
-  izolaciaNavysenie: _izolaciaNavysenie, setIzolaciaNavysenie: _setIzolaciaNavysenie,
-  zaklady: _zaklady, setZaklady: _setZaklady,
-  vstupneDvere: _vstupneDvere, setVstupneDvere: _setVstupneDvere,
+  predajNehnutelnosti: _predajNehnutelnosti, 
+  setPredajNehnutelnosti: _setPredajNehnutelnosti,
+  hladaniePozemku: _hladaniePozemku, 
+  setHladaniePozemku: _setHladaniePozemku,
+  financneSluzby: _financneSluzby, 
+  setFinancneSluzby: _setFinancneSluzby,
+  montazHolodomu: _montazHolodomu, 
+  setMontazHolodomu: _setMontazHolodomu,
+  izolaciaNavysenie: _izolaciaNavysenie, 
+  setIzolaciaNavysenie: _setIzolaciaNavysenie,
+  zaklady: _zaklady, 
+  setZaklady: _setZaklady,
+  vstupneDvere: _vstupneDvere, 
+  setVstupneDvere: _setVstupneDvere,
   elektroinstalacia, setElektroinstalacia,
   vodaKanalizacia, setVodaKanalizacia,
   sanitaKomplet, setSanitaKomplet,
@@ -175,6 +182,35 @@ export default function KonfiguratorNord({
   showOnlyPhase = null,
   typStavby = ""
 }) {
+  // Vlastný izolátor stav pre Nord - nezávislý od rodičovského DetailDomu
+  const [nordMontazHolodomu, setNordMontazHolodomu] = useState("nie");
+  const [nordIzolaciaNavysenie, setNordIzolaciaNavysenie] = useState("standard");
+  const [nordZaklady, setNordZaklady] = useState("bez");
+  const [nordVstupneDvere, setNordVstupneDvere] = useState("ziadne");
+  const [nordElektroinstalacia, setNordElektroinstalacia] = useState(false);
+  const [nordVodaKanalizacia, setNordVodaKanalizacia] = useState(false);
+  const [nordSanitaKomplet, setNordSanitaKomplet] = useState(false);
+  const [nordBojler, setNordBojler] = useState(false);
+  const [nordTepelneCerpadlo, setNordTepelneCerpadlo] = useState(false);
+  const [nordRekuperacia, setNordRekuperacia] = useState(false);
+  const [nordPripojkaSiete, setNordPripojkaSiete] = useState(false);
+  const [nordStresneOkno, setNordStresneOkno] = useState(0);
+  const [nordBocneOknoFixne, setNordBocneOknoFixne] = useState(0);
+  const [nordBocneOknoVyklopne90, setNordBocneOknoVyklopne90] = useState(0);
+  const [nordBocneOknoVyklopne55, setNordBocneOknoVyklopne55] = useState(0);
+  const [nordPovrchokaOkien, setNordPovrchokaOkien] = useState(false);
+  const [nordTonovaneSkla, setNordTonovaneSkla] = useState(false);
+  const [nordVonkajsiaFasada, setNordVonkajsiaFasada] = useState("standard");
+  const [nordInterierFinis, setNordInterierFinis] = useState("ziadne");
+  const [nordVnutornePodlahy, setNordVnutornePodlahy] = useState(false);
+  const [nordPodlahovVykurovanie, setNordPodlahovVykurovanie] = useState(false);
+  const [nordInterieroveDvere, setNordInterieroveDvere] = useState(0);
+  const [nordPergola, setNordPergola] = useState(false);
+  const [nordInziniering, setNordInziniering] = useState(false);
+  const [nordProjektA0, setNordProjektA0] = useState(false);
+  const [nordRevizna, setNordRevizna] = useState(true);
+  const [nordDoprava, setNordDoprava] = useState(false);
+
   const BASE_PRICE = dom?.zakladna_cena || 0;
   const { t, language } = useLanguage();
   
