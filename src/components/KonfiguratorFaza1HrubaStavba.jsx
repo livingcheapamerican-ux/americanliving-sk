@@ -212,7 +212,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         ) : (
           <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>{price}</span>
         )}
-        {isPriced && !isEditing && isAdmin && (
+        {isAdmin && isPriced && !isEditing && (
           <button
             onClick={(e) => {
               e.preventDefault();
