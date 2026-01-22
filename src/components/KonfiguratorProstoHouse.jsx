@@ -104,12 +104,27 @@ export default function KonfiguratorProstoHouse({
     return text?.tooltip || defaultText;
   };
 
+  // Ultra izolácia - mapovanie cien podľa domu
+  const ultraIzolaciaMapping = {
+    "Flat Double": 21750,
+    "Flat House 1,5": 16500,
+    "Nord": 12000,
+    "Barn Double": 10125,
+    "Flat": 11063,
+    "A-Frame": 6000,
+    "Barn": 5250,
+    "Flat Small": 5250
+  };
+  
+  const hasUltraInsulation = ultraIzolaciaMapping[dom?.nazov] !== undefined;
+  const ultraDefaultPrice = ultraIzolaciaMapping[dom?.nazov] || 10125;
+
   // Cenník - Prosto House (DEFAULT hodnoty)
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 9225 },
     predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 },
+    izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: ultraDefaultPrice },
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
@@ -831,19 +846,21 @@ export default function KonfiguratorProstoHouse({
                         onPriceChange={handlePriceChange}
                       />
 
-                      <EditableTile
-                        selected={izolaciaNavysenie === "ultra"}
-                        onClick={() => setIzolaciaNavysenie("ultra")}
-                        title="300mm"
-                        subtitle="Ultra izolácia"
-                        price={`+ ${CENY.izolacia.ultra.toLocaleString('sk-SK')} €`}
-                        isPriced={true}
-                        isA0={true}
-                        t={t}
-                        isAdmin={isAdmin}
-                        priceKey="izolacia_ultra"
-                        onPriceChange={handlePriceChange}
-                      />
+                      {hasUltraInsulation && (
+                        <EditableTile
+                          selected={izolaciaNavysenie === "ultra"}
+                          onClick={() => setIzolaciaNavysenie("ultra")}
+                          title="300mm"
+                          subtitle="Ultra izolácia"
+                          price={`+ ${CENY.izolacia.ultra.toLocaleString('sk-SK')} €`}
+                          isPriced={true}
+                          isA0={true}
+                          t={t}
+                          isAdmin={isAdmin}
+                          priceKey="izolacia_extra"
+                          onPriceChange={handlePriceChange}
+                        />
+                      )}
                     </div>
 
                     {/* Základy - skupina */}
