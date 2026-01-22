@@ -76,7 +76,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative p-3 sm:p-5 rounded-xl sm:rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center min-h-[140px] sm:min-h-[160px] justify-center overflow-hidden group ${
+      className={`relative p-4 sm:p-6 rounded-xl sm:rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center min-h-[180px] sm:min-h-[200px] justify-center overflow-hidden group ${
         selected 
           ? `${selectedBg} border-2 ${selectedBorder} shadow-2xl ring-2 ${selectedRing} bg-opacity-90` 
           : isA0 
