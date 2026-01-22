@@ -8,7 +8,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "./LanguageContext";
 
-// --- NOVÝ TILE KOMPONENT S ADMIN LOGIKOU ---
+// --- TILE KOMPONENT ---
 const Tile = ({ 
   selected, 
   onClick, 
@@ -17,11 +17,11 @@ const Tile = ({
   iconSelectedColor, 
   title, 
   subtitle, 
-  price, // Zobrazená cena (string alebo číslo)
-  priceValue, // Surová hodnota ceny pre editáciu (číslo)
-  priceKey, // Kľúč v DB (napr. 'montaz.ano')
-  updatePrice, // Funkcia na update ceny
-  isAdmin, // Boolean - či som admin
+  price, 
+  priceValue, 
+  priceKey, 
+  updatePrice, 
+  isAdmin, 
   isPriced, 
   isA0, 
   tooltip, 
@@ -30,11 +30,10 @@ const Tile = ({
   selectedRing = "ring-amber-300" 
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
-  const [isEditing, setIsEditing] = useState(false); // Stav editácie
-  const [editValue, setEditValue] = useState(priceValue || 0); // Dočasná hodnota
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(priceValue || 0);
+  
   const tileRef = useRef(null);
-
-  // Tooltip logika (zachovaná pôvodná)
   const [hoverTimer, setHoverTimer] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 
@@ -52,7 +51,7 @@ const Tile = ({
     const timer = setTimeout(() => {
       updateTooltipPosition();
       setShowTooltip(true);
-    }, 1500); // Mierně dlhší delay aby to neblikalo
+    }, 1500);
     setHoverTimer(timer);
   };
 
@@ -63,7 +62,7 @@ const Tile = ({
 
   // --- ADMIN HANDLERS ---
   const startEditing = (e) => {
-    e.stopPropagation(); // Aby sme nevybrali dlaždicu pri kliku na ceruzku
+    e.stopPropagation();
     setEditValue(priceValue || 0);
     setIsEditing(true);
   };
@@ -89,8 +88,8 @@ const Tile = ({
       onClick={!isEditing ? onClick : undefined}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      // ZMENA CSS: h-full zabezpečí rovnakú výšku, flex-col a justify-between roztiahne obsah
-      className={`relative p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center justify-between h-full min-h-[180px] group ${
+      // VIZUÁL: min-h zabezpečí konzistentnú výšku, flex roztiahne obsah
+      className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center justify-between min-h-[190px] w-full group ${
         selected 
           ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
           : isA0 
@@ -99,24 +98,22 @@ const Tile = ({
       }`}
     >
       
-      {/* Admin Edit Button */}
+      {/* CERUZKA PRE ADMINA */}
       {isAdmin && isPriced && !isEditing && (
         <div 
           onClick={startEditing}
-          className="absolute top-2 right-2 p-1.5 bg-gray-100 hover:bg-gray-200 rounded-full z-50 transition-colors cursor-pointer border border-gray-300"
+          className="absolute top-2 right-2 p-1.5 bg-white/80 hover:bg-white rounded-full z-50 transition-colors cursor-pointer border border-gray-200 shadow-sm"
         >
-          <Pencil className="w-3 h-3 text-gray-600" />
+          <Pencil className="w-3.5 h-3.5 text-gray-600" />
         </div>
       )}
 
-      {/* A0 Badge */}
       {isA0 && (
         <Badge className="absolute top-2 left-2 bg-emerald-500 text-white text-[9px] px-1.5 py-0.5 z-10 font-bold">
           A0
         </Badge>
       )}
       
-      {/* Selected Check Animation - Posunuté do pozadia (z-index) aby neprekrývalo text */}
       <AnimatePresence>
         {selected && (
           <motion.div
@@ -132,41 +129,41 @@ const Tile = ({
         )}
       </AnimatePresence>
 
-      {/* Content Container - z-30 aby bol nad animáciou */}
-      <div className="relative z-30 flex flex-col items-center gap-2 w-full mt-4">
-        <Icon className={`w-8 h-8 ${selected ? iconSelectedColor : iconColor}`} />
+      {/* Obsah */}
+      <div className="relative z-30 flex flex-col items-center justify-center flex-grow gap-2 w-full px-1 mt-4">
+        <Icon className={`w-8 h-8 sm:w-9 sm:h-9 ${selected ? iconSelectedColor : iconColor}`} />
         
-        {/* ZMENA: Odstránený truncate, pridaný whitespace-normal */}
-        <span className="font-bold text-gray-800 text-sm leading-tight whitespace-normal break-words w-full">
+        {/* TEXT: break-words a w-full zabezpečia, že sa text nezalomí vertikálne */}
+        <span className="font-bold text-gray-800 text-sm leading-tight break-words w-full">
           {title}
         </span>
-        <span className="text-xs text-gray-500 leading-tight whitespace-normal break-words w-full px-1">
+        <span className="text-xs text-gray-500 leading-tight break-words w-full px-1">
           {subtitle}
         </span>
       </div>
 
-      {/* Price Section */}
-      <div className="relative z-30 mt-3 min-h-[24px] w-full flex justify-center items-center">
+      {/* Cena */}
+      <div className="relative z-30 mt-auto pt-2 w-full flex justify-center items-center h-10">
         {isEditing ? (
-          <div className="flex items-center gap-1 bg-white p-1 rounded border border-blue-400 shadow-lg absolute bottom-0 w-[90%] left-[5%]">
+          <div className="flex items-center gap-1 bg-white p-1 rounded-lg border-2 border-blue-500 shadow-xl absolute bottom-2 w-[95%] z-50">
             <input 
               type="number" 
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
-              className="w-full text-xs p-1 border-none focus:ring-0 text-center font-bold"
+              onClick={(e) => e.stopPropagation()}
+              className="w-full text-sm p-0 border-none focus:ring-0 text-center font-bold text-gray-900 h-6 bg-transparent"
               autoFocus
             />
-            <Save onClick={savePrice} className="w-4 h-4 text-green-600 cursor-pointer hover:scale-110" />
-            <X onClick={cancelEdit} className="w-4 h-4 text-red-600 cursor-pointer hover:scale-110" />
+            <Save onClick={savePrice} className="w-4 h-4 text-green-600 cursor-pointer hover:scale-110 flex-shrink-0" />
+            <X onClick={cancelEdit} className="w-4 h-4 text-red-600 cursor-pointer hover:scale-110 flex-shrink-0" />
           </div>
         ) : (
-          <span className={`${isPriced ? "font-bold text-green-700" : "text-gray-400 font-medium"} text-sm bg-white/50 px-2 py-0.5 rounded-full`}>
+          <span className={`${isPriced ? "font-bold text-green-700" : "text-gray-400 font-medium"} text-sm bg-white/60 px-3 py-1 rounded-full backdrop-blur-sm`}>
             {price}
           </span>
         )}
       </div>
 
-      {/* Tooltip Portal */}
       {showTooltip && tooltip && ReactDOM.createPortal(
         <div 
           className="fixed z-[9999] w-56 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
@@ -188,8 +185,8 @@ export default function KonfiguratorFaza1HrubaStavba({
   predlzenie, setPredlzenie,
   dom,
   cennik,
-  // Tieto props musíme prijať z parenta (KonfiguratorFjord.jsx)
-  isAdmin = false, 
+  // Defaultne zapnutý admin
+  isAdmin = true, 
   updatePrice = (key, val) => console.log("Simulácia uloženia:", key, val) 
 }) {
   
@@ -221,7 +218,6 @@ export default function KonfiguratorFaza1HrubaStavba({
       animate={{ opacity: 1, y: 0 }}
       className="space-y-6"
     >
-      {/* A0 Info Box */}
       <div className="p-4 bg-green-50 border border-green-200 rounded-xl flex gap-3 shadow-sm">
         <Sparkles className="w-5 h-5 text-green-600 flex-shrink-0" />
         <p className="text-sm text-green-800 font-medium leading-snug">{t('a0Recommendation')}</p>
@@ -239,11 +235,11 @@ export default function KonfiguratorFaza1HrubaStavba({
         <div className="p-4 sm:p-6 bg-gray-50/50">
           <p className="text-xs text-red-600 mb-4 text-center bg-red-50 p-2 rounded border border-red-100">{t('assemblyNote')}</p>
           
-          {/* GRID LAYOUT - Opravené medzery a zarovnanie */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* HLAVNÝ GRID - Rozdelenie na 2 hlavné stĺpce pre väčšie obrazovky */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            {/* 1. MONTÁŽ */}
-            <div className="col-span-2 p-4 border-2 border-amber-200 rounded-2xl bg-amber-50/30">
+            {/* 1. MONTÁŽ (Ľavý stĺpec) */}
+            <div className="p-4 border-2 border-amber-200 rounded-2xl bg-amber-50/30 flex flex-col">
                <p className="text-xs font-bold text-amber-800 mb-3 flex items-center gap-2">
                 <span className="w-5 h-5 bg-amber-600 text-white rounded-full flex items-center justify-center text-[10px]">1</span>
                 {t('assembly')}
@@ -279,13 +275,14 @@ export default function KonfiguratorFaza1HrubaStavba({
               </div>
             </div>
 
-            {/* 2. IZOLÁCIA */}
-            <div className="col-span-2 p-4 border-2 border-cyan-200 rounded-2xl bg-cyan-50/30">
+            {/* 2. IZOLÁCIA (Pravý stĺpec) */}
+            {/* ZMENA: grid-cols-2 zabezpečí, že dlaždice budú v mriežke 2x2. Tým získajú šírku. */}
+            <div className="p-4 border-2 border-cyan-200 rounded-2xl bg-cyan-50/30">
                <p className="text-xs font-bold text-cyan-800 mb-3 flex items-center gap-2">
                 <span className="w-5 h-5 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[10px]">2</span>
                 {t('insulation')}
               </p>
-              <div className={`grid ${hasUltraInsulation ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-3'} gap-2 h-auto`}>
+              <div className="grid grid-cols-2 gap-3">
                  <Tile 
                     selected={izolaciaNavysenie === "standard"} 
                     onClick={() => setIzolaciaNavysenie("standard")} 
@@ -350,12 +347,13 @@ export default function KonfiguratorFaza1HrubaStavba({
               </div>
             </div>
 
-            {/* 3. ZÁKLADY */}
-            <div className="col-span-2 lg:col-span-4 p-4 border-2 border-orange-200 rounded-2xl bg-orange-50/30">
+            {/* 3. ZÁKLADY (Celá šírka) */}
+            <div className="col-span-1 lg:col-span-2 p-4 border-2 border-orange-200 rounded-2xl bg-orange-50/30">
                <p className="text-xs font-bold text-orange-800 mb-3 flex items-center gap-2">
                 <span className="w-5 h-5 bg-orange-600 text-white rounded-full flex items-center justify-center text-[10px]">3</span>
                 {t('foundations')}
               </p>
+              {/* Responzívny Grid: na mobiloch 2x2, na desktopoch 4 vedľa seba (text je tu krátky, takže sa zmestí) */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                  <Tile 
                     selected={zaklady === "bez"} 
@@ -419,7 +417,7 @@ export default function KonfiguratorFaza1HrubaStavba({
 
             {/* 4. PREDĹŽENIE (Voliteľné) */}
             {hasPredlzenie && (
-               <div className="col-span-2 lg:col-span-4 p-4 border-2 border-indigo-200 rounded-2xl bg-indigo-50/30">
+               <div className="col-span-1 lg:col-span-2 p-4 border-2 border-indigo-200 rounded-2xl bg-indigo-50/30">
                  <p className="text-xs font-bold text-indigo-800 mb-3 flex items-center gap-2">
                    <span className="w-5 h-5 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[10px]">+</span>
                    Predĺženie domu
