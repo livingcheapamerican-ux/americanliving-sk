@@ -331,6 +331,8 @@ export default function KonfiguratorFjord({
 
   // Funkcia na uloženie zmenenej ceny do databázy
   const handlePriceChange = async (priceKey, newPrice) => {
+    console.log('🔧 handlePriceChange called:', { priceKey, newPrice, dom_id: dom?.id });
+    
     try {
       const response = await base44.functions.invoke('updateFjordPrice', {
         dom_id: dom.id,
@@ -338,18 +340,27 @@ export default function KonfiguratorFjord({
         new_price: newPrice
       });
       
+      console.log('📡 Backend response:', response?.data);
+      
       if (response?.data?.success) {
-        console.log('Cena aktualizovaná:', priceKey, newPrice);
-        // Aktualizuj state cien bez reload-u
-        setCustomCeny(prev => ({
-          ...prev,
-          [priceKey]: newPrice
-        }));
+        console.log('✅ Cena úspešne aktualizovaná v databáze:', priceKey, newPrice);
+        
+        // Aktualizuj state cien - toto spustí prebudovanie CENY memoizovaného objektu
+        setCustomCeny(prev => {
+          const updated = {
+            ...prev,
+            [priceKey]: newPrice
+          };
+          console.log('💾 CustomCeny aktualizované:', updated);
+          return updated;
+        });
+        
+        console.log('✨ State aktualizovaný, komponent by sa mal prerendrovať');
       } else {
         throw new Error(response?.data?.error || 'Neznáma chyba');
       }
     } catch (error) {
-      console.error('Error updating price:', error);
+      console.error('❌ Error updating price:', error);
       alert('Chyba pri ukladaní ceny: ' + error.message);
     }
   };
