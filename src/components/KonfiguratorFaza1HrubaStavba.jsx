@@ -25,9 +25,10 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
   // Sleduj zmeny v price prop a resetni editing
   React.useEffect(() => {
     console.log('🔄 Tile price changed:', { title, price, priceKey });
-    setEditPrice(price);
-    setIsEditing(false);
-  }, [price, title, priceKey]);
+    // Extrahuj číselnú hodnotu z formátovaného stringu
+    const priceNum = price.replace(/[^0-9]/g, '');
+    setEditPrice(priceNum);
+  }, [price]);
 
   const handleEditClick = (e) => {
     e.stopPropagation();
