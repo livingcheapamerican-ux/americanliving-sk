@@ -270,65 +270,63 @@ export default function KonfiguratorFjord({
     setCustomCeny(dom?.konfigurator_ceny || {});
   }, [dom?.konfigurator_ceny]);
   
-  const getPrice = (key) => {
-    const customValue = customCeny[key];
-    // Použiť custom hodnotu len ak existuje A je väčšia ako 0
-    // Ak je 0 alebo undefined, vrátiť undefined a použije sa fallback
-    if (customValue !== undefined && customValue !== null && customValue > 0) {
-      return customValue;
-    }
-    return undefined; // Použije sa default cena cez ?? operator
-  };
-
   // CENY - s možnosťou override z databázy (memo-ované!)
-  const CENY = useMemo(() => ({
-    montaz: { nie: 0, ano: getPrice('montaz_ano') ?? DEFAULT_CENY.montaz.ano },
-    dvere: { 
-      ziadne: 0, 
-      kovove: getPrice('dvere_kovove') ?? DEFAULT_CENY.dvere.kovove, 
-      plastove: getPrice('dvere_plastove') ?? DEFAULT_CENY.dvere.plastove 
-    },
-    izolacia: { 
-      standard: 0, 
-      zvysena: getPrice('izolacia_zvysena') ?? DEFAULT_CENY.izolacia.zvysena, 
-      premium: getPrice('izolacia_premium') ?? DEFAULT_CENY.izolacia.premium 
-    },
-    elektroinstalacia: getPrice('elektroinstalacia') ?? DEFAULT_CENY.elektroinstalacia,
-    vodaKanalizacia: getPrice('vodaKanalizacia') ?? DEFAULT_CENY.vodaKanalizacia,
-    sanitaKomplet: getPrice('sanitaKomplet') ?? DEFAULT_CENY.sanitaKomplet,
-    bojler: getPrice('bojler') ?? DEFAULT_CENY.bojler,
-    tepelneCerpadlo: getPrice('tepelneCerpadlo') ?? DEFAULT_CENY.tepelneCerpadlo,
-    rekuperacia: getPrice('rekuperacia') ?? DEFAULT_CENY.rekuperacia,
-    zaklady: { 
-      bez: 0, 
-      skrutky: getPrice('zaklady_skrutky') ?? DEFAULT_CENY.zaklady.skrutky, 
-      doska: getPrice('zaklady_doska') ?? DEFAULT_CENY.zaklady.doska, 
-      pasove: getPrice('zaklady_pasove') ?? DEFAULT_CENY.zaklady.pasove 
-    },
-    pripojkaSiete: getPrice('pripojkaSiete') ?? DEFAULT_CENY.pripojkaSiete,
-    inziniering: getPrice('inziniering') ?? DEFAULT_CENY.inziniering,
-    projektA0: getPrice('projektA0') ?? DEFAULT_CENY.projektA0,
-    interierFinis: { 
-      ziadne: 0, 
-      drevo: getPrice('interierFinis_drevo') ?? DEFAULT_CENY.interierFinis.drevo, 
-      sadrokarton: getPrice('interierFinis_sadrokarton') ?? DEFAULT_CENY.interierFinis.sadrokarton 
-    },
-    vonkajsiaFasada: { 
-      standard: 0, 
-      suchana: getPrice('vonkajsiaFasada_suchana') ?? DEFAULT_CENY.vonkajsiaFasada.suchana 
-    },
-    povrchokaOkien: getPrice('povrchokaOkien') ?? DEFAULT_CENY.povrchokaOkien,
-    vnutornePodlahy: getPrice('vnutornePodlahy') ?? DEFAULT_CENY.vnutornePodlahy,
-    podlahovVykurovanie: getPrice('podlahovVykurovanie') ?? DEFAULT_CENY.podlahovVykurovanie,
-    interieroveDvere: getPrice('interieroveDvere') ?? DEFAULT_CENY.interieroveDvere,
-    tonovaneSkla: getPrice('tonovaneSkla') ?? DEFAULT_CENY.tonovaneSkla,
-    doprava: getPrice('doprava') ?? DEFAULT_CENY.doprava,
-    revizna: getPrice('revizna') ?? DEFAULT_CENY.revizna,
-    stresneOkno: getPrice('stresneOkno') ?? DEFAULT_CENY.stresneOkno,
-    bocneOknoFixne: getPrice('bocneOknoFixne') ?? DEFAULT_CENY.bocneOknoFixne,
-    bocneOknoVyklopne90: getPrice('bocneOknoVyklopne90') ?? DEFAULT_CENY.bocneOknoVyklopne90,
-    bocneOknoVyklopne55: getPrice('bocneOknoVyklopne55') ?? DEFAULT_CENY.bocneOknoVyklopne55
-  }), [customCeny]);
+  const CENY = useMemo(() => {
+    // Helper na ziskanie ceny - pouzije custom ak je > 0, inak default
+    const get = (key, defaultVal) => {
+      const custom = customCeny[key];
+      return (custom !== undefined && custom !== null && custom > 0) ? custom : defaultVal;
+    };
+
+    return {
+      montaz: { nie: 0, ano: get('montaz_ano', DEFAULT_CENY.montaz.ano) },
+      dvere: { 
+        ziadne: 0, 
+        kovove: get('dvere_kovove', DEFAULT_CENY.dvere.kovove), 
+        plastove: get('dvere_plastove', DEFAULT_CENY.dvere.plastove) 
+      },
+      izolacia: { 
+        standard: 0, 
+        zvysena: get('izolacia_zvysena', DEFAULT_CENY.izolacia.zvysena), 
+        premium: get('izolacia_premium', DEFAULT_CENY.izolacia.premium) 
+      },
+      elektroinstalacia: get('elektroinstalacia', DEFAULT_CENY.elektroinstalacia),
+      vodaKanalizacia: get('vodaKanalizacia', DEFAULT_CENY.vodaKanalizacia),
+      sanitaKomplet: get('sanitaKomplet', DEFAULT_CENY.sanitaKomplet),
+      bojler: get('bojler', DEFAULT_CENY.bojler),
+      tepelneCerpadlo: get('tepelneCerpadlo', DEFAULT_CENY.tepelneCerpadlo),
+      rekuperacia: get('rekuperacia', DEFAULT_CENY.rekuperacia),
+      zaklady: { 
+        bez: 0, 
+        skrutky: get('zaklady_skrutky', DEFAULT_CENY.zaklady.skrutky), 
+        doska: get('zaklady_doska', DEFAULT_CENY.zaklady.doska), 
+        pasove: get('zaklady_pasove', DEFAULT_CENY.zaklady.pasove) 
+      },
+      pripojkaSiete: get('pripojkaSiete', DEFAULT_CENY.pripojkaSiete),
+      inziniering: get('inziniering', DEFAULT_CENY.inziniering),
+      projektA0: get('projektA0', DEFAULT_CENY.projektA0),
+      interierFinis: { 
+        ziadne: 0, 
+        drevo: get('interierFinis_drevo', DEFAULT_CENY.interierFinis.drevo), 
+        sadrokarton: get('interierFinis_sadrokarton', DEFAULT_CENY.interierFinis.sadrokarton) 
+      },
+      vonkajsiaFasada: { 
+        standard: 0, 
+        suchana: get('vonkajsiaFasada_suchana', DEFAULT_CENY.vonkajsiaFasada.suchana) 
+      },
+      povrchokaOkien: get('povrchokaOkien', DEFAULT_CENY.povrchokaOkien),
+      vnutornePodlahy: get('vnutornePodlahy', DEFAULT_CENY.vnutornePodlahy),
+      podlahovVykurovanie: get('podlahovVykurovanie', DEFAULT_CENY.podlahovVykurovanie),
+      interieroveDvere: get('interieroveDvere', DEFAULT_CENY.interieroveDvere),
+      tonovaneSkla: get('tonovaneSkla', DEFAULT_CENY.tonovaneSkla),
+      doprava: get('doprava', DEFAULT_CENY.doprava),
+      revizna: get('revizna', DEFAULT_CENY.revizna),
+      stresneOkno: get('stresneOkno', DEFAULT_CENY.stresneOkno),
+      bocneOknoFixne: get('bocneOknoFixne', DEFAULT_CENY.bocneOknoFixne),
+      bocneOknoVyklopne90: get('bocneOknoVyklopne90', DEFAULT_CENY.bocneOknoVyklopne90),
+      bocneOknoVyklopne55: get('bocneOknoVyklopne55', DEFAULT_CENY.bocneOknoVyklopne55)
+    };
+  }, [customCeny]);
 
   // Funkcia na uloženie zmenenej ceny do databázy
   const handlePriceChange = async (priceKey, newPrice) => {
