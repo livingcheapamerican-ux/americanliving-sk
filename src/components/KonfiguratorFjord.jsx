@@ -264,11 +264,11 @@ export default function KonfiguratorFjord({
   };
 
   // Načítať custom ceny z databázy
-  const [customCeny, setCustomCeny] = useState(dom?.konfigurator_ceny || {});
-  
+  const [customCeny, setCustomCeny] = useState(dom?.konfigurator_custom_ceny_prosto_house || {});
+
   useEffect(() => {
-    setCustomCeny(dom?.konfigurator_ceny || {});
-  }, [dom?.konfigurator_ceny]);
+    setCustomCeny(dom?.konfigurator_custom_ceny_prosto_house || {});
+  }, [dom?.konfigurator_custom_ceny_prosto_house]);
   
   // CENY - s možnosťou override z databázy (memo-ované!)
   const CENY = useMemo(() => {
@@ -367,11 +367,11 @@ export default function KonfiguratorFjord({
 
   // Výpočet celkovej ceny
   const totalPrice = useMemo(() => {
-    let total = BASE_PRICE;
-    
-    total += CENY.montaz[montazHolodomu];
-    total += CENY.dvere[vstupneDvere];
-    total += CENY.izolacia[izolaciaNavysenie];
+      let total = BASE_PRICE;
+
+      total += CENY.montaz[montazHolodomu];
+      total += CENY.dvere[vstupneDvere];
+      total += CENY.izolacia[izolaciaNavysenie] || 0;
     
     if (elektroinstalacia) total += CENY.elektroinstalacia;
     if (vodaKanalizacia) total += CENY.vodaKanalizacia;
