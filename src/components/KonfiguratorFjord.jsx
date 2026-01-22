@@ -264,11 +264,11 @@ export default function KonfiguratorFjord({
   };
 
   // Načítať custom ceny z databázy
-  const [customCeny, setCustomCeny] = useState(dom?.konfigurator_custom_ceny_prosto_house || {});
+  const [customCeny, setCustomCeny] = useState(dom?.konfigurator_ceny || {});
 
   useEffect(() => {
-    setCustomCeny(dom?.konfigurator_custom_ceny_prosto_house || {});
-  }, [dom?.konfigurator_custom_ceny_prosto_house]);
+    setCustomCeny(dom?.konfigurator_ceny || {});
+  }, [dom?.konfigurator_ceny]);
   
   // CENY - s možnosťou override z databázy (memo-ované!)
   const CENY = useMemo(() => {
@@ -288,8 +288,7 @@ export default function KonfiguratorFjord({
       izolacia: { 
         standard: 0, 
         zvysena: get('izolacia_zvysena', DEFAULT_CENY.izolacia.zvysena), 
-        premium: get('izolacia_premium', DEFAULT_CENY.izolacia.premium),
-        ultra: get('izolacia_extra', 11063)
+        premium: get('izolacia_premium', DEFAULT_CENY.izolacia.premium)
       },
       elektroinstalacia: get('elektroinstalacia', DEFAULT_CENY.elektroinstalacia),
       vodaKanalizacia: get('vodaKanalizacia', DEFAULT_CENY.vodaKanalizacia),
@@ -371,7 +370,7 @@ export default function KonfiguratorFjord({
 
       total += CENY.montaz[montazHolodomu];
       total += CENY.dvere[vstupneDvere];
-      total += CENY.izolacia[izolaciaNavysenie] || 0;
+      total += CENY.izolacia[izolaciaNavysenie];
     
     if (elektroinstalacia) total += CENY.elektroinstalacia;
     if (vodaKanalizacia) total += CENY.vodaKanalizacia;
