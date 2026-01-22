@@ -547,37 +547,33 @@ export default function KonfiguratorNord({
   }, []);
 
   const handleReset = () => {
-    if (onReset) {
-      onReset();
-    } else {
-      setMontazHolodomu?.("nie");
-      setVstupneDvere("ziadne");
-      setIzolaciaNavysenie?.("standard");
-      setElektroinstalacia(false);
-      setVodaKanalizacia(false);
-      setSanitaKomplet(false);
-      setBojler(false);
-      setTepelneCerpadlo(false);
-      setRekuperacia(false);
-      setZaklady?.("bez");
-      setPripojkaSiete(false);
-      setInziniering(false);
-      setProjektA0(false);
-      setInterierFinis("ziadne");
-      setVonkajsiaFasada("standard");
-      setPovrchokaOkien(false);
-      setVnutornePodlahy(false);
-      setPodlahovVykurovanie(false);
-      setPergola(false);
-      setInterieroveDvere(0);
-      setTonovaneSkla(false);
-      setDoprava(false);
-      setRevizna(true);
-      setStresneOkno(0);
-      setBocneOknoFixne(0);
-      setBocneOknoVyklopne90(0);
-      setBocneOknoVyklopne55(0);
-    }
+    setNordMontazHolodomu("nie");
+    setNordVstupneDvere("ziadne");
+    setNordIzolaciaNavysenie("standard");
+    setNordElektroinstalacia(false);
+    setNordVodaKanalizacia(false);
+    setNordSanitaKomplet(false);
+    setNordBojler(false);
+    setNordTepelneCerpadlo(false);
+    setNordRekuperacia(false);
+    setNordZaklady("bez");
+    setNordPripojkaSiete(false);
+    setNordInziniering(false);
+    setNordProjektA0(false);
+    setNordInterierFinis("ziadne");
+    setNordVonkajsiaFasada("standard");
+    setNordPovrchokaOkien(false);
+    setNordVnutornePodlahy(false);
+    setNordPodlahovVykurovanie(false);
+    setNordPergola(false);
+    setNordInterieroveDvere(0);
+    setNordTonovaneSkla(false);
+    setNordDoprava(false);
+    setNordRevizna(true);
+    setNordStresneOkno(0);
+    setNordBocneOknoFixne(0);
+    setNordBocneOknoVyklopne90(0);
+    setNordBocneOknoVyklopne55(0);
   };
 
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
