@@ -76,7 +76,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative p-4 sm:p-6 rounded-xl sm:rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center min-h-[180px] sm:min-h-[200px] justify-center overflow-hidden group ${
+      className={`relative p-5 sm:p-7 rounded-xl sm:rounded-2xl cursor-pointer transition-all flex flex-col items-center text-center min-h-[200px] sm:min-h-[220px] justify-center overflow-hidden group ${
         selected 
           ? `${selectedBg} border-2 ${selectedBorder} shadow-2xl ring-2 ${selectedRing} bg-opacity-90` 
           : isA0 
@@ -117,15 +117,15 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         )}
       </AnimatePresence>
 
-      <motion.div className="relative z-30 flex flex-col items-center gap-1">
-        <div className={`p-1.5 sm:p-2 rounded-lg transition-all ${selected ? "bg-white/30" : "bg-white/0 group-hover:bg-white/20"}`}>
-          <Icon className={`w-6 h-6 sm:w-8 sm:h-8 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
+      <motion.div className="relative z-30 flex flex-col items-center gap-1.5">
+        <div className={`p-2 sm:p-3 rounded-lg transition-all ${selected ? "bg-white/30" : "bg-white/0 group-hover:bg-white/20"}`}>
+          <Icon className={`w-7 h-7 sm:w-9 sm:h-9 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
         </div>
-        <span className={`font-bold text-gray-800 text-[11px] sm:text-sm leading-snug transition-opacity ${selected ? "opacity-30" : ""}`}>{title}</span>
-        <span className={`text-[8px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1 leading-snug transition-opacity ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
+        <span className={`font-bold text-gray-800 text-xs sm:text-base leading-snug transition-opacity ${selected ? "opacity-30" : ""}`}>{title}</span>
+        <span className={`text-[9px] sm:text-sm text-gray-600 mt-0.5 sm:mt-1 leading-snug transition-opacity ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
       </motion.div>
-      <div className={`flex items-center gap-1 justify-center relative z-30`}>
-        <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>
+      <div className={`flex items-center gap-1 justify-center relative z-30 mt-1`}>
+        <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[10px] sm:text-sm`}>
           {price}
         </span>
       </div>
