@@ -724,58 +724,66 @@ export default function KonfiguratorNord({
                         {t('insulation')} ({t('selectOne')})
                       </p>
 
-                      <EditableTile
-                        selected={izolaciaNavysenie === "standard"}
-                        onClick={() => setIzolaciaNavysenie("standard")}
-                        title={t('insulationStandard')}
-                        subtitle="150/200mm"
-                        price="0 €"
-                        isPriced={false}
-                        isIncluded={true}
-                        t={t}
-                        isAdmin={false}
-                      />
+                      <div className="col-span-1">
+                        <EditableTile
+                          selected={izolaciaNavysenie === "standard"}
+                          onClick={() => setIzolaciaNavysenie("standard")}
+                          title={t('insulationStandard')}
+                          subtitle="150/200mm"
+                          price="0 €"
+                          isPriced={false}
+                          isIncluded={true}
+                          t={t}
+                          isAdmin={false}
+                        />
+                      </div>
 
-                      <EditableTile
-                        selected={izolaciaNavysenie === "zvysena"}
-                        onClick={() => setIzolaciaNavysenie("zvysena")}
-                        title={t('insulationEnhanced')}
-                        subtitle={t('insulationEnhancedDesc')}
-                        price={`+ ${CENY.izolacia.zvysena.toLocaleString('sk-SK')} €`}
-                        isPriced={true}
-                        t={t}
-                        isAdmin={isAdmin}
-                        priceKey="izolacia_zvysena"
-                        onPriceChange={handlePriceChange}
-                      />
+                      <div className="col-span-1">
+                        <EditableTile
+                          selected={izolaciaNavysenie === "zvysena"}
+                          onClick={() => setIzolaciaNavysenie("zvysena")}
+                          title={t('insulationEnhanced')}
+                          subtitle={t('insulationEnhancedDesc')}
+                          price={`+ ${CENY.izolacia.zvysena.toLocaleString('sk-SK')} €`}
+                          isPriced={true}
+                          t={t}
+                          isAdmin={isAdmin}
+                          priceKey="izolacia_zvysena"
+                          onPriceChange={handlePriceChange}
+                        />
+                      </div>
 
-                      <EditableTile
-                        selected={izolaciaNavysenie === "premium"}
-                        onClick={() => setIzolaciaNavysenie("premium")}
-                        title={t('insulationPremium')}
-                        subtitle={t('insulationPremiumDesc')}
-                        price={`+ ${CENY.izolacia.premium.toLocaleString('sk-SK')} €`}
-                        isPriced={true}
-                        isA0={true}
-                        t={t}
-                        isAdmin={isAdmin}
-                        priceKey="izolacia_premium"
-                        onPriceChange={handlePriceChange}
-                      />
+                      <div className="col-span-1">
+                        <EditableTile
+                          selected={izolaciaNavysenie === "premium"}
+                          onClick={() => setIzolaciaNavysenie("premium")}
+                          title={t('insulationPremium')}
+                          subtitle={t('insulationPremiumDesc')}
+                          price={`+ ${CENY.izolacia.premium.toLocaleString('sk-SK')} €`}
+                          isPriced={true}
+                          isA0={true}
+                          t={t}
+                          isAdmin={isAdmin}
+                          priceKey="izolacia_premium"
+                          onPriceChange={handlePriceChange}
+                        />
+                      </div>
 
-                      <EditableTile
-                        selected={izolaciaNavysenie === "ultra"}
-                        onClick={() => setIzolaciaNavysenie("ultra")}
-                        title="Ultra 300mm"
-                        subtitle={t('insulationUltraDesc')}
-                        price={`+ ${(CENY.izolacia?.ultra || 12000).toLocaleString('sk-SK')} €`}
-                        isPriced={true}
-                        isA0={true}
-                        t={t}
-                        isAdmin={isAdmin}
-                        priceKey="izolacia_extra"
-                        onPriceChange={handlePriceChange}
-                      />
+                      <div className="col-span-1">
+                        <EditableTile
+                          selected={izolaciaNavysenie === "ultra"}
+                          onClick={() => setIzolaciaNavysenie("ultra")}
+                          title="Ultra 300mm"
+                          subtitle={t('insulationUltraDesc')}
+                          price={`+ ${(CENY.izolacia?.ultra || 12000).toLocaleString('sk-SK')} €`}
+                          isPriced={true}
+                          isA0={true}
+                          t={t}
+                          isAdmin={isAdmin}
+                          priceKey="izolacia_extra"
+                          onPriceChange={handlePriceChange}
+                        />
+                      </div>
                     </div>
 
                     {/* Základy - skupina */}
