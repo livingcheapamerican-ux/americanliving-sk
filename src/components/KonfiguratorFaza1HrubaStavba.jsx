@@ -426,14 +426,78 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <span className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-cyan-600 to-blue-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold shadow-lg">2</span>
                 {t('insulation')} ({t('selectOne')})
               </p>
-              <Tile selected={izolaciaNavysenie === "standard"} onClick={() => setIzolaciaNavysenie("standard")} icon={ThermometerSun} iconColor="text-cyan-600" iconSelectedColor="text-cyan-800" title={t('insulationStandard')} subtitle="150/200mm" price="0 €" isPriced={false} isAdmin={isAdmin} selectedBg="bg-cyan-100" selectedBorder="border-cyan-600" selectedRing="ring-cyan-300" />
+              <Tile 
+                selected={izolaciaNavysenie === "standard"} 
+                onClick={() => setIzolaciaNavysenie("standard")} 
+                icon={ThermometerSun} 
+                iconColor="text-cyan-600" 
+                iconSelectedColor="text-cyan-800" 
+                title={t('insulationStandard')} 
+                subtitle="150/200mm" 
+                price="0 €" 
+                isPriced={false} 
+                isAdmin={isAdmin} 
+                selectedBg="bg-cyan-100" 
+                selectedBorder="border-cyan-600" 
+                selectedRing="ring-cyan-300" 
+              />
 
-              <Tile selected={izolaciaNavysenie === "zvysena"} onClick={() => setIzolaciaNavysenie("zvysena")} icon={ThermometerSun} iconColor="text-cyan-600" iconSelectedColor="text-cyan-800" title={t('insulationEnhanced')} subtitle={t('insulationEnhancedDesc')} price={`+ ${(cennik?.izolacia?.zvysena || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="izolacia_zvysena" onPriceChange={onPriceChange} selectedBg="bg-cyan-100" selectedBorder="border-cyan-600" selectedRing="ring-cyan-300" />
+              <Tile 
+                selected={izolaciaNavysenie === "zvysena"} 
+                onClick={() => setIzolaciaNavysenie("zvysena")} 
+                icon={ThermometerSun} 
+                iconColor="text-cyan-600" 
+                iconSelectedColor="text-cyan-800" 
+                title={t('insulationEnhanced')} 
+                subtitle={t('insulationEnhancedDesc')} 
+                price={`+ ${(cennik?.izolacia?.zvysena || 0).toLocaleString('sk-SK')} €`} 
+                isPriced={true} 
+                isAdmin={isAdmin} 
+                priceKey="izolacia_zvysena" 
+                onPriceChange={onPriceChange} 
+                selectedBg="bg-cyan-100" 
+                selectedBorder="border-cyan-600" 
+                selectedRing="ring-cyan-300" 
+              />
 
-              <Tile selected={izolaciaNavysenie === "premium"} onClick={() => setIzolaciaNavysenie("premium")} icon={ThermometerSun} iconColor="text-cyan-600" iconSelectedColor="text-cyan-800" title={t('insulationPremium')} subtitle={t('insulationPremiumDesc')} price={`+ ${(cennik?.izolacia?.premium || 0).toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} isAdmin={isAdmin} priceKey="izolacia_premium" onPriceChange={onPriceChange} selectedBg="bg-cyan-100" selectedBorder="border-cyan-600" selectedRing="ring-cyan-300" />
+              <Tile 
+                selected={izolaciaNavysenie === "premium"} 
+                onClick={() => setIzolaciaNavysenie("premium")} 
+                icon={ThermometerSun} 
+                iconColor="text-cyan-600" 
+                iconSelectedColor="text-cyan-800" 
+                title={t('insulationPremium')} 
+                subtitle={t('insulationPremiumDesc')} 
+                price={`+ ${(cennik?.izolacia?.premium || 0).toLocaleString('sk-SK')} €`} 
+                isPriced={true} 
+                isA0={true} 
+                isAdmin={isAdmin} 
+                priceKey="izolacia_premium" 
+                onPriceChange={onPriceChange} 
+                selectedBg="bg-cyan-100" 
+                selectedBorder="border-cyan-600" 
+                selectedRing="ring-cyan-300" 
+              />
 
               {hasUltraInsulation && (
-                <Tile selected={izolaciaNavysenie === "ultra"} onClick={() => setIzolaciaNavysenie("ultra")} icon={ThermometerSun} iconColor="text-cyan-600" iconSelectedColor="text-cyan-800" title="300mm" subtitle="Ultra izolácia" price={`+ ${(cennik?.izolacia?.ultra || 0).toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} isAdmin={isAdmin} priceKey="izolacia_ultra" onPriceChange={onPriceChange} selectedBg="bg-cyan-100" selectedBorder="border-cyan-600" selectedRing="ring-cyan-300" />
+                <Tile 
+                  selected={izolaciaNavysenie === "ultra"} 
+                  onClick={() => setIzolaciaNavysenie("ultra")} 
+                  icon={ThermometerSun} 
+                  iconColor="text-cyan-600" 
+                  iconSelectedColor="text-cyan-800" 
+                  title="300mm" 
+                  subtitle="Ultra izolácia" 
+                  price={`+ ${(cennik?.izolacia?.ultra || 0).toLocaleString('sk-SK')} €`} 
+                  isPriced={true} 
+                  isA0={true} 
+                  isAdmin={isAdmin} 
+                  priceKey="izolacia_ultra" 
+                  onPriceChange={onPriceChange} 
+                  selectedBg="bg-cyan-100" 
+                  selectedBorder="border-cyan-600" 
+                  selectedRing="ring-cyan-300" 
+                />
               )}
             </motion.div>
 
@@ -448,13 +512,75 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <span className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-orange-600 to-red-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold shadow-lg">3</span>
                 {t('foundations')} ({t('selectOne')})
               </p>
-              <Tile selected={zaklady === "bez"} onClick={() => setZaklady("bez")} icon={Landmark} iconColor="text-orange-600" iconSelectedColor="text-orange-800" title={t('foundationsNone')} subtitle={t('own')} price="0 €" isPriced={false} isAdmin={isAdmin} selectedBg="bg-orange-100" selectedBorder="border-orange-600" selectedRing="ring-orange-300" />
+              <Tile 
+                selected={zaklady === "bez"} 
+                onClick={() => setZaklady("bez")} 
+                icon={Landmark} 
+                iconColor="text-orange-600" 
+                iconSelectedColor="text-orange-800" 
+                title={t('foundationsNone')} 
+                subtitle={t('own')} 
+                price="0 €" 
+                isPriced={false} 
+                isAdmin={isAdmin} 
+                selectedBg="bg-orange-100" 
+                selectedBorder="border-orange-600" 
+                selectedRing="ring-orange-300" 
+              />
 
-              <Tile selected={zaklady === "skrutky"} onClick={() => setZaklady("skrutky")} icon={Landmark} iconColor="text-orange-600" iconSelectedColor="text-orange-800" title="Pilóty/Pätky" subtitle={t('groundFootings')} price={`+ ${(cennik?.zaklady?.skrutky || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_skrutky" onPriceChange={onPriceChange} selectedBg="bg-orange-100" selectedBorder="border-orange-600" selectedRing="ring-orange-300" />
+              <Tile 
+                selected={zaklady === "skrutky"} 
+                onClick={() => setZaklady("skrutky")} 
+                icon={Landmark} 
+                iconColor="text-orange-600" 
+                iconSelectedColor="text-orange-800" 
+                title="Pilóty/Pätky" 
+                subtitle={t('groundFootings')} 
+                price={`+ ${(cennik?.zaklady?.skrutky || 0).toLocaleString('sk-SK')} €`} 
+                isPriced={true} 
+                isAdmin={isAdmin} 
+                priceKey="zaklady_skrutky" 
+                onPriceChange={onPriceChange} 
+                selectedBg="bg-orange-100" 
+                selectedBorder="border-orange-600" 
+                selectedRing="ring-orange-300" 
+              />
 
-              <Tile selected={zaklady === "doska"} onClick={() => setZaklady("doska")} icon={Landmark} iconColor="text-orange-600" iconSelectedColor="text-orange-800" title={t('foundationsSlab')} subtitle={t('foundationSlab')} price={`+ ${(cennik?.zaklady?.doska || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_doska" onPriceChange={onPriceChange} selectedBg="bg-orange-100" selectedBorder="border-orange-600" selectedRing="ring-orange-300" />
+              <Tile 
+                selected={zaklady === "doska"} 
+                onClick={() => setZaklady("doska")} 
+                icon={Landmark} 
+                iconColor="text-orange-600" 
+                iconSelectedColor="text-orange-800" 
+                title={t('foundationsSlab')} 
+                subtitle={t('foundationSlab')} 
+                price={`+ ${(cennik?.zaklady?.doska || 0).toLocaleString('sk-SK')} €`} 
+                isPriced={true} 
+                isAdmin={isAdmin} 
+                priceKey="zaklady_doska" 
+                onPriceChange={onPriceChange} 
+                selectedBg="bg-orange-100" 
+                selectedBorder="border-orange-600" 
+                selectedRing="ring-orange-300" 
+              />
 
-              <Tile selected={zaklady === "pasove"} onClick={() => setZaklady("pasove")} icon={Landmark} iconColor="text-orange-600" iconSelectedColor="text-orange-800" title={t('foundationsStrip')} subtitle={t('stripFound')} price={`+ ${(cennik?.zaklady?.pasove || 0).toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="zaklady_pasove" onPriceChange={onPriceChange} selectedBg="bg-orange-100" selectedBorder="border-orange-600" selectedRing="ring-orange-300" />
+              <Tile 
+                selected={zaklady === "pasove"} 
+                onClick={() => setZaklady("pasove")} 
+                icon={Landmark} 
+                iconColor="text-orange-600" 
+                iconSelectedColor="text-orange-800" 
+                title={t('foundationsStrip')} 
+                subtitle={t('stripFound')} 
+                price={`+ ${(cennik?.zaklady?.pasove || 0).toLocaleString('sk-SK')} €`} 
+                isPriced={true} 
+                isAdmin={isAdmin} 
+                priceKey="zaklady_pasove" 
+                onPriceChange={onPriceChange} 
+                selectedBg="bg-orange-100" 
+                selectedBorder="border-orange-600" 
+                selectedRing="ring-orange-300" 
+              />
             </motion.div>
 
           </div>
