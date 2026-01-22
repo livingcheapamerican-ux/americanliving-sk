@@ -142,7 +142,7 @@ export default function KonfiguratorFaza1HrubaStavba({
   const phaseRef = useRef(null);
   const { t } = useLanguage();
 
-  const hasUltraInsulation = dom?.nazov !== "Fjord";
+  const hasUltraInsulation = ["Flat Double", "Flat House 1,5", "Nord", "Barn Double", "Flat", "A-Frame", "Barn", "Flat Small"].includes(dom?.nazov);
   const hasPredlzenie = setPredlzenie && ["Prosto House", "A-Frame", "Barn 48", "Barn Double"].includes(dom?.nazov);
   
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
