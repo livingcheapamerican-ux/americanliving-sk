@@ -234,8 +234,8 @@ export default function KonfiguratorContactModal({
 
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
-        {!submitted ? (
-          <div className="flex flex-col lg:flex-row">
+          {!submitted ? (
+            <div className="flex flex-col lg:flex-row">
             {/* Ľavá strana - Obrázok a súhrn */}
             <div className="lg:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-6 text-white">
               <DialogHeader className="mb-4">
