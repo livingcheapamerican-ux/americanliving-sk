@@ -59,7 +59,7 @@ const Tile = ({
       ref={tileRef}
       whileHover={{ scale: 1.02, y: -2 }}
       whileTap={{ scale: 0.98 }}
-      onClick={!isEditing ? onClick : undefined}
+      onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       // VIZUÁL: min-h zabezpečí konzistentnú výšku, flex roztiahne obsah
@@ -72,15 +72,7 @@ const Tile = ({
       }`}
     >
       
-      {/* CERUZKA PRE ADMINA */}
-      {isAdmin && isPriced && !isEditing && (
-        <div 
-          onClick={startEditing}
-          className="absolute top-2 right-2 p-1.5 bg-white/80 hover:bg-white rounded-full z-50 transition-colors cursor-pointer border border-gray-200 shadow-sm"
-        >
-          <Pencil className="w-3.5 h-3.5 text-gray-600" />
-        </div>
-      )}
+
 
       {isA0 && (
         <Badge className="absolute top-2 left-2 bg-emerald-500 text-white text-[9px] px-1.5 py-0.5 z-10 font-bold">
@@ -143,10 +135,7 @@ export default function KonfiguratorFaza1HrubaStavba({
   zaklady, setZaklady,
   predlzenie, setPredlzenie,
   dom,
-  cennik,
-  // Defaultne zapnutý admin
-  isAdmin = true, 
-  updatePrice = (key, val) => console.log("Simulácia uloženia:", key, val) 
+  cennik 
 }) {
   
   const phaseRef = useRef(null);
