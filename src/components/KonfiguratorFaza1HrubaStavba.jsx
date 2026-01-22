@@ -142,8 +142,21 @@ export default function KonfiguratorFaza1HrubaStavba({
   const phaseRef = useRef(null);
   const { t } = useLanguage();
 
-  const hasUltraInsulation = ["Flat Double", "Flat House 1,5", "Nord", "Barn Double", "Flat", "A-Frame", "Barn", "Flat Small"].includes(dom?.nazov);
-  const hasPredlzenie = setPredlzenie && ["Prosto House", "A-Frame", "Barn 48", "Barn Double"].includes(dom?.nazov);
+  // Mapovanie cien ultra izolácie podľa domov
+  const ultraIzolaciaMapping = {
+    "Flat Double": 21750,
+    "Flat House 1,5": 16500,
+    "Nord": 12000,
+    "Barn Double": 10125,
+    "Flat": 11063,
+    "A-Frame": 6000,
+    "Barn": 5250,
+    "Flat Small": 5250
+  };
+
+  const hasUltraInsulation = ultraIzolaciaMapping[dom?.nazov] !== undefined;
+  const ultraIzolaciaPrice = ultraIzolaciaMapping[dom?.nazov] || 0;
+  const hasPredlzenie = setPredlzenie && ["Prosto House", "A-Frame", "Barn 48", "Barn Double", "Flat", "Flat Double", "Flat House 1,5", "Nord", "Flat Small"].includes(dom?.nazov);
   
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
     <div className={`relative flex items-center gap-3 p-4 bg-gradient-to-r ${color} rounded-t-xl overflow-hidden`}>
@@ -265,7 +278,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                       iconSelectedColor="text-cyan-800" 
                       title="Ultra 300mm" 
                       subtitle={t('insulationUltraDesc')}
-                      price={cennik?.izolacia?.ultra ? `+ ${cennik.izolacia.ultra.toLocaleString('sk-SK')} €` : "+ 11 063 €"}
+                      price={`+ ${ultraIzolaciaPrice.toLocaleString('sk-SK')} €`}
                       isA0={true}
                     />
                   )}
