@@ -329,6 +329,66 @@ export default function KonfiguratorNord({
     bocneOknoVyklopne55: getPrice('okno_vyklopne_55_90') ?? DEFAULT_CENY.bocneOknoVyklopne55
   };
 
+  // Použiť nord-scoped alebo parent premenné
+  const montazHolodomu = nordMontazHolodomu;
+  const izolaciaNavysenie = nordIzolaciaNavysenie;
+  const zaklady = nordZaklady;
+  const vstupneDvere = nordVstupneDvere;
+  const elektroinstalacia = nordElektroinstalacia;
+  const vodaKanalizacia = nordVodaKanalizacia;
+  const sanitaKomplet = nordSanitaKomplet;
+  const bojler = nordBojler;
+  const tepelneCerpadlo = nordTepelneCerpadlo;
+  const rekuperacia = nordRekuperacia;
+  const pripojkaSiete = nordPripojkaSiete;
+  const stresneOkno = nordStresneOkno;
+  const bocneOknoFixne = nordBocneOknoFixne;
+  const bocneOknoVyklopne90 = nordBocneOknoVyklopne90;
+  const bocneOknoVyklopne55 = nordBocneOknoVyklopne55;
+  const povrchokaOkien = nordPovrchokaOkien;
+  const tonovaneSkla = nordTonovaneSkla;
+  const vonkajsiaFasada = nordVonkajsiaFasada;
+  const interierFinis = nordInterierFinis;
+  const vnutornePodlahy = nordVnutornePodlahy;
+  const podlahovVykurovanie = nordPodlahovVykurovanie;
+  const interieroveDvere = nordInterieroveDvere;
+  const pergola = nordPergola;
+  const inziniering = nordInziniering;
+  const projektA0 = nordProjektA0;
+  const revizna = nordRevizna;
+  const doprava = nordDoprava;
+  const predajNehnutelnosti = _predajNehnutelnosti;
+  const hladaniePozemku = _hladaniePozemku;
+  const financneSluzby = _financneSluzby;
+
+  const setMontazHolodomu = setNordMontazHolodomu;
+  const setIzolaciaNavysenie = setNordIzolaciaNavysenie;
+  const setZaklady = setNordZaklady;
+  const setVstupneDvere = setNordVstupneDvere;
+  const setElektroinstalacia = setNordElektroinstalacia;
+  const setVodaKanalizacia = setNordVodaKanalizacia;
+  const setSanitaKomplet = setNordSanitaKomplet;
+  const setBojler = setNordBojler;
+  const setTepelneCerpadlo = setNordTepelneCerpadlo;
+  const setRekuperacia = setNordRekuperacia;
+  const setPripojkaSiete = setNordPripojkaSiete;
+  const setStresneOkno = setNordStresneOkno;
+  const setBocneOknoFixne = setNordBocneOknoFixne;
+  const setBocneOknoVyklopne90 = setNordBocneOknoVyklopne90;
+  const setBocneOknoVyklopne55 = setNordBocneOknoVyklopne55;
+  const setPovrchokaOkien = setNordPovrchokaOkien;
+  const setTonovaneSkla = setNordTonovaneSkla;
+  const setVonkajsiaFasada = setNordVonkajsiaFasada;
+  const setInterierFinis = setNordInterierFinis;
+  const setVnutornePodlahy = setNordVnutornePodlahy;
+  const setPodlahovVykurovanie = setNordPodlahovVykurovanie;
+  const setInterieroveDvere = setNordInterieroveDvere;
+  const setPergola = setNordPergola;
+  const setInziniering = setNordInziniering;
+  const setProjektA0 = setNordProjektA0;
+  const setRevizna = setNordRevizna;
+  const setDoprava = setNordDoprava;
+
   // Výpočet celkovej ceny
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
