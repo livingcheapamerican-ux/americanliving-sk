@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
-  Check, Wrench, ThermometerSun, Landmark, Package, Sparkles, Maximize, Pencil, Save, X
+  Check, Wrench, ThermometerSun, Landmark, Package, Sparkles, Maximize
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "./LanguageContext";
@@ -18,10 +18,6 @@ const Tile = ({
   title, 
   subtitle, 
   price, 
-  priceValue, 
-  priceKey, 
-  updatePrice, 
-  isAdmin, 
   isPriced, 
   isA0, 
   tooltip, 
@@ -30,9 +26,7 @@ const Tile = ({
   selectedRing = "ring-amber-300" 
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(priceValue || 0);
-  
+
   const tileRef = useRef(null);
   const [hoverTimer, setHoverTimer] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
@@ -58,26 +52,6 @@ const Tile = ({
   const handleMouseLeave = () => {
     if (hoverTimer) clearTimeout(hoverTimer);
     setShowTooltip(false);
-  };
-
-  // --- ADMIN HANDLERS ---
-  const startEditing = (e) => {
-    e.stopPropagation();
-    setEditValue(priceValue || 0);
-    setIsEditing(true);
-  };
-
-  const savePrice = (e) => {
-    e.stopPropagation();
-    if (updatePrice && priceKey) {
-      updatePrice(priceKey, Number(editValue));
-    }
-    setIsEditing(false);
-  };
-
-  const cancelEdit = (e) => {
-    e.stopPropagation();
-    setIsEditing(false);
   };
 
   return (
@@ -144,24 +118,9 @@ const Tile = ({
 
       {/* Cena */}
       <div className="relative z-30 mt-auto pt-2 w-full flex justify-center items-center h-10">
-        {isEditing ? (
-          <div className="flex items-center gap-1 bg-white p-1 rounded-lg border-2 border-blue-500 shadow-xl absolute bottom-2 w-[95%] z-50">
-            <input 
-              type="number" 
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full text-sm p-0 border-none focus:ring-0 text-center font-bold text-gray-900 h-6 bg-transparent"
-              autoFocus
-            />
-            <Save onClick={savePrice} className="w-4 h-4 text-green-600 cursor-pointer hover:scale-110 flex-shrink-0" />
-            <X onClick={cancelEdit} className="w-4 h-4 text-red-600 cursor-pointer hover:scale-110 flex-shrink-0" />
-          </div>
-        ) : (
-          <span className={`${isPriced ? "font-bold text-green-700" : "text-gray-400 font-medium"} text-sm bg-white/60 px-3 py-1 rounded-full backdrop-blur-sm`}>
-            {price}
-          </span>
-        )}
+        <span className={`${isPriced ? "font-bold text-green-700" : "text-gray-400 font-medium"} text-sm bg-white/60 px-3 py-1 rounded-full backdrop-blur-sm`}>
+          {price}
+        </span>
       </div>
 
       {showTooltip && tooltip && ReactDOM.createPortal(
@@ -254,7 +213,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                   title={t('assemblyNo')} 
                   subtitle={t('onlyKit')} 
                   price="0 €"
-                  isAdmin={isAdmin}
                   isPriced={false}
                 />
                 <Tile 
@@ -266,10 +224,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                   title={t('assemblyYes')} 
                   subtitle={t('phase1')} 
                   price={`+ ${(cennik?.montaz?.ano || 0).toLocaleString('sk-SK')} €`}
-                  priceValue={cennik?.montaz?.ano}
-                  priceKey="montaz.ano"
-                  updatePrice={updatePrice}
-                  isAdmin={isAdmin}
                   isPriced={true}
                 />
               </div>
@@ -292,7 +246,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                     title={t('insulationStandard')} 
                     subtitle="150/200mm" 
                     price="0 €"
-                    isAdmin={isAdmin}
                     isPriced={false}
                   />
                   <Tile 
@@ -304,10 +257,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                     title={t('insulationEnhanced')} 
                     subtitle={t('insulationEnhancedDesc')}
                     price={`+ ${(cennik?.izolacia?.zvysena || 0).toLocaleString('sk-SK')} €`}
-                    priceValue={cennik?.izolacia?.zvysena}
-                    priceKey="izolacia.zvysena"
-                    updatePrice={updatePrice}
-                    isAdmin={isAdmin}
                     isPriced={true}
                   />
                   <Tile 
@@ -319,10 +268,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                     title={t('insulationPremium')} 
                     subtitle={t('insulationPremiumDesc')}
                     price={`+ ${(cennik?.izolacia?.premium || 0).toLocaleString('sk-SK')} €`}
-                    priceValue={cennik?.izolacia?.premium}
-                    priceKey="izolacia.premium"
-                    updatePrice={updatePrice}
-                    isAdmin={isAdmin}
                     isPriced={true}
                     isA0={true}
                   />
@@ -336,10 +281,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                       title="Ultra 300mm" 
                       subtitle="Pre pasívne domy"
                       price={`+ ${(cennik?.izolacia?.ultra || 0).toLocaleString('sk-SK')} €`}
-                      priceValue={cennik?.izolacia?.ultra}
-                      priceKey="izolacia.ultra"
-                      updatePrice={updatePrice}
-                      isAdmin={isAdmin}
                       isPriced={true}
                       isA0={true}
                     />
@@ -364,7 +305,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                     title={t('foundationsNone')} 
                     subtitle={t('own')} 
                     price="0 €"
-                    isAdmin={isAdmin}
                     isPriced={false}
                   />
                   <Tile 
@@ -376,10 +316,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                     title="Pilóty/Pätky" 
                     subtitle={t('groundFootings')}
                     price={`+ ${(cennik?.zaklady?.skrutky || 0).toLocaleString('sk-SK')} €`}
-                    priceValue={cennik?.zaklady?.skrutky}
-                    priceKey="zaklady.skrutky"
-                    updatePrice={updatePrice}
-                    isAdmin={isAdmin}
                     isPriced={true}
                   />
                    <Tile 
@@ -391,10 +327,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                     title={t('foundationsSlab')} 
                     subtitle={t('foundationSlab')}
                     price={`+ ${(cennik?.zaklady?.doska || 0).toLocaleString('sk-SK')} €`}
-                    priceValue={cennik?.zaklady?.doska}
-                    priceKey="zaklady.doska"
-                    updatePrice={updatePrice}
-                    isAdmin={isAdmin}
                     isPriced={true}
                   />
                   <Tile 
@@ -406,10 +338,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                     title={t('foundationsStrip')} 
                     subtitle={t('stripFound')}
                     price={`+ ${(cennik?.zaklady?.pasove || 0).toLocaleString('sk-SK')} €`}
-                    priceValue={cennik?.zaklady?.pasove}
-                    priceKey="zaklady.pasove"
-                    updatePrice={updatePrice}
-                    isAdmin={isAdmin}
                     isPriced={true}
                   />
               </div>
@@ -440,10 +368,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                         title={opt.label}
                         subtitle={opt.price ? "Extra priestor" : "Štandard"}
                         price={opt.price ? `+ ${opt.price.toLocaleString('sk-SK')} €` : '0 €'}
-                        priceValue={opt.price}
-                        priceKey={`predlzenie.${opt.value}`}
-                        updatePrice={updatePrice}
-                        isAdmin={isAdmin}
                         isPriced={opt.price > 0}
                         selectedBg="bg-indigo-100"
                         selectedBorder="border-indigo-600"
