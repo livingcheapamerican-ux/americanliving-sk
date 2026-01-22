@@ -127,6 +127,13 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         </motion.div>
       )}
       
+      {/* DEBUG INFO */}
+      {isPriced && priceKey && (
+        <div className="absolute top-0 left-0 z-40 bg-purple-500 text-white text-[8px] px-1 py-0.5 rounded">
+          A:{isAdmin?'Y':'N'} K:{priceKey?'Y':'N'}
+        </div>
+      )}
+
       {/* Animovaná zelená fajka */}
       <AnimatePresence>
         {selected && (
