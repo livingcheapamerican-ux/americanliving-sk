@@ -571,25 +571,43 @@ export default function KonfiguratorFjord({
   );
 
   // Funkcia pre update cien z Fázy 1
-  const handleUpdatePrice = (priceKey, newValue) => {
+  const handleUpdatePrice = async (priceKey, newValue) => {
     console.log("✏️ Admin mení cenu:", priceKey, newValue);
     
-    // Aktualizácia stavu cenníka (Deep update)
-    setCustomCeny((prev) => {
-      const newState = JSON.parse(JSON.stringify(prev));
-      const keys = priceKey.split('.');
-      let current = newState;
+    // Transform priceKey from "montaz.ano" to "montaz_ano" for backend
+    const backendKey = priceKey.replace('.', '_');
+    
+    try {
+      const response = await base44.functions.invoke('updateFjordPrice', {
+        dom_id: dom.id,
+        price_key: backendKey,
+        new_price: newValue
+      });
       
-      for (let i = 0; i < keys.length - 1; i++) {
-         if (!current[keys[i]]) current[keys[i]] = {};
-         current = current[keys[i]];
+      if (response?.data?.success) {
+        console.log('✅ Cena úspešne aktualizovaná v databáze:', backendKey, newValue);
+        
+        // Aktualizácia stavu cenníka (Deep update)
+        setCustomCeny((prev) => {
+          const newState = JSON.parse(JSON.stringify(prev));
+          const keys = priceKey.split('.');
+          let current = newState;
+          
+          for (let i = 0; i < keys.length - 1; i++) {
+             if (!current[keys[i]]) current[keys[i]] = {};
+             current = current[keys[i]];
+          }
+          
+          current[keys[keys.length - 1]] = newValue;
+          return newState;
+        });
+      } else {
+        throw new Error(response?.data?.error || 'Neznáma chyba');
       }
-      
-      current[keys[keys.length - 1]] = newValue;
-      return newState;
-    });
-
-    // TODO: Tu by malo byť volanie databázy, ak existuje (napr. updateDoc)
+    } catch (error) {
+      console.error('❌ Error updating price:', error);
+      alert('Chyba pri ukladaní ceny: ' + error.message);
+    }
   };
 
   const handleSendQuoteFromFloating = async (contactData) => {
