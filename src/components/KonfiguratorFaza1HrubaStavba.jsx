@@ -37,9 +37,8 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
     setEditPrice(priceNum);
   };
 
-  const handleSavePrice = async (e) => {
-    if (e) e.stopPropagation();
-    console.log('💾 handleSavePrice called in Tile:', { 
+  const handleSavePrice = async () => {
+    console.log('💾 SAVE PRICE START:', { 
       title, 
       priceKey, 
       editPrice, 
@@ -56,21 +55,18 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       const newPrice = parseFloat(editPrice);
       console.log('📊 Parsed price:', newPrice);
       
-      if (!isNaN(newPrice)) {
+      if (!isNaN(newPrice) && newPrice > 0) {
         console.log('🚀 Calling onPriceChange with:', { priceKey, newPrice });
         await onPriceChange(priceKey, newPrice);
-        console.log('✅ onPriceChange completed successfully');
-        
-        // Exit edit mode after successful save
+        console.log('✅ onPriceChange completed');
         setIsEditing(false);
       } else {
         console.error('❌ Invalid price:', editPrice);
         alert('Neplatná cena: ' + editPrice);
       }
     } catch (error) {
-      console.error('❌ Error in handleSavePrice:', error);
-      alert('Chyba pri ukladaní: ' + error.message);
-      setIsEditing(false);
+      console.error('❌ Error saving:', error);
+      alert('Chyba: ' + error.message);
     }
   };
 
@@ -180,24 +176,35 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       </motion.div>
       <div className={`flex items-center gap-1 justify-center relative`}>
         {isEditing && isPriced ? (
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
             <input
               type="number"
               value={editPrice}
               onChange={(e) => setEditPrice(e.target.value)}
-              onBlur={handleSavePrice}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') handleSavePrice();
-                if (e.key === 'Escape') setIsEditing(false);
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSavePrice();
+                }
+                if (e.key === 'Escape') {
+                  e.preventDefault();
+                  setIsEditing(false);
+                }
               }}
               className="w-16 px-1.5 py-1 text-xs border-2 border-green-500 rounded bg-white text-gray-800 font-semibold"
               autoFocus
               onClick={(e) => e.stopPropagation()}
             />
             <button
-              onClick={(e) => handleSavePrice(e)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🔘 Button clicked!');
+                handleSavePrice();
+              }}
               className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs font-bold rounded transition-all active:scale-95"
               title="Uložiť cenu"
+              type="button"
             >
               ✓
             </button>
@@ -205,11 +212,16 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         ) : (
           <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>{price}</span>
         )}
-        {isPriced && !isEditing && (
+        {isPriced && !isEditing && isAdmin && (
           <button
-            onClick={handleEditClick}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleEditClick(e);
+            }}
             className="ml-1 p-0.5 hover:bg-amber-200 rounded transition-all hover:scale-110 active:scale-95"
             title="Edituj cenu"
+            type="button"
           >
             <Pencil className="w-4 h-4 text-amber-600 stroke-[2.5]" />
           </button>
