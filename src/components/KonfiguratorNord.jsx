@@ -703,55 +703,55 @@ export default function KonfiguratorNord({
         <div className="space-y-6">
 
           {showHruba && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Card className="overflow-hidden border-2 border-amber-300 shadow-lg">
-                <SectionHeader 
-                  icon={Package} 
-                  title={t('phase1')} 
-                  subtitle={t('phase1Subtitle')}
-                  step="1"
-                />
-                <div className="p-1.5 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
-                  <p className="text-[10px] sm:text-xs text-red-600 mb-3 text-center">* {t('assemblyNote')}</p>
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <Card className="overflow-hidden border-2 border-amber-300 shadow-lg">
+                            <SectionHeader 
+                              icon={Package} 
+                              title={t('phase1')} 
+                              subtitle={t('phase1Subtitle')}
+                              step="1"
+                            />
+                            <div className="p-1.5 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
+                              <p className="text-[10px] sm:text-xs text-red-600 mb-3 text-center">* {t('assemblyNote')}</p>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
+                              <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
 
-                    {/* Montáž - skupina */}
-                    <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-amber-600 rounded-lg sm:rounded-xl bg-amber-100/70 shadow-xl">
-                      <p className="col-span-2 text-[8px] sm:text-[10px] font-bold text-amber-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
-                        <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-amber-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">1</span>
-                        {t('assembly')} ({t('selectOne')})
-                      </p>
+                                {/* Montáž - skupina */}
+                                <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-amber-600 rounded-lg sm:rounded-xl bg-amber-100/70 shadow-xl">
+                                  <p className="col-span-2 text-[8px] sm:text-[10px] font-bold text-amber-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
+                                    <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-amber-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">1</span>
+                                    {t('assembly')} ({t('selectOne')})
+                                  </p>
 
-                      <EditableTile
-                        selected={montazHolodomu === "nie"}
-                        onClick={() => setMontazHolodomu("nie")}
-                        title={t('assemblyNo')}
-                        subtitle={t('onlyKit')}
-                        price="0 €"
-                        isPriced={false}
-                        isIncluded={true}
-                        t={t}
-                        isAdmin={false}
-                      />
+                                  <EditableTile
+                                    selected={nordMontazHolodomu === "nie"}
+                                    onClick={() => setNordMontazHolodomu("nie")}
+                                    title={t('assemblyNo')}
+                                    subtitle={t('onlyKit')}
+                                    price="0 €"
+                                    isPriced={false}
+                                    isIncluded={true}
+                                    t={t}
+                                    isAdmin={false}
+                                  />
 
-                      <EditableTile
-                        selected={montazHolodomu === "ano"}
-                        onClick={() => setMontazHolodomu("ano")}
-                        title={t('assemblyYes')}
-                        subtitle={t('phase1')}
-                        price={`+ ${CENY.montaz.ano.toLocaleString('sk-SK')} €`}
-                        isPriced={true}
-                        t={t}
-                        isAdmin={isAdmin}
-                        priceKey="montaz_ano"
-                        onPriceChange={handlePriceChange}
-                      />
-                    </div>
+                                  <EditableTile
+                                    selected={nordMontazHolodomu === "ano"}
+                                    onClick={() => setNordMontazHolodomu("ano")}
+                                    title={t('assemblyYes')}
+                                    subtitle={t('phase1')}
+                                    price={`+ ${CENY.montaz.ano.toLocaleString('sk-SK')} €`}
+                                    isPriced={true}
+                                    t={t}
+                                    isAdmin={isAdmin}
+                                    priceKey="montaz_ano"
+                                    onPriceChange={handlePriceChange}
+                                  />
+                                </div>
 
                     {/* Izolácia - skupina 2 */}
                     <div className="col-span-1 sm:col-span-3 lg:col-span-4 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-cyan-600 rounded-lg sm:rounded-xl bg-cyan-100/70 shadow-xl">
