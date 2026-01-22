@@ -570,6 +570,28 @@ export default function KonfiguratorFjord({
     </div>
   );
 
+  // Funkcia pre update cien z Fázy 1
+  const handleUpdatePrice = (priceKey, newValue) => {
+    console.log("✏️ Admin mení cenu:", priceKey, newValue);
+    
+    // Aktualizácia stavu cenníka (Deep update)
+    setCustomCeny((prev) => {
+      const newState = JSON.parse(JSON.stringify(prev));
+      const keys = priceKey.split('.');
+      let current = newState;
+      
+      for (let i = 0; i < keys.length - 1; i++) {
+         if (!current[keys[i]]) current[keys[i]] = {};
+         current = current[keys[i]];
+      }
+      
+      current[keys[keys.length - 1]] = newValue;
+      return newState;
+    });
+
+    // TODO: Tu by malo byť volanie databázy, ak existuje (napr. updateDoc)
+  };
+
   const handleSendQuoteFromFloating = async (contactData) => {
     try {
       const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
@@ -745,6 +767,8 @@ export default function KonfiguratorFjord({
               setZaklady={setZaklady}
               dom={dom}
               cennik={CENY}
+              updatePrice={handleUpdatePrice}
+              isAdmin={isAdmin}
             />
           )}
 
