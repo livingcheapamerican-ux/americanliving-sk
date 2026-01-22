@@ -738,18 +738,23 @@ export default function KonfiguratorFjord({
         <div className="space-y-6">
 
           {showHruba && (
-            <KonfiguratorFaza1HrubaStavba 
-              montazHolodomu={montazHolodomu}
-              setMontazHolodomu={setMontazHolodomu}
-              izolaciaNavysenie={izolaciaNavysenie}
-              setIzolaciaNavysenie={setIzolaciaNavysenie}
-              zaklady={zaklady}
-              setZaklady={setZaklady}
-              dom={dom}
-              cennik={CENY}
-              isAdmin={isAdmin}
-              onPriceChange={handlePriceChange}
-            />
+            <>
+              <div className="mb-2 p-2 bg-blue-100 rounded">
+                <pre className="text-xs">{JSON.stringify({ isAdmin, hasCennik: !!CENY, hasHandler: !!handlePriceChange }, null, 2)}</pre>
+              </div>
+              <KonfiguratorFaza1HrubaStavba 
+                montazHolodomu={montazHolodomu}
+                setMontazHolodomu={setMontazHolodomu}
+                izolaciaNavysenie={izolaciaNavysenie}
+                setIzolaciaNavysenie={setIzolaciaNavysenie}
+                zaklady={zaklady}
+                setZaklady={setZaklady}
+                dom={dom}
+                cennik={CENY}
+                isAdmin={isAdmin}
+                onPriceChange={handlePriceChange}
+              />
+            </>
           )}
 
           {showHolodom && (
