@@ -108,16 +108,16 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             transition={{ type: "spring", stiffness: 500 }}
-            className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none"
           >
-            <div className="w-12 h-12 sm:w-24 sm:h-24 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center shadow-2xl shadow-green-500/50">
-              <Check className="w-7 h-7 sm:w-16 sm:h-16 text-white stroke-[3]" />
+            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center shadow-2xl shadow-green-500/50">
+              <Check className="w-7 h-7 sm:w-10 sm:h-10 text-white stroke-[3]" />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <motion.div className="relative z-10 flex flex-col items-center gap-1">
+      <motion.div className="relative z-30 flex flex-col items-center gap-1">
         <div className={`p-1.5 sm:p-2 rounded-lg transition-all ${selected ? "bg-white/30" : "bg-white/0 group-hover:bg-white/20"}`}>
           <Icon className={`w-6 h-6 sm:w-8 sm:h-8 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
         </div>
