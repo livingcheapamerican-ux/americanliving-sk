@@ -124,8 +124,14 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         <span className={`font-bold text-gray-800 text-[11px] sm:text-sm leading-snug transition-opacity ${selected ? "opacity-30" : ""}`}>{title}</span>
         <span className={`text-[8px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1 leading-snug transition-opacity ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
       </motion.div>
-      <div className={`flex items-center gap-1 justify-center relative`}>
-        <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>{price}</span>
+      <div className={`flex items-center gap-1 justify-center relative z-10`}>
+        <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>
+          {price || "NO PRICE"}
+        </span>
+      </div>
+      {/* DEBUG */}
+      <div className="absolute bottom-0 right-0 bg-red-500 text-white text-[6px] px-1 z-50">
+        P:{isPriced?'Y':'N'} V:{price}
       </div>
 
       {/* Tooltip - rendered via portal */}
