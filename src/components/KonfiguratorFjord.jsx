@@ -745,8 +745,6 @@ export default function KonfiguratorFjord({
               setZaklady={setZaklady}
               dom={dom}
               cennik={CENY}
-              isAdmin={isAdmin}
-              onPriceChange={handlePriceChange}
             />
           )}
 

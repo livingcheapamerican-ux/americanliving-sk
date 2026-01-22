@@ -14,38 +14,11 @@ import { useLanguage } from "./LanguageContext";
 
 
 // Dlaždica s tooltip a veľkou fajkou
-const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-amber-100", selectedBorder = "border-amber-500", selectedRing = "ring-amber-300", isAdmin = false, priceKey, onPriceChange }) => {
+const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, title, subtitle, price, isPriced, isA0, tooltip, selectedBg = "bg-amber-100", selectedBorder = "border-amber-500", selectedRing = "ring-amber-300" }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [hoverTimer, setHoverTimer] = useState(null);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
-  const [isEditing, setIsEditing] = useState(false);
-  const [editPrice, setEditPrice] = useState(price);
   const tileRef = useRef(null);
-
-  React.useEffect(() => {
-    const priceNum = price.replace(/[^0-9]/g, '');
-    setEditPrice(priceNum);
-  }, [price]);
-
-  const handleEditClick = (e) => {
-    e.stopPropagation();
-    setIsEditing(true);
-    const priceNum = price.replace(/[^0-9]/g, '');
-    setEditPrice(priceNum);
-  };
-
-  const handleSavePrice = async () => {
-    if (!onPriceChange) return;
-    try {
-      const newPrice = parseFloat(editPrice);
-      if (!isNaN(newPrice) && newPrice > 0) {
-        await onPriceChange(priceKey, newPrice);
-        setIsEditing(false);
-      }
-    } catch (error) {
-      alert('Chyba: ' + error.message);
-    }
-  };
 
   const updateTooltipPosition = () => {
     if (tileRef.current) {
@@ -176,42 +149,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         <span className={`text-[8px] sm:text-xs text-gray-600 mt-0.5 sm:mt-1 leading-snug transition-opacity ${selected ? "opacity-30" : ""}`}>{subtitle}</span>
       </motion.div>
       <div className={`flex items-center gap-1 justify-center relative`}>
-        {isEditing && isPriced ? (
-          <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
-            <input
-              type="number"
-              value={editPrice}
-              onChange={(e) => setEditPrice(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  handleSavePrice();
-                }
-                if (e.key === 'Escape') {
-                  e.preventDefault();
-                  setIsEditing(false);
-                }
-              }}
-              className="w-16 px-1.5 py-1 text-xs border-2 border-green-500 rounded bg-white text-gray-800 font-semibold"
-              autoFocus
-              onClick={(e) => e.stopPropagation()}
-            />
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleSavePrice();
-              }}
-              className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs font-bold rounded transition-all active:scale-95"
-              title="Uložiť cenu"
-              type="button"
-            >
-              ✓
-            </button>
-          </div>
-        ) : (
-          <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>{price}</span>
-        )}
+        <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>{price}</span>
       </div>
 
       {/* Tooltip - rendered via portal */}
@@ -241,9 +179,7 @@ export default function KonfiguratorFaza1HrubaStavba({
   zaklady, setZaklady,
   predlzenie, setPredlzenie,
   dom,
-  cennik,
-  isAdmin = false,
-  onPriceChange
+  cennik
   }) {
   
   const phaseRef = React.useRef(null);
@@ -347,7 +283,6 @@ export default function KonfiguratorFaza1HrubaStavba({
               subtitle={t('onlyKit')} 
               price="0 €" 
               isPriced={false} 
-              isAdmin={isAdmin} 
               selectedBg="bg-amber-100" 
               selectedBorder="border-amber-600" 
               selectedRing="ring-amber-300" 
@@ -364,9 +299,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                 subtitle={t('phase1')} 
                 price={`+ ${(cennik?.montaz?.ano || 0).toLocaleString('sk-SK')} €`} 
                 isPriced={true} 
-                isAdmin={isAdmin} 
-                priceKey="montaz_ano" 
-                onPriceChange={onPriceChange} 
                 selectedBg="bg-amber-100" 
                 selectedBorder="border-amber-600" 
                 selectedRing="ring-amber-300" 
@@ -436,7 +368,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                 subtitle="150/200mm" 
                 price="0 €" 
                 isPriced={false} 
-                isAdmin={isAdmin} 
                 selectedBg="bg-cyan-100" 
                 selectedBorder="border-cyan-600" 
                 selectedRing="ring-cyan-300" 
@@ -453,9 +384,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                 subtitle={t('insulationEnhancedDesc')} 
                 price={`+ ${(cennik?.izolacia?.zvysena || 0).toLocaleString('sk-SK')} €`} 
                 isPriced={true} 
-                isAdmin={isAdmin} 
-                priceKey="izolacia_zvysena" 
-                onPriceChange={onPriceChange} 
                 selectedBg="bg-cyan-100" 
                 selectedBorder="border-cyan-600" 
                 selectedRing="ring-cyan-300" 
@@ -473,9 +401,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                 price={`+ ${(cennik?.izolacia?.premium || 0).toLocaleString('sk-SK')} €`} 
                 isPriced={true} 
                 isA0={true} 
-                isAdmin={isAdmin} 
-                priceKey="izolacia_premium" 
-                onPriceChange={onPriceChange} 
                 selectedBg="bg-cyan-100" 
                 selectedBorder="border-cyan-600" 
                 selectedRing="ring-cyan-300" 
@@ -494,9 +419,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                   price={`+ ${(cennik?.izolacia?.ultra || 0).toLocaleString('sk-SK')} €`} 
                   isPriced={true} 
                   isA0={true} 
-                  isAdmin={isAdmin} 
-                  priceKey="izolacia_ultra" 
-                  onPriceChange={onPriceChange} 
                   selectedBg="bg-cyan-100" 
                   selectedBorder="border-cyan-600" 
                   selectedRing="ring-cyan-300" 
@@ -525,7 +447,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                 subtitle={t('own')} 
                 price="0 €" 
                 isPriced={false} 
-                isAdmin={isAdmin} 
                 selectedBg="bg-orange-100" 
                 selectedBorder="border-orange-600" 
                 selectedRing="ring-orange-300" 
@@ -542,9 +463,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                 subtitle={t('groundFootings')} 
                 price={`+ ${(cennik?.zaklady?.skrutky || 0).toLocaleString('sk-SK')} €`} 
                 isPriced={true} 
-                isAdmin={isAdmin} 
-                priceKey="zaklady_skrutky" 
-                onPriceChange={onPriceChange} 
                 selectedBg="bg-orange-100" 
                 selectedBorder="border-orange-600" 
                 selectedRing="ring-orange-300" 
@@ -561,9 +479,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                 subtitle={t('foundationSlab')} 
                 price={`+ ${(cennik?.zaklady?.doska || 0).toLocaleString('sk-SK')} €`} 
                 isPriced={true} 
-                isAdmin={isAdmin} 
-                priceKey="zaklady_doska" 
-                onPriceChange={onPriceChange} 
                 selectedBg="bg-orange-100" 
                 selectedBorder="border-orange-600" 
                 selectedRing="ring-orange-300" 
@@ -580,9 +495,6 @@ export default function KonfiguratorFaza1HrubaStavba({
                 subtitle={t('stripFound')} 
                 price={`+ ${(cennik?.zaklady?.pasove || 0).toLocaleString('sk-SK')} €`} 
                 isPriced={true} 
-                isAdmin={isAdmin} 
-                priceKey="zaklady_pasove" 
-                onPriceChange={onPriceChange} 
                 selectedBg="bg-orange-100" 
                 selectedBorder="border-orange-600" 
                 selectedRing="ring-orange-300" 
