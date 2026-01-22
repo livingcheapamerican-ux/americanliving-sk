@@ -49,7 +49,7 @@ export default function EditableTile({
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
       onClick={!isEditing ? onClick : undefined}
-      className={`relative p-2 sm:p-2.5 md:p-3 rounded-md cursor-pointer transition-all ${
+      className={`relative p-2 sm:p-2.5 md:p-3 rounded-md cursor-pointer transition-all min-w-0 ${
         selected 
           ? isA0 
             ? "bg-gradient-to-br from-green-500 to-emerald-600 border-4 border-green-600 shadow-xl ring-4 ring-green-200" 
