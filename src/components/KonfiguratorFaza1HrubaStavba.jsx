@@ -22,6 +22,8 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
   const [editPrice, setEditPrice] = useState(price);
   const tileRef = useRef(null);
 
+  console.log('🔍 Tile render:', { title, isAdmin, isPriced, isEditing, priceKey });
+
   // Sleduj zmeny v price prop a resetni editing
   React.useEffect(() => {
     console.log('🔄 Tile price changed:', { title, price, priceKey });
