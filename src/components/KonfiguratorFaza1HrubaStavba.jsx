@@ -212,7 +212,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                   iconSelectedColor="text-amber-800" 
                   title={t('assemblyYes')} 
                   subtitle={t('phase1')}
-                  price={`+ ${(cennik?.montaz?.ano || 0).toLocaleString('sk-SK')} €`}
+                  price="+ 17 700 €"
                 />
               </div>
             </div>
