@@ -340,6 +340,7 @@ export default function KonfiguratorWizard({
         {/* Všetky fázy pod sebou - vždy zobrazené */}
         <div className="space-y-6">
           <KonfiguratorFaza1HrubaStavba
+            dom={dom}
             montazHolodomu={montazHolodomu}
             setMontazHolodomu={setMontazHolodomu}
             izolaciaNavysenie={izolaciaNavysenie}
