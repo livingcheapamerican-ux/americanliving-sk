@@ -768,7 +768,7 @@ export default function KonfiguratorNord({
                         onClick={() => setIzolaciaNavysenie("ultra")}
                         title="Ultra 300mm"
                         subtitle={t('insulationUltraDesc')}
-                        price={`+ ${CENY.izolacia.ultra.toLocaleString('sk-SK')} €`}
+                        price={`+ ${(CENY.izolacia?.ultra || 12000).toLocaleString('sk-SK')} €`}
                         isPriced={true}
                         isA0={true}
                         t={t}
