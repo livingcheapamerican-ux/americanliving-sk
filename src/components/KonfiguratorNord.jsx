@@ -667,6 +667,7 @@ export default function KonfiguratorNord({
               zaklady={zaklady}
               setZaklady={setZaklady}
               dom={dom}
+              cennik={CENY}
             />
           )}
 
