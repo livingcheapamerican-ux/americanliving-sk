@@ -502,8 +502,8 @@ export default function KonfiguratorContactModal({
             </p>
           </motion.div>
         )}
-      </DialogContent>
-    </Dialog>
-    </>
-  );
-}
+        </DialogContent>
+        </Dialog>
+        </>
+        );
+        }
