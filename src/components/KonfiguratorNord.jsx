@@ -254,7 +254,12 @@ export default function KonfiguratorNord({
       kovove: getPrice('dvere_kovove') ?? DEFAULT_CENY.dvere.kovove, 
       plastove: getPrice('dvere_plastove') ?? DEFAULT_CENY.dvere.plastove 
     },
-    izolacia: DEFAULT_CENY.izolacia,
+    izolacia: { 
+      standard: 0, 
+      zvysena: getPrice('izolacia_zvysena') ?? DEFAULT_CENY.izolacia.zvysena, 
+      premium: getPrice('izolacia_premium') ?? DEFAULT_CENY.izolacia.premium, 
+      ultra: getPrice('izolacia_extra') ?? DEFAULT_CENY.izolacia.ultra 
+    },
     elektroinstalacia: getPrice('elektroinstalacia') ?? DEFAULT_CENY.elektroinstalacia,
     vodaKanalizacia: getPrice('vodaKanalizacia') ?? DEFAULT_CENY.vodaKanalizacia,
     sanitaKomplet: getPrice('sanitaKomplet') ?? DEFAULT_CENY.sanitaKomplet,
