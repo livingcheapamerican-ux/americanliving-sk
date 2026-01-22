@@ -243,7 +243,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                     iconSelectedColor="text-cyan-800" 
                     title={t('insulationEnhanced')} 
                     subtitle={t('insulationEnhancedDesc')}
-                    price={`+ ${(cennik?.izolacia?.zvysena || 0).toLocaleString('sk-SK')} €`}
+                    price="+ 5 660 €"
                   />
                   <Tile 
                     selected={izolaciaNavysenie === "premium"} 
@@ -253,7 +253,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                     iconSelectedColor="text-cyan-800" 
                     title={t('insulationPremium')} 
                     subtitle={t('insulationPremiumDesc')}
-                    price={`+ ${(cennik?.izolacia?.premium || 0).toLocaleString('sk-SK')} €`}
+                    price="+ 9 106 €"
                     isA0={true}
                   />
                   {hasUltraInsulation && (
@@ -265,7 +265,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                       iconSelectedColor="text-cyan-800" 
                       title="Ultra 300mm" 
                       subtitle="Pre pasívne domy"
-                      price={`+ ${(cennik?.izolacia?.ultra || 0).toLocaleString('sk-SK')} €`}
+                      price="+ 12 500 €"
                       isA0={true}
                     />
                   )}
@@ -298,7 +298,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                     iconSelectedColor="text-orange-800" 
                     title="Pilóty/Pätky" 
                     subtitle={t('groundFootings')}
-                    price={`+ ${(cennik?.zaklady?.skrutky || 0).toLocaleString('sk-SK')} €`}
+                    price="+ 7 655 €"
                   />
                    <Tile 
                     selected={zaklady === "doska"} 
@@ -308,7 +308,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                     iconSelectedColor="text-orange-800" 
                     title={t('foundationsSlab')} 
                     subtitle={t('foundationSlab')}
-                    price={`+ ${(cennik?.zaklady?.doska || 0).toLocaleString('sk-SK')} €`}
+                    price="+ 13 000 €"
                   />
                   <Tile 
                     selected={zaklady === "pasove"} 
@@ -318,7 +318,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                     iconSelectedColor="text-orange-800" 
                     title={t('foundationsStrip')} 
                     subtitle={t('stripFound')}
-                    price={`+ ${(cennik?.zaklady?.pasove || 0).toLocaleString('sk-SK')} €`}
+                    price="+ 11 500 €"
                   />
               </div>
             </div>
