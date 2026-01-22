@@ -144,6 +144,16 @@ export default function KonfiguratorProstoHouse({
     console.log(`[getPrice] DEFAULT_CENY:`, DEFAULT_CENY);
     console.log(`[getPrice] DEFAULT_CENY[${category}]:`, DEFAULT_CENY[category]);
     
+    // Špeciálne mapovanie pre ultra izoláciu (v DB je izolacia_extra)
+    if (category === 'izolacia' && key === 'ultra') {
+      const ultraValue = customCeny.izolacia_extra;
+      if (ultraValue !== undefined && ultraValue !== null && ultraValue !== 0) {
+        console.log(`[getPrice] Using ultra (extra) custom value: ${ultraValue}`);
+        return ultraValue;
+      }
+      return DEFAULT_CENY.izolacia.ultra;
+    }
+    
     // Jednoduchá hodnota (napr. elektroinstalacia)
     if (key === null) {
       const customValue = customCeny[category];
