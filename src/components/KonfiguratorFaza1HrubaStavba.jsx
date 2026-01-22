@@ -106,9 +106,9 @@ const Tile = ({
           {subtitle}
         </span>
         
-        {/* Cena sa zobrazí len pri vybranej dlaždici */}
-        {selected && price && (
-          <div className="mt-2 px-3 py-1 bg-green-600 text-white text-xs font-bold rounded-full shadow-md">
+        {/* Cena */}
+        {price && (
+          <div className={`mt-2 px-3 py-1 text-xs font-bold rounded-full shadow-md ${selected ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700'}`}>
             {price}
           </div>
         )}
