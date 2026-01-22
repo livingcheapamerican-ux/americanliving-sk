@@ -288,7 +288,8 @@ export default function KonfiguratorFjord({
       izolacia: { 
         standard: 0, 
         zvysena: get('izolacia_zvysena', DEFAULT_CENY.izolacia.zvysena), 
-        premium: get('izolacia_premium', DEFAULT_CENY.izolacia.premium) 
+        premium: get('izolacia_premium', DEFAULT_CENY.izolacia.premium),
+        ultra: get('izolacia_extra', 11063)
       },
       elektroinstalacia: get('elektroinstalacia', DEFAULT_CENY.elektroinstalacia),
       vodaKanalizacia: get('vodaKanalizacia', DEFAULT_CENY.vodaKanalizacia),

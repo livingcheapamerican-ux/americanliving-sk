@@ -265,7 +265,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                       iconSelectedColor="text-cyan-800" 
                       title="Ultra 300mm" 
                       subtitle={t('insulationUltraDesc')}
-                      price="+ 11 063 €"
+                      price={cennik?.izolacia?.ultra ? `+ ${cennik.izolacia.ultra.toLocaleString('sk-SK')} €` : "+ 11 063 €"}
                       isA0={true}
                     />
                   )}
