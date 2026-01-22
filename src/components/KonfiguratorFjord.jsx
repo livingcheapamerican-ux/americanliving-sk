@@ -230,9 +230,7 @@ export default function KonfiguratorFjord({
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
 
-  console.log('=== FJORD ADMIN CHECK ===');
-  console.log('user:', user);
-  console.log('isAdmin:', isAdmin);
+
 
   // DEFAULT CENY
   const DEFAULT_CENY = {
@@ -738,23 +736,18 @@ export default function KonfiguratorFjord({
         <div className="space-y-6">
 
           {showHruba && (
-            <>
-              <div className="mb-2 p-2 bg-blue-100 rounded">
-                <pre className="text-xs">{JSON.stringify({ isAdmin, hasCennik: !!CENY, hasHandler: !!handlePriceChange }, null, 2)}</pre>
-              </div>
-              <KonfiguratorFaza1HrubaStavba 
-                montazHolodomu={montazHolodomu}
-                setMontazHolodomu={setMontazHolodomu}
-                izolaciaNavysenie={izolaciaNavysenie}
-                setIzolaciaNavysenie={setIzolaciaNavysenie}
-                zaklady={zaklady}
-                setZaklady={setZaklady}
-                dom={dom}
-                cennik={CENY}
-                isAdmin={isAdmin}
-                onPriceChange={handlePriceChange}
-              />
-            </>
+            <KonfiguratorFaza1HrubaStavba 
+              montazHolodomu={montazHolodomu}
+              setMontazHolodomu={setMontazHolodomu}
+              izolaciaNavysenie={izolaciaNavysenie}
+              setIzolaciaNavysenie={setIzolaciaNavysenie}
+              zaklady={zaklady}
+              setZaklady={setZaklady}
+              dom={dom}
+              cennik={CENY}
+              isAdmin={isAdmin}
+              onPriceChange={handlePriceChange}
+            />
           )}
 
           {showHolodom && (

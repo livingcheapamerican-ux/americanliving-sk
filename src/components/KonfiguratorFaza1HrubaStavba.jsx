@@ -22,12 +22,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
   const [editPrice, setEditPrice] = useState(price);
   const tileRef = useRef(null);
 
-  console.log('🔍 Tile render:', { title, isAdmin, isPriced, isEditing, priceKey });
-
-  // Sleduj zmeny v price prop a resetni editing
   React.useEffect(() => {
-    console.log('🔄 Tile price changed:', { title, price, priceKey });
-    // Extrahuj číselnú hodnotu z formátovaného stringu
     const priceNum = price.replace(/[^0-9]/g, '');
     setEditPrice(priceNum);
   }, [price]);
@@ -40,34 +35,14 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
   };
 
   const handleSavePrice = async () => {
-    console.log('💾 SAVE PRICE START:', { 
-      title, 
-      priceKey, 
-      editPrice, 
-      hasOnPriceChange: !!onPriceChange 
-    });
-    
-    if (!onPriceChange) {
-      console.error('❌ onPriceChange je undefined!');
-      alert('Chyba: onPriceChange funkcia nie je definovaná');
-      return;
-    }
-    
+    if (!onPriceChange) return;
     try {
       const newPrice = parseFloat(editPrice);
-      console.log('📊 Parsed price:', newPrice);
-      
       if (!isNaN(newPrice) && newPrice > 0) {
-        console.log('🚀 Calling onPriceChange with:', { priceKey, newPrice });
         await onPriceChange(priceKey, newPrice);
-        console.log('✅ onPriceChange completed');
         setIsEditing(false);
-      } else {
-        console.error('❌ Invalid price:', editPrice);
-        alert('Neplatná cena: ' + editPrice);
       }
     } catch (error) {
-      console.error('❌ Error saving:', error);
       alert('Chyba: ' + error.message);
     }
   };
@@ -169,6 +144,23 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         )}
       </AnimatePresence>
 
+      {isAdmin && isPriced && priceKey && !isEditing && (
+        <div className="absolute top-1 right-1 z-30">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleEditClick(e);
+            }}
+            className="p-1.5 bg-amber-500 hover:bg-amber-600 rounded-lg shadow-lg transition-all hover:scale-110 active:scale-95"
+            title="Edituj cenu"
+            type="button"
+          >
+            <Pencil className="w-4 h-4 text-white stroke-[2.5]" />
+          </button>
+        </div>
+      )}
+
       <motion.div className="relative z-10 flex flex-col items-center gap-1">
         <div className={`p-1.5 sm:p-2 rounded-lg transition-all ${selected ? "bg-white/30" : "bg-white/0 group-hover:bg-white/20"}`}>
           <Icon className={`w-6 h-6 sm:w-8 sm:h-8 ${selected ? iconSelectedColor : iconColor} ${selected ? "opacity-30" : ""}`} />
@@ -201,7 +193,6 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('🔘 Button clicked!');
                 handleSavePrice();
               }}
               className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white text-xs font-bold rounded transition-all active:scale-95"
@@ -213,20 +204,6 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
           </div>
         ) : (
           <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>{price}</span>
-        )}
-        {isAdmin && isPriced && priceKey && !isEditing && (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleEditClick(e);
-            }}
-            className="ml-1 p-0.5 hover:bg-amber-200 rounded transition-all hover:scale-110 active:scale-95"
-            title="Edituj cenu"
-            type="button"
-          >
-            <Pencil className="w-4 h-4 text-amber-600 stroke-[2.5]" />
-          </button>
         )}
       </div>
 
