@@ -763,19 +763,21 @@ export default function KonfiguratorNord({
                         onPriceChange={handlePriceChange}
                       />
 
-                      <EditableTile
-                        selected={izolaciaNavysenie === "ultra"}
-                        onClick={() => setIzolaciaNavysenie("ultra")}
-                        title="Ultra 300mm"
-                        subtitle={t('insulationUltraDesc')}
-                        price={`+ ${CENY.izolacia.ultra.toLocaleString('sk-SK')} €`}
-                        isPriced={true}
-                        isA0={true}
-                        t={t}
-                        isAdmin={isAdmin}
-                        priceKey="izolacia_extra"
-                        onPriceChange={handlePriceChange}
-                      />
+                      {hasUltraInsulation && (
+                        <EditableTile
+                          selected={izolaciaNavysenie === "ultra"}
+                          onClick={() => setIzolaciaNavysenie("ultra")}
+                          title="🔥 Ultra 300mm"
+                          subtitle="Najlepšia izolácia (A0+)"
+                          price={`+ ${(CENY.izolacia.ultra || 12000).toLocaleString('sk-SK')} €`}
+                          isPriced={true}
+                          isA0={true}
+                          t={t}
+                          isAdmin={isAdmin}
+                          priceKey="izolacia_extra"
+                          onPriceChange={handlePriceChange}
+                        />
+                      )}
                     </div>
 
                     {/* Základy - skupina */}
