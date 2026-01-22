@@ -801,7 +801,7 @@ export default function KonfiguratorProstoHouse({
                     )}
 
                     {/* Izolácia - skupina */}
-                    <div className="col-span-1 sm:col-span-2 lg:col-span-2 grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-cyan-600 rounded-lg sm:rounded-xl bg-cyan-100/70 shadow-xl">
+                    <div className="col-span-1 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-cyan-600 rounded-lg sm:rounded-xl bg-cyan-100/70 shadow-xl">
                       <p className="col-span-2 sm:col-span-4 text-[8px] sm:text-[10px] font-bold text-cyan-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
                         <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">2</span>
                         {t('insulation')} ({t('selectOne')})
@@ -846,21 +846,19 @@ export default function KonfiguratorProstoHouse({
                         onPriceChange={handlePriceChange}
                       />
 
-                      {hasUltraInsulation && (
-                        <EditableTile
-                          selected={izolaciaNavysenie === "ultra"}
-                          onClick={() => setIzolaciaNavysenie("ultra")}
-                          title="300mm"
-                          subtitle="Ultra izolácia"
-                          price={`+ ${CENY.izolacia.ultra.toLocaleString('sk-SK')} €`}
-                          isPriced={true}
-                          isA0={true}
-                          t={t}
-                          isAdmin={isAdmin}
-                          priceKey="izolacia_extra"
-                          onPriceChange={handlePriceChange}
-                        />
-                      )}
+                      <EditableTile
+                        selected={izolaciaNavysenie === "ultra"}
+                        onClick={() => setIzolaciaNavysenie("ultra")}
+                        title="Ultra 300mm"
+                        subtitle={t('insulationUltraDesc')}
+                        price={`+ ${CENY.izolacia.ultra.toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        isA0={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="izolacia_extra"
+                        onPriceChange={handlePriceChange}
+                      />
                     </div>
 
                     {/* Základy - skupina */}
