@@ -271,10 +271,13 @@ export default function KonfiguratorFjord({
   }, [dom?.konfigurator_ceny]);
   
   const getPrice = (key) => {
-    if (customCeny[key] !== undefined && customCeny[key] !== null) {
-      return customCeny[key];
+    const customValue = customCeny[key];
+    // Použiť custom hodnotu len ak existuje A je väčšia ako 0
+    // Ak je 0 alebo undefined, vrátiť undefined a použije sa fallback
+    if (customValue !== undefined && customValue !== null && customValue > 0) {
+      return customValue;
     }
-    return DEFAULT_CENY[key];
+    return undefined; // Použije sa default cena cez ?? operator
   };
 
   // CENY - s možnosťou override z databázy (memo-ované!)
