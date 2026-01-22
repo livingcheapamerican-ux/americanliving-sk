@@ -100,13 +100,6 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         </motion.div>
       )}
       
-      {/* DEBUG INFO */}
-      {isPriced && priceKey && (
-        <div className="absolute top-0 left-0 z-40 bg-purple-500 text-white text-[8px] px-1 py-0.5 rounded">
-          A:{isAdmin?'Y':'N'} K:{priceKey?'Y':'N'}
-        </div>
-      )}
-
       {/* Animovaná zelená fajka */}
       <AnimatePresence>
         {selected && (
@@ -123,23 +116,6 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
           </motion.div>
         )}
       </AnimatePresence>
-
-      {isAdmin && isPriced && priceKey && !isEditing && (
-        <div className="absolute top-1 right-1 z-30">
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleEditClick(e);
-            }}
-            className="p-1.5 bg-amber-500 hover:bg-amber-600 rounded-lg shadow-lg transition-all hover:scale-110 active:scale-95"
-            title="Edituj cenu"
-            type="button"
-          >
-            <Pencil className="w-4 h-4 text-white stroke-[2.5]" />
-          </button>
-        </div>
-      )}
 
       <motion.div className="relative z-10 flex flex-col items-center gap-1">
         <div className={`p-1.5 sm:p-2 rounded-lg transition-all ${selected ? "bg-white/30" : "bg-white/0 group-hover:bg-white/20"}`}>
