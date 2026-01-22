@@ -237,7 +237,7 @@ export default function KonfiguratorFaza1HrubaStavba({
                 <span className="w-5 h-5 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[10px]">2</span>
                 {t('insulation')}
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                  <Tile 
                     selected={izolaciaNavysenie === "standard"} 
                     onClick={() => setIzolaciaNavysenie("standard")} 
