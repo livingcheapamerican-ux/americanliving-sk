@@ -698,14 +698,14 @@ export default function KonfiguratorFlat15({
                 <div className="p-1.5 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
                   <p className="text-[10px] sm:text-xs text-red-600 mb-3 text-center">* {t('assemblyNote')}</p>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-1.5 sm:gap-3">
 
-                    {/* Montáž - skupina */}
-                    <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-amber-600 rounded-lg sm:rounded-xl bg-amber-100/70 shadow-xl">
-                      <p className="col-span-2 text-[8px] sm:text-[10px] font-bold text-amber-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
-                        <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-amber-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">1</span>
-                        {t('assembly')} ({t('selectOne')})
-                      </p>
+                   {/* Montáž - skupina */}
+                   <div className="col-span-2 lg:col-span-1 grid grid-cols-1 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-amber-600 rounded-lg sm:rounded-xl bg-amber-100/70 shadow-xl">
+                     <p className="text-[8px] sm:text-[10px] font-bold text-amber-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
+                       <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-amber-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">1</span>
+                       {t('assembly')}
+                     </p>
 
                       <EditableTile
                         selected={montazHolodomu === "nie"}
@@ -734,12 +734,12 @@ export default function KonfiguratorFlat15({
                     </div>
 
                     {/* Izolácia - skupina */}
-                    <div className="col-span-1 sm:col-span-3 lg:col-span-4 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-cyan-600 rounded-lg sm:rounded-xl bg-cyan-100/70 shadow-xl">
+                    <div className="col-span-2 lg:col-span-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-cyan-600 rounded-lg sm:rounded-xl bg-cyan-100/70 shadow-xl">
                       <p className="text-[8px] sm:text-[10px] font-bold text-cyan-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1 mb-2">
                         <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">2</span>
-                        {t('insulation')} ({t('selectOne')})
+                        {t('insulation')}
                       </p>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2">
+                      <div className="grid grid-cols-2 gap-1 sm:gap-2">
                         <EditableTile
                           selected={izolaciaNavysenie === "standard"}
                           onClick={() => setIzolaciaNavysenie("standard")}
@@ -796,10 +796,10 @@ export default function KonfiguratorFlat15({
                     </div>
 
                     {/* Základy - skupina */}
-                    <div className="col-span-1 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-orange-600 rounded-lg sm:rounded-xl bg-orange-100/70 shadow-xl">
-                      <p className="col-span-2 sm:col-span-4 text-[8px] sm:text-[10px] font-bold text-orange-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
+                    <div className="col-span-2 lg:col-span-1 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-orange-600 rounded-lg sm:rounded-xl bg-orange-100/70 shadow-xl">
+                      <p className="col-span-2 text-[8px] sm:text-[10px] font-bold text-orange-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
                         <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-orange-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">3</span>
-                        {t('foundations')} ({t('selectOne')})
+                        {t('foundations')}
                       </p>
 
                       <EditableTile
@@ -1067,8 +1067,8 @@ export default function KonfiguratorFlat15({
                 step="4"
               />
               <div className="p-3 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-                  
+                <div className="grid grid-cols-2 gap-2 sm:gap-3 max-w-2xl">
+
                   <EditableTile selected={inziniering} onClick={() => setInziniering(!inziniering)} title={t('engineering')} subtitle={t('buildingPermit')} price={`+ ${CENY.inziniering.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="inziniering" onPriceChange={handlePriceChange} />
                   <EditableTile selected={projektA0} onClick={() => setProjektA0(!projektA0)} title={t('projectA0')} subtitle={t('certification')} price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="projektA0" onPriceChange={handlePriceChange} />
                   <EditableTile selected={revizna} onClick={() => setRevizna(!revizna)} title={t('revision')} subtitle={t('documentation')} price={`+ ${CENY.revizna.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="revizna" onPriceChange={handlePriceChange} />
