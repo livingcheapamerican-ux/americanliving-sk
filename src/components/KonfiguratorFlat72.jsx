@@ -726,8 +726,6 @@ export default function KonfiguratorFlat72({
       <div>
       <div className="space-y-6">
 
-{/* Fáza 1 - bude neskôr nahradená zdieľaným komponentom */}
-
         {/* ═══════════════════════════════════════════════════════════════════════
           FÁZA 2: HOLODOM (Montáž, Inštalácie, Okná/Dvere)
           ═══════════════════════════════════════════════════════════════════════ */}
