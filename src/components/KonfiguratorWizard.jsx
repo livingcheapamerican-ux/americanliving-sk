@@ -129,15 +129,20 @@ export default function KonfiguratorWizard({
     if (setTypStavby) setTypStavby(typ);
     
     if (typ === "rodinny_dom") {
-      if (setIzolaciaNavysenie) setIzolaciaNavysenie("premium");
-      if (setTepelneCerpadlo) setTepelneCerpadlo(true);
-      if (setRekuperacia) setRekuperacia(true);
-      if (setProjektA0) setProjektA0(true);
-    } else {
-      if (setIzolaciaNavysenie) setIzolaciaNavysenie("standard");
-      if (setTepelneCerpadlo) setTepelneCerpadlo(false);
-      if (setRekuperacia) setRekuperacia(false);
-      if (setProjektA0) setProjektA0(false);
+      // Nastaviť premium izoláciu (250mm) a ďalšie A0 požiadavky
+      setTimeout(() => {
+        if (setIzolaciaNavysenie) setIzolaciaNavysenie("premium");
+        if (setTepelneCerpadlo) setTepelneCerpadlo(true);
+        if (setRekuperacia) setRekuperacia(true);
+        if (setProjektA0) setProjektA0(true);
+      }, 50);
+    } else if (typ === "rekreacna") {
+      setTimeout(() => {
+        if (setIzolaciaNavysenie) setIzolaciaNavysenie("standard");
+        if (setTepelneCerpadlo) setTepelneCerpadlo(false);
+        if (setRekuperacia) setRekuperacia(false);
+        if (setProjektA0) setProjektA0(false);
+      }, 50);
     }
   };
 
