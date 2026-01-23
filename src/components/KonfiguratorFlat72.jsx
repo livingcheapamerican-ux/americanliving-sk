@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
-import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
+
 import TypStavbySelector from "./TypStavbySelector";
 import FloatingPrice from "./FloatingPrice";
 import { base44 } from "@/api/base44Client";
@@ -259,14 +259,24 @@ export default function KonfiguratorFlat72({
       kovove: getPrice('dvere_kovove') ?? DEFAULT_CENY.dvere.kovove, 
       plastove: getPrice('dvere_plastove') ?? DEFAULT_CENY.dvere.plastove 
     },
-    izolacia: DEFAULT_CENY.izolacia,
+    izolacia: { 
+      standard: 0, 
+      zvysena: getPrice('izolacia_zvysena') ?? DEFAULT_CENY.izolacia.zvysena, 
+      premium: getPrice('izolacia_premium') ?? DEFAULT_CENY.izolacia.premium,
+      ultra: getPrice('izolacia_extra') ?? DEFAULT_CENY.izolacia.ultra 
+    },
     elektroinstalacia: getPrice('elektro_rozvody') ?? DEFAULT_CENY.elektroinstalacia,
     vodaKanalizacia: getPrice('voda') ?? DEFAULT_CENY.vodaKanalizacia,
     sanitaKomplet: getPrice('sanita') ?? DEFAULT_CENY.sanitaKomplet,
     bojler: getPrice('bojler') ?? DEFAULT_CENY.bojler,
     tepelneCerpadlo: getPrice('tepelne_cerpadlo') ?? DEFAULT_CENY.tepelneCerpadlo,
     rekuperacia: getPrice('rekuperacia') ?? DEFAULT_CENY.rekuperacia,
-    zaklady: DEFAULT_CENY.zaklady,
+    zaklady: { 
+      bez: 0, 
+      skrutky: getPrice('zaklady_vruty') ?? DEFAULT_CENY.zaklady.skrutky, 
+      doska: getPrice('zaklady_doska') ?? DEFAULT_CENY.zaklady.doska, 
+      pasove: getPrice('zaklady_pasove') ?? DEFAULT_CENY.zaklady.pasove 
+    },
     pripojkaSiete: getPrice('siete') ?? DEFAULT_CENY.pripojkaSiete,
     inziniering: getPrice('inziniering') ?? DEFAULT_CENY.inziniering,
     projektA0: getPrice('projektACertifikacia') ?? DEFAULT_CENY.projektA0,
@@ -376,8 +386,8 @@ export default function KonfiguratorFlat72({
     // Hrubá stavba
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
-    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra izolácia (300mm)" : izolaciaNavysenie === "premium" ? t('insulationPremium') + " (250mm)" : izolaciaNavysenie === "zvysena" ? t('insulationEnhanced') + " (200mm)" : t('insulationStd');
-    const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
+    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra 300mm" : izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
+    const izolaciaPrice = izolaciaNavysenie === "ultra" ? 11063 : izolaciaNavysenie === "premium" ? 5900 : izolaciaNavysenie === "zvysena" ? 2950 : 0;
     items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" });
     
     const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? "Pilóty/Pätky" : t('foundationsLabel');
@@ -717,15 +727,175 @@ export default function KonfiguratorFlat72({
       <div className="space-y-6">
 
         {showHruba && (
-          <KonfiguratorFaza1HrubaStavba 
-            montazHolodomu={montazHolodomu}
-            setMontazHolodomu={setMontazHolodomu}
-            izolaciaNavysenie={izolaciaNavysenie}
-            setIzolaciaNavysenie={setIzolaciaNavysenie}
-            zaklady={zaklady}
-            setZaklady={setZaklady}
-            dom={dom}
-          />
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <Card className="overflow-hidden border-2 border-amber-300 shadow-lg">
+              <SectionHeader 
+                icon={Package} 
+                title={t('phase1')} 
+                subtitle={t('phase1Subtitle')}
+                color="from-amber-600 to-orange-600"
+                step="1"
+              />
+              <div className="p-1.5 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
+                <p className="text-[10px] sm:text-xs text-red-600 mb-3 text-center">* {t('assemblyNote')}</p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
+
+                  <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-amber-600 rounded-lg sm:rounded-xl bg-amber-100/70 shadow-xl">
+                    <p className="col-span-2 text-[8px] sm:text-[10px] font-bold text-amber-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
+                      <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-amber-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">1</span>
+                      {t('assembly')} ({t('selectOne')})
+                    </p>
+
+                    <EditableTile
+                      selected={montazHolodomu === "nie"}
+                      onClick={() => setMontazHolodomu("nie")}
+                      title={t('assemblyNo')}
+                      subtitle={t('onlyKit')}
+                      price="0 €"
+                      isPriced={false}
+                      isIncluded={true}
+                      t={t}
+                      isAdmin={false}
+                    />
+
+                    <EditableTile
+                      selected={montazHolodomu === "ano"}
+                      onClick={() => setMontazHolodomu("ano")}
+                      title={t('assemblyYes')}
+                      subtitle={t('phase1')}
+                      price={`+ ${(7925).toLocaleString('sk-SK')} €`}
+                      isPriced={true}
+                      t={t}
+                      isAdmin={isAdmin}
+                      priceKey="montaz_ano"
+                      onPriceChange={handlePriceChange}
+                    />
+                  </div>
+
+                  <div className="col-span-1 sm:col-span-3 lg:col-span-4 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-cyan-600 rounded-lg sm:rounded-xl bg-cyan-100/70 shadow-xl">
+                    <p className="text-[8px] sm:text-[10px] font-bold text-cyan-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1 mb-2">
+                      <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">2</span>
+                      {t('insulation')} ({t('selectOne')})
+                    </p>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2">
+                      <EditableTile
+                        selected={izolaciaNavysenie === "standard"}
+                        onClick={() => setIzolaciaNavysenie("standard")}
+                        title="150/200mm"
+                        subtitle="150/200mm"
+                        price="0 €"
+                        isPriced={false}
+                        isIncluded={true}
+                        t={t}
+                        isAdmin={false}
+                      />
+
+                      <EditableTile
+                        selected={izolaciaNavysenie === "zvysena"}
+                        onClick={() => setIzolaciaNavysenie("zvysena")}
+                        title="200/250mm"
+                        subtitle="200/250mm"
+                        price={`+ ${(2950).toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="izolacia_zvysena"
+                        onPriceChange={handlePriceChange}
+                      />
+
+                      <EditableTile
+                        selected={izolaciaNavysenie === "premium"}
+                        onClick={() => setIzolaciaNavysenie("premium")}
+                        title="250/300mm"
+                        subtitle="250/300mm"
+                        price={`+ ${(5900).toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        isA0={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="izolacia_premium"
+                        onPriceChange={handlePriceChange}
+                      />
+
+                      <EditableTile
+                        selected={izolaciaNavysenie === "ultra"}
+                        onClick={() => setIzolaciaNavysenie("ultra")}
+                        title="Ultra 300mm"
+                        subtitle="Ultra 300mm"
+                        price={`+ ${(11063).toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        isA0={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="izolacia_extra"
+                        onPriceChange={handlePriceChange}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="col-span-1 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-orange-600 rounded-lg sm:rounded-xl bg-orange-100/70 shadow-xl">
+                    <p className="col-span-2 sm:col-span-4 text-[8px] sm:text-[10px] font-bold text-orange-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
+                      <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-orange-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">3</span>
+                      {t('foundations')} ({t('selectOne')})
+                    </p>
+
+                    <EditableTile
+                      selected={zaklady === "bez"}
+                      onClick={() => setZaklady("bez")}
+                      title={t('foundationsNone')}
+                      subtitle={t('own')}
+                      price="0 €"
+                      isPriced={false}
+                      isIncluded={true}
+                      t={t}
+                      isAdmin={false}
+                    />
+
+                    <EditableTile
+                      selected={zaklady === "skrutky"}
+                      onClick={() => setZaklady("skrutky")}
+                      title="Pilóty/Pätky"
+                      subtitle={t('groundFootings')}
+                      price={`+ ${(3100).toLocaleString('sk-SK')} €`}
+                      isPriced={true}
+                      t={t}
+                      isAdmin={isAdmin}
+                      priceKey="zaklady_vruty"
+                      onPriceChange={handlePriceChange}
+                    />
+
+                    <EditableTile
+                      selected={zaklady === "doska"}
+                      onClick={() => setZaklady("doska")}
+                      title={t('foundationsSlab')}
+                      subtitle={t('foundationSlab')}
+                      price={`+ ${(10000).toLocaleString('sk-SK')} €`}
+                      isPriced={true}
+                      t={t}
+                      isAdmin={isAdmin}
+                      priceKey="zaklady_doska"
+                      onPriceChange={handlePriceChange}
+                    />
+
+                    <EditableTile
+                      selected={zaklady === "pasove"}
+                      onClick={() => setZaklady("pasove")}
+                      title={t('foundationsStrip')}
+                      subtitle={t('stripFound')}
+                      price={`+ ${(8500).toLocaleString('sk-SK')} €`}
+                      isPriced={true}
+                      t={t}
+                      isAdmin={isAdmin}
+                      priceKey="zaklady_pasove"
+                      onPriceChange={handlePriceChange}
+                    />
+                  </div>
+
+                </div>
+              </div>
+            </Card>
+          </motion.div>
         )}
 
         {/* ═══════════════════════════════════════════════════════════════════════
