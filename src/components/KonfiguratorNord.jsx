@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
-import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
+
 import FloatingPrice from "./FloatingPrice";
 import { base44 } from "@/api/base44Client";
 import EditableTile from "./EditableTile";
@@ -486,8 +486,8 @@ export default function KonfiguratorNord({
     
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
-    const izolaciaLabel = izolaciaNavysenie === "ultra" ? t('insulationUltra') : izolaciaNavysenie === "premium" ? t('insulationPremium') + " (250/300mm)" : izolaciaNavysenie === "zvysena" ? t('insulationEnhanced') + " (200mm)" : t('insulationStd');
-    const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
+    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra 300mm" : izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
+    const izolaciaPrice = izolaciaNavysenie === "ultra" ? 12000 : izolaciaNavysenie === "premium" ? 6400 : izolaciaNavysenie === "zvysena" ? 3200 : 0;
     items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" });
     
     const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? t('foundationsScrews') : t('foundationsLabel');
@@ -782,57 +782,54 @@ export default function KonfiguratorNord({
         <div className="space-y-6">
 
           {showHruba && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5 }}
-                        >
-                          <Card className="overflow-hidden border-2 border-amber-300 shadow-lg">
-                            <SectionHeader 
-                              icon={Package} 
-                              title={t('phase1')} 
-                              subtitle={t('phase1Subtitle')}
-                              step="1"
-                            />
-                            <div className="p-1.5 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
-                              <p className="text-[10px] sm:text-xs text-red-600 mb-3 text-center">* {t('assemblyNote')}</p>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+              <Card className="overflow-hidden border-2 border-amber-300 shadow-lg">
+                <SectionHeader 
+                  icon={Package} 
+                  title={t('phase1')} 
+                  subtitle={t('phase1Subtitle')}
+                  color="from-amber-600 to-orange-600"
+                  step="1"
+                />
+                <div className="p-1.5 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
+                  <p className="text-[10px] sm:text-xs text-red-600 mb-3 text-center">* {t('assemblyNote')}</p>
 
-                              <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
 
-                                {/* Montáž - skupina */}
-                                <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-amber-600 rounded-lg sm:rounded-xl bg-amber-100/70 shadow-xl">
-                                  <p className="col-span-2 text-[8px] sm:text-[10px] font-bold text-amber-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
-                                    <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-amber-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">1</span>
-                                    {t('assembly')} ({t('selectOne')})
-                                  </p>
+                    {/* Montáž - skupina */}
+                    <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-amber-600 rounded-lg sm:rounded-xl bg-amber-100/70 shadow-xl">
+                      <p className="col-span-2 text-[8px] sm:text-[10px] font-bold text-amber-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
+                        <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-amber-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">1</span>
+                        {t('assembly')} ({t('selectOne')})
+                      </p>
 
-                                  <EditableTile
-                                    selected={nordMontazHolodomu === "nie"}
-                                    onClick={() => setNordMontazHolodomu("nie")}
-                                    title={t('assemblyNo')}
-                                    subtitle={t('onlyKit')}
-                                    price="0 €"
-                                    isPriced={false}
-                                    isIncluded={true}
-                                    t={t}
-                                    isAdmin={false}
-                                  />
+                      <EditableTile
+                        selected={montazHolodomu === "nie"}
+                        onClick={() => setMontazHolodomu("nie")}
+                        title={t('assemblyNo')}
+                        subtitle={t('onlyKit')}
+                        price="0 €"
+                        isPriced={false}
+                        isIncluded={true}
+                        t={t}
+                        isAdmin={false}
+                      />
 
-                                  <EditableTile
-                                    selected={nordMontazHolodomu === "ano"}
-                                    onClick={() => setNordMontazHolodomu("ano")}
-                                    title={t('assemblyYes')}
-                                    subtitle={t('phase1')}
-                                    price={`+ ${CENY.montaz.ano.toLocaleString('sk-SK')} €`}
-                                    isPriced={true}
-                                    t={t}
-                                    isAdmin={isAdmin}
-                                    priceKey="montaz_ano"
-                                    onPriceChange={handlePriceChange}
-                                  />
-                                </div>
+                      <EditableTile
+                        selected={montazHolodomu === "ano"}
+                        onClick={() => setMontazHolodomu("ano")}
+                        title={t('assemblyYes')}
+                        subtitle={t('phase1')}
+                        price={`+ ${(14850).toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="montaz_ano"
+                        onPriceChange={handlePriceChange}
+                      />
+                    </div>
 
-                    {/* Izolácia - skupina 2 */}
+                    {/* Izolácia - skupina */}
                     <div className="col-span-1 sm:col-span-3 lg:col-span-4 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-cyan-600 rounded-lg sm:rounded-xl bg-cyan-100/70 shadow-xl">
                       <p className="text-[8px] sm:text-[10px] font-bold text-cyan-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1 mb-2">
                         <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">2</span>
@@ -842,7 +839,7 @@ export default function KonfiguratorNord({
                         <EditableTile
                           selected={izolaciaNavysenie === "standard"}
                           onClick={() => setIzolaciaNavysenie("standard")}
-                          title={t('insulationStandard')}
+                          title="150/200mm"
                           subtitle="150/200mm"
                           price="0 €"
                           isPriced={false}
@@ -854,9 +851,9 @@ export default function KonfiguratorNord({
                         <EditableTile
                           selected={izolaciaNavysenie === "zvysena"}
                           onClick={() => setIzolaciaNavysenie("zvysena")}
-                          title={t('insulationEnhanced')}
-                          subtitle={t('insulationEnhancedDesc')}
-                          price={`+ ${CENY.izolacia.zvysena.toLocaleString('sk-SK')} €`}
+                          title="200/250mm"
+                          subtitle="200/250mm"
+                          price={`+ ${(3200).toLocaleString('sk-SK')} €`}
                           isPriced={true}
                           t={t}
                           isAdmin={isAdmin}
@@ -867,9 +864,9 @@ export default function KonfiguratorNord({
                         <EditableTile
                           selected={izolaciaNavysenie === "premium"}
                           onClick={() => setIzolaciaNavysenie("premium")}
-                          title={t('insulationPremium')}
-                          subtitle={t('insulationPremiumDesc')}
-                          price={`+ ${CENY.izolacia.premium.toLocaleString('sk-SK')} €`}
+                          title="250/300mm"
+                          subtitle="250/300mm"
+                          price={`+ ${(6400).toLocaleString('sk-SK')} €`}
                           isPriced={true}
                           isA0={true}
                           t={t}
@@ -882,8 +879,8 @@ export default function KonfiguratorNord({
                           selected={izolaciaNavysenie === "ultra"}
                           onClick={() => setIzolaciaNavysenie("ultra")}
                           title="Ultra 300mm"
-                          subtitle={t('insulationUltraDesc')}
-                          price={`+ ${(CENY.izolacia?.ultra || 12000).toLocaleString('sk-SK')} €`}
+                          subtitle="Ultra 300mm"
+                          price={`+ ${(12000).toLocaleString('sk-SK')} €`}
                           isPriced={true}
                           isA0={true}
                           t={t}
@@ -918,11 +915,11 @@ export default function KonfiguratorNord({
                         onClick={() => setZaklady("skrutky")}
                         title="Pilóty/Pätky"
                         subtitle={t('groundFootings')}
-                        price={`+ ${CENY.zaklady.skrutky.toLocaleString('sk-SK')} €`}
+                        price={`+ ${(7655).toLocaleString('sk-SK')} €`}
                         isPriced={true}
                         t={t}
                         isAdmin={isAdmin}
-                        priceKey="zaklady_skrutky"
+                        priceKey="zaklady_vruty"
                         onPriceChange={handlePriceChange}
                       />
 
@@ -931,7 +928,7 @@ export default function KonfiguratorNord({
                         onClick={() => setZaklady("doska")}
                         title={t('foundationsSlab')}
                         subtitle={t('foundationSlab')}
-                        price={`+ ${CENY.zaklady.doska.toLocaleString('sk-SK')} €`}
+                        price={`+ ${(13000).toLocaleString('sk-SK')} €`}
                         isPriced={true}
                         t={t}
                         isAdmin={isAdmin}
@@ -944,7 +941,7 @@ export default function KonfiguratorNord({
                         onClick={() => setZaklady("pasove")}
                         title={t('foundationsStrip')}
                         subtitle={t('stripFound')}
-                        price={`+ ${CENY.zaklady.pasove.toLocaleString('sk-SK')} €`}
+                        price={`+ ${(11500).toLocaleString('sk-SK')} €`}
                         isPriced={true}
                         t={t}
                         isAdmin={isAdmin}
