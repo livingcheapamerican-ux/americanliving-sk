@@ -654,7 +654,7 @@ export default function KonfiguratorFlatSmall({
                 className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg text-xs h-8"
               >
                 <Send className="mr-1.5 w-3.5 h-3.5" />
-                {t('interested')}
+                Pošli cenovú ponuku
               </Button>
               <Button 
                 size="sm" 
@@ -686,7 +686,7 @@ export default function KonfiguratorFlatSmall({
         onSendQuote={handleSendQuoteFromFloating}
         dom={dom}
         vyrobca="Prosto House"
-        buttonText={t('showHouseAndSendQuote')}
+        buttonText="Pošli cenovú ponuku"
       />
 
       <div>
