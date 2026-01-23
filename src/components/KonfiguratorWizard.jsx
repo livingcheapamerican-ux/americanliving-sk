@@ -339,6 +339,7 @@ export default function KonfiguratorWizard({
         
         {/* Všetky fázy pod sebou - vždy zobrazené */}
         <div className="space-y-6">
+          {getKonfigurator("hruba")}
           {getKonfigurator("holodom")}
           {getKonfigurator("kluc")}
           {getKonfigurator("docs")}
