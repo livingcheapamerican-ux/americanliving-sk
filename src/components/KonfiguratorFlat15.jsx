@@ -683,7 +683,7 @@ export default function KonfiguratorFlat15({
         onSendQuote={handleSendQuoteFromFloating}
         dom={dom}
         vyrobca="Prosto House"
-        buttonText={t('showHouseAndSendQuote')}
+        buttonText="Pošli cenovú ponuku"
       />}
 
       <div>
@@ -1136,7 +1136,7 @@ export default function KonfiguratorFlat15({
             onSendQuote={handleSendQuoteFromFloating}
             dom={dom}
             vyrobca="Prosto House"
-            buttonText={t('showHouseAndSendQuote')}
+            buttonText="Pošli cenovú ponuku"
           />
           <KonfiguratorContactModal
             isOpen={showContactModal}
