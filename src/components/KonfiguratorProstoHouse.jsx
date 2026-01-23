@@ -768,11 +768,11 @@ export default function KonfiguratorProstoHouse({
                       <div className="col-span-1 sm:col-span-3 lg:col-span-4 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-indigo-600 rounded-lg sm:rounded-xl bg-indigo-100/70 shadow-xl">
                         <p className="text-[8px] sm:text-xs font-bold text-indigo-700 mb-2 flex items-center gap-1">
                           <span className="w-3.5 h-3.5 sm:w-6 sm:h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-xs font-extrabold">+</span>
-                          Predĺženie dĺžky domu (v násobkoch 1,2m)
+                          {t('extensionLength')}
                         </p>
                         <div className="grid grid-cols-2 sm:grid-cols-5 gap-1 sm:gap-2">
                           {[
-                            { value: 0, label: "Bez predĺženia", price: 0 },
+                            { value: 0, label: t('noExtension'), price: 0 },
                             { value: 1.2, label: "+1,2 m", price: CENY.predlzenie[1.2] },
                             { value: 2.4, label: "+2,4 m", price: CENY.predlzenie[2.4] },
                             { value: 3.6, label: "+3,6 m", price: CENY.predlzenie[3.6] },
