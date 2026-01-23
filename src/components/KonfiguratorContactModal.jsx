@@ -448,22 +448,6 @@ export default function KonfiguratorContactModal({
                       <Mail className="mr-2 w-5 h-5" />
                       {generatingPDF ? t('sending') : 'Pošli cenovú ponuku'}
                     </Button>
-                    <Button
-                      type="submit"
-                      size="lg"
-                      variant="outline"
-                      className="w-full border-2 border-green-500 text-green-600 hover:bg-green-50 font-bold"
-                      disabled={createDopytMutation.isPending}
-                    >
-                      {createDopytMutation.isPending ? (
-                        t('sending')
-                      ) : (
-                        <>
-                          <Send className="mr-2 w-5 h-5" />
-                          {t('sendInquiry')}
-                        </>
-                      )}
-                    </Button>
                   </div>
                 ) : (
                   <Button
