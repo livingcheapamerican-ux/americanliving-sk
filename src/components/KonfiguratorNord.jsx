@@ -896,7 +896,6 @@ export default function KonfiguratorNord({
                           onPriceChange={handlePriceChange}
                         />
                       </div>
-                      </div>
                     </div>
 
                     {/* Základy - skupina */}
