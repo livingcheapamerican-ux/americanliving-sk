@@ -727,6 +727,41 @@ export default function KonfiguratorFlat72({
       <div className="space-y-6">
 
         {/* ═══════════════════════════════════════════════════════════════════════
+          FÁZA 1: HRUBÁ STAVBA
+          ═══════════════════════════════════════════════════════════════════════ */}
+        {showHruba && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <Card className="overflow-hidden border-2 border-amber-300 shadow-lg">
+              <SectionHeader 
+                icon={Package} 
+                title={t('phase1')} 
+                subtitle={t('phase1Subtitle')}
+                color="from-amber-600 to-orange-600"
+                step="1"
+              />
+              <div className="p-3 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
+                <KonfiguratorFaza1HrubaStavba
+                  dom={dom}
+                  isAdmin={isAdmin}
+                  onPriceUpdate={handlePriceChange}
+                  showTooltips={true}
+                  initialSelections={{
+                    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
+                    izolacia: `izolacia_${izolaciaNavysenie}`,
+                    zaklady: `zaklady_${zaklady}`
+                  }}
+                  onSelectionChange={(selections) => {
+                    if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
+                    if (selections.izolacia) setIzolaciaNavysenie(selections.izolacia.replace('izolacia_', ''));
+                    if (selections.zaklady) setZaklady(selections.zaklady.replace('zaklady_', ''));
+                  }}
+                />
+              </div>
+            </Card>
+          </motion.div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════════════
           FÁZA 2: HOLODOM (Montáž, Inštalácie, Okná/Dvere)
           ═══════════════════════════════════════════════════════════════════════ */}
         {showHolodom && <motion.div
