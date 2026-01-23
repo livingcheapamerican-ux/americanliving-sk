@@ -503,7 +503,7 @@ export default function KonfiguratorProstoHouse({
         </div>
         <div className="relative flex-1 min-w-0">
           <div className="flex items-center gap-1 sm:gap-2 mb-0.5">
-            <span className="inline-flex items-center justify-center px-1 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[8px] sm:text-xs font-bold uppercase tracking-wider">
+            <span className="inline-flex items-center justify-center px-1 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[8px] sm:text-[10px] font-bold uppercase tracking-wider">
               {t('phase')} {step}
             </span>
           </div>
@@ -753,7 +753,7 @@ export default function KonfiguratorProstoHouse({
                         selected={montazHolodomu === "ano"}
                         onClick={() => setMontazHolodomu("ano")}
                         title={t('assemblyYes')}
-                        subtitle={t('phase1')}
+                        subtitle={t('roughConstruction')}
                         price={`+ ${CENY.montaz.ano.toLocaleString('sk-SK')} €`}
                         isPriced={true}
                         t={t}
