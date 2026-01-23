@@ -446,7 +446,7 @@ export default function KonfiguratorContactModal({
                       className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold"
                     >
                       <Mail className="mr-2 w-5 h-5" />
-                      {generatingPDF ? t('sending') : t('sendQuote')}
+                      {generatingPDF ? t('sending') : 'Pošli cenovú ponuku'}
                     </Button>
                     <Button
                       type="submit"
@@ -477,7 +477,7 @@ export default function KonfiguratorContactModal({
                     ) : (
                       <>
                         <Send className="mr-2 w-5 h-5" />
-                        {t('sendQuote')}
+                        Pošli cenovú ponuku
                       </>
                     )}
                   </Button>
