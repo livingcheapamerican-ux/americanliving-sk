@@ -321,7 +321,7 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
                 </ul>
               </div>
 
-              {/* Časť 1: Hrubá Stavba */}
+              {/* Phase 1 */}
               <div className="mb-8">
                 <h2 className="text-2xl font-bold text-primary mb-6">{t('phase')} 1: {t('phase1')}</h2>
                 
@@ -447,7 +447,7 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
                 </div>
               </div>
 
-              {/* Časť 2: Inštalácie */}
+              {/* Phase 2 */}
               <div className="mb-8">
                 <h2 className="text-2xl font-bold text-primary mb-6">{t('phase')} 2: {t('phase2')}</h2>
                 <div className="space-y-4">
@@ -476,7 +476,7 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
                 </div>
               </div>
 
-              {/* Časť 3: Kolaudácia a A0 */}
+              {/* Phase 3 */}
               <div className="mb-8">
                 <h2 className="text-2xl font-bold text-primary mb-6">{t('phase')} 3: {t('phase3')}</h2>
                 <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-4">
