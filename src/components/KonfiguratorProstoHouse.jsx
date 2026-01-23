@@ -721,7 +721,7 @@ export default function KonfiguratorProstoHouse({
               <Card className="overflow-hidden border-2 border-amber-300 shadow-lg">
                 <SectionHeader 
                   icon={Package} 
-                  title={t('phase1')} 
+                  title={t('roughConstruction')} 
                   subtitle={t('phase1Subtitle')}
                   step="1"
                 />
@@ -753,7 +753,7 @@ export default function KonfiguratorProstoHouse({
                         selected={montazHolodomu === "ano"}
                         onClick={() => setMontazHolodomu("ano")}
                         title={t('assemblyYes')}
-                        subtitle={t('roughConstruction')}
+                        subtitle={t('shellConstruction')}
                         price={`+ ${CENY.montaz.ano.toLocaleString('sk-SK')} €`}
                         isPriced={true}
                         t={t}
