@@ -124,7 +124,7 @@ function LayoutContent({ children }) {
 
   const navItems = [
     { name: t('home'), path: createPageUrl("Domov"), icon: Home },
-    ...(isAdmin ? [{ name: '💰 Cenník', path: createPageUrl("AdminCennik"), icon: Grid3x3 }] : []),
+    ...(isAdmin ? [{ name: '💰 ' + t('adminPriceList'), path: createPageUrl("AdminCennik"), icon: Grid3x3 }] : []),
     { name: t('catalog'), path: createPageUrl("Katalog"), icon: Grid3x3 },
     { name: t('aiRecommendations'), path: createPageUrl("OdporucanieDomov"), icon: Sparkles },
     { name: t('about'), path: createPageUrl("ONas"), icon: Info },
@@ -133,7 +133,7 @@ function LayoutContent({ children }) {
   ];
 
   const adminNavItems = isAdmin ? [
-    { name: '📊 Marketing', path: createPageUrl("Marketing"), icon: Activity }
+    { name: '📊 ' + t('adminMarketing'), path: createPageUrl("Marketing"), icon: Activity }
   ] : [];
   const isSuperAdmin = user?.super_admin === true;
 
@@ -302,32 +302,32 @@ function LayoutContent({ children }) {
             {isAdmin && (
               <>
                 <Link to={createPageUrl("AdminUserManagement")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Správa používateľov">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminUserManagement')}>
                     <Users className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("AdminPixelSettings")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Meta Pixel">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminMetaPixel')}>
                     <Settings className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("AdminAnalyzaSessions")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Analytics & Sessions">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminAnalyticsSessions')}>
                     <Activity className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("AdminSEOAnalyzer")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="SEO Analyzer">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminSEOAnalyzer')}>
                     <Zap className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("AIMarketingInsights")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="AI Marketing Insights">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminAIMarketing')}>
                     <Sparkles className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("SocialMediaDashboard")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Social Media Performance">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminSocialMedia')}>
                     <Activity className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
@@ -336,62 +336,62 @@ function LayoutContent({ children }) {
             {isSuperAdmin && (
               <>
                 <Link to={createPageUrl("AdminAnalyzaDomov")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="AI Analýza domov">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminAIAnalysis')}>
                     <Brain className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("AdminSpravaDomov")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Správa domov">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminHouseManagement')}>
                     <Image className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("AdminUploadFotiekDomov")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Upload fotiek domov">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminPhotoUpload')}>
                     <Upload className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("AdminPrekladyDomov")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Preklady domov">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminTranslationsHouses')}>
                     <FileText className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("AdminGenerujObrazkyBlogov")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="AI Generovanie obrázkov pre blog">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminBlogImageGen')}>
                     <Sparkles className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("AdminPrekladyBlogov")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Preklady blogov">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminBlogTranslations')}>
                     <Languages className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("AdminPrekladyKonfiguratora")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Preklady konfiguratora">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminConfiguratorTranslations')}>
                     <Settings className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("AdminWatermark")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Watermark">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminWatermark')}>
                     <Image className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("AdminMigraciaFotiek")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Migrácia fotiek">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminPhotoMigration')}>
                     <Upload className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("TestAnalyzaKonfiguratora")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Test Analýza Konfiguratora">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminConfiguratorAnalysis')}>
                     <Sparkles className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("RegenerujPrekladyDeFrSrHrEl")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Regeneruj preklady DE/FR/SR/HR/EL">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminRegenerateTranslations')}>
                     <Languages className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("AdminTestGemini")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Test Gemini API">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminTestGemini')}>
                     <Zap className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
@@ -400,12 +400,12 @@ function LayoutContent({ children }) {
             {isAdmin && (
               <>
                 <Link to={createPageUrl("AdminDokumenty")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Správa dokumentov">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminDocuments')}>
                     <FileText className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
                 <Link to={createPageUrl("AdminGoogleDrive")}>
-                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Správa Google Drive">
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminGoogleDrive')}>
                     <Settings className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
@@ -480,7 +480,7 @@ function LayoutContent({ children }) {
                     className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                   >
                     <Brain className="w-5 h-5" />
-                    AI Analýza domov
+                    {t('adminAIAnalysis')}
                   </Link>
                   <Link
                     to={createPageUrl("AdminSpravaDomov")}
@@ -488,7 +488,7 @@ function LayoutContent({ children }) {
                     className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                   >
                     <Image className="w-5 h-5" />
-                    Správa domov
+                    {t('adminHouseManagement')}
                   </Link>
                   <Link
                     to={createPageUrl("AdminUploadFotiekDomov")}
@@ -496,7 +496,7 @@ function LayoutContent({ children }) {
                     className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                   >
                     <Image className="w-5 h-5" />
-                    Upload fotiek domov
+                    {t('adminPhotoUpload')}
                   </Link>
                   <Link
                     to={createPageUrl("AdminPrekladyDomov")}
@@ -504,7 +504,7 @@ function LayoutContent({ children }) {
                     className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                   >
                     <FileText className="w-5 h-5" />
-                    Preklady domov
+                    {t('adminTranslationsHouses')}
                   </Link>
                   <Link
                     to={createPageUrl("TestAnalyzaKonfiguratora")}
@@ -512,7 +512,7 @@ function LayoutContent({ children }) {
                     className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                   >
                     <Sparkles className="w-5 h-5" />
-                    Test Analýza Konfiguratora
+                    {t('adminConfiguratorAnalysis')}
                   </Link>
                   <Link
                     to={createPageUrl("RegenerujPrekladyDeFrSrHrEl")}
@@ -520,7 +520,7 @@ function LayoutContent({ children }) {
                     className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                   >
                     <Languages className="w-5 h-5" />
-                    Regeneruj preklady DE/FR/SR/HR/EL
+                    {t('adminRegenerateTranslations')}
                   </Link>
                   <Link
                     to={createPageUrl("AdminGenerujObrazkyBlogov")}
@@ -528,7 +528,7 @@ function LayoutContent({ children }) {
                     className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                   >
                     <Sparkles className="w-5 h-5" />
-                    AI Generovanie obrázkov blogu
+                    {t('adminBlogImageGen')}
                   </Link>
                   <Link
                     to={createPageUrl("AdminPrekladyBlogov")}
@@ -536,7 +536,7 @@ function LayoutContent({ children }) {
                     className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                   >
                     <Languages className="w-5 h-5" />
-                    Preklady blogov
+                    {t('adminBlogTranslations')}
                   </Link>
                   <Link
                     to={createPageUrl("AdminPrekladyKonfiguratora")}
@@ -544,7 +544,7 @@ function LayoutContent({ children }) {
                     className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                   >
                     <Settings className="w-5 h-5" />
-                    Preklady konfiguratora
+                    {t('adminConfiguratorTranslations')}
                   </Link>
                   <Link
                     to={createPageUrl("AdminMigraciaFotiek")}
@@ -552,7 +552,7 @@ function LayoutContent({ children }) {
                     className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                   >
                     <Upload className="w-5 h-5" />
-                    Migrácia fotiek
+                    {t('adminPhotoMigration')}
                   </Link>
                   </>
                   )}
@@ -564,7 +564,7 @@ function LayoutContent({ children }) {
                       className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                     >
                       <Users className="w-5 h-5" />
-                      Správa používateľov
+                      {t('adminUserManagement')}
                     </Link>
                     <Link
                       to={createPageUrl("AdminPixelSettings")}
@@ -572,7 +572,7 @@ function LayoutContent({ children }) {
                       className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                     >
                       <Settings className="w-5 h-5" />
-                      Meta Pixel Settings
+                      {t('adminMetaPixel')}
                     </Link>
                     <Link
                       to={createPageUrl("AdminAnalyzaSessions")}
@@ -580,7 +580,7 @@ function LayoutContent({ children }) {
                       className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                     >
                       <Activity className="w-5 h-5" />
-                      Analytics & Sessions
+                      {t('adminAnalyticsSessions')}
                     </Link>
                     <Link
                       to={createPageUrl("AdminSEOAnalyzer")}
@@ -588,7 +588,7 @@ function LayoutContent({ children }) {
                       className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                     >
                       <Zap className="w-5 h-5" />
-                      SEO Analyzer
+                      {t('adminSEOAnalyzer')}
                     </Link>
                     <Link
                       to={createPageUrl("AIMarketingInsights")}
@@ -596,7 +596,7 @@ function LayoutContent({ children }) {
                       className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                     >
                       <Sparkles className="w-5 h-5" />
-                      AI Marketing Insights
+                      {t('adminAIMarketing')}
                     </Link>
                     <Link
                       to={createPageUrl("SocialMediaDashboard")}
@@ -604,7 +604,7 @@ function LayoutContent({ children }) {
                       className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                     >
                       <Activity className="w-5 h-5" />
-                      Social Media Performance
+                      {t('adminSocialMedia')}
                     </Link>
                     <Link
                       to={createPageUrl("AdminDokumenty")}
@@ -612,7 +612,7 @@ function LayoutContent({ children }) {
                       className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                     >
                       <FileText className="w-5 h-5" />
-                      Správa dokumentov
+                      {t('adminDocuments')}
                     </Link>
                   <Link
                     to={createPageUrl("AdminGoogleDrive")}
@@ -620,7 +620,7 @@ function LayoutContent({ children }) {
                     className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-gray-700 hover:bg-gray-100 transition-all"
                   >
                     <Settings className="w-5 h-5" />
-                    Správa Google Drive
+                    {t('adminGoogleDrive')}
                   </Link>
                   </>
                   )}
@@ -664,11 +664,10 @@ function LayoutContent({ children }) {
                 />
               </div>
               <p className="text-gray-300 text-sm leading-relaxed mb-4">
-                Distribútor a realizátor stavby modulárnych a montovaných domov. 
-                Vyrobených viac ako 700 domov od roku 2008.
+                {t('distributorAndBuilderFooter')}
               </p>
               <p className="text-gray-300 text-sm">
-                Oficiálny distribútor TicabHouse, JAK modules, Prosto House a Domki z Gór
+                {t('officialDistributor')}
               </p>
             </div>
             
@@ -714,7 +713,7 @@ function LayoutContent({ children }) {
                     className="h-20 w-auto mx-auto mb-2"
                   />
                   <p className="text-xs text-center text-cyan-300">
-                    AI funkcie na tejto stránke
+                    {t('aiFeaturesOnSite')}
                   </p>
                 </a>
               </div>
