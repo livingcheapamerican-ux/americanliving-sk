@@ -783,7 +783,6 @@ export default function KonfiguratorBarnDouble({
                           onPriceChange={handlePriceChange}
                         />
                       </div>
-                      </div>
                     </div>
 
                     <div className="col-span-2 p-3 sm:p-4 border-[3px] sm:border-[4px] border-orange-600 rounded-xl sm:rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100/80 shadow-xl">
