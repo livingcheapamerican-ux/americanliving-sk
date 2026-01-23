@@ -66,94 +66,40 @@ function Tile({ icon: Icon, title, subtitle, price, isSelected, onClick, tooltip
         onClick={onClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className={`relative p-4 rounded-xl cursor-pointer transition-all duration-300 border-2 ${
+        className={`relative p-2 sm:p-3 rounded-lg cursor-pointer transition-all duration-300 border-2 ${
           isSelected
-            ? 'bg-gradient-to-br from-red-50 to-red-100 border-red-500 shadow-lg scale-105'
-            : 'bg-white border-gray-200 hover:border-red-300 hover:shadow-md'
+            ? 'bg-blue-100 border-blue-500 shadow-lg ring-2 ring-blue-300'
+            : 'bg-white border-gray-200 hover:border-blue-300 hover:shadow-md'
         }`}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
-        {isSelected && (
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-lg z-10"
-          >
-            <Check className="w-4 h-4" />
-          </motion.div>
-        )}
-
-        <div className="flex flex-col items-center gap-3 relative z-0">
-          <div className={`p-3 rounded-lg transition-colors ${
-            isSelected ? 'bg-red-500 text-white' : 'bg-red-50 text-red-600'
-          }`}>
-            <Icon className="w-6 h-6" />
-          </div>
-
-          <div className="text-center space-y-1">
-            <h4 className="font-semibold text-gray-900">{title}</h4>
-            {subtitle && (
-              <p className="text-xs text-gray-600">{subtitle}</p>
-            )}
-          </div>
-
-          {price !== null && price !== undefined && (
-            <div className="text-center">
-              {isAdmin && isEditingPrice ? (
-                <div className="flex items-center gap-2">
-                  <input
-                    type="number"
-                    value={editedPrice}
-                    onChange={(e) => setEditedPrice(e.target.value)}
-                    onClick={(e) => e.stopPropagation()}
-                    className="w-24 px-2 py-1 border rounded text-sm"
-                  />
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePriceUpdate();
-                    }}
-                    className="px-2 py-1 bg-green-500 text-white rounded text-xs"
-                  >
-                    ✓
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsEditingPrice(false);
-                      setEditedPrice(price);
-                    }}
-                    className="px-2 py-1 bg-gray-500 text-white rounded text-xs"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 justify-center">
-                  <span className={`text-lg font-bold ${
-                    isSelected ? 'text-red-600' : 'text-gray-700'
-                  }`}>
-                    {price === 0 ? 'Zahrnuté' : `+${price.toLocaleString()} €`}
-                  </span>
-                  {isAdmin && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsEditingPrice(true);
-                      }}
-                      className="text-xs text-blue-500 hover:text-blue-700"
-                    >
-                      ✎
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
+        <AnimatePresence>
+          {isSelected && (
+            <motion.div
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              className="absolute top-1 right-1 sm:top-2 sm:right-2 z-20 pointer-events-none"
+            >
+              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-green-500 flex items-center justify-center shadow-md">
+                <Check className="w-3 h-3 sm:w-4 sm:h-4 text-white stroke-[3]" />
+              </div>
+            </motion.div>
           )}
+        </AnimatePresence>
 
-          {tooltip && showTooltip && (
-            <Info className="w-4 h-4 text-gray-400" />
+        <div className="flex flex-col items-center text-center">
+          <Icon className="w-5 h-5 sm:w-6 sm:h-6 mb-1 text-gray-700" />
+          <span className="font-semibold text-gray-800 text-[10px] sm:text-sm leading-tight">{title}</span>
+          {subtitle && (
+            <span className="text-[8px] sm:text-xs text-gray-500 mt-0.5 leading-tight">{subtitle}</span>
+          )}
+          
+          {price !== null && price !== undefined && (
+            <span className={`${price > 0 ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1`}>
+              {price === 0 ? '0 €' : `+ ${price.toLocaleString('sk-SK')} €`}
+            </span>
           )}
         </div>
       </motion.div>
@@ -278,11 +224,14 @@ export default function KonfiguratorFaza1HrubaStavba({
   }, [montaz, izolacia, zaklady, dom]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Montáž */}
-      <div>
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Montáž</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="p-2 sm:p-3 border-[3px] sm:border-[4px] border-amber-600 rounded-xl bg-amber-100/70 shadow-xl">
+        <p className="text-[9px] sm:text-[10px] font-bold text-amber-700 mb-3 flex items-center gap-1">
+          <span className="w-4 h-4 sm:w-5 sm:h-5 bg-amber-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">1</span>
+          {t('assembly')} ({t('selectOne')})
+        </p>
+        <div className="grid grid-cols-2 gap-2">
           <Tile
             icon={() => <span className="text-2xl">🏗️</span>}
             title="Montáž domu"
@@ -313,9 +262,12 @@ export default function KonfiguratorFaza1HrubaStavba({
       </div>
 
       {/* Izolácia */}
-      <div>
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Izolácia</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="p-2 sm:p-3 border-[3px] sm:border-[4px] border-cyan-600 rounded-xl bg-cyan-100/70 shadow-xl">
+        <p className="text-[9px] sm:text-[10px] font-bold text-cyan-700 mb-3 flex items-center gap-1">
+          <span className="w-4 h-4 sm:w-5 sm:h-5 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">2</span>
+          {t('insulation')} ({t('selectOne')})
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           <Tile
             icon={() => <span className="text-2xl">🏠</span>}
             title="Štandardná"
@@ -372,9 +324,12 @@ export default function KonfiguratorFaza1HrubaStavba({
       </div>
 
       {/* Základy */}
-      <div>
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Základy</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="p-2 sm:p-3 border-[3px] sm:border-[4px] border-orange-600 rounded-xl bg-orange-100/70 shadow-xl">
+        <p className="text-[9px] sm:text-[10px] font-bold text-orange-700 mb-3 flex items-center gap-1">
+          <span className="w-4 h-4 sm:w-5 sm:h-5 bg-orange-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">3</span>
+          {t('foundations')} ({t('selectOne')})
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           <Tile
             icon={() => <span className="text-2xl">🔩</span>}
             title="Vruty"
