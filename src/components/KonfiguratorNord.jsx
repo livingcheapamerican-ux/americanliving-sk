@@ -325,7 +325,12 @@ export default function KonfiguratorNord({
     bojler: getPrice('bojler') ?? DEFAULT_CENY.bojler,
     tepelneCerpadlo: getPrice('tepelneCerpadlo') ?? DEFAULT_CENY.tepelneCerpadlo,
     rekuperacia: getPrice('rekuperacia') ?? DEFAULT_CENY.rekuperacia,
-    zaklady: DEFAULT_CENY.zaklady,
+    zaklady: { 
+      bez: 0, 
+      skrutky: getPrice('zaklady_vruty') ?? DEFAULT_CENY.zaklady.skrutky, 
+      doska: getPrice('zaklady_doska') ?? DEFAULT_CENY.zaklady.doska, 
+      pasove: getPrice('zaklady_pasove') ?? DEFAULT_CENY.zaklady.pasove 
+    },
     pripojkaSiete: getPrice('pripojkaSiete') ?? DEFAULT_CENY.pripojkaSiete,
     inziniering: getPrice('inziniering') ?? DEFAULT_CENY.inziniering,
     projektA0: getPrice('projektA0') ?? DEFAULT_CENY.projektA0,
