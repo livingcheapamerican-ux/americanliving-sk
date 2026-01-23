@@ -9,7 +9,7 @@ import {
   Info
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba.jsx";
+
 import KonfiguratorFlat15 from "../components/KonfiguratorFlat15";
 import KonfiguratorFlatDouble from "../components/KonfiguratorFlatDouble";
 import KonfiguratorFlat72 from "../components/KonfiguratorFlat72";
@@ -339,28 +339,6 @@ export default function KonfiguratorWizard({
         
         {/* Všetky fázy pod sebou - vždy zobrazené */}
         <div className="space-y-6">
-          <KonfiguratorFaza1HrubaStavba
-            dom={dom}
-            montazHolodomu={montazHolodomu}
-            setMontazHolodomu={setMontazHolodomu}
-            izolaciaNavysenie={izolaciaNavysenie}
-            setIzolaciaNavysenie={setIzolaciaNavysenie}
-            zaklady={zaklady}
-            setZaklady={setZaklady}
-            predlzenie={predlzenie}
-            setPredlzenie={setPredlzenie}
-            useNordPrices={useNordPrices}
-            useFlat15Prices={useFlat15Prices}
-            useFlatDoublePrices={useFlatDoublePrices}
-            useFlat72Prices={useFlat72Prices}
-            useProstoHousePrices={useProstoHousePrices}
-            useFjordPrices={useFjordPrices}
-            useAFramePrices={useAFramePrices}
-            useBarn48Prices={useBarn48Prices}
-            useBarnDoublePrices={useBarnDoublePrices}
-            useFlatSmallPrices={useFlatSmallPrices}
-          />
-          
           {getKonfigurator("holodom")}
           {getKonfigurator("kluc")}
           {getKonfigurator("docs")}
