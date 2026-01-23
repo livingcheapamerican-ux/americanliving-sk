@@ -5,6 +5,7 @@ import { useLanguage } from "./LanguageContext";
 
 // Tile Component
 function Tile({ icon: Icon, title, subtitle, price, isSelected, onClick, tooltip, isAdmin, onPriceUpdate, tileId, showTooltip }) {
+  const { t } = useLanguage();
   const [isHovered, setIsHovered] = useState(false);
   const [showTooltipDelayed, setShowTooltipDelayed] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
@@ -104,7 +105,7 @@ function Tile({ icon: Icon, title, subtitle, price, isSelected, onClick, tooltip
           
           {price !== null && price !== undefined && (
             <span className={`${price > 0 ? "font-extrabold text-green-600 text-base sm:text-lg" : "text-gray-500 font-semibold text-sm"} mt-2`}>
-              {price === 0 ? 'Zahrnuté' : `+ ${price.toLocaleString('sk-SK')} €`}
+              {price === 0 ? t('included') : `+ ${price.toLocaleString('sk-SK')} €`}
             </span>
           )}
         </div>
@@ -204,7 +205,7 @@ export default function KonfiguratorFaza1HrubaStavba({
         totalPrice += price;
         selections.items.push({
           id: montaz,
-          name: montaz === 'montaz_ano' ? 'Montáž domu' : 'Bez montáže',
+          name: montaz === 'montaz_ano' ? t('assemblyYes') : t('assemblyNo'),
           price,
           category: 'montaz'
         });
@@ -214,10 +215,10 @@ export default function KonfiguratorFaza1HrubaStavba({
         const price = getPrice(izolacia);
         totalPrice += price;
         const izolaciaNames = {
-          izolacia_standardna: 'Izolácia štandardná',
-          izolacia_zvysena: 'Izolácia zvýšená',
-          izolacia_premium: 'Izolácia premium',
-          izolacia_extra: 'Extra izolácia'
+          izolacia_standardna: t('insulationStandard'),
+          izolacia_zvysena: t('insulationEnhanced'),
+          izolacia_premium: t('insulationPremium'),
+          izolacia_extra: t('insulationExtra')
         };
         selections.items.push({
           id: izolacia,
@@ -231,9 +232,9 @@ export default function KonfiguratorFaza1HrubaStavba({
         const price = getPrice(zaklady);
         totalPrice += price;
         const zakladyNames = {
-          zaklady_vruty: 'Základy - vruty',
-          zaklady_doska: 'Základy - doska',
-          zaklady_pasove: 'Základy - pásové'
+          zaklady_vruty: t('foundationsScrews'),
+          zaklady_doska: t('foundationsSlab'),
+          zaklady_pasove: t('foundationsStrip')
         };
         selections.items.push({
           id: zaklady,
@@ -257,10 +258,10 @@ export default function KonfiguratorFaza1HrubaStavba({
         </div>
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="bg-white/30 text-white text-xs font-bold px-2 py-0.5 rounded-full uppercase">Fáza 1</span>
+            <span className="bg-white/30 text-white text-xs font-bold px-2 py-0.5 rounded-full uppercase">{t('phase')} 1</span>
           </div>
-          <h2 className="text-xl font-bold text-white">Hrubá stavba</h2>
-          <p className="text-white/90 text-sm">Konštrukcia, izolácia a základy</p>
+          <h2 className="text-xl font-bold text-white">{t('roughConstruction')}</h2>
+          <p className="text-white/90 text-sm">{t('phase1Subtitle')}</p>
         </div>
       </div>
 
@@ -268,17 +269,17 @@ export default function KonfiguratorFaza1HrubaStavba({
       <div className="p-3 sm:p-4 border-[3px] sm:border-[4px] border-orange-500 rounded-xl bg-gradient-to-br from-orange-50 to-yellow-50 shadow-xl">
         <p className="text-sm sm:text-base font-bold text-orange-800 mb-4 flex items-center gap-2">
           <span className="w-6 h-6 sm:w-7 sm:h-7 bg-orange-500 text-white rounded-full flex items-center justify-center text-sm font-extrabold">1</span>
-          Montáž hrubej stavby (vyberte jednu)
+          {t('assembly')} ({t('selectOne')})
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <Tile
             icon={() => <span className="text-3xl">🔧</span>}
-            title="Bez montáže"
-            subtitle="Iba sada"
+            title={t('assemblyNo')}
+            subtitle={t('onlyKit')}
             price={0}
             isSelected={montaz === 'montaz_nie'}
             onClick={() => setMontaz('montaz_nie')}
-            tooltip="Dom dodáme bez montáže - iba stavebný kit"
+            tooltip={t('assemblyNoTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="montaz_nie"
@@ -286,12 +287,12 @@ export default function KonfiguratorFaza1HrubaStavba({
           />
           <Tile
             icon={Home}
-            title="S montážou"
-            subtitle="Hrubá stavba"
+            title={t('assemblyYes')}
+            subtitle={t('shellConstruction')}
             price={getPrice('montaz_ano')}
             isSelected={montaz === 'montaz_ano'}
             onClick={() => setMontaz('montaz_ano')}
-            tooltip="Kompletná montáž domu vrátane práce a materiálu"
+            tooltip={t('assemblyYesTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="montaz_ano"
@@ -304,17 +305,17 @@ export default function KonfiguratorFaza1HrubaStavba({
       <div className="p-3 sm:p-4 border-[3px] sm:border-[4px] border-cyan-500 rounded-xl bg-gradient-to-br from-cyan-50 to-blue-50 shadow-xl">
         <p className="text-sm sm:text-base font-bold text-cyan-800 mb-4 flex items-center gap-2">
           <span className="w-6 h-6 sm:w-7 sm:h-7 bg-cyan-500 text-white rounded-full flex items-center justify-center text-sm font-extrabold">2</span>
-          Izolácia (vyberte jednu)
+          {t('insulation')} ({t('selectOne')})
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           <Tile
             icon={() => <span className="text-3xl">🧊</span>}
-            title="Celoročná izolácia"
+            title={t('insulationStandard')}
             subtitle="150/200mm"
             price={0}
             isSelected={izolacia === 'izolacia_standardna'}
             onClick={() => setIzolacia('izolacia_standardna')}
-            tooltip="Štandardná celoročná izolácia 150/200mm"
+            tooltip={t('insulationStandardTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="izolacia_standardna"
@@ -322,12 +323,12 @@ export default function KonfiguratorFaza1HrubaStavba({
           />
           <Tile
             icon={() => <span className="text-3xl">🔥</span>}
-            title="200mm"
+            title={t('insulationEnhanced200mmShort')}
             subtitle="200mm/250mm"
             price={getPrice('izolacia_zvysena')}
             isSelected={izolacia === 'izolacia_zvysena'}
             onClick={() => setIzolacia('izolacia_zvysena')}
-            tooltip="Zvýšená izolácia 200mm steny, 250mm strecha"
+            tooltip={t('insulationEnhancedTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="izolacia_zvysena"
@@ -335,12 +336,12 @@ export default function KonfiguratorFaza1HrubaStavba({
           />
           <Tile
             icon={() => <div className="flex items-center gap-1"><span className="text-2xl">⭐</span><span className="text-xs bg-green-500 text-white px-1 rounded">A0</span></div>}
-            title="250mm"
+            title={t('insulationPremium250mmShort')}
             subtitle="250mm/300mm"
             price={getPrice('izolacia_premium')}
             isSelected={izolacia === 'izolacia_premium'}
             onClick={() => setIzolacia('izolacia_premium')}
-            tooltip="Premium izolácia 250mm steny, 300mm strecha pre A0"
+            tooltip={t('insulationPremiumTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="izolacia_premium"
@@ -348,12 +349,12 @@ export default function KonfiguratorFaza1HrubaStavba({
           />
           <Tile
             icon={() => <div className="flex items-center gap-1"><span className="text-2xl">🌟</span><span className="text-xs bg-green-500 text-white px-1 rounded">A0</span></div>}
-            title="Extra izolácia"
+            title={t('insulationExtra')}
             subtitle="300mm"
             price={getPrice('izolacia_extra')}
             isSelected={izolacia === 'izolacia_extra'}
             onClick={() => setIzolacia('izolacia_extra')}
-            tooltip="Extra izolácia 300mm pre pasívne domy"
+            tooltip={t('insulationExtraTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="izolacia_extra"
@@ -366,17 +367,17 @@ export default function KonfiguratorFaza1HrubaStavba({
       <div className="p-3 sm:p-4 border-[3px] sm:border-[4px] border-red-500 rounded-xl bg-gradient-to-br from-red-50 to-orange-50 shadow-xl">
         <p className="text-sm sm:text-base font-bold text-red-800 mb-4 flex items-center gap-2">
           <span className="w-6 h-6 sm:w-7 sm:h-7 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-extrabold">3</span>
-          Základy (vyberte jednu)
+          {t('foundations')} ({t('selectOne')})
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           <Tile
             icon={() => <span className="text-3xl">🏛️</span>}
-            title="Bez základov"
-            subtitle="Vlastné"
+            title={t('foundationsNone')}
+            subtitle={t('own')}
             price={0}
             isSelected={zaklady === 'zaklady_bez'}
             onClick={() => setZaklady('zaklady_bez')}
-            tooltip="Bez základov - vlastné riešenie"
+            tooltip={t('foundationsNoneTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="zaklady_bez"
@@ -384,12 +385,12 @@ export default function KonfiguratorFaza1HrubaStavba({
           />
           <Tile
             icon={() => <span className="text-3xl">🔩</span>}
-            title="Zemné skrutky / Pätky"
-            subtitle="Zemné pätky"
+            title={t('foundationsScrews')}
+            subtitle={t('foundationsGroundPilots')}
             price={getPrice('zaklady_vruty')}
             isSelected={zaklady === 'zaklady_vruty'}
             onClick={() => setZaklady('zaklady_vruty')}
-            tooltip="Rýchle a efektívne vrútené základy"
+            tooltip={t('foundationsScrewsTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="zaklady_vruty"
@@ -397,12 +398,12 @@ export default function KonfiguratorFaza1HrubaStavba({
           />
           <Tile
             icon={() => <span className="text-3xl">🏗️</span>}
-            title="Základová doska"
-            subtitle="Základová"
+            title={t('foundationsSlab')}
+            subtitle={t('foundationsFoundationSlab')}
             price={getPrice('zaklady_doska')}
             isSelected={zaklady === 'zaklady_doska'}
             onClick={() => setZaklady('zaklady_doska')}
-            tooltip="Klasická betónová základová doska"
+            tooltip={t('foundationsSlabTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="zaklady_doska"
@@ -410,12 +411,12 @@ export default function KonfiguratorFaza1HrubaStavba({
           />
           <Tile
             icon={() => <span className="text-3xl">🧱</span>}
-            title="Pásové základy"
-            subtitle="Základy"
+            title={t('foundationsStrip')}
+            subtitle={t('foundationsStripBase')}
             price={getPrice('zaklady_pasove')}
             isSelected={zaklady === 'zaklady_pasove'}
             onClick={() => setZaklady('zaklady_pasove')}
-            tooltip="Tradičné pásové základy"
+            tooltip={t('foundationsStripTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="zaklady_pasove"
