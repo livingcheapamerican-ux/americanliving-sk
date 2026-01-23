@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import { useLanguage } from "@/components/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,7 @@ import { ArrowLeft, Home, Settings, Send, CheckCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function KonfiguratorProstoHouse() {
+  const { t } = useLanguage();
   const urlParams = new URLSearchParams(window.location.search);
   const domId = urlParams.get('id');
 
@@ -321,7 +323,7 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
 
               {/* Časť 1: Hrubá Stavba */}
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-primary mb-6">Časť 1: Hrubá Stavba a Exteriér</h2>
+                <h2 className="text-2xl font-bold text-primary mb-6">{t('phase')} 1: {t('phase1')}</h2>
                 
                 <div className="space-y-6">
                   {/* Montáž */}
@@ -447,7 +449,7 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
 
               {/* Časť 2: Inštalácie */}
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-primary mb-6">Časť 2: Inštalácie a Prístavby</h2>
+                <h2 className="text-2xl font-bold text-primary mb-6">{t('phase')} 2: {t('phase2')}</h2>
                 <div className="space-y-4">
                   {[
                     {key: 'izolacie', label: 'Dodatočná izolácia', cena: cennik.izolacie},
@@ -476,7 +478,7 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
 
               {/* Časť 3: Kolaudácia a A0 */}
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-primary mb-6">Časť 3: Kolaudácia a Energetický Certifikát A0</h2>
+                <h2 className="text-2xl font-bold text-primary mb-6">{t('phase')} 3: {t('phase3')}</h2>
                 <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-4">
                   <h3 className="font-bold text-green-700 mb-2">Pre energetický certifikát A0 potrebujete:</h3>
                   <ul className="space-y-1 text-sm text-green-700">
