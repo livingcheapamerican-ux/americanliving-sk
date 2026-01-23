@@ -111,7 +111,7 @@ export default function EditableTile({
                 <span className={`text-[9px] sm:text-[10px] md:text-[11px] italic leading-tight font-medium ${
                   selected ? 'text-white/90' : 'text-gray-600'
                 }`}>
-                  {t?.('itemIncludedInBase') || 'Táto položka je súčasťou základnej konfigurácie domu'}
+                  {t?.('included') || t?.('itemIncludedInBase') || 'Zahrnuté'}
                 </span>
               ) : (
                 price
