@@ -27,6 +27,7 @@ import FloatingPrice from "./FloatingPrice";
 
 // Konštantné mapovanie farieb pre sekcie - predchádza blikaniu
 const SECTION_COLORS = {
+  "1": "from-amber-600 to-orange-600",
   "2": "from-blue-600 to-indigo-600",
   "3": "from-emerald-600 to-teal-600",
   "4": "from-purple-600 to-violet-600"
