@@ -307,9 +307,9 @@ export default function KonfiguratorFlat72({
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
 
-    total += CENY.montaz[montazHolodomu];
-    total += CENY.dvere[vstupneDvere];
-    total += CENY.izolacia[izolaciaNavysenie];
+    total += CENY.montaz[montazHolodomu] || 0;
+    total += CENY.dvere[vstupneDvere] || 0;
+    total += CENY.izolacia[izolaciaNavysenie] || 0;
     
     if (elektroinstalacia) total += CENY.elektroinstalacia;
     if (vodaKanalizacia) total += CENY.vodaKanalizacia;
@@ -318,7 +318,7 @@ export default function KonfiguratorFlat72({
     if (tepelneCerpadlo) total += CENY.tepelneCerpadlo;
     if (rekuperacia) total += CENY.rekuperacia;
     
-    total += CENY.zaklady[zaklady];
+    total += CENY.zaklady[zaklady] || 0;
     if (pripojkaSiete) total += CENY.pripojkaSiete;
     
     if (inziniering) total += CENY.inziniering;
@@ -360,7 +360,10 @@ export default function KonfiguratorFlat72({
     return chybajuce.length > 0 ? chybajuce : null;
   }, [projektA0, izolaciaNavysenie, tepelneCerpadlo, rekuperacia]);
 
-  const formatPrice = (price) => price.toLocaleString('sk-SK') + " €";
+  const formatPrice = (price) => {
+    const validPrice = typeof price === 'number' && !isNaN(price) ? price : 0;
+    return validPrice.toLocaleString('sk-SK') + " €";
+  };
 
   // Detekcia dosiahnutých úrovní
   const dosiahnuteUrovne = useMemo(() => {
