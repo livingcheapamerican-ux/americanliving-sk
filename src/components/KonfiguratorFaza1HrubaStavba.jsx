@@ -1,377 +1,421 @@
-import React, { useState, useRef, useEffect } from "react";
-import ReactDOM from "react-dom";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { 
-  Check, Wrench, ThermometerSun, Landmark, Package, Sparkles, Maximize
-} from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Check, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "./LanguageContext";
 
-// --- TILE KOMPONENT ---
-const Tile = ({ 
-  selected, 
-  onClick, 
-  icon: Icon, 
-  iconColor, 
-  iconSelectedColor, 
-  title, 
-  subtitle, 
-  price,
-  isA0, 
-  tooltip, 
-  selectedBg = "bg-amber-100", 
-  selectedBorder = "border-amber-500", 
-  selectedRing = "ring-amber-300" 
-}) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-
-  const tileRef = useRef(null);
-  const [hoverTimer, setHoverTimer] = useState(null);
+// Tile Component
+function Tile({ icon: Icon, title, subtitle, price, isSelected, onClick, tooltip, isAdmin, onPriceUpdate, tileId, showTooltip }) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [showTooltipDelayed, setShowTooltipDelayed] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const [isEditingPrice, setIsEditingPrice] = useState(false);
+  const [editedPrice, setEditedPrice] = useState(price);
+  const tileRef = useRef(null);
+  const timeoutRef = useRef(null);
 
-  const updateTooltipPosition = () => {
-    if (tileRef.current) {
-      const rect = tileRef.current.getBoundingClientRect();
-      const left = Math.min(Math.max(rect.left + rect.width / 2, 138), window.innerWidth - 138);
-      let top = rect.bottom + 10;
-      if (top + 80 > window.innerHeight) top = rect.top - 90;
-      setTooltipPosition({ top, left });
+  useEffect(() => {
+    setEditedPrice(price);
+  }, [price]);
+
+  useEffect(() => {
+    if (isHovered && tooltip && showTooltip) {
+      timeoutRef.current = setTimeout(() => {
+        if (tileRef.current) {
+          const rect = tileRef.current.getBoundingClientRect();
+          const tooltipWidth = 300;
+          let left = rect.left + rect.width / 2 - tooltipWidth / 2;
+          
+          if (left < 10) left = 10;
+          if (left + tooltipWidth > window.innerWidth - 10) {
+            left = window.innerWidth - tooltipWidth - 10;
+          }
+
+          setTooltipPosition({
+            top: rect.bottom + window.scrollY + 8,
+            left: left + window.scrollX,
+          });
+        }
+        setShowTooltipDelayed(true);
+      }, 500);
+    } else {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      setShowTooltipDelayed(false);
+    }
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [isHovered, tooltip, showTooltip]);
+
+  const handlePriceUpdate = () => {
+    const newPrice = parseFloat(editedPrice);
+    if (!isNaN(newPrice) && onPriceUpdate) {
+      onPriceUpdate(tileId, newPrice);
+      setIsEditingPrice(false);
     }
   };
 
-  const handleMouseEnter = () => {
-    const timer = setTimeout(() => {
-      updateTooltipPosition();
-      setShowTooltip(true);
-    }, 1500);
-    setHoverTimer(timer);
-  };
-
-  const handleMouseLeave = () => {
-    if (hoverTimer) clearTimeout(hoverTimer);
-    setShowTooltip(false);
-  };
-
   return (
-    <motion.div
-      ref={tileRef}
-      whileHover={{ scale: 1.02, y: -2 }}
-      whileTap={{ scale: 0.98 }}
-      onClick={onClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      // VIZUÁL: min-h zabezpečí konzistentnú výšku, flex roztiahne obsah
-      className={`relative p-3 sm:p-4 rounded-xl cursor-pointer transition-all flex flex-col items-center text-center justify-between min-h-[190px] w-full group ${
-        selected 
-          ? `${selectedBg} border-2 ${selectedBorder} shadow-xl ring-2 ${selectedRing}` 
-          : isA0 
-            ? "bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-400 hover:border-green-500"
-            : "bg-white border-2 border-gray-200 hover:border-amber-400"
-      }`}
-    >
-      
-
-
-      {isA0 && (
-        <Badge className="absolute top-2 left-2 bg-emerald-500 text-white text-[9px] px-1.5 py-0.5 z-10 font-bold">
-          A0
-        </Badge>
-      )}
-      
-      <AnimatePresence>
-        {selected && (
+    <>
+      <motion.div
+        ref={tileRef}
+        onClick={onClick}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className={`relative p-4 rounded-xl cursor-pointer transition-all duration-300 border-2 ${
+          isSelected
+            ? 'bg-gradient-to-br from-red-50 to-red-100 border-red-500 shadow-lg scale-105'
+            : 'bg-white border-gray-200 hover:border-red-300 hover:shadow-md'
+        }`}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        {isSelected && (
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none"
+            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-lg z-10"
           >
-            <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center">
-              <Check className="w-8 h-8 text-green-600 opacity-20" />
+            <Check className="w-4 h-4" />
+          </motion.div>
+        )}
+
+        <div className="flex flex-col items-center gap-3 relative z-0">
+          <div className={`p-3 rounded-lg transition-colors ${
+            isSelected ? 'bg-red-500 text-white' : 'bg-red-50 text-red-600'
+          }`}>
+            <Icon className="w-6 h-6" />
+          </div>
+
+          <div className="text-center space-y-1">
+            <h4 className="font-semibold text-gray-900">{title}</h4>
+            {subtitle && (
+              <p className="text-xs text-gray-600">{subtitle}</p>
+            )}
+          </div>
+
+          {price !== null && price !== undefined && (
+            <div className="text-center">
+              {isAdmin && isEditingPrice ? (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    value={editedPrice}
+                    onChange={(e) => setEditedPrice(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                    className="w-24 px-2 py-1 border rounded text-sm"
+                  />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePriceUpdate();
+                    }}
+                    className="px-2 py-1 bg-green-500 text-white rounded text-xs"
+                  >
+                    ✓
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsEditingPrice(false);
+                      setEditedPrice(price);
+                    }}
+                    className="px-2 py-1 bg-gray-500 text-white rounded text-xs"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 justify-center">
+                  <span className={`text-lg font-bold ${
+                    isSelected ? 'text-red-600' : 'text-gray-700'
+                  }`}>
+                    {price === 0 ? 'Zahrnuté' : `+${price.toLocaleString()} €`}
+                  </span>
+                  {isAdmin && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsEditingPrice(true);
+                      }}
+                      className="text-xs text-blue-500 hover:text-blue-700"
+                    >
+                      ✎
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
+          )}
+
+          {tooltip && showTooltip && (
+            <Info className="w-4 h-4 text-gray-400" />
+          )}
+        </div>
+      </motion.div>
+
+      <AnimatePresence>
+        {showTooltipDelayed && tooltip && showTooltip && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            style={{
+              position: 'absolute',
+              top: tooltipPosition.top,
+              left: tooltipPosition.left,
+              zIndex: 9999,
+            }}
+            className="w-[300px] bg-gray-900 text-white p-4 rounded-lg shadow-2xl"
+          >
+            <div className="text-sm leading-relaxed">{tooltip}</div>
+            <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-gray-900"></div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Obsah */}
-      <div className="relative z-30 flex flex-col items-center justify-center flex-grow gap-2 w-full px-1 mt-4">
-        <Icon className={`w-8 h-8 sm:w-9 sm:h-9 ${selected ? iconSelectedColor : iconColor}`} />
-        
-        {/* TEXT: break-words a w-full zabezpečia, že sa text nezalomí vertikálne */}
-        <span className="font-bold text-gray-800 text-sm leading-tight break-words w-full">
-          {title}
-        </span>
-        <span className="text-xs text-gray-500 leading-tight break-words w-full px-1">
-          {subtitle}
-        </span>
-        
-        {/* Cena */}
-        {price && (
-          <div className={`mt-2 px-3 py-1 text-xs font-bold rounded-full shadow-md ${selected ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700'}`}>
-            {price}
-          </div>
-        )}
-      </div>
-
-
-
-      {showTooltip && tooltip && ReactDOM.createPortal(
-        <div 
-          className="fixed z-[9999] w-56 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-xl pointer-events-none"
-          style={{ top: tooltipPosition.top, left: tooltipPosition.left, transform: 'translateX(-50%)' }}
-        >
-          {tooltip}
-        </div>,
-        document.body
-      )}
-    </motion.div>
+    </>
   );
+}
+
+// Default prices - fallback if dom doesn't have custom prices
+const DEFAULT_PRICES = {
+  montaz_ano: 0,
+  montaz_nie: 0,
+  izolacia_standardna: 0,
+  izolacia_zvysena: 0,
+  izolacia_premium: 0,
+  izolacia_extra: 0,
+  zaklady_vruty: 0,
+  zaklady_doska: 0,
+  zaklady_pasove: 0,
 };
 
-// --- HLAVNÝ KOMPONENT ---
 export default function KonfiguratorFaza1HrubaStavba({ 
-  montazHolodomu, setMontazHolodomu,
-  izolaciaNavysenie, setIzolaciaNavysenie,
-  zaklady, setZaklady,
-  predlzenie, setPredlzenie,
-  dom,
-  cennik 
+  dom, 
+  onSelectionChange, 
+  isAdmin = false,
+  onPriceUpdate,
+  showTooltips = true,
+  initialSelections = {}
 }) {
-  
-  const phaseRef = useRef(null);
   const { t } = useLanguage();
 
-  // Mapovanie cien ultra izolácie podľa domov
-  const ultraIzolaciaMapping = {
-    "Flat Double": 21750,
-    "Flat House 1,5": 16500,
-    "Nord": 12000,
-    "Barn Double": 10125,
-    "Flat": 11063,
-    "A-Frame": 6000,
-    "Barn": 5250,
-    "Flat Small": 5250
+  // Get prices - custom prices from dom or defaults
+  const getPrice = (itemId) => {
+    if (dom?.konfigurator_custom_ceny_prosto_house?.[itemId] !== undefined) {
+      return dom.konfigurator_custom_ceny_prosto_house[itemId];
+    }
+    return DEFAULT_PRICES[itemId] || 0;
   };
 
-  const hasUltraInsulation = ultraIzolaciaMapping[dom?.nazov] !== undefined;
-  const ultraIzolaciaPrice = ultraIzolaciaMapping[dom?.nazov] || 0;
-  const hasPredlzenie = setPredlzenie && ["Prosto House", "A-Frame", "Barn 48", "Barn Double", "Flat", "Flat Double", "Flat House 1,5", "Nord", "Flat Small"].includes(dom?.nazov);
-  
-  const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
-    <div className={`relative flex items-center gap-3 p-4 bg-gradient-to-r ${color} rounded-t-xl overflow-hidden`}>
-      <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
-        <Icon className="w-6 h-6 text-white" />
-      </div>
-      <div>
-        <div className="flex items-center gap-2">
-           <span className="text-[10px] uppercase font-bold text-white/80 tracking-wider border border-white/30 px-2 rounded-full">{t('phase')} {step}</span>
-        </div>
-        <h3 className="text-lg font-bold text-white leading-none mt-1">{title}</h3>
-        {subtitle && <p className="text-white/80 text-xs mt-0.5">{subtitle}</p>}
-      </div>
-    </div>
-  );
+  const [montaz, setMontaz] = useState(initialSelections.montaz || null);
+  const [izolacia, setIzolacia] = useState(initialSelections.izolacia || null);
+  const [zaklady, setZaklady] = useState(initialSelections.zaklady || null);
+
+  // Notify parent of changes
+  useEffect(() => {
+    if (onSelectionChange) {
+      const selections = {
+        montaz,
+        izolacia,
+        zaklady,
+        items: []
+      };
+
+      let totalPrice = 0;
+
+      if (montaz) {
+        const price = getPrice(montaz);
+        totalPrice += price;
+        selections.items.push({
+          id: montaz,
+          name: montaz === 'montaz_ano' ? 'Montáž domu' : 'Bez montáže',
+          price,
+          category: 'montaz'
+        });
+      }
+
+      if (izolacia) {
+        const price = getPrice(izolacia);
+        totalPrice += price;
+        const izolaciaNames = {
+          izolacia_standardna: 'Izolácia štandardná',
+          izolacia_zvysena: 'Izolácia zvýšená',
+          izolacia_premium: 'Izolácia premium',
+          izolacia_extra: 'Extra izolácia'
+        };
+        selections.items.push({
+          id: izolacia,
+          name: izolaciaNames[izolacia] || izolacia,
+          price,
+          category: 'izolacia'
+        });
+      }
+
+      if (zaklady) {
+        const price = getPrice(zaklady);
+        totalPrice += price;
+        const zakladyNames = {
+          zaklady_vruty: 'Základy - vruty',
+          zaklady_doska: 'Základy - doska',
+          zaklady_pasove: 'Základy - pásové'
+        };
+        selections.items.push({
+          id: zaklady,
+          name: zakladyNames[zaklady] || zaklady,
+          price,
+          category: 'zaklady'
+        });
+      }
+
+      selections.totalPrice = totalPrice;
+      onSelectionChange(selections);
+    }
+  }, [montaz, izolacia, zaklady, dom]);
 
   return (
-    <motion.div
-      ref={phaseRef}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="space-y-6"
-    >
-      <div className="p-4 bg-green-50 border border-green-200 rounded-xl flex gap-3 shadow-sm">
-        <Sparkles className="w-5 h-5 text-green-600 flex-shrink-0" />
-        <p className="text-sm text-green-800 font-medium leading-snug">{t('a0Recommendation')}</p>
+    <div className="space-y-8">
+      {/* Montáž */}
+      <div>
+        <h3 className="text-xl font-bold text-gray-900 mb-4">Montáž</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Tile
+            icon={() => <span className="text-2xl">🏗️</span>}
+            title="Montáž domu"
+            subtitle="Profesionálna montáž na kľúč"
+            price={getPrice('montaz_ano')}
+            isSelected={montaz === 'montaz_ano'}
+            onClick={() => setMontaz('montaz_ano')}
+            tooltip="Kompletná montáž domu vrátane práce a materiálu"
+            isAdmin={isAdmin}
+            onPriceUpdate={onPriceUpdate}
+            tileId="montaz_ano"
+            showTooltip={showTooltips}
+          />
+          <Tile
+            icon={() => <span className="text-2xl">❌</span>}
+            title="Bez montáže"
+            subtitle="Len dodanie domu"
+            price={0}
+            isSelected={montaz === 'montaz_nie'}
+            onClick={() => setMontaz('montaz_nie')}
+            tooltip="Dom dodáme bez montáže"
+            isAdmin={isAdmin}
+            onPriceUpdate={onPriceUpdate}
+            tileId="montaz_nie"
+            showTooltip={showTooltips}
+          />
+        </div>
       </div>
 
-      <Card className="border-0 shadow-xl bg-white rounded-xl overflow-hidden">
-        <SectionHeader 
-          icon={Package} 
-          title={t('phase1')} 
-          subtitle={t('phase1Subtitle')}
-          color="from-amber-600 to-orange-600"
-          step="1"
-        />
-        
-        <div className="p-4 sm:p-6 bg-gray-50/50">
-          <p className="text-xs text-red-600 mb-4 text-center bg-red-50 p-2 rounded border border-red-100">{t('assemblyNote')}</p>
-          
-          {/* HLAVNÝ GRID - Rozdelenie na 2 hlavné stĺpce pre väčšie obrazovky */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-            {/* 1. MONTÁŽ (Ľavý stĺpec) */}
-            <div className="p-4 border-2 border-amber-200 rounded-2xl bg-amber-50/30 flex flex-col">
-               <p className="text-xs font-bold text-amber-800 mb-3 flex items-center gap-2">
-                <span className="w-5 h-5 bg-amber-600 text-white rounded-full flex items-center justify-center text-[10px]">1</span>
-                {t('assembly')}
-              </p>
-              <div className="grid grid-cols-2 gap-3 h-full">
-                <Tile 
-                  selected={montazHolodomu === "nie"} 
-                  onClick={() => setMontazHolodomu("nie")} 
-                  icon={Wrench} 
-                  iconColor="text-amber-600" 
-                  iconSelectedColor="text-amber-800" 
-                  title={t('assemblyNo')} 
-                  subtitle={t('onlyKit')}
-                  price="0 €"
-                />
-                <Tile 
-                  selected={montazHolodomu === "ano"} 
-                  onClick={() => setMontazHolodomu("ano")} 
-                  icon={Check} 
-                  iconColor="text-amber-600" 
-                  iconSelectedColor="text-amber-800" 
-                  title={t('assemblyYes')} 
-                  subtitle={t('phase1')}
-                  price="+ 17 700 €"
-                />
-              </div>
-            </div>
-
-            {/* 2. IZOLÁCIA (Pravý stĺpec) */}
-            <div className="p-4 border-2 border-cyan-200 rounded-2xl bg-cyan-50/30">
-               <p className="text-xs font-bold text-cyan-800 mb-3 flex items-center gap-2">
-                <span className="w-5 h-5 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[10px]">2</span>
-                {t('insulation')}
-              </p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                 <Tile 
-                    selected={izolaciaNavysenie === "standard"} 
-                    onClick={() => setIzolaciaNavysenie("standard")} 
-                    icon={ThermometerSun} 
-                    iconColor="text-cyan-600" 
-                    iconSelectedColor="text-cyan-800" 
-                    title={t('insulationStandard')} 
-                    subtitle="150/200mm"
-                    price="0 €"
-                  />
-                  <Tile 
-                    selected={izolaciaNavysenie === "zvysena"} 
-                    onClick={() => setIzolaciaNavysenie("zvysena")} 
-                    icon={ThermometerSun} 
-                    iconColor="text-cyan-600" 
-                    iconSelectedColor="text-cyan-800" 
-                    title={t('insulationEnhanced')} 
-                    subtitle={t('insulationEnhancedDesc')}
-                    price="+ 5 660 €"
-                  />
-                  <Tile 
-                    selected={izolaciaNavysenie === "premium"} 
-                    onClick={() => setIzolaciaNavysenie("premium")} 
-                    icon={ThermometerSun} 
-                    iconColor="text-cyan-600" 
-                    iconSelectedColor="text-cyan-800" 
-                    title={t('insulationPremium')} 
-                    subtitle={t('insulationPremiumDesc')}
-                    price="+ 9 106 €"
-                    isA0={true}
-                  />
-                  {hasUltraInsulation && (
-                    <Tile 
-                      selected={izolaciaNavysenie === "ultra"} 
-                      onClick={() => setIzolaciaNavysenie("ultra")} 
-                      icon={ThermometerSun} 
-                      iconColor="text-cyan-600" 
-                      iconSelectedColor="text-cyan-800" 
-                      title="Ultra 300mm" 
-                      subtitle={t('insulationUltraDesc')}
-                      price={`+ ${ultraIzolaciaPrice.toLocaleString('sk-SK')} €`}
-                      isA0={true}
-                    />
-                  )}
-              </div>
-            </div>
-
-            {/* 3. ZÁKLADY (Celá šírka) */}
-            <div className="col-span-1 lg:col-span-2 p-4 border-2 border-orange-200 rounded-2xl bg-orange-50/30">
-               <p className="text-xs font-bold text-orange-800 mb-3 flex items-center gap-2">
-                <span className="w-5 h-5 bg-orange-600 text-white rounded-full flex items-center justify-center text-[10px]">3</span>
-                {t('foundations')}
-              </p>
-              {/* Responzívny Grid: na mobiloch 2x2, na desktopoch 4 vedľa seba (text je tu krátky, takže sa zmestí) */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                 <Tile 
-                    selected={zaklady === "bez"} 
-                    onClick={() => setZaklady("bez")} 
-                    icon={Landmark} 
-                    iconColor="text-orange-600" 
-                    iconSelectedColor="text-orange-800" 
-                    title={t('foundationsNone')} 
-                    subtitle={t('own')}
-                    price="0 €"
-                  />
-                  <Tile 
-                    selected={zaklady === "skrutky"} 
-                    onClick={() => setZaklady("skrutky")} 
-                    icon={Landmark} 
-                    iconColor="text-orange-600" 
-                    iconSelectedColor="text-orange-800" 
-                    title="Pilóty/Pätky" 
-                    subtitle={t('groundFootings')}
-                    price="+ 7 655 €"
-                  />
-                   <Tile 
-                    selected={zaklady === "doska"} 
-                    onClick={() => setZaklady("doska")} 
-                    icon={Landmark} 
-                    iconColor="text-orange-600" 
-                    iconSelectedColor="text-orange-800" 
-                    title={t('foundationsSlab')} 
-                    subtitle={t('foundationSlab')}
-                    price="+ 13 000 €"
-                  />
-                  <Tile 
-                    selected={zaklady === "pasove"} 
-                    onClick={() => setZaklady("pasove")} 
-                    icon={Landmark} 
-                    iconColor="text-orange-600" 
-                    iconSelectedColor="text-orange-800" 
-                    title={t('foundationsStrip')} 
-                    subtitle={t('stripFound')}
-                    price="+ 11 500 €"
-                  />
-              </div>
-            </div>
-
-            {/* 4. PREDĹŽENIE (Voliteľné) */}
-            {hasPredlzenie && (
-               <div className="col-span-1 lg:col-span-2 p-4 border-2 border-indigo-200 rounded-2xl bg-indigo-50/30">
-                 <p className="text-xs font-bold text-indigo-800 mb-3 flex items-center gap-2">
-                   <span className="w-5 h-5 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[10px]">+</span>
-                   Predĺženie domu
-                 </p>
-                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                    {[
-                      { value: 0, label: "Bez predĺženia", price: 0 },
-                      { value: 1.2, label: "+1,2 m", price: cennik?.predlzenie?.[1.2] },
-                      { value: 2.4, label: "+2,4 m", price: cennik?.predlzenie?.[2.4] },
-                      { value: 3.6, label: "+3,6 m", price: cennik?.predlzenie?.[3.6] },
-                      { value: 4.8, label: "+4,8 m", price: cennik?.predlzenie?.[4.8] }
-                    ].map((opt) => (
-                       <Tile 
-                        key={opt.value}
-                        selected={predlzenie === opt.value} 
-                        onClick={() => setPredlzenie(opt.value)} 
-                        icon={Maximize} 
-                        iconColor="text-indigo-600" 
-                        iconSelectedColor="text-indigo-800" 
-                        title={opt.label}
-                        subtitle={opt.price ? "Extra priestor" : "Štandard"}
-                        price={opt.price ? `+ ${opt.price.toLocaleString('sk-SK')} €` : '0 €'}
-                        selectedBg="bg-indigo-100"
-                        selectedBorder="border-indigo-600"
-                        selectedRing="ring-indigo-300"
-                      />
-                    ))}
-                 </div>
-               </div>
-            )}
-
-          </div>
+      {/* Izolácia */}
+      <div>
+        <h3 className="text-xl font-bold text-gray-900 mb-4">Izolácia</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Tile
+            icon={() => <span className="text-2xl">🏠</span>}
+            title="Štandardná"
+            subtitle="Základná izolácia"
+            price={0}
+            isSelected={izolacia === 'izolacia_standardna'}
+            onClick={() => setIzolacia('izolacia_standardna')}
+            tooltip="Štandardná izolácia zahrnutá v cene"
+            isAdmin={isAdmin}
+            onPriceUpdate={onPriceUpdate}
+            tileId="izolacia_standardna"
+            showTooltip={showTooltips}
+          />
+          <Tile
+            icon={() => <span className="text-2xl">🔥</span>}
+            title="Zvýšená"
+            subtitle="Lepšia izolácia"
+            price={getPrice('izolacia_zvysena')}
+            isSelected={izolacia === 'izolacia_zvysena'}
+            onClick={() => setIzolacia('izolacia_zvysena')}
+            tooltip="Zvýšená izolácia pre lepšie tepelné vlastnosti"
+            isAdmin={isAdmin}
+            onPriceUpdate={onPriceUpdate}
+            tileId="izolacia_zvysena"
+            showTooltip={showTooltips}
+          />
+          <Tile
+            icon={() => <span className="text-2xl">⭐</span>}
+            title="Premium"
+            subtitle="Prémiová izolácia"
+            price={getPrice('izolacia_premium')}
+            isSelected={izolacia === 'izolacia_premium'}
+            onClick={() => setIzolacia('izolacia_premium')}
+            tooltip="Premium izolácia pre najvyššiu energetickú efektívnosť"
+            isAdmin={isAdmin}
+            onPriceUpdate={onPriceUpdate}
+            tileId="izolacia_premium"
+            showTooltip={showTooltips}
+          />
+          <Tile
+            icon={() => <span className="text-2xl">🌟</span>}
+            title="Extra"
+            subtitle="Maximálna izolácia"
+            price={getPrice('izolacia_extra')}
+            isSelected={izolacia === 'izolacia_extra'}
+            onClick={() => setIzolacia('izolacia_extra')}
+            tooltip="Extra izolácia pre pasívne domy"
+            isAdmin={isAdmin}
+            onPriceUpdate={onPriceUpdate}
+            tileId="izolacia_extra"
+            showTooltip={showTooltips}
+          />
         </div>
-      </Card>
-    </motion.div>
+      </div>
+
+      {/* Základy */}
+      <div>
+        <h3 className="text-xl font-bold text-gray-900 mb-4">Základy</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Tile
+            icon={() => <span className="text-2xl">🔩</span>}
+            title="Vruty"
+            subtitle="Vrútené základy"
+            price={getPrice('zaklady_vruty')}
+            isSelected={zaklady === 'zaklady_vruty'}
+            onClick={() => setZaklady('zaklady_vruty')}
+            tooltip="Rýchle a efektívne vrútené základy"
+            isAdmin={isAdmin}
+            onPriceUpdate={onPriceUpdate}
+            tileId="zaklady_vruty"
+            showTooltip={showTooltips}
+          />
+          <Tile
+            icon={() => <span className="text-2xl">🏗️</span>}
+            title="Doska"
+            subtitle="Betónová doska"
+            price={getPrice('zaklady_doska')}
+            isSelected={zaklady === 'zaklady_doska'}
+            onClick={() => setZaklady('zaklady_doska')}
+            tooltip="Klasická betónová doska"
+            isAdmin={isAdmin}
+            onPriceUpdate={onPriceUpdate}
+            tileId="zaklady_doska"
+            showTooltip={showTooltips}
+          />
+          <Tile
+            icon={() => <span className="text-2xl">🧱</span>}
+            title="Pásové"
+            subtitle="Pásové základy"
+            price={getPrice('zaklady_pasove')}
+            isSelected={zaklady === 'zaklady_pasove'}
+            onClick={() => setZaklady('zaklady_pasove')}
+            tooltip="Tradičné pásové základy"
+            isAdmin={isAdmin}
+            onPriceUpdate={onPriceUpdate}
+            tileId="zaklady_pasove"
+            showTooltip={showTooltips}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
