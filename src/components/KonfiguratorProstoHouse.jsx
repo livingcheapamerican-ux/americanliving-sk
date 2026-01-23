@@ -721,7 +721,7 @@ export default function KonfiguratorProstoHouse({
               <Card className="overflow-hidden border-2 border-amber-300 shadow-lg">
                 <SectionHeader 
                   icon={Package} 
-                  title={t('phase1')} 
+                  title={t('roughConstruction')} 
                   subtitle={t('phase1Subtitle')}
                   step="1"
                 />
