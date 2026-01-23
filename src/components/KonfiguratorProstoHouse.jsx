@@ -883,7 +883,7 @@ export default function KonfiguratorProstoHouse({
                       <EditableTile
                         selected={zaklady === "skrutky"}
                         onClick={() => setZaklady("skrutky")}
-                        title="Pilóty/Pätky"
+                        title={t('foundationsPilots')}
                         subtitle={t('groundFootings')}
                         price={`+ ${CENY.zaklady.skrutky.toLocaleString('sk-SK')} €`}
                         isPriced={true}

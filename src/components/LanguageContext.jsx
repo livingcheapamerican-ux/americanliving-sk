@@ -83,6 +83,7 @@ const translations = {
     foundations: "Základy",
     foundationsNone: "Bez základov",
     foundationsScrews: "Zemné skrutky / Pätky",
+    foundationsPilots: "Pilóty/Pätky",
     foundationsSlab: "Základová doska",
     foundationsStrip: "Pásové základy",
     
@@ -1352,6 +1353,7 @@ const translations = {
     foundations: "Fundamente",
     foundationsNone: "Ohne Fundamente",
     foundationsScrews: "Erdschrauben / Fundamente",
+    foundationsPilots: "Pfähle/Fundamente",
     foundationsSlab: "Fundamentplatte",
     foundationsStrip: "Streifenfundamente",
     
@@ -2384,6 +2386,7 @@ const translations = {
     foundations: "Fondations",
     foundationsNone: "Sans fondations",
     foundationsScrews: "Vis de sol / Semelles",
+    foundationsPilots: "Pieux/Semelles",
     foundationsSlab: "Dalle de fondation",
     foundationsStrip: "Fondations en bande",
     
@@ -3358,6 +3361,7 @@ const translations = {
     foundations: "Темељи",
     foundationsNone: "Без темеља",
     foundationsScrews: "Земљани шрафови / Стопе",
+    foundationsPilots: "Пилоти/Стопе",
     foundationsSlab: "Темељна плоча",
     foundationsStrip: "Тракасти темељи",
     
@@ -4399,6 +4403,7 @@ const translations = {
     foundations: "Temelji",
     foundationsNone: "Bez temelja",
     foundationsScrews: "Zemljani vijci / Stope",
+    foundationsPilots: "Piloti/Stope",
     foundationsSlab: "Temeljna ploča",
     foundationsStrip: "Trakasti temelji",
     
@@ -5427,6 +5432,7 @@ const translations = {
     foundations: "Θεμέλια",
     foundationsNone: "Χωρίς θεμέλια",
     foundationsScrews: "Εδαφικές βίδες / Πέδιλα",
+    foundationsPilots: "Πάσσαλοι/Πέδιλα",
     foundationsSlab: "Πλάκα θεμελίωσης",
     foundationsStrip: "Λωριδωτά θεμέλια",
     
@@ -6145,6 +6151,7 @@ const translations = {
     foundations: "Foundations",
     foundationsNone: "No foundations",
     foundationsScrews: "Ground screws / Footings",
+    foundationsPilots: "Piles/Footings",
     foundationsSlab: "Foundation slab",
     foundationsStrip: "Strip foundations",
     
@@ -7088,6 +7095,7 @@ const translations = {
     foundations: "Alapok",
     foundationsNone: "Alapok nélkül",
     foundationsScrews: "Talajcsavarok / Lábazatok",
+    foundationsPilots: "Cölöpök/Lábazatok",
     foundationsSlab: "Alaplemez",
     foundationsStrip: "Sávalapok",
     
@@ -8022,6 +8030,7 @@ const translations = {
     foundations: "Fundamenty",
     foundationsNone: "Bez fundamentów",
     foundationsScrews: "Śruby gruntowe / Stopy",
+    foundationsPilots: "Paliki/Stopy",
     foundationsSlab: "Płyta fundamentowa",
     foundationsStrip: "Ławy fundamentowe",
     
@@ -8917,6 +8926,7 @@ const translations = {
     foundations: "Фундамент",
     foundationsNone: "Без фундаменту",
     foundationsScrews: "Ґрунтові гвинти / Опори",
+    foundationsPilots: "Палі/Опори",
     foundationsSlab: "Фундаментна плита",
     foundationsStrip: "Стрічковий фундамент",
     
