@@ -789,13 +789,14 @@ export default function KonfiguratorFjord({
                 <div className="p-1.5 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
                   <p className="text-[10px] sm:text-xs text-red-600 mb-3 text-center">* {t('assemblyNote')}</p>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
 
-                    <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-amber-600 rounded-lg sm:rounded-xl bg-amber-100/70 shadow-xl">
-                      <p className="col-span-2 text-[8px] sm:text-[10px] font-bold text-amber-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
-                        <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-amber-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">1</span>
+                    <div className="col-span-2 lg:col-span-1 p-3 sm:p-4 border-[3px] sm:border-[4px] border-amber-600 rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100/80 shadow-xl">
+                      <p className="text-xs sm:text-sm font-bold text-amber-800 mb-3 flex items-center gap-1.5">
+                        <span className="w-6 h-6 sm:w-7 sm:h-7 bg-amber-600 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-extrabold shadow-md">1</span>
                         {t('assembly')} ({t('selectOne')})
                       </p>
+                      <div className="grid grid-cols-2 gap-2 sm:gap-3">
 
                       <EditableTile
                         selected={montazHolodomu === "nie"}
@@ -821,14 +822,15 @@ export default function KonfiguratorFjord({
                         priceKey="montaz_ano"
                         onPriceChange={handlePriceChange}
                       />
+                      </div>
                     </div>
 
-                    <div className="col-span-1 sm:col-span-3 lg:col-span-4 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-cyan-600 rounded-lg sm:rounded-xl bg-cyan-100/70 shadow-xl">
-                      <p className="text-[8px] sm:text-[10px] font-bold text-cyan-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1 mb-2">
-                        <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">2</span>
+                    <div className="col-span-2 lg:col-span-1 p-3 sm:p-4 border-[3px] sm:border-[4px] border-cyan-600 rounded-xl sm:rounded-2xl bg-gradient-to-br from-cyan-50 to-cyan-100/80 shadow-xl">
+                      <p className="text-xs sm:text-sm font-bold text-cyan-800 mb-3 flex items-center gap-1.5">
+                        <span className="w-6 h-6 sm:w-7 sm:h-7 bg-cyan-600 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-extrabold shadow-md">2</span>
                         {t('insulation')} ({t('selectOne')})
                       </p>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-1 sm:gap-2">
+                      <div className="grid grid-cols-2 gap-2 sm:gap-3">
                         <EditableTile
                           selected={izolaciaNavysenie === "standard"}
                           onClick={() => setIzolaciaNavysenie("standard")}
@@ -870,11 +872,12 @@ export default function KonfiguratorFjord({
                       </div>
                     </div>
 
-                    <div className="col-span-1 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] border-orange-600 rounded-lg sm:rounded-xl bg-orange-100/70 shadow-xl">
-                      <p className="col-span-2 sm:col-span-4 text-[8px] sm:text-[10px] font-bold text-orange-700 -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1">
-                        <span className="w-3.5 h-3.5 sm:w-5 sm:h-5 bg-orange-600 text-white rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold">3</span>
+                    <div className="col-span-2 p-3 sm:p-4 border-[3px] sm:border-[4px] border-orange-600 rounded-xl sm:rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100/80 shadow-xl">
+                      <p className="text-xs sm:text-sm font-bold text-orange-800 mb-3 flex items-center gap-1.5">
+                        <span className="w-6 h-6 sm:w-7 sm:h-7 bg-orange-600 text-white rounded-full flex items-center justify-center text-xs sm:text-sm font-extrabold shadow-md">3</span>
                         {t('foundations')} ({t('selectOne')})
                       </p>
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
 
                       <EditableTile
                         selected={zaklady === "bez"}
@@ -926,6 +929,7 @@ export default function KonfiguratorFjord({
                         priceKey="zaklady_pasove"
                         onPriceChange={handlePriceChange}
                       />
+                      </div>
                     </div>
 
                   </div>
@@ -1073,7 +1077,7 @@ export default function KonfiguratorFjord({
               <Card className="overflow-hidden border-2 border-purple-300 shadow-lg">
                 <SectionHeader icon={FileText} title={t('phase4')} subtitle={t('phase4Subtitle')} color="from-purple-600 to-violet-600" step="4" />
                 <div className="p-2 sm:p-3 bg-gradient-to-b from-purple-50/50 to-white">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3 max-w-2xl">
                     <Tile selected={inziniering} onClick={() => setInziniering(!inziniering)} icon={FileCheck} iconColor="text-purple-600" iconSelectedColor="text-purple-800" title={t('engineering')} subtitle={t('buildingPermit')} price={`+ ${CENY.inziniering.toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="inziniering" onPriceChange={handlePriceChange} />
                     <Tile selected={projektA0} onClick={() => setProjektA0(!projektA0)} icon={FileText} iconColor="text-purple-600" iconSelectedColor="text-purple-800" title={t('projectA0')} subtitle={t('certification')} price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} isAdmin={isAdmin} priceKey="projektA0" onPriceChange={handlePriceChange} />
                     <Tile selected={revizna} onClick={() => setRevizna(!revizna)} icon={FileText} iconColor="text-purple-600" iconSelectedColor="text-purple-800" title={t('revision')} subtitle={t('documentation')} price={`+ ${CENY.revizna.toLocaleString('sk-SK')} €`} isPriced={true} isAdmin={isAdmin} priceKey="revizna" onPriceChange={handlePriceChange} />
