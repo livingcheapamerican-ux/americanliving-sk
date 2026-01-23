@@ -32,27 +32,6 @@ const SECTION_COLORS = {
   "4": "from-purple-600 to-violet-600"
 };
 
-const SectionHeader = ({ icon: Icon, title, subtitle, step, t }) => {
-  const colorClass = SECTION_COLORS[step] || "from-blue-600 to-indigo-600";
-  
-  return (
-    <div className={`relative flex items-center gap-1 sm:gap-3 p-1.5 sm:p-3 bg-gradient-to-r ${colorClass}`}>
-      <div className="relative flex items-center justify-center w-6 h-6 sm:w-10 sm:h-10 bg-white/90 rounded-md sm:rounded-xl shadow-lg flex-shrink-0">
-        <Icon className="w-3 h-3 sm:w-5 sm:h-5 text-gray-800" />
-      </div>
-      <div className="relative flex-1 min-w-0">
-        <div className="flex items-center gap-1 sm:gap-2 mb-0.5">
-          <span className="inline-flex items-center justify-center px-1 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[8px] sm:text-[10px] font-bold uppercase tracking-wider">
-            {t('phase')} {step}
-          </span>
-        </div>
-        <h3 className="text-xs sm:text-lg font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
-        {subtitle && <p className="text-white text-[9px] sm:text-xs mt-0.5 truncate drop-shadow-md">{subtitle}</p>}
-      </div>
-    </div>
-  );
-};
-
 export default function KonfiguratorProstoHouse({ 
   dom,
   onReset,
@@ -485,7 +464,7 @@ export default function KonfiguratorProstoHouse({
       setHladaniePozemku?.(false);
       setFinancneSluzby?.(false);
       setMontazHolodomu?.("nie");
-      setVstupneDvere("ziadne");
+      setVstupneDviere("ziadne");
       setIzolaciaNavysenie?.("standard");
       setElektroinstalacia(false);
       setVodaKanalizacia(false);
@@ -512,6 +491,27 @@ export default function KonfiguratorProstoHouse({
       setBocneOknoVyklopne55(0);
       setPredlzenie?.(0);
     }
+  };
+
+  const SectionHeader = ({ icon: Icon, title, subtitle, step }) => {
+    const colorClass = SECTION_COLORS[step] || "from-blue-600 to-indigo-600";
+    
+    return (
+      <div className={`relative flex items-center gap-1 sm:gap-3 p-1.5 sm:p-3 bg-gradient-to-r ${colorClass}`}>
+        <div className="relative flex items-center justify-center w-6 h-6 sm:w-10 sm:h-10 bg-white/90 rounded-md sm:rounded-xl shadow-lg flex-shrink-0">
+          <Icon className="w-3 h-3 sm:w-5 sm:h-5 text-gray-800" />
+        </div>
+        <div className="relative flex-1 min-w-0">
+          <div className="flex items-center gap-1 sm:gap-2 mb-0.5">
+            <span className="inline-flex items-center justify-center px-1 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[8px] sm:text-[10px] font-bold uppercase tracking-wider">
+              {t('phase')} {step}
+            </span>
+          </div>
+          <h3 className="text-xs sm:text-lg font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
+          {subtitle && <p className="text-white text-[9px] sm:text-xs mt-0.5 truncate drop-shadow-md">{subtitle}</p>}
+        </div>
+      </div>
+    );
   };
 
   if (showOnlySummary) {
@@ -724,7 +724,6 @@ export default function KonfiguratorProstoHouse({
                   title={t('phase1')} 
                   subtitle={t('phase1Subtitle')}
                   step="1"
-                  t={t}
                 />
                 <div className="p-1.5 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
                   <p className="text-[10px] sm:text-xs text-red-600 mb-3 text-center">* {t('assemblyNote')}</p>
@@ -945,7 +944,6 @@ export default function KonfiguratorProstoHouse({
                 title={t('phase2')} 
                 subtitle={t('phase2Subtitle')}
                 step="2"
-                t={t}
               />
               <div className="p-1.5 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
@@ -1216,7 +1214,6 @@ export default function KonfiguratorProstoHouse({
                 title={t('phase3')} 
                 subtitle={t('phase3Subtitle')}
                 step="3"
-                t={t}
               />
               <div className="p-1.5 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
@@ -1325,7 +1322,6 @@ export default function KonfiguratorProstoHouse({
                 title={t('phase4')} 
                 subtitle={t('phase4Subtitle')}
                 step="4"
-                t={t}
               />
               <div className="p-1.5 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
