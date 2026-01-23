@@ -79,6 +79,12 @@ const translations = {
     insulationEnhancedDesc: "200mm steny, 250mm strecha",
     insulationPremium: "Premium izolácia A0",
     insulationPremiumDesc: "250mm steny, 300mm strecha",
+    insulationEnhanced200mm: "200mm",
+    insulationEnhanced200250: "200mm/250mm",
+    insulationPremium250mm: "250mm",
+    insulationPremium250300: "250mm/300mm",
+    insulationExtra300mm: "Extra izolácia",
+    insulationExtra300: "300mm",
     
     foundations: "Základy",
     foundationsNone: "Bez základov",
@@ -86,6 +92,9 @@ const translations = {
     foundationsPilots: "Pilóty/Pätky",
     foundationsSlab: "Základová doska",
     foundationsStrip: "Pásové základy",
+    foundationsGroundPilots: "Zemné pätky",
+    foundationsFoundationSlab: "Základová",
+    foundationsStripBase: "Základy",
     
     interiorFinish: "Interiér finiš",
     interiorNone: "Bez interiéru",
