@@ -168,6 +168,19 @@ export default function KonfiguratorFaza1HrubaStavba({
   const [izolacia, setIzolacia] = useState(initialSelections.izolacia || null);
   const [zaklady, setZaklady] = useState(initialSelections.zaklady || null);
 
+  // Synchronizovať s externými zmenami
+  useEffect(() => {
+    if (initialSelections.izolacia && initialSelections.izolacia !== izolacia) {
+      setIzolacia(initialSelections.izolacia);
+    }
+    if (initialSelections.montaz && initialSelections.montaz !== montaz) {
+      setMontaz(initialSelections.montaz);
+    }
+    if (initialSelections.zaklady && initialSelections.zaklady !== zaklady) {
+      setZaklady(initialSelections.zaklady);
+    }
+  }, [initialSelections.izolacia, initialSelections.montaz, initialSelections.zaklady]);
+
   // Notify parent of changes
   useEffect(() => {
     if (onSelectionChange) {
