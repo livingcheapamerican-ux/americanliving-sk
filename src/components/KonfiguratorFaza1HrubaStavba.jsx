@@ -231,13 +231,12 @@ export default function KonfiguratorFaza1HrubaStavba({
             </div>
 
             {/* 2. IZOLÁCIA (Pravý stĺpec) */}
-            {/* ZMENA: grid-cols-2 zabezpečí, že dlaždice budú v mriežke 2x2. Tým získajú šírku. */}
             <div className="p-4 border-2 border-cyan-200 rounded-2xl bg-cyan-50/30">
                <p className="text-xs font-bold text-cyan-800 mb-3 flex items-center gap-2">
                 <span className="w-5 h-5 bg-cyan-600 text-white rounded-full flex items-center justify-center text-[10px]">2</span>
                 {t('insulation')}
               </p>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                  <Tile 
                     selected={izolaciaNavysenie === "standard"} 
                     onClick={() => setIzolaciaNavysenie("standard")} 
