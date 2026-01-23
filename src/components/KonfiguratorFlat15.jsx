@@ -712,8 +712,14 @@ export default function KonfiguratorFlat15({
                   }}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
-                    if (selections.izolacia) setIzolaciaNavysenie(selections.izolacia.replace('izolacia_', ''));
-                    if (selections.zaklady) setZaklady(selections.zaklady.replace('zaklady_', ''));
+                    if (selections.izolacia) {
+                      const izolaciaValue = selections.izolacia.replace('izolacia_', '');
+                      setIzolaciaNavysenie(izolaciaValue === 'extra' ? 'ultra' : izolaciaValue === 'standardna' ? 'standard' : izolaciaValue);
+                    }
+                    if (selections.zaklady) {
+                      const zakladyValue = selections.zaklady.replace('zaklady_', '');
+                      setZaklady(zakladyValue === 'vruty' ? 'skrutky' : zakladyValue === 'bez' ? 'bez' : zakladyValue);
+                    }
                   }}
                 />
               </div>
