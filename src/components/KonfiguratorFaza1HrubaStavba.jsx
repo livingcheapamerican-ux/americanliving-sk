@@ -253,8 +253,21 @@ export default function KonfiguratorFaza1HrubaStavba({
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <Tile
+            icon={() => <span className="text-3xl">🔧</span>}
+            title="Bez montáže"
+            subtitle="Iba sada"
+            price={0}
+            isSelected={montaz === 'montaz_nie'}
+            onClick={() => setMontaz('montaz_nie')}
+            tooltip="Dom dodáme bez montáže - iba stavebný kit"
+            isAdmin={isAdmin}
+            onPriceUpdate={onPriceUpdate}
+            tileId="montaz_nie"
+            showTooltip={showTooltips}
+          />
+          <Tile
             icon={Home}
-            title="Montáž"
+            title="S montážou"
             subtitle="Hrubá stavba"
             price={getPrice('montaz_ano')}
             isSelected={montaz === 'montaz_ano'}
@@ -263,19 +276,6 @@ export default function KonfiguratorFaza1HrubaStavba({
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="montaz_ano"
-            showTooltip={showTooltips}
-          />
-          <Tile
-            icon={() => <span className="text-3xl">🔧</span>}
-            title="S montážou"
-            subtitle="Hrubá stavba"
-            price={0}
-            isSelected={montaz === 'montaz_nie'}
-            onClick={() => setMontaz('montaz_nie')}
-            tooltip="Dom dodáme bez montáže"
-            isAdmin={isAdmin}
-            onPriceUpdate={onPriceUpdate}
-            tileId="montaz_nie"
             showTooltip={showTooltips}
           />
         </div>
@@ -290,12 +290,12 @@ export default function KonfiguratorFaza1HrubaStavba({
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           <Tile
             icon={() => <span className="text-3xl">🧊</span>}
-            title="200mm"
-            subtitle="200mm/200mm"
+            title="Celoročná izolácia"
+            subtitle="150/200mm"
             price={0}
             isSelected={izolacia === 'izolacia_standardna'}
             onClick={() => setIzolacia('izolacia_standardna')}
-            tooltip="Štandardná izolácia 200mm"
+            tooltip="Štandardná celoročná izolácia 150/200mm"
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="izolacia_standardna"
@@ -303,12 +303,12 @@ export default function KonfiguratorFaza1HrubaStavba({
           />
           <Tile
             icon={() => <span className="text-3xl">🔥</span>}
-            title="250mm"
+            title="200mm"
             subtitle="200mm/250mm"
             price={getPrice('izolacia_zvysena')}
             isSelected={izolacia === 'izolacia_zvysena'}
             onClick={() => setIzolacia('izolacia_zvysena')}
-            tooltip="Zvýšená izolácia 250mm"
+            tooltip="Zvýšená izolácia 200mm steny, 250mm strecha"
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="izolacia_zvysena"
@@ -321,7 +321,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             price={getPrice('izolacia_premium')}
             isSelected={izolacia === 'izolacia_premium'}
             onClick={() => setIzolacia('izolacia_premium')}
-            tooltip="Premium izolácia 250/300mm pre A0"
+            tooltip="Premium izolácia 250mm steny, 300mm strecha pre A0"
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="izolacia_premium"
@@ -330,7 +330,7 @@ export default function KonfiguratorFaza1HrubaStavba({
           <Tile
             icon={() => <div className="flex items-center gap-1"><span className="text-2xl">🌟</span><span className="text-xs bg-green-500 text-white px-1 rounded">A0</span></div>}
             title="Extra izolácia"
-            subtitle="300mm/300mm"
+            subtitle="300mm"
             price={getPrice('izolacia_extra')}
             isSelected={izolacia === 'izolacia_extra'}
             onClick={() => setIzolacia('izolacia_extra')}
@@ -352,6 +352,19 @@ export default function KonfiguratorFaza1HrubaStavba({
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           <Tile
             icon={() => <span className="text-3xl">🏛️</span>}
+            title="Bez základov"
+            subtitle="Vlastné"
+            price={0}
+            isSelected={zaklady === 'zaklady_bez'}
+            onClick={() => setZaklady('zaklady_bez')}
+            tooltip="Bez základov - vlastné riešenie"
+            isAdmin={isAdmin}
+            onPriceUpdate={onPriceUpdate}
+            tileId="zaklady_bez"
+            showTooltip={showTooltips}
+          />
+          <Tile
+            icon={() => <span className="text-3xl">🔩</span>}
             title="Zemné skrutky / Pätky"
             subtitle="Zemné pätky"
             price={getPrice('zaklady_vruty')}
@@ -366,11 +379,11 @@ export default function KonfiguratorFaza1HrubaStavba({
           <Tile
             icon={() => <span className="text-3xl">🏗️</span>}
             title="Základová doska"
-            subtitle="Základové pásy"
+            subtitle="Základová"
             price={getPrice('zaklady_doska')}
             isSelected={zaklady === 'zaklady_doska'}
             onClick={() => setZaklady('zaklady_doska')}
-            tooltip="Klasická betónová doska"
+            tooltip="Klasická betónová základová doska"
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="zaklady_doska"
