@@ -510,6 +510,15 @@ export default function KonfiguratorFlatSmall({
 
   const handleSendQuoteFromFloating = async (contactData) => {
     try {
+      console.log('=== DEBUG FLAT SMALL SEND QUOTE ===');
+      console.log('contactData:', contactData);
+      console.log('dom:', dom);
+      console.log('selectedItems:', selectedItems);
+      console.log('totalPrice:', totalPrice);
+      console.log('montazHolodomu:', montazHolodomu);
+      console.log('izolaciaNavysenie:', izolaciaNavysenie);
+      console.log('zaklady:', zaklady);
+      
       const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
         dom_id: dom?.id,
         klient_meno: contactData.meno,
@@ -528,6 +537,8 @@ export default function KonfiguratorFlatSmall({
         predajNehnutelnosti, hladaniePozemku, financneSluzby,
         language: language
       });
+      
+      console.log('Response z backend funkcie:', response);
       return response;
     } catch (error) {
       console.error('Error in handleSendQuoteFromFloating:', error);
