@@ -800,6 +800,7 @@ export default function KonfiguratorFjord({
                   onPriceUpdate={handlePriceChange}
                   showTooltips={true}
                   initialSelections={initialSelectionsForFaza1}
+                  customPrices={customCeny}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
                     if (selections.izolacia) setIzolaciaNavysenie(selections.izolacia.replace('izolacia_', ''));
