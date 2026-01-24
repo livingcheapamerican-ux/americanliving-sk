@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, memo, useCallback } from "react";
+import { Helmet } from "react-helmet";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { debounce } from "lodash";
@@ -516,38 +517,21 @@ export default function Katalog() {
     };
   };
 
-  useEffect(() => {
-    document.title = metaTitle;
-    
-    const setMetaTag = (selector, attribute, attributeValue, content) => {
-      let tag = document.querySelector(selector);
-      if (!tag) {
-        tag = document.createElement('meta');
-        tag.setAttribute(attribute, attributeValue);
-        document.head.appendChild(tag);
-      }
-      tag.content = content;
-    };
-
-    setMetaTag('meta[name="description"]', 'name', 'description', metaDescription);
-    setMetaTag('meta[property="og:title"]', 'property', 'og:title', metaTitle);
-    setMetaTag('meta[property="og:description"]', 'property', 'og:description', metaDescription);
-    setMetaTag('meta[property="og:type"]', 'property', 'og:type', 'website');
-    setMetaTag('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary_large_image');
-    setMetaTag('meta[name="twitter:title"]', 'name', 'twitter:title', metaTitle);
-    setMetaTag('meta[name="twitter:description"]', 'name', 'twitter:description', metaDescription);
-
-    let schemaScript = document.querySelector('script[type="application/ld+json"]');
-    if (!schemaScript) {
-      schemaScript = document.createElement('script');
-      schemaScript.setAttribute('type', 'application/ld+json');
-      document.head.appendChild(schemaScript);
-    }
-    schemaScript.textContent = JSON.stringify(generateSchemaOrg());
-  }, [metaTitle, metaDescription]);
-
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden max-w-full">
+      <Helmet>
+        <title>{metaTitle}</title>
+        <meta name="description" content={metaDescription} />
+        <meta property="og:title" content={metaTitle} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={metaTitle} />
+        <meta name="twitter:description" content={metaDescription} />
+        <script type="application/ld+json">
+          {JSON.stringify(generateSchemaOrg())}
+        </script>
+      </Helmet>
       {/* Header */}
       <section className="bg-gradient-to-br from-red-900 via-red-800 to-red-700 py-3 sm:py-12">
         <div className="container mx-auto px-4">

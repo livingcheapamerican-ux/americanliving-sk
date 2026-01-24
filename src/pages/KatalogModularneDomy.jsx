@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { useNavigate, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import Katalog from "./Katalog";
@@ -13,31 +14,16 @@ export default function KatalogModularneDomy() {
     navigate(`${createPageUrl("Katalog")}?${params.toString()}`, { replace: true });
   }, []);
 
-  useEffect(() => {
-    document.title = "Modulárne domy - Katalóg | American Living";
-    
-    const setMetaTag = (selector, attribute, attributeValue, content) => {
-      let tag = document.querySelector(selector);
-      if (!tag) {
-        tag = document.createElement('meta');
-        tag.setAttribute(attribute, attributeValue);
-        document.head.appendChild(tag);
-      }
-      tag.content = content;
-    };
-
-    setMetaTag('meta[name="description"]', 'name', 'description', "Komplexný katalóg modulárnych domov. Flexibilné riešenia s možnosťou rozšírenia. Rýchla výstavba a energetická účinnosť. Ticab house a ďalší výrobcovia.");
-    setMetaTag('meta[property="og:title"]', 'property', 'og:title', "Modulárne domy - Katalóg | American Living");
-    setMetaTag('meta[property="og:description"]', 'property', 'og:description', "Katalóg modulárnych domov s možnosťou flexibilnej konfigurácie a rozšírenia.");
-
-    let canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (!canonicalLink) {
-      canonicalLink = document.createElement('link');
-      canonicalLink.rel = 'canonical';
-      document.head.appendChild(canonicalLink);
-    }
-    canonicalLink.href = `https://americanliving.sk${createPageUrl("Katalog")}?typ=modularny`;
-  }, []);
-
-  return <Katalog />;
+  return (
+    <>
+      <Helmet>
+        <title>Modulárne domy - Katalóg | American Living</title>
+        <meta name="description" content="Komplexný katalóg modulárnych domov. Flexibilné riešenia s možnosťou rozšírenia. Rýchla výstavba a energetická účinnosť. Ticab house a ďalší výrobcovia." />
+        <meta property="og:title" content="Modulárne domy - Katalóg | American Living" />
+        <meta property="og:description" content="Katalóg modulárnych domov s možnosťou flexibilnej konfigurácie a rozšírenia." />
+        <link rel="canonical" href={`https://americanliving.sk${createPageUrl("Katalog")}?typ=modularny`} />
+      </Helmet>
+      <Katalog />
+    </>
+  );
 }

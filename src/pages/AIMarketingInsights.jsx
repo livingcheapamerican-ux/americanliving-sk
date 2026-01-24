@@ -13,10 +13,13 @@ import {
   Settings,
   RefreshCw,
   Facebook,
+  Instagram,
   Search,
   Target,
   DollarSign,
+  Users,
   Eye,
+  MousePointer,
   BarChart3,
   Zap,
   Globe,
@@ -1504,7 +1507,7 @@ export default function AIMarketingInsights() {
                                 <div className="bg-blue-50 p-4 rounded-lg text-center">
                                   <div className="flex items-center justify-center gap-2 mb-2">
                                     <Facebook className="w-5 h-5 text-blue-600" />
-                                    <Sparkles className="w-5 h-5 text-pink-600" />
+                                    <Instagram className="w-5 h-5 text-pink-600" />
                                   </div>
                                   <p className="text-3xl font-bold text-blue-700">
                                     {insight.roi_predikcia.optimalne_rozdelenie_budgetu.facebook_percent}%
@@ -1620,7 +1623,7 @@ export default function AIMarketingInsights() {
                           <CardTitle className="flex items-center gap-2">
                             <div className="flex gap-1">
                               <Facebook className="w-5 h-5 text-blue-600" />
-                              <Sparkles className="w-5 h-5 text-pink-600" />
+                              <Instagram className="w-5 h-5 text-pink-600" />
                             </div>
                             Facebook & Instagram
                           </CardTitle>

@@ -174,6 +174,10 @@ export default function KonfiguratorFaza1HrubaStavba({
     if (dom?.konfigurator_ceny?.[itemId] !== undefined) {
       return dom.konfigurator_ceny[itemId];
     }
+    // Pre montáž check specific house prices
+    if (itemId === 'montaz_ano' && dom?.nazov && MONTAZ_CENY[dom.nazov] !== undefined) {
+      return MONTAZ_CENY[dom.nazov];
+    }
     return DEFAULT_PRICES[itemId] || 0;
   };
 
