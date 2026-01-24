@@ -205,8 +205,17 @@ export default function KonfiguratorNord({
   setDoprava: _setDoprava,
   showOnlySummary = false,
   showOnlyPhase = null,
-  typStavby = ""
+  typStavby = "",
+  setTypStavby
 }) {
+  // Lokálny stav pre typ stavby
+  const [localTypStavby, setLocalTypStavby] = useState(typStavby || "");
+  
+  // Sync lokálneho stavu s props
+  useEffect(() => {
+    if (setTypStavby) setTypStavby(localTypStavby);
+  }, [localTypStavby, setTypStavby]);
+
   // Vlastný izolátor stav pre Nord - nezávislý od rodičovského DetailDomu
   const [nordMontazHolodomu, setNordMontazHolodomu] = useState("nie");
   const [nordIzolaciaNavysenie, setNordIzolaciaNavysenie] = useState("standard");
@@ -758,12 +767,12 @@ export default function KonfiguratorNord({
               typStavby={localTypStavby}
               setTypStavby={setLocalTypStavby}
               onContinue={() => {}}
-              predajNehnutelnosti={predajNehnutelnosti}
-              setPredajNehnutelnosti={setPredajNehnutelnosti}
-              hladaniePozemku={hladaniePozemku}
-              setHladaniePozemku={setHladaniePozemku}
-              financneSluzby={financneSluzby}
-              setFinancneSluzby={setFinancneSluzby}
+              predajNehnutelnosti={_predajNehnutelnosti}
+              setPredajNehnutelnosti={_setPredajNehnutelnosti}
+              hladaniePozemku={_hladaniePozemku}
+              setHladaniePozemku={_setHladaniePozemku}
+              financneSluzby={_financneSluzby}
+              setFinancneSluzby={_setFinancneSluzby}
             />
           )}
 
