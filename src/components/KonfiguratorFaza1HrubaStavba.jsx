@@ -180,7 +180,7 @@ export default function KonfiguratorFaza1HrubaStavba({
   // Synchronizovať s externými zmenami (iba pri prvom mount alebo pri externej zmene)
   useEffect(() => {
     // Synchronizuj iba ak sa initialSelections zmenili zvonku (nie kvôli internej zmene)
-    if (prevInitialSelections.current !== initialSelections) {
+    if (JSON.stringify(prevInitialSelections.current) !== JSON.stringify(initialSelections)) {
       if (initialSelections.izolacia && initialSelections.izolacia !== izolacia) {
         setIzolacia(initialSelections.izolacia);
       }
@@ -192,7 +192,7 @@ export default function KonfiguratorFaza1HrubaStavba({
       }
       prevInitialSelections.current = initialSelections;
     }
-  }, [initialSelections]);
+  }, [initialSelections, izolacia, montaz, zaklady]);
 
   // Notify parent of changes
   useEffect(() => {
