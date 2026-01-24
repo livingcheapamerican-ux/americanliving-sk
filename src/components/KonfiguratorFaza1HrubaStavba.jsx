@@ -142,7 +142,7 @@ const DEFAULT_PRICES = {
   izolacia_zvysena: 5660,
   izolacia_premium: 9106,
   izolacia_extra: 5250,
-  zaklady_vruty: 7655,
+  zaklady_skrutky: 7655,
   zaklady_doska: 13000,
   zaklady_pasove: 11500,
 };
@@ -232,7 +232,7 @@ export default function KonfiguratorFaza1HrubaStavba({
         const price = getPrice(zaklady);
         totalPrice += price;
         const zakladyNames = {
-          zaklady_vruty: t('foundationsScrews'),
+          zaklady_skrutky: t('foundationsScrews'),
           zaklady_doska: t('foundationsSlab'),
           zaklady_pasove: t('foundationsStrip')
         };
@@ -374,13 +374,13 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={() => <span className="text-3xl">🔩</span>}
             title={t('foundationsScrews')}
             subtitle={t('foundationsGroundPilots')}
-            price={getPrice('zaklady_vruty')}
-            isSelected={zaklady === 'zaklady_vruty'}
-            onClick={() => setZaklady('zaklady_vruty')}
+            price={getPrice('zaklady_skrutky')}
+            isSelected={zaklady === 'zaklady_skrutky'}
+            onClick={() => setZaklady('zaklady_skrutky')}
             tooltip={t('foundationsScrewsTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
-            tileId="zaklady_vruty"
+            tileId="zaklady_skrutky"
             showTooltip={showTooltips}
           />
           <Tile
