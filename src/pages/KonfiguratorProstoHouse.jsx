@@ -91,6 +91,48 @@ export default function KonfiguratorProstoHouse() {
     return DEFAULT_CENNIK[key] ?? 0;
   };
 
+  const getMontazPrice = () => {
+    if (!dom?.zastavana_plocha) return 0;
+    const plocha = dom.zastavana_plocha;
+    
+    if (plocha <= 48) return getPrice('montaz_48') || 4614;
+    if (plocha <= 72) return getPrice('montaz_72') || 7524;
+    if (plocha <= 103) return getPrice('montaz_103') || 12073;
+    if (plocha <= 108) return getPrice('montaz_108') || 9664;
+    return getPrice('montaz_142') || 12091;
+  };
+
+  const getPriceNested = (category, subkey) => {
+    const fullKey = `${category}_${subkey}`;
+    
+    // Priority 1: flat key format
+    if (customCeny && customCeny[fullKey] !== undefined && customCeny[fullKey] > 0) {
+      return customCeny[fullKey];
+    }
+    
+    // Priority 2: nested object
+    if (customCeny && customCeny[category] && typeof customCeny[category] === 'object') {
+      if (customCeny[category][subkey] !== undefined && customCeny[category][subkey] > 0) {
+        return customCeny[category][subkey];
+      }
+    }
+    
+    // Priority 3: defaults (hardcoded because these aren't in DEFAULT_CENNIK)
+    const DEFAULTS = {
+      vstupne_dviere_kovove: 480,
+      vstupne_dviere_plastkovo_kovove: 440,
+      zaklady_skrutky: 3521,
+      zaklady_pasove: 9093,
+      zaklady_doska: 9633,
+      fasada_smrekovec: 960,
+      fasada_termicky_upravene_drevo: 1440,
+      fasada_kompozit: 2400,
+      okna_hlinikove: 1200
+    };
+    
+    return DEFAULTS[fullKey] ?? 0;
+  };
+
   const cennik = React.useMemo(() => ({
     izolacie: getPrice('izolacie'),
     elektroinst: getPrice('elektroinst'),
