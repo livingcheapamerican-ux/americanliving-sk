@@ -35,7 +35,9 @@ export default function KonfiguratorContactModal({
   bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, interierFinis,
   vnutornePodlahy, podlahovVykurovanie, interieroveDvere, inziniering,
   revizna, doprava,
-  predajNehnutelnosti, hladaniePozemku, financneSluzby
+  predajNehnutelnosti, hladaniePozemku, financneSluzby,
+  pergola,
+  typStavby
 }) {
   const [formData, setFormData] = useState({
     meno: "",
