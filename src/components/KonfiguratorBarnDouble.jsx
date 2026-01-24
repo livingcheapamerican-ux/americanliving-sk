@@ -208,7 +208,7 @@ export default function KonfiguratorBarnDouble({
     montaz: { nie: 0, ano: 9225 },
     predlzenie: { 0: 0, 1.2: 6600, 2.4: 13200, 3.6: 19800, 4.8: 26400 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 2700, premium: 5400, ultra: 10125 },
+    izolacia: { standard: 0, standardna: 0, zvysena: 2700, premium: 5400, ultra: 10125 },
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
