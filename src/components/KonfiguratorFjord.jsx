@@ -464,25 +464,25 @@ export default function KonfiguratorFjord({
     const dverePrice = vstupneDvere === "kovove" ? CENY?.dvere?.kovove || 0 : vstupneDvere === "plastove" ? CENY?.dvere?.plastove || 0 : 0;
     items.push({ name: dvereLabel, price: dverePrice, section: "holodom", selected: vstupneDvere !== "ziadne" });
     
-    if (stresneOkno > 0) items.push({ name: `${t('roofWindow')} (${stresneOkno}×)`, price: stresneOkno * CENY.stresneOkno, section: "holodom", selected: true });
-    if (bocneOknoFixne > 0) items.push({ name: `${t('fixedWindow')} (${bocneOknoFixne}×)`, price: bocneOknoFixne * CENY.bocneOknoFixne, section: "holodom", selected: true });
-    if (bocneOknoVyklopne90 > 0) items.push({ name: `${t('tiltWindow')} 90×205 (${bocneOknoVyklopne90}×)`, price: bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90, section: "holodom", selected: true });
-    if (bocneOknoVyklopne55 > 0) items.push({ name: `${t('tiltWindow')} 55×90 (${bocneOknoVyklopne55}×)`, price: bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55, section: "holodom", selected: true });
-    items.push({ name: t('lamination') + " - " + t('laminationAnthracite'), price: povrchokaOkien ? CENY.povrchokaOkien : 0, section: "holodom", selected: povrchokaOkien });
-    items.push({ name: t('tintedGlass') + " (Solar)", price: tonovaneSkla ? CENY.tonovaneSkla : 0, section: "holodom", selected: tonovaneSkla });
+    if (stresneOkno > 0) items.push({ name: `${t('roofWindow')} (${stresneOkno}×)`, price: stresneOkno * (CENY?.stresneOkno || 0), section: "holodom", selected: true });
+    if (bocneOknoFixne > 0) items.push({ name: `${t('fixedWindow')} (${bocneOknoFixne}×)`, price: bocneOknoFixne * (CENY?.bocneOknoFixne || 0), section: "holodom", selected: true });
+    if (bocneOknoVyklopne90 > 0) items.push({ name: `${t('tiltWindow')} 90×205 (${bocneOknoVyklopne90}×)`, price: bocneOknoVyklopne90 * (CENY?.bocneOknoVyklopne90 || 0), section: "holodom", selected: true });
+    if (bocneOknoVyklopne55 > 0) items.push({ name: `${t('tiltWindow')} 55×90 (${bocneOknoVyklopne55}×)`, price: bocneOknoVyklopne55 * (CENY?.bocneOknoVyklopne55 || 0), section: "holodom", selected: true });
+    items.push({ name: t('lamination') + " - " + t('laminationAnthracite'), price: povrchokaOkien ? CENY?.povrchokaOkien || 0 : 0, section: "holodom", selected: povrchokaOkien });
+    items.push({ name: t('tintedGlass') + " (Solar)", price: tonovaneSkla ? CENY?.tonovaneSkla || 0 : 0, section: "holodom", selected: tonovaneSkla });
     
     const fasadaLabel = vonkajsiaFasada === "suchana" ? t('facadeStucco') : vonkajsiaFasada === "standard" ? t('facadeWoodMetal') : t('facade');
-    const fasadaPrice = vonkajsiaFasada === "suchana" ? CENY.vonkajsiaFasada.suchana : 0;
+    const fasadaPrice = vonkajsiaFasada === "suchana" ? CENY?.vonkajsiaFasada?.suchana || 0 : 0;
     items.push({ name: fasadaLabel, price: fasadaPrice, section: "kluc", selected: !!vonkajsiaFasada });
 
-    items.push({ name: t('floors') + " - " + t('floorsLaminate'), price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
-    items.push({ name: t('floorHeatingFull'), price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
-    items.push({ name: `${t('interiorDoors')} (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere, section: "kluc", selected: interieroveDvere > 0 });
+    items.push({ name: t('floors') + " - " + t('floorsLaminate'), price: vnutornePodlahy ? CENY?.vnutornePodlahy || 0 : 0, section: "kluc", selected: vnutornePodlahy });
+    items.push({ name: t('floorHeatingFull'), price: podlahovVykurovanie ? CENY?.podlahovVykurovanie || 0 : 0, section: "kluc", selected: podlahovVykurovanie });
+    items.push({ name: `${t('interiorDoors')} (${interieroveDvere}×)`, price: interieroveDvere * (CENY?.interieroveDvere || 0), section: "kluc", selected: interieroveDvere > 0 });
     
-    items.push({ name: t('engineeringFull'), price: inziniering ? CENY.inziniering : 0, section: "docs", selected: inziniering });
-    items.push({ name: t('projectA0Full'), price: projektA0 ? CENY.projektA0 : 0, section: "docs", selected: projektA0 });
-    items.push({ name: t('revisionFull'), price: revizna ? CENY.revizna : 0, section: "docs", selected: revizna });
-    items.push({ name: t('transport'), price: doprava ? CENY.doprava : 0, section: "docs", selected: doprava });
+    items.push({ name: t('engineeringFull'), price: inziniering ? CENY?.inziniering || 0 : 0, section: "docs", selected: inziniering });
+    items.push({ name: t('projectA0Full'), price: projektA0 ? CENY?.projektA0 || 0 : 0, section: "docs", selected: projektA0 });
+    items.push({ name: t('revisionFull'), price: revizna ? CENY?.revizna || 0 : 0, section: "docs", selected: revizna });
+    items.push({ name: t('transport'), price: doprava ? CENY?.doprava || 0 : 0, section: "docs", selected: doprava });
     
     return items;
   }, [predajNehnutelnosti, hladaniePozemku, financneSluzby,
