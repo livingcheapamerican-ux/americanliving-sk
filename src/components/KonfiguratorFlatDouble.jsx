@@ -221,7 +221,7 @@ export default function KonfiguratorFlatDouble({
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 17970 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, standardna: 0, zvysena: 5800, premium: 11600, ultra: 10125, extra300: 10125 },
+    izolacia: { standard: 0, zvysena: 5800, premium: 11600, ultra: 21750, extra300: 21750 },
     elektroinstalacia: 7400,
     vodaKanalizacia: 2380,
     sanitaKomplet: 1169,
@@ -267,8 +267,7 @@ export default function KonfiguratorFlatDouble({
       plastove: getPrice('dvere_plastove') ?? DEFAULT_CENY.dvere.plastove 
     },
     izolacia: { 
-      standard: 0,
-      standardna: 0,
+      standard: 0, 
       zvysena: getPrice('izolacia_zvysena') ?? DEFAULT_CENY.izolacia.zvysena, 
       premium: getPrice('izolacia_premium') ?? DEFAULT_CENY.izolacia.premium,
       ultra: getPrice('izolacia_300mm') ?? DEFAULT_CENY.izolacia.ultra 
@@ -397,8 +396,8 @@ export default function KonfiguratorFlatDouble({
     // Hrubá stavba
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
-    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Extra 300mm" : izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
-    const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
+    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra 300mm" : izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
+    const izolaciaPrice = izolaciaNavysenie === "ultra" ? 21750 : izolaciaNavysenie === "premium" ? 11600 : izolaciaNavysenie === "zvysena" ? 5800 : 0;
     items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" });
     
     const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? t('foundationsScrews') : t('foundationsLabel');
@@ -760,14 +759,14 @@ export default function KonfiguratorFlatDouble({
                   showTooltips={true}
                   initialSelections={{
                     montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie === 'zvysena' ? 'zvysena' : izolaciaNavysenie === 'premium' ? 'premium' : '300mm'}`,
+                    izolacia: `izolacia_${izolaciaNavysenie === 'standard' ? 'standardna' : izolaciaNavysenie === 'zvysena' ? 'zvysena' : izolaciaNavysenie === 'premium' ? 'premium' : '300mm'}`,
                     zaklady: `zaklady_${zaklady}`
                   }}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
                     if (selections.izolacia) {
                       const izolaciaValue = selections.izolacia.replace('izolacia_', '');
-                      setIzolaciaNavysenie(izolaciaValue === '300mm' ? 'ultra' : izolaciaValue === 'standardna' ? 'standard' : izolaciaValue);
+                      setIzolaciaNavysenie(izolaciaValue === 'extra' || izolaciaValue === '300mm' ? 'ultra' : izolaciaValue === 'standardna' ? 'standard' : izolaciaValue);
                     }
                     if (selections.zaklady) {
                       const zakladyValue = selections.zaklady.replace('zaklady_', '');
