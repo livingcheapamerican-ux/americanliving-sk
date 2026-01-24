@@ -898,7 +898,74 @@ export default function DetailDomu() {
               />
             )}
 
-            {/* Nord nemá wizard */}
+            {/* Konfigurátor pre Nord - ľavá strana */}
+            {isProstoHouse && dom.nazov?.includes("Nord") && (
+              <KonfiguratorNord
+                dom={dom}
+                onConfigChange={(config) => setProstoKonfiguracia(config)}
+                predajNehnutelnosti={predajNehnutelnosti}
+                setPredajNehnutelnosti={setPredajNehnutelnosti}
+                hladaniePozemku={hladaniePozemku}
+                setHladaniePozemku={setHladaniePozemku}
+                financneSluzby={financneSluzby}
+                setFinancneSluzby={setFinancneSluzby}
+                montazHolodomu={montazHolodomu}
+                setMontazHolodomu={setMontazHolodomu}
+                izolaciaNavysenie={izolaciaNavysenie}
+                setIzolaciaNavysenie={setIzolaciaNavysenie}
+                zaklady={zaklady}
+                setZaklady={setZaklady}
+                vstupneDvere={vstupneDvere}
+                setVstupneDvere={setVstupneDvere}
+                elektroinstalacia={elektroinstalacia}
+                setElektroinstalacia={setElektroinstalacia}
+                vodaKanalizacia={vodaKanalizacia}
+                setVodaKanalizacia={setVodaKanalizacia}
+                sanitaKomplet={sanitaKomplet}
+                setSanitaKomplet={setSanitaKomplet}
+                bojler={bojler}
+                setBojler={setBojler}
+                tepelneCerpadlo={tepelneCerpadlo}
+                setTepelneCerpadlo={setTepelneCerpadlo}
+                rekuperacia={rekuperacia}
+                setRekuperacia={setRekuperacia}
+                pripojkaSiete={pripojkaSiete}
+                setPripojkaSiete={setPripojkaSiete}
+                stresneOkno={stresneOkno}
+                setStresneOkno={setStresneOkno}
+                bocneOknoFixne={bocneOknoFixne}
+                setBocneOknoFixne={setBocneOknoFixne}
+                bocneOknoVyklopne90={bocneOknoVyklopne90}
+                setBocneOknoVyklopne90={setBocneOknoVyklopne90}
+                bocneOknoVyklopne55={bocneOknoVyklopne55}
+                setBocneOknoVyklopne55={setBocneOknoVyklopne55}
+                povrchokaOkien={povrchokaOkien}
+                setPovrchokaOkien={setPovrchokaOkien}
+                tonovaneSkla={tonovaneSkla}
+                setTonovaneSkla={setTonovaneSkla}
+                vonkajsiaFasada={vonkajsiaFasada}
+                setVonkajsiaFasada={setVonkajsiaFasada}
+                interierFinis={interierFinis}
+                setInterierFinis={setInterierFinis}
+                vnutornePodlahy={vnutornePodlahy}
+                setVnutornePodlahy={setVnutornePodlahy}
+                podlahovVykurovanie={podlahovVykurovanie}
+                setPodlahovVykurovanie={setPodlahovVykurovanie}
+                interieroveDvere={interieroveDvere}
+                setInterieroveDvere={setInterieroveDvere}
+                pergola={pergola}
+                setPergola={setPergola}
+                inziniering={inziniering}
+                setInziniering={setInziniering}
+                projektA0={projektA0}
+                setProjektA0={setProjektA0}
+                revizna={revizna}
+                setRevizna={setRevizna}
+                doprava={doprava}
+                setDoprava={setDoprava}
+                showOnlySummary={false}
+              />
+            )}
 
             {/* Konfigurátor pre Fjord - Wizard výber typu */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
