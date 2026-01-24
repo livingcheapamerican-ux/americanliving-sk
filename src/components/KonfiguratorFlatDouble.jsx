@@ -270,7 +270,7 @@ export default function KonfiguratorFlatDouble({
       standard: 0, 
       zvysena: getPrice('izolacia_zvysena') ?? DEFAULT_CENY.izolacia.zvysena, 
       premium: getPrice('izolacia_premium') ?? DEFAULT_CENY.izolacia.premium,
-      ultra: getPrice('izolacia_extra') ?? DEFAULT_CENY.izolacia.ultra 
+      ultra: getPrice('izolacia_300mm') ?? DEFAULT_CENY.izolacia.ultra 
     },
     elektroinstalacia: getPrice('elektroinstalacia') ?? DEFAULT_CENY.elektroinstalacia,
     vodaKanalizacia: getPrice('vodaKanalizacia') ?? DEFAULT_CENY.vodaKanalizacia,
