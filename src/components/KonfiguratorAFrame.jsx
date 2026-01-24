@@ -399,7 +399,7 @@ export default function KonfiguratorAFrame({
     }
     
     const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra 300mm" : izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
-    const izolaciaPrice = izolaciaNavysenie === "ultra" ? 6000 : izolaciaNavysenie === "premium" ? 3200 : izolaciaNavysenie === "zvysena" ? 1600 : 0;
+    const izolaciaPrice = CENY.izolacia[izolaciaNavysenie] || 0;
     items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" });
     
     const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? "Pilóty/Pätky" : t('foundationsLabel');
