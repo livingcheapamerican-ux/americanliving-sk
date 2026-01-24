@@ -213,17 +213,17 @@ export default function KonfiguratorFlat15({
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
     izolacia: { standard: 0, zvysena: 4400, premium: 8800, ultra: 16500 },
     elektroinstalacia: 5200,
-    vodaKanalizacia: 2150,
+    vodaKanalizacia: 2100,
     sanitaKomplet: 1169,
     bojler: 246,
-    tepelneCerpadlo: 2500,
+    tepelneCerpadlo: 2200,
     rekuperacia: 4428,
     zaklady: { bez: 0, skrutky: 6348, doska: 14000, pasove: 12000 },
     pripojkaSiete: 1500,
     inziniering: 2590,
     projektA0: 3500,
     interierFinis: { ziadne: 0, drevo: 12700, sadrokarton: 14545 },
-    vonkajsiaFasada: { standard: 0, suchana: 10395 },
+    vonkajsiaFasada: { standard: 0, suchana: 10384 },
     povrchokaOkien: 2400,
     vnutornePodlahy: 2640,
     podlahovVykurovanie: 4316,
@@ -756,7 +756,7 @@ export default function KonfiguratorFlat15({
                       {t('interiorFinish')} ({t('selectOne')})
                     </p>
                     <EditableTile selected={interierFinis === "ziadne"} onClick={() => setInterierFinis("ziadne")} title={t('interiorNone')} subtitle={t('shellConstruction')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
-                    <EditableTile selected={interierFinis === "drevo"} onClick={() => setInterierFinis("drevo")} title={t('interiorWood')} subtitle={t('woodCladding')} price={`+ ${CENY.interierFinis.drevo.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interierFinis_drevo" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={interierFinis === "drevo"} onClick={() => setInterierFinis("drevo")} title={t('interiorWood')} subtitle={t('woodCladding')} price={`+ 12700 €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interierFinis_drevo" onPriceChange={handlePriceChange} />
                     <EditableTile selected={interierFinis === "sadrokarton"} onClick={() => setInterierFinis("sadrokarton")} title={t('interiorDrywall')} subtitle={t('plaster')} price={`+ ${CENY.interierFinis.sadrokarton.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interierFinis_sadrokarton" onPriceChange={handlePriceChange} />
                   </div>
 
@@ -765,8 +765,8 @@ export default function KonfiguratorFlat15({
                       <span className="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
                       {t('electrical')} & {t('water')}
                     </p>
-                    <EditableTile selected={elektroinstalacia} onClick={() => setElektroinstalacia(!elektroinstalacia)} title={t('electrical')} subtitle={t('wiring')} price={`+ ${CENY.elektroinstalacia.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="elektroinstalacia" onPriceChange={handlePriceChange} />
-                    <EditableTile selected={vodaKanalizacia} onClick={() => setVodaKanalizacia(!vodaKanalizacia)} title={t('water')} subtitle={t('wiring')} price={`+ ${CENY.vodaKanalizacia.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vodaKanalizacia" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={elektroinstalacia} onClick={() => setElektroinstalacia(!elektroinstalacia)} title={t('electrical')} subtitle={t('wiring')} price={`+ 5200 €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="elektroinstalacia" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={vodaKanalizacia} onClick={() => setVodaKanalizacia(!vodaKanalizacia)} title={t('water')} subtitle={t('wiring')} price={`+ 2100 €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vodaKanalizacia" onPriceChange={handlePriceChange} />
                     <EditableTile selected={sanitaKomplet} onClick={() => setSanitaKomplet(!sanitaKomplet)} title={t('sanitary')} subtitle={t('complete')} price={`+ ${CENY.sanitaKomplet.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="sanitaKomplet" onPriceChange={handlePriceChange} />
                     <EditableTile selected={bojler} onClick={() => setBojler(!bojler)} title={t('boiler')} subtitle={t('boilerElectric')} price={`+ ${CENY.bojler.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="bojler" onPriceChange={handlePriceChange} />
                   </div>
@@ -776,12 +776,12 @@ export default function KonfiguratorFlat15({
                       <span className="w-5 h-5 sm:w-6 sm:h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">3</span>
                       {t('heatPump')} & {t('recuperation')} (A0)
                     </p>
-                    <EditableTile selected={tepelneCerpadlo} onClick={() => setTepelneCerpadlo(!tepelneCerpadlo)} title={t('heatPump')} subtitle={t('units5')} price={`+ ${CENY.tepelneCerpadlo.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="tepelneCerpadlo" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={tepelneCerpadlo} onClick={() => setTepelneCerpadlo(!tepelneCerpadlo)} title={t('heatPump')} subtitle={t('units5')} price={`+ 2200 €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="tepelneCerpadlo" onPriceChange={handlePriceChange} />
                     <EditableTile selected={rekuperacia} onClick={() => setRekuperacia(!rekuperacia)} title={t('recuperation')} subtitle={t('units5')} price={`+ ${CENY.rekuperacia.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="rekuperacia" onPriceChange={handlePriceChange} />
                   </div>
 
                   <EditableTile selected={pripojkaSiete} onClick={() => setPripojkaSiete(!pripojkaSiete)} title={t('gridConnection')} subtitle={t('connection')} price={`+ ${CENY.pripojkaSiete.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="pripojkaSiete" onPriceChange={handlePriceChange} />
-                  <EditableTile selected={povrchokaOkien} onClick={() => setPovrchokaOkien(!povrchokaOkien)} title={t('lamination')} subtitle={t('laminationAnthracite')} price={`+ ${CENY.povrchokaOkien.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="povrchokaOkien" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={povrchokaOkien} onClick={() => setPovrchokaOkien(!povrchokaOkien)} title={t('lamination')} subtitle={t('laminationAnthracite')} price={`+ 2400 €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="povrchokaOkien" onPriceChange={handlePriceChange} />
                   <EditableTile selected={tonovaneSkla} onClick={() => setTonovaneSkla(!tonovaneSkla)} title={t('tintedGlass')} subtitle={t('solarGlass')} price={`+ ${CENY.tonovaneSkla.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="tonovaneSkla" onPriceChange={handlePriceChange} />
 
                 </div>
@@ -880,7 +880,7 @@ export default function KonfiguratorFlat15({
                     <EditableTile selected={vonkajsiaFasada === "suchana"} onClick={() => setVonkajsiaFasada("suchana")} title={t('facadeStucco')} subtitle={t('whitePlaster')} price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vonkajsiaFasada_suchana" onPriceChange={handlePriceChange} />
                   </div>
 
-                  <EditableTile selected={vnutornePodlahy} onClick={() => setVnutornePodlahy(!vnutornePodlahy)} title={t('floors')} subtitle={t('floorsLaminate')} price={`+ ${CENY.vnutornePodlahy.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vnutornePodlahy" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={vnutornePodlahy} onClick={() => setVnutornePodlahy(!vnutornePodlahy)} title={t('floors')} subtitle={t('floorsLaminate')} price={`+ 2640 €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vnutornePodlahy" onPriceChange={handlePriceChange} />
                   <EditableTile selected={podlahovVykurovanie} onClick={() => setPodlahovVykurovanie(!podlahovVykurovanie)} title={t('floorHeating')} subtitle={t('wifiThermostat')} price={`+ ${CENY.podlahovVykurovanie.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="podlahovVykurovanie" onPriceChange={handlePriceChange} />
                   <EditableTile selected={pergola} onClick={() => setPergola(!pergola)} title={t('pergola')} subtitle={t('terrace')} price={`+ ${CENY.pergola.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="pergola" onPriceChange={handlePriceChange} />
 
