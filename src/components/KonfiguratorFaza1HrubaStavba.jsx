@@ -163,14 +163,14 @@ export default function KonfiguratorFaza1HrubaStavba({
 
   // Get prices - dynamically from dom or defaults
   const getPrice = (itemId) => {
-    // Priority 1: Check dom's custom prices (direktne z domu)
+    // Priority 1: Check customPrices prop (state-driven, always up-to-date)
+    if (customPrices && customPrices[itemId] !== undefined && customPrices[itemId] !== null && customPrices[itemId] > 0) {
+      return customPrices[itemId];
+    }
+    // Priority 2: Check dom's custom prices (direktne z domu)
     const customPrice = dom?.konfigurator_custom_ceny_prosto_house?.[itemId];
     if (customPrice !== undefined && customPrice !== null && customPrice > 0) {
       return customPrice;
-    }
-    // Priority 2: Check customPrices prop (fallback)
-    if (customPrices && customPrices[itemId] !== undefined && customPrices[itemId] !== null && customPrices[itemId] > 0) {
-      return customPrices[itemId];
     }
     // Priority 3: Check konfigurator_ceny (fallback)
     if (dom?.konfigurator_ceny?.[itemId] !== undefined && dom.konfigurator_ceny[itemId] > 0) {
