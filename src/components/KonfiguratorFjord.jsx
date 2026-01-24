@@ -279,7 +279,7 @@ export default function KonfiguratorFjord({
       return (custom !== undefined && custom !== null && custom > 0) ? custom : defaultVal;
     };
 
-    return {
+    const result = {
       montaz: { nie: 0, ano: get('montaz_ano', DEFAULT_CENY.montaz.ano) },
       dvere: { 
         ziadne: 0, 
@@ -326,8 +326,9 @@ export default function KonfiguratorFjord({
       bocneOknoFixne: get('bocneOknoFixne', DEFAULT_CENY.bocneOknoFixne),
       bocneOknoVyklopne90: get('bocneOknoVyklopne90', DEFAULT_CENY.bocneOknoVyklopne90),
       bocneOknoVyklopne55: get('bocneOknoVyklopne55', DEFAULT_CENY.bocneOknoVyklopne55)
-    };
-  }, [customCeny]);
+      };
+      return result;
+      }, [customCeny, DEFAULT_CENY]);
 
   // Funkcia na uloženie zmenenej ceny do databázy
   const handlePriceChange = async (priceKey, newPrice) => {
