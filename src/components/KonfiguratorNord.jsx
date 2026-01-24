@@ -251,16 +251,16 @@ export default function KonfiguratorNord({
 
   // DEFAULT ceny (Nord - z databázy)
   const DEFAULT_CENY = {
-            montaz: { nie: 0, ano: 17970 },
+            montaz: { nie: 0, ano: 14850 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 3200, premium: 6400, extra300: 21750, ultra: 12000 },
+    izolacia: { standard: 0, zvysena: 3200, premium: 6400, extra300: 12000, ultra: 12000 },
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
     bojler: 246,
     tepelneCerpadlo: 1600,
     rekuperacia: 3321,
-    zaklady: { bez: 0, skrutky: 8141, doska: 13000, pasove: 11500 },
+    zaklady: { bez: 0, skrutky: 7655, doska: 13000, pasove: 11500 },
     pripojkaSiete: 1501,
     inziniering: 2590,
     projektA0: 3500,
