@@ -784,9 +784,9 @@ export default function KonfiguratorNord({
                         <span className="w-4 h-4 sm:w-5 sm:h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">1</span>
                         {t('interiorFinish')} ({t('selectOne')})
                       </p>
-                      <EditableTile selected={interierFinis === "ziadne"} onClick={() => setInterierFinis("ziadne")} title={t('interiorNone')} subtitle={t('shellConstruction')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
-                      <EditableTile selected={interierFinis === "drevo"} onClick={() => setInterierFinis("drevo")} title={t('interiorWood')} subtitle={t('woodCladding')} price={`+ ${CENY.interierFinis.drevo.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interier_drevo" onPriceChange={handlePriceChange} />
-                      <EditableTile selected={interierFinis === "sadrokarton"} onClick={() => setInterierFinis("sadrokarton")} title={t('interiorDrywall')} subtitle={t('plaster')} price={`+ ${CENY.interierFinis.sadrokarton.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interier_sadrokarton" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={nordInterierFinis === "ziadne"} onClick={() => setNordInterierFinis("ziadne")} title={t('interiorNone')} subtitle={t('shellConstruction')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
+                      <EditableTile selected={nordInterierFinis === "drevo"} onClick={() => setNordInterierFinis("drevo")} title={t('interiorWood')} subtitle={t('woodCladding')} price={`+ ${CENY.interierFinis.drevo.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interier_drevo" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={nordInterierFinis === "sadrokarton"} onClick={() => setNordInterierFinis("sadrokarton")} title={t('interiorDrywall')} subtitle={t('plaster')} price={`+ ${CENY.interierFinis.sadrokarton.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interier_sadrokarton" onPriceChange={handlePriceChange} />
                     </div>
 
                     <div className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-yellow-500 rounded-xl bg-yellow-100/70 shadow-xl">
@@ -794,10 +794,10 @@ export default function KonfiguratorNord({
                         <span className="w-4 h-4 sm:w-5 sm:h-5 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">2</span>
                         {t('electrical')} & {t('water')}
                       </p>
-                      <EditableTile selected={elektroinstalacia} onClick={() => setElektroinstalacia(!elektroinstalacia)} title={t('electrical')} subtitle={t('wiring')} price={`+ ${CENY.elektroinstalacia.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="elektroinstalacia" onPriceChange={handlePriceChange} />
-                      <EditableTile selected={vodaKanalizacia} onClick={() => setVodaKanalizacia(!vodaKanalizacia)} title={t('water')} subtitle={t('wiring')} price={`+ ${CENY.vodaKanalizacia.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vodaKanalizacia" onPriceChange={handlePriceChange} />
-                      <EditableTile selected={sanitaKomplet} onClick={() => setSanitaKomplet(!sanitaKomplet)} title={t('sanitary')} subtitle={t('complete')} price={`+ ${CENY.sanitaKomplet.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="sanitaKomplet" onPriceChange={handlePriceChange} />
-                      <EditableTile selected={bojler} onClick={() => setBojler(!bojler)} title={t('boiler')} subtitle={t('boilerElectric')} price={`+ ${CENY.bojler.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="bojler" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={nordElektroinstalacia} onClick={() => setNordElektroinstalacia(!nordElektroinstalacia)} title={t('electrical')} subtitle={t('wiring')} price={`+ ${CENY.elektroinstalacia.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="elektroinstalacia" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={nordVodaKanalizacia} onClick={() => setNordVodaKanalizacia(!nordVodaKanalizacia)} title={t('water')} subtitle={t('wiring')} price={`+ ${CENY.vodaKanalizacia.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vodaKanalizacia" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={nordSanitaKomplet} onClick={() => setNordSanitaKomplet(!nordSanitaKomplet)} title={t('sanitary')} subtitle={t('complete')} price={`+ ${CENY.sanitaKomplet.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="sanitaKomplet" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={nordBojler} onClick={() => setNordBojler(!nordBojler)} title={t('boiler')} subtitle={t('boilerElectric')} price={`+ ${CENY.bojler.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="bojler" onPriceChange={handlePriceChange} />
                     </div>
 
                     <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-green-600 rounded-xl bg-green-100/70 shadow-xl">
@@ -805,13 +805,13 @@ export default function KonfiguratorNord({
                         <span className="w-4 h-4 sm:w-5 sm:h-5 bg-green-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">3</span>
                         {t('heatPump')} & {t('recuperation')} (A0)
                       </p>
-                      <EditableTile selected={tepelneCerpadlo} onClick={() => setTepelneCerpadlo(!tepelneCerpadlo)} title={t('heatPump')} subtitle="1× vonkajšia / 4× vnútorná" price={`+ ${CENY.tepelneCerpadlo.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="tepelneCerpadlo" onPriceChange={handlePriceChange} />
-                      <EditableTile selected={rekuperacia} onClick={() => setRekuperacia(!rekuperacia)} title={t('recuperation')} subtitle="5× systém" price={`+ ${CENY.rekuperacia.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="rekuperacia" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={nordTepelneCerpadlo} onClick={() => setNordTepelneCerpadlo(!nordTepelneCerpadlo)} title={t('heatPump')} subtitle="1× vonkajšia / 4× vnútorná" price={`+ ${CENY.tepelneCerpadlo.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="tepelneCerpadlo" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={nordRekuperacia} onClick={() => setNordRekuperacia(!nordRekuperacia)} title={t('recuperation')} subtitle="5× systém" price={`+ ${CENY.rekuperacia.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="rekuperacia" onPriceChange={handlePriceChange} />
                     </div>
 
-                    <EditableTile selected={pripojkaSiete} onClick={() => setPripojkaSiete(!pripojkaSiete)} title={t('gridConnection')} subtitle={t('connection')} price={`+ ${CENY.pripojkaSiete.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="pripojkaSiete" onPriceChange={handlePriceChange} />
-                    <EditableTile selected={povrchokaOkien} onClick={() => setPovrchokaOkien(!povrchokaOkien)} title={t('lamination')} subtitle={t('laminationAnthracite')} price={`+ ${CENY.povrchokaOkien.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="laminacia_okien" onPriceChange={handlePriceChange} />
-                    <EditableTile selected={tonovaneSkla} onClick={() => setTonovaneSkla(!tonovaneSkla)} title={t('tintedGlass')} subtitle={t('solarGlass')} price={`+ ${CENY.tonovaneSkla.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="tonovanie_skla" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={nordPripojkaSiete} onClick={() => setNordPripojkaSiete(!nordPripojkaSiete)} title={t('gridConnection')} subtitle={t('connection')} price={`+ ${CENY.pripojkaSiete.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="pripojkaSiete" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={nordPovrchokaOkien} onClick={() => setNordPovrchokaOkien(!nordPovrchokaOkien)} title={t('lamination')} subtitle={t('laminationAnthracite')} price={`+ ${CENY.povrchokaOkien.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="laminacia_okien" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={nordTonovaneSkla} onClick={() => setNordTonovaneSkla(!nordTonovaneSkla)} title={t('tintedGlass')} subtitle={t('solarGlass')} price={`+ ${CENY.tonovaneSkla.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="tonovanie_skla" onPriceChange={handlePriceChange} />
                   </div>
 
                   <div className="mt-2 sm:mt-3 p-2 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
@@ -866,17 +866,17 @@ export default function KonfiguratorNord({
                 <SectionHeader icon={Key} title={t('phase3')} subtitle={t('phase3Subtitle')} color="from-emerald-600 to-teal-600" step="3" />
                 <div className="p-2 sm:p-3 bg-gradient-to-b from-emerald-50/50 to-white">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
-                    <div className={`col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] rounded-xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
-                      <p className={`col-span-2 text-[9px] sm:text-[10px] font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
-                        <span className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
-                        {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
+                    <div className={`col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] rounded-xl shadow-xl ${!nordVonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
+                      <p className={`col-span-2 text-[9px] sm:text-[10px] font-bold -mb-1 flex items-center gap-1 ${!nordVonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
+                        <span className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold text-white ${!nordVonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
+                        {t('facade')} ({t('selectOne')}) {!nordVonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
                       </p>
-                      <EditableTile selected={vonkajsiaFasada === "standard"} onClick={() => setVonkajsiaFasada("standard")} title={t('facadeWoodMetal')} subtitle={t('facadeStandard')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
-                      <EditableTile selected={vonkajsiaFasada === "suchana"} onClick={() => setVonkajsiaFasada("suchana")} title={t('facadeStucco')} subtitle={t('whitePlaster')} price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="fasada_omietka" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={nordVonkajsiaFasada === "standard"} onClick={() => setNordVonkajsiaFasada("standard")} title={t('facadeWoodMetal')} subtitle={t('facadeStandard')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
+                      <EditableTile selected={nordVonkajsiaFasada === "suchana"} onClick={() => setNordVonkajsiaFasada("suchana")} title={t('facadeStucco')} subtitle={t('whitePlaster')} price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="fasada_omietka" onPriceChange={handlePriceChange} />
                     </div>
 
-                    <EditableTile selected={vnutornePodlahy} onClick={() => setVnutornePodlahy(!vnutornePodlahy)} title={t('floors')} subtitle={t('floorsLaminate')} price={`+ ${CENY.vnutornePodlahy.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="podlahy_laminat" onPriceChange={handlePriceChange} />
-                    <EditableTile selected={podlahovVykurovanie} onClick={() => setPodlahovVykurovanie(!podlahovVykurovanie)} title={t('floorHeating')} subtitle={t('wifiThermostat')} price={`+ ${CENY.podlahovVykurovanie.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="podlahove_kurenie" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={nordVnutornePodlahy} onClick={() => setNordVnutornePodlahy(!nordVnutornePodlahy)} title={t('floors')} subtitle={t('floorsLaminate')} price={`+ ${CENY.vnutornePodlahy.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="podlahy_laminat" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={nordPodlahovVykurovanie} onClick={() => setNordPodlahovVykurovanie(!nordPodlahovVykurovanie)} title={t('floorHeating')} subtitle={t('wifiThermostat')} price={`+ ${CENY.podlahovVykurovanie.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="podlahove_kurenie" onPriceChange={handlePriceChange} />
                   </div>
 
                   <div className="mt-2 sm:mt-3 p-2 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
@@ -906,10 +906,10 @@ export default function KonfiguratorNord({
                 <SectionHeader icon={FileText} title={t('phase4')} subtitle={t('phase4Subtitle')} color="from-purple-600 to-violet-600" step="4" />
                 <div className="p-2 sm:p-3 bg-gradient-to-b from-purple-50/50 to-white">
                   <div className="grid grid-cols-2 gap-2 sm:gap-3 max-w-2xl">
-                    <EditableTile selected={inziniering} onClick={() => setInziniering(!inziniering)} title={t('engineering')} subtitle={t('buildingPermit')} price={`+ ${CENY.inziniering.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="inziniering" onPriceChange={handlePriceChange} />
-                    <EditableTile selected={projektA0} onClick={() => setProjektA0(!projektA0)} title={t('projectA0')} subtitle={t('certification')} price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="projektA0" onPriceChange={handlePriceChange} />
-                    <EditableTile selected={revizna} onClick={() => setRevizna(!revizna)} title={t('revision')} subtitle={t('documentation')} price={`+ ${CENY.revizna.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="revizia" onPriceChange={handlePriceChange} />
-                    <EditableTile selected={doprava} onClick={() => setDoprava(!doprava)} title={t('transport')} subtitle={t('transportFull')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
+                    <EditableTile selected={nordInziniering} onClick={() => setNordInziniering(!nordInziniering)} title={t('engineering')} subtitle={t('buildingPermit')} price={`+ ${CENY.inziniering.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="inziniering" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={nordProjektA0} onClick={() => setNordProjektA0(!nordProjektA0)} title={t('projectA0')} subtitle={t('certification')} price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="projektA0" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={nordRevizna} onClick={() => setNordRevizna(!nordRevizna)} title={t('revision')} subtitle={t('documentation')} price={`+ ${CENY.revizna.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="revizia" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={nordDoprava} onClick={() => setNordDoprava(!nordDoprava)} title={t('transport')} subtitle={t('transportFull')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
                   </div>
 
                   {a0Odporucania && (
@@ -931,7 +931,7 @@ export default function KonfiguratorNord({
                     </div>
                   )}
 
-                  {projektA0 && !a0Odporucania && (
+                  {nordProjektA0 && !a0Odporucania && (
                     <div className="mt-2 sm:mt-3 p-2 sm:p-3 bg-green-50 border-2 border-green-300 rounded-lg">
                       <div className="flex items-center gap-1.5">
                         <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
@@ -986,11 +986,11 @@ export default function KonfiguratorNord({
             dom={dom}
             totalPrice={totalPrice}
             selectedItems={selectedItems}
-            vonkajsiaFasada={vonkajsiaFasada}
-            izolaciaNavysenie={izolaciaNavysenie}
-            tepelneCerpadlo={tepelneCerpadlo}
-            rekuperacia={rekuperacia}
-            projektA0={projektA0}
+            vonkajsiaFasada={nordVonkajsiaFasada}
+            izolaciaNavysenie={nordIzolaciaNavysenie}
+            tepelneCerpadlo={nordTepelneCerpadlo}
+            rekuperacia={nordRekuperacia}
+            projektA0={nordProjektA0}
           />
         </>
       )}
