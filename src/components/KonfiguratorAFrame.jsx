@@ -726,7 +726,11 @@ export default function KonfiguratorAFrame({
                   }}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) setMontazHolodomu(selections.montaz.replace('montaz_', ''));
-                    if (selections.izolacia) setIzolaciaNavysenie(selections.izolacia.replace('izolacia_', ''));
+                    if (selections.izolacia) {
+                      let izolaciaValue = selections.izolacia.replace('izolacia_', '');
+                      if (izolaciaValue === 'extra') izolaciaValue = 'ultra';
+                      setIzolaciaNavysenie(izolaciaValue);
+                    }
                     if (selections.zaklady) setZaklady(selections.zaklady.replace('zaklady_', ''));
                   }}
                 />
