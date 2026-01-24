@@ -751,7 +751,7 @@ export default function KonfiguratorFlatSmall({
                       <span className="w-4 h-4 sm:w-5 sm:h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">1</span>
                       {t('interiorFinish')} ({t('selectOne')})
                     </p>
-                    <EditableTile selected={izolaciaNavysenie === "ultra"} onClick={() => setIzolaciaNavysenie("ultra")} title="Extra izolácia" subtitle="300mm" price={`+ ${CENY.izolacia.ultra.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="izolacia_extra" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={interierFinis === "ziadne"} onClick={() => setInterierFinis("ziadne")} title={t('interiorNone')} subtitle={t('shellConstruction')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
                     <EditableTile selected={interierFinis === "drevo"} onClick={() => setInterierFinis("drevo")} title={t('interiorWood')} subtitle={t('woodCladding')} price={`+ ${CENY.interierFinis.drevo.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interier_drevo" onPriceChange={handlePriceChange} />
                     <EditableTile selected={interierFinis === "sadrokarton"} onClick={() => setInterierFinis("sadrokarton")} title={t('interiorDrywall')} subtitle={t('plaster')} price={`+ ${CENY.interierFinis.sadrokarton.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interier_sadrokarton" onPriceChange={handlePriceChange} />
                   </div>
