@@ -766,7 +766,7 @@ export default function KonfiguratorFlatDouble({
                     if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
                     if (selections.izolacia) {
                       const izolaciaValue = selections.izolacia.replace('izolacia_', '');
-                      setIzolaciaNavysenie(izolaciaValue === 'extra' ? 'ultra' : izolaciaValue === 'standardna' ? 'standard' : izolaciaValue);
+                      setIzolaciaNavysenie(izolaciaValue === 'extra' || izolaciaValue === '300mm' ? 'ultra' : izolaciaValue === 'standardna' ? 'standard' : izolaciaValue);
                     }
                     if (selections.zaklady) {
                       const zakladyValue = selections.zaklady.replace('zaklady_', '');
