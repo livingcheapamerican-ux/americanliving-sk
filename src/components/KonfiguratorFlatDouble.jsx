@@ -221,7 +221,7 @@ export default function KonfiguratorFlatDouble({
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 17970 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 5800, premium: 11600, ultra: 21750 },
+    izolacia: { standard: 0, zvysena: 5800, premium: 11600, ultra: 21750, extra300: 21750 },
     elektroinstalacia: 7800,
     vodaKanalizacia: 2450,
     sanitaKomplet: 1169,
