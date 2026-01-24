@@ -707,7 +707,7 @@ export default function KonfiguratorFlat15({
                   showTooltips={true}
                   initialSelections={{
                     montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: `izolacia_${izolaciaNavysenie}`,
+                    izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_300mm' : `izolacia_${izolaciaNavysenie}`,
                     zaklady: `zaklady_${zaklady}`
                   }}
                   onSelectionChange={(selections) => {
