@@ -727,8 +727,7 @@ export default function KonfiguratorFlatSmall({
                       }
                       if (selections.zaklady) {
                         const zakladyValue = selections.zaklady.replace('zaklady_', '');
-                        // Map 'vruty' to 'skrutky' for consistency
-                        setZaklady(zakladyValue === 'vruty' ? 'skrutky' : zakladyValue === 'bez' ? 'bez' : zakladyValue);
+                        setZaklady(zakladyValue === 'bez' ? 'bez' : zakladyValue);
                       }
                     }}
                   />
