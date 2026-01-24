@@ -224,6 +224,7 @@ export default function KonfiguratorFaza1HrubaStavba({
           izolacia_standardna: t('insulationStandard'),
           izolacia_zvysena: t('insulationEnhanced'),
           izolacia_premium: t('insulationPremium'),
+          izolacia_300mm: t('insulationExtra') + ' 300mm',
           izolacia_extra: t('insulationExtra')
         };
         selections.items.push({
@@ -313,7 +314,7 @@ export default function KonfiguratorFaza1HrubaStavba({
           <span className="w-6 h-6 sm:w-7 sm:h-7 bg-cyan-500 text-white rounded-full flex items-center justify-center text-sm font-extrabold">2</span>
           {t('insulation')} ({t('selectOne')})
         </p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           <Tile
             icon={() => <span className="text-3xl">🧊</span>}
             title={t('insulationStandard')}
@@ -351,6 +352,19 @@ export default function KonfiguratorFaza1HrubaStavba({
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
             tileId="izolacia_premium"
+            showTooltip={showTooltips}
+          />
+          <Tile
+            icon={() => <div className="flex items-center gap-1"><span className="text-2xl">❄️</span><span className="text-xs bg-green-500 text-white px-1 rounded">A0</span></div>}
+            title={t('insulationExtra')}
+            subtitle="300mm"
+            price={getPrice('izolacia_300mm')}
+            isSelected={izolacia === 'izolacia_300mm'}
+            onClick={() => setIzolacia('izolacia_300mm')}
+            tooltip={t('insulationExtraTooltip')}
+            isAdmin={isAdmin}
+            onPriceUpdate={onPriceUpdate}
+            tileId="izolacia_300mm"
             showTooltip={showTooltips}
           />
         </div>

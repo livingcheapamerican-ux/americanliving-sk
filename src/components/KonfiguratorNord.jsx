@@ -253,7 +253,7 @@ export default function KonfiguratorNord({
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 14850 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 3200, premium: 6400, extra300: 9600, ultra: 12000 },
+    izolacia: { standard: 0, zvysena: 3200, premium: 6400, extra300: 12000, ultra: 12000 },
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
@@ -409,7 +409,7 @@ export default function KonfiguratorNord({
     
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
-    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra 300mm" : izolaciaNavysenie === "extra300" ? "300mm" : izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
+    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra 300mm" : izolaciaNavysenie === "extra300" ? "Extra izolácia 300mm" : izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
     const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "extra300" ? CENY.izolacia.extra300 : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
     items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" && izolaciaNavysenie !== "standardna" });
     
