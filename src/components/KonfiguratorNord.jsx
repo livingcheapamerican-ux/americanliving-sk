@@ -607,19 +607,19 @@ export default function KonfiguratorNord({
 
   // Auto-set A0 items when "rodinny_dom" is selected
   useEffect(() => {
-    if (localTypStavby === "rodinny_dom") {
+    if (typStavby === "rodinny_dom") {
       setNordIzolaciaNavysenie("premium");
       setNordTepelneCerpadlo(true);
       setNordRekuperacia(true);
       setNordProjektA0(true);
       setNordZaklady("pasove");
-    } else if (localTypStavby === "rekreacna") {
+    } else if (typStavby === "rekreacna") {
       setNordIzolaciaNavysenie("standard");
       setNordTepelneCerpadlo(false);
       setNordRekuperacia(false);
       setNordProjektA0(false);
     }
-  }, [localTypStavby]);
+  }, [typStavby]);
 
   // Ak showOnlySummary, zobrazujeme len súmarný panel (ako Fjord)
   if (showOnlySummary) {
@@ -755,8 +755,8 @@ export default function KonfiguratorNord({
 
           {showServices && (
             <TypStavbySelector
-              typStavby={localTypStavby}
-              setTypStavby={setLocalTypStavby}
+              typStavby={typStavby}
+              setTypStavby={setTypStavby}
               onContinue={() => {}}
               predajNehnutelnosti={predajNehnutelnosti}
               setPredajNehnutelnosti={setPredajNehnutelnosti}
