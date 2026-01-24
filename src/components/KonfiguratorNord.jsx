@@ -409,8 +409,8 @@ export default function KonfiguratorNord({
     
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
-    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra 300mm" : izolaciaNavysenie === "extra300" ? "Extra izolácia 300mm" : izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
-    const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "extra300" ? CENY.izolacia.extra300 : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
+    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra 300mm" : izolaciaNavysenie === "extra300" ? "Extra izolácia 300mm" : izolaciaNavysenie === "premium" ? "Premium 250/300mm" : izolaciaNavysenie === "zvysena" ? "Zvýšená 200/250mm" : "Štandardná 150/200mm";
+     const izolaciaPrice = CENY.izolacia[izolaciaNavysenie] || 0;
     items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" && izolaciaNavysenie !== "standardna" });
     
     const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? t('foundationsScrews') : t('foundationsLabel');
@@ -786,7 +786,8 @@ export default function KonfiguratorNord({
                       setMontazHolodomu(montazValue);
                     }
                     if (selections.izolacia) {
-                      const izolaciaValue = selections.izolacia === 'izolacia_300mm' ? 'extra300' : selections.izolacia.replace('izolacia_', '');
+                      let izolaciaValue = selections.izolacia.replace('izolacia_', '');
+                      if (izolaciaValue === '300mm') izolaciaValue = 'extra300';
                       setIzolaciaNavysenie(izolaciaValue);
                     }
                     if (selections.zaklady) {
