@@ -461,7 +461,7 @@ export default function KonfiguratorNord({
       zaklady, pripojkaSiete, inziniering, projektA0, interierFinis,
       vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, podlahovVykurovanie,
       pergola, interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE]);
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE, CENY]);
 
   const a0Odporucania = useMemo(() => {
     if (!projektA0) return null;
@@ -543,7 +543,7 @@ export default function KonfiguratorNord({
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
-      interieroveDvere, pergola, inziniering, projektA0, revizna, doprava, t, BASE_PRICE]);
+      interieroveDvere, pergola, inziniering, projektA0, revizna, doprava, t, BASE_PRICE, CENY]);
 
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
