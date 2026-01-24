@@ -334,14 +334,18 @@ export default function KonfiguratorContactModal({
                     </ul>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <Package className="w-5 h-5 text-blue-400" />
-                    <div>
-                      <p className="text-blue-400 font-bold text-sm">{t('recreationalBuilding')}</p>
-                      <p className="text-blue-300/80 text-xs">{t('cottageOrGardenHouse')}</p>
-                    </div>
-                  </div>
-                )}
+                   <div className="flex items-center gap-2">
+                     <Package className="w-5 h-5 text-blue-400" />
+                     <div>
+                       <p className="text-blue-400 font-bold text-sm">
+                         {typStavby === 'rodinny_dom' ? t('familyHouse') : t('recreationalBuilding')}
+                       </p>
+                       <p className="text-blue-300/80 text-xs">
+                         {typStavby === 'rodinny_dom' ? t('completeCalculation') : t('cottageOrGardenHouse')}
+                       </p>
+                     </div>
+                   </div>
+                 )}
               </div>
 
               {/* Celková cena */}
