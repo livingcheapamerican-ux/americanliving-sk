@@ -325,7 +325,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={() => <span className="text-3xl">🧊</span>}
             title={t('insulationStandard')}
             subtitle="150/200mm"
-            price={t('included')}
+            price={0}
             isPriced={false}
             isSelected={izolacia === 'izolacia_standardna'}
             onClick={() => setIzolacia('izolacia_standardna')}
@@ -339,7 +339,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={() => <span className="text-3xl">🔥</span>}
             title={t('insulationEnhanced200mmShort')}
             subtitle="200mm/250mm"
-            price={`+ ${getPrice('izolacia_zvysena').toLocaleString('sk-SK')} €`}
+            price={getPrice('izolacia_zvysena')}
             isPriced={true}
             isSelected={izolacia === 'izolacia_zvysena'}
             onClick={() => setIzolacia('izolacia_zvysena')}
@@ -353,7 +353,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={() => <div className="flex items-center gap-1"><span className="text-2xl">⭐</span><span className="text-xs bg-green-500 text-white px-1 rounded">A0</span></div>}
             title={t('insulationPremium250mmShort')}
             subtitle="250mm/300mm"
-            price={`+ ${getPrice('izolacia_premium').toLocaleString('sk-SK')} €`}
+            price={getPrice('izolacia_premium')}
             isPriced={true}
             isSelected={izolacia === 'izolacia_premium'}
             onClick={() => setIzolacia('izolacia_premium')}
@@ -368,7 +368,7 @@ export default function KonfiguratorFaza1HrubaStavba({
               icon={() => <div className="flex items-center gap-1"><span className="text-2xl">❄️</span><span className="text-xs bg-green-500 text-white px-1 rounded">A0</span></div>}
               title={t('insulationExtra')}
               subtitle="300mm"
-              price={`+ ${getPrice('izolacia_extra').toLocaleString('sk-SK')} €`}
+              price={getPrice('izolacia_extra')}
               isPriced={true}
               isSelected={izolacia === 'izolacia_extra' || izolacia === 'izolacia_300mm'}
               onClick={() => setIzolacia('izolacia_extra')}
