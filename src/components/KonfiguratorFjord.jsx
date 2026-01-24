@@ -441,15 +441,15 @@ export default function KonfiguratorFjord({
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY?.montaz?.ano || 0 : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
     const izolaciaLabel = izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
-    const izolaciaPrice = izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
+    const izolaciaPrice = izolaciaNavysenie === "premium" ? CENY?.izolacia?.premium || 0 : izolaciaNavysenie === "zvysena" ? CENY?.izolacia?.zvysena || 0 : 0;
     items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standardna" && izolaciaNavysenie !== "standard" });
     
     const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? t('foundationsScrews') : t('foundationsLabel');
-    const zakladyPrice = zaklady === "pasove" ? CENY.zaklady.pasove : zaklady === "doska" ? CENY.zaklady.doska : zaklady === "skrutky" ? CENY.zaklady.skrutky : 0;
+    const zakladyPrice = zaklady === "pasove" ? CENY?.zaklady?.pasove || 0 : zaklady === "doska" ? CENY?.zaklady?.doska || 0 : zaklady === "skrutky" ? CENY?.zaklady?.skrutky || 0 : 0;
     items.push({ name: zakladyLabel, price: zakladyPrice, section: "hruba", selected: zaklady !== "bez" });
     
     const interierLabel = interierFinis === "drevo" ? t('interiorWood') : interierFinis === "sadrokarton" ? t('interiorDrywall') : t('interiorFinish');
-    const interierPrice = interierFinis === "drevo" ? CENY.interierFinis.drevo : interierFinis === "sadrokarton" ? CENY.interierFinis.sadrokarton : 0;
+    const interierPrice = interierFinis === "drevo" ? CENY?.interierFinis?.drevo || 0 : interierFinis === "sadrokarton" ? CENY?.interierFinis?.sadrokarton || 0 : 0;
     items.push({ name: interierLabel, price: interierPrice, section: "holodom", selected: interierFinis !== "ziadne" });
 
     items.push({ name: t('electricalFull'), price: elektroinstalacia ? CENY.elektroinstalacia : 0, section: "holodom", selected: elektroinstalacia });
