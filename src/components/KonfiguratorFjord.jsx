@@ -452,16 +452,16 @@ export default function KonfiguratorFjord({
     const interierPrice = interierFinis === "drevo" ? CENY?.interierFinis?.drevo || 0 : interierFinis === "sadrokarton" ? CENY?.interierFinis?.sadrokarton || 0 : 0;
     items.push({ name: interierLabel, price: interierPrice, section: "holodom", selected: interierFinis !== "ziadne" });
 
-    items.push({ name: t('electricalFull'), price: elektroinstalacia ? CENY.elektroinstalacia : 0, section: "holodom", selected: elektroinstalacia });
-    items.push({ name: t('waterFull'), price: vodaKanalizacia ? CENY.vodaKanalizacia : 0, section: "holodom", selected: vodaKanalizacia });
-    items.push({ name: t('sanitaryFull'), price: sanitaKomplet ? CENY.sanitaKomplet : 0, section: "holodom", selected: sanitaKomplet });
-    items.push({ name: t('boiler'), price: bojler ? CENY.bojler : 0, section: "holodom", selected: bojler });
-    items.push({ name: t('heatPumpFull'), price: tepelneCerpadlo ? CENY.tepelneCerpadlo : 0, section: "holodom", selected: tepelneCerpadlo });
-    items.push({ name: t('recuperation'), price: rekuperacia ? CENY.rekuperacia : 0, section: "holodom", selected: rekuperacia });
-    items.push({ name: t('gridConnectionFull'), price: pripojkaSiete ? CENY.pripojkaSiete : 0, section: "holodom", selected: pripojkaSiete });
+    items.push({ name: t('electricalFull'), price: elektroinstalacia ? CENY?.elektroinstalacia || 0 : 0, section: "holodom", selected: elektroinstalacia });
+    items.push({ name: t('waterFull'), price: vodaKanalizacia ? CENY?.vodaKanalizacia || 0 : 0, section: "holodom", selected: vodaKanalizacia });
+    items.push({ name: t('sanitaryFull'), price: sanitaKomplet ? CENY?.sanitaKomplet || 0 : 0, section: "holodom", selected: sanitaKomplet });
+    items.push({ name: t('boiler'), price: bojler ? CENY?.bojler || 0 : 0, section: "holodom", selected: bojler });
+    items.push({ name: t('heatPumpFull'), price: tepelneCerpadlo ? CENY?.tepelneCerpadlo || 0 : 0, section: "holodom", selected: tepelneCerpadlo });
+    items.push({ name: t('recuperation'), price: rekuperacia ? CENY?.rekuperacia || 0 : 0, section: "holodom", selected: rekuperacia });
+    items.push({ name: t('gridConnectionFull'), price: pripojkaSiete ? CENY?.pripojkaSiete || 0 : 0, section: "holodom", selected: pripojkaSiete });
     
     const dvereLabel = vstupneDvere === "kovove" ? t('doorMetal') : vstupneDvere === "plastove" ? t('doorPlastic') : t('doorStandard');
-    const dverePrice = vstupneDvere === "kovove" ? CENY.dvere.kovove : vstupneDvere === "plastove" ? CENY.dvere.plastove : 0;
+    const dverePrice = vstupneDvere === "kovove" ? CENY?.dvere?.kovove || 0 : vstupneDvere === "plastove" ? CENY?.dvere?.plastove || 0 : 0;
     items.push({ name: dvereLabel, price: dverePrice, section: "holodom", selected: vstupneDvere !== "ziadne" });
     
     if (stresneOkno > 0) items.push({ name: `${t('roofWindow')} (${stresneOkno}×)`, price: stresneOkno * CENY.stresneOkno, section: "holodom", selected: true });
