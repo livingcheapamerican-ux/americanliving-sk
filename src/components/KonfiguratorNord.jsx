@@ -143,66 +143,66 @@ export default function KonfiguratorNord({
   dom,
   onReset: parentOnReset,
   onConfigChange,
-  predajNehnutelnosti: _predajNehnutelnosti, 
-  setPredajNehnutelnosti: _setPredajNehnutelnosti,
-  hladaniePozemku: _hladaniePozemku, 
-  setHladaniePozemku: _setHladaniePozemku,
-  financneSluzby: _financneSluzby, 
-  setFinancneSluzby: _setFinancneSluzby,
-  montazHolodomu: _montazHolodomu, 
-  setMontazHolodomu: _setMontazHolodomu,
-  izolaciaNavysenie: _izolaciaNavysenie, 
-  setIzolaciaNavysenie: _setIzolaciaNavysenie,
-  zaklady: _zaklady, 
-  setZaklady: _setZaklady,
-  vstupneDvere: _vstupneDvere, 
-  setVstupneDvere: _setVstupneDvere,
-  elektroinstalacia: _elektroinstalacia, 
-  setElektroinstalacia: _setElektroinstalacia,
-  vodaKanalizacia: _vodaKanalizacia, 
-  setVodaKanalizacia: _setVodaKanalizacia,
-  sanitaKomplet: _sanitaKomplet, 
-  setSanitaKomplet: _setSanitaKomplet,
-  bojler: _bojler, 
-  setBojler: _setBojler,
-  tepelneCerpadlo: _tepelneCerpadlo, 
-  setTepelneCerpadlo: _setTepelneCerpadlo,
-  rekuperacia: _rekuperacia, 
-  setRekuperacia: _setRekuperacia,
-  pripojkaSiete: _pripojkaSiete, 
-  setPripojkaSiete: _setPripojkaSiete,
-  stresneOkno: _stresneOkno, 
-  setStresneOkno: _setStresneOkno,
-  bocneOknoFixne: _bocneOknoFixne, 
-  setBocneOknoFixne: _setBocneOknoFixne,
-  bocneOknoVyklopne90: _bocneOknoVyklopne90, 
-  setBocneOknoVyklopne90: _setBocneOknoVyklopne90,
-  bocneOknoVyklopne55: _bocneOknoVyklopne55, 
-  setBocneOknoVyklopne55: _setBocneOknoVyklopne55,
-  povrchokaOkien: _povrchokaOkien, 
-  setPovrchokaOkien: _setPovrchokaOkien,
-  tonovaneSkla: _tonovaneSkla, 
-  setTonovaneSkla: _setTonovaneSkla,
-  vonkajsiaFasada: _vonkajsiaFasada, 
-  setVonkajsiaFasada: _setVonkajsiaFasada,
-  interierFinis: _interierFinis, 
-  setInterierFinis: _setInterierFinis,
-  vnutornePodlahy: _vnutornePodlahy, 
-  setVnutornePodlahy: _setVnutornePodlahy,
-  podlahovVykurovanie: _podlahovVykurovanie, 
-  setPodlahovVykurovanie: _setPodlahovVykurovanie,
-  interieroveDvere: _interieroveDvere, 
-  setInterieroveDvere: _setInterieroveDvere,
-  pergola: _pergola, 
-  setPergola: _setPergola,
-  inziniering: _inziniering, 
-  setInziniering: _setInziniering,
-  projektA0: _projektA0, 
-  setProjektA0: _setProjektA0,
-  revizna: _revizna, 
-  setRevizna: _setRevizna,
-  doprava: _doprava, 
-  setDoprava: _setDoprava,
+  predajNehnutelnosti, 
+  setPredajNehnutelnosti,
+  hladaniePozemku, 
+  setHladaniePozemku,
+  financneSluzby, 
+  setFinancneSluzby,
+  montazHolodomu, 
+  setMontazHolodomu,
+  izolaciaNavysenie, 
+  setIzolaciaNavysenie,
+  zaklady, 
+  setZaklady,
+  vstupneDvere, 
+  setVstupneDvere,
+  elektroinstalacia, 
+  setElektroinstalacia,
+  vodaKanalizacia, 
+  setVodaKanalizacia,
+  sanitaKomplet, 
+  setSanitaKomplet,
+  bojler, 
+  setBojler,
+  tepelneCerpadlo, 
+  setTepelneCerpadlo,
+  rekuperacia, 
+  setRekuperacia,
+  pripojkaSiete, 
+  setPripojkaSiete,
+  stresneOkno, 
+  setStresneOkno,
+  bocneOknoFixne, 
+  setBocneOknoFixne,
+  bocneOknoVyklopne90, 
+  setBocneOknoVyklopne90,
+  bocneOknoVyklopne55, 
+  setBocneOknoVyklopne55,
+  povrchokaOkien, 
+  setPovrchokaOkien,
+  tonovaneSkla, 
+  setTonovaneSkla,
+  vonkajsiaFasada, 
+  setVonkajsiaFasada,
+  interierFinis, 
+  setInterierFinis,
+  vnutornePodlahy, 
+  setVnutornePodlahy,
+  podlahovVykurovanie, 
+  setPodlahovVykurovanie,
+  interieroveDvere, 
+  setInterieroveDvere,
+  pergola, 
+  setPergola,
+  inziniering, 
+  setInziniering,
+  projektA0, 
+  setProjektA0,
+  revizna, 
+  setRevizna,
+  doprava, 
+  setDoprava,
   showOnlySummary = false,
   showOnlyPhase = null,
   typStavby = "",
@@ -215,35 +215,6 @@ export default function KonfiguratorNord({
   useEffect(() => {
     if (setTypStavby) setTypStavby(localTypStavby);
   }, [localTypStavby, setTypStavby]);
-
-  // Vlastný izolátor stav pre Nord - nezávislý od rodičovského DetailDomu
-  const [nordMontazHolodomu, setNordMontazHolodomu] = useState("nie");
-  const [nordIzolaciaNavysenie, setNordIzolaciaNavysenie] = useState("standard");
-  const [nordZaklady, setNordZaklady] = useState("bez");
-  const [nordVstupneDvere, setNordVstupneDvere] = useState("ziadne");
-  const [nordElektroinstalacia, setNordElektroinstalacia] = useState(false);
-  const [nordVodaKanalizacia, setNordVodaKanalizacia] = useState(false);
-  const [nordSanitaKomplet, setNordSanitaKomplet] = useState(false);
-  const [nordBojler, setNordBojler] = useState(false);
-  const [nordTepelneCerpadlo, setNordTepelneCerpadlo] = useState(false);
-  const [nordRekuperacia, setNordRekuperacia] = useState(false);
-  const [nordPripojkaSiete, setNordPripojkaSiete] = useState(false);
-  const [nordStresneOkno, setNordStresneOkno] = useState(0);
-  const [nordBocneOknoFixne, setNordBocneOknoFixne] = useState(0);
-  const [nordBocneOknoVyklopne90, setNordBocneOknoVyklopne90] = useState(0);
-  const [nordBocneOknoVyklopne55, setNordBocneOknoVyklopne55] = useState(0);
-  const [nordPovrchokaOkien, setNordPovrchokaOkien] = useState(false);
-  const [nordTonovaneSkla, setNordTonovaneSkla] = useState(false);
-  const [nordVonkajsiaFasada, setNordVonkajsiaFasada] = useState("standard");
-  const [nordInterierFinis, setNordInterierFinis] = useState("ziadne");
-  const [nordVnutornePodlahy, setNordVnutornePodlahy] = useState(false);
-  const [nordPodlahovVykurovanie, setNordPodlahovVykurovanie] = useState(false);
-  const [nordInterieroveDvere, setNordInterieroveDvere] = useState(0);
-  const [nordPergola, setNordPergola] = useState(false);
-  const [nordInziniering, setNordInziniering] = useState(false);
-  const [nordProjektA0, setNordProjektA0] = useState(false);
-  const [nordRevizna, setNordRevizna] = useState(true);
-  const [nordDoprava, setNordDoprava] = useState(false);
 
   const BASE_PRICE = dom?.zakladna_cena || 0;
   const { t, language } = useLanguage();
@@ -374,55 +345,55 @@ export default function KonfiguratorNord({
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
     
-    total += CENY.montaz[nordMontazHolodomu];
-    total += CENY.dvere[nordVstupneDvere];
-    total += CENY.izolacia[nordIzolaciaNavysenie];
+    total += CENY.montaz[montazHolodomu];
+    total += CENY.dvere[vstupneDvere];
+    total += CENY.izolacia[izolaciaNavysenie];
     
-    if (nordElektroinstalacia) total += CENY.elektroinstalacia;
-    if (nordVodaKanalizacia) total += CENY.vodaKanalizacia;
-    if (nordSanitaKomplet) total += CENY.sanitaKomplet;
-    if (nordBojler) total += CENY.bojler;
-    if (nordTepelneCerpadlo) total += CENY.tepelneCerpadlo;
-    if (nordRekuperacia) total += CENY.rekuperacia;
+    if (elektroinstalacia) total += CENY.elektroinstalacia;
+    if (vodaKanalizacia) total += CENY.vodaKanalizacia;
+    if (sanitaKomplet) total += CENY.sanitaKomplet;
+    if (bojler) total += CENY.bojler;
+    if (tepelneCerpadlo) total += CENY.tepelneCerpadlo;
+    if (rekuperacia) total += CENY.rekuperacia;
     
-    total += CENY.zaklady[nordZaklady];
-    if (nordPripojkaSiete) total += CENY.pripojkaSiete;
+    total += CENY.zaklady[zaklady];
+    if (pripojkaSiete) total += CENY.pripojkaSiete;
     
-    if (nordInziniering) total += CENY.inziniering;
-    if (nordProjektA0) total += CENY.projektA0;
+    if (inziniering) total += CENY.inziniering;
+    if (projektA0) total += CENY.projektA0;
     
-    total += CENY.interierFinis[nordInterierFinis] || 0;
-    total += CENY.vonkajsiaFasada[nordVonkajsiaFasada] || 0;
-    if (nordPovrchokaOkien) total += CENY.povrchokaOkien;
-    if (nordVnutornePodlahy) total += CENY.vnutornePodlahy;
-    if (nordPodlahovVykurovanie) total += CENY.podlahovVykurovanie;
-    if (nordPergola) total += CENY.pergola;
-    total += nordInterieroveDvere * CENY.interieroveDvere;
-    if (nordTonovaneSkla) total += CENY.tonovaneSkla;
-    if (nordDoprava) total += CENY.doprava;
-    if (nordRevizna) total += CENY.revizna;
+    total += CENY.interierFinis[interierFinis] || 0;
+    total += CENY.vonkajsiaFasada[vonkajsiaFasada] || 0;
+    if (povrchokaOkien) total += CENY.povrchokaOkien;
+    if (vnutornePodlahy) total += CENY.vnutornePodlahy;
+    if (podlahovVykurovanie) total += CENY.podlahovVykurovanie;
+    if (pergola) total += CENY.pergola;
+    total += interieroveDvere * CENY.interieroveDvere;
+    if (tonovaneSkla) total += CENY.tonovaneSkla;
+    if (doprava) total += CENY.doprava;
+    if (revizna) total += CENY.revizna;
     
-    total += nordStresneOkno * CENY.stresneOkno;
-    total += nordBocneOknoFixne * CENY.bocneOknoFixne;
-    total += nordBocneOknoVyklopne90 * CENY.bocneOknoVyklopne90;
-    total += nordBocneOknoVyklopne55 * CENY.bocneOknoVyklopne55;
+    total += stresneOkno * CENY.stresneOkno;
+    total += bocneOknoFixne * CENY.bocneOknoFixne;
+    total += bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90;
+    total += bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55;
     
     return total;
-  }, [nordMontazHolodomu, nordVstupneDvere, nordIzolaciaNavysenie, nordElektroinstalacia, 
-      nordVodaKanalizacia, nordSanitaKomplet, nordBojler, nordTepelneCerpadlo, nordRekuperacia,
-      nordZaklady, nordPripojkaSiete, nordInziniering, nordProjektA0, nordInterierFinis,
-      nordVonkajsiaFasada, nordPovrchokaOkien, nordVnutornePodlahy, nordPodlahovVykurovanie,
-      nordPergola, nordInterieroveDvere, nordTonovaneSkla, nordDoprava, nordRevizna,
-      nordStresneOkno, nordBocneOknoFixne, nordBocneOknoVyklopne90, nordBocneOknoVyklopne55, BASE_PRICE, CENY]);
+  }, [montazHolodomu, vstupneDvere, izolaciaNavysenie, elektroinstalacia, 
+      vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia,
+      zaklady, pripojkaSiete, inziniering, projektA0, interierFinis,
+      vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, podlahovVykurovanie,
+      pergola, interieroveDvere, tonovaneSkla, doprava, revizna,
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE, CENY]);
 
   const a0Odporucania = useMemo(() => {
-    if (!nordProjektA0) return null;
+    if (!projektA0) return null;
     const chybajuce = [];
-    if (nordIzolaciaNavysenie !== "premium" && nordIzolaciaNavysenie !== "ultra") chybajuce.push("Premium izolácia (250mm steny, 300mm strecha)");
-    if (!nordTepelneCerpadlo) chybajuce.push("Tepelné čerpadlo / Klimatizácia");
-    if (!nordRekuperacia) chybajuce.push("Rekuperácia");
+    if (izolaciaNavysenie !== "premium" && izolaciaNavysenie !== "ultra") chybajuce.push("Premium izolácia (250mm steny, 300mm strecha)");
+    if (!tepelneCerpadlo) chybajuce.push("Tepelné čerpadlo / Klimatizácia");
+    if (!rekuperacia) chybajuce.push("Rekuperácia");
     return chybajuce.length > 0 ? chybajuce : null;
-  }, [nordProjektA0, nordIzolaciaNavysenie, nordTepelneCerpadlo, nordRekuperacia]);
+  }, [projektA0, izolaciaNavysenie, tepelneCerpadlo, rekuperacia]);
 
   const formatPrice = (price) => price.toLocaleString('sk-SK') + " €";
 
@@ -430,72 +401,72 @@ export default function KonfiguratorNord({
     const items = [];
     items.push({ name: t('basePriceKit'), price: BASE_PRICE, section: "base", selected: true });
     
-    if (_predajNehnutelnosti) items.push({ name: t('sellPreviousProperty'), price: 0, section: "services", selected: true });
-    if (_hladaniePozemku) items.push({ name: t('wantLandForHouse'), price: 0, section: "services", selected: true });
-    if (_financneSluzby) items.push({ name: t('financialServicesLoans'), price: 0, section: "services", selected: true });
+    if (predajNehnutelnosti) items.push({ name: t('sellPreviousProperty'), price: 0, section: "services", selected: true });
+    if (hladaniePozemku) items.push({ name: t('wantLandForHouse'), price: 0, section: "services", selected: true });
+    if (financneSluzby) items.push({ name: t('financialServicesLoans'), price: 0, section: "services", selected: true });
     
-    items.push({ name: t('shellAssembly'), price: nordMontazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: nordMontazHolodomu === "ano" });
+    items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
-    const izolaciaLabel = nordIzolaciaNavysenie === "ultra" ? "Ultra 300mm" : nordIzolaciaNavysenie === "premium" ? "250/300mm" : nordIzolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
-    const izolaciaPrice = nordIzolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : nordIzolaciaNavysenie === "premium" ? CENY.izolacia.premium : nordIzolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
-    items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: nordIzolaciaNavysenie !== "standard" && nordIzolaciaNavysenie !== "standardna" });
+    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra 300mm" : izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
+    const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
+    items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" && izolaciaNavysenie !== "standardna" });
     
-    const zakladyLabel = nordZaklady === "pasove" ? t('foundationsStrip') : nordZaklady === "doska" ? t('foundationsSlab') : nordZaklady === "skrutky" ? t('foundationsScrews') : t('foundationsLabel');
-    const zakladyPrice = nordZaklady === "pasove" ? CENY.zaklady.pasove : nordZaklady === "doska" ? CENY.zaklady.doska : nordZaklady === "skrutky" ? CENY.zaklady.skrutky : 0;
-    items.push({ name: zakladyLabel, price: zakladyPrice, section: "hruba", selected: nordZaklady !== "bez" });
+    const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? t('foundationsScrews') : t('foundationsLabel');
+    const zakladyPrice = zaklady === "pasove" ? CENY.zaklady.pasove : zaklady === "doska" ? CENY.zaklady.doska : zaklady === "skrutky" ? CENY.zaklady.skrutky : 0;
+    items.push({ name: zakladyLabel, price: zakladyPrice, section: "hruba", selected: zaklady !== "bez" });
     
-    const interierLabel = nordInterierFinis === "drevo" ? t('interiorWood') : nordInterierFinis === "sadrokarton" ? t('interiorDrywall') : t('interiorFinish');
-    const interierPrice = nordInterierFinis === "drevo" ? CENY.interierFinis.drevo : nordInterierFinis === "sadrokarton" ? CENY.interierFinis.sadrokarton : 0;
-    items.push({ name: interierLabel, price: interierPrice, section: "holodom", selected: nordInterierFinis !== "ziadne" });
+    const interierLabel = interierFinis === "drevo" ? t('interiorWood') : interierFinis === "sadrokarton" ? t('interiorDrywall') : t('interiorFinish');
+    const interierPrice = interierFinis === "drevo" ? CENY.interierFinis.drevo : interierFinis === "sadrokarton" ? CENY.interierFinis.sadrokarton : 0;
+    items.push({ name: interierLabel, price: interierPrice, section: "holodom", selected: interierFinis !== "ziadne" });
 
-    items.push({ name: t('electricalFull'), price: nordElektroinstalacia ? CENY.elektroinstalacia : 0, section: "holodom", selected: nordElektroinstalacia });
-    items.push({ name: t('waterFull'), price: nordVodaKanalizacia ? CENY.vodaKanalizacia : 0, section: "holodom", selected: nordVodaKanalizacia });
-    items.push({ name: t('sanitaryFull'), price: nordSanitaKomplet ? CENY.sanitaKomplet : 0, section: "holodom", selected: nordSanitaKomplet });
-    items.push({ name: t('boiler'), price: nordBojler ? CENY.bojler : 0, section: "holodom", selected: nordBojler });
-    items.push({ name: t('heatPumpFull'), price: nordTepelneCerpadlo ? CENY.tepelneCerpadlo : 0, section: "holodom", selected: nordTepelneCerpadlo });
-    items.push({ name: t('recuperation'), price: nordRekuperacia ? CENY.rekuperacia : 0, section: "holodom", selected: nordRekuperacia });
-    items.push({ name: t('gridConnectionFull'), price: nordPripojkaSiete ? CENY.pripojkaSiete : 0, section: "holodom", selected: nordPripojkaSiete });
+    items.push({ name: t('electricalFull'), price: elektroinstalacia ? CENY.elektroinstalacia : 0, section: "holodom", selected: elektroinstalacia });
+    items.push({ name: t('waterFull'), price: vodaKanalizacia ? CENY.vodaKanalizacia : 0, section: "holodom", selected: vodaKanalizacia });
+    items.push({ name: t('sanitaryFull'), price: sanitaKomplet ? CENY.sanitaKomplet : 0, section: "holodom", selected: sanitaKomplet });
+    items.push({ name: t('boiler'), price: bojler ? CENY.bojler : 0, section: "holodom", selected: bojler });
+    items.push({ name: t('heatPumpFull'), price: tepelneCerpadlo ? CENY.tepelneCerpadlo : 0, section: "holodom", selected: tepelneCerpadlo });
+    items.push({ name: t('recuperation'), price: rekuperacia ? CENY.rekuperacia : 0, section: "holodom", selected: rekuperacia });
+    items.push({ name: t('gridConnectionFull'), price: pripojkaSiete ? CENY.pripojkaSiete : 0, section: "holodom", selected: pripojkaSiete });
     
-    const dvereLabel = nordVstupneDvere === "kovove" ? t('doorMetal') : nordVstupneDvere === "plastove" ? t('doorPlastic') : t('doorStandard');
-    const dverePrice = nordVstupneDvere === "kovove" ? CENY.dvere.kovove : nordVstupneDvere === "plastove" ? CENY.dvere.plastove : 0;
-    items.push({ name: dvereLabel, price: dverePrice, section: "holodom", selected: nordVstupneDvere !== "ziadne" });
+    const dvereLabel = vstupneDvere === "kovove" ? t('doorMetal') : vstupneDvere === "plastove" ? t('doorPlastic') : t('doorStandard');
+    const dverePrice = vstupneDvere === "kovove" ? CENY.dvere.kovove : vstupneDvere === "plastove" ? CENY.dvere.plastove : 0;
+    items.push({ name: dvereLabel, price: dverePrice, section: "holodom", selected: vstupneDvere !== "ziadne" });
     
-    if (nordStresneOkno > 0) items.push({ name: `${t('roofWindow')} (${nordStresneOkno}×)`, price: nordStresneOkno * CENY.stresneOkno, section: "holodom", selected: true });
-    if (nordBocneOknoFixne > 0) items.push({ name: `${t('fixedWindow')} (${nordBocneOknoFixne}×)`, price: nordBocneOknoFixne * CENY.bocneOknoFixne, section: "holodom", selected: true });
-    if (nordBocneOknoVyklopne90 > 0) items.push({ name: `${t('tiltWindow')} 90×205 (${nordBocneOknoVyklopne90}×)`, price: nordBocneOknoVyklopne90 * CENY.bocneOknoVyklopne90, section: "holodom", selected: true });
-    if (nordBocneOknoVyklopne55 > 0) items.push({ name: `${t('tiltWindow')} 55×90 (${nordBocneOknoVyklopne55}×)`, price: nordBocneOknoVyklopne55 * CENY.bocneOknoVyklopne55, section: "holodom", selected: true });
-    items.push({ name: t('lamination') + " - " + t('laminationAnthracite'), price: nordPovrchokaOkien ? CENY.povrchokaOkien : 0, section: "holodom", selected: nordPovrchokaOkien });
-    items.push({ name: t('tintedGlass') + " (Solar)", price: nordTonovaneSkla ? CENY.tonovaneSkla : 0, section: "holodom", selected: nordTonovaneSkla });
+    if (stresneOkno > 0) items.push({ name: `${t('roofWindow')} (${stresneOkno}×)`, price: stresneOkno * CENY.stresneOkno, section: "holodom", selected: true });
+    if (bocneOknoFixne > 0) items.push({ name: `${t('fixedWindow')} (${bocneOknoFixne}×)`, price: bocneOknoFixne * CENY.bocneOknoFixne, section: "holodom", selected: true });
+    if (bocneOknoVyklopne90 > 0) items.push({ name: `${t('tiltWindow')} 90×205 (${bocneOknoVyklopne90}×)`, price: bocneOknoVyklopne90 * CENY.bocneOknoVyklopne90, section: "holodom", selected: true });
+    if (bocneOknoVyklopne55 > 0) items.push({ name: `${t('tiltWindow')} 55×90 (${bocneOknoVyklopne55}×)`, price: bocneOknoVyklopne55 * CENY.bocneOknoVyklopne55, section: "holodom", selected: true });
+    items.push({ name: t('lamination') + " - " + t('laminationAnthracite'), price: povrchokaOkien ? CENY.povrchokaOkien : 0, section: "holodom", selected: povrchokaOkien });
+    items.push({ name: t('tintedGlass') + " (Solar)", price: tonovaneSkla ? CENY.tonovaneSkla : 0, section: "holodom", selected: tonovaneSkla });
     
-    const fasadaLabel = nordVonkajsiaFasada === "suchana" ? t('facadeStucco') : nordVonkajsiaFasada === "standard" ? t('facadeWoodMetal') : t('facade');
-    const fasadaPrice = nordVonkajsiaFasada === "suchana" ? CENY.vonkajsiaFasada.suchana : 0;
-    items.push({ name: fasadaLabel, price: fasadaPrice, section: "kluc", selected: !!nordVonkajsiaFasada });
+    const fasadaLabel = vonkajsiaFasada === "suchana" ? t('facadeStucco') : vonkajsiaFasada === "standard" ? t('facadeWoodMetal') : t('facade');
+    const fasadaPrice = vonkajsiaFasada === "suchana" ? CENY.vonkajsiaFasada.suchana : 0;
+    items.push({ name: fasadaLabel, price: fasadaPrice, section: "kluc", selected: !!vonkajsiaFasada });
 
-    items.push({ name: t('floors') + " - " + t('floorsLaminate'), price: nordVnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: nordVnutornePodlahy });
-    items.push({ name: t('floorHeatingFull'), price: nordPodlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: nordPodlahovVykurovanie });
-    items.push({ name: `${t('interiorDoors')} (${nordInterieroveDvere}×)`, price: nordInterieroveDvere * CENY.interieroveDvere, section: "kluc", selected: nordInterieroveDvere > 0 });
-    if (nordPergola) items.push({ name: t('pergola'), price: CENY.pergola, section: "kluc", selected: true });
+    items.push({ name: t('floors') + " - " + t('floorsLaminate'), price: vnutornePodlahy ? CENY.vnutornePodlahy : 0, section: "kluc", selected: vnutornePodlahy });
+    items.push({ name: t('floorHeatingFull'), price: podlahovVykurovanie ? CENY.podlahovVykurovanie : 0, section: "kluc", selected: podlahovVykurovanie });
+    items.push({ name: `${t('interiorDoors')} (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere, section: "kluc", selected: interieroveDvere > 0 });
+    if (pergola) items.push({ name: t('pergola'), price: CENY.pergola, section: "kluc", selected: true });
     
-    items.push({ name: t('engineeringFull'), price: nordInziniering ? CENY.inziniering : 0, section: "docs", selected: nordInziniering });
-    items.push({ name: t('projectA0Full'), price: nordProjektA0 ? CENY.projektA0 : 0, section: "docs", selected: nordProjektA0 });
-    items.push({ name: t('revisionFull'), price: nordRevizna ? CENY.revizna : 0, section: "docs", selected: nordRevizna });
-    items.push({ name: t('transport'), price: nordDoprava ? CENY.doprava : 0, section: "docs", selected: nordDoprava });
+    items.push({ name: t('engineeringFull'), price: inziniering ? CENY.inziniering : 0, section: "docs", selected: inziniering });
+    items.push({ name: t('projectA0Full'), price: projektA0 ? CENY.projektA0 : 0, section: "docs", selected: projektA0 });
+    items.push({ name: t('revisionFull'), price: revizna ? CENY.revizna : 0, section: "docs", selected: revizna });
+    items.push({ name: t('transport'), price: doprava ? CENY.doprava : 0, section: "docs", selected: doprava });
     
     return items;
-  }, [_predajNehnutelnosti, _hladaniePozemku, _financneSluzby,
-      nordMontazHolodomu, nordIzolaciaNavysenie, nordZaklady, nordElektroinstalacia, nordVodaKanalizacia, 
-      nordSanitaKomplet, nordBojler, nordTepelneCerpadlo, nordRekuperacia, nordPripojkaSiete, nordVstupneDvere,
-      nordStresneOkno, nordBocneOknoFixne, nordBocneOknoVyklopne90, nordBocneOknoVyklopne55, nordPovrchokaOkien,
-      nordTonovaneSkla, nordVonkajsiaFasada, nordInterierFinis, nordVnutornePodlahy, nordPodlahovVykurovanie,
-      nordInterieroveDvere, nordPergola, nordInziniering, nordProjektA0, nordRevizna, nordDoprava, t, BASE_PRICE, CENY]);
+  }, [predajNehnutelnosti, hladaniePozemku, financneSluzby,
+      montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
+      sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
+      tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
+      interieroveDvere, pergola, inziniering, projektA0, revizna, doprava, t, BASE_PRICE, CENY]);
 
   const dosiahnuteUrovne = useMemo(() => {
-    const hrubaStavba = nordMontazHolodomu === "ano" || nordIzolaciaNavysenie !== "standard" || nordZaklady !== "bez";
-    const holodom = hrubaStavba && (nordElektroinstalacia || nordVodaKanalizacia || nordTepelneCerpadlo || nordRekuperacia);
-    const domNaKluc = holodom && (nordInterierFinis !== "ziadne" || nordVnutornePodlahy || nordVonkajsiaFasada === "suchana");
+    const hrubaStavba = montazHolodomu === "ano" || izolaciaNavysenie !== "standard" || zaklady !== "bez";
+    const holodom = hrubaStavba && (elektroinstalacia || vodaKanalizacia || tepelneCerpadlo || rekuperacia);
+    const domNaKluc = holodom && (interierFinis !== "ziadne" || vnutornePodlahy || vonkajsiaFasada === "suchana");
     return { hrubaStavba, holodom, domNaKluc };
-  }, [nordMontazHolodomu, nordIzolaciaNavysenie, nordZaklady, nordElektroinstalacia, nordVodaKanalizacia, 
-      nordTepelneCerpadlo, nordRekuperacia, nordInterierFinis, nordVnutornePodlahy, nordVonkajsiaFasada]);
+  }, [montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
+      tepelneCerpadlo, rekuperacia, interierFinis, vnutornePodlahy, vonkajsiaFasada]);
 
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
@@ -505,15 +476,15 @@ export default function KonfiguratorNord({
     if (onConfigChange) {
       onConfigChange({
         celkovaCena: totalPrice,
-        izolaciaNavysenie: nordIzolaciaNavysenie,
-        tepelneCerpadlo: nordTepelneCerpadlo,
-        rekuperacia: nordRekuperacia,
-        projektA0: nordProjektA0,
-        montazHolodomu: nordMontazHolodomu,
-        zaklady: nordZaklady
+        izolaciaNavysenie,
+        tepelneCerpadlo,
+        rekuperacia,
+        projektA0,
+        montazHolodomu,
+        zaklady
       });
     }
-  }, [totalPrice, nordIzolaciaNavysenie, nordTepelneCerpadlo, nordRekuperacia, nordProjektA0, nordMontazHolodomu, nordZaklady, onConfigChange]);
+  }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady, onConfigChange]);
 
   useEffect(() => {
     const updateWidth = () => {
@@ -528,33 +499,34 @@ export default function KonfiguratorNord({
   }, []);
 
   const handleReset = () => {
-    setNordMontazHolodomu("nie");
-    setNordVstupneDvere("ziadne");
-    setNordIzolaciaNavysenie("standard");
-    setNordElektroinstalacia(false);
-    setNordVodaKanalizacia(false);
-    setNordSanitaKomplet(false);
-    setNordBojler(false);
-    setNordTepelneCerpadlo(false);
-    setNordRekuperacia(false);
-    setNordZaklady("bez");
-    setNordPripojkaSiete(false);
-    setNordInziniering(false);
-    setNordProjektA0(false);
-    setNordInterierFinis("ziadne");
-    setNordVonkajsiaFasada("standard");
-    setNordPovrchokaOkien(false);
-    setNordVnutornePodlahy(false);
-    setNordPodlahovVykurovanie(false);
-    setNordPergola(false);
-    setNordInterieroveDvere(0);
-    setNordTonovaneSkla(false);
-    setNordDoprava(false);
-    setNordRevizna(true);
-    setNordStresneOkno(0);
-    setNordBocneOknoFixne(0);
-    setNordBocneOknoVyklopne90(0);
-    setNordBocneOknoVyklopne55(0);
+    setMontazHolodomu("nie");
+    setVstupneDvere("ziadne");
+    setIzolaciaNavysenie("standard");
+    setElektroinstalacia(false);
+    setVodaKanalizacia(false);
+    setSanitaKomplet(false);
+    setBojler(false);
+    setTepelneCerpadlo(false);
+    setRekuperacia(false);
+    setZaklady("bez");
+    setPripojkaSiete(false);
+    setInziniering(false);
+    setProjektA0(false);
+    setInterierFinis("ziadne");
+    setVonkajsiaFasada("standard");
+    setPovrchokaOkien(false);
+    setVnutornePodlahy(false);
+    setPodlahovVykurovanie(false);
+    setPergola(false);
+    setInterieroveDvere(0);
+    setTonovaneSkla(false);
+    setDoprava(false);
+    setRevizna(true);
+    setStresneOkno(0);
+    setBocneOknoFixne(0);
+    setBocneOknoVyklopne90(0);
+    setBocneOknoVyklopne55(0);
+    setLocalTypStavby("");
   };
 
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
@@ -575,10 +547,10 @@ export default function KonfiguratorNord({
   );
 
   const initialSelectionsForFaza1 = useMemo(() => ({
-    montaz: nordMontazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-    izolacia: nordIzolaciaNavysenie === 'standard' || nordIzolaciaNavysenie === 'standardna' ? 'izolacia_standardna' : `izolacia_${nordIzolaciaNavysenie}`,
-    zaklady: nordZaklady === 'bez' ? 'zaklady_bez' : nordZaklady === 'skrutky' ? 'zaklady_skrutky' : `zaklady_${nordZaklady}`
-  }), [nordMontazHolodomu, nordIzolaciaNavysenie, nordZaklady]);
+    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
+    izolacia: izolaciaNavysenie === 'standard' || izolaciaNavysenie === 'standardna' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+    zaklady: zaklady === 'bez' ? 'zaklady_bez' : zaklady === 'skrutky' ? 'zaklady_skrutky' : `zaklady_${zaklady}`
+  }), [montazHolodomu, izolaciaNavysenie, zaklady]);
 
   const handleSendQuoteFromFloating = async (contactData) => {
     try {
@@ -591,13 +563,13 @@ export default function KonfiguratorNord({
         klient_poznamka: contactData.poznamka || '',
         selectedItems: selectedItems,
         totalPrice: totalPrice,
-        montazHolodomu: nordMontazHolodomu, izolaciaNavysenie: nordIzolaciaNavysenie, zaklady: nordZaklady, vstupneDvere: nordVstupneDvere,
-        elektroinstalacia: nordElektroinstalacia, vodaKanalizacia: nordVodaKanalizacia, sanitaKomplet: nordSanitaKomplet, bojler: nordBojler, tepelneCerpadlo: nordTepelneCerpadlo,
-        rekuperacia: nordRekuperacia, pripojkaSiete: nordPripojkaSiete, stresneOkno: nordStresneOkno, bocneOknoFixne: nordBocneOknoFixne, bocneOknoVyklopne90: nordBocneOknoVyklopne90,
-        bocneOknoVyklopne55: nordBocneOknoVyklopne55, povrchokaOkien: nordPovrchokaOkien, tonovaneSkla: nordTonovaneSkla, vonkajsiaFasada: nordVonkajsiaFasada,
-        interierFinis: nordInterierFinis, vnutornePodlahy: nordVnutornePodlahy, podlahovVykurovanie: nordPodlahovVykurovanie, interieroveDvere: nordInterieroveDvere,
-        pergola: nordPergola, inziniering: nordInziniering, projektA0: nordProjektA0, revizna: nordRevizna, doprava: nordDoprava, predlzenie: 0,
-        predajNehnutelnosti: _predajNehnutelnosti, hladaniePozemku: _hladaniePozemku, financneSluzby: _financneSluzby,
+        montazHolodomu, izolaciaNavysenie, zaklady, vstupneDvere,
+        elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler, tepelneCerpadlo,
+        rekuperacia, pripojkaSiete, stresneOkno, bocneOknoFixne, bocneOknoVyklopne90,
+        bocneOknoVyklopne55, povrchokaOkien, tonovaneSkla, vonkajsiaFasada,
+        interierFinis, vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
+        pergola, inziniering, projektA0, revizna, doprava, predlzenie: 0,
+        predajNehnutelnosti, hladaniePozemku, financneSluzby,
         language: language
       });
       return response;
@@ -617,16 +589,16 @@ export default function KonfiguratorNord({
   // Auto-set A0 items when "rodinny_dom" is selected
   useEffect(() => {
     if (localTypStavby === "rodinny_dom") {
-      setNordIzolaciaNavysenie("premium");
-      setNordTepelneCerpadlo(true);
-      setNordRekuperacia(true);
-      setNordProjektA0(true);
-      setNordZaklady("pasove");
+      setIzolaciaNavysenie("premium");
+      setTepelneCerpadlo(true);
+      setRekuperacia(true);
+      setProjektA0(true);
+      setZaklady("pasove");
     } else if (localTypStavby === "rekreacna") {
-      setNordIzolaciaNavysenie("standard");
-      setNordTepelneCerpadlo(false);
-      setNordRekuperacia(false);
-      setNordProjektA0(false);
+      setIzolaciaNavysenie("standard");
+      setTepelneCerpadlo(false);
+      setRekuperacia(false);
+      setProjektA0(false);
     }
   }, [localTypStavby]);
 
@@ -650,11 +622,11 @@ export default function KonfiguratorNord({
             dom={dom}
             totalPrice={totalPrice}
             selectedItems={selectedItems}
-            vonkajsiaFasada={nordVonkajsiaFasada}
-            izolaciaNavysenie={nordIzolaciaNavysenie}
-            tepelneCerpadlo={nordTepelneCerpadlo}
-            rekuperacia={nordRekuperacia}
-            projektA0={nordProjektA0}
+            vonkajsiaFasada={vonkajsiaFasada}
+            izolaciaNavysenie={izolaciaNavysenie}
+            tepelneCerpadlo={tepelneCerpadlo}
+            rekuperacia={rekuperacia}
+            projektA0={projektA0}
           />
 
           <div className="px-2 py-1 max-h-[65vh] overflow-y-auto">
@@ -767,12 +739,12 @@ export default function KonfiguratorNord({
               typStavby={localTypStavby}
               setTypStavby={setLocalTypStavby}
               onContinue={() => {}}
-              predajNehnutelnosti={_predajNehnutelnosti}
-              setPredajNehnutelnosti={_setPredajNehnutelnosti}
-              hladaniePozemku={_hladaniePozemku}
-              setHladaniePozemku={_setHladaniePozemku}
-              financneSluzby={_financneSluzby}
-              setFinancneSluzby={_setFinancneSluzby}
+              predajNehnutelnosti={predajNehnutelnosti}
+              setPredajNehnutelnosti={setPredajNehnutelnosti}
+              hladaniePozemku={hladaniePozemku}
+              setHladaniePozemku={setHladaniePozemku}
+              financneSluzby={financneSluzby}
+              setFinancneSluzby={setFinancneSluzby}
             />
           )}
 
@@ -808,15 +780,15 @@ export default function KonfiguratorNord({
                   onSelectionChange={(selections) => {
                     if (selections.montaz) {
                       const montazValue = selections.montaz === 'montaz_ano' ? 'ano' : 'nie';
-                      setNordMontazHolodomu(montazValue);
+                      setMontazHolodomu(montazValue);
                     }
                     if (selections.izolacia) {
                       const izolaciaValue = selections.izolacia.replace('izolacia_', '');
-                      setNordIzolaciaNavysenie(izolaciaValue);
+                      setIzolaciaNavysenie(izolaciaValue);
                     }
                     if (selections.zaklady) {
                       const zakladyValue = selections.zaklady.replace('zaklady_', '');
-                      setNordZaklady(zakladyValue);
+                      setZaklady(zakladyValue);
                     }
                   }}
                 />
@@ -843,9 +815,9 @@ export default function KonfiguratorNord({
                         <span className="w-4 h-4 sm:w-5 sm:h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">1</span>
                         {t('interiorFinish')} ({t('selectOne')})
                       </p>
-                      <EditableTile selected={nordInterierFinis === "ziadne"} onClick={() => setNordInterierFinis("ziadne")} title={t('interiorNone')} subtitle={t('shellConstruction')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
-                      <EditableTile selected={nordInterierFinis === "drevo"} onClick={() => setNordInterierFinis("drevo")} title={t('interiorWood')} subtitle={t('woodCladding')} price={`+ ${CENY.interierFinis.drevo.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interier_drevo" onPriceChange={handlePriceChange} />
-                      <EditableTile selected={nordInterierFinis === "sadrokarton"} onClick={() => setNordInterierFinis("sadrokarton")} title={t('interiorDrywall')} subtitle={t('plaster')} price={`+ ${CENY.interierFinis.sadrokarton.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interier_sadrokarton" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={interierFinis === "ziadne"} onClick={() => setInterierFinis("ziadne")} title={t('interiorNone')} subtitle={t('shellConstruction')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
+                      <EditableTile selected={interierFinis === "drevo"} onClick={() => setInterierFinis("drevo")} title={t('interiorWood')} subtitle={t('woodCladding')} price={`+ ${CENY.interierFinis.drevo.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interier_drevo" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={interierFinis === "sadrokarton"} onClick={() => setInterierFinis("sadrokarton")} title={t('interiorDrywall')} subtitle={t('plaster')} price={`+ ${CENY.interierFinis.sadrokarton.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interier_sadrokarton" onPriceChange={handlePriceChange} />
                     </div>
 
                     <div className="col-span-2 sm:col-span-3 lg:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-yellow-500 rounded-xl bg-yellow-100/70 shadow-xl">
@@ -853,10 +825,10 @@ export default function KonfiguratorNord({
                         <span className="w-4 h-4 sm:w-5 sm:h-5 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">2</span>
                         {t('electrical')} & {t('water')}
                       </p>
-                      <EditableTile selected={nordElektroinstalacia} onClick={() => setNordElektroinstalacia(!nordElektroinstalacia)} title={t('electrical')} subtitle={t('wiring')} price={`+ ${CENY.elektroinstalacia.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="elektroinstalacia" onPriceChange={handlePriceChange} />
-                      <EditableTile selected={nordVodaKanalizacia} onClick={() => setNordVodaKanalizacia(!nordVodaKanalizacia)} title={t('water')} subtitle={t('wiring')} price={`+ ${CENY.vodaKanalizacia.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vodaKanalizacia" onPriceChange={handlePriceChange} />
-                      <EditableTile selected={nordSanitaKomplet} onClick={() => setNordSanitaKomplet(!nordSanitaKomplet)} title={t('sanitary')} subtitle={t('complete')} price={`+ ${CENY.sanitaKomplet.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="sanitaKomplet" onPriceChange={handlePriceChange} />
-                      <EditableTile selected={nordBojler} onClick={() => setNordBojler(!nordBojler)} title={t('boiler')} subtitle={t('boilerElectric')} price={`+ ${CENY.bojler.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="bojler" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={elektroinstalacia} onClick={() => setElektroinstalacia(!elektroinstalacia)} title={t('electrical')} subtitle={t('wiring')} price={`+ ${CENY.elektroinstalacia.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="elektroinstalacia" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={vodaKanalizacia} onClick={() => setVodaKanalizacia(!vodaKanalizacia)} title={t('water')} subtitle={t('wiring')} price={`+ ${CENY.vodaKanalizacia.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vodaKanalizacia" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={sanitaKomplet} onClick={() => setSanitaKomplet(!sanitaKomplet)} title={t('sanitary')} subtitle={t('complete')} price={`+ ${CENY.sanitaKomplet.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="sanitaKomplet" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={bojler} onClick={() => setBojler(!bojler)} title={t('boiler')} subtitle={t('boilerElectric')} price={`+ ${CENY.bojler.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="bojler" onPriceChange={handlePriceChange} />
                     </div>
 
                     <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-green-600 rounded-xl bg-green-100/70 shadow-xl">
@@ -864,13 +836,13 @@ export default function KonfiguratorNord({
                         <span className="w-4 h-4 sm:w-5 sm:h-5 bg-green-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">3</span>
                         {t('heatPump')} & {t('recuperation')} (A0)
                       </p>
-                      <EditableTile selected={nordTepelneCerpadlo} onClick={() => setNordTepelneCerpadlo(!nordTepelneCerpadlo)} title={t('heatPump')} subtitle="1× vonkajšia / 4× vnútorná" price={`+ ${CENY.tepelneCerpadlo.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="tepelneCerpadlo" onPriceChange={handlePriceChange} />
-                      <EditableTile selected={nordRekuperacia} onClick={() => setNordRekuperacia(!nordRekuperacia)} title={t('recuperation')} subtitle="5× systém" price={`+ ${CENY.rekuperacia.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="rekuperacia" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={tepelneCerpadlo} onClick={() => setTepelneCerpadlo(!tepelneCerpadlo)} title={t('heatPump')} subtitle="1× vonkajšia / 4× vnútorná" price={`+ ${CENY.tepelneCerpadlo.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="tepelneCerpadlo" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={rekuperacia} onClick={() => setRekuperacia(!rekuperacia)} title={t('recuperation')} subtitle="5× systém" price={`+ ${CENY.rekuperacia.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="rekuperacia" onPriceChange={handlePriceChange} />
                     </div>
 
-                    <EditableTile selected={nordPripojkaSiete} onClick={() => setNordPripojkaSiete(!nordPripojkaSiete)} title={t('gridConnection')} subtitle={t('connection')} price={`+ ${CENY.pripojkaSiete.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="pripojkaSiete" onPriceChange={handlePriceChange} />
-                    <EditableTile selected={nordPovrchokaOkien} onClick={() => setNordPovrchokaOkien(!nordPovrchokaOkien)} title={t('lamination')} subtitle={t('laminationAnthracite')} price={`+ ${CENY.povrchokaOkien.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="laminacia_okien" onPriceChange={handlePriceChange} />
-                    <EditableTile selected={nordTonovaneSkla} onClick={() => setNordTonovaneSkla(!nordTonovaneSkla)} title={t('tintedGlass')} subtitle={t('solarGlass')} price={`+ ${CENY.tonovaneSkla.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="tonovanie_skla" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={pripojkaSiete} onClick={() => setPripojkaSiete(!pripojkaSiete)} title={t('gridConnection')} subtitle={t('connection')} price={`+ ${CENY.pripojkaSiete.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="pripojkaSiete" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={povrchokaOkien} onClick={() => setPovrchokaOkien(!povrchokaOkien)} title={t('lamination')} subtitle={t('laminationAnthracite')} price={`+ ${CENY.povrchokaOkien.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="laminacia_okien" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={tonovaneSkla} onClick={() => setTonovaneSkla(!tonovaneSkla)} title={t('tintedGlass')} subtitle={t('solarGlass')} price={`+ ${CENY.tonovaneSkla.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="tonovanie_skla" onPriceChange={handlePriceChange} />
                   </div>
 
                   <div className="mt-2 sm:mt-3 p-2 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
@@ -884,7 +856,7 @@ export default function KonfiguratorNord({
                         { value: "kovove", label: t('doorMetal'), price: `+ ${CENY.dvere.kovove.toLocaleString('sk-SK')} €` },
                         { value: "plastove", label: t('doorPlastic'), price: `+ ${CENY.dvere.plastove.toLocaleString('sk-SK')} €` }
                       ].map((opt) => (
-                        <motion.div key={opt.value} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setNordVstupneDvere(opt.value)} className={`p-2 sm:p-3 rounded-lg cursor-pointer text-center transition-all ${nordVstupneDvere === opt.value ? "bg-blue-100 border-2 border-blue-500" : "bg-gray-50 border-2 border-gray-200 hover:border-blue-300"}`}>
+                        <motion.div key={opt.value} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setVstupneDvere(opt.value)} className={`p-2 sm:p-3 rounded-lg cursor-pointer text-center transition-all ${vstupneDvere === opt.value ? "bg-blue-100 border-2 border-blue-500" : "bg-gray-50 border-2 border-gray-200 hover:border-blue-300"}`}>
                           <span className="font-medium text-gray-800 text-xs sm:text-sm block">{opt.label}</span>
                           <span className={`${opt.value === "ziadne" ? "text-gray-400" : "text-green-600 font-bold"} text-[10px] sm:text-xs`}>{opt.price}</span>
                         </motion.div>
@@ -897,10 +869,10 @@ export default function KonfiguratorNord({
                     </p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                       {[
-                        { state: nordStresneOkno, setter: setNordStresneOkno, label: t('roofWindow'), price: `${CENY.stresneOkno.toLocaleString('sk-SK')} €` },
-                        { state: nordBocneOknoFixne, setter: setNordBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: `${CENY.bocneOknoFixne.toLocaleString('sk-SK')} €` },
-                        { state: nordBocneOknoVyklopne90, setter: setNordBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: `${CENY.bocneOknoVyklopne90.toLocaleString('sk-SK')} €` },
-                        { state: nordBocneOknoVyklopne55, setter: setNordBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: `${CENY.bocneOknoVyklopne55.toLocaleString('sk-SK')} €` }
+                        { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: `${CENY.stresneOkno.toLocaleString('sk-SK')} €` },
+                        { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: `${CENY.bocneOknoFixne.toLocaleString('sk-SK')} €` },
+                        { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: `${CENY.bocneOknoVyklopne90.toLocaleString('sk-SK')} €` },
+                        { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: `${CENY.bocneOknoVyklopne55.toLocaleString('sk-SK')} €` }
                       ].map((opt, idx) => (
                         <div key={idx} className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
                           <span className="font-medium text-gray-800 text-[10px] sm:text-xs block mb-1">{opt.label}</span>
@@ -925,17 +897,17 @@ export default function KonfiguratorNord({
                 <SectionHeader icon={Key} title={t('phase3')} subtitle={t('phase3Subtitle')} color="from-emerald-600 to-teal-600" step="3" />
                 <div className="p-2 sm:p-3 bg-gradient-to-b from-emerald-50/50 to-white">
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
-                    <div className={`col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] rounded-xl shadow-xl ${!nordVonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
-                      <p className={`col-span-2 text-[9px] sm:text-[10px] font-bold -mb-1 flex items-center gap-1 ${!nordVonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
-                        <span className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold text-white ${!nordVonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
-                        {t('facade')} ({t('selectOne')}) {!nordVonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
+                    <div className={`col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] rounded-xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
+                      <p className={`col-span-2 text-[9px] sm:text-[10px] font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
+                        <span className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
+                        {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
                       </p>
-                      <EditableTile selected={nordVonkajsiaFasada === "standard"} onClick={() => setNordVonkajsiaFasada("standard")} title={t('facadeWoodMetal')} subtitle={t('facadeStandard')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
-                      <EditableTile selected={nordVonkajsiaFasada === "suchana"} onClick={() => setNordVonkajsiaFasada("suchana")} title={t('facadeStucco')} subtitle={t('whitePlaster')} price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="fasada_omietka" onPriceChange={handlePriceChange} />
+                      <EditableTile selected={vonkajsiaFasada === "standard"} onClick={() => setVonkajsiaFasada("standard")} title={t('facadeWoodMetal')} subtitle={t('facadeStandard')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
+                      <EditableTile selected={vonkajsiaFasada === "suchana"} onClick={() => setVonkajsiaFasada("suchana")} title={t('facadeStucco')} subtitle={t('whitePlaster')} price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="fasada_omietka" onPriceChange={handlePriceChange} />
                     </div>
 
-                    <EditableTile selected={nordVnutornePodlahy} onClick={() => setNordVnutornePodlahy(!nordVnutornePodlahy)} title={t('floors')} subtitle={t('floorsLaminate')} price={`+ ${CENY.vnutornePodlahy.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="podlahy_laminat" onPriceChange={handlePriceChange} />
-                    <EditableTile selected={nordPodlahovVykurovanie} onClick={() => setNordPodlahovVykurovanie(!nordPodlahovVykurovanie)} title={t('floorHeating')} subtitle={t('wifiThermostat')} price={`+ ${CENY.podlahovVykurovanie.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="podlahove_kurenie" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={vnutornePodlahy} onClick={() => setVnutornePodlahy(!vnutornePodlahy)} title={t('floors')} subtitle={t('floorsLaminate')} price={`+ ${CENY.vnutornePodlahy.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="podlahy_laminat" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={podlahovVykurovanie} onClick={() => setPodlahovVykurovanie(!podlahovVykurovanie)} title={t('floorHeating')} subtitle={t('wifiThermostat')} price={`+ ${CENY.podlahovVykurovanie.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="podlahove_kurenie" onPriceChange={handlePriceChange} />
                   </div>
 
                   <div className="mt-2 sm:mt-3 p-2 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
@@ -948,9 +920,9 @@ export default function KonfiguratorNord({
                         </div>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <button onClick={() => setNordInterieroveDvere(Math.max(0, nordInterieroveDvere - 1))} className="w-6 h-6 sm:w-7 sm:h-7 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm">−</button>
-                        <span className="w-6 text-center font-bold text-sm">{nordInterieroveDvere}</span>
-                        <button onClick={() => setNordInterieroveDvere(nordInterieroveDvere + 1)} className="w-6 h-6 sm:w-7 sm:h-7 rounded bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm">+</button>
+                        <button onClick={() => setInterieroveDvere(Math.max(0, interieroveDvere - 1))} className="w-6 h-6 sm:w-7 sm:h-7 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm">−</button>
+                        <span className="w-6 text-center font-bold text-sm">{interieroveDvere}</span>
+                        <button onClick={() => setInterieroveDvere(interieroveDvere + 1)} className="w-6 h-6 sm:w-7 sm:h-7 rounded bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm">+</button>
                       </div>
                     </div>
                   </div>
@@ -965,10 +937,10 @@ export default function KonfiguratorNord({
                 <SectionHeader icon={FileText} title={t('phase4')} subtitle={t('phase4Subtitle')} color="from-purple-600 to-violet-600" step="4" />
                 <div className="p-2 sm:p-3 bg-gradient-to-b from-purple-50/50 to-white">
                   <div className="grid grid-cols-2 gap-2 sm:gap-3 max-w-2xl">
-                    <EditableTile selected={nordInziniering} onClick={() => setNordInziniering(!nordInziniering)} title={t('engineering')} subtitle={t('buildingPermit')} price={`+ ${CENY.inziniering.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="inziniering" onPriceChange={handlePriceChange} />
-                    <EditableTile selected={nordProjektA0} onClick={() => setNordProjektA0(!nordProjektA0)} title={t('projectA0')} subtitle={t('certification')} price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="projektA0" onPriceChange={handlePriceChange} />
-                    <EditableTile selected={nordRevizna} onClick={() => setNordRevizna(!nordRevizna)} title={t('revision')} subtitle={t('documentation')} price={`+ ${CENY.revizna.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="revizia" onPriceChange={handlePriceChange} />
-                    <EditableTile selected={nordDoprava} onClick={() => setNordDoprava(!nordDoprava)} title={t('transport')} subtitle={t('transportFull')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
+                    <EditableTile selected={inziniering} onClick={() => setInziniering(!inziniering)} title={t('engineering')} subtitle={t('buildingPermit')} price={`+ ${CENY.inziniering.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="inziniering" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={projektA0} onClick={() => setProjektA0(!projektA0)} title={t('projectA0')} subtitle={t('certification')} price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="projektA0" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={revizna} onClick={() => setRevizna(!revizna)} title={t('revision')} subtitle={t('documentation')} price={`+ ${CENY.revizna.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="revizia" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={doprava} onClick={() => setDoprava(!doprava)} title={t('transport')} subtitle={t('transportFull')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
                   </div>
 
                   {a0Odporucania && (
@@ -1045,11 +1017,11 @@ export default function KonfiguratorNord({
             dom={dom}
             totalPrice={totalPrice}
             selectedItems={selectedItems}
-            vonkajsiaFasada={nordVonkajsiaFasada}
-            izolaciaNavysenie={nordIzolaciaNavysenie}
-            tepelneCerpadlo={nordTepelneCerpadlo}
-            rekuperacia={nordRekuperacia}
-            projektA0={nordProjektA0}
+            vonkajsiaFasada={vonkajsiaFasada}
+            izolaciaNavysenie={izolaciaNavysenie}
+            tepelneCerpadlo={tepelneCerpadlo}
+            rekuperacia={rekuperacia}
+            projektA0={projektA0}
           />
         </>
       )}
