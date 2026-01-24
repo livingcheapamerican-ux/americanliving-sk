@@ -156,7 +156,8 @@ export default function KonfiguratorFaza1HrubaStavba({
   onPriceUpdate,
   showTooltips = true,
   initialSelections = {},
-  customPrices = null
+  customPrices = null,
+  hideExtraInsulation = false
 }) {
   const { t } = useLanguage();
 
