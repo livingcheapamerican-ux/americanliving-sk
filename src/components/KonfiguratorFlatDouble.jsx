@@ -760,14 +760,14 @@ export default function KonfiguratorFlatDouble({
                   showTooltips={true}
                   initialSelections={{
                     montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: `izolacia_${izolaciaNavysenie === 'standard' ? 'standardna' : izolaciaNavysenie === 'zvysena' ? 'zvysena' : izolaciaNavysenie === 'premium' ? 'premium' : '300mm'}`,
+                    izolacia: izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie === 'zvysena' ? 'zvysena' : izolaciaNavysenie === 'premium' ? 'premium' : '300mm'}`,
                     zaklady: `zaklady_${zaklady}`
                   }}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
                     if (selections.izolacia) {
                       const izolaciaValue = selections.izolacia.replace('izolacia_', '');
-                      setIzolaciaNavysenie(izolaciaValue === 'extra' || izolaciaValue === '300mm' ? 'ultra' : izolaciaValue === 'standardna' ? 'standard' : izolaciaValue);
+                      setIzolaciaNavysenie(izolaciaValue === '300mm' ? 'ultra' : izolaciaValue === 'standardna' ? 'standard' : izolaciaValue);
                     }
                     if (selections.zaklady) {
                       const zakladyValue = selections.zaklady.replace('zaklady_', '');
