@@ -13,7 +13,6 @@ import {
   Settings,
   RefreshCw,
   Facebook,
-  Instagram,
   Search,
   Target,
   DollarSign,
