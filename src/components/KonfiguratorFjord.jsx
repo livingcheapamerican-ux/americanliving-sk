@@ -237,7 +237,7 @@ export default function KonfiguratorFjord({
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 17700 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 5660, premium: 9106 },
+    izolacia: { standardna: 0, zvysena: 5660, premium: 9106 },
     elektroinstalacia: 7800,
     vodaKanalizacia: 3650,
     sanitaKomplet: 1169,
@@ -287,7 +287,7 @@ export default function KonfiguratorFjord({
         plastove: get('dvere_plastove', DEFAULT_CENY.dvere.plastove) 
       },
       izolacia: { 
-        standard: 0, 
+        standardna: 0, 
         zvysena: get('izolacia_zvysena', DEFAULT_CENY.izolacia.zvysena), 
         premium: get('izolacia_premium', DEFAULT_CENY.izolacia.premium)
       },
