@@ -416,14 +416,6 @@ export default function KonfiguratorNord({
 
   const formatPrice = (price) => price.toLocaleString('sk-SK') + " €";
 
-  const dosiahnuteUrovne = useMemo(() => {
-    const hrubaStavba = nordMontazHolodomu === "ano" || nordIzolaciaNavysenie !== "standard" || nordZaklady !== "bez";
-    const holodom = hrubaStavba && (nordElektroinstalacia || nordVodaKanalizacia || nordTepelneCerpadlo || nordRekuperacia);
-    const domNaKluc = holodom && (nordInterierFinis !== "ziadne" || nordVnutornePodlahy || nordVonkajsiaFasada === "suchana");
-    return { hrubaStavba, holodom, domNaKluc };
-  }, [nordMontazHolodomu, nordIzolaciaNavysenie, nordZaklady, nordElektroinstalacia, nordVodaKanalizacia, 
-      nordTepelneCerpadlo, nordRekuperacia, nordInterierFinis, nordVnutornePodlahy, nordVonkajsiaFasada]);
-
   const selectedItems = useMemo(() => {
     const items = [];
     items.push({ name: t('basePriceKit'), price: BASE_PRICE, section: "base", selected: true });
@@ -486,6 +478,14 @@ export default function KonfiguratorNord({
       nordStresneOkno, nordBocneOknoFixne, nordBocneOknoVyklopne90, nordBocneOknoVyklopne55, nordPovrchokaOkien,
       nordTonovaneSkla, nordVonkajsiaFasada, nordInterierFinis, nordVnutornePodlahy, nordPodlahovVykurovanie,
       nordInterieroveDvere, nordPergola, nordInziniering, nordProjektA0, nordRevizna, nordDoprava, t, BASE_PRICE, CENY]);
+
+  const dosiahnuteUrovne = useMemo(() => {
+    const hrubaStavba = nordMontazHolodomu === "ano" || nordIzolaciaNavysenie !== "standard" || nordZaklady !== "bez";
+    const holodom = hrubaStavba && (nordElektroinstalacia || nordVodaKanalizacia || nordTepelneCerpadlo || nordRekuperacia);
+    const domNaKluc = holodom && (nordInterierFinis !== "ziadne" || nordVnutornePodlahy || nordVonkajsiaFasada === "suchana");
+    return { hrubaStavba, holodom, domNaKluc };
+  }, [nordMontazHolodomu, nordIzolaciaNavysenie, nordZaklady, nordElektroinstalacia, nordVodaKanalizacia, 
+      nordTepelneCerpadlo, nordRekuperacia, nordInterierFinis, nordVnutornePodlahy, nordVonkajsiaFasada]);
 
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
