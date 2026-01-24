@@ -68,41 +68,9 @@ export default function KonfiguratorProstoHouse() {
   });
 
   // Načítať cenník z databázy (fallback na defaults ak neexistuje)
-  const [customCeny, setCustomCeny] = useState(dom?.konfigurator_custom_ceny_prosto_house || {});
+  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
 
-  useEffect(() => {
-    setCustomCeny(dom?.konfigurator_custom_ceny_prosto_house || {});
-  }, [dom?.konfigurator_custom_ceny_prosto_house]);
-  
   const DEFAULT_CENNIK = {
-    montaz: {
-      48: 4614,
-      72: 7524,
-      103: 12073,
-      108: 9664,
-      142: 12091
-    },
-    vstupne_dviere: {
-      kovove: 480,
-      plastkovo_kovove: 440,
-      standardne: 0
-    },
-    zaklady: {
-      skrutky: 3521,
-      pasove: 9093,
-      doska: 9633,
-      bez: 0
-    },
-    fasada: {
-      smrekovec: 960,
-      termicky_upravene_drevo: 1440,
-      kompozit: 2400,
-      standard: 0
-    },
-    okna: {
-      hlinikove: 1200,
-      standard: 0
-    },
     izolacie: 3200,
     elektroinst: 2400,
     vodoinst: 1800,
@@ -116,64 +84,14 @@ export default function KonfiguratorProstoHouse() {
     energeticky_cert: 3500
   };
 
-  const getPrice = (category, key = null) => {
-    // First try flat key format (e.g., 'montaz_48')
-    if (key !== null) {
-      const flatKey = `${category}_${key}`;
-      if (customCeny[flatKey] !== undefined && customCeny[flatKey] !== null && customCeny[flatKey] > 0) {
-        return customCeny[flatKey];
-      }
+  const getPrice = (key) => {
+    if (customCeny && customCeny[key] !== undefined && customCeny[key] > 0) {
+      return customCeny[key];
     }
-    
-    // Then try nested object format
-    if (key === null) {
-      const customValue = customCeny[category];
-      if (customValue !== undefined && customValue !== null && customValue !== 0) {
-        return customValue;
-      }
-      return DEFAULT_CENNIK[category] ?? 0;
-    }
-    
-    const customCategory = customCeny[category];
-    if (customCategory && typeof customCategory === 'object') {
-      const customValue = customCategory[key];
-      if (customValue !== undefined && customValue !== null && customValue !== 0) {
-        return customValue;
-      }
-    }
-    
-    return DEFAULT_CENNIK[category]?.[key] ?? 0;
+    return DEFAULT_CENNIK[key] ?? 0;
   };
 
   const cennik = React.useMemo(() => ({
-    montaz: {
-      48: getPrice('montaz_48') || DEFAULT_CENNIK.montaz[48],
-      72: getPrice('montaz_72') || DEFAULT_CENNIK.montaz[72],
-      103: getPrice('montaz_103') || DEFAULT_CENNIK.montaz[103],
-      108: getPrice('montaz_108') || DEFAULT_CENNIK.montaz[108],
-      142: getPrice('montaz_142') || DEFAULT_CENNIK.montaz[142]
-    },
-    vstupne_dvery: {
-      kovove: getPrice('vstupne_dviere', 'kovove'),
-      plastkovo_kovove: getPrice('vstupne_dviere', 'plastkovo_kovove'),
-      standardne: 0
-    },
-    zaklady: {
-      skrutky: getPrice('zaklady', 'skrutky'),
-      pasove: getPrice('zaklady', 'pasove'),
-      doska: getPrice('zaklady', 'doska'),
-      bez: 0
-    },
-    fasada: {
-      smrekovec: getPrice('fasada', 'smrekovec'),
-      termicky_upravene_drevo: getPrice('fasada', 'termicky_upravene_drevo'),
-      kompozit: getPrice('fasada', 'kompozit'),
-      standard: 0
-    },
-    okna: {
-      hlinikove: getPrice('okna', 'hlinikove'),
-      standard: 0
-    },
     izolacie: getPrice('izolacie'),
     elektroinst: getPrice('elektroinst'),
     vodoinst: getPrice('vodoinst'),
