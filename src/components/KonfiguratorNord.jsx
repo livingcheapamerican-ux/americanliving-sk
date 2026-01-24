@@ -424,51 +424,6 @@ export default function KonfiguratorNord({
   }, [nordMontazHolodomu, nordIzolaciaNavysenie, nordZaklady, nordElektroinstalacia, nordVodaKanalizacia, 
       nordTepelneCerpadlo, nordRekuperacia, nordInterierFinis, nordVnutornePodlahy, nordVonkajsiaFasada]);
 
-  // Výpočet celkovej ceny
-  const totalPrice = useMemo(() => {
-    let total = BASE_PRICE;
-    
-    total += CENY.montaz[nordMontazHolodomu];
-    total += CENY.dvere[nordVstupneDvere];
-    total += CENY.izolacia[nordIzolaciaNavysenie];
-    
-    if (nordElektroinstalacia) total += CENY.elektroinstalacia;
-    if (nordVodaKanalizacia) total += CENY.vodaKanalizacia;
-    if (nordSanitaKomplet) total += CENY.sanitaKomplet;
-    if (nordBojler) total += CENY.bojler;
-    if (nordTepelneCerpadlo) total += CENY.tepelneCerpadlo;
-    if (nordRekuperacia) total += CENY.rekuperacia;
-    
-    total += CENY.zaklady[nordZaklady];
-    if (nordPripojkaSiete) total += CENY.pripojkaSiete;
-    
-    if (nordInziniering) total += CENY.inziniering;
-    if (nordProjektA0) total += CENY.projektA0;
-    
-    total += CENY.interierFinis[nordInterierFinis] || 0;
-    total += CENY.vonkajsiaFasada[nordVonkajsiaFasada] || 0;
-    if (nordPovrchokaOkien) total += CENY.povrchokaOkien;
-    if (nordVnutornePodlahy) total += CENY.vnutornePodlahy;
-    if (nordPodlahovVykurovanie) total += CENY.podlahovVykurovanie;
-    if (nordPergola) total += CENY.pergola;
-    total += nordInterieroveDvere * CENY.interieroveDvere;
-    if (nordTonovaneSkla) total += CENY.tonovaneSkla;
-    if (nordDoprava) total += CENY.doprava;
-    if (nordRevizna) total += CENY.revizna;
-    
-    total += nordStresneOkno * CENY.stresneOkno;
-    total += nordBocneOknoFixne * CENY.bocneOknoFixne;
-    total += nordBocneOknoVyklopne90 * CENY.bocneOknoVyklopne90;
-    total += nordBocneOknoVyklopne55 * CENY.bocneOknoVyklopne55;
-    
-    return total;
-  }, [nordMontazHolodomu, nordVstupneDvere, nordIzolaciaNavysenie, nordElektroinstalacia, 
-      nordVodaKanalizacia, nordSanitaKomplet, nordBojler, nordTepelneCerpadlo, nordRekuperacia,
-      nordZaklady, nordPripojkaSiete, nordInziniering, nordProjektA0, nordInterierFinis,
-      nordVonkajsiaFasada, nordPovrchokaOkien, nordVnutornePodlahy, nordPodlahovVykurovanie,
-      nordPergola, nordInterieroveDvere, nordTonovaneSkla, nordDoprava, nordRevizna,
-      nordStresneOkno, nordBocneOknoFixne, nordBocneOknoVyklopne90, nordBocneOknoVyklopne55, BASE_PRICE, CENY]);
-
   const selectedItems = useMemo(() => {
     const items = [];
     items.push({ name: t('basePriceKit'), price: BASE_PRICE, section: "base", selected: true });
