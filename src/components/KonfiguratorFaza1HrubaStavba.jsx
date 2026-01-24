@@ -136,7 +136,7 @@ function Tile({ icon: Icon, title, subtitle, price, isSelected, onClick, tooltip
 
 // Default prices - fallback if dom doesn't have custom prices
 const DEFAULT_PRICES = {
-  montaz_ano: 4875, // Flat Small cena
+  montaz_ano: 17700, // Fjord cena
   montaz_nie: 0,
   izolacia_standardna: 0,
   izolacia_zvysena: 1400, // Flat Small cena
