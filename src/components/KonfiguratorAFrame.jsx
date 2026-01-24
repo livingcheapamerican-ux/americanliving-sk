@@ -242,6 +242,20 @@ export default function KonfiguratorAFrame({
     if (customCeny[key] !== undefined && customCeny[key] !== null) {
       return customCeny[key];
     }
+    
+    // For nested keys like 'izolacia_extra', map to the nested DEFAULT_CENY structure
+    const parts = key.split('_');
+    if (parts.length === 2) {
+      const [category, type] = parts;
+      if (DEFAULT_CENY[category] && DEFAULT_CENY[category][type] !== undefined) {
+        return DEFAULT_CENY[category][type];
+      }
+      // Special mapping for 'extra' to 'ultra'
+      if (key === 'izolacia_extra' && DEFAULT_CENY.izolacia && DEFAULT_CENY.izolacia.ultra !== undefined) {
+        return DEFAULT_CENY.izolacia.ultra;
+      }
+    }
+    
     return DEFAULT_CENY[key];
   };
 
