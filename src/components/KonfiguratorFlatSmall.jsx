@@ -212,14 +212,14 @@ export default function KonfiguratorFlatSmall({
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 4875 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 1400, premium: 2800, ultra: 5250 },
+    izolacia: { standard: 0, zvysena: 1400, premium: 2800, ultra: 5250 }, // ultra je extra izolácia = 5250 €
     elektroinstalacia: 2300,
     vodaKanalizacia: 980,
     sanitaKomplet: 1169,
     bojler: 246,
     tepelneCerpadlo: 600,
     rekuperacia: 1105,
-    zaklady: { bez: 0, skrutky: 2808, doska: 6000, pasove: 5000 },
+    zaklady: { bez: 0, skrutky: 2808, doska: 6000, pasove: 5000 }, // skrutky = zemné vruty = 2808 €
     pripojkaSiete: 1501,
     inziniering: 2590,
     projektA0: 3500,
@@ -751,7 +751,7 @@ export default function KonfiguratorFlatSmall({
                       <span className="w-4 h-4 sm:w-5 sm:h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">1</span>
                       {t('interiorFinish')} ({t('selectOne')})
                     </p>
-                    <EditableTile selected={interierFinis === "ziadne"} onClick={() => setInterierFinis("ziadne")} title={t('interiorNone')} subtitle={t('shellConstruction')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
+                    <EditableTile selected={izolaciaNavysenie === "ultra"} onClick={() => setIzolaciaNavysenie("ultra")} title="Extra izolácia" subtitle="300mm" price={`+ ${CENY.izolacia.ultra.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="izolacia_extra" onPriceChange={handlePriceChange} />
                     <EditableTile selected={interierFinis === "drevo"} onClick={() => setInterierFinis("drevo")} title={t('interiorWood')} subtitle={t('woodCladding')} price={`+ ${CENY.interierFinis.drevo.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interier_drevo" onPriceChange={handlePriceChange} />
                     <EditableTile selected={interierFinis === "sadrokarton"} onClick={() => setInterierFinis("sadrokarton")} title={t('interiorDrywall')} subtitle={t('plaster')} price={`+ ${CENY.interierFinis.sadrokarton.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interier_sadrokarton" onPriceChange={handlePriceChange} />
                   </div>
@@ -816,7 +816,7 @@ export default function KonfiguratorFlatSmall({
                   </p>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                     {[
-                      { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: `${CENY.stresneOkno.toLocaleString('sk-SK')} €` },
+                      { state: zaklady === "skrutky" ? 1 : 0, setter: () => setZaklady(zaklady === "skrutky" ? "bez" : "skrutky"), label: "Zemné skrutky", price: `${CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` },
                       { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: `${CENY.bocneOknoFixne.toLocaleString('sk-SK')} €` },
                       { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: `${CENY.bocneOknoVyklopne90.toLocaleString('sk-SK')} €` },
                       { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: `${CENY.bocneOknoVyklopne55.toLocaleString('sk-SK')} €` }
