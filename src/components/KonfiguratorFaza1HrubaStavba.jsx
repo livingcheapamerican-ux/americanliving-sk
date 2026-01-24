@@ -180,6 +180,7 @@ export default function KonfiguratorFaza1HrubaStavba({
   const [zaklady, setZaklady] = useState(initialSelections.zaklady || null);
 
   const prevInitialSelections = useRef(initialSelections);
+  const prevCustomPrices = useRef(customPrices);
 
   // Synchronizovať s externými zmenami (iba pri prvom mount alebo pri externej zmene)
   useEffect(() => {
@@ -197,6 +198,11 @@ export default function KonfiguratorFaza1HrubaStavba({
       prevInitialSelections.current = initialSelections;
     }
   }, [initialSelections, izolacia, montaz, zaklady]);
+
+  // Recompute getPrice if customPrices change
+  useEffect(() => {
+    prevCustomPrices.current = customPrices;
+  }, [customPrices]);
 
   // Notify parent of changes
   useEffect(() => {
