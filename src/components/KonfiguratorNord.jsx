@@ -623,11 +623,11 @@ export default function KonfiguratorNord({
             dom={dom}
             totalPrice={totalPrice}
             selectedItems={selectedItems}
-            vonkajsiaFasada={vonkajsiaFasada}
-            izolaciaNavysenie={izolaciaNavysenie}
-            tepelneCerpadlo={tepelneCerpadlo}
-            rekuperacia={rekuperacia}
-            projektA0={projektA0}
+            vonkajsiaFasada={nordVonkajsiaFasada}
+            izolaciaNavysenie={nordIzolaciaNavysenie}
+            tepelneCerpadlo={nordTepelneCerpadlo}
+            rekuperacia={nordRekuperacia}
+            projektA0={nordProjektA0}
           />
 
           <div className="px-2 py-1 max-h-[65vh] overflow-y-auto">
