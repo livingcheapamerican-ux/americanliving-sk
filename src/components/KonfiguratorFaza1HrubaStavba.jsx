@@ -393,7 +393,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={() => <span className="text-3xl">🏛️</span>}
             title={t('foundationsNone')}
             subtitle={t('own')}
-            price={t('included')}
+            price={0}
             isPriced={false}
             isSelected={zaklady === 'zaklady_bez'}
             onClick={() => setZaklady('zaklady_bez')}
@@ -407,7 +407,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={() => <span className="text-3xl">🔩</span>}
             title={t('foundationsScrews')}
             subtitle={t('foundationsGroundPilots')}
-            price={`+ ${getPrice('zaklady_skrutky').toLocaleString('sk-SK')} €`}
+            price={getPrice('zaklady_skrutky')}
             isPriced={true}
             isSelected={zaklady === 'zaklady_skrutky'}
             onClick={() => setZaklady('zaklady_skrutky')}
@@ -421,7 +421,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={() => <span className="text-3xl">🏗️</span>}
             title={t('foundationsSlab')}
             subtitle={t('foundationsFoundationSlab')}
-            price={`+ ${getPrice('zaklady_doska').toLocaleString('sk-SK')} €`}
+            price={getPrice('zaklady_doska')}
             isPriced={true}
             isSelected={zaklady === 'zaklady_doska'}
             onClick={() => setZaklady('zaklady_doska')}
@@ -435,7 +435,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={() => <span className="text-3xl">🧱</span>}
             title={t('foundationsStrip')}
             subtitle={t('foundationsStripBase')}
-            price={`+ ${getPrice('zaklady_pasove').toLocaleString('sk-SK')} €`}
+            price={getPrice('zaklady_pasove')}
             isPriced={true}
             isSelected={zaklady === 'zaklady_pasove'}
             onClick={() => setZaklady('zaklady_pasove')}
