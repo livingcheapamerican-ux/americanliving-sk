@@ -1622,7 +1622,7 @@ export default function AIMarketingInsights() {
                           <CardTitle className="flex items-center gap-2">
                             <div className="flex gap-1">
                               <Facebook className="w-5 h-5 text-blue-600" />
-                              <Instagram className="w-5 h-5 text-pink-600" />
+                              <Sparkles className="w-5 h-5 text-pink-600" />
                             </div>
                             Facebook & Instagram
                           </CardTitle>
