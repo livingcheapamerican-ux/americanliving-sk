@@ -612,6 +612,12 @@ export default function KonfiguratorFjord({
     }
   };
 
+  const initialSelectionsForFaza1 = useMemo(() => ({
+    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
+    izolacia: izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+    zaklady: zaklady === 'bez' ? 'zaklady_bez' : zaklady === 'skrutky' ? 'zaklady_skrutky' : `zaklady_${zaklady}`
+  }), [montazHolodomu, izolaciaNavysenie, zaklady]);
+
   const handleSendQuoteFromFloating = async (contactData) => {
     try {
       const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
@@ -793,11 +799,7 @@ export default function KonfiguratorFjord({
                   isAdmin={isAdmin}
                   onPriceUpdate={handlePriceChange}
                   showTooltips={true}
-                  initialSelections={{
-                    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
-                    zaklady: zaklady === 'bez' ? 'zaklady_bez' : zaklady === 'skrutky' ? 'zaklady_skrutky' : `zaklady_${zaklady}`
-                  }}
+                  initialSelections={initialSelectionsForFaza1}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
                     if (selections.izolacia) setIzolaciaNavysenie(selections.izolacia.replace('izolacia_', ''));
