@@ -153,12 +153,18 @@ export default function KonfiguratorFaza1HrubaStavba({
   isAdmin = false,
   onPriceUpdate,
   showTooltips = true,
-  initialSelections = {}
+  initialSelections = {},
+  customPrices = null
 }) {
   const { t } = useLanguage();
 
   // Get prices - custom prices from dom or defaults
   const getPrice = (itemId) => {
+    // First check if custom prices passed via props
+    if (customPrices && customPrices[itemId] !== undefined) {
+      return customPrices[itemId];
+    }
+    // Then check dom's custom prices
     if (dom?.konfigurator_custom_ceny_prosto_house?.[itemId] !== undefined) {
       return dom.konfigurator_custom_ceny_prosto_house[itemId];
     }

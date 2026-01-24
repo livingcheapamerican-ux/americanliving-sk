@@ -810,6 +810,18 @@ export default function KonfiguratorNord({
                   onPriceUpdate={handlePriceChange}
                   showTooltips={true}
                   initialSelections={initialSelectionsForFaza1}
+                  customPrices={{
+                    montaz_ano: CENY.montaz.ano,
+                    montaz_nie: 0,
+                    izolacia_standardna: 0,
+                    izolacia_zvysena: CENY.izolacia.zvysena,
+                    izolacia_premium: CENY.izolacia.premium,
+                    izolacia_extra: CENY.izolacia.ultra,
+                    zaklady_bez: 0,
+                    zaklady_skrutky: CENY.zaklady.skrutky,
+                    zaklady_doska: CENY.zaklady.doska,
+                    zaklady_pasove: CENY.zaklady.pasove
+                  }}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) {
                       const montazValue = selections.montaz === 'montaz_ano' ? 'ano' : 'nie';
