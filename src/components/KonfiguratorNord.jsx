@@ -811,9 +811,18 @@ export default function KonfiguratorNord({
                   showTooltips={true}
                   initialSelections={initialSelectionsForFaza1}
                   onSelectionChange={(selections) => {
-                    if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
-                    if (selections.izolacia) setIzolaciaNavysenie(selections.izolacia.replace('izolacia_', ''));
-                    if (selections.zaklady) setZaklady(selections.zaklady.replace('zaklady_', ''));
+                    if (selections.montaz) {
+                      const montazValue = selections.montaz === 'montaz_ano' ? 'ano' : 'nie';
+                      setNordMontazHolodomu(montazValue);
+                    }
+                    if (selections.izolacia) {
+                      const izolaciaValue = selections.izolacia.replace('izolacia_', '');
+                      setNordIzolaciaNavysenie(izolaciaValue);
+                    }
+                    if (selections.zaklady) {
+                      const zakladyValue = selections.zaklady.replace('zaklady_', '');
+                      setNordZaklady(zakladyValue);
+                    }
                   }}
                 />
               </div>
