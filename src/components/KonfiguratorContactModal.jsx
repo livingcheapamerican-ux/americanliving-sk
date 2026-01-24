@@ -308,7 +308,7 @@ export default function KonfiguratorContactModal({
                           </span>
                         </div>
                       )}
-                    </React.Fragment>
+                    </div>
                   );
                 })}
               </div>
