@@ -161,27 +161,22 @@ export default function KonfiguratorFaza1HrubaStavba({
 }) {
   const { t } = useLanguage();
 
-  // Get prices - custom prices from dom or defaults
+  // Get prices - dynamically from dom or defaults
   const getPrice = (itemId) => {
-    // First check if custom prices passed via props
-    if (customPrices && customPrices[itemId] !== undefined && customPrices[itemId] !== null && customPrices[itemId] > 0) {
-      return customPrices[itemId];
-    }
-    // Then check dom's custom prices (try both field names)
+    // Priority 1: Check dom's custom prices (direktne z domu)
     const customPrice = dom?.konfigurator_custom_ceny_prosto_house?.[itemId];
     if (customPrice !== undefined && customPrice !== null && customPrice > 0) {
       return customPrice;
     }
-    // Special handling for montaz - check both 'montaz_ano' and 'montaz'
-    if (itemId === 'montaz_ano') {
-      const montazPrice = dom?.konfigurator_custom_ceny_prosto_house?.montaz;
-      if (montazPrice !== undefined && montazPrice !== null && montazPrice > 0) {
-        return montazPrice;
-      }
+    // Priority 2: Check customPrices prop (fallback)
+    if (customPrices && customPrices[itemId] !== undefined && customPrices[itemId] !== null && customPrices[itemId] > 0) {
+      return customPrices[itemId];
     }
-    if (dom?.konfigurator_ceny?.[itemId] !== undefined) {
+    // Priority 3: Check konfigurator_ceny (fallback)
+    if (dom?.konfigurator_ceny?.[itemId] !== undefined && dom.konfigurator_ceny[itemId] > 0) {
       return dom.konfigurator_ceny[itemId];
     }
+    // Priority 4: Use DEFAULT_PRICES
     return DEFAULT_PRICES[itemId] || 0;
   };
 
