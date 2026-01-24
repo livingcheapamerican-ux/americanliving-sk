@@ -438,7 +438,7 @@ export default function KonfiguratorFjord({
     if (hladaniePozemku) items.push({ name: t('wantLandForHouse'), price: 0, section: "services", selected: true });
     if (financneSluzby) items.push({ name: t('financialServicesLoans'), price: 0, section: "services", selected: true });
     
-    items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
+    items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY?.montaz?.ano || 0 : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
     const izolaciaLabel = izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
     const izolaciaPrice = izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
