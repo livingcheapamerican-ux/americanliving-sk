@@ -253,7 +253,7 @@ export default function KonfiguratorNord({
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 14850 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standard: 0, zvysena: 3200, premium: 6400, ultra: 12000 },
+    izolacia: { standard: 0, zvysena: 3200, premium: 6400, extra300: 9600, ultra: 12000 },
     elektroinstalacia: 3900,
     vodaKanalizacia: 1150,
     sanitaKomplet: 1169,
@@ -299,7 +299,8 @@ export default function KonfiguratorNord({
       standard: 0,
       standardna: 0, 
       zvysena: getPrice('izolacia_zvysena') ?? DEFAULT_CENY.izolacia.zvysena, 
-      premium: getPrice('izolacia_premium') ?? DEFAULT_CENY.izolacia.premium, 
+      premium: getPrice('izolacia_premium') ?? DEFAULT_CENY.izolacia.premium,
+      extra300: getPrice('izolacia_300mm') ?? DEFAULT_CENY.izolacia.extra300, 
       ultra: getPrice('izolacia_extra') ?? DEFAULT_CENY.izolacia.ultra 
     },
     elektroinstalacia: getPrice('elektroinstalacia') ?? DEFAULT_CENY.elektroinstalacia,
@@ -408,8 +409,8 @@ export default function KonfiguratorNord({
     
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
-    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra 300mm" : izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
-    const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
+    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra 300mm" : izolaciaNavysenie === "extra300" ? "300mm" : izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
+    const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "extra300" ? CENY.izolacia.extra300 : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
     items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" && izolaciaNavysenie !== "standardna" });
     
     const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? t('foundationsScrews') : t('foundationsLabel');
@@ -549,7 +550,7 @@ export default function KonfiguratorNord({
 
   const initialSelectionsForFaza1 = useMemo(() => ({
     montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-    izolacia: izolaciaNavysenie === 'standard' || izolaciaNavysenie === 'standardna' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+    izolacia: izolaciaNavysenie === 'standard' || izolaciaNavysenie === 'standardna' ? 'izolacia_standardna' : izolaciaNavysenie === 'extra300' ? 'izolacia_300mm' : `izolacia_${izolaciaNavysenie}`,
     zaklady: zaklady === 'bez' ? 'zaklady_bez' : zaklady === 'skrutky' ? 'zaklady_skrutky' : `zaklady_${zaklady}`
   }), [montazHolodomu, izolaciaNavysenie, zaklady]);
 
@@ -772,6 +773,7 @@ export default function KonfiguratorNord({
                     izolacia_standardna: 0,
                     izolacia_zvysena: CENY.izolacia.zvysena,
                     izolacia_premium: CENY.izolacia.premium,
+                    izolacia_300mm: CENY.izolacia.extra300,
                     izolacia_extra: CENY.izolacia.ultra,
                     zaklady_bez: 0,
                     zaklady_skrutky: CENY.zaklady.skrutky,
@@ -784,7 +786,7 @@ export default function KonfiguratorNord({
                       setMontazHolodomu(montazValue);
                     }
                     if (selections.izolacia) {
-                      const izolaciaValue = selections.izolacia.replace('izolacia_', '');
+                      const izolaciaValue = selections.izolacia === 'izolacia_300mm' ? 'extra300' : selections.izolacia.replace('izolacia_', '');
                       setIzolaciaNavysenie(izolaciaValue);
                     }
                     if (selections.zaklady) {
