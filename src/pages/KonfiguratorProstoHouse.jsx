@@ -10,9 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ArrowLeft, Home, Settings, Send, CheckCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import KonfiguratorProstoHouseFaza1 from "@/components/KonfiguratorProstoHouseFaza1";
 
 export default function KonfiguratorProstoHouse() {
   const { t } = useLanguage();
