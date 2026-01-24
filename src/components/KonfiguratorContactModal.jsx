@@ -265,17 +265,17 @@ export default function KonfiguratorContactModal({
               {/* Súhrn položiek */}
               <div className="bg-slate-800/50 rounded-xl p-3 border border-slate-700/50 max-h-[200px] sm:max-h-[250px] overflow-y-auto text-sm">
                 {selectedItems?.map((item, index) => {
-                  const isBase = item.section === "base";
-                  const prevItem = selectedItems[index - 1];
-                  const showHrubaDivider = item.section === "hruba" && (!prevItem || prevItem.section === "base");
-                  const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
-                  const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
-                  const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
-                  
-                  if (!item.selected && !isBase) return null;
-                  
-                  return (
-                    <React.Fragment key={index}>
+                   const isBase = item.section === "base";
+                   const prevItem = selectedItems[index - 1];
+                   const showHrubaDivider = item.section === "hruba" && (!prevItem || prevItem.section === "base");
+                   const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
+                   const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
+                   const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
+
+                   if (!item.selected && !isBase) return null;
+
+                   return (
+                     <div key={index}>
                       {showHrubaDivider && (
                         <div className="flex items-center gap-2 py-1 mt-2">
                           <Package className="w-3 h-3 text-amber-400" />
