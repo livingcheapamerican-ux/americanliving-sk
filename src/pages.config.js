@@ -1,4 +1,3 @@
-import AIMarketingInsights from './pages/AIMarketingInsights';
 import AdminABTesting from './pages/AdminABTesting';
 import AdminAnalytikaCenovychPonuk from './pages/AdminAnalytikaCenovychPonuk';
 import AdminAnalyzaDomov from './pages/AdminAnalyzaDomov';
@@ -34,20 +33,12 @@ import AutoRegeneraciaPrekladov from './pages/AutoRegeneraciaPrekladov';
 import AutoSEOTrigger from './pages/AutoSEOTrigger';
 import Blog from './pages/Blog';
 import BlogDetail from './pages/BlogDetail';
-import DetailDomu from './pages/DetailDomu';
 import Domov from './pages/Domov';
 import FAQ from './pages/FAQ';
 import GaleriaRealizacii from './pages/GaleriaRealizacii';
 import Home from './pages/Home';
 import InteraktivnyKonfigurator from './pages/InteraktivnyKonfigurator';
-import Katalog from './pages/Katalog';
-import KatalogDomkiZGor from './pages/KatalogDomkiZGor';
-import KatalogMobilneDomy from './pages/KatalogMobilneDomy';
-import KatalogModularneDomy from './pages/KatalogModularneDomy';
-import KatalogMontovaneDomy from './pages/KatalogMontovaneDomy';
-import KatalogProstoHouse from './pages/KatalogProstoHouse';
 import KatalogRodinneDomy from './pages/KatalogRodinneDomy';
-import KatalogTicabHouse from './pages/KatalogTicabHouse';
 import Konfigurator from './pages/Konfigurator';
 import Konfigurator3D from './pages/Konfigurator3D';
 import KonfiguratorFlatDouble from './pages/KonfiguratorFlatDouble';
@@ -69,11 +60,19 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
+import KatalogTicabHouse from './pages/KatalogTicabHouse';
+import Katalog from './pages/Katalog';
+import KatalogProstoHouse from './pages/KatalogProstoHouse';
+import KatalogMobilneDomy from './pages/KatalogMobilneDomy';
+import AIMarketingInsights from './pages/AIMarketingInsights';
+import KatalogMontovaneDomy from './pages/KatalogMontovaneDomy';
+import KatalogModularneDomy from './pages/KatalogModularneDomy';
+import KatalogDomkiZGor from './pages/KatalogDomkiZGor';
+import DetailDomu from './pages/DetailDomu';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "AIMarketingInsights": AIMarketingInsights,
     "AdminABTesting": AdminABTesting,
     "AdminAnalytikaCenovychPonuk": AdminAnalytikaCenovychPonuk,
     "AdminAnalyzaDomov": AdminAnalyzaDomov,
@@ -109,20 +108,12 @@ export const PAGES = {
     "AutoSEOTrigger": AutoSEOTrigger,
     "Blog": Blog,
     "BlogDetail": BlogDetail,
-    "DetailDomu": DetailDomu,
     "Domov": Domov,
     "FAQ": FAQ,
     "GaleriaRealizacii": GaleriaRealizacii,
     "Home": Home,
     "InteraktivnyKonfigurator": InteraktivnyKonfigurator,
-    "Katalog": Katalog,
-    "KatalogDomkiZGor": KatalogDomkiZGor,
-    "KatalogMobilneDomy": KatalogMobilneDomy,
-    "KatalogModularneDomy": KatalogModularneDomy,
-    "KatalogMontovaneDomy": KatalogMontovaneDomy,
-    "KatalogProstoHouse": KatalogProstoHouse,
     "KatalogRodinneDomy": KatalogRodinneDomy,
-    "KatalogTicabHouse": KatalogTicabHouse,
     "Konfigurator": Konfigurator,
     "Konfigurator3D": Konfigurator3D,
     "KonfiguratorFlatDouble": KonfiguratorFlatDouble,
@@ -144,6 +135,15 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
+    "KatalogTicabHouse": KatalogTicabHouse,
+    "Katalog": Katalog,
+    "KatalogProstoHouse": KatalogProstoHouse,
+    "KatalogMobilneDomy": KatalogMobilneDomy,
+    "AIMarketingInsights": AIMarketingInsights,
+    "KatalogMontovaneDomy": KatalogMontovaneDomy,
+    "KatalogModularneDomy": KatalogModularneDomy,
+    "KatalogDomkiZGor": KatalogDomkiZGor,
+    "DetailDomu": DetailDomu,
 }
 
 export const pagesConfig = {
