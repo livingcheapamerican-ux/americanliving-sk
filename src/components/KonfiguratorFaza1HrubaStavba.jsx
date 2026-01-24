@@ -166,9 +166,12 @@ export default function KonfiguratorFaza1HrubaStavba({
     if (customPrices && customPrices[itemId] !== undefined) {
       return customPrices[itemId];
     }
-    // Then check dom's custom prices
+    // Then check dom's custom prices (try both field names)
     if (dom?.konfigurator_custom_ceny_prosto_house?.[itemId] !== undefined) {
       return dom.konfigurator_custom_ceny_prosto_house[itemId];
+    }
+    if (dom?.konfigurator_ceny?.[itemId] !== undefined) {
+      return dom.konfigurator_ceny[itemId];
     }
     return DEFAULT_PRICES[itemId] || 0;
   };
