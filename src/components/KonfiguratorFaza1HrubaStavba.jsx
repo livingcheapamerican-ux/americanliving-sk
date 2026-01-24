@@ -141,8 +141,8 @@ const DEFAULT_PRICES = {
   izolacia_standardna: 0,
   izolacia_zvysena: 1400, // Flat Small cena
   izolacia_premium: 2800, // Flat Small cena
-  izolacia_300mm: 5250, // Flat Small Extra izolácia - 5250 € nie 16500 €
-  zaklady_skrutky: 2808, // Flat Small Zemné skrutky - 2808 € nie 6348 €
+  izolacia_extra: 5250, // Flat Small Extra izolácia
+  zaklady_skrutky: 2808, // Flat Small Zemné skrutky
   zaklady_doska: 6000, // Flat Small cena
   zaklady_pasove: 5000, // Flat Small cena
 };
