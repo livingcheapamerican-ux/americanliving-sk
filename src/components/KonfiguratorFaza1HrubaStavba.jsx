@@ -136,15 +136,15 @@ function Tile({ icon: Icon, title, subtitle, price, isSelected, onClick, tooltip
 
 // Default prices - fallback if dom doesn't have custom prices
 const DEFAULT_PRICES = {
-  montaz_ano: 4875,
+  montaz_ano: 17700,
   montaz_nie: 0,
   izolacia_standardna: 0,
-  izolacia_zvysena: 1400,
-  izolacia_premium: 2800,
+  izolacia_zvysena: 5660,
+  izolacia_premium: 9106,
   izolacia_extra: 5250,
-  zaklady_vruty: 2808,
-  zaklady_doska: 6000,
-  zaklady_pasove: 5000,
+  zaklady_vruty: 7655,
+  zaklady_doska: 13000,
+  zaklady_pasove: 11500,
 };
 
 export default function KonfiguratorFaza1HrubaStavba({ 
