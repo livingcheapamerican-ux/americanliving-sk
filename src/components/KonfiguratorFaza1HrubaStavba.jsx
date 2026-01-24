@@ -393,7 +393,8 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={() => <span className="text-3xl">🏛️</span>}
             title={t('foundationsNone')}
             subtitle={t('own')}
-            price={0}
+            price={t('included')}
+            isPriced={false}
             isSelected={zaklady === 'zaklady_bez'}
             onClick={() => setZaklady('zaklady_bez')}
             tooltip={t('foundationsNoneTooltip')}
@@ -406,7 +407,8 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={() => <span className="text-3xl">🔩</span>}
             title={t('foundationsScrews')}
             subtitle={t('foundationsGroundPilots')}
-            price={getPrice('zaklady_skrutky')}
+            price={`+ ${getPrice('zaklady_skrutky').toLocaleString('sk-SK')} €`}
+            isPriced={true}
             isSelected={zaklady === 'zaklady_skrutky'}
             onClick={() => setZaklady('zaklady_skrutky')}
             tooltip={t('foundationsScrewsTooltip')}
@@ -419,7 +421,8 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={() => <span className="text-3xl">🏗️</span>}
             title={t('foundationsSlab')}
             subtitle={t('foundationsFoundationSlab')}
-            price={getPrice('zaklady_doska')}
+            price={`+ ${getPrice('zaklady_doska').toLocaleString('sk-SK')} €`}
+            isPriced={true}
             isSelected={zaklady === 'zaklady_doska'}
             onClick={() => setZaklady('zaklady_doska')}
             tooltip={t('foundationsSlabTooltip')}
@@ -432,7 +435,8 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={() => <span className="text-3xl">🧱</span>}
             title={t('foundationsStrip')}
             subtitle={t('foundationsStripBase')}
-            price={getPrice('zaklady_pasove')}
+            price={`+ ${getPrice('zaklady_pasove').toLocaleString('sk-SK')} €`}
+            isPriced={true}
             isSelected={zaklady === 'zaklady_pasove'}
             onClick={() => setZaklady('zaklady_pasove')}
             tooltip={t('foundationsStripTooltip')}
