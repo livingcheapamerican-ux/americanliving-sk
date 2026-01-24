@@ -1094,6 +1094,7 @@ export default function KonfiguratorFlat15({
                     tepelneCerpadlo={tepelneCerpadlo}
                     rekuperacia={rekuperacia}
                     projektA0={projektA0}
+                    typStavby="rodinny_dom"
                   />
                 </div>
               </div>
