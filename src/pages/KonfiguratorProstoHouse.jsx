@@ -137,7 +137,13 @@ export default function KonfiguratorProstoHouse() {
   };
 
   const cennik = {
-    montaz: DEFAULT_CENNIK.montaz,
+    montaz: {
+      48: getPrice('montaz_48') || DEFAULT_CENNIK.montaz[48],
+      72: getPrice('montaz_72') || DEFAULT_CENNIK.montaz[72],
+      103: getPrice('montaz_103') || DEFAULT_CENNIK.montaz[103],
+      108: getPrice('montaz_108') || DEFAULT_CENNIK.montaz[108],
+      142: getPrice('montaz_142') || DEFAULT_CENNIK.montaz[142]
+    },
     vstupne_dvery: {
       kovove: getPrice('vstupne_dviere', 'kovove'),
       plastkovo_kovove: getPrice('vstupne_dviere', 'plastkovo_kovove'),
