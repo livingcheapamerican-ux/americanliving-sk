@@ -164,16 +164,20 @@ export default function KonfiguratorFaza1HrubaStavba({
   // Get prices - custom prices from dom or defaults
   const getPrice = (itemId) => {
     // First check if custom prices passed via props
-    if (customPrices && customPrices[itemId] !== undefined) {
+    if (customPrices && customPrices[itemId] !== undefined && customPrices[itemId] !== null && customPrices[itemId] > 0) {
       return customPrices[itemId];
     }
     // Then check dom's custom prices (try both field names)
-    if (dom?.konfigurator_custom_ceny_prosto_house?.[itemId] !== undefined) {
-      return dom.konfigurator_custom_ceny_prosto_house[itemId];
+    const customPrice = dom?.konfigurator_custom_ceny_prosto_house?.[itemId];
+    if (customPrice !== undefined && customPrice !== null && customPrice > 0) {
+      return customPrice;
     }
     // Special handling for montaz - check both 'montaz_ano' and 'montaz'
-    if (itemId === 'montaz_ano' && dom?.konfigurator_custom_ceny_prosto_house?.montaz !== undefined) {
-      return dom.konfigurator_custom_ceny_prosto_house.montaz;
+    if (itemId === 'montaz_ano') {
+      const montazPrice = dom?.konfigurator_custom_ceny_prosto_house?.montaz;
+      if (montazPrice !== undefined && montazPrice !== null && montazPrice > 0) {
+        return montazPrice;
+      }
     }
     if (dom?.konfigurator_ceny?.[itemId] !== undefined) {
       return dom.konfigurator_ceny[itemId];
