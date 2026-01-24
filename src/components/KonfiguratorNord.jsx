@@ -328,7 +328,7 @@ export default function KonfiguratorNord({
     rekuperacia: getPrice('rekuperacia') ?? DEFAULT_CENY.rekuperacia,
     zaklady: { 
       bez: 0, 
-      skrutky: getPrice('zaklady_vruty') ?? DEFAULT_CENY.zaklady.skrutky, 
+      skrutky: getPrice('zaklady_skrutky') ?? DEFAULT_CENY.zaklady.skrutky, 
       doska: getPrice('zaklady_doska') ?? DEFAULT_CENY.zaklady.doska, 
       pasove: getPrice('zaklady_pasove') ?? DEFAULT_CENY.zaklady.pasove 
     },
@@ -493,8 +493,8 @@ export default function KonfiguratorNord({
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
     const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra 300mm" : izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
-    const izolaciaPrice = izolaciaNavysenie === "ultra" ? 12000 : izolaciaNavysenie === "premium" ? 6400 : izolaciaNavysenie === "zvysena" ? 3200 : 0;
-    items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" });
+    const izolaciaPrice = izolaciaNavysenie === "ultra" ? CENY.izolacia.ultra : izolaciaNavysenie === "premium" ? CENY.izolacia.premium : izolaciaNavysenie === "zvysena" ? CENY.izolacia.zvysena : 0;
+    items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" && izolaciaNavysenie !== "standardna" });
     
     const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? t('foundationsScrews') : t('foundationsLabel');
     const zakladyPrice = zaklady === "pasove" ? CENY.zaklady.pasove : zaklady === "doska" ? CENY.zaklady.doska : zaklady === "skrutky" ? CENY.zaklady.skrutky : 0;
@@ -621,6 +621,12 @@ export default function KonfiguratorNord({
       </div>
     </div>
   );
+
+  const initialSelectionsForFaza1 = useMemo(() => ({
+    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
+    izolacia: izolaciaNavysenie === 'standard' || izolaciaNavysenie === 'standardna' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+    zaklady: zaklady === 'bez' ? 'zaklady_bez' : zaklady === 'skrutky' ? 'zaklady_skrutky' : `zaklady_${zaklady}`
+  }), [montazHolodomu, izolaciaNavysenie, zaklady]);
 
   const handleSendQuoteFromFloating = async (contactData) => {
     try {
@@ -803,11 +809,7 @@ export default function KonfiguratorNord({
                   isAdmin={isAdmin}
                   onPriceUpdate={handlePriceChange}
                   showTooltips={true}
-                  initialSelections={{
-                    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: `izolacia_${izolaciaNavysenie}`,
-                    zaklady: `zaklady_${zaklady}`
-                  }}
+                  initialSelections={initialSelectionsForFaza1}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
                     if (selections.izolacia) setIzolaciaNavysenie(selections.izolacia.replace('izolacia_', ''));
