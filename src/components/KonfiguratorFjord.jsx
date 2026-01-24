@@ -801,6 +801,7 @@ export default function KonfiguratorFjord({
                   showTooltips={true}
                   initialSelections={initialSelectionsForFaza1}
                   customPrices={customCeny}
+                  hideExtraInsulation={true}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
                     if (selections.izolacia) setIzolaciaNavysenie(selections.izolacia.replace('izolacia_', ''));

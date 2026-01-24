@@ -360,19 +360,21 @@ export default function KonfiguratorFaza1HrubaStavba({
             tileId="izolacia_premium"
             showTooltip={showTooltips}
           />
-          <Tile
-            icon={() => <div className="flex items-center gap-1"><span className="text-2xl">❄️</span><span className="text-xs bg-green-500 text-white px-1 rounded">A0</span></div>}
-            title={t('insulationExtra')}
-            subtitle="300mm"
-            price={customPrices?.izolacia_300mm !== undefined ? getPrice('izolacia_300mm') : getPrice('izolacia_extra')}
-            isSelected={izolacia === 'izolacia_extra' || izolacia === 'izolacia_300mm'}
-            onClick={() => setIzolacia(customPrices?.izolacia_300mm !== undefined ? 'izolacia_300mm' : 'izolacia_extra')}
-            tooltip={t('insulationExtraTooltip')}
-            isAdmin={isAdmin}
-            onPriceUpdate={onPriceUpdate}
-            tileId={customPrices?.izolacia_300mm !== undefined ? 'izolacia_300mm' : 'izolacia_extra'}
-            showTooltip={showTooltips}
-          />
+          {!hideExtraInsulation && (
+            <Tile
+              icon={() => <div className="flex items-center gap-1"><span className="text-2xl">❄️</span><span className="text-xs bg-green-500 text-white px-1 rounded">A0</span></div>}
+              title={t('insulationExtra')}
+              subtitle="300mm"
+              price={customPrices?.izolacia_300mm !== undefined ? getPrice('izolacia_300mm') : getPrice('izolacia_extra')}
+              isSelected={izolacia === 'izolacia_extra' || izolacia === 'izolacia_300mm'}
+              onClick={() => setIzolacia(customPrices?.izolacia_300mm !== undefined ? 'izolacia_300mm' : 'izolacia_extra')}
+              tooltip={t('insulationExtraTooltip')}
+              isAdmin={isAdmin}
+              onPriceUpdate={onPriceUpdate}
+              tileId={customPrices?.izolacia_300mm !== undefined ? 'izolacia_300mm' : 'izolacia_extra'}
+              showTooltip={showTooltips}
+            />
+          )}
         </div>
       </div>
 
