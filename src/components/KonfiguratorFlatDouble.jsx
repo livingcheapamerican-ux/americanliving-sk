@@ -759,7 +759,7 @@ export default function KonfiguratorFlatDouble({
                   showTooltips={true}
                   initialSelections={{
                     montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: `izolacia_${izolaciaNavysenie}`,
+                    izolacia: `izolacia_${izolaciaNavysenie === 'standard' ? 'standardna' : izolaciaNavysenie === 'zvysena' ? 'zvysena' : izolaciaNavysenie === 'premium' ? 'premium' : '300mm'}`,
                     zaklady: `zaklady_${zaklady}`
                   }}
                   onSelectionChange={(selections) => {
