@@ -716,8 +716,14 @@ export default function KonfiguratorFlatSmall({
                       if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
                       if (selections.izolacia) {
                         const izolaciaValue = selections.izolacia.replace('izolacia_', '');
-                        // Map 'extra' to 'ultra' for consistency
-                        setIzolaciaNavysenie(izolaciaValue === 'extra' ? 'ultra' : izolaciaValue === 'standardna' ? 'standard' : izolaciaValue);
+                        // Map properly: 'extra' and '300mm' to 'ultra', 'standardna' to 'standard'
+                        if (izolaciaValue === 'extra' || izolaciaValue === '300mm') {
+                          setIzolaciaNavysenie('ultra');
+                        } else if (izolaciaValue === 'standardna') {
+                          setIzolaciaNavysenie('standard');
+                        } else {
+                          setIzolaciaNavysenie(izolaciaValue);
+                        }
                       }
                       if (selections.zaklady) {
                         const zakladyValue = selections.zaklady.replace('zaklady_', '');
