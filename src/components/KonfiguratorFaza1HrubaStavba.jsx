@@ -134,19 +134,6 @@ function Tile({ icon: Icon, title, subtitle, price, isSelected, onClick, tooltip
   );
 }
 
-// Ceny montáže pre jednotlivé domy od Prosto House
-const MONTAZ_CENY = {
-  "Flat Double": 17970,
-  "Fjord": 17700,
-  "Nord": 14850,
-  "Flat House 1,5": 13470,
-  "Barn Double": 9225,
-  "Flat 72m²": 7925,
-  "A-Frame": 5675,
-  "Barn": 4875,
-  "Flat Small": 4875
-};
-
 // Default prices - fallback if dom doesn't have custom prices
 const DEFAULT_PRICES = {
   montaz_ano: 17700, // Fjord cena
