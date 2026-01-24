@@ -2403,7 +2403,7 @@ export default function DetailDomu() {
 
             {/* Floating panel pre Nord */}
             {isProstoHouse && dom.nazov?.includes("Nord") && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="lg:sticky lg:top-20 z-10 self-start space-y-4" style={{ position: 'sticky', top: '80px' }}>
                 <KonfiguratorNord
                   dom={dom}
                   onConfigChange={(config) => setProstoKonfiguracia(config)}
@@ -2467,7 +2467,7 @@ export default function DetailDomu() {
                   setRevizna={setRevizna}
                   doprava={doprava}
                   setDoprava={setDoprava}
-                  showOnlySummary={true}
+                  showOnlySummary={false}
                 />
               </div>
             )}
