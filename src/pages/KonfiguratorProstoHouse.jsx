@@ -145,7 +145,7 @@ export default function KonfiguratorProstoHouse() {
     return DEFAULT_CENNIK[category]?.[key] ?? 0;
   };
 
-  const cennik = {
+  const cennik = React.useMemo(() => ({
     montaz: {
       48: getPrice('montaz_48') || DEFAULT_CENNIK.montaz[48],
       72: getPrice('montaz_72') || DEFAULT_CENNIK.montaz[72],
@@ -185,7 +185,7 @@ export default function KonfiguratorProstoHouse() {
     fotovoltaika: getPrice('fotovoltaika'),
     projektova_dok: getPrice('projektova_dok'),
     energeticky_cert: getPrice('energeticky_cert')
-  };
+  }), [customCeny]);
 
   const vypocitatCenu = () => {
     if (!dom) return { bezDPH: 0, sDPH: 0 };
