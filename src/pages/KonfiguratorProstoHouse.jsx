@@ -117,6 +117,15 @@ export default function KonfiguratorProstoHouse() {
   };
 
   const getPrice = (category, key = null) => {
+    // First try flat key format (e.g., 'montaz_48')
+    if (key !== null) {
+      const flatKey = `${category}_${key}`;
+      if (customCeny[flatKey] !== undefined && customCeny[flatKey] !== null && customCeny[flatKey] > 0) {
+        return customCeny[flatKey];
+      }
+    }
+    
+    // Then try nested object format
     if (key === null) {
       const customValue = customCeny[category];
       if (customValue !== undefined && customValue !== null && customValue !== 0) {
