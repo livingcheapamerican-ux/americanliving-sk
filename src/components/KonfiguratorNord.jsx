@@ -12,7 +12,7 @@ import {
   Send, AlertTriangle, Check, Calculator, RotateCcw,
   Wrench, Plug, Droplets, ThermometerSun, Wind, Landmark, FileText,
   Zap, ShowerHead, Flame, Cable, Paintbrush, Home, Truck, Sun, DoorOpen,
-  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, Building2
+  Maximize, Square, FileCheck, Package, Hammer, Key, Sparkles, CheckCircle, Building2, CheckSquare
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -597,11 +597,29 @@ export default function KonfiguratorNord({
     }
   };
 
+  const showServices = !showOnlyPhase;
   const showHruba = !showOnlyPhase || showOnlyPhase === "hruba";
   const showHolodom = !showOnlyPhase || showOnlyPhase === "holodom";
   const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
   const showFinale = !showOnlyPhase || showOnlyPhase === "finale";
+
+  // Auto-set A0 items when "rodinny_dom" is selected
+  useEffect(() => {
+    if (typStavby === "rodinny_dom") {
+      setIzolaciaNavysenie("premium");
+      setTepelneCerpadlo(true);
+      setRekuperacia(true);
+      setProjektA0(true);
+      setZaklady("pasove");
+    } else if (typStavby === "rekreacna") {
+      // Reset to standard for recreational
+      setIzolaciaNavysenie("standard");
+      setTepelneCerpadlo(false);
+      setRekuperacia(false);
+      setProjektA0(false);
+    }
+  }, [typStavby]);
 
   // Ak showOnlySummary, zobrazujeme len súmarný panel (ako Fjord)
   if (showOnlySummary) {
@@ -732,11 +750,123 @@ export default function KonfiguratorNord({
 
   return (
     <div className="mt-8 relative">
-
       <div>
         <div className="space-y-6">
 
-{showHruba && (
+          {showServices && (
+            <Card className="p-6 border-2 border-purple-300 shadow-lg bg-gradient-to-b from-purple-50/50 to-white">
+              <div className="flex items-center gap-3 mb-4">
+                <Building2 className="w-6 h-6 text-purple-600" />
+                <h4 className="text-lg font-bold text-gray-800">{t('buildingTypeQuestion')}</h4>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  onClick={() => setTypStavby("rekreacna")}
+                  className={`p-4 rounded-lg cursor-pointer transition-all border-2 ${
+                    typStavby === "rekreacna" 
+                      ? 'bg-amber-100 border-amber-500 shadow-md' 
+                      : 'bg-white border-gray-200 hover:border-amber-300'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Package className="w-6 h-6 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-800">{t('recreationalBuilding')}</p>
+                      <p className="text-xs text-gray-600 mt-1">{t('cottage')}</p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  onClick={() => setTypStavby("rodinny_dom")}
+                  className={`p-4 rounded-lg cursor-pointer transition-all border-2 ${
+                    typStavby === "rodinny_dom" 
+                      ? 'bg-green-100 border-green-500 shadow-md' 
+                      : 'bg-white border-gray-200 hover:border-green-300'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Home className="w-6 h-6 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-800">{t('familyHouseA0')}</p>
+                      <p className="text-xs text-gray-600 mt-1">⚡ {t('recommended')}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+
+              {typStavby && (
+                <div className="space-y-3 mt-4 pt-4 border-t border-purple-200">
+                  <p className="text-sm font-semibold text-gray-700 mb-3">{t('additionalServices')}</p>
+                  <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    onClick={() => setPredajNehnutelnosti(!predajNehnutelnosti)}
+                    className={`p-3 rounded-lg cursor-pointer transition-all border-2 ${
+                      predajNehnutelnosti 
+                        ? 'bg-blue-100 border-blue-500 shadow-md' 
+                        : 'bg-white border-gray-200 hover:border-blue-300'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      {predajNehnutelnosti ? (
+                        <CheckCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                      ) : (
+                        <Square className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                      )}
+                      <p className="font-medium text-gray-800 text-sm">{t('sellPreviousProperty')}</p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    onClick={() => setHladaniePozemku(!hladaniePozemku)}
+                    className={`p-3 rounded-lg cursor-pointer transition-all border-2 ${
+                      hladaniePozemku 
+                        ? 'bg-green-100 border-green-500 shadow-md' 
+                        : 'bg-white border-gray-200 hover:border-green-300'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      {hladaniePozemku ? (
+                        <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      ) : (
+                        <Square className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                      )}
+                      <p className="font-medium text-gray-800 text-sm">{t('wantLandForHouse')}</p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    onClick={() => setFinancneSluzby(!financneSluzby)}
+                    className={`p-3 rounded-lg cursor-pointer transition-all border-2 ${
+                      financneSluzby 
+                        ? 'bg-amber-100 border-amber-500 shadow-md' 
+                        : 'bg-white border-gray-200 hover:border-amber-300'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      {financneSluzby ? (
+                        <CheckCircle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                      ) : (
+                        <Square className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                      )}
+                      <p className="font-medium text-gray-800 text-sm">{t('financialServicesLoans')}</p>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+            </Card>
+          )}
+
+          {showHruba && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <Card className="overflow-hidden border-2 border-amber-300 shadow-lg">
               <SectionHeader 

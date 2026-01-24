@@ -65,6 +65,7 @@ export default function DetailDomu() {
   
   // Zdieľaný stav pre Fázu 1 - Hrubá stavba
   const [typStavby, setTypStavby] = useState("");
+  const [nordTypStavby, setNordTypStavby] = useState("");
   const [montazHolodomu, setMontazHolodomu] = useState("nie");
   const [izolaciaNavysenie, setIzolaciaNavysenie] = useState("standard");
   const [zaklady, setZaklady] = useState("bez");
