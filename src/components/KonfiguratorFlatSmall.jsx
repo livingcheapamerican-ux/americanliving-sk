@@ -374,8 +374,8 @@ export default function KonfiguratorFlatSmall({
     
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
-    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra 300mm" : izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
-    const izolaciaPrice = izolaciaNavysenie === "ultra" ? 5250 : izolaciaNavysenie === "premium" ? 2800 : izolaciaNavysenie === "zvysena" ? 1400 : 0;
+    const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra izolácia 300mm" : izolaciaNavysenie === "premium" ? "Premium izolácia 250/300mm" : izolaciaNavysenie === "zvysena" ? "Zvýšená izolácia 200/250mm" : "Štandardná izolácia";
+    const izolaciaPrice = CENY.izolacia[izolaciaNavysenie] || 0;
     items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standard" });
     
     const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? "Pilóty/Pätky" : t('foundationsLabel');
