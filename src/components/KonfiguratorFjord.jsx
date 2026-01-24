@@ -237,7 +237,7 @@ export default function KonfiguratorFjord({
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 17700 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
-    izolacia: { standardna: 0, zvysena: 5660, premium: 9106 },
+    izolacia: { standardna: 0, zvysena: 5660, premium: 9106, extra: 10125, "300mm": 10125 },
     elektroinstalacia: 7800,
     vodaKanalizacia: 3650,
     sanitaKomplet: 1169,
@@ -289,7 +289,9 @@ export default function KonfiguratorFjord({
       izolacia: { 
         standardna: 0, 
         zvysena: get('izolacia_zvysena', DEFAULT_CENY.izolacia.zvysena), 
-        premium: get('izolacia_premium', DEFAULT_CENY.izolacia.premium)
+        premium: get('izolacia_premium', DEFAULT_CENY.izolacia.premium),
+        extra: get('izolacia_extra', DEFAULT_CENY.izolacia.extra),
+        "300mm": get('izolacia_300mm', DEFAULT_CENY.izolacia["300mm"])
       },
       elektroinstalacia: get('elektroinstalacia', DEFAULT_CENY.elektroinstalacia),
       vodaKanalizacia: get('vodaKanalizacia', DEFAULT_CENY.vodaKanalizacia),
@@ -371,8 +373,12 @@ export default function KonfiguratorFjord({
       let total = BASE_PRICE;
 
       total += CENY.montaz[montazHolodomu];
-      total += CENY.dvere[vstupneDvere];
-      total += CENY.izolacia[izolaciaNavysenie];
+      total += CENY.dvere[vstupneDviere];
+      // Handle izolacia - map old keys to new CENY keys
+      if (izolaciaNavysenie === 'izolacia_extra') total += CENY.izolacia.extra;
+      else if (izolaciaNavysenie === 'izolacia_300mm') total += CENY.izolacia["300mm"];
+      else if (CENY.izolacia[izolaciaNavysenie]) total += CENY.izolacia[izolaciaNavysenie];
+      else total += CENY.izolacia.standardna;
     
     if (elektroinstalacia) total += CENY.elektroinstalacia;
     if (vodaKanalizacia) total += CENY.vodaKanalizacia;
@@ -440,9 +446,22 @@ export default function KonfiguratorFjord({
     
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY?.montaz?.ano || 0 : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
-    const izolaciaLabel = izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
-    const izolaciaPrice = izolaciaNavysenie === "premium" ? CENY?.izolacia?.premium || 0 : izolaciaNavysenie === "zvysena" ? CENY?.izolacia?.zvysena || 0 : 0;
-    items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standardna" && izolaciaNavysenie !== "standard" });
+    let izolaciaLabel = "150/200mm";
+    let izolaciaPrice = 0;
+    if (izolaciaNavysenie === "premium") {
+      izolaciaLabel = "250/300mm";
+      izolaciaPrice = CENY?.izolacia?.premium || 0;
+    } else if (izolaciaNavysenie === "zvysena") {
+      izolaciaLabel = "200/250mm";
+      izolaciaPrice = CENY?.izolacia?.zvysena || 0;
+    } else if (izolaciaNavysenie === "izolacia_extra") {
+      izolaciaLabel = t('insulationExtra');
+      izolaciaPrice = CENY?.izolacia?.extra || 0;
+    } else if (izolaciaNavysenie === "izolacia_300mm") {
+      izolaciaLabel = t('insulationExtra') + ' 300mm';
+      izolaciaPrice = CENY?.izolacia?.["300mm"] || 0;
+    }
+    items.push({ name: izolaciaLabel, price: izolaciaPrice, section: "hruba", selected: izolaciaNavysenie !== "standardna" && izolaciaNavysenie !== "standard" && izolaciaNavysenie !== "izolacia_extra" && izolaciaNavysenie !== "izolacia_300mm" || izolaciaNavysenie === "izolacia_extra" || izolaciaNavysenie === "izolacia_300mm" });
     
     const zakladyLabel = zaklady === "pasove" ? t('foundationsStrip') : zaklady === "doska" ? t('foundationsSlab') : zaklady === "skrutky" ? t('foundationsScrews') : t('foundationsLabel');
     const zakladyPrice = zaklady === "pasove" ? CENY?.zaklady?.pasove || 0 : zaklady === "doska" ? CENY?.zaklady?.doska || 0 : zaklady === "skrutky" ? CENY?.zaklady?.skrutky || 0 : 0;
