@@ -282,8 +282,7 @@ export default function KonfiguratorWizard({
       revizna, setRevizna,
       doprava, setDoprava,
       showOnlySummary: false,
-      showOnlyPhase: phase,
-      typStavby
+      showOnlyPhase: phase
     };
 
     if (useFlatSmallPrices) {
