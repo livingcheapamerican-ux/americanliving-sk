@@ -962,7 +962,7 @@ export default function KonfiguratorNord({
                     </div>
                   )}
 
-                  {nordProjektA0 && !a0Odporucania && (
+                  {projektA0 && !a0Odporucania && (
                     <div className="mt-2 sm:mt-3 p-2 sm:p-3 bg-green-50 border-2 border-green-300 rounded-lg">
                       <div className="flex items-center gap-1.5">
                         <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
