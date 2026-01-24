@@ -837,27 +837,70 @@ export default function KonfiguratorNord({
           )}
 
           {showFinale && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.5 }}>
-              <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500">
-                <div className="p-4 sm:p-6 text-center">
-                  <div className="flex justify-center mb-3">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 rounded-full flex items-center justify-center">
-                      <CheckCircle className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+            <>
+              {/* Súmarná tabuľka vybratých položiek */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }}>
+                <Card className="overflow-hidden border-2 border-blue-300 shadow-lg">
+                  <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-3 sm:p-4">
+                    <div className="flex items-center gap-2">
+                      <Calculator className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                      <h3 className="text-lg sm:text-xl font-bold text-white">{t('configurationSummary') || 'Súhrn konfigurácie'}</h3>
                     </div>
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('readyToStart')}</h3>
-                  <p className="text-white/90 mb-4 text-xs sm:text-sm">{t('finalPhaseDesc')}</p>
-                  <Button 
-                    size="lg" 
-                    onClick={() => setShowContactModal(true)}
-                    className="bg-white text-green-600 hover:bg-gray-100 font-bold text-sm sm:text-base px-6 sm:px-10 py-4 sm:py-5 shadow-2xl transition-all hover:scale-105"
-                  >
-                    <Send className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
-                    {t('showHouseAndSendQuote')}
-                  </Button>
-                </div>
-              </Card>
-            </motion.div>
+                  <div className="p-3 sm:p-4 bg-gradient-to-b from-blue-50/50 to-white max-h-96 overflow-y-auto">
+                    <div className="space-y-2">
+                      {selectedItems.filter(item => item.selected && item.price > 0).map((item, index) => (
+                        <div key={index} className="flex justify-between items-center p-2 sm:p-3 bg-white rounded-lg border border-gray-200 hover:border-blue-300 transition-colors">
+                          <div className="flex-1 min-w-0">
+                            <span className="text-xs sm:text-sm font-medium text-gray-800 block truncate">{item.name}</span>
+                            <span className="text-[10px] text-gray-500">{
+                              item.section === 'base' ? t('baseConfiguration') || 'Základná zostava' :
+                              item.section === 'hruba' ? t('phase1') :
+                              item.section === 'holodom' ? t('phase2') :
+                              item.section === 'kluc' ? t('phase3') :
+                              item.section === 'docs' ? t('phase4') : 
+                              t('services') || 'Služby'
+                            }</span>
+                          </div>
+                          <span className="text-xs sm:text-sm font-bold text-green-600 ml-3 whitespace-nowrap">
+                            {formatPrice(item.price)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-4 pt-4 border-t-2 border-gray-300">
+                      <div className="flex justify-between items-center p-3 sm:p-4 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg">
+                        <span className="text-base sm:text-lg font-bold text-gray-800">{t('totalPrice') || 'Celková cena'}:</span>
+                        <span className="text-xl sm:text-2xl font-extrabold text-green-600">{formatPrice(totalPrice)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.5 }}>
+                <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500">
+                  <div className="p-4 sm:p-6 text-center">
+                    <div className="flex justify-center mb-3">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 rounded-full flex items-center justify-center">
+                        <CheckCircle className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                      </div>
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('readyToStart')}</h3>
+                    <p className="text-white/90 mb-4 text-xs sm:text-sm">{t('finalPhaseDesc')}</p>
+                    <Button 
+                      size="lg" 
+                      onClick={() => setShowContactModal(true)}
+                      className="bg-white text-green-600 hover:bg-gray-100 font-bold text-sm sm:text-base px-6 sm:px-10 py-4 sm:py-5 shadow-2xl transition-all hover:scale-105"
+                    >
+                      <Send className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
+                      {t('showHouseAndSendQuote')}
+                    </Button>
+                  </div>
+                </Card>
+              </motion.div>
+            </>
           )}
         </div>
       </div>
