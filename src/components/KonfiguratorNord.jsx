@@ -603,44 +603,126 @@ export default function KonfiguratorNord({
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
   const showFinale = !showOnlyPhase || showOnlyPhase === "finale";
 
-  // Ak showOnlySummary, zobrazujeme len súmarný panel
+  // Ak showOnlySummary, zobrazujeme len súmarný panel (ako Fjord)
   if (showOnlySummary) {
     return (
-      <div className="mt-0 relative">
-        <Card className="overflow-hidden border-2 border-blue-300 shadow-lg">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-3 sm:p-4">
-            <div className="flex items-center gap-2">
-              <Calculator className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-              <h3 className="text-lg sm:text-xl font-bold text-white">{t('configurationSummary') || 'Súhrn konfigurácie'}</h3>
+      <div>
+        <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-100 via-white to-slate-50 ring-2 ring-green-500/30">
+          <div className="p-3 border-b-2 border-slate-300 bg-slate-50">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-green-900 text-xs font-bold uppercase tracking-wider mb-0.5">{t('yourConfiguration')}</p>
+                <h3 className="text-base font-black text-gray-900">{dom?.nazov || 'Nord'}</h3>
+              </div>
             </div>
           </div>
-          <div className="p-3 sm:p-4 bg-gradient-to-b from-blue-50/50 to-white max-h-[600px] overflow-y-auto">
-            <div className="space-y-2">
-              {selectedItems.filter(item => item.selected && item.price > 0).map((item, index) => (
-                <div key={index} className="flex justify-between items-center p-2 sm:p-3 bg-white rounded-lg border border-gray-200 hover:border-blue-300 transition-colors">
-                  <div className="flex-1 min-w-0">
-                    <span className="text-xs sm:text-sm font-medium text-gray-800 block truncate">{item.name}</span>
-                    <span className="text-[10px] text-gray-500">{
-                      item.section === 'base' ? t('baseConfiguration') || 'Základná zostava' :
-                      item.section === 'hruba' ? t('phase1') :
-                      item.section === 'holodom' ? t('phase2') :
-                      item.section === 'kluc' ? t('phase3') :
-                      item.section === 'docs' ? t('phase4') : 
-                      t('services') || 'Služby'
-                    }</span>
-                  </div>
-                  <span className="text-xs sm:text-sm font-bold text-green-600 ml-3 whitespace-nowrap">
-                    {formatPrice(item.price)}
-                  </span>
-                </div>
-              ))}
-            </div>
 
-            <div className="mt-4 pt-4 border-t-2 border-gray-300">
-              <div className="flex justify-between items-center p-3 sm:p-4 bg-gradient-to-r from-green-100 to-emerald-100 rounded-lg">
-                <span className="text-base sm:text-lg font-bold text-gray-800">{t('totalPrice') || 'Celková cena'}:</span>
-                <span className="text-xl sm:text-2xl font-extrabold text-green-600">{formatPrice(totalPrice)}</span>
-              </div>
+          <KonfiguratorContactModal
+            isOpen={showContactModal}
+            onClose={() => setShowContactModal(false)}
+            dom={dom}
+            totalPrice={totalPrice}
+            selectedItems={selectedItems}
+            vonkajsiaFasada={vonkajsiaFasada}
+            izolaciaNavysenie={izolaciaNavysenie}
+            tepelneCerpadlo={tepelneCerpadlo}
+            rekuperacia={rekuperacia}
+            projektA0={projektA0}
+          />
+
+          <div className="px-2 py-1 max-h-[65vh] overflow-y-auto">
+            {selectedItems.map((item, index) => {
+              const isBase = item.section === "base";
+              const prevItem = selectedItems[index - 1];
+              const showServicesDivider = item.section === "services" && (!prevItem || prevItem.section === "base");
+              const showHrubaDivider = item.section === "hruba" && (prevItem?.section !== "hruba" && prevItem?.section !== "services");
+              const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
+              const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
+              const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
+
+              return (
+                <React.Fragment key={index}>
+                  {showServicesDivider && (
+                    <div className="py-0.5">
+                      <div className="border-t border-cyan-400"></div>
+                      <div className="flex items-center gap-1 px-1">
+                        <Building2 className="w-3 h-3 text-cyan-800" />
+                        <span className="text-xs font-bold text-cyan-950 uppercase">{t('additionalServices')}</span>
+                      </div>
+                    </div>
+                  )}
+                  {showHrubaDivider && (
+                    <div className="py-0.5">
+                      <div className="border-t border-amber-400"></div>
+                      <div className="flex items-center gap-1 px-1">
+                        <Package className="w-3 h-3 text-amber-800" />
+                        <span className="text-xs font-bold text-amber-950 uppercase">{t('roughConstruction')}</span>
+                      </div>
+                    </div>
+                  )}
+                  {showHolodomDivider && (
+                    <div className="py-0.5">
+                      <div className="border-t border-blue-400"></div>
+                      <div className="flex items-center gap-1 px-1">
+                        <Hammer className="w-3 h-3 text-blue-800" />
+                        <span className="text-xs font-bold text-blue-950 uppercase">{t('holodomLabel')}</span>
+                      </div>
+                    </div>
+                  )}
+                  {showKlucDivider && (
+                    <div className="py-0.5">
+                      <div className="border-t border-emerald-400"></div>
+                      <div className="flex items-center gap-1 px-1">
+                        <Key className="w-3 h-3 text-emerald-800" />
+                        <span className="text-xs font-bold text-emerald-950 uppercase">{t('turnkeyLabel')}</span>
+                      </div>
+                    </div>
+                  )}
+                  {showDocsDivider && (
+                    <div className="py-0.5">
+                      <div className="border-t border-purple-400"></div>
+                      <div className="flex items-center gap-1 px-1">
+                        <FileText className="w-3 h-3 text-purple-800" />
+                        <span className="text-xs font-bold text-purple-950 uppercase">{t('documentationLabel')}</span>
+                      </div>
+                    </div>
+                  )}
+                  <div className={`flex justify-between items-center py-1 px-2 rounded ${isBase ? 'bg-blue-200 my-0.5' : item.selected ? 'bg-slate-50 hover:bg-slate-100' : ''}`}>
+                    <span className={`${isBase ? 'text-blue-950 font-extrabold text-base' : item.selected ? 'text-gray-800 font-bold text-sm' : 'text-red-600 line-through text-sm'} flex-1 pr-1 truncate`}>{item.name}</span>
+                    <span className={`${isBase ? 'text-blue-950 text-base' : item.selected ? 'text-green-700 text-sm' : 'text-red-600 text-sm'} font-extrabold whitespace-nowrap`}>
+                      {item.selected ? formatPrice(item.price) : '—'}
+                    </span>
+                  </div>
+                </React.Fragment>
+              );
+            })}
+          </div>
+
+          <div className="p-3 bg-gradient-to-br from-green-100 to-emerald-100 border-t-2 border-green-300">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-gray-900 text-sm font-bold">{t('totalWithVATLabel')}</span>
+              <span className="text-2xl font-black text-green-900">
+                {formatPrice(totalPrice)}
+              </span>
+            </div>
+            <div className="space-y-1.5">
+              <Button 
+                size="sm" 
+                onClick={() => setShowContactModal(true)}
+                className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg text-xs h-8"
+              >
+                <Send className="mr-1.5 w-3.5 h-3.5" />
+                Pošli cenovú ponuku
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={handleReset}
+                className="w-full border-slate-200 text-slate-700 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all text-xs h-8"
+              >
+                <RotateCcw className="mr-1.5 w-3.5 h-3.5" />
+                {t('reset')}
+              </Button>
             </div>
           </div>
         </Card>
