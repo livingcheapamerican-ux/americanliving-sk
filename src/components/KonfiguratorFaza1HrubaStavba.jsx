@@ -104,8 +104,8 @@ function Tile({ icon: Icon, title, subtitle, price, isSelected, onClick, tooltip
           )}
           
           {price !== null && price !== undefined && (
-            <span className={`${price > 0 ? "font-extrabold text-green-600 text-base sm:text-lg" : "text-gray-500 font-semibold text-sm"} mt-2`}>
-              {price === 0 ? t('included') : `+ ${price.toLocaleString('sk-SK')} €`}
+            <span className={`${(typeof price === 'number' && price > 0) ? "font-extrabold text-green-600 text-base sm:text-lg" : "text-gray-500 font-semibold text-sm"} mt-2`}>
+              {(typeof price === 'number' && price === 0) || price === 0 ? t('included') : `+ ${typeof price === 'number' ? price.toLocaleString('sk-SK') : price} €`}
             </span>
           )}
         </div>
