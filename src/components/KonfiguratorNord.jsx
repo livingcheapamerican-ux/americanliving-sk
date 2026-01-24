@@ -308,7 +308,7 @@ export default function KonfiguratorNord({
   };
 
   const CENY = {
-    montaz: { nie: 0, ano: getPrice('montaz') ?? DEFAULT_CENY.montaz.ano },
+    montaz: { nie: 0, ano: getPrice('montaz_ano') ?? DEFAULT_CENY.montaz.ano },
     dvere: { 
       ziadne: 0, 
       kovove: getPrice('dvere_kovove') ?? DEFAULT_CENY.dvere.kovove, 
