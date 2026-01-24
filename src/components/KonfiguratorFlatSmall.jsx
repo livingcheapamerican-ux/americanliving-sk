@@ -710,7 +710,7 @@ export default function KonfiguratorFlatSmall({
                     initialSelections={{
                       montaz: montazHolodomu === 'ano' ? 'montaz_ano' : montazHolodomu === 'nie' ? 'montaz_nie' : null,
                       izolacia: izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : izolaciaNavysenie === 'zvysena' ? 'izolacia_zvysena' : izolaciaNavysenie === 'premium' ? 'izolacia_premium' : izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : null,
-                      zaklady: zaklady === 'bez' ? 'zaklady_bez' : zaklady === 'skrutky' ? 'zaklady_vruty' : zaklady === 'doska' ? 'zaklady_doska' : zaklady === 'pasove' ? 'zaklady_pasove' : null
+                      zaklady: zaklady === 'bez' ? 'zaklady_bez' : zaklady === 'skrutky' ? 'zaklady_skrutky' : zaklady === 'doska' ? 'zaklady_doska' : zaklady === 'pasove' ? 'zaklady_pasove' : null
                     }}
                     onSelectionChange={(selections) => {
                       if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
