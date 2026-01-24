@@ -111,26 +111,27 @@ export default function KonfiguratorProstoHouse() {
     let celkovaCena = dom.zakladna_cena || 0; // dom.zakladna_cena je uz s DPH
     const plocha = dom.zastavana_plocha || 72;
     
-    // Montáž - podľa plochy (cennik.montaz hodnoty su bez DPH, pripocitame s DPH)
+    // Montáž - podľa plochy (ceny su bez DPH, pripocitame s DPH)
     if (konfig.montaz) {
-      if (plocha <= 48) celkovaCena += cennik.montaz[48] * 1.23;
-      else if (plocha <= 72) celkovaCena += cennik.montaz[72] * 1.23;
-      else if (plocha <= 103) celkovaCena += cennik.montaz[103] * 1.23;
-      else if (plocha <= 108) celkovaCena += cennik.montaz[108] * 1.23;
-      else celkovaCena += cennik.montaz[142] * 1.23;
+      const montazPrice = getMontazPrice();
+      celkovaCena += montazPrice * 1.23;
     }
 
-    // Vstupné dvere (cennik.vstupne_dvere hodnoty su bez DPH, pripocitame s DPH)
-    celkovaCena += (cennik.vstupne_dvere[konfig.vstupne_dvere] || 0) * 1.23;
+    // Vstupné dvere (ceny su bez DPH, pripocitame s DPH)
+    const dverePrice = getPriceNested('vstupne_dviere', konfig.vstupne_dvere);
+    celkovaCena += dverePrice * 1.23;
 
-    // Základy (cennik.zaklady hodnoty su bez DPH, pripocitame s DPH)
-    celkovaCena += (cennik.zaklady[konfig.zaklady] || 0) * 1.23;
+    // Základy (ceny su bez DPH, pripocitame s DPH)
+    const zakladyPrice = getPriceNested('zaklady', konfig.zaklady);
+    celkovaCena += zakladyPrice * 1.23;
 
-    // Fasáda (cennik.fasada hodnoty su bez DPH, pripocitame s DPH)
-    celkovaCena += (cennik.fasada[konfig.fasada] || 0) * 1.23;
+    // Fasáda (ceny su bez DPH, pripocitame s DPH)
+    const fasadaPrice = getPriceNested('fasada', konfig.fasada);
+    celkovaCena += fasadaPrice * 1.23;
 
-    // Okná (cennik.okna hodnoty su bez DPH, pripocitame s DPH)
-    celkovaCena += (cennik.okna[konfig.okna] || 0) * 1.23;
+    // Okná (ceny su bez DPH, pripocitame s DPH)
+    const oknaPrice = getPriceNested('okna', konfig.okna);
+    celkovaCena += oknaPrice * 1.23;
 
     // Ostatné položky (cennik hodnoty su bez DPH, pripocitame s DPH)
     if (konfig.izolacie) celkovaCena += cennik.izolacie * 1.23;
