@@ -716,8 +716,8 @@ export default function KonfiguratorFlatSmall({
                       if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
                       if (selections.izolacia) {
                         const izolaciaValue = selections.izolacia.replace('izolacia_', '');
-                        // Map properly: 'extra' and '300mm' to 'ultra', 'standardna' to 'standard'
-                        if (izolaciaValue === 'extra' || izolaciaValue === '300mm') {
+                        // Map properly: 'extra' to 'ultra', 'standardna' to 'standard'
+                        if (izolaciaValue === 'extra') {
                           setIzolaciaNavysenie('ultra');
                         } else if (izolaciaValue === 'standardna') {
                           setIzolaciaNavysenie('standard');
