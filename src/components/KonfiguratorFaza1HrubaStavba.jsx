@@ -136,15 +136,15 @@ function Tile({ icon: Icon, title, subtitle, price, isSelected, onClick, tooltip
 
 // Default prices - fallback if dom doesn't have custom prices
 const DEFAULT_PRICES = {
-  montaz_ano: 13470,
+  montaz_ano: 4875, // Flat Small cena
   montaz_nie: 0,
   izolacia_standardna: 0,
-  izolacia_zvysena: 4400,
-  izolacia_premium: 8800,
-  izolacia_300mm: 16500,
-  zaklady_skrutky: 6348,
-  zaklady_doska: 14000,
-  zaklady_pasove: 12000,
+  izolacia_zvysena: 1400, // Flat Small cena
+  izolacia_premium: 2800, // Flat Small cena
+  izolacia_300mm: 5250, // Flat Small Extra izolácia - 5250 € nie 16500 €
+  zaklady_skrutky: 2808, // Flat Small Zemné skrutky - 2808 € nie 6348 €
+  zaklady_doska: 6000, // Flat Small cena
+  zaklady_pasove: 5000, // Flat Small cena
 };
 
 export default function KonfiguratorFaza1HrubaStavba({ 
