@@ -773,6 +773,9 @@ export default function KonfiguratorFlatDouble({
                       setZaklady(zakladyValue === 'vruty' ? 'skrutky' : zakladyValue === 'bez' ? 'bez' : zakladyValue);
                     }
                   }}
+                  customPrices={{
+                    izolacia_300mm: CENY.izolacia.ultra
+                  }}
                 />
               </div>
             </Card>
