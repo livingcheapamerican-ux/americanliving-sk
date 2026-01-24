@@ -721,7 +721,7 @@ export default function KonfiguratorAFrame({
                   showTooltips={true}
                   initialSelections={{
                     montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: `izolacia_${izolaciaNavysenie}`,
+                    izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : `izolacia_${izolaciaNavysenie}`,
                     zaklady: `zaklady_${zaklady}`
                   }}
                   onSelectionChange={(selections) => {
