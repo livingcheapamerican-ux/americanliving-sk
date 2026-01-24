@@ -795,8 +795,8 @@ export default function KonfiguratorFjord({
                   showTooltips={true}
                   initialSelections={{
                     montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: `izolacia_${izolaciaNavysenie}`,
-                    zaklady: `zaklady_${zaklady}`
+                    izolacia: izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+                    zaklady: zaklady === 'bez' ? 'zaklady_bez' : zaklady === 'skrutky' ? 'zaklady_vruty' : `zaklady_${zaklady}`
                   }}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
