@@ -700,7 +700,11 @@ export default function KonfiguratorBarnDouble({
                   }}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
-                    if (selections.izolacia) setIzolaciaNavysenie(selections.izolacia.replace('izolacia_', ''));
+                    if (selections.izolacia) {
+                      let val = selections.izolacia.replace('izolacia_', '');
+                      if (val === 'extra') val = 'ultra';
+                      setIzolaciaNavysenie(val);
+                    }
                     if (selections.zaklady) setZaklady(selections.zaklady.replace('zaklady_', ''));
                   }}
                 />
