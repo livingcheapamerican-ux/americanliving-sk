@@ -68,7 +68,11 @@ export default function KonfiguratorProstoHouse() {
   });
 
   // Načítať cenník z databázy (fallback na defaults ak neexistuje)
-  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
+  const [customCeny, setCustomCeny] = useState(dom?.konfigurator_custom_ceny_prosto_house || {});
+
+  useEffect(() => {
+    setCustomCeny(dom?.konfigurator_custom_ceny_prosto_house || {});
+  }, [dom?.konfigurator_custom_ceny_prosto_house]);
   
   const DEFAULT_CENNIK = {
     montaz: {
