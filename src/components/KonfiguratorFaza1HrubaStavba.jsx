@@ -171,6 +171,10 @@ export default function KonfiguratorFaza1HrubaStavba({
     if (dom?.konfigurator_custom_ceny_prosto_house?.[itemId] !== undefined) {
       return dom.konfigurator_custom_ceny_prosto_house[itemId];
     }
+    // Special handling for montaz - check both 'montaz_ano' and 'montaz'
+    if (itemId === 'montaz_ano' && dom?.konfigurator_custom_ceny_prosto_house?.montaz !== undefined) {
+      return dom.konfigurator_custom_ceny_prosto_house.montaz;
+    }
     if (dom?.konfigurator_ceny?.[itemId] !== undefined) {
       return dom.konfigurator_ceny[itemId];
     }
