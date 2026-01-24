@@ -1246,6 +1246,7 @@ export default function KonfiguratorFlatDouble({
             predajNehnutelnosti={predajNehnutelnosti}
             hladaniePozemku={hladaniePozemku}
             financneSluzby={financneSluzby}
+            typStavby={typStavby}
           />
         </>
       )}
