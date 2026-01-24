@@ -287,7 +287,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={() => <span className="text-3xl">🔧</span>}
             title={t('assemblyNo')}
             subtitle={t('onlyKit')}
-            price={t('included')}
+            price={0}
             isPriced={false}
             isSelected={montaz === 'montaz_nie'}
             onClick={() => setMontaz('montaz_nie')}
@@ -301,7 +301,7 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={Home}
             title={t('assemblyYes')}
             subtitle={t('shellConstruction')}
-            price={`+ ${getPrice('montaz_ano').toLocaleString('sk-SK')} €`}
+            price={getPrice('montaz_ano')}
             isPriced={true}
             isSelected={montaz === 'montaz_ano'}
             onClick={() => setMontaz('montaz_ano')}
