@@ -898,6 +898,8 @@ export default function DetailDomu() {
               />
             )}
 
+            {/* Nord nemá wizard */}
+
             {/* Konfigurátor pre Fjord - Wizard výber typu */}
             {isProstoHouse && dom.nazov?.includes("Fjord") && (
               <KonfiguratorWizard 
