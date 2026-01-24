@@ -289,7 +289,7 @@ export default function KonfiguratorFlat15({
     povrchokaOkien: getPrice('povrchokaOkien') ?? DEFAULT_CENY.povrchokaOkien,
     vnutornePodlahy: getPrice('vnutornePodlahy') ?? DEFAULT_CENY.vnutornePodlahy,
     podlahovVykurovanie: getPrice('podlahovVykurovanie') ?? DEFAULT_CENY.podlahovVykurovanie,
-    pergola: getPrice('pergola') ?? DEFAULT_CENY.pergola,
+    pergola: getPrice('pergola') || DEFAULT_CENY.pergola,
     interieroveDvere: getPrice('interieroveDvere') ?? DEFAULT_CENY.interieroveDvere,
     tonovaneSkla: getPrice('tonovaneSkla') ?? DEFAULT_CENY.tonovaneSkla,
     doprava: getPrice('doprava') ?? DEFAULT_CENY.doprava,
