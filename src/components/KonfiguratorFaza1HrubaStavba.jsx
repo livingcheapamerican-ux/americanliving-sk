@@ -161,20 +161,16 @@ export default function KonfiguratorFaza1HrubaStavba({
 }) {
   const { t } = useLanguage();
 
-  // Get prices - dynamically from customPrices prop or dom
+  // Get prices - dynamically from dom or defaults
   const getPrice = React.useCallback((itemId) => {
-    // Priority 1: Check customPrices prop (state z rodiča, vždy aktuálny)
-    if (customPrices && customPrices[itemId] !== undefined && customPrices[itemId] !== null && customPrices[itemId] > 0) {
-      return customPrices[itemId];
-    }
-    // Priority 2: Check dom's custom prices
+    // Priority 1: Check dom's custom prices (direktne z domu, zdroj pravdy)
     const customPrice = dom?.konfigurator_custom_ceny_prosto_house?.[itemId];
     if (customPrice !== undefined && customPrice !== null && customPrice > 0) {
       return customPrice;
     }
-    // Priority 3: Use DEFAULT_PRICES
+    // Priority 2: Use DEFAULT_PRICES
     return DEFAULT_PRICES[itemId] || 0;
-  }, [customPrices, dom]);
+  }, [dom]);
 
   const [montaz, setMontaz] = useState(initialSelections.montaz || null);
   const [izolacia, setIzolacia] = useState(initialSelections.izolacia || null);
