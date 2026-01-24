@@ -725,7 +725,7 @@ export default function KonfiguratorAFrame({
                     zaklady: `zaklady_${zaklady}`
                   }}
                   onSelectionChange={(selections) => {
-                    if (selections.montaz) setMontazHolodomu(selections.montaz === 'ano' ? 'ano' : 'nie');
+                    if (selections.montaz) setMontazHolodomu(selections.montaz.replace('montaz_', ''));
                     if (selections.izolacia) setIzolaciaNavysenie(selections.izolacia.replace('izolacia_', ''));
                     if (selections.zaklady) setZaklady(selections.zaklady.replace('zaklady_', ''));
                   }}
