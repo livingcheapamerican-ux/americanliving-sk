@@ -265,11 +265,11 @@ export default function KonfiguratorFjord({
   };
 
   // Načítať custom ceny z databázy
-  const [customCeny, setCustomCeny] = useState(dom?.konfigurator_ceny || {});
+  const [customCeny, setCustomCeny] = useState(dom?.konfigurator_custom_ceny_prosto_house || {});
 
   useEffect(() => {
-    setCustomCeny(dom?.konfigurator_ceny || {});
-  }, [dom?.konfigurator_ceny]);
+    setCustomCeny(dom?.konfigurator_custom_ceny_prosto_house || {});
+  }, [dom?.konfigurator_custom_ceny_prosto_house]);
   
   // CENY - s možnosťou override z databázy (memo-ované!)
   const CENY = useMemo(() => {
