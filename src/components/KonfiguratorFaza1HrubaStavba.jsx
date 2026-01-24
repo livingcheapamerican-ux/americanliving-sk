@@ -142,6 +142,7 @@ const DEFAULT_PRICES = {
   izolacia_zvysena: 1400, // Flat Small cena
   izolacia_premium: 2800, // Flat Small cena
   izolacia_extra: 5250, // Flat Small Extra izolácia
+  zaklady_bez: 0,
   zaklady_skrutky: 2808, // Flat Small Zemné skrutky
   zaklady_doska: 6000, // Flat Small cena
   zaklady_pasove: 5000, // Flat Small cena
