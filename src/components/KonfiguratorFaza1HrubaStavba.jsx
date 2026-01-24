@@ -358,13 +358,13 @@ export default function KonfiguratorFaza1HrubaStavba({
             icon={() => <div className="flex items-center gap-1"><span className="text-2xl">❄️</span><span className="text-xs bg-green-500 text-white px-1 rounded">A0</span></div>}
             title={t('insulationExtra')}
             subtitle="300mm"
-            price={getPrice('izolacia_300mm')}
-            isSelected={izolacia === 'izolacia_300mm'}
-            onClick={() => setIzolacia('izolacia_300mm')}
+            price={getPrice('izolacia_extra')}
+            isSelected={izolacia === 'izolacia_extra'}
+            onClick={() => setIzolacia('izolacia_extra')}
             tooltip={t('insulationExtraTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
-            tileId="izolacia_300mm"
+            tileId="izolacia_extra"
             showTooltip={showTooltips}
           />
         </div>
