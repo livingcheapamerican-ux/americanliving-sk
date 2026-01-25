@@ -306,10 +306,10 @@ export default function KonfiguratorBarn48({
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
 
-    total += CENY.montaz[montazHolodomu];
+    total += CENY.montaz[montazHolodomu] || 0;
     total += CENY.predlzenie[predlzenie] || 0;
-    total += CENY.dvere[vstupneDvere];
-    total += CENY.izolacia[izolaciaNavysenie];
+    total += CENY.dvere[vstupneDvere] || 0;
+    total += CENY.izolacia[izolaciaNavysenie] || 0;
 
     if (elektroinstalacia) total += CENY.elektroinstalacia;
     if (vodaKanalizacia) total += CENY.vodaKanalizacia;
@@ -318,7 +318,7 @@ export default function KonfiguratorBarn48({
     if (tepelneCerpadlo) total += CENY.tepelneCerpadlo;
     if (rekuperacia) total += CENY.rekuperacia;
 
-    total += CENY.zaklady[zaklady];
+    total += CENY.zaklady[zaklady] || 0;
     if (pripojkaSiete) total += CENY.pripojkaSiete;
 
     if (inziniering) total += CENY.inziniering;
