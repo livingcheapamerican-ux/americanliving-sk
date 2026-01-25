@@ -350,7 +350,7 @@ export default function KonfiguratorBarn48({
     povrchokaOkien: getPrice('povrchokaOkien') ?? DEFAULT_CENY.povrchokaOkien,
     vnutornePodlahy: getPrice('vnutornePodlahy') ?? DEFAULT_CENY.vnutornePodlahy,
     podlahovVykurovanie: getPrice('podlahovVykurovanie') ?? DEFAULT_CENY.podlahovVykurovanie,
-    interieroveDvere: getPrice('interieroveDvere') ?? DEFAULT_CENY.interieroveDvere,
+    interieroveDvere: DEFAULT_CENY.interieroveDvere,
     tonovaneSkla: getPrice('tonovaneSkla') ?? DEFAULT_CENY.tonovaneSkla,
     doprava: getPrice('doprava') ?? DEFAULT_CENY.doprava,
     revizna: getPrice('revizna') ?? DEFAULT_CENY.revizna,
