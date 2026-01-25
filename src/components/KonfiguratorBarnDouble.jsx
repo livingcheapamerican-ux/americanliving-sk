@@ -335,6 +335,12 @@ export default function KonfiguratorBarnDouble({
     zaklady_pasove: CENY.zaklady.pasove
   }), [CENY]);
 
+  const phase1InitialSelections = useMemo(() => ({
+    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
+    izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+    zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
+  }), [montazHolodomu, izolaciaNavysenie, zaklady]);
+
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
 
@@ -727,11 +733,7 @@ export default function KonfiguratorBarnDouble({
                   showTooltips={true}
                   customPrices={phase1CustomPrices}
                   hideExtraInsulation={false}
-                  initialSelections={{
-                    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
-                    zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
-                  }}
+                  initialSelections={phase1InitialSelections}
                   onSelectionChange={(selections) => {
                     // Kontrola či sa hodnota skutočne zmenila
                     if (selections.montaz) {
