@@ -288,18 +288,18 @@ export default function KonfiguratorFlatDouble({
     bocneOknoVyklopne55: 225
   };
 
-  // Načítať custom ceny z databázy
-  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
+  // Načítať custom ceny z databázy - stabilná referencia
+  const customCeny = useMemo(() => dom?.konfigurator_custom_ceny_prosto_house || {}, [dom]);
   
-  const getPrice = (key) => {
+  const getPrice = React.useCallback((key) => {
     if (customCeny[key] !== undefined && customCeny[key] !== null) {
       return customCeny[key];
     }
     return DEFAULT_CENY[key];
-  };
+  }, [customCeny]);
 
-  // CENY - s možnosťou override z databázy
-  const CENY = {
+  // CENY - s možnosťou override z databázy - stabilná referencia
+  const CENY = useMemo(() => ({
     montaz: { nie: 0, ano: getPrice('montaz_ano') ?? DEFAULT_CENY.montaz.ano },
     dvere: { 
       ziadne: 0, 
@@ -349,7 +349,7 @@ export default function KonfiguratorFlatDouble({
     bocneOknoFixne: getPrice('bocneOknoFixne') ?? DEFAULT_CENY.bocneOknoFixne,
     bocneOknoVyklopne90: getPrice('bocneOknoVyklopne90') ?? DEFAULT_CENY.bocneOknoVyklopne90,
     bocneOknoVyklopne55: getPrice('bocneOknoVyklopne55') ?? DEFAULT_CENY.bocneOknoVyklopne55
-  };
+  }), [getPrice]);
 
   // Custom prices pre Fázu 1 komponent
   const phase1CustomPrices = useMemo(() => ({
@@ -367,6 +367,12 @@ export default function KonfiguratorFlatDouble({
     zaklady_doska: CENY.zaklady.doska,
     zaklady_pasove: CENY.zaklady.pasove
   }), [CENY]);
+
+  const phase1InitialSelections = useMemo(() => ({
+    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
+    izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+    zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
+  }), [montazHolodomu, izolaciaNavysenie, zaklady]);
 
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
@@ -410,7 +416,7 @@ export default function KonfiguratorFlatDouble({
       zaklady, pripojkaSiete, inziniering, projektA0, interierFinis,
       vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, podlahovVykurovanie,
       pergola, interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE]);
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE, CENY]);
 
   const a0Odporucania = useMemo(() => {
     if (!projektA0) return null;
@@ -499,7 +505,7 @@ export default function KonfiguratorFlatDouble({
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
-      interieroveDvere, pergola, inziniering, projektA0, revizna, doprava, t, BASE_PRICE]);
+      interieroveDvere, pergola, inziniering, projektA0, revizna, doprava, t, BASE_PRICE, CENY]);
 
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
@@ -648,7 +654,7 @@ export default function KonfiguratorFlatDouble({
               const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
 
               return (
-                <React.Fragment key={index}>
+                <div key={index}>
                   {showServicesDivider && (
                     <div className="py-0.5">
                       <div className="border-t border-cyan-400"></div>
@@ -700,7 +706,7 @@ export default function KonfiguratorFlatDouble({
                       {item.selected ? formatPrice(item.price) : '—'}
                     </span>
                   </div>
-                </React.Fragment>
+                </div>
               );
             })}
           </div>
@@ -775,23 +781,22 @@ export default function KonfiguratorFlatDouble({
                     showTooltips={true}
                     customPrices={phase1CustomPrices}
                     hideExtraInsulation={false}
-                    initialSelections={{
-                      montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                      izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
-                      zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
-                    }}
+                    initialSelections={phase1InitialSelections}
                     onSelectionChange={(selections) => {
-                      if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
+                      if (selections.montaz) {
+                        const newValue = selections.montaz === 'montaz_ano' ? 'ano' : 'nie';
+                        if (montazHolodomu !== newValue) setMontazHolodomu(newValue);
+                      }
                       if (selections.izolacia) {
                         let izolaciaValue = selections.izolacia.replace('izolacia_', '');
                         if (izolaciaValue === 'extra' || izolaciaValue === '300mm') izolaciaValue = 'ultra';
                         if (izolaciaValue === 'standardna') izolaciaValue = 'standard';
-                        setIzolaciaNavysenie(izolaciaValue);
+                        if (izolaciaNavysenie !== izolaciaValue) setIzolaciaNavysenie(izolaciaValue);
                       }
                       if (selections.zaklady) {
                         let zakladyValue = selections.zaklady.replace('zaklady_', '');
                         if (zakladyValue === 'vruty') zakladyValue = 'skrutky';
-                        setZaklady(zakladyValue);
+                        if (zaklady !== zakladyValue) setZaklady(zakladyValue);
                       }
                     }}
                   />
@@ -1084,7 +1089,7 @@ export default function KonfiguratorFlatDouble({
                             const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
                             
                             return (
-                              <React.Fragment key={index}>
+                              <div key={index}>
                                 {showServicesDivider && (
                                   <div className="py-1.5">
                                     <div className="flex items-center gap-2">
@@ -1131,7 +1136,7 @@ export default function KonfiguratorFlatDouble({
                                     {item.selected ? formatPrice(item.price) : 'NIE'}
                                   </span>
                                 </div>
-                              </React.Fragment>
+                              </div>
                             );
                           })}
                         </div>
