@@ -733,17 +733,21 @@ export default function KonfiguratorBarnDouble({
                     zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
                   }}
                   onSelectionChange={(selections) => {
-                    if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
+                    // Kontrola či sa hodnota skutočne zmenila
+                    if (selections.montaz) {
+                      const newValue = selections.montaz === 'montaz_ano' ? 'ano' : 'nie';
+                      if (montazHolodomu !== newValue) setMontazHolodomu(newValue);
+                    }
                     if (selections.izolacia) {
                       let izolaciaValue = selections.izolacia.replace('izolacia_', '');
                       if (izolaciaValue === 'extra') izolaciaValue = 'ultra';
                       if (izolaciaValue === 'standardna') izolaciaValue = 'standard';
-                      setIzolaciaNavysenie(izolaciaValue);
+                      if (izolaciaNavysenie !== izolaciaValue) setIzolaciaNavysenie(izolaciaValue);
                     }
                     if (selections.zaklady) {
                       let zakladyValue = selections.zaklady.replace('zaklady_', '');
                       if (zakladyValue === 'vruty') zakladyValue = 'skrutky';
-                      setZaklady(zakladyValue);
+                      if (zaklady !== zakladyValue) setZaklady(zakladyValue);
                     }
                   }}
                 />
