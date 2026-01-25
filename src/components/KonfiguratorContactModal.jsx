@@ -235,35 +235,35 @@ export default function KonfiguratorContactModal({
       </Dialog>
 
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
+        <DialogContent className="w-[95vw] max-w-4xl h-[95vh] max-h-[95vh] overflow-hidden p-0 flex flex-col">
           {!submitted ? (
-            <div className="flex flex-col lg:flex-row">
+            <div className="flex flex-col md:flex-row h-full overflow-hidden">
             {/* Ľavá strana - Obrázok a súhrn */}
-            <div className="lg:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 sm:p-6 text-white">
-              <DialogHeader className="mb-4">
-                <DialogTitle className="text-xl sm:text-2xl font-bold text-white">
+            <div className="md:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-3 sm:p-4 text-white overflow-y-auto">
+              <DialogHeader className="mb-2 flex-shrink-0">
+                <DialogTitle className="text-lg sm:text-xl font-bold text-white">
                   {t('yourConfiguration')}
                 </DialogTitle>
               </DialogHeader>
 
               {/* Obrázok domu */}
-              <div className="relative rounded-xl overflow-hidden mb-4 bg-white">
+              <div className="relative rounded-lg overflow-hidden mb-2 bg-white flex-shrink-0">
                 <img 
                   src={getHouseImage()} 
                   alt={dom?.nazov || "Flat Double"} 
-                  className="w-full h-40 sm:h-48 object-contain"
+                  className="w-full h-24 sm:h-32 md:h-40 object-contain"
                 />
-                <div className="absolute top-2 left-2">
+                <div className="absolute top-1 left-1">
                   <Badge className={`${vonkajsiaFasada === "suchana" ? "bg-orange-500" : "bg-amber-600"} text-white text-xs`}>
                     {vonkajsiaFasada === "suchana" ? t('facadeStucco') : t('facadeWoodMetal')}
                   </Badge>
                 </div>
               </div>
 
-              <h3 className="text-lg font-bold mb-3">{dom?.nazov || 'Flat Double 142m²'}</h3>
+              <h3 className="text-base sm:text-lg font-bold mb-2 flex-shrink-0">{dom?.nazov || 'Flat Double 142m²'}</h3>
 
               {/* Súhrn položiek */}
-              <div className="bg-slate-800/50 rounded-xl p-3 border border-slate-700/50 max-h-[200px] sm:max-h-[250px] overflow-y-auto text-sm">
+              <div className="bg-slate-800/50 rounded-lg p-2 border border-slate-700/50 flex-1 overflow-y-auto text-xs sm:text-sm">
                 {selectedItems?.map((item, index) => {
                    const isBase = item.section === "base";
                    const prevItem = selectedItems[index - 1];
@@ -314,30 +314,30 @@ export default function KonfiguratorContactModal({
               </div>
 
               {/* A0 / Rekreačná stavba status */}
-              <div className={`mt-3 p-3 rounded-xl border ${isA0Ready ? 'bg-green-500/20 border-green-500/30' : projektA0 && a0Missing.length > 0 ? 'bg-amber-500/20 border-amber-500/30' : 'bg-blue-500/20 border-blue-500/30'}`}>
-                {isA0Ready ? (
+              <div className={`mt-2 p-2 rounded-lg border flex-shrink-0 ${isA0Ready ? 'bg-green-500/20 border-green-500/30' : projektA0 && a0Missing.length > 0 ? 'bg-amber-500/20 border-amber-500/30' : 'bg-blue-500/20 border-blue-500/30'}`}>
+               {isA0Ready ? (
+                 <div className="flex items-center gap-2">
+                   <Sparkles className="w-4 h-4 text-green-400 flex-shrink-0" />
+                   <div>
+                     <p className="text-green-400 font-bold text-xs sm:text-sm">✓ {t('meetsA0Conditions')}</p>
+                     <p className="text-green-300/80 text-xs">{t('familyHouseWithCert')}</p>
+                   </div>
+                 </div>
+               ) : projektA0 && a0Missing.length > 0 ? (
+                 <div>
+                   <div className="flex items-center gap-2 mb-1">
+                     <Sparkles className="w-3 h-3 text-amber-400 flex-shrink-0" />
+                     <p className="text-amber-400 font-bold text-xs sm:text-sm">{t('forA0Missing')}:</p>
+                   </div>
+                   <ul className="text-amber-300/80 text-xs space-y-0 ml-5">
+                     {a0Missing.map((item, i) => <li key={i}>• {item}</li>)}
+                   </ul>
+                 </div>
+               ) : (
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-green-400" />
-                    <div>
-                      <p className="text-green-400 font-bold text-sm">✓ {t('meetsA0Conditions')}</p>
-                      <p className="text-green-300/80 text-xs">{t('familyHouseWithCert')}</p>
-                    </div>
-                  </div>
-                ) : projektA0 && a0Missing.length > 0 ? (
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Sparkles className="w-4 h-4 text-amber-400" />
-                      <p className="text-amber-400 font-bold text-sm">{t('forA0Missing')}:</p>
-                    </div>
-                    <ul className="text-amber-300/80 text-xs space-y-0.5 ml-6">
-                      {a0Missing.map((item, i) => <li key={i}>• {item}</li>)}
-                    </ul>
-                  </div>
-                ) : (
-                   <div className="flex items-center gap-2">
-                     <Package className="w-5 h-5 text-blue-400" />
+                     <Package className="w-4 h-4 text-blue-400 flex-shrink-0" />
                      <div>
-                       <p className="text-blue-400 font-bold text-sm">
+                       <p className="text-blue-400 font-bold text-xs sm:text-sm">
                          {typStavby === 'rodinny_dom' ? t('familyHouse') : t('recreationalBuilding')}
                        </p>
                        <p className="text-blue-300/80 text-xs">
@@ -349,40 +349,40 @@ export default function KonfiguratorContactModal({
               </div>
 
               {/* Celková cena */}
-              <div className="mt-3 p-3 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl border border-green-500/30">
-                <div className="flex justify-between items-center">
-                  <span className="text-slate-300 text-sm">{t('totalWithVAT')}</span>
-                  <span className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
-                    {formatPrice(totalPrice)}
-                  </span>
-                </div>
+              <div className="mt-2 p-2 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-lg border border-green-500/30 flex-shrink-0">
+               <div className="flex justify-between items-center gap-2">
+                 <span className="text-slate-300 text-xs sm:text-sm">{t('totalWithVAT')}</span>
+                 <span className="text-lg sm:text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 whitespace-nowrap">
+                   {formatPrice(totalPrice)}
+                 </span>
+               </div>
               </div>
             </div>
 
             {/* Pravá strana - Formulár */}
-            <div className="lg:w-1/2 p-4 sm:p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">
+            <div className="md:w-1/2 p-3 sm:p-4 overflow-y-auto flex flex-col">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2 flex-shrink-0">
                 {t('contactDetails')}
               </h3>
-              <p className="text-gray-600 text-sm mb-6">
+              <p className="text-gray-600 text-xs sm:text-sm mb-3 flex-shrink-0">
                 {t('fillFormWeContact')}
               </p>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3 flex-1 overflow-y-auto">
                 <div>
-                  <Label htmlFor="meno">{t('fullName')} *</Label>
+                  <Label htmlFor="meno" className="text-xs sm:text-sm">{t('fullName')} *</Label>
                   <Input
                     id="meno"
                     required
                     value={formData.meno}
                     onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
                     placeholder={t('fullNamePlaceholder')}
-                    className="mt-1 !text-gray-900 placeholder:text-gray-500"
+                    className="mt-1 h-8 sm:h-10 text-xs sm:text-sm !text-gray-900 placeholder:text-gray-500"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="email">{t('email')} *</Label>
+                  <Label htmlFor="email" className="text-xs sm:text-sm">{t('email')} *</Label>
                   <Input
                     id="email"
                     type="email"
@@ -390,83 +390,83 @@ export default function KonfiguratorContactModal({
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder={t('emailPlaceholder')}
-                    className="mt-1 !text-gray-900 placeholder:text-gray-500"
+                    className="mt-1 h-8 sm:h-10 text-xs sm:text-sm !text-gray-900 placeholder:text-gray-500"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="telefon">{t('phone')} *</Label>
+                  <Label htmlFor="telefon" className="text-xs sm:text-sm">{t('phone')} *</Label>
                   <Input
                     id="telefon"
                     required
                     value={formData.telefon}
                     onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
                     placeholder={t('phonePlaceholder')}
-                    className="mt-1 !text-gray-900 placeholder:text-gray-500"
+                    className="mt-1 h-8 sm:h-10 text-xs sm:text-sm !text-gray-900 placeholder:text-gray-500"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="obec">{t('cityLocation')} *</Label>
+                  <Label htmlFor="obec" className="text-xs sm:text-sm">{t('cityLocation')} *</Label>
                   <Input
                     id="obec"
                     required
                     value={formData.obec}
                     onChange={(e) => setFormData({ ...formData, obec: e.target.value })}
                     placeholder={t('cityPlaceholder')}
-                    className="mt-1 !text-gray-900 placeholder:text-gray-500"
+                    className="mt-1 h-8 sm:h-10 text-xs sm:text-sm !text-gray-900 placeholder:text-gray-500"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="poznamka">{t('note')} ({t('optional')})</Label>
+                  <Label htmlFor="poznamka" className="text-xs sm:text-sm">{t('note')} ({t('optional')})</Label>
                   <Textarea
                     id="poznamka"
                     value={formData.poznamka}
                     onChange={(e) => setFormData({ ...formData, poznamka: e.target.value })}
                     placeholder={t('notePlaceholder')}
-                    rows={3}
-                    className="mt-1 !text-gray-900 placeholder:text-gray-500"
+                    rows={2}
+                    className="mt-1 text-xs sm:text-sm !text-gray-900 placeholder:text-gray-500"
                   />
                 </div>
 
                 {isProstoHouse ? (
-                  <div className="space-y-3">
+                  <div className="space-y-2 mt-auto pt-2 flex-shrink-0">
                     {isAdmin && (
                       <Button
                         type="button"
                         size="sm"
                         variant="outline"
                         onClick={handlePreview}
-                        className="w-full border-2 border-blue-500 text-blue-600 hover:bg-blue-50"
+                        className="w-full border border-blue-500 text-blue-600 hover:bg-blue-50 text-xs sm:text-sm h-8 sm:h-10"
                       >
-                        <Mail className="mr-2 w-4 h-4" />
+                        <Mail className="mr-2 w-3 h-3 sm:w-4 sm:h-4" />
                         {t('quotePreview')}
                       </Button>
                     )}
                     <Button
                       type="button"
-                      size="lg"
+                      size="sm"
                       onClick={handleSendEmail}
                       disabled={generatingPDF || !formData.email || !formData.meno || !formData.telefon || !formData.obec}
-                      className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold"
+                      className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold text-xs sm:text-sm h-8 sm:h-10"
                     >
-                      <Mail className="mr-2 w-5 h-5" />
+                      <Mail className="mr-2 w-3 h-3 sm:w-4 sm:h-4" />
                       {generatingPDF ? t('sending') : t('sendQuote')}
                     </Button>
                   </div>
                 ) : (
                   <Button
                     type="submit"
-                    size="lg"
-                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold"
+                    size="sm"
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold text-xs sm:text-sm h-8 sm:h-10 mt-auto flex-shrink-0"
                     disabled={createDopytMutation.isPending}
                   >
                     {createDopytMutation.isPending ? (
                       t('sending')
                     ) : (
                       <>
-                        <Send className="mr-2 w-5 h-5" />
+                        <Send className="mr-2 w-3 h-3 sm:w-4 sm:h-4" />
                         {t('sendQuote')}
                       </>
                     )}
