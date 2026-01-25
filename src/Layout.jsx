@@ -16,6 +16,7 @@ import { LanguageProvider, useLanguage } from "./components/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
 import UserTracking from "./components/UserTracking";
 import SessionRecorder from "./components/SessionRecorder";
+import PassiveIncomeButton from "./components/PassiveIncomeButton";
 
 
 
@@ -299,6 +300,7 @@ function LayoutContent({ children }) {
                   </Link>
                 );
               })}
+              <PassiveIncomeButton />
             </nav>
 
             <div className="hidden sm:flex items-center gap-1 sm:gap-2">
