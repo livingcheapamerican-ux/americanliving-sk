@@ -632,23 +632,17 @@ export default function KonfiguratorFjord({
     }
   };
 
-  const initialSelectionsForFaza1 = useMemo(() => ({
-    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-    izolacia: izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
-    zaklady: zaklady === 'bez' ? 'zaklady_bez' : zaklady === 'skrutky' ? 'zaklady_skrutky' : `zaklady_${zaklady}`
-  }), [montazHolodomu, izolaciaNavysenie, zaklady]);
-
-  const cennikFaza1 = useMemo(() => ({
-    montaz: CENY.montaz.ano,
-    vstupne_dviere_kovove: CENY.dvere.kovove,
-    vstupne_dviere_plastkovo_kovove: CENY.dvere.plastove,
+  const phase1CustomPrices = useMemo(() => ({
+    montaz_ano: CENY.montaz.ano,
+    izolacia_standardna: 0,
+    izolacia_zvysena: CENY.izolacia.zvysena,
+    izolacia_premium: CENY.izolacia.premium,
+    izolacia_extra: CENY.izolacia.extra,
+    izolacia_300mm: CENY.izolacia["300mm"],
+    zaklady_bez: 0,
     zaklady_skrutky: CENY.zaklady.skrutky,
-    zaklady_pasove: CENY.zaklady.pasove,
     zaklady_doska: CENY.zaklady.doska,
-    fasada_smrekovec: 0,
-    fasada_termicky_upravene_drevo: 0,
-    fasada_kompozit: 0,
-    okna_hlinikove: 0
+    zaklady_pasove: CENY.zaklady.pasove
   }), [CENY]);
 
   const handleSendQuoteFromFloating = async (contactData) => {
@@ -829,19 +823,21 @@ export default function KonfiguratorFjord({
               <div className="p-3 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
                 <KonfiguratorFaza1HrubaStavba
                   dom={dom}
-                  konfig={{
-                    montaz: montazHolodomu === 'ano',
-                    vstupne_dvere: vstupneDvere,
-                    zaklady: zaklady,
-                    fasada: 'standard',
-                    okna: 'standard'
+                  isAdmin={isAdmin}
+                  onPriceUpdate={handlePriceChange}
+                  showTooltips={true}
+                  customPrices={phase1CustomPrices}
+                  hideExtraInsulation={false}
+                  initialSelections={{
+                    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
+                    izolacia: izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+                    zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
                   }}
-                  setKonfig={(newKonfig) => {
-                    if (newKonfig.montaz !== undefined) setMontazHolodomu(newKonfig.montaz ? 'ano' : 'nie');
-                    if (newKonfig.vstupne_dvere !== undefined) setVstupneDvere(newKonfig.vstupne_dvere);
-                    if (newKonfig.zaklady !== undefined) setZaklady(newKonfig.zaklady);
+                  onSelectionChange={(selections) => {
+                    if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
+                    if (selections.izolacia) setIzolaciaNavysenie(selections.izolacia.replace('izolacia_', ''));
+                    if (selections.zaklady) setZaklady(selections.zaklady.replace('zaklady_', ''));
                   }}
-                  cennikFaza1={cennikFaza1}
                 />
               </div>
             </Card>
