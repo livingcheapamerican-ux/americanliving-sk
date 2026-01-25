@@ -1,3 +1,53 @@
+/**
+ * ⚠️⚠️⚠️ KRITICKÉ UPOZORNENIE - FLAT 1,5 KONFIGURÁTOR ⚠️⚠️⚠️
+ * 
+ * ═══════════════════════════════════════════════════════════════
+ * TENTO SÚBOR JE VÝHRADNE PRE MODEL "FLAT 1,5" - NEMEŇTE HO!
+ * ═══════════════════════════════════════════════════════════════
+ * 
+ * ⛔ ABSOLÚTNE ZAKÁZANÉ OPERÁCIE:
+ * ────────────────────────────────────────────────────────────────
+ * ❌ NEODSTRAŇUJTE prop `customPrices` z KonfiguratorFaza1HrubaStavba
+ * ❌ NEPREPISUJTE funkciu getPrice() a objekt CENY
+ * ❌ NEPREPISUJTE mapovanie v initialSelections a onSelectionChange
+ * ❌ NEMEŇTE logiku phase1CustomPrices useMemo
+ * ❌ NEODSTRAŇUJTE mapovanie izolacia_extra/izolacia_300mm → ultra a vice versa
+ * ❌ NEMEŇTE hardcodovanú cenu 16500 pre ultra/extra izoláciu
+ * 
+ * ✅ POVINNÉ PROPS pre KonfiguratorFaza1HrubaStavba:
+ * ────────────────────────────────────────────────────────────────
+ * ✓ dom={dom}
+ * ✓ isAdmin={isAdmin}
+ * ✓ onPriceUpdate={handlePriceChange}
+ * ✓ showTooltips={true}
+ * ✓ customPrices={phase1CustomPrices}  ← KRITICKÉ!
+ * ✓ hideExtraInsulation={false}
+ * ✓ initialSelections={{...}}  ← musí mapovať ultra → extra
+ * ✓ onSelectionChange={(selections) => {...}}  ← musí mapovať extra → ultra
+ * 
+ * 📋 MAPOVANIE CIEN (NEMEŇTE!):
+ * ────────────────────────────────────────────────────────────────
+ * - montaz: montaz_ano / montaz_nie
+ * - izolacia: izolacia_standardna / izolacia_zvysena / izolacia_premium / izolacia_extra
+ * - zaklady: zaklady_bez / zaklady_skrutky / zaklady_doska / zaklady_pasove
+ * 
+ * 🔄 MAPOVANIE HODNÔT (NEMEŇTE!):
+ * ────────────────────────────────────────────────────────────────
+ * Parent state (ultra) ↔ Fáza 1 komponent (extra/300mm)
+ * Parent state (standard) ↔ Fáza 1 komponent (standardna)
+ * 
+ * 💰 HARDCODOVANÉ CENY PRE FLAT 1,5 (NEMEŇTE!):
+ * ────────────────────────────────────────────────────────────────
+ * - CENY.izolacia.ultra = 16500 (FIX, nie getPrice!)
+ * - phase1CustomPrices.izolacia_extra = 16500
+ * - phase1CustomPrices.izolacia_ultra = 16500
+ * - phase1CustomPrices.izolacia_300mm = 16500
+ * 
+ * ═══════════════════════════════════════════════════════════════
+ * Posledná úprava: 2026-01-25 - Opravené NaN a ceny pre ultra/extra
+ * ═══════════════════════════════════════════════════════════════
+ */
+
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
@@ -257,10 +307,11 @@ export default function KonfiguratorFlat15({
       plastove: getPrice('dvere_plastove') ?? DEFAULT_CENY.dvere.plastove 
     },
     izolacia: { 
-      standard: 0, 
+      standard: 0,
+      standardna: 0, 
       zvysena: getPrice('izolacia_zvysena') ?? DEFAULT_CENY.izolacia.zvysena, 
       premium: getPrice('izolacia_premium') ?? DEFAULT_CENY.izolacia.premium,
-      ultra: getPrice('izolacia_extra') ?? DEFAULT_CENY.izolacia.ultra 
+      ultra: 16500
     },
     elektroinstalacia: getPrice('elektroinstalacia') ?? DEFAULT_CENY.elektroinstalacia,
     vodaKanalizacia: getPrice('vodaKanalizacia') ?? DEFAULT_CENY.vodaKanalizacia,
@@ -299,6 +350,23 @@ export default function KonfiguratorFlat15({
     bocneOknoVyklopne90: getPrice('bocneOknoVyklopne90') ?? DEFAULT_CENY.bocneOknoVyklopne90,
     bocneOknoVyklopne55: getPrice('bocneOknoVyklopne55') ?? DEFAULT_CENY.bocneOknoVyklopne55
   };
+
+  // Custom prices pre Fázu 1 komponent
+  const phase1CustomPrices = useMemo(() => ({
+    montaz_ano: CENY.montaz.ano,
+    montaz_nie: 0,
+    izolacia_standardna: 0,
+    izolacia_standard: 0,
+    izolacia_zvysena: CENY.izolacia.zvysena,
+    izolacia_premium: CENY.izolacia.premium,
+    izolacia_ultra: 16500,
+    izolacia_extra: 16500,
+    izolacia_300mm: 16500,
+    zaklady_bez: 0,
+    zaklady_skrutky: CENY.zaklady.skrutky,
+    zaklady_doska: CENY.zaklady.doska,
+    zaklady_pasove: CENY.zaklady.pasove
+  }), [CENY]);
 
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
@@ -705,20 +773,25 @@ export default function KonfiguratorFlat15({
                   isAdmin={isAdmin}
                   onPriceUpdate={handlePriceChange}
                   showTooltips={true}
+                  customPrices={phase1CustomPrices}
+                  hideExtraInsulation={false}
                   initialSelections={{
                     montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_300mm' : `izolacia_${izolaciaNavysenie}`,
-                    zaklady: `zaklady_${zaklady}`
+                    izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+                    zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
                   }}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
                     if (selections.izolacia) {
-                      const izolaciaValue = selections.izolacia.replace('izolacia_', '');
-                      setIzolaciaNavysenie(izolaciaValue === '300mm' ? 'ultra' : izolaciaValue === 'extra' ? 'ultra' : izolaciaValue === 'standardna' ? 'standard' : izolaciaValue);
+                      let izolaciaValue = selections.izolacia.replace('izolacia_', '');
+                      if (izolaciaValue === 'extra' || izolaciaValue === '300mm') izolaciaValue = 'ultra';
+                      if (izolaciaValue === 'standardna') izolaciaValue = 'standard';
+                      setIzolaciaNavysenie(izolaciaValue);
                     }
                     if (selections.zaklady) {
-                      const zakladyValue = selections.zaklady.replace('zaklady_', '');
-                      setZaklady(zakladyValue === 'vruty' ? 'skrutky' : zakladyValue === 'bez' ? 'bez' : zakladyValue);
+                      let zakladyValue = selections.zaklady.replace('zaklady_', '');
+                      if (zakladyValue === 'vruty') zakladyValue = 'skrutky';
+                      setZaklady(zakladyValue);
                     }
                   }}
                 />
