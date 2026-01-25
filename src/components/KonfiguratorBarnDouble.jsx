@@ -252,18 +252,18 @@ export default function KonfiguratorBarnDouble({
     bocneOknoVyklopne55: 225
   };
 
-  // Načítať custom ceny z databázy
-  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
+  // Načítať custom ceny z databázy - stabilná referencia
+  const customCeny = useMemo(() => dom?.konfigurator_custom_ceny_prosto_house || {}, [dom]);
   
-  const getPrice = (key) => {
+  const getPrice = React.useCallback((key) => {
     if (customCeny[key] !== undefined && customCeny[key] !== null) {
       return customCeny[key];
     }
     return DEFAULT_CENY[key];
-  };
+  }, [customCeny]);
 
-  // CENY - s možnosťou override z databázy
-  const CENY = {
+  // CENY - s možnosťou override z databázy - stabilná referencia
+  const CENY = useMemo(() => ({
     montaz: { nie: 0, ano: getPrice('montaz_ano') ?? DEFAULT_CENY.montaz.ano },
     predlzenie: { 
       0: 0, 
@@ -319,7 +319,7 @@ export default function KonfiguratorBarnDouble({
     bocneOknoFixne: getPrice('bocneOknoFixne') ?? DEFAULT_CENY.bocneOknoFixne,
     bocneOknoVyklopne90: getPrice('bocneOknoVyklopne90') ?? DEFAULT_CENY.bocneOknoVyklopne90,
     bocneOknoVyklopne55: getPrice('bocneOknoVyklopne55') ?? DEFAULT_CENY.bocneOknoVyklopne55
-  };
+  }), [getPrice]);
 
   const phase1CustomPrices = useMemo(() => ({
     montaz_ano: CENY.montaz.ano,

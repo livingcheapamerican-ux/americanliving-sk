@@ -124,20 +124,30 @@ export default function KonfiguratorWizard({
     setCurrentStep(0);
   }, []);
 
-  // Keď sa zmení typ stavby, nastaviť predvolené hodnoty
+  // Sledovať predchádzajúci typ stavby
+  const prevTypStavbyRef = React.useRef(typStavby);
+
+  // Keď sa zmení typ stavby, nastaviť predvolené hodnoty - len raz
+  React.useEffect(() => {
+    if (typStavby && typStavby !== prevTypStavbyRef.current) {
+      prevTypStavbyRef.current = typStavby;
+      
+      if (typStavby === "rodinny_dom") {
+        setIzolaciaNavysenie("premium");
+        setTepelneCerpadlo(true);
+        setRekuperacia(true);
+        setProjektA0(true);
+      } else if (typStavby === "rekreacna") {
+        setIzolaciaNavysenie("standard");
+        setTepelneCerpadlo(false);
+        setRekuperacia(false);
+        setProjektA0(false);
+      }
+    }
+  }, [typStavby]);
+
   const handleTypStavbyChange = (typ) => {
     if (setTypStavby) setTypStavby(typ);
-    
-    if (typ === "rodinny_dom") {
-      // Nastaviť iba A0 požiadavky - izoláciu nechať na používateľa
-      if (setTepelneCerpadlo) setTepelneCerpadlo(true);
-      if (setRekuperacia) setRekuperacia(true);
-      if (setProjektA0) setProjektA0(true);
-    } else if (typ === "rekreacna") {
-      if (setTepelneCerpadlo) setTepelneCerpadlo(false);
-      if (setRekuperacia) setRekuperacia(false);
-      if (setProjektA0) setProjektA0(false);
-    }
   };
 
   const steps = [
