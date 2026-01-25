@@ -20,9 +20,10 @@ Deno.serve(async (req) => {
       errors: []
     };
 
-    // Spracuj posledných 20 Dom
-    console.log('Processing last 20 Dom records...');
-    const domRecords = await base44.asServiceRole.entities.Dom.list('-updated_date', 20);
+    // Spracuj posledných 5 Dom (menšia dávka)
+    console.log('Processing last 5 Dom records...');
+    const domRecords = await base44.asServiceRole.entities.Dom.list('-updated_date', 5);
+    let lastDomImages = {};
     
     for (const dom of domRecords) {
       try {
@@ -33,11 +34,12 @@ Deno.serve(async (req) => {
         if (dom.podorys_3d) imageUrls.push(dom.podorys_3d);
         if (Array.isArray(dom.galeria)) imageUrls.push(...dom.galeria.filter(u => u));
 
+        // VYNÚTENÝ ZÁPIS: Inicializuj ako prázdny objekt ak je null
         const seoMap = dom.images_seo_map || {};
         let updated = false;
 
         for (const imageUrl of imageUrls) {
-          if (!imageUrl.trim()) continue;
+          if (!imageUrl || !imageUrl.trim()) continue;
 
           try {
             console.log(`Analyzing Dom image: ${imageUrl}`);
@@ -61,20 +63,24 @@ Deno.serve(async (req) => {
             console.log(`✅ Dom image optimized: ${altText}`);
 
           } catch (imgError) {
+            console.error(`Image error for ${imageUrl}:`, imgError.message);
             report.errors.push(`Dom ${dom.nazov} image: ${imgError.message}`);
           }
         }
 
-        // Ulož updatovanú SEO mapu do databázy
-        if (updated) {
-          await base44.asServiceRole.entities.Dom.update(dom.id, {
-            images_seo_map: seoMap
-          });
-        }
+        // VYNÚTENÝ ZÁPIS: Ulož VŽDY, aj ak je mapa prázdna
+        await base44.asServiceRole.entities.Dom.update(dom.id, {
+          images_seo_map: seoMap
+        });
+        
+        // Ulož posledný dom pre výpis logu
+        lastDomImages = { dom_id: dom.id, dom_name: dom.nazov, images_seo_map: seoMap };
 
         report.dom_processed++;
+        console.log(`✅ Dom updated: ${dom.nazov} with ${Object.keys(seoMap).length} images`);
       } catch (error) {
         report.dom_failed++;
+        console.error(`Dom error: ${error.message}`);
         report.errors.push(`Dom ${dom.nazov}: ${error.message}`);
       }
     }
