@@ -198,9 +198,16 @@ export default function KonfiguratorFaza1HrubaStavba({
 
   const prevInitialSelections = useRef(initialSelections);
   const prevCustomPrices = useRef(customPrices);
+  const isInternalUpdate = useRef(false);
 
   // Synchronizovať s externými zmenami (iba pri prvom mount alebo pri externej zmene)
   useEffect(() => {
+    // Ak je to interná zmena (z onClick), ignoruj
+    if (isInternalUpdate.current) {
+      isInternalUpdate.current = false;
+      return;
+    }
+
     // Synchronizuj iba ak sa initialSelections zmenili zvonku (nie kvôli internej zmene)
     if (JSON.stringify(prevInitialSelections.current) !== JSON.stringify(initialSelections)) {
       if (initialSelections.izolacia && initialSelections.izolacia !== izolacia) {
@@ -214,7 +221,7 @@ export default function KonfiguratorFaza1HrubaStavba({
       }
       prevInitialSelections.current = initialSelections;
     }
-  }, [initialSelections, izolacia, montaz, zaklady]);
+  }, [initialSelections]);
 
   // Recompute getPrice if customPrices change
   useEffect(() => {
@@ -313,7 +320,10 @@ export default function KonfiguratorFaza1HrubaStavba({
             price={0}
             isPriced={false}
             isSelected={montaz === 'montaz_nie'}
-            onClick={() => setMontaz('montaz_nie')}
+            onClick={() => {
+              isInternalUpdate.current = true;
+              setMontaz('montaz_nie');
+            }}
             tooltip={t('assemblyNoTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
@@ -327,7 +337,10 @@ export default function KonfiguratorFaza1HrubaStavba({
             price={getPrice('montaz_ano')}
             isPriced={true}
             isSelected={montaz === 'montaz_ano'}
-            onClick={() => setMontaz('montaz_ano')}
+            onClick={() => {
+              isInternalUpdate.current = true;
+              setMontaz('montaz_ano');
+            }}
             tooltip={t('assemblyYesTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
@@ -351,7 +364,10 @@ export default function KonfiguratorFaza1HrubaStavba({
             price={0}
             isPriced={false}
             isSelected={izolacia === 'izolacia_standardna'}
-            onClick={() => setIzolacia('izolacia_standardna')}
+            onClick={() => {
+              isInternalUpdate.current = true;
+              setIzolacia('izolacia_standardna');
+            }}
             tooltip={t('insulationStandardTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
@@ -365,7 +381,10 @@ export default function KonfiguratorFaza1HrubaStavba({
             price={getPrice('izolacia_zvysena')}
             isPriced={true}
             isSelected={izolacia === 'izolacia_zvysena'}
-            onClick={() => setIzolacia('izolacia_zvysena')}
+            onClick={() => {
+              isInternalUpdate.current = true;
+              setIzolacia('izolacia_zvysena');
+            }}
             tooltip={t('insulationEnhancedTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
@@ -379,7 +398,10 @@ export default function KonfiguratorFaza1HrubaStavba({
             price={getPrice('izolacia_premium')}
             isPriced={true}
             isSelected={izolacia === 'izolacia_premium'}
-            onClick={() => setIzolacia('izolacia_premium')}
+            onClick={() => {
+              isInternalUpdate.current = true;
+              setIzolacia('izolacia_premium');
+            }}
             tooltip={t('insulationPremiumTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
@@ -394,7 +416,10 @@ export default function KonfiguratorFaza1HrubaStavba({
               price={getPrice('izolacia_extra')}
               isPriced={true}
               isSelected={izolacia === 'izolacia_extra' || izolacia === 'izolacia_300mm'}
-              onClick={() => setIzolacia('izolacia_extra')}
+              onClick={() => {
+                isInternalUpdate.current = true;
+                setIzolacia('izolacia_extra');
+              }}
               tooltip={t('insulationExtraTooltip')}
               isAdmin={isAdmin}
               onPriceUpdate={onPriceUpdate}
@@ -419,7 +444,10 @@ export default function KonfiguratorFaza1HrubaStavba({
             price={0}
             isPriced={false}
             isSelected={zaklady === 'zaklady_bez'}
-            onClick={() => setZaklady('zaklady_bez')}
+            onClick={() => {
+              isInternalUpdate.current = true;
+              setZaklady('zaklady_bez');
+            }}
             tooltip={t('foundationsNoneTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
@@ -433,7 +461,10 @@ export default function KonfiguratorFaza1HrubaStavba({
             price={getPrice('zaklady_skrutky')}
             isPriced={true}
             isSelected={zaklady === 'zaklady_skrutky'}
-            onClick={() => setZaklady('zaklady_skrutky')}
+            onClick={() => {
+              isInternalUpdate.current = true;
+              setZaklady('zaklady_skrutky');
+            }}
             tooltip={t('foundationsScrewsTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
@@ -447,7 +478,10 @@ export default function KonfiguratorFaza1HrubaStavba({
             price={getPrice('zaklady_doska')}
             isPriced={true}
             isSelected={zaklady === 'zaklady_doska'}
-            onClick={() => setZaklady('zaklady_doska')}
+            onClick={() => {
+              isInternalUpdate.current = true;
+              setZaklady('zaklady_doska');
+            }}
             tooltip={t('foundationsSlabTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
@@ -461,7 +495,10 @@ export default function KonfiguratorFaza1HrubaStavba({
             price={getPrice('zaklady_pasove')}
             isPriced={true}
             isSelected={zaklady === 'zaklady_pasove'}
-            onClick={() => setZaklady('zaklady_pasove')}
+            onClick={() => {
+              isInternalUpdate.current = true;
+              setZaklady('zaklady_pasove');
+            }}
             tooltip={t('foundationsStripTooltip')}
             isAdmin={isAdmin}
             onPriceUpdate={onPriceUpdate}
