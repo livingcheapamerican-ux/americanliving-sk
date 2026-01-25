@@ -54,6 +54,7 @@ import KonfiguratorFlatDouble from './pages/KonfiguratorFlatDouble';
 import KonfiguratorProstoHouse from './pages/KonfiguratorProstoHouse';
 import KonfiguratorTicabhouse from './pages/KonfiguratorTicabhouse';
 import Kontakt from './pages/Kontakt';
+import LokaciaDetail from './pages/LokaciaDetail';
 import Marketing from './pages/Marketing';
 import MigraciaObrazkovLyon from './pages/MigraciaObrazkovLyon';
 import ModularneDomyBratislava from './pages/ModularneDomyBratislava';
@@ -69,7 +70,6 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
-import LokaciaDetail from './pages/LokaciaDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -130,6 +130,7 @@ export const PAGES = {
     "KonfiguratorProstoHouse": KonfiguratorProstoHouse,
     "KonfiguratorTicabhouse": KonfiguratorTicabhouse,
     "Kontakt": Kontakt,
+    "LokaciaDetail": LokaciaDetail,
     "Marketing": Marketing,
     "MigraciaObrazkovLyon": MigraciaObrazkovLyon,
     "ModularneDomyBratislava": ModularneDomyBratislava,
@@ -145,7 +146,6 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
-    "LokaciaDetail": LokaciaDetail,
 }
 
 export const pagesConfig = {

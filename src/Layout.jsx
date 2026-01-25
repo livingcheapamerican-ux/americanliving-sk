@@ -180,6 +180,15 @@ function LayoutContent({ children }) {
         .hover\\:bg-secondary:hover { background-color: var(--secondary); }
         .border-primary { border-color: var(--primary); }
 
+        @keyframes blinking-pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.6; transform: scale(1.05); }
+        }
+
+        .nav-blink {
+          animation: blinking-pulse 1.2s ease-in-out infinite;
+        }
+
         html { scroll-behavior: smooth; }
 
         /* Ochrana proti sťahovaniu obsahu */
