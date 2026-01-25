@@ -263,7 +263,7 @@ export default function KonfiguratorBarn48({
   // DEFAULT CENY
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 4875 },
-    predlzenie: { 0: 0, 1.2: 3300, 2.4: 6600, 3.6: 9900, 4.8: 13200 },
+    predlzenie: { 0: 0, 1.2: 3300, 2.4: 6600, 3.6: 9900, 4.8: 15880 },
     dvere: { ziadne: 0, kovove: 720, plastove: 660 },
     izolacia: { standard: 0, zvysena: 1400, premium: 2800, ultra: 5250 },
     elektroinstalacia: 2300,
