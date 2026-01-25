@@ -164,6 +164,20 @@ export default function KonfiguratorProstoHouse() {
     energeticky_cert: getPrice('energeticky_cert')
   }), [customCeny]);
 
+  // Cenník pre Fázu 1 - rovnaká logika ako pre ostatné fázy
+  const cennikFaza1 = React.useMemo(() => ({
+    montaz: getMontazPrice(),
+    vstupne_dviere_kovove: getPriceNested('vstupne_dviere', 'kovove'),
+    vstupne_dviere_plastkovo_kovove: getPriceNested('vstupne_dviere', 'plastkovo_kovove'),
+    zaklady_skrutky: getPriceNested('zaklady', 'skrutky'),
+    zaklady_pasove: getPriceNested('zaklady', 'pasove'),
+    zaklady_doska: getPriceNested('zaklady', 'doska'),
+    fasada_smrekovec: getPriceNested('fasada', 'smrekovec'),
+    fasada_termicky_upravene_drevo: getPriceNested('fasada', 'termicky_upravene_drevo'),
+    fasada_kompozit: getPriceNested('fasada', 'kompozit'),
+    okna_hlinikove: getPriceNested('okna', 'hlinikove')
+  }), [customCeny, dom?.zastavana_plocha]);
+
   const vypocitatCenu = () => {
     if (!dom) return { bezDPH: 0, sDPH: 0 };
     
@@ -323,7 +337,7 @@ S DPH: ${ceny.sDPH.toFixed(2)} €
                 konfig={konfig}
                 setKonfig={setKonfig}
                 dom={dom}
-                customCeny={customCeny}
+                cennikFaza1={cennikFaza1}
               />
 
               {/* Phase 2 */}

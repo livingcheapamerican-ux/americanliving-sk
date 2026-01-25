@@ -38,60 +38,8 @@ export default function KonfiguratorProstoHouseFaza1({
   konfig, 
   setKonfig, 
   dom,
-  customCeny = {}
+  cennikFaza1 = {}
 }) {
-  const getPrice = (key) => {
-    // Skúsime rôzne varianty kľúčov v customCeny
-    const variants = [key, key.replace(/_/g, '')];
-    
-    for (const variant of variants) {
-      if (customCeny && customCeny[variant] !== undefined && customCeny[variant] > 0) {
-        return customCeny[variant];
-      }
-    }
-    
-    return DEFAULT_CENNIK[key] ?? 0;
-  };
-
-  // Helper funkcia na ziskanie ceny pre nested struktures
-  const getPriceNested = (category, subkey) => {
-    const fullKey = `${category}_${subkey}`;
-    
-    // Priority 1: flat key format (s rôznymi variantmi)
-    const flatVariants = [fullKey, fullKey.replace(/_/g, '')];
-    for (const variant of flatVariants) {
-      if (customCeny && customCeny[variant] !== undefined && customCeny[variant] > 0) {
-        return customCeny[variant];
-      }
-    }
-    
-    // Priority 2: nested object
-    if (customCeny && customCeny[category] && typeof customCeny[category] === 'object') {
-      if (customCeny[category][subkey] !== undefined && customCeny[category][subkey] > 0) {
-        return customCeny[category][subkey];
-      }
-    }
-    
-    // Priority 3: default
-    return DEFAULT_CENNIK[category]?.[subkey] ?? 0;
-  };
-
-  const getMontazPrice = () => {
-    if (!dom?.zastavana_plocha) return 0;
-    const plocha = dom.zastavana_plocha;
-    
-    // Skúsime najprv priamy kľúč "montaz" v customCeny
-    if (customCeny && customCeny.montaz !== undefined && customCeny.montaz > 0) {
-      return customCeny.montaz;
-    }
-    
-    // Potom podľa plochy
-    if (plocha <= 48) return getPrice('montaz_48') || DEFAULT_CENNIK.montaz[48];
-    if (plocha <= 72) return getPrice('montaz_72') || DEFAULT_CENNIK.montaz[72];
-    if (plocha <= 103) return getPrice('montaz_103') || DEFAULT_CENNIK.montaz[103];
-    if (plocha <= 108) return getPrice('montaz_108') || DEFAULT_CENNIK.montaz[108];
-    return getPrice('montaz_142') || DEFAULT_CENNIK.montaz[142];
-  };
 
   return (
     <div className="mb-8">
@@ -111,7 +59,7 @@ export default function KonfiguratorProstoHouseFaza1({
               </Label>
             </div>
             <span className="text-green-600 font-extrabold text-lg">
-              +{(getMontazPrice() * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH
+              +{((cennikFaza1.montaz || 0) * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH
             </span>
           </div>
         </div>
@@ -132,14 +80,14 @@ export default function KonfiguratorProstoHouseFaza1({
                   <RadioGroupItem value="kovove" id="dvere-kov" />
                   <Label htmlFor="dvere-kov" className="cursor-pointer">Kovové s 2 zámkami</Label>
                 </div>
-                <span className="text-primary font-bold">+{(getPriceNested('vstupne_dviere', 'kovove') * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
+                <span className="text-primary font-bold">+{((cennikFaza1.vstupne_dviere_kovove || 0) * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="plastkovo_kovove" id="dvere-plast" />
                   <Label htmlFor="dvere-plast" className="cursor-pointer">Plastovo-kovové</Label>
                 </div>
-                <span className="text-primary font-bold">+{(getPriceNested('vstupne_dviere', 'plastkovo_kovove') * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
+                <span className="text-primary font-bold">+{((cennikFaza1.vstupne_dviere_plastkovo_kovove || 0) * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
               </div>
             </div>
           </RadioGroup>
@@ -161,21 +109,21 @@ export default function KonfiguratorProstoHouseFaza1({
                   <RadioGroupItem value="skrutky" id="zakl-skr" />
                   <Label htmlFor="zakl-skr" className="cursor-pointer">Zemné skrutky</Label>
                 </div>
-                <span className="text-green-600 font-extrabold text-lg">+{(getPriceNested('zaklady', 'skrutky') * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
+                <span className="text-green-600 font-extrabold text-lg">+{((cennikFaza1.zaklady_skrutky || 0) * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="pasove" id="zakl-pas" />
                   <Label htmlFor="zakl-pas" className="cursor-pointer">Pásové základy</Label>
                 </div>
-                <span className="text-green-600 font-extrabold text-lg">+{(getPriceNested('zaklady', 'pasove') * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
+                <span className="text-green-600 font-extrabold text-lg">+{((cennikFaza1.zaklady_pasove || 0) * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="doska" id="zakl-doska" />
                   <Label htmlFor="zakl-doska" className="cursor-pointer">Základová doska</Label>
                 </div>
-                <span className="text-green-600 font-extrabold text-lg">+{(getPriceNested('zaklady', 'doska') * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
+                <span className="text-green-600 font-extrabold text-lg">+{((cennikFaza1.zaklady_doska || 0) * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
               </div>
             </div>
           </RadioGroup>
@@ -197,21 +145,21 @@ export default function KonfiguratorProstoHouseFaza1({
                   <RadioGroupItem value="smrekovec" id="fas-smr" />
                   <Label htmlFor="fas-smr" className="cursor-pointer">Smrekovec</Label>
                 </div>
-                <span className="text-green-600 font-extrabold text-lg">+{(getPriceNested('fasada', 'smrekovec') * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
+                <span className="text-green-600 font-extrabold text-lg">+{((cennikFaza1.fasada_smrekovec || 0) * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="termicky_upravene_drevo" id="fas-term" />
                   <Label htmlFor="fas-term" className="cursor-pointer">Termicky upravené drevo</Label>
                 </div>
-                <span className="text-green-600 font-extrabold text-lg">+{(getPriceNested('fasada', 'termicky_upravene_drevo') * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
+                <span className="text-green-600 font-extrabold text-lg">+{((cennikFaza1.fasada_termicky_upravene_drevo || 0) * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <RadioGroupItem value="kompozit" id="fas-komp" />
                   <Label htmlFor="fas-komp" className="cursor-pointer">Kompozitné panely</Label>
                 </div>
-                <span className="text-green-600 font-extrabold text-lg">+{(getPriceNested('fasada', 'kompozit') * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
+                <span className="text-green-600 font-extrabold text-lg">+{((cennikFaza1.fasada_kompozit || 0) * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
               </div>
             </div>
           </RadioGroup>
@@ -233,7 +181,7 @@ export default function KonfiguratorProstoHouseFaza1({
                   <RadioGroupItem value="hlinikove" id="okno-hl" />
                   <Label htmlFor="okno-hl" className="cursor-pointer">Hliníkové okná</Label>
                 </div>
-                <span className="text-green-600 font-extrabold text-lg">+{(getPriceNested('okna', 'hlinikove') * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
+                <span className="text-green-600 font-extrabold text-lg">+{((cennikFaza1.okna_hlinikove || 0) * 1.23).toLocaleString('sk-SK', {minimumFractionDigits: 2, maximumFractionDigits: 2})} € s DPH</span>
               </div>
             </div>
           </RadioGroup>
