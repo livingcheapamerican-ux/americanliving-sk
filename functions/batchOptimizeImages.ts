@@ -20,9 +20,9 @@ Deno.serve(async (req) => {
       errors: []
     };
 
-    // Spracuj všetky Dom (limit 50)
-    console.log('Processing all Dom records (limit 50)...');
-    const domRecords = await base44.asServiceRole.entities.Dom.list('-updated_date', 50);
+    // Spracuj všetky Dom v malých dávkach (8 domov)
+    console.log('Processing Dom records in batch (limit 8)...');
+    const domRecords = await base44.asServiceRole.entities.Dom.list('-updated_date', 8);
     let lastDomImages = {};
     
     for (const dom of domRecords) {
@@ -85,7 +85,19 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Spracuj posledných 20 Referencia
+    // SKIP Referencia - focus on Dom only
+    return Response.json({
+      success: true,
+      report: {
+        ...report,
+        timestamp: new Date().toISOString(),
+        total_records_processed: report.dom_processed + report.referencia_processed + report.fotka_processed
+      },
+      lastDomProcessed: lastDomImages,
+      message: 'Referencia and Fotka processing skipped. Run multiple times with different timestamps to process all Dom records.'
+    });
+    
+    /* // Spracuj posledných 20 Referencia
     console.log('Processing last 20 Referencia records...');
     const referenciaRecords = await base44.asServiceRole.entities.Referencia.list('-updated_date', 20);
     
@@ -176,16 +188,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    return Response.json({
-      success: true,
-      report: {
-        ...report,
-        timestamp: new Date().toISOString(),
-        total_records_processed: report.dom_processed + report.referencia_processed + report.fotka_processed
-      },
-      lastDomProcessed: lastDomImages
-    });
-
+    */
   } catch (error) {
     console.error('Batch image optimization error:', error);
     return Response.json({ error: error.message, success: false }, { status: 500 });
