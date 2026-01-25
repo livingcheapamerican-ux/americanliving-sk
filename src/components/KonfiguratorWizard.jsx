@@ -129,13 +129,11 @@ export default function KonfiguratorWizard({
     if (setTypStavby) setTypStavby(typ);
     
     if (typ === "rodinny_dom") {
-      // Nastaviť premium izoláciu (250mm) a ďalšie A0 požiadavky - naraz bez setTimeout
-      if (setIzolaciaNavysenie) setIzolaciaNavysenie("premium");
+      // Nastaviť iba A0 požiadavky - izoláciu nechať na používateľa
       if (setTepelneCerpadlo) setTepelneCerpadlo(true);
       if (setRekuperacia) setRekuperacia(true);
       if (setProjektA0) setProjektA0(true);
     } else if (typ === "rekreacna") {
-      if (setIzolaciaNavysenie) setIzolaciaNavysenie("standard");
       if (setTepelneCerpadlo) setTepelneCerpadlo(false);
       if (setRekuperacia) setRekuperacia(false);
       if (setProjektA0) setProjektA0(false);
