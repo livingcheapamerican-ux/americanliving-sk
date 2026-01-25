@@ -69,6 +69,7 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
+import LokaciaDetail from './pages/LokaciaDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -144,6 +145,7 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
+    "LokaciaDetail": LokaciaDetail,
 }
 
 export const pagesConfig = {
