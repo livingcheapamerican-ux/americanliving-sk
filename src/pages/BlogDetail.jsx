@@ -27,6 +27,23 @@ export default function BlogDetail() {
     enabled: !!postId
   });
 
+  // MUST be before any conditional returns
+  const faqSchemaData = React.useMemo(() => {
+    if (!post?.faq_schema_data?.faqs || post.faq_schema_data.faqs.length === 0) return null;
+    return {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": post.faq_schema_data.faqs.map(item => ({
+        "@type": "Question",
+        "name": item.otazka,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.odpoved
+        }
+      }))
+    };
+  }, [post]);
+
   const updateViewsMutation = useMutation({
     mutationFn: (id) => base44.entities.BlogPost.update(id, {
       pocet_zobrazeni: (post?.pocet_zobrazeni || 0) + 1
@@ -103,26 +120,6 @@ export default function BlogDetail() {
     const translatedField = post[`${field}_${language}`];
     return translatedField || post[field];
   };
-
-  // Prepare FAQ schema data
-  const faqSchemaData = post?.faq_schema_data ? {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": post.faq_schema_data.faqs?.map(item => ({
-      "@type": "Question",
-      "name": item.otazka,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": item.odpoved
-      }
-    })) || []
-  } : null;
-
-  // Debug logging
-  React.useEffect(() => {
-    console.log('BlogDetail - Post loaded:', post?.id);
-    console.log('BlogDetail - FAQ Schema Data:', faqSchemaData);
-  }, [post, faqSchemaData]);
 
   return (
     <div className="min-h-screen bg-gray-50">

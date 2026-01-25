@@ -44,6 +44,41 @@ export default function DetailDomu() {
   const domId = urlParams.get('id');
   const domSlug = urlParams.get('slug');
   const returnUrl = urlParams.get('return') || createPageUrl("Katalog");
+
+  const { data: dom, isLoading } = useQuery({
+    queryKey: ['dom-detail', domId, domSlug],
+    queryFn: async () => {
+      if (domSlug) {
+        const domy = await base44.entities.Dom.filter({ slug: domSlug });
+        return domy[0] || null;
+      }
+      if (domId) {
+        const domy = await base44.entities.Dom.filter({ id: domId });
+        return domy[0] || null;
+      }
+      return null;
+    },
+    enabled: !!domId || !!domSlug,
+    staleTime: 300000,
+  });
+
+  // MUST be at top level before any conditional returns
+  const faqSchemaData = React.useMemo(() => {
+    if (!dom?.faq_schema_data?.faqs || dom.faq_schema_data.faqs.length === 0) return null;
+    return {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": dom.faq_schema_data.faqs.map(item => ({
+        "@type": "Question",
+        "name": item.otazka,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.odpoved
+        }
+      }))
+    };
+  }, [dom]);
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [calculatedPrice, setCalculatedPrice] = useState(0);
   const [showCalculator, setShowCalculator] = useState(false);
@@ -159,23 +194,6 @@ export default function DetailDomu() {
   const isAdmin = user?.role === 'admin';
   const isSuperAdmin = user?.super_admin === true;
   const canManage = isAdmin || isSuperAdmin;
-
-  const { data: dom, isLoading } = useQuery({
-    queryKey: ['dom-detail', domId, domSlug],
-    queryFn: async () => {
-      if (domSlug) {
-        const domy = await base44.entities.Dom.filter({ slug: domSlug });
-        return domy[0] || null;
-      }
-      if (domId) {
-        const domy = await base44.entities.Dom.filter({ id: domId });
-        return domy[0] || null;
-      }
-      return null;
-    },
-    enabled: !!domId || !!domSlug,
-    staleTime: 300000,
-  });
 
   // Scroll na vrch pri načítaní stránky
   useEffect(() => {
@@ -570,23 +588,6 @@ export default function DetailDomu() {
     setPredlzenie(0);
     setWizardKey(prev => prev + 1);
   };
-
-  // Prepare FAQ schema data - MUST be at top level
-  const faqSchemaData = React.useMemo(() => {
-    if (!dom?.faq_schema_data?.faqs || dom.faq_schema_data.faqs.length === 0) return null;
-    return {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": dom.faq_schema_data.faqs.map(item => ({
-        "@type": "Question",
-        "name": item.otazka,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": item.odpoved
-        }
-      }))
-    };
-  }, [dom]);
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden max-w-full">
