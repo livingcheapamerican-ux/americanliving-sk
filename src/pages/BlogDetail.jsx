@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
@@ -58,30 +59,9 @@ export default function BlogDetail() {
       setMetaTag('meta[property="og:description"]', 'property', 'og:description', metaDescription);
       setMetaTag('meta[property="og:image"]', 'property', 'og:image', post.titulny_obrazok);
 
-      // FAQ Schema - pre AEO (Answer Engine Optimization)
-      if (post.faq_schema_data && post.faq_schema_data.faqs && post.faq_schema_data.faqs.length > 0) {
-        const faqSchema = {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          "mainEntity": post.faq_schema_data.faqs.map(item => ({
-            "@type": "Question",
-            "name": item.otazka,
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": item.odpoved
-            }
-          }))
-        };
-
-        let faqScript = document.querySelector('script[type="application/ld+json"][data-schema="faq"]');
-        if (!faqScript) {
-          faqScript = document.createElement('script');
-          faqScript.type = 'application/ld+json';
-          faqScript.setAttribute('data-schema', 'faq');
-          document.head.appendChild(faqScript);
-        }
-        faqScript.textContent = JSON.stringify(faqSchema);
-      }
+      // Cleanup old FAQ script if exists
+      const oldFaqScript = document.querySelector('script[type="application/ld+json"][data-schema="faq"]');
+      if (oldFaqScript) oldFaqScript.remove();
     }
 
     return () => {
@@ -124,8 +104,29 @@ export default function BlogDetail() {
     return translatedField || post[field];
   };
 
+  // Prepare FAQ schema data
+  const faqSchemaData = post?.faq_schema_data ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": post.faq_schema_data.faqs?.map(item => ({
+      "@type": "Question",
+      "name": item.otazka,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.odpoved
+      }
+    })) || []
+  } : null;
+
   return (
     <div className="min-h-screen bg-gray-50">
+      {faqSchemaData && (
+        <Helmet>
+          <script type="application/ld+json">
+            {JSON.stringify(faqSchemaData)}
+          </script>
+        </Helmet>
+      )}
       {/* Back Button */}
       <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-3">
