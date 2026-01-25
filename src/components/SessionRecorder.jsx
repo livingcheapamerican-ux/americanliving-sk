@@ -182,6 +182,8 @@ export default function SessionRecorder() {
       is_active: true,
       session_tags: isReturning ? ['vracajuci_sa'] : []
     }).then((created) => {
+      if (!sessionIdRef.current) return;
+      
       console.log('✅ SessionRecorder: Session ÚSPEŠNE vytvorená v DB!', {
         session_id: sessionIdRef.current,
         created_id: created?.id,
@@ -191,19 +193,24 @@ export default function SessionRecorder() {
         timestamp: new Date().toISOString()
       });
       
-      const allSessions = JSON.parse(previousSessions || '[]');
-      allSessions.push(sessionIdRef.current);
-      localStorage.setItem('user_previous_sessions', JSON.stringify(allSessions.slice(-10)));
+      try {
+        const allSessions = JSON.parse(previousSessions || '[]');
+        allSessions.push(sessionIdRef.current);
+        localStorage.setItem('user_previous_sessions', JSON.stringify(allSessions.slice(-10)));
+      } catch (err) {
+        console.warn('⚠️ Failed to save previous sessions:', err);
+      }
       
       // Fetch location info
       fetch('https://ipapi.co/json/')
         .then(res => res.json())
         .then(data => {
+          if (!sessionIdRef.current) return;
           console.log('📍 Location info získaná:', data.city, data.country_code);
-          base44.entities.UserSession.filter({ session_id: sessionIdRef.current })
+          return base44.entities.UserSession.filter({ session_id: sessionIdRef.current })
             .then(sessions => {
               if (sessions.length > 0) {
-                base44.entities.UserSession.update(sessions[0].id, {
+                return base44.entities.UserSession.update(sessions[0].id, {
                   location_info: {
                     ip: data.ip,
                     country: data.country_name,
@@ -214,18 +221,35 @@ export default function SessionRecorder() {
                     latitude: data.latitude,
                     longitude: data.longitude
                   }
-                }).then(() => console.log('✅ Location info uložená do DB'));
+                }).then(() => console.log('✅ Location info uložená do DB'))
+                  .catch(err => console.warn('⚠️ Location update failed:', err));
               }
-            });
+            })
+            .catch(err => console.warn('⚠️ Location session fetch failed:', err));
         })
-        .catch(err => console.log('⚠️ Location fetch failed:', err));
+        .catch(err => console.warn('⚠️ Location fetch failed:', err));
     }).catch(err => {
       console.error('❌ CRITICAL: SessionRecorder vytvorenie zlyhalo!', err);
-      sessionIdRef.current = null; // Reset aby sa mohlo skúsiť znova
+      sessionIdRef.current = null;
+      sessionInitializedRef.current = false;
     });
 
-    // Attach global event listeners
-    window.addEventListener('error', (e) => {
+    // Track language changes via storage event
+    const handleStorageChange = (e) => {
+      if (e.key === 'language' && e.oldValue !== e.newValue && e.newValue) {
+        languageChangesRef.current.push({
+          from: e.oldValue || '',
+          to: e.newValue,
+          timestamp: new Date().toISOString()
+        });
+        scheduleSave();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+
+    // Attach global error listener
+    const handleError = (e) => {
       errorsRef.current.push({
         error_message: e.message,
         error_stack: e.error?.stack || '',
@@ -233,22 +257,12 @@ export default function SessionRecorder() {
         page_url: window.location.pathname
       });
       scheduleSave();
-    });
-
-    const originalSetItem = localStorage.setItem;
-    localStorage.setItem = function(key, value) {
-      if (key === 'language') {
-        const oldLang = localStorage.getItem('language');
-        if (oldLang && oldLang !== value) {
-          languageChangesRef.current.push({
-            from: oldLang,
-            to: value,
-            timestamp: new Date().toISOString()
-          });
-          scheduleSave();
-        }
-      }
-      originalSetItem.apply(this, arguments);
+    };
+    
+    window.addEventListener('error', handleError);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('error', handleError);
     };
   }, [user, userLoading]);
 
@@ -279,11 +293,11 @@ export default function SessionRecorder() {
     lastPageRef.current = currentPage;
     pageStartTimeRef.current = Date.now();
 
-    if (window.performance) {
-      setTimeout(() => {
-        const perfData = window.performance.timing;
-        const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
-      }, 0);
+    // Performance tracking
+    if (window.performance && window.performance.timing) {
+      const perfData = window.performance.timing;
+      const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+      console.log('⏱️ Page load time:', pageLoadTime, 'ms');
     }
 
     let maxScroll = 0;
@@ -434,16 +448,24 @@ export default function SessionRecorder() {
 
       base44.entities.UserSession.filter({ session_id: sessionIdRef.current })
         .then(sessions => {
-          if (sessions.length > 0) {
-            const session = sessions[0];
-            const currentDuration = Math.round((Date.now() - new Date(session.start_time).getTime()) / 1000);
-            
-            const engagementScore = Math.min(100, Math.round(
-              (currentDuration / 60) * 10 +
-              (clicksRef.current.length) * 2 +
-              (session.pages_visited?.length || 0) * 5 +
-              (Math.max(...Object.values(scrollDepthRef.current)) || 0) / 2
-            ));
+          if (sessions.length === 0) return;
+          
+          const session = sessions[0];
+          if (!session.start_time) {
+            console.warn('⚠️ Session missing start_time');
+            return;
+          }
+          
+          const currentDuration = Math.round((Date.now() - new Date(session.start_time).getTime()) / 1000);
+          const scrollValues = Object.values(scrollDepthRef.current);
+          const maxScroll = scrollValues.length > 0 ? Math.max(...scrollValues) : 0;
+          
+          const engagementScore = Math.min(100, Math.round(
+            (currentDuration / 60) * 10 +
+            (clicksRef.current.length) * 2 +
+            (session.pages_visited?.length || 0) * 5 +
+            maxScroll / 2
+          ));
 
             const tags = [];
             if (currentDuration < 10) tags.push('odrazeny');
@@ -521,20 +543,19 @@ export default function SessionRecorder() {
               }
             }
 
-            base44.entities.UserSession.update(session.id, updates)
-              .then(() => {
-                lastSaveRef.current = Date.now();
-                console.log('💾 Session saved:', sessionIdRef.current, {
-                  duration: currentDuration,
-                  engagement: engagementScore,
-                  clicks: clicksRef.current.length,
-                  pages: updates.pages_visited?.length || 0
-                });
-              })
-              .catch(err => console.error('❌ Session update error:', err));
-          }
+          base44.entities.UserSession.update(session.id, updates)
+            .then(() => {
+              lastSaveRef.current = Date.now();
+              console.log('💾 Session saved:', sessionIdRef.current, {
+                duration: currentDuration,
+                engagement: engagementScore,
+                clicks: clicksRef.current.length,
+                pages: updates.pages_visited?.length || 0
+              });
+            })
+            .catch(err => console.warn('⚠️ Session update error:', err));
         })
-        .catch(err => console.log('Session fetch error:', err));
+        .catch(err => console.warn('⚠️ Session fetch error:', err));
     }, 3000);
   };
 
@@ -564,31 +585,33 @@ export default function SessionRecorder() {
   // End session on unload
   useEffect(() => {
     const handleBeforeUnload = () => {
-      if (sessionIdRef.current && lastPageRef.current && pageStartTimeRef.current) {
-        const timeSpent = Math.round((Date.now() - pageStartTimeRef.current) / 1000);
-        
-        base44.entities.UserSession.filter({ session_id: sessionIdRef.current })
-          .then(sessions => {
-            if (sessions.length > 0) {
-              const session = sessions[0];
-              const pages = [...(session.pages_visited || [])];
-              const lastPage = pages[pages.length - 1];
-              
-              if (lastPage) {
-                lastPage.time_spent_seconds = timeSpent;
-                lastPage.exit_type = 'exit';
-              }
+      if (!sessionIdRef.current || !lastPageRef.current || !pageStartTimeRef.current) return;
+      
+      const timeSpent = Math.round((Date.now() - pageStartTimeRef.current) / 1000);
+      
+      base44.entities.UserSession.filter({ session_id: sessionIdRef.current })
+        .then(sessions => {
+          if (sessions.length === 0) return;
+          
+          const session = sessions[0];
+          if (!session.start_time) return;
+          
+          const pages = [...(session.pages_visited || [])];
+          const lastPage = pages[pages.length - 1];
+          
+          if (lastPage) {
+            lastPage.time_spent_seconds = timeSpent;
+            lastPage.exit_type = 'exit';
+          }
 
-              base44.entities.UserSession.update(sessions[0].id, {
-                end_time: new Date().toISOString(),
-                is_active: false,
-                pages_visited: pages,
-                duration_seconds: Math.round((Date.now() - new Date(session.start_time).getTime()) / 1000)
-              }).catch(() => {});
-            }
-          })
-          .catch(() => {});
-      }
+          return base44.entities.UserSession.update(session.id, {
+            end_time: new Date().toISOString(),
+            is_active: false,
+            pages_visited: pages,
+            duration_seconds: Math.round((Date.now() - new Date(session.start_time).getTime()) / 1000)
+          });
+        })
+        .catch(err => console.warn('⚠️ BeforeUnload error:', err));
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
