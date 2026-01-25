@@ -1,3 +1,21 @@
+/**
+ * ⚠️ KRITICKÉ UPOZORNENIE - FJORD KONFIGURÁTOR ⚠️
+ * 
+ * Tento súbor je ŠPECIFICKY NASTAVENÝ pre model "Fjord".
+ * 
+ * DÔLEŽITÉ:
+ * - Ceny sú načítané z entity Dom (konfigurator_custom_ceny_prosto_house)
+ * - Komponent KonfiguratorFaza1HrubaStavba MUSÍ dostať prop `customPrices`
+ * - Mapovanie cien: montaz → montaz_ano, izolacia → izolacia_*, zaklady → zaklady_*
+ * - Props pre Fázu 1: isAdmin, onPriceUpdate, showTooltips, customPrices, initialSelections, onSelectionChange
+ * 
+ * NEODSTRAŇUJTE prop `customPrices` z KonfiguratorFaza1HrubaStavba!
+ * NEPREPISUJTE logiku CENY objektu a phase1CustomPrices!
+ * NEPREPISUJTE mapovanie v initialSelections a onSelectionChange!
+ * 
+ * Ak potrebujete upraviť iné modely domov, vytvorte nový súbor - NIE TENTO SÚBOR!
+ */
+
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
