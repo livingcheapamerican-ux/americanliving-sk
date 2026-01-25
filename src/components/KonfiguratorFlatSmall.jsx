@@ -847,7 +847,7 @@ export default function KonfiguratorFlatSmall({
                   </p>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                     {[
-                      { state: zaklady === "skrutky" ? 1 : 0, setter: () => setZaklady(zaklady === "skrutky" ? "bez" : "skrutky"), label: "Zemné skrutky", price: `${CENY.zaklady.skrutky.toLocaleString('sk-SK')} €` },
+                      { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: `${CENY.stresneOkno.toLocaleString('sk-SK')} €` },
                       { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: `${CENY.bocneOknoFixne.toLocaleString('sk-SK')} €` },
                       { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: `${CENY.bocneOknoVyklopne90.toLocaleString('sk-SK')} €` },
                       { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: `${CENY.bocneOknoVyklopne55.toLocaleString('sk-SK')} €` }
