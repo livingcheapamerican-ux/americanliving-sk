@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 
 import KonfiguratorContactModal from "./KonfiguratorContactModal";
 import { useLanguage } from "./LanguageContext";
+import KonfiguratorFaza1HrubaStavba from "./KonfiguratorFaza1HrubaStavba";
 
 import TypStavbySelector from "./TypStavbySelector";
 import FloatingPrice from "./FloatingPrice";
