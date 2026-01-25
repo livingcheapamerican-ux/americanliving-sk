@@ -1,3 +1,21 @@
+/**
+ * ⚠️ KRITICKÉ UPOZORNENIE - NORD KONFIGURÁTOR ⚠️
+ * 
+ * Tento súbor je ŠPECIFICKY NASTAVENÝ pre model "Nord".
+ * 
+ * DÔLEŽITÉ:
+ * - Ceny sú načítané z entity Dom (konfigurator_custom_ceny_prosto_house)
+ * - Komponent KonfiguratorFaza1HrubaStavba MUSÍ dostať prop `customPrices`
+ * - Mapovanie cien: montaz → montaz_ano, izolacia → izolacia_*, zaklady → zaklady_*
+ * - Props pre Fázu 1: isAdmin, onPriceUpdate, showTooltips, customPrices, initialSelections, onSelectionChange
+ * 
+ * NEODSTRAŇUJTE prop `customPrices` z KonfiguratorFaza1HrubaStavba!
+ * NEPREPISUJTE logiku getPrice() a CENY objektu!
+ * NEPREPISUJTE mapovanie v initialSelections a onSelectionChange!
+ * 
+ * Ak potrebujete upraviť iné modely domov, vytvorte nový súbor - NIE TENTO SÚBOR!
+ */
+
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
@@ -340,6 +358,23 @@ export default function KonfiguratorNord({
     bocneOknoVyklopne90: getPrice('okno_vyklopne_90_205') ?? DEFAULT_CENY.bocneOknoVyklopne90,
     bocneOknoVyklopne55: getPrice('okno_vyklopne_55_90') ?? DEFAULT_CENY.bocneOknoVyklopne55
   };
+
+  const phase1CustomPrices = useMemo(() => ({
+    montaz_ano: CENY.montaz.ano,
+    izolacia_standardna: 0,
+    izolacia_standard: 0,
+    izolacia_zvysena: CENY.izolacia.zvysena,
+    izolacia_premium: CENY.izolacia.premium,
+    izolacia_300mm: CENY.izolacia.extra300,
+    izolacia_ultra: CENY.izolacia.ultra,
+    izolacia_extra: CENY.izolacia.ultra,
+    zaklady_bez: 0,
+    zaklady_skrutky: CENY.zaklady.skrutky,
+    zaklady_doska: CENY.zaklady.doska,
+    zaklady_pasove: CENY.zaklady.pasove
+  }), [CENY]);
+
+  // Výpočet celkovej ceny
 
 
 
@@ -766,32 +801,27 @@ export default function KonfiguratorNord({
                   isAdmin={isAdmin}
                   onPriceUpdate={handlePriceChange}
                   showTooltips={true}
-                  initialSelections={initialSelectionsForFaza1}
-                  customPrices={{
-                    montaz_ano: CENY.montaz.ano,
-                    montaz_nie: 0,
-                    izolacia_standardna: 0,
-                    izolacia_zvysena: CENY.izolacia.zvysena,
-                    izolacia_premium: CENY.izolacia.premium,
-                    izolacia_300mm: CENY.izolacia.extra300,
-                    izolacia_extra: CENY.izolacia.ultra,
-                    zaklady_bez: 0,
-                    zaklady_skrutky: CENY.zaklady.skrutky,
-                    zaklady_doska: CENY.zaklady.doska,
-                    zaklady_pasove: CENY.zaklady.pasove
+                  customPrices={phase1CustomPrices}
+                  hideExtraInsulation={false}
+                  initialSelections={{
+                    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
+                    izolacia: izolaciaNavysenie === 'standard' || izolaciaNavysenie === 'standardna' ? 'izolacia_standardna' : izolaciaNavysenie === 'extra300' ? 'izolacia_300mm' : izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : `izolacia_${izolaciaNavysenie}`,
+                    zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
                   }}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) {
-                      const montazValue = selections.montaz === 'montaz_ano' ? 'ano' : 'nie';
-                      setMontazHolodomu(montazValue);
+                      setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
                     }
                     if (selections.izolacia) {
                       let izolaciaValue = selections.izolacia.replace('izolacia_', '');
                       if (izolaciaValue === '300mm') izolaciaValue = 'extra300';
+                      if (izolaciaValue === 'extra') izolaciaValue = 'ultra';
+                      if (izolaciaValue === 'standardna') izolaciaValue = 'standard';
                       setIzolaciaNavysenie(izolaciaValue);
                     }
                     if (selections.zaklady) {
-                      const zakladyValue = selections.zaklady.replace('zaklady_', '');
+                      let zakladyValue = selections.zaklady.replace('zaklady_', '');
+                      if (zakladyValue === 'vruty') zakladyValue = 'skrutky';
                       setZaklady(zakladyValue);
                     }
                   }}
