@@ -282,6 +282,8 @@ function LayoutContent({ children }) {
                   : item.path === createPageUrl("Kontakt") ? "nav-kontakt"
                   : null;
 
+                const isCatalog = item.path === createPageUrl("Katalog");
+
                 return (
                   <Link
                     key={item.path}
@@ -291,7 +293,7 @@ function LayoutContent({ children }) {
                       isActive(item.path)
                         ? 'bg-primary text-white'
                         : 'text-gray-700 hover:bg-gray-100'
-                    }`}
+                    } ${isCatalog ? 'nav-blink' : ''}`}
                   >
                     {item.name}
                   </Link>
