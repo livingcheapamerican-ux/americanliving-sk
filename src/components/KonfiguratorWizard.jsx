@@ -133,23 +133,18 @@ export default function KonfiguratorWizard({
       prevTypStavbyRef.current = typStavby;
       
       if (typStavby === "rodinny_dom") {
-        // Použiť batch update aby sa všetky zmeny aplikovali naraz
-        requestAnimationFrame(() => {
-          setIzolaciaNavysenie("premium");
-          setTepelneCerpadlo(true);
-          setRekuperacia(true);
-          setProjektA0(true);
-        });
+        setIzolaciaNavysenie("premium");
+        setTepelneCerpadlo(true);
+        setRekuperacia(true);
+        setProjektA0(true);
       } else if (typStavby === "rekreacna") {
-        requestAnimationFrame(() => {
-          setIzolaciaNavysenie("standard");
-          setTepelneCerpadlo(false);
-          setRekuperacia(false);
-          setProjektA0(false);
-        });
+        setIzolaciaNavysenie("standard");
+        setTepelneCerpadlo(false);
+        setRekuperacia(false);
+        setProjektA0(false);
       }
     }
-  }, [typStavby, setIzolaciaNavysenie, setTepelneCerpadlo, setRekuperacia, setProjektA0]);
+  }, [typStavby]);
 
   const handleTypStavbyChange = (typ) => {
     if (setTypStavby) setTypStavby(typ);
