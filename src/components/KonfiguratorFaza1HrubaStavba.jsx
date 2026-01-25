@@ -200,6 +200,7 @@ export default function KonfiguratorFaza1HrubaStavba({
   const prevCustomPrices = useRef(customPrices);
   const isInternalUpdate = useRef(false);
   const mountedRef = useRef(false);
+  const onSelectionChangeRef = useRef(onSelectionChange);
 
   // Synchronizovať s externými zmenami iba pri mount alebo skutočnej externej zmene
   useEffect(() => {
@@ -240,9 +241,15 @@ export default function KonfiguratorFaza1HrubaStavba({
     prevCustomPrices.current = customPrices;
   }, [customPrices]);
 
+  // Update ref when callback changes
+  useEffect(() => {
+    onSelectionChangeRef.current = onSelectionChange;
+  }, [onSelectionChange]);
+
   // Notify parent of changes
   useEffect(() => {
-    if (onSelectionChange) {
+    const callback = onSelectionChangeRef.current;
+    if (callback) {
       const selections = {
         montaz,
         izolacia,
@@ -298,9 +305,9 @@ export default function KonfiguratorFaza1HrubaStavba({
       }
 
       selections.totalPrice = totalPrice;
-      onSelectionChange(selections);
+      callback(selections);
     }
-  }, [montaz, izolacia, zaklady, getPrice, onSelectionChange, t]);
+  }, [montaz, izolacia, zaklady, getPrice, t]);
 
   return (
     <div className="space-y-6">
