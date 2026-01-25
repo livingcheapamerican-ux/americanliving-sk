@@ -654,6 +654,7 @@ const translations = {
     area: "Plocha",
     outerDimensions: "Vonkajšie rozmery (D × Š × V)",
     ceilingHeight: "Výška stropu",
+    ceilingHeight270A0: "Strop 270 cm A0 verzia",
     insulationAndConstruction: "IZOLÁCIA A KONŠTRUKCIA",
     floorAndCeiling: "Podlaha a strop",
     wallsLabel: "Steny",
@@ -2256,6 +2257,7 @@ const translations = {
     length: "Longueur",
     height: "Hauteur",
     ceilingHeight: "Hauteur sous plafond",
+    ceilingHeight270A0: "Hauteur sous plafond 270 cm Version A0",
     description: "Description",
     specification: "Spécification",
     
@@ -8140,6 +8142,7 @@ const translations = {
     length: "Hosszúság",
     height: "Magasság",
     ceilingHeight: "Belmagasság",
+    ceilingHeight270A0: "270 cm Belmagasság A0 Verzió",
     description: "Leírás",
     specification: "Specifikáció",
     

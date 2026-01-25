@@ -1948,7 +1948,7 @@ export default function DetailDomu() {
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2 sm:mb-3">
                 {dom.nazov}
               </h1>
-              <p className="text-base sm:text-lg font-semibold text-primary mb-3">Strop 270 cm A0 verzia</p>
+              <p className="text-base sm:text-lg font-semibold text-primary mb-3">{t('ceilingHeight270A0')}</p>
               
               {/* Desktop verzia - cena */}
               <div className="hidden lg:flex items-baseline gap-2 flex-wrap">
