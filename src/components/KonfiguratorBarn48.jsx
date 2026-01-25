@@ -260,7 +260,8 @@ export default function KonfiguratorBarn48({
       plastove: getPrice('dvere_plastove') ?? DEFAULT_CENY.dvere.plastove 
     },
     izolacia: { 
-      standard: 0, 
+      standard: 0,
+      standardna: 0, 
       zvysena: getPrice('izolacia_zvysena') ?? DEFAULT_CENY.izolacia.zvysena, 
       premium: getPrice('izolacia_premium') ?? DEFAULT_CENY.izolacia.premium, 
       ultra: getPrice('izolacia_extra') ?? DEFAULT_CENY.izolacia.ultra 
