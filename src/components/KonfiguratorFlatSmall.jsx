@@ -696,17 +696,9 @@ export default function KonfiguratorFlatSmall({
   const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
   const showFinale = !showOnlyPhase || showOnlyPhase === "finale";
 
-  // Selektor typu stavby s dependent starom pre A0
+  // Selektor typu stavby - bez automatickej konfigurácie
   const handleTypStavbyChange = (newTyp) => {
     if (typStavby !== newTyp) setTypStavby(newTyp);
-    
-    // Auto-konfigurácia pre rodinny_dom (A0)
-    if (newTyp === "rodinny_dom") {
-      if (izolaciaNavysenie !== "premium") setIzolaciaNavysenie("premium");
-      if (!tepelneCerpadlo) setTepelneCerpadlo(true);
-      if (!rekuperacia) setRekuperacia(true);
-      if (!projektA0) setProjektA0(true);
-    }
   };
 
   const showTypSelector = !showOnlySummary && !showOnlyPhase;
