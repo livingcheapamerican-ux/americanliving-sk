@@ -646,7 +646,7 @@ export default function DetailDomu() {
             >
               <ImageWithWatermark
                   src={allImages[selectedImage]}
-                  alt={`${dom.nazov} - obrázok ${selectedImage + 1}`}
+                  alt={dom.images_seo_map?.[allImages[selectedImage]] || `${dom.nazov} - obrázok ${selectedImage + 1}`}
                   className="w-full h-full object-contain bg-gray-100"
                   priority={true}
                 />
@@ -680,7 +680,7 @@ export default function DetailDomu() {
                   >
                     <img
                       src={img}
-                      alt={`Miniatúra ${index + 1}`}
+                      alt={dom.images_seo_map?.[img] || `Miniatúra ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
                   </button>
@@ -702,7 +702,7 @@ export default function DetailDomu() {
                       >
                         <ImageWithWatermark
                           src={dom.podorys_2d}
-                          alt="2D Pôdorys"
+                          alt={dom.images_seo_map?.[dom.podorys_2d] || "2D Pôdorys domu"}
                           className="w-full h-auto object-contain hover:opacity-90"
                         />
                       </div>
@@ -724,7 +724,7 @@ export default function DetailDomu() {
                       >
                         <ImageWithWatermark
                           src={dom.podorys_3d}
-                          alt="3D Pôdorys"
+                          alt={dom.images_seo_map?.[dom.podorys_3d] || "3D Pôdorys domu"}
                           className="w-full h-auto object-contain hover:opacity-90"
                         />
                       </div>
@@ -772,7 +772,7 @@ export default function DetailDomu() {
                           >
                             <img
                               src={foto}
-                              alt={`Náhľad ${fotoIndex + 1}`}
+                              alt={dom.images_seo_map?.[foto] || `Náhľad ${fotoIndex + 1}`}
                               className="w-full h-full object-cover"
                             />
                             {/* Overlay pre posledný ak je viac */}
@@ -1306,7 +1306,7 @@ export default function DetailDomu() {
                     <div key={index} className="rounded-lg overflow-hidden bg-gray-50">
                       <img
                         src={podorysUrl}
-                        alt={`Pôdorys ${index + 1}`}
+                        alt={dom.images_seo_map?.[podorysUrl] || `Pôdorys ${index + 1}`}
                         className="w-full h-auto object-contain"
                       />
                     </div>
@@ -2130,7 +2130,7 @@ export default function DetailDomu() {
                 <div className="rounded-lg overflow-hidden shadow-lg">
                   <ImageWithWatermark 
                     src={dom.zakladna_konfiguracia_obrazok} 
-                    alt={`${dom.nazov} - základná konfigurácia`}
+                    alt={dom.images_seo_map?.[dom.zakladna_konfiguracia_obrazok] || `${dom.nazov} - základná konfigurácia`}
                     className="w-full h-auto object-cover"
                   />
                 </div>
@@ -2325,7 +2325,7 @@ export default function DetailDomu() {
                 <div className="rounded-lg overflow-hidden shadow-lg">
                   <ImageWithWatermark 
                     src={dom.zakladna_konfiguracia_obrazok} 
-                    alt={`${dom.nazov} - ${t('basicConfiguration')}`}
+                    alt={dom.images_seo_map?.[dom.zakladna_konfiguracia_obrazok] || `${dom.nazov} - ${t('basicConfiguration')}`}
                     className="w-full h-auto object-cover"
                   />
                 </div>
@@ -3505,17 +3505,17 @@ export default function DetailDomu() {
                   <div key={idx} className="w-screen h-screen flex items-center justify-center flex-shrink-0 px-8">
                     <div className="relative max-w-full max-h-full flex items-center justify-center">
                       <ImageWithWatermark
-                        src={img}
-                        alt={`Fotka ${idx + 1}`}
-                        className="select-none w-auto h-auto max-w-[85vw] max-h-[85vh] object-contain"
-                        onContextMenu={(e) => e.preventDefault()}
-                        draggable={false}
-                        priority={true}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (!swipeStart && Math.abs(swipeOffset) < 10) handleZoomIn();
-                        }}
-                      />
+                         src={img}
+                         alt={dom.images_seo_map?.[img] || `Fotka ${idx + 1}`}
+                         className="select-none w-auto h-auto max-w-[85vw] max-h-[85vh] object-contain"
+                         onContextMenu={(e) => e.preventDefault()}
+                         draggable={false}
+                         priority={true}
+                         onClick={(e) => {
+                           e.stopPropagation();
+                           if (!swipeStart && Math.abs(swipeOffset) < 10) handleZoomIn();
+                         }}
+                       />
                     </div>
                   </div>
                 ))}
@@ -3524,7 +3524,7 @@ export default function DetailDomu() {
               <div className="relative flex items-center justify-center w-full h-full">
                 <ImageWithWatermark
                   src={lightboxImages[lightboxIndex]}
-                  alt={`Fotka ${lightboxIndex + 1}`}
+                  alt={dom.images_seo_map?.[lightboxImages[lightboxIndex]] || `Fotka ${lightboxIndex + 1}`}
                   className={`select-none ${zoomLevel > 1 ? 'cursor-grab' : 'cursor-zoom-in'} ${isDragging ? 'cursor-grabbing' : ''} w-auto h-auto object-contain`}
                   priority={true}
                   style={{
@@ -3563,7 +3563,7 @@ export default function DetailDomu() {
                     idx === lightboxIndex ? 'border-white' : 'border-transparent opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" onContextMenu={(e) => e.preventDefault()} draggable={false} />
+                  <img src={img} alt={dom.images_seo_map?.[img] || ""} className="w-full h-full object-cover" onContextMenu={(e) => e.preventDefault()} draggable={false} />
                 </button>
               ))}
             </div>
