@@ -1,3 +1,20 @@
+/**
+ * ⚠️ KRITICKÉ - ZDIEĽANÝ KOMPONENT PRE FÁZU 1 ⚠️
+ * 
+ * Tento komponent je používaný viacerými konfigurátormi (Flat Small, Fjord, atď.)
+ * 
+ * DÔLEŽITÉ PROPS:
+ * - `customPrices` - NAJVYŠŠIA PRIORITA! Ak je poskytnutý, použijú sa tieto ceny
+ * - `dom.konfigurator_custom_ceny_prosto_house` - Druhá priorita
+ * - `DEFAULT_PRICES` - Fallback
+ * 
+ * FLAT SMALL:
+ * - MUSÍ dostať prop `customPrices` s mapovaním cien z entity Dom
+ * - Neodstraňujte podporu pre `customPrices` prop!
+ * 
+ * Pri úpravách dbajte na to, aby zmeny nerozbili existujúce implementácie!
+ */
+
 import React, { useState, useEffect, useRef } from "react";
 import { Check, Info, Home } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";

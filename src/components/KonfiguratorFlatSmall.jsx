@@ -1,3 +1,20 @@
+/**
+ * ⚠️ KRITICKÉ UPOZORNENIE - FLAT SMALL KONFIGURÁTOR ⚠️
+ * 
+ * Tento súbor je ŠPECIFICKY NASTAVENÝ pre model "Flat Small, 41m²".
+ * 
+ * DÔLEŽITÉ:
+ * - Ceny sú načítané z entity Dom (konfigurator_custom_ceny_prosto_house)
+ * - Komponent KonfiguratorFaza1HrubaStavba MUSÍ dostať prop `customPrices`
+ * - Mapovanie cien: montaz → montaz_ano, izolacia_extra → ultra, zaklady_vruty → skrutky
+ * 
+ * NEODSTRAŇUJTE prop `customPrices` z KonfiguratorFaza1HrubaStavba!
+ * NEPREPISUJTE logiku getPrice() a CENY objektu!
+ * 
+ * Ak potrebujete upraviť iné modely domov, vytvorte nový súbor alebo upravte
+ * KonfiguratorProstoHouse.js - NIE TENTO SÚBOR!
+ */
+
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "@/components/ui/button";
