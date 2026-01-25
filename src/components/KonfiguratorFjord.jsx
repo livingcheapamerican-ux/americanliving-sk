@@ -282,78 +282,71 @@ export default function KonfiguratorFjord({
     bocneOknoVyklopne55: 225
   };
 
-  // Načítať custom ceny z databázy
-  const [customCeny, setCustomCeny] = useState(dom?.konfigurator_custom_ceny_prosto_house || {});
-
-  useEffect(() => {
-    setCustomCeny(dom?.konfigurator_custom_ceny_prosto_house || {});
-  }, [dom?.konfigurator_custom_ceny_prosto_house]);
+  // Načítať custom ceny z databázy - stabilná referencia
+  const customCeny = useMemo(() => dom?.konfigurator_custom_ceny_prosto_house || {}, [dom]);
   
-  // CENY - s možnosťou override z databázy (memo-ované!)
-  const CENY = useMemo(() => {
-    // Helper na ziskanie ceny - pouzije custom ak je > 0, inak default
-    const get = (key, defaultVal) => {
-      const custom = customCeny[key];
-      return (custom !== undefined && custom !== null && custom > 0) ? custom : defaultVal;
-    };
+  const getPrice = React.useCallback((key) => {
+    if (customCeny[key] !== undefined && customCeny[key] !== null) {
+      return customCeny[key];
+    }
+    return DEFAULT_CENY[key];
+  }, [customCeny]);
 
-    const result = {
-      montaz: { nie: 0, ano: get('montaz_ano', DEFAULT_CENY.montaz.ano) },
-      dvere: { 
-        ziadne: 0, 
-        kovove: get('dvere_kovove', DEFAULT_CENY.dvere.kovove), 
-        plastove: get('dvere_plastove', DEFAULT_CENY.dvere.plastove) 
-      },
-      izolacia: { 
-        standardna: 0, 
-        zvysena: get('izolacia_zvysena', DEFAULT_CENY.izolacia.zvysena), 
-        premium: get('izolacia_premium', DEFAULT_CENY.izolacia.premium),
-        extra: get('izolacia_extra', DEFAULT_CENY.izolacia.extra),
-        "300mm": get('izolacia_300mm', DEFAULT_CENY.izolacia["300mm"])
-      },
-      elektroinstalacia: get('elektroinstalacia', DEFAULT_CENY.elektroinstalacia),
-      vodaKanalizacia: get('vodaKanalizacia', DEFAULT_CENY.vodaKanalizacia),
-      sanitaKomplet: get('sanitaKomplet', DEFAULT_CENY.sanitaKomplet),
-      bojler: get('bojler', DEFAULT_CENY.bojler),
-      tepelneCerpadlo: get('tepelneCerpadlo', DEFAULT_CENY.tepelneCerpadlo),
-      rekuperacia: get('rekuperacia', DEFAULT_CENY.rekuperacia),
-      zaklady: { 
-        bez: 0, 
-        skrutky: get('zaklady_skrutky', DEFAULT_CENY.zaklady.skrutky), 
-        doska: get('zaklady_doska', DEFAULT_CENY.zaklady.doska), 
-        pasove: get('zaklady_pasove', DEFAULT_CENY.zaklady.pasove) 
-      },
-      pripojkaSiete: get('pripojkaSiete', DEFAULT_CENY.pripojkaSiete),
-      inziniering: get('inziniering', DEFAULT_CENY.inziniering),
-      projektA0: get('projektA0', DEFAULT_CENY.projektA0),
-      interierFinis: { 
-        ziadne: 0, 
-        drevo: get('interierFinis_drevo', DEFAULT_CENY.interierFinis.drevo), 
-        sadrokarton: get('interierFinis_sadrokarton', DEFAULT_CENY.interierFinis.sadrokarton) 
-      },
-      vonkajsiaFasada: { 
-        standard: 0, 
-        suchana: get('vonkajsiaFasada_suchana', DEFAULT_CENY.vonkajsiaFasada.suchana) 
-      },
-      povrchokaOkien: get('povrchokaOkien', DEFAULT_CENY.povrchokaOkien),
-      vnutornePodlahy: get('vnutornePodlahy', DEFAULT_CENY.vnutornePodlahy),
-      podlahovVykurovanie: get('podlahovVykurovanie', DEFAULT_CENY.podlahovVykurovanie),
-      interieroveDvere: get('interieroveDvere', DEFAULT_CENY.interieroveDvere),
-      tonovaneSkla: get('tonovaneSkla', DEFAULT_CENY.tonovaneSkla),
-      doprava: get('doprava', DEFAULT_CENY.doprava),
-      revizna: get('revizna', DEFAULT_CENY.revizna),
-      stresneOkno: get('stresneOkno', DEFAULT_CENY.stresneOkno),
-      bocneOknoFixne: get('bocneOknoFixne', DEFAULT_CENY.bocneOknoFixne),
-      bocneOknoVyklopne90: get('bocneOknoVyklopne90', DEFAULT_CENY.bocneOknoVyklopne90),
-      bocneOknoVyklopne55: get('bocneOknoVyklopne55', DEFAULT_CENY.bocneOknoVyklopne55)
-      };
-      return result;
-      }, [customCeny, DEFAULT_CENY]);
+  // CENY - s možnosťou override z databázy - stabilná referencia
+  const CENY = useMemo(() => ({
+    montaz: { nie: 0, ano: getPrice('montaz_ano') ?? DEFAULT_CENY.montaz.ano },
+    dvere: { 
+      ziadne: 0, 
+      kovove: getPrice('dvere_kovove') ?? DEFAULT_CENY.dvere.kovove, 
+      plastove: getPrice('dvere_plastove') ?? DEFAULT_CENY.dvere.plastove 
+    },
+    izolacia: { 
+      standardna: 0, 
+      standard: 0,
+      zvysena: getPrice('izolacia_zvysena') ?? DEFAULT_CENY.izolacia.zvysena, 
+      premium: getPrice('izolacia_premium') ?? DEFAULT_CENY.izolacia.premium,
+      extra: getPrice('izolacia_extra') ?? DEFAULT_CENY.izolacia.extra,
+      "300mm": getPrice('izolacia_300mm') ?? DEFAULT_CENY.izolacia["300mm"]
+    },
+    elektroinstalacia: getPrice('elektroinstalacia') ?? DEFAULT_CENY.elektroinstalacia,
+    vodaKanalizacia: getPrice('vodaKanalizacia') ?? DEFAULT_CENY.vodaKanalizacia,
+    sanitaKomplet: getPrice('sanitaKomplet') ?? DEFAULT_CENY.sanitaKomplet,
+    bojler: getPrice('bojler') ?? DEFAULT_CENY.bojler,
+    tepelneCerpadlo: getPrice('tepelneCerpadlo') ?? DEFAULT_CENY.tepelneCerpadlo,
+    rekuperacia: getPrice('rekuperacia') ?? DEFAULT_CENY.rekuperacia,
+    zaklady: { 
+      bez: 0, 
+      skrutky: getPrice('zaklady_skrutky') ?? DEFAULT_CENY.zaklady.skrutky, 
+      doska: getPrice('zaklady_doska') ?? DEFAULT_CENY.zaklady.doska, 
+      pasove: getPrice('zaklady_pasove') ?? DEFAULT_CENY.zaklady.pasove 
+    },
+    pripojkaSiete: getPrice('pripojkaSiete') ?? DEFAULT_CENY.pripojkaSiete,
+    inziniering: getPrice('inziniering') ?? DEFAULT_CENY.inziniering,
+    projektA0: getPrice('projektA0') ?? DEFAULT_CENY.projektA0,
+    interierFinis: { 
+      ziadne: 0, 
+      drevo: getPrice('interierFinis_drevo') ?? DEFAULT_CENY.interierFinis.drevo, 
+      sadrokarton: getPrice('interierFinis_sadrokarton') ?? DEFAULT_CENY.interierFinis.sadrokarton 
+    },
+    vonkajsiaFasada: { 
+      standard: 0, 
+      suchana: getPrice('vonkajsiaFasada_suchana') ?? DEFAULT_CENY.vonkajsiaFasada.suchana 
+    },
+    povrchokaOkien: getPrice('povrchokaOkien') ?? DEFAULT_CENY.povrchokaOkien,
+    vnutornePodlahy: getPrice('vnutornePodlahy') ?? DEFAULT_CENY.vnutornePodlahy,
+    podlahovVykurovanie: getPrice('podlahovVykurovanie') ?? DEFAULT_CENY.podlahovVykurovanie,
+    interieroveDvere: getPrice('interieroveDvere') ?? DEFAULT_CENY.interieroveDvere,
+    tonovaneSkla: getPrice('tonovaneSkla') ?? DEFAULT_CENY.tonovaneSkla,
+    doprava: getPrice('doprava') ?? DEFAULT_CENY.doprava,
+    revizna: getPrice('revizna') ?? DEFAULT_CENY.revizna,
+    stresneOkno: getPrice('stresneOkno') ?? DEFAULT_CENY.stresneOkno,
+    bocneOknoFixne: getPrice('bocneOknoFixne') ?? DEFAULT_CENY.bocneOknoFixne,
+    bocneOknoVyklopne90: getPrice('bocneOknoVyklopne90') ?? DEFAULT_CENY.bocneOknoVyklopne90,
+    bocneOknoVyklopne55: getPrice('bocneOknoVyklopne55') ?? DEFAULT_CENY.bocneOknoVyklopne55
+  }), [getPrice]);
 
   // Funkcia na uloženie zmenenej ceny do databázy
   const handlePriceChange = async (priceKey, newPrice) => {
-    console.log('🔧 handlePriceChange called:', { priceKey, newPrice, dom_id: dom?.id });
-    
     try {
       const response = await base44.functions.invoke('updateFjordPrice', {
         dom_id: dom.id,
@@ -361,27 +354,14 @@ export default function KonfiguratorFjord({
         new_price: newPrice
       });
       
-      console.log('📡 Backend response:', response?.data);
-      
       if (response?.data?.success) {
-        console.log('✅ Cena úspešne aktualizovaná v databáze:', priceKey, newPrice);
-        
-        // Aktualizuj state cien - toto spustí prebudovanie CENY memoizovaného objektu
-        setCustomCeny(prev => {
-          const updated = {
-            ...prev,
-            [priceKey]: newPrice
-          };
-          console.log('💾 CustomCeny aktualizované:', updated);
-          return updated;
-        });
-        
-        console.log('✨ State aktualizovaný, komponent by sa mal prerendrovať');
+        alert('Cena aktualizovaná - obnovujem stránku...');
+        setTimeout(() => window.location.reload(), 300);
       } else {
         throw new Error(response?.data?.error || 'Neznáma chyba');
       }
     } catch (error) {
-      console.error('❌ Error updating price:', error);
+      console.error('Error updating price:', error);
       alert('Chyba pri ukladaní ceny: ' + error.message);
     }
   };
@@ -610,45 +590,7 @@ export default function KonfiguratorFjord({
     </div>
   );
 
-  // Funkcia pre update cien z Fázy 1
-  const handleUpdatePrice = async (priceKey, newValue) => {
-    console.log("✏️ Admin mení cenu:", priceKey, newValue);
-    
-    // Transform priceKey from "montaz.ano" to "montaz_ano" for backend
-    const backendKey = priceKey.replace('.', '_');
-    
-    try {
-      const response = await base44.functions.invoke('updateFjordPrice', {
-        dom_id: dom.id,
-        price_key: backendKey,
-        new_price: newValue
-      });
-      
-      if (response?.data?.success) {
-        console.log('✅ Cena úspešne aktualizovaná v databáze:', backendKey, newValue);
-        
-        // Aktualizácia stavu cenníka (Deep update)
-        setCustomCeny((prev) => {
-          const newState = JSON.parse(JSON.stringify(prev));
-          const keys = priceKey.split('.');
-          let current = newState;
-          
-          for (let i = 0; i < keys.length - 1; i++) {
-             if (!current[keys[i]]) current[keys[i]] = {};
-             current = current[keys[i]];
-          }
-          
-          current[keys[keys.length - 1]] = newValue;
-          return newState;
-        });
-      } else {
-        throw new Error(response?.data?.error || 'Neznáma chyba');
-      }
-    } catch (error) {
-      console.error('❌ Error updating price:', error);
-      alert('Chyba pri ukladaní ceny: ' + error.message);
-    }
-  };
+
 
   const phase1CustomPrices = useMemo(() => ({
     montaz_ano: CENY.montaz.ano,
@@ -846,15 +788,25 @@ export default function KonfiguratorFjord({
                   showTooltips={true}
                   customPrices={phase1CustomPrices}
                   hideExtraInsulation={false}
-                  initialSelections={{
+                  initialSelections={useMemo(() => ({
                     montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+                    izolacia: izolaciaNavysenie === 'standard' || izolaciaNavysenie === 'standardna' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
                     zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
-                  }}
+                  }), [montazHolodomu, izolaciaNavysenie, zaklady])}
                   onSelectionChange={(selections) => {
-                    if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
-                    if (selections.izolacia) setIzolaciaNavysenie(selections.izolacia.replace('izolacia_', ''));
-                    if (selections.zaklady) setZaklady(selections.zaklady.replace('zaklady_', ''));
+                    if (selections.montaz) {
+                      const newValue = selections.montaz === 'montaz_ano' ? 'ano' : 'nie';
+                      if (montazHolodomu !== newValue) setMontazHolodomu(newValue);
+                    }
+                    if (selections.izolacia) {
+                      let izolaciaValue = selections.izolacia.replace('izolacia_', '');
+                      if (izolaciaValue === 'standardna') izolaciaValue = 'standard';
+                      if (izolaciaNavysenie !== izolaciaValue) setIzolaciaNavysenie(izolaciaValue);
+                    }
+                    if (selections.zaklady) {
+                      let zakladyValue = selections.zaklady.replace('zaklady_', '');
+                      if (zaklady !== zakladyValue) setZaklady(zakladyValue);
+                    }
                   }}
                 />
               </div>
