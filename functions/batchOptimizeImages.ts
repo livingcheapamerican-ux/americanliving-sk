@@ -182,7 +182,8 @@ Deno.serve(async (req) => {
         ...report,
         timestamp: new Date().toISOString(),
         total_records_processed: report.dom_processed + report.referencia_processed + report.fotka_processed
-      }
+      },
+      lastDomProcessed: lastDomImages
     });
 
   } catch (error) {
