@@ -985,13 +985,13 @@ export default function KonfiguratorBarn48({
 
                 </div>
 
-                <div className="mt-2 sm:mt-3 p-2 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
+                <div className={`mt-2 sm:mt-3 p-2 sm:p-3 rounded-lg border-2 transition-all ${interieroveDvere > 0 ? "bg-emerald-50 border-emerald-400" : "bg-white border-gray-200"}`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <DoorOpen className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
                       <div>
                         <span className="font-semibold text-gray-800 text-[10px] sm:text-xs">{t('interiorDoors')}</span>
-                        <span className="text-green-600 font-bold text-[10px] ml-1.5">× {CENY.interieroveDvere.toLocaleString('sk-SK')} €</span>
+                        <span className={`font-bold text-[10px] ml-1.5 ${interieroveDvere > 0 ? "text-green-600" : "text-gray-400"}`}>× {CENY.interieroveDvere.toLocaleString('sk-SK')} €</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5">
@@ -1006,6 +1006,14 @@ export default function KonfiguratorBarn48({
                       >+</button>
                     </div>
                   </div>
+                  {interieroveDvere > 0 && (
+                    <div className="mt-2 pt-2 border-t border-emerald-300">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-600">{t('total')}:</span>
+                        <span className="text-sm font-bold text-green-600">{formatPrice(interieroveDvere * CENY.interieroveDvere)}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
               </div>
