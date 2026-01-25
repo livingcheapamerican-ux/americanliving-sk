@@ -133,18 +133,18 @@ export default function KonfiguratorWizard({
       prevTypStavbyRef.current = typStavby;
       
       if (typStavby === "rodinny_dom") {
-        setIzolaciaNavysenie("premium");
-        setTepelneCerpadlo(true);
-        setRekuperacia(true);
-        setProjektA0(true);
+        if (setIzolaciaNavysenie) setIzolaciaNavysenie("premium");
+        if (setTepelneCerpadlo) setTepelneCerpadlo(true);
+        if (setRekuperacia) setRekuperacia(true);
+        if (setProjektA0) setProjektA0(true);
       } else if (typStavby === "rekreacna") {
-        setIzolaciaNavysenie("standard");
-        setTepelneCerpadlo(false);
-        setRekuperacia(false);
-        setProjektA0(false);
+        if (setIzolaciaNavysenie) setIzolaciaNavysenie("standard");
+        if (setTepelneCerpadlo) setTepelneCerpadlo(false);
+        if (setRekuperacia) setRekuperacia(false);
+        if (setProjektA0) setProjektA0(false);
       }
     }
-  }, [typStavby]);
+  }, [typStavby, setIzolaciaNavysenie, setTepelneCerpadlo, setRekuperacia, setProjektA0]);
 
   const handleTypStavbyChange = (typ) => {
     if (setTypStavby) setTypStavby(typ);

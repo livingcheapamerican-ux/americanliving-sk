@@ -985,24 +985,24 @@ export default function KonfiguratorBarn48({
 
                 </div>
 
-                <div className="mt-2 sm:mt-3 p-2 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
+                <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
-                      <DoorOpen className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
+                    <div className="flex items-center gap-2">
+                      <DoorOpen className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-600" />
                       <div>
-                        <span className="font-semibold text-gray-800 text-[10px] sm:text-xs">{t('interiorDoors')}</span>
-                        <span className="text-green-600 font-bold text-[10px] ml-1.5">× {CENY.interieroveDvere.toLocaleString('sk-SK')} €</span>
+                        <span className="font-semibold text-gray-800 text-xs sm:text-sm">{t('interiorDoors')}</span>
+                        <span className="text-green-600 font-bold text-xs ml-2">× {CENY.interieroveDvere.toLocaleString('sk-SK')} €</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                       <button
                         onClick={() => setInterieroveDvere(Math.max(0, interieroveDvere - 1))}
-                        className="w-6 h-6 sm:w-7 sm:h-7 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm"
-                      >-</button>
-                      <span className="w-6 text-center font-bold text-sm">{interieroveDvere}</span>
+                        className="w-8 h-8 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-lg"
+                      >−</button>
+                      <span className="w-8 text-center font-bold text-lg">{interieroveDvere}</span>
                       <button
                         onClick={() => setInterieroveDvere(interieroveDvere + 1)}
-                        className="w-6 h-6 sm:w-7 sm:h-7 rounded bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm"
+                        className="w-8 h-8 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg"
                       >+</button>
                     </div>
                   </div>
