@@ -51,7 +51,7 @@
  * ➡️ NIKDY NEMEŇTE TENTO SÚBOR PRE INÉ MODELY!
  * 
  * ═══════════════════════════════════════════════════════════════
- * Posledná úprava: 2026-01-25 - Opravené NaN a ceny pre ultra/extra
+ * Posledná úprava: 2026-01-25 - Opravené NaN, ceny pre ultra/extra a interiérové dvere
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -291,18 +291,18 @@ export default function KonfiguratorBarn48({
     bocneOknoVyklopne55: 225
   };
 
-  // Načítať custom ceny z databázy
-  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
+  // Načítať custom ceny z databázy - stabilná referencia
+  const customCeny = useMemo(() => dom?.konfigurator_custom_ceny_prosto_house || {}, [dom]);
   
-  const getPrice = (key) => {
+  const getPrice = React.useCallback((key) => {
     if (customCeny[key] !== undefined && customCeny[key] !== null) {
       return customCeny[key];
     }
     return DEFAULT_CENY[key];
-  };
+  }, [customCeny]);
 
-  // CENY - s možnosťou override z databázy
-  const CENY = {
+  // CENY - s možnosťou override z databázy - stabilná referencia
+  const CENY = useMemo(() => ({
     montaz: { nie: 0, ano: getPrice('montaz_ano') ?? DEFAULT_CENY.montaz.ano },
     predlzenie: { 
       0: 0, 
@@ -358,7 +358,7 @@ export default function KonfiguratorBarn48({
     bocneOknoFixne: getPrice('bocneOknoFixne') ?? DEFAULT_CENY.bocneOknoFixne,
     bocneOknoVyklopne90: getPrice('bocneOknoVyklopne90') ?? DEFAULT_CENY.bocneOknoVyklopne90,
     bocneOknoVyklopne55: getPrice('bocneOknoVyklopne55') ?? DEFAULT_CENY.bocneOknoVyklopne55
-  };
+  }), [getPrice]);
 
   // Custom prices pre Fázu 1 komponent
   const phase1CustomPrices = useMemo(() => ({
@@ -375,6 +375,12 @@ export default function KonfiguratorBarn48({
     zaklady_doska: CENY.zaklady.doska,
     zaklady_pasove: CENY.zaklady.pasove
   }), [CENY]);
+
+  const phase1InitialSelections = useMemo(() => ({
+    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
+    izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+    zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
+  }), [montazHolodomu, izolaciaNavysenie, zaklady]);
 
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
@@ -418,7 +424,7 @@ export default function KonfiguratorBarn48({
       zaklady, pripojkaSiete, inziniering, projektA0, interierFinis,
       vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, podlahovVykurovanie,
       interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE]);
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE, CENY]);
 
   const a0Odporucania = useMemo(() => {
     if (!projektA0) return null;
@@ -505,7 +511,7 @@ export default function KonfiguratorBarn48({
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
-      interieroveDvere, inziniering, projektA0, revizna, doprava, t, BASE_PRICE]);
+      interieroveDvere, inziniering, projektA0, revizna, doprava, t, BASE_PRICE, CENY]);
 
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
@@ -780,23 +786,23 @@ export default function KonfiguratorBarn48({
                   showTooltips={true}
                   customPrices={phase1CustomPrices}
                   hideExtraInsulation={false}
-                  initialSelections={{
-                    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
-                    zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
-                  }}
+                  initialSelections={phase1InitialSelections}
                   onSelectionChange={(selections) => {
-                    if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
+                    // Kontrola či sa hodnota skutočne zmenila
+                    if (selections.montaz) {
+                      const newValue = selections.montaz === 'montaz_ano' ? 'ano' : 'nie';
+                      if (montazHolodomu !== newValue) setMontazHolodomu(newValue);
+                    }
                     if (selections.izolacia) {
                       let izolaciaValue = selections.izolacia.replace('izolacia_', '');
                       if (izolaciaValue === 'extra') izolaciaValue = 'ultra';
                       if (izolaciaValue === 'standardna') izolaciaValue = 'standard';
-                      setIzolaciaNavysenie(izolaciaValue);
+                      if (izolaciaNavysenie !== izolaciaValue) setIzolaciaNavysenie(izolaciaValue);
                     }
                     if (selections.zaklady) {
                       let zakladyValue = selections.zaklady.replace('zaklady_', '');
                       if (zakladyValue === 'vruty') zakladyValue = 'skrutky';
-                      setZaklady(zakladyValue);
+                      if (zaklady !== zakladyValue) setZaklady(zakladyValue);
                     }
                   }}
                 />
@@ -985,25 +991,19 @@ export default function KonfiguratorBarn48({
 
                 </div>
 
-                <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
+                <div className="mt-2 sm:mt-3 p-2 sm:p-3 bg-white rounded-lg border-2 border-gray-200">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <DoorOpen className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-600" />
+                    <div className="flex items-center gap-1.5">
+                      <DoorOpen className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" />
                       <div>
-                        <span className="font-semibold text-gray-800 text-xs sm:text-sm">{t('interiorDoors')}</span>
-                        <span className="text-green-600 font-bold text-xs ml-2">× {CENY.interieroveDvere.toLocaleString('sk-SK')} €</span>
+                        <span className="font-semibold text-gray-800 text-[10px] sm:text-xs">{t('interiorDoors')}</span>
+                        <span className="text-green-600 font-bold text-[10px] ml-1.5">× {CENY.interieroveDvere.toLocaleString('sk-SK')} €</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => setInterieroveDvere(Math.max(0, interieroveDvere - 1))}
-                        className="w-8 h-8 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-lg"
-                      >−</button>
-                      <span className="w-8 text-center font-bold text-lg">{interieroveDvere}</span>
-                      <button
-                        onClick={() => setInterieroveDvere(interieroveDvere + 1)}
-                        className="w-8 h-8 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg"
-                      >+</button>
+                    <div className="flex items-center gap-1.5">
+                      <button onClick={() => setInterieroveDvere(Math.max(0, interieroveDvere - 1))} className="w-6 h-6 sm:w-7 sm:h-7 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm">−</button>
+                      <span className="w-6 text-center font-bold text-sm">{interieroveDvere}</span>
+                      <button onClick={() => setInterieroveDvere(interieroveDvere + 1)} className="w-6 h-6 sm:w-7 sm:h-7 rounded bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm">+</button>
                     </div>
                   </div>
                 </div>
@@ -1074,7 +1074,7 @@ export default function KonfiguratorBarn48({
           >
             <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800">
               <div className="relative">
-                <div className="absolute top-0 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
+                <div className="abso top-0 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
                 <div className="absolute inset-0 opacity-5">
                   <div className="absolute top-10 right-10 w-40 h-40 bg-green-400 rounded-full blur-3xl"></div>
                   <div className="absolute bottom-10 left-10 w-32 h-32 bg-emerald-400 rounded-full blur-3xl"></div>
