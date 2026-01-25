@@ -35,20 +35,22 @@ Deno.serve(async (req) => {
 
       // Spusti obidve funkcie paralelne pre všetky domy v dávke
       const batchPromises = batch.map(async (dom) => {
+        const domName = (dom.data?.nazov || dom.nazov || 'Unknown');
+        const domId = dom.id || dom.data?.id;
+        
         try {
-          const domName = dom.data?.nazov || dom.nazov || 'Unknown';
           console.log(`  🏠 Processing: ${domName}`);
 
           // Paralelne: FAQ + Images SEO
           const [aeoResult, imagesResult] = await Promise.all([
-            base44.asServiceRole.functions.invoke('generateAEODataset', { domId: dom.id }),
-            base44.asServiceRole.functions.invoke('batchOptimizeImagesSmall', { domId: dom.id })
+            base44.asServiceRole.functions.invoke('generateAEODataset', { domId }),
+            base44.asServiceRole.functions.invoke('batchOptimizeImagesSmall', { domId })
           ]);
 
           if (aeoResult?.data?.success && imagesResult?.data?.success) {
             report.processed++;
             report.processed_houses.push({
-              dom_id: dom.id || dom.data?.id,
+              dom_id: domId,
               dom_name: domName,
               languages_generated: aeoResult.data.report.languagesGenerated.length,
               images_optimized: imagesResult.data.report.total_images_optimized,
