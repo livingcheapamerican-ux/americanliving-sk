@@ -118,6 +118,12 @@ export default function BlogDetail() {
     })) || []
   } : null;
 
+  // Debug logging
+  React.useEffect(() => {
+    console.log('BlogDetail - Post loaded:', post?.id);
+    console.log('BlogDetail - FAQ Schema Data:', faqSchemaData);
+  }, [post, faqSchemaData]);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {faqSchemaData && (
