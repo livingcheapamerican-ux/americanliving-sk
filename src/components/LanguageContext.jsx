@@ -1186,6 +1186,7 @@ const translations = {
     length: "Länge",
     height: "Höhe",
     ceilingHeight: "Deckenhöhe",
+    ceilingHeight270A0: "Deckenhöhe 270 cm A0 Version",
     description: "Beschreibung",
     specification: "Spezifikation",
     
