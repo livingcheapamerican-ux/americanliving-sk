@@ -300,8 +300,7 @@ function LayoutContent({ children }) {
                   </Link>
                 );
               })}
-              <PassiveIncomeButton />
-            </nav>
+              </nav>
 
             <div className="hidden sm:flex items-center gap-1 sm:gap-2">
               {/* Desktop - Language Flags */}
