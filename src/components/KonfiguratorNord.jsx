@@ -298,15 +298,15 @@ export default function KonfiguratorNord({
     bocneOknoVyklopne55: 225
   };
 
-  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
-  const getPrice = (key) => {
+  const customCeny = useMemo(() => dom?.konfigurator_custom_ceny_prosto_house || {}, [dom]);
+  const getPrice = React.useCallback((key) => {
     if (customCeny[key] !== undefined && customCeny[key] !== null) {
       return customCeny[key];
     }
     return DEFAULT_CENY[key];
-  };
+  }, [customCeny]);
 
-  const CENY = {
+  const CENY = useMemo(() => ({
     montaz: { nie: 0, ano: getPrice('montaz_ano') ?? DEFAULT_CENY.montaz.ano },
     dvere: { 
       ziadne: 0, 
@@ -357,7 +357,7 @@ export default function KonfiguratorNord({
     bocneOknoFixne: getPrice('okno_fix_90_205') ?? DEFAULT_CENY.bocneOknoFixne,
     bocneOknoVyklopne90: getPrice('okno_vyklopne_90_205') ?? DEFAULT_CENY.bocneOknoVyklopne90,
     bocneOknoVyklopne55: getPrice('okno_vyklopne_55_90') ?? DEFAULT_CENY.bocneOknoVyklopne55
-  };
+  }), [getPrice]);
 
   const phase1CustomPrices = useMemo(() => ({
     montaz_ano: CENY.montaz.ano,
@@ -803,26 +803,27 @@ export default function KonfiguratorNord({
                   showTooltips={true}
                   customPrices={phase1CustomPrices}
                   hideExtraInsulation={false}
-                  initialSelections={{
+                  initialSelections={useMemo(() => ({
                     montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
                     izolacia: izolaciaNavysenie === 'standard' || izolaciaNavysenie === 'standardna' ? 'izolacia_standardna' : izolaciaNavysenie === 'extra300' ? 'izolacia_300mm' : izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : `izolacia_${izolaciaNavysenie}`,
                     zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
-                  }}
+                  }), [montazHolodomu, izolaciaNavysenie, zaklady])}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) {
-                      setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
+                      const newValue = selections.montaz === 'montaz_ano' ? 'ano' : 'nie';
+                      if (montazHolodomu !== newValue) setMontazHolodomu(newValue);
                     }
                     if (selections.izolacia) {
                       let izolaciaValue = selections.izolacia.replace('izolacia_', '');
                       if (izolaciaValue === '300mm') izolaciaValue = 'extra300';
                       if (izolaciaValue === 'extra') izolaciaValue = 'ultra';
                       if (izolaciaValue === 'standardna') izolaciaValue = 'standard';
-                      setIzolaciaNavysenie(izolaciaValue);
+                      if (izolaciaNavysenie !== izolaciaValue) setIzolaciaNavysenie(izolaciaValue);
                     }
                     if (selections.zaklady) {
                       let zakladyValue = selections.zaklady.replace('zaklady_', '');
                       if (zakladyValue === 'vruty') zakladyValue = 'skrutky';
-                      setZaklady(zakladyValue);
+                      if (zaklady !== zakladyValue) setZaklady(zakladyValue);
                     }
                   }}
                 />
