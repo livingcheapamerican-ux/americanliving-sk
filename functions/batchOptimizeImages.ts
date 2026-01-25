@@ -33,6 +33,9 @@ Deno.serve(async (req) => {
         if (dom.podorys_3d) imageUrls.push(dom.podorys_3d);
         if (Array.isArray(dom.galeria)) imageUrls.push(...dom.galeria.filter(u => u));
 
+        const seoMap = dom.images_seo_map || {};
+        let updated = false;
+
         for (const imageUrl of imageUrls) {
           if (!imageUrl.trim()) continue;
 
@@ -51,19 +54,22 @@ Deno.serve(async (req) => {
             });
 
             const altText = (aiResponse.alt_text || '').substring(0, 160);
+            seoMap[imageUrl] = altText;
+            updated = true;
             
-            // Konverzia na WebP
-            let optimizedUrl = imageUrl;
-            if (imageUrl.includes('cloudinary.com')) {
-              optimizedUrl = imageUrl.replace(/upload\//, 'upload/f_webp,q_auto/');
-            }
-
             report.total_images_optimized++;
             console.log(`✅ Dom image optimized: ${altText}`);
 
           } catch (imgError) {
             report.errors.push(`Dom ${dom.nazov} image: ${imgError.message}`);
           }
+        }
+
+        // Ulož updatovanú SEO mapu do databázy
+        if (updated) {
+          await base44.asServiceRole.entities.Dom.update(dom.id, {
+            images_seo_map: seoMap
+          });
         }
 
         report.dom_processed++;
@@ -80,6 +86,8 @@ Deno.serve(async (req) => {
     for (const ref of referenciaRecords) {
       try {
         const imageUrls = Array.isArray(ref.obrazky) ? ref.obrazky.filter(u => u) : [];
+        const seoMap = ref.images_seo_map || {};
+        let updated = false;
 
         for (const imageUrl of imageUrls) {
           if (!imageUrl.trim()) continue;
@@ -99,11 +107,8 @@ Deno.serve(async (req) => {
             });
 
             const altText = (aiResponse.alt_text || '').substring(0, 160);
-            
-            let optimizedUrl = imageUrl;
-            if (imageUrl.includes('cloudinary.com')) {
-              optimizedUrl = imageUrl.replace(/upload\//, 'upload/f_webp,q_auto/');
-            }
+            seoMap[imageUrl] = altText;
+            updated = true;
 
             report.total_images_optimized++;
             console.log(`✅ Referencia image optimized: ${altText}`);
@@ -111,6 +116,13 @@ Deno.serve(async (req) => {
           } catch (imgError) {
             report.errors.push(`Referencia ${ref.meno_klienta} image: ${imgError.message}`);
           }
+        }
+
+        // Ulož updatovanú SEO mapu do databázy
+        if (updated) {
+          await base44.asServiceRole.entities.Referencia.update(ref.id, {
+            images_seo_map: seoMap
+          });
         }
 
         report.referencia_processed++;
@@ -146,15 +158,6 @@ Deno.serve(async (req) => {
         // Ulož alt text ako popis
         await base44.asServiceRole.entities.Fotka.update(fotka.id, {
           popis: altText
-        });
-
-        let optimizedUrl = fotka.url;
-        if (fotka.url.includes('cloudinary.com')) {
-          optimizedUrl = fotka.url.replace(/upload\//, 'upload/f_webp,q_auto/');
-        }
-
-        await base44.asServiceRole.entities.Fotka.update(fotka.id, {
-          url: optimizedUrl
         });
 
         report.total_images_optimized++;
