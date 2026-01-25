@@ -1,3 +1,60 @@
+/**
+ * ⚠️⚠️⚠️ KRITICKÉ UPOZORNENIE - BARN 48 KONFIGURÁTOR ⚠️⚠️⚠️
+ * 
+ * ═══════════════════════════════════════════════════════════════
+ * TENTO SÚBOR JE VÝHRADNE PRE MODEL "BARN 48m²" - NEMEŇTE HO!
+ * ═══════════════════════════════════════════════════════════════
+ * 
+ * ⛔ ABSOLÚTNE ZAKÁZANÉ OPERÁCIE:
+ * ────────────────────────────────────────────────────────────────
+ * ❌ NEODSTRAŇUJTE prop `customPrices` z KonfiguratorFaza1HrubaStavba
+ * ❌ NEPREPISUJTE funkciu getPrice() a objekt CENY
+ * ❌ NEPREPISUJTE mapovanie v initialSelections a onSelectionChange
+ * ❌ NEMEŇTE logiku phase1CustomPrices useMemo
+ * ❌ NEODSTRAŇUJTE mapovanie izolacia_extra → ultra a vice versa
+ * ❌ NEMEŇTE hardcodovanú cenu 5250 pre ultra/extra izoláciu v CENY.izolacia.ultra
+ * ❌ NEMEŇTE hardcodovanú cenu 5250 v phase1CustomPrices pre izolacia_extra a izolacia_ultra
+ * 
+ * ✅ POVINNÉ PROPS pre KonfiguratorFaza1HrubaStavba:
+ * ────────────────────────────────────────────────────────────────
+ * ✓ dom={dom}
+ * ✓ isAdmin={isAdmin}
+ * ✓ onPriceUpdate={handlePriceChange}
+ * ✓ showTooltips={true}
+ * ✓ customPrices={phase1CustomPrices}  ← KRITICKÉ!
+ * ✓ hideExtraInsulation={false}
+ * ✓ initialSelections={{...}}  ← musí mapovať ultra → extra a standard → standardna
+ * ✓ onSelectionChange={(selections) => {...}}  ← musí mapovať extra → ultra a standardna → standard
+ * 
+ * 📋 MAPOVANIE CIEN (NEMEŇTE!):
+ * ────────────────────────────────────────────────────────────────
+ * - montaz: montaz_ano / montaz_nie
+ * - izolacia: izolacia_standardna / izolacia_zvysena / izolacia_premium / izolacia_extra
+ * - zaklady: zaklady_bez / zaklady_skrutky / zaklady_doska / zaklady_pasove
+ * 
+ * 🔄 MAPOVANIE HODNÔT (NEMEŇTE!):
+ * ────────────────────────────────────────────────────────────────
+ * Parent state (ultra) ↔ Fáza 1 komponent (extra)
+ * Parent state (standard) ↔ Fáza 1 komponent (standardna)
+ * Parent state (standardna) ↔ Fáza 1 komponent (standardna)
+ * 
+ * 💰 HARDCODOVANÉ CENY (NEMEŇTE!):
+ * ────────────────────────────────────────────────────────────────
+ * - CENY.izolacia.ultra = 5250 (FIX, nie getPrice!)
+ * - phase1CustomPrices.izolacia_extra = 5250
+ * - phase1CustomPrices.izolacia_ultra = 5250
+ * 
+ * 🏗️ AK POTREBUJETE UPRAVIŤ INÝ MODEL:
+ * ────────────────────────────────────────────────────────────────
+ * ➡️ VYTVORTE NOVÝ SÚBOR (napr. KonfiguratorMyModel.jsx)
+ * ➡️ NEKOPÍRUJTE tento súbor ako základ - použite KonfiguratorFlatSmall.jsx
+ * ➡️ NIKDY NEMEŇTE TENTO SÚBOR PRE INÉ MODELY!
+ * 
+ * ═══════════════════════════════════════════════════════════════
+ * Posledná úprava: 2026-01-25 - Opravené NaN a ceny pre ultra/extra
+ * ═══════════════════════════════════════════════════════════════
+ */
+
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "@/components/ui/button";
