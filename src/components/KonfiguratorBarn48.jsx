@@ -264,7 +264,7 @@ export default function KonfiguratorBarn48({
       standardna: 0, 
       zvysena: getPrice('izolacia_zvysena') ?? DEFAULT_CENY.izolacia.zvysena, 
       premium: getPrice('izolacia_premium') ?? DEFAULT_CENY.izolacia.premium, 
-      ultra: getPrice('izolacia_extra') ?? DEFAULT_CENY.izolacia.ultra 
+      ultra: 5250
     },
     elektroinstalacia: getPrice('elektroinstalacia') ?? DEFAULT_CENY.elektroinstalacia,
     vodaKanalizacia: getPrice('vodaKanalizacia') ?? DEFAULT_CENY.vodaKanalizacia,
@@ -302,6 +302,22 @@ export default function KonfiguratorBarn48({
     bocneOknoVyklopne90: getPrice('bocneOknoVyklopne90') ?? DEFAULT_CENY.bocneOknoVyklopne90,
     bocneOknoVyklopne55: getPrice('bocneOknoVyklopne55') ?? DEFAULT_CENY.bocneOknoVyklopne55
   };
+
+  // Custom prices pre Fázu 1 komponent
+  const phase1CustomPrices = useMemo(() => ({
+    montaz_ano: CENY.montaz.ano,
+    montaz_nie: 0,
+    izolacia_standardna: 0,
+    izolacia_standard: 0,
+    izolacia_zvysena: CENY.izolacia.zvysena,
+    izolacia_premium: CENY.izolacia.premium,
+    izolacia_ultra: 5250,
+    izolacia_extra: 5250,
+    zaklady_bez: 0,
+    zaklady_skrutky: CENY.zaklady.skrutky,
+    zaklady_doska: CENY.zaklady.doska,
+    zaklady_pasove: CENY.zaklady.pasove
+  }), [CENY]);
 
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
@@ -705,15 +721,26 @@ export default function KonfiguratorBarn48({
                   isAdmin={isAdmin}
                   onPriceUpdate={handlePriceChange}
                   showTooltips={true}
+                  customPrices={phase1CustomPrices}
+                  hideExtraInsulation={false}
                   initialSelections={{
                     montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: `izolacia_${izolaciaNavysenie}`,
-                    zaklady: `zaklady_${zaklady}`
+                    izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+                    zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
                   }}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
-                    if (selections.izolacia) setIzolaciaNavysenie(selections.izolacia.replace('izolacia_', ''));
-                    if (selections.zaklady) setZaklady(selections.zaklady.replace('zaklady_', ''));
+                    if (selections.izolacia) {
+                      let izolaciaValue = selections.izolacia.replace('izolacia_', '');
+                      if (izolaciaValue === 'extra') izolaciaValue = 'ultra';
+                      if (izolaciaValue === 'standardna') izolaciaValue = 'standard';
+                      setIzolaciaNavysenie(izolaciaValue);
+                    }
+                    if (selections.zaklady) {
+                      let zakladyValue = selections.zaklady.replace('zaklady_', '');
+                      if (zakladyValue === 'vruty') zakladyValue = 'skrutky';
+                      setZaklady(zakladyValue);
+                    }
                   }}
                 />
               </div>
