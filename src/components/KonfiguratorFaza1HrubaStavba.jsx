@@ -1,14 +1,14 @@
 /**
  * ⚠️ KRITICKÉ - ZDIEĽANÝ KOMPONENT PRE FÁZU 1 ⚠️
  * 
- * Tento komponent je používaný viacerými konfigurátormi (Flat Small, Fjord, atď.)
+ * Tento komponent je používaný viacerými konfigurátormi (Flat Small, Fjord, A-Frame, atď.)
  * 
  * DÔLEŽITÉ PROPS:
  * - `customPrices` - NAJVYŠŠIA PRIORITA! Ak je poskytnutý, použijú sa tieto ceny
  * - `dom.konfigurator_custom_ceny_prosto_house` - Druhá priorita
  * - `DEFAULT_PRICES` - Fallback
  * 
- * FLAT SMALL:
+ * FLAT SMALL / FJORD / A-FRAME:
  * - MUSÍ dostať prop `customPrices` s mapovaním cien z entity Dom
  * - Neodstraňujte podporu pre `customPrices` prop!
  * 
@@ -281,7 +281,7 @@ export default function KonfiguratorFaza1HrubaStavba({
       selections.totalPrice = totalPrice;
       onSelectionChange(selections);
     }
-  }, [montaz, izolacia, zaklady, dom]);
+  }, [montaz, izolacia, zaklady, getPrice, onSelectionChange, t]);
 
   return (
     <div className="space-y-6">
