@@ -153,6 +153,11 @@ function LayoutContent({ children }) {
     }
   });
 
+  const { data: lokacii } = useQuery({
+    queryKey: ['lokacii-seo'],
+    queryFn: () => base44.entities.LokaciaSEO.list()
+  });
+
   const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png";
   const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
 
@@ -710,6 +715,26 @@ function LayoutContent({ children }) {
               </ul>
             </div>
             
+            <div>
+              <h4 className="font-semibold mb-4 text-white">Kde staviame</h4>
+              <ul className="space-y-1.5 text-sm">
+                {lokacii && lokacii.length > 0 ? (
+                  lokacii.map((lokacia) => (
+                    <li key={lokacia.id}>
+                      <a 
+                        href={`/lokalita/${lokacia.slug}`}
+                        className="text-gray-300 hover:text-white transition-colors"
+                      >
+                        {lokacia.nazov_mesta}
+                      </a>
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-gray-400 text-xs">Načítavam lokality...</li>
+                )}
+              </ul>
+            </div>
+
             <div>
               <h4 className="font-semibold mb-4 text-white">{t('poweredByAI')}</h4>
               <div className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 p-4 rounded-xl border border-cyan-500/20">
