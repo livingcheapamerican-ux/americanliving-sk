@@ -727,6 +727,7 @@ export default function KonfiguratorBarnDouble({
                   showTooltips={true}
                   customPrices={phase1CustomPrices}
                   hideExtraInsulation={false}
+                  typStavby={typStavby}
                   initialSelections={{
                     montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
                     izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
