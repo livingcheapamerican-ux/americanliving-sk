@@ -571,7 +571,7 @@ export default function DetailDomu() {
     setWizardKey(prev => prev + 1);
   };
 
-  // Prepare FAQ schema data
+  // Prepare FAQ schema data - MUST be at top level
   const faqSchemaData = React.useMemo(() => {
     if (!dom?.faq_schema_data?.faqs || dom.faq_schema_data.faqs.length === 0) return null;
     return {
@@ -587,12 +587,6 @@ export default function DetailDomu() {
       }))
     };
   }, [dom]);
-
-  // Debug logging
-  React.useEffect(() => {
-    console.log('DetailDomu - Dom loaded:', dom?.id);
-    console.log('DetailDomu - FAQ Schema Data:', faqSchemaData);
-  }, [dom, faqSchemaData]);
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden max-w-full">
