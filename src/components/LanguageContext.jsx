@@ -10334,10 +10334,30 @@ const ensureTranslations = (translations) => {
 
 const translationsData = ensureTranslations(translations);
 
+// Helper function to detect browser language
+const detectBrowserLanguage = () => {
+  const browserLang = navigator.language || navigator.userLanguage;
+  const langCode = browserLang.split('-')[0].toLowerCase();
+  
+  // Map of supported languages
+  const supportedLanguages = ['sk', 'en', 'hu', 'pl', 'uk', 'de', 'fr', 'sr', 'hr', 'el'];
+  
+  // Return the language if supported, otherwise default to Slovak
+  return supportedLanguages.includes(langCode) ? langCode : 'sk';
+};
+
 export function LanguageProvider({ children }) {
   const [language, setLanguage] = useState(() => {
     const saved = localStorage.getItem('app_language');
-    return saved || 'sk';
+    
+    // If no saved language, detect browser language
+    if (!saved) {
+      const detectedLang = detectBrowserLanguage();
+      localStorage.setItem('app_language', detectedLang);
+      return detectedLang;
+    }
+    
+    return saved;
   });
 
   useEffect(() => {
