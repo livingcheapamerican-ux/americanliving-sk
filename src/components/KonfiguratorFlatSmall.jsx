@@ -255,15 +255,16 @@ export default function KonfiguratorFlatSmall({
     bocneOknoVyklopne55: 225
   };
 
-  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
-  const getPrice = (key) => {
+  const customCeny = useMemo(() => dom?.konfigurator_custom_ceny_prosto_house || {}, [dom]);
+  
+  const getPrice = React.useCallback((key) => {
     if (customCeny[key] !== undefined && customCeny[key] !== null) {
       return customCeny[key];
     }
     return DEFAULT_CENY[key];
-  };
+  }, [customCeny]);
 
-  const CENY = {
+  const CENY = useMemo(() => ({
     montaz: { nie: 0, ano: getPrice('montaz') ?? DEFAULT_CENY.montaz.ano },
     dvere: { 
       ziadne: 0, 
@@ -311,7 +312,7 @@ export default function KonfiguratorFlatSmall({
     bocneOknoFixne: getPrice('okno_fix_90_205') ?? DEFAULT_CENY.bocneOknoFixne,
     bocneOknoVyklopne90: getPrice('okno_vyklopne_90_205') ?? DEFAULT_CENY.bocneOknoVyklopne90,
     bocneOknoVyklopne55: getPrice('okno_vyklopne_55_90') ?? DEFAULT_CENY.bocneOknoVyklopne55
-  };
+  }), [getPrice]);
 
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
@@ -353,7 +354,7 @@ export default function KonfiguratorFlatSmall({
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, zaklady, pripojkaSiete, 
       inziniering, projektA0, interierFinis, vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, 
       podlahovVykurovanie, interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE]);
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE, CENY]);
 
   const a0Odporucania = useMemo(() => {
     if (!projektA0) return null;
@@ -725,35 +726,40 @@ export default function KonfiguratorFlatSmall({
                     onPriceUpdate={handlePriceChange}
                     showTooltips={true}
                     customPrices={{
-                      montaz_ano: getPrice('montaz') ?? CENY.montaz.ano,
+                      montaz_ano: CENY.montaz.ano,
+                      montaz_nie: 0,
+                      izolacia_standardna: 0,
+                      izolacia_standard: 0,
                       izolacia_zvysena: CENY.izolacia.zvysena,
                       izolacia_premium: CENY.izolacia.premium,
                       izolacia_extra: CENY.izolacia.ultra,
+                      izolacia_ultra: CENY.izolacia.ultra,
+                      zaklady_bez: 0,
                       zaklady_skrutky: CENY.zaklady.skrutky,
                       zaklady_doska: CENY.zaklady.doska,
                       zaklady_pasove: CENY.zaklady.pasove
                     }}
                     initialSelections={{
-                      montaz: montazHolodomu === 'ano' ? 'montaz_ano' : montazHolodomu === 'nie' ? 'montaz_nie' : null,
-                      izolacia: izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : izolaciaNavysenie === 'zvysena' ? 'izolacia_zvysena' : izolaciaNavysenie === 'premium' ? 'izolacia_premium' : izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : null,
-                      zaklady: zaklady === 'bez' ? 'zaklady_bez' : zaklady === 'skrutky' ? 'zaklady_skrutky' : zaklady === 'doska' ? 'zaklady_doska' : zaklady === 'pasove' ? 'zaklady_pasove' : null
+                      montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
+                      izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+                      zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
                     }}
                     onSelectionChange={(selections) => {
-                      if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
+                      // Kontrola či sa hodnota skutočne zmenila
+                      if (selections.montaz) {
+                        const newValue = selections.montaz === 'montaz_ano' ? 'ano' : 'nie';
+                        if (montazHolodomu !== newValue) setMontazHolodomu(newValue);
+                      }
                       if (selections.izolacia) {
-                        const izolaciaValue = selections.izolacia.replace('izolacia_', '');
-                        // Map properly: 'extra' to 'ultra', 'standardna' to 'standard'
-                        if (izolaciaValue === 'extra') {
-                          setIzolaciaNavysenie('ultra');
-                        } else if (izolaciaValue === 'standardna') {
-                          setIzolaciaNavysenie('standard');
-                        } else {
-                          setIzolaciaNavysenie(izolaciaValue);
-                        }
+                        let izolaciaValue = selections.izolacia.replace('izolacia_', '');
+                        if (izolaciaValue === 'extra') izolaciaValue = 'ultra';
+                        if (izolaciaValue === 'standardna') izolaciaValue = 'standard';
+                        if (izolaciaNavysenie !== izolaciaValue) setIzolaciaNavysenie(izolaciaValue);
                       }
                       if (selections.zaklady) {
-                        const zakladyValue = selections.zaklady.replace('zaklady_', '');
-                        setZaklady(zakladyValue === 'bez' ? 'bez' : zakladyValue);
+                        let zakladyValue = selections.zaklady.replace('zaklady_', '');
+                        if (zakladyValue === 'vruty') zakladyValue = 'skrutky';
+                        if (zaklady !== zakladyValue) setZaklady(zakladyValue);
                       }
                     }}
                   />

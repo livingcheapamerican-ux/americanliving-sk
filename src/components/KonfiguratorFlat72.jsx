@@ -263,15 +263,16 @@ export default function KonfiguratorFlat72({
     bocneOknoVyklopne55: 225
   };
 
-  const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
-  const getPrice = (key) => {
+  const customCeny = useMemo(() => dom?.konfigurator_custom_ceny_prosto_house || {}, [dom]);
+  
+  const getPrice = React.useCallback((key) => {
     if (customCeny[key] !== undefined && customCeny[key] !== null) {
       return customCeny[key];
     }
     return DEFAULT_CENY[key];
-  };
+  }, [customCeny]);
 
-  const CENY = {
+  const CENY = useMemo(() => ({
     montaz: { nie: 0, ano: getPrice('montaz') ?? DEFAULT_CENY.montaz.ano },
     dvere: { 
       ziadne: 0, 
@@ -320,10 +321,17 @@ export default function KonfiguratorFlat72({
     bocneOknoFixne: getPrice('okno_fix_90_205') ?? DEFAULT_CENY.bocneOknoFixne,
     bocneOknoVyklopne90: getPrice('okno_vyklopne_90_205') ?? DEFAULT_CENY.bocneOknoVyklopne90,
     bocneOknoVyklopne55: getPrice('okno_vyklopne_55_90') ?? DEFAULT_CENY.bocneOknoVyklopne55
-  };
+  }), [getPrice]);
+
+  const phase1InitialSelections = useMemo(() => ({
+    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
+    izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+    zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
+  }), [montazHolodomu, izolaciaNavysenie, zaklady]);
 
   const phase1CustomPrices = useMemo(() => ({
     montaz_ano: CENY.montaz.ano,
+    montaz_nie: 0,
     izolacia_standardna: 0,
     izolacia_standard: 0,
     izolacia_zvysena: CENY.izolacia.zvysena,
@@ -379,7 +387,7 @@ export default function KonfiguratorFlat72({
       zaklady, pripojkaSiete, inziniering, projektA0, interierFinis,
       vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, podlahovVykurovanie,
       pergola, interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55]);
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE, CENY]);
 
   // Kontrola A0 odporúčaní
   const a0Odporucania = useMemo(() => {
@@ -783,23 +791,23 @@ export default function KonfiguratorFlat72({
                   showTooltips={true}
                   customPrices={phase1CustomPrices}
                   hideExtraInsulation={false}
-                  initialSelections={{
-                    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
-                    zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
-                  }}
+                  initialSelections={phase1InitialSelections}
                   onSelectionChange={(selections) => {
-                    if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
+                    // Kontrola či sa hodnota skutočne zmenila
+                    if (selections.montaz) {
+                      const newValue = selections.montaz === 'montaz_ano' ? 'ano' : 'nie';
+                      if (montazHolodomu !== newValue) setMontazHolodomu(newValue);
+                    }
                     if (selections.izolacia) {
                       let izolaciaValue = selections.izolacia.replace('izolacia_', '');
                       if (izolaciaValue === 'extra') izolaciaValue = 'ultra';
                       if (izolaciaValue === 'standardna') izolaciaValue = 'standard';
-                      setIzolaciaNavysenie(izolaciaValue);
+                      if (izolaciaNavysenie !== izolaciaValue) setIzolaciaNavysenie(izolaciaValue);
                     }
                     if (selections.zaklady) {
                       let zakladyValue = selections.zaklady.replace('zaklady_', '');
                       if (zakladyValue === 'vruty') zakladyValue = 'skrutky';
-                      setZaklady(zakladyValue);
+                      if (zaklady !== zakladyValue) setZaklady(zakladyValue);
                     }
                   }}
                 />

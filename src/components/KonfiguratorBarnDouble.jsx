@@ -311,7 +311,7 @@ export default function KonfiguratorBarnDouble({
     povrchokaOkien: getPrice('povrchokaOkien') ?? DEFAULT_CENY.povrchokaOkien,
     vnutornePodlahy: getPrice('vnutornePodlahy') ?? DEFAULT_CENY.vnutornePodlahy,
     podlahovVykurovanie: getPrice('podlahovVykurovanie') ?? DEFAULT_CENY.podlahovVykurovanie,
-    interieroveDvere: getPrice('interieroveDvere') ?? DEFAULT_CENY.interieroveDvere,
+    interieroveDvere: DEFAULT_CENY.interieroveDvere,
     tonovaneSkla: getPrice('tonovaneSkla') ?? DEFAULT_CENY.tonovaneSkla,
     doprava: getPrice('doprava') ?? DEFAULT_CENY.doprava,
     revizna: getPrice('revizna') ?? DEFAULT_CENY.revizna,
@@ -344,10 +344,10 @@ export default function KonfiguratorBarnDouble({
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
 
-    total += CENY.montaz[montazHolodomu];
+    total += CENY.montaz[montazHolodomu] || 0;
     total += CENY.predlzenie[predlzenie] || 0;
-    total += CENY.dvere[vstupneDvere];
-    total += CENY.izolacia[izolaciaNavysenie];
+    total += CENY.dvere[vstupneDvere] || 0;
+    total += CENY.izolacia[izolaciaNavysenie] || 0;
     
     if (elektroinstalacia) total += CENY.elektroinstalacia;
     if (vodaKanalizacia) total += CENY.vodaKanalizacia;
@@ -356,7 +356,7 @@ export default function KonfiguratorBarnDouble({
     if (tepelneCerpadlo) total += CENY.tepelneCerpadlo;
     if (rekuperacia) total += CENY.rekuperacia;
     
-    total += CENY.zaklady[zaklady];
+    total += CENY.zaklady[zaklady] || 0;
     if (pripojkaSiete) total += CENY.pripojkaSiete;
     
     if (inziniering) total += CENY.inziniering;
@@ -382,7 +382,7 @@ export default function KonfiguratorBarnDouble({
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, zaklady, pripojkaSiete, 
       inziniering, projektA0, interierFinis, vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, 
       podlahovVykurovanie, interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55]);
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE, CENY]);
 
   const a0Odporucania = useMemo(() => {
     if (!projektA0) return null;
