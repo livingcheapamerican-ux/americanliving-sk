@@ -1,5 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
+const TARGET_LANGUAGES = ['sk', 'en', 'hu', 'pl', 'uk', 'de', 'fr', 'sr', 'hr', 'el'];
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -9,105 +11,128 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
+    const { domId } = await req.json();
+
+    if (!domId) {
+      return Response.json({ error: 'domId is required' }, { status: 400 });
+    }
+
     const report = {
       domProcessed: 0,
-      domFailed: 0,
       blogProcessed: 0,
-      blogFailed: 0,
+      languagesGenerated: [],
       errors: []
     };
 
-    // Načítaj Dom záznamy (max 10)
-    console.log('Loading Dom records...');
-    const domRecords = await base44.asServiceRole.entities.Dom.list('', 10);
-    const domsToProcess = domRecords.filter(d => !d.ai_summary);
-    console.log(`Found ${domsToProcess.length} Dom records to process`);
+    // Načítaj Dom záznam
+    console.log(`Loading Dom record: ${domId}`);
+    const domRecords = await base44.asServiceRole.entities.Dom.filter({ id: domId });
+    const dom = domRecords[0];
 
-    // Spracuj Dom záznamy
-    for (const dom of domsToProcess) {
+    if (!dom) {
+      return Response.json({ error: 'Dom not found' }, { status: 404 });
+    }
+
+    const contentForAnalysis = `${dom.nazov}. ${(dom.popis || '').substring(0, 800)}`;
+    
+    if (!contentForAnalysis.trim()) {
+      return Response.json({ error: 'No content to analyze' }, { status: 400 });
+    }
+
+    // Generuj Slovak FAQ ako základ
+    console.log('Generating Slovak FAQ...');
+    const slovakResponse = await base44.integrations.Core.InvokeLLM({
+      prompt: `Vytvor: a) 1-vetné zhrnutie max 300 znakov. b) 3 FAQ otázky a odpovede pre tento dom. Všetko v slovenčine. Text: ${contentForAnalysis}`,
+      response_json_schema: {
+        type: 'object',
+        properties: {
+          ai_summary: { type: 'string' },
+          faq_schema_data: {
+            type: 'object',
+            properties: {
+              faqs: { 
+                type: 'array', 
+                items: { 
+                  type: 'object',
+                  properties: {
+                    otazka: { type: 'string' },
+                    odpoved: { type: 'string' }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    const faqMultiLang = {
+      sk: slovakResponse.faq_schema_data || { faqs: [] }
+    };
+
+    // Preložiť FAQ do všetkých jazykov
+    for (const langCode of TARGET_LANGUAGES) {
+      if (langCode === 'sk') continue; // Slovak už máme
+
       try {
-        const contentForAnalysis = `${dom.nazov}. ${(dom.popis || '').substring(0, 800)}`;
+        console.log(`Translating FAQ to ${langCode}...`);
         
-        if (!contentForAnalysis.trim()) continue;
+        const langNames = {
+          en: 'angličtine',
+          hu: 'maďarčine',
+          pl: 'poľštine',
+          uk: 'ukrajinčine',
+          de: 'nemčine',
+          fr: 'francúzštine',
+          sr: 'srbčine',
+          hr: 'chorvátčine',
+          el: 'gréčtine'
+        };
 
-        const response = await base44.integrations.Core.InvokeLLM({
-          prompt: `Vytvor: a) 1-vetné zhrnutie max 300 znakov. b) 3 FAQ (JSON s polom faqs). Text: ${contentForAnalysis}`,
+        const translatedFaq = await base44.integrations.Core.InvokeLLM({
+          prompt: `Prelož tento FAQ do ${langNames[langCode]}. Otázky a odpovede musia byť kultúrne relevantné. FAQ v slovenčine: ${JSON.stringify(slovakResponse.faq_schema_data)}`,
           response_json_schema: {
             type: 'object',
             properties: {
-              ai_summary: { type: 'string' },
               faq_schema_data: {
                 type: 'object',
                 properties: {
-                  faqs: { type: 'array', items: { type: 'object' } }
+                  faqs: { 
+                    type: 'array', 
+                    items: { 
+                      type: 'object',
+                      properties: {
+                        otazka: { type: 'string' },
+                        odpoved: { type: 'string' }
+                      }
+                    }
+                  }
                 }
               }
             }
           }
         });
 
-        await base44.asServiceRole.entities.Dom.update(dom.id, {
-          ai_summary: (response.ai_summary || '').substring(0, 300),
-          faq_schema_data: response.faq_schema_data || { faqs: [] },
-          geo_context_keywords: dom.typ_domu + ', ' + (dom.kategoria || 'dom')
-        });
-
-        report.domProcessed++;
+        faqMultiLang[langCode] = translatedFaq.faq_schema_data || { faqs: [] };
+        report.languagesGenerated.push(langCode);
       } catch (error) {
-        report.domFailed++;
-        report.errors.push(`Dom ${dom.nazov}: ${error.message}`);
+        report.errors.push(`FAQ translation ${langCode}: ${error.message}`);
       }
     }
 
-    // Načítaj BlogPost záznamy (max 5)
-    console.log('Loading BlogPost records...');
-    const blogRecords = await base44.asServiceRole.entities.BlogPost.list('', 5);
-    const blogsToProcess = blogRecords.filter(b => !b.ai_summary);
-    console.log(`Found ${blogsToProcess.length} BlogPost records to process`);
+    // Ulož multi-language FAQ
+    await base44.asServiceRole.entities.Dom.update(dom.id, {
+      ai_summary: (slovakResponse.ai_summary || '').substring(0, 300),
+      faq_schema_data: faqMultiLang,
+      geo_context_keywords: dom.typ_domu + ', ' + (dom.kategoria || 'dom')
+    });
 
-    for (const blog of blogsToProcess) {
-      try {
-        const contentForAnalysis = `${blog.nazov}. ${(blog.perex || '').substring(0, 500)}`;
-        
-        if (!contentForAnalysis.trim()) continue;
-
-        const response = await base44.integrations.Core.InvokeLLM({
-          prompt: `Vytvor: a) 1-vetné zhrnutie max 300 znakov. b) 3 FAQ (JSON s polom faqs). Text: ${contentForAnalysis}`,
-          response_json_schema: {
-            type: 'object',
-            properties: {
-              ai_summary: { type: 'string' },
-              faq_schema_data: {
-                type: 'object',
-                properties: {
-                  faqs: { type: 'array', items: { type: 'object' } }
-                }
-              }
-            }
-          }
-        });
-
-        await base44.asServiceRole.entities.BlogPost.update(blog.id, {
-          ai_summary: (response.ai_summary || '').substring(0, 300),
-          faq_schema_data: response.faq_schema_data || { faqs: [] },
-          geo_context_keywords: (blog.tagy || []).join(', ') || blog.kategoria
-        });
-
-        report.blogProcessed++;
-      } catch (error) {
-        report.blogFailed++;
-        report.errors.push(`BlogPost ${blog.nazov}: ${error.message}`);
-      }
-    }
-
-    const totalProcessed = report.domProcessed + report.blogProcessed;
+    report.domProcessed = 1;
 
     return Response.json({
       success: true,
       report: {
         ...report,
-        totalProcessed,
-        totalFailed: report.domFailed + report.blogFailed,
         timestamp: new Date().toISOString()
       }
     });

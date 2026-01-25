@@ -29,11 +29,17 @@ export default function BlogDetail() {
 
   // MUST be before any conditional returns
   const faqSchemaData = React.useMemo(() => {
-    if (!post?.faq_schema_data?.faqs || post.faq_schema_data.faqs.length === 0) return null;
+    if (!post?.faq_schema_data) return null;
+    
+    // Multi-language support
+    const langFaq = post.faq_schema_data[language] || post.faq_schema_data['sk'] || post.faq_schema_data;
+    
+    if (!langFaq?.faqs || langFaq.faqs.length === 0) return null;
+    
     return {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "mainEntity": post.faq_schema_data.faqs.map(item => ({
+      "mainEntity": langFaq.faqs.map(item => ({
         "@type": "Question",
         "name": item.otazka,
         "acceptedAnswer": {
@@ -42,7 +48,7 @@ export default function BlogDetail() {
         }
       }))
     };
-  }, [post]);
+  }, [post, language]);
 
   const updateViewsMutation = useMutation({
     mutationFn: (id) => base44.entities.BlogPost.update(id, {
