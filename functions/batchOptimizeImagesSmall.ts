@@ -1,5 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
+const TARGET_LANGUAGES = ['sk', 'en', 'hu', 'pl', 'uk', 'de', 'fr', 'sr', 'hr', 'el'];
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -9,47 +11,85 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
+    const { domId } = await req.json();
+
+    if (!domId) {
+      return Response.json({ error: 'domId is required' }, { status: 400 });
+    }
+
     const report = {
       dom_processed: 0,
       dom_failed: 0,
       total_images_optimized: 0,
-      errors: [],
-      domains_skipped: []
+      languagesGenerated: [],
+      errors: []
     };
 
-    // Spracuj posledných 3 Dom v malej dávke
-    console.log('Processing Dom records in micro-batch (limit 3)...');
-    const domRecords = await base44.asServiceRole.entities.Dom.list('-updated_date', 3);
-    let lastDomImages = {};
-    
-    for (const dom of domRecords) {
-      try {
-        const imageUrls = [];
-        if (dom.hlavny_obrazok) imageUrls.push(dom.hlavny_obrazok);
-        if (dom.zakladna_konfiguracia_obrazok) imageUrls.push(dom.zakladna_konfiguracia_obrazok);
-        if (dom.podorys_2d) imageUrls.push(dom.podorys_2d);
-        if (dom.podorys_3d) imageUrls.push(dom.podorys_3d);
-        if (Array.isArray(dom.galeria)) imageUrls.push(...dom.galeria.filter(u => u));
+    // Načítaj Dom záznam
+    const domRecords = await base44.asServiceRole.entities.Dom.filter({ id: domId });
+    const dom = domRecords[0];
 
-        // Filtruj iba base44.app URLs
-        const validUrls = imageUrls.filter(url => {
-          if (!url || !url.trim()) return false;
-          if (!url.includes('base44.app')) {
-            report.domains_skipped.push(url.substring(0, 80));
-            return false;
-          }
-          return true;
-        });
+    if (!dom) {
+      return Response.json({ error: 'Dom not found' }, { status: 404 });
+    }
 
-        const seoMap = dom.images_seo_map || {};
-        let updated = false;
+    // Zbier všetky image URLs (s limitom na prvých 20)
+    const imageUrls = [];
+    if (dom.hlavny_obrazok) imageUrls.push(dom.hlavny_obrazok);
+    if (dom.zakladna_konfiguracia_obrazok) imageUrls.push(dom.zakladna_konfiguracia_obrazok);
+    if (dom.podorys_2d) imageUrls.push(dom.podorys_2d);
+    if (dom.podorys_3d) imageUrls.push(dom.podorys_3d);
+    if (Array.isArray(dom.galeria)) imageUrls.push(...dom.galeria.filter(u => u).slice(0, 10));
+    if (Array.isArray(dom.galerie)) {
+      dom.galerie.forEach(gal => {
+        if (Array.isArray(gal.fotky)) {
+          imageUrls.push(...gal.fotky.slice(0, 5));
+        }
+      });
+    }
 
-        for (const imageUrl of validUrls) {
+    const seoMapMultiLang = {};
+
+    // Pre každý jazyk - batch procesovanie obrázkov
+    for (const langCode of TARGET_LANGUAGES) {
+      const langMap = {};
+
+      const langNames = {
+        sk: 'slovenčine',
+        en: 'angličtine',
+        hu: 'maďarčine',
+        pl: 'poľštine',
+        uk: 'ukrajinčine',
+        de: 'nemčine',
+        fr: 'francúzštine',
+        sr: 'srbčine',
+        hr: 'chorvátčine',
+        el: 'gréčtine'
+      };
+
+      const culturalTerms = {
+        sk: 'montovaný dom, drevostavba, modulárny dom',
+        en: 'prefab house, modular home, timber frame',
+        hu: 'előregyártott ház, moduláris ház',
+        pl: 'dom prefabrykowany, dom modułowy',
+        uk: 'збірний будинок, модульний будинок',
+        de: 'Fertighaus, Modulhaus',
+        fr: 'maison préfabriquée, maison modulaire',
+        sr: 'монтажна кућа, модуларна кућа',
+        hr: 'montažna kuća, modularna kuća',
+        el: 'προκατασκευασμένο σπίτι, αρθρωτό σπίτι'
+      };
+
+      // Batch obrázkov do skupín (max 5 súčasne na jazyk)
+      for (let i = 0; i < imageUrls.length; i += 5) {
+        const imageBatch = imageUrls.slice(i, Math.min(i + 5, imageUrls.length));
+
+        const batchPromises = imageBatch.map(async (imageUrl) => {
+          if (!imageUrl || !imageUrl.trim()) return null;
+
           try {
-            console.log(`Analyzing Dom image: ${imageUrl}`);
-
             const aiResponse = await base44.integrations.Core.InvokeLLM({
-              prompt: `Stručne popíš tento obrázok pre SEO atribút alt. Použi slovenčinu a relevantné kľúčové slová ako: montovaný dom, drevostavba, modulárny dom, ${dom.typ_domu}, interiér, exteriér, terasa, balkón. Maximálne 1 veta, 80-120 znakov.`,
+              prompt: `Stručne popíš tento obrázok pre SEO atribút alt. Použi ${langNames[langCode]} a kultúrne relevantné kľúčové slová: ${culturalTerms[langCode]}, ${dom.typ_domu}, interiér, exteriér, terasa, balkón. Maximálne 1 veta, 80-120 znakov.`,
               file_urls: [imageUrl],
               response_json_schema: {
                 type: 'object',
@@ -59,46 +99,43 @@ Deno.serve(async (req) => {
               }
             });
 
-            const altText = (aiResponse.alt_text || '').substring(0, 160);
-            seoMap[imageUrl] = altText;
-            updated = true;
-            
-            report.total_images_optimized++;
-            console.log(`✅ Dom image optimized: ${altText}`);
-
+            return {
+              url: imageUrl,
+              text: (aiResponse.alt_text || '').substring(0, 160)
+            };
           } catch (imgError) {
-            console.error(`Image error for ${imageUrl}:`, imgError.message);
-            report.errors.push(`Dom ${dom.nazov} image: ${imgError.message}`);
+            console.error(`Image error for ${langCode}: ${imgError.message}`);
+            return null;
           }
-        }
-
-        // VYNÚTENÝ ZÁPIS: Ulož VŽDY
-        await base44.asServiceRole.entities.Dom.update(dom.id, {
-          images_seo_map: seoMap
         });
-        
-        lastDomImages = { dom_id: dom.id, dom_name: dom.nazov, images_seo_map: seoMap };
 
-        report.dom_processed++;
-        console.log(`✅ Dom updated: ${dom.nazov} with ${Object.keys(seoMap).length} images`);
-      } catch (error) {
-        report.dom_failed++;
-        console.error(`Dom error: ${error.message}`);
-        report.errors.push(`Dom ${dom.nazov}: ${error.message}`);
+        const results = await Promise.all(batchPromises);
+        results.forEach(result => {
+          if (result) {
+            langMap[result.url] = result.text;
+            report.total_images_optimized++;
+          }
+        });
       }
+
+      seoMapMultiLang[langCode] = langMap;
+      report.languagesGenerated.push(langCode);
     }
+
+    // Ulož multi-language SEO mapu
+    await base44.asServiceRole.entities.Dom.update(dom.id, {
+      images_seo_map: seoMapMultiLang
+    });
+
+    report.dom_processed = 1;
 
     return Response.json({
       success: true,
       report: {
         ...report,
-        timestamp: new Date().toISOString(),
-        total_records_processed: report.dom_processed
-      },
-      lastDomProcessed: lastDomImages,
-      message: `Processed ${report.dom_processed} Dom records. Run this function multiple times to process remaining houses.`
+        timestamp: new Date().toISOString()
+      }
     });
-
   } catch (error) {
     console.error('Batch image optimization error:', error);
     return Response.json({ error: error.message, success: false }, { status: 500 });
