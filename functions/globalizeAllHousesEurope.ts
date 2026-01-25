@@ -43,8 +43,8 @@ Deno.serve(async (req) => {
 
           // Paralelne: FAQ + Images SEO
           const [aeoResult, imagesResult] = await Promise.all([
-            base44.asServiceRole.functions.invoke('generateAEODataset', { domId }),
-            base44.asServiceRole.functions.invoke('batchOptimizeImagesSmall', { domId })
+            base44.functions.invoke('generateAEODataset', { domId }),
+            base44.functions.invoke('batchOptimizeImagesSmall', { domId })
           ]);
 
           if (aeoResult?.data?.success && imagesResult?.data?.success) {
