@@ -14,11 +14,12 @@ Deno.serve(async (req) => {
     console.log('🌍 Starting Global Europeanization of All Houses...');
 
     // Načítaj všetky domy
-    const allDoms = await base44.asServiceRole.entities.Dom.list('', 500);
-    console.log(`📋 Found ${allDoms.length} houses to process`);
+    const allDoms = await base44.asServiceRole.entities.Dom.filter({}, '', 500);
+    const domsToProcess = Array.isArray(allDoms) ? allDoms : [];
+    console.log(`📋 Found ${domsToProcess.length} houses to process`);
 
     const report = {
-      total_houses: allDoms.length,
+      total_houses: domsToProcess.length,
       processed: 0,
       failed: 0,
       errors: [],
@@ -28,8 +29,8 @@ Deno.serve(async (req) => {
     };
 
     // Spracovávaj v dávkach
-    for (let i = 0; i < allDoms.length; i += BATCH_SIZE) {
-      const batch = allDoms.slice(i, i + BATCH_SIZE);
+    for (let i = 0; i < domsToProcess.length; i += BATCH_SIZE) {
+      const batch = domsToProcess.slice(i, i + BATCH_SIZE);
       console.log(`\n📦 Batch ${report.batches_completed + 1}: Processing ${batch.length} houses...`);
 
       // Spusti obidve funkcie paralelne pre všetky domy v dávke
@@ -70,7 +71,7 @@ Deno.serve(async (req) => {
       await Promise.all(batchPromises);
       report.batches_completed++;
 
-      console.log(`✅ Batch ${report.batches_completed} completed. Progress: ${report.processed}/${allDoms.length}`);
+      console.log(`✅ Batch ${report.batches_completed} completed. Progress: ${report.processed}/${domsToProcess.length}`);
     }
 
     console.log(`\n🎉 GLOBALIZATION COMPLETE!`);
