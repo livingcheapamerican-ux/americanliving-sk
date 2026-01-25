@@ -5,7 +5,6 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
-    // Iba admin môže spustiť túto funkciu
     if (!user || user.role !== 'admin') {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
@@ -18,30 +17,21 @@ Deno.serve(async (req) => {
       errors: []
     };
 
-    // Načítaj všetky záznamy Dom
+    // Načítaj Dom záznamy (max 10)
     console.log('Loading Dom records...');
-    const domRecords = await base44.asServiceRole.entities.Dom.list();
-    console.log(`Found ${domRecords.length} Dom records`);
-
-    // Spracuj Dom záznamy (len tých bez ai_summary na optimalizáciu)
+    const domRecords = await base44.asServiceRole.entities.Dom.list('', 10);
     const domsToProcess = domRecords.filter(d => !d.ai_summary);
-    console.log(`Processing ${domsToProcess.length} Dom records without ai_summary`);
-    
-    for (let i = 0; i < domsToProcess.length; i++) {
-      const dom = domsToProcess[i];
+    console.log(`Found ${domsToProcess.length} Dom records to process`);
+
+    // Spracuj Dom záznamy
+    for (const dom of domsToProcess) {
       try {
-        const contentForAnalysis = `${dom.nazov}. ${dom.popis || ''} ${dom.specifikacia || ''}`;
+        const contentForAnalysis = `${dom.nazov}. ${(dom.popis || '').substring(0, 800)}`;
         
         if (!contentForAnalysis.trim()) continue;
 
         const response = await base44.integrations.Core.InvokeLLM({
-          prompt: `Analyzuj nasledujúci text a vytvor z neho:
-a) Krátke zhrnutie do 300 znakov optimalizované pre AI odpovede (bez uvodzoviek).
-b) 3 najčastejšie otázky a odpovede (FAQ) vyplývajúce z textu vo formáte JSON.
-
-Vráť JSON s dvomi poľami: "ai_summary" (string) a "faq_schema_data" (object s polom "faqs" obsahujúcim array objektov s "otazka" a "odpoved").
-
-Vstupný text: ${contentForAnalysis.substring(0, 1500)}`,
+          prompt: `Vytvor: a) 1-vetné zhrnutie max 300 znakov. b) 3 FAQ (JSON s polom faqs). Text: ${contentForAnalysis}`,
           response_json_schema: {
             type: 'object',
             properties: {
@@ -49,61 +39,40 @@ Vstupný text: ${contentForAnalysis.substring(0, 1500)}`,
               faq_schema_data: {
                 type: 'object',
                 properties: {
-                  faqs: {
-                    type: 'array',
-                    items: {
-                      type: 'object',
-                      properties: {
-                        otazka: { type: 'string' },
-                        odpoved: { type: 'string' }
-                      }
-                    }
-                  }
+                  faqs: { type: 'array', items: { type: 'object' } }
                 }
               }
             }
           }
         });
 
-        // Aktualizuj Dom záznam
         await base44.asServiceRole.entities.Dom.update(dom.id, {
-          ai_summary: response.ai_summary || '',
+          ai_summary: (response.ai_summary || '').substring(0, 300),
           faq_schema_data: response.faq_schema_data || { faqs: [] },
           geo_context_keywords: dom.typ_domu + ', ' + (dom.kategoria || 'dom')
         });
 
         report.domProcessed++;
       } catch (error) {
-        console.error(`Error processing Dom ${dom.id}:`, error.message);
         report.domFailed++;
         report.errors.push(`Dom ${dom.nazov}: ${error.message}`);
       }
     }
 
-    // Načítaj všetky BlogPost záznamy
+    // Načítaj BlogPost záznamy (max 5)
     console.log('Loading BlogPost records...');
-    const blogRecords = await base44.asServiceRole.entities.BlogPost.list();
-    console.log(`Found ${blogRecords.length} BlogPost records`);
-
-    // Spracuj BlogPost záznamy (len tých bez ai_summary)
+    const blogRecords = await base44.asServiceRole.entities.BlogPost.list('', 5);
     const blogsToProcess = blogRecords.filter(b => !b.ai_summary);
-    console.log(`Processing ${blogsToProcess.length} BlogPost records without ai_summary`);
-    
-    for (let i = 0; i < blogsToProcess.length; i++) {
-      const blog = blogsToProcess[i];
+    console.log(`Found ${blogsToProcess.length} BlogPost records to process`);
+
+    for (const blog of blogsToProcess) {
       try {
-        const contentForAnalysis = `${blog.nazov}. ${blog.perex || ''} ${(blog.obsah || '').substring(0, 1000)}`;
+        const contentForAnalysis = `${blog.nazov}. ${(blog.perex || '').substring(0, 500)}`;
         
         if (!contentForAnalysis.trim()) continue;
 
         const response = await base44.integrations.Core.InvokeLLM({
-          prompt: `Analyzuj nasledujúci text a vytvor z neho:
-a) Krátke zhrnutie do 300 znakov optimalizované pre AI odpovede (bez uvodzoviek).
-b) 3 najčastejšie otázky a odpovede (FAQ) vyplývajúce z textu vo formáte JSON.
-
-Vráť JSON s dvomi poľami: "ai_summary" (string) a "faq_schema_data" (object s polom "faqs" obsahujúcim array objektov s "otazka" a "odpoved").
-
-Vstupný text: ${contentForAnalysis.substring(0, 1500)}`,
+          prompt: `Vytvor: a) 1-vetné zhrnutie max 300 znakov. b) 3 FAQ (JSON s polom faqs). Text: ${contentForAnalysis}`,
           response_json_schema: {
             type: 'object',
             properties: {
@@ -111,56 +80,38 @@ Vstupný text: ${contentForAnalysis.substring(0, 1500)}`,
               faq_schema_data: {
                 type: 'object',
                 properties: {
-                  faqs: {
-                    type: 'array',
-                    items: {
-                      type: 'object',
-                      properties: {
-                        otazka: { type: 'string' },
-                        odpoved: { type: 'string' }
-                      }
-                    }
-                  }
+                  faqs: { type: 'array', items: { type: 'object' } }
                 }
               }
             }
           }
         });
 
-        // Aktualizuj BlogPost záznam
         await base44.asServiceRole.entities.BlogPost.update(blog.id, {
-          ai_summary: response.ai_summary || '',
+          ai_summary: (response.ai_summary || '').substring(0, 300),
           faq_schema_data: response.faq_schema_data || { faqs: [] },
           geo_context_keywords: (blog.tagy || []).join(', ') || blog.kategoria
         });
 
         report.blogProcessed++;
       } catch (error) {
-        console.error(`Error processing BlogPost ${blog.id}:`, error.message);
         report.blogFailed++;
         report.errors.push(`BlogPost ${blog.nazov}: ${error.message}`);
       }
     }
 
-    // Vrať report
     const totalProcessed = report.domProcessed + report.blogProcessed;
-    const totalFailed = report.domFailed + report.blogFailed;
 
     return Response.json({
       success: true,
-      message: `AEO Dataset generation completed`,
       report: {
         ...report,
         totalProcessed,
-        totalFailed,
+        totalFailed: report.domFailed + report.blogFailed,
         timestamp: new Date().toISOString()
       }
     });
   } catch (error) {
-    console.error('Fatal error:', error);
-    return Response.json({ 
-      error: error.message,
-      success: false 
-    }, { status: 500 });
+    return Response.json({ error: error.message, success: false }, { status: 500 });
   }
 });
