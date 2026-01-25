@@ -57,7 +57,37 @@ export default function BlogDetail() {
       setMetaTag('meta[property="og:title"]', 'property', 'og:title', post.nazov);
       setMetaTag('meta[property="og:description"]', 'property', 'og:description', metaDescription);
       setMetaTag('meta[property="og:image"]', 'property', 'og:image', post.titulny_obrazok);
+
+      // FAQ Schema - pre AEO (Answer Engine Optimization)
+      if (post.faq_schema_data && post.faq_schema_data.faqs && post.faq_schema_data.faqs.length > 0) {
+        const faqSchema = {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": post.faq_schema_data.faqs.map(item => ({
+            "@type": "Question",
+            "name": item.otazka,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": item.odpoved
+            }
+          }))
+        };
+
+        let faqScript = document.querySelector('script[type="application/ld+json"][data-schema="faq"]');
+        if (!faqScript) {
+          faqScript = document.createElement('script');
+          faqScript.type = 'application/ld+json';
+          faqScript.setAttribute('data-schema', 'faq');
+          document.head.appendChild(faqScript);
+        }
+        faqScript.textContent = JSON.stringify(faqSchema);
+      }
     }
+
+    return () => {
+      const faqScripts = document.querySelectorAll('script[type="application/ld+json"][data-schema="faq"]');
+      faqScripts.forEach(script => script.remove());
+    };
   }, [post]);
 
   if (isLoading) {
