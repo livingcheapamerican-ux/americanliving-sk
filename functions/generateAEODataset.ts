@@ -23,8 +23,12 @@ Deno.serve(async (req) => {
     const domRecords = await base44.asServiceRole.entities.Dom.list();
     console.log(`Found ${domRecords.length} Dom records`);
 
-    // Spracuj Dom záznamy
-    for (const dom of domRecords) {
+    // Spracuj Dom záznamy (len tých bez ai_summary na optimalizáciu)
+    const domsToProcess = domRecords.filter(d => !d.ai_summary);
+    console.log(`Processing ${domsToProcess.length} Dom records without ai_summary`);
+    
+    for (let i = 0; i < domsToProcess.length; i++) {
+      const dom = domsToProcess[i];
       try {
         const contentForAnalysis = `${dom.nazov}. ${dom.popis || ''} ${dom.specifikacia || ''}`;
         
@@ -37,7 +41,7 @@ b) 3 najčastejšie otázky a odpovede (FAQ) vyplývajúce z textu vo formáte J
 
 Vráť JSON s dvomi poľami: "ai_summary" (string) a "faq_schema_data" (object s polom "faqs" obsahujúcim array objektov s "otazka" a "odpoved").
 
-Vstupný text: ${contentForAnalysis.substring(0, 2000)}`,
+Vstupný text: ${contentForAnalysis.substring(0, 1500)}`,
           response_json_schema: {
             type: 'object',
             properties: {
@@ -81,10 +85,14 @@ Vstupný text: ${contentForAnalysis.substring(0, 2000)}`,
     const blogRecords = await base44.asServiceRole.entities.BlogPost.list();
     console.log(`Found ${blogRecords.length} BlogPost records`);
 
-    // Spracuj BlogPost záznamy
-    for (const blog of blogRecords) {
+    // Spracuj BlogPost záznamy (len tých bez ai_summary)
+    const blogsToProcess = blogRecords.filter(b => !b.ai_summary);
+    console.log(`Processing ${blogsToProcess.length} BlogPost records without ai_summary`);
+    
+    for (let i = 0; i < blogsToProcess.length; i++) {
+      const blog = blogsToProcess[i];
       try {
-        const contentForAnalysis = `${blog.nazov}. ${blog.perex || ''} ${blog.obsah || ''}`;
+        const contentForAnalysis = `${blog.nazov}. ${blog.perex || ''} ${(blog.obsah || '').substring(0, 1000)}`;
         
         if (!contentForAnalysis.trim()) continue;
 
@@ -95,7 +103,7 @@ b) 3 najčastejšie otázky a odpovede (FAQ) vyplývajúce z textu vo formáte J
 
 Vráť JSON s dvomi poľami: "ai_summary" (string) a "faq_schema_data" (object s polom "faqs" obsahujúcim array objektov s "otazka" a "odpoved").
 
-Vstupný text: ${contentForAnalysis.substring(0, 2000)}`,
+Vstupný text: ${contentForAnalysis.substring(0, 1500)}`,
           response_json_schema: {
             type: 'object',
             properties: {
