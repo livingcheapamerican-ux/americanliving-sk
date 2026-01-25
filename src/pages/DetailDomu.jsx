@@ -62,8 +62,6 @@ export default function DetailDomu() {
     staleTime: 300000,
   });
 
-  const { language } = useLanguage();
-
   // MUST be at top level before any conditional returns
   const faqSchemaData = React.useMemo(() => {
     if (!dom?.faq_schema_data) return null;
