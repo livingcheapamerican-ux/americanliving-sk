@@ -267,7 +267,7 @@ export default function DetailDomu() {
       setMetaTag('meta[name="twitter:image"]', 'name', 'twitter:image', dom.hlavny_obrazok);
       setMetaTag('meta[name="twitter:url"]', 'name', 'twitter:url', canonicalUrl);
 
-      // Schema.org structured data
+      // Schema.org structured data - Product schema
       const schemaData = {
         "@context": "https://schema.org",
         "@type": "Product",
@@ -328,13 +328,39 @@ export default function DetailDomu() {
         ].filter(Boolean)
       };
 
-      let schemaScript = document.querySelector('script[type="application/ld+json"]');
+      let schemaScript = document.querySelector('script[type="application/ld+json"][data-schema="product"]');
       if (!schemaScript) {
         schemaScript = document.createElement('script');
         schemaScript.type = 'application/ld+json';
+        schemaScript.setAttribute('data-schema', 'product');
         document.head.appendChild(schemaScript);
       }
       schemaScript.textContent = JSON.stringify(schemaData);
+
+      // FAQ Schema - pre AEO (Answer Engine Optimization)
+      if (dom.faq_schema_data && dom.faq_schema_data.faqs && dom.faq_schema_data.faqs.length > 0) {
+        const faqSchema = {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": dom.faq_schema_data.faqs.map(item => ({
+            "@type": "Question",
+            "name": item.otazka,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": item.odpoved
+            }
+          }))
+        };
+
+        let faqScript = document.querySelector('script[type="application/ld+json"][data-schema="faq"]');
+        if (!faqScript) {
+          faqScript = document.createElement('script');
+          faqScript.type = 'application/ld+json';
+          faqScript.setAttribute('data-schema', 'faq');
+          document.head.appendChild(faqScript);
+        }
+        faqScript.textContent = JSON.stringify(faqSchema);
+      }
 
       // Set initial calculatedPrice to base price
       setCalculatedPrice(dom.zakladna_cena || 0);
