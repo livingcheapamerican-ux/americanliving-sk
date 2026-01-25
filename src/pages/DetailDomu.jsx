@@ -338,30 +338,9 @@ export default function DetailDomu() {
       }
       schemaScript.textContent = JSON.stringify(schemaData);
 
-      // FAQ Schema - pre AEO (Answer Engine Optimization)
-      if (dom.faq_schema_data && dom.faq_schema_data.faqs && dom.faq_schema_data.faqs.length > 0) {
-        const faqSchema = {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          "mainEntity": dom.faq_schema_data.faqs.map(item => ({
-            "@type": "Question",
-            "name": item.otazka,
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": item.odpoved
-            }
-          }))
-        };
-
-        let faqScript = document.querySelector('script[type="application/ld+json"][data-schema="faq"]');
-        if (!faqScript) {
-          faqScript = document.createElement('script');
-          faqScript.type = 'application/ld+json';
-          faqScript.setAttribute('data-schema', 'faq');
-          document.head.appendChild(faqScript);
-        }
-        faqScript.textContent = JSON.stringify(faqSchema);
-      }
+      // Cleanup old FAQ script if exists
+      const oldFaqScript = document.querySelector('script[type="application/ld+json"][data-schema="faq"]');
+      if (oldFaqScript) oldFaqScript.remove();
 
       // Set initial calculatedPrice to base price
       setCalculatedPrice(dom.zakladna_cena || 0);
