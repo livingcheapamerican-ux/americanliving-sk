@@ -235,7 +235,7 @@ export default function KonfiguratorContactModal({
       </Dialog>
 
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="w-[95vw] max-w-4xl h-[95vh] max-h-[95vh] overflow-hidden p-0 flex flex-col">
+        <DialogContent className="w-[95vw] max-w-4xl h-[95vh] max-h-[95vh] overflow-y-auto p-0 flex flex-col">
           {!submitted ? (
             <div className="flex flex-col md:flex-row h-full overflow-hidden">
             {/* Ľavá strana - Obrázok a súhrn */}
