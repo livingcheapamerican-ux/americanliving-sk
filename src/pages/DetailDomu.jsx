@@ -370,8 +370,12 @@ export default function DetailDomu() {
     return () => {
       const canonicalLink = document.querySelector('link[rel="canonical"]');
       if (canonicalLink) canonicalLink.remove();
-      const schemaScript = document.querySelector('script[type="application/ld+json"]');
-      if (schemaScript) schemaScript.remove();
+      const schemaScripts = document.querySelectorAll('script[type="application/ld+json"]');
+      schemaScripts.forEach(script => {
+        if (script.getAttribute('data-schema') === 'product' || script.getAttribute('data-schema') === 'faq') {
+          script.remove();
+        }
+      });
     };
   }, [dom, t]);
 
