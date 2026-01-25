@@ -572,18 +572,27 @@ export default function DetailDomu() {
   };
 
   // Prepare FAQ schema data
-  const faqSchemaData = dom?.faq_schema_data ? {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": dom.faq_schema_data.faqs?.map(item => ({
-      "@type": "Question",
-      "name": item.otazka,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": item.odpoved
-      }
-    })) || []
-  } : null;
+  const faqSchemaData = React.useMemo(() => {
+    if (!dom?.faq_schema_data?.faqs || dom.faq_schema_data.faqs.length === 0) return null;
+    return {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": dom.faq_schema_data.faqs.map(item => ({
+        "@type": "Question",
+        "name": item.otazka,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.odpoved
+        }
+      }))
+    };
+  }, [dom]);
+
+  // Debug logging
+  React.useEffect(() => {
+    console.log('DetailDomu - Dom loaded:', dom?.id);
+    console.log('DetailDomu - FAQ Schema Data:', faqSchemaData);
+  }, [dom, faqSchemaData]);
 
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden max-w-full">
