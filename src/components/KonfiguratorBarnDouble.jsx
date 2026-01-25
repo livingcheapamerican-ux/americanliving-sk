@@ -1,3 +1,21 @@
+/**
+ * ⚠️ KRITICKÉ UPOZORNENIE - BARN DOUBLE KONFIGURÁTOR ⚠️
+ * 
+ * Tento súbor je ŠPECIFICKY NASTAVENÝ pre model "Barn Double 72m²".
+ * 
+ * DÔLEŽITÉ:
+ * - Ceny sú načítané z entity Dom (konfigurator_custom_ceny_prosto_house)
+ * - Komponent KonfiguratorFaza1HrubaStavba MUSÍ dostať prop `customPrices`
+ * - Mapovanie cien: montaz → montaz_ano, izolacia → izolacia_*, zaklady → zaklady_*
+ * - Props pre Fázu 1: isAdmin, onPriceUpdate, showTooltips, customPrices, initialSelections, onSelectionChange
+ * 
+ * NEODSTRAŇUJTE prop `customPrices` z KonfiguratorFaza1HrubaStavba!
+ * NEPREPISUJTE logiku getPrice() a CENY objektu!
+ * NEPREPISUJTE mapovanie v initialSelections a onSelectionChange!
+ * 
+ * Ak potrebujete upraviť iné modely domov, vytvorte nový súbor - NIE TENTO SÚBOR!
+ */
+
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Button } from "@/components/ui/button";
@@ -302,6 +320,20 @@ export default function KonfiguratorBarnDouble({
     bocneOknoVyklopne90: getPrice('bocneOknoVyklopne90') ?? DEFAULT_CENY.bocneOknoVyklopne90,
     bocneOknoVyklopne55: getPrice('bocneOknoVyklopne55') ?? DEFAULT_CENY.bocneOknoVyklopne55
   };
+
+  const phase1CustomPrices = useMemo(() => ({
+    montaz_ano: CENY.montaz.ano,
+    izolacia_standardna: 0,
+    izolacia_standard: 0,
+    izolacia_zvysena: CENY.izolacia.zvysena,
+    izolacia_premium: CENY.izolacia.premium,
+    izolacia_ultra: CENY.izolacia.ultra,
+    izolacia_extra: CENY.izolacia.ultra,
+    zaklady_bez: 0,
+    zaklady_skrutky: CENY.zaklady.skrutky,
+    zaklady_doska: CENY.zaklady.doska,
+    zaklady_pasove: CENY.zaklady.pasove
+  }), [CENY]);
 
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
@@ -693,19 +725,26 @@ export default function KonfiguratorBarnDouble({
                   isAdmin={isAdmin}
                   onPriceUpdate={handlePriceChange}
                   showTooltips={true}
+                  customPrices={phase1CustomPrices}
+                  hideExtraInsulation={false}
                   initialSelections={{
                     montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: `izolacia_${izolaciaNavysenie}`,
-                    zaklady: `zaklady_${zaklady}`
+                    izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+                    zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
                   }}
                   onSelectionChange={(selections) => {
                     if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
                     if (selections.izolacia) {
-                      let val = selections.izolacia.replace('izolacia_', '');
-                      if (val === 'extra') val = 'ultra';
-                      setIzolaciaNavysenie(val);
+                      let izolaciaValue = selections.izolacia.replace('izolacia_', '');
+                      if (izolaciaValue === 'extra') izolaciaValue = 'ultra';
+                      if (izolaciaValue === 'standardna') izolaciaValue = 'standard';
+                      setIzolaciaNavysenie(izolaciaValue);
                     }
-                    if (selections.zaklady) setZaklady(selections.zaklady.replace('zaklady_', ''));
+                    if (selections.zaklady) {
+                      let zakladyValue = selections.zaklady.replace('zaklady_', '');
+                      if (zakladyValue === 'vruty') zakladyValue = 'skrutky';
+                      setZaklady(zakladyValue);
+                    }
                   }}
                 />
               </div>
