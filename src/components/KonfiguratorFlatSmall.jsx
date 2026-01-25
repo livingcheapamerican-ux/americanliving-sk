@@ -707,6 +707,15 @@ export default function KonfiguratorFlatSmall({
                     isAdmin={isAdmin}
                     onPriceUpdate={handlePriceChange}
                     showTooltips={true}
+                    customPrices={{
+                      montaz_ano: getPrice('montaz') ?? CENY.montaz.ano,
+                      izolacia_zvysena: CENY.izolacia.zvysena,
+                      izolacia_premium: CENY.izolacia.premium,
+                      izolacia_extra: CENY.izolacia.ultra,
+                      zaklady_skrutky: CENY.zaklady.skrutky,
+                      zaklady_doska: CENY.zaklady.doska,
+                      zaklady_pasove: CENY.zaklady.pasove
+                    }}
                     initialSelections={{
                       montaz: montazHolodomu === 'ano' ? 'montaz_ano' : montazHolodomu === 'nie' ? 'montaz_nie' : null,
                       izolacia: izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : izolaciaNavysenie === 'zvysena' ? 'izolacia_zvysena' : izolaciaNavysenie === 'premium' ? 'izolacia_premium' : izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : null,
