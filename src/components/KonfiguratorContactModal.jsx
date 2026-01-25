@@ -235,11 +235,11 @@ export default function KonfiguratorContactModal({
       </Dialog>
 
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="w-[95vw] max-w-4xl h-[95vh] max-h-[95vh] overflow-y-auto p-0 flex flex-col">
+        <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] overflow-hidden p-0 flex flex-col md:flex-row">
           {!submitted ? (
-            <div className="flex flex-col md:flex-row h-full overflow-hidden">
+            <>
             {/* Ľavá strana - Obrázok a súhrn */}
-            <div className="md:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-3 sm:p-4 text-white overflow-y-auto">
+            <div className="w-full md:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-3 text-white flex flex-col md:overflow-y-auto">
               <DialogHeader className="mb-2 flex-shrink-0">
                 <DialogTitle className="text-lg sm:text-xl font-bold text-white">
                   {t('yourConfiguration')}
@@ -360,15 +360,15 @@ export default function KonfiguratorContactModal({
             </div>
 
             {/* Pravá strana - Formulár */}
-            <div className="md:w-1/2 p-3 sm:p-4 overflow-y-auto flex flex-col">
-              <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2 flex-shrink-0">
+            <div className="w-full md:w-1/2 p-3 overflow-y-auto flex flex-col md:max-h-[95vh]">
+              <h3 className="text-base font-bold text-gray-800 mb-1 flex-shrink-0">
                 {t('contactDetails')}
               </h3>
-              <p className="text-gray-600 text-xs sm:text-sm mb-3 flex-shrink-0">
+              <p className="text-gray-500 text-xs mb-2 flex-shrink-0">
                 {t('fillFormWeContact')}
               </p>
 
-              <form onSubmit={handleSubmit} className="space-y-3 flex-1 overflow-y-auto">
+              <form onSubmit={handleSubmit} className="space-y-2 flex-1">
                 <div>
                   <Label htmlFor="meno" className="text-xs sm:text-sm">{t('fullName')} *</Label>
                   <Input
@@ -474,7 +474,7 @@ export default function KonfiguratorContactModal({
                 )}
               </form>
             </div>
-          </div>
+            </>
         ) : (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
