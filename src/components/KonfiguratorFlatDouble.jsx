@@ -1,3 +1,53 @@
+/**
+ * ⚠️⚠️⚠️ KRITICKÉ UPOZORNENIE - FLAT DOUBLE KONFIGURÁTOR ⚠️⚠️⚠️
+ * 
+ * ═══════════════════════════════════════════════════════════════
+ * TENTO SÚBOR JE VÝHRADNE PRE MODEL "FLAT DOUBLE 142m²" - NEMEŇTE HO!
+ * ═══════════════════════════════════════════════════════════════
+ * 
+ * ⛔ ABSOLÚTNE ZAKÁZANÉ OPERÁCIE:
+ * ────────────────────────────────────────────────────────────────
+ * ❌ NEODSTRAŇUJTE prop `customPrices` z KonfiguratorFaza1HrubaStavba
+ * ❌ NEPREPISUJTE funkciu getPrice() a objekt CENY
+ * ❌ NEPREPISUJTE mapovanie v initialSelections a onSelectionChange
+ * ❌ NEMEŇTE logiku phase1CustomPrices useMemo
+ * ❌ NEODSTRAŇUJTE mapovanie izolacia_extra/izolacia_300mm → ultra a vice versa
+ * ❌ NEMEŇTE hardcodovanú cenu 21750 pre ultra/extra izoláciu
+ * 
+ * ✅ POVINNÉ PROPS pre KonfiguratorFaza1HrubaStavba:
+ * ────────────────────────────────────────────────────────────────
+ * ✓ dom={dom}
+ * ✓ isAdmin={isAdmin}
+ * ✓ onPriceUpdate={handlePriceChange}
+ * ✓ showTooltips={true}
+ * ✓ customPrices={phase1CustomPrices}  ← KRITICKÉ!
+ * ✓ hideExtraInsulation={false}
+ * ✓ initialSelections={{...}}  ← musí mapovať ultra → extra
+ * ✓ onSelectionChange={(selections) => {...}}  ← musí mapovať extra → ultra
+ * 
+ * 📋 MAPOVANIE CIEN (NEMEŇTE!):
+ * ────────────────────────────────────────────────────────────────
+ * - montaz: montaz_ano / montaz_nie
+ * - izolacia: izolacia_standardna / izolacia_zvysena / izolacia_premium / izolacia_extra
+ * - zaklady: zaklady_bez / zaklady_skrutky / zaklady_doska / zaklady_pasove
+ * 
+ * 🔄 MAPOVANIE HODNÔT (NEMEŇTE!):
+ * ────────────────────────────────────────────────────────────────
+ * Parent state (ultra) ↔ Fáza 1 komponent (extra/300mm)
+ * Parent state (standard) ↔ Fáza 1 komponent (standardna)
+ * 
+ * 💰 HARDCODOVANÉ CENY PRE FLAT DOUBLE (NEMEŇTE!):
+ * ────────────────────────────────────────────────────────────────
+ * - CENY.izolacia.ultra = 21750 (FIX, nie getPrice!)
+ * - phase1CustomPrices.izolacia_extra = 21750
+ * - phase1CustomPrices.izolacia_ultra = 21750
+ * - phase1CustomPrices.izolacia_300mm = 21750
+ * 
+ * ═══════════════════════════════════════════════════════════════
+ * Posledná úprava: 2026-01-25 - Opravené NaN a ceny pre ultra/extra
+ * ═══════════════════════════════════════════════════════════════
+ */
+
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Link } from "react-router-dom";
@@ -38,12 +88,9 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       const rect = tileRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       const viewportWidth = window.innerWidth;
-      const tooltipHeight = 80; // approximate
+      const tooltipHeight = 80;
       
-      // Position tooltip closer to center of screen
       let top, left;
-      
-      // Vertical: prefer center, but stay near tile
       const centerY = viewportHeight / 2;
       if (rect.bottom < centerY) {
         top = rect.bottom + 10;
@@ -51,9 +98,7 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         top = Math.max(rect.top - tooltipHeight - 10, 60);
       }
       
-      // Horizontal: center of viewport
       left = viewportWidth / 2;
-      
       setTooltipPosition({ top, left });
     }
   };
@@ -62,7 +107,6 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
     const timer = setTimeout(() => {
       updateTooltipPosition();
       setShowTooltip(true);
-      // Auto-hide after 3 seconds on mobile
       setTimeout(() => setShowTooltip(false), 3000);
     }, 2000);
     setHoverTimer(timer);
@@ -73,7 +117,6 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
     setShowTooltip(false);
   };
 
-  // Update position on scroll
   React.useEffect(() => {
     if (showTooltip) {
       const handleScroll = () => updateTooltipPosition();
@@ -104,7 +147,6 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
         </Badge>
       )}
       
-      {/* Malá fajka v rohu */}
       <AnimatePresence>
         {selected && (
           <motion.div
@@ -125,7 +167,6 @@ const Tile = ({ selected, onClick, icon: Icon, iconColor, iconSelectedColor, tit
       <span className={`text-[8px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1 leading-tight`}>{subtitle}</span>
       <span className={`${isPriced ? "font-bold text-green-600" : "text-gray-400 font-medium"} text-[9px] sm:text-xs mt-1 sm:mt-2`}>{price}</span>
 
-      {/* Tooltip - rendered via portal */}
       {showTooltip && tooltip && ReactDOM.createPortal(
         <motion.div
           initial={{ opacity: 0, y: -5 }}
@@ -185,7 +226,6 @@ export default function KonfiguratorFlatDouble({
   showOnlyPhase = null,
   typStavby = ""
 }) {
-  // Základná cena - dynamická z objektu domu
   const BASE_PRICE = dom?.zakladna_cena || 59900;
 
   const { t, language } = useLanguage();
@@ -267,10 +307,11 @@ export default function KonfiguratorFlatDouble({
       plastove: getPrice('dvere_plastove') ?? DEFAULT_CENY.dvere.plastove 
     },
     izolacia: { 
-      standard: 0, 
+      standard: 0,
+      standardna: 0, 
       zvysena: getPrice('izolacia_zvysena') ?? DEFAULT_CENY.izolacia.zvysena, 
       premium: getPrice('izolacia_premium') ?? DEFAULT_CENY.izolacia.premium,
-      ultra: getPrice('izolacia_300mm') ?? DEFAULT_CENY.izolacia.ultra 
+      ultra: 21750
     },
     elektroinstalacia: getPrice('elektroinstalacia') ?? DEFAULT_CENY.elektroinstalacia,
     vodaKanalizacia: getPrice('vodaKanalizacia') ?? DEFAULT_CENY.vodaKanalizacia,
@@ -310,7 +351,23 @@ export default function KonfiguratorFlatDouble({
     bocneOknoVyklopne55: getPrice('bocneOknoVyklopne55') ?? DEFAULT_CENY.bocneOknoVyklopne55
   };
 
-  // Výpočet celkovej ceny
+  // Custom prices pre Fázu 1 komponent
+  const phase1CustomPrices = useMemo(() => ({
+    montaz_ano: CENY.montaz.ano,
+    montaz_nie: 0,
+    izolacia_standardna: 0,
+    izolacia_standard: 0,
+    izolacia_zvysena: CENY.izolacia.zvysena,
+    izolacia_premium: CENY.izolacia.premium,
+    izolacia_ultra: 21750,
+    izolacia_extra: 21750,
+    izolacia_300mm: 21750,
+    zaklady_bez: 0,
+    zaklady_skrutky: CENY.zaklady.skrutky,
+    zaklady_doska: CENY.zaklady.doska,
+    zaklady_pasove: CENY.zaklady.pasove
+  }), [CENY]);
+
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
 
@@ -353,14 +410,13 @@ export default function KonfiguratorFlatDouble({
       zaklady, pripojkaSiete, inziniering, projektA0, interierFinis,
       vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, podlahovVykurovanie,
       pergola, interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55]);
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE]);
 
-  // Kontrola A0 odporúčaní
   const a0Odporucania = useMemo(() => {
     if (!projektA0) return null;
     
     const chybajuce = [];
-    if (izolaciaNavysenie !== "premium") chybajuce.push("Premium izolácia (250mm steny, 300mm strecha)");
+    if (izolaciaNavysenie !== "premium" && izolaciaNavysenie !== "ultra") chybajuce.push("Premium alebo Ultra izolácia (250mm alebo 300mm)");
     if (!tepelneCerpadlo) chybajuce.push("Tepelné čerpadlo / Klimatizácia");
     if (!rekuperacia) chybajuce.push("Rekuperácia");
     
@@ -372,7 +428,6 @@ export default function KonfiguratorFlatDouble({
     return validPrice.toLocaleString('sk-SK') + " €";
   };
 
-  // Detekcia dosiahnutých úrovní
   const dosiahnuteUrovne = useMemo(() => {
     const hrubaStavba = montazHolodomu === "ano" || izolaciaNavysenie !== "standard" || zaklady !== "bez";
     const holodom = hrubaStavba && (elektroinstalacia || vodaKanalizacia || tepelneCerpadlo || rekuperacia);
@@ -382,18 +437,15 @@ export default function KonfiguratorFlatDouble({
   }, [montazHolodomu, izolaciaNavysenie, zaklady, elektroinstalacia, vodaKanalizacia, 
       tepelneCerpadlo, rekuperacia, interierFinis, vnutornePodlahy, vonkajsiaFasada]);
 
-  // Generovanie súhrnu všetkých položiek (vybrané aj nevybrané)
   const selectedItems = useMemo(() => {
     const items = [];
     
-    // Základná cena
     items.push({ name: t('basePriceKit'), price: BASE_PRICE, section: "base", selected: true });
     
     if (predajNehnutelnosti) items.push({ name: t('sellPreviousProperty'), price: 0, section: "services", selected: true });
     if (hladaniePozemku) items.push({ name: t('wantLandForHouse'), price: 0, section: "services", selected: true });
     if (financneSluzby) items.push({ name: t('financialServicesLoans'), price: 0, section: "services", selected: true });
     
-    // Hrubá stavba
     items.push({ name: t('shellAssembly'), price: montazHolodomu === "ano" ? CENY.montaz.ano : 0, section: "hruba", selected: montazHolodomu === "ano" });
     
     const izolaciaLabel = izolaciaNavysenie === "ultra" ? "Ultra 300mm" : izolaciaNavysenie === "premium" ? "250/300mm" : izolaciaNavysenie === "zvysena" ? "200/250mm" : "150/200mm";
@@ -404,7 +456,6 @@ export default function KonfiguratorFlatDouble({
     const zakladyPrice = zaklady === "pasove" ? CENY.zaklady.pasove : zaklady === "doska" ? CENY.zaklady.doska : zaklady === "skrutky" ? CENY.zaklady.skrutky : 0;
     items.push({ name: zakladyLabel, price: zakladyPrice, section: "hruba", selected: zaklady !== "bez" });
     
-    // Holodom
     const interierLabel = interierFinis === "drevo" ? t('interiorWood') : interierFinis === "sadrokarton" ? t('interiorDrywall') : t('interiorFinish');
     const interierPrice = interierFinis === "drevo" ? CENY.interierFinis.drevo : interierFinis === "sadrokarton" ? CENY.interierFinis.sadrokarton : 0;
     items.push({ name: interierLabel, price: interierPrice, section: "holodom", selected: interierFinis !== "ziadne" });
@@ -428,7 +479,6 @@ export default function KonfiguratorFlatDouble({
     items.push({ name: t('lamination') + " - " + t('laminationAnthracite'), price: povrchokaOkien ? CENY.povrchokaOkien : 0, section: "holodom", selected: povrchokaOkien });
     items.push({ name: t('tintedGlass') + " (Solar)", price: tonovaneSkla ? CENY.tonovaneSkla : 0, section: "holodom", selected: tonovaneSkla });
     
-    // Dom na kľúč
     const fasadaLabel = vonkajsiaFasada === "suchana" ? t('facadeStucco') : vonkajsiaFasada === "standard" ? t('facadeWoodMetal') : t('facade');
     const fasadaPrice = vonkajsiaFasada === "suchana" ? CENY.vonkajsiaFasada.suchana : 0;
     items.push({ name: fasadaLabel, price: fasadaPrice, section: "kluc", selected: !!vonkajsiaFasada });
@@ -438,7 +488,6 @@ export default function KonfiguratorFlatDouble({
     items.push({ name: `${t('interiorDoors')} (${interieroveDvere}×)`, price: interieroveDvere * CENY.interieroveDvere, section: "kluc", selected: interieroveDvere > 0 });
     if (pergola) items.push({ name: t('pergola'), price: CENY.pergola, section: "kluc", selected: true });
     
-    // Dokumentácia
     items.push({ name: t('engineeringFull'), price: inziniering ? CENY.inziniering : 0, section: "docs", selected: inziniering });
     items.push({ name: t('projectA0Full'), price: projektA0 ? CENY.projektA0 : 0, section: "docs", selected: projektA0 });
     items.push({ name: t('revisionFull'), price: revizna ? CENY.revizna : 0, section: "docs", selected: revizna });
@@ -450,15 +499,11 @@ export default function KonfiguratorFlatDouble({
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
-      interieroveDvere, inziniering, projektA0, revizna, doprava, t]);
+      interieroveDvere, pergola, inziniering, projektA0, revizna, doprava, t, BASE_PRICE]);
 
-  // Fixed panel reference
-  const dragRef = useRef(null);
-  const interierFinisRef = useRef(null);
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
 
-  // Poslať konfiguráciu do rodičovského komponentu
   useEffect(() => {
     if (onConfigChange) {
       onConfigChange({
@@ -473,7 +518,6 @@ export default function KonfiguratorFlatDouble({
     }
   }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady, onConfigChange]);
 
-  // Get width of Interiér finiš panel
   useEffect(() => {
     const updateWidth = () => {
       const interierPanel = document.getElementById('interier-finis-panel');
@@ -519,10 +563,10 @@ export default function KonfiguratorFlatDouble({
       setBocneOknoFixne(0);
       setBocneOknoVyklopne90(0);
       setBocneOknoVyklopne55(0);
+      setPergola?.(false);
     }
   };
 
-  // Sekcia Header komponenta bez animácií
   const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
     <div className={`relative flex items-center gap-2 sm:gap-4 p-3 sm:p-5 bg-gradient-to-r ${color}`}>
       <div className="relative flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 bg-white/90 rounded-xl sm:rounded-2xl shadow-lg flex-shrink-0">
@@ -539,166 +583,6 @@ export default function KonfiguratorFlatDouble({
       </div>
     </div>
   );
-
-  // Animovaný checkbox wrapper
-  const AnimatedOption = ({ children, isSelected, color = "blue" }) => (
-    <motion.div
-      whileHover={{ scale: 1.01, x: 4 }}
-      whileTap={{ scale: 0.99 }}
-      animate={{ 
-        backgroundColor: isSelected ? `rgba(var(--${color}-rgb), 0.05)` : "transparent",
-        borderColor: isSelected ? `rgba(var(--${color}-rgb), 0.5)` : "rgba(229, 231, 235, 1)"
-      }}
-      transition={{ duration: 0.2 }}
-    >
-      {children}
-    </motion.div>
-  );
-
-  // Handler pre animácie
-  const handleSelectionWithAnimation = (type, value, setter, element) => {
-    setter(value);
-    if (element) {
-      triggerAnimation(type, element.currentTarget || element);
-    }
-  };
-
-  // Ak zobrazujeme iba sumár (pre ľavý stĺpec)
-    if (showOnlySummary) {
-                return (
-                  <div>
-                    <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-100 via-white to-slate-50 ring-2 ring-green-500/30">
-            <div className="p-3 border-b-2 border-slate-300 bg-slate-50">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-green-900 text-xs font-bold uppercase tracking-wider mb-0.5">{t('yourConfiguration')}</p>
-                  <h3 className="text-base font-black text-gray-900">{dom?.nazov || 'Flat Double 142m²'}</h3>
-                </div>
-              </div>
-            </div>
-
-          {/* Contact Modal for summary view */}
-          <KonfiguratorContactModal
-            isOpen={showContactModal}
-            onClose={() => setShowContactModal(false)}
-            dom={dom}
-            totalPrice={totalPrice}
-            selectedItems={selectedItems}
-            vonkajsiaFasada={vonkajsiaFasada}
-            izolaciaNavysenie={izolaciaNavysenie}
-            tepelneCerpadlo={tepelneCerpadlo}
-            rekuperacia={rekuperacia}
-            projektA0={projektA0}
-          />
-
-            {/* Súhrn položiek - všetky položky */}
-            <div className="px-2 py-1 max-h-[65vh] overflow-y-auto">
-              {selectedItems.map((item, index) => {
-                const isBase = item.section === "base";
-                const prevItem = selectedItems[index - 1];
-                const showServicesDivider = item.section === "services" && (!prevItem || prevItem.section === "base");
-                const showHrubaDivider = item.section === "hruba" && (prevItem?.section !== "hruba" && prevItem?.section !== "services");
-                const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
-                const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
-                const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
-
-                return (
-                  <div key={index}>
-                    {showServicesDivider && (
-                      <div className="py-0.5">
-                        <div className="border-t border-cyan-400"></div>
-                        <div className="flex items-center gap-1 px-1">
-                          <Building2 className="w-3 h-3 text-cyan-800" />
-                          <span className="text-xs font-bold text-cyan-950 uppercase">{t('additionalServices')}</span>
-                        </div>
-                      </div>
-                    )}
-                    {showHrubaDivider && (
-                      <div className="py-0.5">
-                                <div className="border-t border-amber-400"></div>
-                                <div className="flex items-center gap-1 px-1">
-                                  <Package className="w-3 h-3 text-amber-800" />
-                                  <span className="text-xs font-bold text-amber-950 uppercase">{t('roughConstruction')}</span>
-                                </div>
-                              </div>
-                    )}
-                    {showHolodomDivider && (
-                      <div className="py-0.5">
-                                <div className="border-t border-blue-400"></div>
-                                <div className="flex items-center gap-1 px-1">
-                                  <Hammer className="w-3 h-3 text-blue-800" />
-                                  <span className="text-xs font-bold text-blue-950 uppercase">{t('holodomLabel')}</span>
-                                </div>
-                              </div>
-                    )}
-                    {showKlucDivider && (
-                      <div className="py-0.5">
-                                <div className="border-t border-emerald-400"></div>
-                                <div className="flex items-center gap-1 px-1">
-                                  <Key className="w-3 h-3 text-emerald-800" />
-                                  <span className="text-xs font-bold text-emerald-950 uppercase">{t('turnkeyLabel')}</span>
-                                </div>
-                              </div>
-                    )}
-                    {showDocsDivider && (
-                      <div className="py-0.5">
-                                <div className="border-t border-purple-400"></div>
-                                <div className="flex items-center gap-1 px-1">
-                                  <FileText className="w-3 h-3 text-purple-800" />
-                                  <span className="text-xs font-bold text-purple-950 uppercase">{t('documentationLabel')}</span>
-                                </div>
-                              </div>
-                    )}
-                    <div className={`flex justify-between items-center py-1 px-2 rounded ${isBase ? 'bg-blue-200 my-0.5' : item.selected ? 'bg-slate-50 hover:bg-slate-100' : ''}`}>
-                    <span className={`${isBase ? 'text-blue-950 font-extrabold text-base' : item.selected ? 'text-gray-800 font-bold text-sm' : 'text-red-600 line-through text-sm'} flex-1 pr-1 truncate`}>{item.name}</span>
-                    <span className={`${isBase ? 'text-blue-950 text-base' : item.selected ? 'text-green-700 text-sm' : 'text-red-600 text-sm'} font-extrabold whitespace-nowrap`}>
-                      {item.selected ? formatPrice(item.price) : '—'}
-                    </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Celková cena */}
-            <div className="p-3 bg-gradient-to-br from-green-100 to-emerald-100 border-t-2 border-green-300">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-gray-900 text-sm font-bold">{t('totalWithVATLabel')}</span>
-                <span className="text-2xl font-black text-green-900">
-                  {formatPrice(totalPrice)}
-                </span>
-              </div>
-              <div className="space-y-1.5">
-                  <Button 
-                    size="sm" 
-                    onClick={() => setShowContactModal(true)}
-                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg text-xs h-8"
-                  >
-                    <Send className="mr-1.5 w-3.5 h-3.5" />
-                    Pošli cenovú ponuku
-                  </Button>
-                <Button 
-                    size="sm" 
-                    variant="outline" 
-                    onClick={handleReset}
-                    className="w-full border-slate-200 text-slate-700 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all text-xs h-8"
-                  >
-                  <RotateCcw className="mr-1.5 w-3.5 h-3.5" />
-                  {t('reset')}
-                </Button>
-              </div>
-            </div>
-          </Card>
-          </div>
-          );
-          }
-
-  // Určenie, ktoré sekcie zobraziť
-  const showHruba = !showOnlyPhase || showOnlyPhase === "hruba";
-  const showHolodom = !showOnlyPhase || showOnlyPhase === "holodom";
-  const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
-  const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
-  const showFinale = !showOnlyPhase || showOnlyPhase === "finale";
 
   const handleSendQuoteFromFloating = async (contactData) => {
     try {
@@ -727,488 +611,19 @@ export default function KonfiguratorFlatDouble({
     }
   };
 
-  return (
-    <div className="mt-8 relative">
-      {!showOnlySummary && <FloatingPrice 
-        price={totalPrice} 
-        isVisible={true} 
-        onSendQuote={handleSendQuoteFromFloating}
-        dom={dom}
-        vyrobca="Prosto House"
-        buttonText="Pošli cenovú ponuku"
-      />}
-
+  if (showOnlySummary) {
+    return (
       <div>
-      <div className="space-y-6">
-
-{showHruba && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <Card className="overflow-hidden border-2 border-amber-300 shadow-lg">
-              <SectionHeader 
-                icon={Package} 
-                title={t('phase1')} 
-                subtitle={t('phase1Subtitle')}
-                color="from-amber-600 to-orange-600"
-                step="1"
-              />
-              <div className="p-3 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
-                <KonfiguratorFaza1HrubaStavba
-                  dom={dom}
-                  isAdmin={isAdmin}
-                  onPriceUpdate={handlePriceChange}
-                  showTooltips={true}
-                  initialSelections={{
-                    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                    izolacia: `izolacia_${izolaciaNavysenie === 'standard' ? 'standardna' : izolaciaNavysenie === 'zvysena' ? 'zvysena' : izolaciaNavysenie === 'premium' ? 'premium' : '300mm'}`,
-                    zaklady: `zaklady_${zaklady}`
-                  }}
-                  onSelectionChange={(selections) => {
-                    if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
-                    if (selections.izolacia) {
-                      const izolaciaValue = selections.izolacia.replace('izolacia_', '');
-                      setIzolaciaNavysenie(izolaciaValue === 'extra' || izolaciaValue === '300mm' ? 'ultra' : izolaciaValue === 'standardna' ? 'standard' : izolaciaValue);
-                    }
-                    if (selections.zaklady) {
-                      const zakladyValue = selections.zaklady.replace('zaklady_', '');
-                      setZaklady(zakladyValue === 'vruty' ? 'skrutky' : zakladyValue === 'bez' ? 'bez' : zakladyValue);
-                    }
-                  }}
-                  customPrices={{
-                    izolacia_300mm: CENY.izolacia.ultra
-                  }}
-                />
-              </div>
-            </Card>
-          </motion.div>
-        )}
-
-        {/* ═══════════════════════════════════════════════════════════════════════
-          FÁZA 2: HOLODOM (Montáž, Inštalácie, Okná/Dvere)
-          ═══════════════════════════════════════════════════════════════════════ */}
-        {showHolodom && <motion.div
-        ref={(el) => {
-        if (el && window.innerWidth < 768) {
-          setTimeout(() => {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 100);
-        }
-        }}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        >
-        <Card className="overflow-hidden border-2 border-blue-300 shadow-lg">
-        <SectionHeader 
-          icon={Hammer} 
-          title={t('phase2')} 
-          subtitle={t('phase2Subtitle')}
-          color="from-blue-600 to-indigo-600"
-          step="2"
-        />
-        <div className="p-3 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
-          {/* Dlaždice - Grid layout */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-
-            {/* Interiér finiš - skupina */}
-            <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-2 sm:gap-3 p-4 border-[5px] border-blue-600 rounded-2xl bg-blue-100/70 shadow-xl">
-              <p className="col-span-3 text-[10px] sm:text-xs font-bold text-blue-700 -mb-1 flex items-center gap-1">
-                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">1</span>
-                {t('interiorFinish')} ({t('selectOne')})
-              </p>
-              <EditableTile selected={interierFinis === "ziadne"} onClick={() => setInterierFinis("ziadne")} title={t('interiorNone')} subtitle={t('shellConstruction')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
-              <EditableTile selected={interierFinis === "drevo"} onClick={() => setInterierFinis("drevo")} title={t('interiorWood')} subtitle={t('woodCladding')} price={`+ 16400 €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interierFinis_drevo" onPriceChange={handlePriceChange} />
-              <EditableTile selected={interierFinis === "sadrokarton"} onClick={() => setInterierFinis("sadrokarton")} title={t('interiorDrywall')} subtitle={t('plaster')} price={`+ ${CENY.interierFinis.sadrokarton.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interierFinis_sadrokarton" onPriceChange={handlePriceChange} />
-            </div>
-
-            {/* Inštalácie - skupina */}
-            <div className="col-span-2 sm:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] border-yellow-500 rounded-2xl bg-yellow-100/70 shadow-xl">
-              <p className="col-span-2 text-[10px] sm:text-xs font-bold text-yellow-800 -mb-1 flex items-center gap-1">
-                <span className="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
-                {t('electrical')} & {t('water')}
-              </p>
-              <EditableTile selected={elektroinstalacia} onClick={() => setElektroinstalacia(!elektroinstalacia)} title={t('electrical')} subtitle={t('wiring')} price={`+ 7400 €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="elektroinstalacia" onPriceChange={handlePriceChange} />
-              <EditableTile selected={vodaKanalizacia} onClick={() => setVodaKanalizacia(!vodaKanalizacia)} title={t('water')} subtitle={t('wiring')} price={`+ 2380 €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vodaKanalizacia" onPriceChange={handlePriceChange} />
-              <EditableTile selected={sanitaKomplet} onClick={() => setSanitaKomplet(!sanitaKomplet)} title={t('sanitary')} subtitle={t('complete')} price={`+ ${CENY.sanitaKomplet.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="sanitaKomplet" onPriceChange={handlePriceChange} />
-              <EditableTile selected={bojler} onClick={() => setBojler(!bojler)} title={t('boiler')} subtitle={t('boilerElectric')} price={`+ ${CENY.bojler.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="bojler" onPriceChange={handlePriceChange} />
-              </div>
-
-              {/* Klimatizácia a vetranie - A0 skupina */}
-              <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] border-green-600 rounded-2xl bg-green-100/70 shadow-xl">
-                <p className="col-span-2 text-xs font-bold text-green-800 -mb-1 flex items-center gap-1">
-                  <span className="w-5 h-5 sm:w-6 sm:h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">3</span>
-                  {t('heatPump')} & {t('recuperation')} (A0)
-                </p>
-                <EditableTile selected={tepelneCerpadlo} onClick={() => setTepelneCerpadlo(!tepelneCerpadlo)} title={t('heatPump')} subtitle={t('units5')} price={`+ 2700 €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="tepelneCerpadlo" onPriceChange={handlePriceChange} />
-                <EditableTile selected={rekuperacia} onClick={() => setRekuperacia(!rekuperacia)} title={t('recuperation')} subtitle={t('units5')} price={`+ ${CENY.rekuperacia.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="rekuperacia" onPriceChange={handlePriceChange} />
-              </div>
-
-              <EditableTile selected={pripojkaSiete} onClick={() => setPripojkaSiete(!pripojkaSiete)} title={t('gridConnection')} subtitle={t('connection')} price={`+ ${CENY.pripojkaSiete.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="pripojkaSiete" onPriceChange={handlePriceChange} />
-              <EditableTile selected={povrchokaOkien} onClick={() => setPovrchokaOkien(!povrchokaOkien)} title={t('lamination')} subtitle={t('laminationAnthracite')} price={`+ 3100 €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="povrchokaOkien" onPriceChange={handlePriceChange} />
-              <EditableTile selected={tonovaneSkla} onClick={() => setTonovaneSkla(!tonovaneSkla)} title={t('tintedGlass')} subtitle={t('solarGlass')} price={`+ 1300 €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="tonovaneSkla" onPriceChange={handlePriceChange} />
-
-          </div>
-
-          {/* Sekcia s počtami - Dvere a Okná */}
-          <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
-            <p className="text-xs sm:text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
-              <DoorOpen className="w-4 h-4 text-blue-600" />
-              {t('entryDoor')}
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { value: "ziadne", label: t('doorStandard'), price: "0 €" },
-                { value: "kovove", label: t('doorMetal'), price: `+ ${CENY.dvere.kovove.toLocaleString('sk-SK')} €` },
-                { value: "plastove", label: t('doorPlastic'), price: `+ ${CENY.dvere.plastove.toLocaleString('sk-SK')} €` }
-              ].map((opt) => (
-                <motion.div
-                  key={opt.value}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setVstupneDvere(opt.value)}
-                  className={`p-2 sm:p-3 rounded-lg cursor-pointer text-center transition-all ${
-                    vstupneDvere === opt.value 
-                      ? "bg-blue-100 border-2 border-blue-500" 
-                      : "bg-gray-50 border-2 border-gray-200 hover:border-blue-300"
-                  }`}
-                >
-                  <span className="font-medium text-gray-800 text-xs sm:text-sm block">{opt.label}</span>
-                  <span className={`text-[10px] sm:text-xs ${opt.value === "ziadne" ? "text-gray-400" : "text-green-600 font-bold"}`}>{opt.price}</span>
-                </motion.div>
-              ))}
-            </div>
-
-            <p className="text-xs sm:text-sm font-bold text-gray-700 mt-4 mb-3 flex items-center gap-2">
-                <Square className="w-4 h-4 text-blue-600" />
-                {t('additionalWindows')}
-              </p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {[
-                  { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: `${CENY.stresneOkno.toLocaleString('sk-SK')} €` },
-                  { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: `${CENY.bocneOknoFixne.toLocaleString('sk-SK')} €` },
-                  { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: `${CENY.bocneOknoVyklopne90.toLocaleString('sk-SK')} €` },
-                  { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: `${CENY.bocneOknoVyklopne55.toLocaleString('sk-SK')} €` }
-                ].map((opt, idx) => (
-                <div key={idx} className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
-                  <span className="font-medium text-gray-800 text-[10px] sm:text-xs block mb-1">{opt.label}</span>
-                  <div className="flex items-center justify-center gap-1">
-                    <button 
-                      onClick={() => opt.setter(Math.max(0, opt.state - 1))}
-                      className="w-6 h-6 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm"
-                    >−</button>
-                    <span className="w-6 text-center font-bold text-sm">{opt.state}</span>
-                    <button 
-                      onClick={() => opt.setter(opt.state + 1)}
-                      className="w-6 h-6 rounded bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm"
-                    >+</button>
-                  </div>
-                  <span className="text-green-600 font-bold text-[10px] block mt-1 text-center">× {opt.price}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-        </div>
-        </Card>
-        </motion.div>}
-
-        {/* ═══════════════════════════════════════════════════════════════════════
-          FÁZA 3: DOM NA KĽÚČ (Interiér, Podlahy, Fasáda, Dokončenie)
-          ═══════════════════════════════════════════════════════════════════════ */}
-        {showKluc && <motion.div
-        ref={(el) => {
-        if (el && window.innerWidth < 768) {
-          setTimeout(() => {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 100);
-        }
-        }}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        >
-        <Card className="overflow-hidden border-2 border-emerald-300 shadow-lg">
-        <SectionHeader 
-          icon={Key} 
-          title={t('phase3')} 
-          subtitle={t('phase3Subtitle')}
-          color="from-emerald-600 to-teal-600"
-          step="3"
-        />
-        <div className="p-3 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
-          {/* Dlaždice - Grid layout */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-
-            {/* Fasáda - skupina */}
-            <div className={`col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] rounded-2xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
-              <p className={`col-span-2 text-[10px] sm:text-xs font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
-                <span className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
-                {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
-              </p>
-              <EditableTile selected={vonkajsiaFasada === "standard"} onClick={() => setVonkajsiaFasada("standard")} title={t('facadeWoodMetal')} subtitle={t('facadeStandard')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
-              <EditableTile selected={vonkajsiaFasada === "suchana"} onClick={() => setVonkajsiaFasada("suchana")} title={t('facadeStucco')} subtitle={t('whitePlaster')} price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vonkajsiaFasada_suchana" onPriceChange={handlePriceChange} />
-            </div>
-
-            <EditableTile selected={vnutornePodlahy} onClick={() => setVnutornePodlahy(!vnutornePodlahy)} title={t('floors')} subtitle={t('floorsLaminate')} price={`+ 3350 €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vnutornePodlahy" onPriceChange={handlePriceChange} />
-            <EditableTile selected={podlahovVykurovanie} onClick={() => setPodlahovVykurovanie(!podlahovVykurovanie)} title={t('floorHeating')} subtitle={t('wifiThermostat')} price={`+ ${CENY.podlahovVykurovanie.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="podlahovVykurovanie" onPriceChange={handlePriceChange} />
-            <EditableTile selected={pergola} onClick={() => setPergola(!pergola)} title={t('pergola')} subtitle={t('terrace')} price={`+ ${CENY.pergola.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="pergola" onPriceChange={handlePriceChange} />
-
-              </div>
-
-          {/* Interiérové dvere - počet */}
-          <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
+        <Card className="overflow-hidden border-0 shadow-2xl bg-gradient-to-br from-slate-100 via-white to-slate-50 ring-2 ring-green-500/30">
+          <div className="p-3 border-b-2 border-slate-300 bg-slate-50">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <DoorOpen className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-600" />
-                <div>
-                  <span className="font-semibold text-gray-800 text-xs sm:text-sm">{t('interiorDoors')}</span>
-                  <span className="text-green-600 font-bold text-xs ml-2">× {CENY.interieroveDvere.toLocaleString('sk-SK')} €</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <button 
-                  onClick={() => setInterieroveDvere(Math.max(0, interieroveDvere - 1))}
-                  className="w-8 h-8 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-lg"
-                >−</button>
-                <span className="w-8 text-center font-bold text-lg">{interieroveDvere}</span>
-                <button 
-                  onClick={() => setInterieroveDvere(interieroveDvere + 1)}
-                  className="w-8 h-8 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg"
-                >+</button>
+              <div>
+                <p className="text-green-900 text-xs font-bold uppercase tracking-wider mb-0.5">{t('yourConfiguration')}</p>
+                <h3 className="text-base font-black text-gray-900">{dom?.nazov || 'Flat Double 142m²'}</h3>
               </div>
             </div>
           </div>
 
-        </div>
-        </Card>
-        </motion.div>}
-
-        {/* ═══════════════════════════════════════════════════════════════════════
-          FÁZA 4: DOKUMENTÁCIA A DOPRAVA
-          ═══════════════════════════════════════════════════════════════════════ */}
-        {showDocs && <motion.div
-        ref={(el) => {
-        if (el && window.innerWidth < 768) {
-          setTimeout(() => {
-            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 100);
-        }
-        }}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-        >
-        <Card className="overflow-hidden border-2 border-purple-300 shadow-lg">
-        <SectionHeader 
-          icon={FileText} 
-          title={t('phase4')} 
-          subtitle={t('phase4Subtitle')}
-          color="from-purple-600 to-violet-600"
-          step="4"
-        />
-        <div className="p-3 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
-          {/* Dlaždice - Grid layout */}
-          <div className="grid grid-cols-2 gap-2 sm:gap-3 max-w-2xl">
-            
-            <EditableTile selected={inziniering} onClick={() => setInziniering(!inziniering)} title={t('engineering')} subtitle={t('buildingPermit')} price={`+ ${CENY.inziniering.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="inziniering" onPriceChange={handlePriceChange} />
-            <EditableTile selected={projektA0} onClick={() => setProjektA0(!projektA0)} title={t('projectA0')} subtitle={t('certification')} price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="projektA0" onPriceChange={handlePriceChange} />
-            <EditableTile selected={revizna} onClick={() => setRevizna(!revizna)} title={t('revision')} subtitle={t('documentation')} price={`+ ${CENY.revizna.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="revizna" onPriceChange={handlePriceChange} />
-            <EditableTile selected={doprava} onClick={() => setDoprava(!doprava)} title={t('transport')} subtitle={t('transportFull')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
-
-          </div>
-
-          {/* A0 Upozornenie */}
-          {a0Odporucania && (
-            <div className="mt-4 p-3 sm:p-4 bg-amber-50 border-2 border-amber-300 rounded-xl">
-              <div className="flex items-start gap-2 sm:gap-3">
-                <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-bold text-amber-800 mb-1 text-xs sm:text-sm">{t('a0Recommendations')}</p>
-                  <ul className="space-y-0.5">
-                    {a0Odporucania.map((item, index) => (
-                      <li key={index} className="text-amber-700 flex items-center gap-1 text-[10px] sm:text-xs">
-                        <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* A0 Splnené */}
-          {projektA0 && !a0Odporucania && (
-            <div className="mt-4 p-3 sm:p-4 bg-green-50 border-2 border-green-300 rounded-xl">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-                <p className="font-bold text-green-800 text-xs sm:text-sm">{t('configMeetsA0')}</p>
-              </div>
-            </div>
-          )}
-
-        </div>
-        </Card>
-        </motion.div>}
-
-        {/* ═══════════════════════════════════════════════════════════════════════
-          FINÁLNY CENOVÝ SÚHRN
-          ═══════════════════════════════════════════════════════════════════════ */}
-        {!showOnlyPhase && <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-        >
-        <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800">
-                  <div className="relative">
-                    {/* Dekoratívny gradient */}
-          <div className="absolute top-0 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-10 right-10 w-40 h-40 bg-green-400 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-10 left-10 w-32 h-32 bg-emerald-400 rounded-full blur-3xl"></div>
-          </div>
-
-          <div className="relative p-4 sm:p-8 md:p-10">
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-8">
-                <div className="flex-1">
-                  <p className="text-green-400 text-[10px] sm:text-sm font-semibold uppercase tracking-wider mb-1 sm:mb-2">{t('yourConfiguration')}</p>
-                  <h3 className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">{dom?.nazov || 'Flat Double 142m²'}</h3>
-                  <p className="text-slate-400 text-xs sm:text-base mb-4">{t('completeCalculation')}</p>
-                  {projektA0 && !a0Odporucania && (
-                    <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] sm:text-sm py-1 sm:py-1.5 px-2 sm:px-4 shadow-lg shadow-green-500/30">✓ {t('meetsA0')}</Badge>
-                  )}
-                
-                {/* Zoznam vybraných položiek */}
-                <div className="mt-4 sm:mt-6 bg-slate-800/50 rounded-xl p-3 sm:p-4 border border-slate-700/50 max-h-[300px] overflow-y-auto">
-                  <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">{t('selectedItems')}</p>
-                  <div className="space-y-1">
-                    {selectedItems.map((item, index) => {
-                      const isBase = item.section === "base";
-                      const prevItem = selectedItems[index - 1];
-                      const showServicesDivider = item.section === "services" && (!prevItem || prevItem.section === "base");
-                      const showHrubaDivider = item.section === "hruba" && (prevItem?.section !== "hruba" && prevItem?.section !== "services");
-                      const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
-                      const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
-                      const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
-                      
-                      return (
-                        <div key={index}>
-                          {showServicesDivider && (
-                            <div className="py-1.5">
-                              <div className="flex items-center gap-2">
-                                <Building2 className="w-3 h-3 text-cyan-400" />
-                                <span className="text-[10px] sm:text-xs font-bold text-cyan-400 uppercase tracking-wider">{t('additionalServices')}</span>
-                              </div>
-                            </div>
-                          )}
-                          {showHrubaDivider && dosiahnuteUrovne.hrubaStavba && (
-                            <div className="py-1.5">
-                              <div className="flex items-center gap-2">
-                                <Package className="w-3 h-3 text-amber-400" />
-                                <span className="text-[10px] sm:text-xs font-bold text-amber-400 uppercase tracking-wider">{t('roughConstruction')}</span>
-                              </div>
-                            </div>
-                          )}
-                          {showHolodomDivider && dosiahnuteUrovne.holodom && (
-                            <div className="py-1.5">
-                              <div className="flex items-center gap-2">
-                                <Hammer className="w-3 h-3 text-blue-400" />
-                                <span className="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-wider">{t('holodomLabel')}</span>
-                              </div>
-                            </div>
-                          )}
-                          {showKlucDivider && dosiahnuteUrovne.domNaKluc && (
-                            <div className="py-1.5">
-                              <div className="flex items-center gap-2">
-                                <Key className="w-3 h-3 text-emerald-400" />
-                                <span className="text-[10px] sm:text-xs font-bold text-emerald-400 uppercase tracking-wider">{t('turnkeyLabel')}</span>
-                              </div>
-                            </div>
-                          )}
-                          {showDocsDivider && (
-                            <div className="py-1.5">
-                              <div className="flex items-center gap-2">
-                                <FileText className="w-3 h-3 text-purple-400" />
-                                <span className="text-[10px] sm:text-xs font-bold text-purple-400 uppercase tracking-wider">{t('documentationLabel')}</span>
-                              </div>
-                            </div>
-                          )}
-                          <div className={`flex justify-between items-center py-1 px-2 rounded text-[11px] sm:text-sm ${isBase ? 'bg-blue-500/20 border border-blue-500/30' : item.selected ? 'hover:bg-slate-700/30' : 'opacity-50'}`}>
-                            <span className={`${isBase ? 'text-blue-300 font-semibold' : item.selected ? 'text-slate-300' : 'text-slate-500 line-through'} flex-1 pr-2`}>{item.name}</span>
-                            <span className={`${isBase ? 'text-blue-300' : item.selected ? 'text-green-400' : 'text-slate-500'} font-semibold whitespace-nowrap`}>
-                              {item.selected ? formatPrice(item.price) : 'NIE'}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-              <div className="text-right p-3 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl sm:rounded-2xl border border-green-500/20 lg:min-w-[280px]">
-                <p className="text-slate-400 mb-1 sm:mb-2 text-[10px] sm:text-sm">{t('totalWithVAT')}</p>
-                <p className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
-                  {formatPrice(totalPrice)}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6 sm:mt-10 pt-4 sm:pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <Button 
-                size="lg" 
-                onClick={() => setShowContactModal(true)}
-                className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
-              >
-                <Send className="mr-2 sm:mr-3 w-4 h-4 sm:w-6 sm:h-6" />
-                {t('showHouseAndSendQuote')}
-              </Button>
-            </div>
-
-          </div>
-        </div>
-        </Card>
-        </motion.div>}
-
-        {/* ═══════════════════════════════════════════════════════════════════════
-          FÁZA 5: FINÁLNE TLAČIDLO
-          ═══════════════════════════════════════════════════════════════════════ */}
-        {showFinale && <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-        >
-        <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500">
-          <div className="p-6 sm:p-8 text-center">
-            <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                <CheckCircle className="w-10 h-10 text-white" />
-              </div>
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3">{t('readyToStart')}</h3>
-            <p className="text-white/90 mb-6 text-sm sm:text-base">{t('finalPhaseDesc')}</p>
-            <Button 
-              size="lg" 
-              onClick={() => setShowContactModal(true)}
-              className="bg-white text-green-600 hover:bg-gray-100 font-bold text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-7 shadow-2xl transition-all hover:scale-105"
-            >
-              <Send className="mr-2 sm:mr-3 w-5 h-5 sm:w-6 sm:h-6" />
-              {t('showHouseAndSendQuote')}
-            </Button>
-          </div>
-        </Card>
-        </motion.div>}
-        </div>
-        </div>
-
-      {!showOnlySummary && (
-        <>
-          <FloatingPrice
-            price={totalPrice}
-            isVisible={true}
-            onSendQuote={handleSendQuoteFromFloating}
-            dom={dom}
-            vyrobca="Prosto House"
-            buttonText="Pošli cenovú ponuku"
-          />
           <KonfiguratorContactModal
             isOpen={showContactModal}
             onClose={() => setShowContactModal(false)}
@@ -1220,36 +635,614 @@ export default function KonfiguratorFlatDouble({
             tepelneCerpadlo={tepelneCerpadlo}
             rekuperacia={rekuperacia}
             projektA0={projektA0}
-            montazHolodomu={montazHolodomu}
-            zaklady={zaklady}
-            predlzenie={0}
-            vstupneDvere={vstupneDvere}
-            elektroinstalacia={elektroinstalacia}
-            vodaKanalizacia={vodaKanalizacia}
-            sanitaKomplet={sanitaKomplet}
-            bojler={bojler}
-            pripojkaSiete={pripojkaSiete}
-            stresneOkno={stresneOkno}
-            bocneOknoFixne={bocneOknoFixne}
-            bocneOknoVyklopne90={bocneOknoVyklopne90}
-            bocneOknoVyklopne55={bocneOknoVyklopne55}
-            povrchokaOkien={povrchokaOkien}
-            tonovaneSkla={tonovaneSkla}
-            interierFinis={interierFinis}
-            vnutornePodlahy={vnutornePodlahy}
-            podlahovVykurovanie={podlahovVykurovanie}
-            interieroveDvere={interieroveDvere}
-            pergola={pergola}
-            inziniering={inziniering}
-            revizna={revizna}
-            doprava={doprava}
-            predajNehnutelnosti={predajNehnutelnosti}
-            hladaniePozemku={hladaniePozemku}
-            financneSluzby={financneSluzby}
-            typStavby={typStavby}
           />
-        </>
-      )}
+
+          <div className="px-2 py-1 max-h-[65vh] overflow-y-auto">
+            {selectedItems.map((item, index) => {
+              const isBase = item.section === "base";
+              const prevItem = selectedItems[index - 1];
+              const showServicesDivider = item.section === "services" && (!prevItem || prevItem.section === "base");
+              const showHrubaDivider = item.section === "hruba" && (prevItem?.section !== "hruba" && prevItem?.section !== "services");
+              const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
+              const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
+              const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
+
+              return (
+                <React.Fragment key={index}>
+                  {showServicesDivider && (
+                    <div className="py-0.5">
+                      <div className="border-t border-cyan-400"></div>
+                      <div className="flex items-center gap-1 px-1">
+                        <Building2 className="w-3 h-3 text-cyan-800" />
+                        <span className="text-xs font-bold text-cyan-950 uppercase">{t('additionalServices')}</span>
+                      </div>
+                    </div>
+                  )}
+                  {showHrubaDivider && (
+                    <div className="py-0.5">
+                      <div className="border-t border-amber-400"></div>
+                      <div className="flex items-center gap-1 px-1">
+                        <Package className="w-3 h-3 text-amber-800" />
+                        <span className="text-xs font-bold text-amber-950 uppercase">{t('roughConstruction')}</span>
+                      </div>
+                    </div>
+                  )}
+                  {showHolodomDivider && (
+                    <div className="py-0.5">
+                      <div className="border-t border-blue-400"></div>
+                      <div className="flex items-center gap-1 px-1">
+                        <Hammer className="w-3 h-3 text-blue-800" />
+                        <span className="text-xs font-bold text-blue-950 uppercase">{t('holodomLabel')}</span>
+                      </div>
+                    </div>
+                  )}
+                  {showKlucDivider && (
+                    <div className="py-0.5">
+                      <div className="border-t border-emerald-400"></div>
+                      <div className="flex items-center gap-1 px-1">
+                        <Key className="w-3 h-3 text-emerald-800" />
+                        <span className="text-xs font-bold text-emerald-950 uppercase">{t('turnkeyLabel')}</span>
+                      </div>
+                    </div>
+                  )}
+                  {showDocsDivider && (
+                    <div className="py-0.5">
+                      <div className="border-t border-purple-400"></div>
+                      <div className="flex items-center gap-1 px-1">
+                        <FileText className="w-3 h-3 text-purple-800" />
+                        <span className="text-xs font-bold text-purple-950 uppercase">{t('documentationLabel')}</span>
+                      </div>
+                    </div>
+                  )}
+                  <div className={`flex justify-between items-center py-1 px-2 rounded ${isBase ? 'bg-blue-200 my-0.5' : item.selected ? 'bg-slate-50 hover:bg-slate-100' : ''}`}>
+                    <span className={`${isBase ? 'text-blue-950 font-extrabold text-base' : item.selected ? 'text-gray-800 font-bold text-sm' : 'text-red-600 line-through text-sm'} flex-1 pr-1 truncate`}>{item.name}</span>
+                    <span className={`${isBase ? 'text-blue-950 text-base' : item.selected ? 'text-green-700 text-sm' : 'text-red-600 text-sm'} font-extrabold whitespace-nowrap`}>
+                      {item.selected ? formatPrice(item.price) : '—'}
+                    </span>
+                  </div>
+                </React.Fragment>
+              );
+            })}
+          </div>
+
+          <div className="p-3 bg-gradient-to-br from-green-100 to-emerald-100 border-t-2 border-green-300">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-gray-900 text-sm font-bold">{t('totalWithVATLabel')}</span>
+              <span className="text-2xl font-black text-green-900">
+                {formatPrice(totalPrice)}
+              </span>
+            </div>
+            <div className="space-y-1.5">
+              <Button 
+                size="sm" 
+                onClick={() => setShowContactModal(true)}
+                className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold shadow-lg text-xs h-8"
+              >
+                <Send className="mr-1.5 w-3.5 h-3.5" />
+                Pošli cenovú ponuku
+              </Button>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={handleReset}
+                className="w-full border-slate-200 text-slate-700 hover:bg-red-50 hover:border-red-300 hover:text-red-600 transition-all text-xs h-8"
+              >
+                <RotateCcw className="mr-1.5 w-3.5 h-3.5" />
+                {t('reset')}
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  const showHruba = !showOnlyPhase || showOnlyPhase === "hruba";
+  const showHolodom = !showOnlyPhase || showOnlyPhase === "holodom";
+  const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
+  const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
+  const showFinale = !showOnlyPhase || showOnlyPhase === "finale";
+
+  return (
+    <div className="mt-8 relative">
+      <FloatingPrice 
+        price={totalPrice} 
+        isVisible={true} 
+        onSendQuote={handleSendQuoteFromFloating}
+        dom={dom}
+        vyrobca="Prosto House"
+        buttonText="Pošli cenovú ponuku"
+      />
+
+      <div>
+        <div className="space-y-6">
+
+          {showHruba && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+              <Card className="overflow-hidden border-2 border-amber-300 shadow-lg">
+                <SectionHeader 
+                  icon={Package} 
+                  title={t('phase1')} 
+                  subtitle={t('phase1Subtitle')}
+                  color="from-amber-600 to-orange-600"
+                  step="1"
+                />
+                <div className="p-3 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
+                  <KonfiguratorFaza1HrubaStavba
+                    dom={dom}
+                    isAdmin={isAdmin}
+                    onPriceUpdate={handlePriceChange}
+                    showTooltips={true}
+                    customPrices={phase1CustomPrices}
+                    hideExtraInsulation={false}
+                    initialSelections={{
+                      montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
+                      izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+                      zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
+                    }}
+                    onSelectionChange={(selections) => {
+                      if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
+                      if (selections.izolacia) {
+                        let izolaciaValue = selections.izolacia.replace('izolacia_', '');
+                        if (izolaciaValue === 'extra' || izolaciaValue === '300mm') izolaciaValue = 'ultra';
+                        if (izolaciaValue === 'standardna') izolaciaValue = 'standard';
+                        setIzolaciaNavysenie(izolaciaValue);
+                      }
+                      if (selections.zaklady) {
+                        let zakladyValue = selections.zaklady.replace('zaklady_', '');
+                        if (zakladyValue === 'vruty') zakladyValue = 'skrutky';
+                        setZaklady(zakladyValue);
+                      }
+                    }}
+                  />
+                </div>
+              </Card>
+            </motion.div>
+          )}
+
+          {showHolodom && <motion.div
+            ref={(el) => {
+              if (el && window.innerWidth < 768) {
+                setTimeout(() => {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+              }
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <Card className="overflow-hidden border-2 border-blue-300 shadow-lg">
+              <SectionHeader 
+                icon={Hammer} 
+                title={t('phase2')} 
+                subtitle={t('phase2Subtitle')}
+                color="from-blue-600 to-indigo-600"
+                step="2"
+              />
+              <div className="p-3 sm:p-6 bg-gradient-to-b from-blue-50/50 to-white">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+
+                  <div className="col-span-2 sm:col-span-3 grid grid-cols-3 gap-2 sm:gap-3 p-4 border-[5px] border-blue-600 rounded-2xl bg-blue-100/70 shadow-xl">
+                    <p className="col-span-3 text-[10px] sm:text-xs font-bold text-blue-700 -mb-1 flex items-center gap-1">
+                      <span className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">1</span>
+                      {t('interiorFinish')} ({t('selectOne')})
+                    </p>
+                    <EditableTile selected={interierFinis === "ziadne"} onClick={() => setInterierFinis("ziadne")} title={t('interiorNone')} subtitle={t('shellConstruction')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
+                    <EditableTile selected={interierFinis === "drevo"} onClick={() => setInterierFinis("drevo")} title={t('interiorWood')} subtitle={t('woodCladding')} price={`+ ${CENY.interierFinis.drevo.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interierFinis_drevo" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={interierFinis === "sadrokarton"} onClick={() => setInterierFinis("sadrokarton")} title={t('interiorDrywall')} subtitle={t('plaster')} price={`+ ${CENY.interierFinis.sadrokarton.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="interierFinis_sadrokarton" onPriceChange={handlePriceChange} />
+                  </div>
+
+                  <div className="col-span-2 sm:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] border-yellow-500 rounded-2xl bg-yellow-100/70 shadow-xl">
+                    <p className="col-span-2 text-[10px] sm:text-xs font-bold text-yellow-800 -mb-1 flex items-center gap-1">
+                      <span className="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">2</span>
+                      {t('electrical')} & {t('water')}
+                    </p>
+                    <EditableTile selected={elektroinstalacia} onClick={() => setElektroinstalacia(!elektroinstalacia)} title={t('electrical')} subtitle={t('wiring')} price={`+ ${CENY.elektroinstalacia.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="elektroinstalacia" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={vodaKanalizacia} onClick={() => setVodaKanalizacia(!vodaKanalizacia)} title={t('water')} subtitle={t('wiring')} price={`+ ${CENY.vodaKanalizacia.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vodaKanalizacia" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={sanitaKomplet} onClick={() => setSanitaKomplet(!sanitaKomplet)} title={t('sanitary')} subtitle={t('complete')} price={`+ ${CENY.sanitaKomplet.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="sanitaKomplet" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={bojler} onClick={() => setBojler(!bojler)} title={t('boiler')} subtitle={t('boilerElectric')} price={`+ ${CENY.bojler.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="bojler" onPriceChange={handlePriceChange} />
+                  </div>
+
+                  <div className="col-span-2 sm:col-span-2 lg:col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] border-green-600 rounded-2xl bg-green-100/70 shadow-xl">
+                    <p className="col-span-2 text-xs font-bold text-green-800 -mb-1 flex items-center gap-1">
+                      <span className="w-5 h-5 sm:w-6 sm:h-6 bg-green-600 text-white rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold">3</span>
+                      {t('heatPump')} & {t('recuperation')} (A0)
+                    </p>
+                    <EditableTile selected={tepelneCerpadlo} onClick={() => setTepelneCerpadlo(!tepelneCerpadlo)} title={t('heatPump')} subtitle={t('units5')} price={`+ ${CENY.tepelneCerpadlo.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="tepelneCerpadlo" onPriceChange={handlePriceChange} />
+                    <EditableTile selected={rekuperacia} onClick={() => setRekuperacia(!rekuperacia)} title={t('recuperation')} subtitle={t('units5')} price={`+ ${CENY.rekuperacia.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="rekuperacia" onPriceChange={handlePriceChange} />
+                  </div>
+
+                  <EditableTile selected={pripojkaSiete} onClick={() => setPripojkaSiete(!pripojkaSiete)} title={t('gridConnection')} subtitle={t('connection')} price={`+ ${CENY.pripojkaSiete.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="pripojkaSiete" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={povrchokaOkien} onClick={() => setPovrchokaOkien(!povrchokaOkien)} title={t('lamination')} subtitle={t('laminationAnthracite')} price={`+ ${CENY.povrchokaOkien.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="povrchokaOkien" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={tonovaneSkla} onClick={() => setTonovaneSkla(!tonovaneSkla)} title={t('tintedGlass')} subtitle={t('solarGlass')} price={`+ ${CENY.tonovaneSkla.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="tonovaneSkla" onPriceChange={handlePriceChange} />
+
+                </div>
+
+                <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
+                  <p className="text-xs sm:text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+                    <DoorOpen className="w-4 h-4 text-blue-600" />
+                    {t('entryDoor')}
+                  </p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { value: "ziadne", label: t('doorStandard'), price: "0 €" },
+                      { value: "kovove", label: t('doorMetal'), price: `+ ${CENY.dvere.kovove.toLocaleString('sk-SK')} €` },
+                      { value: "plastove", label: t('doorPlastic'), price: `+ ${CENY.dvere.plastove.toLocaleString('sk-SK')} €` }
+                    ].map((opt) => (
+                      <motion.div
+                        key={opt.value}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setVstupneDvere(opt.value)}
+                        className={`p-2 sm:p-3 rounded-lg cursor-pointer text-center transition-all ${
+                          vstupneDvere === opt.value 
+                            ? "bg-blue-100 border-2 border-blue-500" 
+                            : "bg-gray-50 border-2 border-gray-200 hover:border-blue-300"
+                        }`}
+                      >
+                        <span className="font-medium text-gray-800 text-xs sm:text-sm block">{opt.label}</span>
+                        <span className={`text-[10px] sm:text-xs ${opt.value === "ziadne" ? "text-gray-400" : "text-green-600 font-bold"}`}>{opt.price}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <p className="text-xs sm:text-sm font-bold text-gray-700 mt-4 mb-3 flex items-center gap-2">
+                    <Square className="w-4 h-4 text-blue-600" />
+                    {t('additionalWindows')}
+                  </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {[
+                      { state: stresneOkno, setter: setStresneOkno, label: t('roofWindow'), price: `${CENY.stresneOkno.toLocaleString('sk-SK')} €` },
+                      { state: bocneOknoFixne, setter: setBocneOknoFixne, label: `${t('fixedWindow')} 90×205`, price: `${CENY.bocneOknoFixne.toLocaleString('sk-SK')} €` },
+                      { state: bocneOknoVyklopne90, setter: setBocneOknoVyklopne90, label: `${t('tiltWindow')} 90×205`, price: `${CENY.bocneOknoVyklopne90.toLocaleString('sk-SK')} €` },
+                      { state: bocneOknoVyklopne55, setter: setBocneOknoVyklopne55, label: `${t('tiltWindow')} 55×90`, price: `${CENY.bocneOknoVyklopne55.toLocaleString('sk-SK')} €` }
+                    ].map((opt, idx) => (
+                      <div key={idx} className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${opt.state > 0 ? "bg-blue-50 border-blue-400" : "bg-gray-50 border-gray-200"}`}>
+                        <span className="font-medium text-gray-800 text-[10px] sm:text-xs block mb-1">{opt.label}</span>
+                        <div className="flex items-center justify-center gap-1">
+                          <button 
+                            onClick={() => opt.setter(Math.max(0, opt.state - 1))}
+                            className="w-6 h-6 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-sm"
+                          >−</button>
+                          <span className="w-6 text-center font-bold text-sm">{opt.state}</span>
+                          <button 
+                            onClick={() => opt.setter(opt.state + 1)}
+                            className="w-6 h-6 rounded bg-blue-500 hover:bg-blue-600 text-white font-bold text-sm"
+                          >+</button>
+                        </div>
+                        <span className="text-green-600 font-bold text-[10px] block mt-1 text-center">× {opt.price}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+            </Card>
+          </motion.div>}
+
+          {showKluc && <motion.div
+            ref={(el) => {
+              if (el && window.innerWidth < 768) {
+                setTimeout(() => {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+              }
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Card className="overflow-hidden border-2 border-emerald-300 shadow-lg">
+              <SectionHeader 
+                icon={Key} 
+                title={t('phase3')} 
+                subtitle={t('phase3Subtitle')}
+                color="from-emerald-600 to-teal-600"
+                step="3"
+              />
+              <div className="p-3 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+
+                  <div className={`col-span-2 grid grid-cols-2 gap-2 sm:gap-3 p-4 border-[5px] rounded-2xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
+                    <p className={`col-span-2 text-[10px] sm:text-xs font-bold -mb-1 flex items-center gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
+                      <span className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
+                      {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
+                    </p>
+                    <EditableTile selected={vonkajsiaFasada === "standard"} onClick={() => setVonkajsiaFasada("standard")} title={t('facadeWoodMetal')} subtitle={t('facadeStandard')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
+                    <EditableTile selected={vonkajsiaFasada === "suchana"} onClick={() => setVonkajsiaFasada("suchana")} title={t('facadeStucco')} subtitle={t('whitePlaster')} price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vonkajsiaFasada_suchana" onPriceChange={handlePriceChange} />
+                  </div>
+
+                  <EditableTile selected={vnutornePodlahy} onClick={() => setVnutornePodlahy(!vnutornePodlahy)} title={t('floors')} subtitle={t('floorsLaminate')} price={`+ ${CENY.vnutornePodlahy.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vnutornePodlahy" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={podlahovVykurovanie} onClick={() => setPodlahovVykurovanie(!podlahovVykurovanie)} title={t('floorHeating')} subtitle={t('wifiThermostat')} price={`+ ${CENY.podlahovVykurovanie.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="podlahovVykurovanie" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={pergola} onClick={() => setPergola(!pergola)} title={t('pergola')} subtitle={t('terrace')} price={`+ ${CENY.pergola.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="pergola" onPriceChange={handlePriceChange} />
+
+                </div>
+
+                <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <DoorOpen className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-600" />
+                      <div>
+                        <span className="font-semibold text-gray-800 text-xs sm:text-sm">{t('interiorDoors')}</span>
+                        <span className="text-green-600 font-bold text-xs ml-2">× {CENY.interieroveDvere.toLocaleString('sk-SK')} €</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={() => setInterieroveDvere(Math.max(0, interieroveDvere - 1))}
+                        className="w-8 h-8 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-lg"
+                      >−</button>
+                      <span className="w-8 text-center font-bold text-lg">{interieroveDvere}</span>
+                      <button 
+                        onClick={() => setInterieroveDvere(interieroveDvere + 1)}
+                        className="w-8 h-8 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg"
+                      >+</button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </Card>
+          </motion.div>}
+
+          {showDocs && <motion.div
+            ref={(el) => {
+              if (el && window.innerWidth < 768) {
+                setTimeout(() => {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+              }
+            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <Card className="overflow-hidden border-2 border-purple-300 shadow-lg">
+              <SectionHeader 
+                icon={FileText} 
+                title={t('phase4')} 
+                subtitle={t('phase4Subtitle')}
+                color="from-purple-600 to-violet-600"
+                step="4"
+              />
+              <div className="p-3 sm:p-6 bg-gradient-to-b from-purple-50/50 to-white">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3 max-w-2xl">
+                  
+                  <EditableTile selected={inziniering} onClick={() => setInziniering(!inziniering)} title={t('engineering')} subtitle={t('buildingPermit')} price={`+ ${CENY.inziniering.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="inziniering" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={projektA0} onClick={() => setProjektA0(!projektA0)} title={t('projectA0')} subtitle={t('certification')} price={`+ ${CENY.projektA0.toLocaleString('sk-SK')} €`} isPriced={true} isA0={true} t={t} isAdmin={isAdmin} priceKey="projektA0" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={revizna} onClick={() => setRevizna(!revizna)} title={t('revision')} subtitle={t('documentation')} price={`+ ${CENY.revizna.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="revizna" onPriceChange={handlePriceChange} />
+                  <EditableTile selected={doprava} onClick={() => setDoprava(!doprava)} title={t('transport')} subtitle={t('transportFull')} price="0 €" isPriced={false} isIncluded={true} t={t} isAdmin={false} />
+
+                </div>
+
+                {a0Odporucania && (
+                  <div className="mt-4 p-3 sm:p-4 bg-amber-50 border-2 border-amber-300 rounded-xl">
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-bold text-amber-800 mb-1 text-xs sm:text-sm">{t('a0Recommendations')}</p>
+                        <ul className="space-y-0.5">
+                          {a0Odporucania.map((item, index) => (
+                            <li key={index} className="text-amber-700 flex items-center gap-1 text-[10px] sm:text-xs">
+                              <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {projektA0 && !a0Odporucania && (
+                  <div className="mt-4 p-3 sm:p-4 bg-green-50 border-2 border-green-300 rounded-xl">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+                      <p className="font-bold text-green-800 text-xs sm:text-sm">{t('configMeetsA0')}</p>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            </Card>
+          </motion.div>}
+
+          {!showOnlyPhase && <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800">
+              <div className="relative">
+                <div className="absolute top-0 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
+                <div className="absolute inset-0 opacity-5">
+                  <div className="absolute top-10 right-10 w-40 h-40 bg-green-400 rounded-full blur-3xl"></div>
+                  <div className="absolute bottom-10 left-10 w-32 h-32 bg-emerald-400 rounded-full blur-3xl"></div>
+                </div>
+
+                <div className="relative p-4 sm:p-8 md:p-10">
+                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-8">
+                    <div className="flex-1">
+                      <p className="text-green-400 text-[10px] sm:text-sm font-semibold uppercase tracking-wider mb-1 sm:mb-2">{t('yourConfiguration')}</p>
+                      <h3 className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">{dom?.nazov || 'Flat Double 142m²'}</h3>
+                      <p className="text-slate-400 text-xs sm:text-base mb-4">{t('completeCalculation')}</p>
+                      {projektA0 && !a0Odporucania && (
+                        <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] sm:text-sm py-1 sm:py-1.5 px-2 sm:px-4 shadow-lg shadow-green-500/30">✓ {t('meetsA0')}</Badge>
+                      )}
+                    
+                      <div className="mt-4 sm:mt-6 bg-slate-800/50 rounded-xl p-3 sm:p-4 border border-slate-700/50 max-h-[300px] overflow-y-auto">
+                        <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">{t('selectedItems')}</p>
+                        <div className="space-y-1">
+                          {selectedItems.map((item, index) => {
+                            const isBase = item.section === "base";
+                            const prevItem = selectedItems[index - 1];
+                            const showServicesDivider = item.section === "services" && (!prevItem || prevItem.section === "base");
+                            const showHrubaDivider = item.section === "hruba" && (prevItem?.section !== "hruba" && prevItem?.section !== "services");
+                            const showHolodomDivider = item.section === "holodom" && prevItem?.section === "hruba";
+                            const showKlucDivider = item.section === "kluc" && prevItem?.section === "holodom";
+                            const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
+                            
+                            return (
+                              <React.Fragment key={index}>
+                                {showServicesDivider && (
+                                  <div className="py-1.5">
+                                    <div className="flex items-center gap-2">
+                                      <Building2 className="w-3 h-3 text-cyan-400" />
+                                      <span className="text-[10px] sm:text-xs font-bold text-cyan-400 uppercase tracking-wider">{t('additionalServices')}</span>
+                                    </div>
+                                  </div>
+                                )}
+                                {showHrubaDivider && dosiahnuteUrovne.hrubaStavba && (
+                                  <div className="py-1.5">
+                                    <div className="flex items-center gap-2">
+                                      <Package className="w-3 h-3 text-amber-400" />
+                                      <span className="text-[10px] sm:text-xs font-bold text-amber-400 uppercase tracking-wider">{t('roughConstruction')}</span>
+                                    </div>
+                                  </div>
+                                )}
+                                {showHolodomDivider && dosiahnuteUrovne.holodom && (
+                                  <div className="py-1.5">
+                                    <div className="flex items-center gap-2">
+                                      <Hammer className="w-3 h-3 text-blue-400" />
+                                      <span className="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-wider">{t('holodomLabel')}</span>
+                                    </div>
+                                  </div>
+                                )}
+                                {showKlucDivider && dosiahnuteUrovne.domNaKluc && (
+                                  <div className="py-1.5">
+                                    <div className="flex items-center gap-2">
+                                      <Key className="w-3 h-3 text-emerald-400" />
+                                      <span className="text-[10px] sm:text-xs font-bold text-emerald-400 uppercase tracking-wider">{t('turnkeyLabel')}</span>
+                                    </div>
+                                  </div>
+                                )}
+                                {showDocsDivider && (
+                                  <div className="py-1.5">
+                                    <div className="flex items-center gap-2">
+                                      <FileText className="w-3 h-3 text-purple-400" />
+                                      <span className="text-[10px] sm:text-xs font-bold text-purple-400 uppercase tracking-wider">{t('documentationLabel')}</span>
+                                    </div>
+                                  </div>
+                                )}
+                                <div className={`flex justify-between items-center py-1 px-2 rounded text-[11px] sm:text-sm ${isBase ? 'bg-blue-500/20 border border-blue-500/30' : item.selected ? 'hover:bg-slate-700/30' : 'opacity-50'}`}>
+                                  <span className={`${isBase ? 'text-blue-300 font-semibold' : item.selected ? 'text-slate-300' : 'text-slate-500 line-through'} flex-1 pr-2`}>{item.name}</span>
+                                  <span className={`${isBase ? 'text-blue-300' : item.selected ? 'text-green-400' : 'text-slate-500'} font-semibold whitespace-nowrap`}>
+                                    {item.selected ? formatPrice(item.price) : 'NIE'}
+                                  </span>
+                                </div>
+                              </React.Fragment>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right p-3 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl sm:rounded-2xl border border-green-500/20 lg:min-w-[280px]">
+                      <p className="text-slate-400 mb-1 sm:mb-2 text-[10px] sm:text-sm">{t('totalWithVAT')}</p>
+                      <p className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
+                        {formatPrice(totalPrice)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 sm:mt-10 pt-4 sm:pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                    <Button 
+                      size="lg" 
+                      onClick={() => setShowContactModal(true)}
+                      className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
+                    >
+                      <Send className="mr-2 sm:mr-3 w-4 h-4 sm:w-6 sm:h-6" />
+                      {t('interestedInConfig')}
+                    </Button>
+                  </div>
+
+                  <KonfiguratorContactModal
+                    isOpen={showContactModal}
+                    onClose={() => setShowContactModal(false)}
+                    dom={dom}
+                    totalPrice={totalPrice}
+                    selectedItems={selectedItems}
+                    vonkajsiaFasada={vonkajsiaFasada}
+                    izolaciaNavysenie={izolaciaNavysenie}
+                    tepelneCerpadlo={tepelneCerpadlo}
+                    rekuperacia={rekuperacia}
+                    projektA0={projektA0}
+                    typStavby="rodinny_dom"
+                  />
+                </div>
+              </div>
+            </Card>
+          </motion.div>}
+
+          {showFinale && <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500">
+              <div className="p-6 sm:p-8 text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-10 h-10 text-white" />
+                  </div>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3">{t('readyToStart')}</h3>
+                <p className="text-white/90 mb-6 text-sm sm:text-base">{t('finalPhaseDesc')}</p>
+                <Button 
+                  size="lg" 
+                  onClick={() => setShowContactModal(true)}
+                  className="bg-white text-green-600 hover:bg-gray-100 font-bold text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-7 shadow-2xl transition-all hover:scale-105"
+                >
+                  <Send className="mr-2 sm:mr-3 w-5 h-5 sm:w-6 sm:h-6" />
+                  {t('showHouseAndSendQuote')}
+                </Button>
+              </div>
+            </Card>
+          </motion.div>}
         </div>
-        );
-        }
+      </div>
+
+      {!showOnlySummary && (
+        <KonfiguratorContactModal
+          isOpen={showContactModal}
+          onClose={() => setShowContactModal(false)}
+          dom={dom}
+          totalPrice={totalPrice}
+          selectedItems={selectedItems}
+          vonkajsiaFasada={vonkajsiaFasada}
+          izolaciaNavysenie={izolaciaNavysenie}
+          tepelneCerpadlo={tepelneCerpadlo}
+          rekuperacia={rekuperacia}
+          projektA0={projektA0}
+          montazHolodomu={montazHolodomu}
+          zaklady={zaklady}
+          predlzenie={0}
+          vstupneDvere={vstupneDvere}
+          elektroinstalacia={elektroinstalacia}
+          vodaKanalizacia={vodaKanalizacia}
+          sanitaKomplet={sanitaKomplet}
+          bojler={bojler}
+          pripojkaSiete={pripojkaSiete}
+          stresneOkno={stresneOkno}
+          bocneOknoFixne={bocneOknoFixne}
+          bocneOknoVyklopne90={bocneOknoVyklopne90}
+          bocneOknoVyklopne55={bocneOknoVyklopne55}
+          povrchokaOkien={povrchokaOkien}
+          tonovaneSkla={tonovaneSkla}
+          interierFinis={interierFinis}
+          vnutornePodlahy={vnutornePodlahy}
+          podlahovVykurovanie={podlahovVykurovanie}
+          interieroveDvere={interieroveDvere}
+          pergola={pergola}
+          inziniering={inziniering}
+          revizna={revizna}
+          doprava={doprava}
+          predajNehnutelnosti={predajNehnutelnosti}
+          hladaniePozemku={hladaniePozemku}
+          financneSluzby={financneSluzby}
+          typStavby={typStavby}
+        />
+      )}
+    </div>
+  );
+}
