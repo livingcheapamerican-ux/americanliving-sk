@@ -235,11 +235,11 @@ export default function KonfiguratorContactModal({
       </Dialog>
 
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] overflow-hidden p-0 flex flex-col md:flex-row">
+        <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] p-0 flex flex-col md:flex-row overflow-hidden">
           {!submitted ? (
             <>
             {/* Ľavá strana - Obrázok a súhrn */}
-            <div className="w-full md:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-3 text-white flex flex-col md:overflow-y-auto">
+            <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-3 text-white flex-col overflow-y-auto">
               <DialogHeader className="mb-2 flex-shrink-0">
                 <DialogTitle className="text-lg sm:text-xl font-bold text-white">
                   {t('yourConfiguration')}
@@ -360,7 +360,7 @@ export default function KonfiguratorContactModal({
             </div>
 
             {/* Pravá strana - Formulár */}
-            <div className="w-full md:w-1/2 p-3 overflow-y-auto flex flex-col md:max-h-[95vh]">
+            <div className="w-full md:w-1/2 p-3 overflow-y-auto flex flex-col max-h-[95vh]">
               <h3 className="text-base font-bold text-gray-800 mb-1 flex-shrink-0">
                 {t('contactDetails')}
               </h3>
