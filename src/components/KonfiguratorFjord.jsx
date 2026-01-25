@@ -638,6 +638,19 @@ export default function KonfiguratorFjord({
     zaklady: zaklady === 'bez' ? 'zaklady_bez' : zaklady === 'skrutky' ? 'zaklady_skrutky' : `zaklady_${zaklady}`
   }), [montazHolodomu, izolaciaNavysenie, zaklady]);
 
+  const cennikFaza1 = useMemo(() => ({
+    montaz: CENY.montaz.ano,
+    vstupne_dviere_kovove: CENY.dvere.kovove,
+    vstupne_dviere_plastkovo_kovove: CENY.dvere.plastove,
+    zaklady_skrutky: CENY.zaklady.skrutky,
+    zaklady_pasove: CENY.zaklady.pasove,
+    zaklady_doska: CENY.zaklady.doska,
+    fasada_smrekovec: 0,
+    fasada_termicky_upravene_drevo: 0,
+    fasada_kompozit: 0,
+    okna_hlinikove: 0
+  }), [CENY]);
+
   const handleSendQuoteFromFloating = async (contactData) => {
     try {
       const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
@@ -816,17 +829,19 @@ export default function KonfiguratorFjord({
               <div className="p-3 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
                 <KonfiguratorFaza1HrubaStavba
                   dom={dom}
-                  isAdmin={isAdmin}
-                  onPriceUpdate={handlePriceChange}
-                  showTooltips={true}
-                  initialSelections={initialSelectionsForFaza1}
-                  customPrices={customCeny}
-                  hideExtraInsulation={true}
-                  onSelectionChange={(selections) => {
-                    if (selections.montaz) setMontazHolodomu(selections.montaz === 'montaz_ano' ? 'ano' : 'nie');
-                    if (selections.izolacia) setIzolaciaNavysenie(selections.izolacia.replace('izolacia_', ''));
-                    if (selections.zaklady) setZaklady(selections.zaklady.replace('zaklady_', ''));
+                  konfig={{
+                    montaz: montazHolodomu === 'ano',
+                    vstupne_dvere: vstupneDvere,
+                    zaklady: zaklady,
+                    fasada: 'standard',
+                    okna: 'standard'
                   }}
+                  setKonfig={(newKonfig) => {
+                    if (newKonfig.montaz !== undefined) setMontazHolodomu(newKonfig.montaz ? 'ano' : 'nie');
+                    if (newKonfig.vstupne_dvere !== undefined) setVstupneDvere(newKonfig.vstupne_dvere);
+                    if (newKonfig.zaklady !== undefined) setZaklady(newKonfig.zaklady);
+                  }}
+                  cennikFaza1={cennikFaza1}
                 />
               </div>
             </Card>
