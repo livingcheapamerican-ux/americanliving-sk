@@ -20,9 +20,9 @@ Deno.serve(async (req) => {
       errors: []
     };
 
-    // Spracuj posledných 5 Dom (menšia dávka)
-    console.log('Processing last 5 Dom records...');
-    const domRecords = await base44.asServiceRole.entities.Dom.list('-updated_date', 5);
+    // Spracuj všetky Dom (limit 50)
+    console.log('Processing all Dom records (limit 50)...');
+    const domRecords = await base44.asServiceRole.entities.Dom.list('-updated_date', 50);
     let lastDomImages = {};
     
     for (const dom of domRecords) {
