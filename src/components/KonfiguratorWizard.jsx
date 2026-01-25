@@ -124,24 +124,20 @@ export default function KonfiguratorWizard({
     setCurrentStep(0);
   }, []);
 
-  // Sledovať predchádzajúci typ stavby a či už bolo nastavenie vykonané
+  // Sledovať predchádzajúci typ stavby
   const prevTypStavbyRef = React.useRef(typStavby);
-  const izolaciaWasSetRef = React.useRef(false);
 
   // Keď sa zmení typ stavby, nastaviť predvolené hodnoty - len raz
   React.useEffect(() => {
     if (typStavby && typStavby !== prevTypStavbyRef.current) {
-      const isFirstChange = !prevTypStavbyRef.current;
       prevTypStavbyRef.current = typStavby;
       
-      if (typStavby === "rodinny_dom" && !izolaciaWasSetRef.current) {
-        izolaciaWasSetRef.current = true;
+      if (typStavby === "rodinny_dom") {
         setIzolaciaNavysenie("premium");
         setTepelneCerpadlo(true);
         setRekuperacia(true);
         setProjektA0(true);
       } else if (typStavby === "rekreacna") {
-        izolaciaWasSetRef.current = false;
         setIzolaciaNavysenie("standard");
         setTepelneCerpadlo(false);
         setRekuperacia(false);
