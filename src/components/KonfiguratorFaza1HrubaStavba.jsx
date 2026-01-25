@@ -199,16 +199,28 @@ export default function KonfiguratorFaza1HrubaStavba({
   const prevInitialSelections = useRef(initialSelections);
   const prevCustomPrices = useRef(customPrices);
   const isInternalUpdate = useRef(false);
+  const mountedRef = useRef(false);
 
-  // Synchronizovať s externými zmenami (iba pri prvom mount alebo pri externej zmene)
+  // Synchronizovať s externými zmenami iba pri mount alebo skutočnej externej zmene
   useEffect(() => {
-    // Ak je to interná zmena (z onClick), ignoruj
-    if (isInternalUpdate.current) {
-      isInternalUpdate.current = false;
+    // Prvý mount - nastav initial values
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      if (initialSelections.izolacia) setIzolacia(initialSelections.izolacia);
+      if (initialSelections.montaz) setMontaz(initialSelections.montaz);
+      if (initialSelections.zaklady) setZaklady(initialSelections.zaklady);
+      prevInitialSelections.current = initialSelections;
       return;
     }
 
-    // Synchronizuj iba ak sa initialSelections zmenili zvonku (nie kvôli internej zmene)
+    // Ak je to interná zmena (z onClick), ignoruj
+    if (isInternalUpdate.current) {
+      isInternalUpdate.current = false;
+      prevInitialSelections.current = initialSelections;
+      return;
+    }
+
+    // Synchronizuj iba ak sa initialSelections skutočne zmenili zvonku
     if (JSON.stringify(prevInitialSelections.current) !== JSON.stringify(initialSelections)) {
       if (initialSelections.izolacia && initialSelections.izolacia !== izolacia) {
         setIzolacia(initialSelections.izolacia);
