@@ -601,7 +601,7 @@ export default function KonfiguratorFlatSmall({
               const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
 
               return (
-                <React.Fragment key={index}>
+                <div key={index}>
                   {showServicesDivider && (
                     <div className="py-0.5">
                       <div className="border-t border-cyan-400"></div>
@@ -653,7 +653,7 @@ export default function KonfiguratorFlatSmall({
                       {item.selected ? formatPrice(item.price) : '—'}
                     </span>
                   </div>
-                </React.Fragment>
+                </div>
               );
             })}
           </div>
@@ -702,6 +702,28 @@ export default function KonfiguratorFlatSmall({
   };
 
   const showTypSelector = !showOnlySummary && !showOnlyPhase;
+
+  // Memoized customPrices a initialSelections pre Phase 1
+  const phase1CustomPrices = useMemo(() => ({
+    montaz_ano: CENY.montaz.ano,
+    montaz_nie: 0,
+    izolacia_standardna: 0,
+    izolacia_standard: 0,
+    izolacia_zvysena: CENY.izolacia.zvysena,
+    izolacia_premium: CENY.izolacia.premium,
+    izolacia_extra: CENY.izolacia.ultra,
+    izolacia_ultra: CENY.izolacia.ultra,
+    zaklady_bez: 0,
+    zaklady_skrutky: CENY.zaklady.skrutky,
+    zaklady_doska: CENY.zaklady.doska,
+    zaklady_pasove: CENY.zaklady.pasove
+  }), [CENY]);
+
+  const phase1InitialSelections = useMemo(() => ({
+    montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
+    izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
+    zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
+  }), [montazHolodomu, izolaciaNavysenie, zaklady]);
 
   return (
     <div className="mt-8 relative">
@@ -873,27 +895,10 @@ export default function KonfiguratorFlatSmall({
                     isAdmin={isAdmin}
                     onPriceUpdate={handlePriceChange}
                     showTooltips={true}
-                    customPrices={{
-                      montaz_ano: CENY.montaz.ano,
-                      montaz_nie: 0,
-                      izolacia_standardna: 0,
-                      izolacia_standard: 0,
-                      izolacia_zvysena: CENY.izolacia.zvysena,
-                      izolacia_premium: CENY.izolacia.premium,
-                      izolacia_extra: CENY.izolacia.ultra,
-                      izolacia_ultra: CENY.izolacia.ultra,
-                      zaklady_bez: 0,
-                      zaklady_skrutky: CENY.zaklady.skrutky,
-                      zaklady_doska: CENY.zaklady.doska,
-                      zaklady_pasove: CENY.zaklady.pasove
-                    }}
-                    initialSelections={{
-                      montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
-                      izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
-                      zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
-                    }}
+                    customPrices={phase1CustomPrices}
+                    initialSelections={phase1InitialSelections}
+                    hideExtraInsulation={false}
                     onSelectionChange={(selections) => {
-                      // Kontrola či sa hodnota skutočne zmenila
                       if (selections.montaz) {
                         const newValue = selections.montaz === 'montaz_ano' ? 'ano' : 'nie';
                         if (montazHolodomu !== newValue) setMontazHolodomu(newValue);
@@ -1175,7 +1180,7 @@ export default function KonfiguratorFlatSmall({
                             const showDocsDivider = item.section === "docs" && prevItem?.section === "kluc";
                             
                             return (
-                              <React.Fragment key={index}>
+                              <div key={index}>
                                 {showServicesDivider && (
                                   <div className="py-1.5">
                                     <div className="flex items-center gap-2">
@@ -1222,7 +1227,7 @@ export default function KonfiguratorFlatSmall({
                                     {item.selected ? formatPrice(item.price) : 'NIE'}
                                   </span>
                                 </div>
-                              </React.Fragment>
+                              </div>
                             );
                           })}
                         </div>
