@@ -36,7 +36,8 @@ Deno.serve(async (req) => {
       // Spusti obidve funkcie paralelne pre všetky domy v dávke
       const batchPromises = batch.map(async (dom) => {
         try {
-          console.log(`  🏠 Processing: ${dom.data.nazov}`);
+          const domName = dom.data?.nazov || dom.nazov || 'Unknown';
+          console.log(`  🏠 Processing: ${domName}`);
 
           // Paralelne: FAQ + Images SEO
           const [aeoResult, imagesResult] = await Promise.all([
@@ -47,23 +48,23 @@ Deno.serve(async (req) => {
           if (aeoResult?.data?.success && imagesResult?.data?.success) {
             report.processed++;
             report.processed_houses.push({
-              dom_id: dom.id,
-              dom_name: dom.data.nazov,
+              dom_id: dom.id || dom.data?.id,
+              dom_name: domName,
               languages_generated: aeoResult.data.report.languagesGenerated.length,
               images_optimized: imagesResult.data.report.total_images_optimized,
               status: 'success'
             });
-            console.log(`    ✅ ${dom.data.nazov}: AEO + ${imagesResult.data.report.total_images_optimized} images optimized`);
+            console.log(`    ✅ ${domName}: AEO + ${imagesResult.data.report.total_images_optimized} images optimized`);
           } else {
             throw new Error('Function returned false success');
           }
         } catch (error) {
           report.failed++;
           report.errors.push({
-            dom_name: dom.data.nazov,
+            dom_name: domName,
             error: error.message
           });
-          console.error(`    ❌ ${dom.data.nazov}: ${error.message}`);
+          console.error(`    ❌ ${domName}: ${error.message}`);
         }
       });
 
