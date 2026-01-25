@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 export default function SessionRecorder() {
   const location = useLocation();
   const sessionIdRef = useRef(null);
+  const sessionInitializedRef = useRef(false);
   const sessionStartRef = useRef(null);
   const lastPageRef = useRef(null);
   const pageStartTimeRef = useRef(null);
@@ -91,13 +92,15 @@ export default function SessionRecorder() {
 
   // Initialize session ONCE per page load
   useEffect(() => {
-    // Skip if already has session ID or still loading user
-    if (sessionIdRef.current || userLoading) {
+    // Skip if already initialized, has session ID, or still loading user
+    if (sessionInitializedRef.current || sessionIdRef.current || userLoading) {
       if (userLoading) {
         console.log('⏸️ SessionRecorder: Čakám na načítanie user...');
       }
       return;
     }
+    
+    sessionInitializedRef.current = true;
     
     console.log('🚀 SessionRecorder: START - Inicializujem novú session', { 
       user: user?.email || 'anonymous',
@@ -403,7 +406,7 @@ export default function SessionRecorder() {
       document.removeEventListener('focus', handleFormFocus, true);
       document.removeEventListener('submit', handleFormSubmit, true);
     };
-  }, [location.pathname]);
+  }, [location.pathname, user]);
 
   // Save session data (throttled every 5 seconds)
   const scheduleSave = () => {
@@ -590,7 +593,7 @@ export default function SessionRecorder() {
 
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, []);
+    }, [user]);
 
   // Expose global tracking functions
   useEffect(() => {
