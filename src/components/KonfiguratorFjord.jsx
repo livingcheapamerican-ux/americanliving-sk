@@ -373,7 +373,7 @@ export default function KonfiguratorFjord({
       let total = BASE_PRICE;
 
       total += CENY.montaz[montazHolodomu];
-      total += CENY.dvere[vstupneDviere];
+      total += CENY.dvere[vstupneDvere];
       // Handle izolacia - map old keys to new CENY keys
       if (izolaciaNavysenie === 'izolacia_extra') total += CENY.izolacia.extra;
       else if (izolaciaNavysenie === 'izolacia_300mm') total += CENY.izolacia["300mm"];
