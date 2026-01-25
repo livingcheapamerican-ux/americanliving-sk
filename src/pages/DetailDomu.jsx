@@ -373,6 +373,10 @@ export default function DetailDomu() {
   if (!dom) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Helmet>
+          <title>Dom nenájdený | American Living</title>
+          <meta name="robots" content="noindex, follow" />
+        </Helmet>
         <Card className="p-12 text-center max-w-md">
           <Home className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-700 mb-2">{t('noHousesFound')}</h2>
@@ -567,8 +571,29 @@ export default function DetailDomu() {
     setWizardKey(prev => prev + 1);
   };
 
+  // Prepare FAQ schema data
+  const faqSchemaData = dom?.faq_schema_data ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": dom.faq_schema_data.faqs?.map(item => ({
+      "@type": "Question",
+      "name": item.otazka,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.odpoved
+      }
+    })) || []
+  } : null;
+
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden max-w-full">
+      {faqSchemaData && (
+        <Helmet>
+          <script type="application/ld+json">
+            {JSON.stringify(faqSchemaData)}
+          </script>
+        </Helmet>
+      )}
       {/* Back Button */}
       <div className="bg-white border-b">
         <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between">
