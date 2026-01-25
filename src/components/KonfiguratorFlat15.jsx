@@ -505,7 +505,7 @@ export default function KonfiguratorFlat15({
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
-      interieroveDvere, pergola, inziniering, projektA0, revizna, doprava, t]);
+      interieroveDvere, pergola, inziniering, projektA0, revizna, doprava, t, BASE_PRICE, CENY]);
 
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);

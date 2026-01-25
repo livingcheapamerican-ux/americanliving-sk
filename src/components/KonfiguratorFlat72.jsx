@@ -484,7 +484,7 @@ export default function KonfiguratorFlat72({
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, pripojkaSiete, vstupneDvere,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, povrchokaOkien,
       tonovaneSkla, vonkajsiaFasada, interierFinis, vnutornePodlahy, podlahovVykurovanie,
-      interieroveDvere, inziniering, projektA0, revizna, doprava, t]);
+      interieroveDvere, inziniering, projektA0, revizna, doprava, t, BASE_PRICE, CENY]);
 
   // Fixed panel reference
   const dragRef = useRef(null);

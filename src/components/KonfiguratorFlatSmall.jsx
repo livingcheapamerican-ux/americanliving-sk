@@ -442,7 +442,7 @@ export default function KonfiguratorFlatSmall({
       sanitaKomplet, bojler, tepelneCerpadlo, rekuperacia, zaklady, pripojkaSiete, 
       inziniering, projektA0, interierFinis, vonkajsiaFasada, povrchokaOkien, vnutornePodlahy, 
       podlahovVykurovanie, interieroveDvere, tonovaneSkla, doprava, revizna,
-      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, BASE_PRICE, CENY, t]);
+      stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55, t, BASE_PRICE, CENY]);
 
   const [showContactModal, setShowContactModal] = useState(false);
 
