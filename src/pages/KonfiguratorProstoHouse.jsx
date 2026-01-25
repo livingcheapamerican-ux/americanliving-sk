@@ -71,6 +71,11 @@ export default function KonfiguratorProstoHouse() {
   const customCeny = dom?.konfigurator_custom_ceny_prosto_house || {};
 
   const DEFAULT_CENNIK = {
+    montaz_48: 4614,
+    montaz_72: 7524,
+    montaz_103: 12073,
+    montaz_108: 9664,
+    montaz_142: 12091,
     izolacie: 3200,
     elektroinst: 2400,
     vodoinst: 1800,
@@ -85,9 +90,15 @@ export default function KonfiguratorProstoHouse() {
   };
 
   const getPrice = (key) => {
-    if (customCeny && customCeny[key] !== undefined && customCeny[key] > 0) {
-      return customCeny[key];
+    // Skúsime rôzne varianty kľúčov v customCeny
+    const variants = [key, key.replace(/_/g, '')];
+    
+    for (const variant of variants) {
+      if (customCeny && customCeny[variant] !== undefined && customCeny[variant] > 0) {
+        return customCeny[variant];
+      }
     }
+    
     return DEFAULT_CENNIK[key] ?? 0;
   };
 
@@ -95,11 +106,17 @@ export default function KonfiguratorProstoHouse() {
     if (!dom?.zastavana_plocha) return 0;
     const plocha = dom.zastavana_plocha;
     
-    if (plocha <= 48) return getPrice('montaz_48') || 4614;
-    if (plocha <= 72) return getPrice('montaz_72') || 7524;
-    if (plocha <= 103) return getPrice('montaz_103') || 12073;
-    if (plocha <= 108) return getPrice('montaz_108') || 9664;
-    return getPrice('montaz_142') || 12091;
+    // Skúsime najprv priamy kľúč "montaz" v customCeny
+    if (customCeny && customCeny.montaz !== undefined && customCeny.montaz > 0) {
+      return customCeny.montaz;
+    }
+    
+    // Potom podľa plochy
+    if (plocha <= 48) return getPrice('montaz_48');
+    if (plocha <= 72) return getPrice('montaz_72');
+    if (plocha <= 103) return getPrice('montaz_103');
+    if (plocha <= 108) return getPrice('montaz_108');
+    return getPrice('montaz_142');
   };
 
   const getPriceNested = (category, subkey) => {

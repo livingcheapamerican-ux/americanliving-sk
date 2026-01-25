@@ -41,11 +41,15 @@ export default function KonfiguratorProstoHouseFaza1({
   customCeny = {}
 }) {
   const getPrice = (key) => {
-    // Priority 1: custom ceny
-    if (customCeny && customCeny[key] !== undefined && customCeny[key] > 0) {
-      return customCeny[key];
+    // Skúsime rôzne varianty kľúčov v customCeny
+    const variants = [key, key.replace(/_/g, '')];
+    
+    for (const variant of variants) {
+      if (customCeny && customCeny[variant] !== undefined && customCeny[variant] > 0) {
+        return customCeny[variant];
+      }
     }
-    // Priority 2: default cennik
+    
     return DEFAULT_CENNIK[key] ?? 0;
   };
 
@@ -53,9 +57,12 @@ export default function KonfiguratorProstoHouseFaza1({
   const getPriceNested = (category, subkey) => {
     const fullKey = `${category}_${subkey}`;
     
-    // Priority 1: flat key format
-    if (customCeny && customCeny[fullKey] !== undefined && customCeny[fullKey] > 0) {
-      return customCeny[fullKey];
+    // Priority 1: flat key format (s rôznymi variantmi)
+    const flatVariants = [fullKey, fullKey.replace(/_/g, '')];
+    for (const variant of flatVariants) {
+      if (customCeny && customCeny[variant] !== undefined && customCeny[variant] > 0) {
+        return customCeny[variant];
+      }
     }
     
     // Priority 2: nested object
@@ -73,6 +80,12 @@ export default function KonfiguratorProstoHouseFaza1({
     if (!dom?.zastavana_plocha) return 0;
     const plocha = dom.zastavana_plocha;
     
+    // Skúsime najprv priamy kľúč "montaz" v customCeny
+    if (customCeny && customCeny.montaz !== undefined && customCeny.montaz > 0) {
+      return customCeny.montaz;
+    }
+    
+    // Potom podľa plochy
     if (plocha <= 48) return getPrice('montaz_48') || DEFAULT_CENNIK.montaz[48];
     if (plocha <= 72) return getPrice('montaz_72') || DEFAULT_CENNIK.montaz[72];
     if (plocha <= 103) return getPrice('montaz_103') || DEFAULT_CENNIK.montaz[103];
