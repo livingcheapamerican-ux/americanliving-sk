@@ -19,15 +19,26 @@ Deno.serve(async (req) => {
     console.log('🔍 Hľadám sessions na analýzu...');
 
     // Nájdi ukončené sessions s frustráciou bez AI analýzy
-    const sessions = await base44.asServiceRole.entities.UserSession.filter({
-      is_active: false
-    });
+    const sessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 500);
+    
+    console.log(`📊 DEBUG: Typ sessions = ${typeof sessions}, isArray = ${Array.isArray(sessions)}, length = ${sessions?.length}`);
+
+    if (!Array.isArray(sessions)) {
+      console.error('❌ CHYBA: sessions nie je pole!', sessions);
+      return Response.json({ 
+        error: 'Database nevrátila pole',
+        received_type: typeof sessions,
+        success: false
+      }, { status: 500 });
+    }
 
     const toAnalyze = sessions.filter(s => 
-      (s.frustration_score || 0) > 0 && !s.ai_analysis
+      s.is_active === false && 
+      (s.frustration_score || 0) > 0 && 
+      !s.ai_analysis
     );
 
-    console.log(`📊 Našiel som ${toAnalyze.length} sessions na analýzu`);
+    console.log(`📊 Našiel som ${toAnalyze.length} sessions na analýzu (z celkových ${sessions.length})`);
 
     if (toAnalyze.length === 0) {
       return Response.json({ 
