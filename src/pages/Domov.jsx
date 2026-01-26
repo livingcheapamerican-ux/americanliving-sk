@@ -271,7 +271,7 @@ export default function Domov() {
               <img 
                 src={LOGO_URL} 
                 alt="American Living" 
-                className="h-40 sm:h-64 md:h-80 lg:h-96 w-auto drop-shadow-2xl rounded-full"
+                className="h-24 sm:h-64 md:h-80 lg:h-96 w-auto drop-shadow-2xl rounded-full"
                 style={{ mixBlendMode: 'multiply' }}
               />
             </div>
@@ -286,9 +286,9 @@ export default function Domov() {
             </p>
             <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-3">
               <Link to={createPageUrl("Katalog")}>
-                <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-white font-semibold text-xs sm:text-base px-3 sm:px-6 py-1.5 sm:py-3 w-full sm:w-auto shadow-xl">
-                  {t('showOffer')}
-                  <ArrowRight className="ml-1.5 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4" />
+                <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-white font-semibold text-sm sm:text-base px-4 sm:px-6 py-2.5 sm:py-3 w-full sm:w-auto shadow-xl">
+                  Zobraziť katalóg domov
+                  <ArrowRight className="ml-1.5 sm:ml-2 w-4 h-4 sm:w-4 sm:h-4" />
                 </Button>
               </Link>
               <Link to={createPageUrl("Kontakt")}>
