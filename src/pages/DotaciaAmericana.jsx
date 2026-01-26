@@ -106,24 +106,25 @@ export default function DotaciaAmericana() {
           </video>
           
           {/* Content Overlay */}
-          <div className="relative z-20 flex flex-col items-center justify-center h-full p-8 text-center">
+          <div className="relative z-20 flex flex-col items-center justify-center h-full p-4 sm:p-8 text-center">
             <motion.div
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-4 drop-shadow-2xl">
+              <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-white mb-2 sm:mb-4 drop-shadow-2xl leading-tight">
                 RODINA & ISTOTA
               </h2>
-              <p className="text-xl md:text-2xl text-white/90 mb-8 drop-shadow-lg">
+              <p className="text-sm sm:text-lg md:text-2xl text-white/90 mb-4 sm:mb-8 drop-shadow-lg px-2">
                 Dotácia na bývanie + Príspevok na energie
               </p>
               <Button
                 size="lg"
-                className="bg-white/95 hover:bg-white text-gray-900 font-bold px-8 py-6 text-lg rounded-full shadow-2xl backdrop-blur-sm"
+                className="bg-white/95 hover:bg-white text-gray-900 font-bold px-4 sm:px-8 py-3 sm:py-6 text-sm sm:text-lg rounded-full shadow-2xl backdrop-blur-sm"
                 onClick={(e) => { e.stopPropagation(); setModalType('rodina'); }}
               >
-                Chcem domov (Program Ambassador)
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <span className="hidden sm:inline">Chcem domov (Program Ambassador)</span>
+                <span className="sm:hidden">Chcem domov</span>
+                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </motion.div>
           </div>
@@ -152,24 +153,25 @@ export default function DotaciaAmericana() {
           </video>
 
           {/* Content Overlay */}
-          <div className="relative z-20 flex flex-col items-center justify-center h-full p-8 text-center">
+          <div className="relative z-20 flex flex-col items-center justify-center h-full p-4 sm:p-8 text-center">
             <motion.div
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-4 drop-shadow-2xl">
+              <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-white mb-2 sm:mb-4 drop-shadow-2xl leading-tight">
                 INVESTÍCIA & VÝNOS
               </h2>
-              <p className="text-xl md:text-2xl text-white/90 mb-8 drop-shadow-lg">
+              <p className="text-sm sm:text-lg md:text-2xl text-white/90 mb-4 sm:mb-8 drop-shadow-lg px-2">
                 Partnerská dotácia + Garantovaný marketing
               </p>
               <Button
                 size="lg"
-                className="bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-8 py-6 text-lg rounded-full shadow-2xl"
+                className="bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 sm:px-8 py-3 sm:py-6 text-sm sm:text-lg rounded-full shadow-2xl"
                 onClick={(e) => { e.stopPropagation(); setModalType('investor'); }}
               >
-                Chcem zarábať (Program Partner)
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <span className="hidden sm:inline">Chcem zarábať (Program Partner)</span>
+                <span className="sm:hidden">Chcem zarábať</span>
+                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </motion.div>
           </div>
@@ -180,9 +182,9 @@ export default function DotaciaAmericana() {
       <AnimatePresence>
         {modalType && (
           <Dialog open={!!modalType} onOpenChange={() => setModalType(null)}>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
               <DialogHeader>
-                <DialogTitle className="text-3xl font-black">
+                <DialogTitle className="text-xl sm:text-3xl font-black">
                   {modalType === 'rodina' ? '🏡 Program Ambassador' : '📈 Program Partner'}
                 </DialogTitle>
               </DialogHeader>
@@ -200,7 +202,7 @@ export default function DotaciaAmericana() {
                     />
                   </video>
                 </div>
-                <p className="mt-4 text-center text-lg font-semibold text-gray-700">
+                <p className="mt-4 text-center text-sm sm:text-lg font-semibold text-gray-700">
                   {modalType === 'rodina' 
                     ? '✅ Garancia: Zľava 5% + Odmena 150€ za každú tichú obhliadku.'
                     : '✅ Garancia: Zľava 5% + Zaradenie do mapy Testovacích centier.'
@@ -209,9 +211,9 @@ export default function DotaciaAmericana() {
               </div>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
                     Meno
                   </label>
                   <Input
@@ -220,13 +222,13 @@ export default function DotaciaAmericana() {
                     value={formData.meno}
                     onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
                     required
-                    className="text-lg p-4"
+                    className="text-sm sm:text-lg p-3 sm:p-4"
                   />
                 </div>
 
                 {modalType === 'rodina' && (
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
                       Lokalita pozemku
                     </label>
                     <Input
@@ -234,14 +236,14 @@ export default function DotaciaAmericana() {
                       placeholder="Bratislava - Rača"
                       value={formData.lokalita}
                       onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
-                      className="text-lg p-4"
+                      className="text-sm sm:text-lg p-3 sm:p-4"
                     />
                   </div>
                 )}
 
                 {modalType === 'investor' && (
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
                       Rozpočet
                     </label>
                     <Input
@@ -249,13 +251,13 @@ export default function DotaciaAmericana() {
                       placeholder="50 000 - 100 000 €"
                       value={formData.rozpocet}
                       onChange={(e) => setFormData({ ...formData, rozpocet: e.target.value })}
-                      className="text-lg p-4"
+                      className="text-sm sm:text-lg p-3 sm:p-4"
                     />
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
                     Email
                   </label>
                   <Input
@@ -264,12 +266,12 @@ export default function DotaciaAmericana() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
-                    className="text-lg p-4"
+                    className="text-sm sm:text-lg p-3 sm:p-4"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
                     Telefón
                   </label>
                   <Input
@@ -278,7 +280,7 @@ export default function DotaciaAmericana() {
                     value={formData.telefon}
                     onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
                     required
-                    className="text-lg p-4"
+                    className="text-sm sm:text-lg p-3 sm:p-4"
                   />
                 </div>
 
@@ -286,14 +288,14 @@ export default function DotaciaAmericana() {
                   type="submit"
                   size="lg"
                   disabled={isSubmitting}
-                  className={`w-full font-bold py-6 text-lg ${
+                  className={`w-full font-bold py-4 sm:py-6 text-base sm:text-lg ${
                     modalType === 'rodina'
                       ? 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600'
                       : 'bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black'
                   }`}
                 >
                   {isSubmitting ? "Odosielam..." : "Odoslať žiadosť"}
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
               </form>
             </DialogContent>
@@ -311,10 +313,10 @@ export default function DotaciaAmericana() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl sm:text-5xl font-black text-gray-900 mb-4">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-4">
               Dostupné Modely
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-base sm:text-xl text-gray-600">
               Všetky domy sú vhodné pre Program Ambassador aj Partner
             </p>
           </motion.div>
@@ -334,17 +336,17 @@ export default function DotaciaAmericana() {
                     alt={dom.nazov}
                     className="w-full h-64 object-cover"
                   />
-                  <div className="p-6">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{dom.nazov}</h3>
+                  <div className="p-4 sm:p-6">
+                    <h3 className="text-lg sm:text-2xl font-bold text-gray-900 mb-2">{dom.nazov}</h3>
                     <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-gray-400 line-through text-lg">
+                      <span className="text-gray-400 line-through text-sm sm:text-lg">
                         {dom.zakladna_cena?.toLocaleString()} €
                       </span>
-                      <span className="text-3xl font-black text-green-600">
+                      <span className="text-xl sm:text-3xl font-black text-green-600">
                         {Math.round(dom.zakladna_cena * 0.95).toLocaleString()} €
                       </span>
                     </div>
-                    <div className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold mb-4">
+                    <div className="inline-block bg-blue-100 text-blue-800 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-4">
                       ✅ Vhodné pre obidva programy
                     </div>
                     <Link to={createPageUrl(`DetailDomu?id=${dom.id}`)}>
@@ -376,7 +378,7 @@ export default function DotaciaAmericana() {
                   Program Ambassador
                 </span>
               </div>
-              <h2 className="text-4xl sm:text-5xl font-black text-gray-900 mb-6">
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-6">
                 Váš dom si na energie zarobí sám
               </h2>
             </motion.div>
@@ -443,7 +445,7 @@ export default function DotaciaAmericana() {
                   Program Partner
                 </span>
               </div>
-              <h2 className="text-4xl sm:text-5xl font-black mb-6">
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-black mb-6">
                 Nekupujte nehnuteľnosť. Kúpte si fungujúci biznis.
               </h2>
             </motion.div>
