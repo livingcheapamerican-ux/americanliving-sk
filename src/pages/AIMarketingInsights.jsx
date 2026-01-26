@@ -999,8 +999,8 @@ export default function AIMarketingInsights() {
           </Card>
         ) : (
           <div className="grid gap-6">
-            {insights.map((insight) => (
-              <Card key={insight.id} className="overflow-hidden bg-white/80 backdrop-blur shadow-lg hover:shadow-xl transition-all">
+            {insights.map((insight, insightIndex) => (
+              <Card key={`insight-${insight.id || insightIndex}`} className="overflow-hidden bg-white/80 backdrop-blur shadow-lg hover:shadow-xl transition-all">
                 {/* Header */}
                 <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 border-b">
                   <div className="flex items-start justify-between">
@@ -1356,23 +1356,23 @@ export default function AIMarketingInsights() {
                     {/* Kampane */}
                     <TabsContent value="kampane" className="space-y-4">
                       {/* Kreatívne varianty pre typy cieľovej skupiny */}
-                      {insight.behavioralna_segmentacia?.ai_predikcia_konverzie?.kreativne_varianty_pre_typy?.length > 0 && (
-                        <Card className="border-2 border-pink-200 bg-gradient-to-br from-pink-50 to-rose-50">
-                          <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                              <Sparkles className="w-5 h-5 text-pink-600" />
-                              🎨 Kreatívne varianty pre Facebook/Instagram podľa typu cieľovej skupiny
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent className="space-y-4">
-                            {insight.behavioralna_segmentacia.ai_predikcia_konverzie.kreativne_varianty_pre_typy.map((skupina, idx) => (
-                              <div key={idx} className="bg-white p-4 rounded-lg border-2 border-pink-300">
-                                <h4 className="font-bold text-lg mb-3 text-pink-900">
-                                  👥 {skupina.typ_skupiny}
-                                </h4>
-                                <div className="grid md:grid-cols-3 gap-3">
-                                  {skupina.varianty?.map((varianta, vIdx) => (
-                                    <Card key={vIdx} className="bg-gradient-to-br from-white to-pink-50">
+                        {insight.behavioralna_segmentacia?.ai_predikcia_konverzie?.kreativne_varianty_pre_typy?.length > 0 && (
+                          <Card className="border-2 border-pink-200 bg-gradient-to-br from-pink-50 to-rose-50">
+                            <CardHeader>
+                              <CardTitle className="flex items-center gap-2">
+                                <Sparkles className="w-5 h-5 text-pink-600" />
+                                🎨 Kreatívne varianty pre Facebook/Instagram podľa typu cieľovej skupiny
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                              {insight.behavioralna_segmentacia.ai_predikcia_konverzie.kreativne_varianty_pre_typy.map((skupina, idx) => (
+                                <div key={`skupina-${insight.id}-${idx}`} className="bg-white p-4 rounded-lg border-2 border-pink-300">
+                                  <h4 className="font-bold text-lg mb-3 text-pink-900">
+                                    👥 {skupina.typ_skupiny}
+                                  </h4>
+                                  <div className="grid md:grid-cols-3 gap-3">
+                                    {skupina.varianty?.map((varianta, vIdx) => (
+                                      <Card key={`varianta-${insight.id}-${idx}-${vIdx}`} className="bg-gradient-to-br from-white to-pink-50">
                                       <CardContent className="p-3">
                                         <Badge className="mb-2 bg-pink-600 text-white">
                                           Varianta {vIdx + 1}
@@ -1676,7 +1676,7 @@ export default function AIMarketingInsights() {
                           </CardHeader>
                           <CardContent className="space-y-3">
                             {insight.ab_testing_strategie.google_ads_texty_testy.map((test, idx) => (
-                              <Card key={idx} className="bg-white border-2 border-teal-200">
+                              <Card key={`google-ads-text-${insight.id}-${idx}`} className="bg-white border-2 border-teal-200">
                                 <CardContent className="p-4">
                                   <p className="font-bold text-base mb-2">{test.nazov}</p>
 
@@ -1720,7 +1720,7 @@ export default function AIMarketingInsights() {
                           </CardHeader>
                           <CardContent className="space-y-3">
                             {insight.ab_testing_strategie.google_ads_kreativy_testy.map((test, idx) => (
-                              <Card key={idx} className="bg-white border-2 border-emerald-200">
+                              <Card key={`google-ads-kreativ-${insight.id}-${idx}`} className="bg-white border-2 border-emerald-200">
                                 <CardContent className="p-4">
                                   <p className="font-bold text-base mb-2">{test.nazov}</p>
 
@@ -1847,7 +1847,7 @@ export default function AIMarketingInsights() {
                               </h4>
                               <div className="space-y-3">
                                 {insight.ab_testing_strategie.facebook_testy?.map((test, idx) => (
-                                  <Card key={idx} className="bg-white border-2 border-blue-200">
+                                  <Card key={`fb-test-${insight.id}-${idx}`} className="bg-white border-2 border-blue-200">
                                     <CardContent className="p-4">
                                       <p className="font-bold text-base mb-2">{test.nazov}</p>
 
@@ -1900,7 +1900,7 @@ export default function AIMarketingInsights() {
                               </h4>
                               <div className="space-y-3">
                                 {insight.ab_testing_strategie.google_ads_testy?.map((test, idx) => (
-                                  <Card key={idx} className="bg-white border-2 border-green-200">
+                                  <Card key={`ga-test-${insight.id}-${idx}`} className="bg-white border-2 border-green-200">
                                     <CardContent className="p-4">
                                       <p className="font-bold text-base mb-2">{test.nazov}</p>
 
@@ -2062,7 +2062,7 @@ export default function AIMarketingInsights() {
                                 <h4 className="font-semibold text-sm mb-2">🖼️ Reklamné obrázky</h4>
                                 <div className="space-y-2">
                                   {insight.kreativne_odporucania.reklamne_obrazky.map((obrazok, idx) => (
-                                    <div key={idx} className="bg-white p-3 rounded-lg">
+                                    <div key={`obrazok-${insight.id}-${idx}`} className="bg-white p-3 rounded-lg">
                                       <p className="font-semibold text-xs text-purple-600 mb-1">{obrazok.typ}</p>
                                       <p className="text-sm">{obrazok.popis}</p>
                                       <p className="text-xs text-gray-600 mt-1">💡 {obrazok.odporucany_obsah}</p>
@@ -2078,7 +2078,7 @@ export default function AIMarketingInsights() {
                                 <h4 className="font-semibold text-sm mb-2">✍️ Reklamné texty</h4>
                                 <div className="space-y-2">
                                   {insight.kreativne_odporucania.reklamne_texty.map((text, idx) => (
-                                    <div key={idx} className="bg-white p-3 rounded-lg">
+                                    <div key={`text-${insight.id}-${idx}`} className="bg-white p-3 rounded-lg">
                                       <Badge className="mb-2 text-xs">{text.platform}</Badge>
                                       <p className="font-bold text-sm mb-1">{text.nadpis}</p>
                                       <p className="text-sm text-gray-700 mb-2">{text.text}</p>
@@ -2097,7 +2097,7 @@ export default function AIMarketingInsights() {
                                 <h4 className="font-semibold text-sm mb-2">🎥 Video koncepty</h4>
                                 <div className="space-y-2">
                                   {insight.kreativne_odporucania.video_koncepty.map((koncept, idx) => (
-                                    <div key={idx} className="bg-white p-3 rounded-lg text-sm">
+                                    <div key={`video-${insight.id}-${idx}`} className="bg-white p-3 rounded-lg text-sm">
                                       {koncept}
                                     </div>
                                   ))}
@@ -2111,7 +2111,7 @@ export default function AIMarketingInsights() {
                                 <h4 className="font-semibold text-sm mb-2">⭐ Najúspešnejšie prvky</h4>
                                 <div className="flex flex-wrap gap-2">
                                   {insight.kreativne_odporucania.najuspesnejsie_prvky.map((prvok, idx) => (
-                                    <Badge key={idx} className="bg-yellow-100 text-yellow-800">
+                                    <Badge key={`prvok-${insight.id}-${idx}`} className="bg-yellow-100 text-yellow-800">
                                       {prvok}
                                     </Badge>
                                   ))}
