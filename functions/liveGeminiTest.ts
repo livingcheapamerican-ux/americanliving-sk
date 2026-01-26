@@ -17,9 +17,9 @@ Deno.serve(async (req) => {
     console.log("🚀 Inicializujem Gemini AI klienta...");
     
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
     
-    console.log("📤 Posielam testovací prompt do Gemini 1.5 Flash...");
+    console.log("📤 Posielam testovací prompt do Gemini Pro...");
     const prompt = "Ak toto čítaš a spojenie funguje, napíš mi krátku vtipnú vetu o stavbe domu.";
     
     const result = await model.generateContent(prompt);
@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
     return Response.json({
       status: 'success',
       message: 'Gemini API je funkčné a pripojenie funguje!',
-      model: 'gemini-1.5-flash',
+      model: 'gemini-pro',
       ai_response: text,
       timestamp: new Date().toISOString()
     });
