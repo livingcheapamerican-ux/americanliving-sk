@@ -373,7 +373,7 @@ export default function Domov() {
                   DOTÁCIA AMERICANA
                 </h2>
                 <p className="text-base sm:text-xl text-white/95 leading-relaxed font-medium drop-shadow-md">
-                  Využite špeciálny program dotácií pre váš rodinný dom. Pomôžeme vám získať finančnú podporu na ekologické a energeticky efektívne riešenia.
+                  Využite špeciálny program dotácií pre rodinný dom aj Airbnb apartmány. Získate finančnú podporu + reklamu ZDARMA, aby sme vám apartmán naplnili hosťami!
                 </p>
                 <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
                   <Link to={createPageUrl("Kontakt")}>
