@@ -936,46 +936,111 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
           </div>
 
           <div className="flex gap-2">
-            {/* Analytics Sync Button */}
+            {/* NOVÉ: Analyzovať UX Problémy */}
             <Button
-              onClick={() => syncAnalytics.mutate()}
-              disabled={syncAnalytics.isPending}
+              onClick={async () => {
+                toast.info('🕵️‍♂️ Analyzujem posledné nahrávky používateľov...');
+                try {
+                  const response = await base44.functions.invoke('processUserSessions');
+                  if (response.data.success) {
+                    toast.success(`✅ ${response.data.message}`, {
+                      description: `Úspešne: ${response.data.analyzed}, Zlyhalo: ${response.data.failed}`
+                    });
+                  }
+                } catch (error) {
+                  toast.error('Chyba pri analýze: ' + error.message);
+                }
+              }}
               variant="outline"
               size="lg"
-              className="flex items-center gap-2 bg-cyan-50 border-cyan-300 hover:bg-cyan-100"
+              className="flex items-center gap-2 bg-purple-50 border-purple-300 hover:bg-purple-100"
             >
-              {syncAnalytics.isPending ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-cyan-600"></div>
-                  Sťahujem dáta...
-                </>
-              ) : (
-                <>
-                  <RefreshCw className="w-5 h-5 text-cyan-600" />
-                  📊 Aktualizovať Analytics
-                </>
-              )}
+              <Brain className="w-5 h-5 text-purple-600" />
+              🕵️‍♂️ Analyzovať UX Problémy
             </Button>
 
-            {/* Manual Run Button */}
+            {/* NOVÉ: Generovať Stratégiu */}
             <Button
-              onClick={() => runDailyRoutine.mutate()}
-              disabled={runDailyRoutine.isPending}
+              onClick={async () => {
+                toast.info('🧠 Generujem stratégiu...');
+                try {
+                  const sessions = await base44.entities.UserSession.list('-created_date', 500);
+                  
+                  // Agregované štatistiky
+                  const stats = {
+                    total_sessions: sessions.length,
+                    total_rage_clicks: sessions.reduce((sum, s) => sum + (s.rage_clicks?.length || 0), 0),
+                    total_errors: sessions.reduce((sum, s) => sum + (s.console_errors?.length || 0), 0),
+                    total_conversions: sessions.filter(s => s.conversions?.length > 0).length,
+                    conversion_rate: sessions.length > 0 
+                      ? ((sessions.filter(s => s.conversions?.length > 0).length / sessions.length) * 100).toFixed(2)
+                      : 0,
+                    top_errors: (() => {
+                      const errorCounts = {};
+                      sessions.forEach(s => {
+                        s.console_errors?.forEach(err => {
+                          errorCounts[err.message] = (errorCounts[err.message] || 0) + 1;
+                        });
+                      });
+                      return Object.entries(errorCounts)
+                        .sort((a, b) => b[1] - a[1])
+                        .slice(0, 5)
+                        .map(([message, count]) => ({ message, count }));
+                    })(),
+                    problematic_pages: (() => {
+                      const pageFrustration = {};
+                      sessions.forEach(s => {
+                        s.pages_visited?.forEach(p => {
+                          if (!pageFrustration[p.page_url]) {
+                            pageFrustration[p.page_url] = { count: 0, frustration: 0 };
+                          }
+                          pageFrustration[p.page_url].count++;
+                          pageFrustration[p.page_url].frustration += (s.frustration_score || 0);
+                        });
+                      });
+                      return Object.entries(pageFrustration)
+                        .sort((a, b) => (b[1].frustration / b[1].count) - (a[1].frustration / a[1].count))
+                        .slice(0, 5)
+                        .map(([url]) => url);
+                    })()
+                  };
+
+                  const response = await base44.functions.invoke('AIService', {
+                    action: 'generateMarketingStrategy',
+                    data: { aggregatedStats: stats }
+                  });
+
+                  if (response.data.success) {
+                    const strategy = response.data.strategy;
+                    
+                    // Zobraz v dialógu
+                    const modalContent = `
+📊 ${strategy.overall_insight}
+
+ODPORÚČANÉ KROKY:
+
+${strategy.actions?.map((action, i) => `
+${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
+   ${action.description}
+   💡 Dopad: ${action.expected_impact}
+`).join('\n')}
+                    `;
+
+                    toast.success('Stratégia vygenerovaná!', {
+                      description: modalContent,
+                      duration: 15000
+                    });
+                  }
+                } catch (error) {
+                  toast.error('Chyba: ' + error.message);
+                }
+              }}
               variant="outline"
               size="lg"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-green-50 border-green-300 hover:bg-green-100"
             >
-              {runDailyRoutine.isPending ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-600"></div>
-                  Spúšťam...
-                </>
-              ) : (
-                <>
-                  <Rocket className="w-5 h-5" />
-                  ▶️ Spustiť teraz
-                </>
-              )}
+              <Lightbulb className="w-5 h-5 text-green-600" />
+              🧠 Generovať Stratégiu
             </Button>
 
             {/* Settings Button */}
