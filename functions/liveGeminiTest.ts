@@ -14,7 +14,7 @@ Deno.serve(async (req) => {
     console.log("✅ API kľúč načítaný úspešne");
     console.log("🚀 Volám Gemini API pomocou REST...");
     
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
     
     const body = {
       contents: [{
