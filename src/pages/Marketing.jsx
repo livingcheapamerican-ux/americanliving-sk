@@ -954,6 +954,7 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
               variant="outline"
               size="lg"
               className="flex items-center gap-2 bg-purple-50 border-purple-300 hover:bg-purple-100"
+              title="Spustí AI analýzu nahrávok, kde používatelia klikali zúrivo alebo narazili na chybu."
             >
               <Brain className="w-5 h-5 text-purple-600" />
               🕵️‍♂️ Analyzovať UX Problémy
@@ -961,6 +962,7 @@ Vráť JSON s "posts" array, "overall_reasoning" a "target_profile_used".`;
 
             {/* NOVÉ: Generovať Stratégiu */}
             <Button
+              title="Vytvorí textový návrh marketingových krokov na základe dát z webu."
               onClick={async () => {
                 toast.info('🧠 Generujem stratégiu...');
                 try {
@@ -1046,7 +1048,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
             {/* Settings Button */}
             <Dialog open={showSettings} onOpenChange={setShowSettings}>
             <DialogTrigger asChild>
-              <Button variant="outline" size="lg" className="flex items-center gap-2">
+              <Button variant="outline" size="lg" className="flex items-center gap-2" title="Nastavenia API kľúčov a diagnostika integrácií">
                 <Settings className="w-5 h-5" />
                 ⚙️ Nastavenia
               </Button>
@@ -1087,6 +1089,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                         onClick={saveApiKey}
                         disabled={savingApiKey || !apiKey.trim()}
                         className="w-full bg-indigo-600 hover:bg-indigo-700"
+                        title="Overí platnosť API kľúča volaním Gemini API a poskytne inštrukcie na uloženie"
                       >
                         {savingApiKey ? (
                           <>
@@ -1121,6 +1124,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                       onClick={testAPIConnection}
                       disabled={testingAPI}
                       className="w-full bg-purple-600 hover:bg-purple-700 mb-3"
+                      title="Otestuje spojenie s Gemini API a overí funkčnosť modelu"
                     >
                       {testingAPI ? (
                         <>
@@ -1185,6 +1189,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                       onClick={runDiagnostics}
                       disabled={loadingDiagnostics}
                       className="w-full bg-cyan-600 hover:bg-cyan-700 mb-3"
+                      title="Kompletný test všetkých API integrácií, OAuth pripojení a secrets"
                     >
                       {loadingDiagnostics ? (
                         <>
@@ -1465,6 +1470,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                   onClick={generateWeeklyAnalysis}
                   disabled={loadingAnalysis}
                   className="w-full bg-purple-600 hover:bg-purple-700 mb-4"
+                  title="AI vytvorí súhrn týždňa - trendy dom, bounce rate, odporúčania"
                 >
                   {loadingAnalysis ? (
                     <>
@@ -1502,6 +1508,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                   onClick={generateFacebookPost}
                   disabled={loadingFbPost}
                   className="w-full bg-blue-600 hover:bg-blue-700 mb-4"
+                  title="Vygeneruje text príspevku pre najpopulárnejší dom z posledných 7 dní"
                 >
                   {loadingFbPost ? (
                     <>
@@ -1528,6 +1535,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                       onClick={() => copyToClipboard(facebookPost)}
                       variant="outline"
                       className="w-full"
+                      title="Skopíruje text do schránky na priame použitie"
                     >
                       <Copy className="w-4 h-4 mr-2" />
                       Kopírovať do schránky
@@ -1638,6 +1646,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                       disabled={loadingCreative}
                       size="lg"
                       className="w-full bg-gradient-to-r from-yellow-400 to-pink-500 hover:from-yellow-500 hover:to-pink-600 text-gray-900 font-bold"
+                      title="AI premení váš nápad na kompletný produkčný plán s detailným scenárom"
                     >
                       {loadingCreative ? (
                         <>
@@ -1744,6 +1753,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                       onClick={saveDriveLink}
                       disabled={savingDriveLink}
                       className="w-full bg-cyan-600 hover:bg-cyan-700"
+                      title="Uloží Google Drive priečinok s fotkami a videami pre AI pripomienky"
                     >
                       {savingDriveLink ? 'Ukladám...' : 'Uložiť link'}
                     </Button>
@@ -1757,8 +1767,8 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                   </div>
                 </CardContent>
               </Card>
-              {/* Deep Think Strategist */}
-              <Card className="bg-gradient-to-br from-purple-900 to-indigo-900 text-white border-none shadow-2xl">
+              {/* Deep Think Strategist - SKRYTÉ (nefunkčné - funkcia vymazaná) */}
+              <Card className="bg-gradient-to-br from-purple-900 to-indigo-900 text-white border-none shadow-2xl" style={{ display: 'none' }}>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-2xl">
                     <Brain className="w-8 h-8" />
@@ -1864,7 +1874,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                         onChange={(e) => setNewKnowHow({...newKnowHow, urgency_level: parseInt(e.target.value)})}
                       />
                     </div>
-                    <Button onClick={saveKnowHow} className="w-full bg-green-600 hover:bg-green-700">
+                    <Button onClick={saveKnowHow} className="w-full bg-green-600 hover:bg-green-700" title="Uloží nové pravidlo, ktoré AI použije pri generovaní kampaní">
                       <Plus className="w-4 h-4 mr-2" />
                       Uložiť Know-How
                     </Button>
@@ -1920,6 +1930,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                       onClick={analyzeComments}
                       disabled={loadingComments}
                       className="w-full bg-orange-600 hover:bg-orange-700"
+                      title="AI analyzuje komentáre z kampane a automaticky aktualizuje know-how databázu"
                     >
                       {loadingComments ? (
                         <>
@@ -2019,6 +2030,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                       disabled={loadingCompetitors}
                       size="lg"
                       className="w-full bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 font-bold"
+                      title="AI automaticky nájde Top 15 slovenských konkurentov zoradených podle online sily"
                     >
                       {loadingCompetitors ? (
                         <>
@@ -2092,7 +2104,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                         onChange={(e) => setNewCompetitor({...newCompetitor, engagement_score: parseInt(e.target.value)})}
                       />
                     </div>
-                    <Button onClick={saveCompetitor} className="w-full bg-red-600 hover:bg-red-700">
+                    <Button onClick={saveCompetitor} className="w-full bg-red-600 hover:bg-red-700" title="Uloží úspešný príspevok konkurencie pre budúcu inšpiráciu">
                       <Plus className="w-4 h-4 mr-2" />
                       Uložiť konkurenčný príspevok
                     </Button>
@@ -2246,6 +2258,7 @@ ${i + 1}. ${action.title} [${action.priority.toUpperCase()}]
                     disabled={loadingWeeklyPlan}
                     size="lg"
                     className="w-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-gray-900 font-bold text-lg"
+                    title="AI vytvorí 7 príspevkov na základe vášho budgetu, behaviorálneho profilingu a know-how"
                   >
                     {loadingWeeklyPlan ? (
                       <>
