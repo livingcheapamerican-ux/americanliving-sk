@@ -197,7 +197,7 @@ export default function Domov() {
   ];
 
   return (
-    <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16">
+    <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20">
       <FloatingHouses side="left" />
       <FloatingHouses side="right" />
       {/* Admin Login Box - zobrazí sa len pre neprihlásených */}
@@ -248,7 +248,7 @@ export default function Domov() {
 
 
       {/* Hero Section */}
-      <section className="relative h-[55vh] sm:h-[75vh] min-h-[320px] sm:min-h-[450px] overflow-hidden bg-gradient-to-br from-red-900 via-red-800 to-red-700">
+      <section className="relative h-[55vh] sm:h-[75vh] min-h-[320px] sm:min-h-[450px] overflow-hidden bg-gradient-to-br from-red-900 via-red-800 to-red-700 pt-12 sm:pt-0">
         
         {heroImages.map((img, index) => (
           <div
