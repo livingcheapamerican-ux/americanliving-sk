@@ -236,6 +236,14 @@ export default function DotaciaAmericana() {
             />
           )}
           
+          {/* Edit Button */}
+          <button
+            onClick={(e) => { e.stopPropagation(); setShowPhotoManager('rodina'); }}
+            className="absolute top-4 right-4 z-30 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all"
+          >
+            <Edit className="w-5 h-5 text-emerald-600" />
+          </button>
+
           {/* Content Overlay */}
           <div className="relative z-20 flex flex-col items-center justify-center h-full p-4 sm:p-8 text-center">
             <motion.div
