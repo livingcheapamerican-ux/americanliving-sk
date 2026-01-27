@@ -249,29 +249,24 @@ export default function DotaciaAmericana() {
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="bg-white/90 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-emerald-500 shadow-2xl max-w-2xl"
+              className="bg-white/85 backdrop-blur-sm p-3 sm:p-4 rounded-xl border-2 border-emerald-500 shadow-xl max-w-md"
             >
-              {/* Video Container for HeyGen Avatar */}
-              <div id="video-ambassador" className="mb-4 sm:mb-6 aspect-video bg-gray-100 rounded-lg overflow-hidden border-2 border-emerald-200">
-                {/* HeyGen Blonde Female Avatar will be inserted here */}
-              </div>
-
-              <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-gray-900 mb-2 leading-tight">
                 Program AMBASSADOR
               </h2>
-              <p className="text-sm sm:text-base md:text-xl text-emerald-700 mb-2 sm:mb-3 font-sans font-bold">
+              <p className="text-xs sm:text-sm text-emerald-700 mb-1 sm:mb-2 font-sans font-bold">
                 Dotované bývanie pre rodiny
               </p>
-              <p className="text-xs sm:text-sm md:text-base text-gray-800 mb-4 sm:mb-6 font-sans max-w-md mx-auto leading-relaxed">
-                Získajte príspevok na výstavbu domu a dotáciu na energie výmenou za referenčnú spoluprácu. Bývajte vo vlastnom lacnejšie ako v nájme.
+              <p className="text-xs text-gray-700 mb-3 sm:mb-4 font-sans leading-relaxed">
+                Získajte príspevok na výstavbu domu a dotáciu na energie výmenou za referenčnú spoluprácu.
               </p>
               <Button
-                size="lg"
-                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-sans font-bold px-4 sm:px-8 py-3 sm:py-6 text-xs sm:text-base rounded-lg shadow-2xl"
+                size="sm"
+                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-sans font-bold px-4 py-2 text-xs rounded-lg shadow-xl w-full"
                 onClick={(e) => { e.stopPropagation(); setModalType('rodina'); }}
               >
                 Overiť nárok na dotáciu
-                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
+                <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </motion.div>
           </div>
@@ -325,29 +320,24 @@ export default function DotaciaAmericana() {
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="bg-black/60 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-yellow-400/50 max-w-2xl"
+              className="bg-black/70 backdrop-blur-sm p-3 sm:p-4 rounded-xl border-2 border-yellow-400/50 max-w-md"
             >
-              {/* Video Container for HeyGen Avatar */}
-              <div id="video-partner" className="mb-4 sm:mb-6 aspect-video bg-black/30 rounded-lg overflow-hidden">
-                {/* HeyGen Business Male Avatar will be inserted here */}
-              </div>
-
-              <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3 sm:mb-4 drop-shadow-2xl leading-tight">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-white mb-2 drop-shadow-xl leading-tight">
                 Program INVESTOR & PARTNER
               </h2>
-              <p className="text-sm sm:text-base md:text-xl text-white/95 mb-2 sm:mb-3 drop-shadow-lg font-sans font-medium">
+              <p className="text-xs sm:text-sm text-white/95 mb-1 sm:mb-2 drop-shadow-lg font-sans font-medium">
                 Investícia s garanciou správy
               </p>
-              <p className="text-xs sm:text-sm md:text-base text-white/85 mb-4 sm:mb-6 drop-shadow-lg font-sans max-w-md mx-auto">
-                Investujte do rekreačných domov. My zabezpečíme výstavbu, marketing a hostí. Vy vlastníte nehnuteľnosť a inkasujete výnos bez starostí.
+              <p className="text-xs text-white/85 mb-3 sm:mb-4 drop-shadow-lg font-sans leading-relaxed">
+                Investujte do rekreačných domov. My zabezpečíme výstavbu, marketing a hostí.
               </p>
               <Button
-                size="lg"
-                className="bg-yellow-400 hover:bg-yellow-300 text-black font-sans font-bold px-4 sm:px-8 py-3 sm:py-6 text-xs sm:text-base rounded-lg shadow-2xl"
+                size="sm"
+                className="bg-yellow-400 hover:bg-yellow-300 text-black font-sans font-bold px-4 py-2 text-xs rounded-lg shadow-xl w-full"
                 onClick={(e) => { e.stopPropagation(); setModalType('investor'); }}
               >
                 Žiadosť o investičný stimul
-                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
+                <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </motion.div>
           </div>
