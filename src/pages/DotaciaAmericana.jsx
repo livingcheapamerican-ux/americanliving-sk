@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CheckCircle, Euro, Home, Phone, ArrowRight, Gift, TrendingUp, Users, Play, Zap, Shield, Calendar, DollarSign, Star, Map, X, FileText, Edit, Upload, Trash2 } from "lucide-react";
+import { CheckCircle, Euro, Home, Phone, ArrowRight, Gift, TrendingUp, Users, Play, Zap, Shield, Calendar, DollarSign, Star, Map, X, FileText, Edit, Upload, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../components/LanguageContext";
 import { base44 } from "@/api/base44Client";
@@ -165,6 +165,24 @@ export default function DotaciaAmericana() {
     
     queryClient.invalidateQueries(['dotacia-hero-settings']);
     toast.success("Fotka vymazaná");
+  };
+
+  const handleMovePhoto = async (type, index, direction) => {
+    const currentPhotos = type === 'rodina' ? heroSettings.rodina_fotky : heroSettings.investor_fotky;
+    const newPhotos = [...currentPhotos];
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+
+    if (newIndex < 0 || newIndex >= newPhotos.length) return;
+
+    [newPhotos[index], newPhotos[newIndex]] = [newPhotos[newIndex], newPhotos[index]];
+
+    await base44.entities.DotaciaHeroSettings.update(heroSettings.id,
+      type === 'rodina' 
+        ? { rodina_fotky: newPhotos }
+        : { investor_fotky: newPhotos }
+    );
+    
+    queryClient.invalidateQueries(['dotacia-hero-settings']);
   };
 
   return (
@@ -381,19 +399,42 @@ export default function DotaciaAmericana() {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {(showPhotoManager === 'rodina' ? heroSettings.rodina_fotky : heroSettings.investor_fotky)?.map((url, index) => (
                     <div key={index} className="relative group">
+                      <div className="absolute top-2 left-2 z-10 bg-white/90 rounded px-2 py-1 text-xs font-bold">
+                        #{index + 1}
+                      </div>
                       <img
                         src={url}
                         alt={`Fotka ${index + 1}`}
                         className="w-full h-40 object-cover rounded-lg"
                       />
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={() => handleDeletePhoto(showPhotoManager, index)}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          className="h-8 w-8 p-0"
+                          onClick={() => handleMovePhoto(showPhotoManager, index, 'up')}
+                          disabled={index === 0}
+                        >
+                          <ChevronUp className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          className="h-8 w-8 p-0"
+                          onClick={() => handleMovePhoto(showPhotoManager, index, 'down')}
+                          disabled={index === (showPhotoManager === 'rodina' ? heroSettings.rodina_fotky : heroSettings.investor_fotky).length - 1}
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="h-8 w-8 p-0"
+                          onClick={() => handleDeletePhoto(showPhotoManager, index)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>
