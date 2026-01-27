@@ -171,15 +171,11 @@ export default function DotaciaAmericana() {
               />
             </AnimatePresence>
           ) : (
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
+            <img
+              src="https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1200&q=80"
+              alt="Šťastná rodina v novom dome"
               className="absolute inset-0 w-full h-full object-cover"
-            >
-              <source src="https://player.vimeo.com/external/371433846.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164" type="video/mp4" />
-            </video>
+            />
           )}
           
           {/* Content Overlay */}
@@ -187,20 +183,20 @@ export default function DotaciaAmericana() {
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="bg-white/15 backdrop-blur-md p-6 sm:p-8 rounded-2xl border-2 border-emerald-300/60 shadow-2xl"
+              className="bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-2xl border-4 border-emerald-500 shadow-2xl"
             >
               {/* Video Container for HeyGen Avatar */}
-              <div id="video-ambassador" className="mb-4 sm:mb-6 aspect-video bg-black/30 rounded-lg overflow-hidden">
+              <div id="video-ambassador" className="mb-4 sm:mb-6 aspect-video bg-gray-100 rounded-lg overflow-hidden border-2 border-emerald-200">
                 {/* HeyGen Blonde Female Avatar will be inserted here */}
               </div>
 
-              <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3 sm:mb-4 drop-shadow-2xl leading-tight">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
                 Program AMBASSADOR
               </h2>
-              <p className="text-sm sm:text-base md:text-xl text-white/95 mb-2 sm:mb-3 drop-shadow-lg font-sans font-medium">
+              <p className="text-sm sm:text-base md:text-xl text-emerald-700 mb-2 sm:mb-3 font-sans font-bold">
                 Dotované bývanie pre rodiny
               </p>
-              <p className="text-xs sm:text-sm md:text-base text-white/85 mb-4 sm:mb-6 drop-shadow-lg font-sans max-w-md mx-auto">
+              <p className="text-xs sm:text-sm md:text-base text-gray-800 mb-4 sm:mb-6 font-sans max-w-md mx-auto leading-relaxed">
                 Získajte príspevok na výstavbu domu a dotáciu na energie výmenou za referenčnú spoluprácu. Bývajte vo vlastnom lacnejšie ako v nájme.
               </p>
               <Button
