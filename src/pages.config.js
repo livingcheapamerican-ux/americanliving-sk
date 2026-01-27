@@ -6,6 +6,7 @@ import AdminAnalyzaSessions from './pages/AdminAnalyzaSessions';
 import AdminBlog from './pages/AdminBlog';
 import AdminCennik from './pages/AdminCennik';
 import AdminDokumenty from './pages/AdminDokumenty';
+import AdminDotaciaHero from './pages/AdminDotaciaHero';
 import AdminGeneratorCenovychPonuk from './pages/AdminGeneratorCenovychPonuk';
 import AdminGeneratorObrazkov from './pages/AdminGeneratorObrazkov';
 import AdminGenerujObrazkyBlogov from './pages/AdminGenerujObrazkyBlogov';
@@ -71,7 +72,6 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
-import AdminDotaciaHero from './pages/AdminDotaciaHero';
 import __Layout from './Layout.jsx';
 
 
@@ -84,6 +84,7 @@ export const PAGES = {
     "AdminBlog": AdminBlog,
     "AdminCennik": AdminCennik,
     "AdminDokumenty": AdminDokumenty,
+    "AdminDotaciaHero": AdminDotaciaHero,
     "AdminGeneratorCenovychPonuk": AdminGeneratorCenovychPonuk,
     "AdminGeneratorObrazkov": AdminGeneratorObrazkov,
     "AdminGenerujObrazkyBlogov": AdminGenerujObrazkyBlogov,
@@ -149,7 +150,6 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
-    "AdminDotaciaHero": AdminDotaciaHero,
 }
 
 export const pagesConfig = {

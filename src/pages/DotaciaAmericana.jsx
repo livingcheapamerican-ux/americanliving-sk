@@ -150,22 +150,25 @@ export default function DotaciaAmericana() {
           {/* Content Overlay */}
           <div className="relative z-20 flex flex-col items-center justify-center h-full p-4 sm:p-8 text-center">
             <motion.div
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
+              className="bg-black/20 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border-2 border-white/30"
             >
-              <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-white mb-2 sm:mb-4 drop-shadow-2xl leading-tight">
-                RODINA & ISTOTA
+              <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3 sm:mb-4 drop-shadow-2xl leading-tight">
+                PROGRAM AMBASSADOR
               </h2>
-              <p className="text-sm sm:text-lg md:text-2xl text-white/90 mb-4 sm:mb-8 drop-shadow-lg px-2">
-                Dotácia na bývanie + Príspevok na energie
+              <p className="text-sm sm:text-base md:text-xl text-white/95 mb-2 sm:mb-3 drop-shadow-lg font-sans font-medium">
+                Dotačný grant na rodinné bývanie + Prevádzkový príspevok na energie
+              </p>
+              <p className="text-xs sm:text-sm md:text-base text-white/85 mb-4 sm:mb-6 drop-shadow-lg font-sans max-w-md mx-auto">
+                Fond American Living alokoval prostriedky na podporu 15 rodín. Získajte príspevok na výstavbu a mesačnú rentu za reprezentáciu.
               </p>
               <Button
                 size="lg"
-                className="bg-white/95 hover:bg-white text-gray-900 font-bold px-4 sm:px-8 py-3 sm:py-6 text-sm sm:text-lg rounded-full shadow-2xl backdrop-blur-sm"
+                className="bg-white hover:bg-gray-100 text-gray-900 font-sans font-bold px-4 sm:px-8 py-3 sm:py-6 text-xs sm:text-base rounded-lg shadow-2xl"
                 onClick={(e) => { e.stopPropagation(); setModalType('rodina'); }}
               >
-                <span className="hidden sm:inline">Chcem domov (Program Ambassador)</span>
-                <span className="sm:hidden">Chcem domov</span>
+                Overiť nárok na dotáciu
                 <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </motion.div>
@@ -210,22 +213,25 @@ export default function DotaciaAmericana() {
           {/* Content Overlay */}
           <div className="relative z-20 flex flex-col items-center justify-center h-full p-4 sm:p-8 text-center">
             <motion.div
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
+              className="bg-black/30 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border-2 border-yellow-400/50"
             >
-              <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-white mb-2 sm:mb-4 drop-shadow-2xl leading-tight">
-                INVESTÍCIA & VÝNOS
+              <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3 sm:mb-4 drop-shadow-2xl leading-tight">
+                PROGRAM PARTNER
               </h2>
-              <p className="text-sm sm:text-lg md:text-2xl text-white/90 mb-4 sm:mb-8 drop-shadow-lg px-2">
-                Partnerská dotácia + Garantovaný marketing
+              <p className="text-sm sm:text-base md:text-xl text-white/95 mb-2 sm:mb-3 drop-shadow-lg font-sans font-medium">
+                Investičný stimul pre podnikateľov + Garancia obsadenosti
+              </p>
+              <p className="text-xs sm:text-sm md:text-base text-white/85 mb-4 sm:mb-6 drop-shadow-lg font-sans max-w-md mx-auto">
+                Otvárame dotačnú schému pre výstavbu testovacích centier. My zainvestujeme do vašej nehnuteľnosti, vy inkasujete zisk.
               </p>
               <Button
                 size="lg"
-                className="bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-4 sm:px-8 py-3 sm:py-6 text-sm sm:text-lg rounded-full shadow-2xl"
+                className="bg-yellow-400 hover:bg-yellow-300 text-black font-sans font-bold px-4 sm:px-8 py-3 sm:py-6 text-xs sm:text-base rounded-lg shadow-2xl"
                 onClick={(e) => { e.stopPropagation(); setModalType('investor'); }}
               >
-                <span className="hidden sm:inline">Chcem zarábať (Program Partner)</span>
-                <span className="sm:hidden">Chcem zarábať</span>
+                Žiadosť o investičný stimul
                 <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </motion.div>
@@ -239,14 +245,14 @@ export default function DotaciaAmericana() {
           <Dialog open={!!modalType} onOpenChange={() => setModalType(null)}>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
               <DialogHeader>
-                <DialogTitle className="text-xl sm:text-3xl font-black">
-                  {modalType === 'rodina' ? '🏡 Program Ambassador' : '📈 Program Partner'}
+                <DialogTitle className="text-xl sm:text-3xl font-serif font-bold text-primary">
+                  {modalType === 'rodina' ? '🏡 Program Ambassador - Žiadosť o dotáciu' : '📈 Program Partner - Žiadosť o investičný stimul'}
                 </DialogTitle>
               </DialogHeader>
 
               {/* Video Section */}
               <div className="mb-6">
-                <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden">
+                <div className="aspect-video bg-gradient-to-br from-blue-900 to-blue-950 rounded-lg overflow-hidden border-2 border-accent/30">
                   <video autoPlay controls className="w-full h-full">
                     <source 
                       src={modalType === 'rodina' 
@@ -257,12 +263,14 @@ export default function DotaciaAmericana() {
                     />
                   </video>
                 </div>
-                <p className="mt-4 text-center text-sm sm:text-lg font-semibold text-gray-700">
-                  {modalType === 'rodina' 
-                    ? '✅ Garancia: Zľava 5% + Odmena 150€ za každú tichú obhliadku.'
-                    : '✅ Garancia: Zľava 5% + Zaradenie do mapy Testovacích centier.'
-                  }
-                </p>
+                <div className="mt-4 p-4 bg-blue-50 border-l-4 border-primary rounded">
+                  <p className="text-xs sm:text-sm font-sans font-semibold text-primary">
+                    {modalType === 'rodina' 
+                      ? '✅ SCHVÁLENÉ BENEFITY: Dotácia 5% z ceny + Prevádzkový príspevok 150€ za každú schválenú návštevu'
+                      : '✅ SCHVÁLENÉ BENEFITY: Investičný stimul 5% + Zaradenie do oficiálnej mapy Testovacích centier'
+                    }
+                  </p>
+                </div>
               </div>
 
               {/* Form */}
@@ -343,13 +351,9 @@ export default function DotaciaAmericana() {
                   type="submit"
                   size="lg"
                   disabled={isSubmitting}
-                  className={`w-full font-bold py-4 sm:py-6 text-base sm:text-lg ${
-                    modalType === 'rodina'
-                      ? 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600'
-                      : 'bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black'
-                  }`}
+                  className="w-full font-sans font-bold py-4 sm:py-6 text-base sm:text-lg bg-primary hover:bg-secondary text-white"
                 >
-                  {isSubmitting ? "Odosielam..." : "Odoslať žiadosť"}
+                  {isSubmitting ? "Spracovávam žiadosť..." : "Odoslať žiadosť o pridelenie dotácie"}
                   <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
               </form>
@@ -359,7 +363,7 @@ export default function DotaciaAmericana() {
       </AnimatePresence>
 
       {/* PRODUKTOVÁ SEKCIA */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-100">
+      <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-blue-50">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -368,180 +372,217 @@ export default function DotaciaAmericana() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-4">
-              Dostupné Modely
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
+              Aktuálna dotačná ponuka
             </h2>
-            <p className="text-base sm:text-xl text-gray-600">
-              Všetky domy sú vhodné pre Program Ambassador aj Partner
+            <p className="text-base sm:text-xl text-gray-700 font-sans">
+              Všetky modely sú oprávnené pre Program Ambassador aj Partner
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {houses?.slice(0, 6).map((dom) => (
-              <motion.div
-                key={dom.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-              >
-                <Card className="overflow-hidden hover:shadow-2xl transition-all">
-                  <img 
-                    src={dom.hlavny_obrazok} 
-                    alt={dom.nazov}
-                    className="w-full h-64 object-cover"
+            {houses?.slice(0, 6).map((dom) => {
+              const cennikova = dom.zakladna_cena;
+              const dotacia = Math.round(cennikova * 0.05);
+              const doplatok = cennikova - dotacia;
+
+              return (
+                <motion.div
+                  key={dom.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  viewport={{ once: true }}
+                >
+                  <Card className="overflow-hidden hover:shadow-2xl transition-all border-2 border-blue-200">
+                    <img 
+                      src={dom.hlavny_obrazok} 
+                      alt={dom.nazov}
+                      className="w-full h-64 object-cover"
+                    />
+                    <div className="p-4 sm:p-6 bg-gradient-to-b from-white to-blue-50">
+                      <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-4">{dom.nazov} - Edícia 2026</h3>
+
+                      <div className="bg-white border-2 border-blue-200 rounded-lg p-4 mb-4 font-sans">
+                        <div className="flex justify-between items-center mb-2 pb-2 border-b">
+                          <span className="text-xs sm:text-sm text-gray-500">Cenníková hodnota:</span>
+                          <span className="text-sm sm:text-base text-gray-400 line-through">{cennikova?.toLocaleString()} €</span>
+                        </div>
+                        <div className="flex justify-between items-center mb-2 pb-2 border-b">
+                          <span className="text-xs sm:text-sm font-bold text-success">SCHVÁLENÁ DOTÁCIA:</span>
+                          <span className="text-base sm:text-xl font-bold text-success">- {dotacia?.toLocaleString()} €</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm sm:text-base font-bold text-primary">DOPLATOK KLIENTA:</span>
+                          <span className="text-xl sm:text-3xl font-black text-primary">{doplatok?.toLocaleString()} €</span>
+                        </div>
+                      </div>
+
+                      <div className="bg-green-50 border-l-4 border-success p-3 mb-4 rounded">
+                        <p className="text-xs font-sans font-semibold text-success">
+                          + BONUS: Nárok na ročný prevádzkový grant (energie) až do výšky 400 €
+                        </p>
+                      </div>
+
+                      <Link to={createPageUrl(`DetailDomu?id=${dom.id}`)}>
+                        <Button className="w-full bg-primary hover:bg-secondary text-white font-sans font-semibold" size="lg">
+                          Detail dotačnej ponuky
+                        </Button>
+                      </Link>
+                    </div>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* SEKCIA: PROCES ČERPANIA DOTÁCIE */}
+      <section id="proces-section" className="py-20 bg-gradient-to-br from-gray-50 via-blue-50 to-gray-50">
+        <div className="container mx-auto px-4 sm:px-8">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <div className="inline-block mb-4">
+                <span className="bg-primary text-white px-6 py-2 rounded-lg text-sm font-sans font-bold uppercase tracking-wide">
+                  Oficiálny proces
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
+                PROCES ČERPANIA DOTÁCIE
+              </h2>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-8 mb-12">
+              <Card className="p-8 bg-white border-2 border-primary/30 hover:shadow-2xl transition-all">
+                <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                  <CheckCircle className="w-8 h-8 text-primary" />
+                </div>
+                <div className="mb-4 inline-block bg-primary text-white px-3 py-1 rounded text-xs font-sans font-bold">
+                  KROK 1
+                </div>
+                <h3 className="text-xl font-serif font-bold text-gray-900 mb-4">
+                  Schválenie žiadosti
+                </h3>
+                <p className="text-gray-600 leading-relaxed font-sans">
+                  Náš interný výbor posúdi vašu lokalitu. Ak spĺňa kritériá programu Ambassador alebo Partner, alokujeme pre vás zdroje.
+                </p>
+              </Card>
+
+              <Card className="p-8 bg-white border-2 border-primary/30 hover:shadow-2xl transition-all">
+                <div className="w-16 h-16 bg-accent/20 rounded-lg flex items-center justify-center mb-6">
+                  <FileText className="w-8 h-8 text-accent" />
+                </div>
+                <div className="mb-4 inline-block bg-primary text-white px-3 py-1 rounded text-xs font-sans font-bold">
+                  KROK 2
+                </div>
+                <h3 className="text-xl font-serif font-bold text-gray-900 mb-4">
+                  Podpis dotačného dekrétu
+                </h3>
+                <p className="text-gray-600 leading-relaxed font-sans">
+                  Pri podpise zmluvy vám okamžite odpočítame schválenú výšku dotácie z ceny nehnuteľnosti (Zníženie istiny).
+                </p>
+              </Card>
+
+              <Card className="p-8 bg-white border-2 border-primary/30 hover:shadow-2xl transition-all">
+                <div className="w-16 h-16 bg-success/20 rounded-lg flex items-center justify-center mb-6">
+                  <Euro className="w-8 h-8 text-success" />
+                </div>
+                <div className="mb-4 inline-block bg-primary text-white px-3 py-1 rounded text-xs font-sans font-bold">
+                  KROK 3
+                </div>
+                <h3 className="text-xl font-serif font-bold text-gray-900 mb-4">
+                  Výplata prevádzkového grantu
+                </h3>
+                <p className="text-gray-600 leading-relaxed font-sans">
+                  Po odovzdaní domu vám začneme vyplácať "Ambassador Fee" – finančnú odmenu za každú zrealizovanú referenčnú návštevu, ktorá pokryje vaše náklady na energie.
+                </p>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SEKCIA: CTA - ŽIADOSŤ O DOTÁCIU */}
+      <section id="cta-section" className="py-20 bg-gradient-to-br from-primary via-secondary to-primary text-white">
+        <div className="container mx-auto px-4 sm:px-8">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="inline-block mb-6 px-6 py-3 bg-white/10 backdrop-blur-sm border-2 border-white/30 rounded-lg">
+                <p className="text-lg sm:text-2xl font-serif font-bold text-white">
+                  ⚠️ Stav fondu: <span className="text-accent">OTVORENÝ</span> do vyčerpania kapacity
+                </p>
+              </div>
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold mb-6">
+                Pridelenie dotácie prebieha na základe poradia žiadostí
+              </h2>
+              <p className="text-base sm:text-xl font-sans mb-8 text-white/90 max-w-2xl mx-auto">
+                Pre tento kvartál sme uvoľnili prostriedky len pre 15 stavieb. Po naplnení kvóty bude dotačná výzva uzavretá.
+              </p>
+
+              <div className="bg-white/95 backdrop-blur-sm p-6 sm:p-10 rounded-2xl shadow-2xl">
+                <h3 className="text-xl sm:text-2xl font-serif font-bold text-primary mb-6">
+                  Rýchla žiadosť o pridelenie dotácie
+                </h3>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <Input
+                    type="text"
+                    placeholder="Celé meno"
+                    value={formData.meno}
+                    onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
+                    required
+                    className="text-base p-4 font-sans"
                   />
-                  <div className="p-4 sm:p-6">
-                    <h3 className="text-lg sm:text-2xl font-bold text-gray-900 mb-2">{dom.nazov}</h3>
-                    <div className="flex items-baseline gap-2 mb-4">
-                      <span className="text-gray-400 line-through text-sm sm:text-lg">
-                        {dom.zakladna_cena?.toLocaleString()} €
-                      </span>
-                      <span className="text-xl sm:text-3xl font-black text-green-600">
-                        {Math.round(dom.zakladna_cena * 0.95).toLocaleString()} €
-                      </span>
-                    </div>
-                    <div className="inline-block bg-blue-100 text-blue-800 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold mb-4">
-                      ✅ Vhodné pre obidva programy
-                    </div>
-                    <Link to={createPageUrl(`DetailDomu?id=${dom.id}`)}>
-                      <Button className="w-full" variant="outline">
-                        Zobraziť detail
-                      </Button>
-                    </Link>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SEKCIA A: PROGRAM "AMBASSADOR" (Pre Rodiny) */}
-      <section id="ambassador-section" className="py-20 bg-gradient-to-br from-blue-50 via-white to-blue-100">
-        <div className="container mx-auto px-4 sm:px-8">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <div className="inline-block mb-4">
-                <span className="bg-blue-600 text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wide">
-                  Program Ambassador
-                </span>
+                  <Input
+                    type="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    required
+                    className="text-base p-4 font-sans"
+                  />
+                  <Input
+                    type="tel"
+                    placeholder="Telefón"
+                    value={formData.telefon}
+                    onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
+                    required
+                    className="text-base p-4 font-sans"
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Lokalita (voliteľné)"
+                    value={formData.lokalita}
+                    onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
+                    className="text-base p-4 font-sans"
+                  />
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={isSubmitting}
+                    className="w-full bg-primary hover:bg-secondary text-white font-sans font-bold py-6 text-lg"
+                  >
+                    {isSubmitting ? "Spracovávam..." : "Odoslať žiadosť o pridelenie dotácie"}
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </form>
+                <p className="text-xs text-gray-500 mt-4 font-sans">
+                  Vaša žiadosť bude spracovaná do 24 hodín. Dostanete personalizované video s potvrdením alokácie prostriedkov.
+                </p>
               </div>
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-6">
-                Váš dom si na energie zarobí sám
-              </h2>
             </motion.div>
-
-            <div className="grid md:grid-cols-3 gap-8 mb-12">
-              <Card className="p-8 bg-white border-2 border-blue-300 hover:shadow-2xl transition-all">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
-                  <DollarSign className="w-8 h-8 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  📉 Investičná zľava 5%
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Získate zľavu 5% z cenníkovej ceny vášho nového domu.
-                </p>
-              </Card>
-
-              <Card className="p-8 bg-white border-2 border-blue-300 hover:shadow-2xl transition-all">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
-                  <Zap className="w-8 h-8 text-green-600" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  ⚡ Energy Cashback
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Platíme vám za každú referenčnú návštevu vo vašom dome.
-                </p>
-              </Card>
-
-              <Card className="p-8 bg-white border-2 border-blue-300 hover:shadow-2xl transition-all">
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-6">
-                  <Shield className="w-8 h-8 text-purple-600" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  🛡️ 100% Súkromie
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Adresa je tajná, návštevy schvaľujete len vy.
-                </p>
-              </Card>
-            </div>
-
-            <div className="text-center">
-              <p className="text-gray-500 text-sm mb-4">Príklady domov pre program Ambassador - Prosto House (Rodinné modely)</p>
-              <p className="text-gray-400 text-xs italic">Ceny na vyžiadanie</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SEKCIA B: PROGRAM "PARTNER" (Pre Investorov) */}
-      <section id="partner-section" className="py-20 bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
-        <div className="container mx-auto px-4 sm:px-8">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <div className="inline-block mb-4">
-                <span className="bg-yellow-400 text-black px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wide">
-                  Program Partner
-                </span>
-              </div>
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-black mb-6">
-                Nekupujte nehnuteľnosť. Kúpte si fungujúci biznis.
-              </h2>
-            </motion.div>
-
-            <div className="grid md:grid-cols-3 gap-8 mb-12">
-              <Card className="p-8 bg-gray-800 border-2 border-yellow-400 hover:shadow-2xl transition-all">
-                <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-6">
-                  <DollarSign className="w-8 h-8 text-yellow-600" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-4">
-                  📉 Veľkoobchodná dotácia
-                </h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Špeciálna zľava na nákup stavby pre investičné účely.
-                </p>
-              </Card>
-
-              <Card className="p-8 bg-gray-800 border-2 border-yellow-400 hover:shadow-2xl transition-all">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
-                  <Map className="w-8 h-8 text-green-600" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-4">
-                  🚀 Marketing ZDARMA
-                </h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Vaša stavba bude na našej mape 'Testovacích centier'.
-                </p>
-              </Card>
-
-              <Card className="p-8 bg-gray-800 border-2 border-yellow-400 hover:shadow-2xl transition-all">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
-                  <Calendar className="w-8 h-8 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-4">
-                  📅 Plný kalendár
-                </h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Posielame vám klientov, ktorí chcú dom skúsiť pred kúpou.
-                </p>
-              </Card>
-            </div>
           </div>
         </div>
       </section>
@@ -549,16 +590,17 @@ export default function DotaciaAmericana() {
       {/* PÄTIČKA */}
       <footer className="py-12 bg-gray-900 text-white">
         <div className="container mx-auto px-4 text-center">
-          <p className="text-lg font-semibold mb-2">
-            American Living - Partner pre váš domov aj biznis
+          <p className="text-lg font-serif font-bold mb-2">
+            American Living Foundation
           </p>
-          <p className="text-gray-400 text-sm mb-6">
-            Powered by AI
+          <p className="text-gray-400 text-sm mb-6 font-sans">
+            Súkromný dotačný fond na podporu bývania a podnikania
           </p>
           <div className="border-t border-gray-700 pt-6">
-            <p className="text-gray-500 text-xs max-w-3xl mx-auto">
-              ⚖️ <strong>Legal Disclaimer:</strong> Dotácia je poskytovaná spoločnosťou American Living ako súkromný marketingový príspevok. 
-              Nejde o štátnu pomoc. Podmienky platné k dátumu podpisu kúpnej zmluvy. Marketingová akcia môže byť kedykoľvek ukončená bez predchádzajúceho upozornenia.
+            <p className="text-gray-500 text-xs max-w-3xl mx-auto font-sans leading-relaxed">
+              ⚖️ <strong>Právne upozornenie:</strong> Dotácia je poskytovaná spoločnosťou American Living ako súkromný marketingový príspevok a investičný stimul. 
+              Nejde o štátnu pomoc ani verejný grant. Podmienky platné k dátumu podpisu dotačného dekrétu (kúpnej zmluvy). 
+              Dotačná schéma môže byť kedykoľvek upravená alebo ukončená bez predchádzajúceho upozornenia pri vyčerpaní alokovaných prostriedkov.
             </p>
           </div>
         </div>
