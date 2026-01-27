@@ -548,19 +548,19 @@ export default function DotaciaAmericana() {
               viewport={{ once: true }}
               className="text-center"
             >
-              <div className="inline-block mb-6 px-6 py-3 bg-white/10 backdrop-blur-sm border-2 border-white/30 rounded-lg">
-                <p className="text-lg sm:text-2xl font-serif font-bold text-white">
-                  ⚠️ Stav fondu: <span className="text-accent">OTVORENÝ</span> do vyčerpania kapacity
+              <div className="inline-block mb-6 px-6 py-3 bg-white/20 backdrop-blur-md border-2 border-accent rounded-lg">
+                <p className="text-lg sm:text-2xl font-serif font-bold text-white drop-shadow-lg">
+                  ⚠️ Stav fondu: <span className="text-accent drop-shadow-lg">OTVORENÝ</span> do vyčerpania kapacity
                 </p>
               </div>
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold mb-6">
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold mb-6 text-white drop-shadow-lg">
                 Pridelenie dotácie prebieha na základe poradia žiadostí
               </h2>
-              <p className="text-base sm:text-xl font-sans mb-8 text-white/90 max-w-2xl mx-auto">
+              <p className="text-base sm:text-xl font-sans mb-8 text-white drop-shadow-lg max-w-2xl mx-auto">
                 Pre tento kvartál sme uvoľnili prostriedky len pre 15 stavieb. Po naplnení kvóty bude dotačná výzva uzavretá.
               </p>
 
-              <div className="bg-white/95 backdrop-blur-sm p-6 sm:p-10 rounded-2xl shadow-2xl">
+              <div className="bg-white p-6 sm:p-10 rounded-2xl shadow-2xl">
                 <h3 className="text-xl sm:text-2xl font-serif font-bold text-primary mb-6">
                   Rýchla žiadosť o pridelenie dotácie
                 </h3>
@@ -571,7 +571,7 @@ export default function DotaciaAmericana() {
                     value={formData.meno}
                     onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
                     required
-                    className="text-base p-4 font-sans"
+                    className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
                   />
                   <Input
                     type="email"
@@ -579,7 +579,7 @@ export default function DotaciaAmericana() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
-                    className="text-base p-4 font-sans"
+                    className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
                   />
                   <Input
                     type="tel"
@@ -587,26 +587,26 @@ export default function DotaciaAmericana() {
                     value={formData.telefon}
                     onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
                     required
-                    className="text-base p-4 font-sans"
+                    className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
                   />
                   <Input
                     type="text"
                     placeholder="Lokalita (voliteľné)"
                     value={formData.lokalita}
                     onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
-                    className="text-base p-4 font-sans"
+                    className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
                   />
                   <Button
                     type="submit"
                     size="lg"
                     disabled={isSubmitting}
-                    className="w-full bg-primary hover:bg-secondary text-white font-sans font-bold py-6 text-lg"
+                    className="w-full bg-primary hover:bg-secondary text-white font-sans font-bold py-6 text-lg shadow-lg"
                   >
                     {isSubmitting ? "Spracovávam..." : "Odoslať žiadosť o pridelenie dotácie"}
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </form>
-                <p className="text-xs text-gray-500 mt-4 font-sans">
+                <p className="text-xs text-gray-600 mt-4 font-sans">
                   Vaša žiadosť bude spracovaná do 24 hodín. Dostanete personalizované video s potvrdením alokácie prostriedkov.
                 </p>
               </div>
