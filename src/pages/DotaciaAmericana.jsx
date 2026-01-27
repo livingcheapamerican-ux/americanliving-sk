@@ -115,11 +115,13 @@ export default function DotaciaAmericana() {
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
         :root {
-          --primary: #1E3A8A;
-          --secondary: #1E40AF;
-          --accent: #D4AF37;
+          --primary: #34D399;
+          --secondary: #10B981;
+          --accent: #FBBF24;
           --dark-brown: #3E2723;
           --success: #059669;
+          --warm-orange: #FB923C;
+          --soft-yellow: #FDE047;
         }
 
         .bg-primary { background-color: var(--primary); }
@@ -154,7 +156,7 @@ export default function DotaciaAmericana() {
           onClick={() => setModalType('rodina')}
         >
           {/* Image Background with Slideshow */}
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-400/20 via-amber-300/10 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/30 via-green-300/20 to-yellow-200/15 z-10 pointer-events-none"></div>
           {heroSettings?.rodina_fotky?.length > 0 ? (
             <AnimatePresence mode="wait">
               <motion.img
@@ -185,7 +187,7 @@ export default function DotaciaAmericana() {
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="bg-black/20 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border-2 border-white/30"
+              className="bg-white/15 backdrop-blur-md p-6 sm:p-8 rounded-2xl border-2 border-emerald-300/60 shadow-2xl"
             >
               {/* Video Container for HeyGen Avatar */}
               <div id="video-ambassador" className="mb-4 sm:mb-6 aspect-video bg-black/30 rounded-lg overflow-hidden">
@@ -203,7 +205,7 @@ export default function DotaciaAmericana() {
               </p>
               <Button
                 size="lg"
-                className="bg-white hover:bg-gray-100 text-gray-900 font-sans font-bold px-4 sm:px-8 py-3 sm:py-6 text-xs sm:text-base rounded-lg shadow-2xl"
+                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-sans font-bold px-4 sm:px-8 py-3 sm:py-6 text-xs sm:text-base rounded-lg shadow-2xl"
                 onClick={(e) => { e.stopPropagation(); setModalType('rodina'); }}
               >
                 Overiť nárok na dotáciu
@@ -306,8 +308,8 @@ export default function DotaciaAmericana() {
                     />
                   </video>
                 </div>
-                <div className="mt-4 p-4 bg-blue-50 border-l-4 border-primary rounded">
-                  <p className="text-xs sm:text-sm font-sans font-semibold text-primary">
+                <div className="mt-4 p-4 bg-gradient-to-r from-emerald-50 to-green-50 border-l-4 border-emerald-500 rounded shadow-sm">
+                  <p className="text-xs sm:text-sm font-sans font-semibold text-emerald-700">
                     {modalType === 'rodina' 
                       ? '✅ SCHVÁLENÉ BENEFITY: Dotácia 5% z ceny + Prevádzkový príspevok 150€ za každú schválenú návštevu'
                       : '✅ SCHVÁLENÉ BENEFITY: Investičný stimul 5% + Zaradenie do oficiálnej mapy Testovacích centier'
@@ -406,7 +408,7 @@ export default function DotaciaAmericana() {
       </AnimatePresence>
 
       {/* PRODUKTOVÁ SEKCIA */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-blue-50">
+      <section className="py-20 bg-gradient-to-br from-emerald-50 via-white to-green-50">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -437,16 +439,16 @@ export default function DotaciaAmericana() {
                   transition={{ duration: 0.5 }}
                   viewport={{ once: true }}
                 >
-                  <Card className="overflow-hidden hover:shadow-2xl transition-all border-2 border-blue-200">
+                  <Card className="overflow-hidden hover:shadow-2xl transition-all border-2 border-emerald-200">
                     <img 
                       src={dom.hlavny_obrazok} 
                       alt={dom.nazov}
                       className="w-full h-64 object-cover"
                     />
-                    <div className="p-4 sm:p-6 bg-gradient-to-b from-white to-blue-50">
+                    <div className="p-4 sm:p-6 bg-gradient-to-b from-white to-emerald-50">
                       <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-4">{dom.nazov} - Edícia 2026</h3>
 
-                      <div className="bg-white border-2 border-blue-200 rounded-lg p-4 mb-4 font-sans">
+                      <div className="bg-white border-2 border-emerald-200 rounded-lg p-4 mb-4 font-sans">
                         <div className="flex justify-between items-center mb-2 pb-2 border-b">
                           <span className="text-xs sm:text-sm text-gray-500">Cenníková hodnota:</span>
                           <span className="text-sm sm:text-base text-gray-400 line-through">{cennikova?.toLocaleString()} €</span>
@@ -482,7 +484,7 @@ export default function DotaciaAmericana() {
       </section>
 
       {/* SEKCIA: PROCES ČERPANIA DOTÁCIE */}
-      <section id="proces-section" className="py-20 bg-gradient-to-br from-gray-50 via-blue-50 to-gray-50">
+      <section id="proces-section" className="py-20 bg-gradient-to-br from-gray-50 via-emerald-50 to-gray-50">
         <div className="container mx-auto px-4 sm:px-8">
           <div className="max-w-6xl mx-auto">
             <motion.div
@@ -503,9 +505,9 @@ export default function DotaciaAmericana() {
             </motion.div>
 
             <div className="grid md:grid-cols-3 gap-8 mb-12">
-              <Card className="p-8 bg-white border-2 border-primary/30 hover:shadow-2xl transition-all">
-                <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                  <CheckCircle className="w-8 h-8 text-primary" />
+              <Card className="p-8 bg-white border-2 border-emerald-300/50 hover:shadow-2xl transition-all">
+                <div className="w-16 h-16 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
+                  <CheckCircle className="w-8 h-8 text-emerald-600" />
                 </div>
                 <div className="mb-4 inline-block bg-primary text-white px-3 py-1 rounded text-xs font-sans font-bold">
                   KROK 1
@@ -518,9 +520,9 @@ export default function DotaciaAmericana() {
                 </p>
               </Card>
 
-              <Card className="p-8 bg-white border-2 border-primary/30 hover:shadow-2xl transition-all">
-                <div className="w-16 h-16 bg-accent/20 rounded-lg flex items-center justify-center mb-6">
-                  <FileText className="w-8 h-8 text-accent" />
+              <Card className="p-8 bg-white border-2 border-emerald-300/50 hover:shadow-2xl transition-all">
+                <div className="w-16 h-16 bg-yellow-100 rounded-lg flex items-center justify-center mb-6">
+                  <FileText className="w-8 h-8 text-yellow-600" />
                 </div>
                 <div className="mb-4 inline-block bg-primary text-white px-3 py-1 rounded text-xs font-sans font-bold">
                   KROK 2
@@ -533,9 +535,9 @@ export default function DotaciaAmericana() {
                 </p>
               </Card>
 
-              <Card className="p-8 bg-white border-2 border-primary/30 hover:shadow-2xl transition-all">
-                <div className="w-16 h-16 bg-success/20 rounded-lg flex items-center justify-center mb-6">
-                  <Euro className="w-8 h-8 text-success" />
+              <Card className="p-8 bg-white border-2 border-emerald-300/50 hover:shadow-2xl transition-all">
+                <div className="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center mb-6">
+                  <Euro className="w-8 h-8 text-green-600" />
                 </div>
                 <div className="mb-4 inline-block bg-primary text-white px-3 py-1 rounded text-xs font-sans font-bold">
                   KROK 3
