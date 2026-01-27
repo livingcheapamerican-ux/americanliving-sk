@@ -267,7 +267,7 @@ export default function DotaciaAmericana() {
                 Investícia s garanciou správy
               </p>
               <p className="text-xs sm:text-sm md:text-base text-white/85 mb-4 sm:mb-6 drop-shadow-lg font-sans max-w-md mx-auto">
-                Investujte do rekreačných domov. My zabezpečíme výstavbu, marketing a hostí. Vy vlastníte nehnuteľnosť a inkasujete výnos bez starostí. (Žiadne testovacie centrum – plná prevádzka).
+                Investujte do rekreačných domov. My zabezpečíme výstavbu, marketing a hostí. Vy vlastníte nehnuteľnosť a inkasujete výnos bez starostí.
               </p>
               <Button
                 size="lg"
