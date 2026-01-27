@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CheckCircle, Euro, Home, Phone, ArrowRight, Gift, TrendingUp, Users, Play, Zap, Shield, Calendar, DollarSign, Star, Map, X } from "lucide-react";
+import { CheckCircle, Euro, Home, Phone, ArrowRight, Gift, TrendingUp, Users, Play, Zap, Shield, Calendar, DollarSign, Star, Map, X, FileText } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../components/LanguageContext";
 import { base44 } from "@/api/base44Client";
@@ -106,6 +106,34 @@ export default function DotaciaAmericana() {
 
   return (
     <div className="min-h-screen bg-white">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+          --primary: #1E3A8A;
+          --secondary: #1E40AF;
+          --accent: #D4AF37;
+          --dark-brown: #3E2723;
+          --success: #059669;
+        }
+
+        .bg-primary { background-color: var(--primary); }
+        .text-primary { color: var(--primary); }
+        .bg-secondary { background-color: var(--secondary); }
+        .text-secondary { color: var(--secondary); }
+        .bg-accent { background-color: var(--accent); }
+        .text-accent { color: var(--accent); }
+        .hover\\:bg-secondary:hover { background-color: var(--secondary); }
+        .border-primary { border-color: var(--primary); }
+        
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-sans { font-family: 'Inter', sans-serif; }
+
+        .border-success { border-color: var(--success); }
+        .text-success { color: var(--success); }
+        .bg-success { background-color: var(--success); }
+      `}</style>
+
       {/* Audio Elements */}
       <audio ref={pianoRef} src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />
       <audio ref={houseRef} src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" />
