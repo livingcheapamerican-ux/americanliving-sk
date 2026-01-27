@@ -471,8 +471,8 @@ export default function DotaciaAmericana() {
                 <div className="mt-4 p-4 bg-gradient-to-r from-emerald-50 to-green-50 border-l-4 border-emerald-500 rounded shadow-sm">
                   <p className="text-xs sm:text-sm font-sans font-semibold text-emerald-700">
                     {modalType === 'rodina' 
-                      ? '✅ SCHVÁLENÉ BENEFITY: Dotácia 5% z ceny + Prevádzkový príspevok 150€ za každú schválenú návštevu'
-                      : '✅ SCHVÁLENÉ BENEFITY: Investičný stimul 5% + Zaradenie do oficiálnej mapy Testovacích centier'
+                      ? '✅ SCHVÁLENÉ BENEFITY: Finančný príspevok + Prevádzkový grant 150€ za každú schválenú návštevu'
+                      : '✅ SCHVÁLENÉ BENEFITY: Investičný stimul + Zaradenie do oficiálnej mapy Testovacích centier'
                     }
                   </p>
                 </div>
@@ -588,8 +588,8 @@ export default function DotaciaAmericana() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {houses?.slice(0, 6).map((dom) => {
               const cennikova = dom.zakladna_cena;
-              const dotacia = Math.round(cennikova * 0.05);
-              const doplatok = cennikova - dotacia;
+              const dotacia = null; // Dotácia sa individuálne určuje
+              const doplatok = null;
 
               return (
                 <motion.div
@@ -611,21 +611,17 @@ export default function DotaciaAmericana() {
                       <div className="bg-white border-2 border-emerald-200 rounded-lg p-4 mb-4 font-sans">
                         <div className="flex justify-between items-center mb-2 pb-2 border-b">
                           <span className="text-xs sm:text-sm text-gray-500">Cenníková hodnota:</span>
-                          <span className="text-sm sm:text-base text-gray-400 line-through">{cennikova?.toLocaleString()} €</span>
-                        </div>
-                        <div className="flex justify-between items-center mb-2 pb-2 border-b">
-                          <span className="text-xs sm:text-sm font-bold text-success">SCHVÁLENÁ DOTÁCIA:</span>
-                          <span className="text-base sm:text-xl font-bold text-success">- {dotacia?.toLocaleString()} €</span>
+                          <span className="text-sm sm:text-base font-bold text-gray-900">{cennikova?.toLocaleString()} €</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-sm sm:text-base font-bold text-primary">DOPLATOK KLIENTA:</span>
-                          <span className="text-xl sm:text-3xl font-black text-primary">{doplatok?.toLocaleString()} €</span>
+                          <span className="text-xs sm:text-sm font-bold text-success">DOTÁCIA SA URČUJE INDIVIDUÁLNE</span>
+                          <span className="text-base sm:text-xl font-bold text-success">✅</span>
                         </div>
                       </div>
 
                       <div className="bg-green-50 border-l-4 border-success p-3 mb-4 rounded">
                         <p className="text-xs font-sans font-semibold text-success">
-                          + BONUS: Nárok na ročný prevádzkový grant (energie) až do výšky 400 €
+                          + BONUS: Nárok na prevádzkový grant (energie) až 400 € ročne
                         </p>
                       </div>
 
@@ -691,7 +687,7 @@ export default function DotaciaAmericana() {
                   Podpis dotačného dekrétu
                 </h3>
                 <p className="text-gray-600 leading-relaxed font-sans">
-                  Pri podpise zmluvy vám okamžite odpočítame schválenú výšku dotácie z ceny nehnuteľnosti (Zníženie istiny).
+                  Pri podpise zmluvy vám okamžite odpočítame schválenú dotáciu z ceny nehnuteľnosti (Zníženie istiny).
                 </p>
               </Card>
 

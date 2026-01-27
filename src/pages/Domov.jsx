@@ -352,7 +352,7 @@ export default function Domov() {
             </Link>
           </motion.div>
           <p className="text-white text-sm sm:text-lg font-bold mt-4 drop-shadow-lg">
-            🎁 Získajte dotáciu 5% + Prevádzkový grant na energie!
+            🎁 Získajte finančnú dotáciu + Prevádzkový grant na energie!
           </p>
         </div>
       </section>
