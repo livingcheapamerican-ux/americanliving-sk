@@ -314,7 +314,7 @@ export default function Domov() {
       </section>
 
       {/* DOTÁCIA AMERICANA - Blikajúce tlačidlo */}
-      <section className="py-6 sm:py-8 bg-gradient-to-br from-emerald-600 via-green-600 to-emerald-700 relative overflow-hidden">
+      <section className="py-6 sm:py-8 bg-gradient-to-br from-yellow-500 via-amber-500 to-yellow-600 relative overflow-hidden">
         <div className="container mx-auto px-4 text-center">
           <motion.div
             animate={{ 
