@@ -313,16 +313,31 @@ export default function Domov() {
         </div>
       </section>
 
-      {/* DOTÁCIA AMERICANA - Blikajúce tlačidlo */}
-      <section className="py-6 sm:py-8 bg-gradient-to-br from-[#B8860B] via-[#DAA520] to-[#B8860B] relative overflow-hidden">
-        <div className="container mx-auto px-4 text-center">
+      {/* DOTÁCIA AMERICANA - Luxusná zlatá tehla */}
+      <section className="py-6 sm:py-8 relative overflow-hidden">
+        {/* Zlatá tehla pozadie s textúrou */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37] via-[#FFD700] to-[#C9A536]"></div>
+        <div className="absolute inset-0 opacity-20" style={{
+          backgroundImage: `repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(0,0,0,0.05) 10px,
+            rgba(0,0,0,0.05) 20px
+          )`
+        }}></div>
+        
+        {/* Lesklý zlatý efekt overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+        
+        <div className="container mx-auto px-4 text-center relative z-10">
           <motion.div
             animate={{ 
               scale: [1, 1.05, 1],
               boxShadow: [
-                "0 0 20px rgba(16, 185, 129, 0.5)",
-                "0 0 60px rgba(16, 185, 129, 0.8)",
-                "0 0 20px rgba(16, 185, 129, 0.5)"
+                "0 0 40px rgba(212, 175, 55, 0.6)",
+                "0 0 80px rgba(255, 215, 0, 0.8)",
+                "0 0 40px rgba(212, 175, 55, 0.6)"
               ]
             }}
             transition={{ duration: 2, repeat: Infinity }}
@@ -331,31 +346,41 @@ export default function Domov() {
             <Link to={createPageUrl("DotaciaAmericana")}>
               <Button 
                 size="lg" 
-                className="bg-white hover:bg-yellow-50 text-emerald-700 font-black text-xl sm:text-3xl md:text-4xl px-8 sm:px-16 py-6 sm:py-10 shadow-2xl border-4 border-yellow-400 relative overflow-hidden group"
+                className="bg-gradient-to-br from-white via-yellow-50 to-white hover:from-yellow-50 hover:via-white hover:to-yellow-50 text-[#8B6914] font-black text-xl sm:text-3xl md:text-4xl px-8 sm:px-16 py-6 sm:py-10 shadow-[0_8px_30px_rgba(212,175,55,0.5)] border-4 border-[#D4AF37] relative overflow-hidden group"
               >
                 <motion.div
                   animate={{ rotate: [0, 5, -5, 0] }}
                   transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
                   className="flex flex-col items-center"
                 >
-                  <span className="text-emerald-700 drop-shadow-lg">DOTÁCIA</span>
-                  <span className="text-red-600 text-2xl sm:text-4xl drop-shadow-lg">AMERICANA</span>
+                  <span className="text-[#8B6914] drop-shadow-[0_2px_10px_rgba(212,175,55,0.8)]">DOTÁCIA</span>
+                  <span className="text-red-600 text-2xl sm:text-4xl drop-shadow-[0_2px_10px_rgba(212,175,55,0.8)]">AMERICANA</span>
                 </motion.div>
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 1, repeat: Infinity }}
-                  className="absolute -right-2 -top-2 bg-red-600 text-white text-xs sm:text-sm font-bold px-3 py-1 rounded-full rotate-12"
+                  className="absolute -right-2 -top-2 bg-gradient-to-br from-red-600 to-red-700 text-white text-xs sm:text-sm font-bold px-3 py-1 rounded-full rotate-12 shadow-xl"
                 >
                   NOVÉ!
                 </motion.div>
               </Button>
             </Link>
           </motion.div>
-          <p className="text-white text-sm sm:text-lg font-bold mt-4 drop-shadow-lg">
+          <p className="text-[#5D4E37] text-sm sm:text-lg font-bold mt-4 drop-shadow-[0_2px_8px_rgba(255,255,255,0.8)]">
             🎁 Získajte finančnú dotáciu + Prevádzkový grant na energie!
           </p>
         </div>
       </section>
+      
+      <style>{`
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        .animate-shimmer {
+          animation: shimmer 3s infinite;
+        }
+      `}</style>
 
       {/* Fixácia úrokov - Nová sekcia */}
       <section className="py-8 sm:py-12 bg-gradient-to-br from-red-900 via-red-800 to-red-700 relative overflow-hidden">
