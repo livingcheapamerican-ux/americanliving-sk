@@ -25,6 +25,8 @@ export default function DotaciaAmericana() {
   const [modalType, setModalType] = useState(null); // 'rodina' or 'investor'
   const pianoRef = useRef(null);
   const houseRef = useRef(null);
+  const [rodinaIndex, setRodinaIndex] = useState(0);
+  const [investorIndex, setInvestorIndex] = useState(0);
 
   // Fetch houses for product section
   const { data: houses } = useQuery({
@@ -34,6 +36,33 @@ export default function DotaciaAmericana() {
       return allHouses.filter(h => h.vyrobca === 'Prosto House' || h.nazov.includes('Teacup'));
     }
   });
+
+  // Fetch hero settings
+  const { data: heroSettings } = useQuery({
+    queryKey: ['dotacia-hero-settings'],
+    queryFn: async () => {
+      const settings = await base44.entities.DotaciaHeroSettings.filter({ klic: 'hero_settings' });
+      return settings[0] || null;
+    }
+  });
+
+  // Slideshow for Rodina
+  useEffect(() => {
+    if (!heroSettings?.rodina_fotky?.length) return;
+    const interval = setInterval(() => {
+      setRodinaIndex((prev) => (prev + 1) % heroSettings.rodina_fotky.length);
+    }, heroSettings.rodina_interval || 5000);
+    return () => clearInterval(interval);
+  }, [heroSettings?.rodina_fotky, heroSettings?.rodina_interval]);
+
+  // Slideshow for Investor
+  useEffect(() => {
+    if (!heroSettings?.investor_fotky?.length) return;
+    const interval = setInterval(() => {
+      setInvestorIndex((prev) => (prev + 1) % heroSettings.investor_fotky.length);
+    }, heroSettings.investor_interval || 5000);
+    return () => clearInterval(interval);
+  }, [heroSettings?.investor_fotky, heroSettings?.investor_interval]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -93,17 +122,32 @@ export default function DotaciaAmericana() {
           onMouseEnter={() => playSound('piano')}
           onMouseLeave={() => stopSound('piano')}
         >
-          {/* Video Background */}
+          {/* Image Background with Slideshow */}
           <div className="absolute inset-0 bg-gradient-to-br from-orange-400/20 via-amber-300/10 to-transparent z-10 pointer-events-none"></div>
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover"
-          >
-            <source src="https://player.vimeo.com/external/371433846.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164" type="video/mp4" />
-          </video>
+          {heroSettings?.rodina_fotky?.length > 0 ? (
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={rodinaIndex}
+                src={heroSettings.rodina_fotky[rodinaIndex]}
+                alt="Rodina & Istota"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1 }}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </AnimatePresence>
+          ) : (
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="https://player.vimeo.com/external/371433846.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164" type="video/mp4" />
+            </video>
+          )}
           
           {/* Content Overlay */}
           <div className="relative z-20 flex flex-col items-center justify-center h-full p-4 sm:p-8 text-center">
@@ -140,17 +184,32 @@ export default function DotaciaAmericana() {
           onMouseEnter={() => playSound('house')}
           onMouseLeave={() => stopSound('house')}
         >
-          {/* Video Background */}
+          {/* Image Background with Slideshow */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-indigo-900/20 to-transparent z-10 pointer-events-none"></div>
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover"
-          >
-            <source src="https://player.vimeo.com/external/434045526.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164" type="video/mp4" />
-          </video>
+          {heroSettings?.investor_fotky?.length > 0 ? (
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={investorIndex}
+                src={heroSettings.investor_fotky[investorIndex]}
+                alt="Investícia & Výnos"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1 }}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </AnimatePresence>
+          ) : (
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="https://player.vimeo.com/external/434045526.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164" type="video/mp4" />
+            </video>
+          )}
 
           {/* Content Overlay */}
           <div className="relative z-20 flex flex-col items-center justify-center h-full p-4 sm:p-8 text-center">

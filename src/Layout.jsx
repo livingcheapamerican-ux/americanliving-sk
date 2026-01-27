@@ -419,10 +419,15 @@ function LayoutContent({ children }) {
                     <Zap className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                   </Button>
                 </Link>
+                <Link to={createPageUrl("AdminDotaciaHero")}>
+                  <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title="Dotácia Hero">
+                    <Gift className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                  </Button>
+                </Link>
                 </>
                 )}
-            {isAdmin && (
-              <>
+                {isAdmin && (
+                <>
                 <Link to={createPageUrl("AdminDokumenty")}>
                   <Button variant="ghost" size="icon" className="text-primary hover:text-primary/80 h-7 w-7 lg:h-8 lg:w-8" title={t('adminDocuments')}>
                     <FileText className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
