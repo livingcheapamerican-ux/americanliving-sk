@@ -548,17 +548,19 @@ export default function DotaciaAmericana() {
               viewport={{ once: true }}
               className="text-center"
             >
-              <div className="inline-block mb-6 px-6 py-3 bg-white/20 backdrop-blur-md border-2 border-accent rounded-lg">
-                <p className="text-lg sm:text-2xl font-serif font-bold text-white drop-shadow-lg">
-                  ⚠️ Stav fondu: <span className="text-accent drop-shadow-lg">OTVORENÝ</span> do vyčerpania kapacity
+              <div className="inline-block mb-6 px-6 py-3 bg-black/60 backdrop-blur-md border-2 border-accent rounded-lg shadow-2xl">
+                <p className="text-lg sm:text-2xl font-serif font-bold text-white" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>
+                  ⚠️ Stav fondu: <span className="text-accent" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>OTVORENÝ</span> do vyčerpania kapacity
                 </p>
               </div>
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold mb-6 text-white drop-shadow-lg">
-                Pridelenie dotácie prebieha na základe poradia žiadostí
-              </h2>
-              <p className="text-base sm:text-xl font-sans mb-8 text-white drop-shadow-lg max-w-2xl mx-auto">
-                Pre tento kvartál sme uvoľnili prostriedky len pre 15 stavieb. Po naplnení kvóty bude dotačná výzva uzavretá.
-              </p>
+              <div className="bg-black/50 backdrop-blur-sm rounded-2xl p-6 mb-8 shadow-2xl">
+                <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold mb-6 text-white" style={{ textShadow: '3px 3px 10px rgba(0,0,0,0.9)' }}>
+                  Pridelenie dotácie prebieha na základe poradia žiadostí
+                </h2>
+                <p className="text-base sm:text-xl font-sans text-white max-w-2xl mx-auto" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>
+                  Pre tento kvartál sme uvoľnili prostriedky len pre 15 stavieb. Po naplnení kvóty bude dotačná výzva uzavretá.
+                </p>
+              </div>
 
               <div className="bg-white p-6 sm:p-10 rounded-2xl shadow-2xl">
                 <h3 className="text-xl sm:text-2xl font-serif font-bold text-primary mb-6">
