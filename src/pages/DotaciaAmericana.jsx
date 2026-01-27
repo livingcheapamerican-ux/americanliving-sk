@@ -214,7 +214,7 @@ export default function DotaciaAmericana() {
           onClick={() => setModalType('rodina')}
         >
           {/* Image Background with Slideshow */}
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/30 via-green-300/20 to-yellow-200/15 z-10 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 z-10 pointer-events-none"></div>
           {heroSettings?.rodina_fotky?.length > 0 ? (
             <AnimatePresence mode="wait">
               <motion.img
@@ -225,14 +225,14 @@ export default function DotaciaAmericana() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 1 }}
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover brightness-90"
               />
             </AnimatePresence>
           ) : (
             <img
               src="https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1200&q=80"
               alt="Šťastná rodina v novom dome"
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover brightness-90"
             />
           )}
           
@@ -249,7 +249,7 @@ export default function DotaciaAmericana() {
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-2xl border-4 border-emerald-500 shadow-2xl"
+              className="bg-white/90 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-emerald-500 shadow-2xl max-w-2xl"
             >
               {/* Video Container for HeyGen Avatar */}
               <div id="video-ambassador" className="mb-4 sm:mb-6 aspect-video bg-gray-100 rounded-lg overflow-hidden border-2 border-emerald-200">
@@ -286,7 +286,7 @@ export default function DotaciaAmericana() {
           onClick={() => setModalType('investor')}
         >
           {/* Image Background with Slideshow */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-indigo-900/20 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 z-10 pointer-events-none"></div>
           {heroSettings?.investor_fotky?.length > 0 ? (
             <AnimatePresence mode="wait">
               <motion.img
@@ -297,7 +297,7 @@ export default function DotaciaAmericana() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 1 }}
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover brightness-90"
               />
             </AnimatePresence>
           ) : (
@@ -306,7 +306,7 @@ export default function DotaciaAmericana() {
               loop
               muted
               playsInline
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover brightness-90"
             >
               <source src="https://player.vimeo.com/external/434045526.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164" type="video/mp4" />
             </video>
@@ -325,7 +325,7 @@ export default function DotaciaAmericana() {
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="bg-black/30 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border-2 border-yellow-400/50"
+              className="bg-black/60 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border-2 border-yellow-400/50 max-w-2xl"
             >
               {/* Video Container for HeyGen Avatar */}
               <div id="video-partner" className="mb-4 sm:mb-6 aspect-video bg-black/30 rounded-lg overflow-hidden">
