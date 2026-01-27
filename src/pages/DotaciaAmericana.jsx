@@ -316,7 +316,7 @@ export default function DotaciaAmericana() {
           </button>
 
           {/* Content Overlay */}
-          <div className="relative z-20 flex flex-col items-center justify-center h-full p-4 sm:p-8 text-center">
+          <div className="relative z-20 flex flex-col items-center justify-start pt-12 sm:pt-16 h-full p-4 sm:p-8 text-center">
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
