@@ -119,8 +119,6 @@ export default function DotaciaAmericana() {
           transition={{ duration: 0.8 }}
           className="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden group cursor-pointer"
           onClick={() => setModalType('rodina')}
-          onMouseEnter={() => playSound('piano')}
-          onMouseLeave={() => stopSound('piano')}
         >
           {/* Image Background with Slideshow */}
           <div className="absolute inset-0 bg-gradient-to-br from-orange-400/20 via-amber-300/10 to-transparent z-10 pointer-events-none"></div>
@@ -181,8 +179,6 @@ export default function DotaciaAmericana() {
           transition={{ duration: 0.8 }}
           className="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden group cursor-pointer"
           onClick={() => setModalType('investor')}
-          onMouseEnter={() => playSound('house')}
-          onMouseLeave={() => stopSound('house')}
         >
           {/* Image Background with Slideshow */}
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-indigo-900/20 to-transparent z-10 pointer-events-none"></div>
