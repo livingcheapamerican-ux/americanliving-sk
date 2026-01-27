@@ -656,7 +656,7 @@ export default function DotaciaAmericana() {
                 </span>
               </div>
               <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
-                PROCES ČERPANIA DOTÁCIE
+                AKO TO FUNGUJE
               </h2>
             </motion.div>
 
