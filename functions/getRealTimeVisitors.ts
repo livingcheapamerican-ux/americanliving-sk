@@ -10,14 +10,25 @@ Deno.serve(async (req) => {
     }
 
     // Načítaj iba aktívne sessions (is_active = true)
-    const sessions = await base44.asServiceRole.entities.UserSession.filter({
+    const activeSessions = await base44.asServiceRole.entities.UserSession.filter({
       is_active: true
     });
 
+    // Filter sessions ktoré mali aktivitu za posledných 5 minút
+    const now = new Date();
+    const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+
+    const reallySessions = activeSessions.filter(s => {
+      const lastActivity = s.last_activity ? new Date(s.last_activity) : new Date(s.start_time);
+      return lastActivity >= fiveMinutesAgo;
+    });
+
+    console.log(`📊 Active sessions: ${activeSessions.length}, Really online: ${reallySessions.length}`);
+
     // Vráť počet a detaily
     return Response.json({
-      count: sessions.length,
-      sessions: sessions.map(s => ({
+      count: reallySessions.length,
+      sessions: reallySessions.map(s => ({
         id: s.id,
         user_email: s.user_email,
         user_name: s.user_name,

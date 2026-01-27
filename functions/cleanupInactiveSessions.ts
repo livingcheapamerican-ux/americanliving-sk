@@ -1,54 +1,68 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     
-    // Service role - automatická úloha
-    const INACTIVE_THRESHOLD_MINUTES = 5; // Session je neaktívna po 5 minútach nečinnosti
-    
-    // Vypočítaj threshold čas
-    const thresholdTime = new Date(Date.now() - INACTIVE_THRESHOLD_MINUTES * 60 * 1000);
-    
+    const user = await base44.auth.me();
+    if (!user || user.role !== 'admin') {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const now = new Date();
+    const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+
+    console.log('🧹 Starting cleanup...', {
+      now: now.toISOString(),
+      threshold: fiveMinutesAgo.toISOString()
+    });
+
     // Načítaj všetky aktívne sessions
     const activeSessions = await base44.asServiceRole.entities.UserSession.filter({
       is_active: true
     });
+
+    console.log(`📊 Found ${activeSessions.length} active sessions`);
+
+    // Filter sessions ktoré nemajú last_activity update viac ako 5 minút
+    const staleSessionIds = [];
     
-    console.log(`Našiel som ${activeSessions.length} aktívnych sessions`);
-    
-    // Filtruj tie, ktoré sú neaktívne (posledná aktivita > 5 minút)
-    const inactiveSessions = activeSessions.filter(session => {
-      const lastActivity = session.last_activity || session.updated_date || session.start_time;
-      const lastActivityDate = new Date(lastActivity);
-      return lastActivityDate < thresholdTime;
-    });
-    
-    console.log(`Označujem ${inactiveSessions.length} sessions ako neaktívne`);
-    
-    // Aktualizuj všetky neaktívne sessions
-    const updatePromises = inactiveSessions.map(session => 
-      base44.asServiceRole.entities.UserSession.update(session.id, {
+    for (const session of activeSessions) {
+      const lastActivity = session.last_activity ? new Date(session.last_activity) : new Date(session.start_time);
+      
+      if (lastActivity < fiveMinutesAgo) {
+        staleSessionIds.push(session.id);
+        console.log(`⏰ Session ${session.session_id} is stale`, {
+          last_activity: lastActivity.toISOString(),
+          user: session.user_email
+        });
+      }
+    }
+
+    console.log(`🔄 Marking ${staleSessionIds.length} sessions as inactive`);
+
+    // Bulk update - nastav is_active na false a end_time
+    let updatedCount = 0;
+    for (const sessionId of staleSessionIds) {
+      await base44.asServiceRole.entities.UserSession.update(sessionId, {
         is_active: false,
-        end_time: session.last_activity || session.updated_date || new Date().toISOString()
-      })
-    );
-    
-    await Promise.all(updatePromises);
-    
-    // Spočítaj iba skutočne aktívne sessions
-    const realActiveCount = activeSessions.length - inactiveSessions.length;
-    
+        end_time: now.toISOString()
+      });
+      updatedCount++;
+    }
+
+    console.log(`✅ Cleanup complete: ${updatedCount} sessions marked inactive`);
+
     return Response.json({
       success: true,
-      total_active_before: activeSessions.length,
-      marked_inactive: inactiveSessions.length,
-      real_active_now: realActiveCount,
-      threshold_minutes: INACTIVE_THRESHOLD_MINUTES
+      total_active: activeSessions.length,
+      marked_inactive: updatedCount,
+      still_active: activeSessions.length - updatedCount,
+      threshold_time: fiveMinutesAgo.toISOString()
     });
 
   } catch (error) {
-    console.error('Error:', error);
+    console.error('❌ Cleanup error:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
