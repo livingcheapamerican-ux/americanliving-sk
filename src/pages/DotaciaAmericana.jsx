@@ -28,12 +28,17 @@ export default function DotaciaAmericana() {
   const [rodinaIndex, setRodinaIndex] = useState(0);
   const [investorIndex, setInvestorIndex] = useState(0);
 
-  // Fetch houses for product section
+  // Fetch houses for product section - only visible houses with photos
   const { data: houses } = useQuery({
     queryKey: ['dotacia-houses'],
     queryFn: async () => {
       const allHouses = await base44.entities.Dom.list();
-      return allHouses.filter(h => h.vyrobca === 'Prosto House' || h.nazov.includes('Teacup'));
+      return allHouses.filter(h => {
+        const isVisible = h.verejny !== false;
+        const hasMainImage = h.hlavny_obrazok && h.hlavny_obrazok.length > 0;
+        const isProstoOrTeacup = h.vyrobca === 'Prosto House' || h.nazov?.includes('Teacup');
+        return isVisible && hasMainImage && isProstoOrTeacup;
+      });
     }
   });
 
@@ -182,14 +187,19 @@ export default function DotaciaAmericana() {
               transition={{ duration: 0.3 }}
               className="bg-black/20 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border-2 border-white/30"
             >
+              {/* Video Container for HeyGen Avatar */}
+              <div id="video-ambassador" className="mb-4 sm:mb-6 aspect-video bg-black/30 rounded-lg overflow-hidden">
+                {/* HeyGen Blonde Female Avatar will be inserted here */}
+              </div>
+
               <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3 sm:mb-4 drop-shadow-2xl leading-tight">
-                PROGRAM AMBASSADOR
+                Program AMBASSADOR
               </h2>
               <p className="text-sm sm:text-base md:text-xl text-white/95 mb-2 sm:mb-3 drop-shadow-lg font-sans font-medium">
-                Dotačný grant na rodinné bývanie + Prevádzkový príspevok na energie
+                Dotované bývanie pre rodiny
               </p>
               <p className="text-xs sm:text-sm md:text-base text-white/85 mb-4 sm:mb-6 drop-shadow-lg font-sans max-w-md mx-auto">
-                Fond American Living alokoval prostriedky na podporu 15 rodín. Získajte príspevok na výstavbu a mesačnú rentu za reprezentáciu.
+                Získajte príspevok na výstavbu domu a dotáciu na energie výmenou za referenčnú spoluprácu. Bývajte vo vlastnom lacnejšie ako v nájme.
               </p>
               <Button
                 size="lg"
@@ -245,14 +255,19 @@ export default function DotaciaAmericana() {
               transition={{ duration: 0.3 }}
               className="bg-black/30 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border-2 border-yellow-400/50"
             >
+              {/* Video Container for HeyGen Avatar */}
+              <div id="video-partner" className="mb-4 sm:mb-6 aspect-video bg-black/30 rounded-lg overflow-hidden">
+                {/* HeyGen Business Male Avatar will be inserted here */}
+              </div>
+
               <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3 sm:mb-4 drop-shadow-2xl leading-tight">
-                PROGRAM PARTNER
+                Program INVESTOR & PARTNER
               </h2>
               <p className="text-sm sm:text-base md:text-xl text-white/95 mb-2 sm:mb-3 drop-shadow-lg font-sans font-medium">
-                Investičný stimul pre podnikateľov + Garancia obsadenosti
+                Investícia s garanciou správy
               </p>
               <p className="text-xs sm:text-sm md:text-base text-white/85 mb-4 sm:mb-6 drop-shadow-lg font-sans max-w-md mx-auto">
-                Otvárame dotačnú schému pre výstavbu testovacích centier. My zainvestujeme do vašej nehnuteľnosti, vy inkasujete zisk.
+                Investujte do rekreačných domov. My zabezpečíme výstavbu, marketing a hostí. Vy vlastníte nehnuteľnosť a inkasujete výnos bez starostí. (Žiadne testovacie centrum – plná prevádzka).
               </p>
               <Button
                 size="lg"
@@ -558,7 +573,7 @@ export default function DotaciaAmericana() {
                   Pridelenie dotácie prebieha na základe poradia žiadostí
                 </h2>
                 <p className="text-base sm:text-xl font-sans text-white max-w-2xl mx-auto" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>
-                  Pre tento kvartál sme uvoľnili prostriedky len pre 15 stavieb. Po naplnení kvóty bude dotačná výzva uzavretá.
+                  Fond American Living alokoval prostriedky na podporu rodinného bývania a investičných príležitostí. Žiadosti sa vyhodnocujú priebežne.
                 </p>
               </div>
 
