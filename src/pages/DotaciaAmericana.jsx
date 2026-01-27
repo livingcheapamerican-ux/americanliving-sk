@@ -5,12 +5,12 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CheckCircle, Euro, Home, Phone, ArrowRight, Gift, TrendingUp, Users, Play, Zap, Shield, Calendar, DollarSign, Star, Map, X, FileText } from "lucide-react";
+import { CheckCircle, Euro, Home, Phone, ArrowRight, Gift, TrendingUp, Users, Play, Zap, Shield, Calendar, DollarSign, Star, Map, X, FileText, Edit, Upload, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../components/LanguageContext";
 import { base44 } from "@/api/base44Client";
 import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function DotaciaAmericana() {
   const { t } = useLanguage();
@@ -27,6 +27,8 @@ export default function DotaciaAmericana() {
   const houseRef = useRef(null);
   const [rodinaIndex, setRodinaIndex] = useState(0);
   const [investorIndex, setInvestorIndex] = useState(0);
+  const [showPhotoManager, setShowPhotoManager] = useState(null); // 'rodina' or 'investor'
+  const [uploading, setUploading] = useState(false);
 
   // Fetch houses for product section - only visible houses with photos
   const { data: houses } = useQuery({
@@ -47,9 +49,21 @@ export default function DotaciaAmericana() {
     queryKey: ['dotacia-hero-settings'],
     queryFn: async () => {
       const settings = await base44.entities.DotaciaHeroSettings.filter({ klic: 'hero_settings' });
-      return settings[0] || null;
+      if (settings.length === 0) {
+        const newSettings = await base44.entities.DotaciaHeroSettings.create({
+          klic: 'hero_settings',
+          rodina_fotky: [],
+          rodina_interval: 5000,
+          investor_fotky: [],
+          investor_interval: 5000
+        });
+        return newSettings;
+      }
+      return settings[0];
     }
   });
+
+  const queryClient = useQueryClient();
 
   // Slideshow for Rodina
   useEffect(() => {
@@ -107,6 +121,50 @@ export default function DotaciaAmericana() {
       houseRef.current.pause();
       houseRef.current.currentTime = 0;
     }
+  };
+
+  const handlePhotoUpload = async (e, type) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    setUploading(true);
+    try {
+      const uploadedUrls = [];
+      for (const file of files) {
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        uploadedUrls.push(file_url);
+      }
+
+      const currentPhotos = type === 'rodina' ? heroSettings.rodina_fotky : heroSettings.investor_fotky;
+      const newPhotos = [...(currentPhotos || []), ...uploadedUrls];
+
+      await base44.entities.DotaciaHeroSettings.update(heroSettings.id, 
+        type === 'rodina' 
+          ? { rodina_fotky: newPhotos }
+          : { investor_fotky: newPhotos }
+      );
+      
+      queryClient.invalidateQueries(['dotacia-hero-settings']);
+      toast.success(`${uploadedUrls.length} fotiek nahraných`);
+    } catch (error) {
+      toast.error("Chyba pri nahrávaní fotiek");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleDeletePhoto = async (type, index) => {
+    const currentPhotos = type === 'rodina' ? heroSettings.rodina_fotky : heroSettings.investor_fotky;
+    const newPhotos = currentPhotos.filter((_, i) => i !== index);
+
+    await base44.entities.DotaciaHeroSettings.update(heroSettings.id,
+      type === 'rodina' 
+        ? { rodina_fotky: newPhotos }
+        : { investor_fotky: newPhotos }
+    );
+    
+    queryClient.invalidateQueries(['dotacia-hero-settings']);
+    toast.success("Fotka vymazaná");
   };
 
   return (
@@ -246,6 +304,14 @@ export default function DotaciaAmericana() {
             </video>
           )}
 
+          {/* Edit Button */}
+          <button
+            onClick={(e) => { e.stopPropagation(); setShowPhotoManager('investor'); }}
+            className="absolute top-4 right-4 z-30 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all"
+          >
+            <Edit className="w-5 h-5 text-yellow-600" />
+          </button>
+
           {/* Content Overlay */}
           <div className="relative z-20 flex flex-col items-center justify-center h-full p-4 sm:p-8 text-center">
             <motion.div
@@ -279,6 +345,65 @@ export default function DotaciaAmericana() {
           </div>
         </motion.div>
       </section>
+
+      {/* PHOTO MANAGER MODAL */}
+      <AnimatePresence>
+        {showPhotoManager && heroSettings && (
+          <Dialog open={!!showPhotoManager} onOpenChange={() => setShowPhotoManager(null)}>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-serif font-bold text-primary">
+                  {showPhotoManager === 'rodina' ? '🏡 Správa fotiek - Program Ambassador' : '📈 Správa fotiek - Program Partner'}
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-4">
+                <div>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={(e) => handlePhotoUpload(e, showPhotoManager)}
+                    className="hidden"
+                    id={`upload-${showPhotoManager}`}
+                  />
+                  <label htmlFor={`upload-${showPhotoManager}`}>
+                    <Button
+                      type="button"
+                      disabled={uploading}
+                      className="w-full"
+                      onClick={() => document.getElementById(`upload-${showPhotoManager}`).click()}
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      {uploading ? "Nahrávam..." : "Nahrať nové fotky"}
+                    </Button>
+                  </label>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {(showPhotoManager === 'rodina' ? heroSettings.rodina_fotky : heroSettings.investor_fotky)?.map((url, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={url}
+                        alt={`Fotka ${index + 1}`}
+                        className="w-full h-40 object-cover rounded-lg"
+                      />
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => handleDeletePhoto(showPhotoManager, index)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
+      </AnimatePresence>
 
       {/* MODALS */}
       <AnimatePresence>
