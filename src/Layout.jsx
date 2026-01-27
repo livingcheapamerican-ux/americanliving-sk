@@ -284,6 +284,7 @@ function LayoutContent({ children }) {
                   : null;
 
                 const isCatalog = item.path === createPageUrl("Katalog");
+                const isDotacia = item.name === "DOTÁCIA";
 
                 return (
                   <Link
@@ -294,9 +295,16 @@ function LayoutContent({ children }) {
                       isActive(item.path)
                         ? 'bg-primary text-white'
                         : 'text-gray-700 hover:bg-gray-100'
-                    } ${isCatalog ? 'nav-blink' : ''}`}
+                    } ${isCatalog ? 'nav-blink' : ''} ${isDotacia ? 'flex flex-col items-center leading-tight' : ''}`}
                   >
-                    {item.name}
+                    {isDotacia ? (
+                      <>
+                        <span>DOTÁCIA</span>
+                        <span className="text-[10px] font-bold" style={{ color: '#EF4444' }}>AMERICANA</span>
+                      </>
+                    ) : (
+                      item.name
+                    )}
                   </Link>
                 );
               })}
@@ -486,21 +494,31 @@ function LayoutContent({ children }) {
                 </a>
               </div>
 
-              {[...navItems, ...adminNavItems].map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
-                    isActive(item.path)
-                      ? 'bg-primary text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <item.icon className="w-5 h-5" />
-                  {item.name}
-                </Link>
-              ))}
+              {[...navItems, ...adminNavItems].map((item) => {
+                const isDotacia = item.name === "DOTÁCIA";
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
+                      isActive(item.path)
+                        ? 'bg-primary text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <item.icon className="w-5 h-5" />
+                    {isDotacia ? (
+                      <div className="flex flex-col leading-tight">
+                        <span>DOTÁCIA</span>
+                        <span className="text-xs font-bold" style={{ color: '#EF4444' }}>AMERICANA</span>
+                      </div>
+                    ) : (
+                      item.name
+                    )}
+                  </Link>
+                );
+              })}
               {isSuperAdmin && (
                 <>
                   <Link
