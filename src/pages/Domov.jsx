@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
   ArrowRight, CheckCircle, Home, Zap, Clock, Shield, Euro,
-  FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings, LogIn
+  FileText, Hammer, Key, Phone, Building2, ChevronRight, Building, Landmark, TrendingUp, Settings, LogIn, Gift
 } from "lucide-react";
 import { motion } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
@@ -310,6 +310,50 @@ export default function Domov() {
               }`}
             />
           ))}
+        </div>
+      </section>
+
+      {/* DOTÁCIA AMERICANA - Blikajúce tlačidlo */}
+      <section className="py-6 sm:py-8 bg-gradient-to-br from-emerald-600 via-green-600 to-emerald-700 relative overflow-hidden">
+        <div className="container mx-auto px-4 text-center">
+          <motion.div
+            animate={{ 
+              scale: [1, 1.05, 1],
+              boxShadow: [
+                "0 0 20px rgba(16, 185, 129, 0.5)",
+                "0 0 60px rgba(16, 185, 129, 0.8)",
+                "0 0 20px rgba(16, 185, 129, 0.5)"
+              ]
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="inline-block"
+          >
+            <Link to={createPageUrl("DotaciaAmericana")}>
+              <Button 
+                size="lg" 
+                className="bg-white hover:bg-yellow-50 text-emerald-700 font-black text-xl sm:text-3xl md:text-4xl px-8 sm:px-16 py-6 sm:py-10 shadow-2xl border-4 border-yellow-400 relative overflow-hidden group"
+              >
+                <motion.div
+                  animate={{ rotate: [0, 5, -5, 0] }}
+                  transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
+                  className="flex flex-col items-center"
+                >
+                  <span className="text-emerald-700 drop-shadow-lg">DOTÁCIA</span>
+                  <span className="text-red-600 text-2xl sm:text-4xl drop-shadow-lg">AMERICANA</span>
+                </motion.div>
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                  className="absolute -right-2 -top-2 bg-red-600 text-white text-xs sm:text-sm font-bold px-3 py-1 rounded-full rotate-12"
+                >
+                  NOVÉ!
+                </motion.div>
+              </Button>
+            </Link>
+          </motion.div>
+          <p className="text-white text-sm sm:text-lg font-bold mt-4 drop-shadow-lg">
+            🎁 Získajte dotáciu 5% + Prevádzkový grant na energie!
+          </p>
         </div>
       </section>
 
