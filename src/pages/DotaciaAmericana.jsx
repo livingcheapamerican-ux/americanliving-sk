@@ -278,11 +278,11 @@ export default function DotaciaAmericana() {
           </button>
 
           {/* Content Overlay */}
-          <div className="relative z-20 flex flex-col items-center justify-start pt-12 sm:pt-16 h-full p-4 sm:p-8 text-center">
+          <div className="relative z-20 flex flex-col items-start md:items-center justify-start md:justify-start pt-4 md:pt-16 h-full p-4 sm:p-8 text-left md:text-center">
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="bg-white/85 backdrop-blur-sm p-3 sm:p-4 rounded-xl border-2 border-emerald-500 shadow-xl max-w-md"
+              className="bg-white/85 backdrop-blur-sm p-2 sm:p-4 rounded-xl border-2 border-emerald-500 shadow-xl max-w-xs sm:max-w-md"
             >
               <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-gray-900 mb-2 leading-tight">
                 Program AMBASSADOR
@@ -358,11 +358,11 @@ export default function DotaciaAmericana() {
           </button>
 
           {/* Content Overlay */}
-          <div className="relative z-20 flex flex-col items-center justify-start pt-12 sm:pt-16 h-full p-4 sm:p-8 text-center">
+          <div className="relative z-20 flex flex-col items-start md:items-center justify-start md:justify-start pt-4 md:pt-16 h-full p-4 sm:p-8 text-left md:text-center">
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="bg-black/70 backdrop-blur-sm p-3 sm:p-4 rounded-xl border-2 border-yellow-400/50 max-w-md"
+              className="bg-black/70 backdrop-blur-sm p-2 sm:p-4 rounded-xl border-2 border-yellow-400/50 max-w-xs sm:max-w-md"
             >
               <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-white mb-2 drop-shadow-xl leading-tight">
                 Program INVESTOR & PARTNER
