@@ -238,18 +238,33 @@ export default function DotaciaAmericana() {
               <motion.img
                 key={rodinaIndex}
                 src={heroSettings.rodina_fotky[rodinaIndex]}
+                srcSet={`
+                  ${heroSettings.rodina_fotky[rodinaIndex]}?w=800&q=70 800w,
+                  ${heroSettings.rodina_fotky[rodinaIndex]}?w=1200&q=75 1200w,
+                  ${heroSettings.rodina_fotky[rodinaIndex]}?w=1600&q=80 1600w
+                `}
+                sizes="(max-width: 768px) 100vw, 50vw"
                 alt="Rodina & Istota"
+                loading="eager"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 1 }}
+                transition={{ duration: 0.3 }}
                 className="absolute inset-0 w-full h-full object-cover brightness-90"
+                onLoad={(e) => e.target.style.opacity = 1}
               />
             </AnimatePresence>
           ) : (
             <img
-              src="https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1200&q=80"
+              src="https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1200&q=75"
+              srcSet="
+                https://images.unsplash.com/photo-1560518883-ff514cd811de?w=800&q=70 800w,
+                https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1200&q=75 1200w,
+                https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1600&q=80 1600w
+              "
+              sizes="(max-width: 768px) 100vw, 50vw"
               alt="Šťastná rodina v novom dome"
+              loading="eager"
               className="absolute inset-0 w-full h-full object-cover brightness-90"
             />
           )}
@@ -305,12 +320,20 @@ export default function DotaciaAmericana() {
               <motion.img
                 key={investorIndex}
                 src={heroSettings.investor_fotky[investorIndex]}
+                srcSet={`
+                  ${heroSettings.investor_fotky[investorIndex]}?w=800&q=70 800w,
+                  ${heroSettings.investor_fotky[investorIndex]}?w=1200&q=75 1200w,
+                  ${heroSettings.investor_fotky[investorIndex]}?w=1600&q=80 1600w
+                `}
+                sizes="(max-width: 768px) 100vw, 50vw"
                 alt="Investícia & Výnos"
+                loading="eager"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 1 }}
+                transition={{ duration: 0.3 }}
                 className="absolute inset-0 w-full h-full object-cover brightness-90"
+                onLoad={(e) => e.target.style.opacity = 1}
               />
             </AnimatePresence>
           ) : (
@@ -319,6 +342,7 @@ export default function DotaciaAmericana() {
               loop
               muted
               playsInline
+              preload="auto"
               className="absolute inset-0 w-full h-full object-cover brightness-90"
             >
               <source src="https://player.vimeo.com/external/434045526.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164" type="video/mp4" />
