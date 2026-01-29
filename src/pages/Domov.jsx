@@ -268,12 +268,14 @@ export default function Domov() {
           <div className="max-w-2xl text-white">
             {/* Logo v hero sekcii */}
             <div className="mb-6 sm:mb-10">
-              <img 
-                src={LOGO_URL} 
-                alt="American Living" 
-                className="h-24 sm:h-64 md:h-80 lg:h-96 w-auto drop-shadow-2xl rounded-full"
-                style={{ mixBlendMode: 'multiply' }}
-              />
+              <div className="md:bg-transparent bg-black/30 md:backdrop-blur-none backdrop-blur-sm p-3 md:p-0 rounded-full inline-block">
+                <img 
+                  src={LOGO_URL} 
+                  alt="American Living" 
+                  className="h-24 sm:h-64 md:h-80 lg:h-96 w-auto drop-shadow-2xl rounded-full"
+                  style={{ mixBlendMode: 'multiply' }}
+                />
+              </div>
             </div>
             <h1 className="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-4 leading-tight" style={{ textShadow: '3px 3px 10px rgba(0,0,0,0.9), 0 0 20px rgba(255,255,255,0.3)' }}>
               {t('affordableFamilyHouse')}
@@ -501,7 +503,7 @@ export default function Domov() {
             </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-6xl mx-auto mb-4 sm:mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-4 max-w-6xl mx-auto mb-4 sm:mb-10">
             {sluzby.map((sluzba, index) => (
               <motion.div 
                 key={index}
@@ -583,7 +585,7 @@ export default function Domov() {
             </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-4 mb-4 sm:mb-10">
             {vyhody.map((vyhoda, index) => (
               <motion.div 
                 key={index}

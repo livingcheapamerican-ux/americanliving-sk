@@ -671,17 +671,38 @@ function LayoutContent({ children }) {
                   </Link>
                   </>
                   )}
-              <div className="pt-4 space-y-2">
+              <div className="pt-4 space-y-3 border-t border-gray-200 mt-4">
+                {/* Logo v mobile menu */}
+                <div className="flex justify-center py-3">
+                  <img 
+                    src={LOGO_URL} 
+                    alt="American Living" 
+                    className="h-16 w-auto"
+                  />
+                </div>
+
                 <div className="flex justify-center py-2">
                   <LanguageSelector />
                 </div>
-                <a
-                  href="tel:+421905138124"
-                  className="flex items-center justify-center gap-2 text-primary font-semibold py-3"
-                >
-                  <Phone className="w-5 h-5" />
-                  +421 905 138 124
-                </a>
+
+                {/* Kontakty */}
+                <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                  <a
+                    href="tel:+421905138124"
+                    className="flex items-center justify-center gap-2 text-primary font-semibold py-2"
+                  >
+                    <Phone className="w-5 h-5" />
+                    +421 905 138 124
+                  </a>
+                  <a
+                    href="mailto:info@americanliving.sk"
+                    className="flex items-center justify-center gap-2 text-gray-700 text-sm"
+                  >
+                    <Mail className="w-4 h-4" />
+                    info@americanliving.sk
+                  </a>
+                </div>
+
                 <Link to={createPageUrl("Kontakt")} onClick={() => setMobileMenuOpen(false)}>
                   <Button className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold">
                     {t('contactUs')}
