@@ -665,7 +665,7 @@ export default function DotaciaAmericana() {
                   Výplata prevádzkového grantu
                 </h3>
                 <p className="text-gray-600 leading-relaxed font-sans">
-                  Po odovzdaní domu vám začneme vyplácať "Ambassador Fee" – finančnú odmenu za každú zrealizovanú referenčnú návštevu, ktorá pokryje vaše náklady na energie.
+                  Po odovzdaní domu vám začneme vyplácať "Ambassador Fee"* – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne a máte náklady za energie už uhradené.
                 </p>
               </Card>
             </div>
@@ -918,7 +918,7 @@ export default function DotaciaAmericana() {
                   Výplata prevádzkového grantu
                 </h3>
                 <p className="text-gray-600 leading-relaxed font-sans">
-                  Po odovzdaní domu vám začneme vyplácať "Ambassador Fee" – finančnú odmenu za každú zrealizovanú referenčnú návštevu, ktorá pokryje vaše náklady na energie.
+                  Po odovzdaní domu vám začneme vyplácať "Ambassador Fee"* – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne a máte náklady za energie už uhradené.
                 </p>
               </Card>
             </div>
