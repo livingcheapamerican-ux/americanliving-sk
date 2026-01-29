@@ -32,16 +32,16 @@ export default function DotaciaAmericana() {
 
   // Fetch houses for product section - only visible TicabHouse houses with photos
   const { data: houses } = useQuery({
-    queryKey: ['dotacia-houses'],
+    queryKey: ['dotacia-ticabhouse-houses'],
     queryFn: async () => {
-      const allHouses = await base44.entities.Dom.list();
+      const allHouses = await base44.entities.Dom.filter({ vyrobca: 'Ticab house' });
       return allHouses.filter(h => {
         const isVisible = h.verejny !== false;
         const hasMainImage = h.hlavny_obrazok && h.hlavny_obrazok.length > 0;
-        const isTicabHouse = h.vyrobca === 'Ticab house';
-        return isVisible && hasMainImage && isTicabHouse;
+        return isVisible && hasMainImage;
       });
-    }
+    },
+    staleTime: 0 // Force fresh data
   });
 
   // Fetch hero settings
