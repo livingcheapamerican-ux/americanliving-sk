@@ -275,13 +275,13 @@ export default function Domov() {
                 style={{ mixBlendMode: 'multiply' }}
               />
             </div>
-            <h1 className="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-4 leading-tight drop-shadow-lg">
+            <h1 className="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-4 leading-tight" style={{ textShadow: '3px 3px 10px rgba(0,0,0,0.9), 0 0 20px rgba(255,255,255,0.3)' }}>
               {t('affordableFamilyHouse')}
             </h1>
-            <p className="text-sm sm:text-xl mb-2 sm:mb-4 font-bold text-yellow-300 drop-shadow-lg">
+            <p className="text-sm sm:text-xl mb-2 sm:mb-4 font-bold text-yellow-300" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9), 0 0 15px rgba(255,215,0,0.5)' }}>
               {t('directFromManufacturer')}
             </p>
-            <p className="text-xs sm:text-base md:text-lg mb-3 sm:mb-6 text-gray-100 leading-relaxed drop-shadow-md">
+            <p className="text-xs sm:text-base md:text-lg mb-3 sm:mb-6 text-gray-100 leading-relaxed" style={{ textShadow: '2px 2px 6px rgba(0,0,0,0.9)' }}>
               {t('everythingYouNeed')}
             </p>
             <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-3">
@@ -317,7 +317,7 @@ export default function Domov() {
       <section className="py-6 sm:py-8 relative overflow-hidden">
         {/* Zlatá tehla pozadie s textúrou */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37] via-[#FFD700] to-[#C9A536]"></div>
-        <div className="absolute inset-0 opacity-20" style={{
+        <div className="hidden md:block absolute inset-0 opacity-20" style={{
           backgroundImage: `repeating-linear-gradient(
             45deg,
             transparent,
@@ -327,8 +327,8 @@ export default function Domov() {
           )`
         }}></div>
         
-        {/* Lesklý zlatý efekt overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+        {/* Lesklý zlatý efekt overlay - menej na mobile */}
+        <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
         
         <div className="container mx-auto px-4 text-center relative z-10">
           <motion.div
@@ -351,22 +351,26 @@ export default function Domov() {
                 <motion.div
                   animate={{ rotate: [0, 5, -5, 0] }}
                   transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
-                  className="flex flex-col items-center"
+                  className="hidden md:flex flex-col items-center"
                 >
                   <span className="text-[#8B6914] drop-shadow-[0_2px_10px_rgba(212,175,55,0.8)]">DOTÁCIA</span>
                   <span className="text-red-600 text-2xl sm:text-4xl drop-shadow-[0_2px_10px_rgba(212,175,55,0.8)]">AMERICANA</span>
                 </motion.div>
+                <div className="md:hidden flex flex-col items-center">
+                  <span className="text-[#8B6914] drop-shadow-[0_2px_10px_rgba(212,175,55,0.8)]">DOTÁCIA</span>
+                  <span className="text-red-600 text-2xl drop-shadow-[0_2px_10px_rgba(212,175,55,0.8)]">AMERICANA</span>
+                </div>
                 <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                  className="absolute -right-2 -top-2 bg-gradient-to-br from-red-600 to-red-700 text-white text-xs sm:text-sm font-bold px-3 py-1 rounded-full rotate-12 shadow-xl"
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="absolute -right-1 -top-1 md:-right-2 md:-top-2 bg-gradient-to-br from-red-600 to-red-700 text-white text-[10px] md:text-xs sm:text-sm font-bold px-2 py-0.5 md:px-3 md:py-1 rounded-full rotate-12 shadow-xl"
                 >
                   NOVÉ!
                 </motion.div>
               </Button>
             </Link>
           </motion.div>
-          <p className="text-[#5D4E37] text-sm sm:text-lg font-bold mt-4 drop-shadow-[0_2px_8px_rgba(255,255,255,0.8)]">
+          <p className="text-[#3E2723] md:text-[#5D4E37] text-sm sm:text-lg font-bold mt-4" style={{ textShadow: '1px 1px 3px rgba(255,255,255,0.9), 0 0 10px rgba(255,255,255,0.6)' }}>
             🎁 Získajte finančnú dotáciu + Prevádzkový grant na energie!
           </p>
         </div>
@@ -497,7 +501,7 @@ export default function Domov() {
             </div>
             </motion.div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 max-w-6xl mx-auto mb-4 sm:mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-6xl mx-auto mb-4 sm:mb-10">
             {sluzby.map((sluzba, index) => (
               <motion.div 
                 key={index}
@@ -520,11 +524,11 @@ export default function Domov() {
                       </div>
                     </div>
                   </div>
-                  <div className="p-1.5 sm:p-3 bg-gradient-to-b from-white to-gray-50">
-                    <h3 className="text-[10px] sm:text-sm font-bold text-gray-900 mb-0.5 group-hover:text-primary transition-colors line-clamp-2">
+                  <div className="p-2 sm:p-3 bg-gradient-to-b from-white to-gray-50">
+                    <h3 className="text-sm sm:text-sm font-bold text-gray-900 mb-1 group-hover:text-primary transition-colors line-clamp-2">
                       {sluzba.nazov}
                     </h3>
-                    <p className="text-[10px] sm:text-xs text-gray-600 font-medium hidden sm:block">{sluzba.popis}</p>
+                    <p className="text-xs sm:text-xs text-gray-600 font-medium">{sluzba.popis}</p>
                   </div>
                   </Card>
                   </motion.div>
@@ -579,7 +583,7 @@ export default function Domov() {
             </p>
             </motion.div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-10">
             {vyhody.map((vyhoda, index) => (
               <motion.div 
                 key={index}
@@ -588,16 +592,16 @@ export default function Domov() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
               >
-                <Card className="p-2 sm:p-5 text-center h-full hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 bg-white border-2 border-transparent hover:border-blue-500/30 group hover:-translate-y-1">
+                <Card className="p-3 sm:p-5 text-center h-full hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 bg-white border-2 border-transparent hover:border-blue-500/30 group hover:-translate-y-1">
                   <motion.div 
                     whileHover={{ rotate: 360, scale: 1.1 }}
                     transition={{ duration: 0.6 }}
-                    className="w-7 h-7 sm:w-12 sm:h-12 bg-gradient-to-br from-primary via-blue-600 to-indigo-600 rounded-md sm:rounded-lg flex items-center justify-center mx-auto mb-1.5 sm:mb-3 shadow-lg group-hover:shadow-xl group-hover:shadow-blue-500/50"
+                    className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary via-blue-600 to-indigo-600 rounded-md sm:rounded-lg flex items-center justify-center mx-auto mb-2 sm:mb-3 shadow-lg group-hover:shadow-xl group-hover:shadow-blue-500/50"
                   >
-                    <vyhoda.icon className="w-3.5 h-3.5 sm:w-6 sm:h-6 text-white" />
+                    <vyhoda.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </motion.div>
-                  <h3 className="text-[10px] sm:text-sm font-bold text-gray-900 mb-0.5 sm:mb-1 group-hover:text-primary transition-colors">{vyhoda.title}</h3>
-                  <p className="text-[10px] sm:text-xs text-gray-700 leading-relaxed hidden sm:block">{vyhoda.description}</p>
+                  <h3 className="text-sm sm:text-sm font-bold text-gray-900 mb-1 sm:mb-1 group-hover:text-primary transition-colors">{vyhoda.title}</h3>
+                  <p className="text-xs sm:text-xs text-gray-700 leading-relaxed">{vyhoda.description}</p>
                   </Card>
                   </motion.div>
                   ))}
@@ -697,19 +701,19 @@ export default function Domov() {
                           </div>
                         )}
                       </div>
-                      <div className="p-1.5 sm:p-4">
-                        <div className="text-[8px] sm:text-xs text-gray-600 mb-0.5 font-semibold">{dom.vyrobca}</div>
-                        <h3 className="text-xs sm:text-lg font-bold text-gray-900 mb-0.5 sm:mb-2 group-hover:text-secondary transition-colors line-clamp-1">
+                      <div className="p-2 sm:p-4">
+                        <div className="text-xs sm:text-xs text-gray-600 mb-1 font-semibold">{dom.vyrobca}</div>
+                        <h3 className="text-sm sm:text-lg font-bold text-gray-900 mb-2 sm:mb-2 group-hover:text-secondary transition-colors line-clamp-2">
                           {dom.nazov}
                         </h3>
-                        <div className="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-gray-200">
+                        <div className="flex items-center justify-between pt-2 sm:pt-2 border-t border-gray-200">
                           <div>
-                            <p className="text-[8px] sm:text-xs text-gray-600 font-semibold">Od</p>
-                            <p className="text-xs sm:text-xl font-bold text-primary">
+                            <p className="text-xs sm:text-xs text-gray-600 font-semibold">Od</p>
+                            <p className="text-base sm:text-xl font-bold text-primary">
                               {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                             </p>
                           </div>
-                          <ChevronRight className="w-3 h-3 sm:w-5 sm:h-5 text-primary group-hover:text-secondary transition-colors" />
+                          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-primary group-hover:text-secondary transition-colors" />
                         </div>
                       </div>
                     </Card>
