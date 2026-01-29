@@ -667,10 +667,26 @@ export default function DotaciaAmericana() {
                             </div>
                           </div>
 
-                          <div className="bg-green-50 border-l-4 border-success p-3 mb-4 rounded">
-                            <p className="text-xs font-sans font-semibold text-success">
-                              + BONUS: Nárok na prevádzkový grant (energie) až 400 € ročne
+                          <div className="bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-300 p-4 mb-4 rounded-lg">
+                            <p className="text-xs sm:text-sm font-sans font-bold text-gray-800 mb-3">
+                              Vyberte si váš program:
                             </p>
+                            <div className="space-y-2">
+                              <div className="flex items-start gap-2">
+                                <span className="text-success text-lg">🏡</span>
+                                <div>
+                                  <p className="text-xs sm:text-sm font-bold text-success">AMBASSADOR (Rodina & Bývanie)</p>
+                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Energie ZDARMA (až 400 €/rok)</p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-2">
+                                <span className="text-yellow-600 text-lg">📈</span>
+                                <div>
+                                  <p className="text-xs sm:text-sm font-bold text-yellow-700">INVESTOR & PARTNER (Investícia)</p>
+                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Marketing ZDARMA (správa hostí)</p>
+                                </div>
+                              </div>
+                            </div>
                           </div>
 
                           <Link to={createPageUrl(`DetailDomu?id=${dom.id}`)}>
@@ -731,10 +747,26 @@ export default function DotaciaAmericana() {
                             </div>
                           </div>
 
-                          <div className="bg-green-50 border-l-4 border-success p-3 mb-4 rounded">
-                            <p className="text-xs font-sans font-semibold text-success">
-                              + BONUS: Nárok na prevádzkový grant (energie) až 400 € ročne
+                          <div className="bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-300 p-4 mb-4 rounded-lg">
+                            <p className="text-xs sm:text-sm font-sans font-bold text-gray-800 mb-3">
+                              Vyberte si váš program:
                             </p>
+                            <div className="space-y-2">
+                              <div className="flex items-start gap-2">
+                                <span className="text-success text-lg">🏡</span>
+                                <div>
+                                  <p className="text-xs sm:text-sm font-bold text-success">AMBASSADOR (Rodina & Bývanie)</p>
+                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Energie ZDARMA (až 400 €/rok)</p>
+                                </div>
+                              </div>
+                              <div className="flex items-start gap-2">
+                                <span className="text-yellow-600 text-lg">📈</span>
+                                <div>
+                                  <p className="text-xs sm:text-sm font-bold text-yellow-700">INVESTOR & PARTNER (Investícia)</p>
+                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Marketing ZDARMA (správa hostí)</p>
+                                </div>
+                              </div>
+                            </div>
                           </div>
 
                           <Link to={createPageUrl(`DetailDomu?id=${dom.id}`)}>
