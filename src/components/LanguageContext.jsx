@@ -4,6 +4,7 @@ const translations = {
   sk: {
     // Navigation
     home: "Domov",
+    dotacia: "DOTÁCIA",
     catalog: "Katalóg domov",
     gallery: "Galéria realizácií",
     configurator: "Konfigurátor",
@@ -983,6 +984,7 @@ const translations = {
   de: {
     // Navigation
     home: "Startseite",
+    dotacia: "FÖRDERUNG",
     catalog: "Hauskatalog",
     gallery: "Realisierungsgalerie",
     configurator: "Konfigurator",
@@ -2105,6 +2107,7 @@ const translations = {
   fr: {
     // Navigation
     home: "Accueil",
+    dotacia: "SUBVENTION",
     catalog: "Catalogue de maisons",
     gallery: "Galerie de réalisations",
     configurator: "Configurateur",
@@ -4205,6 +4208,7 @@ const translations = {
   hr: {
     // Navigation
     home: "Početna",
+    dotacia: "SUBVENCIJA",
     catalog: "Katalog kuća",
     gallery: "Galerija realizacija",
     configurator: "Konfigurator",
@@ -5299,6 +5303,7 @@ const translations = {
   el: {
     // Navigation
     home: "Αρχική",
+    dotacia: "ΕΠΙΔΟΤΗΣΗ",
     catalog: "Κατάλογος σπιτιών",
     gallery: "Γκαλερί υλοποιήσεων",
     configurator: "Διαμορφωτής",
@@ -6382,6 +6387,7 @@ const translations = {
   en: {
     // Navigation
     home: "Home",
+    dotacia: "GRANT",
     catalog: "House Catalog",
     gallery: "Realization Gallery",
     configurator: "Configurator",
@@ -7380,6 +7386,7 @@ const translations = {
   hu: {
     // Navigation
     home: "Kezdőlap",
+    dotacia: "TÁMOGATÁS",
     catalog: "Házkatalógus",
     gallery: "Megvalósítási galéria",
     configurator: "Konfigurátor",
@@ -8370,6 +8377,7 @@ const translations = {
   pl: {
     // Navigation
     home: "Strona główna",
+    dotacia: "DOTACJA",
     catalog: "Katalog domów",
     gallery: "Galeria realizacji",
     configurator: "Konfigurator",
@@ -9320,6 +9328,7 @@ const translations = {
   uk: {
     // Navigation
     home: "Головна",
+    dotacia: "ДОТАЦІЯ",
     catalog: "Каталог будинків",
     gallery: "Галерея реалізацій",
     configurator: "Конфігуратор",

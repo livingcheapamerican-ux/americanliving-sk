@@ -131,7 +131,7 @@ function LayoutContent({ children }) {
 
   const navItems = [
     { name: t('home'), path: createPageUrl("Domov"), icon: Home },
-    { name: "DOTÁCIA", path: createPageUrl("DotaciaAmericana"), icon: Gift },
+    { name: t('dotacia'), path: createPageUrl("DotaciaAmericana"), icon: Gift },
     ...(isAdmin ? [{ name: '💰 ' + t('adminPriceList'), path: createPageUrl("AdminCennik"), icon: Grid3x3 }] : []),
     { name: t('catalog'), path: createPageUrl("Katalog"), icon: Grid3x3 },
     { name: t('aiRecommendations'), path: createPageUrl("OdporucanieDomov"), icon: Sparkles },
@@ -284,7 +284,7 @@ function LayoutContent({ children }) {
                   : null;
 
                 const isCatalog = item.path === createPageUrl("Katalog");
-                const isDotacia = item.name === "DOTÁCIA";
+                const isDotacia = item.path === createPageUrl("DotaciaAmericana");
 
                 return (
                   <Link
@@ -299,7 +299,7 @@ function LayoutContent({ children }) {
                   >
                     {isDotacia ? (
                       <>
-                        <span>DOTÁCIA</span>
+                        <span>{t('dotacia')}</span>
                         <span className="text-[10px] font-bold" style={{ color: '#EF4444' }}>AMERICANA</span>
                       </>
                     ) : (
@@ -495,7 +495,7 @@ function LayoutContent({ children }) {
               </div>
 
               {[...navItems, ...adminNavItems].map((item) => {
-                const isDotacia = item.name === "DOTÁCIA";
+                const isDotacia = item.path === createPageUrl("DotaciaAmericana");
                 return (
                   <Link
                     key={item.path}
@@ -510,7 +510,7 @@ function LayoutContent({ children }) {
                     <item.icon className="w-5 h-5" />
                     {isDotacia ? (
                       <div className="flex flex-col leading-tight">
-                        <span>DOTÁCIA</span>
+                        <span>{t('dotacia')}</span>
                         <span className="text-xs font-bold" style={{ color: '#EF4444' }}>AMERICANA</span>
                       </div>
                     ) : (
