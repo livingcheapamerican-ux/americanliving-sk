@@ -4210,7 +4210,6 @@ const translations = {
     // Navigation
     home: "Početna",
     dotacia: "SUBVENCIJA",
-    dotacia: "SUBVENCIJA",
     catalog: "Katalog kuća",
     gallery: "Galerija realizacija",
     configurator: "Konfigurator",
