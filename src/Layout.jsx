@@ -16,7 +16,6 @@ import { LanguageProvider, useLanguage } from "./components/LanguageContext";
 import LanguageSelector from "./components/LanguageSelector";
 import UserTracking from "./components/UserTracking";
 import SessionRecorder from "./components/SessionRecorder";
-import confetti from "canvas-confetti";
 
 
 
@@ -162,13 +161,6 @@ function LayoutContent({ children }) {
 
   const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png";
   const KONFIGA_LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/1a73e4a6c_Konfigaeu.jpg";
-
-  // Make confetti available globally
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.confetti = confetti;
-    }
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -835,10 +827,11 @@ function LayoutContent({ children }) {
 
       export default function Layout({ children }) {
       return (
-      <HelmetProvider>
-      <LanguageProvider>
-      <LayoutContent>{children}</LayoutContent>
-      </LanguageProvider>
-      </HelmetProvider>
-      );
-      }
+        <HelmetProvider>
+        <LanguageProvider>
+        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+        <LayoutContent>{children}</LayoutContent>
+        </LanguageProvider>
+        </HelmetProvider>
+        );
+        }
