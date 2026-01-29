@@ -3138,6 +3138,7 @@ const translations = {
   sr: {
     // Navigation
     home: "Почетна",
+    dotacia: "СУБВЕНЦИЈА",
     catalog: "Каталог кућа",
     gallery: "Галерија реализација",
     configurator: "Конфигуратор",
