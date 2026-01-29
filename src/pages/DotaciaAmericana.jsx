@@ -657,7 +657,7 @@ export default function DotaciaAmericana() {
                                 Dotácia AMERICANA s programom AMBASSADOR alebo INVESTOR & PARTNER
                               </p>
                               <div className="flex justify-between items-center">
-                                <span className="text-xs sm:text-sm text-gray-600">Výška dotácie (5%):</span>
+                                <span className="text-xs sm:text-sm text-gray-600">Výška dotácie:</span>
                                 <span className="text-lg sm:text-2xl font-bold text-success">{dotacia?.toLocaleString()} €</span>
                               </div>
                             </div>
@@ -737,7 +737,7 @@ export default function DotaciaAmericana() {
                                 Dotácia AMERICANA s programom AMBASSADOR alebo INVESTOR & PARTNER
                               </p>
                               <div className="flex justify-between items-center">
-                                <span className="text-xs sm:text-sm text-gray-600">Výška dotácie (5%):</span>
+                                <span className="text-xs sm:text-sm text-gray-600">Výška dotácie:</span>
                                 <span className="text-lg sm:text-2xl font-bold text-success">{dotacia?.toLocaleString()} €</span>
                               </div>
                             </div>
