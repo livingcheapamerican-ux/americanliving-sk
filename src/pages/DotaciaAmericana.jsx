@@ -30,7 +30,7 @@ export default function DotaciaAmericana() {
   const [showPhotoManager, setShowPhotoManager] = useState(null); // 'rodina' or 'investor'
   const [uploading, setUploading] = useState(false);
 
-  // Fetch houses for product section - only visible houses with photos
+  // Fetch houses for product section - only visible TicabHouse houses with photos
   const { data: houses } = useQuery({
     queryKey: ['dotacia-houses'],
     queryFn: async () => {
@@ -38,8 +38,8 @@ export default function DotaciaAmericana() {
       return allHouses.filter(h => {
         const isVisible = h.verejny !== false;
         const hasMainImage = h.hlavny_obrazok && h.hlavny_obrazok.length > 0;
-        const isProstoOrTeacup = h.vyrobca === 'Prosto House' || h.nazov?.includes('Teacup');
-        return isVisible && hasMainImage && isProstoOrTeacup;
+        const isTicabHouse = h.vyrobca === 'Ticab house';
+        return isVisible && hasMainImage && isTicabHouse;
       });
     }
   });
@@ -623,8 +623,7 @@ export default function DotaciaAmericana() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {houses?.slice(0, 6).map((dom) => {
               const cennikova = dom.zakladna_cena;
-              const dotacia = null; // Dotácia sa individuálne určuje
-              const doplatok = null;
+              const dotacia = cennikova ? Math.round(cennikova * 0.05) : 0;
 
               return (
                 <motion.div
@@ -648,9 +647,18 @@ export default function DotaciaAmericana() {
                           <span className="text-xs sm:text-sm text-gray-500">Cenníková hodnota:</span>
                           <span className="text-sm sm:text-base font-bold text-gray-900">{cennikova?.toLocaleString()} €</span>
                         </div>
+                        <div className="mb-3 pb-3 border-b">
+                          <p className="text-xs sm:text-sm font-bold text-gray-700 mb-2">
+                            Dotácia AMERICANA s programom AMBASSADOR alebo INVESTOR & PARTNER
+                          </p>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs sm:text-sm text-gray-600">Výška dotácie (5%):</span>
+                            <span className="text-lg sm:text-2xl font-bold text-success">{dotacia?.toLocaleString()} €</span>
+                          </div>
+                        </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-xs sm:text-sm font-bold text-success">DOTÁCIA SA URČUJE INDIVIDUÁLNE</span>
-                          <span className="text-base sm:text-xl font-bold text-success">✅</span>
+                          <span className="text-xs sm:text-sm font-bold text-primary">Váš doplatok:</span>
+                          <span className="text-base sm:text-xl font-bold text-primary">{(cennikova - dotacia)?.toLocaleString()} €</span>
                         </div>
                       </div>
 
