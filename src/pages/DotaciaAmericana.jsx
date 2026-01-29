@@ -620,64 +620,134 @@ export default function DotaciaAmericana() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {houses?.slice(0, 6).map((dom) => {
-              const cennikova = dom.zakladna_cena;
-              const dotacia = cennikova ? Math.round(cennikova * 0.05) : 0;
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* ĽAVÝ STĹPEC - Viacmodulové domy (4, 3, 2 moduly) */}
+            <div className="space-y-6">
+              {houses
+                ?.filter(h => (h.pocet_modulov || 1) >= 2)
+                ?.sort((a, b) => (b.zakladna_cena || 0) - (a.zakladna_cena || 0))
+                ?.map((dom) => {
+                  const cennikova = dom.zakladna_cena;
+                  const dotacia = cennikova ? Math.round(cennikova * 0.05) : 0;
 
-              return (
-                <motion.div
-                  key={dom.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  viewport={{ once: true }}
-                >
-                  <Card className="overflow-hidden hover:shadow-2xl transition-all border-2 border-emerald-200">
-                    <img 
-                      src={dom.hlavny_obrazok} 
-                      alt={dom.nazov}
-                      className="w-full h-64 object-cover"
-                    />
-                    <div className="p-4 sm:p-6 bg-gradient-to-b from-white to-emerald-50">
-                      <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-4">{dom.nazov} - Edícia 2026</h3>
+                  return (
+                    <motion.div
+                      key={dom.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                      viewport={{ once: true }}
+                    >
+                      <Card className="overflow-hidden hover:shadow-2xl transition-all border-2 border-emerald-200">
+                        <img 
+                          src={dom.hlavny_obrazok} 
+                          alt={dom.nazov}
+                          className="w-full h-64 object-cover"
+                        />
+                        <div className="p-4 sm:p-6 bg-gradient-to-b from-white to-emerald-50">
+                          <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-4">{dom.nazov} - Edícia 2026</h3>
 
-                      <div className="bg-white border-2 border-emerald-200 rounded-lg p-4 mb-4 font-sans">
-                        <div className="flex justify-between items-center mb-2 pb-2 border-b">
-                          <span className="text-xs sm:text-sm text-gray-500">Cenníková hodnota:</span>
-                          <span className="text-sm sm:text-base font-bold text-gray-900">{cennikova?.toLocaleString()} €</span>
-                        </div>
-                        <div className="mb-3 pb-3 border-b">
-                          <p className="text-xs sm:text-sm font-bold text-gray-700 mb-2">
-                            Dotácia AMERICANA s programom AMBASSADOR alebo INVESTOR & PARTNER
-                          </p>
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs sm:text-sm text-gray-600">Výška dotácie (5%):</span>
-                            <span className="text-lg sm:text-2xl font-bold text-success">{dotacia?.toLocaleString()} €</span>
+                          <div className="bg-white border-2 border-emerald-200 rounded-lg p-4 mb-4 font-sans">
+                            <div className="flex justify-between items-center mb-2 pb-2 border-b">
+                              <span className="text-xs sm:text-sm text-gray-500">Cenníková hodnota:</span>
+                              <span className="text-sm sm:text-base font-bold text-gray-900">{cennikova?.toLocaleString()} €</span>
+                            </div>
+                            <div className="mb-3 pb-3 border-b">
+                              <p className="text-xs sm:text-sm font-bold text-gray-700 mb-2">
+                                Dotácia AMERICANA s programom AMBASSADOR alebo INVESTOR & PARTNER
+                              </p>
+                              <div className="flex justify-between items-center">
+                                <span className="text-xs sm:text-sm text-gray-600">Výška dotácie (5%):</span>
+                                <span className="text-lg sm:text-2xl font-bold text-success">{dotacia?.toLocaleString()} €</span>
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs sm:text-sm font-bold text-primary">Váš doplatok:</span>
+                              <span className="text-base sm:text-xl font-bold text-primary">{(cennikova - dotacia)?.toLocaleString()} €</span>
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs sm:text-sm font-bold text-primary">Váš doplatok:</span>
-                          <span className="text-base sm:text-xl font-bold text-primary">{(cennikova - dotacia)?.toLocaleString()} €</span>
-                        </div>
-                      </div>
 
-                      <div className="bg-green-50 border-l-4 border-success p-3 mb-4 rounded">
-                        <p className="text-xs font-sans font-semibold text-success">
-                          + BONUS: Nárok na prevádzkový grant (energie) až 400 € ročne
-                        </p>
-                      </div>
+                          <div className="bg-green-50 border-l-4 border-success p-3 mb-4 rounded">
+                            <p className="text-xs font-sans font-semibold text-success">
+                              + BONUS: Nárok na prevádzkový grant (energie) až 400 € ročne
+                            </p>
+                          </div>
 
-                      <Link to={createPageUrl(`DetailDomu?id=${dom.id}`)}>
-                        <Button className="w-full bg-primary hover:bg-secondary text-white font-sans font-semibold" size="lg">
-                          Detail dotačnej ponuky
-                        </Button>
-                      </Link>
-                    </div>
-                  </Card>
-                </motion.div>
-              );
-            })}
+                          <Link to={createPageUrl(`DetailDomu?id=${dom.id}`)}>
+                            <Button className="w-full bg-primary hover:bg-secondary text-white font-sans font-semibold" size="lg">
+                              Detail dotačnej ponuky
+                            </Button>
+                          </Link>
+                        </div>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
+            </div>
+
+            {/* PRAVÝ STĹPEC - Jednomodulové domy */}
+            <div className="space-y-6">
+              {houses
+                ?.filter(h => (h.pocet_modulov || 1) === 1)
+                ?.sort((a, b) => (b.zakladna_cena || 0) - (a.zakladna_cena || 0))
+                ?.map((dom) => {
+                  const cennikova = dom.zakladna_cena;
+                  const dotacia = cennikova ? Math.round(cennikova * 0.05) : 0;
+
+                  return (
+                    <motion.div
+                      key={dom.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                      viewport={{ once: true }}
+                    >
+                      <Card className="overflow-hidden hover:shadow-2xl transition-all border-2 border-emerald-200">
+                        <img 
+                          src={dom.hlavny_obrazok} 
+                          alt={dom.nazov}
+                          className="w-full h-64 object-cover"
+                        />
+                        <div className="p-4 sm:p-6 bg-gradient-to-b from-white to-emerald-50">
+                          <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-4">{dom.nazov} - Edícia 2026</h3>
+
+                          <div className="bg-white border-2 border-emerald-200 rounded-lg p-4 mb-4 font-sans">
+                            <div className="flex justify-between items-center mb-2 pb-2 border-b">
+                              <span className="text-xs sm:text-sm text-gray-500">Cenníková hodnota:</span>
+                              <span className="text-sm sm:text-base font-bold text-gray-900">{cennikova?.toLocaleString()} €</span>
+                            </div>
+                            <div className="mb-3 pb-3 border-b">
+                              <p className="text-xs sm:text-sm font-bold text-gray-700 mb-2">
+                                Dotácia AMERICANA s programom AMBASSADOR alebo INVESTOR & PARTNER
+                              </p>
+                              <div className="flex justify-between items-center">
+                                <span className="text-xs sm:text-sm text-gray-600">Výška dotácie (5%):</span>
+                                <span className="text-lg sm:text-2xl font-bold text-success">{dotacia?.toLocaleString()} €</span>
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs sm:text-sm font-bold text-primary">Váš doplatok:</span>
+                              <span className="text-base sm:text-xl font-bold text-primary">{(cennikova - dotacia)?.toLocaleString()} €</span>
+                            </div>
+                          </div>
+
+                          <div className="bg-green-50 border-l-4 border-success p-3 mb-4 rounded">
+                            <p className="text-xs font-sans font-semibold text-success">
+                              + BONUS: Nárok na prevádzkový grant (energie) až 400 € ročne
+                            </p>
+                          </div>
+
+                          <Link to={createPageUrl(`DetailDomu?id=${dom.id}`)}>
+                            <Button className="w-full bg-primary hover:bg-secondary text-white font-sans font-semibold" size="lg">
+                              Detail dotačnej ponuky
+                            </Button>
+                          </Link>
+                        </div>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
+            </div>
           </div>
         </div>
       </section>
