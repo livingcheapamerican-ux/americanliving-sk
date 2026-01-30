@@ -795,7 +795,7 @@ export default function DotaciaAmericana() {
                 ?.sort((a, b) => (b.zakladna_cena || 0) - (a.zakladna_cena || 0))
                 ?.map((dom) => {
                   const cennikova = dom.zakladna_cena;
-                  const dotacia = 0; // Dotácia sa nezobrazuje
+                  const dotacia = cennikova ? Math.round(cennikova * 0.05) : 0;
 
                   return (
                     <motion.div
@@ -823,9 +823,14 @@ export default function DotaciaAmericana() {
                               <p className="text-xs sm:text-sm font-bold text-gray-700 mb-2">
                                 Dotácia AMERICANA s programom AMBASSADOR alebo INVESTOR & PARTNER
                               </p>
-                              <p className="text-xs sm:text-sm text-gray-600">
-                                Výška dotácie závisí od typu domu. Kontaktujte nás pre presnú kalkuláciu.
-                              </p>
+                              <div className="flex justify-between items-center">
+                                <span className="text-xs sm:text-sm text-gray-600">Výška dotácie:</span>
+                                <span className="text-lg sm:text-2xl font-bold text-success">{dotacia?.toLocaleString()} €</span>
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs sm:text-sm font-bold text-primary">Váš doplatok:</span>
+                              <span className="text-base sm:text-xl font-bold text-primary">{(cennikova - dotacia)?.toLocaleString()} €</span>
                             </div>
                           </div>
 
@@ -870,7 +875,7 @@ export default function DotaciaAmericana() {
                 ?.sort((a, b) => (b.zakladna_cena || 0) - (a.zakladna_cena || 0))
                 ?.map((dom) => {
                   const cennikova = dom.zakladna_cena;
-                  const dotacia = 0; // Dotácia sa nezobrazuje
+                  const dotacia = cennikova ? Math.round(cennikova * 0.05) : 0;
 
                   return (
                     <motion.div
@@ -898,9 +903,14 @@ export default function DotaciaAmericana() {
                               <p className="text-xs sm:text-sm font-bold text-gray-700 mb-2">
                                 Dotácia AMERICANA s programom AMBASSADOR alebo INVESTOR & PARTNER
                               </p>
-                              <p className="text-xs sm:text-sm text-gray-600">
-                                Výška dotácie závisí od typu domu. Kontaktujte nás pre presnú kalkuláciu.
-                              </p>
+                              <div className="flex justify-between items-center">
+                                <span className="text-xs sm:text-sm text-gray-600">Výška dotácie:</span>
+                                <span className="text-lg sm:text-2xl font-bold text-success">{dotacia?.toLocaleString()} €</span>
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs sm:text-sm font-bold text-primary">Váš doplatok:</span>
+                              <span className="text-base sm:text-xl font-bold text-primary">{(cennikova - dotacia)?.toLocaleString()} €</span>
                             </div>
                           </div>
 
