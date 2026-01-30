@@ -623,6 +623,85 @@ export default function DotaciaAmericana() {
               </h2>
             </motion.div>
 
+            {/* VIZUÁLNE ZNÁZORNENIE TYPOV DOTÁCIÍ */}
+            <div className="grid md:grid-cols-2 gap-8 mb-16">
+              <Card className="p-8 bg-gradient-to-br from-emerald-50 to-green-50 border-4 border-emerald-400 hover:shadow-2xl transition-all">
+                <div className="text-center mb-6">
+                  <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Home className="w-10 h-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-serif font-bold text-emerald-700 mb-2">
+                    Program AMBASSADOR
+                  </h3>
+                  <p className="text-sm text-gray-600 font-sans">Pre rodiny a bývanie</p>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="bg-white rounded-lg p-4 border-2 border-emerald-300">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Euro className="w-5 h-5 text-emerald-600" />
+                      </div>
+                      <p className="font-bold text-gray-900 font-sans">Dotácia na dom</p>
+                    </div>
+                    <p className="text-sm text-gray-600 font-sans ml-13">5% z ceny domu odpočítané priamo pri podpise zmluvy</p>
+                  </div>
+                  
+                  <div className="text-center py-2">
+                    <span className="text-3xl font-bold text-emerald-600">+</span>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg p-4 border-2 border-emerald-300">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Zap className="w-5 h-5 text-emerald-600" />
+                      </div>
+                      <p className="font-bold text-gray-900 font-sans">Energie ZDARMA</p>
+                    </div>
+                    <p className="text-sm text-gray-600 font-sans ml-13">V plnej výške uhradené mesačnou "Ambassador dotáciou"</p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-8 bg-gradient-to-br from-yellow-50 to-orange-50 border-4 border-yellow-400 hover:shadow-2xl transition-all">
+                <div className="text-center mb-6">
+                  <div className="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <TrendingUp className="w-10 h-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-serif font-bold text-yellow-700 mb-2">
+                    Program INVESTOR & PARTNER
+                  </h3>
+                  <p className="text-sm text-gray-600 font-sans">Pre investorov a podnikateľov</p>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="bg-white rounded-lg p-4 border-2 border-yellow-300">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Euro className="w-5 h-5 text-yellow-600" />
+                      </div>
+                      <p className="font-bold text-gray-900 font-sans">Dotácia na dom</p>
+                    </div>
+                    <p className="text-sm text-gray-600 font-sans ml-13">5% z ceny domu odpočítané priamo pri podpise zmluvy</p>
+                  </div>
+                  
+                  <div className="text-center py-2">
+                    <span className="text-3xl font-bold text-yellow-600">+</span>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg p-4 border-2 border-yellow-300">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Users className="w-5 h-5 text-yellow-600" />
+                      </div>
+                      <p className="font-bold text-gray-900 font-sans">Reklama ZDARMA</p>
+                    </div>
+                    <p className="text-sm text-gray-600 font-sans ml-13">Marketing a zabezpečenie prísunu hostí do ubytovania</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
             <div className="grid md:grid-cols-3 gap-8 mb-12">
               <Card className="p-8 bg-white border-2 border-emerald-300/50 hover:shadow-2xl transition-all">
                 <div className="w-16 h-16 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
