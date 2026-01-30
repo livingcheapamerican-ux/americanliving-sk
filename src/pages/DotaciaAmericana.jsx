@@ -644,7 +644,7 @@ export default function DotaciaAmericana() {
                       </div>
                       <p className="font-bold text-gray-900 font-sans">Dotácia na dom</p>
                     </div>
-                    <p className="text-sm text-gray-600 font-sans ml-13">5% z ceny domu odpočítané priamo pri podpise zmluvy</p>
+                    <p className="text-sm text-gray-600 font-sans ml-13">Výška dotácie závisí od typu domu, odpočítané priamo pri podpise zmluvy</p>
                   </div>
                   
                   <div className="text-center py-2">
@@ -682,7 +682,7 @@ export default function DotaciaAmericana() {
                       </div>
                       <p className="font-bold text-gray-900 font-sans">Dotácia na dom</p>
                     </div>
-                    <p className="text-sm text-gray-600 font-sans ml-13">5% z ceny domu odpočítané priamo pri podpise zmluvy</p>
+                    <p className="text-sm text-gray-600 font-sans ml-13">Výška dotácie závisí od typu domu, odpočítané priamo pri podpise zmluvy</p>
                   </div>
                   
                   <div className="text-center py-2">
@@ -795,7 +795,7 @@ export default function DotaciaAmericana() {
                 ?.sort((a, b) => (b.zakladna_cena || 0) - (a.zakladna_cena || 0))
                 ?.map((dom) => {
                   const cennikova = dom.zakladna_cena;
-                  const dotacia = cennikova ? Math.round(cennikova * 0.05) : 0;
+                  const dotacia = 0; // Dotácia sa nezobrazuje
 
                   return (
                     <motion.div
@@ -823,14 +823,9 @@ export default function DotaciaAmericana() {
                               <p className="text-xs sm:text-sm font-bold text-gray-700 mb-2">
                                 Dotácia AMERICANA s programom AMBASSADOR alebo INVESTOR & PARTNER
                               </p>
-                              <div className="flex justify-between items-center">
-                                <span className="text-xs sm:text-sm text-gray-600">Výška dotácie:</span>
-                                <span className="text-lg sm:text-2xl font-bold text-success">{dotacia?.toLocaleString()} €</span>
-                              </div>
-                            </div>
-                            <div className="flex justify-between items-center">
-                              <span className="text-xs sm:text-sm font-bold text-primary">Váš doplatok:</span>
-                              <span className="text-base sm:text-xl font-bold text-primary">{(cennikova - dotacia)?.toLocaleString()} €</span>
+                              <p className="text-xs sm:text-sm text-gray-600">
+                                Výška dotácie závisí od typu domu. Kontaktujte nás pre presnú kalkuláciu.
+                              </p>
                             </div>
                           </div>
 
@@ -843,14 +838,14 @@ export default function DotaciaAmericana() {
                                 <span className="text-success text-lg">🏡</span>
                                 <div>
                                   <p className="text-xs sm:text-sm font-bold text-success">AMBASSADOR (Rodina & Bývanie)</p>
-                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Energie ZDARMA v plnej výške</p>
+                                  <p className="text-xs text-gray-700">Dotácia + Energie ZDARMA v plnej výške</p>
                                 </div>
                               </div>
                               <div className="flex items-start gap-2">
                                 <span className="text-yellow-600 text-lg">📈</span>
                                 <div>
                                   <p className="text-xs sm:text-sm font-bold text-yellow-700">INVESTOR & PARTNER (Investícia)</p>
-                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Marketing ZDARMA (správa hostí)</p>
+                                  <p className="text-xs text-gray-700">Dotácia + Marketing ZDARMA (správa hostí)</p>
                                 </div>
                               </div>
                             </div>
@@ -875,7 +870,7 @@ export default function DotaciaAmericana() {
                 ?.sort((a, b) => (b.zakladna_cena || 0) - (a.zakladna_cena || 0))
                 ?.map((dom) => {
                   const cennikova = dom.zakladna_cena;
-                  const dotacia = cennikova ? Math.round(cennikova * 0.05) : 0;
+                  const dotacia = 0; // Dotácia sa nezobrazuje
 
                   return (
                     <motion.div
@@ -903,14 +898,9 @@ export default function DotaciaAmericana() {
                               <p className="text-xs sm:text-sm font-bold text-gray-700 mb-2">
                                 Dotácia AMERICANA s programom AMBASSADOR alebo INVESTOR & PARTNER
                               </p>
-                              <div className="flex justify-between items-center">
-                                <span className="text-xs sm:text-sm text-gray-600">Výška dotácie:</span>
-                                <span className="text-lg sm:text-2xl font-bold text-success">{dotacia?.toLocaleString()} €</span>
-                              </div>
-                            </div>
-                            <div className="flex justify-between items-center">
-                              <span className="text-xs sm:text-sm font-bold text-primary">Váš doplatok:</span>
-                              <span className="text-base sm:text-xl font-bold text-primary">{(cennikova - dotacia)?.toLocaleString()} €</span>
+                              <p className="text-xs sm:text-sm text-gray-600">
+                                Výška dotácie závisí od typu domu. Kontaktujte nás pre presnú kalkuláciu.
+                              </p>
                             </div>
                           </div>
 
@@ -923,14 +913,14 @@ export default function DotaciaAmericana() {
                                 <span className="text-success text-lg">🏡</span>
                                 <div>
                                   <p className="text-xs sm:text-sm font-bold text-success">AMBASSADOR (Rodina & Bývanie)</p>
-                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Energie ZDARMA v plnej výške</p>
+                                  <p className="text-xs text-gray-700">Dotácia + Energie ZDARMA v plnej výške</p>
                                 </div>
                               </div>
                               <div className="flex items-start gap-2">
                                 <span className="text-yellow-600 text-lg">📈</span>
                                 <div>
                                   <p className="text-xs sm:text-sm font-bold text-yellow-700">INVESTOR & PARTNER (Investícia)</p>
-                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Marketing ZDARMA (správa hostí)</p>
+                                  <p className="text-xs text-gray-700">Dotácia + Marketing ZDARMA (správa hostí)</p>
                                 </div>
                               </div>
                             </div>
