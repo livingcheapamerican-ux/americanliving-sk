@@ -664,9 +664,14 @@ export default function DotaciaAmericana() {
                 <h3 className="text-xl font-serif font-bold text-gray-900 mb-4">
                   Výplata prevádzkového grantu
                 </h3>
-                <p className="text-gray-600 leading-relaxed font-sans">
+                <p className="text-gray-600 leading-relaxed font-sans mb-4">
                   Po odovzdaní domu vám začneme vyplácať "Ambassador Fee"* – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne a máte náklady za energie už uhradené.
                 </p>
+                <div className="bg-yellow-50 border-l-4 border-yellow-500 p-3 rounded">
+                  <p className="text-xs text-gray-700 font-sans">
+                    <strong>INVESTOR & PARTNER:</strong> Automaticky dostávate reklamný priestor na zabezpečenie prílevu hostí do vášho ubytovacieho zariadenia.
+                  </p>
+                </div>
               </Card>
             </div>
           </div>
@@ -917,9 +922,14 @@ export default function DotaciaAmericana() {
                 <h3 className="text-xl font-serif font-bold text-gray-900 mb-4">
                   Výplata prevádzkového grantu
                 </h3>
-                <p className="text-gray-600 leading-relaxed font-sans">
+                <p className="text-gray-600 leading-relaxed font-sans mb-4">
                   Po odovzdaní domu vám začneme vyplácať "Ambassador Fee"* – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne a máte náklady za energie už uhradené.
                 </p>
+                <div className="bg-yellow-50 border-l-4 border-yellow-500 p-3 rounded">
+                  <p className="text-xs text-gray-700 font-sans">
+                    <strong>INVESTOR & PARTNER:</strong> Automaticky dostávate reklamný priestor na zabezpečenie prílevu hostí do vášho ubytovacieho zariadenia.
+                  </p>
+                </div>
               </Card>
             </div>
           </div>
