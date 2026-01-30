@@ -229,7 +229,7 @@ export default function SessionRecorder() {
         })
         .catch(err => console.warn('⚠️ Location fetch failed:', err));
     }).catch(err => {
-      console.error('❌ CRITICAL: SessionRecorder vytvorenie zlyhalo!', err);
+      console.warn('⚠️ SessionRecorder vytvorenie zlyhalo (non-critical):', err?.message || err);
       sessionIdRef.current = null;
       sessionInitializedRef.current = false;
     });
@@ -553,7 +553,14 @@ export default function SessionRecorder() {
                 pages: updates.pages_visited?.length || 0
               });
             })
-            .catch(err => console.warn('⚠️ Session update error:', err));
+            .catch(err => {
+              // Silently handle DB timeout errors to prevent UI disruption
+              if (err?.message?.includes('timed out') || err?.message?.includes('Write results unavailable')) {
+                console.warn('⚠️ Session save timeout (will retry):', sessionIdRef.current);
+              } else {
+                console.warn('⚠️ Session update error:', err?.message || err);
+              }
+            });
         })
         .catch(err => console.warn('⚠️ Session fetch error:', err));
     }, 3000);
