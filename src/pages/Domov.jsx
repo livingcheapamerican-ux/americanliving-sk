@@ -372,9 +372,19 @@ export default function Domov() {
               </Button>
             </Link>
           </motion.div>
-          <p className="text-[#3E2723] md:text-[#5D4E37] text-sm sm:text-lg font-bold mt-4" style={{ textShadow: '1px 1px 3px rgba(255,255,255,0.9), 0 0 10px rgba(255,255,255,0.6)' }}>
-            🎁 Získajte finančnú dotáciu + Prevádzkový grant na energie!
-          </p>
+          <div className="mt-4 space-y-2">
+            <p className="text-[#3E2723] md:text-[#5D4E37] text-sm sm:text-lg font-bold" style={{ textShadow: '1px 1px 3px rgba(255,255,255,0.9), 0 0 10px rgba(255,255,255,0.6)' }}>
+              🎁 Získajte finančnú dotáciu + Prevádzkový grant na energie!
+            </p>
+            <div className="flex flex-col sm:flex-row gap-2 justify-center">
+              <div className="bg-emerald-500 px-3 py-1.5 rounded-lg text-white font-bold text-xs sm:text-sm shadow-lg">
+                🏡 Program Ambassador - Dotácia + Energie ZDARMA
+              </div>
+              <div className="bg-yellow-500 px-3 py-1.5 rounded-lg text-gray-900 font-bold text-xs sm:text-sm shadow-lg">
+                📈 Program Investor & Partner - Dotácia + Marketing ZDARMA
+              </div>
+            </div>
+          </div>
         </div>
       </section>
       
