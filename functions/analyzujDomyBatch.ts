@@ -112,6 +112,9 @@ async function runBatchAnalysisInBackground(documents, userId) {
     const serviceClient = createServiceRoleClient();
 
     for (let i = 0; i < documents.length; i++) {
+        // 🔧 PRE-THROTTLE: Wait 500ms before processing each request
+        await new Promise(resolve => setTimeout(resolve, 500));
+
         try {
             // Kontrola či má pokračovať - načíta user data
             const users = await serviceClient.entities.User.list();
@@ -127,11 +130,34 @@ async function runBatchAnalysisInBackground(documents, userId) {
 
             try {
                 // Zavolať analyzujDokument - používame InvokeLLM priamo
-                const result = await serviceClient.integrations.Core.InvokeLLM({
-                    prompt: generateAnalysisPrompt(doc),
-                    file_urls: [doc.subor_url],
-                    response_json_schema: getAnalysisSchema()
-                });
+                let result;
+                let retryCount = 0;
+                const maxRetries = 2;
+
+                while (retryCount < maxRetries) {
+                    try {
+                        result = await serviceClient.integrations.Core.InvokeLLM({
+                            prompt: generateAnalysisPrompt(doc),
+                            file_urls: [doc.subor_url],
+                            response_json_schema: getAnalysisSchema()
+                        });
+                        break;
+                    } catch (llmError) {
+                        // Handle rate limiting gracefully
+                        if (llmError?.status === 500 || llmError?.message?.includes('Rate limit')) {
+                            retryCount++;
+                            if (retryCount < maxRetries) {
+                                const backoffDelay = 1000 * Math.pow(2, retryCount);
+                                console.warn(`⏳ Rate limit hit, waiting ${backoffDelay}ms before retry ${retryCount}/${maxRetries}...`);
+                                await new Promise(resolve => setTimeout(resolve, backoffDelay));
+                            } else {
+                                throw llmError;
+                            }
+                        } else {
+                            throw llmError;
+                        }
+                    }
+                }
 
                 // Uložiť výsledky
                 const updateData = {
@@ -161,7 +187,7 @@ async function runBatchAnalysisInBackground(documents, userId) {
                 const users2 = await serviceClient.entities.User.list();
                 const latestUser = users2.find(u => u.id === userId);
                 const latestState = latestUser?.[BATCH_STATE_KEY] || currentState;
-                
+
                 await serviceClient.entities.User.update(userId, {
                     [BATCH_STATE_KEY]: {
                         ...latestState,
@@ -172,14 +198,11 @@ async function runBatchAnalysisInBackground(documents, userId) {
                         }]
                     }
                 });
-                
-                console.log(`✅ Analyzed ${i + 1}/${documents.length}: ${doc.nazov}`);
 
-                // Delay medzi analýzami
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                console.log(`✅ Analyzed Dom #${i + 1}/${documents.length}: ${doc.nazov}`);
 
             } catch (error) {
-                console.error(`❌ Failed to analyze ${doc.nazov}:`, error);
+                console.error(`❌ Failed to analyze Dom #${i + 1}: ${doc.nazov}`, error?.message);
 
                 // Aktualizovať stav - chyba
                 const users3 = await serviceClient.entities.User.list();
@@ -193,16 +216,15 @@ async function runBatchAnalysisInBackground(documents, userId) {
                         failed: [...(latestState.failed || []), {
                             id: doc.id,
                             name: doc.nazov,
-                            error: error.message
+                            error: error?.message || 'Unknown error'
                         }]
                     }
                 });
-                
-                console.log(`Failed ${i + 1}/${documents.length}: ${doc.nazov}`);
 
         } catch (stateError) {
-            console.error('State check/update error:', stateError);
-            break;
+            console.error('State check/update error:', stateError?.message);
+            // Continue to next item instead of breaking on state errors
+            continue;
         }
     }
 
