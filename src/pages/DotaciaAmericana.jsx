@@ -671,7 +671,7 @@ export default function DotaciaAmericana() {
                       🏡 Program AMBASSADOR (Rodina & Bývanie):
                     </p>
                     <p className="text-sm text-gray-700 leading-relaxed font-sans">
-                      Po odovzdaní domu vám začneme vyplácať "Ambassador Fee" – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne ukázať dom záujemcom a máte náklady za energie v plnej výške uhradené.
+                      Po odovzdaní domu vám začneme vyplácať "Ambassador dotáciu" – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne ukázať dom záujemcom a máte náklady za energie v plnej výške uhradené.
                     </p>
                   </div>
 
@@ -941,7 +941,7 @@ export default function DotaciaAmericana() {
                       🏡 Program AMBASSADOR (Rodina & Bývanie):
                     </p>
                     <p className="text-sm text-gray-700 leading-relaxed font-sans">
-                      Po odovzdaní domu vám začneme vyplácať "Ambassador Fee" – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne ukázať dom záujemcom a máte náklady za energie v plnej výške uhradené.
+                      Po odovzdaní domu vám začneme vyplácať "Ambassador dotáciu" – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne ukázať dom záujemcom a máte náklady za energie v plnej výške uhradené.
                     </p>
                   </div>
 
