@@ -372,19 +372,9 @@ export default function Domov() {
               </Button>
             </Link>
           </motion.div>
-          <div className="mt-4 space-y-2">
-            <p className="text-[#3E2723] md:text-[#5D4E37] text-sm sm:text-lg font-bold" style={{ textShadow: '1px 1px 3px rgba(255,255,255,0.9), 0 0 10px rgba(255,255,255,0.6)' }}>
-              🎁 Získajte finančnú dotáciu + Prevádzkový grant na energie!
-            </p>
-            <div className="flex flex-col sm:flex-row gap-2 justify-center">
-              <div className="bg-emerald-500 px-3 py-1.5 rounded-lg text-white font-bold text-xs sm:text-sm shadow-lg">
-                🏡 Program Ambassador - Dotácia + Energie ZDARMA
-              </div>
-              <div className="bg-yellow-500 px-3 py-1.5 rounded-lg text-gray-900 font-bold text-xs sm:text-sm shadow-lg">
-                📈 Program Investor & Partner - Dotácia + Marketing ZDARMA
-              </div>
-            </div>
-          </div>
+          <p className="text-[#3E2723] md:text-[#5D4E37] text-sm sm:text-lg font-bold mt-4" style={{ textShadow: '1px 1px 3px rgba(255,255,255,0.9), 0 0 10px rgba(255,255,255,0.6)' }}>
+            🎁 Získajte finančnú dotáciu + Prevádzkový grant na energie!
+          </p>
         </div>
       </section>
       
@@ -457,17 +447,9 @@ export default function Domov() {
                 <h2 className="text-2xl sm:text-4xl font-black text-white mb-4 leading-tight drop-shadow-lg">
                   DOTÁCIA AMERICANA
                 </h2>
-                <p className="text-base sm:text-xl text-white/95 leading-relaxed font-medium drop-shadow-md mb-4">
-                  Využite špeciálny program dotácií pre rodinný dom aj Airbnb apartmány. Získate finančnú podporu + <strong className="text-yellow-300">energie ZDARMA (Program Ambassador)</strong> alebo <strong className="text-yellow-300">reklamu ZDARMA (Program Investor & Partner)</strong>!
+                <p className="text-base sm:text-xl text-white/95 leading-relaxed font-medium drop-shadow-md">
+                  Využite špeciálny program dotácií pre rodinný dom aj Airbnb apartmány. Získate finančnú podporu + reklamu ZDARMA, aby sme vám apartmán naplnili hosťami!
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start mb-6">
-                  <div className="bg-emerald-500 px-4 py-2 rounded-lg text-white font-bold text-sm sm:text-base shadow-lg">
-                    🏡 Program Ambassador - Dotácia + Energie ZDARMA
-                  </div>
-                  <div className="bg-yellow-500 px-4 py-2 rounded-lg text-gray-900 font-bold text-sm sm:text-base shadow-lg">
-                    📈 Program Investor & Partner - Dotácia + Marketing ZDARMA
-                  </div>
-                </div>
                 <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
                   <Link to={createPageUrl("Kontakt")}>
                     <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50 font-bold px-8 py-6 text-lg shadow-xl w-full sm:w-auto">

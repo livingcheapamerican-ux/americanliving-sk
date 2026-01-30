@@ -70,12 +70,8 @@ Deno.serve(async (req) => {
       }
     });
 
-    // Načítaj aktuálny záznam
-    const currentRecord = await base44.asServiceRole.entities[entity_name].get(entity_id);
-    
-    // Ulož do entity - ZACHOVAJ všetky existujúce polia
+    // Ulož do entity
     const updateData = {
-      ...currentRecord, // Zachovaj všetky existujúce polia
       ai_summary: (response.ai_summary || '').substring(0, 300),
       faq_schema_data: response.faq_schema_data || { faqs: [] }
     };
