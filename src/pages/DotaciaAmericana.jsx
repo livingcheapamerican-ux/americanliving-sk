@@ -817,7 +817,7 @@ export default function DotaciaAmericana() {
                           <div className="bg-white border-2 border-emerald-200 rounded-lg p-4 mb-4 font-sans">
                             <div className="flex justify-between items-center mb-2 pb-2 border-b">
                               <span className="text-xs sm:text-sm text-gray-500">Cenníková hodnota:</span>
-                              <span className="text-sm sm:text-base font-bold text-gray-900">{cennikova?.toLocaleString()} €</span>
+                              <span className="text-sm sm:text-base font-bold text-gray-900 line-through">{cennikova?.toLocaleString()} €</span>
                             </div>
                             <div className="mb-3 pb-3 border-b">
                               <p className="text-xs sm:text-sm font-bold text-gray-700 mb-2">
@@ -897,7 +897,7 @@ export default function DotaciaAmericana() {
                           <div className="bg-white border-2 border-emerald-200 rounded-lg p-4 mb-4 font-sans">
                             <div className="flex justify-between items-center mb-2 pb-2 border-b">
                               <span className="text-xs sm:text-sm text-gray-500">Cenníková hodnota:</span>
-                              <span className="text-sm sm:text-base font-bold text-gray-900">{cennikova?.toLocaleString()} €</span>
+                              <span className="text-sm sm:text-base font-bold text-gray-900 line-through">{cennikova?.toLocaleString()} €</span>
                             </div>
                             <div className="mb-3 pb-3 border-b">
                               <p className="text-xs sm:text-sm font-bold text-gray-700 mb-2">
