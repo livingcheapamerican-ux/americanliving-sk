@@ -661,16 +661,28 @@ export default function DotaciaAmericana() {
                 <div className="mb-4 inline-block bg-primary text-white px-3 py-1 rounded text-xs font-sans font-bold">
                   KROK 3
                 </div>
-                <h3 className="text-xl font-serif font-bold text-gray-900 mb-4">
+                <h3 className="text-xl font-serif font-bold text-gray-900 mb-6">
                   Výplata prevádzkového grantu
                 </h3>
-                <p className="text-gray-600 leading-relaxed font-sans mb-4">
-                  Po odovzdaní domu vám začneme vyplácať "Ambassador Fee"* – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne a máte náklady za energie už uhradené.
-                </p>
-                <div className="bg-yellow-50 border-l-4 border-yellow-500 p-3 rounded">
-                  <p className="text-xs text-gray-700 font-sans">
-                    <strong>INVESTOR & PARTNER:</strong> Automaticky dostávate reklamný priestor na zabezpečenie prílevu hostí do vášho ubytovacieho zariadenia.
-                  </p>
+
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-r from-emerald-50 to-green-50 border-l-4 border-emerald-500 p-4 rounded">
+                    <p className="text-sm font-sans font-bold text-gray-900 mb-2">
+                      🏡 Program AMBASSADOR (Rodina & Bývanie):
+                    </p>
+                    <p className="text-sm text-gray-700 leading-relaxed font-sans">
+                      Po odovzdaní domu vám začneme vyplácať "Ambassador Fee" – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne otvoriť dom záujemcom a máte náklady za energie uhradené.
+                    </p>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-500 p-4 rounded">
+                    <p className="text-sm font-sans font-bold text-gray-900 mb-2">
+                      📈 Program INVESTOR & PARTNER (Investícia):
+                    </p>
+                    <p className="text-sm text-gray-700 leading-relaxed font-sans">
+                      Automaticky dostávate reklamný priestor na zabezpečenie prílevu hostí do vášho ubytovacieho zariadenia. My sa postaráme o marketing, správu rezervácií a vaša investícia generuje pasívny príjem.
+                    </p>
+                  </div>
                 </div>
               </Card>
             </div>
@@ -919,16 +931,28 @@ export default function DotaciaAmericana() {
                 <div className="mb-4 inline-block bg-primary text-white px-3 py-1 rounded text-xs font-sans font-bold">
                   KROK 3
                 </div>
-                <h3 className="text-xl font-serif font-bold text-gray-900 mb-4">
+                <h3 className="text-xl font-serif font-bold text-gray-900 mb-6">
                   Výplata prevádzkového grantu
                 </h3>
-                <p className="text-gray-600 leading-relaxed font-sans mb-4">
-                  Po odovzdaní domu vám začneme vyplácať "Ambassador Fee"* – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne a máte náklady za energie už uhradené.
-                </p>
-                <div className="bg-yellow-50 border-l-4 border-yellow-500 p-3 rounded">
-                  <p className="text-xs text-gray-700 font-sans">
-                    <strong>INVESTOR & PARTNER:</strong> Automaticky dostávate reklamný priestor na zabezpečenie prílevu hostí do vášho ubytovacieho zariadenia.
-                  </p>
+
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-r from-emerald-50 to-green-50 border-l-4 border-emerald-500 p-4 rounded">
+                    <p className="text-sm font-sans font-bold text-gray-900 mb-2">
+                      🏡 Program AMBASSADOR (Rodina & Bývanie):
+                    </p>
+                    <p className="text-sm text-gray-700 leading-relaxed font-sans">
+                      Po odovzdaní domu vám začneme vyplácať "Ambassador Fee" – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne otvoriť dom záujemcom a máte náklady za energie uhradené.
+                    </p>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-500 p-4 rounded">
+                    <p className="text-sm font-sans font-bold text-gray-900 mb-2">
+                      📈 Program INVESTOR & PARTNER (Investícia):
+                    </p>
+                    <p className="text-sm text-gray-700 leading-relaxed font-sans">
+                      Automaticky dostávate reklamný priestor na zabezpečenie prílevu hostí do vášho ubytovacieho zariadenia. My sa postaráme o marketing, správu rezervácií a vaša investícia generuje pasívny príjem.
+                    </p>
+                  </div>
                 </div>
               </Card>
             </div>
