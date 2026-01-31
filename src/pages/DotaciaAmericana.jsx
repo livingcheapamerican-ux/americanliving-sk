@@ -673,6 +673,142 @@ export default function DotaciaAmericana() {
         </div>
       </section>
 
+      {/* GRAFICKÉ ZNÁZORNENIE DOTÁCIE */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4 sm:px-8">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
+                Grafické znázornenie dotácie
+              </h2>
+              <p className="text-base sm:text-xl text-gray-700 font-sans">
+                Vizualizácia benefitov pre oba programy
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* PROGRAM AMBASSADOR */}
+              <Card className="p-6 bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-300">
+                <div className="text-center mb-6">
+                  <div className="inline-block bg-success text-white px-4 py-2 rounded-lg text-sm font-bold mb-2">
+                    PROGRAM AMBASSADOR
+                  </div>
+                  <h3 className="text-xl font-serif font-bold text-gray-900">Rodina & Bývanie</h3>
+                </div>
+
+                {/* Vizualizácia */}
+                <div className="space-y-4">
+                  {/* Cenníková hodnota */}
+                  <div className="bg-white p-4 rounded-lg border-2 border-gray-300">
+                    <p className="text-sm text-gray-600 mb-2">Cenníková hodnota domu</p>
+                    <div className="h-12 bg-gray-200 rounded flex items-center justify-center">
+                      <p className="text-lg font-bold text-gray-800">100%</p>
+                    </div>
+                  </div>
+
+                  {/* Dotácia */}
+                  <div className="bg-success/10 p-4 rounded-lg border-2 border-success">
+                    <p className="text-sm text-success font-bold mb-2">✅ Dotácia American Living (5%)</p>
+                    <div className="h-12 bg-success rounded flex items-center justify-center">
+                      <p className="text-lg font-bold text-white">Odpočítame pri podpise</p>
+                    </div>
+                  </div>
+
+                  {/* Váš doplatok */}
+                  <div className="bg-primary/10 p-4 rounded-lg border-2 border-primary">
+                    <p className="text-sm text-primary font-bold mb-2">💰 Váš doplatok (95%)</p>
+                    <div className="h-12 bg-primary rounded flex items-center justify-center">
+                      <p className="text-lg font-bold text-white">Vaša platba</p>
+                    </div>
+                  </div>
+
+                  {/* Bonusy */}
+                  <div className="bg-gradient-to-r from-yellow-50 to-amber-50 p-4 rounded-lg border-2 border-yellow-400">
+                    <p className="text-sm text-yellow-800 font-bold mb-3">🎁 Bonusy programu Ambassador:</p>
+                    <ul className="space-y-2 text-xs text-yellow-900">
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-yellow-600" />
+                        <span>Energie preplatíme v plnej výške</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-yellow-600" />
+                        <span>Prevádzkový grant za prezentácie</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-yellow-600" />
+                        <span>Referenčná spolupráca</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </Card>
+
+              {/* PROGRAM INVESTOR & PARTNER */}
+              <Card className="p-6 bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-400">
+                <div className="text-center mb-6">
+                  <div className="inline-block bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-bold mb-2">
+                    PROGRAM INVESTOR & PARTNER
+                  </div>
+                  <h3 className="text-xl font-serif font-bold text-gray-900">Investícia do rekreácie</h3>
+                </div>
+
+                {/* Vizualizácia */}
+                <div className="space-y-4">
+                  {/* Cenníková hodnota */}
+                  <div className="bg-white p-4 rounded-lg border-2 border-gray-300">
+                    <p className="text-sm text-gray-600 mb-2">Cenníková hodnota domu</p>
+                    <div className="h-12 bg-gray-200 rounded flex items-center justify-center">
+                      <p className="text-lg font-bold text-gray-800">100%</p>
+                    </div>
+                  </div>
+
+                  {/* Dotácia */}
+                  <div className="bg-yellow-600/10 p-4 rounded-lg border-2 border-yellow-600">
+                    <p className="text-sm text-yellow-800 font-bold mb-2">✅ Investičný stimul (5%)</p>
+                    <div className="h-12 bg-yellow-600 rounded flex items-center justify-center">
+                      <p className="text-lg font-bold text-white">Odpočítame pri podpise</p>
+                    </div>
+                  </div>
+
+                  {/* Váš doplatok */}
+                  <div className="bg-orange-100 p-4 rounded-lg border-2 border-orange-400">
+                    <p className="text-sm text-orange-800 font-bold mb-2">💰 Vaša investícia (95%)</p>
+                    <div className="h-12 bg-orange-500 rounded flex items-center justify-center">
+                      <p className="text-lg font-bold text-white">Vaša platba</p>
+                    </div>
+                  </div>
+
+                  {/* Bonusy */}
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border-2 border-green-400">
+                    <p className="text-sm text-green-800 font-bold mb-3">🎁 Bonusy programu Partner:</p>
+                    <ul className="space-y-2 text-xs text-green-900">
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        <span>Marketing a správa hostí ZDARMA</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        <span>Zaradenie na mapu Testovacích centier</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        <span>Pasívny príjem z prenájmu</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* PRODUKTOVÁ SEKCIA */}
       <section className="py-20 bg-gradient-to-br from-emerald-50 via-white to-green-50">
         <div className="container mx-auto px-4">
