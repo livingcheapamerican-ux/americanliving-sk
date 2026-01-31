@@ -747,7 +747,8 @@ export default function DotaciaAmericana() {
                                 <span className="text-success text-lg">🏡</span>
                                 <div>
                                   <p className="text-xs sm:text-sm font-bold text-success">AMBASSADOR (Rodina & Bývanie)</p>
-                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Energie ZDARMA</p>
+                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Energie preplatíme v plnej výške</p>
+                                  <p className="text-xs text-success font-semibold mt-1">✨ Toto je skutočná pomoc!</p>
                                 </div>
                               </div>
                               <div className="flex items-start gap-2">
@@ -827,7 +828,8 @@ export default function DotaciaAmericana() {
                                 <span className="text-success text-lg">🏡</span>
                                 <div>
                                   <p className="text-xs sm:text-sm font-bold text-success">AMBASSADOR (Rodina & Bývanie)</p>
-                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Energie ZDARMA</p>
+                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Energie preplatíme v plnej výške</p>
+                                  <p className="text-xs text-success font-semibold mt-1">✨ Toto je skutočná pomoc!</p>
                                 </div>
                               </div>
                               <div className="flex items-start gap-2">
