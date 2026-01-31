@@ -749,7 +749,7 @@ export default function DotaciaAmericana() {
                   {/* Bonusy */}
                   <div className="bg-gradient-to-r from-yellow-50 to-amber-50 p-4 rounded-lg border-2 border-yellow-400">
                     <p className="text-sm text-yellow-800 font-bold mb-3">🎁 Bonusy programu Ambassador:</p>
-                    <ul className="space-y-2 text-xs text-yellow-900">
+                    <ul className="space-y-2 text-xs text-yellow-900 mb-3">
                       <li className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-yellow-600" />
                         <span>Energie preplatíme v plnej výške</span>
@@ -763,6 +763,12 @@ export default function DotaciaAmericana() {
                         <span>Referenčná spolupráca</span>
                       </li>
                     </ul>
+                    <div className="bg-white/80 p-3 rounded border border-success/30">
+                      <p className="text-xs font-bold text-success mb-1">✨ Naša spolupráca nekončí pri odovzdaní kľúčov!</p>
+                      <p className="text-xs text-gray-700 leading-relaxed">
+                        My sa o vás postaráme aj potom. Skutočná pomoc nie je len dotácia – je to, že <strong className="text-success">energie zaplatíme v plnej výške!</strong> Nemusíte sa báť vysokých účtov. To je pomoc, ktorá skutočne funguje.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </Card>
