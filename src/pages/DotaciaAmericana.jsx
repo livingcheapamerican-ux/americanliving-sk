@@ -522,7 +522,7 @@ export default function DotaciaAmericana() {
                   <p className="text-xs sm:text-sm font-sans font-semibold text-emerald-700">
                     {modalType === 'rodina' 
                       ? '✅ SCHVÁLENÉ BENEFITY: Finančný príspevok + Prevádzkový grant'
-                      : '✅ SCHVÁLENÉ BENEFITY: Investičný stimul + Zaradenie do oficiálnej mapy Testovacích centier'
+                      : '✅ SCHVÁLENÉ BENEFITY: Investičný stimul + Zaradenie do oficiálnej mapy UBYTOVACÍCH ZARIADENÍ'
                     }
                   </p>
                 </div>
@@ -834,7 +834,7 @@ export default function DotaciaAmericana() {
                       </li>
                       <li className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-green-600" />
-                        <span>Zaradenie na mapu Testovacích centier</span>
+                        <span>Zaradenie na mapu UBYTOVACÍCH ZARIADENÍ</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-green-600" />
