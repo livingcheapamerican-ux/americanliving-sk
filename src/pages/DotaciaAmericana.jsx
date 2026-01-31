@@ -667,9 +667,15 @@ export default function DotaciaAmericana() {
                 <div className="space-y-4">
                   <div className="p-4 bg-emerald-50 rounded-lg border-l-4 border-success">
                     <p className="text-sm font-bold text-success mb-2">🏡 Program AMBASSADOR:</p>
-                    <p className="text-gray-600 text-sm leading-relaxed font-sans">
+                    <p className="text-gray-600 text-sm leading-relaxed font-sans mb-3">
                       Po odovzdaní domu vám začneme vyplácať prevádzkový grant – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne a máte náklady za energie už uhradené.
                     </p>
+                    <div className="bg-white/80 p-3 rounded border border-success/30">
+                      <p className="text-xs font-bold text-success mb-1">✨ Naša spolupráca nekončí pri odovzdaní kľúčov!</p>
+                      <p className="text-xs text-gray-700 leading-relaxed">
+                        My sa o vás postaráme aj potom. Skutočná pomoc nie je len dotácia – je to, že <strong className="text-success">energie zaplatíme v plnej výške!</strong> Nemusíte sa báť vysokých účtov. To je pomoc, ktorá skutočne funguje.
+                      </p>
+                    </div>
                   </div>
                   <div className="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-600">
                     <p className="text-sm font-bold text-yellow-700 mb-2">📈 Program INVESTOR & PARTNER:</p>
