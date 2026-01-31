@@ -662,11 +662,22 @@ export default function DotaciaAmericana() {
                   KROK 3
                 </div>
                 <h3 className="text-xl font-serif font-bold text-gray-900 mb-4">
-                  Výplata prevádzkového grantu
+                  Benefity po odovzdaní domu
                 </h3>
-                <p className="text-gray-600 leading-relaxed font-sans">
-                  Po odovzdaní domu vám začneme vyplácať "Ambassador Fee"* – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne a máte náklady za energie už uhradené.
-                </p>
+                <div className="space-y-4">
+                  <div className="p-4 bg-emerald-50 rounded-lg border-l-4 border-success">
+                    <p className="text-sm font-bold text-success mb-2">🏡 Program AMBASSADOR:</p>
+                    <p className="text-gray-600 text-sm leading-relaxed font-sans">
+                      Po odovzdaní domu vám začneme vyplácať prevádzkový grant – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne a máte náklady za energie už uhradené.
+                    </p>
+                  </div>
+                  <div className="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-600">
+                    <p className="text-sm font-bold text-yellow-700 mb-2">📈 Program PARTNER:</p>
+                    <p className="text-gray-600 text-sm leading-relaxed font-sans">
+                      Po odovzdaní domu zabezpečíme kompletnú správu, marketing a obsadenosť hostí. Vy získavate pasívny príjem bez starostí o prevádzku.
+                    </p>
+                  </div>
+                </div>
               </Card>
             </div>
           </div>
