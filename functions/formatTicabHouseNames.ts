@@ -25,11 +25,24 @@ Deno.serve(async (req) => {
         continue;
       }
       
-      // Ak už má správny formát (VEĽKÉ PÍSMENÁ, XXm²), preskoč
+      // Ak už má správny formát (VEĽKÉ PÍSMENÁ, XXm²), preskoč - OCHRANA PRED PREPISOVANÍM
       const alreadyFormatted = /^[A-Z\s]+,\s\d+m²$/.test(currentName);
       if (alreadyFormatted) {
-        skipped.push({ nazov: currentName, reason: 'Already formatted' });
-        continue;
+        // Overíme aj či sa plocha zhoduje s databázou
+        const expectedArea = Math.round(zastavana);
+        const currentArea = parseInt(currentName.match(/(\d+)m²$/)?.[1] || '0');
+
+        if (currentArea === expectedArea) {
+          skipped.push({ nazov: currentName, reason: 'Already correctly formatted' });
+          continue;
+        } else {
+          // Ak sa plocha nezhoduje, upozorníme ale NEPREPISUJEME automaticky
+          skipped.push({ 
+            nazov: currentName, 
+            reason: `Area mismatch: DB has ${expectedArea}m² but name shows ${currentArea}m². Manual review required.` 
+          });
+          continue;
+        }
       }
       
       if (!zastavana) {
