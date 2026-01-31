@@ -506,7 +506,7 @@ export default function DotaciaAmericana() {
                 <div className="mt-4 p-4 bg-gradient-to-r from-emerald-50 to-green-50 border-l-4 border-emerald-500 rounded shadow-sm">
                   <p className="text-xs sm:text-sm font-sans font-semibold text-emerald-700">
                     {modalType === 'rodina' 
-                      ? '✅ SCHVÁLENÉ BENEFITY: Finančný príspevok + Prevádzkový grant 150€ za každú schválenú návštevu'
+                      ? '✅ SCHVÁLENÉ BENEFITY: Finančný príspevok + Prevádzkový grant'
                       : '✅ SCHVÁLENÉ BENEFITY: Investičný stimul + Zaradenie do oficiálnej mapy Testovacích centier'
                     }
                   </p>
