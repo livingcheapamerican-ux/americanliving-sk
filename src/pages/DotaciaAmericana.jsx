@@ -672,7 +672,7 @@ export default function DotaciaAmericana() {
                     </p>
                   </div>
                   <div className="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-600">
-                    <p className="text-sm font-bold text-yellow-700 mb-2">📈 Program PARTNER:</p>
+                    <p className="text-sm font-bold text-yellow-700 mb-2">📈 Program INVESTOR & PARTNER:</p>
                     <p className="text-gray-600 text-sm leading-relaxed font-sans">
                       Po odovzdaní domu zabezpečíme kompletnú správu, marketing a obsadenosť hostí. Vy získavate pasívny príjem bez starostí o prevádzku.
                     </p>
