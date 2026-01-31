@@ -605,28 +605,34 @@ export default function DetailDomu() {
         </Helmet>
       )}
       {/* Back Button */}
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between">
-          <Link to={returnUrl}>
-            <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 text-xs sm:text-sm h-7 sm:h-9">
-              <ArrowLeft className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">{t('backToCatalog')}</span>
-              <span className="sm:hidden">{t('back')}</span>
-            </Button>
-          </Link>
-          <div className="flex items-center gap-2">
-            {canManage && (
-              <Button
-                onClick={() => setShowAdminPanel(!showAdminPanel)}
-                variant={showAdminPanel ? "default" : "outline"}
-                size="sm"
-                className={`h-7 sm:h-9 text-xs ${showAdminPanel ? "bg-blue-600 hover:bg-blue-700" : ""}`}
-              >
-                <Edit className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
-                <span className="hidden sm:inline">{showAdminPanel ? t('close') : t('galleries')}</span>
+      <div className="bg-white border-b mt-10 sm:mt-0">
+        <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
+          <div className="flex items-center justify-between mb-2 sm:mb-0">
+            <Link to={returnUrl}>
+              <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 text-xs sm:text-sm h-8 sm:h-9">
+                <ArrowLeft className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">{t('backToCatalog')}</span>
+                <span className="sm:hidden">{t('back')}</span>
               </Button>
-            )}
+            </Link>
+            <div className="flex items-center gap-2">
+              {canManage && (
+                <Button
+                  onClick={() => setShowAdminPanel(!showAdminPanel)}
+                  variant={showAdminPanel ? "default" : "outline"}
+                  size="sm"
+                  className={`h-7 sm:h-9 text-xs ${showAdminPanel ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                >
+                  <Edit className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">{showAdminPanel ? t('close') : t('galleries')}</span>
+                </Button>
+              )}
+            </div>
           </div>
+          {/* Názov domu - mobilné zobrazenie */}
+          <h1 className="lg:hidden text-lg font-bold text-primary mt-2">
+            {dom.nazov}
+          </h1>
         </div>
       </div>
 
