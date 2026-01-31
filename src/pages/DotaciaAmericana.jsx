@@ -65,23 +65,40 @@ export default function DotaciaAmericana() {
 
   const queryClient = useQueryClient();
 
-  // Slideshow for Rodina
+  // Slideshow for Rodina - faster on mobile
   useEffect(() => {
     if (!heroSettings?.rodina_fotky?.length) return;
+    const isMobile = window.innerWidth < 768;
     const interval = setInterval(() => {
       setRodinaIndex((prev) => (prev + 1) % heroSettings.rodina_fotky.length);
-    }, heroSettings.rodina_interval || 5000);
+    }, isMobile ? 3000 : (heroSettings.rodina_interval || 5000));
     return () => clearInterval(interval);
   }, [heroSettings?.rodina_fotky, heroSettings?.rodina_interval]);
 
-  // Slideshow for Investor
+  // Slideshow for Investor - faster on mobile
   useEffect(() => {
     if (!heroSettings?.investor_fotky?.length) return;
+    const isMobile = window.innerWidth < 768;
     const interval = setInterval(() => {
       setInvestorIndex((prev) => (prev + 1) % heroSettings.investor_fotky.length);
-    }, heroSettings.investor_interval || 5000);
+    }, isMobile ? 3000 : (heroSettings.investor_interval || 5000));
     return () => clearInterval(interval);
   }, [heroSettings?.investor_fotky, heroSettings?.investor_interval]);
+
+  // Preload next images for smooth transitions
+  useEffect(() => {
+    if (!heroSettings?.rodina_fotky?.length) return;
+    const nextIndex = (rodinaIndex + 1) % heroSettings.rodina_fotky.length;
+    const img = new Image();
+    img.src = heroSettings.rodina_fotky[nextIndex] + '?w=800&q=70';
+  }, [rodinaIndex, heroSettings?.rodina_fotky]);
+
+  useEffect(() => {
+    if (!heroSettings?.investor_fotky?.length) return;
+    const nextIndex = (investorIndex + 1) % heroSettings.investor_fotky.length;
+    const img = new Image();
+    img.src = heroSettings.investor_fotky[nextIndex] + '?w=800&q=70';
+  }, [investorIndex, heroSettings?.investor_fotky]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -248,21 +265,20 @@ export default function DotaciaAmericana() {
             <AnimatePresence mode="wait">
               <motion.img
                 key={rodinaIndex}
-                src={heroSettings.rodina_fotky[rodinaIndex]}
+                src={heroSettings.rodina_fotky[rodinaIndex] + '?w=800&q=70'}
                 srcSet={`
+                  ${heroSettings.rodina_fotky[rodinaIndex]}?w=600&q=65 600w,
                   ${heroSettings.rodina_fotky[rodinaIndex]}?w=800&q=70 800w,
-                  ${heroSettings.rodina_fotky[rodinaIndex]}?w=1200&q=75 1200w,
-                  ${heroSettings.rodina_fotky[rodinaIndex]}?w=1600&q=80 1600w
+                  ${heroSettings.rodina_fotky[rodinaIndex]}?w=1200&q=75 1200w
                 `}
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 640px) 600px, (max-width: 768px) 800px, 50vw"
                 alt="Rodina & Istota"
                 loading="eager"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.2 }}
                 className="absolute inset-0 w-full h-full object-cover brightness-90"
-                onLoad={(e) => e.target.style.opacity = 1}
               />
             </AnimatePresence>
           ) : (
@@ -330,21 +346,20 @@ export default function DotaciaAmericana() {
             <AnimatePresence mode="wait">
               <motion.img
                 key={investorIndex}
-                src={heroSettings.investor_fotky[investorIndex]}
+                src={heroSettings.investor_fotky[investorIndex] + '?w=800&q=70'}
                 srcSet={`
+                  ${heroSettings.investor_fotky[investorIndex]}?w=600&q=65 600w,
                   ${heroSettings.investor_fotky[investorIndex]}?w=800&q=70 800w,
-                  ${heroSettings.investor_fotky[investorIndex]}?w=1200&q=75 1200w,
-                  ${heroSettings.investor_fotky[investorIndex]}?w=1600&q=80 1600w
+                  ${heroSettings.investor_fotky[investorIndex]}?w=1200&q=75 1200w
                 `}
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 640px) 600px, (max-width: 768px) 800px, 50vw"
                 alt="Investícia & Výnos"
                 loading="eager"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.2 }}
                 className="absolute inset-0 w-full h-full object-cover brightness-90"
-                onLoad={(e) => e.target.style.opacity = 1}
               />
             </AnimatePresence>
           ) : (
