@@ -16,6 +16,8 @@ import { ArrowRight, Filter, Home, CheckCircle, Search, ArrowUpDown, Plus, Squar
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { useLanguage } from "../components/LanguageContext";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Info, Gift } from "lucide-react";
 import ImageWithWatermark from "../components/ImageWithWatermark";
 
 // Memoizovaný komponent pre kartičku domu
