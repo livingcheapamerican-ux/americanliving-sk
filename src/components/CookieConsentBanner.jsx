@@ -71,33 +71,34 @@ export default function CookieConsentBanner() {
     }));
   };
 
-  if (!showBanner) return null;
-
   return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-50 pointer-events-none">
-        {/* Backdrop for settings */}
-        {showSettings && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/50 pointer-events-auto"
-            onClick={() => setShowSettings(false)}
-          />
-        )}
+    <AnimatePresence mode="wait">
+      {showBanner && (
+        <div className="fixed inset-0 z-50 pointer-events-none">
+          {/* Backdrop for settings */}
+          <AnimatePresence mode="wait">
+            {showSettings && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-black/50 pointer-events-auto"
+                onClick={() => setShowSettings(false)}
+              />
+            )}
+          </AnimatePresence>
 
-        {/* Settings Panel */}
-        <AnimatePresence>
-          {showSettings && (
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25 }}
-              className="absolute right-0 top-0 bottom-0 w-full md:w-[500px] pointer-events-auto"
-            >
-              <Card className="h-full overflow-y-auto bg-white shadow-2xl rounded-none md:rounded-l-2xl">
+          {/* Settings Panel */}
+          <AnimatePresence mode="wait">
+            {showSettings && (
+              <motion.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", damping: 25 }}
+                className="absolute right-0 top-0 bottom-0 w-full md:w-[500px] pointer-events-auto"
+              >
+                <Card className="h-full overflow-y-auto bg-white shadow-2xl rounded-none md:rounded-l-2xl">
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
