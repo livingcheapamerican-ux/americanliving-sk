@@ -677,7 +677,7 @@ export default function DotaciaAmericana() {
                   Pridelenie dotácie prebieha na základe poradia žiadostí
                 </h2>
                 <p className="text-base sm:text-xl font-sans text-white max-w-2xl mx-auto" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>
-                  Fond American Living alokoval prostriedky na podporu rodinného bývania a investičných príležitostí. Žiadosti sa vyhodnocujú priebežne.
+                  Využite náš jedinečný dotačný program, ktorého výška sa líši v závislosti od typu domu! Či už ste investor hľadajúci pasívny príjem z Airbnb apartmánov alebo si chcete postaviť vlastný rodinný dom, American Living je pre vás tou najlepšou voľbou. Dotáciu získate v oboch prípadoch! Pre rodinné domy poskytujeme navyše najsilnejšiu podporu – preplácame vám energiu v plnej výške! Pre Airbnb apartmány získate finančnú podporu a reklamu ZDARMA, aby sme vám zabezpečili plnú obsadenosť!
                 </p>
               </div>
 
@@ -1199,7 +1199,7 @@ export default function DotaciaAmericana() {
                   Pridelenie dotácie prebieha na základe poradia žiadostí
                 </h2>
                 <p className="text-base sm:text-xl font-sans text-white max-w-2xl mx-auto" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>
-                  Fond American Living alokoval prostriedky na podporu rodinného bývania a investičných príležitostí. Žiadosti sa vyhodnocujú priebežne.
+                  Využite náš jedinečný dotačný program, ktorého výška sa líši v závislosti od typu domu! Či už ste investor hľadajúci pasívny príjem z Airbnb apartmánov alebo si chcete postaviť vlastný rodinný dom, American Living je pre vás tou najlepšou voľbou. Dotáciu získate v oboch prípadoch! Pre rodinné domy poskytujeme navyše najsilnejšiu podporu – preplácame vám energiu v plnej výške! Pre Airbnb apartmány získate finančnú podporu a reklamu ZDARMA, aby sme vám zabezpečili plnú obsadenosť!
                 </p>
               </div>
 
@@ -1285,7 +1285,7 @@ export default function DotaciaAmericana() {
                   Pridelenie dotácie prebieha na základe poradia žiadostí
                 </h2>
                 <p className="text-base sm:text-xl font-sans text-white max-w-2xl mx-auto" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>
-                  Fond American Living alokoval prostriedky na podporu rodinného bývania a investičných príležitostí. Žiadosti sa vyhodnocujú priebežne.
+                  Využite náš jedinečný dotačný program, ktorého výška sa líši v závislosti od typu domu! Či už ste investor hľadajúci pasívny príjem z Airbnb apartmánov alebo si chcete postaviť vlastný rodinný dom, American Living je pre vás tou najlepšou voľbou. Dotáciu získate v oboch prípadoch! Pre rodinné domy poskytujeme navyše najsilnejšiu podporu – preplácame vám energiu v plnej výške! Pre Airbnb apartmány získate finančnú podporu a reklamu ZDARMA, aby sme vám zabezpečili plnú obsadenosť!
                 </p>
               </div>
 
