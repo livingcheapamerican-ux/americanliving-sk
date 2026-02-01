@@ -22,7 +22,9 @@ export default function DotaciaAmericana() {
     telefon: "",
     lokalita: "",
     rozpocet: "",
-    dom_id: ""
+    dom_id: "",
+    forma_financovania: "",
+    typ_grantu: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalType, setModalType] = useState(null); // 'rodina' or 'investor'
@@ -116,19 +118,21 @@ export default function DotaciaAmericana() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const ucel = modalType === 'rodina' ? 'Bývanie (Program Ambassador)' : 'Investícia (Program Partner)';
-      const selectedHouse = houses?.find(h => h.id === formData.dom_id);
-      const houseName = selectedHouse?.nazov || '';
-      const dotacia = selectedHouse ? Math.round(selectedHouse.zakladna_cena * 0.05) : 0;
-      
-      await base44.entities.Dopyt.create({
-        meno: formData.meno,
-        email: formData.email,
-        telefon: formData.telefon,
-        typ_dopytu: "vseobecny",
-        dom_id: formData.dom_id || null,
-        poznamka: `Dotácia Americana - Účel: ${ucel}${houseName ? `, Dom: ${houseName} (Dotácia: ${dotacia.toLocaleString()} €)` : ''}${formData.lokalita ? `, Lokalita: ${formData.lokalita}` : ''}${formData.rozpocet ? `, Rozpočet: ${formData.rozpocet}` : ''}`
-      });
+        const ucel = modalType === 'rodina' ? 'Bývanie (Program Ambassador)' : 'Investícia (Program Partner)';
+        const selectedHouse = houses?.find(h => h.id === formData.dom_id);
+        const houseName = selectedHouse?.nazov || '';
+        const dotacia = selectedHouse ? Math.round(selectedHouse.zakladna_cena * 0.05) : 0;
+
+        await base44.entities.Dopyt.create({
+          meno: formData.meno,
+          email: formData.email,
+          telefon: formData.telefon,
+          typ_dopytu: "vseobecny",
+          dom_id: formData.dom_id || null,
+          forma_financovania: formData.forma_financovania,
+          typ_grantu: formData.typ_grantu,
+          poznamka: `Dotácia Americana - Účel: ${ucel}${houseName ? `, Dom: ${houseName} (Dotácia: ${dotacia.toLocaleString()} €)` : ''}${formData.lokalita ? `, Lokalita: ${formData.lokalita}` : ''}${formData.rozpocet ? `, Rozpočet: ${formData.rozpocet}` : ''}${formData.forma_financovania ? `, Financovanie: ${formData.forma_financovania}` : ''}${formData.typ_grantu ? `, Typ grantu: ${formData.typ_grantu}` : ''}`
+        });
       
       // Konfety animácia na potvrdenie
       if (typeof window !== 'undefined' && window.confetti) {
@@ -139,8 +143,8 @@ export default function DotaciaAmericana() {
         });
       }
       
-      toast.success("✅ Vaša žiadosť bola odoslaná! Do 24 hodín dostanete personalizovanú video odpoveď.");
-      setFormData({ meno: "", email: "", telefon: "", lokalita: "", rozpocet: "", dom_id: "" });
+      toast.success("✅ Blahoželáme! Zaradili ste sa medzi kandidátov na poskytnutie súkromného grantu od spoločnosti American Living.");
+      setFormData({ meno: "", email: "", telefon: "", lokalita: "", rozpocet: "", dom_id: "", forma_financovania: "", typ_grantu: "" });
       setModalType(null);
     } catch (error) {
       toast.error("Nepodarilo sa odoslať žiadosť. Skúste to znovu.");
@@ -563,6 +567,25 @@ export default function DotaciaAmericana() {
 
                 <div>
                   <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+                    Typ grantu <span className="text-red-600">*</span>
+                  </label>
+                  <Select value={formData.typ_grantu} onValueChange={(value) => setFormData({ ...formData, typ_grantu: value })} required>
+                    <SelectTrigger className="text-sm sm:text-lg p-3 sm:p-4">
+                      <SelectValue placeholder="Vyberte typ grantu" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Program AMBASSADOR - Dotované bývanie pre rodiny">
+                        Program AMBASSADOR - Dotované bývanie pre rodiny
+                      </SelectItem>
+                      <SelectItem value="Program INVESTOR & PARTNER">
+                        Program INVESTOR & PARTNER
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
                     {t('selectHouse')}
                   </label>
                   <Select value={formData.dom_id} onValueChange={(value) => setFormData({ ...formData, dom_id: value })}>
@@ -578,6 +601,22 @@ export default function DotaciaAmericana() {
                           </SelectItem>
                         );
                       })}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+                    Forma financovania <span className="text-red-600">*</span>
+                  </label>
+                  <Select value={formData.forma_financovania} onValueChange={(value) => setFormData({ ...formData, forma_financovania: value })} required>
+                    <SelectTrigger className="text-sm sm:text-lg p-3 sm:p-4">
+                      <SelectValue placeholder="Vyberte formu financovania" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Hotovosť">1. Hotovosť</SelectItem>
+                      <SelectItem value="Úver - vybavujem si sám">2. Úver - vybavujem si sám</SelectItem>
+                      <SelectItem value="Úver vybavte mi">3. Úver vybavte mi</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -757,6 +796,24 @@ export default function DotaciaAmericana() {
                     className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
                   />
                   <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Typ grantu <span className="text-red-600">*</span>
+                    </label>
+                    <Select value={formData.typ_grantu} onValueChange={(value) => setFormData({ ...formData, typ_grantu: value })} required>
+                      <SelectTrigger className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 h-auto">
+                        <SelectValue placeholder="Vyberte typ grantu" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Program AMBASSADOR - Dotované bývanie pre rodiny">
+                          Program AMBASSADOR - Dotované bývanie pre rodiny
+                        </SelectItem>
+                        <SelectItem value="Program INVESTOR & PARTNER">
+                          Program INVESTOR & PARTNER
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
                     <Select value={formData.dom_id} onValueChange={(value) => setFormData({ ...formData, dom_id: value })} required>
                       <SelectTrigger className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 h-auto">
                         <SelectValue placeholder="Vyberte dom" />
@@ -770,6 +827,21 @@ export default function DotaciaAmericana() {
                             </SelectItem>
                           );
                         })}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Forma financovania <span className="text-red-600">*</span>
+                    </label>
+                    <Select value={formData.forma_financovania} onValueChange={(value) => setFormData({ ...formData, forma_financovania: value })} required>
+                      <SelectTrigger className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 h-auto">
+                        <SelectValue placeholder="Vyberte formu financovania" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Hotovosť">1. Hotovosť</SelectItem>
+                        <SelectItem value="Úver - vybavujem si sám">2. Úver - vybavujem si sám</SelectItem>
+                        <SelectItem value="Úver vybavte mi">3. Úver vybavte mi</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -797,7 +869,7 @@ export default function DotaciaAmericana() {
                   </Button>
                 </form>
                 <p className="text-xs text-gray-600 mt-4 font-sans">
-                  Vaša žiadosť bude spracovaná do 24 hodín. Dostanete personalizované video s potvrdením alokácie prostriedkov.
+                  Vaša žiadosť bola prijatá. Zaradili ste sa medzi kandidátov na poskytnutie súkromného grantu od spoločnosti American Living.
                 </p>
               </div>
             </motion.div>

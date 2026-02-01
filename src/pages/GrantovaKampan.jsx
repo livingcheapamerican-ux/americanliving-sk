@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Search, Home, Phone, Mail, MapPinned } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { MapPin, Search, Home, Phone, Mail, MapPinned, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
@@ -45,6 +46,7 @@ export default function GrantovaKampan() {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [geocodedRequests, setGeocodedRequests] = React.useState([]);
   const [isGeocoding, setIsGeocoding] = React.useState(false);
+  const queryClient = useQueryClient();
   
   // Add Leaflet CSS dynamically
   React.useEffect(() => {
@@ -198,6 +200,18 @@ export default function GrantovaKampan() {
   const centerPosition = geocodedRequests.length > 0 
     ? [geocodedRequests[0].lat, geocodedRequests[0].lng]
     : [48.669, 19.699]; // Center of Slovakia
+
+  // Delete request mutation
+  const deleteRequestMutation = useMutation({
+    mutationFn: (requestId) => base44.entities.Dopyt.delete(requestId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['dotacia-requests']);
+      toast.success('Žiadosť bola vymazaná');
+    },
+    onError: () => {
+      toast.error('Chyba pri vymazávaní žiadosti');
+    }
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-8">
@@ -387,12 +401,35 @@ export default function GrantovaKampan() {
                     <div>
                       <p className="text-xs text-gray-500 mb-1">Lokalita</p>
                       <p className="text-sm font-medium text-gray-900">{req.location}</p>
+                      {req.forma_financovania && (
+                        <Badge variant="outline" className="mt-1 text-xs">
+                          {req.forma_financovania}
+                        </Badge>
+                      )}
+                      {req.typ_grantu && (
+                        <Badge variant="outline" className="mt-1 text-xs">
+                          {req.typ_grantu}
+                        </Badge>
+                      )}
                     </div>
                     
                     <div>
                       <p className="text-xs text-gray-500 mb-1">Vybraný dom</p>
                       <p className="text-sm font-medium text-gray-900">{req.houseName}</p>
                       <Badge className="bg-green-600 mt-2">Dotácia: {req.subsidy} €</Badge>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="mt-2 w-full"
+                        onClick={() => {
+                          if (confirm(`Naozaj chcete vymazať žiadosť od ${req.meno}?`)) {
+                            deleteRequestMutation.mutate(req.id);
+                          }
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Vymazať
+                      </Button>
                     </div>
                   </div>
                 </Card>
