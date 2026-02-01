@@ -285,7 +285,7 @@ export default function DotaciaAmericana() {
           {heroSettings?.rodina_fotky?.length > 0 ? (
             <AnimatePresence mode="wait">
               <motion.img
-                key={rodinaIndex}
+                key={`rodina-${rodinaIndex}`}
                 src={heroSettings.rodina_fotky[rodinaIndex] + '?w=800&q=70'}
                 srcSet={`
                   ${heroSettings.rodina_fotky[rodinaIndex]}?w=600&q=65 600w,
@@ -298,7 +298,7 @@ export default function DotaciaAmericana() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0.5 }}
                 className="absolute inset-0 w-full h-full object-cover brightness-90"
               />
             </AnimatePresence>
@@ -366,7 +366,7 @@ export default function DotaciaAmericana() {
           {heroSettings?.investor_fotky?.length > 0 ? (
             <AnimatePresence mode="wait">
               <motion.img
-                key={investorIndex}
+                key={`investor-${investorIndex}`}
                 src={heroSettings.investor_fotky[investorIndex] + '?w=800&q=70'}
                 srcSet={`
                   ${heroSettings.investor_fotky[investorIndex]}?w=600&q=65 600w,
@@ -379,7 +379,7 @@ export default function DotaciaAmericana() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0.5 }}
                 className="absolute inset-0 w-full h-full object-cover brightness-90"
               />
             </AnimatePresence>
