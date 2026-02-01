@@ -270,7 +270,9 @@ export default function CookieConsentBanner() {
             </div>
           </div>
         </motion.div>
+        )}
       </div>
+      )}
     </AnimatePresence>
   );
 }
