@@ -133,6 +133,7 @@ function LayoutContent({ children }) {
     { name: t('home'), path: createPageUrl("Domov"), icon: Home },
     { name: t('dotacia'), path: createPageUrl("DotaciaAmericana"), icon: Gift },
     ...(isAdmin ? [{ name: '💰 ' + t('adminPriceList'), path: createPageUrl("AdminCennik"), icon: Grid3x3 }] : []),
+    ...(isAdmin ? [{ name: '🗺️ Grantová kampaň', path: createPageUrl("GrantovaKampan"), icon: MapPinned }] : []),
     { name: t('catalog'), path: createPageUrl("Katalog"), icon: Grid3x3 },
     { name: t('aiRecommendations'), path: createPageUrl("OdporucanieDomov"), icon: Sparkles },
     { name: t('about'), path: createPageUrl("ONas"), icon: Info },
