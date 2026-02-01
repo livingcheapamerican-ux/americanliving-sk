@@ -674,9 +674,10 @@ export default function DotaciaAmericana() {
                   />
                   <Input
                     type="text"
-                    placeholder="Lokalita (voliteľné)"
+                    placeholder="Lokalita"
                     value={formData.lokalita}
                     onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
+                    required
                     className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
                   />
                   <Button
@@ -1190,9 +1191,10 @@ export default function DotaciaAmericana() {
                   />
                   <Input
                     type="text"
-                    placeholder="Lokalita (voliteľné)"
+                    placeholder="Lokalita"
                     value={formData.lokalita}
                     onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
+                    required
                     className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
                   />
                   <Button
@@ -1270,9 +1272,10 @@ export default function DotaciaAmericana() {
                   />
                   <Input
                     type="text"
-                    placeholder="Lokalita (voliteľné)"
+                    placeholder="Lokalita"
                     value={formData.lokalita}
                     onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
+                    required
                     className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
                   />
                   <Button
