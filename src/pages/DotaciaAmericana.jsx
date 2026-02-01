@@ -1214,10 +1214,9 @@ export default function DotaciaAmericana() {
                     </motion.div>
                   );
                 })}
-            </div>
+          </div>
 
-            {/* ĽAVÝ STĹPEC - Viacmodulové domy (4, 3, 2 moduly) */}
-            <div className="space-y-6">
+          <div className="space-y-6">
               {houses
                 ?.filter(h => (h.pocet_modulov || 1) >= 2)
                 ?.sort((a, b) => (b.zakladna_cena || 0) - (a.zakladna_cena || 0))
