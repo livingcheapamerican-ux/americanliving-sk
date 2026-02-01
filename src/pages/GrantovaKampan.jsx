@@ -89,6 +89,31 @@ export default function GrantovaKampan() {
     enabled: user?.role === 'admin'
   });
 
+  // Delete request mutation
+  const deleteRequestMutation = useMutation({
+    mutationFn: (requestId) => base44.entities.Dopyt.delete(requestId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['dotacia-requests']);
+      toast.success('Žiadosť bola vymazaná');
+    },
+    onError: () => {
+      toast.error('Chyba pri vymazávaní žiadosti');
+    }
+  });
+
+  // Update request mutation
+  const updateRequestMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Dopyt.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['dotacia-requests']);
+      setEditingRequest(null);
+      toast.success('Žiadosť bola aktualizovaná');
+    },
+    onError: () => {
+      toast.error('Chyba pri aktualizácii žiadosti');
+    }
+  });
+
   // Geocode locations
   useEffect(() => {
     if (!requests || requests.length === 0 || !houses) return;
@@ -203,31 +228,6 @@ export default function GrantovaKampan() {
   const centerPosition = geocodedRequests.length > 0 
     ? [geocodedRequests[0].lat, geocodedRequests[0].lng]
     : [48.669, 19.699]; // Center of Slovakia
-
-  // Delete request mutation
-  const deleteRequestMutation = useMutation({
-    mutationFn: (requestId) => base44.entities.Dopyt.delete(requestId),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['dotacia-requests']);
-      toast.success('Žiadosť bola vymazaná');
-    },
-    onError: () => {
-      toast.error('Chyba pri vymazávaní žiadosti');
-    }
-  });
-
-  // Update request mutation
-  const updateRequestMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Dopyt.update(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['dotacia-requests']);
-      setEditingRequest(null);
-      toast.success('Žiadosť bola aktualizovaná');
-    },
-    onError: () => {
-      toast.error('Chyba pri aktualizácii žiadosti');
-    }
-  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-8">
