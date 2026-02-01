@@ -757,6 +757,23 @@ export default function DotaciaAmericana() {
                     className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
                   />
                   <div>
+                    <Select value={formData.dom_id} onValueChange={(value) => setFormData({ ...formData, dom_id: value })} required>
+                      <SelectTrigger className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 h-auto">
+                        <SelectValue placeholder="Vyberte dom" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {houses?.map((dom) => {
+                          const dotacia = Math.round(dom.zakladna_cena * 0.05);
+                          return (
+                            <SelectItem key={dom.id} value={dom.id}>
+                              {dom.nazov} - {dom.zastavana_plocha} m² - {dotacia.toLocaleString()} €
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
                     <Input
                       type="text"
                       placeholder="Lokalita"
