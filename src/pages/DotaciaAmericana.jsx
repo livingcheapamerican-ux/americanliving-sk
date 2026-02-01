@@ -547,7 +547,7 @@ export default function DotaciaAmericana() {
                 {modalType === 'rodina' && (
                   <div>
                     <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                      Lokalita pozemku
+                      Lokalita pozemku <span className="text-red-600">*</span>
                     </label>
                     <Input
                       type="text"
