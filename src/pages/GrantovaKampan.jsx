@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Search, Home, Phone, Mail, MapPinned } from "lucide-react";
 import { toast } from "sonner";
-import "leaflet/dist/leaflet.css";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 
 // Fix for default marker icons in React Leaflet
@@ -43,9 +42,21 @@ function MapBounds({ positions }) {
 }
 
 export default function GrantovaKampan() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [geocodedRequests, setGeocodedRequests] = useState([]);
-  const [isGeocoding, setIsGeocoding] = useState(false);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [geocodedRequests, setGeocodedRequests] = React.useState([]);
+  const [isGeocoding, setIsGeocoding] = React.useState(false);
+  
+  // Add Leaflet CSS dynamically
+  React.useEffect(() => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css';
+    document.head.appendChild(link);
+    
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
 
   // Check if user is admin
   const { data: user } = useQuery({
