@@ -200,6 +200,15 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
             )}
           </div>
           
+          {dom.vyrobca === 'Ticab house' && (
+            <Alert className="bg-gradient-to-r from-emerald-50 to-green-50 border-emerald-300 mb-2 p-1.5 sm:p-3">
+              <Info className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-600" />
+              <AlertDescription className="text-[8px] sm:text-xs text-gray-700 font-sans leading-tight">
+                {t('dotaciaNotice')}
+              </AlertDescription>
+            </Alert>
+          )}
+
           <div className="pt-1.5 sm:pt-4 border-t space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex-1">
@@ -220,21 +229,25 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                   </p>
                 )}
               </div>
-              <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`} className="w-full sm:w-auto">
-                <Button size="sm" className="w-full sm:w-auto bg-primary hover:bg-primary/90 group-hover:bg-secondary text-[10px] sm:text-sm px-2 sm:px-3 h-6 sm:h-8">
+            </div>
+            <div className="flex gap-1.5">
+              {dom.vyrobca === "Ticab house" && (
+                <Button 
+                  size="sm" 
+                  className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white text-[10px] sm:text-sm px-2 sm:px-3 h-6 sm:h-8 font-semibold"
+                  onClick={() => navigate(createPageUrl(`DotaciaAmericana?dom=${dom.id}`))}
+                >
+                  <Gift className="w-3 h-3 mr-0.5" />
+                  Dotácia
+                </Button>
+              )}
+              <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`} className={dom.vyrobca === "Ticab house" ? 'flex-1' : 'w-full'}>
+                <Button size="sm" className="w-full bg-primary hover:bg-primary/90 group-hover:bg-secondary text-[10px] sm:text-sm px-2 sm:px-3 h-6 sm:h-8">
                   {t('detail')}
                   <ArrowRight className="ml-0.5 sm:ml-1 w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </Link>
             </div>
-            {dom.vyrobca === "Ticab house" && (
-              <Link to={createPageUrl("DotaciaAmericana")} className="block w-full">
-                <Button size="sm" className="w-full bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] sm:text-sm px-2 sm:px-3 h-6 sm:h-8">
-                  {t('dotaciaAmericanaButton')}
-                  <ArrowRight className="ml-0.5 sm:ml-1 w-3 h-3 sm:w-4 sm:h-4" />
-                </Button>
-              </Link>
-            )}
           </div>
         </div>
       </Card>
