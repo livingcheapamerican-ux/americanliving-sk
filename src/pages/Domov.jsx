@@ -429,46 +429,7 @@ export default function Domov() {
         </div>
       </section>
 
-      {/* DOTÁCIA AMERICANA */}
-      <section className="py-8 sm:py-12 bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 relative overflow-hidden">
-        <div className="container mx-auto px-4 sm:px-8">
-          <Card className="bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-700 border-4 border-blue-300 p-6 sm:p-10 shadow-2xl hover:shadow-blue-500/40 transition-shadow">
-            <div className="flex flex-col md:flex-row gap-6 items-center">
-              <motion.div
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="flex-shrink-0"
-              >
-                <div className="w-20 h-20 sm:w-28 sm:h-28 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-4 border-white/40">
-                  <CheckCircle className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
-                </div>
-              </motion.div>
-              <div className="flex-1 text-center md:text-left">
-                <h2 className="text-2xl sm:text-4xl font-black text-white mb-4 leading-tight drop-shadow-lg">
-                  DOTÁCIA AMERICANA
-                </h2>
-                <p className="text-base sm:text-xl text-white/95 leading-relaxed font-medium drop-shadow-md">
-                  Využite špeciálny program dotácií pre rodinný dom aj Airbnb apartmány. Získate finančnú podporu + reklamu ZDARMA, aby sme vám apartmán naplnili hosťami!
-                </p>
-                <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
-                  <Link to={createPageUrl("Kontakt")}>
-                    <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50 font-bold px-8 py-6 text-lg shadow-xl w-full sm:w-auto">
-                      Zistiť viac
-                      <ArrowRight className="ml-2 w-5 h-5" />
-                    </Button>
-                  </Link>
-                  <a href="tel:+421905138124">
-                    <Button size="lg" variant="outline" className="bg-transparent border-3 border-white text-white hover:bg-white hover:text-blue-700 font-bold px-8 py-6 text-lg shadow-xl w-full sm:w-auto">
-                      <Phone className="mr-2 w-5 h-5" />
-                      +421 905 138 124
-                    </Button>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-      </section>
+
 
       {/* Komplexné služby - S OBRÁZKAMI */}
       <section className="py-6 sm:py-16 bg-gradient-to-br from-red-950 via-red-900 to-red-800 relative overflow-hidden">
