@@ -5,7 +5,9 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MapPin, Search, Home, Phone, Mail, MapPinned, Trash2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MapPin, Search, Home, Phone, Mail, MapPinned, Trash2, Edit } from "lucide-react";
 import { toast } from "sonner";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
@@ -46,6 +48,7 @@ export default function GrantovaKampan() {
   const [searchTerm, setSearchTerm] = useState("");
   const [geocodedRequests, setGeocodedRequests] = useState([]);
   const [isGeocoding, setIsGeocoding] = useState(false);
+  const [editingRequest, setEditingRequest] = useState(null);
   const queryClient = useQueryClient();
   
   // Add Leaflet CSS dynamically
@@ -210,6 +213,19 @@ export default function GrantovaKampan() {
     },
     onError: () => {
       toast.error('Chyba pri vymazávaní žiadosti');
+    }
+  });
+
+  // Update request mutation
+  const updateRequestMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Dopyt.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['dotacia-requests']);
+      setEditingRequest(null);
+      toast.success('Žiadosť bola aktualizovaná');
+    },
+    onError: () => {
+      toast.error('Chyba pri aktualizácii žiadosti');
     }
   });
 
@@ -417,19 +433,30 @@ export default function GrantovaKampan() {
                       <p className="text-xs text-gray-500 mb-1">Vybraný dom</p>
                       <p className="text-sm font-medium text-gray-900">{req.houseName}</p>
                       <Badge className="bg-green-600 mt-2">Dotácia: {req.subsidy} €</Badge>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="mt-2 w-full"
-                        onClick={() => {
-                          if (confirm(`Naozaj chcete vymazať žiadosť od ${req.meno}?`)) {
-                            deleteRequestMutation.mutate(req.id);
-                          }
-                        }}
-                      >
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Vymazať
-                      </Button>
+                      <div className="flex gap-2 mt-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1"
+                          onClick={() => setEditingRequest(req)}
+                        >
+                          <Edit className="w-4 h-4 mr-2" />
+                          Upraviť
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="flex-1"
+                          onClick={() => {
+                            if (confirm(`Naozaj chcete vymazať žiadosť od ${req.meno}?`)) {
+                              deleteRequestMutation.mutate(req.id);
+                            }
+                          }}
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Vymazať
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </Card>
