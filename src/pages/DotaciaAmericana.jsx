@@ -333,20 +333,20 @@ export default function DotaciaAmericana() {
               className="bg-white/85 backdrop-blur-sm p-2 sm:p-4 rounded-xl border-2 border-emerald-500 shadow-xl max-w-xs sm:max-w-md"
             >
               <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-gray-900 mb-2 leading-tight">
-                Program AMBASSADOR
+                {t('dotaciaHeroLeft')}
               </h2>
               <p className="text-xs sm:text-sm text-emerald-700 mb-1 sm:mb-2 font-sans font-bold">
-                Dotované bývanie pre rodiny
+                {t('dotaciaHeroLeftSubtitle')}
               </p>
               <p className="text-xs text-gray-700 mb-3 sm:mb-4 font-sans leading-relaxed">
-                Získajte príspevok na výstavbu domu a dotáciu na energie výmenou za referenčnú spoluprácu.
+                {t('dotaciaHeroLeftDesc')}
               </p>
               <Button
                 size="sm"
                 className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-sans font-bold px-4 py-2 text-xs rounded-lg shadow-xl w-full"
                 onClick={(e) => { e.stopPropagation(); setModalType('rodina'); }}
               >
-                Overiť nárok na dotáciu
+                {t('dotaciaHeroLeftButton')}
                 <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </motion.div>
@@ -412,20 +412,20 @@ export default function DotaciaAmericana() {
               className="bg-black/70 backdrop-blur-sm p-2 sm:p-4 rounded-xl border-2 border-yellow-400/50 max-w-xs sm:max-w-md"
             >
               <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-white mb-2 drop-shadow-xl leading-tight">
-                Program INVESTOR & PARTNER
+                {t('dotaciaHeroRight')}
               </h2>
               <p className="text-xs sm:text-sm text-white/95 mb-1 sm:mb-2 drop-shadow-lg font-sans font-medium">
-                Investícia s garanciou správy
+                {t('dotaciaHeroRightSubtitle')}
               </p>
               <p className="text-xs text-white/85 mb-3 sm:mb-4 drop-shadow-lg font-sans leading-relaxed">
-                Investujte do rekreačných domov. My zabezpečíme výstavbu, marketing a hostí.
+                {t('dotaciaHeroRightDesc')}
               </p>
               <Button
                 size="sm"
                 className="bg-yellow-400 hover:bg-yellow-300 text-black font-sans font-bold px-4 py-2 text-xs rounded-lg shadow-xl w-full"
                 onClick={(e) => { e.stopPropagation(); setModalType('investor'); }}
               >
-                Žiadosť o investičný stimul
+                {t('dotaciaHeroRightButton')}
                 <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </motion.div>
@@ -522,7 +522,7 @@ export default function DotaciaAmericana() {
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
               <DialogHeader>
                 <DialogTitle className="text-xl sm:text-3xl font-serif font-bold text-primary">
-                  {modalType === 'rodina' ? '🏡 Program Ambassador - Žiadosť o dotáciu' : '📈 Program Partner - Žiadosť o investičný stimul'}
+                  {modalType === 'rodina' ? '🏡 ' + t('dotaciaModalTitleRodina') : '📈 ' + t('dotaciaModalTitleInvestor')}
                 </DialogTitle>
               </DialogHeader>
 
@@ -542,8 +542,8 @@ export default function DotaciaAmericana() {
                 <div className="mt-4 p-4 bg-gradient-to-r from-emerald-50 to-green-50 border-l-4 border-emerald-500 rounded shadow-sm">
                   <p className="text-xs sm:text-sm font-sans font-semibold text-emerald-700">
                     {modalType === 'rodina' 
-                      ? '✅ SCHVÁLENÉ BENEFITY: Finančný príspevok + Prevádzkový grant'
-                      : '✅ SCHVÁLENÉ BENEFITY: Investičný stimul + Zaradenie do oficiálnej mapy UBYTOVACÍCH ZARIADENÍ'
+                      ? '✅ ' + t('dotaciaModalBenefitsRodina')
+                      : '✅ ' + t('dotaciaModalBenefitsInvestor')
                     }
                   </p>
                 </div>
@@ -553,11 +553,11 @@ export default function DotaciaAmericana() {
               <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                 <div>
                   <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                    Meno
+                    {t('dotaciaFormName')}
                   </label>
                   <Input
                     type="text"
-                    placeholder="Ján Novák"
+                    placeholder={t('dotaciaFormNamePlaceholder')}
                     value={formData.meno}
                     onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
                     required
@@ -567,18 +567,18 @@ export default function DotaciaAmericana() {
 
                 <div>
                   <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                    Typ grantu <span className="text-red-600">*</span>
+                    {t('dotaciaFormTypeGrant')} <span className="text-red-600">*</span>
                   </label>
                   <Select value={formData.typ_grantu} onValueChange={(value) => setFormData({ ...formData, typ_grantu: value })} required>
                     <SelectTrigger className="text-sm sm:text-lg p-3 sm:p-4">
-                      <SelectValue placeholder="Vyberte typ grantu" />
+                      <SelectValue placeholder={t('dotaciaFormTypeGrantPlaceholder')} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Program AMBASSADOR - Dotované bývanie pre rodiny">
-                        Program AMBASSADOR - Dotované bývanie pre rodiny
+                        {t('dotaciaFormTypeGrantOption1')}
                       </SelectItem>
                       <SelectItem value="Program INVESTOR & PARTNER">
-                        Program INVESTOR & PARTNER
+                        {t('dotaciaFormTypeGrantOption2')}
                       </SelectItem>
                     </SelectContent>
                   </Select>
@@ -586,18 +586,18 @@ export default function DotaciaAmericana() {
 
                 <div>
                   <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                    {t('selectHouse')}
+                    {t('dotaciaFormHouse')}
                   </label>
                   <Select value={formData.dom_id} onValueChange={(value) => setFormData({ ...formData, dom_id: value })}>
                     <SelectTrigger className="text-sm sm:text-lg p-3 sm:p-4">
-                      <SelectValue placeholder={t('selectHousePlaceholder')} />
+                      <SelectValue placeholder={t('dotaciaFormHousePlaceholder')} />
                     </SelectTrigger>
                     <SelectContent>
                       {houses?.map((dom) => {
                         const dotacia = Math.round(dom.zakladna_cena * 0.05);
                         return (
                           <SelectItem key={dom.id} value={dom.id}>
-                            {dom.nazov} - Dotácia {dotacia.toLocaleString()} €
+                            {dom.nazov} - {t('dotaciaGrant')} {dotacia.toLocaleString()} €
                           </SelectItem>
                         );
                       })}
@@ -607,16 +607,16 @@ export default function DotaciaAmericana() {
 
                 <div>
                   <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                    Forma financovania <span className="text-red-600">*</span>
+                    {t('dotaciaFormFinancing')} <span className="text-red-600">*</span>
                   </label>
                   <Select value={formData.forma_financovania} onValueChange={(value) => setFormData({ ...formData, forma_financovania: value })} required>
                     <SelectTrigger className="text-sm sm:text-lg p-3 sm:p-4">
-                      <SelectValue placeholder="Vyberte formu financovania" />
+                      <SelectValue placeholder={t('dotaciaFormFinancingPlaceholder')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Hotovosť">1. Hotovosť</SelectItem>
-                      <SelectItem value="Úver - vybavujem si sám">2. Úver - vybavujem si sám</SelectItem>
-                      <SelectItem value="Úver vybavte mi">3. Úver vybavte mi</SelectItem>
+                      <SelectItem value="Hotovosť">{t('dotaciaFormFinancingOption1')}</SelectItem>
+                      <SelectItem value="Úver - vybavujem si sám">{t('dotaciaFormFinancingOption2')}</SelectItem>
+                      <SelectItem value="Úver vybavte mi">{t('dotaciaFormFinancingOption3')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -624,11 +624,11 @@ export default function DotaciaAmericana() {
                 {modalType === 'rodina' && (
                   <div>
                     <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                      Lokalita pozemku <span className="text-red-600">*</span>
+                      {t('dotaciaFormLocation')} <span className="text-red-600">*</span>
                     </label>
                     <Input
                       type="text"
-                      placeholder="Bratislava - Rača"
+                      placeholder={t('dotaciaFormLocationPlaceholder')}
                       value={formData.lokalita}
                       onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
                       required
@@ -640,11 +640,11 @@ export default function DotaciaAmericana() {
                 {modalType === 'investor' && (
                   <div>
                     <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                      Rozpočet
+                      {t('dotaciaFormBudget')}
                     </label>
                     <Input
                       type="text"
-                      placeholder="50 000 - 100 000 €"
+                      placeholder={t('dotaciaFormBudgetPlaceholder')}
                       value={formData.rozpocet}
                       onChange={(e) => setFormData({ ...formData, rozpocet: e.target.value })}
                       className="text-sm sm:text-lg p-3 sm:p-4"
@@ -668,7 +668,7 @@ export default function DotaciaAmericana() {
 
                 <div>
                   <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                    Telefón
+                    {t('phone')}
                   </label>
                   <Input
                     type="tel"
@@ -686,7 +686,7 @@ export default function DotaciaAmericana() {
                   disabled={isSubmitting}
                   className="w-full font-sans font-bold py-4 sm:py-6 text-base sm:text-lg bg-primary hover:bg-secondary text-white"
                 >
-                  {isSubmitting ? "Spracovávam žiadosť..." : "Odoslať žiadosť o pridelenie dotácie"}
+                  {isSubmitting ? t('dotaciaFormSubmitting') : t('dotaciaFormSubmit')}
                   <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
               </form>

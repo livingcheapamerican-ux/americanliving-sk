@@ -89,6 +89,7 @@ import Domov from './pages/Domov';
 import DotaciaAmericana from './pages/DotaciaAmericana';
 import FAQ from './pages/FAQ';
 import GaleriaRealizacii from './pages/GaleriaRealizacii';
+import GrantovaKampan from './pages/GrantovaKampan';
 import Home from './pages/Home';
 import InteraktivnyKonfigurator from './pages/InteraktivnyKonfigurator';
 import Katalog from './pages/Katalog';
@@ -121,7 +122,6 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
-import GrantovaKampan from './pages/GrantovaKampan';
 import __Layout from './Layout.jsx';
 
 
@@ -168,6 +168,7 @@ export const PAGES = {
     "DotaciaAmericana": DotaciaAmericana,
     "FAQ": FAQ,
     "GaleriaRealizacii": GaleriaRealizacii,
+    "GrantovaKampan": GrantovaKampan,
     "Home": Home,
     "InteraktivnyKonfigurator": InteraktivnyKonfigurator,
     "Katalog": Katalog,
@@ -200,7 +201,6 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
-    "GrantovaKampan": GrantovaKampan,
 }
 
 export const pagesConfig = {
