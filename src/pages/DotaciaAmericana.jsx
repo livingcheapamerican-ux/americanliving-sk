@@ -1127,13 +1127,10 @@ export default function DotaciaAmericana() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* ĽAVÝ STĹPEC - Viacmodulové domy (4, 3, 2 moduly) */}
-            <div className="space-y-6">
-              {houses
-                ?.filter(h => (h.pocet_modulov || 1) >= 2)
-                ?.sort((a, b) => (b.zakladna_cena || 0) - (a.zakladna_cena || 0))
-                ?.map((dom) => {
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            {houses
+              ?.sort((a, b) => (b.zakladna_cena || 0) - (a.zakladna_cena || 0))
+              ?.map((dom) => {
                   const cennikova = dom.zakladna_cena;
                   const dotacia = cennikova ? Math.round(cennikova * 0.05) : 0;
 
