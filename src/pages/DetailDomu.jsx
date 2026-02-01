@@ -3297,6 +3297,18 @@ export default function DetailDomu() {
             {/* Sidebar pre všetky Ticabhouse domy - rovnaké ako Lyon (okrem Tiny House) */}
             {isTicabhouse && !dom.nazov?.toLowerCase().includes("tiny house") && (
               <div className="space-y-4">
+                {/* Informácia o dotácii */}
+                <Card className="bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-300 p-3 sm:p-4">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs sm:text-sm text-gray-700 font-sans leading-tight">
+                        {t('dotaciaNotice')}
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+
                 <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
                   <LyonSummaryPanelStandalone
                   predajNehnutelnosti={lyonPredajNehnutelnosti}
