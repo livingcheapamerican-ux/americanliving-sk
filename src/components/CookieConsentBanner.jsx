@@ -197,12 +197,13 @@ export default function CookieConsentBanner() {
         </AnimatePresence>
 
         {/* Main Banner - Oversized & Eye-catching */}
-        <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
-          className="absolute bottom-0 left-0 right-0 pointer-events-auto pb-safe"
-        >
+        {!showSettings && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            className="absolute bottom-0 left-0 right-0 pointer-events-auto pb-safe"
+          >
           <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 shadow-2xl">
             <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3 md:py-12">
               <div className="flex flex-col md:flex-row gap-3 md:gap-8 items-stretch md:items-center">
