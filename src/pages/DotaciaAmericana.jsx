@@ -1161,47 +1161,47 @@ export default function DotaciaAmericana() {
                           )}
                         </div>
                         <div className="p-4 sm:p-6 bg-gradient-to-b from-white to-emerald-50">
-                          <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-4">{dom.nazov} - Edícia 2026</h3>
+                          <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-4">{dom.nazov} - {t('dotaciaEdition2026')}</h3>
 
                           <div className="bg-white border-2 border-emerald-200 rounded-lg p-4 mb-4 font-sans">
                             <div className="flex justify-between items-center mb-2 pb-2 border-b">
-                              <span className="text-xs sm:text-sm text-gray-500">Cenníková hodnota:</span>
+                              <span className="text-xs sm:text-sm text-gray-500">{t('dotaciaCatalogPrice')}:</span>
                               <span className="text-sm sm:text-base font-bold text-gray-900">{cennikova?.toLocaleString()} €</span>
                             </div>
                             <div className="mb-3 pb-3 border-b">
                               <p className="text-xs sm:text-sm font-bold text-gray-700 mb-2 uppercase">
-                                Dotácia/Investičný stimul
+                                {t('dotaciaGrant')}
                               </p>
-                              <p className="text-xs text-gray-600 mb-2">Výška závisí od typu vybraného domu</p>
+                              <p className="text-xs text-gray-600 mb-2">{t('dotaciaGrantAmount')}</p>
                               <div className="flex justify-between items-center">
-                                <span className="text-xs sm:text-sm text-gray-600">Pre tento model:</span>
+                                <span className="text-xs sm:text-sm text-gray-600">{t('dotaciaGrantForModel')}</span>
                                 <span className="text-lg sm:text-2xl font-bold text-success">{dotacia?.toLocaleString()} €</span>
                               </div>
                             </div>
                             <div className="flex justify-between items-center">
-                              <span className="text-xs sm:text-sm font-bold text-primary">Váš doplatok:</span>
+                              <span className="text-xs sm:text-sm font-bold text-primary">{t('dotaciaYourPayment')}:</span>
                               <span className="text-base sm:text-xl font-bold text-primary">{(cennikova - dotacia)?.toLocaleString()} €</span>
                             </div>
                           </div>
 
                           <div className="bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-300 p-4 mb-4 rounded-lg">
                             <p className="text-xs sm:text-sm font-sans font-bold text-gray-800 mb-3">
-                              Vyberte si váš program:
+                              {t('dotaciaSelectProgram')}
                             </p>
                             <div className="space-y-2">
                               <div className="flex items-start gap-2">
                                 <span className="text-success text-lg">🏡</span>
                                 <div>
-                                  <p className="text-xs sm:text-sm font-bold text-success">AMBASSADOR (Rodina & Bývanie)</p>
-                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Energie preplatíme v plnej výške</p>
-                                  <p className="text-xs text-success font-semibold mt-1">✨ Toto je skutočná pomoc!</p>
+                                  <p className="text-xs sm:text-sm font-bold text-success">{t('dotaciaAmbassador')}</p>
+                                  <p className="text-xs text-gray-700">{t('dotaciaGrant')} {dotacia?.toLocaleString()} € + {t('dotaciaBonusEnergy')}</p>
+                                  <p className="text-xs text-success font-semibold mt-1">✨ {t('dotaciaBonusNote')}</p>
                                 </div>
                               </div>
                               <div className="flex items-start gap-2">
                                 <span className="text-yellow-600 text-lg">📈</span>
                                 <div>
-                                  <p className="text-xs sm:text-sm font-bold text-yellow-700">INVESTOR & PARTNER (Investícia)</p>
-                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Marketing ZDARMA (správa hostí)</p>
+                                  <p className="text-xs sm:text-sm font-bold text-yellow-700">{t('dotaciaInvestor')}</p>
+                                  <p className="text-xs text-gray-700">{t('dotaciaGrant')} {dotacia?.toLocaleString()} € + {t('dotaciaInvestorBonusMarketing')}</p>
                                 </div>
                               </div>
                             </div>
@@ -1209,7 +1209,7 @@ export default function DotaciaAmericana() {
 
                           <Link to={createPageUrl(`DetailDomu?id=${dom.id}`)}>
                             <Button className="w-full bg-primary hover:bg-secondary text-white font-sans font-semibold" size="lg">
-                              Detail dotačnej ponuky
+                              {t('dotaciaViewDetail')}
                             </Button>
                           </Link>
                         </div>
@@ -1219,10 +1219,10 @@ export default function DotaciaAmericana() {
                 })}
             </div>
 
-            {/* PRAVÝ STĹPEC - Jednomodulové domy */}
+            {/* ĽAVÝ STĹPEC - Viacmodulové domy (4, 3, 2 moduly) */}
             <div className="space-y-6">
               {houses
-                ?.filter(h => (h.pocet_modulov || 1) === 1)
+                ?.filter(h => (h.pocet_modulov || 1) >= 2)
                 ?.sort((a, b) => (b.zakladna_cena || 0) - (a.zakladna_cena || 0))
                 ?.map((dom) => {
                   const cennikova = dom.zakladna_cena;
@@ -1252,47 +1252,47 @@ export default function DotaciaAmericana() {
                           )}
                         </div>
                         <div className="p-4 sm:p-6 bg-gradient-to-b from-white to-emerald-50">
-                          <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-4">{dom.nazov} - Edícia 2026</h3>
+                          <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-4">{dom.nazov} - {t('dotaciaEdition2026')}</h3>
 
                           <div className="bg-white border-2 border-emerald-200 rounded-lg p-4 mb-4 font-sans">
                             <div className="flex justify-between items-center mb-2 pb-2 border-b">
-                              <span className="text-xs sm:text-sm text-gray-500">Cenníková hodnota:</span>
+                              <span className="text-xs sm:text-sm text-gray-500">{t('dotaciaCatalogPrice')}:</span>
                               <span className="text-sm sm:text-base font-bold text-gray-900">{cennikova?.toLocaleString()} €</span>
                             </div>
                             <div className="mb-3 pb-3 border-b">
                               <p className="text-xs sm:text-sm font-bold text-gray-700 mb-2 uppercase">
-                                Dotácia/Investičný stimul
+                                {t('dotaciaGrant')}
                               </p>
-                              <p className="text-xs text-gray-600 mb-2">Výška závisí od typu vybraného domu</p>
+                              <p className="text-xs text-gray-600 mb-2">{t('dotaciaGrantAmount')}</p>
                               <div className="flex justify-between items-center">
-                                <span className="text-xs sm:text-sm text-gray-600">Pre tento model:</span>
+                                <span className="text-xs sm:text-sm text-gray-600">{t('dotaciaGrantForModel')}</span>
                                 <span className="text-lg sm:text-2xl font-bold text-success">{dotacia?.toLocaleString()} €</span>
                               </div>
                             </div>
                             <div className="flex justify-between items-center">
-                              <span className="text-xs sm:text-sm font-bold text-primary">Váš doplatok:</span>
+                              <span className="text-xs sm:text-sm font-bold text-primary">{t('dotaciaYourPayment')}:</span>
                               <span className="text-base sm:text-xl font-bold text-primary">{(cennikova - dotacia)?.toLocaleString()} €</span>
                             </div>
                           </div>
 
                           <div className="bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-emerald-300 p-4 mb-4 rounded-lg">
                             <p className="text-xs sm:text-sm font-sans font-bold text-gray-800 mb-3">
-                              Vyberte si váš program:
+                              {t('dotaciaSelectProgram')}
                             </p>
                             <div className="space-y-2">
                               <div className="flex items-start gap-2">
                                 <span className="text-success text-lg">🏡</span>
                                 <div>
-                                  <p className="text-xs sm:text-sm font-bold text-success">AMBASSADOR (Rodina & Bývanie)</p>
-                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Energie preplatíme v plnej výške</p>
-                                  <p className="text-xs text-success font-semibold mt-1">✨ Toto je skutočná pomoc!</p>
+                                  <p className="text-xs sm:text-sm font-bold text-success">{t('dotaciaAmbassador')}</p>
+                                  <p className="text-xs text-gray-700">{t('dotaciaGrant')} {dotacia?.toLocaleString()} € + {t('dotaciaBonusEnergy')}</p>
+                                  <p className="text-xs text-success font-semibold mt-1">✨ {t('dotaciaBonusNote')}</p>
                                 </div>
                               </div>
                               <div className="flex items-start gap-2">
                                 <span className="text-yellow-600 text-lg">📈</span>
                                 <div>
-                                  <p className="text-xs sm:text-sm font-bold text-yellow-700">INVESTOR & PARTNER (Investícia)</p>
-                                  <p className="text-xs text-gray-700">Dotácia {dotacia?.toLocaleString()} € + Marketing ZDARMA (správa hostí)</p>
+                                  <p className="text-xs sm:text-sm font-bold text-yellow-700">{t('dotaciaInvestor')}</p>
+                                  <p className="text-xs text-gray-700">{t('dotaciaGrant')} {dotacia?.toLocaleString()} € + {t('dotaciaInvestorBonusMarketing')}</p>
                                 </div>
                               </div>
                             </div>
@@ -1300,7 +1300,7 @@ export default function DotaciaAmericana() {
 
                           <Link to={createPageUrl(`DetailDomu?id=${dom.id}`)}>
                             <Button className="w-full bg-primary hover:bg-secondary text-white font-sans font-semibold" size="lg">
-                              Detail dotačnej ponuky
+                              {t('dotaciaViewDetail')}
                             </Button>
                           </Link>
                         </div>
