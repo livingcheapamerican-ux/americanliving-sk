@@ -470,6 +470,89 @@ export default function GrantovaKampan() {
           </div>
         </Card>
       </div>
+
+      {/* Edit Dialog */}
+      {editingRequest && (
+        <Dialog open={!!editingRequest} onOpenChange={() => setEditingRequest(null)}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Upraviť žiadosť</DialogTitle>
+            </DialogHeader>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                updateRequestMutation.mutate({
+                  id: editingRequest.id,
+                  data: {
+                    meno: formData.get('meno'),
+                    email: formData.get('email'),
+                    telefon: formData.get('telefon'),
+                    forma_financovania: formData.get('forma_financovania'),
+                    typ_grantu: formData.get('typ_grantu'),
+                    poznamka: formData.get('poznamka')
+                  }
+                });
+              }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="block text-sm font-semibold mb-2">Meno</label>
+                <Input name="meno" defaultValue={editingRequest.meno} required />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2">Email</label>
+                <Input name="email" type="email" defaultValue={editingRequest.email} required />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2">Telefón</label>
+                <Input name="telefon" defaultValue={editingRequest.telefon} required />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2">Forma financovania</label>
+                <Select name="forma_financovania" defaultValue={editingRequest.forma_financovania}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Hotovosť">1. Hotovosť</SelectItem>
+                    <SelectItem value="Úver - vybavujem si sám">2. Úver - vybavujem si sám</SelectItem>
+                    <SelectItem value="Úver vybavte mi">3. Úver vybavte mi</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2">Typ grantu</label>
+                <Select name="typ_grantu" defaultValue={editingRequest.typ_grantu}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Program AMBASSADOR - Dotované bývanie pre rodiny">
+                      Program AMBASSADOR - Dotované bývanie pre rodiny
+                    </SelectItem>
+                    <SelectItem value="Program INVESTOR & PARTNER">
+                      Program INVESTOR & PARTNER
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold mb-2">Poznámka</label>
+                <Input name="poznamka" defaultValue={editingRequest.poznamka} />
+              </div>
+              <div className="flex gap-2 justify-end">
+                <Button type="button" variant="outline" onClick={() => setEditingRequest(null)}>
+                  Zrušiť
+                </Button>
+                <Button type="submit" disabled={updateRequestMutation.isPending}>
+                  {updateRequestMutation.isPending ? 'Ukladám...' : 'Uložiť'}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
