@@ -617,6 +617,86 @@ export default function DotaciaAmericana() {
         )}
       </AnimatePresence>
 
+      {/* SEKCIA: CTA - ŽIADOSŤ O DOTÁCIU */}
+      <section id="cta-section" className="py-20 bg-gradient-to-br from-primary via-secondary to-primary text-white">
+        <div className="container mx-auto px-4 sm:px-8">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="inline-block mb-6 px-6 py-3 bg-black/60 backdrop-blur-md border-2 border-accent rounded-lg shadow-2xl">
+                <p className="text-lg sm:text-2xl font-serif font-bold text-white" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>
+                  ⚠️ Stav fondu: <span className="text-accent" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>OTVORENÝ</span> do vyčerpania kapacity
+                </p>
+              </div>
+              <div className="bg-black/50 backdrop-blur-sm rounded-2xl p-6 mb-8 shadow-2xl">
+                <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold mb-6 text-white" style={{ textShadow: '3px 3px 10px rgba(0,0,0,0.9)' }}>
+                  Pridelenie dotácie prebieha na základe poradia žiadostí
+                </h2>
+                <p className="text-base sm:text-xl font-sans text-white max-w-2xl mx-auto" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>
+                  Fond American Living alokoval prostriedky na podporu rodinného bývania a investičných príležitostí. Žiadosti sa vyhodnocujú priebežne.
+                </p>
+              </div>
+
+              <div className="bg-white p-6 sm:p-10 rounded-2xl shadow-2xl">
+                <h3 className="text-xl sm:text-2xl font-serif font-bold text-primary mb-6">
+                  Rýchla žiadosť o pridelenie dotácie
+                </h3>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <Input
+                    type="text"
+                    placeholder="Celé meno"
+                    value={formData.meno}
+                    onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
+                    required
+                    className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
+                  />
+                  <Input
+                    type="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    required
+                    className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
+                  />
+                  <Input
+                    type="tel"
+                    placeholder="Telefón"
+                    value={formData.telefon}
+                    onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
+                    required
+                    className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Lokalita (voliteľné)"
+                    value={formData.lokalita}
+                    onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
+                    className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
+                  />
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={isSubmitting}
+                    className="w-full bg-primary hover:bg-secondary text-white font-sans font-bold py-6 text-lg shadow-lg"
+                  >
+                    {isSubmitting ? "Spracovávam..." : "Odoslať žiadosť o pridelenie dotácie"}
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </form>
+                <p className="text-xs text-gray-600 mt-4 font-sans">
+                  Vaša žiadosť bude spracovaná do 24 hodín. Dostanete personalizované video s potvrdením alokácie prostriedkov.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* SEKCIA: PROCES ČERPANIA DOTÁCIE */}
       <section id="proces-section" className="py-20 bg-gradient-to-br from-gray-50 via-emerald-50 to-gray-50">
         <div className="container mx-auto px-4 sm:px-8">
