@@ -318,36 +318,40 @@ export default function AIMarketingInsights() {
 
   // Export do PDF pomocou jsPDF
   const exportToPDF = async () => {
-    const { jsPDF } = await import('jspdf');
-    const doc = new jsPDF();
-    
-    doc.setFontSize(20);
-    doc.text('AI Marketing Insights Report', 20, 20);
-    doc.setFontSize(10);
-    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 30);
-    doc.text(`Total Insights: ${insights.length}`, 20, 35);
-    
-    let y = 45;
-    insights.forEach((insight, idx) => {
-      if (y > 270) {
-        doc.addPage();
-        y = 20;
-      }
+    try {
+      const jsPDF = (await import('jspdf')).default;
+      const doc = new jsPDF();
       
-      doc.setFontSize(12);
-      doc.text(`${idx + 1}. ${insight.dom_nazov}`, 20, y);
-      doc.setFontSize(9);
-      y += 6;
-      doc.text(`Výrobca: ${insight.vyrobca} | Confidence: ${insight.confidence_score}%`, 25, y);
-      y += 5;
-      doc.text(`Zobrazenia: ${insight.celkovy_zajem?.pocet_zobrazeni || 0} | Konfigurácie: ${insight.celkovy_zajem?.pocet_konfiguracii || 0}`, 25, y);
-      y += 5;
-      doc.text(`Konverzia: ${insight.celkovy_zajem?.miera_konverzie || 0}% | Priemerný čas: ${insight.celkovy_zajem?.priemerny_cas_na_stranke || 0}s`, 25, y);
-      y += 8;
-    });
-    
-    doc.save(`marketing-insights-${new Date().toISOString().split('T')[0]}.pdf`);
-    toast.success('PDF export úspešný!');
+      doc.setFontSize(20);
+      doc.text('AI Marketing Insights Report', 20, 20);
+      doc.setFontSize(10);
+      doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 30);
+      doc.text(`Total Insights: ${insights.length}`, 20, 35);
+      
+      let y = 45;
+      insights.forEach((insight, idx) => {
+        if (y > 270) {
+          doc.addPage();
+          y = 20;
+        }
+        
+        doc.setFontSize(12);
+        doc.text(`${idx + 1}. ${insight.dom_nazov}`, 20, y);
+        doc.setFontSize(9);
+        y += 6;
+        doc.text(`Výrobca: ${insight.vyrobca} | Confidence: ${insight.confidence_score}%`, 25, y);
+        y += 5;
+        doc.text(`Zobrazenia: ${insight.celkovy_zajem?.pocet_zobrazeni || 0} | Konfigurácie: ${insight.celkovy_zajem?.pocet_konfiguracii || 0}`, 25, y);
+        y += 5;
+        doc.text(`Konverzia: ${insight.celkovy_zajem?.miera_konverzie || 0}% | Priemerný čas: ${insight.celkovy_zajem?.priemerny_cas_na_stranke || 0}s`, 25, y);
+        y += 8;
+      });
+      
+      doc.save(`marketing-insights-${new Date().toISOString().split('T')[0]}.pdf`);
+      toast.success('PDF export úspešný!');
+    } catch (error) {
+      toast.error('Chyba pri exporte PDF');
+    }
   };
 
   return (
