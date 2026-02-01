@@ -372,9 +372,61 @@ export default function Domov() {
               </Button>
             </Link>
           </motion.div>
-          <p className="text-[#3E2723] md:text-[#5D4E37] text-xs sm:text-base md:text-lg font-bold mt-4 max-w-5xl mx-auto leading-relaxed px-2" style={{ textShadow: '1px 1px 3px rgba(255,255,255,0.9), 0 0 10px rgba(255,255,255,0.6)' }}>
-            Využite náš jedinečný dotačný program, ktorého výška sa líši v závislosti od typu domu! Či už ste investor hľadajúci pasívny príjem z Airbnb apartmánov alebo si chcete postaviť vlastný rodinný dom, American Living je pre vás tou najlepšou voľbou. Dotáciu získate v oboch prípadoch! Pre rodinné domy poskytujeme navyše najsilnejšiu podporu – preplácame vám energiu v plnej výške! Pre Airbnb apartmány získate finančnú podporu a reklamu ZDARMA, aby sme vám zabezpečili plnú obsadenosť!
-          </p>
+          <div className="mt-6 max-w-4xl mx-auto space-y-3 px-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              {/* Pre rodiny */}
+              <div className="bg-white/90 backdrop-blur-sm rounded-xl p-5 shadow-lg border-2 border-emerald-400">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg flex items-center justify-center">
+                    <Home className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-black text-emerald-700">Pre rodiny</h3>
+                </div>
+                <ul className="space-y-2 text-sm text-gray-800">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span><strong>Dotácia</strong> pri podpise</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span><strong>Energie v plnej výške</strong> preplatené</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span>Podpora aj po odovzdaní</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Pre investorov */}
+              <div className="bg-white/90 backdrop-blur-sm rounded-xl p-5 shadow-lg border-2 border-yellow-400">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center">
+                    <TrendingUp className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-black text-yellow-700">Pre investorov</h3>
+                </div>
+                <ul className="space-y-2 text-sm text-gray-800">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <span><strong>Dotácia</strong> pri podpise</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <span><strong>Marketing ZDARMA</strong> (správa hostí)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <span>Pasívny príjem z Airbnb</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <p className="text-xs sm:text-sm text-center text-gray-800 font-medium bg-white/70 backdrop-blur-sm rounded-lg p-3">
+              💡 <strong>Výška dotácie sa líši podľa typu domu</strong> – od mobilných domov až po viacmodulové konfigurácie
+            </p>
+          </div>
         </div>
       </section>
       
