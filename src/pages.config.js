@@ -121,6 +121,7 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
+import GrantovaKampan from './pages/GrantovaKampan';
 import __Layout from './Layout.jsx';
 
 
@@ -199,6 +200,7 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
+    "GrantovaKampan": GrantovaKampan,
 }
 
 export const pagesConfig = {
