@@ -856,7 +856,7 @@ const translations = {
     dotaciaAmericanaButton: "Dotácia AMERICANA",
     dotaciaNotice: "Cenovú ponuku si dokončite a požadovaná výška dotácie Vám bude odpočítaná z ceny nakonfigurovaného domu. Táto cena sa pri podpise GRANTU zníži. O samotnú dotáciu treba požiadať v sekcii DOTÁCIA AMERICANA alebo stačí kliknúť na zelené tlačidlo dotácia.",
     selectHouse: "Vyberte dom",
-    selectHousePlaceholder: "Vyberte model domu..."
+    selectHousePlaceholder: "Vyberte model domu...",
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Skončila vám fixácia úrokov a splátka za predražený murovaný dom alebo byt vás doslova dusí?",
