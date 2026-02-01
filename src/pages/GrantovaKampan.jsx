@@ -43,13 +43,13 @@ function MapBounds({ positions }) {
 }
 
 export default function GrantovaKampan() {
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [geocodedRequests, setGeocodedRequests] = React.useState([]);
-  const [isGeocoding, setIsGeocoding] = React.useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [geocodedRequests, setGeocodedRequests] = useState([]);
+  const [isGeocoding, setIsGeocoding] = useState(false);
   const queryClient = useQueryClient();
   
   // Add Leaflet CSS dynamically
-  React.useEffect(() => {
+  useEffect(() => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = 'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css';
