@@ -554,6 +554,7 @@ export default function DotaciaAmericana() {
                       placeholder="Bratislava - Rača"
                       value={formData.lokalita}
                       onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
+                      required
                       className="text-sm sm:text-lg p-3 sm:p-4"
                     />
                   </div>
