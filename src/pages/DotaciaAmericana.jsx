@@ -672,14 +672,19 @@ export default function DotaciaAmericana() {
                     required
                     className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
                   />
-                  <Input
-                    type="text"
-                    placeholder="Lokalita"
-                    value={formData.lokalita}
-                    onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
-                    required
-                    className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
-                  />
+                  <div>
+                    <Input
+                      type="text"
+                      placeholder="Lokalita"
+                      value={formData.lokalita}
+                      onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
+                      required
+                      className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
+                    />
+                    <p className="text-xs text-red-600 mt-1 font-sans font-semibold">
+                      * Povinné pole
+                    </p>
+                  </div>
                   <Button
                     type="submit"
                     size="lg"
@@ -1189,14 +1194,19 @@ export default function DotaciaAmericana() {
                     required
                     className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
                   />
-                  <Input
-                    type="text"
-                    placeholder="Lokalita"
-                    value={formData.lokalita}
-                    onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
-                    required
-                    className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
-                  />
+                  <div>
+                    <Input
+                      type="text"
+                      placeholder="Lokalita"
+                      value={formData.lokalita}
+                      onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
+                      required
+                      className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
+                    />
+                    <p className="text-xs text-red-600 mt-1 font-sans font-semibold">
+                      * Povinné pole
+                    </p>
+                  </div>
                   <Button
                     type="submit"
                     size="lg"
@@ -1270,14 +1280,19 @@ export default function DotaciaAmericana() {
                     required
                     className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
                   />
-                  <Input
-                    type="text"
-                    placeholder="Lokalita"
-                    value={formData.lokalita}
-                    onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
-                    required
-                    className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
-                  />
+                  <div>
+                    <Input
+                      type="text"
+                      placeholder="Lokalita"
+                      value={formData.lokalita}
+                      onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
+                      required
+                      className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
+                    />
+                    <p className="text-xs text-red-600 mt-1 font-sans font-semibold">
+                      * Povinné pole
+                    </p>
+                  </div>
                   <Button
                     type="submit"
                     size="lg"
