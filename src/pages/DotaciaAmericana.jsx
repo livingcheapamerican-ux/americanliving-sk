@@ -708,12 +708,12 @@ export default function DotaciaAmericana() {
             >
               <div className="inline-block mb-6 px-6 py-3 bg-black/60 backdrop-blur-md border-2 border-accent rounded-lg shadow-2xl">
                 <p className="text-lg sm:text-2xl font-serif font-bold text-white" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>
-                  ⚠️ Stav fondu: <span className="text-accent" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>OTVORENÝ</span> do vyčerpania kapacity
+                  ⚠️ {t('dotaciaFundStatus')} <span className="text-accent" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>{t('dotaciaFundStatusValue')}</span> {t('dotaciaFundStatusNote')}
                 </p>
               </div>
               <div className="bg-black/50 backdrop-blur-sm rounded-2xl p-6 mb-8 shadow-2xl">
                 <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold mb-6 text-white" style={{ textShadow: '3px 3px 10px rgba(0,0,0,0.9)' }}>
-                  Pridelenie dotácie prebieha na základe poradia žiadostí
+                  {t('dotaciaProcessTitle')}
                 </h2>
                 <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
                   {/* Pre rodiny */}
@@ -722,20 +722,20 @@ export default function DotaciaAmericana() {
                       <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg flex items-center justify-center">
                         <Home className="w-6 h-6 text-white" />
                       </div>
-                      <h3 className="text-lg font-black text-emerald-700">Pre rodiny</h3>
+                      <h3 className="text-lg font-black text-emerald-700">{t('dotaciaHeroLeftSubtitle')}</h3>
                     </div>
                     <ul className="space-y-2 text-sm text-gray-800">
                       <li className="flex items-start gap-2">
                         <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                        <span><strong>Dotácia</strong> pri podpise</span>
+                        <span><strong>{t('dotaciaGrant')}</strong> {t('dotaciaGrantNote')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                        <span><strong>Energie v plnej výške</strong> preplatené</span>
+                        <span><strong>{t('dotaciaBonusEnergy')}</strong></span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                        <span>Podpora aj po odovzdaní</span>
+                        <span>{t('dotaciaBonusRef')}</span>
                       </li>
                     </ul>
                   </div>
@@ -746,20 +746,20 @@ export default function DotaciaAmericana() {
                       <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center">
                         <TrendingUp className="w-6 h-6 text-white" />
                       </div>
-                      <h3 className="text-lg font-black text-yellow-700">Pre investorov</h3>
+                      <h3 className="text-lg font-black text-yellow-700">{t('dotaciaHeroRightSubtitle')}</h3>
                     </div>
                     <ul className="space-y-2 text-sm text-gray-800">
                       <li className="flex items-start gap-2">
                         <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                        <span><strong>Dotácia</strong> pri podpise</span>
+                        <span><strong>{t('dotaciaGrant')}</strong> {t('dotaciaGrantNote')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                        <span><strong>Marketing ZDARMA</strong> (správa hostí)</span>
+                        <span><strong>{t('dotaciaInvestorBonusMarketing')}</strong></span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                        <span>Pasívny príjem z Airbnb</span>
+                        <span>{t('dotaciaInvestorBonusIncome')}</span>
                       </li>
                     </ul>
                   </div>
@@ -768,12 +768,12 @@ export default function DotaciaAmericana() {
 
               <div className="bg-white p-6 sm:p-10 rounded-2xl shadow-2xl">
                 <h3 className="text-xl sm:text-2xl font-serif font-bold text-primary mb-6">
-                  Rýchla žiadosť o pridelenie dotácie
+                  {t('dotaciaFormSubmit')}
                 </h3>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <Input
                     type="text"
-                    placeholder="Celé meno"
+                    placeholder={t('dotaciaFormNamePlaceholder')}
                     value={formData.meno}
                     onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
                     required
@@ -789,7 +789,7 @@ export default function DotaciaAmericana() {
                   />
                   <Input
                     type="tel"
-                    placeholder="Telefón"
+                    placeholder={t('phone')}
                     value={formData.telefon}
                     onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
                     required
@@ -797,18 +797,18 @@ export default function DotaciaAmericana() {
                   />
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Typ grantu <span className="text-red-600">*</span>
+                      {t('dotaciaFormTypeGrant')} <span className="text-red-600">*</span>
                     </label>
                     <Select value={formData.typ_grantu} onValueChange={(value) => setFormData({ ...formData, typ_grantu: value })} required>
                       <SelectTrigger className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 h-auto">
-                        <SelectValue placeholder="Vyberte typ grantu" />
+                        <SelectValue placeholder={t('dotaciaFormTypeGrantPlaceholder')} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Program AMBASSADOR - Dotované bývanie pre rodiny">
-                          Program AMBASSADOR - Dotované bývanie pre rodiny
+                          {t('dotaciaFormTypeGrantOption1')}
                         </SelectItem>
                         <SelectItem value="Program INVESTOR & PARTNER">
-                          Program INVESTOR & PARTNER
+                          {t('dotaciaFormTypeGrantOption2')}
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -816,7 +816,7 @@ export default function DotaciaAmericana() {
                   <div>
                     <Select value={formData.dom_id} onValueChange={(value) => setFormData({ ...formData, dom_id: value })} required>
                       <SelectTrigger className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 h-auto">
-                        <SelectValue placeholder="Vyberte dom" />
+                        <SelectValue placeholder={t('dotaciaFormHousePlaceholder')} />
                       </SelectTrigger>
                       <SelectContent>
                         {houses?.map((dom) => {
@@ -832,30 +832,30 @@ export default function DotaciaAmericana() {
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Forma financovania <span className="text-red-600">*</span>
+                      {t('dotaciaFormFinancing')} <span className="text-red-600">*</span>
                     </label>
                     <Select value={formData.forma_financovania} onValueChange={(value) => setFormData({ ...formData, forma_financovania: value })} required>
                       <SelectTrigger className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 h-auto">
-                        <SelectValue placeholder="Vyberte formu financovania" />
+                        <SelectValue placeholder={t('dotaciaFormFinancingPlaceholder')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Hotovosť">1. Hotovosť</SelectItem>
-                        <SelectItem value="Úver - vybavujem si sám">2. Úver - vybavujem si sám</SelectItem>
-                        <SelectItem value="Úver vybavte mi">3. Úver vybavte mi</SelectItem>
+                        <SelectItem value="Hotovosť">{t('dotaciaFormFinancingOption1')}</SelectItem>
+                        <SelectItem value="Úver - vybavujem si sám">{t('dotaciaFormFinancingOption2')}</SelectItem>
+                        <SelectItem value="Úver vybavte mi">{t('dotaciaFormFinancingOption3')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div>
                     <Input
                       type="text"
-                      placeholder="Lokalita"
+                      placeholder={t('dotaciaFormLocationPlaceholder')}
                       value={formData.lokalita}
                       onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
                       required
                       className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
                     />
                     <p className="text-xs text-red-600 mt-1 font-sans font-semibold">
-                      * Povinné pole
+                      {t('dotaciaFormLocationRequired')}
                     </p>
                   </div>
                   <Button
@@ -864,12 +864,12 @@ export default function DotaciaAmericana() {
                     disabled={isSubmitting}
                     className="w-full bg-primary hover:bg-secondary text-white font-sans font-bold py-6 text-lg shadow-lg"
                   >
-                    {isSubmitting ? "Spracovávam..." : "Odoslať žiadosť o pridelenie dotácie"}
+                    {isSubmitting ? t('dotaciaFormSubmitting') : t('dotaciaFormSubmit')}
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </form>
                 <p className="text-xs text-gray-600 mt-4 font-sans">
-                  Vaša žiadosť bola prijatá. Zaradili ste sa medzi kandidátov na poskytnutie súkromného grantu od spoločnosti American Living.
+                  {t('dotaciaFormNote')}
                 </p>
               </div>
             </motion.div>
@@ -890,11 +890,11 @@ export default function DotaciaAmericana() {
             >
               <div className="inline-block mb-4">
                 <span className="bg-primary text-white px-6 py-2 rounded-lg text-sm font-sans font-bold uppercase tracking-wide">
-                  Oficiálny proces
+                  {t('dotaciaProcessOfficial')}
                 </span>
               </div>
               <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
-                AKO TO FUNGUJE
+                {t('dotaciaProcessTitle')}
               </h2>
             </motion.div>
 
@@ -904,13 +904,13 @@ export default function DotaciaAmericana() {
                   <CheckCircle className="w-8 h-8 text-emerald-600" />
                 </div>
                 <div className="mb-4 inline-block bg-primary text-white px-3 py-1 rounded text-xs font-sans font-bold">
-                  KROK 1
+                  {t('dotaciaProcessStep1')}
                 </div>
                 <h3 className="text-xl font-serif font-bold text-gray-900 mb-4">
-                  Schválenie žiadosti
+                  {t('dotaciaProcessStep1Title')}
                 </h3>
                 <p className="text-gray-600 leading-relaxed font-sans">
-                  Náš interný výbor posúdi vašu lokalitu. Ak spĺňa kritériá programu Ambassador alebo Partner, alokujeme pre vás zdroje.
+                  {t('dotaciaProcessStep1Desc')}
                 </p>
               </Card>
 
@@ -919,13 +919,13 @@ export default function DotaciaAmericana() {
                   <FileText className="w-8 h-8 text-yellow-600" />
                 </div>
                 <div className="mb-4 inline-block bg-primary text-white px-3 py-1 rounded text-xs font-sans font-bold">
-                  KROK 2
+                  {t('dotaciaProcessStep2')}
                 </div>
                 <h3 className="text-xl font-serif font-bold text-gray-900 mb-4">
-                  Podpis dotačného dekrétu
+                  {t('dotaciaProcessStep2Title')}
                 </h3>
                 <p className="text-gray-600 leading-relaxed font-sans">
-                  Pri podpise zmluvy vám okamžite odpočítame schválenú dotáciu z ceny nehnuteľnosti (Zníženie istiny).
+                  {t('dotaciaProcessStep2Desc')}
                 </p>
               </Card>
 
@@ -934,28 +934,28 @@ export default function DotaciaAmericana() {
                   <Euro className="w-8 h-8 text-green-600" />
                 </div>
                 <div className="mb-4 inline-block bg-primary text-white px-3 py-1 rounded text-xs font-sans font-bold">
-                  KROK 3
+                  {t('dotaciaProcessStep3')}
                 </div>
                 <h3 className="text-xl font-serif font-bold text-gray-900 mb-4">
-                  Benefity po odovzdaní domu
+                  {t('dotaciaProcessStep3Title')}
                 </h3>
                 <div className="space-y-4">
                   <div className="p-4 bg-emerald-50 rounded-lg border-l-4 border-success">
-                    <p className="text-sm font-bold text-success mb-2">🏡 Program AMBASSADOR:</p>
+                    <p className="text-sm font-bold text-success mb-2">🏡 {t('dotaciaProcessBenefitRodinaTitle')}</p>
                     <p className="text-gray-600 text-sm leading-relaxed font-sans mb-3">
-                      Po odovzdaní domu vám začneme vyplácať prevádzkový grant – finančnú odmenu za každý prezentačný deň stavby. Stačí raz mesačne a máte náklady za energie už uhradené.
+                      {t('dotaciaProcessBenefitRodinaDesc')}
                     </p>
                     <div className="bg-white/80 p-3 rounded border border-success/30">
-                      <p className="text-xs font-bold text-success mb-1">✨ Naša spolupráca nekončí pri odovzdaní kľúčov!</p>
+                      <p className="text-xs font-bold text-success mb-1">✨ {t('dotaciaBonusNote')}</p>
                       <p className="text-xs text-gray-700 leading-relaxed">
-                        My sa o vás postaráme aj potom. Skutočná pomoc nie je len dotácia – je to, že <strong className="text-success">energie zaplatíme v plnej výške!</strong> Nemusíte sa báť vysokých účtov. To je pomoc, ktorá skutočne funguje.
+                        {t('dotaciaBonusRealHelp')}
                       </p>
                     </div>
                   </div>
                   <div className="p-4 bg-yellow-50 rounded-lg border-l-4 border-yellow-600">
-                    <p className="text-sm font-bold text-yellow-700 mb-2">📈 Program INVESTOR & PARTNER:</p>
+                    <p className="text-sm font-bold text-yellow-700 mb-2">📈 {t('dotaciaProcessBenefitInvestorTitle')}</p>
                     <p className="text-gray-600 text-sm leading-relaxed font-sans">
-                      Po odovzdaní domu zabezpečíme kompletnú správu, marketing a obsadenosť hostí. Vy získavate pasívny príjem bez starostí o prevádzku.
+                      {t('dotaciaProcessBenefitInvestorDesc')}
                     </p>
                   </div>
                 </div>
@@ -977,10 +977,10 @@ export default function DotaciaAmericana() {
               className="text-center mb-12"
             >
               <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
-                Grafické znázornenie dotácie
+                {t('dotaciaVisualizationTitle')}
               </h2>
               <p className="text-base sm:text-xl text-gray-700 font-sans">
-                Vizualizácia benefitov pre oba programy
+                {t('dotaciaVisualizationSubtitle')}
               </p>
             </motion.div>
 
@@ -989,16 +989,16 @@ export default function DotaciaAmericana() {
               <Card className="p-6 bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-300">
                 <div className="text-center mb-6">
                   <div className="inline-block bg-success text-white px-4 py-2 rounded-lg text-sm font-bold mb-2">
-                    PROGRAM AMBASSADOR
+                    {t('dotaciaVisualizationAmbassador')}
                   </div>
-                  <h3 className="text-xl font-serif font-bold text-gray-900">Rodina & Bývanie</h3>
+                  <h3 className="text-xl font-serif font-bold text-gray-900">{t('dotaciaVisualizationAmbassadorSubtitle')}</h3>
                 </div>
 
                 {/* Vizualizácia */}
                 <div className="space-y-4">
                   {/* Cenníková hodnota */}
                   <div className="bg-white p-4 rounded-lg border-2 border-gray-300">
-                    <p className="text-sm text-gray-600 mb-2">Cenníková hodnota domu</p>
+                    <p className="text-sm text-gray-600 mb-2">{t('dotaciaCatalogPrice')}</p>
                     <div className="h-12 bg-gray-200 rounded flex items-center justify-center">
                       <p className="text-lg font-bold text-gray-800">100%</p>
                     </div>
@@ -1006,42 +1006,42 @@ export default function DotaciaAmericana() {
 
                   {/* Dotácia */}
                   <div className="bg-success/10 p-4 rounded-lg border-2 border-success">
-                    <p className="text-sm text-success font-bold mb-2">✅ DOTÁCIA AMERICAN LIVING</p>
+                    <p className="text-sm text-success font-bold mb-2">✅ {t('dotaciaGrant')}</p>
                     <div className="h-12 bg-success rounded flex items-center justify-center">
-                      <p className="text-sm font-bold text-white text-center px-2">Odpočítame pri podpise</p>
+                      <p className="text-sm font-bold text-white text-center px-2">{t('dotaciaGrantNote')}</p>
                     </div>
-                    <p className="text-xs text-success font-semibold mt-2 text-center">Výška závisí od typu vybraného domu</p>
+                    <p className="text-xs text-success font-semibold mt-2 text-center">{t('dotaciaGrantAmount')}</p>
                   </div>
 
                   {/* Váš doplatok */}
                   <div className="bg-primary/10 p-4 rounded-lg border-2 border-primary">
-                    <p className="text-sm text-primary font-bold mb-2">💰 VÁŠ DOPLATOK</p>
+                    <p className="text-sm text-primary font-bold mb-2">💰 {t('dotaciaYourPayment')}</p>
                     <div className="h-12 bg-primary rounded flex items-center justify-center">
-                      <p className="text-lg font-bold text-white">Vaša platba</p>
+                      <p className="text-lg font-bold text-white">{t('dotaciaYourPaymentAmount')}</p>
                     </div>
                   </div>
 
                   {/* Bonusy */}
                   <div className="bg-gradient-to-r from-yellow-50 to-amber-50 p-4 rounded-lg border-2 border-yellow-400">
-                    <p className="text-sm text-yellow-800 font-bold mb-3">🎁 Bonusy programu Ambassador:</p>
+                    <p className="text-sm text-yellow-800 font-bold mb-3">🎁 {t('dotaciaBonusTitle')}</p>
                     <ul className="space-y-2 text-xs text-yellow-900 mb-3">
                       <li className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-yellow-600" />
-                        <span>Energie preplatíme v plnej výške</span>
+                        <span>{t('dotaciaBonusEnergy')}</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-yellow-600" />
-                        <span>Prevádzkový grant za prezentácie</span>
+                        <span>{t('dotaciaBonusGrant')}</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-yellow-600" />
-                        <span>Referenčná spolupráca</span>
+                        <span>{t('dotaciaBonusRef')}</span>
                       </li>
                     </ul>
                     <div className="bg-white/80 p-3 rounded border border-success/30">
-                      <p className="text-xs font-bold text-success mb-1">✨ Naša spolupráca nekončí pri odovzdaní kľúčov!</p>
+                      <p className="text-xs font-bold text-success mb-1">✨ {t('dotaciaBonusNote')}</p>
                       <p className="text-xs text-gray-700 leading-relaxed">
-                        My sa o vás postaráme aj potom. Skutočná pomoc nie je len dotácia – je to, že <strong className="text-success">energie zaplatíme v plnej výške!</strong> Nemusíte sa báť vysokých účtov. To je pomoc, ktorá skutočne funguje.
+                        {t('dotaciaBonusRealHelp')}
                       </p>
                     </div>
                   </div>
@@ -1052,16 +1052,16 @@ export default function DotaciaAmericana() {
               <Card className="p-6 bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-400">
                 <div className="text-center mb-6">
                   <div className="inline-block bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-bold mb-2">
-                    PROGRAM INVESTOR & PARTNER
+                    {t('dotaciaVisualizationInvestor')}
                   </div>
-                  <h3 className="text-xl font-serif font-bold text-gray-900">Investícia do rekreácie</h3>
+                  <h3 className="text-xl font-serif font-bold text-gray-900">{t('dotaciaVisualizationInvestorSubtitle')}</h3>
                 </div>
 
                 {/* Vizualizácia */}
                 <div className="space-y-4">
                   {/* Cenníková hodnota */}
                   <div className="bg-white p-4 rounded-lg border-2 border-gray-300">
-                    <p className="text-sm text-gray-600 mb-2">Cenníková hodnota domu</p>
+                    <p className="text-sm text-gray-600 mb-2">{t('dotaciaCatalogPrice')}</p>
                     <div className="h-12 bg-gray-200 rounded flex items-center justify-center">
                       <p className="text-lg font-bold text-gray-800">100%</p>
                     </div>
@@ -1069,36 +1069,36 @@ export default function DotaciaAmericana() {
 
                   {/* Dotácia */}
                   <div className="bg-yellow-600/10 p-4 rounded-lg border-2 border-yellow-600">
-                    <p className="text-sm text-yellow-800 font-bold mb-2">✅ INVESTIČNÝ STIMUL</p>
+                    <p className="text-sm text-yellow-800 font-bold mb-2">✅ {t('dotaciaGrant')}</p>
                     <div className="h-12 bg-yellow-600 rounded flex items-center justify-center">
-                      <p className="text-sm font-bold text-white text-center px-2">Odpočítame pri podpise</p>
+                      <p className="text-sm font-bold text-white text-center px-2">{t('dotaciaGrantNote')}</p>
                     </div>
-                    <p className="text-xs text-yellow-800 font-semibold mt-2 text-center">Výška závisí od typu vybraného domu</p>
+                    <p className="text-xs text-yellow-800 font-semibold mt-2 text-center">{t('dotaciaGrantAmount')}</p>
                   </div>
 
                   {/* Váš doplatok */}
                   <div className="bg-orange-100 p-4 rounded-lg border-2 border-orange-400">
-                    <p className="text-sm text-orange-800 font-bold mb-2">💰 VAŠA INVESTÍCIA</p>
+                    <p className="text-sm text-orange-800 font-bold mb-2">💰 {t('dotaciaYourPayment')}</p>
                     <div className="h-12 bg-orange-500 rounded flex items-center justify-center">
-                      <p className="text-lg font-bold text-white">Vaša platba</p>
+                      <p className="text-lg font-bold text-white">{t('dotaciaYourPaymentAmount')}</p>
                     </div>
                   </div>
 
                   {/* Bonusy */}
                   <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border-2 border-green-400">
-                    <p className="text-sm text-green-800 font-bold mb-3">🎁 Bonusy programu Partner:</p>
+                    <p className="text-sm text-green-800 font-bold mb-3">🎁 {t('dotaciaInvestorBonusTitle')}</p>
                     <ul className="space-y-2 text-xs text-green-900">
                       <li className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-green-600" />
-                        <span>Marketing a správa hostí ZDARMA</span>
+                        <span>{t('dotaciaInvestorBonusMarketing')}</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-green-600" />
-                        <span>Zaradenie na mapu UBYTOVACÍCH ZARIADENÍ</span>
+                        <span>{t('dotaciaInvestorBonusMap')}</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <CheckCircle className="w-4 h-4 text-green-600" />
-                        <span>Pasívny príjem z prenájmu</span>
+                        <span>{t('dotaciaInvestorBonusIncome')}</span>
                       </li>
                     </ul>
                   </div>
@@ -1120,10 +1120,10 @@ export default function DotaciaAmericana() {
             className="text-center mb-16"
           >
             <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
-              Aktuálna dotačná ponuka
+              {t('dotaciaProductsTitle')}
             </h2>
             <p className="text-base sm:text-xl text-gray-700 font-sans">
-              Všetky modely sú oprávnené pre Program Ambassador aj Partner
+              {t('dotaciaProductsSubtitle')}
             </p>
           </motion.div>
 
@@ -1317,16 +1317,14 @@ export default function DotaciaAmericana() {
       <footer className="py-12 bg-gray-900 text-white">
         <div className="container mx-auto px-4 text-center">
           <p className="text-lg font-serif font-bold mb-2">
-            American Living Foundation
+            {t('dotaciaFooterTitle')}
           </p>
           <p className="text-gray-400 text-sm mb-6 font-sans">
-            Súkromný dotačný fond na podporu bývania a podnikania
+            {t('dotaciaFooterSubtitle')}
           </p>
           <div className="border-t border-gray-700 pt-6">
             <p className="text-gray-500 text-xs max-w-3xl mx-auto font-sans leading-relaxed">
-              ⚖️ <strong>Právne upozornenie:</strong> Dotácia je poskytovaná spoločnosťou American Living ako súkromný marketingový príspevok a investičný stimul. 
-              Nejde o štátnu pomoc ani verejný grant. Podmienky platné k dátumu podpisu dotačného dekrétu (kúpnej zmluvy). 
-              Dotačná schéma môže byť kedykoľvek upravená alebo ukončená bez predchádzajúceho upozornenia pri vyčerpaní alokovaných prostriedkov.
+              ⚖️ {t('dotaciaLegalNotice')}
             </p>
           </div>
         </div>
