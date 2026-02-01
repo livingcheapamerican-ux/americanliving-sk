@@ -854,6 +854,9 @@ const translations = {
     roomsLabel: "izby",
     
     dotaciaAmericanaButton: "Dotácia AMERICANA",
+    dotaciaNotice: "Cenovú ponuku si dokončite a požadovaná výška dotácie Vám bude odpočítaná z ceny nakonfigurovaného domu. Táto cena sa pri podpise GRANTU zníži. O samotnú dotáciu treba požiadať v sekcii DOTÁCIA AMERICANA alebo stačí kliknúť na zelené tlačidlo dotácia.",
+    selectHouse: "Vyberte dom",
+    selectHousePlaceholder: "Vyberte model domu..."
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Skončila vám fixácia úrokov a splátka za predražený murovaný dom alebo byt vás doslova dusí?",
@@ -1352,6 +1355,9 @@ const translations = {
     roomsLabel: "Zimmer",
     ticabPriceNote: "Schlüsselfertiger Preis im Status eines Freizeitgebäudes - Foto des Hauses in Grundkonfiguration in Details",
     dotaciaAmericanaButton: "AMERICANA Zuschuss",
+    dotaciaNotice: "Vervollständigen Sie Ihr Preisangebot und der gewünschte Zuschussbetrag wird vom Preis Ihres konfigurierten Hauses abgezogen. Dieser Preis wird bei Unterzeichnung des ZUSCHUSSES reduziert. Um den Zuschuss selbst zu beantragen, wenden Sie sich an den Abschnitt AMERICANA ZUSCHUSS oder klicken Sie einfach auf die grüne Zuschuss-Schaltfläche.",
+    selectHouse: "Haus auswählen",
+    selectHousePlaceholder: "Hausmodell auswählen..."
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Ist Ihre Zinsbindung abgelaufen und die Rate für ein überteuertes Ziegelhaus oder eine Wohnung erstickt Sie buchstäblich?",
@@ -2427,6 +2433,9 @@ const translations = {
     roomsLabel: "pièces",
     ticabPriceNote: "Prix clé en main en statut de construction récréative - photo de la maison en configuration de base dans les détails",
     dotaciaAmericanaButton: "Subvention AMERICANA",
+    dotaciaNotice: "Complétez votre offre de prix et le montant de la subvention demandée sera déduit du prix de votre maison configurée. Ce prix sera réduit lors de la signature de la SUBVENTION. Pour demander la subvention elle-même, consultez la section SUBVENTION AMERICANA ou cliquez simplement sur le bouton vert subvention.",
+    selectHouse: "Sélectionner une maison",
+    selectHousePlaceholder: "Sélectionner un modèle de maison..."
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Votre taux fixe est-il terminé et la mensualité pour une maison en brique ou un appartement surévalué vous étouffe littéralement?",
@@ -3458,6 +3467,9 @@ const translations = {
     roomsLabel: "собе",
     ticabPriceNote: "Цена кључ у руке у статусу рекреативне зграде - фотографија куће у основној конфигурацији у детаљима",
     dotaciaAmericanaButton: "Дотација AMERICANA",
+    dotaciaNotice: "Завршите своју ценовну понуду и тражени износ дотације ће бити одбијен од цене конфигурисане куће. Ова цена ће бити снижена приликом потписивања ГРАНТА. За саму дотацију треба поднети захтев у одељку ДОТАЦИЈА AMERICANA или једноставно кликните на зелено дугме дотација.",
+    selectHouse: "Изаберите кућу",
+    selectHousePlaceholder: "Изаберите модел куће..."
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Да ли вам је завршила фиксација камата а рата за предраг зидани дом или стан вас дословно гуши?",
@@ -4555,6 +4567,9 @@ const translations = {
     roomsLabel: "sobe",
     ticabPriceNote: "Cijena ključ u ruke u statusu rekreativne zgrade - fotografija kuće u osnovnoj konfiguraciji u detaljima",
     dotaciaAmericanaButton: "Dotacija AMERICANA",
+    dotaciaNotice: "Dovršite svoju cjenovnu ponudu i traženi iznos dotacije će biti odbijen od cijene konfigurirane kuće. Ova cijena će biti snižena prilikom potpisivanja GRANTA. Za samu dotaciju treba podnijeti zahtjev u odjeljku DOTACIJA AMERICANA ili jednostavno kliknite na zeleni gumb dotacija.",
+    selectHouse: "Odaberite kuću",
+    selectHousePlaceholder: "Odaberite model kuće..."
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Je li vam završila fiksacija kamata a rata za preskupu zidanu kuću ili stan vas doslovno guši?",
@@ -5640,6 +5655,9 @@ const translations = {
     roomsLabel: "δωμάτια",
     ticabPriceNote: "Τιμή με το κλειδί στο χέρι σε κατάσταση ψυχαγωγικού κτιρίου - φωτογραφία του σπιτιού σε βασική διαμόρφωση στις λεπτομέρειες",
     dotaciaAmericanaButton: "Επιδότηση AMERICANA",
+    dotaciaNotice: "Ολοκληρώστε την προσφορά τιμής σας και το ζητούμενο ποσό επιδότησης θα αφαιρεθεί από την τιμή του διαμορφωμένου σπιτιού σας. Αυτή η τιμή θα μειωθεί κατά την υπογραφή της ΕΠΙΔΟΤΗΣΗΣ. Για να αιτηθείτε την ίδια την επιδότηση, ανατρέξτε στην ενότητα ΕΠΙΔΟΤΗΣΗ AMERICANA ή απλώς κάντε κλικ στο πράσινο κουμπί επιδότησης.",
+    selectHouse: "Επιλέξτε σπίτι",
+    selectHousePlaceholder: "Επιλέξτε μοντέλο σπιτιού..."
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Έχει τελειώσει η σταθερή σας περίοδος επιτοκίου και η δόση για ένα υπερτιμημένο τούβλινο σπίτι ή διαμέρισμα σας πνίγει κυριολεκτικά;",
@@ -7330,6 +7348,9 @@ const translations = {
     roomsLabel: "rooms",
     ticabPriceNote: "Turnkey price in recreational building status - photo of the house in basic configuration in details",
     dotaciaAmericanaButton: "AMERICANA Grant",
+    dotaciaNotice: "Complete your price quote and the requested grant amount will be deducted from the price of your configured house. This price will be reduced upon signing the GRANT. To apply for the grant itself, go to the AMERICANA GRANT section or simply click the green grant button.",
+    selectHouse: "Select house",
+    selectHousePlaceholder: "Select house model..."
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Has your interest rate fixation ended and the installment for an overpriced brick house or apartment is literally suffocating you?",
@@ -8322,6 +8343,9 @@ const translations = {
     roomsLabel: "szoba",
     ticabPriceNote: "Kulcsrakész ár rekreációs épület státuszban - fotó a házról alapkonfigurációban a részletekben",
     dotaciaAmericanaButton: "Támogatás AMERICANA",
+    dotaciaNotice: "Fejezze be árkalkulációját, és a kért támogatási összeget levonjuk a konfigurált ház árából. Ez az ár a TÁMOGATÁS aláírásakor csökken. Magáért a támogatásért forduljon az AMERICANA TÁMOGATÁS részhez vagy egyszerűen kattintson a zöld támogatás gombra.",
+    selectHouse: "Válasszon házat",
+    selectHousePlaceholder: "Válasszon házmodellt..."
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Lejárt a kamatperiódusod és a túlárazott téglaházért vagy lakásért fizetett részlet szó szerint fojtogat?",
@@ -9274,6 +9298,9 @@ const translations = {
     roomsLabel: "pokoje",
     ticabPriceNote: "Cena pod klucz w statusie budynku rekreacyjnego - zdjęcie domu w podstawowej konfiguracji w szczegółach",
     dotaciaAmericanaButton: "Dotacja AMERICANA",
+    dotaciaNotice: "Uzupełnij swoją ofertę cenową, a żądana kwota dotacji zostanie odliczona od ceny skonfigurowanego domu. Ta cena zostanie obniżona przy podpisywaniu DOTACJI. Aby ubiegać się o samą dotację, przejdź do sekcji DOTACJA AMERICANA lub po prostu kliknij zielony przycisk dotacji.",
+    selectHouse: "Wybierz dom",
+    selectHousePlaceholder: "Wybierz model domu..."
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Skończyła Ci się fiksacja oprocentowania a rata za przewartościowany dom murowany lub mieszkanie dosłownie Cię dusi?",
@@ -10267,6 +10294,9 @@ const translations = {
     roomsLabel: "кімнати",
     ticabPriceNote: "Ціна під ключ у статусі рекреаційної будівлі - фото будинку в базовій конфігурації в деталях",
     dotaciaAmericanaButton: "Дотація AMERICANA",
+    dotaciaNotice: "Завершіть свою цінову пропозицію, і запитувана сума дотації буде вирахувана з ціни сконфігурованого будинку. Ця ціна буде знижена при підписанні ГРАНТУ. Щоб подати заявку на саму дотацію, зверніться до розділу ДОТАЦІЯ AMERICANA або просто натисніть зелену кнопку дотації.",
+    selectHouse: "Виберіть будинок",
+    selectHousePlaceholder: "Виберіть модель будинку..."
     
     // Mortgage fixation banner
     mortgageFixationTitle: "Закінчилася ваша фіксація відсотків, а платіж за переоцінений цегляний будинок або квартиру вас буквально душить?",
