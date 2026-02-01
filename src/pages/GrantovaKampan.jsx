@@ -77,9 +77,16 @@ export default function GrantovaKampan() {
     enabled: user?.role === 'admin'
   });
 
+  // Fetch all houses to calculate correct subsidy
+  const { data: houses } = useQuery({
+    queryKey: ['houses-for-subsidy'],
+    queryFn: () => base44.entities.Dom.list(),
+    enabled: user?.role === 'admin'
+  });
+
   // Geocode locations
   useEffect(() => {
-    if (!requests || requests.length === 0) return;
+    if (!requests || requests.length === 0 || !houses) return;
     
     const geocodeRequests = async () => {
       setIsGeocoding(true);
@@ -104,17 +111,30 @@ export default function GrantovaKampan() {
             const data = await response.json();
             
             if (data && data.length > 0) {
-              // Extract house name and subsidy from note
+              // Extract house name from note
               const houseMatch = request.poznamka?.match(/Dom: ([^(]+)/);
-              const subsidyMatch = request.poznamka?.match(/Dotácia: ([0-9,]+)/);
+              
+              // Calculate correct subsidy from house price
+              let subsidy = 'N/A';
+              let houseName = 'N/A';
+              
+              if (request.dom_id && houses) {
+                const house = houses.find(h => h.id === request.dom_id);
+                if (house) {
+                  subsidy = Math.round(house.zakladna_cena * 0.05).toLocaleString('sk-SK');
+                  houseName = house.nazov + ', ' + house.zastavana_plocha + 'm²';
+                }
+              } else if (houseMatch) {
+                houseName = houseMatch[1].trim();
+              }
               
               geocoded.push({
                 ...request,
                 location,
                 lat: parseFloat(data[0].lat),
                 lng: parseFloat(data[0].lon),
-                houseName: houseMatch ? houseMatch[1].trim() : 'N/A',
-                subsidy: subsidyMatch ? subsidyMatch[1] : 'N/A'
+                houseName,
+                subsidy
               });
             }
             
@@ -135,7 +155,7 @@ export default function GrantovaKampan() {
     };
     
     geocodeRequests();
-  }, [requests]);
+  }, [requests, houses]);
 
   // Filter requests based on search
   const filteredRequests = geocodedRequests.filter(req => {
