@@ -1215,8 +1215,6 @@ export default function DotaciaAmericana() {
                   );
                 })}
           </div>
-
-
         </div>
       </section>
 
