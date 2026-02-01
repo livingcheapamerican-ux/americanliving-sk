@@ -676,9 +676,55 @@ export default function DotaciaAmericana() {
                 <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold mb-6 text-white" style={{ textShadow: '3px 3px 10px rgba(0,0,0,0.9)' }}>
                   Pridelenie dotácie prebieha na základe poradia žiadostí
                 </h2>
-                <p className="text-base sm:text-xl font-sans text-white max-w-2xl mx-auto" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>
-                  Využite náš jedinečný dotačný program, ktorého výška sa líši v závislosti od typu domu! Či už ste investor hľadajúci pasívny príjem z Airbnb apartmánov alebo si chcete postaviť vlastný rodinný dom, American Living je pre vás tou najlepšou voľbou. Dotáciu získate v oboch prípadoch! Pre rodinné domy poskytujeme navyše najsilnejšiu podporu – preplácame vám energiu v plnej výške! Pre Airbnb apartmány získate finančnú podporu a reklamu ZDARMA, aby sme vám zabezpečili plnú obsadenosť!
-                </p>
+                <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+                  {/* Pre rodiny */}
+                  <div className="bg-white/95 backdrop-blur-sm rounded-xl p-5 shadow-xl border-2 border-emerald-400">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg flex items-center justify-center">
+                        <Home className="w-6 h-6 text-white" />
+                      </div>
+                      <h3 className="text-lg font-black text-emerald-700">Pre rodiny</h3>
+                    </div>
+                    <ul className="space-y-2 text-sm text-gray-800">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <span><strong>Dotácia</strong> pri podpise</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <span><strong>Energie v plnej výške</strong> preplatené</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <span>Podpora aj po odovzdaní</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Pre investorov */}
+                  <div className="bg-white/95 backdrop-blur-sm rounded-xl p-5 shadow-xl border-2 border-yellow-400">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center">
+                        <TrendingUp className="w-6 h-6 text-white" />
+                      </div>
+                      <h3 className="text-lg font-black text-yellow-700">Pre investorov</h3>
+                    </div>
+                    <ul className="space-y-2 text-sm text-gray-800">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                        <span><strong>Dotácia</strong> pri podpise</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                        <span><strong>Marketing ZDARMA</strong> (správa hostí)</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                        <span>Pasívny príjem z Airbnb</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
 
               <div className="bg-white p-6 sm:p-10 rounded-2xl shadow-2xl">
@@ -1198,9 +1244,55 @@ export default function DotaciaAmericana() {
                 <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold mb-6 text-white" style={{ textShadow: '3px 3px 10px rgba(0,0,0,0.9)' }}>
                   Pridelenie dotácie prebieha na základe poradia žiadostí
                 </h2>
-                <p className="text-base sm:text-xl font-sans text-white max-w-2xl mx-auto" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>
-                  Využite náš jedinečný dotačný program, ktorého výška sa líši v závislosti od typu domu! Či už ste investor hľadajúci pasívny príjem z Airbnb apartmánov alebo si chcete postaviť vlastný rodinný dom, American Living je pre vás tou najlepšou voľbou. Dotáciu získate v oboch prípadoch! Pre rodinné domy poskytujeme navyše najsilnejšiu podporu – preplácame vám energiu v plnej výške! Pre Airbnb apartmány získate finančnú podporu a reklamu ZDARMA, aby sme vám zabezpečili plnú obsadenosť!
-                </p>
+                <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+                  {/* Pre rodiny */}
+                  <div className="bg-white/95 backdrop-blur-sm rounded-xl p-5 shadow-xl border-2 border-emerald-400">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg flex items-center justify-center">
+                        <Home className="w-6 h-6 text-white" />
+                      </div>
+                      <h3 className="text-lg font-black text-emerald-700">Pre rodiny</h3>
+                    </div>
+                    <ul className="space-y-2 text-sm text-gray-800">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <span><strong>Dotácia</strong> pri podpise</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <span><strong>Energie v plnej výške</strong> preplatené</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <span>Podpora aj po odovzdaní</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Pre investorov */}
+                  <div className="bg-white/95 backdrop-blur-sm rounded-xl p-5 shadow-xl border-2 border-yellow-400">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center">
+                        <TrendingUp className="w-6 h-6 text-white" />
+                      </div>
+                      <h3 className="text-lg font-black text-yellow-700">Pre investorov</h3>
+                    </div>
+                    <ul className="space-y-2 text-sm text-gray-800">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                        <span><strong>Dotácia</strong> pri podpise</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                        <span><strong>Marketing ZDARMA</strong> (správa hostí)</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                        <span>Pasívny príjem z Airbnb</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
 
               <div className="bg-white p-6 sm:p-10 rounded-2xl shadow-2xl">
@@ -1284,9 +1376,55 @@ export default function DotaciaAmericana() {
                 <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold mb-6 text-white" style={{ textShadow: '3px 3px 10px rgba(0,0,0,0.9)' }}>
                   Pridelenie dotácie prebieha na základe poradia žiadostí
                 </h2>
-                <p className="text-base sm:text-xl font-sans text-white max-w-2xl mx-auto" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>
-                  Využite náš jedinečný dotačný program, ktorého výška sa líši v závislosti od typu domu! Či už ste investor hľadajúci pasívny príjem z Airbnb apartmánov alebo si chcete postaviť vlastný rodinný dom, American Living je pre vás tou najlepšou voľbou. Dotáciu získate v oboch prípadoch! Pre rodinné domy poskytujeme navyše najsilnejšiu podporu – preplácame vám energiu v plnej výške! Pre Airbnb apartmány získate finančnú podporu a reklamu ZDARMA, aby sme vám zabezpečili plnú obsadenosť!
-                </p>
+                <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+                  {/* Pre rodiny */}
+                  <div className="bg-white/95 backdrop-blur-sm rounded-xl p-5 shadow-xl border-2 border-emerald-400">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg flex items-center justify-center">
+                        <Home className="w-6 h-6 text-white" />
+                      </div>
+                      <h3 className="text-lg font-black text-emerald-700">Pre rodiny</h3>
+                    </div>
+                    <ul className="space-y-2 text-sm text-gray-800">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <span><strong>Dotácia</strong> pri podpise</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <span><strong>Energie v plnej výške</strong> preplatené</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <span>Podpora aj po odovzdaní</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Pre investorov */}
+                  <div className="bg-white/95 backdrop-blur-sm rounded-xl p-5 shadow-xl border-2 border-yellow-400">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center">
+                        <TrendingUp className="w-6 h-6 text-white" />
+                      </div>
+                      <h3 className="text-lg font-black text-yellow-700">Pre investorov</h3>
+                    </div>
+                    <ul className="space-y-2 text-sm text-gray-800">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                        <span><strong>Dotácia</strong> pri podpise</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                        <span><strong>Marketing ZDARMA</strong> (správa hostí)</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                        <span>Pasívny príjem z Airbnb</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
 
               <div className="bg-white p-6 sm:p-10 rounded-2xl shadow-2xl">
