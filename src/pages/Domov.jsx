@@ -372,8 +372,8 @@ export default function Domov() {
               </Button>
             </Link>
           </motion.div>
-          <p className="text-[#3E2723] md:text-[#5D4E37] text-sm sm:text-lg font-bold mt-4" style={{ textShadow: '1px 1px 3px rgba(255,255,255,0.9), 0 0 10px rgba(255,255,255,0.6)' }}>
-            🎁 Získajte finančnú dotáciu + Prevádzkový grant na energie!
+          <p className="text-[#3E2723] md:text-[#5D4E37] text-xs sm:text-base md:text-lg font-bold mt-4 max-w-5xl mx-auto leading-relaxed px-2" style={{ textShadow: '1px 1px 3px rgba(255,255,255,0.9), 0 0 10px rgba(255,255,255,0.6)' }}>
+            Využite náš jedinečný dotačný program, ktorého výška sa líši v závislosti od typu domu! Či už ste investor hľadajúci pasívny príjem z Airbnb apartmánov alebo si chcete postaviť vlastný rodinný dom, American Living je pre vás tou najlepšou voľbou. Dotáciu získate v oboch prípadoch! Pre rodinné domy poskytujeme navyše najsilnejšiu podporu – preplácame vám energiu v plnej výške! Pre Airbnb apartmány získate finančnú podporu a reklamu ZDARMA, aby sme vám zabezpečili plnú obsadenosť!
           </p>
         </div>
       </section>
