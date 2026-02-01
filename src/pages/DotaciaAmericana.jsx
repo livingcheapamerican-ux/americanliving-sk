@@ -886,11 +886,20 @@ export default function DotaciaAmericana() {
                       viewport={{ once: true }}
                     >
                       <Card className="overflow-hidden hover:shadow-2xl transition-all border-2 border-emerald-200">
-                        <img 
-                          src={dom.hlavny_obrazok} 
-                          alt={dom.nazov}
-                          className="w-full h-64 object-cover"
-                        />
+                        <div className="grid grid-cols-2 gap-2">
+                          <img 
+                            src={dom.hlavny_obrazok} 
+                            alt={dom.nazov}
+                            className="w-full h-64 object-cover"
+                          />
+                          {dom.zakladna_konfiguracia_obrazok && (
+                            <img 
+                              src={dom.zakladna_konfiguracia_obrazok} 
+                              alt={`${dom.nazov} - Základná konfigurácia`}
+                              className="w-full h-64 object-cover"
+                            />
+                          )}
+                        </div>
                         <div className="p-4 sm:p-6 bg-gradient-to-b from-white to-emerald-50">
                           <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-4">{dom.nazov} - Edícia 2026</h3>
 
@@ -968,11 +977,20 @@ export default function DotaciaAmericana() {
                       viewport={{ once: true }}
                     >
                       <Card className="overflow-hidden hover:shadow-2xl transition-all border-2 border-emerald-200">
-                        <img 
-                          src={dom.hlavny_obrazok} 
-                          alt={dom.nazov}
-                          className="w-full h-64 object-cover"
-                        />
+                        <div className="grid grid-cols-2 gap-2">
+                          <img 
+                            src={dom.hlavny_obrazok} 
+                            alt={dom.nazov}
+                            className="w-full h-64 object-cover"
+                          />
+                          {dom.zakladna_konfiguracia_obrazok && (
+                            <img 
+                              src={dom.zakladna_konfiguracia_obrazok} 
+                              alt={`${dom.nazov} - Základná konfigurácia`}
+                              className="w-full h-64 object-cover"
+                            />
+                          )}
+                        </div>
                         <div className="p-4 sm:p-6 bg-gradient-to-b from-white to-emerald-50">
                           <h3 className="text-base sm:text-xl font-serif font-bold text-gray-900 mb-4">{dom.nazov} - Edícia 2026</h3>
 
