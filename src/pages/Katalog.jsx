@@ -228,7 +228,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
             {dom.vyrobca === "Ticab house" && (
               <Link to={createPageUrl("DotaciaAmericana")} className="block w-full">
                 <Button size="sm" className="w-full bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] sm:text-sm px-2 sm:px-3 h-6 sm:h-8">
-                  Dotácia AMERICANA
+                  {t('dotaciaAmericanaButton')}
                   <ArrowRight className="ml-0.5 sm:ml-1 w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </Link>

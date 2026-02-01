@@ -853,6 +853,8 @@ const translations = {
     priceFromLabel: "Cena od",
     roomsLabel: "izby",
     
+    dotaciaAmericanaButton: "Dotácia AMERICANA",
+    
     // Mortgage fixation banner
     mortgageFixationTitle: "Skončila vám fixácia úrokov a splátka za predražený murovaný dom alebo byt vás doslova dusí?",
     mortgageFixationDesc: "Zverte celú situáciu do našich rúk. Postaráme sa o predaj vašej pôvodnej nehnuteľnosti, postavíme vám nový dom a naši kolegovia pre vás vybavia nový úver s nižšou splátkou. Vymeňte starosti za nové bývanie a plaťte mesačne menej.",
