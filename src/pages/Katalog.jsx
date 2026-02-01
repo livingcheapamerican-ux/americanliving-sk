@@ -238,7 +238,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                   onClick={() => navigate(createPageUrl(`DotaciaAmericana?dom=${dom.id}`))}
                 >
                   <Gift className="w-3 h-3 mr-0.5" />
-                  Dotácia
+                  {t('dotacia')}
                 </Button>
               )}
               <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`} className={dom.vyrobca === "Ticab house" ? 'flex-1' : 'w-full'}>
