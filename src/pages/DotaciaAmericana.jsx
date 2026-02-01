@@ -5,7 +5,9 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CheckCircle, Euro, Home, Phone, ArrowRight, Gift, TrendingUp, Users, Play, Zap, Shield, Calendar, DollarSign, Star, Map, X, FileText, Edit, Upload, Trash2, ChevronUp, ChevronDown } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { CheckCircle, Euro, Home, Phone, ArrowRight, Gift, TrendingUp, Users, Play, Zap, Shield, Calendar, DollarSign, Star, Map, X, FileText, Edit, Upload, Trash2, ChevronUp, ChevronDown, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../components/LanguageContext";
 import { base44 } from "@/api/base44Client";
@@ -19,7 +21,8 @@ export default function DotaciaAmericana() {
     email: "",
     telefon: "",
     lokalita: "",
-    rozpocet: ""
+    rozpocet: "",
+    dom_id: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalType, setModalType] = useState(null); // 'rodina' or 'investor'
@@ -43,6 +46,15 @@ export default function DotaciaAmericana() {
     },
     staleTime: 0 // Force fresh data
   });
+
+  // Read URL parameters and prefill house if provided
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const domId = urlParams.get('dom');
+    if (domId && houses) {
+      setFormData(prev => ({ ...prev, dom_id: domId }));
+    }
+  }, [houses]);
 
   // Fetch hero settings
   const { data: heroSettings } = useQuery({
@@ -105,12 +117,17 @@ export default function DotaciaAmericana() {
     setIsSubmitting(true);
     try {
       const ucel = modalType === 'rodina' ? 'Bývanie (Program Ambassador)' : 'Investícia (Program Partner)';
+      const selectedHouse = houses?.find(h => h.id === formData.dom_id);
+      const houseName = selectedHouse?.nazov || '';
+      const dotacia = selectedHouse ? Math.round(selectedHouse.zakladna_cena * 0.05) : 0;
+      
       await base44.entities.Dopyt.create({
         meno: formData.meno,
         email: formData.email,
         telefon: formData.telefon,
         typ_dopytu: "vseobecny",
-        poznamka: `Dotácia Americana - Účel: ${ucel}${formData.lokalita ? `, Lokalita: ${formData.lokalita}` : ''}${formData.rozpocet ? `, Rozpočet: ${formData.rozpocet}` : ''}`
+        dom_id: formData.dom_id || null,
+        poznamka: `Dotácia Americana - Účel: ${ucel}${houseName ? `, Dom: ${houseName} (Dotácia: ${dotacia.toLocaleString()} €)` : ''}${formData.lokalita ? `, Lokalita: ${formData.lokalita}` : ''}${formData.rozpocet ? `, Rozpočet: ${formData.rozpocet}` : ''}`
       });
       
       // Konfety animácia na potvrdenie
@@ -123,7 +140,7 @@ export default function DotaciaAmericana() {
       }
       
       toast.success("✅ Vaša žiadosť bola odoslaná! Do 24 hodín dostanete personalizovanú video odpoveď.");
-      setFormData({ meno: "", email: "", telefon: "", lokalita: "", rozpocet: "" });
+      setFormData({ meno: "", email: "", telefon: "", lokalita: "", rozpocet: "", dom_id: "" });
       setModalType(null);
     } catch (error) {
       toast.error("Nepodarilo sa odoslať žiadosť. Skúste to znovu.");
@@ -542,6 +559,27 @@ export default function DotaciaAmericana() {
                     required
                     className="text-sm sm:text-lg p-3 sm:p-4"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+                    {t('selectHouse')}
+                  </label>
+                  <Select value={formData.dom_id} onValueChange={(value) => setFormData({ ...formData, dom_id: value })}>
+                    <SelectTrigger className="text-sm sm:text-lg p-3 sm:p-4">
+                      <SelectValue placeholder={t('selectHousePlaceholder')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {houses?.map((dom) => {
+                        const dotacia = Math.round(dom.zakladna_cena * 0.05);
+                        return (
+                          <SelectItem key={dom.id} value={dom.id}>
+                            {dom.nazov} - Dotácia {dotacia.toLocaleString()} €
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {modalType === 'rodina' && (
