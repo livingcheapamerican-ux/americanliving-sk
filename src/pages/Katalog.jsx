@@ -198,31 +198,41 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
             )}
           </div>
           
-          <div className="flex items-center justify-between pt-1.5 sm:pt-4 border-t">
-            <div className="flex-1">
-              <p className="text-[9px] sm:text-xs text-gray-500 mb-1">
-                {dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : dom.vyrobca === "Prosto House" ? "Základná cena" : t('priceFromLabel')}
-              </p>
-              <p className="text-base sm:text-xl font-bold text-primary">
-                {dom.zakladna_cena?.toLocaleString('sk-SK')} €
-              </p>
-              {dom.vyrobca === "Ticab house" && (
-                <p className="text-[7px] sm:text-[9px] text-gray-400 mt-0.5 sm:mt-1 italic leading-tight">
-                  {t('ticabPriceNote')}
+          <div className="pt-1.5 sm:pt-4 border-t space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <p className="text-[9px] sm:text-xs text-gray-500 mb-1">
+                  {dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : dom.vyrobca === "Prosto House" ? "Základná cena" : t('priceFromLabel')}
                 </p>
-              )}
-              {dom.vyrobca === "Prosto House" && (
-                <p className="text-[7px] sm:text-[9px] text-gray-400 mt-0.5 sm:mt-1 italic leading-tight">
-                  {t('basePriceNote')}
+                <p className="text-base sm:text-xl font-bold text-primary">
+                  {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                 </p>
-              )}
+                {dom.vyrobca === "Ticab house" && (
+                  <p className="text-[7px] sm:text-[9px] text-gray-400 mt-0.5 sm:mt-1 italic leading-tight">
+                    {t('ticabPriceNote')}
+                  </p>
+                )}
+                {dom.vyrobca === "Prosto House" && (
+                  <p className="text-[7px] sm:text-[9px] text-gray-400 mt-0.5 sm:mt-1 italic leading-tight">
+                    {t('basePriceNote')}
+                  </p>
+                )}
+              </div>
+              <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`} className="w-full sm:w-auto">
+                <Button size="sm" className="w-full sm:w-auto bg-primary hover:bg-primary/90 group-hover:bg-secondary text-[10px] sm:text-sm px-2 sm:px-3 h-6 sm:h-8">
+                  {t('detail')}
+                  <ArrowRight className="ml-0.5 sm:ml-1 w-3 h-3 sm:w-4 sm:h-4" />
+                </Button>
+              </Link>
             </div>
-            <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`} className="w-full sm:w-auto">
-              <Button size="sm" className="w-full sm:w-auto bg-primary hover:bg-primary/90 group-hover:bg-secondary text-[10px] sm:text-sm px-2 sm:px-3 h-6 sm:h-8">
-                {t('detail')}
-                <ArrowRight className="ml-0.5 sm:ml-1 w-3 h-3 sm:w-4 sm:h-4" />
-              </Button>
-            </Link>
+            {dom.vyrobca === "Ticab house" && (
+              <Link to={createPageUrl("DotaciaAmericana")} className="block w-full">
+                <Button size="sm" className="w-full bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] sm:text-sm px-2 sm:px-3 h-6 sm:h-8">
+                  Dotácia AMERICANA
+                  <ArrowRight className="ml-0.5 sm:ml-1 w-3 h-3 sm:w-4 sm:h-4" />
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </Card>
