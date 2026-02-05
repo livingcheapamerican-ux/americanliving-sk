@@ -424,7 +424,7 @@ export default function Domov() {
             </div>
             
             <p className="text-xs sm:text-sm text-center text-gray-800 font-medium bg-white/70 backdrop-blur-sm rounded-lg p-3">
-              💡 <strong>Výška dotácie sa líši podľa typu domu</strong> – od mobilných domov až po viacmodulové konfigurácie
+              💡 <strong>{t('grantAmountVaries')}</strong>
             </p>
           </div>
         </div>
