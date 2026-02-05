@@ -852,6 +852,7 @@ const translations = {
     basicConfigPrice: "Cena základnej konfigurácie",
     priceFromLabel: "Cena od",
     roomsLabel: "izby",
+    turnkeyHouseReady: "Modulárna a montovaná konštrukcia domu – flexibilné riešenie pre vaše bývanie. Dom si v konfigurátore dokážete prispôsobiť legislatívnym požiadavkám, aby spĺňal požiadavky pre energetický certifikát A0, nahlásenie trvalého pobytu, stavebné povolenie v obytnej štvrti a dom bude možné skolaudovať ako rodinný dom.",
     
     dotaciaAmericanaButton: "Dotácia AMERICANA",
     dotaciaNotice: "Cenovú ponuku si dokončite a požadovaná výška dotácie Vám bude odpočítaná z ceny nakonfigurovaného domu. Táto cena sa pri podpise GRANTU zníži. O samotnú dotáciu treba požiadať v sekcii DOTÁCIA AMERICANA alebo stačí kliknúť na zelené tlačidlo dotácia.",
