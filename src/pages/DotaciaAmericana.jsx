@@ -526,18 +526,17 @@ export default function DotaciaAmericana() {
                 </DialogTitle>
               </DialogHeader>
 
-              {/* Video Section */}
+              {/* Image Section */}
               <div className="mb-6">
-                <div className="aspect-video bg-gradient-to-br from-blue-900 to-blue-950 rounded-lg overflow-hidden border-2 border-accent/30">
-                  <video autoPlay controls className="w-full h-full">
-                    <source 
-                      src={modalType === 'rodina' 
-                        ? "https://player.vimeo.com/external/371433846.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164"
-                        : "https://player.vimeo.com/external/434045526.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164"
-                      } 
-                      type="video/mp4" 
-                    />
-                  </video>
+                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg overflow-hidden border-2 border-accent/30">
+                  <img 
+                    src={modalType === 'rodina' 
+                      ? (heroSettings?.rodina_fotky?.[0] || "https://images.unsplash.com/photo-1560518883-ff514cd811de?w=800&q=75")
+                      : (heroSettings?.investor_fotky?.[0] || "https://images.unsplash.com/photo-1560518883-ff514cd811de?w=800&q=75")
+                    }
+                    alt={modalType === 'rodina' ? t('dotaciaModalTitleRodina') : t('dotaciaModalTitleInvestor')}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="mt-4 p-4 bg-gradient-to-r from-emerald-50 to-green-50 border-l-4 border-emerald-500 rounded shadow-sm">
                   <p className="text-xs sm:text-sm font-sans font-semibold text-emerald-700">
@@ -577,7 +576,7 @@ export default function DotaciaAmericana() {
                       <SelectItem value="Program AMBASSADOR - Dotované bývanie pre rodiny">
                         {t('dotaciaFormTypeGrantOption1')}
                       </SelectItem>
-                      <SelectItem value="Program INVESTOR & PARTNER">
+                      <SelectItem value="Program INVESTOR & PARTNER pre pasívny príjem">
                         {t('dotaciaFormTypeGrantOption2')}
                       </SelectItem>
                     </SelectContent>
