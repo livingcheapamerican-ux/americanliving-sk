@@ -605,7 +605,7 @@ export default function DetailDomu() {
         </Helmet>
       )}
       {/* Back Button */}
-      <div className="bg-white border-b">
+      <div className="bg-white border-b sticky top-0 z-50">
         <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
           <div className="flex items-center justify-between mb-2 sm:mb-0">
             <Link to={returnUrl}>
@@ -2031,7 +2031,7 @@ export default function DetailDomu() {
               ) : (isTicabhouse) ? (
                 <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-2">
                   <p className="text-lg sm:text-xl font-bold text-green-600 mb-2">
-                    Za vyššie uvedenú cenu dostávate dom na kľúč, ktorý je pripravený na okamžité použitie
+                    {t('turnkeyHouseReady')}
                   </p>
                   <p className="text-xs sm:text-sm text-blue-800 mb-1">
                     <strong>{t('modularConstruction')}</strong>
