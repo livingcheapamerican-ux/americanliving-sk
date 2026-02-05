@@ -806,7 +806,7 @@ export default function DotaciaAmericana() {
                         <SelectItem value="Program AMBASSADOR - Dotované bývanie pre rodiny">
                           {t('dotaciaFormTypeGrantOption1')}
                         </SelectItem>
-                        <SelectItem value="Program INVESTOR & PARTNER">
+                        <SelectItem value="Program INVESTOR & PARTNER pre pasívny príjem">
                           {t('dotaciaFormTypeGrantOption2')}
                         </SelectItem>
                       </SelectContent>
