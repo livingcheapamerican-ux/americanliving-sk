@@ -155,6 +155,7 @@ Deno.serve(async (req) => {
 <body>
   <div class="container">
     <div class="header">
+      <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png" alt="American Living" style="height: 60px; margin-bottom: 15px;">
       <h1>CENOVÁ PONUKA</h1>
       <p style="font-size: 16px; opacity: 0.95;">Číslo ponuky: ${cisloPonuky}</p>
       <p style="font-size: 14px; opacity: 0.9;">Dátum: ${new Date().toLocaleDateString('sk-SK')}</p>
