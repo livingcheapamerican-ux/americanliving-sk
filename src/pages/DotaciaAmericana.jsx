@@ -271,7 +271,7 @@ export default function DotaciaAmericana() {
       <audio ref={houseRef} src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" />
 
       {/* HERO SECTION - Split Screen */}
-      <section className="h-screen relative overflow-hidden flex flex-col md:flex-row">
+      <section className="min-h-screen md:h-screen relative overflow-hidden flex flex-col md:flex-row">
         {/* ĽAVÁ STRANA - VICTORIA (Rodina) */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -326,28 +326,28 @@ export default function DotaciaAmericana() {
           </button>
 
           {/* Content Overlay */}
-          <div className="relative z-20 flex flex-col items-start md:items-center justify-start md:justify-start pt-4 md:pt-16 h-full p-4 sm:p-8 text-left md:text-center">
+          <div className="relative z-20 flex flex-col items-center justify-center h-full p-4 sm:p-6 md:p-8 text-center">
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="bg-white/85 backdrop-blur-sm p-2 sm:p-4 rounded-xl border-2 border-emerald-500 shadow-xl max-w-xs sm:max-w-md"
+              className="bg-white/90 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-xl border-2 border-emerald-500 shadow-xl w-full max-w-sm md:max-w-md"
             >
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-gray-900 mb-2 leading-tight">
+              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif font-bold text-gray-900 mb-2 leading-tight">
                 {t('dotaciaHeroLeft')}
               </h2>
-              <p className="text-xs sm:text-sm text-emerald-700 mb-1 sm:mb-2 font-sans font-bold">
+              <p className="text-sm sm:text-base text-emerald-700 mb-2 font-sans font-bold">
                 {t('dotaciaHeroLeftSubtitle')}
               </p>
-              <p className="text-xs text-gray-700 mb-3 sm:mb-4 font-sans leading-relaxed">
+              <p className="text-xs sm:text-sm text-gray-700 mb-4 font-sans leading-relaxed">
                 {t('dotaciaHeroLeftDesc')}
               </p>
               <Button
-                size="sm"
-                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-sans font-bold px-4 py-2 text-xs rounded-lg shadow-xl w-full"
+                size="lg"
+                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-sans font-bold px-6 py-3 text-sm sm:text-base rounded-lg shadow-xl w-full min-h-[48px]"
                 onClick={(e) => { e.stopPropagation(); setModalType('rodina'); }}
               >
                 {t('dotaciaHeroLeftButton')}
-                <ArrowRight className="ml-2 w-4 h-4" />
+                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </motion.div>
           </div>
@@ -405,28 +405,28 @@ export default function DotaciaAmericana() {
           </button>
 
           {/* Content Overlay */}
-          <div className="relative z-20 flex flex-col items-start md:items-center justify-start md:justify-start pt-4 md:pt-16 h-full p-4 sm:p-8 text-left md:text-center">
+          <div className="relative z-20 flex flex-col items-center justify-center h-full p-4 sm:p-6 md:p-8 text-center">
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="bg-black/70 backdrop-blur-sm p-2 sm:p-4 rounded-xl border-2 border-yellow-400/50 max-w-xs sm:max-w-md"
+              className="bg-black/80 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-xl border-2 border-yellow-400/50 w-full max-w-sm md:max-w-md"
             >
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-white mb-2 drop-shadow-xl leading-tight">
+              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif font-bold text-white mb-2 drop-shadow-xl leading-tight">
                 {t('dotaciaHeroRight')}
               </h2>
-              <p className="text-xs sm:text-sm text-white/95 mb-1 sm:mb-2 drop-shadow-lg font-sans font-medium">
+              <p className="text-sm sm:text-base text-white/95 mb-2 drop-shadow-lg font-sans font-medium">
                 {t('dotaciaHeroRightSubtitle')}
               </p>
-              <p className="text-xs text-white/85 mb-3 sm:mb-4 drop-shadow-lg font-sans leading-relaxed">
+              <p className="text-xs sm:text-sm text-white/85 mb-4 drop-shadow-lg font-sans leading-relaxed">
                 {t('dotaciaHeroRightDesc')}
               </p>
               <Button
-                size="sm"
-                className="bg-yellow-400 hover:bg-yellow-300 text-black font-sans font-bold px-4 py-2 text-xs rounded-lg shadow-xl w-full"
+                size="lg"
+                className="bg-yellow-400 hover:bg-yellow-300 text-black font-sans font-bold px-6 py-3 text-sm sm:text-base rounded-lg shadow-xl w-full min-h-[48px]"
                 onClick={(e) => { e.stopPropagation(); setModalType('investor'); }}
               >
                 {t('dotaciaHeroRightButton')}
-                <ArrowRight className="ml-2 w-4 h-4" />
+                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </motion.div>
           </div>
@@ -696,8 +696,8 @@ export default function DotaciaAmericana() {
       </AnimatePresence>
 
       {/* SEKCIA: CTA - ŽIADOSŤ O DOTÁCIU */}
-      <section id="cta-section" className="py-20 bg-gradient-to-br from-primary via-secondary to-primary text-white">
-        <div className="container mx-auto px-4 sm:px-8">
+      <section id="cta-section" className="py-10 sm:py-16 md:py-20 bg-gradient-to-br from-primary via-secondary to-primary text-white">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8">
           <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -706,13 +706,13 @@ export default function DotaciaAmericana() {
               viewport={{ once: true }}
               className="text-center"
             >
-              <div className="inline-block mb-6 px-6 py-3 bg-black/60 backdrop-blur-md border-2 border-accent rounded-lg shadow-2xl">
-                <p className="text-lg sm:text-2xl font-serif font-bold text-white" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>
+              <div className="inline-block mb-4 sm:mb-6 px-4 sm:px-6 py-2 sm:py-3 bg-black/60 backdrop-blur-md border-2 border-accent rounded-lg shadow-2xl">
+                <p className="text-sm sm:text-lg md:text-xl lg:text-2xl font-serif font-bold text-white" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>
                   ⚠️ {t('dotaciaFundStatus')} <span className="text-accent" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.9)' }}>{t('dotaciaFundStatusValue')}</span> {t('dotaciaFundStatusNote')}
                 </p>
               </div>
-              <div className="bg-black/50 backdrop-blur-sm rounded-2xl p-6 mb-8 shadow-2xl">
-                <h2 className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold mb-6 text-white" style={{ textShadow: '3px 3px 10px rgba(0,0,0,0.9)' }}>
+              <div className="bg-black/50 backdrop-blur-sm rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 shadow-2xl">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-serif font-bold mb-4 sm:mb-6 text-white" style={{ textShadow: '3px 3px 10px rgba(0,0,0,0.9)' }}>
                   {t('dotaciaProcessTitle')}
                 </h2>
                 <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
@@ -766,18 +766,18 @@ export default function DotaciaAmericana() {
                 </div>
               </div>
 
-              <div className="bg-white p-6 sm:p-10 rounded-2xl shadow-2xl">
-                <h3 className="text-xl sm:text-2xl font-serif font-bold text-primary mb-6">
+              <div className="bg-white p-4 sm:p-6 md:p-8 lg:p-10 rounded-2xl shadow-2xl">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-serif font-bold text-primary mb-4 sm:mb-6">
                   {t('dotaciaFormSubmit')}
                 </h3>
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                   <Input
                     type="text"
                     placeholder={t('dotaciaFormNamePlaceholder')}
                     value={formData.meno}
                     onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
                     required
-                    className="text-base p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
+                    className="text-sm sm:text-base p-3 sm:p-4 font-sans bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 min-h-[48px]"
                   />
                   <Input
                     type="email"
@@ -878,8 +878,8 @@ export default function DotaciaAmericana() {
       </section>
 
       {/* SEKCIA: PROCES ČERPANIA DOTÁCIE */}
-      <section id="proces-section" className="py-20 bg-gradient-to-br from-gray-50 via-emerald-50 to-gray-50">
-        <div className="container mx-auto px-4 sm:px-8">
+      <section id="proces-section" className="py-10 sm:py-16 md:py-20 bg-gradient-to-br from-gray-50 via-emerald-50 to-gray-50">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8">
           <div className="max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -898,7 +898,7 @@ export default function DotaciaAmericana() {
               </h2>
             </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-12">
               <Card className="p-8 bg-white border-2 border-emerald-300/50 hover:shadow-2xl transition-all">
                 <div className="w-16 h-16 bg-emerald-100 rounded-lg flex items-center justify-center mb-6">
                   <CheckCircle className="w-8 h-8 text-emerald-600" />
@@ -1110,8 +1110,8 @@ export default function DotaciaAmericana() {
       </section>
 
       {/* PRODUKTOVÁ SEKCIA */}
-      <section className="py-20 bg-gradient-to-br from-emerald-50 via-white to-green-50">
-        <div className="container mx-auto px-4">
+      <section className="py-10 sm:py-16 md:py-20 bg-gradient-to-br from-emerald-50 via-white to-green-50">
+        <div className="container mx-auto px-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1127,7 +1127,7 @@ export default function DotaciaAmericana() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-7xl mx-auto">
             {houses
               ?.sort((a, b) => (b.zakladna_cena || 0) - (a.zakladna_cena || 0))
               ?.map((dom) => {
