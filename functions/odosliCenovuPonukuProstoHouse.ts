@@ -163,7 +163,7 @@ Deno.serve(async (req) => {
     
     .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
     .gallery-item { position: relative; border-radius: 8px; overflow: hidden; }
-    .gallery-item img { width: 100%; height: 200px; object-fit: cover; }
+    .gallery-item img { width: 100%; height: auto; display: block; object-fit: cover; min-height: 200px; max-height: 400px; }
     .gallery-caption { background: #f3f4f6; padding: 8px; text-align: center; font-size: 12px; color: #6b7280; }
     
     .footer { background: #111827; color: #9ca3af; padding: 30px; text-align: center; font-size: 13px; }
