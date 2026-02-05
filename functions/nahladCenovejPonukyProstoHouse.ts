@@ -343,26 +343,24 @@ Deno.serve(async (req) => {
       ${(dom.podorys_2d || dom.podorys_3d) ? `
       <div class="section">
         <div class="section-title">Pôdorysy</div>
-        <div class="gallery">
-          ${dom.podorys_2d ? `
-          <div class="gallery-item">
-            <div style="position: relative;">
-              <img src="${dom.podorys_2d}" alt="2D pôdorys" class="podorys-img">
-              <div class="watermark" style="font-size: 32px;">American Living</div>
-            </div>
-            <div class="gallery-caption">2D pôdorys</div>
+        ${dom.podorys_2d ? `
+        <div style="margin-bottom: 20px;">
+          <div style="position: relative; text-align: center;">
+            <img src="${dom.podorys_2d}" alt="2D pôdorys" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 8px; background: #f9fafb;">
+            <div class="watermark" style="font-size: 32px;">American Living</div>
           </div>
-          ` : ''}
-          ${dom.podorys_3d ? `
-          <div class="gallery-item">
-            <div style="position: relative;">
-              <img src="${dom.podorys_3d}" alt="3D pôdorys" class="podorys-img">
-              <div class="watermark" style="font-size: 32px;">American Living</div>
-            </div>
-            <div class="gallery-caption">3D pôdorys</div>
-          </div>
-          ` : ''}
+          <p style="text-align: center; color: #6b7280; font-size: 12px; margin-top: 8px; background: #f3f4f6; padding: 8px; border-radius: 4px;">2D pôdorys</p>
         </div>
+        ` : ''}
+        ${dom.podorys_3d ? `
+        <div style="margin-bottom: 20px;">
+          <div style="position: relative; text-align: center;">
+            <img src="${dom.podorys_3d}" alt="3D pôdorys" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 8px; background: #f9fafb;">
+            <div class="watermark" style="font-size: 32px;">American Living</div>
+          </div>
+          <p style="text-align: center; color: #6b7280; font-size: 12px; margin-top: 8px; background: #f3f4f6; padding: 8px; border-radius: 4px;">3D pôdorys</p>
+        </div>
+        ` : ''}
       </div>
       ` : ''}
 
