@@ -605,11 +605,11 @@ export default function DetailDomu() {
         </Helmet>
       )}
       {/* Back Button */}
-      <div className="bg-white border-b sticky top-0 z-50">
+      <div className="bg-white border-b sticky z-[60] shadow-md" style={{ top: '40px' }}>
         <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
           <div className="flex items-center justify-between mb-2 sm:mb-0">
             <Link to={returnUrl}>
-              <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 text-xs sm:text-sm h-8 sm:h-9">
+              <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 text-xs sm:text-sm h-8 sm:h-9 font-bold">
                 <ArrowLeft className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden sm:inline">{t('backToCatalog')}</span>
                 <span className="sm:hidden">{t('back')}</span>
