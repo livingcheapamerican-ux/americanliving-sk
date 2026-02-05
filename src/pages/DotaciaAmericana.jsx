@@ -317,7 +317,7 @@ export default function DotaciaAmericana() {
                 Dotácia AMERICANA
               </h1>
               <p className="text-base text-white/95 mb-4 drop-shadow-xl font-sans">
-                Získajte až 5% dotáciu
+                {t('dotaciaGrantNote')}
               </p>
             </div>
           </div>
@@ -345,7 +345,7 @@ export default function DotaciaAmericana() {
               <div className="space-y-2 mb-4">
                 <div className="flex items-start gap-2 bg-emerald-50 p-2 rounded">
                   <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <p className="text-xs font-bold text-emerald-800">Dotácia až 5%</p>
+                  <p className="text-xs font-bold text-emerald-800">{t('dotaciaGrant')}</p>
                 </div>
                 <div className="flex items-start gap-2 bg-emerald-50 p-2 rounded">
                   <CheckCircle className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
@@ -382,7 +382,7 @@ export default function DotaciaAmericana() {
               <div className="space-y-2 mb-4">
                 <div className="flex items-start gap-2 bg-white/80 p-2 rounded">
                   <CheckCircle className="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5" />
-                  <p className="text-xs font-bold text-yellow-800">Dotácia až 5%</p>
+                  <p className="text-xs font-bold text-yellow-800">{t('dotaciaGrant')}</p>
                 </div>
                 <div className="flex items-start gap-2 bg-white/80 p-2 rounded">
                   <CheckCircle className="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5" />
