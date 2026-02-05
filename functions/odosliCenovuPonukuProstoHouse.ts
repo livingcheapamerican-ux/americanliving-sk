@@ -75,21 +75,17 @@ Deno.serve(async (req) => {
     console.log('vonkajsiaFasada:', vonkajsiaFasada);
     console.log('dom.galerie:', dom.galerie?.map(g => ({ typ: g.typ, pocet_fotiek: g.fotky?.length })));
 
-    // INTERIÉR - len jedna galéria podľa výberu
-    if (interierFinis === "drevo") {
-      const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
-      console.log('Hľadám drevo galériu:', drevoGaleria ? 'našiel' : 'nenašiel');
-      if (drevoGaleria?.fotky?.length > 0) {
-        galerie.push({ nazov: "Interiér - Drevo", fotky: drevoGaleria.fotky });
-        console.log('Pridaná galéria Interiér - Drevo, fotiek:', drevoGaleria.fotky.length);
-      }
-    } else if (interierFinis === "sadrokarton") {
-      const sadroGaleria = dom.galerie?.find(g => g.typ === "interier_sadrokarton");
-      console.log('Hľadám sadrokarton galériu:', sadroGaleria ? 'našiel' : 'nenašiel');
-      if (sadroGaleria?.fotky?.length > 0) {
-        galerie.push({ nazov: "Interiér - Sadrokartón", fotky: sadroGaleria.fotky });
-        console.log('Pridaná galéria Interiér - Sadrokartón, fotiek:', sadroGaleria.fotky.length);
-      }
+    // INTERIÉR - vždy zobraz obe galérie ak existujú
+    const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
+    if (drevoGaleria?.fotky?.length > 0) {
+      galerie.push({ nazov: "Interiér - Drevo", fotky: drevoGaleria.fotky });
+      console.log('Pridaná galéria Interiér - Drevo, fotiek:', drevoGaleria.fotky.length);
+    }
+    
+    const sadroGaleria = dom.galerie?.find(g => g.typ === "interier_sadrokarton");
+    if (sadroGaleria?.fotky?.length > 0) {
+      galerie.push({ nazov: "Interiér - Sadrokartón", fotky: sadroGaleria.fotky });
+      console.log('Pridaná galéria Interiér - Sadrokartón, fotiek:', sadroGaleria.fotky.length);
     }
 
     // EXTERIÉR - len jedna galéria podľa fasády

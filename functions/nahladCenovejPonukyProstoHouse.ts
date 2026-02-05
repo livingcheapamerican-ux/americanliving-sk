@@ -126,6 +126,7 @@ Deno.serve(async (req) => {
     .info-box li { margin: 5px 0; font-size: 14px; }
     
     .house-img { width: 100%; height: auto; object-fit: contain; background: #f9fafb; border-radius: 8px; margin: 15px 0; position: relative; }
+    .podorys-img { width: 100% !important; height: auto !important; display: block !important; object-fit: contain !important; max-height: none !important; }
     .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255,255,255,0.3); font-size: 48px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); pointer-events: none; }
     
     table { width: 100%; border-collapse: collapse; margin: 20px 0; }
