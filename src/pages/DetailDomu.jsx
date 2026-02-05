@@ -605,7 +605,7 @@ export default function DetailDomu() {
         </Helmet>
       )}
       {/* Back Button */}
-      <div className="bg-white border-b sticky z-[60] shadow-md" style={{ top: '40px' }}>
+      <div className="bg-white border-b sticky top-0 z-[60] shadow-md">
         <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
           <div className="flex items-center justify-between mb-2 sm:mb-0">
             <Link to={returnUrl}>
@@ -643,7 +643,7 @@ export default function DetailDomu() {
         </div>
       )}
 
-      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6 max-w-full overflow-hidden">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6 max-w-full overflow-hidden" style={{ paddingTop: '1rem' }}>
         <div className="grid lg:grid-cols-2 gap-4 sm:gap-6 w-full max-w-full overflow-hidden">
           {/* Ľavý stĺpec - Galéria */}
           <motion.div
