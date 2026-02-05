@@ -605,7 +605,7 @@ export default function DetailDomu() {
         </Helmet>
       )}
       {/* Back Button */}
-      <div className="bg-white border-b mt-10 sm:mt-0">
+      <div className="bg-white border-b">
         <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
           <div className="flex items-center justify-between mb-2 sm:mb-0">
             <Link to={returnUrl}>
