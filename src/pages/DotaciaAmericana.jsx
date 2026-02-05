@@ -326,24 +326,24 @@ export default function DotaciaAmericana() {
           </button>
 
           {/* Content Overlay */}
-          <div className="relative z-20 flex flex-col items-start justify-start h-full p-4 sm:p-6 md:p-8 pt-8 sm:pt-12 md:pt-16">
+          <div className="relative z-20 flex flex-col items-start justify-start h-full p-3 sm:p-6 md:p-8 pt-6 sm:pt-12 md:pt-16">
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="bg-white/90 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-xl border-2 border-emerald-500 shadow-xl w-full max-w-sm md:max-w-md"
+              className="bg-white/90 backdrop-blur-sm p-3 sm:p-5 md:p-6 rounded-xl border-2 border-emerald-500 shadow-xl w-full max-w-[280px] sm:max-w-sm md:max-w-md"
             >
-              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif font-bold text-gray-900 mb-2 leading-tight">
+              <h2 className="text-base sm:text-xl md:text-2xl lg:text-3xl font-serif font-bold text-gray-900 mb-1.5 sm:mb-2 leading-tight">
                 {t('dotaciaHeroLeft')}
               </h2>
-              <p className="text-sm sm:text-base text-emerald-700 mb-2 font-sans font-bold">
+              <p className="text-xs sm:text-base text-emerald-700 mb-1.5 sm:mb-2 font-sans font-bold">
                 {t('dotaciaHeroLeftSubtitle')}
               </p>
-              <p className="text-xs sm:text-sm text-gray-700 mb-4 font-sans leading-relaxed">
+              <p className="text-[11px] sm:text-sm text-gray-700 mb-3 sm:mb-4 font-sans leading-relaxed">
                 {t('dotaciaHeroLeftDesc')}
               </p>
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-sans font-bold px-6 py-3 text-sm sm:text-base rounded-lg shadow-xl w-full min-h-[48px]"
+                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-sans font-bold px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-base rounded-lg shadow-xl w-full min-h-[44px] sm:min-h-[48px]"
                 onClick={(e) => { e.stopPropagation(); setModalType('rodina'); }}
               >
                 {t('dotaciaHeroLeftButton')}
@@ -405,24 +405,24 @@ export default function DotaciaAmericana() {
           </button>
 
           {/* Content Overlay */}
-          <div className="relative z-20 flex flex-col items-end justify-start h-full p-4 sm:p-6 md:p-8 pt-8 sm:pt-12 md:pt-16">
+          <div className="relative z-20 flex flex-col items-end justify-start h-full p-3 sm:p-6 md:p-8 pt-6 sm:pt-12 md:pt-16">
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
-              className="bg-black/80 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-xl border-2 border-yellow-400/50 w-full max-w-sm md:max-w-md"
+              className="bg-black/80 backdrop-blur-sm p-3 sm:p-5 md:p-6 rounded-xl border-2 border-yellow-400/50 w-full max-w-[280px] sm:max-w-sm md:max-w-md"
             >
-              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif font-bold text-white mb-2 drop-shadow-xl leading-tight">
+              <h2 className="text-base sm:text-xl md:text-2xl lg:text-3xl font-serif font-bold text-white mb-1.5 sm:mb-2 drop-shadow-xl leading-tight">
                 {t('dotaciaHeroRight')}
               </h2>
-              <p className="text-sm sm:text-base text-white/95 mb-2 drop-shadow-lg font-sans font-medium">
+              <p className="text-xs sm:text-base text-white/95 mb-1.5 sm:mb-2 drop-shadow-lg font-sans font-medium">
                 {t('dotaciaHeroRightSubtitle')}
               </p>
-              <p className="text-xs sm:text-sm text-white/85 mb-4 drop-shadow-lg font-sans leading-relaxed">
+              <p className="text-[11px] sm:text-sm text-white/85 mb-3 sm:mb-4 drop-shadow-lg font-sans leading-relaxed">
                 {t('dotaciaHeroRightDesc')}
               </p>
               <Button
                 size="lg"
-                className="bg-yellow-400 hover:bg-yellow-300 text-black font-sans font-bold px-6 py-3 text-sm sm:text-base rounded-lg shadow-xl w-full min-h-[48px]"
+                className="bg-yellow-400 hover:bg-yellow-300 text-black font-sans font-bold px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-base rounded-lg shadow-xl w-full min-h-[44px] sm:min-h-[48px]"
                 onClick={(e) => { e.stopPropagation(); setModalType('investor'); }}
               >
                 {t('dotaciaHeroRightButton')}
