@@ -225,9 +225,9 @@ Deno.serve(async (req) => {
     .total-price { background: #EF4444; color: white; padding: 20px; border-radius: 8px; text-align: center; margin: 30px 0; }
     .total-price .label { font-size: 14px; opacity: 0.9; }
     .total-price .amount { font-size: 36px; font-weight: bold; margin-top: 5px; }
-    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0; }
+    .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
     .gallery-item { position: relative; border-radius: 8px; overflow: hidden; }
-    .gallery-item img { width: 100%; height: 200px; object-fit: cover; }
+    .gallery-item img { width: 100%; height: auto; object-fit: cover; min-height: 200px; max-height: 400px; }
     .gallery-caption { background: #f3f4f6; padding: 8px; text-align: center; font-size: 11px; color: #6b7280; }
     .footer { background: #111827; color: #9ca3af; padding: 30px; text-align: center; font-size: 12px; }
     .footer a { color: #60a5fa; text-decoration: none; }
@@ -244,6 +244,7 @@ Deno.serve(async (req) => {
   <div class="container">
     <!-- Header -->
     <div class="header">
+      <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png" alt="American Living" style="height: 60px; margin-bottom: 15px;">
       <div class="header-info">
         <div>
           <h1>CENOVÁ PONUKA</h1>
