@@ -663,10 +663,6 @@ Deno.serve(async (req) => {
               <td>• Montáž domu</td>
               <td style="text-align: right;">+ ${formatPrice(CENY.montaz)}</td>
             </tr>
-            <tr class="${!konfiguraciaData.doprava ? 'strikethrough' : ''}">
-              <td>• Doprava modulov</td>
-              <td style="text-align: right;">+ ${formatPrice(CENY.doprava)}</td>
-            </tr>
 
             <!-- DODATOČNÉ SLUŽBY - vždy zobrazené -->
             <tr class="category"><td colspan="2">DODATOČNÉ SLUŽBY</td></tr>
@@ -882,7 +878,6 @@ Deno.serve(async (req) => {
     if (konfiguraciaData.projektACertifikacia) polozky.push({ nazov: 'Projekt + Certifikácia A0', cena: CENY.projektACertifikacia, vybrane: true, kategoria: 'Služby' });
     if (konfiguraciaData.revizia) polozky.push({ nazov: 'Revízna dokumentácia', cena: CENY.revizia, vybrane: true, kategoria: 'Služby' });
     if (konfiguraciaData.montaz) polozky.push({ nazov: 'Montáž domu', cena: CENY.montaz, vybrane: true, kategoria: 'Realizácia' });
-    if (konfiguraciaData.doprava) polozky.push({ nazov: 'Doprava modulov', cena: CENY.doprava, vybrane: true, kategoria: 'Realizácia' });
 
     // Ulož ponuku do databázy
     const novaPonuka = await base44.asServiceRole.entities.CenovaPonuka.create({
