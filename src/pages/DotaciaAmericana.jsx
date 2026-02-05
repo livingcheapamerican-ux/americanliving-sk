@@ -270,167 +270,209 @@ export default function DotaciaAmericana() {
       <audio ref={pianoRef} src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />
       <audio ref={houseRef} src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" />
 
-      {/* HERO SECTION - Split Screen */}
-      <section className="min-h-screen md:h-screen relative overflow-hidden flex flex-col md:flex-row">
-        {/* ĽAVÁ STRANA - VICTORIA (Rodina) */}
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden group cursor-pointer"
-          onClick={() => setModalType('rodina')}
-        >
-          {/* Image Background with Slideshow */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 z-10 pointer-events-none"></div>
-          {heroSettings?.rodina_fotky?.length > 0 ? (
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={`rodina-${rodinaIndex}`}
-                src={heroSettings.rodina_fotky[rodinaIndex] + '?w=800&q=70'}
+      {/* HERO SECTION - Slideshow s minimálnym overlay */}
+      <section className="relative h-[60vh] sm:h-[70vh] md:h-screen overflow-hidden">
+        {/* Slideshow pozadia */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`hero-${rodinaIndex}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            className="absolute inset-0"
+          >
+            {heroSettings?.rodina_fotky?.length > 0 ? (
+              <img
+                src={heroSettings.rodina_fotky[rodinaIndex] + '?w=1600&q=80'}
                 srcSet={`
-                  ${heroSettings.rodina_fotky[rodinaIndex]}?w=600&q=65 600w,
                   ${heroSettings.rodina_fotky[rodinaIndex]}?w=800&q=70 800w,
-                  ${heroSettings.rodina_fotky[rodinaIndex]}?w=1200&q=75 1200w
+                  ${heroSettings.rodina_fotky[rodinaIndex]}?w=1200&q=75 1200w,
+                  ${heroSettings.rodina_fotky[rodinaIndex]}?w=1600&q=80 1600w
                 `}
-                sizes="(max-width: 640px) 600px, (max-width: 768px) 800px, 50vw"
-                alt="Rodina & Istota"
+                sizes="100vw"
+                alt="Dotácia Americana"
                 loading="eager"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="absolute inset-0 w-full h-full object-cover brightness-90"
+                className="w-full h-full object-cover"
               />
-            </AnimatePresence>
-          ) : (
-            <img
-              src="https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1200&q=75"
-              srcSet="
-                https://images.unsplash.com/photo-1560518883-ff514cd811de?w=800&q=70 800w,
-                https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1200&q=75 1200w,
-                https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1600&q=80 1600w
-              "
-              sizes="(max-width: 768px) 100vw, 50vw"
-              alt="Šťastná rodina v novom dome"
-              loading="eager"
-              className="absolute inset-0 w-full h-full object-cover brightness-90"
-            />
-          )}
-          
-          {/* Edit Button */}
-          <button
-            onClick={(e) => { e.stopPropagation(); setShowPhotoManager('rodina'); }}
-            className="absolute top-4 right-4 z-30 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all"
-          >
-            <Edit className="w-5 h-5 text-emerald-600" />
-          </button>
+            ) : (
+              <img
+                src="https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1600&q=80"
+                alt="Modern house"
+                className="w-full h-full object-cover"
+              />
+            )}
+          </motion.div>
+        </AnimatePresence>
 
-          {/* Content Overlay */}
-          <div className="relative z-20 flex flex-col items-start justify-start h-full p-3 sm:p-6 md:p-8 pt-6 sm:pt-12 md:pt-16">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              className="bg-white/90 backdrop-blur-sm p-3 sm:p-5 md:p-6 rounded-xl border-2 border-emerald-500 shadow-xl w-full max-w-[280px] sm:max-w-sm md:max-w-md"
-            >
-              <h2 className="text-base sm:text-xl md:text-2xl lg:text-3xl font-serif font-bold text-gray-900 mb-1.5 sm:mb-2 leading-tight">
-                {t('dotaciaHeroLeft')}
-              </h2>
-              <p className="text-xs sm:text-base text-emerald-700 mb-1.5 sm:mb-2 font-sans font-bold">
-                {t('dotaciaHeroLeftSubtitle')}
-              </p>
-              <p className="text-[11px] sm:text-sm text-gray-700 mb-3 sm:mb-4 font-sans leading-relaxed">
-                {t('dotaciaHeroLeftDesc')}
-              </p>
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-sans font-bold px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-base rounded-lg shadow-xl w-full min-h-[44px] sm:min-h-[48px]"
-                onClick={(e) => { e.stopPropagation(); setModalType('rodina'); }}
-              >
-                {t('dotaciaHeroLeftButton')}
-                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
-              </Button>
-            </motion.div>
-          </div>
-        </motion.div>
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 z-10"></div>
 
-        {/* PRAVÁ STRANA - ALEXANDER (Investor) */}
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden group cursor-pointer"
-          onClick={() => setModalType('investor')}
+        {/* Edit Button */}
+        <button
+          onClick={() => setShowPhotoManager('rodina')}
+          className="absolute top-4 right-4 z-30 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all"
         >
-          {/* Image Background with Slideshow */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 z-10 pointer-events-none"></div>
-          {heroSettings?.investor_fotky?.length > 0 ? (
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={`investor-${investorIndex}`}
-                src={heroSettings.investor_fotky[investorIndex] + '?w=800&q=70'}
-                srcSet={`
-                  ${heroSettings.investor_fotky[investorIndex]}?w=600&q=65 600w,
-                  ${heroSettings.investor_fotky[investorIndex]}?w=800&q=70 800w,
-                  ${heroSettings.investor_fotky[investorIndex]}?w=1200&q=75 1200w
-                `}
-                sizes="(max-width: 640px) 600px, (max-width: 768px) 800px, 50vw"
-                alt="Investícia & Výnos"
-                loading="eager"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="absolute inset-0 w-full h-full object-cover brightness-90"
-              />
-            </AnimatePresence>
-          ) : (
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              className="absolute inset-0 w-full h-full object-cover brightness-90"
-            >
-              <source src="https://player.vimeo.com/external/434045526.sd.mp4?s=236a2c3d3f29c7e1c1b1c3b3b3b3b3b3&profile_id=164" type="video/mp4" />
-            </video>
-          )}
+          <Edit className="w-5 h-5 text-emerald-600" />
+        </button>
 
-          {/* Edit Button */}
-          <button
-            onClick={(e) => { e.stopPropagation(); setShowPhotoManager('investor'); }}
-            className="absolute top-4 right-4 z-30 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all"
+        {/* Minimálny overlay s titulkom */}
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="max-w-4xl"
           >
-            <Edit className="w-5 h-5 text-yellow-600" />
-          </button>
-
-          {/* Content Overlay */}
-          <div className="relative z-20 flex flex-col items-end justify-start h-full p-3 sm:p-6 md:p-8 pt-6 sm:pt-12 md:pt-16">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              className="bg-black/80 backdrop-blur-sm p-3 sm:p-5 md:p-6 rounded-xl border-2 border-yellow-400/50 w-full max-w-[280px] sm:max-w-sm md:max-w-md"
-            >
-              <h2 className="text-base sm:text-xl md:text-2xl lg:text-3xl font-serif font-bold text-white mb-1.5 sm:mb-2 drop-shadow-xl leading-tight">
-                {t('dotaciaHeroRight')}
-              </h2>
-              <p className="text-xs sm:text-base text-white/95 mb-1.5 sm:mb-2 drop-shadow-lg font-sans font-medium">
-                {t('dotaciaHeroRightSubtitle')}
-              </p>
-              <p className="text-[11px] sm:text-sm text-white/85 mb-3 sm:mb-4 drop-shadow-lg font-sans leading-relaxed">
-                {t('dotaciaHeroRightDesc')}
-              </p>
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-black text-white mb-4 sm:mb-6 drop-shadow-2xl leading-tight">
+              {t('dotaciaHeroTitle') || 'Dotácia AMERICANA'}
+            </h1>
+            <p className="text-base sm:text-xl md:text-2xl text-white/95 mb-6 sm:mb-8 drop-shadow-xl font-sans font-medium">
+              {t('dotaciaHeroSubtitle') || 'Získajte až 5% dotáciu na svoj vysnívaný dom'}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
-                className="bg-yellow-400 hover:bg-yellow-300 text-black font-sans font-bold px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-base rounded-lg shadow-xl w-full min-h-[44px] sm:min-h-[48px]"
-                onClick={(e) => { e.stopPropagation(); setModalType('investor'); }}
+                onClick={() => setModalType('rodina')}
+                className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-sans font-bold px-8 py-6 text-lg rounded-xl shadow-2xl"
               >
-                {t('dotaciaHeroRightButton')}
-                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
+                🏡 Program Ambassador
               </Button>
+              <Button
+                size="lg"
+                onClick={() => setModalType('investor')}
+                className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-sans font-bold px-8 py-6 text-lg rounded-xl shadow-2xl"
+              >
+                📈 Program Partner
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* PROGRAMY - 2 karty pod hero sekciou */}
+      <section className="py-10 sm:py-16 bg-gradient-to-br from-gray-50 to-emerald-50">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+            {/* Program AMBASSADOR */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <Card className="p-6 sm:p-8 bg-white border-2 border-emerald-500 shadow-2xl hover:shadow-emerald-200 transition-all h-full">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center">
+                    <Home className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl sm:text-3xl font-serif font-black text-emerald-700 leading-tight">
+                      Program AMBASSADOR
+                    </h2>
+                    <p className="text-sm sm:text-base text-emerald-600 font-sans font-bold">
+                      {t('dotaciaHeroLeftSubtitle')}
+                    </p>
+                  </div>
+                </div>
+
+                <p className="text-gray-700 mb-6 leading-relaxed font-sans">
+                  {t('dotaciaHeroLeftDesc')}
+                </p>
+
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-start gap-3 bg-emerald-50 p-3 rounded-lg">
+                    <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-emerald-800">Dotácia až 5%</p>
+                      <p className="text-sm text-gray-600">{t('dotaciaGrantNote')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 bg-emerald-50 p-3 rounded-lg">
+                    <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-emerald-800">{t('dotaciaBonusEnergy')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 bg-emerald-50 p-3 rounded-lg">
+                    <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-emerald-800">{t('dotaciaBonusRef')}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <Button
+                  size="lg"
+                  onClick={() => setModalType('rodina')}
+                  className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-sans font-bold py-6 text-lg rounded-lg shadow-xl"
+                >
+                  {t('dotaciaHeroLeftButton')}
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Card>
+            </motion.div>
+
+            {/* Program INVESTOR & PARTNER */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <Card className="p-6 sm:p-8 bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-500 shadow-2xl hover:shadow-yellow-200 transition-all h-full">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center">
+                    <TrendingUp className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl sm:text-3xl font-serif font-black text-yellow-800 leading-tight">
+                      Program PARTNER
+                    </h2>
+                    <p className="text-sm sm:text-base text-yellow-700 font-sans font-bold">
+                      {t('dotaciaHeroRightSubtitle')}
+                    </p>
+                  </div>
+                </div>
+
+                <p className="text-gray-800 mb-6 leading-relaxed font-sans">
+                  {t('dotaciaHeroRightDesc')}
+                </p>
+
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-start gap-3 bg-white/80 p-3 rounded-lg">
+                    <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-yellow-800">Dotácia až 5%</p>
+                      <p className="text-sm text-gray-700">{t('dotaciaGrantNote')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 bg-white/80 p-3 rounded-lg">
+                    <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-yellow-800">{t('dotaciaInvestorBonusMarketing')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 bg-white/80 p-3 rounded-lg">
+                    <CheckCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-yellow-800">{t('dotaciaInvestorBonusIncome')}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <Button
+                  size="lg"
+                  onClick={() => setModalType('investor')}
+                  className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-sans font-bold py-6 text-lg rounded-lg shadow-xl"
+                >
+                  {t('dotaciaHeroRightButton')}
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Card>
             </motion.div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* PHOTO MANAGER MODAL */}
