@@ -1445,6 +1445,7 @@ const translations = {
     turnkeyHouseReady: "Für den oben genannten Preis erhalten Sie ein schlüsselfertiges Haus, das sofort bezugsfertig ist",
     dotaciaAmericanaButton: "AMERICANA Zuschuss",
     dotaciaNotice: "Vervollständigen Sie Ihr Preisangebot und der gewünschte Zuschussbetrag wird vom Preis Ihres konfigurierten Hauses abgezogen. Dieser Preis wird bei Unterzeichnung des ZUSCHUSSES reduziert. Um den Zuschuss selbst zu beantragen, wenden Sie sich an den Abschnitt AMERICANA ZUSCHUSS oder klicken Sie einfach auf die grüne Zuschuss-Schaltfläche.",
+    grantAmountVaries: "Die Höhe des Zuschusses variiert je nach Haustyp – von Mobilhäusern bis zu Mehrmodu lkonfigurationen",
     selectHouse: "Haus auswählen",
     selectHousePlaceholder: "Hausmodell auswählen...",
     
@@ -2612,6 +2613,7 @@ const translations = {
     turnkeyHouseReady: "Pour le prix ci-dessus, vous obtenez une maison clé en main prête à être utilisée immédiatement",
     dotaciaAmericanaButton: "Subvention AMERICANA",
     dotaciaNotice: "Complétez votre offre de prix et le montant de la subvention demandée sera déduit du prix de votre maison configurée. Ce prix sera réduit lors de la signature de la SUBVENTION. Pour demander la subvention elle-même, consultez la section SUBVENTION AMERICANA ou cliquez simplement sur le bouton vert subvention.",
+    grantAmountVaries: "Le montant de la subvention varie selon le type de maison – des maisons mobiles aux configurations multimodulaires",
     selectHouse: "Sélectionner une maison",
     selectHousePlaceholder: "Sélectionner un modèle de maison...",
     
@@ -6011,6 +6013,7 @@ const translations = {
     turnkeyHouseReady: "Για την παραπάνω τιμή λαμβάνετε ένα σπίτι με το κλειδί στο χέρι που είναι έτοιμο για άμεση χρήση",
     dotaciaAmericanaButton: "Επιδότηση AMERICANA",
     dotaciaNotice: "Ολοκληρώστε την προσφορά τιμής σας και το ζητούμενο ποσό επιδότησης θα αφαιρεθεί από την τιμή του διαμορφωμένου σπιτιού σας. Αυτή η τιμή θα μειωθεί κατά την υπογραφή της ΕΠΙΔΟΤΗΣΗΣ. Για να αιτηθείτε την ίδια την επιδότηση, ανατρέξτε στην ενότητα ΕΠΙΔΟΤΗΣΗ AMERICANA ή απλώς κάντε κλικ στο πράσινο κουμπί επιδότησης.",
+    grantAmountVaries: "Το ποσό της επιδότησης διαφέρει ανάλογα με τον τύπο σπιτιού – από κινητά σπίτια έως πολυμοδικές διαμορφώσεις",
     selectHouse: "Επιλέξτε σπίτι",
     selectHousePlaceholder: "Επιλέξτε μοντέλο σπιτιού...",
     
@@ -7705,6 +7708,7 @@ const translations = {
     turnkeyHouseReady: "For the above price, you get a turnkey house that is ready for immediate use",
     dotaciaAmericanaButton: "AMERICANA Grant",
     dotaciaNotice: "Complete your price quote and the requested grant amount will be deducted from the price of your configured house. This price will be reduced upon signing the GRANT. To apply for the grant itself, go to the AMERICANA GRANT section or simply click the green grant button.",
+    grantAmountVaries: "The grant amount varies depending on the type of house – from mobile homes to multi-module configurations",
     selectHouse: "Select house",
     selectHousePlaceholder: "Select house model...",
     
@@ -8789,6 +8793,7 @@ const translations = {
     turnkeyHouseReady: "A fenti áron egy kulcsrakész házat kap, amely azonnal használatra kész",
     dotaciaAmericanaButton: "Támogatás AMERICANA",
     dotaciaNotice: "Fejezze be árkalkulációját, és a kért támogatási összeget levonjuk a konfigurált ház árából. Ez az ár a TÁMOGATÁS aláírásakor csökken. Magáért a támogatásért forduljon az AMERICANA TÁMOGATÁS részhez vagy egyszerűen kattintson a zöld támogatás gombra.",
+    grantAmountVaries: "A támogatás összege a ház típusától függ – mobilházoktól a többmodulos konfigurációkig",
     selectHouse: "Válasszon házat",
     selectHousePlaceholder: "Válasszon házmodellt...",
     
@@ -9833,6 +9838,7 @@ const translations = {
     turnkeyHouseReady: "Za powyższą cenę otrzymujesz dom pod klucz, który jest gotowy do natychmiastowego użytkowania",
     dotaciaAmericanaButton: "Dotacja AMERICANA",
     dotaciaNotice: "Uzupełnij swoją ofertę cenową, a żądana kwota dotacji zostanie odliczona od ceny skonfigurowanego domu. Ta cena zostanie obniżona przy podpisywaniu DOTACJI. Aby ubiegać się o samą dotację, przejdź do sekcji DOTACJA AMERICANA lub po prostu kliknij zielony przycisk dotacji.",
+    grantAmountVaries: "Wysokość dotacji różni się w zależności od typu domu – od domów mobilnych po konfiguracje wielomodułowe",
     selectHouse: "Wybierz dom",
     selectHousePlaceholder: "Wybierz model domu...",
     
@@ -10918,6 +10924,7 @@ const translations = {
     turnkeyHouseReady: "За вищевказану ціну ви отримуєте будинок під ключ, який готовий до негайного використання",
     dotaciaAmericanaButton: "Дотація AMERICANA",
     dotaciaNotice: "Завершіть свою цінову пропозицію, і запитувана сума дотації буде вирахувана з ціни сконфігурованого будинку. Ця ціна буде знижена при підписанні ГРАНТУ. Щоб подати заявку на саму дотацію, зверніться до розділу ДОТАЦІЯ AMERICANA або просто натисніть зелену кнопку дотації.",
+    grantAmountVaries: "Розмір дотації відрізняється залежно від типу будинку – від мобільних будинків до багатомодульних конфігурацій",
     selectHouse: "Виберіть будинок",
     selectHousePlaceholder: "Виберіть модель будинку...",
     
