@@ -165,6 +165,7 @@ Deno.serve(async (req) => {
     .gallery-item { position: relative; border-radius: 8px; overflow: hidden; }
     .gallery-item img { width: 100%; height: auto; display: block; object-fit: cover; min-height: 200px; max-height: 400px; }
     .gallery-caption { background: #f3f4f6; padding: 8px; text-align: center; font-size: 12px; color: #6b7280; }
+    .podorys-img { width: 100% !important; height: auto !important; display: block !important; object-fit: contain !important; max-height: none !important; }
     
     .footer { background: #111827; color: #9ca3af; padding: 30px; text-align: center; font-size: 13px; }
     .footer a { color: #60a5fa; text-decoration: none; }
@@ -356,7 +357,7 @@ Deno.serve(async (req) => {
           ${dom.podorys_2d ? `
           <div class="gallery-item">
             <div class="img-wrapper">
-              <img src="${dom.podorys_2d}" alt="2D pôdorys">
+              <img src="${dom.podorys_2d}" alt="2D pôdorys" class="podorys-img">
               <div class="watermark" style="font-size: 32px;">American Living</div>
             </div>
             <div class="gallery-caption">2D pôdorys</div>
@@ -365,7 +366,7 @@ Deno.serve(async (req) => {
           ${dom.podorys_3d ? `
           <div class="gallery-item">
             <div class="img-wrapper">
-              <img src="${dom.podorys_3d}" alt="3D pôdorys">
+              <img src="${dom.podorys_3d}" alt="3D pôdorys" class="podorys-img">
               <div class="watermark" style="font-size: 32px;">American Living</div>
             </div>
             <div class="gallery-caption">3D pôdorys</div>
