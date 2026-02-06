@@ -1074,26 +1074,22 @@ export default function KonfiguratorFlat15({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800">
+            <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-slate-50 via-white to-slate-50">
               <div className="relative">
-                <div className="absolute top-0 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
-                <div className="absolute inset-0 opacity-5">
-                  <div className="absolute top-10 right-10 w-40 h-40 bg-green-400 rounded-full blur-3xl"></div>
-                  <div className="absolute bottom-10 left-10 w-32 h-32 bg-emerald-400 rounded-full blur-3xl"></div>
-                </div>
+                <div className="absolute top-0 left-0 right-0 h-0.5 sm:h-1 bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500"></div>
 
-                <div className="relative p-4 sm:p-8 md:p-10">
+                <div className="relative p-3 sm:p-5 md:p-6">
                   <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-8">
                     <div className="flex-1">
-                      <p className="text-green-400 text-[10px] sm:text-sm font-semibold uppercase tracking-wider mb-1 sm:mb-2">{t('yourConfiguration')}</p>
-                      <h3 className="text-xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">{dom?.nazov || 'Flat 1,5'}</h3>
-                      <p className="text-slate-400 text-xs sm:text-base mb-4">{t('completeCalculation')}</p>
+                      <p className="text-green-600 text-[9px] sm:text-xs font-semibold uppercase tracking-wider mb-1">{t('yourConfiguration')}</p>
+                      <h3 className="text-base sm:text-xl font-bold text-gray-900 mb-1">{dom?.nazov || 'Flat 1,5'}</h3>
+                      <p className="text-slate-600 text-[10px] sm:text-sm mb-3">{t('completeCalculation')}</p>
                       {projektA0 && !a0Odporucania && (
                         <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] sm:text-sm py-1 sm:py-1.5 px-2 sm:px-4 shadow-lg shadow-green-500/30">✓ {t('meetsA0')}</Badge>
                       )}
-                    
-                      <div className="mt-4 sm:mt-6 bg-slate-800/50 rounded-xl p-3 sm:p-4 border border-slate-700/50 max-h-[300px] overflow-y-auto">
-                        <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">{t('selectedItems')}</p>
+
+                      <div className="mt-4 sm:mt-6 bg-slate-50 rounded-xl p-3 sm:p-4 border border-slate-200 max-h-[300px] overflow-y-auto">
+                        <p className="text-slate-600 text-xs font-semibold uppercase tracking-wider mb-3">{t('selectedItems')}</p>
                         <div className="space-y-1">
                           {selectedItems.map((item, index) => {
                             const isBase = item.section === "base";
@@ -1146,9 +1142,9 @@ export default function KonfiguratorFlat15({
                                     </div>
                                   </div>
                                 )}
-                                <div className={`flex justify-between items-center py-1 px-2 rounded text-[11px] sm:text-sm ${isBase ? 'bg-blue-500/20 border border-blue-500/30' : item.selected ? 'hover:bg-slate-700/30' : 'opacity-50'}`}>
-                                  <span className={`${isBase ? 'text-blue-300 font-semibold' : item.selected ? 'text-slate-300' : 'text-slate-500 line-through'} flex-1 pr-2`}>{item.name}</span>
-                                  <span className={`${isBase ? 'text-blue-300' : item.selected ? 'text-green-400' : 'text-slate-500'} font-semibold whitespace-nowrap`}>
+                                <div className={`flex justify-between items-center py-1 px-2 rounded text-[11px] sm:text-sm ${isBase ? 'bg-blue-100 border border-blue-300' : item.selected ? 'hover:bg-slate-100' : 'opacity-50'}`}>
+                                  <span className={`${isBase ? 'text-blue-900 font-semibold' : item.selected ? 'text-slate-700' : 'text-slate-400 line-through'} flex-1 pr-2`}>{item.name}</span>
+                                  <span className={`${isBase ? 'text-blue-900' : item.selected ? 'text-green-600' : 'text-slate-400'} font-semibold whitespace-nowrap`}>
                                     {item.selected ? formatPrice(item.price) : 'NIE'}
                                   </span>
                                 </div>
@@ -1158,24 +1154,24 @@ export default function KonfiguratorFlat15({
                         </div>
                       </div>
                     </div>
-                    <div className="text-right p-3 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl sm:rounded-2xl border border-green-500/20 lg:min-w-[280px]">
-                      <p className="text-slate-400 mb-1 sm:mb-2 text-[10px] sm:text-sm">{t('totalWithVAT')}</p>
-                      <p className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
+                    <div className="text-right p-2 sm:p-4 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-lg sm:rounded-xl border border-green-500/20 lg:min-w-[240px]">
+                      <p className="text-slate-400 mb-1 text-[9px] sm:text-xs">{t('totalWithVAT')}</p>
+                      <p className="text-2xl sm:text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
                         {formatPrice(totalPrice)}
                       </p>
                     </div>
-                  </div>
+                    </div>
 
-                  <div className="mt-6 sm:mt-10 pt-4 sm:pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                    <div className="mt-4 sm:mt-6 pt-3 sm:pt-5 border-t border-slate-200 flex justify-start">
                     <Button 
                       size="lg" 
                       onClick={() => setShowContactModal(true)}
-                      className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
+                      className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-xs sm:text-sm px-4 sm:px-8 py-3 sm:py-4 shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
                     >
-                      <Send className="mr-2 sm:mr-3 w-4 h-4 sm:w-6 sm:h-6" />
-                      {t('interestedInConfig')}
+                      <Send className="mr-1.5 sm:mr-2 w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      {t('showHouseAndSendQuote')}
                     </Button>
-                  </div>
+                    </div>
 
                   <KonfiguratorContactModal
                     isOpen={showContactModal}
