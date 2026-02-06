@@ -195,6 +195,7 @@ export default function KonfiguratorFlat15({
   predajNehnutelnosti, setPredajNehnutelnosti,
   hladaniePozemku, setHladaniePozemku,
   financneSluzby, setFinancneSluzby,
+  typStavby = "",
   montazHolodomu, setMontazHolodomu,
   izolaciaNavysenie, setIzolaciaNavysenie,
   zaklady, setZaklady,
@@ -223,8 +224,7 @@ export default function KonfiguratorFlat15({
   revizna, setRevizna,
   doprava, setDoprava,
   showOnlySummary = false,
-  showOnlyPhase = null,
-  typStavby = ""
+  showOnlyPhase = null
 }) {
   const BASE_PRICE = dom?.zakladna_cena || 59900;
 
