@@ -202,7 +202,7 @@ export default function KonfiguratorFaza1HrubaStavba({
   const mountedRef = useRef(false);
   const onSelectionChangeRef = useRef(onSelectionChange);
 
-  // Synchronizovať s externými zmenami iba pri mount alebo skutočnej externej zmene
+  // Synchronizovať s externými zmenami
   useEffect(() => {
     // Prvý mount - nastav initial values
     if (!mountedRef.current) {
@@ -221,20 +221,21 @@ export default function KonfiguratorFaza1HrubaStavba({
       return;
     }
 
-    // Synchronizuj iba ak sa initialSelections skutočne zmenili zvonku
-    if (JSON.stringify(prevInitialSelections.current) !== JSON.stringify(initialSelections)) {
-      if (initialSelections.izolacia && initialSelections.izolacia !== izolacia) {
-        setIzolacia(initialSelections.izolacia);
-      }
-      if (initialSelections.montaz && initialSelections.montaz !== montaz) {
-        setMontaz(initialSelections.montaz);
-      }
-      if (initialSelections.zaklady && initialSelections.zaklady !== zaklady) {
-        setZaklady(initialSelections.zaklady);
-      }
-      prevInitialSelections.current = initialSelections;
+    // VŽDY synchronizuj so zmenami z rodiča (napríklad pri výbere typu stavby)
+    if (initialSelections.izolacia !== izolacia) {
+      console.log('🔄 Syncing izolacia from parent:', initialSelections.izolacia);
+      setIzolacia(initialSelections.izolacia);
     }
-  }, [initialSelections]);
+    if (initialSelections.montaz !== montaz) {
+      console.log('🔄 Syncing montaz from parent:', initialSelections.montaz);
+      setMontaz(initialSelections.montaz);
+    }
+    if (initialSelections.zaklady !== zaklady) {
+      console.log('🔄 Syncing zaklady from parent:', initialSelections.zaklady);
+      setZaklady(initialSelections.zaklady);
+    }
+    prevInitialSelections.current = initialSelections;
+  }, [initialSelections.montaz, initialSelections.izolacia, initialSelections.zaklady]);
 
   // Recompute getPrice if customPrices change
   useEffect(() => {
