@@ -806,6 +806,75 @@ export default function DetailDomu() {
 
 
 
+            {/* Informačné panely - pre všetky Prosto House domy (okrem A-Frame) - PRESUNUTÉ NA PRAVÚ STRANU */}
+            {isProstoHouse && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-full overflow-hidden">
+                {/* Komplet pre montáž */}
+                <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
+                  <div className="p-3 sm:p-4">
+                    <h4 className="font-bold text-amber-900 mb-2 text-xs sm:text-sm">📦 {t('assemblyKitTitle') || 'Komplet pre montáž'}</h4>
+                    <ul className="space-y-1 text-xs text-amber-800">
+                      <li>✓ {t('assemblyKitWoodenFrame') || 'Drevený rám'}</li>
+                      <li>✓ {t('assemblyKitExteriorFacade') || 'Vonkajšia fasáda'}</li>
+                      <li>✓ {t('assemblyKitWindows') || 'Okná'}</li>
+                      <li>✓ {t('assemblyKitDoors') || 'Dvere'}</li>
+                      <li>✓ {t('assemblyKitInsulation') || 'Izolácia'}</li>
+                    </ul>
+                  </div>
+                </Card>
+
+                {/* Čo nie je zahrnuté */}
+                <Card className="overflow-hidden border border-red-200 bg-red-50/50">
+                  <div className="p-3 sm:p-4">
+                    <h4 className="font-bold text-red-900 mb-2 text-xs sm:text-sm">❌ {t('notIncluded') || 'Nie je zahrnuté'}</h4>
+                    <ul className="space-y-1 text-xs text-red-800">
+                      <li>✗ {t('stairs') || 'Schody'}</li>
+                      <li>✗ {t('painting') || 'Maľovanie'}</li>
+                      <li>✗ {t('installation') || 'Montáž'}</li>
+                    </ul>
+                  </div>
+                </Card>
+              </div>
+            )}
+
+            {/* Možnosti využitia - pre Prosto House */}
+            {isProstoHouse && (
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">✔ {t('usageOptions') || 'Možnosti využitia'}</h3>
+                <ul className="space-y-1.5 sm:space-y-2">
+                  <li className="flex items-start gap-2 text-xs sm:text-sm">
+                    <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>{t('familyHouseOption') || 'Rodinný dom'}</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>{t('a0CertificateOption') || 'A0 certifikát'}</span>
+                  </li>
+                  <li className="flex items-start gap-2 text-sm">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span>{t('recreationalOption') || 'Rekreačná stavba'}</span>
+                  </li>
+                </ul>
+              </Card>
+            )}
+
+            {/* Obrázok základnej konfigurácie - pre Prosto House - hneď pod parametre */}
+            {isProstoHouse && dom.zakladna_konfiguracia_obrazok && (
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">📸 {t('basicConfiguration') || 'Základná konfigurácia'}</h3>
+                <div className="rounded-lg overflow-hidden shadow-lg">
+                  <ImageWithWatermark 
+                    src={dom.zakladna_konfiguracia_obrazok} 
+                    alt={(dom.images_seo_map?.[language] || dom.images_seo_map?.['sk'])?.[dom.zakladna_konfiguracia_obrazok] || `${dom.nazov} - ${t('basicConfiguration')}`}
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+                <p className="text-sm text-blue-800 mt-3 text-center font-medium">
+                  {t('basicConfigDesc') || 'Základná konfigurácia domu'}
+                </p>
+              </Card>
+            )}
+
             {/* Pôdorysy */}
             {dom.podorysy && dom.podorysy.length > 0 && (
               <Card className="p-3 sm:p-4">
@@ -1465,7 +1534,71 @@ export default function DetailDomu() {
                 </span>
                 <span className="text-sm text-gray-500">{t('withVAT')}</span>
               </div>
-              {isTicabhouse ? (
+              {isProstoHouse ? (
+                <div className="mt-2 bg-amber-50 border border-amber-200 rounded-lg p-3 sm:p-4">
+                  <div className="flex items-start gap-2 mb-3">
+                    <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs sm:text-sm text-amber-900 font-semibold mb-1">
+                        {t('basePriceNote')}
+                      </p>
+                      <p className="text-xs sm:text-sm text-amber-800">
+                        {t('basePriceNoteDesc')}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-3 pt-3 border-t border-amber-300">
+                    <p className="text-xs sm:text-sm font-bold text-amber-900 mb-2">{t('assemblyKitTitle')}</p>
+                    <ul className="space-y-1 text-xs sm:text-sm text-amber-800">
+                      <li className="flex items-start gap-2">
+                        <span className="text-amber-600 mt-0.5">•</span>
+                        <span>{t('assemblyKitWoodenFrame')}</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-amber-600 mt-0.5">•</span>
+                        <span>{t('assemblyKitExteriorFacade')}</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-amber-600 mt-0.5">•</span>
+                        <span>{t('assemblyKitWindows')}</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-amber-600 mt-0.5">•</span>
+                        <span>{t('assemblyKitDoors')}</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-amber-600 mt-0.5">•</span>
+                        <span>{t('assemblyKitHydroFoil')}</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-amber-600 mt-0.5">•</span>
+                        <span>{t('assemblyKitInsulation')}</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-amber-600 mt-0.5">•</span>
+                        <span>{t('assemblyKitVaporBarrier')}</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-amber-600 mt-0.5">•</span>
+                        <span>{t('assemblyKitRoughFloor')}</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div className="mt-3 pt-3 border-t border-amber-300 space-y-1.5">
+                    <p className="text-xs sm:text-sm text-red-700 font-medium">
+                      {t('assemblyKitStairsNotIncluded')}
+                    </p>
+                    <p className="text-xs sm:text-sm text-amber-800">
+                      {t('assemblyKitPaintClient')}
+                    </p>
+                    <p className="text-xs sm:text-sm text-amber-800">
+                      {t('assemblyKitPaintingNotIncluded')}
+                    </p>
+                  </div>
+                </div>
+              ) : (isTicabhouse) ? (
                 <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-2">
                   <p className="text-lg sm:text-xl font-bold text-green-600 mb-2">
                     Za vyššie uvedenú cenu dostávate dom na kľúč, ktorý je pripravený na okamžité použitie
