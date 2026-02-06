@@ -1137,7 +1137,7 @@ export default function KonfiguratorBarnDouble({
                     </div>
                   </div>
 
-                  <div className="mt-6 sm:mt-10 pt-4 sm:pt-8 border-t border-slate-700/50 flex justify-end">
+                  <div className="mt-6 sm:mt-10 pt-4 sm:pt-8 border-t border-slate-700/50 flex justify-start">
                     <Button 
                       size="lg" 
                       onClick={() => setShowContactModal(true)}
