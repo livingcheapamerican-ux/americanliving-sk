@@ -2979,9 +2979,9 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Súmarný panel pre A-Frame - pravá strana pod hypotekárnou kalkulačkou */}
+            {/* Súmarný panel pre A-Frame - pravá strana */}
             {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
+              <div className="space-y-4">
                 <KonfiguratorAFrame
                   dom={dom}
                   onReset={handleKonfiguratorReset}
