@@ -255,8 +255,9 @@ export default function KonfiguratorAFrame({
 
   const BASE_PRICE_CORRECTED = 22700;
 
-  // Načítať custom ceny z databázy - stabilná referencia
-  const customCeny = useMemo(() => dom?.konfigurator_custom_ceny_prosto_house || {}, [dom]);
+  // A-Frame VŽDY používa DEFAULT_CENY a ignoruje dom.konfigurator_custom_ceny_prosto_house
+  // Pretože dom A-Frame má v databáze nesprávne ceny z iného domu
+  const customCeny = {};
   
   const getPrice = React.useCallback((key) => {
     if (customCeny[key] !== undefined && customCeny[key] !== null) {
