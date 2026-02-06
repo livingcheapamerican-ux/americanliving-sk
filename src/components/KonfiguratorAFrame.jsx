@@ -549,22 +549,7 @@ export default function KonfiguratorAFrame({
     }
   };
 
-  const SectionHeader = ({ icon: Icon, title, subtitle, color, step }) => (
-    <div className={`relative flex items-center gap-1.5 sm:gap-3 p-2 sm:p-3 bg-gradient-to-r ${color}`}>
-      <div className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-white/90 rounded-lg sm:rounded-xl shadow-lg flex-shrink-0">
-        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-800" />
-      </div>
-      <div className="relative flex-1 min-w-0">
-        <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
-          <span className="inline-flex items-center justify-center px-1.5 sm:px-2 py-0.5 bg-white/90 rounded-full text-gray-800 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider">
-            {t('phase')} {step}
-          </span>
-        </div>
-        <h3 className="text-sm sm:text-lg font-bold text-white tracking-tight truncate drop-shadow-lg">{title}</h3>
-        {subtitle && <p className="text-white text-[10px] sm:text-xs mt-0.5 truncate drop-shadow-md">{subtitle}</p>}
-      </div>
-    </div>
-  );
+
 
   const handleSendQuoteFromFloating = async (contactData) => {
     try {
