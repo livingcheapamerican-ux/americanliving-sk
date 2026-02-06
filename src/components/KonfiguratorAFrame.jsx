@@ -190,7 +190,7 @@ export default function KonfiguratorAFrame({
   showOnlySummary = false,
   showOnlyPhase = null
 }) {
-  const BASE_PRICE = dom?.zakladna_cena || 0;
+  const BASE_PRICE = 22700;
 
   const { t, language } = useLanguage();
 
