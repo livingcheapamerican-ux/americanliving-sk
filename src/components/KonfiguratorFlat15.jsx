@@ -537,6 +537,21 @@ export default function KonfiguratorFlat15({
     return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
+  // Automatické nastavenie A0 položiek pri výbere typu stavby "Rodinný dom A0"
+  useEffect(() => {
+    if (typStavby === "rodinny_a0") {
+      setIzolaciaNavysenie("premium");
+      setTepelneCerpadlo(true);
+      setRekuperacia(true);
+      setProjektA0(true);
+      setZaklady("pasove");
+      setMontazHolodomu("ano");
+      setElektroinstalacia(true);
+      setVodaKanalizacia(true);
+      setSanitaKomplet(true);
+    }
+  }, [typStavby]);
+
   const handleReset = () => {
     if (onReset) {
       onReset();
