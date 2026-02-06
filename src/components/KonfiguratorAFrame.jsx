@@ -943,19 +943,38 @@ export default function KonfiguratorAFrame({
               <div className="p-3 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
 
-                  <div className="col-span-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-emerald-600 rounded-xl bg-emerald-100/70 shadow-xl">
-                    <p className="text-[9px] sm:text-[10px] font-bold text-emerald-700 mb-2 flex items-center gap-1">
-                      <span className="w-4 h-4 sm:w-5 sm:h-5 bg-emerald-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">1</span>
-                      {t('facade')} - Štandardná
-                    </p>
-                    <div className="flex items-center gap-2 p-2 sm:p-3 bg-white rounded-lg border-2 border-emerald-500">
-                      <Paintbrush className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
-                      <div>
-                        <p className="font-semibold text-gray-800 text-xs sm:text-sm">Drevo / Falcovaný plech</p>
-                        <p className="text-[10px] sm:text-xs text-gray-500">Súčasť základnej ceny</p>
-                      </div>
+                  {/* Fasáda - skryté pre verejnosť, zobrazené len pre adminov */}
+                  {isAdmin && (
+                    <div className="col-span-2 grid grid-cols-2 gap-1.5 sm:gap-2 p-2 sm:p-3 border-[3px] sm:border-[4px] border-emerald-600 rounded-xl bg-emerald-100/70 shadow-xl">
+                      <p className="col-span-2 text-[9px] sm:text-[10px] font-bold text-emerald-700 -mb-1 flex items-center gap-1">
+                        <span className="w-4 h-4 sm:w-5 sm:h-5 bg-emerald-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">1</span>
+                        {t('facade')} ({t('selectOne')})
+                      </p>
+                      <EditableTile
+                        selected={vonkajsiaFasada === "standard"}
+                        onClick={() => setVonkajsiaFasada("standard")}
+                        title="Drevo/Plech"
+                        subtitle="Drevo / Plech"
+                        price="0 €"
+                        isPriced={false}
+                        isIncluded={true}
+                        t={t}
+                        isAdmin={false}
+                      />
+                      <EditableTile
+                        selected={vonkajsiaFasada === "suchana"}
+                        onClick={() => setVonkajsiaFasada("suchana")}
+                        title={t('facadeStucco')}
+                        subtitle={t('whitePlaster')}
+                        price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="vonkajsiaFasada_suchana"
+                        onPriceChange={handlePriceChange}
+                      />
                     </div>
-                  </div>
+                  )}
 
                   <EditableTile selected={vnutornePodlahy} onClick={() => setVnutornePodlahy(!vnutornePodlahy)} title={t('floors')} subtitle={t('floorsLaminate')} price={`+ ${CENY.vnutornePodlahy.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="vnutornePodlahy" onPriceChange={handlePriceChange} />
                   <EditableTile selected={podlahovVykurovanie} onClick={() => setPodlahovVykurovanie(!podlahovVykurovanie)} title={t('floorHeating')} subtitle={t('wifiThermostat')} price={`+ ${CENY.podlahovVykurovanie.toLocaleString('sk-SK')} €`} isPriced={true} t={t} isAdmin={isAdmin} priceKey="podlahovVykurovanie" onPriceChange={handlePriceChange} />
