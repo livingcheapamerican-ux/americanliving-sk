@@ -719,7 +719,6 @@ export default function KonfiguratorAFrame({
       </Card>
 
       {!showOnlySummary && (
-
         <KonfiguratorContactModal
           isOpen={showContactModal}
           onClose={() => setShowContactModal(false)}
