@@ -477,7 +477,7 @@ export default function KonfiguratorAFrame({
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
 
-  // Poslať konfiguráciu do rodičovského komponentu
+  // Poslať konfiguráciu do rodičovského komponentu - KRITICKÉ pre hypotekárnu kalkulačku
   useEffect(() => {
     if (onConfigChange) {
       onConfigChange({
@@ -490,7 +490,7 @@ export default function KonfiguratorAFrame({
         zaklady
       });
     }
-  }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady]);
+  }, [onConfigChange, totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady]);
 
   useEffect(() => {
     const updateWidth = () => {
