@@ -477,20 +477,30 @@ export default function KonfiguratorAFrame({
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
 
+  // Ref na uloženie poslednej odoslanej konfigurácie - predchádza infinite loop
+  const lastConfigRef = useRef(null);
+
   // Poslať konfiguráciu do rodičovského komponentu - KRITICKÉ pre hypotekárnu kalkulačku
   useEffect(() => {
-    if (onConfigChange) {
-      onConfigChange({
-        celkovaCena: totalPrice,
-        izolaciaNavysenie,
-        tepelneCerpadlo,
-        rekuperacia,
-        projektA0,
-        montazHolodomu,
-        zaklady
-      });
+    const newConfig = {
+      celkovaCena: totalPrice,
+      izolaciaNavysenie,
+      tepelneCerpadlo,
+      rekuperacia,
+      projektA0,
+      montazHolodomu,
+      zaklady
+    };
+
+    // Porovnať s predchádzajúcou konfiguráciou - volať len ak sa zmenila
+    const newConfigString = JSON.stringify(newConfig);
+    if (newConfigString !== lastConfigRef.current) {
+      if (onConfigChange) {
+        onConfigChange(newConfig);
+      }
+      lastConfigRef.current = newConfigString;
     }
-  }, [onConfigChange, totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady]);
+  }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady]);
 
   useEffect(() => {
     const updateWidth = () => {
