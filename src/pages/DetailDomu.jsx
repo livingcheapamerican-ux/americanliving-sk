@@ -2046,53 +2046,11 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Obrázok základnej konfigurácie - pre Prosto House - hneď pod parametre */}
-            {isProstoHouse && dom.zakladna_konfiguracia_obrazok && (
-              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
-                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">📸 {t('basicConfiguration')}</h3>
-                <div className="rounded-lg overflow-hidden shadow-lg">
-                  <ImageWithWatermark 
-                    src={dom.zakladna_konfiguracia_obrazok} 
-                    alt={(dom.images_seo_map?.[language] || dom.images_seo_map?.['sk'])?.[dom.zakladna_konfiguracia_obrazok] || `${dom.nazov} - ${t('basicConfiguration')}`}
-                    className="w-full h-auto object-cover"
-                  />
-                </div>
-                <p className="text-sm text-blue-800 mt-3 text-center font-medium">
-                  {t('basicConfigDesc')}
-                </p>
-              </Card>
-            )}
 
-            {/* Možnosti využitia - pre Prosto House */}
-            {isProstoHouse && (
-              <Card className="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-white border-2 border-green-200">
-                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">✔ {t('usageOptions')}</h3>
-                <ul className="space-y-1.5 sm:space-y-2">
-                  <li className="flex items-start gap-2 text-xs sm:text-sm">
-                    <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>{t('familyHouseOption')}</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>{t('a0CertificateOption')}</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-sm">
-                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>{t('recreationalOption')}</span>
-                  </li>
-                </ul>
-              </Card>
-            )}
 
-            {/* Informačné panely - pre všetky Prosto House domy (okrem A-Frame) - PRESUNUTÉ NA PRAVÚ STRANU */}
-            {isProstoHouse && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-full overflow-hidden">
-                {/* Komplet pre montáž */}
-                <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
-...
-                </Card>
-              </div>
-            )}
+
+
+
 
             {/* Súmarný panel pre A-Frame - pravá strana */}
             {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && (
