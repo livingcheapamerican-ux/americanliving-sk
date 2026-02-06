@@ -490,7 +490,7 @@ export default function KonfiguratorAFrame({
         zaklady
       });
     }
-  }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady, onConfigChange]);
+  }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady]);
 
   useEffect(() => {
     const updateWidth = () => {
