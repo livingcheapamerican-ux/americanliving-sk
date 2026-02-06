@@ -325,7 +325,7 @@ export default function KonfiguratorAFrame({
   const phase1InitialSelections = useMemo(() => ({
     montaz: montazHolodomu === 'ano' ? 'montaz_ano' : 'montaz_nie',
     izolacia: izolaciaNavysenie === 'ultra' ? 'izolacia_extra' : izolaciaNavysenie === 'standard' ? 'izolacia_standardna' : `izolacia_${izolaciaNavysenie}`,
-    zaklady: zaklady === 'bez' ? 'zaklady_bez' : `zaklady_${zaklady}`
+    zaklady: zaklady === 'bez' ? 'zaklady_bez' : zaklady === 'vruty' ? 'zaklady_skrutky' : `zaklady_${zaklady}`
   }), [montazHolodomu, izolaciaNavysenie, zaklady]);
 
   const phase1CustomPrices = useMemo(() => ({
@@ -748,8 +748,8 @@ export default function KonfiguratorAFrame({
                   customPrices={phase1CustomPrices}
                   hideExtraInsulation={false}
                   initialSelections={phase1InitialSelections}
-                  onSelectionChange={(selections) => {
-                    // Kontrola či sa hodnota skutočne zmenila
+                  onSelectionChange={React.useCallback((selections) => {
+                    // Kontrola či sa hodnota skutočne zmenila - DEBOUNCED
                     if (selections.montaz) {
                       const newValue = selections.montaz === 'montaz_ano' ? 'ano' : 'nie';
                       if (montazHolodomu !== newValue) setMontazHolodomu(newValue);
@@ -765,7 +765,7 @@ export default function KonfiguratorAFrame({
                       if (zakladyValue === 'vruty') zakladyValue = 'skrutky';
                       if (zaklady !== zakladyValue) setZaklady(zakladyValue);
                     }
-                  }}
+                  }, [montazHolodomu, izolaciaNavysenie, zaklady, setMontazHolodomu, setIzolaciaNavysenie, setZaklady])}
                 />
 
                 <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-amber-300">
