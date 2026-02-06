@@ -2305,88 +2305,89 @@ export default function DetailDomu() {
               </Card>
             )}
 
-            {/* Informačné panely - pre všetky Prosto House domy - PRESUNUTÉ NA PRAVÚ STRANU */}
-            {isProstoHouse && (
+            {/* Informačné panely - pre všetky Prosto House domy (okrem A-Frame) - PRESUNUTÉ NA PRAVÚ STRANU */}
+            {isProstoHouse && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-full overflow-hidden">
                 {/* Komplet pre montáž */}
                 <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
-                  <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-amber-900 border-b border-amber-200">
-                    <Package className="w-3 h-3 sm:w-4 sm:h-4" />
-                    {t('assemblyKit')}
-                  </div>
-                  <div className="px-2 pb-2 text-xs text-amber-800 space-y-0.5 pt-1.5">
-                    <p>• {t('panelAssemblyWoodConstruction')}</p>
-                    <p>• {t('panelAssemblyExteriorWalls')}</p>
-                    <p>• {t('panelAssemblyRoof')}</p>
-                    <p>• {t('panelAssemblyWindowsDouble')}</p>
-                    <p>• {t('panelAssemblyDoorsDouble')}</p>
-                    <p>• {t('panelAssemblyMembrane')}</p>
-                    <p>• {t('panelAssemblyInsulation')}</p>
-                    <p>• {t('panelAssemblyVaporBarrier')}</p>
-                    <p>• {t('panelAssemblyFloor')}</p>
-                    <p className="text-red-600 font-medium mt-1">{t('panelAssemblyPainting')}</p>
-                  </div>
-                </Card>
-
-                {/* Elektroinštalácia */}
-                <Card className="overflow-hidden border border-yellow-200 bg-yellow-50/50">
-                  <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-yellow-900 border-b border-yellow-200">
-                    <Zap className="w-3 h-3 sm:w-4 sm:h-4" />
-                    {t('electricalInstallation')}
-                  </div>
-                  <div className="px-2 pb-2 text-xs text-yellow-800 space-y-0.5 pt-1.5">
-                    <p>• {t('panelElectricalCables')}</p>
-                    <p>• {t('panelElectricalPanel')}</p>
-                    <p>• {t('panelElectricalConduit')}</p>
-                    <p>• {t('panelElectricalBoxes')}</p>
-                    <p className="text-red-600 font-medium mt-1">{t('panelElectricalNotIncluded')}</p>
-                  </div>
-                </Card>
-
-                {/* Voda a kanalizácia */}
-                <Card className="overflow-hidden border border-blue-200 bg-blue-50/50">
-                  <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-blue-900 border-b border-blue-200">
-                    <Droplets className="w-3 h-3 sm:w-4 sm:h-4" />
-                    {t('waterAndSewage')}
-                  </div>
-                  <div className="px-2 pb-2 text-xs text-blue-800 space-y-0.5 pt-1.5">
-                    <p>• {t('panelWaterPipes')}</p>
-                    <p>• {t('panelWaterValves')}</p>
-                    <p>• {t('panelWaterSewagePipes')}</p>
-                    <p>• {t('panelWaterPressureTest')}</p>
-                    <p className="text-red-600 font-medium mt-1">{t('panelWaterProtocols')}</p>
-                  </div>
-                </Card>
-
-                {/* Základy */}
-                <Card className="overflow-hidden border border-orange-200 bg-orange-50/50">
-                  <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-orange-900 border-b border-orange-200">
-                    <Landmark className="w-3 h-3 sm:w-4 sm:h-4" />
-                    {t('foundationsPanel')}
-                  </div>
-                  <div className="px-2 pb-2 text-xs text-orange-800 space-y-0.5 pt-1.5">
-                    <p>• {t('panelFoundationScrews')}</p>
-                    <p>• {t('panelFoundationMinPrice')}</p>
-                    <p>• {t('panelFoundationFinalPrice')}</p>
-                    <p className="text-red-600 font-medium mt-1">{t('panelFoundationPrepWork')}</p>
-                  </div>
-                </Card>
-
-                {/* Interiér */}
-                <Card id="interier-finis-panel" className="overflow-hidden border border-emerald-200 bg-emerald-50/50 col-span-1 sm:col-span-2">
-                  <div className="flex items-center gap-1.5 p-2 text-xs sm:text-sm font-semibold text-emerald-900 border-b border-emerald-200">
-                    <Home className="w-3 h-3 sm:w-4 sm:h-4" />
-                    {t('interiorFinishPanel')}
-                  </div>
-                  <div className="px-2 pb-2 text-xs text-emerald-800 space-y-0.5 pt-1.5">
-                    <p>• {t('panelInteriorPartitions')}</p>
-                    <p className="text-red-600 font-medium">{t('panelInteriorPainting')}</p>
-                  </div>
+...
                 </Card>
               </div>
             )}
 
-
+            {/* Súmarný panel pre A-Frame - pravá strana hneď pod "Možnosti využitia" */}
+            {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && (
+              <KonfiguratorAFrame
+                dom={dom}
+                onReset={handleKonfiguratorReset}
+                onConfigChange={(config) => setProstoKonfiguracia(config)}
+                predajNehnutelnosti={predajNehnutelnosti}
+                setPredajNehnutelnosti={setPredajNehnutelnosti}
+                hladaniePozemku={hladaniePozemku}
+                setHladaniePozemku={setHladaniePozemku}
+                financneSluzby={financneSluzby}
+                setFinancneSluzby={setFinancneSluzby}
+                typStavby={typStavby}
+                setTypStavby={setTypStavby}
+                montazHolodomu={montazHolodomu}
+                setMontazHolodomu={setMontazHolodomu}
+                izolaciaNavysenie={izolaciaNavysenie}
+                setIzolaciaNavysenie={setIzolaciaNavysenie}
+                zaklady={zaklady}
+                setZaklady={setZaklady}
+                predlzenie={predlzenie}
+                setPredlzenie={setPredlzenie}
+                vstupneDvere={vstupneDvere}
+                setVstupneDvere={setVstupneDvere}
+                elektroinstalacia={elektroinstalacia}
+                setElektroinstalacia={setElektroinstalacia}
+                vodaKanalizacia={vodaKanalizacia}
+                setVodaKanalizacia={setVodaKanalizacia}
+                sanitaKomplet={sanitaKomplet}
+                setSanitaKomplet={setSanitaKomplet}
+                bojler={bojler}
+                setBojler={setBojler}
+                tepelneCerpadlo={tepelneCerpadlo}
+                setTepelneCerpadlo={setTepelneCerpadlo}
+                rekuperacia={rekuperacia}
+                setRekuperacia={setRekuperacia}
+                pripojkaSiete={pripojkaSiete}
+                setPripojkaSiete={setPripojkaSiete}
+                stresneOkno={stresneOkno}
+                setStresneOkno={setStresneOkno}
+                bocneOknoFixne={bocneOknoFixne}
+                setBocneOknoFixne={setBocneOknoFixne}
+                bocneOknoVyklopne90={bocneOknoVyklopne90}
+                setBocneOknoVyklopne90={setBocneOknoVyklopne90}
+                bocneOknoVyklopne55={bocneOknoVyklopne55}
+                setBocneOknoVyklopne55={setBocneOknoVyklopne55}
+                povrchokaOkien={povrchokaOkien}
+                setPovrchokaOkien={setPovrchokaOkien}
+                tonovaneSkla={tonovaneSkla}
+                setTonovaneSkla={setTonovaneSkla}
+                vonkajsiaFasada={vonkajsiaFasada}
+                setVonkajsiaFasada={setVonkajsiaFasada}
+                interierFinis={interierFinis}
+                setInterierFinis={setInterierFinis}
+                vnutornePodlahy={vnutornePodlahy}
+                setVnutornePodlahy={setVnutornePodlahy}
+                podlahovVykurovanie={podlahovVykurovanie}
+                setPodlahovVykurovanie={setPodlahovVykurovanie}
+                interieroveDvere={interieroveDvere}
+                setInterieroveDvere={setInterieroveDvere}
+                pergola={pergola}
+                setPergola={setPergola}
+                inziniering={inziniering}
+                setInziniering={setInziniering}
+                projektA0={projektA0}
+                setProjektA0={setProjektA0}
+                revizna={revizna}
+                setRevizna={setRevizna}
+                doprava={doprava}
+                setDoprava={setDoprava}
+                showOnlySummary={true}
+              />
+            )}
 
             {/* Floating panel s cenami pre Flat 1,5 - pravá strana */}
             {isProstoHouse && (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) && (
