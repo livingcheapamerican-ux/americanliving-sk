@@ -17,11 +17,18 @@ export default function HypotekaKalkulator({
   const [dobaSplatnosti, setDobaSplatnosti] = useState(25);
   const [urokovaSadzba, setUrokovaSadzba] = useState(3.5);
   const [vlastnyVklad, setVlastnyVklad] = useState(20);
+  const [celkovaCenaKonfiguracie, setCelkovaCenaKonfiguracie] = useState(cenaDoma || dom?.zakladna_cena || 100000);
 
   const isAdmin = user?.role === 'admin' || user?.super_admin === true;
+
+  // Aktualizovať cenu z konfigurácie
+  useEffect(() => {
+    const novaCena = aktualnaKonfiguracia?.celkovaCena || cenaDoma || dom?.zakladna_cena || 100000;
+    setCelkovaCenaKonfiguracie(novaCena);
+  }, [aktualnaKonfiguracia?.celkovaCena, cenaDoma, dom?.zakladna_cena]);
   
   // Suma z ktorej sa počíta hypotéka je PRESNE suma "Celkom s DPH" zo sidebar panelu
-  const celkomSDph = aktualnaKonfiguracia?.celkovaCena || cenaDoma || 100000;
+  const celkomSDph = celkovaCenaKonfiguracie;
   const vyskaUveru = Math.round(celkomSDph * (100 - vlastnyVklad) / 100);
 
   // Výpočet mesačnej splátky pomocou anuitného vzorca
