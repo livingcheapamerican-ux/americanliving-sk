@@ -718,17 +718,7 @@ export default function KonfiguratorAFrame({
         <p className="text-amber-800 text-sm">Konfigurátor pre A-Frame není aktuálne dostupný. Kontaktujte nás prosím pre detailné informácie.</p>
       </Card>
 
-      {false && (
-        <>
-          {/* Disabled configurator sections */}
-        </>
-      )}
-
-      <div className="space-y-6">
-        {/* Render nothing - A-Frame configurator is disabled */}
-      </div>
-
-      {showHolodom && <motion.div
+      {!showOnlySummary && (
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
