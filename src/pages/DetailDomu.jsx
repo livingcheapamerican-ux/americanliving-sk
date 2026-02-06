@@ -16,19 +16,7 @@ import HypotekaKalkulator from "../components/HypotekaKalkulator";
 import PriceCalculatorTicabhouse from "../components/PriceCalculatorTicabhouse";
 import FloatingPrice from "../components/FloatingPrice";
 import DomGalerieManager from "../components/admin/DomGalerieManager";
-import KonfiguratorFlat15 from "../components/KonfiguratorFlat15";
-import KonfiguratorFlatDouble from "../components/KonfiguratorFlatDouble";
 
-import KonfiguratorFaza1HrubaStavba from "../components/KonfiguratorFaza1HrubaStavba";
-import KonfiguratorWizard from "../components/KonfiguratorWizard";
-import KonfiguratorFjord from "../components/KonfiguratorFjord";
-import KonfiguratorNord from "../components/KonfiguratorNord";
-import KonfiguratorProstoHouse from "../components/KonfiguratorProstoHouse";
-import KonfiguratorFlat72 from "../components/KonfiguratorFlat72";
-import KonfiguratorAFrame from "../components/KonfiguratorAFrame";
-import KonfiguratorBarn48 from "../components/KonfiguratorBarn48";
-import KonfiguratorBarnDouble from "../components/KonfiguratorBarnDouble";
-import KonfiguratorFlatSmall from "../components/KonfiguratorFlatSmall";
 import LyonKonfiguratorWrapper from "../components/LyonKonfiguratorWrapper";
 import LyonSummaryPanelStandalone from "../components/LyonSummaryPanelStandalone";
 import KonfiguratorTicabhouse from "../components/KonfiguratorTicabhouse";
@@ -806,149 +794,11 @@ export default function DetailDomu() {
 
 
 
-            {/* Wizard pre Flat 1,5 - ľavá strana */}
-            {isProstoHouse && (dom.nazov?.includes("Flat 1,5") || dom.nazov?.includes("Flat House 1,5")) && (
-              <KonfiguratorWizard
-                key={wizardKey}
-                dom={dom}
-                useFlat15Prices={true}
-                predajNehnutelnosti={predajNehnutelnosti}
-                setPredajNehnutelnosti={setPredajNehnutelnosti}
-                hladaniePozemku={hladaniePozemku}
-                setHladaniePozemku={setHladaniePozemku}
-                financneSluzby={financneSluzby}
-                setFinancneSluzby={setFinancneSluzby}
-                typStavby={typStavby}
-                setTypStavby={setTypStavby}
-                montazHolodomu={montazHolodomu}
-                setMontazHolodomu={setMontazHolodomu}
-                izolaciaNavysenie={izolaciaNavysenie}
-                setIzolaciaNavysenie={setIzolaciaNavysenie}
-                zaklady={zaklady}
-                setZaklady={setZaklady}
-                vstupneDvere={vstupneDvere}
-                setVstupneDvere={setVstupneDvere}
-                elektroinstalacia={elektroinstalacia}
-                setElektroinstalacia={setElektroinstalacia}
-                vodaKanalizacia={vodaKanalizacia}
-                setVodaKanalizacia={setVodaKanalizacia}
-                sanitaKomplet={sanitaKomplet}
-                setSanitaKomplet={setSanitaKomplet}
-                bojler={bojler}
-                setBojler={setBojler}
-                tepelneCerpadlo={tepelneCerpadlo}
-                setTepelneCerpadlo={setTepelneCerpadlo}
-                rekuperacia={rekuperacia}
-                setRekuperacia={setRekuperacia}
-                pripojkaSiete={pripojkaSiete}
-                setPripojkaSiete={setPripojkaSiete}
-                stresneOkno={stresneOkno}
-                setStresneOkno={setStresneOkno}
-                bocneOknoFixne={bocneOknoFixne}
-                setBocneOknoFixne={setBocneOknoFixne}
-                bocneOknoVyklopne90={bocneOknoVyklopne90}
-                setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                bocneOknoVyklopne55={bocneOknoVyklopne55}
-                setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                povrchokaOkien={povrchokaOkien}
-                setPovrchokaOkien={setPovrchokaOkien}
-                tonovaneSkla={tonovaneSkla}
-                setTonovaneSkla={setTonovaneSkla}
-                vonkajsiaFasada={vonkajsiaFasada}
-                setVonkajsiaFasada={setVonkajsiaFasada}
-                interierFinis={interierFinis}
-                setInterierFinis={setInterierFinis}
-                vnutornePodlahy={vnutornePodlahy}
-                setVnutornePodlahy={setVnutornePodlahy}
-                podlahovVykurovanie={podlahovVykurovanie}
-                setPodlahovVykurovanie={setPodlahovVykurovanie}
-                interieroveDvere={interieroveDvere}
-                setInterieroveDvere={setInterieroveDvere}
-                pergola={pergola}
-                setPergola={setPergola}
-                inziniering={inziniering}
-                setInziniering={setInziniering}
-                projektA0={projektA0}
-                setProjektA0={setProjektA0}
-                revizna={revizna}
-                setRevizna={setRevizna}
-                doprava={doprava}
-                setDoprava={setDoprava}
-              />
-            )}
 
 
 
-            {/* Konfigurátor - Wizard krok po kroku pre Flat Double (ale nie Flat 1,5) */}
-            {isProstoHouse && dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("1,5") && !dom.nazov?.includes("1.5") && (
-              <KonfiguratorWizard 
-                key={wizardKey}
-                dom={dom}
-                useFlatDoublePrices={true}
-                predajNehnutelnosti={predajNehnutelnosti}
-                setPredajNehnutelnosti={setPredajNehnutelnosti}
-                hladaniePozemku={hladaniePozemku}
-                setHladaniePozemku={setHladaniePozemku}
-                financneSluzby={financneSluzby}
-                setFinancneSluzby={setFinancneSluzby}
-                typStavby={typStavby}
-                setTypStavby={setTypStavby}
-                montazHolodomu={montazHolodomu}
-                setMontazHolodomu={setMontazHolodomu}
-                izolaciaNavysenie={izolaciaNavysenie}
-                setIzolaciaNavysenie={setIzolaciaNavysenie}
-                zaklady={zaklady}
-                setZaklady={setZaklady}
-                vstupneDvere={vstupneDvere}
-                setVstupneDvere={setVstupneDvere}
-                elektroinstalacia={elektroinstalacia}
-                setElektroinstalacia={setElektroinstalacia}
-                vodaKanalizacia={vodaKanalizacia}
-                setVodaKanalizacia={setVodaKanalizacia}
-                sanitaKomplet={sanitaKomplet}
-                setSanitaKomplet={setSanitaKomplet}
-                bojler={bojler}
-                setBojler={setBojler}
-                tepelneCerpadlo={tepelneCerpadlo}
-                setTepelneCerpadlo={setTepelneCerpadlo}
-                rekuperacia={rekuperacia}
-                setRekuperacia={setRekuperacia}
-                pripojkaSiete={pripojkaSiete}
-                setPripojkaSiete={setPripojkaSiete}
-                stresneOkno={stresneOkno}
-                setStresneOkno={setStresneOkno}
-                bocneOknoFixne={bocneOknoFixne}
-                setBocneOknoFixne={setBocneOknoFixne}
-                bocneOknoVyklopne90={bocneOknoVyklopne90}
-                setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                bocneOknoVyklopne55={bocneOknoVyklopne55}
-                setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                povrchokaOkien={povrchokaOkien}
-                setPovrchokaOkien={setPovrchokaOkien}
-                tonovaneSkla={tonovaneSkla}
-                setTonovaneSkla={setTonovaneSkla}
-                vonkajsiaFasada={vonkajsiaFasada}
-                setVonkajsiaFasada={setVonkajsiaFasada}
-                interierFinis={interierFinis}
-                setInterierFinis={setInterierFinis}
-                vnutornePodlahy={vnutornePodlahy}
-                setVnutornePodlahy={setVnutornePodlahy}
-                podlahovVykurovanie={podlahovVykurovanie}
-                setPodlahovVykurovanie={setPodlahovVykurovanie}
-                interieroveDvere={interieroveDvere}
-                setInterieroveDvere={setInterieroveDvere}
-                pergola={pergola}
-                setPergola={setPergola}
-                inziniering={inziniering}
-                setInziniering={setInziniering}
-                projektA0={projektA0}
-                setProjektA0={setProjektA0}
-                revizna={revizna}
-                setRevizna={setRevizna}
-                doprava={doprava}
-                setDoprava={setDoprava}
-              />
-            )}
+
+
 
 
 
@@ -1165,78 +1015,7 @@ export default function DetailDomu() {
               />
             )}
 
-            {/* Konfigurátor pre ostatné Prosto House domy */}
-            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("Flat Small") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && !dom.nazov?.includes("Barn") && (
-              <KonfiguratorWizard
-                key={wizardKey}
-                dom={dom}
-                useProstoHousePrices={true}
-                predajNehnutelnosti={predajNehnutelnosti}
-                setPredajNehnutelnosti={setPredajNehnutelnosti}
-                hladaniePozemku={hladaniePozemku}
-                setHladaniePozemku={setHladaniePozemku}
-                financneSluzby={financneSluzby}
-                setFinancneSluzby={setFinancneSluzby}
-                typStavby={typStavby}
-                setTypStavby={setTypStavby}
-                montazHolodomu={montazHolodomu}
-                setMontazHolodomu={setMontazHolodomu}
-                izolaciaNavysenie={izolaciaNavysenie}
-                setIzolaciaNavysenie={setIzolaciaNavysenie}
-                zaklady={zaklady}
-                setZaklady={setZaklady}
-                predlzenie={predlzenie}
-                setPredlzenie={setPredlzenie}
-                vstupneDvere={vstupneDvere}
-                setVstupneDvere={setVstupneDvere}
-                elektroinstalacia={elektroinstalacia}
-                setElektroinstalacia={setElektroinstalacia}
-                vodaKanalizacia={vodaKanalizacia}
-                setVodaKanalizacia={setVodaKanalizacia}
-                sanitaKomplet={sanitaKomplet}
-                setSanitaKomplet={setSanitaKomplet}
-                bojler={bojler}
-                setBojler={setBojler}
-                tepelneCerpadlo={tepelneCerpadlo}
-                setTepelneCerpadlo={setTepelneCerpadlo}
-                rekuperacia={rekuperacia}
-                setRekuperacia={setRekuperacia}
-                pripojkaSiete={pripojkaSiete}
-                setPripojkaSiete={setPripojkaSiete}
-                stresneOkno={stresneOkno}
-                setStresneOkno={setStresneOkno}
-                bocneOknoFixne={bocneOknoFixne}
-                setBocneOknoFixne={setBocneOknoFixne}
-                bocneOknoVyklopne90={bocneOknoVyklopne90}
-                setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                bocneOknoVyklopne55={bocneOknoVyklopne55}
-                setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                povrchokaOkien={povrchokaOkien}
-                setPovrchokaOkien={setPovrchokaOkien}
-                tonovaneSkla={tonovaneSkla}
-                setTonovaneSkla={setTonovaneSkla}
-                vonkajsiaFasada={vonkajsiaFasada}
-                setVonkajsiaFasada={setVonkajsiaFasada}
-                interierFinis={interierFinis}
-                setInterierFinis={setInterierFinis}
-                vnutornePodlahy={vnutornePodlahy}
-                setVnutornePodlahy={setVnutornePodlahy}
-                podlahovVykurovanie={podlahovVykurovanie}
-                setPodlahovVykurovanie={setPodlahovVykurovanie}
-                interieroveDvere={interieroveDvere}
-                setInterieroveDvere={setInterieroveDvere}
-                pergola={pergola}
-                setPergola={setPergola}
-                inziniering={inziniering}
-                setInziniering={setInziniering}
-                projektA0={projektA0}
-                setProjektA0={setProjektA0}
-                revizna={revizna}
-                setRevizna={setRevizna}
-                doprava={doprava}
-                setDoprava={setDoprava}
-              />
-            )}
+
 
             {/* Pôdorysy */}
             {dom.podorysy && dom.podorysy.length > 0 && (
