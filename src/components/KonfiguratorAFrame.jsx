@@ -222,7 +222,7 @@ export default function KonfiguratorAFrame({
     }
   };
 
-  // DEFAULT CENY (fallback values)
+  // DEFAULT CENY pre A-Frame (aktualizované 6.2.2026)
   const DEFAULT_CENY = {
     montaz: { nie: 0, ano: 5675 },
     predlzenie: { 0: 0, 1.2: 3550, 2.4: 7100, 3.6: 10650, 4.8: 14200 },
