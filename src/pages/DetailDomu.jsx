@@ -3057,8 +3057,8 @@ export default function DetailDomu() {
 
 
 
-            {/* Kalkulátor hypotéky - skryté pre mobilné domy */}
-            {dom.kategoria !== "mobilne_domy" && (
+            {/* Kalkulátor hypotéky - skryté pre mobilné domy a A-Frame */}
+            {dom.kategoria !== "mobilne_domy" && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && (
               <div className="mb-4">
                 <HypotekaKalkulator 
                   cenaDoma={dom.zakladna_cena} 
