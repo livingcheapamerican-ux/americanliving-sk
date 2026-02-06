@@ -719,80 +719,16 @@ export default function KonfiguratorAFrame({
       </Card>
 
       {false && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <Card className="overflow-hidden border-2 border-amber-300 shadow-lg">
-              <SectionHeader 
-                icon={Package} 
-                title={t('phase1')} 
-                subtitle={t('phase1Subtitle')}
-                color="from-amber-600 to-orange-600"
-                step="1"
-              />
-              <div className="p-3 sm:p-6 bg-gradient-to-b from-amber-50/50 to-white">
-                <KonfiguratorFaza1HrubaStavba
-                  dom={dom}
-                  isAdmin={isAdmin}
-                  onPriceUpdate={handlePriceChange}
-                  showTooltips={true}
-                  customPrices={phase1CustomPrices}
-                  hideExtraInsulation={false}
-                  initialSelections={phase1InitialSelections}
-                  onSelectionChange={React.useCallback((selections) => {
-                    // Kontrola či sa hodnota skutočne zmenila - DEBOUNCED
-                    if (selections.montaz) {
-                      const newValue = selections.montaz === 'montaz_ano' ? 'ano' : 'nie';
-                      if (montazHolodomu !== newValue) setMontazHolodomu(newValue);
-                    }
-                    if (selections.izolacia) {
-                      let izolaciaValue = selections.izolacia.replace('izolacia_', '');
-                      if (izolaciaValue === 'extra') izolaciaValue = 'ultra';
-                      if (izolaciaValue === 'standardna') izolaciaValue = 'standard';
-                      if (izolaciaNavysenie !== izolaciaValue) setIzolaciaNavysenie(izolaciaValue);
-                    }
-                    if (selections.zaklady) {
-                      let zakladyValue = selections.zaklady.replace('zaklady_', '');
-                      if (zakladyValue === 'vruty') zakladyValue = 'skrutky';
-                      if (zaklady !== zakladyValue) setZaklady(zakladyValue);
-                    }
-                  }, [montazHolodomu, izolaciaNavysenie, zaklady, setMontazHolodomu, setIzolaciaNavysenie, setZaklady])}
-                />
+        <>
+          {/* Disabled configurator sections */}
+        </>
+      )}
 
-                <div className="mt-4 p-3 sm:p-4 bg-white rounded-xl border-2 border-amber-300">
-                  <p className="text-xs sm:text-sm font-bold text-amber-800 mb-3 flex items-center gap-2">
-                    <Maximize className="w-4 h-4" />
-                    Predĺženie dĺžky domu (v násobkoch 1,2m)
-                  </p>
-                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3">
-                    {[
-                      { value: 0, label: "Bez\npredĺženia", price: "0 €" },
-                      { value: 1.2, label: "+1,2 m", price: `+ ${CENY.predlzenie[1.2].toLocaleString('sk-SK')} €` },
-                      { value: 2.4, label: "+2,4 m", price: `+ ${CENY.predlzenie[2.4].toLocaleString('sk-SK')} €` },
-                      { value: 3.6, label: "+3,6 m", price: `+ ${CENY.predlzenie[3.6].toLocaleString('sk-SK')} €` },
-                      { value: 4.8, label: "+4,8 m", price: `+ ${CENY.predlzenie[4.8].toLocaleString('sk-SK')} €` }
-                    ].map((opt) => (
-                      <motion.div
-                        key={opt.value}
-                        whileHover={{ scale: 1.02, y: -2 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => setPredlzenie(opt.value)}
-                        className={`p-2 sm:p-3 rounded-lg cursor-pointer text-center transition-all flex flex-col items-center ${
-                          predlzenie === opt.value
-                            ? "bg-amber-100 border-2 border-amber-500 shadow-lg"
-                            : "bg-gray-50 border-2 border-gray-200 hover:border-amber-300"
-                        }`}
-                      >
-                        <span className="font-semibold text-gray-800 text-[10px] sm:text-xs leading-tight whitespace-pre-line">{opt.label}</span>
-                        <span className={`${opt.value === 0 ? "text-gray-400 font-medium" : "text-green-600 font-bold"} text-[9px] sm:text-xs mt-1`}>{opt.price}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
-        )}
+      <div className="space-y-6">
+        {/* Render nothing - A-Frame configurator is disabled */}
+      </div>
 
-          {showHolodom && <motion.div
+      {showHolodom && <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
