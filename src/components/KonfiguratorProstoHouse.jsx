@@ -465,7 +465,7 @@ export default function KonfiguratorProstoHouse({
       setHladaniePozemku?.(false);
       setFinancneSluzby?.(false);
       setMontazHolodomu?.("nie");
-      setVstupneDviere("ziadne");
+      setVstupneDvere("ziadne");
       setIzolaciaNavysenie?.("standard");
       setElektroinstalacia(false);
       setVodaKanalizacia(false);
