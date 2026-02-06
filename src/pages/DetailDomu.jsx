@@ -1103,12 +1103,9 @@ export default function DetailDomu() {
 
 
 
-            {/* Konfigurátor pre Barn Double - Wizard - PO POPISE */}
-            {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && dom.nazov?.toLowerCase().includes("double") && (
-              <KonfiguratorWizard
-                key={wizardKey}
-                dom={dom}
-                useBarnDoublePrices={true}
+            {/* Barn Double - wizard vymazaný - je len popis */}
+            {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && dom.nazov?.toLowerCase().includes("double") && false && (
+              <div></div>
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -1176,12 +1173,9 @@ export default function DetailDomu() {
               />
             )}
 
-            {/* Konfigurátor pre Barn 48 - Wizard - PO POPISE */}
-            {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && !dom.nazov?.toLowerCase().includes("double") && (
-              <KonfiguratorWizard
-                key={wizardKey}
-                dom={dom}
-                useBarn48Prices={true}
+            {/* Barn 48 wizard vymazaný - je len popis */}
+            {isProstoHouse && dom.nazov?.toLowerCase().includes("barn") && !dom.nazov?.toLowerCase().includes("double") && false && (
+              <div></div>
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -1249,12 +1243,9 @@ export default function DetailDomu() {
               />
             )}
 
-            {/* Konfigurátor pre A-Frame - ĽAVÁ STRANA - priamy konfigurátor (nie Wizard) */}
-            {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && (
-              <KonfiguratorAFrame
-                dom={dom}
-                onReset={handleKonfiguratorReset}
-                onConfigChange={(config) => setProstoKonfiguracia(config)}
+            {/* A-Frame konfigurátor vymazaný - je len popis */}
+            {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && false && (
+              <div></div>
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
@@ -1322,12 +1313,9 @@ export default function DetailDomu() {
               />
             )}
 
-            {/* Konfigurátor pre Flat Small - Wizard */}
-            {isProstoHouse && dom.nazov?.includes("Flat Small") && (
-              <KonfiguratorWizard
-                key={wizardKey}
-                dom={dom}
-                useFlatSmallPrices={true}
+            {/* Flat Small wizard vymazaný - je len popis */}
+            {isProstoHouse && dom.nazov?.includes("Flat Small") && false && (
+              <div></div>
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
