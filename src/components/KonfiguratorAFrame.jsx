@@ -704,27 +704,21 @@ export default function KonfiguratorAFrame({
     );
   }
 
-  const showHruba = !showOnlyPhase || showOnlyPhase === "hruba";
-  const showHolodom = !showOnlyPhase || showOnlyPhase === "holodom";
-  const showKluc = !showOnlyPhase || showOnlyPhase === "kluc";
-  const showDocs = !showOnlyPhase || showOnlyPhase === "docs";
-  const showFinale = !showOnlyPhase || showOnlyPhase === "finale";
+  // A-Frame: Všetky sekcie sú skryté - konfigurátor nie je dostupný
+  const showHruba = false;
+  const showHolodom = false;
+  const showKluc = false;
+  const showDocs = false;
+  const showFinale = false;
 
   return (
     <div className="mt-8 relative">
-      <FloatingPrice 
-        price={totalPrice} 
-        isVisible={true} 
-        onSendQuote={handleSendQuoteFromFloating}
-        dom={dom}
-        vyrobca="Prosto House"
-        buttonText="Pošli cenovú ponuku"
-      />
+      <Card className="p-6 bg-amber-50 border-2 border-amber-300 rounded-xl text-center">
+        <p className="text-amber-900 font-semibold mb-2">⚠️ Konfigurátor A-Frame</p>
+        <p className="text-amber-800 text-sm">Konfigurátor pre A-Frame není aktuálne dostupný. Kontaktujte nás prosím pre detailné informácie.</p>
+      </Card>
 
-      <div>
-        <div className="space-y-6">
-
-{showHruba && (
+      {false && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <Card className="overflow-hidden border-2 border-amber-300 shadow-lg">
               <SectionHeader 
