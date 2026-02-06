@@ -144,7 +144,8 @@ export default function KonfiguratorWizard({
         if (setProjektA0) setProjektA0(false);
       }
     }
-  }, [typStavby, setIzolaciaNavysenie, setTepelneCerpadlo, setRekuperacia, setProjektA0]);
+    // OPRAVENÉ: Odstránené setter funkcie z dependencies - spôsobovali nekonečný loop
+  }, [typStavby]);
 
   const handleTypStavbyChange = (typ) => {
     if (setTypStavby) setTypStavby(typ);
