@@ -1229,36 +1229,41 @@ export default function KonfiguratorProstoHouse({
               <div className="p-1.5 sm:p-6 bg-gradient-to-b from-emerald-50/50 to-white">
                 <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
 
-                  <div className={`col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[2px] sm:border-[4px] rounded-lg sm:rounded-xl shadow-xl ${!vonkajsiaFasada ? 'border-red-600 bg-red-100/70 animate-pulse' : 'border-emerald-600 bg-emerald-100/70'}`}>
-                    <p className={`col-span-2 text-[8px] sm:text-[10px] font-bold -mb-0.5 sm:-mb-1 flex items-center gap-0.5 sm:gap-1 ${!vonkajsiaFasada ? 'text-red-600' : 'text-emerald-700'}`}>
-                      <span className={`w-3.5 h-3.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[8px] sm:text-[10px] font-extrabold text-white ${!vonkajsiaFasada ? 'bg-red-600' : 'bg-emerald-600'}`}>1</span>
-                      {t('facade')} ({t('selectOne')}) {!vonkajsiaFasada && <span className="text-red-500 ml-1">*{t('required')}</span>}
-                    </p>
-                    <EditableTile
-                      selected={vonkajsiaFasada === "standard"}
-                      onClick={() => setVonkajsiaFasada("standard")}
-                      title={t('facadeWoodMetal')}
-                      subtitle="Drevo / Plech"
-                      price="0 €"
-                      isPriced={false}
-                      isIncluded={true}
-                      t={t}
-                      isAdmin={false}
-                    />
-
-                    <EditableTile
-                      selected={vonkajsiaFasada === "suchana"}
-                      onClick={() => setVonkajsiaFasada("suchana")}
-                      title={t('facadeStucco')}
-                      subtitle={t('whitePlaster')}
-                      price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`}
-                      isPriced={true}
-                      t={t}
-                      isAdmin={isAdmin}
-                      priceKey="vonkajsiaFasada_suchana"
-                      onPriceChange={handlePriceChange}
-                    />
-                  </div>
+                  {/* Fasáda - skryté pre verejnosť, zobrazené len pre adminov */}
+                  {isAdmin && (
+                    <div className="col-span-1 sm:col-span-2 grid grid-cols-2 gap-1 sm:gap-2 p-1.5 sm:p-3 border-[3px] sm:border-[4px] border-purple-600 rounded-xl bg-purple-100/70 shadow-xl relative">
+                      <div className="absolute top-1 right-1 bg-purple-900 text-white text-[8px] px-2 py-0.5 rounded-full font-bold">
+                        🔒 Skryté pre verejnosť
+                      </div>
+                      <p className="col-span-2 text-[9px] sm:text-[10px] font-bold text-purple-700 -mb-1 flex items-center gap-1">
+                        <span className="w-4 h-4 sm:w-5 sm:h-5 bg-purple-600 text-white rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-extrabold">1</span>
+                        {t('facade')} ({t('selectOne')})
+                      </p>
+                      <EditableTile
+                        selected={vonkajsiaFasada === "standard"}
+                        onClick={() => setVonkajsiaFasada("standard")}
+                        title="Drevo/Plech"
+                        subtitle="Drevo / Plech"
+                        price="0 €"
+                        isPriced={false}
+                        isIncluded={true}
+                        t={t}
+                        isAdmin={false}
+                      />
+                      <EditableTile
+                        selected={vonkajsiaFasada === "suchana"}
+                        onClick={() => setVonkajsiaFasada("suchana")}
+                        title={t('facadeStucco')}
+                        subtitle={t('whitePlaster')}
+                        price={`+ ${CENY.vonkajsiaFasada.suchana.toLocaleString('sk-SK')} €`}
+                        isPriced={true}
+                        t={t}
+                        isAdmin={isAdmin}
+                        priceKey="vonkajsiaFasada_suchana"
+                        onPriceChange={handlePriceChange}
+                      />
+                    </div>
+                  )}
 
                   <EditableTile
                     selected={vnutornePodlahy}
