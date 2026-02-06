@@ -259,20 +259,20 @@ export default function KonfiguratorAFrame({
     zaklady: zaklady === 'bez' ? 'zaklady_bez' : zaklady === 'vruty' ? 'zaklady_skrutky' : `zaklady_${zaklady}`
   }), [montazHolodomu, izolaciaNavysenie, zaklady]);
 
-  const phase1CustomPrices = useMemo(() => ({
-    montaz_ano: CENY.montaz.ano,
+  const phase1CustomPrices = {
+    montaz_ano: 5675,
     montaz_nie: 0,
     izolacia_standardna: 0,
     izolacia_standard: 0,
-    izolacia_zvysena: CENY.izolacia.zvysena,
-    izolacia_premium: CENY.izolacia.premium,
-    izolacia_extra: CENY.izolacia.ultra,
-    izolacia_ultra: CENY.izolacia.ultra,
+    izolacia_zvysena: 1600,
+    izolacia_premium: 3200,
+    izolacia_extra: 6000,
+    izolacia_ultra: 6000,
     zaklady_bez: 0,
-    zaklady_skrutky: CENY.zaklady.skrutky,
-    zaklady_doska: CENY.zaklady.doska,
-    zaklady_pasove: CENY.zaklady.pasove
-  }), [CENY]);
+    zaklady_skrutky: 2100,
+    zaklady_doska: 7000,
+    zaklady_pasove: 6000
+  };
 
   const totalPrice = useMemo(() => {
     let total = BASE_PRICE;
