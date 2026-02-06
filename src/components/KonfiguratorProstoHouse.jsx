@@ -74,6 +74,7 @@ export default function KonfiguratorProstoHouse({
   typStavby = ""
 }) {
   const BASE_PRICE = dom?.zakladna_cena || 0;
+  const isAFrame = dom?.nazov?.includes("A-Frame") || dom?.nazov?.includes("A-frame");
 
   const { t, language } = useLanguage();
 
