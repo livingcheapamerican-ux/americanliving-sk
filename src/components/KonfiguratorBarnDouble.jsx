@@ -1129,23 +1129,22 @@ export default function KonfiguratorBarnDouble({
                         </div>
                       </div>
                     </div>
-                    <div className="text-right p-3 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl sm:rounded-2xl border border-green-500/20 lg:min-w-[280px]">
-                      <p className="text-slate-400 mb-1 sm:mb-2 text-[10px] sm:text-sm">{t('totalWithVAT')}</p>
-                      <p className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
-                        {formatPrice(totalPrice)}
-                      </p>
+                    <div className="p-3 sm:p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-xl sm:rounded-2xl border border-green-500/20 lg:min-w-[280px] flex flex-col gap-4">
+                      <div className="text-right">
+                        <p className="text-slate-400 mb-1 sm:mb-2 text-[10px] sm:text-sm">{t('totalWithVAT')}</p>
+                        <p className="text-3xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">
+                          {formatPrice(totalPrice)}
+                        </p>
+                      </div>
+                      <Button 
+                        size="lg" 
+                        onClick={() => setShowContactModal(true)}
+                        className="w-full bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-sm sm:text-base px-4 sm:px-6 py-4 sm:py-6 shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
+                      >
+                        <Send className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
+                        {t('interestedInConfig')}
+                      </Button>
                     </div>
-                  </div>
-
-                  <div className="mt-6 sm:mt-10 pt-4 sm:pt-8 border-t border-slate-700/50 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-                    <Button 
-                      size="lg" 
-                      onClick={() => setShowContactModal(true)}
-                      className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-600 hover:via-emerald-600 hover:to-teal-600 text-white font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7 w-full sm:w-auto shadow-2xl shadow-green-500/30 transition-all hover:scale-105 hover:shadow-green-500/40"
-                    >
-                      <Send className="mr-2 sm:mr-3 w-4 h-4 sm:w-6 sm:h-6" />
-                      {t('interestedInConfig')}
-                    </Button>
                   </div>
 
                   <KonfiguratorContactModal
