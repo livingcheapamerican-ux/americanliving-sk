@@ -253,6 +253,8 @@ export default function KonfiguratorAFrame({
     bocneOknoVyklopne55: 225
   };
 
+  const BASE_PRICE_CORRECTED = 22700;
+
   // Načítať custom ceny z databázy - stabilná referencia
   const customCeny = useMemo(() => dom?.konfigurator_custom_ceny_prosto_house || {}, [dom]);
   
