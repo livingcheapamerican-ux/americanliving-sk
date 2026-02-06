@@ -537,9 +537,9 @@ export default function KonfiguratorFlat15({
     return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
-  // Automatické nastavenie A0 položiek pri výbere typu stavby "Rodinný dom A0"
+  // Automatické nastavenie A0 položiek pri výbere typu stavby "Rodinný dom"
   useEffect(() => {
-    if (typStavby === "rodinny_a0") {
+    if (typStavby === "rodinny_dom") {
       setIzolaciaNavysenie("premium");
       setTepelneCerpadlo(true);
       setRekuperacia(true);
