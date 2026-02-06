@@ -313,7 +313,7 @@ export default function KonfiguratorWizard({
   };
 
   const renderCurrentStep = () => {
-    // Vždy zobrazíme všetko - aj výber typu stavby aj všetky fázy naraz
+    // Vždy zobrazíme všetko - aj výber typu stavby aj celý konfigurátor
     return (
       <div className="space-y-4">
         {/* Typ stavby - vždy zobrazený */}
@@ -345,14 +345,8 @@ export default function KonfiguratorWizard({
           </Card>
         )}
         
-        {/* Všetky fázy pod sebou - vždy zobrazené */}
-        <div className="space-y-6">
-          {getKonfigurator("hruba")}
-          {getKonfigurator("holodom")}
-          {getKonfigurator("kluc")}
-          {getKonfigurator("docs")}
-          {getKonfigurator("finale")}
-        </div>
+        {/* Celý konfigurátor naraz - bez showOnlyPhase */}
+        {getKonfigurator(null)}
       </div>
     );
   };
