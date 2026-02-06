@@ -1681,12 +1681,12 @@ export default function DetailDomu() {
               />
             )}
 
-            {/* Konfigurátor pre A-Frame - Wizard */}
+            {/* Konfigurátor pre A-Frame - ĽAVÁ STRANA - priamy konfigurátor (nie Wizard) */}
             {isProstoHouse && (dom.nazov?.includes("A-Frame") || dom.nazov?.includes("A-frame")) && (
-              <KonfiguratorWizard
-                key={wizardKey}
+              <KonfiguratorAFrame
                 dom={dom}
-                useAFramePrices={true}
+                onReset={handleKonfiguratorReset}
+                onConfigChange={(config) => setProstoKonfiguracia(config)}
                 predajNehnutelnosti={predajNehnutelnosti}
                 setPredajNehnutelnosti={setPredajNehnutelnosti}
                 hladaniePozemku={hladaniePozemku}
