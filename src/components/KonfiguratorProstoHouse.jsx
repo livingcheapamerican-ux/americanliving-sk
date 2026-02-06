@@ -430,20 +430,30 @@ export default function KonfiguratorProstoHouse({
   const [panelWidth, setPanelWidth] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
 
-  // Poslať konfiguráciu do rodičovského komponentu
+  // Ref na uloženie poslednej odoslanej konfigurácie - predchádza infinite loop
+  const lastConfigRef = useRef(null);
+
+  // Poslať konfiguráciu do rodičovského komponentu - OPTIMALIZOVANÉ
   useEffect(() => {
-    if (onConfigChange) {
-      onConfigChange({
-        celkovaCena: totalPrice,
-        izolaciaNavysenie,
-        tepelneCerpadlo,
-        rekuperacia,
-        projektA0,
-        montazHolodomu,
-        zaklady
-      });
+    const newConfig = {
+      celkovaCena: totalPrice,
+      izolaciaNavysenie,
+      tepelneCerpadlo,
+      rekuperacia,
+      projektA0,
+      montazHolodomu,
+      zaklady
+    };
+
+    // Porovnať s predchádzajúcou konfiguráciou - volať len ak sa zmenila
+    const newConfigString = JSON.stringify(newConfig);
+    if (newConfigString !== lastConfigRef.current) {
+      if (onConfigChange) {
+        onConfigChange(newConfig);
+      }
+      lastConfigRef.current = newConfigString;
     }
-  }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady, onConfigChange]);
+  }, [totalPrice, izolaciaNavysenie, tepelneCerpadlo, rekuperacia, projektA0, montazHolodomu, zaklady]);
 
   useEffect(() => {
     const updateWidth = () => {
