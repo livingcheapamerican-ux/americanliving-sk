@@ -3055,78 +3055,7 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Floating panel pre ostatné Prosto House domy */}
-            {isProstoHouse && !dom.nazov?.includes("Nord") && !dom.nazov?.includes("Fjord") && !dom.nazov?.includes("Flat 1,5") && !dom.nazov?.includes("Flat House 1,5") && !dom.nazov?.includes("Flat Double") && !dom.nazov?.includes("Flat, 72m²") && !dom.nazov?.includes("Flat Small") && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && !dom.nazov?.includes("Barn") && (
-              <div className="lg:sticky lg:top-20 z-10 self-start" style={{ position: 'sticky', top: '80px' }}>
-                <KonfiguratorProstoHouse 
-                  dom={dom}
-                  onConfigChange={(config) => setProstoKonfiguracia(config)}
-                  predajNehnutelnosti={predajNehnutelnosti}
-                  setPredajNehnutelnosti={setPredajNehnutelnosti}
-                  hladaniePozemku={hladaniePozemku}
-                  setHladaniePozemku={setHladaniePozemku}
-                  financneSluzby={financneSluzby}
-                  setFinancneSluzby={setFinancneSluzby}
-                  montazHolodomu={montazHolodomu}
-                  setMontazHolodomu={setMontazHolodomu}
-                  izolaciaNavysenie={izolaciaNavysenie}
-                  setIzolaciaNavysenie={setIzolaciaNavysenie}
-                  zaklady={zaklady}
-                  setZaklady={setZaklady}
-                  predlzenie={predlzenie}
-                  setPredlzenie={setPredlzenie}
-                  vstupneDvere={vstupneDvere}
-                  setVstupneDvere={setVstupneDvere}
-                  elektroinstalacia={elektroinstalacia}
-                  setElektroinstalacia={setElektroinstalacia}
-                  vodaKanalizacia={vodaKanalizacia}
-                  setVodaKanalizacia={setVodaKanalizacia}
-                  sanitaKomplet={sanitaKomplet}
-                  setSanitaKomplet={setSanitaKomplet}
-                  bojler={bojler}
-                  setBojler={setBojler}
-                  tepelneCerpadlo={tepelneCerpadlo}
-                  setTepelneCerpadlo={setTepelneCerpadlo}
-                  rekuperacia={rekuperacia}
-                  setRekuperacia={setRekuperacia}
-                  pripojkaSiete={pripojkaSiete}
-                  setPripojkaSiete={setPripojkaSiete}
-                  stresneOkno={stresneOkno}
-                  setStresneOkno={setStresneOkno}
-                  bocneOknoFixne={bocneOknoFixne}
-                  setBocneOknoFixne={setBocneOknoFixne}
-                  bocneOknoVyklopne90={bocneOknoVyklopne90}
-                  setBocneOknoVyklopne90={setBocneOknoVyklopne90}
-                  bocneOknoVyklopne55={bocneOknoVyklopne55}
-                  setBocneOknoVyklopne55={setBocneOknoVyklopne55}
-                  povrchokaOkien={povrchokaOkien}
-                  setPovrchokaOkien={setPovrchokaOkien}
-                  tonovaneSkla={tonovaneSkla}
-                  setTonovaneSkla={setTonovaneSkla}
-                  vonkajsiaFasada={vonkajsiaFasada}
-                  setVonkajsiaFasada={setVonkajsiaFasada}
-                  interierFinis={interierFinis}
-                  setInterierFinis={setInterierFinis}
-                  vnutornePodlahy={vnutornePodlahy}
-                  setVnutornePodlahy={setVnutornePodlahy}
-                  podlahovVykurovanie={podlahovVykurovanie}
-                  setPodlahovVykurovanie={setPodlahovVykurovanie}
-                  interieroveDvere={interieroveDvere}
-                  setInterieroveDvere={setInterieroveDvere}
-                  pergola={pergola}
-                  setPergola={setPergola}
-                  inziniering={inziniering}
-                  setInziniering={setInziniering}
-                  projektA0={projektA0}
-                  setProjektA0={setProjektA0}
-                  revizna={revizna}
-                  setRevizna={setRevizna}
-                  doprava={doprava}
-                  setDoprava={setDoprava}
-                  showOnlySummary={true}
-                />
-              </div>
-            )}
+
 
             {/* Kalkulátor hypotéky - skryté pre mobilné domy */}
             {dom.kategoria !== "mobilne_domy" && (
