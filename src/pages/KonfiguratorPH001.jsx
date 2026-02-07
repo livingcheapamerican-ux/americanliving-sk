@@ -295,33 +295,28 @@ const AddonCheckbox = ({ label, price, checked, onChange, disabled = false, lock
 );
 
 const SummaryGroup = ({ title, children, icon: Icon }) => (
-  <div className="mb-6 last:mb-0">
-    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
-       {Icon && <Icon className="w-4 h-4 text-gray-500" />}
-       <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">{title}</h4>
+  <div className="mb-5 last:mb-0">
+    <div className="flex items-center gap-2 mb-3">
+       {Icon && <Icon className="w-4 h-4 text-indigo-600" />}
+       <h4 className="text-sm font-bold text-gray-900">{title}</h4>
     </div>
-    <div className="space-y-1">
+    <div className="space-y-2">
       {children}
     </div>
   </div>
 );
 
 const SummaryItem = ({ label, price, active, info }) => {
-  if (!active) {
-    return (
-      <div className="flex justify-between py-1 px-2 text-xs text-gray-300">
-        <span className="line-through decoration-red-300">{label}</span>
-      </div>
-    );
-  }
+  if (!active) return null;
+  
   return (
-    <div className="flex justify-between py-1.5 px-2 text-sm bg-indigo-50/50 rounded-md items-center">
-      <div className="flex flex-col">
-        <span className="font-medium text-gray-800 leading-snug">{label}</span>
-        {info && <span className="text-[10px] text-gray-500 leading-tight">{info}</span>}
+    <div className="flex justify-between py-2.5 px-3 bg-white rounded-lg border border-gray-100 hover:border-indigo-200 transition-all items-center gap-3">
+      <div className="flex flex-col flex-1 min-w-0">
+        <span className="font-semibold text-gray-900 leading-tight text-sm">{label}</span>
+        {info && <span className="text-xs text-gray-500 leading-tight mt-0.5">{info}</span>}
       </div>
-      <span className="font-semibold text-indigo-700 whitespace-nowrap ml-2 text-xs md:text-sm">
-        {price && price > 0 ? `+${price.toLocaleString()} €` : 'V cene'}
+      <span className="font-bold text-indigo-700 whitespace-nowrap text-sm">
+        {price && price > 0 ? `+${price.toLocaleString()} €` : '✓'}
       </span>
     </div>
   );
@@ -826,18 +821,26 @@ export default function KonfiguratorPH001() {
 
   const SummaryContent = () => (
     <>
-      <div className={`p-4 mb-4 rounded-xl border ${isA0Compliant ? 'bg-green-50 border-green-200' : 'bg-blue-50 border-blue-200'}`}>
+      <div className={`p-4 mb-5 rounded-xl border-2 ${isA0Compliant ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-300' : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-300'}`}>
         <div className="flex items-start gap-3">
-            {isA0Compliant ? <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" /> : <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />}
+            {isA0Compliant ? <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0" /> : <Info className="w-6 h-6 text-blue-600 flex-shrink-0" />}
             <div>
-                <h4 className={`font-bold text-sm ${isA0Compliant ? 'text-green-800' : 'text-blue-800'}`}>
+                <h4 className={`font-bold text-base mb-1 ${isA0Compliant ? 'text-green-800' : 'text-blue-800'}`}>
                     {isA0Compliant ? 'Rodinný dom s certifikátom A0' : 'Rekreačná stavba'}
                 </h4>
+                <p className={`text-xs ${isA0Compliant ? 'text-green-700' : 'text-blue-700'}`}>
+                    {isA0Compliant ? 'Dom spĺňa všetky A0 normy' : 'Rekreačné využitie'}
+                </p>
             </div>
         </div>
       </div>
 
-      <SummaryItem label="Základná cena" price={HOUSE_PH001.basePrice} active={true} />
+      <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-xl border-2 border-gray-200 mb-5">
+        <div className="flex justify-between items-center">
+          <span className="text-sm font-semibold text-gray-700">Základná cena</span>
+          <span className="text-xl font-black text-gray-900">{HOUSE_PH001.basePrice.toLocaleString()} €</span>
+        </div>
+      </div>
 
       <SummaryGroup title="Hrubá stavba" icon={Hammer}>
         <SummaryItem label="Montáž hrubej stavby" price={getPrice('mounting', mountingIdx, HOUSE_PH001.options.mounting[mountingIdx].price)} active={mountingIdx > 0} info={mountingIdx > 0 ? HOUSE_PH001.options.mounting[mountingIdx].label : undefined} />
@@ -985,19 +988,20 @@ export default function KonfiguratorPH001() {
               <p className="text-gray-400 text-sm mt-1">{HOUSE_PH001.name}</p>
             </div>
             
-            <div className="p-6 max-h-[calc(100vh-300px)] overflow-y-auto scrollbar-hide">
+            <div className="p-5 max-h-[calc(100vh-320px)] overflow-y-auto">
               <SummaryContent />
             </div>
             
-            <div className="p-6 bg-gray-50 border-t border-gray-200">
-               <div className="flex justify-between items-center mb-4">
-                 <span className="text-gray-600 font-medium">Celkom s DPH</span>
-                 <span key={totalPrice} className="text-3xl font-bold text-indigo-700 animate-pop">{totalPrice.toLocaleString()} €</span>
+            <div className="p-5 bg-gradient-to-br from-indigo-50 to-purple-50 border-t-2 border-indigo-200">
+               <div className="bg-white rounded-xl p-4 mb-4 border-2 border-indigo-300 shadow-lg">
+                 <div className="text-xs text-gray-600 font-medium mb-1">Celková cena s DPH</div>
+                 <div key={totalPrice} className="text-4xl font-black text-indigo-700 animate-pop">{totalPrice.toLocaleString()} €</div>
                </div>
                <button 
                 onClick={() => setModalOpen(true)}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-indigo-200 active:scale-[0.98]"
+                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 rounded-xl transition-all shadow-xl shadow-indigo-300 active:scale-[0.98] flex items-center justify-center gap-2"
                >
+                 <Send className="w-5 h-5" />
                  Odoslať dopyt
                </button>
             </div>
