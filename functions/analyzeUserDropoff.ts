@@ -9,23 +9,17 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
-    // Načítaj všetky UserEvent a UserSession
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
+    // Načítaj VŠETKY UserEvent a UserSession (nie len 30 dní)
     const [allEvents, allSessions] = await Promise.all([
       base44.asServiceRole.entities.UserEvent.list('-created_date', 10000),
-      base44.asServiceRole.entities.UserSession.list('-created_date', 1000)
+      base44.asServiceRole.entities.UserSession.list('-created_date', 2000)
     ]);
 
     // Ensure arrays
-    const eventsArray = Array.isArray(allEvents) ? allEvents : [];
-    const sessionsArray = Array.isArray(allSessions) ? allSessions : [];
+    const recentEvents = Array.isArray(allEvents) ? allEvents : [];
+    const recentSessions = Array.isArray(allSessions) ? allSessions : [];
 
-    const recentEvents = eventsArray.filter(e => e && e.created_date && new Date(e.created_date) >= thirtyDaysAgo);
-    const recentSessions = sessionsArray.filter(s => s && s.created_date && new Date(s.created_date) >= thirtyDaysAgo);
-
-    console.log(`📊 Načítaných ${recentEvents.length} udalostí a ${recentSessions.length} sessions za posledných 30 dní`);
+    console.log(`📊 Načítaných ${recentEvents.length} udalostí a ${recentSessions.length} sessions (VŠETKY dáta)`);
 
     // Analýza UserSession - Detailnejšia analýza správania
     const sessionAnalysis = {
@@ -285,7 +279,7 @@ Deno.serve(async (req) => {
 
     return Response.json({
       success: true,
-      period: '30 dní',
+      period: 'Všetky dáta',
       totalEvents: recentEvents.length,
       totalSessions: recentSessions.length,
       sessionAnalysis,
@@ -298,7 +292,12 @@ Deno.serve(async (req) => {
         deviceStats,
         utmExitRates
       },
-      recommendations: generateRecommendations(funnelData, pagesWithBounceRate, topSessionExitPages, sessionAnalysis)
+      recommendations: generateRecommendations(funnelData, pagesWithBounceRate, topSessionExitPages, sessionAnalysis),
+      debug: {
+        sessionsCount: recentSessions.length,
+        eventsCount: recentEvents.length,
+        sampleSession: recentSessions[0] || null
+      }
     });
 
   } catch (error) {
