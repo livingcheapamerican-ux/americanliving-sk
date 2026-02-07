@@ -1,0 +1,337 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { 
+  TrendingDown, AlertTriangle, ExternalLink, Users, 
+  MousePointer, Smartphone, Monitor, RefreshCw, ArrowDown,
+  AlertCircle, Info, Zap
+} from "lucide-react";
+import { motion } from "framer-motion";
+
+export default function AdminAnalyzaOdchodov() {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const { data: analysisData, isLoading, refetch } = useQuery({
+    queryKey: ['user-dropoff-analysis'],
+    queryFn: async () => {
+      const response = await base44.functions.invoke('analyzeUserDropoff', {});
+      return response.data;
+    },
+    staleTime: 300000, // 5 min
+  });
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-8 flex items-center justify-center">
+        <div className="text-center">
+          <RefreshCw className="w-12 h-12 text-primary animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Analyzujem dáta zo session recordera...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const { analysis, totalEvents, totalSessions, period, recommendations } = analysisData || {};
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              📊 Analýza odchodov zákazníkov
+            </h1>
+            <p className="text-gray-600">
+              Kde návštevníci strácajú záujem a opúšťajú web (za posledných {period})
+            </p>
+          </div>
+          <Button 
+            onClick={handleRefresh} 
+            disabled={isRefreshing}
+            className="bg-primary hover:bg-primary/90"
+          >
+            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+            Obnoviť
+          </Button>
+        </div>
+
+        {/* Summary Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <Users className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Celkový počet sessions</p>
+                  <p className="text-2xl font-bold text-gray-900">{totalSessions?.toLocaleString()}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <MousePointer className="w-6 h-6 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Celkový počet udalostí</p>
+                  <p className="text-2xl font-bold text-gray-900">{totalEvents?.toLocaleString()}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                  <Zap className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Priemerné interakcie/session</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {totalSessions > 0 ? (totalEvents / totalSessions).toFixed(1) : 0}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Recommendations */}
+        {recommendations && recommendations.length > 0 && (
+          <Card className="mb-8 border-orange-200 bg-orange-50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-orange-900">
+                <AlertTriangle className="w-5 h-5" />
+                Kritické nálezy a odporúčania
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {recommendations.map((rec, idx) => (
+                  <Alert 
+                    key={idx}
+                    className={rec.severity === 'high' ? 'border-red-300 bg-red-50' : 'border-yellow-300 bg-yellow-50'}
+                  >
+                    <AlertCircle className="w-4 h-4" />
+                    <AlertDescription>
+                      <div className="font-semibold mb-1">
+                        {rec.area}: {rec.issue}
+                      </div>
+                      <div className="text-sm text-gray-700">
+                        💡 {rec.suggestion}
+                      </div>
+                    </AlertDescription>
+                  </Alert>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Conversion Funnel */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingDown className="w-5 h-5 text-primary" />
+              Conversion Funnel - Kde odchádzajú zákazníci
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {analysis?.funnelData?.map((step, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="relative"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-full">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-semibold text-gray-900">{step.step}</span>
+                        <span className="text-2xl font-bold text-primary">{step.visitors}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-primary to-blue-600 transition-all duration-500"
+                          style={{ 
+                            width: `${analysis.funnelData[0].visitors > 0 ? (step.visitors / analysis.funnelData[0].visitors * 100) : 0}%` 
+                          }}
+                        />
+                      </div>
+                      {parseFloat(step.dropoffRate) > 0 && (
+                        <div className="mt-2 flex items-center gap-2 text-sm">
+                          <ArrowDown className="w-4 h-4 text-red-500" />
+                          <span className="text-red-600 font-semibold">
+                            Dropoff: {step.dropoffRate}%
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Stránky s najvyšším bounce rate */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <ExternalLink className="w-5 h-5 text-red-600" />
+              Top 10 stránok s najvyšším bounce rate
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {analysis?.pagesWithBounceRate?.map((page, idx) => (
+                <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-900 truncate">{page.url}</p>
+                    <p className="text-sm text-gray-600">{page.views} zobrazení</p>
+                  </div>
+                  <div className="text-right">
+                    <p className={`text-2xl font-bold ${parseFloat(page.bounceRate) > 70 ? 'text-red-600' : 'text-orange-600'}`}>
+                      {page.bounceRate}%
+                    </p>
+                    <p className="text-xs text-gray-500">bounce rate</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Top Exit Pages */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingDown className="w-5 h-5 text-orange-600" />
+              Top 10 exit pages - Kde zákazníci najčastejšie odchádzajú
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {analysis?.topExitPages?.map((page, idx) => (
+                <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <span className="font-bold text-gray-400 text-lg">#{idx + 1}</span>
+                    <span className="font-medium text-gray-900 truncate">{page.url}</span>
+                  </div>
+                  <span className="text-xl font-bold text-orange-600">{page.count}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Top Clicks */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <MousePointer className="w-5 h-5 text-green-600" />
+              Top 10 kliknutí - Na čo používatelia klikajú
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {analysis?.topClicks?.map((click, idx) => (
+                <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium text-gray-900 flex-1 truncate">{click.button}</span>
+                  <span className="text-xl font-bold text-green-600">{click.clicks}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Device Stats */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Smartphone className="w-5 h-5 text-blue-600" />
+              Rozdelenie podľa zariadení
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-4">
+              {Object.entries(analysis?.deviceStats || {}).map(([device, count]) => (
+                <div key={device} className="text-center p-4 bg-gray-50 rounded-lg">
+                  {device === 'mobile' ? (
+                    <Smartphone className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+                  ) : device === 'desktop' ? (
+                    <Monitor className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+                  ) : (
+                    <Smartphone className="w-8 h-8 text-gray-600 mx-auto mb-2" />
+                  )}
+                  <p className="text-sm text-gray-600 capitalize">{device}</p>
+                  <p className="text-2xl font-bold text-gray-900">{count}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* UTM Exit Rates */}
+        {analysis?.utmExitRates && analysis.utmExitRates.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ExternalLink className="w-5 h-5 text-purple-600" />
+                Exit rate podľa zdroja návštevnosti (UTM)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {analysis.utmExitRates.map((utm, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-gray-900">{utm.source}</p>
+                      <p className="text-sm text-gray-600">{utm.totalSessions} sessions, {utm.exits} exits</p>
+                    </div>
+                    <div className="text-right">
+                      <p className={`text-xl font-bold ${parseFloat(utm.exitRate) > 70 ? 'text-red-600' : 'text-orange-600'}`}>
+                        {utm.exitRate}%
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Info box */}
+        <Alert className="mt-8 border-blue-200 bg-blue-50">
+          <Info className="w-4 h-4" />
+          <AlertDescription>
+            <p className="font-semibold mb-2">Ako interpretovať dáta:</p>
+            <ul className="text-sm space-y-1 list-disc list-inside">
+              <li><strong>Bounce rate</strong> - % návštevníkov, ktorí opustili stránku bez interakcie</li>
+              <li><strong>Exit rate</strong> - % návštevníkov, ktorí z danej stránky odišli (môže byť normálne)</li>
+              <li><strong>Dropoff rate</strong> - % návštevníkov, ktorí nepokračovali na ďalší krok vo funnel</li>
+            </ul>
+          </AlertDescription>
+        </Alert>
+      </div>
+    </div>
+  );
+}
