@@ -866,7 +866,7 @@ export default function Domov() {
                     <motion.div
                       animate={{ scale: [1, 1.1, 1] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
-                      className="absolute -top-2 -right-2 bg-yellow-400 text-red-900 text-[10px] font-black px-2 py-1 rounded-full rotate-12 shadow-lg"
+                      className="absolute -top-2 -right-2 bg-orange-600 text-white text-[10px] font-black px-2 py-1 rounded-full rotate-12 shadow-lg"
                     >
                       KATALÓG
                     </motion.div>
