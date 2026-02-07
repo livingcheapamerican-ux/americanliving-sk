@@ -314,19 +314,40 @@ export default function Domov() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4"
+              className="space-y-4"
             >
-              <Link to={createPageUrl("Katalog")}>
-                <Button size="lg" className="bg-secondary hover:bg-secondary/90 hover:scale-105 text-white font-bold text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 w-full sm:w-auto shadow-2xl transition-all">
-                  Katalóg domov
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
-              <Link to={createPageUrl("Kontakt")}>
-                <Button size="lg" variant="outline" className="bg-white/15 backdrop-blur-md border-2 border-white text-white hover:bg-white hover:text-primary hover:scale-105 font-bold text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 w-full sm:w-auto shadow-2xl transition-all">
-                  {t('consultation')}
-                </Button>
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                <Link to={createPageUrl("Katalog")} className="w-full sm:w-auto">
+                  <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-red-600 via-primary to-red-600 hover:from-red-700 hover:via-secondary hover:to-red-700 text-white font-black text-xl sm:text-2xl px-10 sm:px-16 py-7 sm:py-9 shadow-[0_0_30px_rgba(239,68,68,0.6)] hover:shadow-[0_0_50px_rgba(220,38,38,0.8)] border-4 border-white animate-pulse transition-all group">
+                    <Home className="mr-3 w-7 h-7 group-hover:rotate-12 transition-transform" />
+                    KATALÓG DOMOV
+                    <ArrowRight className="ml-3 w-7 h-7 group-hover:translate-x-2 transition-transform" />
+                    <motion.div
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="absolute -top-3 -right-3 bg-yellow-400 text-red-900 text-xs font-black px-3 py-1 rounded-full rotate-12 shadow-lg border-2 border-white"
+                    >
+                      POZRI DOMY!
+                    </motion.div>
+                  </Button>
+                </Link>
+                <Link to={createPageUrl("Kontakt")} className="w-full sm:w-auto">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/15 backdrop-blur-md border-3 border-white text-white hover:bg-white hover:text-primary hover:scale-105 font-bold text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 shadow-2xl transition-all">
+                    <Phone className="mr-2" />
+                    {t('consultation')}
+                  </Button>
+                </Link>
+              </div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.2 }}
+                className="text-center"
+              >
+                <p className="text-white text-sm sm:text-lg font-bold bg-black/40 backdrop-blur-sm px-6 py-3 rounded-full inline-block shadow-xl border-2 border-white/30">
+                  👆 Klikni sem pre zobrazenie všetkých modulárnych domov
+                </p>
+              </motion.div>
             </motion.div>
           </div>
         </div>
