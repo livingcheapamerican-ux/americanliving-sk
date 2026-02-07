@@ -604,10 +604,15 @@ export default function KonfiguratorPH001() {
                   {t('shellAssembly')}
                 </h4>
                 <div className="grid grid-cols-1 gap-3">
-                  {HOUSE_PH001.options.mounting.map((opt, i) => (
+                  {HOUSE_PH001.options.mounting.map((opt, i) => {
+                    const mountingLabels = {
+                      0: t('noAssemblySelf'),
+                      1: t('withAssembly')
+                    };
+                    return (
                     <ConfiguratorTile 
                       key={i} 
-                      label={opt.label} 
+                      label={mountingLabels[i] || opt.label} 
                       price={getPrice('mounting', i, opt.price)} 
                       description={opt.description} 
                       selected={mountingIdx === i} 
@@ -615,20 +620,28 @@ export default function KonfiguratorPH001() {
                       isAdmin={isAdmin}
                       onPriceChange={(newPrice) => updatePrice('mounting', i, newPrice)}
                       category="mounting"
-                    />
-                  ))}
-                </div>
-             </div>
+                      />
+                      );
+                      })}
+                      </div>
+                      </div>
              <div className="col-span-full mt-6">
                 <h4 className="font-semibold mb-3 text-sm text-amber-700 uppercase tracking-wide flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-amber-500"></div>
                   {t('foundations')}
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {HOUSE_PH001.options.foundation.map((opt, i) => (
+                  {HOUSE_PH001.options.foundation.map((opt, i) => {
+                    const foundationLabels = {
+                      0: t('noFoundations'),
+                      1: t('pilotsFootings'),
+                      2: t('foundationSlab'),
+                      3: t('stripFoundations')
+                    };
+                    return (
                     <ConfiguratorTile 
                       key={i} 
-                      label={opt.label} 
+                      label={foundationLabels[i] || opt.label} 
                       price={getPrice('foundation', i, opt.price)} 
                       description={opt.description} 
                       selected={foundationIdx === i} 
@@ -636,10 +649,11 @@ export default function KonfiguratorPH001() {
                       isAdmin={isAdmin}
                       onPriceChange={(newPrice) => updatePrice('foundation', i, newPrice)}
                       category="foundation"
-                    />
-                  ))}
-                </div>
-             </div>
+                      />
+                      );
+                      })}
+                      </div>
+                      </div>
           </Section>
         );
       case 2:
@@ -705,10 +719,11 @@ export default function KonfiguratorPH001() {
                       isAdmin={isAdmin}
                       onPriceChange={(newPrice) => updatePrice('doors', i, newPrice)}
                       category="doors"
-                    />
-                  ))}
-                </div>
-              </div>
+                      />
+                      );
+                      })}
+                      </div>
+                      </div>
              <div className="col-span-full mt-6">
                  <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">{t('additionalWindows')}</h4>
                  <div className="grid grid-cols-2 gap-4">
@@ -764,10 +779,11 @@ export default function KonfiguratorPH001() {
                        isAdmin={isAdmin}
                        onPriceChange={(newPrice) => updatePrice('interior', i, newPrice)}
                        category="interior"
-                     />
-                   ))}
-                 </div>
-             </div>
+                       />
+                       );
+                       })}
+                       </div>
+                       </div>
             
             <div className="col-span-full mt-6">
                  <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">{t('interiorDoorsCount')}</h4>
