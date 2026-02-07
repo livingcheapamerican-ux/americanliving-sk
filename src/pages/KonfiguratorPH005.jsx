@@ -19,6 +19,8 @@ import {
   DoorOpen,
   Edit2
 } from 'lucide-react';
+import { useLanguage } from '../components/LanguageContext';
+import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
 
 const HOUSE_PH005 = {
   "id": "barn-double",
@@ -412,16 +414,29 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting }) => {
   );
 };
 
-const STEPS = [
-  { id: 'type', title: 'Typ projektu', icon: Home },
-  { id: 'structure', title: 'Hrubá stavba', icon: Hammer },
-  { id: 'exterior', title: 'Exteriér', icon: Thermometer },
-  { id: 'interior', title: 'Interiér', icon: Layout },
-  { id: 'tech', title: 'Technológie', icon: Zap },
-  { id: 'services', title: 'Služby', icon: FileText },
+const STEPS_CONFIG = [
+  { id: 'type', icon: Home },
+  { id: 'structure', icon: Hammer },
+  { id: 'exterior', icon: Thermometer },
+  { id: 'interior', icon: Layout },
+  { id: 'tech', icon: Zap },
+  { id: 'services', icon: FileText },
 ];
 
 export default function KonfiguratorPH005() {
+  const { language } = useLanguage();
+  const t = (key) => prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key] || key;
+  
+  const STEPS = STEPS_CONFIG.map(step => ({
+    ...step,
+    title: step.id === 'type' ? t('stepProjectType')
+      : step.id === 'structure' ? t('roughConstruction')
+      : step.id === 'exterior' ? 'Exteriér'
+      : step.id === 'interior' ? t('interior')
+      : step.id === 'tech' ? t('technologies')
+      : t('services')
+  }));
+
   const [activeStep, setActiveStep] = useState(0);
   const [typStavby, setTypStavby] = useState('rekreacna');
   const [isAdmin, setIsAdmin] = useState(false);
