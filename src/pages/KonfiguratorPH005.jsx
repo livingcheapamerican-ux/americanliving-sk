@@ -359,7 +359,7 @@ const SummaryItem = ({ label, price, active, info }) => {
   );
 };
 
-const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting }) => {
+const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
   if (!isOpen) return null;
   
   return (
@@ -1150,7 +1150,7 @@ export default function KonfiguratorPH005() {
         </div>
       )}
       
-      <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+      <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSubmit={handleSubmit} isSubmitting={isSubmitting} t={t} />
     </div>
   );
 }
