@@ -300,30 +300,40 @@ export default function AdminAnalyzaOdchodov() {
         </Card>
 
         {/* Stránky s najvyšším bounce rate */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ExternalLink className="w-5 h-5 text-red-600" />
-              Top 10 stránok s najvyšším bounce rate
+        <Card className="mb-8 border-orange-200">
+          <CardHeader className="bg-orange-50">
+            <CardTitle className="flex items-center gap-2 text-orange-900">
+              <TrendingDown className="w-5 h-5 text-orange-600" />
+              🟠 Stránky s najvyšším bounce rate
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {analysis?.pagesWithBounceRate?.map((page, idx) => (
-                <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900 truncate">{page.url}</p>
-                    <p className="text-sm text-gray-600">{page.views} zobrazení</p>
+          <CardContent className="pt-6">
+            {analysis?.pagesWithBounceRate && analysis.pagesWithBounceRate.length > 0 ? (
+              <div className="space-y-3">
+                {analysis.pagesWithBounceRate.map((page, idx) => (
+                  <div key={idx} className={`flex items-center justify-between p-4 rounded-lg ${
+                    idx === 0 ? 'bg-orange-100 border-2 border-orange-300' : 'bg-gray-50'
+                  }`}>
+                    <div className="flex-1">
+                      <p className="font-bold text-gray-900">{page.url}</p>
+                      <div className="flex gap-4 mt-1 text-xs text-gray-600">
+                        <span>{page.entries} vstupov</span>
+                        <span>Avg. čas: {page.avgTimeSpent}s</span>
+                        <span>Avg. scroll: {page.avgScrollDepth}%</span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className={`text-3xl font-black ${parseFloat(page.bounceRate) > 70 ? 'text-red-600' : 'text-orange-600'}`}>
+                        {page.bounceRate}%
+                      </p>
+                      <p className="text-xs text-gray-500">bounce</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className={`text-2xl font-bold ${parseFloat(page.bounceRate) > 70 ? 'text-red-600' : 'text-orange-600'}`}>
-                      {page.bounceRate}%
-                    </p>
-                    <p className="text-xs text-gray-500">bounce rate</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500 text-center py-8">Žiadne dáta k dispozícii</p>
+            )}
           </CardContent>
         </Card>
 
@@ -450,27 +460,32 @@ export default function AdminAnalyzaOdchodov() {
           </CardContent>
         </Card>
 
-        {/* UTM Exit Rates */}
+        {/* UTM / Zdroje návštevnosti */}
         {analysis?.utmExitRates && analysis.utmExitRates.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+          <Card className="border-purple-200">
+            <CardHeader className="bg-purple-50">
+              <CardTitle className="flex items-center gap-2 text-purple-900">
                 <ExternalLink className="w-5 h-5 text-purple-600" />
-                Exit rate podľa zdroja návštevnosti (UTM)
+                🟣 Zdroje návštevnosti - Odkiaľ prichádzajú zákazníci
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
               <div className="space-y-3">
                 {analysis.utmExitRates.map((utm, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div>
-                      <p className="font-medium text-gray-900">{utm.source}</p>
-                      <p className="text-sm text-gray-600">{utm.totalSessions} sessions, {utm.exits} exits</p>
+                  <div key={idx} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div className="flex-1">
+                      <p className="font-bold text-gray-900">{utm.source}</p>
+                      <div className="flex gap-4 mt-1 text-xs text-gray-600">
+                        <span>{utm.sessions} sessions</span>
+                        <span>Avg. čas: {utm.avgDuration}s</span>
+                        <span>Avg. stránky: {utm.avgPages}</span>
+                      </div>
                     </div>
                     <div className="text-right">
-                      <p className={`text-xl font-bold ${parseFloat(utm.exitRate) > 70 ? 'text-red-600' : 'text-orange-600'}`}>
-                        {utm.exitRate}%
+                      <p className={`text-2xl font-bold ${parseFloat(utm.bounceRate) > 70 ? 'text-red-600' : parseFloat(utm.bounceRate) > 50 ? 'text-orange-600' : 'text-green-600'}`}>
+                        {utm.bounceRate}%
                       </p>
+                      <p className="text-xs text-gray-500">bounce rate</p>
                     </div>
                   </div>
                 ))}

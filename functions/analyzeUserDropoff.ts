@@ -137,58 +137,64 @@ Deno.serve(async (req) => {
         : 0;
     });
 
-    // 1. Analýza bounce rate podľa stránok
-    const pageViews = recentEvents.filter(e => e.event_type === 'page_view');
-    const pageStats = {};
+    // 1. HLAVNÁ ANALÝZA zo UserSession (najpresnejšie dáta)
+    const pageVisitStats = {};
+    
+    recentSessions.forEach(session => {
+      if (!session.pages_visited || session.pages_visited.length === 0) return;
 
-    pageViews.forEach(view => {
-      const url = view.page_url;
-      if (!pageStats[url]) {
-        pageStats[url] = {
-          url,
-          totalViews: 0,
-          bounces: 0,
-          sessions: new Set(),
-          avgTimeOnPage: []
-        };
-      }
-      pageStats[url].totalViews++;
-      pageStats[url].sessions.add(view.session_id);
-    });
-
-    // Vypočítaj bounces - session, ktoré mali len 1 page view
-    const sessionPageCounts = {};
-    pageViews.forEach(view => {
-      if (!sessionPageCounts[view.session_id]) {
-        sessionPageCounts[view.session_id] = [];
-      }
-      sessionPageCounts[view.session_id].push(view.page_url);
-    });
-
-    Object.entries(sessionPageCounts).forEach(([sessionId, pages]) => {
-      if (pages.length === 1) {
-        const url = pages[0];
-        if (pageStats[url]) {
-          pageStats[url].bounces++;
+      session.pages_visited.forEach((page, idx) => {
+        const url = cleanUrl(page.page_url);
+        
+        if (!pageVisitStats[url]) {
+          pageVisitStats[url] = {
+            url,
+            totalVisits: 0,
+            totalTimeSpent: 0,
+            totalScrollDepth: 0,
+            bounces: 0,
+            exits: 0,
+            entries: 0,
+            sessions: []
+          };
         }
-      }
+
+        pageVisitStats[url].totalVisits++;
+        pageVisitStats[url].totalTimeSpent += (page.time_spent_seconds || 0);
+        pageVisitStats[url].totalScrollDepth += (page.scroll_depth_percentage || 0);
+        pageVisitStats[url].sessions.push(session.session_id);
+
+        // Entry page
+        if (idx === 0) {
+          pageVisitStats[url].entries++;
+          if (session.pages_visited.length === 1) {
+            pageVisitStats[url].bounces++;
+          }
+        }
+
+        // Exit page
+        if (idx === session.pages_visited.length - 1) {
+          pageVisitStats[url].exits++;
+        }
+      });
     });
 
-    // 2. Analýza conversion funnel
+    // 2. CONVERSION FUNNEL zo sessions
     const funnelSteps = [
-      { name: 'Homepage', url: '/', nextStep: 'Katalog' },
-      { name: 'Katalog', url: '/katalog', nextStep: 'Detail domu' },
-      { name: 'Detail domu', url: '/detail-domu', nextStep: 'Konfigurátor' },
-      { name: 'Konfigurátor', url: '/konfigurator', nextStep: 'Kontakt' },
-      { name: 'Kontakt', url: '/kontakt', nextStep: 'Odoslanie formulára' }
+      { name: 'Domov (Homepage)', url: '/domov' },
+      { name: 'Katalóg', url: '/katalog' },
+      { name: 'Detail domu', url: '/detail-domu' },
+      { name: 'Konfigurátor', url: '/konfigurator' },
+      { name: 'Kontakt', url: '/kontakt' }
     ];
 
     const funnelData = funnelSteps.map(step => {
-      const stepViews = pageViews.filter(v => v.page_url.includes(step.url));
-      const uniqueSessions = new Set(stepViews.map(v => v.session_id));
+      const sessionsAtStep = recentSessions.filter(s => 
+        s.pages_visited && s.pages_visited.some(p => cleanUrl(p.page_url) === step.url)
+      );
       return {
         step: step.name,
-        visitors: uniqueSessions.size,
+        visitors: sessionsAtStep.length,
         dropoffRate: 0
       };
     });
@@ -202,91 +208,76 @@ Deno.serve(async (req) => {
       }
     }
 
-    // 3. Najčastejšie posledné stránky pred odchodom
-    const lastPagesBySession = {};
-    pageViews.forEach(view => {
-      if (!lastPagesBySession[view.session_id] || 
-          new Date(view.created_date) > new Date(lastPagesBySession[view.session_id].created_date)) {
-        lastPagesBySession[view.session_id] = view;
-      }
-    });
-
-    const exitPages = {};
-    Object.values(lastPagesBySession).forEach(lastPage => {
-      const url = lastPage.page_url;
-      exitPages[url] = (exitPages[url] || 0) + 1;
-    });
-
-    const topExitPages = Object.entries(exitPages)
-      .map(([url, count]) => ({ url, count }))
-      .sort((a, b) => b.count - a.count)
+    // 3. STRÁNKY S NAJVYŠŠÍM BOUNCE RATE (zo stats)
+    const pagesWithBounceRate = Object.values(pageVisitStats)
+      .filter(p => p.entries >= 3) // Aspoň 3 vstupy
+      .map(p => ({
+        url: p.url,
+        entries: p.entries,
+        bounces: p.bounces,
+        bounceRate: p.entries > 0 ? ((p.bounces / p.entries) * 100).toFixed(1) : 0,
+        avgTimeSpent: p.totalVisits > 0 ? (p.totalTimeSpent / p.totalVisits).toFixed(1) : 0,
+        avgScrollDepth: p.totalVisits > 0 ? (p.totalScrollDepth / p.totalVisits).toFixed(1) : 0
+      }))
+      .sort((a, b) => parseFloat(b.bounceRate) - parseFloat(a.bounceRate))
       .slice(0, 10);
 
-    // 4. Analýza interakcií (button clicks)
-    const buttonClicks = recentEvents.filter(e => e.event_type === 'button_click');
+    // 4. NAJČASTEJŠIE KLIKNUTIA zo sessions
     const clickStats = {};
     
-    buttonClicks.forEach(click => {
-      const key = `${click.page_url} - ${click.event_data?.button_text || 'Unknown'}`;
-      clickStats[key] = (clickStats[key] || 0) + 1;
+    recentSessions.forEach(session => {
+      if (!session.clicks) return;
+      session.clicks.forEach(click => {
+        const key = `${click.text || click.element}`;
+        const page = cleanUrl(click.page_url);
+        const fullKey = `${page} → ${key}`;
+        clickStats[fullKey] = (clickStats[fullKey] || 0) + 1;
+      });
     });
 
     const topClicks = Object.entries(clickStats)
       .map(([key, count]) => ({ button: key, clicks: count }))
       .sort((a, b) => b.clicks - a.clicks)
-      .slice(0, 10);
+      .slice(0, 15);
 
-    // 5. Stránky s najvyšším bounce rate
-    const pagesWithBounceRate = Object.values(pageStats)
-      .filter(p => p.totalViews >= 5) // Len stránky s aspoň 5 zobrazeniami
-      .map(p => ({
-        url: p.url,
-        views: p.totalViews,
-        bounces: p.bounces,
-        bounceRate: ((p.bounces / p.totalViews) * 100).toFixed(1)
-      }))
-      .sort((a, b) => parseFloat(b.bounceRate) - parseFloat(a.bounceRate))
-      .slice(0, 10);
+    // 6. Analýza zariadení zo sessions
+    const deviceStats = {
+      mobile: sessionAnalysis.mobileSessions,
+      desktop: sessionAnalysis.desktopSessions
+    };
 
-    // 6. Analýza zariadení
-    const deviceStats = {};
-    recentEvents.forEach(e => {
-      const device = e.device_type || 'unknown';
-      deviceStats[device] = (deviceStats[device] || 0) + 1;
-    });
-
-    // 7. UTM source analýza - odkiaľ prichádzajú používatelia, ktorí odchádzajú
+    // 7. UTM source analýza zo sessions
     const utmAnalysis = {};
-    Object.values(lastPagesBySession).forEach(lastPage => {
-      const source = lastPage.utm_source || 'direct';
+    recentSessions.forEach(session => {
+      const source = session.utm_params?.utm_source || session.referrer_domain || 'direct';
       if (!utmAnalysis[source]) {
-        utmAnalysis[source] = { exits: 0, totalSessions: 0 };
+        utmAnalysis[source] = { 
+          sessions: 0, 
+          avgDuration: 0,
+          avgPages: 0,
+          bounces: 0,
+          totalDuration: 0,
+          totalPages: 0
+        };
       }
-      utmAnalysis[source].exits++;
-    });
-
-    // Celkový počet sessions z každého zdroja
-    const allSessions = new Set();
-    pageViews.forEach(view => {
-      const source = view.utm_source || 'direct';
-      const key = `${view.session_id}_${source}`;
-      if (!allSessions.has(key)) {
-        allSessions.add(key);
-        if (!utmAnalysis[source]) {
-          utmAnalysis[source] = { exits: 0, totalSessions: 0 };
-        }
-        utmAnalysis[source].totalSessions++;
+      utmAnalysis[source].sessions++;
+      utmAnalysis[source].totalDuration += (session.duration_seconds || 0);
+      utmAnalysis[source].totalPages += (session.pages_visited?.length || 0);
+      if (session.pages_visited?.length === 1) {
+        utmAnalysis[source].bounces++;
       }
     });
 
     const utmExitRates = Object.entries(utmAnalysis)
       .map(([source, data]) => ({
         source,
-        exitRate: data.totalSessions > 0 ? ((data.exits / data.totalSessions) * 100).toFixed(1) : 0,
-        totalSessions: data.totalSessions,
-        exits: data.exits
+        sessions: data.sessions,
+        bounceRate: data.sessions > 0 ? ((data.bounces / data.sessions) * 100).toFixed(1) : 0,
+        avgDuration: data.sessions > 0 ? (data.totalDuration / data.sessions).toFixed(1) : 0,
+        avgPages: data.sessions > 0 ? (data.totalPages / data.sessions).toFixed(1) : 0
       }))
-      .sort((a, b) => parseFloat(b.exitRate) - parseFloat(a.exitRate));
+      .sort((a, b) => b.sessions - a.sessions)
+      .slice(0, 10);
 
     return Response.json({
       success: true,
