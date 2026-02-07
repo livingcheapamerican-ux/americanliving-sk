@@ -640,63 +640,71 @@ export default function Katalog() {
 
                 {/* Výrobca */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+                  <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
                     <Home className="w-3 h-3 text-primary" />
                     {t('manufacturer')}
                   </label>
-                  <div className="space-y-1">
+                  <div className="grid grid-cols-1 gap-1.5">
                     {vyrobcovia.map((v) => (
-                      <div key={v} className="flex items-center gap-1.5">
-                        <Checkbox
-                          id={`vyrobca-${v}`}
-                          checked={vyrobcaFilter.includes(v)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setVyrobcaFilter([...vyrobcaFilter, v]);
-                            } else {
-                              setVyrobcaFilter(vyrobcaFilter.filter((x) => x !== v));
-                            }
-                          }}
-                          className="data-[state=checked]:bg-black data-[state=checked]:border-black h-3.5 w-3.5"
-                        />
-                        <label htmlFor={`vyrobca-${v}`} className="text-xs cursor-pointer">{v}</label>
-                      </div>
+                      <button
+                        key={v}
+                        onClick={() => {
+                          if (vyrobcaFilter.includes(v)) {
+                            setVyrobcaFilter(vyrobcaFilter.filter((x) => x !== v));
+                          } else {
+                            setVyrobcaFilter([...vyrobcaFilter, v]);
+                          }
+                        }}
+                        className={`p-2 rounded-lg border-2 transition-all text-left ${
+                          vyrobcaFilter.includes(v)
+                            ? 'bg-blue-100 border-primary text-primary font-bold'
+                            : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <Home className={`w-3.5 h-3.5 ${vyrobcaFilter.includes(v) ? 'text-primary' : 'text-gray-400'}`} />
+                          <span className="text-xs">{v}</span>
+                        </div>
+                      </button>
                     ))}
                   </div>
                 </div>
 
                 {/* Typ domu */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+                  <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
                     <LayoutGrid className="w-3 h-3 text-amber-500" />
                     {t('type')}
                   </label>
-                  <div className="space-y-1">
+                  <div className="grid grid-cols-1 gap-1.5">
                     {[
-                      { value: "modularny", label: t('modularType'), icon: LayoutGrid },
-                      { value: "montovany", label: t('prefabType'), icon: Hammer },
-                      { value: "mobilny", label: t('mobileType'), icon: Caravan }
+                      { value: "modularny", label: t('modularType'), icon: LayoutGrid, color: "amber" },
+                      { value: "montovany", label: t('prefabType'), icon: Hammer, color: "orange" },
+                      { value: "mobilny", label: t('mobileType'), icon: Caravan, color: "teal" }
                     ].map((typ) => {
                       const Icon = typ.icon;
+                      const isSelected = typFilter.includes(typ.value);
                       return (
-                        <div key={typ.value} className="flex items-center gap-1.5">
-                          <Checkbox
-                            id={`typ-${typ.value}`}
-                            checked={typFilter.includes(typ.value)}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                setTypFilter([...typFilter, typ.value]);
-                              } else {
-                                setTypFilter(typFilter.filter((x) => x !== typ.value));
-                              }
-                            }}
-                            className="data-[state=checked]:bg-black data-[state=checked]:border-black h-3.5 w-3.5"
-                          />
-                          <label htmlFor={`typ-${typ.value}`} className="text-xs cursor-pointer flex items-center gap-1">
-                            <Icon className="w-3 h-3 text-gray-500" />
-                            {typ.label}
-                          </label>
-                        </div>
+                        <button
+                          key={typ.value}
+                          onClick={() => {
+                            if (isSelected) {
+                              setTypFilter(typFilter.filter((x) => x !== typ.value));
+                            } else {
+                              setTypFilter([...typFilter, typ.value]);
+                            }
+                          }}
+                          className={`p-2 rounded-lg border-2 transition-all text-left ${
+                            isSelected
+                              ? `bg-${typ.color}-100 border-${typ.color}-500 font-bold`
+                              : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <Icon className={`w-3.5 h-3.5 ${isSelected ? `text-${typ.color}-600` : 'text-gray-400'}`} />
+                            <span className="text-xs">{typ.label}</span>
+                          </div>
+                        </button>
                       );
                     })}
                   </div>
@@ -736,57 +744,73 @@ export default function Katalog() {
 
                 {/* Počet izieb */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+                  <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
                     <Grid3x3 className="w-3 h-3 text-blue-500" />
                     {t('roomsFilter')}
                   </label>
-                  <div className="flex flex-wrap gap-1.5">
-                    {Array.isArray(domy) && [...new Set(domy.filter(d => d.pocet_izieb).map(d => d.pocet_izieb))].sort((a, b) => a - b).map((izby) => (
-                      <div key={izby} className="flex items-center gap-0.5">
-                        <Checkbox
-                          id={`izby-${izby}`}
-                          checked={pocetIziebFilter.includes(izby)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setPocetIziebFilter([...pocetIziebFilter, izby]);
-                            } else {
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {Array.isArray(domy) && [...new Set(domy.filter(d => d.pocet_izieb).map(d => d.pocet_izieb))].sort((a, b) => a - b).map((izby) => {
+                      const isSelected = pocetIziebFilter.includes(izby);
+                      return (
+                        <button
+                          key={izby}
+                          onClick={() => {
+                            if (isSelected) {
                               setPocetIziebFilter(pocetIziebFilter.filter((x) => x !== izby));
+                            } else {
+                              setPocetIziebFilter([...pocetIziebFilter, izby]);
                             }
                           }}
-                          className="data-[state=checked]:bg-black data-[state=checked]:border-black h-3.5 w-3.5"
-                        />
-                        <label htmlFor={`izby-${izby}`} className="text-xs cursor-pointer">{izby}</label>
-                      </div>
-                    ))}
+                          className={`p-2 rounded-lg border-2 transition-all ${
+                            isSelected
+                              ? 'bg-blue-100 border-blue-500 text-blue-700 font-bold'
+                              : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          <div className="flex flex-col items-center gap-0.5">
+                            <Grid3x3 className={`w-3.5 h-3.5 ${isSelected ? 'text-blue-600' : 'text-gray-400'}`} />
+                            <span className="text-xs font-bold">{izby}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
                 {/* Počet modulov - zobrazí sa len pre modulárne domy */}
                 {typFilter.includes("modularny") && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-2">
-                    <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                    <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
                       <Boxes className="w-3 h-3 text-red-600" />
                       Počet modulov
                     </label>
                     <p className="text-[10px] text-gray-600 mb-2">Tento výber upravuje počet modulov z ktorých sa má modulárny dom skladať</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {Array.isArray(domy) && [...new Set(domy.filter(d => d.pocet_modulov && d.vyrobca === "Ticab house").map(d => d.pocet_modulov))].sort((a, b) => a - b).map((moduly) => (
-                        <div key={moduly} className="flex items-center gap-0.5">
-                          <Checkbox
-                            id={`moduly-${moduly}`}
-                            checked={pocetModulovFilter.includes(moduly)}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                setPocetModulovFilter([...pocetModulovFilter, moduly]);
-                              } else {
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {Array.isArray(domy) && [...new Set(domy.filter(d => d.pocet_modulov && d.vyrobca === "Ticab house").map(d => d.pocet_modulov))].sort((a, b) => a - b).map((moduly) => {
+                        const isSelected = pocetModulovFilter.includes(moduly);
+                        return (
+                          <button
+                            key={moduly}
+                            onClick={() => {
+                              if (isSelected) {
                                 setPocetModulovFilter(pocetModulovFilter.filter((x) => x !== moduly));
+                              } else {
+                                setPocetModulovFilter([...pocetModulovFilter, moduly]);
                               }
                             }}
-                            className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600 h-3.5 w-3.5"
-                          />
-                          <label htmlFor={`moduly-${moduly}`} className="text-xs cursor-pointer">{moduly}</label>
-                        </div>
-                      ))}
+                            className={`p-2 rounded-lg border-2 transition-all ${
+                              isSelected
+                                ? 'bg-red-100 border-red-500 text-red-700 font-bold'
+                                : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+                            }`}
+                          >
+                            <div className="flex flex-col items-center gap-0.5">
+                              <Boxes className={`w-3.5 h-3.5 ${isSelected ? 'text-red-600' : 'text-gray-400'}`} />
+                              <span className="text-xs font-bold">{moduly}</span>
+                            </div>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
