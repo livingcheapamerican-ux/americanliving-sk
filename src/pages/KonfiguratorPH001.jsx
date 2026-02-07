@@ -939,8 +939,8 @@ export default function KonfiguratorPH001() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div>
           <div className="hidden md:flex items-center justify-between mb-8 px-4 overflow-x-auto pb-4">
              {STEPS.map((step, i) => (
                <button 
@@ -979,31 +979,31 @@ export default function KonfiguratorPH001() {
               {activeStep === STEPS.length - 1 ? 'Dokončiť a odoslať' : 'Pokračovať'} <ChevronRight className="w-5 h-5" />
             </button>
           </div>
-        </div>
 
-        <div className="hidden lg:block lg:col-span-4">
-          <div className="bg-white rounded-3xl shadow-xl border border-gray-200 sticky top-24 overflow-hidden">
-            <div className="bg-gray-900 text-white p-6">
-              <h3 className="font-bold text-xl">Sumár konfigurácie</h3>
-              <p className="text-gray-400 text-sm mt-1">{HOUSE_PH001.name}</p>
-            </div>
-            
-            <div className="p-5 max-h-[calc(100vh-320px)] overflow-y-auto">
-              <SummaryContent />
-            </div>
-            
-            <div className="p-5 bg-gradient-to-br from-indigo-50 to-purple-50 border-t-2 border-indigo-200">
-               <div className="bg-white rounded-xl p-4 mb-4 border-2 border-indigo-300 shadow-lg">
-                 <div className="text-xs text-gray-600 font-medium mb-1">Celková cena s DPH</div>
-                 <div key={totalPrice} className="text-4xl font-black text-indigo-700 animate-pop">{totalPrice.toLocaleString()} €</div>
-               </div>
-               <button 
-                onClick={() => setModalOpen(true)}
-                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 rounded-xl transition-all shadow-xl shadow-indigo-300 active:scale-[0.98] flex items-center justify-center gap-2"
-               >
-                 <Send className="w-5 h-5" />
-                 Odoslať dopyt
-               </button>
+          <div className="mt-8">
+            <div className="bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
+              <div className="bg-gray-900 text-white p-6">
+                <h3 className="font-bold text-xl">Sumár konfigurácie</h3>
+                <p className="text-gray-400 text-sm mt-1">{HOUSE_PH001.name}</p>
+              </div>
+              
+              <div className="p-5">
+                <SummaryContent />
+              </div>
+              
+              <div className="p-5 bg-gradient-to-br from-indigo-50 to-purple-50 border-t-2 border-indigo-200">
+                 <div className="bg-white rounded-xl p-4 mb-4 border-2 border-indigo-300 shadow-lg">
+                   <div className="text-xs text-gray-600 font-medium mb-1">Celková cena s DPH</div>
+                   <div key={totalPrice} className="text-4xl font-black text-indigo-700 animate-pop">{totalPrice.toLocaleString()} €</div>
+                 </div>
+                 <button 
+                  onClick={() => setModalOpen(true)}
+                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 rounded-xl transition-all shadow-xl shadow-indigo-300 active:scale-[0.98] flex items-center justify-center gap-2"
+                 >
+                   <Send className="w-5 h-5" />
+                   Odoslať dopyt
+                 </button>
+              </div>
             </div>
           </div>
         </div>
