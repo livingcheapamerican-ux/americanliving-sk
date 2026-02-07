@@ -610,67 +610,78 @@ export default function KonfiguratorPH005() {
           <Section title={t('roughConstruction')} icon={Hammer}>
              <div className="col-span-full">
                 <h4 className="font-semibold mb-3 text-sm text-orange-700 uppercase tracking-wide flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                  Montáž hrubej stavby
+                 <div className="w-3 h-3 rounded-full bg-orange-500"></div>
+                 {t('shellAssembly')}
                 </h4>
                 <div className="grid grid-cols-1 gap-3">
-                  {HOUSE_PH005.options.mounting.map((opt, i) => (
-                    <ConfiguratorTile 
-                      key={i} 
-                      label={opt.label} 
-                      price={getPrice('mounting', i, opt.price)} 
-                      description={opt.description} 
-                      selected={mountingIdx === i} 
-                      onClick={() => setMountingIdx(i)}
-                      isAdmin={isAdmin}
-                      onPriceChange={(newPrice) => updatePrice('mounting', i, newPrice)}
-                      category="mounting"
-                      />
-                      ))}
-                      </div>
-                      </div>
-                      <div className="col-span-full mt-6">
-                      <h4 className="font-semibold mb-3 text-sm text-teal-700 uppercase tracking-wide flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-teal-500"></div>
-                      Predĺženie domu
-                      </h4>
+                 {HOUSE_PH005.options.mounting.map((opt, i) => {
+                   const mountingLabels = { 0: t('noAssemblySelf'), 1: t('withAssembly') };
+                   const mountingDescriptions = { 0: t('selfAssemblyDesc'), 1: t('proAssemblyDesc') };
+                   return (
+                   <ConfiguratorTile 
+                     key={i} 
+                     label={mountingLabels[i] || opt.label} 
+                     price={getPrice('mounting', i, opt.price)} 
+                     description={mountingDescriptions[i] || opt.description} 
+                     selected={mountingIdx === i} 
+                     onClick={() => setMountingIdx(i)}
+                     isAdmin={isAdmin}
+                     onPriceChange={(newPrice) => updatePrice('mounting', i, newPrice)}
+                     category="mounting"
+                     />
+                     );
+                     })}
+                     </div>
+                     </div>
+                     <div className="col-span-full mt-6">
+                     <h4 className="font-semibold mb-3 text-sm text-teal-700 uppercase tracking-wide flex items-center gap-2">
+                     <div className="w-3 h-3 rounded-full bg-teal-500"></div>
+                     {t('houseExtension')}
+                     </h4>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {HOUSE_PH005.options.extension.map((opt, i) => (
-                    <ConfiguratorTile 
-                      key={i} 
-                      label={opt.label} 
-                      price={getPrice('extension', i, opt.price)} 
-                      description={opt.description} 
-                      selected={extensionIdx === i} 
-                      onClick={() => setExtensionIdx(i)}
-                      isAdmin={isAdmin}
-                      onPriceChange={(newPrice) => updatePrice('extension', i, newPrice)}
-                      category="extension"
-                      />
-                      ))}
-                      </div>
-                      </div>
-                      <div className="col-span-full mt-6">
-                      <h4 className="font-semibold mb-3 text-sm text-amber-700 uppercase tracking-wide flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-amber-500"></div>
-                      Základy
-                      </h4>
+                 {HOUSE_PH005.options.extension.map((opt, i) => {
+                   const extensionLabels = { 0: t('noExtension'), 1: '+1,2 m', 2: '+2,4 m', 3: '+3,6 m', 4: '+4,8 m' };
+                   return (
+                   <ConfiguratorTile 
+                     key={i} 
+                     label={extensionLabels[i] || opt.label} 
+                     price={getPrice('extension', i, opt.price)} 
+                     description={opt.description} 
+                     selected={extensionIdx === i} 
+                     onClick={() => setExtensionIdx(i)}
+                     isAdmin={isAdmin}
+                     onPriceChange={(newPrice) => updatePrice('extension', i, newPrice)}
+                     category="extension"
+                     />
+                     );
+                     })}
+                     </div>
+                     </div>
+                     <div className="col-span-full mt-6">
+                     <h4 className="font-semibold mb-3 text-sm text-amber-700 uppercase tracking-wide flex items-center gap-2">
+                     <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                     {t('foundations')}
+                     </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {HOUSE_PH005.options.foundation.map((opt, i) => (
-                    <ConfiguratorTile 
-                      key={i} 
-                      label={opt.label} 
-                      price={getPrice('foundation', i, opt.price)} 
-                      description={opt.description} 
-                      selected={foundationIdx === i} 
-                      onClick={() => setFoundationIdx(i)}
-                      isAdmin={isAdmin}
-                      onPriceChange={(newPrice) => updatePrice('foundation', i, newPrice)}
-                      category="foundation"
-                      />
-                      ))}
-                      </div>
-                      </div>
+                 {HOUSE_PH005.options.foundation.map((opt, i) => {
+                   const foundationLabels = { 0: t('noFoundations'), 1: t('pilotsFootings'), 2: t('foundationSlab'), 3: t('stripFoundations') };
+                   const foundationDescriptions = { 0: t('noFoundationsDesc'), 1: t('pilotsFootingsDesc'), 2: t('foundationSlabDesc'), 3: t('stripFoundationsDesc') };
+                   return (
+                   <ConfiguratorTile 
+                     key={i} 
+                     label={foundationLabels[i] || opt.label} 
+                     price={getPrice('foundation', i, opt.price)} 
+                     description={foundationDescriptions[i] || opt.description} 
+                     selected={foundationIdx === i} 
+                     onClick={() => setFoundationIdx(i)}
+                     isAdmin={isAdmin}
+                     onPriceChange={(newPrice) => updatePrice('foundation', i, newPrice)}
+                     category="foundation"
+                     />
+                     );
+                     })}
+                     </div>
+                     </div>
                       </Section>
                       );
                       case 2:
@@ -679,15 +690,18 @@ export default function KonfiguratorPH005() {
                       <div className="col-span-full">
                       <h4 className="font-semibold mb-3 text-sm text-blue-700 uppercase tracking-wide flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                      Typ izolácie
+                      {t('insulationType')}
                       </h4>
-                <div className="grid grid-cols-1 gap-3">
-                  {HOUSE_PH005.options.insulation.map((opt, i) => (
-                    <ConfiguratorTile 
+                      <div className="grid grid-cols-1 gap-3">
+                      {HOUSE_PH005.options.insulation.map((opt, i) => {
+                      const insulationLabels = { 0: t('yearRound150mm'), 1: t('enhanced200mm'), 2: t('premium250mm'), 3: t('extra300mm') };
+                      const insulationDescriptions = { 0: t('yearRound150mmDesc'), 1: t('enhanced200mmDesc'), 2: t('premium250mmDesc'), 3: t('extra300mmDesc') };
+                      return (
+                      <ConfiguratorTile 
                       key={i} 
-                      label={opt.label} 
+                      label={insulationLabels[i] || opt.label} 
                       price={getPrice('insulation', i, opt.price)} 
-                      description={opt.description} 
+                      description={insulationDescriptions[i] || opt.description} 
                       selected={insulationIdx === i} 
                       onClick={() => setInsulationIdx(i)} 
                       isA0={opt.label.includes('250 mm')}
@@ -695,60 +709,69 @@ export default function KonfiguratorPH005() {
                       onPriceChange={(newPrice) => updatePrice('insulation', i, newPrice)}
                       category="insulation"
                       />
-                      ))}
+                      );
+                      })}
                       </div>
                       </div>
                       <div className="col-span-full mt-6">
                       <h4 className="font-semibold mb-3 text-sm text-purple-700 uppercase tracking-wide flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full bg-purple-500"></div>
-                      Fasáda
+                      {t('facade')}
                       </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {HOUSE_PH005.options.facade.map((opt, i) => (
-                    <ConfiguratorTile 
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {HOUSE_PH005.options.facade.map((opt, i) => {
+                      const facadeLabels = { 0: t('facadeStandard'), 1: t('facadeStucco') };
+                      const facadeDescriptions = { 0: t('facadeStandardDesc'), 1: t('facadeStuccoDesc') };
+                      return (
+                      <ConfiguratorTile 
                       key={i} 
-                      label={opt.label} 
+                      label={facadeLabels[i] || opt.label} 
                       price={getPrice('facade', i, opt.price)} 
-                      description={opt.description} 
+                      description={facadeDescriptions[i] || opt.description} 
                       selected={facadeIdx === i} 
                       onClick={() => setFacadeIdx(i)}
                       isAdmin={isAdmin}
                       onPriceChange={(newPrice) => updatePrice('facade', i, newPrice)}
                       category="facade"
                       />
-                      ))}
+                      );
+                      })}
                       </div>
                       </div>
                       <div className="col-span-full mt-6">
                       <h4 className="font-semibold mb-3 text-sm text-red-700 uppercase tracking-wide flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                      Vstupné dvere
+                      {t('entryDoors')}
                       </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {HOUSE_PH005.options.doors.map((opt, i) => (
-                    <ConfiguratorTile 
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {HOUSE_PH005.options.doors.map((opt, i) => {
+                      const doorLabels = { 0: t('doorsStandard'), 1: t('doorsMetal2Locks'), 2: t('doorsPlasticMetal') };
+                      const doorDescriptions = { 0: t('doorsStandardDesc'), 1: t('doorsMetal2LocksDesc'), 2: t('doorsPlasticMetalDesc') };
+                      return (
+                      <ConfiguratorTile 
                       key={i} 
-                      label={opt.label} 
+                      label={doorLabels[i] || opt.label} 
                       price={getPrice('doors', i, opt.price)} 
-                      description={opt.description} 
+                      description={doorDescriptions[i] || opt.description} 
                       selected={doorsIdx === i} 
                       onClick={() => setDoorsIdx(i)}
                       isAdmin={isAdmin}
                       onPriceChange={(newPrice) => updatePrice('doors', i, newPrice)}
                       category="doors"
                       />
-                      ))}
+                      );
+                      })}
                       </div>
                       </div>
                       <div className="col-span-full mt-6">
-                      <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">Doplnkové okná (ks)</h4>
-                 <div className="grid grid-cols-2 gap-4">
-                    {[
-                      { l: 'Strešné', p: getPrice('addon', 'roofWindow', HOUSE_PH005.addons.roofWindow), v: roofWindows, s: setRoofWindows, k: 'roofWindow' },
-                      { l: 'Fixné 90x205', p: getPrice('addon', 'fixWindow', HOUSE_PH005.addons.fixWindow), v: fixWindows, s: setFixWindows, k: 'fixWindow' },
-                      { l: 'Výklopné 90x205', p: getPrice('addon', 'tiltWindowBig', HOUSE_PH005.addons.tiltWindowBig), v: tiltWindowsBig, s: setTiltWindowsBig, k: 'tiltWindowBig' },
-                      { l: 'Výklopné 55x90', p: getPrice('addon', 'tiltWindowSmall', HOUSE_PH005.addons.tiltWindowSmall), v: tiltWindowsSmall, s: setTiltWindowsSmall, k: 'tiltWindowSmall' }
-                    ].map((item, idx) => (
+                      <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">{t('additionalWindows')}</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                      {[
+                       { l: t('roofWindow'), p: getPrice('addon', 'roofWindow', HOUSE_PH005.addons.roofWindow), v: roofWindows, s: setRoofWindows, k: 'roofWindow' },
+                       { l: t('fixedWindow'), p: getPrice('addon', 'fixWindow', HOUSE_PH005.addons.fixWindow), v: fixWindows, s: setFixWindows, k: 'fixWindow' },
+                       { l: t('tiltWindowBig'), p: getPrice('addon', 'tiltWindowBig', HOUSE_PH005.addons.tiltWindowBig), v: tiltWindowsBig, s: setTiltWindowsBig, k: 'tiltWindowBig' },
+                       { l: t('tiltWindowSmall'), p: getPrice('addon', 'tiltWindowSmall', HOUSE_PH005.addons.tiltWindowSmall), v: tiltWindowsSmall, s: setTiltWindowsSmall, k: 'tiltWindowSmall' }
+                      ].map((item, idx) => (
                       <div key={idx} className="bg-gray-50 p-4 rounded-xl border border-gray-200 text-center flex flex-col items-center justify-between h-full">
                         <div className="text-sm font-bold text-gray-800 mb-2 text-center">{item.l}</div>
                          {isAdmin ? (
@@ -918,10 +941,10 @@ export default function KonfiguratorPH005() {
             {isA0Compliant ? <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0" /> : <Info className="w-6 h-6 text-blue-600 flex-shrink-0" />}
             <div>
                 <h4 className={`font-bold text-base mb-1 ${isA0Compliant ? 'text-green-800' : 'text-blue-800'}`}>
-                    {isA0Compliant ? 'Rodinný dom s certifikátom A0' : 'Rekreačná stavba'}
+                   {isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}
                 </h4>
                 <p className={`text-xs ${isA0Compliant ? 'text-green-700' : 'text-blue-700'}`}>
-                    {isA0Compliant ? 'Dom spĺňa všetky A0 normy' : 'Rekreačné využitie'}
+                   {isA0Compliant ? t('meetsAllA0Norms') : t('recreationalDesc')}
                 </p>
             </div>
         </div>
@@ -957,7 +980,7 @@ export default function KonfiguratorPH005() {
         <SummaryItem label={t('tintedGlassItem')} price={getPrice('addon', 'windowTint', HOUSE_PH005.addons.windowTint)} active={windowTint} />
         { (roofWindows > 0 || fixWindows > 0 || tiltWindowsBig > 0 || tiltWindowsSmall > 0) &&
             <SummaryItem 
-                label="Doplnkové okná" 
+                label={t('additionalWindowsLabel')} 
                 price={
                     roofWindows * getPrice('addon', 'roofWindow', HOUSE_PH005.addons.roofWindow) + 
                     fixWindows * getPrice('addon', 'fixWindow', HOUSE_PH005.addons.fixWindow) + 
