@@ -19,6 +19,8 @@ import {
   DoorOpen,
   Edit2
 } from 'lucide-react';
+import { useLanguage } from '../components/LanguageContext';
+import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
 
 // --- DATA DEFINITIONS ---
 // PH-001 ONLY
@@ -398,16 +400,19 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting }) => {
   );
 };
 
-const STEPS = [
-  { id: 'type', title: 'Typ projektu', icon: Home },
-  { id: 'structure', title: 'Hrubá stavba', icon: Hammer },
+const getSteps = (t) => [
+  { id: 'type', title: t('stepProjectType'), icon: Home },
+  { id: 'structure', title: t('roughConstruction'), icon: Hammer },
   { id: 'exterior', title: 'Exteriér', icon: Thermometer },
-  { id: 'interior', title: 'Interiér', icon: Layout },
-  { id: 'tech', title: 'Technológie', icon: Zap },
-  { id: 'services', title: 'Služby', icon: FileText },
+  { id: 'interior', title: t('interior'), icon: Layout },
+  { id: 'tech', title: t('technologies'), icon: Zap },
+  { id: 'services', title: t('services'), icon: FileText },
 ];
 
 export default function KonfiguratorPH001() {
+  const { language } = useLanguage();
+  const t = (key) => prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key] || key;
+  
   const [activeStep, setActiveStep] = useState(0);
   const [typStavby, setTypStavby] = useState('rekreacna');
   const [isAdmin, setIsAdmin] = useState(false);
