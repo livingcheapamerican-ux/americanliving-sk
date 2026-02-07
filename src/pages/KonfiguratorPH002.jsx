@@ -19,6 +19,8 @@ import {
   DoorOpen,
   Edit2
 } from 'lucide-react';
+import { useLanguage } from '../components/LanguageContext';
+import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
 
 const HOUSE_PH002 = {
   "id": "fjord",
@@ -148,7 +150,7 @@ const HOUSE_PH002 = {
   }
 };
 
-const TypeSelector = ({ selected, onSelect }) => {
+const TypeSelector = ({ selected, onSelect, t }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <button
@@ -160,7 +162,7 @@ const TypeSelector = ({ selected, onSelect }) => {
         }`}
       >
         <Home className="w-8 h-8 md:w-10 md:h-10" />
-        <span className="text-lg md:text-xl font-bold">Rekreačná stavba</span>
+        <span className="text-lg md:text-xl font-bold">{t('recreationalBuilding')}</span>
       </button>
 
       <button
@@ -175,7 +177,7 @@ const TypeSelector = ({ selected, onSelect }) => {
           <Home className="w-8 h-8 md:w-10 md:h-10" />
           <span className="bg-green-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">A0</span>
         </div>
-        <span className="text-lg md:text-xl font-bold">Rodinný dom A0</span>
+        <span className="text-lg md:text-xl font-bold">{t('familyHouseA0')}</span>
       </button>
     </div>
   );
@@ -254,7 +256,7 @@ const Section = ({ title, icon: Icon, children }) => (
   </div>
 );
 
-const AddonCheckbox = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description }) => (
+const AddonCheckbox = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t }) => (
   <button
     onClick={!disabled && !locked ? onChange : undefined}
     className={`flex items-center justify-between p-5 rounded-xl border-2 transition-all w-full active:scale-[0.98] ${
@@ -280,7 +282,7 @@ const AddonCheckbox = ({ label, price, checked, onChange, disabled = false, lock
       <div className="text-left">
         <span className={`font-semibold text-base md:text-lg block ${checked || locked ? 'text-gray-900' : 'text-gray-700'}`}>{label}</span>
         {description && <p className="text-xs text-gray-500 mt-1 font-medium max-w-sm leading-tight text-left">{description}</p>}
-        {locked && <span className="text-[10px] uppercase font-bold text-green-700 tracking-wider">Vyžadované pre A0</span>}
+        {locked && <span className="text-[10px] uppercase font-bold text-green-700 tracking-wider">{t ? t('requiredForA0') : 'Vyžadované pre A0'}</span>}
       </div>
     </div>
     
@@ -330,7 +332,7 @@ const SummaryItem = ({ label, price, active, info }) => {
   );
 };
 
-const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting }) => {
+const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting, t }) => {
   if (!isOpen) return null;
   
   return (
@@ -340,28 +342,28 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting }) => {
           <X className="w-5 h-5" />
         </button>
         
-        <h2 className="text-2xl font-bold mb-2 text-gray-900">Odoslať nezáväzný dopyt</h2>
-        <p className="text-gray-500 mb-8">Vyplňte údaje a pošleme vám detailnú cenovú ponuku na mieru.</p>
+        <h2 className="text-2xl font-bold mb-2 text-gray-900">{t('inquiryForm')}</h2>
+        <p className="text-gray-500 mb-8">{t('inquiryFormDesc')}</p>
         
         <form onSubmit={onSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Meno a priezvisko</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">{t('nameSurname')}</label>
             <input required type="text" placeholder="Jozef Novák" name="name" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">E-mail</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">{t('email')}</label>
             <input required type="email" placeholder="jozef@example.com" name="email" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Telefón</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">{t('phone')}</label>
             <input required type="tel" placeholder="+421 900 000 000" name="phone" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Miesto výstavby</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">{t('city')}</label>
             <input required type="text" placeholder="Bratislava" name="city" className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all" />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Poznámka</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">{t('note')}</label>
             <textarea name="note" rows={3} placeholder="Mám záujem o..." className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"></textarea>
           </div>
           
@@ -371,10 +373,10 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting }) => {
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 mt-6 disabled:opacity-50 text-lg shadow-lg shadow-indigo-200"
           >
             {isSubmitting ? (
-              <span>Odosielam...</span>
+              <span>{t('sending')}</span>
             ) : (
               <>
-                <span>Odoslať cenovú ponuku</span>
+                <span>{t('sendQuote')}</span>
                 <Send className="w-5 h-5" />
               </>
             )}
@@ -385,16 +387,28 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting }) => {
   );
 };
 
-const STEPS = [
-  { id: 'type', title: 'Typ projektu', icon: Home },
-  { id: 'structure', title: 'Hrubá stavba', icon: Hammer },
-  { id: 'exterior', title: 'Exteriér', icon: Thermometer },
-  { id: 'interior', title: 'Interiér', icon: Layout },
-  { id: 'tech', title: 'Technológie', icon: Zap },
-  { id: 'services', title: 'Služby', icon: FileText },
+const STEPS_CONFIG = [
+  { id: 'type', icon: Home },
+  { id: 'structure', icon: Hammer },
+  { id: 'exterior', icon: Thermometer },
+  { id: 'interior', icon: Layout },
+  { id: 'tech', icon: Zap },
+  { id: 'services', icon: FileText },
 ];
 
 export default function KonfiguratorPH002() {
+  const { language } = useLanguage();
+  const t = (key) => prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key] || key;
+  
+  const STEPS = STEPS_CONFIG.map(step => ({
+    ...step,
+    title: step.id === 'type' ? t('stepProjectType')
+      : step.id === 'structure' ? t('roughConstruction')
+      : step.id === 'exterior' ? t('stepExterior')
+      : step.id === 'interior' ? t('interior')
+      : step.id === 'tech' ? t('technologies')
+      : t('services')
+  }));
   const [activeStep, setActiveStep] = useState(0);
   const [typStavby, setTypStavby] = useState('rekreacna');
   const [isAdmin, setIsAdmin] = useState(false);
@@ -540,8 +554,8 @@ export default function KonfiguratorPH002() {
       case 0:
         return (
           <div className="animate-in fade-in duration-500">
-            <h2 className="text-2xl font-bold mb-6 text-center">Vyberte typ projektu</h2>
-            <TypeSelector selected={typStavby} onSelect={setTypStavby} />
+            <h2 className="text-2xl font-bold mb-6 text-center">{t('selectProjectType')}</h2>
+            <TypeSelector selected={typStavby} onSelect={setTypStavby} t={t} />
             <div className={`p-6 rounded-2xl border transition-all duration-500 ${isA0Compliant ? 'bg-green-50 border-green-200' : 'bg-blue-50 border-blue-200'}`}>
                 <div className="flex items-start gap-4">
                     <div className={`p-2 rounded-full ${isA0Compliant ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
@@ -549,12 +563,12 @@ export default function KonfiguratorPH002() {
                     </div>
                     <div>
                         <h4 className={`font-bold text-lg mb-1 ${isA0Compliant ? 'text-green-800' : 'text-blue-800'}`}>
-                            {isA0Compliant ? 'Rodinný dom s certifikátom A0' : 'Rekreačná stavba'}
+                            {isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}
                         </h4>
                         <p className={`text-base leading-relaxed ${isA0Compliant ? 'text-green-700' : 'text-blue-700'}`}>
                             {isA0Compliant 
-                                ? 'Konfigurácia spĺňa všetky normy pre energetický certifikát A0. Vhodné na kolaudáciu ako rodinný dom.' 
-                                : 'Základná konfigurácia vhodná na rekreačné účely. Pre zmenu na A0 dom zvoľte možnosť "Rodinný dom A0".'}
+                                ? t('meetsA0CertDesc') 
+                                : t('recreationalDesc')}
                         </p>
                     </div>
                 </div>
@@ -563,66 +577,77 @@ export default function KonfiguratorPH002() {
         );
       case 1:
         return (
-          <Section title="Hrubá stavba" icon={Hammer}>
+          <Section title={t('roughConstruction')} icon={Hammer}>
              <div className="col-span-full">
                 <h4 className="font-semibold mb-3 text-sm text-orange-700 uppercase tracking-wide flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                  Montáž hrubej stavby
+                  {t('shellAssembly')}
                 </h4>
                 <div className="grid grid-cols-1 gap-3">
-                  {HOUSE_PH002.options.mounting.map((opt, i) => (
+                  {HOUSE_PH002.options.mounting.map((opt, i) => {
+                    const mountingLabels = { 0: t('noAssemblySelf'), 1: t('withAssembly') };
+                    const mountingDescriptions = { 0: t('selfAssemblyDesc'), 1: t('proAssemblyDesc') };
+                    return (
                     <ConfiguratorTile 
                       key={i} 
-                      label={opt.label} 
+                      label={mountingLabels[i] || opt.label} 
                       price={getPrice('mounting', i, opt.price)} 
-                      description={opt.description} 
+                      description={mountingDescriptions[i] || opt.description} 
                       selected={mountingIdx === i} 
                       onClick={() => setMountingIdx(i)}
                       isAdmin={isAdmin}
                       onPriceChange={(newPrice) => updatePrice('mounting', i, newPrice)}
                       category="mounting"
                     />
-                  ))}
+                    );
+                  })}
                 </div>
              </div>
              <div className="col-span-full mt-6">
                 <h4 className="font-semibold mb-3 text-sm text-amber-700 uppercase tracking-wide flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-amber-500"></div>
-                  Základy
+                  {t('foundations')}
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {HOUSE_PH002.options.foundation.map((opt, i) => (
+                  {HOUSE_PH002.options.foundation.map((opt, i) => {
+                    const foundationLabels = { 0: t('noFoundations'), 1: t('pilotsFootings'), 2: t('foundationSlab'), 3: t('stripFoundations') };
+                    const foundationDescriptions = { 0: t('noFoundationsDesc'), 1: t('pilotsFootingsDesc'), 2: t('foundationSlabDesc'), 3: t('stripFoundationsDesc') };
+                    return (
                     <ConfiguratorTile 
                       key={i} 
-                      label={opt.label} 
+                      label={foundationLabels[i] || opt.label} 
                       price={getPrice('foundation', i, opt.price)} 
-                      description={opt.description} 
+                      description={foundationDescriptions[i] || opt.description} 
                       selected={foundationIdx === i} 
                       onClick={() => setFoundationIdx(i)}
                       isAdmin={isAdmin}
                       onPriceChange={(newPrice) => updatePrice('foundation', i, newPrice)}
                       category="foundation"
                     />
-                  ))}
+                    );
+                  })}
                 </div>
              </div>
           </Section>
         );
       case 2:
         return (
-          <Section title="Exteriér" icon={Thermometer}>
+          <Section title={t('stepExterior')} icon={Thermometer}>
              <div className="col-span-full">
                 <h4 className="font-semibold mb-3 text-sm text-blue-700 uppercase tracking-wide flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                  Typ izolácie
+                  {t('insulationType')}
                 </h4>
                 <div className="grid grid-cols-1 gap-3">
-                  {HOUSE_PH002.options.insulation.map((opt, i) => (
+                  {HOUSE_PH002.options.insulation.map((opt, i) => {
+                    const insulationLabels = { 0: t('yearRound150mm'), 1: t('enhanced200mm'), 2: t('premium250mm') };
+                    const insulationDescriptions = { 0: t('yearRound150mmDesc'), 1: t('enhanced200mmDesc'), 2: t('premium250mmDesc') };
+                    return (
                     <ConfiguratorTile 
                       key={i} 
-                      label={opt.label} 
+                      label={insulationLabels[i] || opt.label} 
                       price={getPrice('insulation', i, opt.price)} 
-                      description={opt.description} 
+                      description={insulationDescriptions[i] || opt.description} 
                       selected={insulationIdx === i} 
                       onClick={() => setInsulationIdx(i)} 
                       isA0={opt.label.includes('250 mm')}
@@ -630,59 +655,68 @@ export default function KonfiguratorPH002() {
                       onPriceChange={(newPrice) => updatePrice('insulation', i, newPrice)}
                       category="insulation"
                     />
-                  ))}
+                    );
+                  })}
                 </div>
              </div>
              <div className="col-span-full mt-6">
                 <h4 className="font-semibold mb-3 text-sm text-purple-700 uppercase tracking-wide flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-purple-500"></div>
-                  Fasáda
+                  {t('facade')}
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {HOUSE_PH002.options.facade.map((opt, i) => (
+                  {HOUSE_PH002.options.facade.map((opt, i) => {
+                    const facadeLabels = { 0: t('facadeStandard'), 1: t('facadeStucco') };
+                    const facadeDescriptions = { 0: t('facadeStandardDesc'), 1: t('facadeStuccoDesc') };
+                    return (
                     <ConfiguratorTile 
                       key={i} 
-                      label={opt.label} 
+                      label={facadeLabels[i] || opt.label} 
                       price={getPrice('facade', i, opt.price)} 
-                      description={opt.description} 
+                      description={facadeDescriptions[i] || opt.description} 
                       selected={facadeIdx === i} 
                       onClick={() => setFacadeIdx(i)}
                       isAdmin={isAdmin}
                       onPriceChange={(newPrice) => updatePrice('facade', i, newPrice)}
                       category="facade"
                     />
-                  ))}
+                    );
+                  })}
                 </div>
              </div>
               <div className="col-span-full mt-6">
                 <h4 className="font-semibold mb-3 text-sm text-red-700 uppercase tracking-wide flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  Vstupné dvere
+                  {t('entryDoors')}
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {HOUSE_PH002.options.doors.map((opt, i) => (
+                  {HOUSE_PH002.options.doors.map((opt, i) => {
+                    const doorLabels = { 0: t('doorsStandard'), 1: t('doorsMetal2Locks'), 2: t('doorsPlasticMetal') };
+                    const doorDescriptions = { 0: t('doorsStandardDesc'), 1: t('doorsMetal2LocksDesc'), 2: t('doorsPlasticMetalDesc') };
+                    return (
                     <ConfiguratorTile 
                       key={i} 
-                      label={opt.label} 
+                      label={doorLabels[i] || opt.label} 
                       price={getPrice('doors', i, opt.price)} 
-                      description={opt.description} 
+                      description={doorDescriptions[i] || opt.description} 
                       selected={doorsIdx === i} 
                       onClick={() => setDoorsIdx(i)}
                       isAdmin={isAdmin}
                       onPriceChange={(newPrice) => updatePrice('doors', i, newPrice)}
                       category="doors"
                     />
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
              <div className="col-span-full mt-6">
-                 <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">Doplnkové okná (ks)</h4>
+                 <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">{t('additionalWindows')}</h4>
                  <div className="grid grid-cols-2 gap-4">
                     {[
-                      { l: 'Strešné', p: getPrice('addon', 'roofWindow', HOUSE_PH002.addons.roofWindow), v: roofWindows, s: setRoofWindows, k: 'roofWindow' },
-                      { l: 'Fixné 90x205', p: getPrice('addon', 'fixWindow', HOUSE_PH002.addons.fixWindow), v: fixWindows, s: setFixWindows, k: 'fixWindow' },
-                      { l: 'Výklopné 90x205', p: getPrice('addon', 'tiltWindowBig', HOUSE_PH002.addons.tiltWindowBig), v: tiltWindowsBig, s: setTiltWindowsBig, k: 'tiltWindowBig' },
-                      { l: 'Výklopné 55x90', p: getPrice('addon', 'tiltWindowSmall', HOUSE_PH002.addons.tiltWindowSmall), v: tiltWindowsSmall, s: setTiltWindowsSmall, k: 'tiltWindowSmall' }
+                      { l: t('roofWindow'), p: getPrice('addon', 'roofWindow', HOUSE_PH002.addons.roofWindow), v: roofWindows, s: setRoofWindows, k: 'roofWindow' },
+                      { l: t('fixedWindow'), p: getPrice('addon', 'fixWindow', HOUSE_PH002.addons.fixWindow), v: fixWindows, s: setFixWindows, k: 'fixWindow' },
+                      { l: t('tiltWindowBig'), p: getPrice('addon', 'tiltWindowBig', HOUSE_PH002.addons.tiltWindowBig), v: tiltWindowsBig, s: setTiltWindowsBig, k: 'tiltWindowBig' },
+                      { l: t('tiltWindowSmall'), p: getPrice('addon', 'tiltWindowSmall', HOUSE_PH002.addons.tiltWindowSmall), v: tiltWindowsSmall, s: setTiltWindowsSmall, k: 'tiltWindowSmall' }
                     ].map((item, idx) => (
                       <div key={idx} className="bg-gray-50 p-4 rounded-xl border border-gray-200 text-center flex flex-col items-center justify-between h-full">
                         <div className="text-sm font-bold text-gray-800 mb-2 text-center">{item.l}</div>
@@ -712,40 +746,44 @@ export default function KonfiguratorPH002() {
         );
       case 3:
         return (
-          <Section title="Interiér" icon={Layout}>
+          <Section title={t('interior')} icon={Layout}>
             <div className="col-span-full">
                  <h4 className="font-semibold mb-3 text-sm text-emerald-700 uppercase tracking-wide flex items-center gap-2">
                    <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-                   Úprava interiéru
+                   {t('interiorFinish')}
                  </h4>
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                   {HOUSE_PH002.options.interior.map((opt, i) => (
+                   {HOUSE_PH002.options.interior.map((opt, i) => {
+                     const interiorLabels = { 0: t('noInterior'), 1: t('interiorWood'), 2: t('interiorDrywall') };
+                     const interiorDescriptions = { 0: t('noInteriorDesc'), 1: t('interiorWoodDesc'), 2: t('interiorDrywallDesc') };
+                     return (
                      <ConfiguratorTile 
                        key={i} 
-                       label={opt.label} 
+                       label={interiorLabels[i] || opt.label} 
                        price={getPrice('interior', i, opt.price)} 
-                       description={opt.description} 
+                       description={interiorDescriptions[i] || opt.description} 
                        selected={interiorIdx === i} 
                        onClick={() => setInteriorIdx(i)} 
                        isAdmin={isAdmin}
                        onPriceChange={(newPrice) => updatePrice('interior', i, newPrice)}
                        category="interior"
                      />
-                   ))}
+                     );
+                   })}
                  </div>
              </div>
             
             <div className="col-span-full mt-6">
-                 <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">Interiérové dvere</h4>
+                 <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">{t('interiorDoorsCount')}</h4>
                  <div className="bg-white p-5 rounded-xl border-2 border-gray-200 flex flex-col md:flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
                             <DoorOpen className="w-6 h-6" />
                         </div>
                         <div>
-                           <div className="text-base font-bold text-gray-900">Počet interiérových dverí</div>
+                           <div className="text-base font-bold text-gray-900">{t('interiorDoorsCount')}</div>
                            <div className="text-sm text-gray-500 font-medium flex items-center gap-1">
-                             Cena za kus: 
+                             {t('pricePerPiece')} 
                              {isAdmin ? (
                                 <input 
                                   type="number" 
@@ -768,45 +806,47 @@ export default function KonfiguratorPH002() {
             </div>
 
             <div className="col-span-full mt-6 grid grid-cols-1 gap-3">
-                  <AddonCheckbox label="Laminácia farby okien" price={getPrice('addon', 'windowLamination', HOUSE_PH002.addons.windowLamination)} checked={windowLamination} onChange={() => setWindowLamination(!windowLamination)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowLamination', p)} />
-                  <AddonCheckbox label="Tónované sklá" price={getPrice('addon', 'windowTint', HOUSE_PH002.addons.windowTint)} checked={windowTint} onChange={() => setWindowTint(!windowTint)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowTint', p)} />
-                  <AddonCheckbox label="Podlahy laminát" price={getPrice('addon', 'laminateFloors', HOUSE_PH002.addons.laminateFloors)} checked={laminateFloors} onChange={() => setLaminateFloors(!laminateFloors)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'laminateFloors', p)} />
-                  <AddonCheckbox label="Podlahové kúrenie" price={getPrice('addon', 'floorHeating', HOUSE_PH002.addons.floorHeating)} checked={floorHeating} onChange={() => setFloorHeating(!floorHeating)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'floorHeating', p)} />
+                  <AddonCheckbox label={t('windowLamination')} price={getPrice('addon', 'windowLamination', HOUSE_PH002.addons.windowLamination)} checked={windowLamination} onChange={() => setWindowLamination(!windowLamination)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowLamination', p)} t={t} />
+                  <AddonCheckbox label={t('tintedGlass')} price={getPrice('addon', 'windowTint', HOUSE_PH002.addons.windowTint)} checked={windowTint} onChange={() => setWindowTint(!windowTint)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'windowTint', p)} t={t} />
+                  <AddonCheckbox label={t('laminateFloors')} price={getPrice('addon', 'laminateFloors', HOUSE_PH002.addons.laminateFloors)} checked={laminateFloors} onChange={() => setLaminateFloors(!laminateFloors)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'laminateFloors', p)} t={t} />
+                  <AddonCheckbox label={t('floorHeating')} price={getPrice('addon', 'floorHeating', HOUSE_PH002.addons.floorHeating)} checked={floorHeating} onChange={() => setFloorHeating(!floorHeating)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'floorHeating', p)} t={t} />
             </div>
           </Section>
         );
       case 4:
         return (
-          <Section title="Technológie" icon={Zap}>
+          <Section title={t('technologies')} icon={Zap}>
              <div className="col-span-full grid grid-cols-1 gap-3">
-                <AddonCheckbox label="Elektro rozvody" price={getPrice('addon', 'electricity', HOUSE_PH002.addons.electricity)} checked={electricity} onChange={() => setElectricity(!electricity)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'electricity', p)} />
-                <AddonCheckbox label="Voda a odpady" price={getPrice('addon', 'water', HOUSE_PH002.addons.water)} checked={water} onChange={() => setWater(!water)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'water', p)} />
-                <AddonCheckbox label="Sanita" price={getPrice('addon', 'sanita', HOUSE_PH002.addons.sanita)} checked={sanita} onChange={() => setSanita(!sanita)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'sanita', p)} />
-                <AddonCheckbox label="Bojler" price={getPrice('addon', 'boiler', HOUSE_PH002.addons.boiler)} checked={boiler} onChange={() => setBoiler(!boiler)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'boiler', p)} />
+                <AddonCheckbox label={t('electricalWiring')} price={getPrice('addon', 'electricity', HOUSE_PH002.addons.electricity)} checked={electricity} onChange={() => setElectricity(!electricity)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'electricity', p)} t={t} />
+                <AddonCheckbox label={t('waterDrainage')} price={getPrice('addon', 'water', HOUSE_PH002.addons.water)} checked={water} onChange={() => setWater(!water)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'water', p)} t={t} />
+                <AddonCheckbox label={t('sanitary')} price={getPrice('addon', 'sanita', HOUSE_PH002.addons.sanita)} checked={sanita} onChange={() => setSanita(!sanita)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'sanita', p)} t={t} />
+                <AddonCheckbox label={t('boiler')} price={getPrice('addon', 'boiler', HOUSE_PH002.addons.boiler)} checked={boiler} onChange={() => setBoiler(!boiler)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'boiler', p)} t={t} />
               </div>
               <div className="col-span-full mt-8 p-4 bg-gray-50 rounded-2xl border border-gray-100">
                  <h4 className="font-bold mb-4 text-base text-gray-800 flex items-center gap-2">
                    <div className="w-2 h-6 bg-green-500 rounded-full"></div>
-                   A0 Štandard (Automaticky zvolené)
+                   {t('a0Standard')}
                  </h4>
                  <div className="grid grid-cols-1 gap-3">
                     <AddonCheckbox 
-                      label="Tepelné čerpadlo" 
+                      label={t('heatPump')} 
                       price={getPrice('addon', 'heatPump', HOUSE_PH002.addons.heatPump)} 
                       checked={heatPump} 
                       onChange={() => setHeatPump(!heatPump)}
                       locked={typStavby === 'rodinny_dom'}
                       isAdmin={isAdmin} 
                       onPriceChange={(p) => updatePrice('addon', 'heatPump', p)}
+                      t={t}
                     />
                     <AddonCheckbox 
-                      label="Rekuperácia" 
+                      label={t('recuperation')} 
                       price={getPrice('addon', 'recuperation', HOUSE_PH002.addons.recuperation)} 
                       checked={recuperation} 
                       onChange={() => setRecuperation(!recuperation)}
                       locked={typStavby === 'rodinny_dom'}
                       isAdmin={isAdmin} 
                       onPriceChange={(p) => updatePrice('addon', 'recuperation', p)}
+                      t={t}
                     />
                  </div>
               </div>
@@ -814,27 +854,28 @@ export default function KonfiguratorPH002() {
         );
       case 5:
         return (
-          <Section title="Služby" icon={FileText}>
+          <Section title={t('services')} icon={FileText}>
               <div className="col-span-full grid grid-cols-1 gap-3">
-                <AddonCheckbox label="Projektant" price={getPrice('addon', 'projectant', HOUSE_PH002.addons.projectant)} checked={projectant} onChange={() => setProjectant(!projectant)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'projectant', p)} />
+                <AddonCheckbox label={t('projectant')} price={getPrice('addon', 'projectant', HOUSE_PH002.addons.projectant)} checked={projectant} onChange={() => setProjectant(!projectant)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'projectant', p)} t={t} />
                 <AddonCheckbox 
-                  label="Inžiniering" 
-                  description="Vybavenie stavebného povolenia až do fázy kolaudácie. American Living dohliadne na bezproblémovú kolaudáciu domu."
+                  label={t('engineering')} 
+                  description={t('engineeringDesc')}
                   price={getPrice('addon', 'engineering', HOUSE_PH002.addons.engineering)} 
                   checked={engineering} 
                   onChange={() => setEngineering(!engineering)} 
                   isAdmin={isAdmin} 
                   onPriceChange={(p) => updatePrice('addon', 'engineering', p)} 
+                  t={t}
                 />
-                <AddonCheckbox label="Revízie" price={getPrice('addon', 'revision', HOUSE_PH002.addons.revision)} checked={revision} onChange={() => {}} disabled={true} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'revision', p)} />
-                <AddonCheckbox label="Prípojky sietí" price={getPrice('addon', 'networks', HOUSE_PH002.addons.networks)} checked={networks} onChange={() => setNetworks(!networks)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'networks', p)} />
+                <AddonCheckbox label={t('revisions')} price={getPrice('addon', 'revision', HOUSE_PH002.addons.revision)} checked={revision} onChange={() => {}} disabled={true} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'revision', p)} t={t} />
+                <AddonCheckbox label={t('networkConnections')} price={getPrice('addon', 'networks', HOUSE_PH002.addons.networks)} checked={networks} onChange={() => setNetworks(!networks)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'networks', p)} t={t} />
               </div>
               <div className="col-span-full mt-8 border-t pt-8">
-                 <h4 className="font-semibold mb-4 text-sm text-gray-500 uppercase tracking-wide">Bezplatné služby</h4>
+                 <h4 className="font-semibold mb-4 text-sm text-gray-500 uppercase tracking-wide">{t('freeServices')}</h4>
                  <div className="grid grid-cols-1 gap-3">
-                   <AddonCheckbox label="Predaj nehnuteľnosti" price={0} checked={realEstate} onChange={() => setRealEstate(!realEstate)} />
-                   <AddonCheckbox label="Hľadanie pozemku" price={0} checked={landSearch} onChange={() => setLandSearch(!landSearch)} />
-                   <AddonCheckbox label="Financovanie" price={0} checked={financing} onChange={() => setFinancing(!financing)} />
+                   <AddonCheckbox label={t('realEstate')} price={0} checked={realEstate} onChange={() => setRealEstate(!realEstate)} t={t} />
+                   <AddonCheckbox label={t('landSearch')} price={0} checked={landSearch} onChange={() => setLandSearch(!landSearch)} t={t} />
+                   <AddonCheckbox label={t('financing')} price={0} checked={financing} onChange={() => setFinancing(!financing)} t={t} />
                  </div>
               </div>
           </Section>
@@ -850,10 +891,10 @@ export default function KonfiguratorPH002() {
             {isA0Compliant ? <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0" /> : <Info className="w-6 h-6 text-blue-600 flex-shrink-0" />}
             <div>
                 <h4 className={`font-bold text-base mb-1 ${isA0Compliant ? 'text-green-800' : 'text-blue-800'}`}>
-                    {isA0Compliant ? 'Rodinný dom s certifikátom A0' : 'Rekreačná stavba'}
+                    {isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}
                 </h4>
                 <p className={`text-xs ${isA0Compliant ? 'text-green-700' : 'text-blue-700'}`}>
-                    {isA0Compliant ? 'Dom spĺňa všetky A0 normy' : 'Rekreačné využitie'}
+                    {isA0Compliant ? t('meetsAllA0Norms') : t('recreationalDesc')}
                 </p>
             </div>
         </div>
@@ -861,34 +902,34 @@ export default function KonfiguratorPH002() {
 
       <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-xl border-2 border-gray-200 mb-5">
         <div className="flex justify-between items-center">
-          <span className="text-sm font-semibold text-gray-700">Základná cena</span>
+          <span className="text-sm font-semibold text-gray-700">{t('basePrice')}</span>
           <span className="text-xl font-black text-gray-900">{HOUSE_PH002.basePrice.toLocaleString()} €</span>
         </div>
       </div>
 
-      <SummaryGroup title="Hrubá stavba" icon={Hammer}>
-        <SummaryItem label="Montáž hrubej stavby" price={getPrice('mounting', mountingIdx, HOUSE_PH002.options.mounting[mountingIdx].price)} active={mountingIdx > 0} info={mountingIdx > 0 ? HOUSE_PH002.options.mounting[mountingIdx].label : undefined} />
-        <SummaryItem label="Izolácia" price={getPrice('insulation', insulationIdx, HOUSE_PH002.options.insulation[insulationIdx].price)} active={true} info={HOUSE_PH002.options.insulation[insulationIdx].label} />
-        <SummaryItem label="Základy" price={getPrice('foundation', foundationIdx, HOUSE_PH002.options.foundation[foundationIdx].price)} active={foundationIdx > 0} info={foundationIdx > 0 ? HOUSE_PH002.options.foundation[foundationIdx].label : undefined} />
-        <SummaryItem label="Vstupné dvere" price={getPrice('doors', doorsIdx, HOUSE_PH002.options.doors[doorsIdx].price)} active={true} info={HOUSE_PH002.options.doors[doorsIdx].label} />
-        <SummaryItem label="Fasáda" price={getPrice('facade', facadeIdx, HOUSE_PH002.options.facade[facadeIdx].price)} active={true} info={HOUSE_PH002.options.facade[facadeIdx].label} />
+      <SummaryGroup title={t('shellConstruction')} icon={Hammer}>
+        <SummaryItem label={t('assemblyItem')} price={getPrice('mounting', mountingIdx, HOUSE_PH002.options.mounting[mountingIdx].price)} active={mountingIdx > 0} />
+        <SummaryItem label={t('insulationItem')} price={getPrice('insulation', insulationIdx, HOUSE_PH002.options.insulation[insulationIdx].price)} active={true} />
+        <SummaryItem label={t('foundationsItem')} price={getPrice('foundation', foundationIdx, HOUSE_PH002.options.foundation[foundationIdx].price)} active={foundationIdx > 0} />
+        <SummaryItem label={t('doorsItem')} price={getPrice('doors', doorsIdx, HOUSE_PH002.options.doors[doorsIdx].price)} active={true} />
+        <SummaryItem label={t('facadeItem')} price={getPrice('facade', facadeIdx, HOUSE_PH002.options.facade[facadeIdx].price)} active={true} />
       </SummaryGroup>
 
-      <SummaryGroup title="Holodom" icon={Layout}>
-        <SummaryItem label="Interiér finiš" price={getPrice('interior', interiorIdx, HOUSE_PH002.options.interior[interiorIdx].price)} active={interiorIdx > 0} info={interiorIdx > 0 ? HOUSE_PH002.options.interior[interiorIdx].label : undefined} />
-        <SummaryItem label={`Interiérové dvere (${interiorDoorsCount} ks)`} price={interiorDoorsCount * getPrice('addon', 'interiorDoor', HOUSE_PH002.addons.interiorDoor)} active={interiorDoorsCount > 0} />
-        <SummaryItem label="Elektrická inštalácia" price={getPrice('addon', 'electricity', HOUSE_PH002.addons.electricity)} active={electricity} />
-        <SummaryItem label="Rozvody vody a kanalizácie" price={getPrice('addon', 'water', HOUSE_PH002.addons.water)} active={water} />
-        <SummaryItem label="Sanita komplet" price={getPrice('addon', 'sanita', HOUSE_PH002.addons.sanita)} active={sanita} />
-        <SummaryItem label="Bojler" price={getPrice('addon', 'boiler', HOUSE_PH002.addons.boiler)} active={boiler} />
-        <SummaryItem label="Tepelné čerpadlo" price={getPrice('addon', 'heatPump', HOUSE_PH002.addons.heatPump)} active={heatPump} />
-        <SummaryItem label="Rekuperácia" price={getPrice('addon', 'recuperation', HOUSE_PH002.addons.recuperation)} active={recuperation} />
-        <SummaryItem label="Prípojky sietí" price={getPrice('addon', 'networks', HOUSE_PH002.addons.networks)} active={networks} />
-        <SummaryItem label="Laminácia farby okien" price={getPrice('addon', 'windowLamination', HOUSE_PH002.addons.windowLamination)} active={windowLamination} />
-        <SummaryItem label="Tónované sklá" price={getPrice('addon', 'windowTint', HOUSE_PH002.addons.windowTint)} active={windowTint} />
+      <SummaryGroup title={t('shellHouse')} icon={Layout}>
+        <SummaryItem label={t('interiorFinishItem')} price={getPrice('interior', interiorIdx, HOUSE_PH002.options.interior[interiorIdx].price)} active={interiorIdx > 0} />
+        <SummaryItem label={`${t('interiorDoorsItem')} (${interiorDoorsCount} ks)`} price={interiorDoorsCount * getPrice('addon', 'interiorDoor', HOUSE_PH002.addons.interiorDoor)} active={interiorDoorsCount > 0} />
+        <SummaryItem label={t('electricalInstallation')} price={getPrice('addon', 'electricity', HOUSE_PH002.addons.electricity)} active={electricity} />
+        <SummaryItem label={t('waterAndDrainage')} price={getPrice('addon', 'water', HOUSE_PH002.addons.water)} active={water} />
+        <SummaryItem label={t('sanitaryComplete')} price={getPrice('addon', 'sanita', HOUSE_PH002.addons.sanita)} active={sanita} />
+        <SummaryItem label={t('boilerItem')} price={getPrice('addon', 'boiler', HOUSE_PH002.addons.boiler)} active={boiler} />
+        <SummaryItem label={t('heatPumpItem')} price={getPrice('addon', 'heatPump', HOUSE_PH002.addons.heatPump)} active={heatPump} />
+        <SummaryItem label={t('recuperationItem')} price={getPrice('addon', 'recuperation', HOUSE_PH002.addons.recuperation)} active={recuperation} />
+        <SummaryItem label={t('networkConnectionsItem')} price={getPrice('addon', 'networks', HOUSE_PH002.addons.networks)} active={networks} />
+        <SummaryItem label={t('windowLaminationItem')} price={getPrice('addon', 'windowLamination', HOUSE_PH002.addons.windowLamination)} active={windowLamination} />
+        <SummaryItem label={t('tintedGlassItem')} price={getPrice('addon', 'windowTint', HOUSE_PH002.addons.windowTint)} active={windowTint} />
         { (roofWindows > 0 || fixWindows > 0 || tiltWindowsBig > 0 || tiltWindowsSmall > 0) &&
             <SummaryItem 
-                label="Doplnkové okná" 
+                label={t('additionalWindowsLabel')} 
                 price={
                     roofWindows * getPrice('addon', 'roofWindow', HOUSE_PH002.addons.roofWindow) + 
                     fixWindows * getPrice('addon', 'fixWindow', HOUSE_PH002.addons.fixWindow) + 
@@ -901,22 +942,22 @@ export default function KonfiguratorPH002() {
         }
       </SummaryGroup>
 
-      <SummaryGroup title="Dom na kľúč" icon={Key}>
-        <SummaryItem label="Podlahy - Laminát" price={getPrice('addon', 'laminateFloors', HOUSE_PH002.addons.laminateFloors)} active={laminateFloors} />
-        <SummaryItem label="Elektrické podlahové vykurovanie" price={getPrice('addon', 'floorHeating', HOUSE_PH002.addons.floorHeating)} active={floorHeating} />
+      <SummaryGroup title={t('turnkeyHouse')} icon={Key}>
+        <SummaryItem label={t('laminateFloorsItem')} price={getPrice('addon', 'laminateFloors', HOUSE_PH002.addons.laminateFloors)} active={laminateFloors} />
+        <SummaryItem label={t('floorHeatingItem')} price={getPrice('addon', 'floorHeating', HOUSE_PH002.addons.floorHeating)} active={floorHeating} />
       </SummaryGroup>
 
-      <SummaryGroup title="Dokumentácia" icon={FileText}>
-          <SummaryItem label="Inžiniering" price={getPrice('addon', 'engineering', HOUSE_PH002.addons.engineering)} active={engineering} />
-          <SummaryItem label="Projektant" price={getPrice('addon', 'projectant', HOUSE_PH002.addons.projectant)} active={projectant} />
-          <SummaryItem label="Revízna dokumentácia" price={getPrice('addon', 'revision', HOUSE_PH002.addons.revision)} active={revision} />
-          <SummaryItem label="Doprava" price={0} active={true} />
+      <SummaryGroup title={t('documentation')} icon={FileText}>
+          <SummaryItem label={t('engineeringItem')} price={getPrice('addon', 'engineering', HOUSE_PH002.addons.engineering)} active={engineering} />
+          <SummaryItem label={t('projectantItem')} price={getPrice('addon', 'projectant', HOUSE_PH002.addons.projectant)} active={projectant} />
+          <SummaryItem label={t('revisionsItem')} price={getPrice('addon', 'revision', HOUSE_PH002.addons.revision)} active={revision} />
+          <SummaryItem label={t('transportItem')} price={0} active={true} />
       </SummaryGroup>
       
-      <SummaryGroup title="Bezplatné služby" icon={Info}>
-          <SummaryItem label="Predaj nehnuteľnosti" price={0} active={realEstate} />
-          <SummaryItem label="Hľadanie pozemku" price={0} active={landSearch} />
-          <SummaryItem label="Financovanie" price={0} active={financing} />
+      <SummaryGroup title={t('freeServicesGroup')} icon={Info}>
+          <SummaryItem label={t('realEstateItem')} price={0} active={realEstate} />
+          <SummaryItem label={t('landSearchItem')} price={0} active={landSearch} />
+          <SummaryItem label={t('financingItem')} price={0} active={financing} />
       </SummaryGroup>
     </>
   );
@@ -1001,13 +1042,13 @@ export default function KonfiguratorPH002() {
               disabled={activeStep === 0}
               className="px-8 py-4 rounded-2xl font-bold text-gray-700 bg-gradient-to-br from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 disabled:opacity-40 disabled:hover:from-gray-100 disabled:hover:to-gray-200 disabled:cursor-not-allowed flex items-center gap-2 transition-all duration-300 hover:shadow-lg active:scale-95 border border-gray-300"
             >
-              <ChevronLeft className="w-5 h-5" /> Späť
+              <ChevronLeft className="w-5 h-5" /> {t('back')}
             </button>
             <button 
               onClick={nextStep}
               className="px-10 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 hover:from-indigo-700 hover:via-purple-700 hover:to-indigo-700 shadow-lg shadow-indigo-400/50 flex items-center gap-2 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/60 hover:scale-105 active:scale-95"
             >
-              {activeStep === STEPS.length - 1 ? 'Dokončiť a odoslať' : 'Pokračovať'} <ChevronRight className="w-5 h-5" />
+              {activeStep === STEPS.length - 1 ? t('finish') : t('continue')} <ChevronRight className="w-5 h-5" />
             </button>
           </div>
 
@@ -1018,7 +1059,7 @@ export default function KonfiguratorPH002() {
                   <div className="absolute top-2 right-2 w-20 h-20 rounded-full bg-white blur-2xl"></div>
                 </div>
                 <div className="relative z-10">
-                  <h3 className="font-bold text-3xl">Sumár konfigurácie</h3>
+                  <h3 className="font-bold text-3xl">{t('configurationSummary')}</h3>
                   <p className="text-indigo-200 text-sm mt-2">{HOUSE_PH002.name}</p>
                 </div>
               </div>
@@ -1031,7 +1072,7 @@ export default function KonfiguratorPH002() {
                 <div className="bg-gradient-to-br from-white via-indigo-50 to-purple-50 rounded-2xl p-6 mb-5 border-2 border-indigo-300 shadow-xl relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-400 to-purple-400 rounded-full opacity-5 blur-3xl"></div>
                   <div className="relative z-10">
-                    <div className="text-xs text-gray-600 font-bold mb-3 uppercase tracking-widest">💰 Celková cena s DPH</div>
+                    <div className="text-xs text-gray-600 font-bold mb-3 uppercase tracking-widest">💰 {t('totalWithVAT')}</div>
                     <div key={totalPrice} className="text-6xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-pop drop-shadow-lg">{totalPrice.toLocaleString()} €</div>
                   </div>
                 </div>
@@ -1040,7 +1081,7 @@ export default function KonfiguratorPH002() {
                  className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold py-6 rounded-2xl transition-all duration-300 shadow-xl shadow-indigo-400/50 active:scale-[0.98] hover:shadow-2xl hover:shadow-indigo-500/60 flex items-center justify-center gap-2 text-lg transform hover:scale-105"
                 >
                   <Send className="w-6 h-6" />
-                  Odoslať cenovú ponuku
+                  {t('sendQuote')}
                 </button>
               </div>
             </div>
@@ -1052,7 +1093,7 @@ export default function KonfiguratorPH002() {
          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
             <div className="flex-1" onClick={() => setMobileSummaryOpen(true)}>
                <div className="text-xs text-gray-500 font-medium flex items-center gap-1 mb-1">
-                 Celková cena <Eye className="w-3 h-3 text-indigo-500" />
+                 {t('totalWithVAT')} <Eye className="w-3 h-3 text-indigo-500" />
                </div>
                <div key={totalPrice} className="text-2xl font-bold text-indigo-700 leading-none animate-pop">{totalPrice.toLocaleString()} €</div>
             </div>
@@ -1066,7 +1107,7 @@ export default function KonfiguratorPH002() {
                 onClick={nextStep}
                 className="h-12 px-6 bg-indigo-600 text-white rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-indigo-200 active:scale-95 transition-all"
                >
-                 {activeStep === STEPS.length - 1 ? 'Odoslať' : 'Ďalej'}
+                 {activeStep === STEPS.length - 1 ? t('submit') : t('next')}
                  <ChevronRight className="w-5 h-5" />
                </button>
             </div>
@@ -1077,14 +1118,14 @@ export default function KonfiguratorPH002() {
         <div className="fixed inset-0 bg-black/50 z-50 flex flex-col justify-end lg:hidden animate-in fade-in duration-200" onClick={() => setMobileSummaryOpen(false)}>
            <div className="bg-white rounded-t-3xl max-h-[80vh] overflow-y-auto w-full p-6 animate-in slide-in-from-bottom duration-300" onClick={e => e.stopPropagation()}>
               <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
-              <h3 className="text-xl font-bold mb-4">Detail ceny</h3>
+              <h3 className="text-xl font-bold mb-4">{t('priceDetail')}</h3>
               <SummaryContent />
               <div className="h-20"></div>
            </div>
         </div>
       )}
       
-      <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+      <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSubmit={handleSubmit} isSubmitting={isSubmitting} t={t} />
     </div>
   );
 }
