@@ -3,17 +3,31 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-
-    if (!user || user.role !== 'admin') {
-      return Response.json({ error: 'Unauthorized' }, { status: 403 });
+    
+    // CRITICAL: Musíme byť autentifikovaní PRED použitím asServiceRole
+    let user = null;
+    try {
+      user = await base44.auth.me();
+    } catch (e) {
+      // Ak user nie je prihlásený, vrátime unauthorized
+      return Response.json({ error: 'Musíte byť prihlásený ako admin' }, { status: 401 });
     }
 
-    // Načítaj VŠETKY UserEvent a UserSession (nie len 30 dní)
+    if (!user || user.role !== 'admin') {
+      return Response.json({ error: 'Unauthorized - admin prístup potrebný' }, { status: 403 });
+    }
+
+    console.log(`✅ User authenticated: ${user.email}, role: ${user.role}`);
+
+    // Načítaj VŠETKY UserEvent a UserSession (bez časového limitu)
+    console.log('📥 Načítavam UserEvent a UserSession...');
     const [allEvents, allSessions] = await Promise.all([
       base44.asServiceRole.entities.UserEvent.list('-created_date', 10000),
       base44.asServiceRole.entities.UserSession.list('-created_date', 2000)
     ]);
+
+    console.log(`📦 Raw response - Events type: ${typeof allEvents}, Sessions type: ${typeof allSessions}`);
+    console.log(`📦 Events: ${allEvents?.length || 0}, Sessions: ${allSessions?.length || 0}`);
 
     // Ensure arrays
     const recentEvents = Array.isArray(allEvents) ? allEvents : [];
