@@ -189,15 +189,6 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
               </div>
             )}
           </div>
-          
-          {dom.vyrobca === 'Ticab house' && (
-            <Alert className="bg-gradient-to-r from-emerald-50 to-green-50 border-emerald-300 mb-2 p-1.5 sm:p-3">
-              <Info className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-600" />
-              <AlertDescription className="text-[8px] sm:text-xs text-gray-700 font-sans leading-tight">
-                {t('dotaciaNotice')}
-              </AlertDescription>
-            </Alert>
-          )}
 
           <div className="pt-3 sm:pt-4 border-t border-gray-200">
             {/* Cena - zvýraznená */}
