@@ -58,130 +58,120 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
               </div>
             )}
           </Link>
-          <div className="absolute top-1 left-1 sm:top-4 sm:left-4 space-y-1 sm:space-y-2">
-            {dom.celorocny && (
-              <div className="bg-accent text-white px-1.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[8px] sm:text-xs font-semibold">
-                ✔ CELOROČNÝ
-              </div>
+          <div className="absolute top-2 right-2 sm:top-4 sm:right-4 flex gap-1 sm:gap-2">
+            {canManage && (
+              <button
+                onClick={(e) => handleDeleteDom(dom, e)}
+                disabled={deleteDomMutation.isPending}
+                className="p-1.5 sm:p-2 rounded-full bg-red-600/90 backdrop-blur-sm text-white hover:bg-red-700 transition-all disabled:opacity-50 shadow-lg"
+              >
+                <Trash2 className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
+              </button>
             )}
-            {dom.energeticky_certifikat && (
-              <div className="bg-green-600 text-white px-1.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[8px] sm:text-xs font-semibold">
-                ✔ CERTIFIKÁT A0
-              </div>
-            )}
-          </div>
-          <div className="absolute bottom-1 left-1 sm:hidden">
-            <div className="bg-gray-900/95 text-white px-2 py-1 rounded-lg shadow-xl border border-white/20">
-              <p className="text-xs font-bold">{dom.zakladna_cena?.toLocaleString('sk-SK')} €</p>
-            </div>
-          </div>
-          <div className="absolute top-1 right-1 sm:top-4 sm:right-4 flex gap-1 sm:gap-2">
-            <button
-              onClick={() => toggleSrovnanie(dom)}
-              disabled={!jeVybrany && vybraneNaSrovnanie.length >= 3}
-              className={`p-1 sm:p-2 rounded-full transition-all ${
-                jeVybrany ?
-                'bg-primary text-white' :
-                'bg-white/90 text-primary hover:bg-primary hover:text-white'} ${
-                !jeVybrany && vybraneNaSrovnanie.length >= 3 ? 'opacity-50 cursor-not-allowed' : ''}`}
-            >
-              <Plus className={`w-3 h-3 sm:w-5 sm:h-5 transition-transform ${jeVybrany ? 'rotate-45' : ''}`} />
-            </button>
             {canManage && (
               <button
                 onClick={(e) => handleToggleVerejny(dom, e)}
                 disabled={toggleVerejnyMutation.isPending}
                 title={dom.verejny !== false ? 'Skryť pre verejnosť' : 'Zobraziť pre verejnosť'}
-                className={`p-1 sm:p-2 rounded-full transition-all disabled:opacity-50 ${
+                className={`p-1.5 sm:p-2 rounded-full backdrop-blur-sm transition-all disabled:opacity-50 shadow-lg ${
                   dom.verejny !== false 
-                    ? 'bg-green-600 text-white hover:bg-green-700' 
-                    : 'bg-gray-600 text-white hover:bg-gray-700'
+                    ? 'bg-green-600/90 text-white hover:bg-green-700' 
+                    : 'bg-gray-600/90 text-white hover:bg-gray-700'
                 }`}
               >
-                {dom.verejny !== false ? <Eye className="w-3 h-3 sm:w-5 sm:h-5" /> : <EyeOff className="w-3 h-3 sm:w-5 sm:h-5" />}
+                {dom.verejny !== false ? <Eye className="w-3.5 h-3.5 sm:w-5 sm:h-5" /> : <EyeOff className="w-3.5 h-3.5 sm:w-5 sm:h-5" />}
               </button>
             )}
-            {canManage && (
-              <button
-                onClick={(e) => handleDeleteDom(dom, e)}
-                disabled={deleteDomMutation.isPending}
-                className="p-1 sm:p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-all disabled:opacity-50"
-              >
-                <Trash2 className="w-3 h-3 sm:w-5 sm:h-5" />
-              </button>
-            )}
+            <button
+              onClick={() => toggleSrovnanie(dom)}
+              disabled={!jeVybrany && vybraneNaSrovnanie.length >= 3}
+              className={`p-1.5 sm:p-2 rounded-full backdrop-blur-sm transition-all shadow-lg ${
+                jeVybrany
+                  ? 'bg-primary text-white'
+                  : 'bg-white/90 text-primary hover:bg-primary hover:text-white'} ${
+                !jeVybrany && vybraneNaSrovnanie.length >= 3 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              <Plus className={`w-3.5 h-3.5 sm:w-5 sm:h-5 transition-transform ${jeVybrany ? 'rotate-45' : ''}`} />
+            </button>
           </div>
         </div>
         
         <div className="p-1.5 sm:p-5">
           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-            <h3 className="text-xs sm:text-xl font-bold text-primary mb-1 sm:mb-3 group-hover:text-secondary transition-colors line-clamp-1">
+            <h3 className="text-sm sm:text-2xl font-bold text-gray-800 mb-2 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
               {dom.nazov}
             </h3>
           </Link>
+          
+          {/* Kľúčové benefity pod názvom */}
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {dom.celorocny && (
+              <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-2.5 py-1 rounded-lg text-[9px] sm:text-xs font-bold shadow-md flex items-center gap-1">
+                <CheckCircle className="w-3 h-3" />
+                {t('yearRound')}
+              </div>
+            )}
+            {dom.energeticky_certifikat && (
+              <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-2.5 py-1 rounded-lg text-[9px] sm:text-xs font-bold shadow-md flex items-center gap-1">
+                <Zap className="w-3 h-3" />
+                A0
+              </div>
+            )}
+          </div>
 
-          {/* Základné parametre */}
-          <div className="grid grid-cols-2 gap-0.5 sm:gap-2 mb-1.5 sm:mb-4 text-[10px] sm:text-sm">
-            <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
-              <Home className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-primary" />
+          {/* Základné parametre - vylepšené */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <Home className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-primary" />
               <div className="flex flex-col min-w-0">
-                <span className="hidden sm:block text-xs text-gray-500">{t('manufacturer')}</span>
-                <span className="font-semibold text-primary text-[9px] sm:text-xs truncate">{dom.vyrobca}</span>
+                <span className="text-[9px] sm:text-xs text-gray-500">{t('manufacturer')}</span>
+                <span className="font-bold text-gray-800 text-[10px] sm:text-sm truncate">{dom.vyrobca}</span>
               </div>
             </div>
-            <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               {dom.typ_domu === 'montovany' ? (
-                <Hammer className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-orange-600" />
+                <Hammer className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-orange-600" />
               ) : dom.typ_domu === 'mobilny' ? (
-                <Caravan className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-teal-600" />
+                <Caravan className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-teal-600" />
               ) : (
-                <LayoutGrid className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-amber-500" />
+                <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-amber-500" />
               )}
               <div className="flex flex-col min-w-0">
-                <span className="hidden sm:block text-xs text-gray-500">{t('houseType')}</span>
-                <span className="font-semibold text-primary text-[9px] sm:text-xs truncate">{dom.typ_domu === 'modularny' ? t('modularType') : dom.typ_domu === 'montovany' ? t('prefabType') : t('mobileType')}</span>
+                <span className="text-[9px] sm:text-xs text-gray-500">{t('houseType')}</span>
+                <span className="font-bold text-gray-800 text-[10px] sm:text-sm truncate">{dom.typ_domu === 'modularny' ? t('modularType') : dom.typ_domu === 'montovany' ? t('prefabType') : t('mobileType')}</span>
               </div>
             </div>
-            <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
-              <div className="w-2.5 h-2 sm:w-4 sm:h-3 border sm:border-2 border-primary rounded-sm flex-shrink-0" />
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="w-4 h-3 sm:w-5 sm:h-4 border-2 border-primary rounded-sm flex-shrink-0" />
               <div className="flex flex-col min-w-0">
-                <span className="hidden sm:block text-xs text-gray-500">{t('builtArea')}</span>
-                <span className="font-semibold text-primary text-[9px] sm:text-xs">{dom.zastavana_plocha} m²</span>
+                <span className="text-[9px] sm:text-xs text-gray-500">{t('builtArea')}</span>
+                <span className="font-bold text-primary text-[10px] sm:text-sm">{dom.zastavana_plocha} m²</span>
               </div>
             </div>
             {dom.uzitkova_plocha && (
-              <div className="hidden sm:flex items-center gap-2 text-gray-600">
-                <Square className="w-4 h-4 flex-shrink-0 text-purple-500" />
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Square className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-purple-500" />
                 <div className="flex flex-col min-w-0">
-                  <span className="text-xs text-gray-500">{t('usableArea')}</span>
-                  <span className="font-semibold text-primary text-xs">{dom.uzitkova_plocha} m²</span>
+                  <span className="text-[9px] sm:text-xs text-gray-500">{t('usableArea')}</span>
+                  <span className="font-bold text-primary text-[10px] sm:text-sm">{dom.uzitkova_plocha} m²</span>
                 </div>
               </div>
             )}
             {dom.pocet_izieb && (
-              <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
-                <Grid3x3 className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-blue-500" />
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Grid3x3 className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-blue-500" />
                 <div className="flex flex-col min-w-0">
-                  <span className="hidden sm:block text-xs text-gray-500">{t('rooms')}</span>
-                  <span className="font-semibold text-primary text-[9px] sm:text-xs">{dom.pocet_izieb} {t('roomsLabel')}</span>
+                  <span className="text-[9px] sm:text-xs text-gray-500">{t('rooms')}</span>
+                  <span className="font-bold text-gray-800 text-[10px] sm:text-sm">{dom.pocet_izieb} {t('roomsLabel')}</span>
                 </div>
               </div>
             )}
             {dom.pocet_modulov && (
-              <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
-                <Boxes className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-red-600" />
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Boxes className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-red-600" />
                 <div className="flex flex-col min-w-0">
-                  <span className="hidden sm:block text-xs text-gray-500">Moduly</span>
-                  <span className="font-semibold text-primary text-[9px] sm:text-xs">{dom.pocet_modulov}</span>
-                </div>
-              </div>
-            )}
-            {dom.energeticky_certifikat && (
-              <div className="hidden sm:flex items-center gap-2 text-gray-600 col-span-2">
-                <Zap className="w-4 h-4 flex-shrink-0 text-green-600" />
-                <div className="flex flex-col min-w-0">
-                  <span className="text-xs text-gray-500">{t('energyClass')}</span>
-                  <span className="font-semibold text-green-600 text-xs">A0 <span className="text-gray-400 font-normal">{t('a0CertificateOption')}</span></span>
+                  <span className="text-[9px] sm:text-xs text-gray-500">Moduly</span>
+                  <span className="font-bold text-gray-800 text-[10px] sm:text-sm">{dom.pocet_modulov}</span>
                 </div>
               </div>
             )}
@@ -190,11 +180,11 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
               (dom.popis && (dom.popis.includes("vstavaná") || dom.popis.includes("zabudovaná") || dom.popis.includes("Vstavaná") || dom.popis.includes("Zabudovaná"))) ||
               (dom.specifikacia && !dom.specifikacia.includes("Terasa: ❌"))
             ) && (
-              <div className="flex items-center gap-1 sm:gap-2 text-gray-600">
-                <Fence className="w-2.5 h-2.5 sm:w-4 sm:h-4 flex-shrink-0 text-teal-500" />
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Fence className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-teal-500" />
                 <div className="flex flex-col min-w-0">
-                  <span className="hidden sm:block text-xs text-gray-500">Terasa</span>
-                  <span className="font-semibold text-primary text-[9px] sm:text-xs">{dom.terasa_plocha} m²</span>
+                  <span className="text-[9px] sm:text-xs text-gray-500">Terasa</span>
+                  <span className="font-bold text-gray-800 text-[10px] sm:text-sm">{dom.terasa_plocha} m²</span>
                 </div>
               </div>
             )}
@@ -209,42 +199,42 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
             </Alert>
           )}
 
-          <div className="pt-1.5 sm:pt-4 border-t space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-[9px] sm:text-xs text-gray-500 mb-1">
-                  {dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : dom.vyrobca === "Prosto House" ? "Základná cena" : t('priceFromLabel')}
+          <div className="pt-3 sm:pt-4 border-t border-gray-200">
+            {/* Cena - zvýraznená */}
+            <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl p-3 mb-3">
+              <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-1">
+                {dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : dom.vyrobca === "Prosto House" ? "Základná cena" : t('priceFromLabel')}
+              </p>
+              <p className="text-2xl sm:text-3xl font-black text-primary">
+                {dom.zakladna_cena?.toLocaleString('sk-SK')} €
+              </p>
+              {dom.vyrobca === "Ticab house" && (
+                <p className="text-[8px] sm:text-[10px] text-gray-500 mt-1 leading-tight">
+                  {t('ticabPriceNote')}
                 </p>
-                <p className="text-base sm:text-xl font-bold text-primary">
-                  {dom.zakladna_cena?.toLocaleString('sk-SK')} €
+              )}
+              {dom.vyrobca === "Prosto House" && (
+                <p className="text-[8px] sm:text-[10px] text-gray-500 mt-1 leading-tight">
+                  {t('basePriceNote')}
                 </p>
-                {dom.vyrobca === "Ticab house" && (
-                  <p className="text-[7px] sm:text-[9px] text-gray-400 mt-0.5 sm:mt-1 italic leading-tight">
-                    {t('ticabPriceNote')}
-                  </p>
-                )}
-                {dom.vyrobca === "Prosto House" && (
-                  <p className="text-[7px] sm:text-[9px] text-gray-400 mt-0.5 sm:mt-1 italic leading-tight">
-                    {t('basePriceNote')}
-                  </p>
-                )}
-              </div>
+              )}
             </div>
-            <div className="flex gap-1.5">
+            {/* Akčné tlačidlá */}
+            <div className="flex gap-2">
               {dom.vyrobca === "Ticab house" && (
                 <Button 
                   size="sm" 
-                  className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white text-[10px] sm:text-sm px-2 sm:px-3 h-6 sm:h-8 font-semibold"
+                  className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white text-xs sm:text-sm px-3 h-9 font-bold shadow-md"
                   onClick={() => navigate(createPageUrl(`DotaciaAmericana?dom=${dom.id}`))}
                 >
-                  <Gift className="w-3 h-3 mr-0.5" />
+                  <Gift className="w-4 h-4 mr-1" />
                   {t('dotacia')}
                 </Button>
               )}
               <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`} className={dom.vyrobca === "Ticab house" ? 'flex-1' : 'w-full'}>
-                <Button size="sm" className="w-full bg-primary hover:bg-primary/90 group-hover:bg-secondary text-[10px] sm:text-sm px-2 sm:px-3 h-6 sm:h-8">
+                <Button size="sm" className="w-full bg-primary hover:bg-primary/90 group-hover:bg-secondary text-xs sm:text-sm px-3 h-9 font-bold shadow-md">
                   {t('detail')}
-                  <ArrowRight className="ml-0.5 sm:ml-1 w-3 h-3 sm:w-4 sm:h-4" />
+                  <ArrowRight className="ml-1 w-4 h-4" />
                 </Button>
               </Link>
             </div>
