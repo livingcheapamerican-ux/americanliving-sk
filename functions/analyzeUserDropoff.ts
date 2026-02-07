@@ -18,8 +18,12 @@ Deno.serve(async (req) => {
       base44.asServiceRole.entities.UserSession.list('-created_date', 1000)
     ]);
 
-    const recentEvents = allEvents.filter(e => new Date(e.created_date) >= thirtyDaysAgo);
-    const recentSessions = allSessions.filter(s => new Date(s.created_date) >= thirtyDaysAgo);
+    // Ensure arrays
+    const eventsArray = Array.isArray(allEvents) ? allEvents : [];
+    const sessionsArray = Array.isArray(allSessions) ? allSessions : [];
+
+    const recentEvents = eventsArray.filter(e => e && e.created_date && new Date(e.created_date) >= thirtyDaysAgo);
+    const recentSessions = sessionsArray.filter(s => s && s.created_date && new Date(s.created_date) >= thirtyDaysAgo);
 
     console.log(`📊 Načítaných ${recentEvents.length} udalostí a ${recentSessions.length} sessions za posledných 30 dní`);
 
