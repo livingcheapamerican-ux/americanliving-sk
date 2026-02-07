@@ -859,7 +859,7 @@ export default function Domov() {
             >
               <Link to={createPageUrl("Katalog")}>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                  <Button size="lg" className="relative bg-gradient-to-r from-primary via-red-600 to-primary hover:from-secondary hover:via-red-700 hover:to-secondary text-white font-black text-lg sm:text-xl px-10 sm:px-16 py-6 sm:py-8 shadow-2xl border-4 border-white group">
+                  <Button size="lg" className="relative bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 hover:from-orange-600 hover:via-orange-700 hover:to-orange-600 text-white font-black text-lg sm:text-xl px-10 sm:px-16 py-6 sm:py-8 shadow-2xl border-4 border-white group">
                     <Home className="mr-2 w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform" />
                     ZOBRAZIŤ VŠETKY DOMY
                     <ArrowRight className="ml-2 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" />
