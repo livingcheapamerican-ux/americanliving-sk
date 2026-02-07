@@ -599,7 +599,8 @@ export default function Katalog() {
               <div className="space-y-3 sm:space-y-4">
                 {/* Vyhľadávanie */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+                    <Search className="w-3 h-3 text-gray-700" />
                     {t('search')}
                   </label>
                   <div className="relative">
@@ -639,7 +640,10 @@ export default function Katalog() {
 
                 {/* Výrobca */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('manufacturer')}</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+                    <Home className="w-3 h-3 text-primary" />
+                    {t('manufacturer')}
+                  </label>
                   <div className="space-y-1">
                     {vyrobcovia.map((v) => (
                       <div key={v} className="flex items-center gap-1.5">
@@ -663,36 +667,46 @@ export default function Katalog() {
 
                 {/* Typ domu */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('type')}</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+                    <LayoutGrid className="w-3 h-3 text-amber-500" />
+                    {t('type')}
+                  </label>
                   <div className="space-y-1">
                     {[
-                      { value: "modularny", label: t('modularType') },
-                      { value: "montovany", label: t('prefabType') },
-                      { value: "mobilny", label: t('mobileType') }
-                    ].map((typ) => (
-                      <div key={typ.value} className="flex items-center gap-1.5">
-                        <Checkbox
-                          id={`typ-${typ.value}`}
-                          checked={typFilter.includes(typ.value)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setTypFilter([...typFilter, typ.value]);
-                            } else {
-                              setTypFilter(typFilter.filter((x) => x !== typ.value));
-                            }
-                          }}
-                          className="data-[state=checked]:bg-black data-[state=checked]:border-black h-3.5 w-3.5"
-                        />
-                        <label htmlFor={`typ-${typ.value}`} className="text-xs cursor-pointer">{typ.label}</label>
-                      </div>
-                    ))}
+                      { value: "modularny", label: t('modularType'), icon: LayoutGrid },
+                      { value: "montovany", label: t('prefabType'), icon: Hammer },
+                      { value: "mobilny", label: t('mobileType'), icon: Caravan }
+                    ].map((typ) => {
+                      const Icon = typ.icon;
+                      return (
+                        <div key={typ.value} className="flex items-center gap-1.5">
+                          <Checkbox
+                            id={`typ-${typ.value}`}
+                            checked={typFilter.includes(typ.value)}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                setTypFilter([...typFilter, typ.value]);
+                              } else {
+                                setTypFilter(typFilter.filter((x) => x !== typ.value));
+                              }
+                            }}
+                            className="data-[state=checked]:bg-black data-[state=checked]:border-black h-3.5 w-3.5"
+                          />
+                          <label htmlFor={`typ-${typ.value}`} className="text-xs cursor-pointer flex items-center gap-1">
+                            <Icon className="w-3 h-3 text-gray-500" />
+                            {typ.label}
+                          </label>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
                 {/* Cenové rozpätie */}
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                   <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
-                    💰 {t('priceRange')}
+                    <Euro className="w-3 h-3 text-green-600" />
+                    {t('priceRange')}
                   </label>
                   <div className="mb-3">
                     <label className="text-[10px] text-gray-500 mb-1 block">Maximálne: {cenoveRozpatie[1].toLocaleString('sk-SK')} €</label>
@@ -722,7 +736,10 @@ export default function Katalog() {
 
                 {/* Počet izieb */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('roomsFilter')}</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center gap-1">
+                    <Grid3x3 className="w-3 h-3 text-blue-500" />
+                    {t('roomsFilter')}
+                  </label>
                   <div className="flex flex-wrap gap-1.5">
                     {Array.isArray(domy) && [...new Set(domy.filter(d => d.pocet_izieb).map(d => d.pocet_izieb))].sort((a, b) => a - b).map((izby) => (
                       <div key={izby} className="flex items-center gap-0.5">
@@ -777,7 +794,8 @@ export default function Katalog() {
                 {/* Zastavaná plocha */}
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                   <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
-                    📐 {t('builtAreaFilter')}
+                    <Square className="w-3 h-3 text-blue-600" />
+                    {t('builtAreaFilter')}
                   </label>
                   <div className="mb-3">
                     <label className="text-[10px] text-gray-500 mb-1 block">Maximálne: {plocharozsah[1]} m²</label>
@@ -808,7 +826,8 @@ export default function Katalog() {
                 {/* Úžitková plocha */}
                 <div className="hidden sm:block bg-purple-50 border border-purple-200 rounded-lg p-3">
                   <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
-                    📏 {t('usableAreaFilter')}
+                    <Square className="w-3 h-3 text-purple-600" />
+                    {t('usableAreaFilter')}
                   </label>
                   <div className="mb-3">
                     <label className="text-[10px] text-gray-500 mb-1 block">Maximálne: {uzitkovaRozsah[1]} m²</label>
@@ -840,7 +859,10 @@ export default function Katalog() {
                 {showAdvancedFilters && (
                   <div className="pt-3 border-t space-y-3">
                     <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                      <label className="block text-xs font-semibold text-gray-700 mb-2">⚡ Energetická trieda</label>
+                      <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                        <Zap className="w-3 h-3 text-green-600" />
+                        Energetická trieda
+                      </label>
                       <Select value={energyCert} onValueChange={setEnergyCert}>
                         <SelectTrigger className="h-7 text-xs">
                           <SelectValue />
