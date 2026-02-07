@@ -24,6 +24,7 @@ import KonfiguratorPH001 from "./KonfiguratorPH001";
 import KonfiguratorPH002 from "./KonfiguratorPH002";
 import KonfiguratorPH003 from "./KonfiguratorPH003";
 import KonfiguratorPH004 from "./KonfiguratorPH004";
+import KonfiguratorPH005 from "./KonfiguratorPH005";
 
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
@@ -875,6 +876,11 @@ export default function DetailDomu() {
             {/* Konfigurátor pre Prosto House PH-004 */}
             {isProstoHouse && dom.prosto_house_kod === "PH-004" && (
               <KonfiguratorPH004 dom={dom} isAdmin={isAdmin} />
+            )}
+
+            {/* Konfigurátor pre Prosto House PH-005 */}
+            {isProstoHouse && dom.prosto_house_kod === "PH-005" && (
+              <KonfiguratorPH005 dom={dom} isAdmin={isAdmin} />
             )}
 
             {/* Konfigurátor pre ostatné Ticabhouse domy (okrem Lyon a Tiny House) */}
