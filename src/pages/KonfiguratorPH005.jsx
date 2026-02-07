@@ -207,14 +207,27 @@ const TypeSelector = ({ selected, onSelect }) => {
   );
 };
 
-const ConfiguratorTile = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange }) => {
+const ConfiguratorTile = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, category = 'default' }) => {
+  const categoryColors = {
+    'mounting': { border: 'border-orange-400', bg: 'from-orange-50 to-orange-100/50', accent: 'orange', selectedBg: 'from-orange-100 to-orange-150' },
+    'extension': { border: 'border-teal-400', bg: 'from-teal-50 to-teal-100/50', accent: 'teal', selectedBg: 'from-teal-100 to-teal-150' },
+    'insulation': { border: 'border-blue-400', bg: 'from-blue-50 to-blue-100/50', accent: 'blue', selectedBg: 'from-blue-100 to-blue-150' },
+    'foundation': { border: 'border-amber-400', bg: 'from-amber-50 to-amber-100/50', accent: 'amber', selectedBg: 'from-amber-100 to-amber-150' },
+    'interior': { border: 'border-emerald-400', bg: 'from-emerald-50 to-emerald-100/50', accent: 'emerald', selectedBg: 'from-emerald-100 to-emerald-150' },
+    'doors': { border: 'border-red-400', bg: 'from-red-50 to-red-100/50', accent: 'red', selectedBg: 'from-red-100 to-red-150' },
+    'facade': { border: 'border-purple-400', bg: 'from-purple-50 to-purple-100/50', accent: 'purple', selectedBg: 'from-purple-100 to-purple-150' },
+    'default': { border: 'border-indigo-400', bg: 'from-indigo-50 to-indigo-100/50', accent: 'indigo', selectedBg: 'from-indigo-100 to-indigo-150' }
+  };
+
+  const colors = categoryColors[category] || categoryColors['default'];
+
   return (
     <button
       onClick={onClick}
-      className={`relative flex flex-col items-start p-5 rounded-xl border-2 transition-all w-full text-left active:scale-[0.98] ${
+      className={`relative flex flex-col items-start p-6 rounded-2xl border-2 transition-all duration-300 w-full text-left active:scale-[0.98] hover:shadow-md ${
         selected
-          ? 'border-indigo-600 bg-indigo-50 shadow-sm ring-1 ring-indigo-600'
-          : 'border-gray-200 bg-white hover:border-gray-300'
+          ? `border-${colors.accent}-600 bg-gradient-to-br ${colors.selectedBg} shadow-lg ring-2 ring-${colors.accent}-400 ring-offset-1`
+          : `${colors.border} bg-gradient-to-br ${colors.bg} hover:border-${colors.accent}-300 hover:shadow-md`
       }`}
     >
       <div className="flex justify-between w-full items-start mb-2">
@@ -251,11 +264,16 @@ const ConfiguratorTile = ({ label, price, description, selected, onClick, isA0, 
 
 const Section = ({ title, icon: Icon, children }) => (
   <div className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-    <div className="flex items-center gap-3 mb-5">
-      <div className="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center">
-        <Icon className="w-5 h-5" />
+    <div className="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 rounded-2xl p-4 mb-6 border-2 border-indigo-200 shadow-sm">
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-indigo-400/50">
+          <Icon className="w-6 h-6" />
+        </div>
+        <div className="flex-1">
+          <h3 className="text-2xl font-bold text-gray-900 tracking-tight">{title}</h3>
+          <div className="h-0.5 w-24 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full mt-1"></div>
+        </div>
       </div>
-      <h3 className="text-xl font-bold text-gray-900 tracking-tight">{title}</h3>
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {children}
@@ -1011,27 +1029,35 @@ export default function KonfiguratorPH005() {
 
           <div className="mt-8">
             <div className="bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
-              <div className="bg-gray-900 text-white p-6">
-                <h3 className="font-bold text-xl">Sumár konfigurácie</h3>
-                <p className="text-gray-400 text-sm mt-1">{HOUSE_PH005.name}</p>
+              <div className="bg-gradient-to-r from-indigo-900 via-purple-900 to-pink-900 text-white p-8 relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute top-2 right-2 w-20 h-20 rounded-full bg-white blur-2xl"></div>
+                </div>
+                <div className="relative z-10">
+                  <h3 className="font-bold text-3xl">Sumár konfigurácie</h3>
+                  <p className="text-indigo-200 text-sm mt-2">{HOUSE_PH005.name}</p>
+                </div>
               </div>
               
-              <div className="p-5">
+              <div className="p-6">
                 <SummaryContent />
               </div>
               
-              <div className="p-5 bg-gradient-to-br from-indigo-50 to-purple-50 border-t-2 border-indigo-200">
-                 <div className="bg-white rounded-xl p-4 mb-4 border-2 border-indigo-300 shadow-lg">
-                   <div className="text-xs text-gray-600 font-medium mb-1">Celková cena s DPH</div>
-                   <div key={totalPrice} className="text-4xl font-black text-indigo-700 animate-pop">{totalPrice.toLocaleString()} €</div>
-                 </div>
-                 <button 
-                  onClick={() => setModalOpen(true)}
-                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 rounded-xl transition-all shadow-xl shadow-indigo-300 active:scale-[0.98] flex items-center justify-center gap-2"
-                 >
-                   <Send className="w-5 h-5" />
-                   Odoslať cenovú ponuku
-                 </button>
+              <div className="p-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-t-4 border-indigo-300">
+                <div className="bg-gradient-to-br from-white via-indigo-50 to-purple-50 rounded-2xl p-6 mb-5 border-2 border-indigo-300 shadow-xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-400 to-purple-400 rounded-full opacity-5 blur-3xl"></div>
+                  <div className="relative z-10">
+                    <div className="text-xs text-gray-600 font-bold mb-3 uppercase tracking-widest">💰 Celková cena s DPH</div>
+                    <div key={totalPrice} className="text-6xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-pop drop-shadow-lg">{totalPrice.toLocaleString()} €</div>
+                  </div>
+                </div>
+                <button 
+                 onClick={() => setModalOpen(true)}
+                 className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold py-6 rounded-2xl transition-all duration-300 shadow-xl shadow-indigo-400/50 active:scale-[0.98] hover:shadow-2xl hover:shadow-indigo-500/60 flex items-center justify-center gap-2 text-lg transform hover:scale-105"
+                >
+                  <Send className="w-6 h-6" />
+                  Odoslať cenovú ponuku
+                </button>
               </div>
             </div>
           </div>
