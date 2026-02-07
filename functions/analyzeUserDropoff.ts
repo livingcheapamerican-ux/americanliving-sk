@@ -30,17 +30,17 @@ Deno.serve(async (req) => {
       allSessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 1000);
       console.log(`✅ Sessions načítané: ${allSessions?.length || 0}, type: ${typeof allSessions}`);
       
-      if (allSessions && allSessions.length > 0) {
-        console.log(`✅ PRVÁ SESSION:`, {
-          id: allSessions[0].id,
-          session_id: allSessions[0].session_id,
-          user_email: allSessions[0].user_email,
-          start_time: allSessions[0].start_time
-        });
-      }
     } catch (err) {
       console.error('❌ Chyba pri načítaní Sessions:', err.message, err.stack);
       allSessions = [];
+    }
+    
+    try {
+      console.log('📥 Načítavam Events...');
+      allEvents = await base44.asServiceRole.entities.UserEvent.list('-created_date', 1000);
+      console.log(`✅ Events načítané: ${allEvents?.length || 0}, type: ${typeof allEvents}`);
+    } catch (err) {
+      console.error('❌ Chyba pri načítaní Events:', err.message);
     }
 
     console.log(`📦 Raw response - Events type: ${typeof allEvents}, Sessions type: ${typeof allSessions}`);
