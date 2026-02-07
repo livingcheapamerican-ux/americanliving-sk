@@ -291,7 +291,6 @@ Deno.serve(async (req) => {
       sessionAnalysis,
       analysis: {
         funnelData,
-        topExitPages,
         topSessionExitPages,
         topLandingPages,
         pagesWithBounceRate,
