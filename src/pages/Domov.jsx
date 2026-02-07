@@ -916,18 +916,23 @@ export default function Domov() {
             <p className="text-xs sm:text-base mb-3 sm:mb-6 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
               {t('contactUsAndFind')}
             </p>
-            <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-3 justify-center">
-              <Link to={createPageUrl("Katalog")}>
-                <Button size="sm" className="bg-white text-primary hover:bg-gray-100 font-semibold px-3 sm:px-6 w-full sm:w-auto shadow-xl text-xs sm:text-base">
-                  {t('showOffer')}
-                  <ArrowRight className="ml-1.5 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4" />
-                </Button>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+              <Link to={createPageUrl("Katalog")} className="w-full sm:w-auto">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-white via-yellow-50 to-white hover:from-yellow-100 hover:via-white hover:to-yellow-100 text-primary hover:text-secondary font-black text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-7 shadow-2xl border-4 border-white/50 group">
+                    <Home className="mr-2 w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform" />
+                    KATALÓG DOMOV
+                    <ArrowRight className="ml-2 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" />
+                  </Button>
+                </motion.div>
               </Link>
-              <Link to={createPageUrl("Kontakt")}>
-                <Button size="sm" variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary font-semibold px-3 sm:px-6 w-full sm:w-auto shadow-xl text-xs sm:text-base">
-                  {t('contact')}
-                  <Phone className="ml-1.5 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4" />
-                </Button>
+              <Link to={createPageUrl("Kontakt")} className="w-full sm:w-auto">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent border-3 border-white text-white hover:bg-white hover:text-primary font-bold text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-7 shadow-2xl">
+                    <Phone className="mr-2 w-5 h-5 sm:w-6 sm:h-6" />
+                    {t('contact')}
+                  </Button>
+                </motion.div>
               </Link>
             </div>
           </div>
