@@ -242,7 +242,7 @@ const ConfiguratorTile = ({ label, price, description, selected, onClick, isA0, 
           </div>
         ) : (
           <span className={`text-sm font-semibold transition-colors ${selected ? 'text-indigo-700' : 'text-gray-500'}`}>
-            {price === 0 ? 'V cene' : `+${price.toLocaleString()} €`}
+            {price === 0 ? t('inPrice') : `+${price.toLocaleString()} €`}
           </span>
         )}
       </div>
@@ -417,7 +417,7 @@ export default function KonfiguratorPH001() {
     ...step,
     title: step.id === 'type' ? t('stepProjectType')
       : step.id === 'structure' ? t('roughConstruction')
-      : step.id === 'exterior' ? 'Exteriér'
+      : step.id === 'exterior' ? t('stepExterior')
       : step.id === 'interior' ? t('interior')
       : step.id === 'tech' ? t('technologies')
       : t('services')
@@ -665,10 +665,17 @@ export default function KonfiguratorPH001() {
                   {t('insulationType')}
                 </h4>
                 <div className="grid grid-cols-1 gap-3">
-                  {HOUSE_PH001.options.insulation.map((opt, i) => (
+                  {HOUSE_PH001.options.insulation.map((opt, i) => {
+                    const insulationLabels = {
+                      0: t('yearRound150mm'),
+                      1: t('enhanced200mm'),
+                      2: t('premium250mm'),
+                      3: t('extra300mm')
+                    };
+                    return (
                     <ConfiguratorTile 
                       key={i} 
-                      label={opt.label} 
+                      label={insulationLabels[i] || opt.label} 
                       price={getPrice('insulation', i, opt.price)} 
                       description={opt.description} 
                       selected={insulationIdx === i} 
@@ -678,7 +685,8 @@ export default function KonfiguratorPH001() {
                       onPriceChange={(newPrice) => updatePrice('insulation', i, newPrice)}
                       category="insulation"
                     />
-                  ))}
+                    );
+                  })}
                 </div>
              </div>
              <div className="col-span-full mt-6">
@@ -740,10 +748,10 @@ export default function KonfiguratorPH001() {
                  <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">{t('additionalWindows')}</h4>
                  <div className="grid grid-cols-2 gap-4">
                     {[
-                      { l: 'Strešné', p: getPrice('addon', 'roofWindow', HOUSE_PH001.addons.roofWindow), v: roofWindows, s: setRoofWindows, k: 'roofWindow' },
-                      { l: 'Fixné 90x205', p: getPrice('addon', 'fixWindow', HOUSE_PH001.addons.fixWindow), v: fixWindows, s: setFixWindows, k: 'fixWindow' },
-                      { l: 'Výklopné 90x205', p: getPrice('addon', 'tiltWindowBig', HOUSE_PH001.addons.tiltWindowBig), v: tiltWindowsBig, s: setTiltWindowsBig, k: 'tiltWindowBig' },
-                      { l: 'Výklopné 55x90', p: getPrice('addon', 'tiltWindowSmall', HOUSE_PH001.addons.tiltWindowSmall), v: tiltWindowsSmall, s: setTiltWindowsSmall, k: 'tiltWindowSmall' }
+                      { l: t('roofWindow'), p: getPrice('addon', 'roofWindow', HOUSE_PH001.addons.roofWindow), v: roofWindows, s: setRoofWindows, k: 'roofWindow' },
+                      { l: t('fixedWindow'), p: getPrice('addon', 'fixWindow', HOUSE_PH001.addons.fixWindow), v: fixWindows, s: setFixWindows, k: 'fixWindow' },
+                      { l: t('tiltWindowBig'), p: getPrice('addon', 'tiltWindowBig', HOUSE_PH001.addons.tiltWindowBig), v: tiltWindowsBig, s: setTiltWindowsBig, k: 'tiltWindowBig' },
+                      { l: t('tiltWindowSmall'), p: getPrice('addon', 'tiltWindowSmall', HOUSE_PH001.addons.tiltWindowSmall), v: tiltWindowsSmall, s: setTiltWindowsSmall, k: 'tiltWindowSmall' }
                     ].map((item, idx) => (
                       <div key={idx} className="bg-gray-50 p-4 rounded-xl border border-gray-200 text-center flex flex-col items-center justify-between h-full">
                         <div className="text-sm font-bold text-gray-800 mb-2 text-center">{item.l}</div>
@@ -921,10 +929,10 @@ export default function KonfiguratorPH001() {
             {isA0Compliant ? <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0" /> : <Info className="w-6 h-6 text-blue-600 flex-shrink-0" />}
             <div>
                 <h4 className={`font-bold text-base mb-1 ${isA0Compliant ? 'text-green-800' : 'text-blue-800'}`}>
-                    {isA0Compliant ? 'Rodinný dom s certifikátom A0' : 'Rekreačná stavba'}
-                </h4>
-                <p className={`text-xs ${isA0Compliant ? 'text-green-700' : 'text-blue-700'}`}>
-                    {isA0Compliant ? 'Dom spĺňa všetky A0 normy' : 'Rekreačné využitie'}
+                    {isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}
+                    </h4>
+                    <p className={`text-xs ${isA0Compliant ? 'text-green-700' : 'text-blue-700'}`}>
+                    {isA0Compliant ? t('meetsA0CertDesc') : t('recreationalDesc')}
                 </p>
             </div>
         </div>
