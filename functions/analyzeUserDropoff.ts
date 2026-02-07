@@ -54,9 +54,33 @@ Deno.serve(async (req) => {
     console.log(`📦 Raw response - Events type: ${typeof allEvents}, Sessions type: ${typeof allSessions}`);
     console.log(`📦 Events is array: ${Array.isArray(allEvents)}, Sessions is array: ${Array.isArray(allSessions)}`);
 
-    // Ensure arrays
-    const recentEvents = Array.isArray(allEvents) ? allEvents : [];
-    const recentSessions = Array.isArray(allSessions) ? allSessions : [];
+    // KRITICKÉ: SDK môže vrátiť string namiesto array, potrebujeme parsovať
+    let recentEvents = [];
+    let recentSessions = [];
+    
+    // Parse events
+    if (Array.isArray(allEvents)) {
+      recentEvents = allEvents;
+    } else if (typeof allEvents === 'string') {
+      try {
+        const parsed = JSON.parse(allEvents);
+        recentEvents = Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        console.error('❌ Chyba pri parsovaní Events string:', e.message);
+      }
+    }
+    
+    // Parse sessions
+    if (Array.isArray(allSessions)) {
+      recentSessions = allSessions;
+    } else if (typeof allSessions === 'string') {
+      try {
+        const parsed = JSON.parse(allSessions);
+        recentSessions = Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        console.error('❌ Chyba pri parsovaní Sessions string:', e.message);
+      }
+    }
 
     console.log(`📊 FINÁLNY POČET: ${recentEvents.length} udalostí a ${recentSessions.length} sessions`);
     
