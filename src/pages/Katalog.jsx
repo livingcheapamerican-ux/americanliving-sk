@@ -29,7 +29,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
       transition={{ delay: index * 0.05 }}
     >
       <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 bg-white ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
-        <div className={`relative overflow-hidden ${portraitImages[dom.id] ? 'h-[161px] sm:h-[414px]' : 'h-[134px] sm:h-[346px]'}`}>
+        <div className={`relative overflow-hidden ${portraitImages[dom.id] ? 'h-[140px] sm:h-[280px]' : 'h-[120px] sm:h-[240px]'}`}>
           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
             {dom.hlavny_obrazok ? (
               <ImageWithWatermark
@@ -41,7 +41,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                       : dom.hlavny_obrazok
                 }
                 alt={dom.nazov}
-                className="w-full h-full object-cover bg-gray-100 group-hover:scale-105 transition-all duration-500"
+                className="w-full h-full object-contain bg-gray-100 group-hover:scale-105 transition-all duration-500"
                 useCatalogSetting={true}
                 priority={index < 4}
                 loading={index < 4 ? "eager" : "lazy"}
