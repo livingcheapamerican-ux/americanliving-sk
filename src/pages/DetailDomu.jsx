@@ -1408,75 +1408,77 @@ export default function DetailDomu() {
                 {/* Komplet pre montáž */}
                 <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
                   <div className="p-3 sm:p-4">
-                    <h4 className="font-bold text-amber-900 mb-2 text-xs sm:text-sm">📦 {t('assemblyKit') || 'Komplet pre montáž'}</h4>
+                    <h4 className="font-bold text-amber-900 mb-2 text-xs sm:text-sm">📦 {t('assemblyKit')}</h4>
                     <ul className="space-y-1 text-xs text-amber-800">
-                      <li>• {t('assemblyWoodenFrame') || 'Drevená konštrukcia, hobľovaný hranol'}</li>
-                      <li>• {t('assemblyExteriorWalls') || 'Vonkajšie steny, falcovaný plech 0,45mm'}</li>
-                      <li>• {t('assemblyRoof') || 'Strecha, falcovaný plech 0,45mm'}</li>
-                      <li>• {t('assemblyWindows') || 'Okná s dvojkomorovým sklom'}</li>
-                      <li>• {t('assemblyDoors') || 'Dvere s dvojkomorovým sklom'}</li>
-                      <li>• {t('assemblyHydroMembrane') || 'Hydroizolačná membána Strotex 1300'}</li>
-                      <li>• {t('assemblyInsulation') || 'Tepelná izolácia (150-250mm)'}</li>
-                      <li>• {t('assemblyVaporBarrier') || 'Parozábrannová fólia Strotex AL90'}</li>
-                      <li>• {t('assemblyRoughFloor') || 'Hrubá podlaha z OSB 22mm'}</li>
+                      <li>• {t('assemblyWoodenFrame')}</li>
+                      <li>• {t('assemblyExteriorWalls')}</li>
+                      <li>• {t('assemblyRoof')}</li>
+                      <li>• {t('assemblyWindows')}</li>
+                      <li>• {t('assemblyDoors')}</li>
+                      <li>• {t('assemblyHydroMembrane')}</li>
+                      <li>• {t('assemblyInsulation')}</li>
+                      <li>• {t('assemblyVaporBarrier')}</li>
+                      <li>• {t('assemblyRoughFloor')}</li>
                     </ul>
-                    <p className="text-xs text-amber-700 font-semibold mt-2">{t('paintingPrice') || 'Maľovanie: 4,5 €/m²'}</p>
+                    <p className="text-xs text-amber-700 font-semibold mt-2">{t('paintingPrice')}</p>
                   </div>
                 </Card>
 
                 {/* Elektroinstalácia */}
                 <Card className="overflow-hidden border border-yellow-200 bg-yellow-50/50">
                   <div className="p-3 sm:p-4">
-                    <h4 className="font-bold text-yellow-900 mb-2 text-xs sm:text-sm">⚡ {t('electrical') || 'Elektroinštalácia'}</h4>
+                    <h4 className="font-bold text-yellow-900 mb-2 text-xs sm:text-sm">⚡ {t('electrical')}</h4>
                     <ul className="space-y-1 text-xs text-yellow-800">
-                      <li>• {t('electricalCables') || 'Montáž elektrických káblov'}</li>
-                      <li>• {t('electricalDistributors') || 'Inštalácia rozvodičov s ističmi'}</li>
-                      <li>• {t('electricalConduit') || 'Uloženie chráničky pre vonkajší kábel'}</li>
-                      <li>• {t('electricalBoxes') || 'Montáž inštalačných krabíc'}</li>
+                      <li>• {t('electricalCables')}</li>
+                      <li>• {t('electricalDistributors')}</li>
+                      <li>• {t('electricalConduit')}</li>
+                      <li>• {t('electricalBoxes')}</li>
                     </ul>
-                    <p className="text-xs text-red-600 font-semibold mt-2">{t('electricalNotIncluded') || 'Nezahrňa: bleskozvod, revízne doklady, montáž zásuviek/svetiel'}</p>
+                    <p className="text-xs text-red-600 font-semibold mt-2">{t('electricalNotIncluded')}</p>
                   </div>
                 </Card>
 
                 {/* Voda a kanalizácia */}
                 <Card className="overflow-hidden border border-blue-200 bg-blue-50/50">
                   <div className="p-3 sm:p-4">
-                    <h4 className="font-bold text-blue-900 mb-2 text-xs sm:text-sm">💧 {t('waterSewage') || 'Voda a kanalizácia'}</h4>
+                    <h4 className="font-bold text-blue-900 mb-2 text-xs sm:text-sm">💧 {t('waterSewage')}</h4>
                     <ul className="space-y-1 text-xs text-blue-800">
-                      <li>• {t('waterPipes') || 'Montáž vodovodných potrubí'}</li>
-                      <li>• {t('waterValves') || 'Montáž ventilov, záslepiek'}</li>
-                      <li>• {t('sewagePipes') || 'Montáž kanalizačných potrubí'}</li>
-                      <li>• {t('waterPressureTest') || 'Kontrola tesnosti pod tlakom'}</li>
+                      <li>• {t('waterPipes')}</li>
+                      <li>• {t('waterValves')}</li>
+                      <li>• {t('sewagePipes')}</li>
+                      <li>• {t('waterPressureTest')}</li>
                     </ul>
-                    <p className="text-xs text-red-600 font-semibold mt-2">{t('waterNotIncluded') || 'Protokoly a sanítne zariadenia za príplatok'}</p>
+                    <p className="text-xs text-red-600 font-semibold mt-2">{t('waterNotIncluded')}</p>
                   </div>
                 </Card>
 
                 {/* Základy */}
                 <Card className="overflow-hidden border border-orange-200 bg-orange-50/50">
                   <div className="p-3 sm:p-4">
-                    <h4 className="font-bold text-orange-900 mb-2 text-xs sm:text-sm">🏗️ {t('foundationsTitle') || 'Základy'}</h4>
+                    <h4 className="font-bold text-orange-900 mb-2 text-xs sm:text-sm">🏗️ {t('foundationsTitle')}</h4>
                     <ul className="space-y-1 text-xs text-orange-800">
-                      <li>• {t('foundationsTypes') || 'Vrutové stĺpy, betónové stĺpiky alebo doska'}</li>
-                      <li>• {t('foundationsMinPrice') || 'Uvedená minimálna cena za rovný terén'}</li>
-                      <li>• {t('foundationsFinalPrice') || 'Konečná cena po geodetickej analýze'}</li>
+                      <li>• {t('foundationsTypes')}</li>
+                      <li>• {t('foundationsMinPrice')}</li>
+                      <li>• {t('foundationsFinalPrice')}</li>
                     </ul>
-                    <p className="text-xs text-red-600 font-semibold mt-2">{t('foundationsNotIncluded') || 'Prípravné práce nie sú v cene'}</p>
+                    <p className="text-xs text-red-600 font-semibold mt-2">{t('foundationsNotIncluded')}</p>
                   </div>
                 </Card>
 
                 {/* Interiér finiš */}
                 <Card className="overflow-hidden border border-emerald-200 bg-emerald-50/50">
                   <div className="p-3 sm:p-4">
-                    <h4 className="font-bold text-emerald-900 mb-2 text-xs sm:text-sm">🏠 {t('interiorFinish') || 'Interiér finiš'}</h4>
+                    <h4 className="font-bold text-emerald-900 mb-2 text-xs sm:text-sm">🏠 {t('interiorFinish')}</h4>
                     <ul className="space-y-1 text-xs text-emerald-800">
-                      <li>• {t('interiorPartitions') || 'Montáž priečok podľa projektu - izolácia 100mm + parozábrana + tatranský profil 8-12mm'}</li>
+                      <li>• {t('interiorPartitions')}</li>
                     </ul>
-                    <p className="text-xs text-red-600 font-semibold mt-2">{t('interiorPainting') || 'Maľovanie: 4,5 €/m², farbu dodáva klient'}</p>
+                    <p className="text-xs text-red-600 font-semibold mt-2">{t('interiorPainting')}</p>
                   </div>
                 </Card>
               </div>
             )}
+
+
 
             {/* Obrázok základnej konfigurácie - pre Ticabhouse */}
             {isTicabhouse && dom.zakladna_konfiguracia_obrazok && (
