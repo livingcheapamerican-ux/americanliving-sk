@@ -905,22 +905,7 @@ export default function DetailDomu() {
               </div>
             )}
 
-            {/* Obrázok základnej konfigurácie - pre Prosto House - hneď pod parametre */}
-            {isProstoHouse && dom.zakladna_konfiguracia_obrazok && (
-              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
-                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">📸 {t('basicConfiguration') || 'Základná konfigurácia'}</h3>
-                <div className="rounded-lg overflow-hidden shadow-lg">
-                  <ImageWithWatermark 
-                    src={dom.zakladna_konfiguracia_obrazok} 
-                    alt={(dom.images_seo_map?.[language] || dom.images_seo_map?.['sk'])?.[dom.zakladna_konfiguracia_obrazok] || `${dom.nazov} - ${t('basicConfiguration')}`}
-                    className="w-full h-auto object-cover"
-                  />
-                </div>
-                <p className="text-sm text-blue-800 mt-3 text-center font-medium">
-                  {t('basicConfigDesc') || 'Základná konfigurácia domu'}
-                </p>
-              </Card>
-            )}
+
 
             {/* Pôdorysy */}
             {dom.podorysy && dom.podorysy.length > 0 && (
@@ -1473,6 +1458,23 @@ export default function DetailDomu() {
                 )}
               </div>
             </Card>
+
+            {/* Obrázok základnej konfigurácie - pre Prosto House - hneď pod parametre */}
+            {isProstoHouse && dom.zakladna_konfiguracia_obrazok && (
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">📸 {t('basicConfiguration') || 'Základná konfigurácia'}</h3>
+                <div className="rounded-lg overflow-hidden shadow-lg">
+                  <ImageWithWatermark 
+                    src={dom.zakladna_konfiguracia_obrazok} 
+                    alt={(dom.images_seo_map?.[language] || dom.images_seo_map?.['sk'])?.[dom.zakladna_konfiguracia_obrazok] || `${dom.nazov} - ${t('basicConfiguration')}`}
+                    className="w-full h-auto object-cover"
+                  />
+                </div>
+                <p className="text-sm text-blue-800 mt-3 text-center font-medium">
+                  {t('basicConfigDesc') || 'Základná konfigurácia domu'}
+                </p>
+              </Card>
+            )}
 
             {/* Obrázok základnej konfigurácie - pre Ticabhouse */}
             {isTicabhouse && dom.zakladna_konfiguracia_obrazok && (
