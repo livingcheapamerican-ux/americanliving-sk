@@ -652,10 +652,10 @@ export default function DetailDomu() {
                 />
               <div className="absolute top-4 left-4 space-y-2">
                 {dom.celorocny && (
-                  <Badge className="bg-accent text-white px-4 py-2">✔ {t('yearRound')}</Badge>
+                  <Badge className="bg-accent text-white px-5 py-3 text-sm sm:text-base font-bold shadow-xl border-2 border-white animate-pulse">✔ {t('yearRound')}</Badge>
                 )}
                 {dom.energeticky_certifikat && (
-                  <Badge className="bg-green-600 text-white px-4 py-2">✔ {t('certificateA0')}</Badge>
+                  <Badge className="bg-green-600 text-white px-5 py-3 text-sm sm:text-base font-bold shadow-xl border-2 border-white animate-pulse">⚡ {t('certificateA0')}</Badge>
                 )}
               </div>
               <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-all flex items-center justify-center">
@@ -690,8 +690,11 @@ export default function DetailDomu() {
 
             {/* 2D a 3D Pôdorysy - hneď pod titulnou fotkou */}
             {(dom.podorys_2d || dom.podorys_3d) && (
-              <Card className="p-3 sm:p-4">
-                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('floorPlans')}</h3>
+              <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-300 shadow-lg">
+                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3 flex items-center gap-2">
+                  <Grid2x2 className="w-5 h-5 text-primary" />
+                  📐 {t('floorPlans')}
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
                   {dom.podorys_2d && (
                     <div>
@@ -709,15 +712,15 @@ export default function DetailDomu() {
                     </div>
                   )}
                   {dom.podorys_3d && (
-                    <div>
-                      <Button
-                        variant="outline"
-                        className="w-full mb-1 sm:mb-2 text-xs sm:text-sm font-semibold border-2 border-primary hover:bg-primary hover:text-white"
-                        onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), dom.podorys_2d ? 1 : 0)}
-                      >
-                        <Grid2x2 className="mr-2 w-4 h-4" />
-                        {t('threeDFloorPlan')}
-                      </Button>
+                   <div>
+                     <Button
+                       variant="outline"
+                       className="w-full mb-1 sm:mb-2 text-xs sm:text-sm font-bold border-2 border-primary hover:bg-primary hover:text-white bg-gradient-to-r from-primary/10 to-purple-100 animate-pulse"
+                       onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), dom.podorys_2d ? 1 : 0)}
+                     >
+                       <Grid2x2 className="mr-2 w-5 h-5" />
+                       🎯 {t('threeDFloorPlan')}
+                     </Button>
                       <div 
                         className="rounded-lg overflow-hidden bg-gray-50 border cursor-pointer"
                         onClick={() => openLightbox([dom.podorys_2d, dom.podorys_3d].filter(Boolean), dom.podorys_2d ? 1 : 0)}
@@ -736,11 +739,14 @@ export default function DetailDomu() {
 
             {/* Pomenované galérie - zobrazovať len ak majú aspoň jednu galériu s fotkami */}
             {dom.galerie && dom.galerie.length > 0 && dom.galerie.some(g => g.fotky && g.fotky.length > 0) && (
-              <Card className="p-3 sm:p-4 w-full max-w-full overflow-hidden">
+              <Card className="p-3 sm:p-4 w-full max-w-full overflow-hidden bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 shadow-lg">
                 <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3 flex items-center gap-2">
                   <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
-                  {t('galleries')}
+                  🖼️ {t('galleries')} - {t('facadeOptions') || 'Možnosti fasád'}
                 </h3>
+                <p className="text-xs sm:text-sm text-gray-600 mb-3">
+                  💡 {t('facadeDescription') || 'Náš drevodom môže vyzerať klasicky ako drevodom, ale aj s modernou bielou omietkou (murovka). Nižšie si pozrite rôzne možnosti dizajnu fasády.'}
+                </p>
                 <div className="space-y-2 sm:space-y-3">
                   {dom.galerie.filter(g => g.fotky && g.fotky.length > 0).map((galeria, index) => (
                     <div 
@@ -1182,12 +1188,12 @@ export default function DetailDomu() {
               <p className="text-base sm:text-lg font-semibold text-primary mb-3">{t('ceilingHeight270A0')}</p>
               
               {/* Desktop verzia - cena */}
-              <div className="hidden lg:flex items-baseline gap-2 flex-wrap">
-                <span className="text-sm text-gray-500">{isTicabhouse ? t('basicConfigPrice') : t('priceFromLabel')}</span>
-                <span className="text-3xl md:text-4xl font-bold text-primary">
+              <div className="hidden lg:flex items-baseline gap-2 flex-wrap bg-gradient-to-r from-primary/10 to-accent/10 p-4 rounded-xl border-2 border-primary/30 shadow-lg">
+                <span className="text-base text-gray-600 font-semibold">{isTicabhouse ? t('basicConfigPrice') : t('priceFromLabel')}</span>
+                <span className="text-4xl md:text-5xl font-black text-primary">
                   {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                 </span>
-                <span className="text-sm text-gray-500">{t('withVAT')}</span>
+                <span className="text-base text-gray-600 font-semibold">{t('withVAT')}</span>
               </div>
               {isProstoHouse ? (
                 <div className="mt-2 bg-amber-50 border border-amber-200 rounded-lg p-3 sm:p-4">
