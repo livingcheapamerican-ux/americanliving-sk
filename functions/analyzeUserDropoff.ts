@@ -19,21 +19,42 @@ Deno.serve(async (req) => {
 
     console.log(`✅ User authenticated: ${user.email}, role: ${user.role}`);
 
-    // Načítaj VŠETKY UserEvent a UserSession pomocou filter (nie list)
-    console.log('📥 Načítavam UserEvent a UserSession...');
-    const [allEvents, allSessions] = await Promise.all([
-      base44.asServiceRole.entities.UserEvent.filter({}, '-created_date', 10000),
-      base44.asServiceRole.entities.UserSession.filter({}, '-created_date', 2000)
-    ]);
+    // Načítaj VŠETKY UserEvent a UserSession pomocou asServiceRole
+    console.log('📥 Začínam načítavať UserEvent a UserSession...');
+    
+    let allEvents = [];
+    let allSessions = [];
+    
+    try {
+      console.log('📥 Načítavam Events...');
+      allEvents = await base44.asServiceRole.entities.UserEvent.list('-created_date', 10000);
+      console.log(`✅ Events načítané: ${allEvents?.length || 0}`);
+    } catch (err) {
+      console.error('❌ Chyba pri načítaní Events:', err.message);
+    }
+    
+    try {
+      console.log('📥 Načítavam Sessions...');
+      allSessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 5000);
+      console.log(`✅ Sessions načítané: ${allSessions?.length || 0}`);
+    } catch (err) {
+      console.error('❌ Chyba pri načítaní Sessions:', err.message);
+    }
 
     console.log(`📦 Raw response - Events type: ${typeof allEvents}, Sessions type: ${typeof allSessions}`);
-    console.log(`📦 Events count: ${allEvents?.length || 0}, Sessions count: ${allSessions?.length || 0}`);
+    console.log(`📦 Events is array: ${Array.isArray(allEvents)}, Sessions is array: ${Array.isArray(allSessions)}`);
 
     // Ensure arrays
     const recentEvents = Array.isArray(allEvents) ? allEvents : [];
     const recentSessions = Array.isArray(allSessions) ? allSessions : [];
 
-    console.log(`📊 CELKOM: ${recentEvents.length} udalostí a ${recentSessions.length} sessions`);
+    console.log(`📊 FINÁLNY POČET: ${recentEvents.length} udalostí a ${recentSessions.length} sessions`);
+    
+    if (recentSessions.length > 0) {
+      console.log(`📋 Prvá session:`, JSON.stringify(recentSessions[0]).substring(0, 200));
+    } else {
+      console.log('⚠️ ŽIADNE SESSIONS - problém s načítaním alebo databáza je prázdna');
+    }
 
     // Analýza UserSession - Detailnejšia analýza správania
     const sessionAnalysis = {
