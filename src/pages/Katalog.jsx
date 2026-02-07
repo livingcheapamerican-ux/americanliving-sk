@@ -29,7 +29,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
       transition={{ delay: index * 0.05 }}
     >
       <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 bg-white flex flex-col h-full ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
-        <div className={`relative overflow-hidden h-[100px] sm:h-[200px]`}>
+        <div className={`relative overflow-hidden h-[90px] sm:h-[180px]`}>
           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
             {dom.hlavny_obrazok ? (
               <ImageWithWatermark
@@ -41,20 +41,14 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                       : dom.hlavny_obrazok
                 }
                 alt={dom.nazov}
-                className="w-full h-full object-contain bg-gray-100 group-hover:scale-105 transition-all duration-500"
+                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
                 useCatalogSetting={true}
                 priority={index < 4}
                 loading={index < 4 ? "eager" : "lazy"}
-                onLoad={(e) => {
-                  const img = e.target;
-                  if (img.naturalHeight > img.naturalWidth) {
-                    setPortraitImages(prev => ({ ...prev, [dom.id]: true }));
-                  }
-                }}
               />
             ) : (
               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <Home className="w-16 h-16 text-gray-400" />
+                <Home className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400" />
               </div>
             )}
           </Link>
@@ -96,15 +90,15 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
           </div>
         </div>
         
-        <div className="p-2 sm:p-4 flex-1 flex flex-col">
+        <div className="p-1.5 sm:p-3 flex-1 flex flex-col">
           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-            <h3 className="text-sm sm:text-xl font-bold text-gray-800 mb-1.5 sm:mb-2 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
+            <h3 className="text-xs sm:text-lg font-bold text-gray-800 mb-1 sm:mb-1.5 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
               {dom.nazov}
             </h3>
           </Link>
           
           {/* Kľúčové benefity pod názvom */}
-          <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-2 sm:mb-3">
+          <div className="flex flex-wrap gap-1 mb-1.5 sm:mb-2">
             {dom.celorocny && (
               <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-2.5 py-1 rounded-lg text-[9px] sm:text-xs font-bold shadow-md flex items-center gap-1">
                 <CheckCircle className="w-3 h-3" />
@@ -120,7 +114,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
           </div>
 
           {/* Základné parametre - dlazdice */}
-          <div className="grid grid-cols-3 gap-1 sm:gap-1.5 mb-2 sm:mb-3">
+          <div className="grid grid-cols-3 gap-1 mb-1.5 sm:mb-2">
             <div className="bg-blue-50 rounded p-1 sm:p-1.5 text-center">
               <Home className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 text-primary" />
               <div className="text-[8px] sm:text-[10px] text-gray-500 leading-tight mb-0.5">{t('manufacturer')}</div>
@@ -182,32 +176,32 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
             )}
           </div>
 
-          <div className="pt-2 sm:pt-3 border-t border-gray-200 mt-auto">
+          <div className="pt-1.5 sm:pt-2 border-t border-gray-200 mt-auto">
             {/* Cena - zvýraznená */}
-            <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg p-2 sm:p-3 mb-2 sm:mb-3">
-              <p className="text-[10px] sm:text-xs text-gray-600 font-semibold mb-0.5 sm:mb-1">
+            <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg p-1.5 sm:p-2 mb-1.5 sm:mb-2">
+              <p className="text-[9px] sm:text-[10px] text-gray-600 font-semibold mb-0.5">
                 {dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : dom.vyrobca === "Prosto House" ? "Základná cena" : t('priceFromLabel')}
               </p>
-              <p className="text-xl sm:text-2xl font-black text-primary">
+              <p className="text-lg sm:text-xl font-black text-primary">
                 {dom.zakladna_cena?.toLocaleString('sk-SK')} €
               </p>
             </div>
             {/* Akčné tlačidlá */}
-            <div className="flex gap-2">
+            <div className="flex gap-1 sm:gap-2">
               {dom.vyrobca === "Ticab house" && (
                 <Button 
                   size="sm" 
-                  className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white text-xs sm:text-sm px-3 h-9 font-bold shadow-md"
+                  className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white text-[10px] sm:text-xs px-2 h-7 sm:h-8 font-bold shadow-md"
                   onClick={() => navigate(createPageUrl(`DotaciaAmericana?dom=${dom.id}`))}
                 >
-                  <Gift className="w-4 h-4 mr-1" />
+                  <Gift className="w-3 h-3 sm:w-4 sm:h-4 mr-0.5" />
                   {t('dotacia')}
                 </Button>
               )}
               <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`} className={dom.vyrobca === "Ticab house" ? 'flex-1' : 'w-full'}>
-                <Button size="sm" className="w-full bg-primary hover:bg-primary/90 group-hover:bg-secondary text-xs sm:text-sm px-3 h-9 font-bold shadow-md">
+                <Button size="sm" className="w-full bg-primary hover:bg-primary/90 group-hover:bg-secondary text-[10px] sm:text-xs px-2 h-7 sm:h-8 font-bold shadow-md">
                   {t('detail')}
-                  <ArrowRight className="ml-1 w-4 h-4" />
+                  <ArrowRight className="ml-0.5 w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </Link>
             </div>
