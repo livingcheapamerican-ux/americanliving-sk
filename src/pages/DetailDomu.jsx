@@ -806,36 +806,7 @@ export default function DetailDomu() {
 
 
 
-            {/* Informačné panely - pre všetky Prosto House domy (okrem A-Frame) - PRESUNUTÉ NA PRAVÚ STRANU */}
-            {isProstoHouse && !dom.nazov?.includes("A-Frame") && !dom.nazov?.includes("A-frame") && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-full overflow-hidden">
-                {/* Komplet pre montáž */}
-                <Card className="overflow-hidden border border-amber-200 bg-amber-50/50">
-                  <div className="p-3 sm:p-4">
-                    <h4 className="font-bold text-amber-900 mb-2 text-xs sm:text-sm">📦 {t('assemblyKitTitle') || 'Komplet pre montáž'}</h4>
-                    <ul className="space-y-1 text-xs text-amber-800">
-                      <li>✓ {t('assemblyKitWoodenFrame') || 'Drevený rám'}</li>
-                      <li>✓ {t('assemblyKitExteriorFacade') || 'Vonkajšia fasáda'}</li>
-                      <li>✓ {t('assemblyKitWindows') || 'Okná'}</li>
-                      <li>✓ {t('assemblyKitDoors') || 'Dvere'}</li>
-                      <li>✓ {t('assemblyKitInsulation') || 'Izolácia'}</li>
-                    </ul>
-                  </div>
-                </Card>
 
-                {/* Čo nie je zahrnuté */}
-                <Card className="overflow-hidden border border-red-200 bg-red-50/50">
-                  <div className="p-3 sm:p-4">
-                    <h4 className="font-bold text-red-900 mb-2 text-xs sm:text-sm">❌ {t('notIncluded') || 'Nie je zahrnuté'}</h4>
-                    <ul className="space-y-1 text-xs text-red-800">
-                      <li>✗ {t('stairs') || 'Schody'}</li>
-                      <li>✗ {t('painting') || 'Maľovanie'}</li>
-                      <li>✗ {t('installation') || 'Montáž'}</li>
-                    </ul>
-                  </div>
-                </Card>
-              </div>
-            )}
 
             {/* Možnosti využitia - pre Prosto House */}
             {isProstoHouse && (
