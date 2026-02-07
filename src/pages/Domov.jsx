@@ -851,14 +851,29 @@ export default function Domov() {
                     ))}
                     </div>
 
-            <div className="text-center">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
               <Link to={createPageUrl("Katalog")}>
-                <Button size="sm" className="bg-primary hover:bg-primary/90 text-white font-semibold px-4 sm:px-8 text-xs sm:text-base shadow-xl">
-                  {t('showFullCatalog')}
-                  <ArrowRight className="ml-1.5 sm:ml-2 w-3.5 h-3.5 sm:w-5 sm:h-5" />
-                </Button>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                  <Button size="lg" className="relative bg-gradient-to-r from-primary via-red-600 to-primary hover:from-secondary hover:via-red-700 hover:to-secondary text-white font-black text-lg sm:text-xl px-10 sm:px-16 py-6 sm:py-8 shadow-2xl border-4 border-white group">
+                    <Home className="mr-2 w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform" />
+                    ZOBRAZIŤ VŠETKY DOMY
+                    <ArrowRight className="ml-2 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" />
+                    <motion.div
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                      className="absolute -top-2 -right-2 bg-yellow-400 text-red-900 text-[10px] font-black px-2 py-1 rounded-full rotate-12 shadow-lg"
+                    >
+                      KATALÓG
+                    </motion.div>
+                  </Button>
+                </motion.div>
               </Link>
-            </div>
+            </motion.div>
           </div>
         </section>
       )}
