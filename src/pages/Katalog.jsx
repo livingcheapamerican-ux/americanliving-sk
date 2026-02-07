@@ -91,11 +91,17 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
         </div>
         
         <div className="p-1 sm:p-2 flex-1 flex flex-col">
-          <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-            <h3 className="text-[10px] sm:text-base font-bold text-gray-800 mb-0.5 sm:mb-1 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
-              {dom.nazov}
-            </h3>
-          </Link>
+        <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
+          <h3 className="text-[10px] sm:text-base font-bold text-gray-800 mb-0.5 sm:mb-1 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
+            {dom.nazov}
+          </h3>
+          {dom.vyrobca === "Prosto House" && dom.prosto_house_kod && (
+            <div className="flex items-center gap-1 mb-1">
+              <Package className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-red-600" />
+              <span className="text-[8px] sm:text-[10px] font-bold text-red-600">{dom.prosto_house_kod}</span>
+            </div>
+          )}
+        </Link>
           
           {/* Kľúčové benefity pod názvom */}
           <div className="flex flex-wrap gap-0.5 sm:gap-1 mb-1 sm:mb-1.5">

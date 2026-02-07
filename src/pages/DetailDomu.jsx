@@ -1285,6 +1285,20 @@ export default function DetailDomu() {
             {/* Parametre */}
             <Card className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 to-white">
               <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('basicParameters')}</h3>
+              
+              {/* Identifikačné číslo pre Prosto House */}
+              {isProstoHouse && dom.prosto_house_kod && (
+                <div className="mb-3 p-3 bg-gradient-to-r from-red-100 to-orange-100 border-2 border-red-300 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Package className="w-5 h-5 text-red-600" />
+                    <div>
+                      <p className="text-xs text-gray-600 font-medium">Identifikačné číslo</p>
+                      <p className="text-lg font-black text-red-600">{dom.prosto_house_kod}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
               <div className="grid grid-cols-2 gap-2 sm:gap-3">
                 <div className="flex items-center gap-2">
                   <Home className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
