@@ -29,7 +29,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
       transition={{ delay: index * 0.05 }}
     >
       <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 bg-white ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
-        <div className={`relative overflow-hidden ${portraitImages[dom.id] ? 'h-[140px] sm:h-[280px]' : 'h-[120px] sm:h-[240px]'}`}>
+        <div className={`relative overflow-hidden h-[120px] sm:h-[240px]`}>
           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
             {dom.hlavny_obrazok ? (
               <ImageWithWatermark
