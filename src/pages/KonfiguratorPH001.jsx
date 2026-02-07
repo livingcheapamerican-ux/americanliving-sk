@@ -159,30 +159,34 @@ const HOUSE_PH001 = {
 
 const TypeSelector = ({ selected, onSelect }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
       <button
         onClick={() => onSelect('rekreacna')}
-        className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center justify-center gap-4 h-32 md:h-40 active:scale-95 ${
+        className={`p-8 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center justify-center gap-4 h-36 md:h-44 active:scale-95 hover:shadow-lg ${
           selected === 'rekreacna'
-            ? 'border-blue-600 bg-blue-50 text-blue-900 ring-2 ring-blue-600 ring-offset-2'
-            : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:shadow-md'
+            ? 'border-blue-600 bg-gradient-to-br from-blue-50 to-blue-100 text-blue-900 ring-2 ring-blue-500 ring-offset-2 shadow-lg'
+            : 'border-gray-200 bg-gradient-to-br from-white to-gray-50 text-gray-600 hover:border-blue-300 hover:shadow-md'
         }`}
       >
-        <Home className="w-8 h-8 md:w-10 md:h-10" />
+        <div className={`p-3 rounded-full transition-colors ${selected === 'rekreacna' ? 'bg-blue-200' : 'bg-gray-100'}`}>
+          <Home className="w-8 h-8 md:w-10 md:h-10" />
+        </div>
         <span className="text-lg md:text-xl font-bold">Rekreačná stavba</span>
       </button>
 
       <button
         onClick={() => onSelect('rodinny_dom')}
-        className={`p-6 rounded-xl border-2 transition-all flex flex-col items-center justify-center gap-4 h-32 md:h-40 active:scale-95 ${
+        className={`p-8 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center justify-center gap-4 h-36 md:h-44 active:scale-95 hover:shadow-lg ${
           selected === 'rodinny_dom'
-            ? 'border-green-600 bg-green-50 text-green-900 ring-2 ring-green-600 ring-offset-2'
-            : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:shadow-md'
+            ? 'border-green-600 bg-gradient-to-br from-green-50 to-green-100 text-green-900 ring-2 ring-green-500 ring-offset-2 shadow-lg'
+            : 'border-gray-200 bg-gradient-to-br from-white to-gray-50 text-gray-600 hover:border-green-300 hover:shadow-md'
         }`}
       >
-        <div className="flex items-center gap-2">
-          <Home className="w-8 h-8 md:w-10 md:h-10" />
-          <span className="bg-green-600 text-white text-xs px-2 py-0.5 rounded-full font-bold">A0</span>
+        <div className="flex items-center gap-3">
+          <div className={`p-3 rounded-full transition-colors ${selected === 'rodinny_dom' ? 'bg-green-200' : 'bg-gray-100'}`}>
+            <Home className="w-8 h-8 md:w-10 md:h-10" />
+          </div>
+          <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs px-3 py-1 rounded-full font-bold">A0</span>
         </div>
         <span className="text-lg md:text-xl font-bold">Rodinný dom A0</span>
       </button>
@@ -194,36 +198,36 @@ const ConfiguratorTile = ({ label, price, description, selected, onClick, isA0, 
   return (
     <button
       onClick={onClick}
-      className={`relative flex flex-col items-start p-5 rounded-xl border-2 transition-all w-full text-left active:scale-[0.98] ${
+      className={`relative flex flex-col items-start p-6 rounded-2xl border-2 transition-all duration-300 w-full text-left active:scale-[0.98] hover:shadow-md ${
         selected
-          ? 'border-indigo-600 bg-indigo-50 shadow-sm ring-1 ring-indigo-600'
-          : 'border-gray-200 bg-white hover:border-gray-300'
+          ? 'border-indigo-600 bg-gradient-to-br from-indigo-50 to-indigo-100 shadow-lg ring-2 ring-indigo-400 ring-offset-1'
+          : 'border-gray-200 bg-gradient-to-br from-white to-gray-50 hover:border-indigo-300 hover:shadow-md'
       }`}
     >
       <div className="flex justify-between w-full items-start mb-2">
         <div className="flex items-center gap-2 flex-wrap pr-4">
-            <span className={`font-bold text-base md:text-lg ${selected ? 'text-indigo-900' : 'text-gray-900'}`}>{label}</span>
-            {isA0 && <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-200">A0</span>}
+            <span className={`font-bold text-base md:text-lg transition-colors ${selected ? 'text-indigo-900' : 'text-gray-900'}`}>{label}</span>
+            {isA0 && <span className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-green-300">⚡ A0</span>}
         </div>
-        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${selected ? 'border-indigo-600 bg-indigo-600 scale-110' : 'border-gray-300'}`}>
-          {selected && <Check className="w-4 h-4 text-white" />}
+        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300 ${selected ? 'border-indigo-600 bg-gradient-to-br from-indigo-500 to-indigo-600 scale-110 shadow-md' : 'border-gray-300 bg-white'}`}>
+          {selected && <Check className="w-4 h-4 text-white animate-in zoom-in-50 duration-200" />}
         </div>
       </div>
-      {description && <p className="text-sm text-gray-500 mb-3 font-medium leading-tight">{description}</p>}
+      {description && <p className="text-sm text-gray-600 mb-3 font-medium leading-tight">{description}</p>}
       
       <div className="flex items-center gap-2">
         {isAdmin && onPriceChange ? (
-          <div className="flex items-center gap-1 bg-white border border-indigo-200 rounded px-1 py-0.5 z-10" onClick={(e) => e.stopPropagation()}>
-             <span className="text-xs text-gray-400">€</span>
+          <div className="flex items-center gap-1 bg-white border border-indigo-200 rounded-lg px-2 py-1 z-10" onClick={(e) => e.stopPropagation()}>
+             <span className="text-xs text-gray-500 font-semibold">€</span>
              <input 
                type="number" 
                value={price} 
                onChange={(e) => onPriceChange(Number(e.target.value))}
-               className="w-20 text-sm font-bold text-indigo-700 outline-none"
+               className="w-20 text-sm font-bold text-indigo-700 outline-none bg-transparent"
              />
           </div>
         ) : (
-          <span className={`text-sm font-semibold ${selected ? 'text-indigo-700' : 'text-gray-400'}`}>
+          <span className={`text-sm font-semibold transition-colors ${selected ? 'text-indigo-700' : 'text-gray-500'}`}>
             {price === 0 ? 'V cene' : `+${price.toLocaleString()} €`}
           </span>
         )}
@@ -249,46 +253,46 @@ const Section = ({ title, icon: Icon, children }) => (
 const AddonCheckbox = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description }) => (
   <button
     onClick={!disabled && !locked ? onChange : undefined}
-    className={`flex items-center justify-between p-5 rounded-xl border-2 transition-all w-full active:scale-[0.98] ${
+    className={`flex items-center justify-between p-6 rounded-2xl border-2 transition-all duration-300 w-full active:scale-[0.98] hover:shadow-md ${
       locked 
-        ? 'border-green-200 bg-green-50 cursor-not-allowed opacity-90'
+        ? 'border-green-400 bg-gradient-to-br from-green-50 to-emerald-50 cursor-not-allowed opacity-95 shadow-sm'
         : checked
-          ? 'border-indigo-600 bg-indigo-50 shadow-sm ring-1 ring-indigo-600'
+          ? 'border-indigo-600 bg-gradient-to-br from-indigo-50 to-indigo-100 shadow-lg ring-2 ring-indigo-400 ring-offset-1'
           : disabled 
-            ? 'border-gray-100 bg-gray-50 opacity-60 cursor-not-allowed' 
-            : 'border-gray-200 bg-white hover:border-gray-300'
+            ? 'border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 opacity-50 cursor-not-allowed' 
+            : 'border-gray-200 bg-gradient-to-br from-white to-gray-50 hover:border-indigo-300'
     }`}
   >
     <div className="flex items-center gap-4">
-      <div className={`w-6 h-6 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+      <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
         locked 
-          ? 'bg-green-600 border-green-600'
+          ? 'bg-gradient-to-br from-green-500 to-emerald-600 border-green-600 shadow-md'
           : checked 
-            ? 'bg-indigo-600 border-indigo-600' 
+            ? 'bg-gradient-to-br from-indigo-500 to-indigo-600 border-indigo-600 shadow-md' 
             : 'bg-white border-gray-300'
       }`}>
-        {locked ? <Lock className="w-3 h-3 text-white" /> : checked && <Check className="w-4 h-4 text-white" />}
+        {locked ? <Lock className="w-3 h-3 text-white" /> : checked && <Check className="w-4 h-4 text-white animate-in zoom-in-50 duration-200" />}
       </div>
       <div className="text-left">
-        <span className={`font-semibold text-base md:text-lg block ${checked || locked ? 'text-gray-900' : 'text-gray-700'}`}>{label}</span>
-        {description && <p className="text-xs text-gray-500 mt-1 font-medium max-w-sm leading-tight text-left">{description}</p>}
-        {locked && <span className="text-[10px] uppercase font-bold text-green-700 tracking-wider">Vyžadované pre A0</span>}
+        <span className={`font-semibold text-base md:text-lg block transition-colors ${checked || locked ? 'text-gray-900' : 'text-gray-700'}`}>{label}</span>
+        {description && <p className="text-xs text-gray-600 mt-1 font-medium max-w-sm leading-tight text-left">{description}</p>}
+        {locked && <span className="text-[10px] uppercase font-bold text-green-700 tracking-wider mt-1">⚡ Vyžadované pre A0</span>}
       </div>
     </div>
     
     <div className="flex items-center gap-2">
         {isAdmin && onPriceChange ? (
-          <div className="flex items-center gap-1 bg-white border border-indigo-200 rounded px-1 py-0.5 z-10" onClick={(e) => e.stopPropagation()}>
-             <span className="text-xs text-gray-400">€</span>
+          <div className="flex items-center gap-1 bg-white border border-indigo-200 rounded-lg px-2 py-1 z-10" onClick={(e) => e.stopPropagation()}>
+             <span className="text-xs text-gray-500 font-semibold">€</span>
              <input 
                type="number" 
                value={price} 
                onChange={(e) => onPriceChange(Number(e.target.value))}
-               className="w-20 text-sm font-bold text-indigo-700 outline-none"
+               className="w-20 text-sm font-bold text-indigo-700 outline-none bg-transparent"
              />
           </div>
         ) : (
-          <span className={`text-sm font-bold ${locked ? 'text-green-700' : 'text-gray-500'}`}>{price === 0 ? '0 €' : `+${price.toLocaleString()} €`}</span>
+          <span className={`text-sm font-bold transition-colors ${locked ? 'text-green-700' : 'text-gray-600'}`}>{price === 0 ? '0 €' : `+${price.toLocaleString()} €`}</span>
         )}
     </div>
   </button>
@@ -910,11 +914,21 @@ export default function KonfiguratorPH001() {
              <button onClick={() => setIsAdmin(!isAdmin)} className={`p-2 rounded-full transition-colors ${isAdmin ? 'bg-indigo-100 text-indigo-600' : 'text-gray-400 hover:bg-gray-100'}`}>
                 {isAdmin ? <Edit2 className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
              </button>
-             <div className="hidden md:flex gap-1">
-               {STEPS.map((_, i) => (
-                 <div key={i} className={`w-2 h-2 rounded-full ${i === activeStep ? 'bg-indigo-600' : i < activeStep ? 'bg-indigo-200' : 'bg-gray-200'}`} />
-               ))}
-             </div>
+             <div className="hidden md:flex gap-2 items-center h-1.5">
+                  {STEPS.map((_, i) => (
+                    <div 
+                      key={i} 
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        i === activeStep 
+                          ? 'bg-gradient-to-r from-indigo-600 to-purple-600 shadow-md' 
+                          : i < activeStep 
+                            ? 'bg-gradient-to-r from-indigo-300 to-indigo-200' 
+                            : 'bg-gray-200'
+                      }`}
+                      style={{ width: i === activeStep ? '24px' : '16px' }}
+                    />
+                  ))}
+                </div>
           </div>
         </div>
         
@@ -979,29 +993,29 @@ export default function KonfiguratorPH001() {
           </div>
 
           <div className="mt-8">
-            <div className="bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
-              <div className="bg-gray-900 text-white p-6">
-                <h3 className="font-bold text-xl">Sumár konfigurácie</h3>
-                <p className="text-gray-400 text-sm mt-1">{HOUSE_PH001.name}</p>
-              </div>
-              
-              <div className="p-5">
-                <SummaryContent />
-              </div>
-              
-              <div className="p-5 bg-gradient-to-br from-indigo-50 to-purple-50 border-t-2 border-indigo-200">
-                 <div className="bg-white rounded-xl p-4 mb-4 border-2 border-indigo-300 shadow-lg">
-                   <div className="text-xs text-gray-600 font-medium mb-1">Celková cena s DPH</div>
-                   <div key={totalPrice} className="text-4xl font-black text-indigo-700 animate-pop">{totalPrice.toLocaleString()} €</div>
-                 </div>
-                 <button 
-                  onClick={() => setModalOpen(true)}
-                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 rounded-xl transition-all shadow-xl shadow-indigo-300 active:scale-[0.98] flex items-center justify-center gap-2"
-                 >
-                   <Send className="w-5 h-5" />
-                   Odoslať cenovú ponuku
-                 </button>
-              </div>
+            <div className="bg-white rounded-3xl shadow-2xl border-2 border-gray-100 overflow-hidden">
+            <div className="bg-gradient-to-r from-gray-900 via-indigo-900 to-purple-900 text-white p-8">
+             <h3 className="font-bold text-2xl">Sumár konfigurácie</h3>
+             <p className="text-indigo-200 text-sm mt-2">{HOUSE_PH001.name}</p>
+            </div>
+
+            <div className="p-6 max-h-64 overflow-y-auto">
+             <SummaryContent />
+            </div>
+
+            <div className="p-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-t-2 border-indigo-200">
+               <div className="bg-gradient-to-br from-white to-indigo-50 rounded-2xl p-5 mb-5 border-2 border-indigo-300 shadow-lg">
+                 <div className="text-xs text-gray-600 font-semibold mb-2 uppercase tracking-wide">Celková cena s DPH</div>
+                 <div key={totalPrice} className="text-5xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent animate-pop">{totalPrice.toLocaleString()} €</div>
+               </div>
+               <button 
+                onClick={() => setModalOpen(true)}
+                className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold py-5 rounded-2xl transition-all duration-300 shadow-xl shadow-indigo-400/50 active:scale-[0.98] hover:shadow-2xl hover:shadow-indigo-500/60 flex items-center justify-center gap-2 text-lg"
+               >
+                 <Send className="w-6 h-6" />
+                 Odoslať cenovú ponuku
+               </button>
+            </div>
             </div>
           </div>
         </div>
