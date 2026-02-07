@@ -28,7 +28,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
     >
-      <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 bg-white ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
+      <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 bg-white flex flex-col h-full ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
         <div className={`relative overflow-hidden h-[120px] sm:h-[240px]`}>
           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
             {dom.hlavny_obrazok ? (
@@ -96,7 +96,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
           </div>
         </div>
         
-        <div className="p-2 sm:p-5">
+        <div className="p-2 sm:p-5 flex-1 flex flex-col">
           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
             <h3 className="text-base sm:text-2xl font-bold text-gray-800 mb-2 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
               {dom.nazov}
@@ -138,7 +138,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
               )}
               <div className="flex flex-col min-w-0">
                 <span className="text-[9px] sm:text-xs text-gray-500">{t('houseType')}</span>
-                <span className="font-bold text-gray-800 text-[10px] sm:text-sm truncate">{dom.typ_domu === 'modularny' ? t('modularType') : dom.typ_domu === 'montovany' ? t('prefabType') : t('mobileType')}</span>
+                <span className="font-bold text-gray-800 text-[10px] sm:text-sm leading-tight">{dom.typ_domu === 'modularny' ? t('modularType') : dom.typ_domu === 'montovany' ? t('prefabType') : t('mobileType')}</span>
               </div>
             </div>
             <div className="flex items-center gap-1.5 sm:gap-2">
@@ -190,7 +190,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
             )}
           </div>
 
-          <div className="pt-3 sm:pt-4 border-t border-gray-200">
+          <div className="pt-3 sm:pt-4 border-t border-gray-200 mt-auto">
             {/* Cena - zvýraznená */}
             <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl p-3 mb-3">
               <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-1">
