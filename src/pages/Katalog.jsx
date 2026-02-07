@@ -41,7 +41,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                       : dom.hlavny_obrazok
                 }
                 alt={dom.nazov}
-                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
+                className={`w-full h-full ${dizajnFilter === "podorys3d" ? "object-contain bg-white" : "object-cover"} group-hover:scale-105 transition-all duration-500`}
                 useCatalogSetting={true}
                 priority={index < 4}
                 loading={index < 4 ? "eager" : "lazy"}
