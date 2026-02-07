@@ -527,12 +527,10 @@ export default function KonfiguratorPH001() {
   const nextStep = () => {
     if (activeStep < STEPS.length - 1) setActiveStep(activeStep + 1);
     else setModalOpen(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const prevStep = () => {
     if (activeStep > 0) setActiveStep(activeStep - 1);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const renderStepContent = () => {
