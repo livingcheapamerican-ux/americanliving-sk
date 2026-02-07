@@ -264,6 +264,7 @@ export default function Katalog() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [dizajnFilter, setDizajnFilter] = useState("murovka"); // "murovka", "drevo", alebo "podorys3d"
   const [pocetModulovFilter, setPocetModulovFilter] = useState([]);
+  const [moduloveDomyFilter, setModuloveDomyFilter] = useState('all'); // 'all', '1modul', 'viacmodulov'
   const [portraitImages, setPortraitImages] = useState({});
   const [energyCert, setEnergyCert] = useState('all');
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
@@ -384,11 +385,14 @@ export default function Katalog() {
       const cenaMatch = dom.zakladna_cena >= cenoveRozpatie[0] && dom.zakladna_cena <= cenoveRozpatie[1];
       const izbyMatch = pocetIziebFilter.length === 0 || (dom.pocet_izieb && pocetIziebFilter.includes(dom.pocet_izieb));
       const modulyMatch = pocetModulovFilter.length === 0 || (dom.pocet_modulov && pocetModulovFilter.includes(dom.pocet_modulov));
+      const moduloveDomyMatch = moduloveDomyFilter === 'all' || 
+        (moduloveDomyFilter === '1modul' && dom.vyrobca === "Ticab house" && dom.pocet_modulov === 1) ||
+        (moduloveDomyFilter === 'viacmodulov' && dom.vyrobca === "Ticab house" && dom.pocet_modulov > 1);
       const energyMatch = energyCert === 'all' || 
         (energyCert === 'a0' && dom.energeticky_certifikat) ||
         (energyCert === 'no' && !dom.energeticky_certifikat);
       
-      return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch && energyMatch;
+      return kategoriaMatch && vyrobcaMatch && typMatch && plochaMatch && uzitkovaMatch && hladanieMatch && cenaMatch && izbyMatch && modulyMatch && moduloveDomyMatch && energyMatch;
     });
   }
 
@@ -777,8 +781,44 @@ export default function Katalog() {
                   </div>
                 </div>
 
+                {/* Modulové domy - Ticabhouse filter */}
+                {vyrobcaFilter.includes("Ticab house") && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                    <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                      <Boxes className="w-3 h-3 text-red-600" />
+                      Modulové domy
+                    </label>
+                    <div className="grid grid-cols-1 gap-1.5">
+                      {[
+                        { value: 'all', label: 'Všetky', icon: Boxes },
+                        { value: '1modul', label: '1 modulové domy', icon: Home },
+                        { value: 'viacmodulov', label: 'Viac modulové domy', icon: Building2 }
+                      ].map((opt) => {
+                        const Icon = opt.icon;
+                        const isSelected = moduloveDomyFilter === opt.value;
+                        return (
+                          <button
+                            key={opt.value}
+                            onClick={() => setModuloveDomyFilter(opt.value)}
+                            className={`p-2 rounded-lg border-2 transition-all text-left ${
+                              isSelected
+                                ? 'bg-red-100 border-red-500 text-red-700 font-bold'
+                                : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-red-600' : 'text-gray-400'}`} />
+                              <span className="text-xs">{opt.label}</span>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
                 {/* Počet modulov - zobrazí sa len pre modulárne domy */}
-                {typFilter.includes("modularny") && (
+                {typFilter.includes("modularny") && !vyrobcaFilter.includes("Ticab house") && (
                   <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                     <label className="block text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
                       <Boxes className="w-3 h-3 text-red-600" />
@@ -927,6 +967,7 @@ export default function Katalog() {
                     setCenoveRozpatie([0, 300000]);
                     setPocetIziebFilter([]);
                     setPocetModulovFilter([]);
+                    setModuloveDomyFilter('all');
                     setZoradenie("poradie");
                     setEnergyCert('all');
                   }}>
@@ -1123,6 +1164,7 @@ export default function Katalog() {
                   setCenoveRozpatie([0, 500000]);
                   setPocetIziebFilter([]);
                   setPocetModulovFilter([]);
+                  setModuloveDomyFilter('all');
                   setZoradenie("poradie");
                 }}>
 
