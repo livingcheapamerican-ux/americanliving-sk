@@ -128,6 +128,7 @@ import KonfiguratorPH003 from './pages/KonfiguratorPH003';
 import KonfiguratorPH004 from './pages/KonfiguratorPH004';
 import KonfiguratorPH002 from './pages/KonfiguratorPH002';
 import KonfiguratorPH005 from './pages/KonfiguratorPH005';
+import KonfiguratorPH006 from './pages/KonfiguratorPH006';
 import __Layout from './Layout.jsx';
 
 
@@ -213,6 +214,7 @@ export const PAGES = {
     "KonfiguratorPH004": KonfiguratorPH004,
     "KonfiguratorPH002": KonfiguratorPH002,
     "KonfiguratorPH005": KonfiguratorPH005,
+    "KonfiguratorPH006": KonfiguratorPH006,
 }
 
 export const pagesConfig = {
