@@ -682,9 +682,9 @@ export default function KonfiguratorPH001() {
                           <div className="text-sm text-indigo-600 font-bold mb-3">{item.p} €</div>
                         )}
                         <div className="flex items-center justify-center gap-3 w-full">
-                           <button onClick={() => item.s(Math.max(0, item.v - 1))} className="w-10 h-10 rounded-lg bg-white border border-gray-300 hover:bg-gray-100 flex items-center justify-center font-bold text-gray-600 active:scale-95 transition-transform">-</button>
+                           <button onClick={() => item.s(Math.max(0, item.v - 1))} className="w-10 h-10 rounded-lg bg-gradient-to-br from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 flex items-center justify-center font-bold text-gray-700 active:scale-90 transition-all duration-200 shadow-md hover:shadow-lg border border-gray-400">−</button>
                            <span className="w-6 font-bold text-lg text-gray-800">{item.v}</span>
-                           <button onClick={() => item.s(item.v + 1)} className="w-10 h-10 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 flex items-center justify-center font-bold shadow-md active:scale-95 transition-transform">+</button>
+                           <button onClick={() => item.s(item.v + 1)} className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 flex items-center justify-center font-bold shadow-lg shadow-indigo-400/50 hover:shadow-lg hover:shadow-indigo-500/60 active:scale-90 transition-all duration-200">+</button>
                         </div>
                       </div>
                     ))}
@@ -738,9 +738,9 @@ export default function KonfiguratorPH001() {
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                       <button onClick={() => setInteriorDoorsCount(Math.max(0, interiorDoorsCount - 1))} className="w-12 h-12 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center font-bold text-gray-600 active:scale-95 transition-all text-xl">-</button>
+                       <button onClick={() => setInteriorDoorsCount(Math.max(0, interiorDoorsCount - 1))} className="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 flex items-center justify-center font-bold text-gray-700 active:scale-90 transition-all duration-200 shadow-md hover:shadow-lg border border-gray-400 text-xl">−</button>
                        <span className="w-12 text-center font-bold text-2xl text-gray-900">{interiorDoorsCount}</span>
-                       <button onClick={() => setInteriorDoorsCount(interiorDoorsCount + 1)} className="w-12 h-12 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center font-bold shadow-lg shadow-indigo-200 active:scale-95 transition-all text-xl">+</button>
+                       <button onClick={() => setInteriorDoorsCount(interiorDoorsCount + 1)} className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white flex items-center justify-center font-bold shadow-lg shadow-indigo-400/50 hover:shadow-lg hover:shadow-indigo-500/60 active:scale-90 transition-all duration-200 text-xl">+</button>
                     </div>
                  </div>
             </div>
@@ -976,17 +976,17 @@ export default function KonfiguratorPH001() {
              {renderStepContent()}
           </div>
           
-          <div className="hidden md:flex justify-between mt-8">
+          <div className="hidden md:flex justify-between mt-8 gap-4">
             <button 
               onClick={prevStep}
               disabled={activeStep === 0}
-              className="px-6 py-3 rounded-xl font-bold text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:hover:bg-transparent flex items-center gap-2 transition-colors"
+              className="px-8 py-4 rounded-2xl font-bold text-gray-700 bg-gradient-to-br from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 disabled:opacity-40 disabled:hover:from-gray-100 disabled:hover:to-gray-200 disabled:cursor-not-allowed flex items-center gap-2 transition-all duration-300 hover:shadow-lg active:scale-95 border border-gray-300"
             >
               <ChevronLeft className="w-5 h-5" /> Späť
             </button>
             <button 
               onClick={nextStep}
-              className="px-8 py-3 rounded-xl font-bold bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-200 flex items-center gap-2 transition-all hover:scale-105 active:scale-95"
+              className="px-10 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 hover:from-indigo-700 hover:via-purple-700 hover:to-indigo-700 shadow-lg shadow-indigo-400/50 flex items-center gap-2 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/60 hover:scale-105 active:scale-95"
             >
               {activeStep === STEPS.length - 1 ? 'Dokončiť a odoslať' : 'Pokračovať'} <ChevronRight className="w-5 h-5" />
             </button>
@@ -1021,23 +1021,23 @@ export default function KonfiguratorPH001() {
         </div>
       </div>
       
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 pb-8 z-40 lg:hidden shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.1)]">
+      <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white to-white/95 border-t-2 border-gray-200 p-4 pb-8 z-40 lg:hidden shadow-[0_-5px_25px_-5px_rgba(0,0,0,0.15)]">
          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-            <div className="flex-1" onClick={() => setMobileSummaryOpen(true)}>
-               <div className="text-xs text-gray-500 font-medium flex items-center gap-1 mb-1">
-                 Celková cena <Eye className="w-3 h-3 text-indigo-500" />
+            <div className="flex-1 cursor-pointer" onClick={() => setMobileSummaryOpen(true)}>
+               <div className="text-xs text-gray-600 font-semibold flex items-center gap-1 mb-1">
+                 Celková cena <Eye className="w-3 h-3 text-indigo-600" />
                </div>
-               <div key={totalPrice} className="text-2xl font-bold text-indigo-700 leading-none animate-pop">{totalPrice.toLocaleString()} €</div>
+               <div key={totalPrice} className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent leading-none animate-pop">{totalPrice.toLocaleString()} €</div>
             </div>
             <div className="flex items-center gap-2">
                {activeStep > 0 && (
-                 <button onClick={prevStep} className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-gray-600 active:scale-90 transition-all border border-gray-200">
+                 <button onClick={prevStep} className="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 flex items-center justify-center text-gray-700 active:scale-90 transition-all duration-200 border border-gray-400 shadow-md">
                    <ChevronLeft className="w-6 h-6" />
                  </button>
                )}
                <button 
                 onClick={nextStep}
-                className="h-12 px-6 bg-indigo-600 text-white rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-indigo-200 active:scale-95 transition-all"
+                className="h-12 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-indigo-400/50 active:scale-95 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/60"
                >
                  {activeStep === STEPS.length - 1 ? 'Odoslať' : 'Ďalej'}
                  <ChevronRight className="w-5 h-5" />
