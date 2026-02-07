@@ -105,6 +105,12 @@ import Konfigurator from './pages/Konfigurator';
 import Konfigurator3D from './pages/Konfigurator3D';
 import KonfiguratorFlatDouble from './pages/KonfiguratorFlatDouble';
 import KonfiguratorPH001 from './pages/KonfiguratorPH001';
+import KonfiguratorPH002 from './pages/KonfiguratorPH002';
+import KonfiguratorPH003 from './pages/KonfiguratorPH003';
+import KonfiguratorPH004 from './pages/KonfiguratorPH004';
+import KonfiguratorPH005 from './pages/KonfiguratorPH005';
+import KonfiguratorPH006 from './pages/KonfiguratorPH006';
+import KonfiguratorPH007 from './pages/KonfiguratorPH007';
 import KonfiguratorProstoHouse from './pages/KonfiguratorProstoHouse';
 import KonfiguratorTicabhouse from './pages/KonfiguratorTicabhouse';
 import Kontakt from './pages/Kontakt';
@@ -124,12 +130,7 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
-import KonfiguratorPH003 from './pages/KonfiguratorPH003';
-import KonfiguratorPH004 from './pages/KonfiguratorPH004';
-import KonfiguratorPH002 from './pages/KonfiguratorPH002';
-import KonfiguratorPH005 from './pages/KonfiguratorPH005';
-import KonfiguratorPH006 from './pages/KonfiguratorPH006';
-import KonfiguratorPH007 from './pages/KonfiguratorPH007';
+import KonfiguratorPH008 from './pages/KonfiguratorPH008';
 import __Layout from './Layout.jsx';
 
 
@@ -192,6 +193,12 @@ export const PAGES = {
     "Konfigurator3D": Konfigurator3D,
     "KonfiguratorFlatDouble": KonfiguratorFlatDouble,
     "KonfiguratorPH001": KonfiguratorPH001,
+    "KonfiguratorPH002": KonfiguratorPH002,
+    "KonfiguratorPH003": KonfiguratorPH003,
+    "KonfiguratorPH004": KonfiguratorPH004,
+    "KonfiguratorPH005": KonfiguratorPH005,
+    "KonfiguratorPH006": KonfiguratorPH006,
+    "KonfiguratorPH007": KonfiguratorPH007,
     "KonfiguratorProstoHouse": KonfiguratorProstoHouse,
     "KonfiguratorTicabhouse": KonfiguratorTicabhouse,
     "Kontakt": Kontakt,
@@ -211,12 +218,7 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
-    "KonfiguratorPH003": KonfiguratorPH003,
-    "KonfiguratorPH004": KonfiguratorPH004,
-    "KonfiguratorPH002": KonfiguratorPH002,
-    "KonfiguratorPH005": KonfiguratorPH005,
-    "KonfiguratorPH006": KonfiguratorPH006,
-    "KonfiguratorPH007": KonfiguratorPH007,
+    "KonfiguratorPH008": KonfiguratorPH008,
 }
 
 export const pagesConfig = {
