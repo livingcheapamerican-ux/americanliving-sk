@@ -605,24 +605,28 @@ export default function KonfiguratorPH001() {
                 </h4>
                 <div className="grid grid-cols-1 gap-3">
                   {HOUSE_PH001.options.mounting.map((opt, i) => {
-                    const mountingLabels = {
-                      0: t('noAssemblySelf'),
-                      1: t('withAssembly')
-                    };
-                    return (
-                    <ConfiguratorTile 
-                      key={i} 
-                      label={mountingLabels[i] || opt.label} 
-                      price={getPrice('mounting', i, opt.price)} 
-                      description={opt.description} 
-                      selected={mountingIdx === i} 
-                      onClick={() => setMountingIdx(i)}
-                      isAdmin={isAdmin}
-                      onPriceChange={(newPrice) => updatePrice('mounting', i, newPrice)}
-                      category="mounting"
-                      />
-                      );
-                      })}
+                  const mountingLabels = {
+                    0: t('noAssemblySelf'),
+                    1: t('withAssembly')
+                  };
+                  const mountingDescriptions = {
+                    0: t('selfAssemblyDesc'),
+                    1: t('proAssemblyDesc')
+                  };
+                  return (
+                  <ConfiguratorTile 
+                    key={i} 
+                    label={mountingLabels[i] || opt.label} 
+                    price={getPrice('mounting', i, opt.price)} 
+                    description={mountingDescriptions[i] || opt.description} 
+                    selected={mountingIdx === i} 
+                    onClick={() => setMountingIdx(i)}
+                    isAdmin={isAdmin}
+                    onPriceChange={(newPrice) => updatePrice('mounting', i, newPrice)}
+                    category="mounting"
+                    />
+                    );
+                    })}
                       </div>
                       </div>
              <div className="col-span-full mt-6">
@@ -638,12 +642,18 @@ export default function KonfiguratorPH001() {
                       2: t('foundationSlab'),
                       3: t('stripFoundations')
                     };
+                    const foundationDescriptions = {
+                      0: t('noFoundationsDesc'),
+                      1: t('pilotsFootingsDesc'),
+                      2: t('foundationSlabDesc'),
+                      3: t('stripFoundationsDesc')
+                    };
                     return (
                     <ConfiguratorTile 
                       key={i} 
                       label={foundationLabels[i] || opt.label} 
                       price={getPrice('foundation', i, opt.price)} 
-                      description={opt.description} 
+                      description={foundationDescriptions[i] || opt.description} 
                       selected={foundationIdx === i} 
                       onClick={() => setFoundationIdx(i)}
                       isAdmin={isAdmin}
@@ -672,12 +682,18 @@ export default function KonfiguratorPH001() {
                       2: t('premium250mm'),
                       3: t('extra300mm')
                     };
+                    const insulationDescriptions = {
+                      0: t('yearRound150mmDesc'),
+                      1: t('enhanced200mmDesc'),
+                      2: t('premium250mmDesc'),
+                      3: t('extra300mmDesc')
+                    };
                     return (
                     <ConfiguratorTile 
                       key={i} 
                       label={insulationLabels[i] || opt.label} 
                       price={getPrice('insulation', i, opt.price)} 
-                      description={opt.description} 
+                      description={insulationDescriptions[i] || opt.description} 
                       selected={insulationIdx === i} 
                       onClick={() => setInsulationIdx(i)} 
                       isA0={opt.label.includes('250 mm')}
@@ -700,12 +716,16 @@ export default function KonfiguratorPH001() {
                       0: t('facadeStandard'),
                       1: t('facadeStucco')
                     };
+                    const facadeDescriptions = {
+                      0: t('facadeStandardDesc'),
+                      1: t('facadeStuccoDesc')
+                    };
                     return (
                     <ConfiguratorTile 
                       key={i} 
                       label={facadeLabels[i] || opt.label} 
                       price={getPrice('facade', i, opt.price)} 
-                      description={opt.description} 
+                      description={facadeDescriptions[i] || opt.description} 
                       selected={facadeIdx === i} 
                       onClick={() => setFacadeIdx(i)}
                       isAdmin={isAdmin}
@@ -723,25 +743,30 @@ export default function KonfiguratorPH001() {
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                    {HOUSE_PH001.options.doors.map((opt, i) => {
-                     const doorLabels = {
-                       0: t('doorsStandard'),
-                       1: t('doorsMetal2Locks'),
-                       2: t('doorsPlasticMetal')
-                     };
-                     return (
-                     <ConfiguratorTile 
-                       key={i} 
-                       label={doorLabels[i] || opt.label} 
-                       price={getPrice('doors', i, opt.price)} 
-                       description={opt.description} 
-                       selected={doorsIdx === i} 
-                       onClick={() => setDoorsIdx(i)}
-                       isAdmin={isAdmin}
-                       onPriceChange={(newPrice) => updatePrice('doors', i, newPrice)}
-                       category="doors"
-                     />
-                     );
-                   })}
+                      const doorLabels = {
+                        0: t('doorsStandard'),
+                        1: t('doorsMetal2Locks'),
+                        2: t('doorsPlasticMetal')
+                      };
+                      const doorDescriptions = {
+                        0: t('doorsStandardDesc'),
+                        1: t('doorsMetal2LocksDesc'),
+                        2: t('doorsPlasticMetalDesc')
+                      };
+                      return (
+                      <ConfiguratorTile 
+                        key={i} 
+                        label={doorLabels[i] || opt.label} 
+                        price={getPrice('doors', i, opt.price)} 
+                        description={doorDescriptions[i] || opt.description} 
+                        selected={doorsIdx === i} 
+                        onClick={() => setDoorsIdx(i)}
+                        isAdmin={isAdmin}
+                        onPriceChange={(newPrice) => updatePrice('doors', i, newPrice)}
+                        category="doors"
+                      />
+                      );
+                    })}
                        </div>
                       </div>
              <div className="col-span-full mt-6">
@@ -794,12 +819,17 @@ export default function KonfiguratorPH001() {
                        1: t('interiorWood'),
                        2: t('interiorDrywall')
                      };
+                     const interiorDescriptions = {
+                       0: t('noInteriorDesc'),
+                       1: t('interiorWoodDesc'),
+                       2: t('interiorDrywallDesc')
+                     };
                      return (
                      <ConfiguratorTile 
                        key={i} 
                        label={interiorLabels[i] || opt.label} 
                        price={getPrice('interior', i, opt.price)} 
-                       description={opt.description} 
+                       description={interiorDescriptions[i] || opt.description} 
                        selected={interiorIdx === i} 
                        onClick={() => setInteriorIdx(i)} 
                        isAdmin={isAdmin}
