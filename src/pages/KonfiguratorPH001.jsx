@@ -687,10 +687,15 @@ export default function KonfiguratorPH001() {
                  {t('facade')}
                </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {HOUSE_PH001.options.facade.map((opt, i) => (
+                  {HOUSE_PH001.options.facade.map((opt, i) => {
+                    const facadeLabels = {
+                      0: t('facadeStandard'),
+                      1: t('facadeStucco')
+                    };
+                    return (
                     <ConfiguratorTile 
                       key={i} 
-                      label={opt.label} 
+                      label={facadeLabels[i] || opt.label} 
                       price={getPrice('facade', i, opt.price)} 
                       description={opt.description} 
                       selected={facadeIdx === i} 
@@ -699,7 +704,8 @@ export default function KonfiguratorPH001() {
                       onPriceChange={(newPrice) => updatePrice('facade', i, newPrice)}
                       category="facade"
                     />
-                  ))}
+                    );
+                  })}
                 </div>
              </div>
               <div className="col-span-full mt-6">
@@ -708,21 +714,27 @@ export default function KonfiguratorPH001() {
                   {t('entryDoors')}
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {HOUSE_PH001.options.doors.map((opt, i) => (
-                    <ConfiguratorTile 
-                      key={i} 
-                      label={opt.label} 
-                      price={getPrice('doors', i, opt.price)} 
-                      description={opt.description} 
-                      selected={doorsIdx === i} 
-                      onClick={() => setDoorsIdx(i)}
-                      isAdmin={isAdmin}
-                      onPriceChange={(newPrice) => updatePrice('doors', i, newPrice)}
-                      category="doors"
-                      />
-                      );
-                      })}
-                      </div>
+                   {HOUSE_PH001.options.doors.map((opt, i) => {
+                     const doorLabels = {
+                       0: t('doorsStandard'),
+                       1: t('doorsMetal2Locks'),
+                       2: t('doorsPlasticMetal')
+                     };
+                     return (
+                     <ConfiguratorTile 
+                       key={i} 
+                       label={doorLabels[i] || opt.label} 
+                       price={getPrice('doors', i, opt.price)} 
+                       description={opt.description} 
+                       selected={doorsIdx === i} 
+                       onClick={() => setDoorsIdx(i)}
+                       isAdmin={isAdmin}
+                       onPriceChange={(newPrice) => updatePrice('doors', i, newPrice)}
+                       category="doors"
+                     />
+                     );
+                   })}
+                       </div>
                       </div>
              <div className="col-span-full mt-6">
                  <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">{t('additionalWindows')}</h4>
@@ -768,10 +780,16 @@ export default function KonfiguratorPH001() {
                   {t('interiorFinish')}
                 </h4>
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                   {HOUSE_PH001.options.interior.map((opt, i) => (
+                   {HOUSE_PH001.options.interior.map((opt, i) => {
+                     const interiorLabels = {
+                       0: t('noInterior'),
+                       1: t('interiorWood'),
+                       2: t('interiorDrywall')
+                     };
+                     return (
                      <ConfiguratorTile 
                        key={i} 
-                       label={opt.label} 
+                       label={interiorLabels[i] || opt.label} 
                        price={getPrice('interior', i, opt.price)} 
                        description={opt.description} 
                        selected={interiorIdx === i} 
@@ -779,10 +797,10 @@ export default function KonfiguratorPH001() {
                        isAdmin={isAdmin}
                        onPriceChange={(newPrice) => updatePrice('interior', i, newPrice)}
                        category="interior"
-                       />
-                       );
-                       })}
-                       </div>
+                     />
+                     );
+                   })}
+                 </div>
                        </div>
             
             <div className="col-span-full mt-6">
