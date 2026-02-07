@@ -24,51 +24,6 @@ import {
 } from 'lucide-react';
 
 // --- DATA DEFINITIONS ---
-
-interface PricingOption {
-  label: string;
-  price: number;
-  description?: string;
-}
-
-interface HouseConfig {
-  id: string;
-  name: string;
-  basePrice: number;
-  image?: string;
-  options: {
-    mounting: PricingOption[];
-    extension: PricingOption[];
-    insulation: PricingOption[];
-    foundation: PricingOption[];
-    interior: PricingOption[];
-    doors: PricingOption[];
-    facade: PricingOption[];
-  };
-  addons: {
-    electricity: number;
-    water: number;
-    sanita: number;
-    boiler: number;
-    heatPump: number;
-    recuperation: number;
-    windowLamination: number;
-    windowTint: number;
-    roofWindow: number;
-    fixWindow: number;
-    tiltWindowBig: number;
-    tiltWindowSmall: number;
-    interiorDoor: number;
-    laminateFloors: number;
-    floorHeating: number;
-    networks: number;
-    engineering: number;
-    projectant: number;
-    revision: number;
-    transport: number;
-  };
-}
-
 // PH-001 ONLY
 const HOUSE_PH001: HouseConfig = {
   "id": "flat-double-ph001",
