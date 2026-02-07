@@ -25,7 +25,7 @@ import {
 
 // --- DATA DEFINITIONS ---
 // PH-001 ONLY
-const HOUSE_PH001: HouseConfig = {
+const HOUSE_PH001 = {
   "id": "flat-double-ph001",
   "name": "Flat Double 142 (PH-001)",
   "basePrice": 59900,
