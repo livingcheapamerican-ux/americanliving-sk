@@ -21,6 +21,7 @@ import LyonKonfiguratorWrapper from "../components/LyonKonfiguratorWrapper";
 import LyonSummaryPanelStandalone from "../components/LyonSummaryPanelStandalone";
 import KonfiguratorTicabhouse from "../components/KonfiguratorTicabhouse";
 import KonfiguratorPH001 from "./KonfiguratorPH001";
+import KonfiguratorPH002 from "./KonfiguratorPH002";
 import KonfiguratorPH003 from "./KonfiguratorPH003";
 import KonfiguratorPH004 from "./KonfiguratorPH004";
 
@@ -859,6 +860,11 @@ export default function DetailDomu() {
             {/* Konfigurátor pre Prosto House PH-001 */}
             {isProstoHouse && dom.prosto_house_kod === "PH-001" && (
               <KonfiguratorPH001 dom={dom} isAdmin={isAdmin} />
+            )}
+
+            {/* Konfigurátor pre Prosto House PH-002 */}
+            {isProstoHouse && dom.prosto_house_kod === "PH-002" && (
+              <KonfiguratorPH002 dom={dom} isAdmin={isAdmin} />
             )}
 
             {/* Konfigurátor pre Prosto House PH-003 */}

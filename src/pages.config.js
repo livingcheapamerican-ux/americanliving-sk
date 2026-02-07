@@ -126,6 +126,7 @@ import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
 import KonfiguratorPH003 from './pages/KonfiguratorPH003';
 import KonfiguratorPH004 from './pages/KonfiguratorPH004';
+import KonfiguratorPH002 from './pages/KonfiguratorPH002';
 import __Layout from './Layout.jsx';
 
 
@@ -209,6 +210,7 @@ export const PAGES = {
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
     "KonfiguratorPH003": KonfiguratorPH003,
     "KonfiguratorPH004": KonfiguratorPH004,
+    "KonfiguratorPH002": KonfiguratorPH002,
 }
 
 export const pagesConfig = {
