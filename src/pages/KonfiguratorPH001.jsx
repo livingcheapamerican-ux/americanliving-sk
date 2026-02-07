@@ -238,11 +238,16 @@ const ConfiguratorTile = ({ label, price, description, selected, onClick, isA0, 
 
 const Section = ({ title, icon: Icon, children }) => (
   <div className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-    <div className="flex items-center gap-3 mb-5">
-      <div className="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center">
-        <Icon className="w-5 h-5" />
+    <div className="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 rounded-2xl p-4 mb-6 border-2 border-indigo-200 shadow-sm">
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-indigo-400/50">
+          <Icon className="w-6 h-6" />
+        </div>
+        <div className="flex-1">
+          <h3 className="text-2xl font-bold text-gray-900 tracking-tight">{title}</h3>
+          <div className="h-0.5 w-24 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full mt-1"></div>
+        </div>
       </div>
-      <h3 className="text-xl font-bold text-gray-900 tracking-tight">{title}</h3>
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {children}
@@ -667,20 +672,20 @@ export default function KonfiguratorPH001() {
                       { l: 'Výklopné 55x90', p: getPrice('addon', 'tiltWindowSmall', HOUSE_PH001.addons.tiltWindowSmall), v: tiltWindowsSmall, s: setTiltWindowsSmall, k: 'tiltWindowSmall' }
                     ].map((item, idx) => (
                       <div key={idx} className="bg-gray-50 p-4 rounded-xl border border-gray-200 text-center flex flex-col items-center justify-between h-full">
-                        <div className="text-sm font-semibold text-gray-700 mb-1">{item.l}</div>
-                        {isAdmin ? (
-                           <div className="flex items-center gap-1 justify-center mb-3">
-                              <span className="text-xs text-indigo-600 font-bold">€</span>
-                              <input 
-                                type="number" 
-                                value={item.p} 
-                                onChange={(e) => updatePrice('addon', item.k, Number(e.target.value))}
-                                className="w-16 text-sm text-center font-bold text-indigo-700 outline-none bg-white border border-indigo-200 rounded px-1"
-                              />
-                           </div>
-                        ) : (
-                          <div className="text-sm text-indigo-600 font-bold mb-3">{item.p} €</div>
-                        )}
+                        <div className="text-sm font-bold text-gray-800 mb-2 text-center">{item.l}</div>
+                                {isAdmin ? (
+                                   <div className="flex items-center gap-1 justify-center mb-3">
+                                      <span className="text-xs text-indigo-600 font-bold">€</span>
+                                      <input 
+                                        type="number" 
+                                        value={item.p} 
+                                        onChange={(e) => updatePrice('addon', item.k, Number(e.target.value))}
+                                        className="w-16 text-sm text-center font-bold text-indigo-700 outline-none bg-white border border-indigo-200 rounded px-1"
+                                      />
+                                   </div>
+                                ) : (
+                                  <div className="text-sm text-indigo-600 font-bold mb-3 bg-gradient-to-r from-indigo-100 to-purple-100 px-3 py-1.5 rounded-lg">{item.p} €</div>
+                                )}
                         <div className="flex items-center justify-center gap-3 w-full">
                            <button onClick={() => item.s(Math.max(0, item.v - 1))} className="w-10 h-10 rounded-lg bg-gradient-to-br from-gray-200 to-gray-300 hover:from-gray-300 hover:to-gray-400 flex items-center justify-center font-bold text-gray-700 active:scale-90 transition-all duration-200 shadow-md hover:shadow-lg border border-gray-400">−</button>
                            <span className="w-6 font-bold text-lg text-gray-800">{item.v}</span>
@@ -953,24 +958,31 @@ export default function KonfiguratorPH001() {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div>
-          <div className="hidden md:flex items-center justify-between mb-8 px-4 overflow-x-auto pb-4">
-             {STEPS.map((step, i) => (
-               <button 
-                key={step.id}
-                onClick={() => setActiveStep(i)}
-                disabled={i > activeStep + 1}
-                className={`flex flex-col items-center gap-2 min-w-[80px] group ${i === activeStep ? 'opacity-100' : 'opacity-60 hover:opacity-100'}`}
-               >
-                 <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all ${
-                   i === activeStep ? 'border-indigo-600 bg-indigo-50 text-indigo-600' : 
-                   i < activeStep ? 'border-indigo-200 bg-indigo-50 text-indigo-400' : 'border-gray-200 text-gray-400'
-                 }`}>
-                   <step.icon className="w-5 h-5" />
-                 </div>
-                 <span className={`text-xs font-bold ${i === activeStep ? 'text-indigo-900' : 'text-gray-500'}`}>{step.title}</span>
-               </button>
-             ))}
-          </div>
+          <div className="hidden md:flex items-center justify-between mb-8 px-4 overflow-x-auto pb-4 gap-6">
+              {STEPS.map((step, i) => (
+                <div key={step.id} className="flex items-center gap-3 flex-1">
+                  <button 
+                   onClick={() => setActiveStep(i)}
+                   disabled={i > activeStep + 1}
+                   className={`flex flex-col items-center gap-2 group transition-all duration-300`}
+                  >
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center border-2 transition-all duration-300 shadow-md ${
+                      i === activeStep 
+                        ? 'border-indigo-600 bg-gradient-to-br from-indigo-600 to-purple-600 text-white scale-110 shadow-lg shadow-indigo-400/50' 
+                        : i < activeStep 
+                          ? 'border-indigo-300 bg-gradient-to-br from-indigo-100 to-indigo-50 text-indigo-600' 
+                          : 'border-gray-300 bg-gradient-to-br from-gray-100 to-gray-50 text-gray-400'
+                    }`}>
+                      <step.icon className="w-6 h-6" />
+                    </div>
+                    <span className={`text-xs font-bold transition-colors duration-300 ${i === activeStep ? 'text-indigo-900' : 'text-gray-500'}`}>{step.title}</span>
+                  </button>
+                  {i < STEPS.length - 1 && (
+                    <div className={`h-1 flex-1 rounded-full transition-all duration-300 ${i < activeStep ? 'bg-gradient-to-r from-indigo-400 to-purple-400' : 'bg-gray-200'}`}></div>
+                  )}
+                </div>
+              ))}
+           </div>
 
           <div className="bg-white md:rounded-3xl shadow-sm p-4 md:p-8 border border-gray-100 min-h-[500px]">
              {renderStepContent()}
@@ -993,29 +1005,37 @@ export default function KonfiguratorPH001() {
           </div>
 
           <div className="mt-8">
-            <div className="bg-white rounded-3xl shadow-2xl border-2 border-gray-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-gray-900 via-indigo-900 to-purple-900 text-white p-8">
-             <h3 className="font-bold text-2xl">Sumár konfigurácie</h3>
-             <p className="text-indigo-200 text-sm mt-2">{HOUSE_PH001.name}</p>
+            <div className="bg-white rounded-3xl shadow-2xl border-2 border-indigo-200 overflow-hidden backdrop-blur-sm">
+            <div className="bg-gradient-to-r from-indigo-900 via-purple-900 to-pink-900 text-white p-8 relative overflow-hidden">
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-2 right-2 w-20 h-20 rounded-full bg-white blur-2xl"></div>
+              </div>
+              <div className="relative z-10">
+                <h3 className="font-bold text-3xl">Sumár konfigurácie</h3>
+                <p className="text-indigo-200 text-sm mt-2">{HOUSE_PH001.name}</p>
+              </div>
             </div>
 
             <div className="p-6 max-h-64 overflow-y-auto">
              <SummaryContent />
             </div>
 
-            <div className="p-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-t-2 border-indigo-200">
-               <div className="bg-gradient-to-br from-white to-indigo-50 rounded-2xl p-5 mb-5 border-2 border-indigo-300 shadow-lg">
-                 <div className="text-xs text-gray-600 font-semibold mb-2 uppercase tracking-wide">Celková cena s DPH</div>
-                 <div key={totalPrice} className="text-5xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent animate-pop">{totalPrice.toLocaleString()} €</div>
-               </div>
-               <button 
-                onClick={() => setModalOpen(true)}
-                className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold py-5 rounded-2xl transition-all duration-300 shadow-xl shadow-indigo-400/50 active:scale-[0.98] hover:shadow-2xl hover:shadow-indigo-500/60 flex items-center justify-center gap-2 text-lg"
-               >
-                 <Send className="w-6 h-6" />
-                 Odoslať cenovú ponuku
-               </button>
-            </div>
+            <div className="p-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-t-4 border-indigo-300">
+                <div className="bg-gradient-to-br from-white via-indigo-50 to-purple-50 rounded-2xl p-6 mb-5 border-2 border-indigo-300 shadow-xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-400 to-purple-400 rounded-full opacity-5 blur-3xl"></div>
+                  <div className="relative z-10">
+                    <div className="text-xs text-gray-600 font-bold mb-3 uppercase tracking-widest">💰 Celková cena s DPH</div>
+                    <div key={totalPrice} className="text-6xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-pop drop-shadow-lg">{totalPrice.toLocaleString()} €</div>
+                  </div>
+                </div>
+                <button 
+                 onClick={() => setModalOpen(true)}
+                 className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold py-6 rounded-2xl transition-all duration-300 shadow-xl shadow-indigo-400/50 active:scale-[0.98] hover:shadow-2xl hover:shadow-indigo-500/60 flex items-center justify-center gap-2 text-lg transform hover:scale-105"
+                >
+                  <Send className="w-6 h-6" />
+                  Odoslať cenovú ponuku
+                </button>
+             </div>
             </div>
           </div>
         </div>
