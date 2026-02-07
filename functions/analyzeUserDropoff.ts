@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
     
     try {
       console.log('📥 Načítavam Sessions...');
-      allSessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 100);
+      allSessions = await base44.asServiceRole.entities.UserSession.list('-created_date', 10000);
       console.log(`✅ Sessions načítané: ${allSessions?.length || 0}`);
       
       if (allSessions && allSessions.length > 0) {
