@@ -29,7 +29,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
       transition={{ delay: index * 0.05 }}
     >
       <Card className={`group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 bg-white flex flex-col h-full ${jeVybrany ? 'ring-2 ring-primary' : ''} ${dom.verejny === false ? 'opacity-60' : ''}`}>
-        <div className={`relative overflow-hidden h-[120px] sm:h-[240px]`}>
+        <div className={`relative overflow-hidden h-[100px] sm:h-[200px]`}>
           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
             {dom.hlavny_obrazok ? (
               <ImageWithWatermark
@@ -96,15 +96,15 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
           </div>
         </div>
         
-        <div className="p-2 sm:p-5 flex-1 flex flex-col">
+        <div className="p-2 sm:p-4 flex-1 flex flex-col">
           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-            <h3 className="text-base sm:text-2xl font-bold text-gray-800 mb-2 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
+            <h3 className="text-sm sm:text-xl font-bold text-gray-800 mb-1.5 sm:mb-2 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
               {dom.nazov}
             </h3>
           </Link>
           
           {/* Kľúčové benefity pod názvom */}
-          <div className="flex flex-wrap gap-1.5 mb-3">
+          <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-2 sm:mb-3">
             {dom.celorocny && (
               <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-2.5 py-1 rounded-lg text-[9px] sm:text-xs font-bold shadow-md flex items-center gap-1">
                 <CheckCircle className="w-3 h-3" />
@@ -120,7 +120,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
           </div>
 
           {/* Základné parametre - vylepšené */}
-          <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-3 sm:mb-4">
+          <div className="grid grid-cols-2 gap-1.5 sm:gap-2 mb-2 sm:mb-3">
             <div className="flex items-center gap-1.5 sm:gap-2">
               <Home className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-primary" />
               <div className="flex flex-col min-w-0">
@@ -190,13 +190,13 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
             )}
           </div>
 
-          <div className="pt-3 sm:pt-4 border-t border-gray-200 mt-auto">
+          <div className="pt-2 sm:pt-3 border-t border-gray-200 mt-auto">
             {/* Cena - zvýraznená */}
-            <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl p-3 mb-3">
-              <p className="text-xs sm:text-sm text-gray-600 font-semibold mb-1">
+            <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg p-2 sm:p-3 mb-2 sm:mb-3">
+              <p className="text-[10px] sm:text-xs text-gray-600 font-semibold mb-0.5 sm:mb-1">
                 {dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : dom.vyrobca === "Prosto House" ? "Základná cena" : t('priceFromLabel')}
               </p>
-              <p className="text-2xl sm:text-3xl font-black text-primary">
+              <p className="text-xl sm:text-2xl font-black text-primary">
                 {dom.zakladna_cena?.toLocaleString('sk-SK')} €
               </p>
               {dom.vyrobca === "Ticab house" && (
