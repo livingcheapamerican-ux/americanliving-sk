@@ -41,7 +41,7 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                       : dom.hlavny_obrazok
                 }
                 alt={dom.nazov}
-                className="w-full h-full object-contain bg-gray-100 group-hover:scale-105 transition-all duration-500"
+                className="w-full h-full object-cover bg-gray-100 group-hover:scale-105 transition-all duration-500"
                 useCatalogSetting={true}
                 priority={index < 4}
                 loading={index < 4 ? "eager" : "lazy"}
@@ -96,9 +96,9 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
           </div>
         </div>
         
-        <div className="p-1.5 sm:p-5">
+        <div className="p-2 sm:p-5">
           <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
-            <h3 className="text-sm sm:text-2xl font-bold text-gray-800 mb-2 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
+            <h3 className="text-base sm:text-2xl font-bold text-gray-800 mb-2 group-hover:text-primary transition-colors line-clamp-2 leading-tight">
               {dom.nazov}
             </h3>
           </Link>

@@ -92,7 +92,6 @@ import GaleriaRealizacii from './pages/GaleriaRealizacii';
 import GrantovaKampan from './pages/GrantovaKampan';
 import Home from './pages/Home';
 import InteraktivnyKonfigurator from './pages/InteraktivnyKonfigurator';
-import Katalog from './pages/Katalog';
 import KatalogDomkiZGor from './pages/KatalogDomkiZGor';
 import KatalogMobilneDomy from './pages/KatalogMobilneDomy';
 import KatalogModularneDomy from './pages/KatalogModularneDomy';
@@ -122,6 +121,7 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
+import Katalog from './pages/Katalog';
 import __Layout from './Layout.jsx';
 
 
@@ -171,7 +171,6 @@ export const PAGES = {
     "GrantovaKampan": GrantovaKampan,
     "Home": Home,
     "InteraktivnyKonfigurator": InteraktivnyKonfigurator,
-    "Katalog": Katalog,
     "KatalogDomkiZGor": KatalogDomkiZGor,
     "KatalogMobilneDomy": KatalogMobilneDomy,
     "KatalogModularneDomy": KatalogModularneDomy,
@@ -201,6 +200,7 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
+    "Katalog": Katalog,
 }
 
 export const pagesConfig = {
