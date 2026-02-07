@@ -159,7 +159,7 @@ const HOUSE_PH001 = {
 
 // --- COMPONENTS ---
 
-const TypeSelector = ({ selected, onSelect }) => {
+const TypeSelector = ({ selected, onSelect, t }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
       <button
@@ -173,7 +173,7 @@ const TypeSelector = ({ selected, onSelect }) => {
         <div className={`p-3 rounded-full transition-colors ${selected === 'rekreacna' ? 'bg-blue-200' : 'bg-gray-100'}`}>
           <Home className="w-8 h-8 md:w-10 md:h-10" />
         </div>
-        <span className="text-lg md:text-xl font-bold">Rekreačná stavba</span>
+        <span className="text-lg md:text-xl font-bold">{t('recreationalBuilding')}</span>
       </button>
 
       <button
@@ -190,7 +190,7 @@ const TypeSelector = ({ selected, onSelect }) => {
           </div>
           <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs px-3 py-1 rounded-full font-bold">A0</span>
         </div>
-        <span className="text-lg md:text-xl font-bold">Rodinný dom A0</span>
+        <span className="text-lg md:text-xl font-bold">{t('familyHouseA0')}</span>
       </button>
     </div>
   );
@@ -269,7 +269,7 @@ const Section = ({ title, icon: Icon, children }) => (
   </div>
 );
 
-const AddonCheckbox = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description }) => (
+const AddonCheckbox = ({ label, price, checked, onChange, disabled = false, locked = false, isAdmin, onPriceChange, description, t }) => (
   <button
     onClick={!disabled && !locked ? onChange : undefined}
     className={`flex items-center justify-between p-6 rounded-2xl border-2 transition-all duration-300 w-full active:scale-[0.98] hover:shadow-md ${
@@ -295,7 +295,7 @@ const AddonCheckbox = ({ label, price, checked, onChange, disabled = false, lock
       <div className="text-left">
         <span className={`font-semibold text-base md:text-lg block transition-colors ${checked || locked ? 'text-gray-900' : 'text-gray-700'}`}>{label}</span>
         {description && <p className="text-xs text-gray-600 mt-1 font-medium max-w-sm leading-tight text-left">{description}</p>}
-        {locked && <span className="text-[10px] uppercase font-bold text-green-700 tracking-wider mt-1">⚡ Vyžadované pre A0</span>}
+        {locked && <span className="text-[10px] uppercase font-bold text-green-700 tracking-wider mt-1">{t ? t('requiredForA0') : '⚡ Vyžadované pre A0'}</span>}
       </div>
     </div>
     
@@ -574,8 +574,8 @@ export default function KonfiguratorPH001() {
       case 0:
         return (
           <div className="animate-in fade-in duration-500">
-            <h2 className="text-2xl font-bold mb-6 text-center">Vyberte typ projektu</h2>
-            <TypeSelector selected={typStavby} onSelect={setTypStavby} />
+            <h2 className="text-2xl font-bold mb-6 text-center">{t('selectProjectType')}</h2>
+            <TypeSelector selected={typStavby} onSelect={setTypStavby} t={t} />
             <div className={`p-6 rounded-2xl border transition-all duration-500 ${isA0Compliant ? 'bg-green-50 border-green-200' : 'bg-blue-50 border-blue-200'}`}>
                 <div className="flex items-start gap-4">
                     <div className={`p-2 rounded-full ${isA0Compliant ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
@@ -583,12 +583,12 @@ export default function KonfiguratorPH001() {
                     </div>
                     <div>
                         <h4 className={`font-bold text-lg mb-1 ${isA0Compliant ? 'text-green-800' : 'text-blue-800'}`}>
-                            {isA0Compliant ? 'Rodinný dom s certifikátom A0' : 'Rekreačná stavba'}
+                            {isA0Compliant ? t('meetsA0Cert') : t('recreationalUse')}
                         </h4>
                         <p className={`text-base leading-relaxed ${isA0Compliant ? 'text-green-700' : 'text-blue-700'}`}>
                             {isA0Compliant 
-                                ? 'Konfigurácia spĺňa všetky normy pre energetický certifikát A0. Vhodné na kolaudáciu ako rodinný dom.' 
-                                : 'Základná konfigurácia vhodná na rekreačné účely. Pre zmenu na A0 dom zvoľte možnosť "Rodinný dom A0".'}
+                                ? t('meetsA0CertDesc')
+                                : t('recreationalDesc')}
                         </p>
                     </div>
                 </div>
@@ -597,7 +597,7 @@ export default function KonfiguratorPH001() {
         );
       case 1:
         return (
-          <Section title="Hrubá stavba" icon={Hammer}>
+          <Section title={t('roughConstruction')} icon={Hammer}>
              <div className="col-span-full">
                 <h4 className="font-semibold mb-3 text-sm text-orange-700 uppercase tracking-wide flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-orange-500"></div>
@@ -644,7 +644,7 @@ export default function KonfiguratorPH001() {
         );
       case 2:
         return (
-          <Section title="Exteriér" icon={Thermometer}>
+          <Section title={t('stepExterior')} icon={Thermometer}>
              <div className="col-span-full">
                 <h4 className="font-semibold mb-3 text-sm text-blue-700 uppercase tracking-wide flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-blue-500"></div>
@@ -746,7 +746,7 @@ export default function KonfiguratorPH001() {
         );
       case 3:
         return (
-          <Section title="Interiér" icon={Layout}>
+          <Section title={t('interior')} icon={Layout}>
             <div className="col-span-full">
                  <h4 className="font-semibold mb-3 text-sm text-emerald-700 uppercase tracking-wide flex items-center gap-2">
                    <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
@@ -811,7 +811,7 @@ export default function KonfiguratorPH001() {
         );
       case 4:
         return (
-          <Section title="Technológie" icon={Zap}>
+          <Section title={t('technologies')} icon={Zap}>
              <div className="col-span-full grid grid-cols-1 gap-3">
                 <AddonCheckbox label="Elektro rozvody" price={getPrice('addon', 'electricity', HOUSE_PH001.addons.electricity)} checked={electricity} onChange={() => setElectricity(!electricity)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'electricity', p)} />
                 <AddonCheckbox label="Voda a odpady" price={getPrice('addon', 'water', HOUSE_PH001.addons.water)} checked={water} onChange={() => setWater(!water)} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'water', p)} />
@@ -848,7 +848,7 @@ export default function KonfiguratorPH001() {
         );
       case 5:
         return (
-          <Section title="Služby" icon={FileText}>
+          <Section title={t('services')} icon={FileText}>
               <div className="col-span-full grid grid-cols-1 gap-3">
                 <AddonCheckbox label="Projektant" price={getPrice('addon', 'projectant', HOUSE_PH001.addons.projectant)} checked={projectant} onChange={() => setProjectant(!projectant)} locked={typStavby === 'rodinny_dom'} isAdmin={isAdmin} onPriceChange={(p) => updatePrice('addon', 'projectant', p)} />
                 <AddonCheckbox 
