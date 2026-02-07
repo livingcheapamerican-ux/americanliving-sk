@@ -19,21 +19,21 @@ Deno.serve(async (req) => {
 
     console.log(`✅ User authenticated: ${user.email}, role: ${user.role}`);
 
-    // Načítaj VŠETKY UserEvent a UserSession (bez časového limitu)
+    // Načítaj VŠETKY UserEvent a UserSession pomocou filter (nie list)
     console.log('📥 Načítavam UserEvent a UserSession...');
     const [allEvents, allSessions] = await Promise.all([
-      base44.asServiceRole.entities.UserEvent.list('-created_date', 10000),
-      base44.asServiceRole.entities.UserSession.list('-created_date', 2000)
+      base44.asServiceRole.entities.UserEvent.filter({}, '-created_date', 10000),
+      base44.asServiceRole.entities.UserSession.filter({}, '-created_date', 2000)
     ]);
 
     console.log(`📦 Raw response - Events type: ${typeof allEvents}, Sessions type: ${typeof allSessions}`);
-    console.log(`📦 Events: ${allEvents?.length || 0}, Sessions: ${allSessions?.length || 0}`);
+    console.log(`📦 Events count: ${allEvents?.length || 0}, Sessions count: ${allSessions?.length || 0}`);
 
     // Ensure arrays
     const recentEvents = Array.isArray(allEvents) ? allEvents : [];
     const recentSessions = Array.isArray(allSessions) ? allSessions : [];
 
-    console.log(`📊 Načítaných ${recentEvents.length} udalostí a ${recentSessions.length} sessions (VŠETKY dáta)`);
+    console.log(`📊 CELKOM: ${recentEvents.length} udalostí a ${recentSessions.length} sessions`);
 
     // Analýza UserSession - Detailnejšia analýza správania
     const sessionAnalysis = {
