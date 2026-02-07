@@ -20,6 +20,7 @@ import DomGalerieManager from "../components/admin/DomGalerieManager";
 import LyonKonfiguratorWrapper from "../components/LyonKonfiguratorWrapper";
 import LyonSummaryPanelStandalone from "../components/LyonSummaryPanelStandalone";
 import KonfiguratorTicabhouse from "../components/KonfiguratorTicabhouse";
+import KonfiguratorPH001 from "./KonfiguratorPH001";
 
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
@@ -851,6 +852,11 @@ export default function DetailDomu() {
                   />
                 </div>
               </Card>
+            )}
+
+            {/* Konfigurátor pre Prosto House PH-001 */}
+            {isProstoHouse && dom.prosto_house_kod === "PH-001" && (
+              <KonfiguratorPH001 dom={dom} isAdmin={isAdmin} />
             )}
 
             {/* Konfigurátor pre ostatné Ticabhouse domy (okrem Lyon a Tiny House) */}

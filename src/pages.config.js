@@ -104,6 +104,7 @@ import KatalogTicabHouse from './pages/KatalogTicabHouse';
 import Konfigurator from './pages/Konfigurator';
 import Konfigurator3D from './pages/Konfigurator3D';
 import KonfiguratorFlatDouble from './pages/KonfiguratorFlatDouble';
+import KonfiguratorPH001 from './pages/KonfiguratorPH001';
 import KonfiguratorProstoHouse from './pages/KonfiguratorProstoHouse';
 import KonfiguratorTicabhouse from './pages/KonfiguratorTicabhouse';
 import Kontakt from './pages/Kontakt';
@@ -123,7 +124,6 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
-import KonfiguratorPH001 from './pages/KonfiguratorPH001';
 import __Layout from './Layout.jsx';
 
 
@@ -185,6 +185,7 @@ export const PAGES = {
     "Konfigurator": Konfigurator,
     "Konfigurator3D": Konfigurator3D,
     "KonfiguratorFlatDouble": KonfiguratorFlatDouble,
+    "KonfiguratorPH001": KonfiguratorPH001,
     "KonfiguratorProstoHouse": KonfiguratorProstoHouse,
     "KonfiguratorTicabhouse": KonfiguratorTicabhouse,
     "Kontakt": Kontakt,
@@ -204,7 +205,6 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
-    "KonfiguratorPH001": KonfiguratorPH001,
 }
 
 export const pagesConfig = {
