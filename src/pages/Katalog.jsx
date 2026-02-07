@@ -119,73 +119,65 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
             )}
           </div>
 
-          {/* Základné parametre - vylepšené */}
-          <div className="grid grid-cols-2 gap-1.5 sm:gap-2 mb-2 sm:mb-3">
-            <div className="flex items-center gap-1.5 sm:gap-2">
-              <Home className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-primary" />
-              <div className="flex flex-col min-w-0">
-                <span className="text-[9px] sm:text-xs text-gray-500">{t('manufacturer')}</span>
-                <span className="font-bold text-gray-800 text-[10px] sm:text-sm truncate">{dom.vyrobca}</span>
-              </div>
+          {/* Základné parametre - dlazdice */}
+          <div className="grid grid-cols-3 gap-1 sm:gap-1.5 mb-2 sm:mb-3">
+            <div className="bg-blue-50 rounded p-1 sm:p-1.5 text-center">
+              <Home className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 text-primary" />
+              <div className="text-[8px] sm:text-[10px] text-gray-500 leading-tight mb-0.5">{t('manufacturer')}</div>
+              <div className="font-bold text-gray-800 text-[9px] sm:text-xs leading-tight">{dom.vyrobca}</div>
             </div>
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            
+            <div className="bg-orange-50 rounded p-1 sm:p-1.5 text-center">
               {dom.typ_domu === 'montovany' ? (
-                <Hammer className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-orange-600" />
+                <Hammer className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 text-orange-600" />
               ) : dom.typ_domu === 'mobilny' ? (
-                <Caravan className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-teal-600" />
+                <Caravan className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 text-teal-600" />
               ) : (
-                <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-amber-500" />
+                <LayoutGrid className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 text-amber-500" />
               )}
-              <div className="flex flex-col min-w-0">
-                <span className="text-[9px] sm:text-xs text-gray-500">{t('houseType')}</span>
-                <span className="font-bold text-gray-800 text-[10px] sm:text-sm leading-tight">{dom.typ_domu === 'modularny' ? t('modularType') : dom.typ_domu === 'montovany' ? t('prefabType') : t('mobileType')}</span>
-              </div>
+              <div className="text-[8px] sm:text-[10px] text-gray-500 leading-tight mb-0.5">{t('houseType')}</div>
+              <div className="font-bold text-gray-800 text-[9px] sm:text-xs leading-tight">{dom.typ_domu === 'modularny' ? t('modularType') : dom.typ_domu === 'montovany' ? t('prefabType') : t('mobileType')}</div>
             </div>
-            <div className="flex items-center gap-1.5 sm:gap-2">
-              <div className="w-4 h-3 sm:w-5 sm:h-4 border-2 border-primary rounded-sm flex-shrink-0" />
-              <div className="flex flex-col min-w-0">
-                <span className="text-[9px] sm:text-xs text-gray-500">{t('builtArea')}</span>
-                <span className="font-bold text-primary text-[10px] sm:text-sm">{dom.zastavana_plocha} m²</span>
-              </div>
+            
+            <div className="bg-red-50 rounded p-1 sm:p-1.5 text-center">
+              <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-primary rounded-sm mx-auto mb-0.5" />
+              <div className="text-[8px] sm:text-[10px] text-gray-500 leading-tight mb-0.5">{t('builtArea')}</div>
+              <div className="font-bold text-primary text-[9px] sm:text-xs">{dom.zastavana_plocha} m²</div>
             </div>
+            
             {dom.uzitkova_plocha && (
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <Square className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-purple-500" />
-                <div className="flex flex-col min-w-0">
-                  <span className="text-[9px] sm:text-xs text-gray-500">{t('usableArea')}</span>
-                  <span className="font-bold text-primary text-[10px] sm:text-sm">{dom.uzitkova_plocha} m²</span>
-                </div>
+              <div className="bg-purple-50 rounded p-1 sm:p-1.5 text-center">
+                <Square className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 text-purple-500" />
+                <div className="text-[8px] sm:text-[10px] text-gray-500 leading-tight mb-0.5">{t('usableArea')}</div>
+                <div className="font-bold text-primary text-[9px] sm:text-xs">{dom.uzitkova_plocha} m²</div>
               </div>
             )}
+            
             {dom.pocet_izieb && (
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <Grid3x3 className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-blue-500" />
-                <div className="flex flex-col min-w-0">
-                  <span className="text-[9px] sm:text-xs text-gray-500">{t('rooms')}</span>
-                  <span className="font-bold text-gray-800 text-[10px] sm:text-sm">{dom.pocet_izieb} {t('roomsLabel')}</span>
-                </div>
+              <div className="bg-blue-50 rounded p-1 sm:p-1.5 text-center">
+                <Grid3x3 className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 text-blue-500" />
+                <div className="text-[8px] sm:text-[10px] text-gray-500 leading-tight mb-0.5">{t('rooms')}</div>
+                <div className="font-bold text-gray-800 text-[9px] sm:text-xs">{dom.pocet_izieb}</div>
               </div>
             )}
+            
             {dom.pocet_modulov && (
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <Boxes className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-red-600" />
-                <div className="flex flex-col min-w-0">
-                  <span className="text-[9px] sm:text-xs text-gray-500">Moduly</span>
-                  <span className="font-bold text-gray-800 text-[10px] sm:text-sm">{dom.pocet_modulov}</span>
-                </div>
+              <div className="bg-red-50 rounded p-1 sm:p-1.5 text-center">
+                <Boxes className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 text-red-600" />
+                <div className="text-[8px] sm:text-[10px] text-gray-500 leading-tight mb-0.5">Moduly</div>
+                <div className="font-bold text-gray-800 text-[9px] sm:text-xs">{dom.pocet_modulov}</div>
               </div>
             )}
+            
             {dom.terasa_plocha && (
               dom.vyrobca !== "Ticab house" || 
               (dom.popis && (dom.popis.includes("vstavaná") || dom.popis.includes("zabudovaná") || dom.popis.includes("Vstavaná") || dom.popis.includes("Zabudovaná"))) ||
               (dom.specifikacia && !dom.specifikacia.includes("Terasa: ❌"))
             ) && (
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                <Fence className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 text-teal-500" />
-                <div className="flex flex-col min-w-0">
-                  <span className="text-[9px] sm:text-xs text-gray-500">Terasa</span>
-                  <span className="font-bold text-gray-800 text-[10px] sm:text-sm">{dom.terasa_plocha} m²</span>
-                </div>
+              <div className="bg-teal-50 rounded p-1 sm:p-1.5 text-center">
+                <Fence className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 text-teal-500" />
+                <div className="text-[8px] sm:text-[10px] text-gray-500 leading-tight mb-0.5">Terasa</div>
+                <div className="font-bold text-gray-800 text-[9px] sm:text-xs">{dom.terasa_plocha} m²</div>
               </div>
             )}
           </div>
