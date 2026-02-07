@@ -131,6 +131,7 @@ import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
 import KonfiguratorPH008 from './pages/KonfiguratorPH008';
+import KonfiguratorPH009 from './pages/KonfiguratorPH009';
 import __Layout from './Layout.jsx';
 
 
@@ -219,6 +220,7 @@ export const PAGES = {
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
     "KonfiguratorPH008": KonfiguratorPH008,
+    "KonfiguratorPH009": KonfiguratorPH009,
 }
 
 export const pagesConfig = {
