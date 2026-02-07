@@ -138,7 +138,8 @@ export const prostoHouseTranslations = {
     "transportItem": "Doprava",
     "realEstateItem": "Predaj nehnuteľnosti",
     "landSearchItem": "Hľadanie pozemku",
-    "financingItem": "Financovanie"
+    "financingItem": "Financovanie",
+    "additionalWindowsLabel": "Doplnkové okná"
   },
   "en": {
     "selectProjectType": "Select project type",
@@ -279,7 +280,8 @@ export const prostoHouseTranslations = {
     "transportItem": "Transport",
     "realEstateItem": "Property sale",
     "landSearchItem": "Land search",
-    "financingItem": "Financing"
+    "financingItem": "Financing",
+    "additionalWindowsLabel": "Additional windows"
   },
   "de": {
     "selectProjectType": "Projekttyp wählen",
@@ -420,7 +422,8 @@ export const prostoHouseTranslations = {
     "transportItem": "Transport",
     "realEstateItem": "Immobilienverkauf",
     "landSearchItem": "Grundstückssuche",
-    "financingItem": "Finanzierung"
+    "financingItem": "Finanzierung",
+    "additionalWindowsLabel": "Zusätzliche Fenster"
   },
   "fr": {
     "selectProjectType": "Sélectionner le type de projet",
@@ -561,7 +564,8 @@ export const prostoHouseTranslations = {
     "transportItem": "Transport",
     "realEstateItem": "Vente immobilière",
     "landSearchItem": "Recherche de terrain",
-    "financingItem": "Financement"
+    "financingItem": "Financement",
+    "additionalWindowsLabel": "Fenêtres supplémentaires"
   },
   "hu": {
     "selectProjectType": "Projekttyp kiválasztása",
@@ -702,7 +706,8 @@ export const prostoHouseTranslations = {
     "transportItem": "Szállítás",
     "realEstateItem": "Ingatlan értékesítés",
     "landSearchItem": "Telekkeresés",
-    "financingItem": "Finanszírozás"
+    "financingItem": "Finanszírozás",
+    "additionalWindowsLabel": "További ablakok"
   },
   "pl": {
     "selectProjectType": "Wybierz typ projektu",
@@ -843,7 +848,8 @@ export const prostoHouseTranslations = {
     "transportItem": "Transport",
     "realEstateItem": "Sprzedaż nieruchomości",
     "landSearchItem": "Poszukiwanie działki",
-    "financingItem": "Finansowanie"
+    "financingItem": "Finansowanie",
+    "additionalWindowsLabel": "Dodatkowe okna"
   },
   "uk": {
     "selectProjectType": "Виберіть тип проекту",
@@ -984,7 +990,8 @@ export const prostoHouseTranslations = {
     "transportItem": "Транспорт",
     "realEstateItem": "Продаж нерухомості",
     "landSearchItem": "Пошук ділянки",
-    "financingItem": "Фінансування"
+    "financingItem": "Фінансування",
+    "additionalWindowsLabel": "Додаткові вікна"
   },
   "sr": {
     "selectProjectType": "Изаберите тип пројекта",
@@ -1125,7 +1132,8 @@ export const prostoHouseTranslations = {
     "transportItem": "Транспорт",
     "realEstateItem": "Продаја некретнине",
     "landSearchItem": "Претрага парцеле",
-    "financingItem": "Финансирање"
+    "financingItem": "Финансирање",
+    "additionalWindowsLabel": "Додатни прозори"
   },
   "hr": {
     "selectProjectType": "Odaberite tip projekta",
@@ -1266,7 +1274,8 @@ export const prostoHouseTranslations = {
     "transportItem": "Transport",
     "realEstateItem": "Prodaja nekretnine",
     "landSearchItem": "Pretraga parcele",
-    "financingItem": "Financiranje"
+    "financingItem": "Financiranje",
+    "additionalWindowsLabel": "Dodatni prozori"
   },
   "el": {
     "selectProjectType": "Επιλέξτε τύπο έργου",
@@ -1407,6 +1416,7 @@ export const prostoHouseTranslations = {
     "transportItem": "Μεταφορά",
     "realEstateItem": "Πώληση ακινήτου",
     "landSearchItem": "Αναζήτηση οικοπέδου",
-    "financingItem": "Χρηματοδότηση"
+    "financingItem": "Χρηματοδότηση",
+    "additionalWindowsLabel": "Πρόσθετα παράθυρα"
   }
 };
