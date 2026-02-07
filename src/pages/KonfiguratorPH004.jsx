@@ -362,7 +362,7 @@ const ContactModal = ({ isOpen, onClose, onSubmit, isSubmitting }) => {
               <span>Odosielam...</span>
             ) : (
               <>
-                <span>Odoslať dopyt</span>
+                <span>Odoslať cenovú ponuku</span>
                 <Send className="w-5 h-5" />
               </>
             )}
