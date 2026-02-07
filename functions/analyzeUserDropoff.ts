@@ -9,14 +9,133 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
-    // Načítaj všetky UserEvent za posledných 30 dní
+    // Načítaj všetky UserEvent a UserSession
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const allEvents = await base44.asServiceRole.entities.UserEvent.list('-created_date', 10000);
-    const recentEvents = allEvents.filter(e => new Date(e.created_date) >= thirtyDaysAgo);
+    const [allEvents, allSessions] = await Promise.all([
+      base44.asServiceRole.entities.UserEvent.list('-created_date', 10000),
+      base44.asServiceRole.entities.UserSession.list('-created_date', 1000)
+    ]);
 
-    console.log(`📊 Načítaných ${recentEvents.length} udalostí za posledných 30 dní`);
+    const recentEvents = allEvents.filter(e => new Date(e.created_date) >= thirtyDaysAgo);
+    const recentSessions = allSessions.filter(s => new Date(s.created_date) >= thirtyDaysAgo);
+
+    console.log(`📊 Načítaných ${recentEvents.length} udalostí a ${recentSessions.length} sessions za posledných 30 dní`);
+
+    // Analýza UserSession - Detailnejšia analýza správania
+    const sessionAnalysis = {
+      totalSessions: recentSessions.length,
+      avgDuration: 0,
+      avgPagesVisited: 0,
+      avgScrollDepth: 0,
+      avgEngagementScore: 0,
+      mobileSessions: 0,
+      desktopSessions: 0,
+      authenticatedSessions: 0,
+      bouncedSessions: 0,
+      exitPages: {},
+      landingPages: {},
+      avgClicksPerSession: 0
+    };
+
+    let totalDuration = 0;
+    let totalPages = 0;
+    let totalScrollDepth = 0;
+    let totalEngagement = 0;
+    let totalClicks = 0;
+
+    recentSessions.forEach(session => {
+      // Duration
+      if (session.duration_seconds) {
+        totalDuration += session.duration_seconds;
+      }
+
+      // Pages visited
+      const pagesCount = session.pages_visited?.length || 0;
+      totalPages += pagesCount;
+
+      // Bounce - len 1 stránka
+      if (pagesCount === 1) {
+        sessionAnalysis.bouncedSessions++;
+      }
+
+      // Scroll depth
+      const scrollDepth = session.scroll_depth?.max_percentage || 0;
+      totalScrollDepth += scrollDepth;
+
+      // Engagement score
+      const engagement = session.engagement_score || 0;
+      totalEngagement += engagement;
+
+      // Device
+      if (session.device_info?.is_mobile) {
+        sessionAnalysis.mobileSessions++;
+      } else {
+        sessionAnalysis.desktopSessions++;
+      }
+
+      // Authenticated
+      if (session.is_authenticated) {
+        sessionAnalysis.authenticatedSessions++;
+      }
+
+      // Exit page - posledná navštívená stránka
+      if (session.pages_visited && session.pages_visited.length > 0) {
+        const lastPage = session.pages_visited[session.pages_visited.length - 1];
+        const exitUrl = cleanUrl(lastPage.page_url);
+        sessionAnalysis.exitPages[exitUrl] = (sessionAnalysis.exitPages[exitUrl] || 0) + 1;
+
+        // Landing page - prvá stránka
+        const firstPage = session.pages_visited[0];
+        const landingUrl = cleanUrl(firstPage.page_url);
+        sessionAnalysis.landingPages[landingUrl] = (sessionAnalysis.landingPages[landingUrl] || 0) + 1;
+      }
+
+      // Clicks
+      totalClicks += session.clicks?.length || 0;
+    });
+
+    // Vypočítaj priemery
+    if (recentSessions.length > 0) {
+      sessionAnalysis.avgDuration = (totalDuration / recentSessions.length).toFixed(1);
+      sessionAnalysis.avgPagesVisited = (totalPages / recentSessions.length).toFixed(1);
+      sessionAnalysis.avgScrollDepth = (totalScrollDepth / recentSessions.length).toFixed(1);
+      sessionAnalysis.avgEngagementScore = (totalEngagement / recentSessions.length).toFixed(1);
+      sessionAnalysis.avgClicksPerSession = (totalClicks / recentSessions.length).toFixed(1);
+    }
+
+    // Top exit pages zo sessions
+    const topSessionExitPages = Object.entries(sessionAnalysis.exitPages)
+      .map(([url, count]) => ({
+        url,
+        count,
+        percentage: ((count / recentSessions.length) * 100).toFixed(1)
+      }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
+
+    // Top landing pages
+    const topLandingPages = Object.entries(sessionAnalysis.landingPages)
+      .map(([url, count]) => ({
+        url,
+        count,
+        bounceRate: 0 // vypočítame nižšie
+      }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
+
+    // Vypočítaj bounce rate pre landing pages
+    topLandingPages.forEach(landing => {
+      const sessionsStartingHere = recentSessions.filter(s => 
+        s.pages_visited && s.pages_visited.length > 0 && 
+        cleanUrl(s.pages_visited[0].page_url) === landing.url
+      );
+      const bouncedHere = sessionsStartingHere.filter(s => s.pages_visited.length === 1).length;
+      landing.bounceRate = sessionsStartingHere.length > 0 
+        ? ((bouncedHere / sessionsStartingHere.length) * 100).toFixed(1)
+        : 0;
+    });
 
     // 1. Analýza bounce rate podľa stránok
     const pageViews = recentEvents.filter(e => e.event_type === 'page_view');
@@ -173,16 +292,19 @@ Deno.serve(async (req) => {
       success: true,
       period: '30 dní',
       totalEvents: recentEvents.length,
-      totalSessions: Object.keys(sessionPageCounts).length,
+      totalSessions: recentSessions.length,
+      sessionAnalysis,
       analysis: {
         funnelData,
         topExitPages,
+        topSessionExitPages,
+        topLandingPages,
         pagesWithBounceRate,
         topClicks,
         deviceStats,
         utmExitRates
       },
-      recommendations: generateRecommendations(funnelData, pagesWithBounceRate, topExitPages)
+      recommendations: generateRecommendations(funnelData, pagesWithBounceRate, topSessionExitPages, sessionAnalysis)
     });
 
   } catch (error) {
@@ -194,42 +316,105 @@ Deno.serve(async (req) => {
   }
 });
 
-function generateRecommendations(funnel, bouncePages, exitPages) {
+function cleanUrl(url) {
+  if (!url) return '/';
+  // Odstráň query parametre okrem dôležitých
+  const urlObj = new URL(url, 'https://example.com');
+  const pathname = urlObj.pathname;
+  
+  // Normalizuj pathname
+  if (pathname === '/' || pathname === '/domov') return '/domov';
+  if (pathname.includes('/katalog')) return '/katalog';
+  if (pathname.includes('/detail-domu') || pathname.includes('/detaildomu')) return '/detail-domu';
+  if (pathname.includes('/konfigurator')) return '/konfigurator';
+  if (pathname.includes('/kontakt')) return '/kontakt';
+  if (pathname.includes('/dotacia')) return '/dotacia-americana';
+  if (pathname.includes('/blog')) return '/blog';
+  if (pathname.includes('/o-nas') || pathname.includes('/onas')) return '/o-nas';
+  
+  return pathname;
+}
+
+function generateRecommendations(funnel, bouncePages, exitPages, sessionAnalysis) {
   const recommendations = [];
 
-  // Najdi najväčší dropoff v funnel
+  // 1. Najväčší dropoff v funnel
   const maxDropoff = funnel.reduce((max, step) => 
     parseFloat(step.dropoffRate) > parseFloat(max.dropoffRate) ? step : max
   , funnel[0]);
 
   if (parseFloat(maxDropoff.dropoffRate) > 50) {
     recommendations.push({
-      severity: 'high',
+      severity: 'critical',
       area: maxDropoff.step,
-      issue: `Veľký dropoff (${maxDropoff.dropoffRate}%) na kroku "${maxDropoff.step}"`,
-      suggestion: `Analyzujte, prečo používatelia odchádzajú z tejto stránky. Možno je formulár príliš zložitý, chýbajú informácie alebo stránka sa načítava pomaly.`
+      issue: `🚨 Kritický dropoff ${maxDropoff.dropoffRate}% na "${maxDropoff.step}"`,
+      suggestion: `Toto je najväčší problém! Zákazníci masívne odchádzajú z tejto stránky. Odporúčania:\n• Skontrolujte načítavanie stránky (rýchlosť)\n• Pridajte jasné CTA tlačidlá\n• Zjednodušte formulár ak je tam\n• Pridajte dôveryhodné prvky (recenzie, certifikáty)`
     });
   }
 
-  // Stránky s vysokým bounce rate
+  // 2. Bounce rate
+  if (sessionAnalysis.bouncedSessions > 0) {
+    const bounceRate = ((sessionAnalysis.bouncedSessions / sessionAnalysis.totalSessions) * 100).toFixed(1);
+    if (parseFloat(bounceRate) > 60) {
+      recommendations.push({
+        severity: 'high',
+        area: 'Celkový bounce rate',
+        issue: `${bounceRate}% návštevníkov opúšťa stránku ihneď po príchode`,
+        suggestion: `• Zlepšite prvý dojem (hero sekcia)\n• Pridajte jasné value proposition\n• Skontrolujte mobilnú responzívnosť\n• Optimalizujte rýchlosť načítania`
+      });
+    }
+  }
+
+  // 3. Nízka scroll depth
+  if (parseFloat(sessionAnalysis.avgScrollDepth) < 30) {
+    recommendations.push({
+      severity: 'high',
+      area: 'Scroll depth',
+      issue: `Priemerne ${sessionAnalysis.avgScrollDepth}% - návštevníci takmer neskrolujú`,
+      suggestion: `• Obsah nad fold musí byť atraktívnejší\n• Pridajte vizuálne vodítka na scroll (šípky)\n• Zlepšite hero sekciu\n• Dôležitý obsah presuňte vyššie`
+    });
+  }
+
+  // 4. Málo kliknutí
+  if (parseFloat(sessionAnalysis.avgClicksPerSession) < 2) {
+    recommendations.push({
+      severity: 'medium',
+      area: 'Interakcia',
+      issue: `Len ${sessionAnalysis.avgClicksPerSession} kliknutí/session - nízka angažovanosť`,
+      suggestion: `• Pridajte viac interaktívnych prvkov\n• CTA tlačidlá musia byť viditeľnejšie\n• Pridajte hover efekty\n• Zvýraznite dôležité akcie`
+    });
+  }
+
+  // 5. Stránky s vysokým bounce rate
   const highBouncePage = bouncePages[0];
   if (highBouncePage && parseFloat(highBouncePage.bounceRate) > 70) {
     recommendations.push({
       severity: 'high',
       area: highBouncePage.url,
-      issue: `Vysoký bounce rate (${highBouncePage.bounceRate}%) na stránke ${highBouncePage.url}`,
-      suggestion: `Zlepšite call-to-action, pridajte jasné navigačné prvky, alebo skontrolujte, či obsah zodpovedá očakávaniam návštevníkov.`
+      issue: `Vysoký bounce rate ${highBouncePage.bounceRate}%`,
+      suggestion: `Táto stránka potrebuje urgentné zlepšenie:\n• Pridajte jasné CTA\n• Zlepšite obsah\n• Skontrolujte mobilnú verziu\n• Pridajte odkazy na relevantné sekcie`
     });
   }
 
-  // Najčastejšia exit page
+  // 6. Top exit page
   const topExit = exitPages[0];
-  if (topExit) {
+  if (topExit && topExit.count > sessionAnalysis.totalSessions * 0.2) {
     recommendations.push({
       severity: 'medium',
       area: topExit.url,
-      issue: `Najviac návštevníkov (${topExit.count}) odchádza zo stránky ${topExit.url}`,
-      suggestion: `Pridajte na túto stránku jasné CTA tlačidlá alebo navigáciu na ďalšie relevantné sekcie.`
+      issue: `${topExit.percentage}% návštevníkov odchádza z ${topExit.url}`,
+      suggestion: `• Pridajte "Ďalšie kroky" sekciu\n• Ponúknite súvisiaci obsah\n• Pridajte kontaktný formulár\n• Zlepšite navigáciu`
+    });
+  }
+
+  // 7. Mobilní vs Desktop
+  const mobileRate = (sessionAnalysis.mobileSessions / sessionAnalysis.totalSessions * 100).toFixed(1);
+  if (parseFloat(mobileRate) > 70) {
+    recommendations.push({
+      severity: 'info',
+      area: 'Mobile traffic',
+      issue: `${mobileRate}% návštevníkov je z mobilu`,
+      suggestion: `• Prioritizujte mobilnú optimalizáciu\n• Väčšie tlačidlá\n• Jednoduchšia navigácia\n• Rýchlejšie načítavanie obrázkov`
     });
   }
 
