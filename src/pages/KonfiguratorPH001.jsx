@@ -1052,8 +1052,8 @@ export default function KonfiguratorPH001() {
               </div>
             </div>
 
-            <div className="p-6 max-h-64 overflow-y-auto">
-             <SummaryContent />
+            <div className="p-6">
+              <SummaryContent />
             </div>
 
             <div className="p-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-t-4 border-indigo-300">
