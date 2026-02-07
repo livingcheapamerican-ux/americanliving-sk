@@ -111,6 +111,8 @@ import KonfiguratorPH004 from './pages/KonfiguratorPH004';
 import KonfiguratorPH005 from './pages/KonfiguratorPH005';
 import KonfiguratorPH006 from './pages/KonfiguratorPH006';
 import KonfiguratorPH007 from './pages/KonfiguratorPH007';
+import KonfiguratorPH008 from './pages/KonfiguratorPH008';
+import KonfiguratorPH009 from './pages/KonfiguratorPH009';
 import KonfiguratorProstoHouse from './pages/KonfiguratorProstoHouse';
 import KonfiguratorTicabhouse from './pages/KonfiguratorTicabhouse';
 import Kontakt from './pages/Kontakt';
@@ -130,8 +132,6 @@ import SrovnaniDomu from './pages/SrovnaniDomu';
 import TestAnalyzaKonfiguratora from './pages/TestAnalyzaKonfiguratora';
 import ZasadyOchranyOsobnychUdajov from './pages/ZasadyOchranyOsobnychUdajov';
 import ZasadyPouzivaniaCookies from './pages/ZasadyPouzivaniaCookies';
-import KonfiguratorPH008 from './pages/KonfiguratorPH008';
-import KonfiguratorPH009 from './pages/KonfiguratorPH009';
 import __Layout from './Layout.jsx';
 
 
@@ -200,6 +200,8 @@ export const PAGES = {
     "KonfiguratorPH005": KonfiguratorPH005,
     "KonfiguratorPH006": KonfiguratorPH006,
     "KonfiguratorPH007": KonfiguratorPH007,
+    "KonfiguratorPH008": KonfiguratorPH008,
+    "KonfiguratorPH009": KonfiguratorPH009,
     "KonfiguratorProstoHouse": KonfiguratorProstoHouse,
     "KonfiguratorTicabhouse": KonfiguratorTicabhouse,
     "Kontakt": Kontakt,
@@ -219,8 +221,6 @@ export const PAGES = {
     "TestAnalyzaKonfiguratora": TestAnalyzaKonfiguratora,
     "ZasadyOchranyOsobnychUdajov": ZasadyOchranyOsobnychUdajov,
     "ZasadyPouzivaniaCookies": ZasadyPouzivaniaCookies,
-    "KonfiguratorPH008": KonfiguratorPH008,
-    "KonfiguratorPH009": KonfiguratorPH009,
 }
 
 export const pagesConfig = {

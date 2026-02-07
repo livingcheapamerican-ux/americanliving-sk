@@ -194,14 +194,26 @@ const TypeSelector = ({ selected, onSelect }) => {
   );
 };
 
-const ConfiguratorTile = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange }) => {
+const ConfiguratorTile = ({ label, price, description, selected, onClick, isA0, isAdmin, onPriceChange, category = 'default' }) => {
+  const categoryColors = {
+    'mounting': { border: 'border-orange-400', bg: 'from-orange-50 to-orange-100/50', accent: 'orange', selectedBg: 'from-orange-100 to-orange-150' },
+    'insulation': { border: 'border-blue-400', bg: 'from-blue-50 to-blue-100/50', accent: 'blue', selectedBg: 'from-blue-100 to-blue-150' },
+    'foundation': { border: 'border-amber-400', bg: 'from-amber-50 to-amber-100/50', accent: 'amber', selectedBg: 'from-amber-100 to-amber-150' },
+    'interior': { border: 'border-emerald-400', bg: 'from-emerald-50 to-emerald-100/50', accent: 'emerald', selectedBg: 'from-emerald-100 to-emerald-150' },
+    'doors': { border: 'border-red-400', bg: 'from-red-50 to-red-100/50', accent: 'red', selectedBg: 'from-red-100 to-red-150' },
+    'facade': { border: 'border-purple-400', bg: 'from-purple-50 to-purple-100/50', accent: 'purple', selectedBg: 'from-purple-100 to-purple-150' },
+    'default': { border: 'border-indigo-400', bg: 'from-indigo-50 to-indigo-100/50', accent: 'indigo', selectedBg: 'from-indigo-100 to-indigo-150' }
+  };
+
+  const colors = categoryColors[category] || categoryColors['default'];
+
   return (
     <button
       onClick={onClick}
       className={`relative flex flex-col items-start p-6 rounded-2xl border-2 transition-all duration-300 w-full text-left active:scale-[0.98] hover:shadow-md ${
         selected
-          ? 'border-indigo-600 bg-gradient-to-br from-indigo-50 to-indigo-100 shadow-lg ring-2 ring-indigo-400 ring-offset-1'
-          : 'border-gray-200 bg-gradient-to-br from-white to-gray-50 hover:border-indigo-300 hover:shadow-md'
+          ? `border-${colors.accent}-600 bg-gradient-to-br ${colors.selectedBg} shadow-lg ring-2 ring-${colors.accent}-400 ring-offset-1`
+          : `${colors.border} bg-gradient-to-br ${colors.bg} hover:border-${colors.accent}-300 hover:shadow-md`
       }`}
     >
       <div className="flex justify-between w-full items-start mb-2">
@@ -572,7 +584,10 @@ export default function KonfiguratorPH001() {
         return (
           <Section title="Hrubá stavba" icon={Hammer}>
              <div className="col-span-full">
-                <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">Montáž hrubej stavby</h4>
+                <h4 className="font-semibold mb-3 text-sm text-orange-700 uppercase tracking-wide flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-orange-500"></div>
+                  Montáž hrubej stavby
+                </h4>
                 <div className="grid grid-cols-1 gap-3">
                   {HOUSE_PH001.options.mounting.map((opt, i) => (
                     <ConfiguratorTile 
@@ -584,12 +599,16 @@ export default function KonfiguratorPH001() {
                       onClick={() => setMountingIdx(i)}
                       isAdmin={isAdmin}
                       onPriceChange={(newPrice) => updatePrice('mounting', i, newPrice)}
+                      category="mounting"
                     />
                   ))}
                 </div>
              </div>
              <div className="col-span-full mt-6">
-                <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">Základy</h4>
+                <h4 className="font-semibold mb-3 text-sm text-amber-700 uppercase tracking-wide flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                  Základy
+                </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {HOUSE_PH001.options.foundation.map((opt, i) => (
                     <ConfiguratorTile 
@@ -601,6 +620,7 @@ export default function KonfiguratorPH001() {
                       onClick={() => setFoundationIdx(i)}
                       isAdmin={isAdmin}
                       onPriceChange={(newPrice) => updatePrice('foundation', i, newPrice)}
+                      category="foundation"
                     />
                   ))}
                 </div>
@@ -611,7 +631,10 @@ export default function KonfiguratorPH001() {
         return (
           <Section title="Exteriér" icon={Thermometer}>
              <div className="col-span-full">
-                <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">Typ izolácie</h4>
+                <h4 className="font-semibold mb-3 text-sm text-blue-700 uppercase tracking-wide flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                  Typ izolácie
+                </h4>
                 <div className="grid grid-cols-1 gap-3">
                   {HOUSE_PH001.options.insulation.map((opt, i) => (
                     <ConfiguratorTile 
@@ -623,13 +646,17 @@ export default function KonfiguratorPH001() {
                       onClick={() => setInsulationIdx(i)} 
                       isA0={opt.label.includes('250 mm')}
                       isAdmin={isAdmin}
-                      onPriceChange={(newPrice) => updatePrice('insulation', i, newPrice)} 
+                      onPriceChange={(newPrice) => updatePrice('insulation', i, newPrice)}
+                      category="insulation"
                     />
                   ))}
                 </div>
              </div>
              <div className="col-span-full mt-6">
-                <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">Fasáda</h4>
+                <h4 className="font-semibold mb-3 text-sm text-purple-700 uppercase tracking-wide flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-purple-500"></div>
+                  Fasáda
+                </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {HOUSE_PH001.options.facade.map((opt, i) => (
                     <ConfiguratorTile 
@@ -641,12 +668,16 @@ export default function KonfiguratorPH001() {
                       onClick={() => setFacadeIdx(i)}
                       isAdmin={isAdmin}
                       onPriceChange={(newPrice) => updatePrice('facade', i, newPrice)}
+                      category="facade"
                     />
                   ))}
                 </div>
              </div>
               <div className="col-span-full mt-6">
-                <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">Vstupné dvere</h4>
+                <h4 className="font-semibold mb-3 text-sm text-red-700 uppercase tracking-wide flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  Vstupné dvere
+                </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {HOUSE_PH001.options.doors.map((opt, i) => (
                     <ConfiguratorTile 
@@ -658,6 +689,7 @@ export default function KonfiguratorPH001() {
                       onClick={() => setDoorsIdx(i)}
                       isAdmin={isAdmin}
                       onPriceChange={(newPrice) => updatePrice('doors', i, newPrice)}
+                      category="doors"
                     />
                   ))}
                 </div>
@@ -701,22 +733,26 @@ export default function KonfiguratorPH001() {
         return (
           <Section title="Interiér" icon={Layout}>
             <div className="col-span-full">
-                <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">Úprava interiéru</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {HOUSE_PH001.options.interior.map((opt, i) => (
-                    <ConfiguratorTile 
-                      key={i} 
-                      label={opt.label} 
-                      price={getPrice('interior', i, opt.price)} 
-                      description={opt.description} 
-                      selected={interiorIdx === i} 
-                      onClick={() => setInteriorIdx(i)} 
-                      isAdmin={isAdmin}
-                      onPriceChange={(newPrice) => updatePrice('interior', i, newPrice)}
-                    />
-                  ))}
-                </div>
-            </div>
+                 <h4 className="font-semibold mb-3 text-sm text-emerald-700 uppercase tracking-wide flex items-center gap-2">
+                   <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+                   Úprava interiéru
+                 </h4>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                   {HOUSE_PH001.options.interior.map((opt, i) => (
+                     <ConfiguratorTile 
+                       key={i} 
+                       label={opt.label} 
+                       price={getPrice('interior', i, opt.price)} 
+                       description={opt.description} 
+                       selected={interiorIdx === i} 
+                       onClick={() => setInteriorIdx(i)} 
+                       isAdmin={isAdmin}
+                       onPriceChange={(newPrice) => updatePrice('interior', i, newPrice)}
+                       category="interior"
+                     />
+                   ))}
+                 </div>
+             </div>
             
             <div className="col-span-full mt-6">
                  <h4 className="font-semibold mb-3 text-sm text-gray-500 uppercase tracking-wide">Interiérové dvere</h4>
