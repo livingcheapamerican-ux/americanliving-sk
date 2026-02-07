@@ -1030,7 +1030,7 @@ export default function KonfiguratorPH007() {
                   className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 rounded-xl transition-all shadow-xl shadow-indigo-300 active:scale-[0.98] flex items-center justify-center gap-2"
                  >
                    <Send className="w-5 h-5" />
-                   Odoslať dopyt
+                   Odoslať cenovú ponuku
                  </button>
               </div>
             </div>
