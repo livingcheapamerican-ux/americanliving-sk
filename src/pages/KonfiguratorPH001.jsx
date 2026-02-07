@@ -242,7 +242,7 @@ const ConfiguratorTile = ({ label, price, description, selected, onClick, isA0, 
           </div>
         ) : (
           <span className={`text-sm font-semibold transition-colors ${selected ? 'text-indigo-700' : 'text-gray-500'}`}>
-            {price === 0 ? t('inPrice') : `+${price.toLocaleString()} €`}
+            {price === 0 ? 'V cene' : `+${price.toLocaleString()} €`}
           </span>
         )}
       </div>
