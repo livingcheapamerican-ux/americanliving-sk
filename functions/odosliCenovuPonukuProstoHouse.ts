@@ -702,8 +702,8 @@ Deno.serve(async (req) => {
     .base-row { background: #dbeafe !important; font-weight: bold; color: #1e40af; }
     
     .total-box { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 25px; border-radius: 12px; text-align: center; margin: 30px 0; }
-    .total-box .label { font-size: 16px; opacity: 0.9; }
-    .total-box .amount { font-size: 42px; font-weight: bold; margin-top: 10px; }
+    .total-box .label { font-size: 16px; opacity: 0.9; color: white; }
+    .total-box .amount { font-size: 42px; font-weight: bold; margin-top: 10px; color: white !important; }
     
     .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
     .gallery-item { position: relative; border-radius: 8px; overflow: hidden; }
