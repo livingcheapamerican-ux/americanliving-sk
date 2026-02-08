@@ -32,6 +32,8 @@ import KonfiguratorPH009 from "./KonfiguratorPH009";
 
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
+import ShellInfoBox from "../components/ShellInfoBox";
+import { prostoHouseTranslations } from "../components/translations/ProstoHouseTranslations";
 
 
 export default function DetailDomu() {
@@ -1449,6 +1451,25 @@ export default function DetailDomu() {
                     className="w-full h-auto object-cover"
                   />
                 </div>
+                
+                {/* Shell Info Box - správne ceny podľa prosto_house_kod */}
+                {(() => {
+                  const priceMap = {
+                    'PH-001': { kit: 59900, assembly: 17970 },  // Flat Double
+                    'PH-002': { kit: 59000, assembly: 17700 },  // Fjord
+                    'PH-003': { kit: 44900, assembly: 13470 },  // Flat House 1,5
+                    'PH-004': { kit: 49500, assembly: 14850 },  // Nord
+                    'PH-005': { kit: 36900, assembly: 9225 },   // Barn Double
+                    'PH-006': { kit: 31700, assembly: 7925 },   // Flat 72
+                    'PH-007': { kit: 22700, assembly: 5675 },   // A-Frame
+                    'PH-008': { kit: 20900, assembly: 4875 },   // Barn
+                    'PH-009': { kit: 19500, assembly: 4875 }    // Flat Small
+                  };
+                  const prices = priceMap[dom.prosto_house_kod];
+                  const tProsto = (key) => prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key] || key;
+                  return prices ? <ShellInfoBox basePriceKit={prices.kit} assemblyPrice={prices.assembly} t={tProsto} /> : null;
+                })()}
+                
                 <p className="text-sm text-blue-800 mt-3 text-center font-medium">
                   {t('basicConfigDesc') || 'Základná konfigurácia domu'}
                 </p>
