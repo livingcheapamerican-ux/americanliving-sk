@@ -415,6 +415,19 @@ export default function KonfiguratorPH001() {
   const { language } = useLanguage();
   const t = (key) => prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key] || key;
   
+  const urlParams = new URLSearchParams(window.location.search);
+  const domIdFromUrl = urlParams.get('id');
+  
+  const { data: domFromDb } = useQuery({
+    queryKey: ['dom-ph001', domIdFromUrl],
+    queryFn: async () => {
+      if (!domIdFromUrl) return null;
+      const domy = await base44.entities.Dom.filter({ id: domIdFromUrl });
+      return domy[0] || null;
+    },
+    enabled: !!domIdFromUrl
+  });
+  
   const STEPS = STEPS_CONFIG.map(step => ({
     ...step,
     title: step.id === 'type' ? t('stepProjectType')
@@ -636,7 +649,7 @@ export default function KonfiguratorPH001() {
 
       // Zavolaj backend funkciu
       const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
-        dom_id: HOUSE_PH001.id,
+        dom_id: domFromDb?.id || domIdFromUrl,
         klient_meno: klientData.meno,
         klient_email: klientData.email,
         klient_telefon: klientData.telefon,
