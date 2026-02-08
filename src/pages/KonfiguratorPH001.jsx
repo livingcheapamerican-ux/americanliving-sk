@@ -441,8 +441,14 @@ export default function KonfiguratorPH001() {
   
   const [activeStep, setActiveStep] = useState(0);
   const [typStavby, setTypStavby] = useState('rekreacna');
-  const [isAdmin, setIsAdmin] = useState(false);
   const [customPrices, setCustomPrices] = useState({});
+
+  const { data: user } = useQuery({
+    queryKey: ['current-user'],
+    queryFn: () => base44.auth.me().catch(() => null)
+  });
+
+  const isAdmin = user?.role === 'admin';
 
   // Načítaj custom ceny z databázy
   useEffect(() => {
@@ -1194,9 +1200,6 @@ export default function KonfiguratorPH001() {
           </div>
           
           <div className="w-24 flex justify-end items-center gap-2">
-             <button onClick={() => setIsAdmin(!isAdmin)} className={`p-2 rounded-full transition-colors ${isAdmin ? 'bg-indigo-100 text-indigo-600' : 'text-gray-400 hover:bg-gray-100'}`}>
-                {isAdmin ? <Edit2 className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
-             </button>
              <div className="hidden md:flex gap-2 items-center h-1.5">
                   {STEPS.map((_, i) => (
                     <div 
