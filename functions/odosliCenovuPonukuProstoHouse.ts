@@ -701,9 +701,9 @@ Deno.serve(async (req) => {
     .not-selected-row { color: #dc2626; text-decoration: line-through; }
     .base-row { background: #dbeafe !important; font-weight: bold; color: #1e40af; }
     
-    .total-box { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 25px; border-radius: 12px; text-align: center; margin: 30px 0; }
-    .total-box .label { font-size: 16px; opacity: 0.9; color: white; }
-    .total-box .amount { font-size: 42px; font-weight: bold; margin-top: 10px; color: white !important; }
+    .total-box { background: linear-gradient(135deg, #065f46, #047857); color: white; padding: 25px; border-radius: 12px; text-align: center; margin: 30px 0; border: 3px solid #10b981; }
+    .total-box .label { font-size: 16px; opacity: 1; color: #d1fae5; font-weight: bold; }
+    .total-box .amount { font-size: 48px; font-weight: bold; margin-top: 10px; color: #ffffff !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
     
     .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
     .gallery-item { position: relative; border-radius: 8px; overflow: hidden; }
@@ -847,8 +847,8 @@ Deno.serve(async (req) => {
 
       <!-- Celková cena -->
       <div class="total-box">
-        <div class="label" style="color: white;">${t(langCode, 'totalPriceWithVAT')}</div>
-        <div class="amount" style="color: white; font-size: 42px; font-weight: bold; margin-top: 10px;">${formatPrice(totalPrice)}</div>
+        <div class="label" style="color: #d1fae5; font-weight: bold; font-size: 16px;">${t(langCode, 'totalPriceWithVAT')}</div>
+        <div class="amount" style="color: #ffffff; font-size: 48px; font-weight: bold; margin-top: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">${formatPrice(totalPrice)}</div>
       </div>
 
       <!-- Pôdorysy -->
