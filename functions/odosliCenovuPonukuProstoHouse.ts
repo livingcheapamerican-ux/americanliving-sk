@@ -58,6 +58,22 @@ Deno.serve(async (req) => {
     console.log('selectedItems:', selectedItems);
     console.log('totalPrice:', totalPrice);
 
+    // Mapovanie cien hrubej stavby podľa prosto_house_kod
+    const priceMap = {
+      'PH-001': { kit: 59900, assembly: 17970 },  // Flat Double
+      'PH-002': { kit: 59000, assembly: 17700 },  // Fjord
+      'PH-003': { kit: 44900, assembly: 13470 },  // Flat House 1,5
+      'PH-004': { kit: 49500, assembly: 14850 },  // Nord
+      'PH-005': { kit: 36900, assembly: 9225 },   // Barn Double
+      'PH-006': { kit: 31700, assembly: 7925 },   // Flat 72
+      'PH-007': { kit: 22700, assembly: 5675 },   // A-Frame
+      'PH-008': { kit: 20900, assembly: 4875 },   // Barn
+      'PH-009': { kit: 19500, assembly: 4875 }    // Flat Small
+    };
+    
+    const shellPrices = priceMap[dom.prosto_house_kod] || { kit: 0, assembly: 0 };
+    const shellTotalPrice = shellPrices.kit + shellPrices.assembly;
+
     // Typ stavby
     const isA0 = projektA0 && izolaciaNavysenie === "premium" && tepelneCerpadlo && rekuperacia;
     const typStavby = isA0 ? "rodinny_dom_a0" : "rekreacna_stavba";
@@ -255,54 +271,7 @@ Deno.serve(async (req) => {
         <p style="margin: 5px 0; color: #6b7280;"><strong>Zastavaná plocha:</strong> ${dom.zastavana_plocha} m²</p>
       </div>
 
-      <!-- Sprievodné texty -->
-      <div class="info-box">
-        <h4>📦 Komplet pre montáž</h4>
-        <ul>
-          <li>drevená konštrukcia, hoblovaný hranol</li>
-          <li>vonkajšie steny, falcovaný plech 0,45mm</li>
-          <li>strecha, falcovaný plech 0,45mm</li>
-          <li>okná s dvojkomorovým sklom</li>
-          <li>dvere s dvojkomorovým sklom</li>
-          <li>hydroizoláčná membrána Strotex 1300</li>
-          <li>tepelná izolácia (150–250mm)</li>
-          <li>parozábranová fólia Strotex AL90</li>
-          <li>hrubá podlaha z OSB 22mm</li>
-        </ul>
-        <p style="color: #dc2626; font-weight: bold; margin-top: 10px;">Maľovanie: 4,5 €/m²</p>
-      </div>
-
-      <div class="info-box">
-        <h4>⚡ Elektroinštalácia</h4>
-        <ul>
-          <li>montáž elektrických káblov</li>
-          <li>inštalácia rozvádzača s ističmi</li>
-          <li>uloženie chráničky pre vonkajší kábel</li>
-          <li>montáž inštalačných krabíc</li>
-        </ul>
-        <p style="color: #dc2626; font-weight: bold; margin-top: 10px;">Nezahŕňa: bleskozvod, revízne doklady, montáž zásuviek/svietidiel</p>
-      </div>
-
-      <div class="info-box">
-        <h4>💧 Voda a kanalizácia</h4>
-        <ul>
-          <li>montáž vodovodných potrubí</li>
-          <li>montáž ventilov, záslepiek</li>
-          <li>montáž kanalizačných potrubí</li>
-          <li>kontrola tesnosti pod tlakom</li>
-        </ul>
-        <p style="color: #dc2626; font-weight: bold; margin-top: 10px;">Protokoly a sanitárne zariadenia za príplatok</p>
-      </div>
-
-      <div class="info-box">
-        <h4>🏗️ Základy</h4>
-        <ul>
-          <li>vrutové stĺpy, betónové stĺpiky alebo doska</li>
-          <li>uvedená minimálna cena za rovný terén</li>
-          <li>konečná cena po geodetickej analýze</li>
-        </ul>
-        <p style="color: #dc2626; font-weight: bold; margin-top: 10px;">Prípravné práce nie sú v cene</p>
-      </div>
+      <!-- Sprievodné texty - BEZ info-box sekcií -->
 
       <!-- Cenový rozpis -->
       <div class="section">
@@ -371,33 +340,22 @@ Deno.serve(async (req) => {
       </div>
       ` : ''}
 
-      <!-- Fotogalérie -->
+      <!-- Fotogalérie - VŠETKY v plnom rozlíšení -->
       ${galerie.length > 0 ? `
       <div class="section">
         <div class="section-title">Fotogaléria</div>
         ${galerie.map(g => `
           <h3 style="color: #374151; font-size: 16px; margin: 20px 0 10px 0;">${g.nazov}</h3>
-          <div class="gallery">
-            ${g.fotky.slice(0, 9).map((fotka, idx) => `
-            <div class="gallery-item">
-              <div class="img-wrapper">
-                <img src="${fotka}" alt="${g.nazov} ${idx + 1}">
-                <div class="watermark" style="font-size: 28px;">American Living</div>
-              </div>
-              <div class="gallery-caption">${g.nazov} - Fotka ${idx + 1}</div>
-            </div>
-            `).join('')}
+          ${g.fotky.map((fotka, idx) => `
+          <div class="image-container" style="margin: 15px 0;">
+            <img src="${fotka}" alt="${g.nazov} ${idx + 1}" style="width: 100%; height: auto; display: block; border-radius: 8px;">
+            <div class="watermark" style="font-size: 32px;">American Living</div>
+            <p style="text-align: center; color: #6b7280; font-size: 12px; margin-top: 8px; background: #f3f4f6; padding: 8px; border-radius: 4px;">${g.nazov} - Fotka ${idx + 1}</p>
           </div>
-          ${g.fotky.length > 9 ? `<p style="text-align: center; color: #6b7280; font-size: 12px;">+ ďalších ${g.fotky.length - 9} fotiek</p>` : ''}
+          `).join('')}
         `).join('')}
       </div>
-      ` : `
-      <div class="section">
-        <p style="color: #dc2626; font-weight: bold;">DEBUG: Žiadne galérie nenájdené</p>
-        <p style="font-size: 12px; color: #6b7280;">interierFinis: ${interierFinis}</p>
-        <p style="font-size: 12px; color: #6b7280;">vonkajsiaFasada: ${vonkajsiaFasada}</p>
-      </div>
-      `}
+      ` : ''}
     </div>
 
     <div class="footer">
@@ -405,6 +363,13 @@ Deno.serve(async (req) => {
       <p style="margin: 8px 0;">📞 Telefón: <a href="tel:+421905138124">+421 905 138 124</a></p>
       <p style="margin: 8px 0;">✉️ Email: <a href="mailto:info@americanliving.sk">info@americanliving.sk</a></p>
       <p style="margin: 8px 0;">🌐 Web: <a href="https://www.americanliving.sk">www.americanliving.sk</a></p>
+      <div style="margin: 20px 0;">
+        <p style="margin-bottom: 10px; font-size: 13px; color: #9ca3af;">Sledujte nás na sociálnych sieťach:</p>
+        <p style="margin: 5px 0;">
+          <a href="https://www.facebook.com/americanliving.sk" style="margin: 0 10px;">Facebook</a>
+          <a href="https://www.instagram.com/americanliving.sk" style="margin: 0 10px;">Instagram</a>
+        </p>
+      </div>
       <p style="margin: 20px 0 5px 0; font-size: 11px;">&copy; ${new Date().getFullYear()} American Living. Všetky práva vyhradené.</p>
     </div>
   </div>
