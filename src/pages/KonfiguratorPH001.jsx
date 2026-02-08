@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
+import ShellInfoBox from '../components/ShellInfoBox';
 
 // --- DATA DEFINITIONS ---
 // PH-001 ONLY
@@ -1143,6 +1144,7 @@ export default function KonfiguratorPH001() {
             </div>
 
             <div className="p-6">
+              <ShellInfoBox basePriceKit={20900} assemblyPrice={4875} t={t} />
               <SummaryContent />
             </div>
 
