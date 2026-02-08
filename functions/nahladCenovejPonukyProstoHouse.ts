@@ -3,27 +3,29 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-
-    if (!user || (user.role !== 'admin' && user.super_admin !== true)) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    
+    let user;
+    try {
+      user = await base44.auth.me();
+    } catch (e) {
+      user = null;
     }
 
     const payload = await req.json();
     const {
-      dom_id, klient_meno, klient_email, klient_telefon, klient_adresa,
+      dom_id, klient_meno, klient_email, klient_telefon, klient_adresa, klient_poznamka,
       selectedItems, totalPrice,
       montazHolodomu, izolaciaNavysenie, zaklady, vstupneDvere,
       elektroinstalacia, vodaKanalizacia, sanitaKomplet, bojler,
       tepelneCerpadlo, rekuperacia, pripojkaSiete,
       stresneOkno, bocneOknoFixne, bocneOknoVyklopne90, bocneOknoVyklopne55,
       povrchokaOkien, tonovaneSkla, vonkajsiaFasada, interierFinis,
-      vnutornePodlahy, podlahovVykurovanie, interieroveDvere,
+      vnutornePodlahy, podlahovVykurovanie, interieroveDvere, pergola,
       inziniering, projektA0, revizna, doprava, predlzenie,
-      predajNehnutelnosti, hladaniePozemku, financneSluzby
+      predajNehnutelnosti, hladaniePozemku, financneSluzby,
+      language
     } = payload;
 
-    // Načítaj dom
     const domy = await base44.asServiceRole.entities.Dom.list();
     const dom = domy.find(d => d.id === dom_id);
 
@@ -31,43 +33,30 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Dom nenájdený' }, { status: 404 });
     }
 
-    // Generuj číslo ponuky
-    const aktualnyRok = new Date().getFullYear();
-    const pocitadla = await base44.asServiceRole.entities.PocitadloCenovychPonuk.list();
-    let pocitadlo = pocitadla.find(p => p.rok === aktualnyRok);
+    // Mapovanie cien hrubej stavby
+    const priceMap = {
+      'PH-001': { kit: 59900, assembly: 17970 },
+      'PH-002': { kit: 59000, assembly: 17700 },
+      'PH-003': { kit: 44900, assembly: 13470 },
+      'PH-004': { kit: 49500, assembly: 14850 },
+      'PH-005': { kit: 36900, assembly: 9225 },
+      'PH-006': { kit: 31700, assembly: 7925 },
+      'PH-007': { kit: 22700, assembly: 5675 },
+      'PH-008': { kit: 20900, assembly: 4875 },
+      'PH-009': { kit: 19500, assembly: 4875 }
+    };
     
-    let cisloPonuky;
-    if (!pocitadlo) {
-      await base44.asServiceRole.entities.PocitadloCenovychPonuk.create({
-        rok: aktualnyRok,
-        posledne_cislo: 1
-      });
-      cisloPonuky = `CP-${aktualnyRok}-001`;
-    } else {
-      const noveCislo = pocitadlo.posledne_cislo + 1;
-      await base44.asServiceRole.entities.PocitadloCenovychPonuk.update(pocitadlo.id, {
-        posledne_cislo: noveCislo
-      });
-      cisloPonuky = `CP-${aktualnyRok}-${String(noveCislo).padStart(3, '0')}`;
-    }
+    const shellPrices = priceMap[dom.prosto_house_kod] || { kit: 0, assembly: 0 };
 
-    console.log('=== PRIJATÉ DÁTA ===');
-    console.log('selectedItems:', selectedItems);
-    console.log('totalPrice:', totalPrice);
-
-    // Typ stavby
     const isA0 = projektA0 && izolaciaNavysenie === "premium" && tepelneCerpadlo && rekuperacia;
     const typStavby = isA0 ? "rodinny_dom_a0" : "rekreacna_stavba";
 
-    // Výber hlavnej fotky
     const hlavnaFotka = vonkajsiaFasada === "suchana" 
       ? dom.hlavny_obrazok 
       : (dom.zakladna_konfiguracia_obrazok || dom.hlavny_obrazok);
 
-    // Galérie - VŽDY zobraz obe interiérové galérie a exteriér podľa fasády
     const galerie = [];
-    
-    // INTERIÉR - vždy zobraz obe galérie ak existujú
+
     const drevoGaleria = dom.galerie?.find(g => g.typ === "interier_drevo");
     if (drevoGaleria?.fotky?.length > 0) {
       galerie.push({ nazov: "Interiér - Drevo", fotky: drevoGaleria.fotky });
@@ -78,7 +67,6 @@ Deno.serve(async (req) => {
       galerie.push({ nazov: "Interiér - Sadrokartón", fotky: sadroGaleria.fotky });
     }
 
-    // EXTERIÉR - podľa fasády
     if (vonkajsiaFasada === "standard" || !vonkajsiaFasada) {
       const exterierDrevoGaleria = dom.galerie?.find(g => g.typ === "exterier_drevo_plech");
       if (exterierDrevoGaleria?.fotky?.length > 0) {
@@ -96,8 +84,7 @@ Deno.serve(async (req) => {
       return price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
     };
 
-    // Vytvor HTML
-    const html = `
+    const htmlEmail = `
 <!DOCTYPE html>
 <html lang="sk">
 <head>
@@ -105,8 +92,8 @@ Deno.serve(async (req) => {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cenová ponuka - ${dom.nazov}</title>
   <style>
-    body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #f5f5f5; }
-    .container { max-width: 800px; margin: 0 auto; background: white; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    body { margin: 0; padding: 0; font-family: Arial, sans-serif; background: #f5f5f5; }
+    .container { max-width: 800px; margin: 0 auto; background: white; }
     .header { background: linear-gradient(135deg, #EF4444 0%, #dc2626 100%); color: white; padding: 40px 30px; text-align: center; }
     .header h1 { margin: 0 0 10px 0; font-size: 32px; }
     .content { padding: 30px; }
@@ -116,17 +103,12 @@ Deno.serve(async (req) => {
     .typ-stavby { padding: 20px; border-radius: 12px; margin: 20px 0; border: 3px solid; }
     .typ-stavby.rekreacna { background: #fef3c7; border-color: #f59e0b; }
     .typ-stavby.a0 { background: #d1fae5; border-color: #10b981; }
-    .typ-stavby h3 { margin: 0 0 10px 0; font-size: 22px; display: flex; align-items: center; gap: 10px; }
+    .typ-stavby h3 { margin: 0 0 10px 0; font-size: 22px; }
     .typ-stavby ul { margin: 10px 0; padding-left: 20px; }
     .typ-stavby li { margin: 5px 0; }
     
-    .info-box { background: #f0fdf4; border: 2px solid #10b981; border-radius: 8px; padding: 15px; margin: 15px 0; }
-    .info-box h4 { margin: 0 0 10px 0; color: #065f46; font-size: 16px; }
-    .info-box ul { margin: 0; padding-left: 20px; color: #047857; }
-    .info-box li { margin: 5px 0; font-size: 14px; }
-    
-    .house-img { width: 100%; height: auto; object-fit: contain; background: #f9fafb; border-radius: 8px; margin: 15px 0; position: relative; }
-    .podorys-img { width: 100% !important; height: auto !important; display: block !important; object-fit: contain !important; max-height: none !important; }
+    .house-img { width: 100%; max-height: 400px; object-fit: contain; background: #f9fafb; border-radius: 8px; margin: 15px 0; }
+    .img-wrapper { position: relative; }
     .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: rgba(255,255,255,0.3); font-size: 48px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); pointer-events: none; }
     
     table { width: 100%; border-collapse: collapse; margin: 20px 0; }
@@ -142,11 +124,8 @@ Deno.serve(async (req) => {
     .total-box .label { font-size: 16px; opacity: 0.9; }
     .total-box .amount { font-size: 42px; font-weight: bold; margin-top: 10px; }
     
-    .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
-    .gallery-item { position: relative; border-radius: 8px; overflow: hidden; }
-    .gallery-item img { width: 100%; height: auto; display: block; object-fit: cover; min-height: 200px; max-height: 400px; }
-    .gallery-caption { background: #f3f4f6; padding: 8px; text-align: center; font-size: 12px; color: #6b7280; }
-    .podorys-img { width: 100% !important; height: auto !important; display: block !important; object-fit: contain !important; max-height: none !important; }
+    .image-container { margin: 15px 0; position: relative; }
+    .image-container img { width: 100%; height: auto; display: block; border-radius: 8px; }
     
     .footer { background: #111827; color: #9ca3af; padding: 30px; text-align: center; font-size: 13px; }
     .footer a { color: #60a5fa; text-decoration: none; }
@@ -157,7 +136,7 @@ Deno.serve(async (req) => {
     <div class="header">
       <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png" alt="American Living" style="height: 60px; margin-bottom: 15px;">
       <h1>CENOVÁ PONUKA</h1>
-      <p style="font-size: 16px; opacity: 0.95;">Číslo ponuky: ${cisloPonuky}</p>
+      <p style="font-size: 16px; opacity: 0.95;">Náhľad konfigurácie</p>
       <p style="font-size: 14px; opacity: 0.9;">Dátum: ${new Date().toLocaleDateString('sk-SK')}</p>
     </div>
 
@@ -195,6 +174,7 @@ Deno.serve(async (req) => {
         <p style="margin: 8px 0;"><strong>Email:</strong> ${klient_email}</p>
         <p style="margin: 8px 0;"><strong>Telefón:</strong> ${klient_telefon}</p>
         ${klient_adresa ? `<p style="margin: 8px 0;"><strong>Lokalita:</strong> ${klient_adresa}</p>` : ''}
+        ${klient_poznamka ? `<p style="margin: 8px 0;"><strong>Poznámka:</strong> ${klient_poznamka}</p>` : ''}
       </div>
 
       <!-- Dodatočné služby -->
@@ -229,7 +209,7 @@ Deno.serve(async (req) => {
       <!-- Vybraný model -->
       <div class="section">
         <div class="section-title">Vybraný model domu</div>
-        <div style="position: relative;">
+        <div class="img-wrapper">
           <img src="${hlavnaFotka}" alt="${dom.nazov}" class="house-img">
           <div class="watermark">American Living</div>
         </div>
@@ -237,65 +217,6 @@ Deno.serve(async (req) => {
         <p style="margin: 5px 0; color: #6b7280;"><strong>Výrobca:</strong> ${dom.vyrobca}</p>
         <p style="margin: 5px 0; color: #6b7280;"><strong>Typ domu:</strong> ${dom.typ_domu}</p>
         <p style="margin: 5px 0; color: #6b7280;"><strong>Zastavaná plocha:</strong> ${dom.zastavana_plocha} m²</p>
-      </div>
-
-      <!-- Sprievodné texty -->
-      <div class="info-box">
-        <h4>📦 Komplet pre montáž</h4>
-        <ul>
-          <li>drevená konštrukcia, hoblovaný hranol</li>
-          <li>vonkajšie steny, falcovaný plech 0,45mm</li>
-          <li>strecha, falcovaný plech 0,45mm</li>
-          <li>okná s dvojkomorovým sklom</li>
-          <li>dvere s dvojkomorovým sklom</li>
-          <li>hydroizoláčná membrána Strotex 1300</li>
-          <li>tepelná izolácia (150–250mm)</li>
-          <li>parozábranová fólia Strotex AL90</li>
-          <li>hrubá podlaha z OSB 22mm</li>
-        </ul>
-        <p style="color: #dc2626; font-weight: bold; margin-top: 10px;">Maľovanie: 4,5 €/m²</p>
-      </div>
-
-      <div class="info-box">
-        <h4>⚡ Elektroinštalácia</h4>
-        <ul>
-          <li>montáž elektrických káblov</li>
-          <li>inštalácia rozvádzača s ističmi</li>
-          <li>uloženie chráničky pre vonkajší kábel</li>
-          <li>montáž inštalačných krabíc</li>
-        </ul>
-        <p style="color: #dc2626; font-weight: bold; margin-top: 10px;">Nezahŕňa: bleskozvod, revízne doklady, montáž zásuviek/svietidiel</p>
-      </div>
-
-      <div class="info-box">
-        <h4>💧 Voda a kanalizácia</h4>
-        <ul>
-          <li>montáž vodovodných potrubí</li>
-          <li>montáž ventilov, záslepiek</li>
-          <li>montáž kanalizačných potrubí</li>
-          <li>kontrola tesnosti pod tlakom</li>
-        </ul>
-        <p style="color: #dc2626; font-weight: bold; margin-top: 10px;">Protokoly a sanitárne zariadenia za príplatok</p>
-      </div>
-
-      <div class="info-box">
-        <h4>🏗️ Základy</h4>
-        <ul>
-          <li>vrutové stĺpy, betónové stĺpiky alebo doska</li>
-          <li>uvedená minimálna cena za rovný terén</li>
-          <li>konečná cena po geodetickej analýze</li>
-        </ul>
-        <p style="color: #dc2626; font-weight: bold; margin-top: 10px;">Prípravné práce nie sú v cene</p>
-      </div>
-
-      <div class="info-box" style="background: #fef3c7; border-color: #f59e0b;">
-        <h4 style="color: #92400e;">🏡 Interiér finiš</h4>
-        <ul style="color: #b45309;">
-          <li>montáž priečok podľa projektu</li>
-          <li>izolácia 100mm + parозábrana</li>
-          <li>tatranský profil 8–12mm</li>
-        </ul>
-        <p style="color: #dc2626; font-weight: bold; margin-top: 10px;">Maľovanie: 4,5 €/m², farbu dodáva klient</p>
       </div>
 
       <!-- Cenový rozpis -->
@@ -312,17 +233,17 @@ Deno.serve(async (req) => {
             ${selectedItems?.map(item => {
               const isBase = item.section === "base";
               const isSectionHeader = item.name === "HRUBÁ STAVBA" || item.name === "HOLODOM" || item.name === "DOM NA KĽÚČ" || item.name === "DOKUMENTÁCIA";
-              
+
               if (isSectionHeader) {
                 const icon = item.name === "HRUBÁ STAVBA" ? "🏗️" : 
                             item.name === "HOLODOM" ? "🔨" : 
                             item.name === "DOM NA KĽÚČ" ? "🔑" : "📋";
                 return `<tr class="section-row"><td colspan="2">${icon} ${item.name}</td></tr>`;
               }
-              
+
               const rowClass = item.selected ? 'selected-row' : 'not-selected-row';
               const baseClass = isBase ? 'base-row' : rowClass;
-              
+
               return `
                 <tr class="${baseClass}">
                   <td>${isBase ? '<strong>' + item.name + '</strong>' : item.name}</td>
@@ -345,57 +266,38 @@ Deno.serve(async (req) => {
       <div class="section">
         <div class="section-title">Pôdorysy</div>
         ${dom.podorys_2d ? `
-        <div style="margin-bottom: 20px;">
-          <div style="position: relative; text-align: center;">
-            <img src="${dom.podorys_2d}" alt="2D pôdorys" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 8px; background: #f9fafb;">
-            <div class="watermark" style="font-size: 32px;">American Living</div>
-          </div>
+        <div class="image-container">
+          <img src="${dom.podorys_2d}" alt="2D pôdorys" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 8px; background: #f9fafb;">
+          <div class="watermark" style="font-size: 32px;">American Living</div>
           <p style="text-align: center; color: #6b7280; font-size: 12px; margin-top: 8px; background: #f3f4f6; padding: 8px; border-radius: 4px;">2D pôdorys</p>
         </div>
         ` : ''}
         ${dom.podorys_3d ? `
-        <div style="margin-bottom: 20px;">
-          <div style="position: relative; text-align: center;">
-            <img src="${dom.podorys_3d}" alt="3D pôdorys" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 8px; background: #f9fafb;">
-            <div class="watermark" style="font-size: 32px;">American Living</div>
-          </div>
+        <div class="image-container">
+          <img src="${dom.podorys_3d}" alt="3D pôdorys" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 8px; background: #f9fafb;">
+          <div class="watermark" style="font-size: 32px;">American Living</div>
           <p style="text-align: center; color: #6b7280; font-size: 12px; margin-top: 8px; background: #f3f4f6; padding: 8px; border-radius: 4px;">3D pôdorys</p>
         </div>
         ` : ''}
       </div>
       ` : ''}
 
-      <!-- Fotogalérie -->
+      <!-- Fotogalérie - VŠETKY v plnom rozlíšení -->
       ${galerie.length > 0 ? `
       <div class="section">
         <div class="section-title">Fotogaléria</div>
         ${galerie.map(g => `
           <h3 style="color: #374151; font-size: 16px; margin: 20px 0 10px 0;">${g.nazov}</h3>
-          <div class="gallery">
-            ${g.fotky.slice(0, 9).map((fotka, idx) => `
-            <div class="gallery-item">
-              <div style="position: relative;">
-                <img src="${fotka}" alt="${g.nazov} ${idx + 1}">
-                <div class="watermark" style="font-size: 28px;">American Living</div>
-              </div>
-              <div class="gallery-caption">${g.nazov} - Fotka ${idx + 1}</div>
-            </div>
-            `).join('')}
+          ${g.fotky.map((fotka, idx) => `
+          <div class="image-container" style="margin: 15px 0;">
+            <img src="${fotka}" alt="${g.nazov} ${idx + 1}" style="width: 100%; height: auto; display: block; border-radius: 8px;">
+            <div class="watermark" style="font-size: 32px;">American Living</div>
+            <p style="text-align: center; color: #6b7280; font-size: 12px; margin-top: 8px; background: #f3f4f6; padding: 8px; border-radius: 4px;">${g.nazov} - Fotka ${idx + 1}</p>
           </div>
-          ${g.fotky.length > 9 ? `<p style="text-align: center; color: #6b7280; font-size: 12px;">+ ďalších ${g.fotky.length - 9} fotiek</p>` : ''}
+          `).join('')}
         `).join('')}
       </div>
-      ` : `
-      <div class="section">
-        <p style="color: #dc2626; font-weight: bold; background: #fee; padding: 15px; border-radius: 8px;">⚠️ DEBUG: Žiadne galérie nenájdené</p>
-        <div style="background: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 12px;">
-          <p><strong>interierFinis:</strong> ${interierFinis}</p>
-          <p><strong>vonkajsiaFasada:</strong> ${vonkajsiaFasada}</p>
-          <p><strong>dom.galerie existuje:</strong> ${dom.galerie ? 'áno' : 'nie'}</p>
-          <p><strong>počet galérií v dome:</strong> ${dom.galerie?.length || 0}</p>
-        </div>
-      </div>
-      `}
+      ` : ''}
     </div>
 
     <div class="footer">
@@ -403,6 +305,13 @@ Deno.serve(async (req) => {
       <p style="margin: 8px 0;">📞 Telefón: <a href="tel:+421905138124">+421 905 138 124</a></p>
       <p style="margin: 8px 0;">✉️ Email: <a href="mailto:info@americanliving.sk">info@americanliving.sk</a></p>
       <p style="margin: 8px 0;">🌐 Web: <a href="https://www.americanliving.sk">www.americanliving.sk</a></p>
+      <div style="margin: 20px 0;">
+        <p style="margin-bottom: 10px; font-size: 13px; color: #9ca3af;">Sledujte nás na sociálnych sieťach:</p>
+        <p style="margin: 5px 0;">
+          <a href="https://www.facebook.com/americanliving.sk" style="margin: 0 10px;">Facebook</a>
+          <a href="https://www.instagram.com/americanliving.sk" style="margin: 0 10px;">Instagram</a>
+        </p>
+      </div>
       <p style="margin: 20px 0 5px 0; font-size: 11px;">&copy; ${new Date().getFullYear()} American Living. Všetky práva vyhradené.</p>
     </div>
   </div>
@@ -410,7 +319,10 @@ Deno.serve(async (req) => {
 </html>
     `;
 
-    return Response.json({ html });
+    return Response.json({ 
+      success: true, 
+      html: htmlEmail
+    });
 
   } catch (error) {
     console.error('Error:', error);
