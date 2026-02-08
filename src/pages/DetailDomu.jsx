@@ -1318,7 +1318,7 @@ export default function DetailDomu() {
               ) : (isTicabhouse) ? (
                 <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-2">
                   <p className="text-lg sm:text-xl font-bold text-green-600 mb-2">
-                    Za vyššie uvedenú cenu dostávate dom na kľúč, ktorý je pripravený na okamžité použitie
+                    {t('turnkeyReadyHouse') || 'Za vyššie uvedenú cenu dostávate dom na kľúč, ktorý je pripravený na okamžité použitie'}
                   </p>
                   <p className="text-xs sm:text-sm text-blue-800 mb-1">
                     <strong>{t('modularConstruction')}</strong>
