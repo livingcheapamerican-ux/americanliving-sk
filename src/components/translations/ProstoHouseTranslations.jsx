@@ -139,7 +139,19 @@ export const prostoHouseTranslations = {
     "realEstateItem": "Predaj nehnuteľnosti",
     "landSearchItem": "Hľadanie pozemku",
     "financingItem": "Financovanie",
-    "additionalWindowsLabel": "Doplnkové okná"
+    "additionalWindowsLabel": "Doplnkové okná",
+    "basePriceKit": "Základná cena sady (svojpomocná montáž)",
+    "shellAssemblyPrice": "Montáž hrubej stavby",
+    "shellPrice": "Cena hrubej stavby",
+    "shellPriceIncludes": "Cena hrubej stavby obsahuje:",
+    "woodenFrame": "drevený rám domu",
+    "exteriorFacade": "vonkajšia fasáda (falzplech a drevený obklad)",
+    "windows": "okná",
+    "doors": "dvere",
+    "hydroInsulation": "hydroizolačná fólia",
+    "thermalInsulation": "tepelná izolácia, 150 až 300 mm steny, 250 mm strecha",
+    "vaporBarrier": "parozábrana",
+    "roughFloor": "hrubá podlaha z OSB dosiek ( možnosť zmeny za Anhydritovú podlahu )"
   },
   "en": {
     "selectProjectType": "Click on the building type to start the configurator",
@@ -281,7 +293,19 @@ export const prostoHouseTranslations = {
     "realEstateItem": "Property sale",
     "landSearchItem": "Land search",
     "financingItem": "Financing",
-    "additionalWindowsLabel": "Additional windows"
+    "additionalWindowsLabel": "Additional windows",
+    "basePriceKit": "Base kit price (self-assembly)",
+    "shellAssemblyPrice": "Shell assembly",
+    "shellPrice": "Shell construction price",
+    "shellPriceIncludes": "Shell construction price includes:",
+    "woodenFrame": "wooden house frame",
+    "exteriorFacade": "exterior facade (standing seam and wooden cladding)",
+    "windows": "windows",
+    "doors": "doors",
+    "hydroInsulation": "hydro-insulation foil",
+    "thermalInsulation": "thermal insulation, 150 to 300 mm walls, 250 mm roof",
+    "vaporBarrier": "vapor barrier",
+    "roughFloor": "rough OSB floor boards (option to change to Anhydrite floor)"
   },
   "de": {
     "selectProjectType": "Klicken Sie auf den Gebäudetyp, um den Konfigurator zu starten",
@@ -423,7 +447,19 @@ export const prostoHouseTranslations = {
     "realEstateItem": "Immobilienverkauf",
     "landSearchItem": "Grundstückssuche",
     "financingItem": "Finanzierung",
-    "additionalWindowsLabel": "Zusätzliche Fenster"
+    "additionalWindowsLabel": "Zusätzliche Fenster",
+    "basePriceKit": "Basis-Set-Preis (Selbstmontage)",
+    "shellAssemblyPrice": "Rohbaumontage",
+    "shellPrice": "Rohbaupreis",
+    "shellPriceIncludes": "Rohbaupreis beinhaltet:",
+    "woodenFrame": "Holzrahmen des Hauses",
+    "exteriorFacade": "Außenfassade (Stehfalz und Holzverkleidung)",
+    "windows": "Fenster",
+    "doors": "Türen",
+    "hydroInsulation": "Hydroisolationsfolie",
+    "thermalInsulation": "Wärmedämmung, 150 bis 300 mm Wände, 250 mm Dach",
+    "vaporBarrier": "Dampfsperre",
+    "roughFloor": "Rohboden aus OSB-Platten (Option auf Anhydritboden)"
   },
   "fr": {
     "selectProjectType": "Cliquez sur le type de bâtiment pour démarrer le configurateur",
@@ -565,7 +601,19 @@ export const prostoHouseTranslations = {
     "realEstateItem": "Vente immobilière",
     "landSearchItem": "Recherche de terrain",
     "financingItem": "Financement",
-    "additionalWindowsLabel": "Fenêtres supplémentaires"
+    "additionalWindowsLabel": "Fenêtres supplémentaires",
+    "basePriceKit": "Prix du kit de base (auto-assemblage)",
+    "shellAssemblyPrice": "Montage du gros œuvre",
+    "shellPrice": "Prix du gros œuvre",
+    "shellPriceIncludes": "Le prix du gros œuvre comprend:",
+    "woodenFrame": "cadre en bois de la maison",
+    "exteriorFacade": "façade extérieure (joint debout et bardage bois)",
+    "windows": "fenêtres",
+    "doors": "portes",
+    "hydroInsulation": "film d'hydro-isolation",
+    "thermalInsulation": "isolation thermique, 150 à 300 mm murs, 250 mm toit",
+    "vaporBarrier": "pare-vapeur",
+    "roughFloor": "plancher brut en panneaux OSB (option de changement pour sol Anhydrite)"
   },
   "hu": {
     "selectProjectType": "Kattintson az épülettípusra a konfigurátor indításához",
@@ -707,7 +755,19 @@ export const prostoHouseTranslations = {
     "realEstateItem": "Ingatlan értékesítés",
     "landSearchItem": "Telekkeresés",
     "financingItem": "Finanszírozás",
-    "additionalWindowsLabel": "További ablakok"
+    "additionalWindowsLabel": "További ablakok",
+    "basePriceKit": "Alap készlet ár (önszerelés)",
+    "shellAssemblyPrice": "Szerkezetkész összeszerelés",
+    "shellPrice": "Szerkezetkész ár",
+    "shellPriceIncludes": "A szerkezetkész ár tartalmazza:",
+    "woodenFrame": "fa vázszerkezet",
+    "exteriorFacade": "külső homlokzat (állófalcas lemez és fa burkolat)",
+    "windows": "ablakok",
+    "doors": "ajtók",
+    "hydroInsulation": "hidroizolációs fólia",
+    "thermalInsulation": "hőszigetelés, 150-300 mm falak, 250 mm tető",
+    "vaporBarrier": "páragát",
+    "roughFloor": "durva OSB lappadló (lehetőség Anhidrit padlóra váltani)"
   },
   "pl": {
     "selectProjectType": "Kliknij na typ budynku, aby uruchomić konfigurator",
@@ -849,7 +909,19 @@ export const prostoHouseTranslations = {
     "realEstateItem": "Sprzedaż nieruchomości",
     "landSearchItem": "Poszukiwanie działki",
     "financingItem": "Finansowanie",
-    "additionalWindowsLabel": "Dodatkowe okna"
+    "additionalWindowsLabel": "Dodatkowe okna",
+    "basePriceKit": "Cena bazowego zestawu (samodzielny montaż)",
+    "shellAssemblyPrice": "Montaż stanu surowego",
+    "shellPrice": "Cena stanu surowego",
+    "shellPriceIncludes": "Cena stanu surowego obejmuje:",
+    "woodenFrame": "drewniana rama domu",
+    "exteriorFacade": "zewnętrzna elewacja (rąbek stojący i drewniana okładzina)",
+    "windows": "okna",
+    "doors": "drzwi",
+    "hydroInsulation": "folia hydroizolacyjna",
+    "thermalInsulation": "izolacja cieplna, 150 do 300 mm ściany, 250 mm dach",
+    "vaporBarrier": "paroizolacja",
+    "roughFloor": "surowa podłoga z płyt OSB (możliwość zmiany na podłogę anhydrytową)"
   },
   "uk": {
     "selectProjectType": "Натисніть на тип будівлі, щоб запустити конфігуратор",
@@ -991,7 +1063,19 @@ export const prostoHouseTranslations = {
     "realEstateItem": "Продаж нерухомості",
     "landSearchItem": "Пошук ділянки",
     "financingItem": "Фінансування",
-    "additionalWindowsLabel": "Додаткові вікна"
+    "additionalWindowsLabel": "Додаткові вікна",
+    "basePriceKit": "Базова ціна комплекту (самостійний монтаж)",
+    "shellAssemblyPrice": "Монтаж каркасу",
+    "shellPrice": "Ціна каркасу",
+    "shellPriceIncludes": "Ціна каркасу включає:",
+    "woodenFrame": "дерев'яний каркас будинку",
+    "exteriorFacade": "зовнішній фасад (фальцевий лист та дерев'яна обшивка)",
+    "windows": "вікна",
+    "doors": "двері",
+    "hydroInsulation": "гідроізоляційна плівка",
+    "thermalInsulation": "теплоізоляція, 150-300 мм стіни, 250 мм дах",
+    "vaporBarrier": "пароізоляція",
+    "roughFloor": "чорнова підлога з OSB-плит (можливість заміни на ангідритну підлогу)"
   },
   "sr": {
     "selectProjectType": "Кликните на тип зграде да покренете конфигуратор",
@@ -1133,7 +1217,19 @@ export const prostoHouseTranslations = {
     "realEstateItem": "Продаја некретнине",
     "landSearchItem": "Претрага парцеле",
     "financingItem": "Финансирање",
-    "additionalWindowsLabel": "Додатни прозори"
+    "additionalWindowsLabel": "Додатни прозори",
+    "basePriceKit": "Основна цена комплета (самостална монтажа)",
+    "shellAssemblyPrice": "Монтажа грубе градње",
+    "shellPrice": "Цена грубе градње",
+    "shellPriceIncludes": "Цена грубе градње садржи:",
+    "woodenFrame": "дрвени оквир куће",
+    "exteriorFacade": "спољна фасада (фалц лим и дрвена облога)",
+    "windows": "прозори",
+    "doors": "врата",
+    "hydroInsulation": "хидроизолациона фолија",
+    "thermalInsulation": "топлотна изолација, 150-300 мм зидови, 250 мм кров",
+    "vaporBarrier": "парна баријера",
+    "roughFloor": "груби под од ОСБ плоча (могућност промене на анхидритни под)"
   },
   "hr": {
     "selectProjectType": "Kliknite na tip zgrade za pokretanje konfiguratora",
@@ -1275,7 +1371,19 @@ export const prostoHouseTranslations = {
     "realEstateItem": "Prodaja nekretnine",
     "landSearchItem": "Pretraga parcele",
     "financingItem": "Financiranje",
-    "additionalWindowsLabel": "Dodatni prozori"
+    "additionalWindowsLabel": "Dodatni prozori",
+    "basePriceKit": "Osnovna cijena kompleta (samostalna montaža)",
+    "shellAssemblyPrice": "Montaža grube gradnje",
+    "shellPrice": "Cijena grube gradnje",
+    "shellPriceIncludes": "Cijena grube gradnje sadrži:",
+    "woodenFrame": "drveni okvir kuće",
+    "exteriorFacade": "vanjska fasada (falc lim i drvena obloga)",
+    "windows": "prozori",
+    "doors": "vrata",
+    "hydroInsulation": "hidroizolacijska folija",
+    "thermalInsulation": "toplinska izolacija, 150-300 mm zidovi, 250 mm krov",
+    "vaporBarrier": "parna barijera",
+    "roughFloor": "gruби pod od OSB ploča (mogućnost promjene na anhidritni pod)"
   },
   "el": {
     "selectProjectType": "Κάντε κλικ στον τύπο κτιρίου για να ξεκινήσετε τον διαμορφωτή",
@@ -1417,6 +1525,18 @@ export const prostoHouseTranslations = {
     "realEstateItem": "Πώληση ακινήτου",
     "landSearchItem": "Αναζήτηση οικοπέδου",
     "financingItem": "Χρηματοδότηση",
-    "additionalWindowsLabel": "Πρόσθετα παράθυρα"
+    "additionalWindowsLabel": "Πρόσθετα παράθυρα",
+    "basePriceKit": "Βασική τιμή κιτ (αυτο-συναρμολόγηση)",
+    "shellAssemblyPrice": "Συναρμολόγηση κελύφους",
+    "shellPrice": "Τιμή κατασκευής κελύφους",
+    "shellPriceIncludes": "Η τιμή κατασκευής κελύφους περιλαμβάνει:",
+    "woodenFrame": "ξύλινο πλαίσιο σπιτιού",
+    "exteriorFacade": "εξωτερική πρόσοψη (διπλή ραφή και ξύλινη επένδυση)",
+    "windows": "παράθυρα",
+    "doors": "πόρτες",
+    "hydroInsulation": "υδρομονωτική μεμβράνη",
+    "thermalInsulation": "θερμομόνωση, 150-300 mm τοίχοι, 250 mm οροφή",
+    "vaporBarrier": "φράγμα ατμών",
+    "roughFloor": "τραχύ πάτωμα από πλάκες OSB (δυνατότητα αλλαγής σε Ανυδρίτη δάπεδο)"
   }
 };
