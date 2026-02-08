@@ -601,6 +601,7 @@ export default function KonfiguratorPH003() {
         klient_poznamka: klientData.poznamka,
         selectedItems: selectedItems,
         totalPrice: totalPrice,
+        language: language,
         montazHolodomu: mountingIdx > 0,
         izolaciaNavysenie: HOUSE_PH003.options.insulation[insulationIdx].label.includes('250') ? 'premium' : 'standard',
         zaklady: HOUSE_PH003.options.foundation[foundationIdx].label,
