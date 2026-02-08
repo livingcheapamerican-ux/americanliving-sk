@@ -1,6 +1,6 @@
 export const prostoHouseTranslations = {
   "sk": {
-    "selectProjectType": "Vyberte typ projektu",
+    "selectProjectType": "Kliknutím na typ stavby spustíš konfigurátor",
     "recreationalBuilding": "Rekreačná stavba",
     "familyHouseA0": "Rodinný dom A0",
     "stepProjectType": "Typ projektu",
@@ -142,7 +142,7 @@ export const prostoHouseTranslations = {
     "additionalWindowsLabel": "Doplnkové okná"
   },
   "en": {
-    "selectProjectType": "Select project type",
+    "selectProjectType": "Click on the building type to start the configurator",
     "recreationalBuilding": "Recreational building",
     "familyHouseA0": "Family house A0",
     "stepProjectType": "Project type",
@@ -284,7 +284,7 @@ export const prostoHouseTranslations = {
     "additionalWindowsLabel": "Additional windows"
   },
   "de": {
-    "selectProjectType": "Projekttyp wählen",
+    "selectProjectType": "Klicken Sie auf den Gebäudetyp, um den Konfigurator zu starten",
     "recreationalBuilding": "Freizeitgebäude",
     "familyHouseA0": "Familienhaus A0",
     "stepProjectType": "Projekttyp",
@@ -426,7 +426,7 @@ export const prostoHouseTranslations = {
     "additionalWindowsLabel": "Zusätzliche Fenster"
   },
   "fr": {
-    "selectProjectType": "Sélectionner le type de projet",
+    "selectProjectType": "Cliquez sur le type de bâtiment pour démarrer le configurateur",
     "recreationalBuilding": "Bâtiment récréatif",
     "familyHouseA0": "Maison familiale A0",
     "stepProjectType": "Type de projet",
@@ -568,7 +568,7 @@ export const prostoHouseTranslations = {
     "additionalWindowsLabel": "Fenêtres supplémentaires"
   },
   "hu": {
-    "selectProjectType": "Projekttyp kiválasztása",
+    "selectProjectType": "Kattintson az épülettípusra a konfigurátor indításához",
     "recreationalBuilding": "Rekreációs épület",
     "familyHouseA0": "Családi ház A0",
     "stepProjectType": "Projekt típusa",
@@ -710,7 +710,7 @@ export const prostoHouseTranslations = {
     "additionalWindowsLabel": "További ablakok"
   },
   "pl": {
-    "selectProjectType": "Wybierz typ projektu",
+    "selectProjectType": "Kliknij na typ budynku, aby uruchomić konfigurator",
     "recreationalBuilding": "Budynek rekreacyjny",
     "familyHouseA0": "Dom rodzinny A0",
     "stepProjectType": "Typ projektu",
@@ -852,7 +852,7 @@ export const prostoHouseTranslations = {
     "additionalWindowsLabel": "Dodatkowe okna"
   },
   "uk": {
-    "selectProjectType": "Виберіть тип проекту",
+    "selectProjectType": "Натисніть на тип будівлі, щоб запустити конфігуратор",
     "recreationalBuilding": "Рекреаційна будівля",
     "familyHouseA0": "Сімейний будинок A0",
     "stepProjectType": "Тип проекту",
@@ -994,7 +994,7 @@ export const prostoHouseTranslations = {
     "additionalWindowsLabel": "Додаткові вікна"
   },
   "sr": {
-    "selectProjectType": "Изаберите тип пројекта",
+    "selectProjectType": "Кликните на тип зграде да покренете конфигуратор",
     "recreationalBuilding": "Рекреациона зграда",
     "familyHouseA0": "Породична кућа А0",
     "stepProjectType": "Тип пројекта",
@@ -1136,7 +1136,7 @@ export const prostoHouseTranslations = {
     "additionalWindowsLabel": "Додатни прозори"
   },
   "hr": {
-    "selectProjectType": "Odaberite tip projekta",
+    "selectProjectType": "Kliknite na tip zgrade za pokretanje konfiguratora",
     "recreationalBuilding": "Rekreacijska zgrada",
     "familyHouseA0": "Obiteljska kuća A0",
     "stepProjectType": "Tip projekta",
@@ -1278,7 +1278,7 @@ export const prostoHouseTranslations = {
     "additionalWindowsLabel": "Dodatni prozori"
   },
   "el": {
-    "selectProjectType": "Επιλέξτε τύπο έργου",
+    "selectProjectType": "Κάντε κλικ στον τύπο κτιρίου για να ξεκινήσετε τον διαμορφωτή",
     "recreationalBuilding": "Ψυχαγωγικό κτίριο",
     "familyHouseA0": "Οικογενειακή κατοικία A0",
     "stepProjectType": "Τύπος έργου",
