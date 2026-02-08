@@ -1452,7 +1452,7 @@ export default function DetailDomu() {
                   />
                 </div>
                 
-                {/* Shell Info Box - aktuálne ceny z konfiguratora */}
+                {/* Shell Info Box - aktuálne ceny z konfiguratora (mounting-1 je "S montážou") */}
                 {(() => {
                   const defaultPriceMap = {
                     'PH-001': { kit: 59900, assembly: 17970 },
@@ -1467,24 +1467,19 @@ export default function DetailDomu() {
                   };
                   
                   const phCode = dom.prosto_house_kod?.toLowerCase();
-                  const customPrices = dom.konfigurator_custom_ceny_prosto_house?.[phCode];
+                  const customPricesFromDb = dom.konfigurator_custom_ceny_prosto_house?.[phCode];
                   const defaultPrices = defaultPriceMap[dom.prosto_house_kod];
                   
                   if (!defaultPrices) return null;
                   
-                  // Funkcia na získanie ceny - custom alebo default
-                  const getPrice = (category, key, defaultValue) => {
-                    if (customPrices) {
-                      const customKey = `${category}-${key}`;
-                      if (customPrices[customKey] !== undefined) {
-                        return customPrices[customKey];
-                      }
-                    }
-                    return defaultValue;
-                  };
-                  
+                  // Základná cena sady je vždy default
                   const kitPrice = defaultPrices.kit;
-                  const assemblyPrice = getPrice('mounting', 1, defaultPrices.assembly);
+                  
+                  // Montáž - čítame z mounting-1 (index 1 = "S montážou")
+                  let assemblyPrice = defaultPrices.assembly;
+                  if (customPricesFromDb && customPricesFromDb['mounting-1'] !== undefined) {
+                    assemblyPrice = customPricesFromDb['mounting-1'];
+                  }
                   
                   const tProsto = (key) => prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key] || key;
                   return <ShellInfoBox basePriceKit={kitPrice} assemblyPrice={assemblyPrice} t={tProsto} />;
