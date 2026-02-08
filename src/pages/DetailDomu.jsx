@@ -1461,7 +1461,7 @@ export default function DetailDomu() {
                     'PH-004': { kit: 49500, assembly: 15650 },
                     'PH-005': { kit: 36900, assembly: 9225 },
                     'PH-006': { kit: 31700, assembly: 8400 },
-                    'PH-007': { kit: 22700, assembly: 5675 },
+                    'PH-007': { kit: 22700, assembly: 7200 },
                     'PH-008': { kit: 20900, assembly: 5225 },
                     'PH-009': { kit: 19500, assembly: 4875 }
                   };
