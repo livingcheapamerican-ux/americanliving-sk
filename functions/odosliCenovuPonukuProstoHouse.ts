@@ -847,8 +847,8 @@ Deno.serve(async (req) => {
 
       <!-- Celková cena -->
       <div class="total-box">
-        <div class="label">${t(langCode, 'totalPriceWithVAT')}</div>
-        <div class="amount">${formatPrice(totalPrice)}</div>
+        <div class="label" style="color: white;">${t(langCode, 'totalPriceWithVAT')}</div>
+        <div class="amount" style="color: white; font-size: 42px; font-weight: bold; margin-top: 10px;">${formatPrice(totalPrice)}</div>
       </div>
 
       <!-- Pôdorysy -->
