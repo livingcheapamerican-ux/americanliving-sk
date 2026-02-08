@@ -847,8 +847,8 @@ Deno.serve(async (req) => {
 
       <!-- Celková cena -->
       <div style="background: linear-gradient(135deg, #065f46, #047857); padding: 25px; border-radius: 12px; text-align: center; margin: 30px 0; border: 3px solid #10b981;">
-        <div style="font-size: 16px; color: #d1fae5; font-weight: bold;">${t(langCode, 'totalPriceWithVAT')}</div>
-        <div style="font-size: 48px; color: #ffffff; font-weight: bold; margin-top: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">${formatPrice(totalPrice)}</div>
+        <div style="font-size: 16px; color: #000000; font-weight: bold;">${t(langCode, 'totalPriceWithVAT')}</div>
+        <div style="font-size: 48px; color: #000000; font-weight: bold; margin-top: 10px;">${formatPrice(totalPrice)}</div>
       </div>
 
       <!-- Pôdorysy -->
