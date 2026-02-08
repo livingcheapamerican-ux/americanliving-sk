@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
+import ProstoHousePriceSaver from '../components/ProstoHousePriceSaver';
 
 const HOUSE_PH004 = {
   "id": "nord",
@@ -433,6 +434,12 @@ export default function KonfiguratorPH004() {
   const [typStavby, setTypStavby] = useState('rekreacna');
   const [isAdmin, setIsAdmin] = useState(false);
   const [customPrices, setCustomPrices] = useState({});
+
+  useEffect(() => {
+    if (domFromDb?.konfigurator_custom_ceny_prosto_house?.['ph004']) {
+      setCustomPrices(domFromDb.konfigurator_custom_ceny_prosto_house['ph004']);
+    }
+  }, [domFromDb]);
 
   const getPrice = (category, indexOrKey, defaultPrice) => {
     const key = `${category}-${indexOrKey}`;
@@ -1234,6 +1241,7 @@ export default function KonfiguratorPH004() {
       )}
       
       <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSubmit={handleSubmit} isSubmitting={isSubmitting} t={t} />
+      <ProstoHousePriceSaver isAdmin={isAdmin} customPrices={customPrices} domId={domIdFromUrl} houseCode="ph004" />
     </div>
   );
 }
