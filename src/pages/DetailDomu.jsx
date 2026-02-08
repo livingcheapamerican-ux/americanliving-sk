@@ -32,8 +32,6 @@ import KonfiguratorPH009 from "./KonfiguratorPH009";
 
 import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
-import ShellInfoBox from "../components/ShellInfoBox";
-import { prostoHouseTranslations } from "../components/translations/ProstoHouseTranslations";
 
 
 export default function DetailDomu() {
@@ -1451,55 +1449,6 @@ export default function DetailDomu() {
                     className="w-full h-auto object-cover"
                   />
                 </div>
-                
-                {/* Shell Info Box - ceny a obsah hrubej stavby */}
-                {(() => {
-                  // Mapovanie podľa názvu domu (keďže prosto_house_kod môže chýbať)
-                  const nameToPrice = {
-                    'Barn': { kit: 20900, assembly: 4875 }, // PH-001
-                    'Nord': { kit: 49500, assembly: 14850 }, // PH-002
-                    'Flat House 1,5': { kit: 44900, assembly: 13470 }, // PH-003
-                    'Flat 72': { kit: 31700, assembly: 7925 }, // PH-004
-                    'Fjord': { kit: 59000, assembly: 17700 }, // PH-005
-                    'Barn Double': { kit: 36900, assembly: 9225 }, // PH-006
-                    'Double Barn': { kit: 36900, assembly: 9225 }, // PH-006
-                    'A-Frame': { kit: 22700, assembly: 5675 }, // PH-007
-                    'Flat Double': { kit: 59900, assembly: 17970 }, // PH-008
-                    'Flat Small': { kit: 19500, assembly: 4875 } // PH-009
-                  };
-                  
-                  let prices = null;
-                  
-                  // Skús najprv podľa prosto_house_kod
-                  if (dom.prosto_house_kod) {
-                    const codeMap = {
-                      'PH-001': { kit: 20900, assembly: 4875 },
-                      'PH-002': { kit: 49500, assembly: 14850 },
-                      'PH-003': { kit: 44900, assembly: 13470 },
-                      'PH-004': { kit: 31700, assembly: 7925 },
-                      'PH-005': { kit: 59000, assembly: 17700 },
-                      'PH-006': { kit: 36900, assembly: 9225 },
-                      'PH-007': { kit: 22700, assembly: 5675 },
-                      'PH-008': { kit: 59900, assembly: 17970 },
-                      'PH-009': { kit: 19500, assembly: 4875 }
-                    };
-                    prices = codeMap[dom.prosto_house_kod];
-                  }
-                  
-                  // Ak nie, skús podľa názvu
-                  if (!prices) {
-                    for (const [name, price] of Object.entries(nameToPrice)) {
-                      if (dom.nazov?.includes(name)) {
-                        prices = price;
-                        break;
-                      }
-                    }
-                  }
-                  
-                  const tProsto = (key) => prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key] || key;
-                  return prices ? <ShellInfoBox basePriceKit={prices.kit} assemblyPrice={prices.assembly} t={tProsto} /> : null;
-                })()}
-                
                 <p className="text-sm text-blue-800 mt-3 text-center font-medium">
                   {t('basicConfigDesc') || 'Základná konfigurácia domu'}
                 </p>
