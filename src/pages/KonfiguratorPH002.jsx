@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
+import ProstoHousePriceSaver from '../components/ProstoHousePriceSaver';
 
 const HOUSE_PH002 = {
   "id": "fjord",
@@ -428,6 +429,13 @@ export default function KonfiguratorPH002() {
   const [typStavby, setTypStavby] = useState('rekreacna');
   const [isAdmin, setIsAdmin] = useState(false);
   const [customPrices, setCustomPrices] = useState({});
+
+  // Načítaj custom ceny z databázy
+  useEffect(() => {
+    if (domFromDb?.konfigurator_custom_ceny_prosto_house?.['ph002']) {
+      setCustomPrices(domFromDb.konfigurator_custom_ceny_prosto_house['ph002']);
+    }
+  }, [domFromDb]);
 
   const getPrice = (category, indexOrKey, defaultPrice) => {
     const key = `${category}-${indexOrKey}`;
@@ -1229,6 +1237,13 @@ export default function KonfiguratorPH002() {
       )}
       
       <ContactModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSubmit={handleSubmit} isSubmitting={isSubmitting} t={t} />
+      
+      <ProstoHousePriceSaver 
+        isAdmin={isAdmin} 
+        customPrices={customPrices} 
+        domId={domIdFromUrl} 
+        houseCode="ph002"
+      />
     </div>
   );
 }
