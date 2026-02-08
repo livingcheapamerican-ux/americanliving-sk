@@ -1452,22 +1452,42 @@ export default function DetailDomu() {
                   />
                 </div>
                 
-                {/* Shell Info Box - správne ceny podľa prosto_house_kod */}
+                {/* Shell Info Box - aktuálne ceny z konfiguratora */}
                 {(() => {
-                  const priceMap = {
-                    'PH-001': { kit: 59900, assembly: 17970 },  // Flat Double
-                    'PH-002': { kit: 59000, assembly: 17700 },  // Fjord
-                    'PH-003': { kit: 44900, assembly: 13470 },  // Flat House 1,5
-                    'PH-004': { kit: 49500, assembly: 14850 },  // Nord
-                    'PH-005': { kit: 36900, assembly: 9225 },   // Barn Double
-                    'PH-006': { kit: 31700, assembly: 7925 },   // Flat 72
-                    'PH-007': { kit: 22700, assembly: 5675 },   // A-Frame
-                    'PH-008': { kit: 20900, assembly: 4875 },   // Barn
-                    'PH-009': { kit: 19500, assembly: 4875 }    // Flat Small
+                  const defaultPriceMap = {
+                    'PH-001': { kit: 59900, assembly: 17970 },
+                    'PH-002': { kit: 59000, assembly: 17700 },
+                    'PH-003': { kit: 44900, assembly: 13470 },
+                    'PH-004': { kit: 49500, assembly: 14850 },
+                    'PH-005': { kit: 36900, assembly: 9225 },
+                    'PH-006': { kit: 31700, assembly: 7925 },
+                    'PH-007': { kit: 22700, assembly: 5675 },
+                    'PH-008': { kit: 20900, assembly: 4875 },
+                    'PH-009': { kit: 19500, assembly: 4875 }
                   };
-                  const prices = priceMap[dom.prosto_house_kod];
+                  
+                  const phCode = dom.prosto_house_kod?.toLowerCase();
+                  const customPrices = dom.konfigurator_custom_ceny_prosto_house?.[phCode];
+                  const defaultPrices = defaultPriceMap[dom.prosto_house_kod];
+                  
+                  if (!defaultPrices) return null;
+                  
+                  // Funkcia na získanie ceny - custom alebo default
+                  const getPrice = (category, key, defaultValue) => {
+                    if (customPrices) {
+                      const customKey = `${category}-${key}`;
+                      if (customPrices[customKey] !== undefined) {
+                        return customPrices[customKey];
+                      }
+                    }
+                    return defaultValue;
+                  };
+                  
+                  const kitPrice = defaultPrices.kit;
+                  const assemblyPrice = getPrice('mounting', 1, defaultPrices.assembly);
+                  
                   const tProsto = (key) => prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key] || key;
-                  return prices ? <ShellInfoBox basePriceKit={prices.kit} assemblyPrice={prices.assembly} t={tProsto} /> : null;
+                  return <ShellInfoBox basePriceKit={kitPrice} assemblyPrice={assemblyPrice} t={tProsto} />;
                 })()}
                 
                 <p className="text-sm text-blue-800 mt-3 text-center font-medium">
