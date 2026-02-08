@@ -575,14 +575,102 @@ export default function KonfiguratorPH005() {
     networks, engineering, projectant, revision, customPrices
   ]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
-      alert('Cenová ponuka bola úspešne odoslaná! Skontrolujte si svoj e-mail.');
+    
+    try {
+      const form = e.target;
+      const klientData = {
+        meno: form.name.value,
+        email: form.email.value,
+        telefon: form.phone.value,
+        obec: form.city.value,
+        poznamka: form.note.value
+      };
+
+      const selectedItems = [];
+      selectedItems.push({ name: HOUSE_PH005.name, price: HOUSE_PH005.basePrice, selected: true, section: "base" });
+      if (mountingIdx > 0) selectedItems.push({ name: `Montáž: ${HOUSE_PH005.options.mounting[mountingIdx].label}`, price: getPrice('mounting', mountingIdx, HOUSE_PH005.options.mounting[mountingIdx].price), selected: true, section: "hruba" });
+      if (extensionIdx > 0) selectedItems.push({ name: `Predĺženie: ${HOUSE_PH005.options.extension[extensionIdx].label}`, price: getPrice('extension', extensionIdx, HOUSE_PH005.options.extension[extensionIdx].price), selected: true, section: "hruba" });
+      selectedItems.push({ name: `Izolácia: ${HOUSE_PH005.options.insulation[insulationIdx].label}`, price: getPrice('insulation', insulationIdx, HOUSE_PH005.options.insulation[insulationIdx].price), selected: true, section: "hruba" });
+      if (foundationIdx > 0) selectedItems.push({ name: `Základy: ${HOUSE_PH005.options.foundation[foundationIdx].label}`, price: getPrice('foundation', foundationIdx, HOUSE_PH005.options.foundation[foundationIdx].price), selected: true, section: "hruba" });
+      selectedItems.push({ name: `Vstupné dvere: ${HOUSE_PH005.options.doors[doorsIdx].label}`, price: getPrice('doors', doorsIdx, HOUSE_PH005.options.doors[doorsIdx].price), selected: true, section: "hruba" });
+      selectedItems.push({ name: `Fasáda: ${HOUSE_PH005.options.facade[facadeIdx].label}`, price: getPrice('facade', facadeIdx, HOUSE_PH005.options.facade[facadeIdx].price), selected: true, section: "hruba" });
+      if (interiorIdx > 0) selectedItems.push({ name: `Interiér: ${HOUSE_PH005.options.interior[interiorIdx].label}`, price: getPrice('interior', interiorIdx, HOUSE_PH005.options.interior[interiorIdx].price), selected: true, section: "holodom" });
+      if (electricity) selectedItems.push({ name: "Elektroinštalácia", price: getPrice('addon', 'electricity', HOUSE_PH005.addons.electricity), selected: true, section: "holodom" });
+      if (water) selectedItems.push({ name: "Voda a kanalizácia", price: getPrice('addon', 'water', HOUSE_PH005.addons.water), selected: true, section: "holodom" });
+      if (sanita) selectedItems.push({ name: "Sanita", price: getPrice('addon', 'sanita', HOUSE_PH005.addons.sanita), selected: true, section: "holodom" });
+      if (boiler) selectedItems.push({ name: "Bojler", price: getPrice('addon', 'boiler', HOUSE_PH005.addons.boiler), selected: true, section: "holodom" });
+      if (heatPump) selectedItems.push({ name: "Tepelné čerpadlo", price: getPrice('addon', 'heatPump', HOUSE_PH005.addons.heatPump), selected: true, section: "kluc" });
+      if (recuperation) selectedItems.push({ name: "Rekuperácia", price: getPrice('addon', 'recuperation', HOUSE_PH005.addons.recuperation), selected: true, section: "kluc" });
+      if (laminateFloors) selectedItems.push({ name: "Laminátové podlahy", price: getPrice('addon', 'laminateFloors', HOUSE_PH005.addons.laminateFloors), selected: true, section: "kluc" });
+      if (floorHeating) selectedItems.push({ name: "Podlahové kúrenie", price: getPrice('addon', 'floorHeating', HOUSE_PH005.addons.floorHeating), selected: true, section: "kluc" });
+      if (windowLamination) selectedItems.push({ name: "Laminácia okien", price: getPrice('addon', 'windowLamination', HOUSE_PH005.addons.windowLamination), selected: true, section: "holodom" });
+      if (windowTint) selectedItems.push({ name: "Tónované sklá", price: getPrice('addon', 'windowTint', HOUSE_PH005.addons.windowTint), selected: true, section: "holodom" });
+      if (interiorDoorsCount > 0) selectedItems.push({ name: `Interiérové dvere (${interiorDoorsCount} ks)`, price: interiorDoorsCount * getPrice('addon', 'interiorDoor', HOUSE_PH005.addons.interiorDoor), selected: true, section: "holodom" });
+      if (roofWindows > 0) selectedItems.push({ name: `Strešné okná (${roofWindows} ks)`, price: roofWindows * getPrice('addon', 'roofWindow', HOUSE_PH005.addons.roofWindow), selected: true, section: "hruba" });
+      if (fixWindows > 0) selectedItems.push({ name: `Fixné okná (${fixWindows} ks)`, price: fixWindows * getPrice('addon', 'fixWindow', HOUSE_PH005.addons.fixWindow), selected: true, section: "hruba" });
+      if (tiltWindowsBig > 0) selectedItems.push({ name: `Výklopné okná veľké (${tiltWindowsBig} ks)`, price: tiltWindowsBig * getPrice('addon', 'tiltWindowBig', HOUSE_PH005.addons.tiltWindowBig), selected: true, section: "hruba" });
+      if (tiltWindowsSmall > 0) selectedItems.push({ name: `Výklopné okná malé (${tiltWindowsSmall} ks)`, price: tiltWindowsSmall * getPrice('addon', 'tiltWindowSmall', HOUSE_PH005.addons.tiltWindowSmall), selected: true, section: "hruba" });
+      if (networks) selectedItems.push({ name: "Prípojky sietí", price: getPrice('addon', 'networks', HOUSE_PH005.addons.networks), selected: true, section: "docs" });
+      if (engineering) selectedItems.push({ name: "Inžiniering", price: getPrice('addon', 'engineering', HOUSE_PH005.addons.engineering), selected: true, section: "docs" });
+      if (projectant) selectedItems.push({ name: "Projektant", price: getPrice('addon', 'projectant', HOUSE_PH005.addons.projectant), selected: true, section: "docs" });
+      if (revision) selectedItems.push({ name: "Revízie", price: getPrice('addon', 'revision', HOUSE_PH005.addons.revision), selected: true, section: "docs" });
+
+      const response = await base44.functions.invoke('odosliCenovuPonukuProstoHouse', {
+        dom_id: domFromDb?.id || domIdFromUrl,
+        klient_meno: klientData.meno,
+        klient_email: klientData.email,
+        klient_telefon: klientData.telefon,
+        klient_adresa: klientData.obec,
+        klient_poznamka: klientData.poznamka,
+        selectedItems: selectedItems,
+        totalPrice: totalPrice,
+        montazHolodomu: mountingIdx > 0,
+        izolaciaNavysenie: HOUSE_PH005.options.insulation[insulationIdx].label.includes('250') ? 'premium' : 'standard',
+        zaklady: HOUSE_PH005.options.foundation[foundationIdx].label,
+        vstupneDvere: HOUSE_PH005.options.doors[doorsIdx].label,
+        elektroinstalacia: electricity,
+        vodaKanalizacia: water,
+        sanitaKomplet: sanita,
+        bojler: boiler,
+        tepelneCerpadlo: heatPump,
+        rekuperacia: recuperation,
+        pripojkaSiete: networks,
+        stresneOkno: roofWindows,
+        bocneOknoFixne: fixWindows,
+        bocneOknoVyklopne90: tiltWindowsBig,
+        bocneOknoVyklopne55: tiltWindowsSmall,
+        povrchokaOkien: windowLamination,
+        tonovaneSkla: windowTint,
+        vonkajsiaFasada: facadeIdx === 1 ? 'suchana' : 'standard',
+        interierFinis: HOUSE_PH005.options.interior[interiorIdx].label,
+        vnutornePodlahy: laminateFloors,
+        podlahovVykurovanie: floorHeating,
+        interieroveDvere: interiorDoorsCount,
+        inziniering: engineering,
+        projektA0: projectant,
+        revizna: revision,
+        doprava: 0,
+        predlzenie: extensionIdx > 0 ? HOUSE_PH005.options.extension[extensionIdx].label : 0,
+        predajNehnutelnosti: realEstate,
+        hladaniePozemku: landSearch,
+        financneSluzby: financing
+      });
+
+      if (response?.data?.success) {
+        alert('✓ Cenová ponuka bola úspešne odoslaná na váš email!');
+        setModalOpen(false);
+      } else {
+        alert('Chyba: ' + (response?.data?.error || 'Neznáma chyba'));
+      }
+    } catch (error) {
+      console.error('Chyba pri odosielaní:', error);
+      alert('Chyba pri odosielaní: ' + error.message);
+    } finally {
       setIsSubmitting(false);
-      setModalOpen(false);
-    }, 1500);
+    }
   };
 
   const nextStep = () => {
