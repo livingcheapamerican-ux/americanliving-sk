@@ -21,7 +21,6 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
-import ShellInfoBox from '../components/ShellInfoBox';
 
 const HOUSE_PH006 = {
   "id": "flat-72",
@@ -1071,7 +1070,6 @@ export default function KonfiguratorPH006() {
               </div>
               
               <div className="p-6">
-                <ShellInfoBox basePriceKit={36900} assemblyPrice={9225} t={t} />
                 <SummaryContent />
               </div>
               

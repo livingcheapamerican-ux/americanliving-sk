@@ -21,7 +21,6 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
 import { prostoHouseTranslations } from '../components/translations/ProstoHouseTranslations';
-import ShellInfoBox from '../components/ShellInfoBox';
 
 const HOUSE_PH005 = {
   "id": "barn-double",
@@ -1117,7 +1116,6 @@ export default function KonfiguratorPH005() {
               </div>
               
               <div className="p-6">
-                <ShellInfoBox basePriceKit={59000} assemblyPrice={17700} t={t} />
                 <SummaryContent />
               </div>
               
