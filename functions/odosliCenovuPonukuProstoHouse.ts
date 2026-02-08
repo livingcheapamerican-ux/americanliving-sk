@@ -1,5 +1,533 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
+const emailTranslations = {
+  "sk": {
+    "priceQuote": "CENOVÁ PONUKA",
+    "quoteNumber": "Číslo ponuky:",
+    "date": "Dátum:",
+    "familyHouseA0": "Rodinný dom A0",
+    "recommended": "⚡ Odporúčané",
+    "yearRoundLiving": "✓ Celoročné bývanie",
+    "energyCertA0": "✓ Energetický certifikát A0",
+    "premiumInsulation": "✓ Premium izolácia 250/300mm",
+    "heatPumpRecup": "✓ Tepelné čerpadlo + Rekuperácia",
+    "permanentResidence": "✓ Možnosť trvalého pobytu",
+    "meetsAllNorms": "Spĺňa všetky normy pre rodinný dom",
+    "recreationalBuilding": "Rekreačná stavba",
+    "economicChoice": "💰 Ekonomická voľba",
+    "cottage": "✓ Chata, záhradný domček",
+    "standardInsulation": "✓ Celoročná izolácia 150/200mm",
+    "noEnergyCert": "✓ Bez energetického certifikátu",
+    "lowerPrice": "✓ Nižšia cena",
+    "recreationalParams": "Spĺňa parametre rekreačnej stavby",
+    "forClient": "Pre klienta",
+    "name": "Meno:",
+    "email": "Email:",
+    "phone": "Telefón:",
+    "location": "Lokalita:",
+    "note": "Poznámka:",
+    "additionalServices": "Vybrané dodatočné služby",
+    "realEstateSale": "✓ Predaj predošlej nehnuteľnosti",
+    "realEstateSaleDesc": "Budú sa Vám venovať naši najlepší odborníci v realitách.",
+    "landSearch": "✓ Chcem pozemok pod svoj dom",
+    "landSearchDesc": "Pomôžeme Vám nájsť ideálny pozemok.",
+    "financialServices": "✓ Finančné služby - úvery/pôžičky",
+    "financialServicesDesc": "Budú sa Vám venovať naši najlepší finančníci.",
+    "selectedModel": "Vybraný model domu",
+    "manufacturer": "Výrobca:",
+    "houseType": "Typ domu:",
+    "builtArea": "Zastavaná plocha:",
+    "priceBreakdown": "Cenový rozpis konfigurácie",
+    "item": "Položka",
+    "priceWithVAT": "Cena s DPH",
+    "shellConstruction": "HRUBÁ STAVBA",
+    "shellHouse": "HOLODOM",
+    "turnkeyHouse": "DOM NA KĽÚČ",
+    "documentation": "DOKUMENTÁCIA",
+    "totalPriceWithVAT": "CELKOVÁ CENA s DPH",
+    "floorPlans": "Pôdorysy",
+    "floorPlan2D": "2D pôdorys",
+    "floorPlan3D": "3D pôdorys",
+    "photoGallery": "Fotogaléria",
+    "photo": "Fotka",
+    "allRightsReserved": "Všetky práva vyhradené.",
+    "followUs": "Sledujte nás na sociálnych sieťach:",
+    "year": "${new Date().getFullYear()}"
+  },
+  "en": {
+    "priceQuote": "PRICE QUOTE",
+    "quoteNumber": "Quote number:",
+    "date": "Date:",
+    "familyHouseA0": "Family house A0",
+    "recommended": "⚡ Recommended",
+    "yearRoundLiving": "✓ Year-round living",
+    "energyCertA0": "✓ Energy certificate A0",
+    "premiumInsulation": "✓ Premium insulation 250/300mm",
+    "heatPumpRecup": "✓ Heat pump + Recuperation",
+    "permanentResidence": "✓ Permanent residence option",
+    "meetsAllNorms": "Meets all family house norms",
+    "recreationalBuilding": "Recreational building",
+    "economicChoice": "💰 Economic choice",
+    "cottage": "✓ Cottage, garden house",
+    "standardInsulation": "✓ Year-round insulation 150/200mm",
+    "noEnergyCert": "✓ No energy certificate",
+    "lowerPrice": "✓ Lower price",
+    "recreationalParams": "Meets recreational building parameters",
+    "forClient": "For client",
+    "name": "Name:",
+    "email": "Email:",
+    "phone": "Phone:",
+    "location": "Location:",
+    "note": "Note:",
+    "additionalServices": "Selected additional services",
+    "realEstateSale": "✓ Sale of previous property",
+    "realEstateSaleDesc": "Our best real estate experts will take care of you.",
+    "landSearch": "✓ I need land for my house",
+    "landSearchDesc": "We will help you find the ideal plot.",
+    "financialServices": "✓ Financial services - loans",
+    "financialServicesDesc": "Our best financial experts will take care of you.",
+    "selectedModel": "Selected house model",
+    "manufacturer": "Manufacturer:",
+    "houseType": "House type:",
+    "builtArea": "Built area:",
+    "priceBreakdown": "Configuration price breakdown",
+    "item": "Item",
+    "priceWithVAT": "Price incl. VAT",
+    "shellConstruction": "SHELL CONSTRUCTION",
+    "shellHouse": "SHELL HOUSE",
+    "turnkeyHouse": "TURNKEY HOUSE",
+    "documentation": "DOCUMENTATION",
+    "totalPriceWithVAT": "TOTAL PRICE incl. VAT",
+    "floorPlans": "Floor plans",
+    "floorPlan2D": "2D floor plan",
+    "floorPlan3D": "3D floor plan",
+    "photoGallery": "Photo gallery",
+    "photo": "Photo",
+    "allRightsReserved": "All rights reserved.",
+    "followUs": "Follow us on social media:"
+  },
+  "de": {
+    "priceQuote": "PREISANGEBOT",
+    "quoteNumber": "Angebotsnummer:",
+    "date": "Datum:",
+    "familyHouseA0": "Familienhaus A0",
+    "recommended": "⚡ Empfohlen",
+    "yearRoundLiving": "✓ Ganzjähriges Wohnen",
+    "energyCertA0": "✓ Energiezertifikat A0",
+    "premiumInsulation": "✓ Premium-Isolierung 250/300mm",
+    "heatPumpRecup": "✓ Wärmepumpe + Rekuperation",
+    "permanentResidence": "✓ Möglichkeit des ständigen Wohnsitzes",
+    "meetsAllNorms": "Erfüllt alle Normen für Familienhaus",
+    "recreationalBuilding": "Freizeitgebäude",
+    "economicChoice": "💰 Wirtschaftliche Wahl",
+    "cottage": "✓ Ferienhaus, Gartenhaus",
+    "standardInsulation": "✓ Ganzjährige Isolierung 150/200mm",
+    "noEnergyCert": "✓ Ohne Energiezertifikat",
+    "lowerPrice": "✓ Niedrigerer Preis",
+    "recreationalParams": "Erfüllt Parameter für Freizeitgebäude",
+    "forClient": "Für Kunde",
+    "name": "Name:",
+    "email": "E-Mail:",
+    "phone": "Telefon:",
+    "location": "Standort:",
+    "note": "Notiz:",
+    "additionalServices": "Ausgewählte Zusatzleistungen",
+    "realEstateSale": "✓ Verkauf früherer Immobilie",
+    "realEstateSaleDesc": "Unsere besten Immobilienexperten kümmern sich um Sie.",
+    "landSearch": "✓ Ich brauche Grundstück für mein Haus",
+    "landSearchDesc": "Wir helfen Ihnen, das ideale Grundstück zu finden.",
+    "financialServices": "✓ Finanzdienstleistungen - Kredite",
+    "financialServicesDesc": "Unsere besten Finanzexperten kümmern sich um Sie.",
+    "selectedModel": "Ausgewähltes Hausmodell",
+    "manufacturer": "Hersteller:",
+    "houseType": "Haustyp:",
+    "builtArea": "Bebaute Fläche:",
+    "priceBreakdown": "Preisaufschlüsselung der Konfiguration",
+    "item": "Position",
+    "priceWithVAT": "Preis inkl. MwSt.",
+    "shellConstruction": "ROHBAU",
+    "shellHouse": "ROHHAUS",
+    "turnkeyHouse": "SCHLÜSSELFERTIG",
+    "documentation": "DOKUMENTATION",
+    "totalPriceWithVAT": "GESAMTPREIS inkl. MwSt.",
+    "floorPlans": "Grundrisse",
+    "floorPlan2D": "2D Grundriss",
+    "floorPlan3D": "3D Grundriss",
+    "photoGallery": "Fotogalerie",
+    "photo": "Foto",
+    "allRightsReserved": "Alle Rechte vorbehalten.",
+    "followUs": "Folgen Sie uns in sozialen Medien:"
+  },
+  "fr": {
+    "priceQuote": "DEVIS",
+    "quoteNumber": "Numéro de devis:",
+    "date": "Date:",
+    "familyHouseA0": "Maison familiale A0",
+    "recommended": "⚡ Recommandé",
+    "yearRoundLiving": "✓ Logement toute l'année",
+    "energyCertA0": "✓ Certificat énergétique A0",
+    "premiumInsulation": "✓ Isolation premium 250/300mm",
+    "heatPumpRecup": "✓ Pompe à chaleur + Récupération",
+    "permanentResidence": "✓ Option de résidence permanente",
+    "meetsAllNorms": "Répond à toutes les normes pour maison familiale",
+    "recreationalBuilding": "Bâtiment récréatif",
+    "economicChoice": "💰 Choix économique",
+    "cottage": "✓ Chalet, maison de jardin",
+    "standardInsulation": "✓ Isolation toute l'année 150/200mm",
+    "noEnergyCert": "✓ Sans certificat énergétique",
+    "lowerPrice": "✓ Prix inférieur",
+    "recreationalParams": "Répond aux paramètres du bâtiment récréatif",
+    "forClient": "Pour le client",
+    "name": "Nom:",
+    "email": "E-mail:",
+    "phone": "Téléphone:",
+    "location": "Localisation:",
+    "note": "Note:",
+    "additionalServices": "Services supplémentaires sélectionnés",
+    "realEstateSale": "✓ Vente de bien immobilier précédent",
+    "realEstateSaleDesc": "Nos meilleurs experts immobiliers s'occuperont de vous.",
+    "landSearch": "✓ J'ai besoin d'un terrain pour ma maison",
+    "landSearchDesc": "Nous vous aiderons à trouver le terrain idéal.",
+    "financialServices": "✓ Services financiers - prêts",
+    "financialServicesDesc": "Nos meilleurs experts financiers s'occuperont de vous.",
+    "selectedModel": "Modèle de maison sélectionné",
+    "manufacturer": "Fabricant:",
+    "houseType": "Type de maison:",
+    "builtArea": "Surface bâtie:",
+    "priceBreakdown": "Détail des prix de configuration",
+    "item": "Article",
+    "priceWithVAT": "Prix TTC",
+    "shellConstruction": "GROS ŒUVRE",
+    "shellHouse": "MAISON COQUE",
+    "turnkeyHouse": "CLÉ EN MAIN",
+    "documentation": "DOCUMENTATION",
+    "totalPriceWithVAT": "PRIX TOTAL TTC",
+    "floorPlans": "Plans d'étage",
+    "floorPlan2D": "Plan 2D",
+    "floorPlan3D": "Plan 3D",
+    "photoGallery": "Galerie photo",
+    "photo": "Photo",
+    "allRightsReserved": "Tous droits réservés.",
+    "followUs": "Suivez-nous sur les réseaux sociaux:"
+  },
+  "hu": {
+    "priceQuote": "ÁRAJÁNLAT",
+    "quoteNumber": "Ajánlat száma:",
+    "date": "Dátum:",
+    "familyHouseA0": "Családi ház A0",
+    "recommended": "⚡ Ajánlott",
+    "yearRoundLiving": "✓ Egész éves lakhatás",
+    "energyCertA0": "✓ A0 energetikai tanúsítvány",
+    "premiumInsulation": "✓ Prémium szigetelés 250/300mm",
+    "heatPumpRecup": "✓ Hőszivattyú + Rekuperáció",
+    "permanentResidence": "✓ Állandó lakóhely lehetőség",
+    "meetsAllNorms": "Megfelel minden családi ház normának",
+    "recreationalBuilding": "Rekreációs épület",
+    "economicChoice": "💰 Gazdaságos választás",
+    "cottage": "✓ Nyaraló, kerti ház",
+    "standardInsulation": "✓ Egész éves szigetelés 150/200mm",
+    "noEnergyCert": "✓ Energetikai tanúsítvány nélkül",
+    "lowerPrice": "✓ Alacsonyabb ár",
+    "recreationalParams": "Megfelel a rekreációs épület paramétereknek",
+    "forClient": "Ügyfél részére",
+    "name": "Név:",
+    "email": "E-mail:",
+    "phone": "Telefon:",
+    "location": "Helyszín:",
+    "note": "Megjegyzés:",
+    "additionalServices": "Kiválasztott kiegészítő szolgáltatások",
+    "realEstateSale": "✓ Korábbi ingatlan értékesítése",
+    "realEstateSaleDesc": "Legjobb ingatlan szakértőink gondoskodnak Önről.",
+    "landSearch": "✓ Telekre van szükségem a házamhoz",
+    "landSearchDesc": "Segítünk megtalálni az ideális telket.",
+    "financialServices": "✓ Pénzügyi szolgáltatások - hitelek",
+    "financialServicesDesc": "Legjobb pénzügyi szakértőink gondoskodnak Önről.",
+    "selectedModel": "Kiválasztott házmodell",
+    "manufacturer": "Gyártó:",
+    "houseType": "Háztípus:",
+    "builtArea": "Beépített terület:",
+    "priceBreakdown": "Konfiguráció árrészletezése",
+    "item": "Tétel",
+    "priceWithVAT": "Ár ÁFÁ-val",
+    "shellConstruction": "SZERKEZETKÉSZ",
+    "shellHouse": "HÉJHÁZ",
+    "turnkeyHouse": "KULCSRAKÉSZ",
+    "documentation": "DOKUMENTÁCIÓ",
+    "totalPriceWithVAT": "TELJES ÁR ÁFÁ-VAL",
+    "floorPlans": "Alaprajzok",
+    "floorPlan2D": "2D alaprajz",
+    "floorPlan3D": "3D alaprajz",
+    "photoGallery": "Fotógaléria",
+    "photo": "Fotó",
+    "allRightsReserved": "Minden jog fenntartva.",
+    "followUs": "Kövessen minket a közösségi médiában:"
+  },
+  "pl": {
+    "priceQuote": "OFERTA CENOWA",
+    "quoteNumber": "Numer oferty:",
+    "date": "Data:",
+    "familyHouseA0": "Dom rodzinny A0",
+    "recommended": "⚡ Polecane",
+    "yearRoundLiving": "✓ Całoroczne zamieszkanie",
+    "energyCertA0": "✓ Certyfikat energetyczny A0",
+    "premiumInsulation": "✓ Izolacja premium 250/300mm",
+    "heatPumpRecup": "✓ Pompa ciepła + Rekuperacja",
+    "permanentResidence": "✓ Możliwość stałego zameldowania",
+    "meetsAllNorms": "Spełnia wszystkie normy dla domu rodzinnego",
+    "recreationalBuilding": "Budynek rekreacyjny",
+    "economicChoice": "💰 Wybór ekonomiczny",
+    "cottage": "✓ Domek letniskowy, ogrodowy",
+    "standardInsulation": "✓ Izolacja całoroczna 150/200mm",
+    "noEnergyCert": "✓ Bez certyfikatu energetycznego",
+    "lowerPrice": "✓ Niższa cena",
+    "recreationalParams": "Spełnia parametry budynku rekreacyjnego",
+    "forClient": "Dla klienta",
+    "name": "Imię:",
+    "email": "E-mail:",
+    "phone": "Telefon:",
+    "location": "Lokalizacja:",
+    "note": "Notatka:",
+    "additionalServices": "Wybrane dodatkowe usługi",
+    "realEstateSale": "✓ Sprzedaż poprzedniej nieruchomości",
+    "realEstateSaleDesc": "Zajmą się Państwem nasi najlepsi eksperci od nieruchomości.",
+    "landSearch": "✓ Potrzebuję działki pod dom",
+    "landSearchDesc": "Pomożemy znaleźć idealną działkę.",
+    "financialServices": "✓ Usługi finansowe - kredyty",
+    "financialServicesDesc": "Zajmą się Państwem nasi najlepsi eksperci finansowi.",
+    "selectedModel": "Wybrany model domu",
+    "manufacturer": "Producent:",
+    "houseType": "Typ domu:",
+    "builtArea": "Powierzchnia zabudowy:",
+    "priceBreakdown": "Szczegółowy kosztorys konfiguracji",
+    "item": "Pozycja",
+    "priceWithVAT": "Cena z VAT",
+    "shellConstruction": "STAN SUROWY",
+    "shellHouse": "DOM W STANIE SUROWYM",
+    "turnkeyHouse": "POD KLUCZ",
+    "documentation": "DOKUMENTACJA",
+    "totalPriceWithVAT": "CENA CAŁKOWITA z VAT",
+    "floorPlans": "Rzuty",
+    "floorPlan2D": "Rzut 2D",
+    "floorPlan3D": "Rzut 3D",
+    "photoGallery": "Galeria zdjęć",
+    "photo": "Zdjęcie",
+    "allRightsReserved": "Wszelkie prawa zastrzeżone.",
+    "followUs": "Obserwuj nas w mediach społecznościowych:"
+  },
+  "uk": {
+    "priceQuote": "ЦІНОВА ПРОПОЗИЦІЯ",
+    "quoteNumber": "Номер пропозиції:",
+    "date": "Дата:",
+    "familyHouseA0": "Сімейний будинок A0",
+    "recommended": "⚡ Рекомендовано",
+    "yearRoundLiving": "✓ Цілорічне проживання",
+    "energyCertA0": "✓ Енергетичний сертифікат A0",
+    "premiumInsulation": "✓ Преміум ізоляція 250/300мм",
+    "heatPumpRecup": "✓ Тепловий насос + Рекуперація",
+    "permanentResidence": "✓ Можливість постійної реєстрації",
+    "meetsAllNorms": "Відповідає всім нормам для сімейного будинку",
+    "recreationalBuilding": "Рекреаційна будівля",
+    "economicChoice": "💰 Економічний вибір",
+    "cottage": "✓ Дача, садовий будинок",
+    "standardInsulation": "✓ Цілорічна ізоляція 150/200мм",
+    "noEnergyCert": "✓ Без енергетичного сертифікату",
+    "lowerPrice": "✓ Нижча ціна",
+    "recreationalParams": "Відповідає параметрам рекреаційної будівлі",
+    "forClient": "Для клієнта",
+    "name": "Ім'я:",
+    "email": "Електронна пошта:",
+    "phone": "Телефон:",
+    "location": "Локація:",
+    "note": "Примітка:",
+    "additionalServices": "Вибрані додаткові послуги",
+    "realEstateSale": "✓ Продаж попередньої нерухомості",
+    "realEstateSaleDesc": "Наші найкращі експерти з нерухомості подбають про вас.",
+    "landSearch": "✓ Мені потрібна ділянка під будинок",
+    "landSearchDesc": "Допоможемо знайти ідеальну ділянку.",
+    "financialServices": "✓ Фінансові послуги - кредити",
+    "financialServicesDesc": "Наші найкращі фінансові експерти подбають про вас.",
+    "selectedModel": "Обраний модель будинку",
+    "manufacturer": "Виробник:",
+    "houseType": "Тип будинку:",
+    "builtArea": "Площа забудови:",
+    "priceBreakdown": "Детальний кошторис конфігурації",
+    "item": "Позиція",
+    "priceWithVAT": "Ціна з ПДВ",
+    "shellConstruction": "КАРКАС",
+    "shellHouse": "КАРКАСНИЙ БУДИНОК",
+    "turnkeyHouse": "ПІД КЛЮЧ",
+    "documentation": "ДОКУМЕНТАЦІЯ",
+    "totalPriceWithVAT": "ЗАГАЛЬНА ЦІНА з ПДВ",
+    "floorPlans": "Плани поверхів",
+    "floorPlan2D": "2D план",
+    "floorPlan3D": "3D план",
+    "photoGallery": "Фотогалерея",
+    "photo": "Фото",
+    "allRightsReserved": "Всі права захищені.",
+    "followUs": "Слідкуйте за нами в соціальних мережах:"
+  },
+  "sr": {
+    "priceQuote": "ЦЕНОВНА ПОНУДА",
+    "quoteNumber": "Број понуде:",
+    "date": "Датум:",
+    "familyHouseA0": "Породична кућа А0",
+    "recommended": "⚡ Препоручено",
+    "yearRoundLiving": "✓ Целогодишње становање",
+    "energyCertA0": "✓ Енергетски сертификат А0",
+    "premiumInsulation": "✓ Премијум изолација 250/300мм",
+    "heatPumpRecup": "✓ Топлотна пумпа + Рекуперација",
+    "permanentResidence": "✓ Могућност сталног боравка",
+    "meetsAllNorms": "Испуњава све норме за породичну кућу",
+    "recreationalBuilding": "Рекреациона зграда",
+    "economicChoice": "💰 Економична опција",
+    "cottage": "✓ Викендица, вртна кућа",
+    "standardInsulation": "✓ Целогодишња изолација 150/200мм",
+    "noEnergyCert": "✓ Без енергетског сертификата",
+    "lowerPrice": "✓ Нижа цена",
+    "recreationalParams": "Испуњава параметре рекреационе зграде",
+    "forClient": "За клијента",
+    "name": "Име:",
+    "email": "Е-пошта:",
+    "phone": "Телефон:",
+    "location": "Локација:",
+    "note": "Напомена:",
+    "additionalServices": "Одабране додатне услуге",
+    "realEstateSale": "✓ Продаја претходне некретнине",
+    "realEstateSaleDesc": "Наши најбољи стручњаци за некретнине ће се побринути за вас.",
+    "landSearch": "✓ Треба ми парцела за кућу",
+    "landSearchDesc": "Помоћи ћемо вам да пронађете идеалну парцелу.",
+    "financialServices": "✓ Финансијске услуге - кредити",
+    "financialServicesDesc": "Наши најбољи финансијски стручњаци ће се побринути за вас.",
+    "selectedModel": "Одабрани модел куће",
+    "manufacturer": "Произвођач:",
+    "houseType": "Тип куће:",
+    "builtArea": "Изграђена површина:",
+    "priceBreakdown": "Детаљан распис цена конфигурације",
+    "item": "Ставка",
+    "priceWithVAT": "Цена са ПДВ-ом",
+    "shellConstruction": "ГРУБА ГРАДЊА",
+    "shellHouse": "КУЋА У СИРОВОМ СТАЊУ",
+    "turnkeyHouse": "ПОД КЉУЧ",
+    "documentation": "ДОКУМЕНТАЦИЈА",
+    "totalPriceWithVAT": "УКУПНА ЦЕНА са ПДВ-ом",
+    "floorPlans": "Основе",
+    "floorPlan2D": "2Д основа",
+    "floorPlan3D": "3Д основа",
+    "photoGallery": "Фотогалерија",
+    "photo": "Фотографија",
+    "allRightsReserved": "Сва права задржана.",
+    "followUs": "Пратите нас на друштвеним мрежама:"
+  },
+  "hr": {
+    "priceQuote": "CJENOVNA PONUDA",
+    "quoteNumber": "Broj ponude:",
+    "date": "Datum:",
+    "familyHouseA0": "Obiteljska kuća A0",
+    "recommended": "⚡ Preporučeno",
+    "yearRoundLiving": "✓ Cjelogodišnje stanovanje",
+    "energyCertA0": "✓ Energetski certifikat A0",
+    "premiumInsulation": "✓ Premium izolacija 250/300mm",
+    "heatPumpRecup": "✓ Toplinska pumpa + Rekuperacija",
+    "permanentResidence": "✓ Mogućnost stalnog boravka",
+    "meetsAllNorms": "Ispunjava sve norme za obiteljsku kuću",
+    "recreationalBuilding": "Rekreacijska zgrada",
+    "economicChoice": "💰 Ekonomičan izbor",
+    "cottage": "✓ Vikendica, vrtna kuća",
+    "standardInsulation": "✓ Cjelogodišnja izolacija 150/200mm",
+    "noEnergyCert": "✓ Bez energetskog certifikata",
+    "lowerPrice": "✓ Niža cijena",
+    "recreationalParams": "Ispunjava parametre rekreacijske zgrade",
+    "forClient": "Za klijenta",
+    "name": "Ime:",
+    "email": "E-pošta:",
+    "phone": "Telefon:",
+    "location": "Lokacija:",
+    "note": "Napomena:",
+    "additionalServices": "Odabrane dodatne usluge",
+    "realEstateSale": "✓ Prodaja prethodne nekretnine",
+    "realEstateSaleDesc": "Naši najbolji stručnjaci za nekretnine će se pobrinuti za vas.",
+    "landSearch": "✓ Trebam parcelu za kuću",
+    "landSearchDesc": "Pomoći ćemo vam pronaći idealnu parcelu.",
+    "financialServices": "✓ Financijske usluge - krediti",
+    "financialServicesDesc": "Naši najbolji financijski stručnjaci će se pobrinuti za vas.",
+    "selectedModel": "Odabrani model kuće",
+    "manufacturer": "Proizvođač:",
+    "houseType": "Tip kuće:",
+    "builtArea": "Izgrađena površina:",
+    "priceBreakdown": "Detaljan cjenovnik konfiguracije",
+    "item": "Stavka",
+    "priceWithVAT": "Cijena s PDV-om",
+    "shellConstruction": "GRUBA GRADNJA",
+    "shellHouse": "KUĆA U SIROVOM STANJU",
+    "turnkeyHouse": "POD KLJUČ",
+    "documentation": "DOKUMENTACIJA",
+    "totalPriceWithVAT": "UKUPNA CIJENA s PDV-om",
+    "floorPlans": "Tlocrti",
+    "floorPlan2D": "2D tlocrt",
+    "floorPlan3D": "3D tlocrt",
+    "photoGallery": "Foto galerija",
+    "photo": "Fotografija",
+    "allRightsReserved": "Sva prava pridržana.",
+    "followUs": "Pratite nas na društvenim mrežama:"
+  },
+  "el": {
+    "priceQuote": "ΠΡΟΣΦΟΡΑ ΤΙΜΗΣ",
+    "quoteNumber": "Αριθμός προσφοράς:",
+    "date": "Ημερομηνία:",
+    "familyHouseA0": "Οικογενειακή κατοικία A0",
+    "recommended": "⚡ Προτείνεται",
+    "yearRoundLiving": "✓ Ολόχρονη κατοικία",
+    "energyCertA0": "✓ Ενεργειακό πιστοποιητικό A0",
+    "premiumInsulation": "✓ Premium μόνωση 250/300mm",
+    "heatPumpRecup": "✓ Αντλία θερμότητας + Ανάκτηση",
+    "permanentResidence": "✓ Δυνατότητα μόνιμης κατοικίας",
+    "meetsAllNorms": "Πληροί όλα τα πρότυπα για οικογενειακή κατοικία",
+    "recreationalBuilding": "Ψυχαγωγικό κτίριο",
+    "economicChoice": "💰 Οικονομική επιλογή",
+    "cottage": "✓ Εξοχική κατοικία, κήπος",
+    "standardInsulation": "✓ Ολόχρονη μόνωση 150/200mm",
+    "noEnergyCert": "✓ Χωρίς ενεργειακό πιστοποιητικό",
+    "lowerPrice": "✓ Χαμηλότερη τιμή",
+    "recreationalParams": "Πληροί παραμέτρους ψυχαγωγικού κτιρίου",
+    "forClient": "Για πελάτη",
+    "name": "Όνομα:",
+    "email": "Ηλεκτρονικό ταχυδρομείο:",
+    "phone": "Τηλέφωνο:",
+    "location": "Τοποθεσία:",
+    "note": "Σημείωση:",
+    "additionalServices": "Επιλεγμένες πρόσθετες υπηρεσίες",
+    "realEstateSale": "✓ Πώληση προηγούμενης ιδιοκτησίας",
+    "realEstateSaleDesc": "Οι καλύτεροι ειδικοί μας σε ακίνητα θα φροντίσουν για εσάς.",
+    "landSearch": "✓ Χρειάζομαι οικόπεδο για το σπίτι μου",
+    "landSearchDesc": "Θα σας βοηθήσουμε να βρείτε το ιδανικό οικόπεδο.",
+    "financialServices": "✓ Χρηματοοικονομικές υπηρεσίες - δάνεια",
+    "financialServicesDesc": "Οι καλύτεροι χρηματοοικονομικοί μας ειδικοί θα φροντίσουν για εσάς.",
+    "selectedModel": "Επιλεγμένο μοντέλο σπιτιού",
+    "manufacturer": "Κατασκευαστής:",
+    "houseType": "Τύπος σπιτιού:",
+    "builtArea": "Δομημένη επιφάνεια:",
+    "priceBreakdown": "Ανάλυση τιμών διαμόρφωσης",
+    "item": "Στοιχείο",
+    "priceWithVAT": "Τιμή με ΦΠΑ",
+    "shellConstruction": "ΧΟΝΤΡΗ ΚΑΤΑΣΚΕΥΗ",
+    "shellHouse": "ΣΠΙΤΙ ΚΕΛΥΦΟΣ",
+    "turnkeyHouse": "ΜΕ ΤΟ ΚΛΕΙΔΙ",
+    "documentation": "ΤΕΚΜΗΡΙΩΣΗ",
+    "totalPriceWithVAT": "ΣΥΝΟΛΙΚΗ ΤΙΜΗ με ΦΠΑ",
+    "floorPlans": "Κατόψεις",
+    "floorPlan2D": "2D κάτοψη",
+    "floorPlan3D": "3D κάτοψη",
+    "photoGallery": "Φωτογραφική γκαλερί",
+    "photo": "Φωτογραφία",
+    "allRightsReserved": "Όλα τα δικαιώματα διατηρούνται.",
+    "followUs": "Ακολουθήστε μας στα μέσα κοινωνικής δικτύωσης:"
+  }
+};
+
+function t(language, key) {
+  return emailTranslations[language]?.[key] || emailTranslations['sk']?.[key] || key;
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -23,7 +551,8 @@ Deno.serve(async (req) => {
       povrchokaOkien, tonovaneSkla, vonkajsiaFasada, interierFinis,
       vnutornePodlahy, podlahovVykurovanie, interieroveDvere, pergola,
       inziniering, projektA0, revizna, doprava, predlzenie,
-      predajNehnutelnosti, hladaniePozemku, financneSluzby
+      predajNehnutelnosti, hladaniePozemku, financneSluzby,
+      language = 'sk'
     } = payload;
 
     // Načítaj dom
@@ -127,14 +656,17 @@ Deno.serve(async (req) => {
       return price.toLocaleString('sk-SK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
     };
 
+    const langCode = language || 'sk';
+    const dateLocale = langCode === 'en' ? 'en-US' : langCode === 'de' ? 'de-DE' : langCode === 'fr' ? 'fr-FR' : langCode === 'hu' ? 'hu-HU' : langCode === 'pl' ? 'pl-PL' : langCode === 'uk' ? 'uk-UA' : langCode === 'sr' ? 'sr-RS' : langCode === 'hr' ? 'hr-HR' : langCode === 'el' ? 'el-GR' : 'sk-SK';
+
     // HTML email
     const htmlEmail = `
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="${langCode}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cenová ponuka ${cisloPonuky}</title>
+  <title>${t(langCode, 'priceQuote')} ${cisloPonuky}</title>
   <style>
     body { margin: 0; padding: 0; font-family: Arial, sans-serif; background: #f5f5f5; }
     .container { max-width: 800px; margin: 0 auto; background: white; }
@@ -187,46 +719,46 @@ Deno.serve(async (req) => {
   <div class="container">
     <div class="header">
       <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png" alt="American Living" style="height: 60px; margin-bottom: 15px;">
-      <h1>CENOVÁ PONUKA</h1>
-      <p style="font-size: 16px; opacity: 0.95;">Číslo ponuky: ${cisloPonuky}</p>
-      <p style="font-size: 14px; opacity: 0.9;">Dátum: ${new Date().toLocaleDateString('sk-SK')}</p>
+      <h1>${t(langCode, 'priceQuote')}</h1>
+      <p style="font-size: 16px; opacity: 0.95;">${t(langCode, 'quoteNumber')} ${cisloPonuky}</p>
+      <p style="font-size: 14px; opacity: 0.9;">${t(langCode, 'date')} ${new Date().toLocaleDateString(dateLocale)}</p>
     </div>
 
     <div class="content">
       <!-- Typ stavby -->
       <div class="typ-stavby ${typStavby === 'rodinny_dom_a0' ? 'a0' : 'rekreacna'}">
         ${typStavby === 'rodinny_dom_a0' ? `
-          <h3><span style="font-size: 28px;">🏡</span> Rodinný dom A0</h3>
-          <div style="display: inline-block; background: #10b981; color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 10px;">⚡ Odporúčané</div>
+          <h3><span style="font-size: 28px;">🏡</span> ${t(langCode, 'familyHouseA0')}</h3>
+          <div style="display: inline-block; background: #10b981; color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 10px;">${t(langCode, 'recommended')}</div>
           <ul style="margin: 10px 0; color: #065f46;">
-            <li>✓ Celoročné bývanie</li>
-            <li>✓ Energetický certifikát A0</li>
-            <li>✓ Premium izolácia 250/300mm</li>
-            <li>✓ Tepelné čerpadlo + Rekuperácia</li>
-            <li>✓ Možnosť trvalého pobytu</li>
+            <li>${t(langCode, 'yearRoundLiving')}</li>
+            <li>${t(langCode, 'energyCertA0')}</li>
+            <li>${t(langCode, 'premiumInsulation')}</li>
+            <li>${t(langCode, 'heatPumpRecup')}</li>
+            <li>${t(langCode, 'permanentResidence')}</li>
           </ul>
-          <p style="margin: 10px 0 0 0; font-size: 12px; color: #047857; font-style: italic;">Spĺňa všetky normy pre rodinný dom</p>
+          <p style="margin: 10px 0 0 0; font-size: 12px; color: #047857; font-style: italic;">${t(langCode, 'meetsAllNorms')}</p>
         ` : `
-          <h3><span style="font-size: 28px;">🏕️</span> Rekreačná stavba</h3>
-          <div style="display: inline-block; background: #f59e0b; color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 10px;">💰 Ekonomická voľba</div>
+          <h3><span style="font-size: 28px;">🏕️</span> ${t(langCode, 'recreationalBuilding')}</h3>
+          <div style="display: inline-block; background: #f59e0b; color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 10px;">${t(langCode, 'economicChoice')}</div>
           <ul style="margin: 10px 0; color: #92400e;">
-            <li>✓ Chata, záhradný domček</li>
-            <li>✓ Celoročná izolácia 150/200mm</li>
-            <li>✓ Bez energetického certifikátu</li>
-            <li>✓ Nižšia cena</li>
+            <li>${t(langCode, 'cottage')}</li>
+            <li>${t(langCode, 'standardInsulation')}</li>
+            <li>${t(langCode, 'noEnergyCert')}</li>
+            <li>${t(langCode, 'lowerPrice')}</li>
           </ul>
-          <p style="margin: 10px 0 0 0; font-size: 12px; color: #b45309; font-style: italic;">Spĺňa parametre rekreačnej stavby</p>
+          <p style="margin: 10px 0 0 0; font-size: 12px; color: #b45309; font-style: italic;">${t(langCode, 'recreationalParams')}</p>
         `}
       </div>
 
       <!-- Klient info -->
       <div class="section">
-        <div class="section-title">Pre klienta</div>
-        <p style="margin: 8px 0;"><strong>Meno:</strong> ${klient_meno}</p>
-        <p style="margin: 8px 0;"><strong>Email:</strong> ${klient_email}</p>
-        <p style="margin: 8px 0;"><strong>Telefón:</strong> ${klient_telefon}</p>
-        ${klient_adresa ? `<p style="margin: 8px 0;"><strong>Lokalita:</strong> ${klient_adresa}</p>` : ''}
-        ${klient_poznamka ? `<p style="margin: 8px 0;"><strong>Poznámka:</strong> ${klient_poznamka}</p>` : ''}
+        <div class="section-title">${t(langCode, 'forClient')}</div>
+        <p style="margin: 8px 0;"><strong>${t(langCode, 'name')}</strong> ${klient_meno}</p>
+        <p style="margin: 8px 0;"><strong>${t(langCode, 'email')}</strong> ${klient_email}</p>
+        <p style="margin: 8px 0;"><strong>${t(langCode, 'phone')}</strong> ${klient_telefon}</p>
+        ${klient_adresa ? `<p style="margin: 8px 0;"><strong>${t(langCode, 'location')}</strong> ${klient_adresa}</p>` : ''}
+        ${klient_poznamka ? `<p style="margin: 8px 0;"><strong>${t(langCode, 'note')}</strong> ${klient_poznamka}</p>` : ''}
       </div>
 
       <!-- Dodatočné služby -->
@@ -234,24 +766,24 @@ Deno.serve(async (req) => {
       <div class="section">
         <div style="background: #ecfdf5; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin: 20px 0;">
           <h3 style="margin: 0 0 15px 0; color: #065f46; font-size: 18px; display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 24px;">✨</span> Vybrané dodatočné služby
+            <span style="font-size: 24px;">✨</span> ${t(langCode, 'additionalServices')}
           </h3>
           ${predajNehnutelnosti ? `
           <div style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #10b981;">
-            <p style="margin: 0; color: #047857; font-weight: bold;">✓ Predaj predošlej nehnuteľnosti</p>
-            <p style="margin: 5px 0 0 0; color: #059669; font-size: 13px;">Budú sa Vám venovať naši najlepší odborníci v realitách.</p>
+            <p style="margin: 0; color: #047857; font-weight: bold;">${t(langCode, 'realEstateSale')}</p>
+            <p style="margin: 5px 0 0 0; color: #059669; font-size: 13px;">${t(langCode, 'realEstateSaleDesc')}</p>
           </div>
           ` : ''}
           ${hladaniePozemku ? `
           <div style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #10b981;">
-            <p style="margin: 0; color: #047857; font-weight: bold;">✓ Chcem pozemok pod svoj dom</p>
-            <p style="margin: 5px 0 0 0; color: #059669; font-size: 13px;">Pomôžeme Vám nájsť ideálny pozemok.</p>
+            <p style="margin: 0; color: #047857; font-weight: bold;">${t(langCode, 'landSearch')}</p>
+            <p style="margin: 5px 0 0 0; color: #059669; font-size: 13px;">${t(langCode, 'landSearchDesc')}</p>
           </div>
           ` : ''}
           ${financneSluzby ? `
           <div style="background: white; padding: 12px; border-radius: 8px; border-left: 4px solid #10b981;">
-            <p style="margin: 0; color: #047857; font-weight: bold;">✓ Finančné služby - úvery/pôžičky</p>
-            <p style="margin: 5px 0 0 0; color: #059669; font-size: 13px;">Budú sa Vám venovať naši najlepší finančníci.</p>
+            <p style="margin: 0; color: #047857; font-weight: bold;">${t(langCode, 'financialServices')}</p>
+            <p style="margin: 5px 0 0 0; color: #059669; font-size: 13px;">${t(langCode, 'financialServicesDesc')}</p>
           </div>
           ` : ''}
         </div>
@@ -260,27 +792,27 @@ Deno.serve(async (req) => {
 
       <!-- Vybraný model -->
       <div class="section">
-        <div class="section-title">Vybraný model domu</div>
+        <div class="section-title">${t(langCode, 'selectedModel')}</div>
         <div class="img-wrapper">
           <img src="${hlavnaFotka}" alt="${dom.nazov}" class="house-img">
           <div class="watermark">American Living</div>
         </div>
         <h2 style="margin: 15px 0 10px 0; color: #1f2937; font-size: 26px;">${dom.nazov}</h2>
-        <p style="margin: 5px 0; color: #6b7280;"><strong>Výrobca:</strong> ${dom.vyrobca}</p>
-        <p style="margin: 5px 0; color: #6b7280;"><strong>Typ domu:</strong> ${dom.typ_domu}</p>
-        <p style="margin: 5px 0; color: #6b7280;"><strong>Zastavaná plocha:</strong> ${dom.zastavana_plocha} m²</p>
+        <p style="margin: 5px 0; color: #6b7280;"><strong>${t(langCode, 'manufacturer')}</strong> ${dom.vyrobca}</p>
+        <p style="margin: 5px 0; color: #6b7280;"><strong>${t(langCode, 'houseType')}</strong> ${dom.typ_domu}</p>
+        <p style="margin: 5px 0; color: #6b7280;"><strong>${t(langCode, 'builtArea')}</strong> ${dom.zastavana_plocha} m²</p>
       </div>
 
       <!-- Sprievodné texty - BEZ info-box sekcií -->
 
       <!-- Cenový rozpis -->
       <div class="section">
-        <div class="section-title">Cenový rozpis konfigurácie</div>
+        <div class="section-title">${t(langCode, 'priceBreakdown')}</div>
         <table>
           <thead>
             <tr>
-              <th>Položka</th>
-              <th style="text-align: right;">Cena s DPH</th>
+              <th>${t(langCode, 'item')}</th>
+              <th style="text-align: right;">${t(langCode, 'priceWithVAT')}</th>
             </tr>
           </thead>
           <tbody>
@@ -292,7 +824,11 @@ Deno.serve(async (req) => {
                 const icon = item.name === "HRUBÁ STAVBA" ? "🏗️" : 
                             item.name === "HOLODOM" ? "🔨" : 
                             item.name === "DOM NA KĽÚČ" ? "🔑" : "📋";
-                return `<tr class="section-row"><td colspan="2">${icon} ${item.name}</td></tr>`;
+                const translatedName = item.name === "HRUBÁ STAVBA" ? t(langCode, 'shellConstruction') :
+                                      item.name === "HOLODOM" ? t(langCode, 'shellHouse') :
+                                      item.name === "DOM NA KĽÚČ" ? t(langCode, 'turnkeyHouse') :
+                                      t(langCode, 'documentation');
+                return `<tr class="section-row"><td colspan="2">${icon} ${translatedName}</td></tr>`;
               }
 
               const rowClass = item.selected ? 'selected-row' : 'not-selected-row';
@@ -311,30 +847,30 @@ Deno.serve(async (req) => {
 
       <!-- Celková cena -->
       <div class="total-box">
-        <div class="label">CELKOVÁ CENA s DPH</div>
+        <div class="label">${t(langCode, 'totalPriceWithVAT')}</div>
         <div class="amount">${formatPrice(totalPrice)}</div>
       </div>
 
       <!-- Pôdorysy -->
       ${(dom.podorys_2d || dom.podorys_3d) ? `
       <div class="section">
-        <div class="section-title">Pôdorysy</div>
+        <div class="section-title">${t(langCode, 'floorPlans')}</div>
         ${dom.podorys_2d ? `
         <div style="margin-bottom: 20px;">
           <div style="position: relative; text-align: center;">
-            <img src="${dom.podorys_2d}" alt="2D pôdorys" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 8px; background: #f9fafb;">
+            <img src="${dom.podorys_2d}" alt="${t(langCode, 'floorPlan2D')}" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 8px; background: #f9fafb;">
             <div class="watermark" style="font-size: 32px;">American Living</div>
           </div>
-          <p style="text-align: center; color: #6b7280; font-size: 12px; margin-top: 8px; background: #f3f4f6; padding: 8px; border-radius: 4px;">2D pôdorys</p>
+          <p style="text-align: center; color: #6b7280; font-size: 12px; margin-top: 8px; background: #f3f4f6; padding: 8px; border-radius: 4px;">${t(langCode, 'floorPlan2D')}</p>
         </div>
         ` : ''}
         ${dom.podorys_3d ? `
         <div style="margin-bottom: 20px;">
           <div style="position: relative; text-align: center;">
-            <img src="${dom.podorys_3d}" alt="3D pôdorys" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 8px; background: #f9fafb;">
+            <img src="${dom.podorys_3d}" alt="${t(langCode, 'floorPlan3D')}" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 8px; background: #f9fafb;">
             <div class="watermark" style="font-size: 32px;">American Living</div>
           </div>
-          <p style="text-align: center; color: #6b7280; font-size: 12px; margin-top: 8px; background: #f3f4f6; padding: 8px; border-radius: 4px;">3D pôdorys</p>
+          <p style="text-align: center; color: #6b7280; font-size: 12px; margin-top: 8px; background: #f3f4f6; padding: 8px; border-radius: 4px;">${t(langCode, 'floorPlan3D')}</p>
         </div>
         ` : ''}
       </div>
@@ -343,14 +879,14 @@ Deno.serve(async (req) => {
       <!-- Fotogalérie - VŠETKY v plnom rozlíšení -->
       ${galerie.length > 0 ? `
       <div class="section">
-        <div class="section-title">Fotogaléria</div>
+        <div class="section-title">${t(langCode, 'photoGallery')}</div>
         ${galerie.map(g => `
           <h3 style="color: #374151; font-size: 16px; margin: 20px 0 10px 0;">${g.nazov}</h3>
           ${g.fotky.map((fotka, idx) => `
           <div class="image-container" style="margin: 15px 0;">
             <img src="${fotka}" alt="${g.nazov} ${idx + 1}" style="width: 100%; height: auto; display: block; border-radius: 8px;">
             <div class="watermark" style="font-size: 32px;">American Living</div>
-            <p style="text-align: center; color: #6b7280; font-size: 12px; margin-top: 8px; background: #f3f4f6; padding: 8px; border-radius: 4px;">${g.nazov} - Fotka ${idx + 1}</p>
+            <p style="text-align: center; color: #6b7280; font-size: 12px; margin-top: 8px; background: #f3f4f6; padding: 8px; border-radius: 4px;">${g.nazov} - ${t(langCode, 'photo')} ${idx + 1}</p>
           </div>
           `).join('')}
         `).join('')}
@@ -360,17 +896,17 @@ Deno.serve(async (req) => {
 
     <div class="footer">
       <p style="font-size: 18px; font-weight: bold; margin-bottom: 15px;">American Living</p>
-      <p style="margin: 8px 0;">📞 Telefón: <a href="tel:+421905138124">+421 905 138 124</a></p>
-      <p style="margin: 8px 0;">✉️ Email: <a href="mailto:info@americanliving.sk">info@americanliving.sk</a></p>
+      <p style="margin: 8px 0;">📞 ${t(langCode, 'phone')} <a href="tel:+421905138124">+421 905 138 124</a></p>
+      <p style="margin: 8px 0;">✉️ ${t(langCode, 'email')} <a href="mailto:info@americanliving.sk">info@americanliving.sk</a></p>
       <p style="margin: 8px 0;">🌐 Web: <a href="https://www.americanliving.sk">www.americanliving.sk</a></p>
       <div style="margin: 20px 0;">
-        <p style="margin-bottom: 10px; font-size: 13px; color: #9ca3af;">Sledujte nás na sociálnych sieťach:</p>
+        <p style="margin-bottom: 10px; font-size: 13px; color: #9ca3af;">${t(langCode, 'followUs')}</p>
         <p style="margin: 5px 0;">
           <a href="https://www.facebook.com/americanliving.sk" style="margin: 0 10px;">Facebook</a>
           <a href="https://www.instagram.com/americanliving.sk" style="margin: 0 10px;">Instagram</a>
         </p>
       </div>
-      <p style="margin: 20px 0 5px 0; font-size: 11px;">&copy; ${new Date().getFullYear()} American Living. Všetky práva vyhradené.</p>
+      <p style="margin: 20px 0 5px 0; font-size: 11px;">&copy; ${new Date().getFullYear()} American Living. ${t(langCode, 'allRightsReserved')}</p>
     </div>
   </div>
 </body>
