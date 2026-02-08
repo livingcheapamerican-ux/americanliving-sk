@@ -415,7 +415,7 @@ export default function Katalog() {
     return (a.poradie || 0) - (b.poradie || 0);
   });
 
-  const vyrobcovia = ["Ticab house", "Prosto House", "Domki z Gór"];
+  const vyrobcovia = ["Ticab house", "Prosto House"];
 
   // Generovanie dynamických meta tagov
   const generateMetaTags = () => {
