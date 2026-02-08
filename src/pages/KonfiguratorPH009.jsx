@@ -407,6 +407,19 @@ export default function KonfiguratorPH009() {
   const { language } = useLanguage();
   const t = (key) => prostoHouseTranslations[language]?.[key] || prostoHouseTranslations['sk']?.[key] || key;
   
+  const urlParams = new URLSearchParams(window.location.search);
+  const domIdFromUrl = urlParams.get('id');
+  
+  const { data: domFromDb } = useQuery({
+    queryKey: ['dom-ph009', domIdFromUrl],
+    queryFn: async () => {
+      if (!domIdFromUrl) return null;
+      const domy = await base44.entities.Dom.filter({ id: domIdFromUrl });
+      return domy[0] || null;
+    },
+    enabled: !!domIdFromUrl
+  });
+  
   const STEPS = STEPS_CONFIG.map(step => ({
     ...step,
     title: step.id === 'type' ? t('stepProjectType')
