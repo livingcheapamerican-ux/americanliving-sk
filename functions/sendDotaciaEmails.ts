@@ -1,130 +1,119 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
-import { Resend } from 'npm:resend@4.0.0';
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { data } = await req.json();
+    const { klientEmail, klientMeno, domId, typGrantu, domNazov, dotacia, lokalita, rozpocet, formaFinancovania } = await req.json();
 
-    // Get dopyt data
-    const dopyt = data || {};
-    const { meno, email, telefon, poznamka } = dopyt;
+    // Fetch house data with photos
+    let houseData = null;
+    let housePhotos = [];
+    if (domId) {
+      const houses = await base44.entities.Dom.filter({ id: domId });
+      if (houses.length > 0) {
+        houseData = houses[0];
+        housePhotos = [houseData.hlavny_obrazok];
+        if (houseData.zakladna_konfiguracia_obrazok) {
+          housePhotos.push(houseData.zakladna_konfiguracia_obrazok);
+        }
+        if (houseData.galeria && houseData.galeria.length > 0) {
+          housePhotos = [...housePhotos, ...houseData.galeria.slice(0, 3)];
+        }
+      }
+    }
 
-    // Extract účel from poznámka
-    const ucel = poznamka?.includes('Bývanie') ? 'Bývanie (Program Ambassador)' : 
-                 poznamka?.includes('Investícia') ? 'Investícia (Program Partner)' : 
-                 'Neuvedený';
+    // Construct email HTML
+    const photoGallery = housePhotos.map(url => 
+      `<div style="margin-bottom: 20px;">
+        <img src="${url}" alt="Dom" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+      </div>`
+    ).join('');
 
-    const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
+    const emailHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
+  <div style="background: linear-gradient(135deg, #34D399 0%, #10B981 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
+    <h1 style="color: white; margin: 0; font-size: 28px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">✅ Žiadosť prijatá!</h1>
+    <p style="color: white; margin: 10px 0 0 0; font-size: 16px;">Dotácia AMERICANA - American Living</p>
+  </div>
+  
+  <div style="background: white; padding: 30px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <p style="font-size: 18px; color: #10B981; font-weight: bold; margin-bottom: 20px;">Dobrý deň ${klientMeno},</p>
+    
+    <p style="margin-bottom: 20px; color: #555;">
+      Ďakujeme za Vašu žiadosť o <strong>dotáciu AMERICANA</strong>. Vaša žiadosť bola úspešne zaznamenaná a zaradili ste sa medzi kandidátov na poskytnutie súkromného grantu od spoločnosti American Living.
+    </p>
 
-    // Email pre klienta
-    const clientEmailHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); padding: 40px 20px; text-align: center;">
-          <h1 style="color: white; margin: 0; font-size: 32px;">DOTÁCIA AMERICANA</h1>
-        </div>
-        
-        <div style="padding: 40px 20px; background: white;">
-          <h2 style="color: #1e40af; margin-bottom: 20px;">Ďakujeme za váš záujem, ${meno}! 🎉</h2>
-          
-          <p style="font-size: 16px; line-height: 1.6; color: #374151;">
-            Vaša žiadosť o dotáciu bola úspešne prijatá. Náš tím ju teraz spracováva.
-          </p>
+    <div style="background: #F0FDF4; border-left: 4px solid #10B981; padding: 20px; margin: 20px 0; border-radius: 8px;">
+      <p style="margin: 0; font-weight: bold; color: #10B981; margin-bottom: 10px;">📋 Detaily Vašej žiadosti:</p>
+      <ul style="margin: 10px 0; padding-left: 20px; color: #555;">
+        ${typGrantu ? `<li><strong>Typ programu:</strong> ${typGrantu}</li>` : ''}
+        ${domNazov ? `<li><strong>Vybraný dom:</strong> ${domNazov}</li>` : ''}
+        ${dotacia ? `<li><strong>Výška dotácie:</strong> ${dotacia.toLocaleString()} €</li>` : ''}
+        ${lokalita ? `<li><strong>Lokalita:</strong> ${lokalita}</li>` : ''}
+        ${rozpocet ? `<li><strong>Rozpočet:</strong> ${rozpocet}</li>` : ''}
+        ${formaFinancovania ? `<li><strong>Financovanie:</strong> ${formaFinancovania}</li>` : ''}
+      </ul>
+    </div>
 
-          <div style="background: #eff6ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <p style="margin: 0; color: #1e40af; font-weight: bold;">📹 ČO ĎALEJ?</p>
-            <p style="margin: 10px 0 0 0; color: #374151;">
-              Do 24 hodín vám pošleme <strong>personalizovanú video odpoveď</strong> s detailmi o dotácii 
-              pre váš účel: <strong>${ucel}</strong>
-            </p>
-          </div>
+    ${housePhotos.length > 0 ? `
+    <div style="margin: 30px 0;">
+      <h3 style="color: #10B981; font-size: 20px; margin-bottom: 15px;">🏡 Fotografie vybraného domu</h3>
+      ${photoGallery}
+    </div>
+    ` : ''}
 
-          <p style="font-size: 14px; color: #6b7280; margin-top: 30px;">
-            Ak máte akékoľvek otázky, neváhajte nás kontaktovať:
-          </p>
-          
-          <p style="font-size: 14px; color: #6b7280;">
-            📞 <a href="tel:+421905138124" style="color: #1e40af;">+421 905 138 124</a><br>
-            📧 <a href="mailto:info@americanliving.sk" style="color: #1e40af;">info@americanliving.sk</a>
-          </p>
-        </div>
+    <div style="background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 20px; margin: 20px 0; border-radius: 8px;">
+      <p style="margin: 0; font-weight: bold; color: #D97706; margin-bottom: 10px;">⏳ Ďalšie kroky:</p>
+      <ol style="margin: 10px 0; padding-left: 20px; color: #555;">
+        <li style="margin-bottom: 8px;">Náš tím posúdi Vašu žiadosť v najbližších dňoch</li>
+        <li style="margin-bottom: 8px;">Budeme Vás kontaktovať s dodatočnými informáciami</li>
+        <li style="margin-bottom: 8px;">Ak spĺňate kritériá, dohodneme si stretnutie</li>
+      </ol>
+    </div>
 
-        <div style="background: #f3f4f6; padding: 20px; text-align: center; color: #6b7280; font-size: 12px;">
-          <p style="margin: 0;">American Living - Partner pre váš domov aj biznis</p>
-          <p style="margin: 5px 0 0 0;">Powered by AI 🤖</p>
-        </div>
+    <div style="border-top: 2px solid #E5E7EB; padding-top: 20px; margin-top: 30px;">
+      <h3 style="color: #10B981; font-size: 18px; margin-bottom: 15px;">📞 Kontaktujte nás</h3>
+      <div style="background: #F9FAFB; padding: 15px; border-radius: 8px;">
+        <p style="margin: 5px 0; color: #555;">
+          <strong style="color: #10B981;">📧 Email:</strong> 
+          <a href="mailto:info@americanliving.sk" style="color: #10B981; text-decoration: none;">info@americanliving.sk</a>
+        </p>
+        <p style="margin: 5px 0; color: #555;">
+          <strong style="color: #10B981;">📞 Telefón:</strong> 
+          <a href="tel:+421905138124" style="color: #10B981; text-decoration: none;">+421 905 138 124</a>
+        </p>
+        <p style="margin: 5px 0; color: #555;">
+          <strong style="color: #10B981;">🌐 Web:</strong> 
+          <a href="https://americanliving.sk" style="color: #10B981; text-decoration: none;">www.americanliving.sk</a>
+        </p>
       </div>
-    `;
+    </div>
 
-    // Email pre tím
-    const teamEmailHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <div style="background: #dc2626; padding: 30px 20px; text-align: center;">
-          <h1 style="color: white; margin: 0; font-size: 28px;">🚨 NOVÝ DOPYT - DOTÁCIA AMERICANA</h1>
-        </div>
-        
-        <div style="padding: 30px 20px; background: white;">
-          <h2 style="color: #dc2626; margin-bottom: 20px;">Detaily dopytu:</h2>
-          
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr style="border-bottom: 1px solid #e5e7eb;">
-              <td style="padding: 12px 0; font-weight: bold; color: #374151;">Meno:</td>
-              <td style="padding: 12px 0; color: #374151;">${meno}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #e5e7eb;">
-              <td style="padding: 12px 0; font-weight: bold; color: #374151;">Email:</td>
-              <td style="padding: 12px 0;"><a href="mailto:${email}" style="color: #1e40af;">${email}</a></td>
-            </tr>
-            <tr style="border-bottom: 1px solid #e5e7eb;">
-              <td style="padding: 12px 0; font-weight: bold; color: #374151;">Telefón:</td>
-              <td style="padding: 12px 0;"><a href="tel:${telefon}" style="color: #1e40af;">${telefon}</a></td>
-            </tr>
-            <tr style="border-bottom: 1px solid #e5e7eb;">
-              <td style="padding: 12px 0; font-weight: bold; color: #374151;">Účel:</td>
-              <td style="padding: 12px 0; color: #374151;"><strong>${ucel}</strong></td>
-            </tr>
-          </table>
+    <p style="margin-top: 30px; color: #888; font-size: 14px; text-align: center;">
+      S pozdravom,<br>
+      <strong style="color: #10B981;">Tým American Living</strong>
+    </p>
+  </div>
+</body>
+</html>`;
 
-          <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #f59e0b;">
-            <p style="margin: 0; color: #92400e; font-weight: bold;">⚡ AKCIA POTREBNÁ:</p>
-            <p style="margin: 10px 0 0 0; color: #92400e;">
-              Vytvorte personalizované video pre ${meno} s detailmi o ${ucel === 'Bývanie (Program Ambassador)' ? 'programe Ambassador' : 'programe Partner'}.
-            </p>
-          </div>
-        </div>
-
-        <div style="background: #f3f4f6; padding: 20px; text-align: center; color: #6b7280; font-size: 12px;">
-          <p style="margin: 0;">American Living - Interný systém</p>
-        </div>
-      </div>
-    `;
-
-    // Odoslať e-mail klientovi
-    await resend.emails.send({
-      from: 'American Living <info@americanliving.sk>',
-      to: email,
-      subject: '🎁 Dotácia Americana - Vaša žiadosť bola prijatá',
-      html: clientEmailHtml
+    // Send email to client
+    await base44.integrations.Core.SendEmail({
+      to: klientEmail,
+      from_name: "American Living - Dotácia AMERICANA",
+      subject: `✅ Potvrdenie žiadosti o dotáciu AMERICANA${domNazov ? ` - ${domNazov}` : ''}`,
+      body: emailHtml
     });
 
-    // Odoslať e-mail tímu
-    await resend.emails.send({
-      from: 'American Living System <info@americanliving.sk>',
-      to: 'info@americanliving.sk',
-      subject: `🚨 NOVÝ DOPYT - Dotácia Americana (${ucel}) - ${meno}`,
-      html: teamEmailHtml
-    });
-
-    return Response.json({
-      success: true,
-      message: 'E-maily úspešne odoslané'
-    });
-
+    return Response.json({ success: true });
   } catch (error) {
-    console.error('Chyba pri odosielaní e-mailov:', error);
-    return Response.json({
-      success: false,
-      error: error.message
-    }, { status: 500 });
+    console.error('Error:', error);
+    return Response.json({ success: false, error: error.message }, { status: 500 });
   }
 });

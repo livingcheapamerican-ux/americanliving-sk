@@ -114,6 +114,8 @@ export default function DotaciaAmericana() {
     img.src = heroSettings.investor_fotky[nextIndex] + '?w=800&q=70';
   }, [investorIndex, heroSettings?.investor_fotky]);
 
+  const [successData, setSuccessData] = useState(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -133,6 +135,19 @@ export default function DotaciaAmericana() {
           typ_grantu: formData.typ_grantu,
           poznamka: `Dotácia Americana - Účel: ${ucel}${houseName ? `, Dom: ${houseName} (Dotácia: ${dotacia.toLocaleString()} €)` : ''}${formData.lokalita ? `, Lokalita: ${formData.lokalita}` : ''}${formData.rozpocet ? `, Rozpočet: ${formData.rozpocet}` : ''}${formData.forma_financovania ? `, Financovanie: ${formData.forma_financovania}` : ''}${formData.typ_grantu ? `, Typ grantu: ${formData.typ_grantu}` : ''}`
         });
+
+        // Send email to client with house photos and contact info
+        await base44.functions.invoke('sendDotaciaEmails', {
+          klientEmail: formData.email,
+          klientMeno: formData.meno,
+          domId: formData.dom_id,
+          typGrantu: formData.typ_grantu,
+          domNazov: houseName,
+          dotacia: dotacia,
+          lokalita: formData.lokalita,
+          rozpocet: formData.rozpocet,
+          formaFinancovania: formData.forma_financovania
+        });
       
       // Konfety animácia na potvrdenie
       if (typeof window !== 'undefined' && window.confetti) {
@@ -142,6 +157,12 @@ export default function DotaciaAmericana() {
           origin: { y: 0.6 }
         });
       }
+
+      // Set success data for display
+      setSuccessData({
+        house: selectedHouse,
+        dotacia: dotacia
+      });
       
       toast.success("✅ Blahoželáme! Zaradili ste sa medzi kandidátov na poskytnutie súkromného grantu od spoločnosti American Living.");
       setFormData({ meno: "", email: "", telefon: "", lokalita: "", rozpocet: "", dom_id: "", forma_financovania: "", typ_grantu: "" });
@@ -616,6 +637,89 @@ export default function DotaciaAmericana() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
+      </AnimatePresence>
+
+      {/* SUCCESS MODAL */}
+      <AnimatePresence>
+        {successData && (
+          <Dialog open={!!successData} onOpenChange={() => setSuccessData(null)}>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-serif font-bold text-primary">
+                  ✅ Žiadosť úspešne odoslaná!
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-6">
+                <Alert className="bg-emerald-50 border-emerald-500">
+                  <CheckCircle className="w-5 h-5 text-emerald-600" />
+                  <AlertDescription className="text-emerald-800 font-semibold">
+                    Potvrdenie sme Vám zaslali na email. Budeme Vás kontaktovať v najbližších dňoch.
+                  </AlertDescription>
+                </Alert>
+
+                {successData.house && (
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">Váš vybraný dom</h3>
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <img 
+                        src={successData.house.hlavny_obrazok} 
+                        alt={successData.house.nazov}
+                        className="w-full h-48 object-cover rounded-lg"
+                      />
+                      {successData.house.zakladna_konfiguracia_obrazok && (
+                        <img 
+                          src={successData.house.zakladna_konfiguracia_obrazok} 
+                          alt="Základná konfigurácia"
+                          className="w-full h-48 object-cover rounded-lg"
+                        />
+                      )}
+                    </div>
+                    <div className="bg-gradient-to-r from-emerald-50 to-green-50 p-4 rounded-lg border-2 border-emerald-300">
+                      <p className="text-lg font-bold text-gray-900 mb-2">{successData.house.nazov}</p>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Dotácia:</span>
+                        <span className="text-2xl font-bold text-emerald-600">{successData.dotacia?.toLocaleString()} €</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">📞 Naše kontakty</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Phone className="w-5 h-5 text-emerald-600" />
+                      <a href="tel:+421905138124" className="text-emerald-600 font-semibold hover:underline">
+                        +421 905 138 124
+                      </a>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <FileText className="w-5 h-5 text-emerald-600" />
+                      <a href="mailto:info@americanliving.sk" className="text-emerald-600 font-semibold hover:underline">
+                        info@americanliving.sk
+                      </a>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Home className="w-5 h-5 text-emerald-600" />
+                      <a href="https://americanliving.sk" target="_blank" rel="noopener noreferrer" className="text-emerald-600 font-semibold hover:underline">
+                        www.americanliving.sk
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={() => setSuccessData(null)}
+                  className="w-full bg-primary hover:bg-secondary text-white"
+                  size="lg"
+                >
+                  Zavrieť
+                </Button>
               </div>
             </DialogContent>
           </Dialog>
