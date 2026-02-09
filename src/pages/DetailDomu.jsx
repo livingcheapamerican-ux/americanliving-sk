@@ -34,6 +34,7 @@ import { useLanguage } from "../components/LanguageContext";
 import TranslatedDescription from "../components/TranslatedDescription";
 import ShellInfoBox from "../components/ShellInfoBox";
 import { prostoHouseTranslations } from "../components/translations/ProstoHouseTranslations";
+import ExternalReviews from "../components/ExternalReviews";
 
 
 export default function DetailDomu() {
@@ -194,6 +195,11 @@ export default function DetailDomu() {
   const { data: user } = useQuery({
     queryKey: ['current-user'],
     queryFn: () => base44.auth.me().catch(() => null)
+  });
+
+  const { data: reviews } = useQuery({
+    queryKey: ['external-reviews'],
+    queryFn: () => base44.entities.ExternalReview.list()
   });
 
   const isAdmin = user?.role === 'admin';
@@ -2035,6 +2041,11 @@ export default function DetailDomu() {
               </div>
             )}
           </motion.div>
+        </div>
+
+        {/* External Reviews Section */}
+        <div className="container mx-auto px-2 sm:px-4 py-8">
+          <ExternalReviews reviews={reviews} domId={dom.id} />
         </div>
       </div>
 
