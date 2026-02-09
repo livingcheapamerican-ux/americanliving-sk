@@ -320,14 +320,14 @@ export default function Domov() {
                 <Link to={createPageUrl("Katalog")} className="w-full sm:w-auto">
                   <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-red-600 via-primary to-red-600 hover:from-red-700 hover:via-secondary hover:to-red-700 text-white font-black text-xl sm:text-2xl px-10 sm:px-16 py-7 sm:py-9 shadow-[0_0_30px_rgba(239,68,68,0.6)] hover:shadow-[0_0_50px_rgba(220,38,38,0.8)] border-4 border-white animate-pulse transition-all group">
                     <Home className="mr-3 w-7 h-7 group-hover:rotate-12 transition-transform" />
-                    KATALÓG DOMOV
+                    {t('houseCatalogButton')}
                     <ArrowRight className="ml-3 w-7 h-7 group-hover:translate-x-2 transition-transform" />
                     <motion.div
                       animate={{ scale: [1, 1.1, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
                       className="absolute -top-3 -right-3 bg-yellow-400 text-red-900 text-xs font-black px-3 py-1 rounded-full rotate-12 shadow-lg border-2 border-white"
                     >
-                      POZRI DOMY!
+                      {t('seeHousesNow')}
                     </motion.div>
                   </Button>
                 </Link>
@@ -345,7 +345,7 @@ export default function Domov() {
                 className="text-center"
               >
                 <p className="text-white text-sm sm:text-lg font-bold bg-black/40 backdrop-blur-sm px-6 py-3 rounded-full inline-block shadow-xl border-2 border-white/30">
-                  👆 Klikni sem pre zobrazenie všetkých modulárnych domov
+                  👆 {t('clickToShowAllModularHouses')}
                 </p>
               </motion.div>
             </motion.div>
@@ -428,7 +428,7 @@ export default function Domov() {
                     transition={{ duration: 2, repeat: Infinity }}
                     className="absolute -right-2 -top-2 md:-right-3 md:-top-3 bg-gradient-to-br from-red-600 via-red-700 to-red-800 text-white text-xs md:text-sm font-black px-3 py-1 md:px-4 md:py-1.5 rounded-full rotate-12 shadow-[0_4px_15px_rgba(220,38,38,0.6)] border-2 border-white"
                   >
-                    ✨ NOVÉ!
+                    ✨ {t('newBadge')}!
                   </motion.div>
                 </Button>
               </motion.div>
@@ -453,20 +453,20 @@ export default function Domov() {
                 >
                   <Home className="w-7 h-7 text-white" />
                 </motion.div>
-                <h3 className="text-xl font-black text-emerald-700 tracking-tight">Pre rodiny</h3>
+                <h3 className="text-xl font-black text-emerald-700 tracking-tight">{t('forFamilies')}</h3>
               </div>
               <ul className="space-y-3 text-base text-gray-800 relative z-10">
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span><strong className="text-emerald-700">Dotácia</strong> pri podpise</span>
+                  <span><strong className="text-emerald-700">{t('grantAtSigning')}</strong></span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span><strong className="text-emerald-700">Energie v plnej výške</strong> preplatené</span>
+                  <span><strong className="text-emerald-700">{t('energyFullyRefunded')}</strong></span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span>Podpora aj po odovzdaní</span>
+                  <span>{t('supportAfterHandover')}</span>
                 </li>
               </ul>
             </motion.div>
@@ -488,20 +488,20 @@ export default function Domov() {
                 >
                   <TrendingUp className="w-7 h-7 text-white" />
                 </motion.div>
-                <h3 className="text-xl font-black text-yellow-700 tracking-tight">Pre investorov</h3>
+                <h3 className="text-xl font-black text-yellow-700 tracking-tight">{t('forInvestors')}</h3>
               </div>
               <ul className="space-y-3 text-base text-gray-800 relative z-10">
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
-                  <span><strong className="text-yellow-700">Dotácia</strong> pri podpise</span>
+                  <span><strong className="text-yellow-700">{t('grantAtSigning')}</strong></span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
-                  <span><strong className="text-yellow-700">Marketing ZDARMA</strong> (správa hostí)</span>
+                  <span><strong className="text-yellow-700">{t('marketingFree')}</strong></span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
-                  <span>Pasívny príjem z Airbnb</span>
+                  <span>{t('passiveIncomeFromAirbnb')}</span>
                 </li>
               </ul>
             </motion.div>
@@ -861,14 +861,14 @@ export default function Domov() {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                   <Button size="lg" className="relative bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 hover:from-orange-600 hover:via-orange-700 hover:to-orange-600 text-white font-black text-lg sm:text-xl px-10 sm:px-16 py-6 sm:py-8 shadow-2xl border-4 border-white group">
                     <Home className="mr-2 w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform" />
-                    ZOBRAZIŤ VŠETKY DOMY
+                    {t('showAllHouses')}
                     <ArrowRight className="ml-2 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" />
                     <motion.div
                       animate={{ scale: [1, 1.1, 1] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
                       className="absolute -top-2 -right-2 bg-orange-600 text-white text-[10px] font-black px-2 py-1 rounded-full rotate-12 shadow-lg"
                     >
-                      KATALÓG
+                      {t('catalogBadge')}
                     </motion.div>
                   </Button>
                 </motion.div>
@@ -921,7 +921,7 @@ export default function Domov() {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                   <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-white via-yellow-50 to-white hover:from-yellow-100 hover:via-white hover:to-yellow-100 text-primary hover:text-secondary font-black text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-7 shadow-2xl border-4 border-white/50 group">
                     <Home className="mr-2 w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform" />
-                    KATALÓG DOMOV
+                    {t('houseCatalogButton')}
                     <ArrowRight className="ml-2 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" />
                   </Button>
                 </motion.div>
