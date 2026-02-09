@@ -56,6 +56,9 @@ export default function KonfiguratorProstoHouse() {
       return domy[0] || null;
     },
     enabled: !!domId,
+    staleTime: 0,
+    cacheTime: 0,
+    refetchOnMount: 'always'
   });
 
   const createDopytMutation = useMutation({

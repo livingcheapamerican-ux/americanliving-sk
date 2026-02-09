@@ -413,7 +413,10 @@ export default function KonfiguratorPH002() {
       const domy = await base44.entities.Dom.filter({ id: domIdFromUrl });
       return domy[0] || null;
     },
-    enabled: !!domIdFromUrl
+    enabled: !!domIdFromUrl,
+    staleTime: 0,
+    cacheTime: 0,
+    refetchOnMount: 'always'
   });
   
   const STEPS = STEPS_CONFIG.map(step => ({
