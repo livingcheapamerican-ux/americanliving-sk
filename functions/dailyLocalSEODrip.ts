@@ -7,7 +7,7 @@ Deno.serve(async (req) => {
     // Find up to 2 pending LokaciaSEO records
     const allRecords = await base44.asServiceRole.entities.LokaciaSEO.list();
     const pendingRecords = allRecords
-      .filter(record => !record.obsah || record.status === 'pending')
+      .filter(record => !record.unikany_text_o_lokalite || record.unikany_text_o_lokalite.length < 100)
       .slice(0, 2);
 
     if (pendingRecords.length === 0) {
@@ -71,9 +71,8 @@ Vráť ČISTÝ HTML kód (bez markdown, bez \`\`\`html blokov).`;
 
         // Update the record with generated content
         await base44.asServiceRole.entities.LokaciaSEO.update(record.id, {
-          obsah: generatedContent,
-          status: 'publikovany',
-          datum_publikacie: new Date().toISOString()
+          unikany_text_o_lokalite: generatedContent,
+          verejny: true
         });
 
         console.log(`✓ Generated SEO content for ${cityName}`);
