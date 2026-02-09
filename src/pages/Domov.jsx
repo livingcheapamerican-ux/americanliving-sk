@@ -416,11 +416,11 @@ export default function Domov() {
                     transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
                     className="hidden md:flex flex-col items-center relative z-10"
                   >
-                    <span className="text-[#8B6914] drop-shadow-[0_3px_12px_rgba(212,175,55,1)]">DOTÁCIA</span>
+                    <span className="text-[#8B6914] drop-shadow-[0_3px_12px_rgba(212,175,55,1)]">{t('dotacia').toUpperCase()}</span>
                     <span className="text-red-600 text-3xl sm:text-5xl drop-shadow-[0_3px_12px_rgba(212,175,55,1)] mt-1">AMERICANA</span>
                   </motion.div>
                   <div className="md:hidden flex flex-col items-center relative z-10">
-                    <span className="text-[#8B6914] drop-shadow-[0_3px_12px_rgba(212,175,55,1)]">DOTÁCIA</span>
+                    <span className="text-[#8B6914] drop-shadow-[0_3px_12px_rgba(212,175,55,1)]">{t('dotacia').toUpperCase()}</span>
                     <span className="text-red-600 text-2xl drop-shadow-[0_3px_12px_rgba(212,175,55,1)] mt-0.5">AMERICANA</span>
                   </div>
                   <motion.div
