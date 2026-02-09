@@ -103,13 +103,26 @@ Deno.serve(async (req) => {
 </body>
 </html>`;
 
-    // Send email to client
-    await base44.integrations.Core.SendEmail({
-      to: klientEmail,
-      from_name: "American Living - Dotácia AMERICANA",
-      subject: `✅ Potvrdenie žiadosti o dotáciu AMERICANA${domNazov ? ` - ${domNazov}` : ''}`,
-      body: emailHtml
+    // Send email to client using Resend API
+    const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
+    
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'American Living <info@americanliving.sk>',
+        to: klientEmail,
+        cc: 'info.americanliving@gmail.com',
+        subject: `✅ Potvrdenie žiadosti o dotáciu AMERICANA${domNazov ? ` - ${domNazov}` : ''}`,
+        html: emailHtml
+      })
     });
+    
+    const result = await response.json();
+    console.log('✅ Email odoslaný:', result);
 
     return Response.json({ success: true });
   } catch (error) {
