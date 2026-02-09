@@ -2045,7 +2045,7 @@ export default function DetailDomu() {
 
         {/* External Reviews Section */}
         <div className="container mx-auto px-2 sm:px-4 py-8">
-          <ExternalReviews reviews={reviews} domId={dom.id} />
+          <ExternalReviews reviews={reviews} domId={dom.id} manufacturer={dom.vyrobca} />
         </div>
       </div>
 

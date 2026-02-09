@@ -4,8 +4,11 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from './LanguageContext';
 
-export default function ExternalReviews({ reviews, domId }) {
+export default function ExternalReviews({ reviews, domId, manufacturer }) {
   const { language } = useLanguage();
+
+  // Only show for Ticabhouse
+  if (manufacturer !== 'Ticab house') return null;
 
   if (!reviews || reviews.length === 0) return null;
 
