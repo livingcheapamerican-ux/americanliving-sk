@@ -439,9 +439,10 @@ export default function Domov() {
             >
               <div className="mb-6">
                 <img 
-                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" 
+                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=60" 
                   alt="Prosto House - Modern wood house technology"
                   className="w-full h-64 object-cover rounded-xl"
+                  loading="lazy"
                 />
               </div>
               <h3 className="text-2xl font-bold mb-4" style={{ color: '#333333' }}>
@@ -460,9 +461,10 @@ export default function Domov() {
             >
               <div className="mb-6">
                 <img 
-                  src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80" 
+                  src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=60" 
                   alt="TicabHouse - Precision modular construction"
                   className="w-full h-64 object-cover rounded-xl"
+                  loading="lazy"
                 />
               </div>
               <h3 className="text-2xl font-bold mb-4" style={{ color: '#333333' }}>
@@ -710,6 +712,7 @@ export default function Domov() {
                       src={sluzba.image} 
                       alt={sluzba.nazov}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent group-hover:from-blue-900/80" />
                     <div className="absolute bottom-1.5 left-1.5 sm:bottom-2 sm:left-2">
