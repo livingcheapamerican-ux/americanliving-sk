@@ -887,14 +887,14 @@ const translations = {
     adminDocuments: "Správa dokumentov",
     adminGoogleDrive: "Správa Google Drive",
     
-    // Homepage Hero
+    // Homepage Hero - New Redesign
     heroHeadline: "Postavte dom, nie vzdušné zámky. Bývanie od A po Z bez starostí.",
-    heroSubheadline: "Jediný partner na trhu, ktorý za vás vyrieši predaj starého bytu, nájdenie pozemku, hypotéku, povolenia aj výstavbu.",
+    heroSubheadline: "Jediný partner, ktorý vyrieši predaj bytu, pozemok, hypotéku a stavbu.",
     
-    // Trusted Partners Section
+    // Trusted Partners Section - New Partnership Content
     trustedPartnersTitle: "Dôverujeme len overenému",
     prostoTitle: "Prosto House: Neriskujte úspory s amatérmi",
-    prostoBody: "Slovenský trh je plný firiem, ktoré tu zajtra nebudú. Prosto House je 13 rokov overená istota. Kým susedovi bude garážová firma opravovať zatekajúcu strechu, vy budete pokojne bývať.",
+    prostoBody: "Slovenský trh je plný firiem, ktoré tu zajtra nebudú. Prosto House je 13 rokov overená istota. Kým susedovi bude garážová firma opravovať strechu, vy budete pokojne bývať.",
     ticabTitle: "TicabHouse: Ukončite dobu krivých stien",
     ticabBody: "Prečo platiť za chyby robotníkov? TicabHouse je továrenská výroba s CNC presnosťou. Nechajte amatérov stavať kôlne, vy si zaslúžite nemeckú kvalitu.",
     
@@ -1499,16 +1499,16 @@ const translations = {
     adminDocuments: "Dokumentenverwaltung",
     adminGoogleDrive: "Google Drive Verwaltung",
     
-    // Homepage Hero
+    // Homepage Hero - New Redesign
     heroHeadline: "Bauen Sie ein Haus, keine Luftschlösser. Wohnen von A bis Z.",
-    heroSubheadline: "Der einzige Partner, der Verkauf, Grundstückssuche, Hypothek, Genehmigungen und Bau für Sie erledigt.",
+    heroSubheadline: "Der einzige Partner, der Verkauf, Grundstück, Hypothek und Bau erledigt.",
     
-    // Trusted Partners Section
+    // Trusted Partners Section - New Partnership Content
     trustedPartnersTitle: "Wir vertrauen nur geprüften",
     prostoTitle: "Prosto House: Riskieren Sie keine Ersparnisse",
     prostoBody: "Der Markt ist voll von Eintagsfliegen. Prosto House ist seit 13 Jahren eine sichere Bank. Während der Nachbar das Dach repariert, wohnen Sie ruhig.",
     ticabTitle: "TicabHouse: Schluss mit schiefen Wänden",
-    ticabBody: "Warum für Fehler zahlen? TicabHouse ist Fabrikproduktion mit CNC-Präzision. Lassen Sie Amateure Schuppen bauen, Sie verdienen deutsche Qualität.",
+    ticabBody: "TicabHouse ist Fabrikproduktion mit CNC-Präzision. Lassen Sie Amateure Schuppen bauen, Sie verdienen deutsche Qualität.",
     
     affordableFamilyHouse: "Erschwingliches Familienhaus",
     directFromManufacturer: "Direkter Herstellerpreis! Ohne Aufschlag!",
@@ -2723,11 +2723,11 @@ const translations = {
     adminDocuments: "Gestion documents",
     adminGoogleDrive: "Gestion Google Drive",
     
-    // Homepage Hero
+    // Homepage Hero - New Redesign
     heroHeadline: "Construisez une maison, pas des rêves. L'habitat de A à Z.",
-    heroSubheadline: "Le seul partenaire qui gère la vente, le terrain, le prêt et la construction pour vous.",
+    heroSubheadline: "Le seul partenaire qui gère la vente, le terrain, le prêt et la construction.",
     
-    // Trusted Partners Section
+    // Trusted Partners Section - New Partnership Content
     trustedPartnersTitle: "Nous ne faisons confiance qu'aux vérifiés",
     prostoTitle: "Prosto House: Ne jouez pas avec votre épargne",
     prostoBody: "Prosto House, c'est 13 ans de stabilité. Pendant que le voisin répare les fuites, vous vivez sereinement.",
@@ -3903,11 +3903,11 @@ const translations = {
     adminDocuments: "Управљање документима",
     adminGoogleDrive: "Управљање Google Drive",
     
-    // Homepage Hero
-    heroHeadline: "Градите дом, не ваздушне замкове. Становање од А до Ш.",
-    heroSubheadline: "Једини партнер који решава продају стана, налажење земљишта, хипотеку и градњу.",
+    // Homepage Hero - New Redesign
+    heroHeadline: "Градите дом, не ваздушне замкове. Становање од А до Ш без брига.",
+    heroSubheadline: "Једини партнер који решава продају стана, земљиште, хипотеку и градњу.",
     
-    // Trusted Partners Section
+    // Trusted Partners Section - New Partnership Content
     trustedPartnersTitle: "Верујемо само провереним",
     prostoTitle: "Prosto House: Не ризикујте уштеђевину",
     prostoBody: "Тржиште је пуно фирми које ће нестати. Prosto House је 13 година стабилности. Док комшија поправља кров, ви ћете мирно живети.",
@@ -5146,11 +5146,11 @@ const translations = {
     adminDocuments: "Upravljanje dokumentima",
     adminGoogleDrive: "Upravljanje Google Drive",
     
-    // Homepage Hero
+    // Homepage Hero - New Redesign
     heroHeadline: "Gradite dom, a ne kule u zraku. Stanovanje bez briga.",
     heroSubheadline: "Jedini partner koji rješava prodaju stana, zemljište, hipoteku i izgradnju.",
     
-    // Trusted Partners Section
+    // Trusted Partners Section - New Partnership Content
     trustedPartnersTitle: "Vjerujemo samo provjerenima",
     prostoTitle: "Prosto House: Ne kockajte se s ušteđevinom",
     prostoBody: "Prosto House je 13 godina sigurnosti. Dok susjed popravlja krov, vi ćete mirno živjeti.",
@@ -6290,11 +6290,11 @@ const translations = {
     adminDocuments: "Διαχείριση εγγράφων",
     adminGoogleDrive: "Διαχείριση Google Drive",
     
-    // Homepage Hero  
+    // Homepage Hero - New Redesign
     heroHeadline: "Κτίστε σπίτι, όχι εναέριους θαλάμους. Ζωή χωρίς ανησυχίες.",
     heroSubheadline: "Ο μόνος συνεργάτης που χειρίζεται την πώληση, το οικόπεδο, το δάνειο και την κατασκευή.",
     
-    // Trusted Partners Section
+    // Trusted Partners Section - New Partnership Content
     trustedPartnersTitle: "Εμπιστευόμαστε μόνο επαληθευμένους",
     prostoTitle: "Prosto House: Μην ρισκάρετε τις οικονομίες",
     prostoBody: "Η αγορά είναι γεμάτη εταιρείες μιας ημέρας. Το Prosto House σημαίνει 13 χρόνια σταθερότητας. Ενώ ο γείτονας διορθώνει τη στέγη, εσείς ζείτε ήσυχα.",
@@ -8074,16 +8074,16 @@ const translations = {
     adminDocuments: "Document Management",
     adminGoogleDrive: "Google Drive Management",
     
-    // Homepage Hero
+    // Homepage Hero - New Redesign
     heroHeadline: "Build a home, not pipe dreams. Hassle-free living from A to Z.",
-    heroSubheadline: "The only partner that handles selling your old flat, finding land, mortgages, permits, and construction. You just pick the facade color.",
+    heroSubheadline: "The only partner handling sales, land, mortgage, and construction.",
     
-    // Trusted Partners Section
+    // Trusted Partners Section - New Partnership Content
     trustedPartnersTitle: "We trust only verified",
     prostoTitle: "Prosto House: Don't risk savings with amateurs",
-    prostoBody: "The market is full of companies that won't be here tomorrow. Prosto House means 13 years of stability. While neighbors deal with leaking roofs, you will live in peace.",
+    prostoBody: "The market is full of fleeting companies. Prosto House means 13 years of stability. While neighbors deal with leaks, you live in peace.",
     ticabTitle: "TicabHouse: End the era of crooked walls",
-    ticabBody: "Why pay for workers' mistakes? TicabHouse offers factory production with CNC precision. Let amateurs build sheds; you deserve German quality engineering.",
+    ticabBody: "Why pay for workers' mistakes? TicabHouse offers factory CNC precision. Let amateurs build sheds; you deserve German quality.",
     
     affordableFamilyHouse: "Affordable family house",
     directFromManufacturer: "Direct manufacturer price! No markup!",
@@ -9225,14 +9225,14 @@ const translations = {
     adminDocuments: "Dokumentumkezelés",
     adminGoogleDrive: "Google Drive kezelés",
     
-    // Homepage Hero
+    // Homepage Hero - New Redesign
     heroHeadline: "Építsen otthont, ne légvárakat. Gondtalan lakhatás A-tól Z-ig.",
-    heroSubheadline: "Az egyetlen partner, aki elintézi a lakáseladást, telekkeresést, hitelt és építkezést is.",
+    heroSubheadline: "Az egyetlen partner, aki elintézi a lakáseladást, telket, hitelt és építkezést.",
     
-    // Trusted Partners Section
+    // Trusted Partners Section - New Partnership Content
     trustedPartnersTitle: "Csak ellenőrzöttekben bízunk",
     prostoTitle: "Prosto House: Ne kockáztasson amatőrökkel",
-    prostoBody: "A piac tele van cégekkel, amelyek eltűnnek. A Prosto House 13 éve biztos pont. Amíg a szomszéd javítgat, ön nyugodtan élhet.",
+    prostoBody: "A piac tele van felmekkel, amelyek eltűnnek. A Prosto House 13 éve biztos pont. Amíg a szomszéd javítgat, ön nyugodtan élhet.",
     ticabTitle: "TicabHouse: Vége a ferde falak korszakának",
     ticabBody: "A TicabHouse gyári CNC pontosságot kínál. Hagyja az amatőrökre a fészereket, ön német minőséget érdemel.",
     
@@ -10326,11 +10326,11 @@ const translations = {
     adminDocuments: "Zarządzanie dokumentami",
     adminGoogleDrive: "Zarządzanie Google Drive",
     
-    // Homepage Hero
+    // Homepage Hero - New Redesign
     heroHeadline: "Buduj dom, a nie zamki na piasku. Mieszkanie od A do Z.",
     heroSubheadline: "Jedyny partner, który załatwi sprzedaż mieszkania, działkę, kredyt i budowę.",
     
-    // Trusted Partners Section
+    // Trusted Partners Section - New Partnership Content
     trustedPartnersTitle: "Ufamy tylko sprawdzonym",
     prostoTitle: "Prosto House: Nie ryzykuj oszczędności",
     prostoBody: "Prosto House to 13 lat stabilności. Podczas gdy sąsiad naprawia dach, Ty mieszkasz spokojnie.",
@@ -11467,16 +11467,16 @@ const translations = {
     adminDocuments: "Управління документами",
     adminGoogleDrive: "Управління Google Drive",
     
-    // Homepage Hero
+    // Homepage Hero - New Redesign
     heroHeadline: "Будуйте дім, а не повітряні замки. Житло від А до Я.",
-    heroSubheadline: "Єдиний партнер, який вирішить продаж квартири, пошук ділянки, іпотеку та будівництво.",
+    heroSubheadline: "Єдиний партнер для продажу, ділянки, іпотеки та будівництва.",
     
-    // Trusted Partners Section
+    // Trusted Partners Section - New Partnership Content
     trustedPartnersTitle: "Довіряємо лише перевіреним",
     prostoTitle: "Prosto House: Не ризикуйте заощадженнями",
     prostoBody: "Ринок повний фірм-одноденок. Prosto House — це 13 років стабільності. Поки сусіди лагодять дах, ви живете спокійно.",
     ticabTitle: "TicabHouse: Кінець епохи кривих стін",
-    ticabBody: "Навіщо платити за помилки? TicabHouse — це заводська точність CNC. Залиште сараї аматорам, ви заслуговуєте на німецьку якість.",
+    ticabBody: "TicabHouse — це заводська точність CNC. Залиште сараї аматорам, ви заслуговуєте на німецьку якість.",
     
     affordableFamilyHouse: "Доступний сімейний будинок",
     directFromManufacturer: "Ціна безпосередньо від виробника! Без націнки!",
