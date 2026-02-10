@@ -50,7 +50,7 @@ export default function ServiceDetailModal({ isOpen, onClose, service }) {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
             <a href="tel:+421905138124" className="flex-1">
-              <button className="w-full bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-all">
+              <button className="w-full bg-gray-900 hover:bg-black text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-all text-lg">
                 📞 Zavolať: +421 905 138 124
               </button>
             </a>
