@@ -299,7 +299,7 @@ export default function Domov() {
 
 
       {/* Hero Section */}
-      <section className="relative h-[60vh] sm:h-[80vh] min-h-[400px] sm:min-h-[600px] overflow-hidden bg-white pt-12 sm:pt-0">
+      <section className="relative h-[50vh] sm:h-[80vh] min-h-[300px] sm:min-h-[600px] overflow-hidden bg-white pt-8 sm:pt-0">
         
         {heroImages.map((img, index) => (
           <div
@@ -322,12 +322,12 @@ export default function Domov() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
-              className="mb-8 sm:mb-12"
+              className="mb-4 sm:mb-12"
             >
               <img 
                 src={LOGO_URL} 
                 alt="American Living" 
-                className="h-16 sm:h-24 md:h-32 w-auto drop-shadow-2xl rounded-full"
+                className="h-12 sm:h-24 md:h-32 w-auto drop-shadow-2xl rounded-full"
               />
             </motion.div>
             
@@ -335,7 +335,7 @@ export default function Domov() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-4 sm:mb-6 leading-tight text-white" 
+              className="text-xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-2 sm:mb-6 leading-tight text-white" 
               style={{ textShadow: '4px 4px 20px rgba(0,0,0,0.9)' }}
             >
               {t('heroHeadline')}
@@ -345,7 +345,7 @@ export default function Domov() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-lg sm:text-2xl md:text-3xl mb-3 sm:mb-5 font-semibold text-white" 
+              className="text-base sm:text-2xl md:text-3xl mb-2 sm:mb-5 font-semibold text-white" 
               style={{ textShadow: '3px 3px 15px rgba(0,0,0,0.9)' }}
             >
               {t('heroSubheadline')}
@@ -355,7 +355,7 @@ export default function Domov() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-sm sm:text-lg md:text-xl mb-6 sm:mb-8 text-gray-100 leading-relaxed max-w-2xl" 
+              className="text-xs sm:text-lg md:text-xl mb-3 sm:mb-8 text-gray-100 leading-relaxed max-w-2xl" 
               style={{ textShadow: '2px 2px 8px rgba(0,0,0,1)' }}
             >
               {t('everythingYouNeed')}
@@ -367,24 +367,24 @@ export default function Domov() {
               transition={{ duration: 0.8, delay: 0.8 }}
               className="space-y-4"
             >
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center">
                 <Link to={createPageUrl("Katalog")} className="w-full sm:w-auto">
-                  <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-red-600 via-primary to-red-600 hover:from-red-700 hover:via-secondary hover:to-red-700 text-white font-black text-xl sm:text-2xl px-10 sm:px-16 py-7 sm:py-9 shadow-[0_0_30px_rgba(239,68,68,0.6)] hover:shadow-[0_0_50px_rgba(220,38,38,0.8)] border-4 border-white animate-pulse transition-all group">
-                    <Home className="mr-3 w-7 h-7 group-hover:rotate-12 transition-transform" />
+                  <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-red-600 via-primary to-red-600 hover:from-red-700 hover:via-secondary hover:to-red-700 text-white font-black text-base sm:text-2xl px-6 sm:px-16 py-4 sm:py-9 shadow-[0_0_30px_rgba(239,68,68,0.6)] hover:shadow-[0_0_50px_rgba(220,38,38,0.8)] border-2 sm:border-4 border-white animate-pulse transition-all group">
+                    <Home className="mr-2 w-4 h-4 sm:w-7 sm:h-7 group-hover:rotate-12 transition-transform" />
                     {t('houseCatalogButton')}
-                    <ArrowRight className="ml-3 w-7 h-7 group-hover:translate-x-2 transition-transform" />
+                    <ArrowRight className="ml-2 w-4 h-4 sm:w-7 sm:h-7 group-hover:translate-x-2 transition-transform" />
                     <motion.div
                       animate={{ scale: [1, 1.1, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
-                      className="absolute -top-3 -right-3 bg-yellow-400 text-red-900 text-xs font-black px-3 py-1 rounded-full rotate-12 shadow-lg border-2 border-white"
+                      className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-yellow-400 text-red-900 text-[9px] sm:text-xs font-black px-2 py-0.5 sm:px-3 sm:py-1 rounded-full rotate-12 shadow-lg border-2 border-white"
                     >
                       {t('seeHousesNow')}
                     </motion.div>
                   </Button>
                 </Link>
                 <Link to={createPageUrl("Kontakt")} className="w-full sm:w-auto">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/15 backdrop-blur-md border-3 border-white text-white hover:bg-white hover:text-primary hover:scale-105 font-bold text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 shadow-2xl transition-all">
-                    <Phone className="mr-2" />
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/15 backdrop-blur-md border-2 sm:border-3 border-white text-white hover:bg-white hover:text-primary hover:scale-105 font-bold text-sm sm:text-lg px-4 sm:px-8 py-3 sm:py-6 shadow-2xl transition-all">
+                    <Phone className="mr-1 w-4 h-4 sm:mr-2 sm:w-5 sm:h-5" />
                     {t('consultation')}
                   </Button>
                 </Link>
@@ -395,7 +395,7 @@ export default function Domov() {
                 transition={{ delay: 1.2 }}
                 className="text-center"
               >
-                <p className="text-white text-sm sm:text-lg font-bold bg-black/40 backdrop-blur-sm px-6 py-3 rounded-full inline-block shadow-xl border-2 border-white/30">
+                <p className="text-white text-[10px] sm:text-lg font-bold bg-black/40 backdrop-blur-sm px-3 py-1.5 sm:px-6 sm:py-3 rounded-full inline-block shadow-xl border border-white/30 sm:border-2">
                   👆 {t('clickToShowAllModularHouses')}
                 </p>
               </motion.div>
@@ -419,12 +419,12 @@ export default function Domov() {
       </section>
 
       {/* Trusted Partners Section - Overení partneri */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-8 sm:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="text-3xl md:text-4xl font-bold text-center mb-12"
+            className="text-xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-12"
             style={{ color: '#333333' }}
           >
             {t('trustedPartnersTitle')}
@@ -522,19 +522,19 @@ export default function Domov() {
               className="bg-white rounded-2xl p-6 shadow-md border-2 border-emerald-300 relative overflow-hidden group"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-400/10 rounded-full blur-3xl group-hover:bg-emerald-400/20 transition-all"></div>
-              <div className="flex items-center gap-3 mb-4 relative z-10">
+              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 relative z-10">
                 <motion.div 
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.6 }}
-                  className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg"
+                  className="w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg"
                 >
-                  <Home className="w-7 h-7 text-white" />
+                  <Home className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
                 </motion.div>
-                <h3 className="text-xl font-black text-emerald-700 tracking-tight">{t('forFamilies')}</h3>
+                <h3 className="text-base sm:text-xl font-black text-emerald-700 tracking-tight">{t('forFamilies')}</h3>
               </div>
-              <ul className="space-y-3 text-base text-gray-800 relative z-10">
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <ul className="space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-800 relative z-10">
+                <li className="flex items-start gap-2 sm:gap-3">
+                  <CheckCircle className="w-4 h-4 sm:w-6 sm:h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
                   <span><strong className="text-emerald-700">{t('grantAtSigning')}</strong></span>
                 </li>
                 <li className="flex items-start gap-3">
@@ -584,7 +584,7 @@ export default function Domov() {
             </motion.div>
           </div>
             
-            <p className="text-xs sm:text-sm text-center text-gray-800 font-medium bg-white/70 backdrop-blur-sm rounded-lg p-3">
+            <p className="text-[10px] sm:text-sm text-center text-gray-800 font-medium bg-white/70 backdrop-blur-sm rounded-lg p-2 sm:p-3">
               💡 <strong>{t('grantAmountVaries')}</strong>
             </p>
           </div>
@@ -602,17 +602,17 @@ export default function Domov() {
       `}</style>
 
       {/* Fixácia úrokov - Nová sekcia */}
-      <section className="py-12 sm:py-16 bg-gradient-to-br from-red-900 via-red-800 to-red-700 relative overflow-hidden">
+      <section className="py-6 sm:py-16 bg-gradient-to-br from-red-900 via-red-800 to-red-700 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-600/20 via-transparent to-transparent"></div>
-        <div className="container mx-auto px-4 sm:px-8 relative z-10">
+        <div className="container mx-auto px-2 sm:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <Card className="bg-gradient-to-br from-red-600 via-orange-600 to-red-700 border-[6px] border-orange-400 p-8 sm:p-12 shadow-[0_20px_60px_rgba(249,115,22,0.4)] hover:shadow-[0_25px_70px_rgba(249,115,22,0.5)] transition-all">
-              <div className="flex flex-col md:flex-row gap-8 items-center">
+            <Card className="bg-gradient-to-br from-red-600 via-orange-600 to-red-700 border-[3px] sm:border-[6px] border-orange-400 p-4 sm:p-12 shadow-[0_20px_60px_rgba(249,115,22,0.4)] hover:shadow-[0_25px_70px_rgba(249,115,22,0.5)] transition-all">
+              <div className="flex flex-col md:flex-row gap-4 sm:gap-8 items-center">
                 <motion.div
                   animate={{ 
                     scale: [1, 1.15, 1],
@@ -621,30 +621,30 @@ export default function Domov() {
                   transition={{ duration: 3, repeat: Infinity }}
                   className="flex-shrink-0"
                 >
-                  <div className="w-28 h-28 sm:w-36 sm:h-36 bg-white/25 backdrop-blur-md rounded-full flex items-center justify-center border-[6px] border-white/50 shadow-2xl">
-                    <Euro className="w-16 h-16 sm:w-20 sm:h-20 text-white drop-shadow-lg" />
+                  <div className="w-20 h-20 sm:w-36 sm:h-36 bg-white/25 backdrop-blur-md rounded-full flex items-center justify-center border-[3px] sm:border-[6px] border-white/50 shadow-2xl">
+                    <Euro className="w-10 h-10 sm:w-20 sm:h-20 text-white drop-shadow-lg" />
                   </div>
                 </motion.div>
                 <div className="flex-1 text-center md:text-left">
-                  <h2 className="text-3xl sm:text-5xl font-black text-white mb-5 leading-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
+                  <h2 className="text-xl sm:text-5xl font-black text-white mb-3 sm:mb-5 leading-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]">
                     {t('mortgageFixationTitle')}
                   </h2>
-                  <p className="text-lg sm:text-2xl text-white/98 leading-relaxed font-semibold drop-shadow-md mb-8">
+                  <p className="text-sm sm:text-2xl text-white/98 leading-relaxed font-semibold drop-shadow-md mb-4 sm:mb-8">
                     {t('mortgageFixationDesc')}
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center md:justify-start">
                     <Link to={createPageUrl("Kontakt")}>
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button size="lg" className="bg-white text-red-700 hover:bg-yellow-100 font-black px-10 py-7 text-xl shadow-2xl w-full sm:w-auto">
+                        <Button size="lg" className="bg-white text-red-700 hover:bg-yellow-100 font-black px-6 py-4 sm:px-10 sm:py-7 text-sm sm:text-xl shadow-2xl w-full sm:w-auto">
                           {t('contactUs')}
-                          <ArrowRight className="ml-2 w-6 h-6" />
+                          <ArrowRight className="ml-1 w-4 h-4 sm:ml-2 sm:w-6 sm:h-6" />
                         </Button>
                       </motion.div>
                     </Link>
                     <a href="tel:+421905138124">
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button size="lg" variant="outline" className="bg-white/10 backdrop-blur-sm border-[4px] border-white text-white hover:bg-white hover:text-red-700 font-black px-10 py-7 text-xl shadow-2xl w-full sm:w-auto">
-                          <Phone className="mr-2 w-6 h-6" />
+                        <Button size="lg" variant="outline" className="bg-white/10 backdrop-blur-sm border-2 sm:border-[4px] border-white text-white hover:bg-white hover:text-red-700 font-black px-6 py-4 sm:px-10 sm:py-7 text-sm sm:text-xl shadow-2xl w-full sm:w-auto">
+                          <Phone className="mr-1 w-4 h-4 sm:mr-2 sm:w-6 sm:h-6" />
                           +421 905 138 124
                         </Button>
                       </motion.div>
@@ -798,25 +798,25 @@ export default function Domov() {
                     transition={{ duration: 0.6 }}
                     className="max-w-5xl mx-auto"
                   >
-            <Card className="bg-gradient-to-br from-yellow-50 via-orange-50 to-yellow-50 border-2 border-yellow-400 p-8 shadow-2xl hover:shadow-yellow-400/30 transition-shadow">
-              <div className="flex gap-4">
+            <Card className="bg-gradient-to-br from-yellow-50 via-orange-50 to-yellow-50 border-2 border-yellow-400 p-4 sm:p-8 shadow-2xl hover:shadow-yellow-400/30 transition-shadow">
+              <div className="flex gap-2 sm:gap-4">
                 <motion.div
                   animate={{ rotate: [0, -10, 10, -10, 0] }}
                   transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                 >
-                  <Shield className="w-12 h-12 text-yellow-600 flex-shrink-0" />
+                  <Shield className="w-8 h-8 sm:w-12 sm:h-12 text-yellow-600 flex-shrink-0" />
                 </motion.div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  <h3 className="text-base sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4">
                     {t('misleadingAdsWarning')}
                   </h3>
-                  <p className="text-gray-800 mb-3 leading-relaxed font-medium">
+                  <p className="text-xs sm:text-base text-gray-800 mb-2 sm:mb-3 leading-relaxed font-medium">
                     {t('misleadingAdsDesc1')}
                   </p>
-                  <p className="text-gray-800 mb-3 leading-relaxed font-medium">
+                  <p className="text-xs sm:text-base text-gray-800 mb-2 sm:mb-3 leading-relaxed font-medium">
                     {t('misleadingAdsDesc2')}
                   </p>
-                  <p className="text-gray-900 font-bold text-lg">
+                  <p className="text-sm sm:text-lg text-gray-900 font-bold">
                     ✓ {t('ourHousesMeetStandards')}
                   </p>
                 </div>
@@ -845,7 +845,7 @@ export default function Domov() {
               </p>
               </motion.div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-6 mb-8 sm:mb-12">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 sm:gap-6 mb-4 sm:mb-12">
                 {domy.map((dom, index) => (
                   <motion.div 
                     key={dom.id}
@@ -857,7 +857,7 @@ export default function Domov() {
                   >
                     <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
                       <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 bg-white shadow-md h-full">
-                      <div className="relative h-32 sm:h-44 overflow-hidden">
+                      <div className="relative h-28 sm:h-44 overflow-hidden">
                         <img
                           src={dom.hlavny_obrazok}
                           alt={dom.nazov}
@@ -868,21 +868,21 @@ export default function Domov() {
                           <motion.div 
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
-                            className="absolute top-2 left-2 bg-accent text-white px-2 py-1 rounded-lg text-[9px] sm:text-xs font-bold shadow-lg"
+                            className="absolute top-1 left-1 sm:top-2 sm:left-2 bg-accent text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded text-[7px] sm:text-xs font-bold shadow-lg"
                           >
                             ✔ CELOROČNÝ
                           </motion.div>
                         )}
                       </div>
-                      <div className="p-3 sm:p-4">
-                        <div className="text-[10px] sm:text-xs text-gray-500 mb-1 font-semibold uppercase tracking-wider">{dom.vyrobca}</div>
-                        <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-3 group-hover:text-secondary transition-colors line-clamp-2 leading-tight">
+                      <div className="p-2 sm:p-4">
+                        <div className="text-[8px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1 font-semibold uppercase tracking-wider">{dom.vyrobca}</div>
+                        <h3 className="text-xs sm:text-base font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-secondary transition-colors line-clamp-2 leading-tight">
                           {dom.nazov}
                         </h3>
-                        <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+                        <div className="flex items-center justify-between pt-2 sm:pt-3 border-t border-gray-200">
                           <div>
-                            <p className="text-[10px] sm:text-xs text-gray-500 font-semibold mb-0.5">Od</p>
-                            <p className="text-base sm:text-lg font-black text-primary">
+                            <p className="text-[8px] sm:text-xs text-gray-500 font-semibold mb-0.5">Od</p>
+                            <p className="text-sm sm:text-lg font-black text-primary">
                               {dom.zakladna_cena?.toLocaleString('sk-SK')} €
                             </p>
                           </div>
@@ -890,7 +890,7 @@ export default function Domov() {
                             whileHover={{ x: 5 }}
                             transition={{ duration: 0.2 }}
                           >
-                            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-primary group-hover:text-secondary transition-colors" />
+                            <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6 text-primary group-hover:text-secondary transition-colors" />
                           </motion.div>
                         </div>
                       </div>
@@ -908,10 +908,10 @@ export default function Domov() {
             >
               <Link to={createPageUrl("Katalog")}>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                  <Button size="lg" className="relative bg-gray-900 hover:bg-black text-white font-black text-lg sm:text-xl px-10 sm:px-16 py-6 sm:py-8 shadow-lg group">
-                    <Home className="mr-2 w-5 h-5 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform" />
+                  <Button size="lg" className="relative bg-gray-900 hover:bg-black text-white font-black text-sm sm:text-xl px-6 sm:px-16 py-4 sm:py-8 shadow-lg group">
+                    <Home className="mr-1 w-4 h-4 sm:mr-2 sm:w-6 sm:h-6 group-hover:rotate-12 transition-transform" />
                     {t('showAllHouses')}
-                    <ArrowRight className="ml-2 w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" />
+                    <ArrowRight className="ml-1 w-4 h-4 sm:ml-2 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" />
                   </Button>
                 </motion.div>
               </Link>
@@ -921,18 +921,18 @@ export default function Domov() {
       )}
 
       {/* Proces realizácie */}
-      <section className="py-4 sm:py-10 bg-white">
+      <section className="py-3 sm:py-10 bg-white">
         <div className="container mx-auto px-2 sm:px-4">
           <div className="text-center mb-2 sm:mb-4">
-              <h2 className="text-base sm:text-2xl font-bold text-gray-900">{t('implementationProcess')}</h2>
+              <h2 className="text-sm sm:text-2xl font-bold text-gray-900">{t('implementationProcess')}</h2>
             </div>
 
             <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-1 sm:gap-2">
             {proces.map((krok, index) => (
-              <div key={index} className="flex items-center gap-1 bg-gray-50 border border-gray-200 rounded px-1.5 py-1 sm:px-3 sm:py-1.5">
-                <span className="text-[8px] sm:text-xs font-bold text-primary/50">{krok.cislo}</span>
-                <krok.icon className="w-2.5 h-2.5 sm:w-4 sm:h-4 text-primary" />
-                <span className="text-[8px] sm:text-xs font-medium text-gray-800">{krok.nazov}</span>
+              <div key={index} className="flex items-center gap-0.5 sm:gap-1 bg-gray-50 border border-gray-200 rounded px-1 py-0.5 sm:px-3 sm:py-1.5">
+                <span className="text-[7px] sm:text-xs font-bold text-primary/50">{krok.cislo}</span>
+                <krok.icon className="w-2 h-2 sm:w-4 sm:h-4 text-primary" />
+                <span className="text-[7px] sm:text-xs font-medium text-gray-800">{krok.nazov}</span>
               </div>
                   ))}
                   </div>
@@ -959,17 +959,17 @@ export default function Domov() {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <Link to={createPageUrl("Katalog")} className="w-full sm:w-auto">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                  <Button size="lg" className="w-full sm:w-auto bg-white text-gray-900 hover:bg-gray-100 font-black text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-7 shadow-lg">
-                    <Home className="mr-2 w-5 h-5 sm:w-6 sm:h-6" />
+                  <Button size="lg" className="w-full sm:w-auto bg-white text-gray-900 hover:bg-gray-100 font-black text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7 shadow-lg">
+                    <Home className="mr-1 w-4 h-4 sm:mr-2 sm:w-6 sm:h-6" />
                     {t('houseCatalogButton')}
-                    <ArrowRight className="ml-2 w-5 h-5 sm:w-6 sm:h-6" />
+                    <ArrowRight className="ml-1 w-4 h-4 sm:ml-2 sm:w-6 sm:h-6" />
                   </Button>
                 </motion.div>
               </Link>
               <Link to={createPageUrl("Kontakt")} className="w-full sm:w-auto">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900 font-bold text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-7">
-                    <Phone className="mr-2 w-5 h-5 sm:w-6 sm:h-6" />
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900 font-bold text-sm sm:text-lg px-6 sm:px-12 py-4 sm:py-7">
+                    <Phone className="mr-1 w-4 h-4 sm:mr-2 sm:w-6 sm:h-6" />
                     {t('contact')}
                   </Button>
                 </motion.div>
