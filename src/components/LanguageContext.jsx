@@ -887,7 +887,17 @@ const translations = {
     adminDocuments: "Správa dokumentov",
     adminGoogleDrive: "Správa Google Drive",
     
-    // Homepage
+    // Homepage Hero
+    heroHeadline: "Postavte dom, nie vzdušné zámky. Bývanie od A po Z bez starostí.",
+    heroSubheadline: "Jediný partner na trhu, ktorý za vás vyrieši predaj starého bytu, nájdenie pozemku, hypotéku, povolenia aj výstavbu.",
+    
+    // Trusted Partners Section
+    trustedPartnersTitle: "Dôverujeme len overenému",
+    prostoTitle: "Prosto House: Neriskujte úspory s amatérmi",
+    prostoBody: "Slovenský trh je plný firiem, ktoré tu zajtra nebudú. Prosto House je 13 rokov overená istota. Kým susedovi bude garážová firma opravovať zatekajúcu strechu, vy budete pokojne bývať.",
+    ticabTitle: "TicabHouse: Ukončite dobu krivých stien",
+    ticabBody: "Prečo platiť za chyby robotníkov? TicabHouse je továrenská výroba s CNC presnosťou. Nechajte amatérov stavať kôlne, vy si zaslúžite nemeckú kvalitu.",
+    
     affordableFamilyHouse: "Cenovo dostupný rodinný dom",
     directFromManufacturer: "Za cenu priamo od výrobcu! Bez navýšenia!",
     everythingYouNeed: "Všetko, čo potrebujete, máte presne tu! Naši kolegovia sa postarajú o kompletné vybavenie.",
@@ -1489,7 +1499,17 @@ const translations = {
     adminDocuments: "Dokumentenverwaltung",
     adminGoogleDrive: "Google Drive Verwaltung",
     
-    // Homepage
+    // Homepage Hero
+    heroHeadline: "Bauen Sie ein Haus, keine Luftschlösser. Wohnen von A bis Z.",
+    heroSubheadline: "Der einzige Partner, der Verkauf, Grundstückssuche, Hypothek, Genehmigungen und Bau für Sie erledigt.",
+    
+    // Trusted Partners Section
+    trustedPartnersTitle: "Wir vertrauen nur geprüften",
+    prostoTitle: "Prosto House: Riskieren Sie keine Ersparnisse",
+    prostoBody: "Der Markt ist voll von Eintagsfliegen. Prosto House ist seit 13 Jahren eine sichere Bank. Während der Nachbar das Dach repariert, wohnen Sie ruhig.",
+    ticabTitle: "TicabHouse: Schluss mit schiefen Wänden",
+    ticabBody: "Warum für Fehler zahlen? TicabHouse ist Fabrikproduktion mit CNC-Präzision. Lassen Sie Amateure Schuppen bauen, Sie verdienen deutsche Qualität.",
+    
     affordableFamilyHouse: "Erschwingliches Familienhaus",
     directFromManufacturer: "Direkter Herstellerpreis! Ohne Aufschlag!",
     everythingYouNeed: "Alles, was Sie brauchen, ist hier! Unsere Kollegen kümmern sich um die komplette Ausstattung.",
@@ -2703,7 +2723,17 @@ const translations = {
     adminDocuments: "Gestion documents",
     adminGoogleDrive: "Gestion Google Drive",
     
-    // Homepage
+    // Homepage Hero
+    heroHeadline: "Construisez une maison, pas des rêves. L'habitat de A à Z.",
+    heroSubheadline: "Le seul partenaire qui gère la vente, le terrain, le prêt et la construction pour vous.",
+    
+    // Trusted Partners Section
+    trustedPartnersTitle: "Nous ne faisons confiance qu'aux vérifiés",
+    prostoTitle: "Prosto House: Ne jouez pas avec votre épargne",
+    prostoBody: "Prosto House, c'est 13 ans de stabilité. Pendant que le voisin répare les fuites, vous vivez sereinement.",
+    ticabTitle: "TicabHouse: Finie l'époque des murs tordus",
+    ticabBody: "TicabHouse offre une précision d'usine CNC. Laissez les amateurs construire des cabanes, vous méritez la qualité allemande.",
+    
     affordableFamilyHouse: "Maison familiale abordable",
     directFromManufacturer: "Prix direct fabricant! Sans majoration!",
     everythingYouNeed: "Tout ce dont vous avez besoin est ici! Nos collègues s'occupent de l'équipement complet.",
@@ -3873,7 +3903,17 @@ const translations = {
     adminDocuments: "Управљање документима",
     adminGoogleDrive: "Управљање Google Drive",
     
-    // Homepage
+    // Homepage Hero
+    heroHeadline: "Градите дом, не ваздушне замкове. Становање од А до Ш.",
+    heroSubheadline: "Једини партнер који решава продају стана, налажење земљишта, хипотеку и градњу.",
+    
+    // Trusted Partners Section
+    trustedPartnersTitle: "Верујемо само провереним",
+    prostoTitle: "Prosto House: Не ризикујте уштеђевину",
+    prostoBody: "Тржиште је пуно фирми које ће нестати. Prosto House је 13 година стабилности. Док комшија поправља кров, ви ћете мирно живети.",
+    ticabTitle: "TicabHouse: Крај ере криvih зидова",
+    ticabBody: "Зашто плаћати за грешке радника? TicabHouse је фабричка производња са CNC прецизношћу. Препустите аматерима колибе, ви заслужујете немачки квалитет.",
+    
     affordableFamilyHouse: "Приступачна породична кућа",
     directFromManufacturer: "Директна фабричка цена! Без надокнаде!",
     everythingYouNeed: "Све што вам треба је овде! Наше колеге ће се побринути за комплетну опрему.",
@@ -5106,7 +5146,17 @@ const translations = {
     adminDocuments: "Upravljanje dokumentima",
     adminGoogleDrive: "Upravljanje Google Drive",
     
-    // Homepage
+    // Homepage Hero
+    heroHeadline: "Gradite dom, a ne kule u zraku. Stanovanje bez briga.",
+    heroSubheadline: "Jedini partner koji rješava prodaju stana, zemljište, hipoteku i izgradnju.",
+    
+    // Trusted Partners Section
+    trustedPartnersTitle: "Vjerujemo samo provjerenima",
+    prostoTitle: "Prosto House: Ne kockajte se s ušteđevinom",
+    prostoBody: "Prosto House je 13 godina sigurnosti. Dok susjed popravlja krov, vi ćete mirno živjeti.",
+    ticabTitle: "TicabHouse: Kraj ere krivih zidova",
+    ticabBody: "TicabHouse je tvornička proizvodnja s CNC preciznošću. Vi zaslužujete njemačku kvalitetu.",
+    
     affordableFamilyHouse: "Pristupačna obiteljska kuća",
     directFromManufacturer: "Direktna tvornička cijena! Bez nadoplate!",
     everythingYouNeed: "Sve što trebate je ovdje! Naše kolege će se pobrinuti za kompletnu opremu.",
@@ -6240,7 +6290,17 @@ const translations = {
     adminDocuments: "Διαχείριση εγγράφων",
     adminGoogleDrive: "Διαχείριση Google Drive",
     
-    // Homepage
+    // Homepage Hero  
+    heroHeadline: "Κτίστε σπίτι, όχι εναέριους θαλάμους. Ζωή χωρίς ανησυχίες.",
+    heroSubheadline: "Ο μόνος συνεργάτης που χειρίζεται την πώληση, το οικόπεδο, το δάνειο και την κατασκευή.",
+    
+    // Trusted Partners Section
+    trustedPartnersTitle: "Εμπιστευόμαστε μόνο επαληθευμένους",
+    prostoTitle: "Prosto House: Μην ρισκάρετε τις οικονομίες",
+    prostoBody: "Η αγορά είναι γεμάτη εταιρείες μιας ημέρας. Το Prosto House σημαίνει 13 χρόνια σταθερότητας. Ενώ ο γείτονας διορθώνει τη στέγη, εσείς ζείτε ήσυχα.",
+    ticabTitle: "TicabHouse: Τέλος η εποχή των στραβών τοίχων",
+    ticabBody: "Το TicabHouse προσφέρει εργοστασιακή ακρίβεια CNC. Αφήστε τους ερασιτέχνες να φτιάχνουν υπόστεγα, εσείς αξίζετε γερμανική ποιότητα.",
+    
     affordableFamilyHouse: "Προσιτή οικογενειακή κατοικία",
     directFromManufacturer: "Απευθείας εργοστασιακή τιμή! Χωρίς προσαύξηση!",
     everythingYouNeed: "Όλα όσα χρειάζεστε είναι εδώ! Οι συνεργάτες μας θα φροντίσουν για τον πλήρη εξοπλισμό.",
@@ -8014,7 +8074,17 @@ const translations = {
     adminDocuments: "Document Management",
     adminGoogleDrive: "Google Drive Management",
     
-    // Homepage
+    // Homepage Hero
+    heroHeadline: "Build a home, not pipe dreams. Hassle-free living from A to Z.",
+    heroSubheadline: "The only partner that handles selling your old flat, finding land, mortgages, permits, and construction. You just pick the facade color.",
+    
+    // Trusted Partners Section
+    trustedPartnersTitle: "We trust only verified",
+    prostoTitle: "Prosto House: Don't risk savings with amateurs",
+    prostoBody: "The market is full of companies that won't be here tomorrow. Prosto House means 13 years of stability. While neighbors deal with leaking roofs, you will live in peace.",
+    ticabTitle: "TicabHouse: End the era of crooked walls",
+    ticabBody: "Why pay for workers' mistakes? TicabHouse offers factory production with CNC precision. Let amateurs build sheds; you deserve German quality engineering.",
+    
     affordableFamilyHouse: "Affordable family house",
     directFromManufacturer: "Direct manufacturer price! No markup!",
     everythingYouNeed: "Everything you need is right here! Our colleagues will take care of complete equipment.",
@@ -9155,7 +9225,17 @@ const translations = {
     adminDocuments: "Dokumentumkezelés",
     adminGoogleDrive: "Google Drive kezelés",
     
-    // Homepage
+    // Homepage Hero
+    heroHeadline: "Építsen otthont, ne légvárakat. Gondtalan lakhatás A-tól Z-ig.",
+    heroSubheadline: "Az egyetlen partner, aki elintézi a lakáseladást, telekkeresést, hitelt és építkezést is.",
+    
+    // Trusted Partners Section
+    trustedPartnersTitle: "Csak ellenőrzöttekben bízunk",
+    prostoTitle: "Prosto House: Ne kockáztasson amatőrökkel",
+    prostoBody: "A piac tele van cégekkel, amelyek eltűnnek. A Prosto House 13 éve biztos pont. Amíg a szomszéd javítgat, ön nyugodtan élhet.",
+    ticabTitle: "TicabHouse: Vége a ferde falak korszakának",
+    ticabBody: "A TicabHouse gyári CNC pontosságot kínál. Hagyja az amatőrökre a fészereket, ön német minőséget érdemel.",
+    
     affordableFamilyHouse: "Megfizethető családi ház",
     directFromManufacturer: "Közvetlen gyári ár! Felár nélkül!",
     everythingYouNeed: "Minden, amire szüksége van, itt van! Kollégáink gondoskodnak a teljes felszerelésről.",
@@ -11377,7 +11457,17 @@ const translations = {
     adminDocuments: "Управління документами",
     adminGoogleDrive: "Управління Google Drive",
     
-    // Homepage
+    // Homepage Hero
+    heroHeadline: "Будуйте дім, а не повітряні замки. Житло від А до Я.",
+    heroSubheadline: "Єдиний партнер, який вирішить продаж квартири, пошук ділянки, іпотеку та будівництво.",
+    
+    // Trusted Partners Section
+    trustedPartnersTitle: "Довіряємо лише перевіреним",
+    prostoTitle: "Prosto House: Не ризикуйте заощадженнями",
+    prostoBody: "Ринок повний фірм-одноденок. Prosto House — це 13 років стабільності. Поки сусіди лагодять дах, ви живете спокійно.",
+    ticabTitle: "TicabHouse: Кінець епохи кривих стін",
+    ticabBody: "Навіщо платити за помилки? TicabHouse — це заводська точність CNC. Залиште сараї аматорам, ви заслуговуєте на німецьку якість.",
+    
     affordableFamilyHouse: "Доступний сімейний будинок",
     directFromManufacturer: "Ціна безпосередньо від виробника! Без націнки!",
     everythingYouNeed: "Все, що вам потрібно, прямо тут! Наші колеги подбають про повне обладнання.",
