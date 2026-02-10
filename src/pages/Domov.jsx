@@ -106,8 +106,8 @@ export default function Domov() {
       headline: "Kapitál pre váš nový domov získame rýchlo a bezpečne.",
       body: "Aby ste mohli stavať nové, často musíte najprv dobre predať to staré. Postaráme sa o kompletný realitný servis vašej súčasnej nehnuteľnosti. Nastavíme trhovú cenu tak, aby sa predala v ideálnom čase nadväzujúcom na vašu novú výstavbu. Zabezpečíme home staging, profesionálne fotenie, právny servis a prevod peňazí, ktoré plynulo použijeme na financovanie vášho nového projektu.",
       detailImages: [
-        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80",
-        "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=800&q=80"
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
+        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80"
       ]
     },
     { 
@@ -166,8 +166,8 @@ export default function Domov() {
       headline: "Kvalitná realizácia bez skrytých poplatkov.",
       body: "Realizujeme hrubé stavby, holodomy aj domy na kľúč. Pracujeme s overenými materiálmi a vlastným tímom odborníkov. Garantujeme dodržanie dohodnutého rozpočtu a termínov. Počas výstavby máte k dispozícii stavebný dozor a pravidelné reporty, takže presne vidíte, ako váš nový domov rastie pred očami.",
       detailImages: [
-        "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80",
-        "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80"
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
+        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80"
       ]
     },
     { 
@@ -190,8 +190,8 @@ export default function Domov() {
       headline: "Posledná pečiatka a odovzdanie kľúčov.",
       body: "Cieľová rovinka. Pripravíme všetky revízie, certifikáty, geometrické plány a dokumenty potrebné ku kolaudačnému konaniu. Zastúpime vás pri miestnom šetrení stavebného úradu. Vám odovzdáme už skolaudovaný dom so súpisným číslom, pripravený na nasťahovanie a prepis energií.",
       detailImages: [
-        "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80",
-        "https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?w=800&q=80"
+        "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=800&q=80",
+        "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&q=80"
       ]
     }
   ];
