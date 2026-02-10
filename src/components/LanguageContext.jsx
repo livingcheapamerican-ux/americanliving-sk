@@ -10326,7 +10326,17 @@ const translations = {
     adminDocuments: "Zarządzanie dokumentami",
     adminGoogleDrive: "Zarządzanie Google Drive",
     
-    // Homepage
+    // Homepage Hero
+    heroHeadline: "Buduj dom, a nie zamki na piasku. Mieszkanie od A do Z.",
+    heroSubheadline: "Jedyny partner, który załatwi sprzedaż mieszkania, działkę, kredyt i budowę.",
+    
+    // Trusted Partners Section
+    trustedPartnersTitle: "Ufamy tylko sprawdzonym",
+    prostoTitle: "Prosto House: Nie ryzykuj oszczędności",
+    prostoBody: "Prosto House to 13 lat stabilności. Podczas gdy sąsiad naprawia dach, Ty mieszkasz spokojnie.",
+    ticabTitle: "TicabHouse: Koniec ery krzywych ścian",
+    ticabBody: "TicabHouse to fabryczna precyzja CNC. Zostaw szopy amatorom, zasługujesz na niemiecką jakość.",
+    
     affordableFamilyHouse: "Przystępny cenowo dom rodzinny",
     directFromManufacturer: "Cena bezpośrednio od producenta! Bez narzutu!",
     everythingYouNeed: "Wszystko czego potrzebujesz jest tutaj! Nasi koledzy zadbają o kompletne wyposażenie.",
