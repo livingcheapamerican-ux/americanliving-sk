@@ -338,7 +338,7 @@ export default function Domov() {
               className="text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-4 sm:mb-6 leading-tight" 
               style={{ textShadow: '4px 4px 12px rgba(0,0,0,1), 0 0 30px rgba(255,255,255,0.2)' }}
             >
-              {t('affordableFamilyHouse')}
+              {t('heroHeadline')}
             </motion.h1>
             
             <motion.p 
@@ -348,7 +348,7 @@ export default function Domov() {
               className="text-base sm:text-2xl mb-3 sm:mb-5 font-bold text-yellow-300" 
               style={{ textShadow: '3px 3px 10px rgba(0,0,0,1), 0 0 20px rgba(255,215,0,0.5)' }}
             >
-              {t('directFromManufacturer')}
+              {t('heroSubheadline')}
             </motion.p>
             
             <motion.p 
@@ -415,6 +415,63 @@ export default function Domov() {
               }`}
             />
           ))}
+        </div>
+      </section>
+
+      {/* Trusted Partners Section - Overení partneri */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900"
+          >
+            {t('trustedPartnersTitle')}
+          </motion.h2>
+          
+          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {/* Prosto House */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border-2 border-blue-200 shadow-xl"
+            >
+              <div className="mb-6">
+                <img 
+                  src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" 
+                  alt="Prosto House - Modern wood house technology"
+                  className="w-full h-64 object-cover rounded-xl shadow-lg"
+                />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                {t('prostoTitle')}
+              </h3>
+              <p className="text-gray-700 leading-relaxed text-lg">
+                {t('prostoBody')}
+              </p>
+            </motion.div>
+
+            {/* TicabHouse */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 border-2 border-green-200 shadow-xl"
+            >
+              <div className="mb-6">
+                <img 
+                  src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80" 
+                  alt="TicabHouse - Precision modular construction"
+                  className="w-full h-64 object-cover rounded-xl shadow-lg"
+                />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                {t('ticabTitle')}
+              </h3>
+              <p className="text-gray-700 leading-relaxed text-lg">
+                {t('ticabBody')}
+              </p>
+            </motion.div>
+          </div>
         </div>
       </section>
 
