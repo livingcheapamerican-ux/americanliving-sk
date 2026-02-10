@@ -299,7 +299,7 @@ export default function Domov() {
 
 
       {/* Hero Section */}
-      <section className="relative h-[60vh] sm:h-[80vh] min-h-[400px] sm:min-h-[600px] overflow-hidden bg-gradient-to-br from-red-900 via-red-800 to-red-700 pt-12 sm:pt-0">
+      <section className="relative h-[60vh] sm:h-[80vh] min-h-[400px] sm:min-h-[600px] overflow-hidden bg-white pt-12 sm:pt-0">
         
         {heroImages.map((img, index) => (
           <div
@@ -310,8 +310,8 @@ export default function Domov() {
               opacity: index === currentSlide ? 1 : 0 
             }}
           >
-            <img src={img} alt={`Modulárny dom ${index + 1}`} className="w-full h-full object-cover" loading="lazy" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/70 to-black/40" />
+            <img src={img} alt={`Premium modular house ${index + 1}`} className="w-full h-full object-cover" loading="lazy" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
           </div>
         ))}
 
@@ -419,12 +419,13 @@ export default function Domov() {
       </section>
 
       {/* Trusted Partners Section - Overení partneri */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900"
+            className="text-3xl md:text-4xl font-bold text-center mb-12"
+            style={{ color: '#333333' }}
           >
             {t('trustedPartnersTitle')}
           </motion.h2>
@@ -434,19 +435,19 @@ export default function Domov() {
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border-2 border-blue-200 shadow-xl"
+              className="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-shadow"
             >
               <div className="mb-6">
                 <img 
                   src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" 
                   alt="Prosto House - Modern wood house technology"
-                  className="w-full h-64 object-cover rounded-xl shadow-lg"
+                  className="w-full h-64 object-cover rounded-xl"
                 />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              <h3 className="text-2xl font-bold mb-4" style={{ color: '#333333' }}>
                 {t('prostoTitle')}
               </h3>
-              <p className="text-gray-700 leading-relaxed text-lg">
+              <p className="text-gray-600 leading-relaxed text-lg">
                 {t('prostoBody')}
               </p>
             </motion.div>
@@ -455,19 +456,19 @@ export default function Domov() {
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 border-2 border-green-200 shadow-xl"
+              className="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-shadow"
             >
               <div className="mb-6">
                 <img 
                   src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80" 
                   alt="TicabHouse - Precision modular construction"
-                  className="w-full h-64 object-cover rounded-xl shadow-lg"
+                  className="w-full h-64 object-cover rounded-xl"
                 />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              <h3 className="text-2xl font-bold mb-4" style={{ color: '#333333' }}>
                 {t('ticabTitle')}
               </h3>
-              <p className="text-gray-700 leading-relaxed text-lg">
+              <p className="text-gray-600 leading-relaxed text-lg">
                 {t('ticabBody')}
               </p>
             </motion.div>
@@ -475,34 +476,12 @@ export default function Domov() {
         </div>
       </section>
 
-      {/* DOTÁCIA AMERICANA - Luxusná zlatá tehla */}
-      <section className="py-8 sm:py-12 relative overflow-hidden">
-        {/* Luxusné zlaté pozadie s diamantovým vzorom */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#C9A236] via-[#FFD700] to-[#D4AF37]"></div>
-        
-        {/* Diamantový vzor */}
-        <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(0,0,0,0.1) 35px, rgba(0,0,0,0.1) 70px),
-                           repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(0,0,0,0.1) 35px, rgba(0,0,0,0.1) 70px)`
-        }}></div>
-        
-        {/* Animovaný lesklý zlatý efekt */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
-        
-        {/* Žiariace body */}
-        <div className="absolute top-10 left-20 w-2 h-2 bg-white rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
-        <div className="absolute top-32 right-40 w-3 h-3 bg-white rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-        <div className="absolute bottom-20 left-1/3 w-2 h-2 bg-white rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-        
-        <div className="container mx-auto px-4 text-center relative z-10">
+      {/* DOTÁCIA AMERICANA - High-Contrast RED */}
+      <section className="py-8 sm:py-12 bg-white">
+        <div className="container mx-auto px-4 text-center">
           <motion.div
             animate={{ 
-              scale: [1, 1.05, 1],
-              boxShadow: [
-                "0 0 40px rgba(212, 175, 55, 0.6)",
-                "0 0 80px rgba(255, 215, 0, 0.8)",
-                "0 0 40px rgba(212, 175, 55, 0.6)"
-              ]
+              scale: [1, 1.02, 1]
             }}
             transition={{ duration: 2, repeat: Infinity }}
             className="inline-block"
@@ -514,27 +493,17 @@ export default function Domov() {
               >
                 <Button 
                   size="lg" 
-                  className="bg-gradient-to-br from-white via-yellow-50 to-white hover:from-yellow-100 hover:via-white hover:to-yellow-100 text-[#8B6914] font-black text-xl sm:text-3xl md:text-5xl px-10 sm:px-20 py-8 sm:py-12 shadow-[0_10px_40px_rgba(212,175,55,0.6),0_0_60px_rgba(255,215,0,0.3)] border-[6px] border-[#D4AF37] relative overflow-hidden group transition-all"
+                  style={{ backgroundColor: '#FF0000' }}
+                  className="hover:opacity-90 text-white font-black text-xl sm:text-3xl md:text-5xl px-10 sm:px-20 py-8 sm:py-12 shadow-2xl border-4 border-white relative overflow-hidden group transition-all"
                 >
-                  {/* Žiariaci efekt na pozadí */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                  
-                  <motion.div
-                    animate={{ rotate: [0, 5, -5, 0] }}
-                    transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
-                    className="hidden md:flex flex-col items-center relative z-10"
-                  >
-                    <span className="text-[#8B6914] drop-shadow-[0_3px_12px_rgba(212,175,55,1)]">{t('dotacia').toUpperCase()}</span>
-                    <span className="text-red-600 text-3xl sm:text-5xl drop-shadow-[0_3px_12px_rgba(212,175,55,1)] mt-1">AMERICANA</span>
-                  </motion.div>
-                  <div className="md:hidden flex flex-col items-center relative z-10">
-                    <span className="text-[#8B6914] drop-shadow-[0_3px_12px_rgba(212,175,55,1)]">{t('dotacia').toUpperCase()}</span>
-                    <span className="text-red-600 text-2xl drop-shadow-[0_3px_12px_rgba(212,175,55,1)] mt-0.5">AMERICANA</span>
+                  <div className="flex flex-col items-center relative z-10">
+                    <span className="text-white drop-shadow-lg">{t('dotacia').toUpperCase()}</span>
+                    <span className="text-white text-3xl sm:text-5xl drop-shadow-lg mt-1">AMERICANA</span>
                   </div>
                   <motion.div
-                    animate={{ scale: [1, 1.15, 1], rotate: [12, 15, 12] }}
+                    animate={{ scale: [1, 1.1, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute -right-2 -top-2 md:-right-3 md:-top-3 bg-gradient-to-br from-red-600 via-red-700 to-red-800 text-white text-xs md:text-sm font-black px-3 py-1 md:px-4 md:py-1.5 rounded-full rotate-12 shadow-[0_4px_15px_rgba(220,38,38,0.6)] border-2 border-white"
+                    className="absolute -right-2 -top-2 md:-right-3 md:-top-3 bg-yellow-400 text-gray-900 text-xs md:text-sm font-black px-3 py-1 md:px-4 md:py-1.5 rounded-full rotate-12 shadow-lg border-2 border-white"
                   >
                     ✨ {t('newBadge')}!
                   </motion.div>
@@ -549,8 +518,8 @@ export default function Domov() {
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              whileHover={{ y: -5, boxShadow: "0 20px 40px rgba(16, 185, 129, 0.3)" }}
-              className="bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-xl border-[3px] border-emerald-400 relative overflow-hidden group"
+              whileHover={{ y: -5, boxShadow: "0 20px 40px rgba(16, 185, 129, 0.2)" }}
+              className="bg-white rounded-2xl p-6 shadow-md border-2 border-emerald-300 relative overflow-hidden group"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-400/10 rounded-full blur-3xl group-hover:bg-emerald-400/20 transition-all"></div>
               <div className="flex items-center gap-3 mb-4 relative z-10">
@@ -584,8 +553,8 @@ export default function Domov() {
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              whileHover={{ y: -5, boxShadow: "0 20px 40px rgba(251, 191, 36, 0.3)" }}
-              className="bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-xl border-[3px] border-yellow-400 relative overflow-hidden group"
+              whileHover={{ y: -5, boxShadow: "0 20px 40px rgba(251, 191, 36, 0.2)" }}
+              className="bg-white rounded-2xl p-6 shadow-md border-2 border-yellow-300 relative overflow-hidden group"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400/10 rounded-full blur-3xl group-hover:bg-yellow-400/20 transition-all"></div>
               <div className="flex items-center gap-3 mb-4 relative z-10">
@@ -736,7 +705,7 @@ export default function Domov() {
                   setServiceModalOpen(true);
                 }}
               >
-                <Card className="group overflow-hidden h-full hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer bg-white border-2 border-transparent hover:border-blue-500/30 hover:-translate-y-1">
+                <Card className="group overflow-hidden h-full hover:shadow-xl transition-all duration-300 cursor-pointer bg-white shadow-md hover:-translate-y-1">
                   <div className="relative h-20 sm:h-36 overflow-hidden">
                     <img 
                       src={sluzba.image} 

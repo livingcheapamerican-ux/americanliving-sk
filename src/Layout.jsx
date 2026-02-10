@@ -167,10 +167,12 @@ function LayoutContent({ children }) {
     <div className="min-h-screen bg-gray-50">
       <style>{`
         :root {
-          --primary: #EF4444;
+          --primary: #FF0000;
           --secondary: #dc2626;
           --accent: #B8860B;
-          --dark-brown: #3E2723;
+          --dark-brown: #333333;
+          --bg-main: #FFFFFF;
+          --text-main: #333333;
         }
 
         .bg-primary { background-color: var(--primary); }
@@ -312,22 +314,37 @@ function LayoutContent({ children }) {
             </nav>
 
             <div className="hidden sm:flex items-center gap-1 sm:gap-2">
-              {/* Desktop - Language Flags */}
-              <div className="hidden lg:flex items-center gap-1 flex-nowrap mr-2">
-                {AVAILABLE_LANGUAGES.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => setLanguage(lang.code)}
-                    className={`flex items-center justify-center w-8 h-8 rounded-md text-xl transition-all ${
-                      language === lang.code
-                        ? 'bg-primary ring-2 ring-primary shadow-md scale-110'
-                        : 'bg-gray-100 hover:bg-gray-200 hover:scale-105'
-                    }`}
-                    title={lang.name}
-                  >
-                    <span>{lang.flag}</span>
-                  </button>
-                ))}
+              {/* Desktop - Language Dropdown */}
+              <div className="hidden lg:block mr-2">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-gray-200 hover:bg-gray-50 transition-all shadow-sm">
+                      <Languages className="w-4 h-4 text-gray-700" />
+                      <span className="text-sm font-medium text-gray-700">
+                        {AVAILABLE_LANGUAGES.find(l => l.code === language)?.flag}
+                      </span>
+                      <ChevronDown className="w-3 h-3 text-gray-500" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-56 p-2">
+                    <div className="grid gap-1">
+                      {AVAILABLE_LANGUAGES.map((lang) => (
+                        <button
+                          key={lang.code}
+                          onClick={() => setLanguage(lang.code)}
+                          className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all text-left ${
+                            language === lang.code
+                              ? 'bg-primary text-white'
+                              : 'hover:bg-gray-100'
+                          }`}
+                        >
+                          <span className="text-xl">{lang.flag}</span>
+                          <span>{lang.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
 
