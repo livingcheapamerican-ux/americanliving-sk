@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import HeroSettingsManager from "../components/admin/HeroSettingsManager";
 import { useLanguage } from "../components/LanguageContext";
 import FloatingHouses from "../components/FloatingHouses";
+import ServiceDetailModal from "../components/ServiceDetailModal";
 
 const DEFAULT_HERO_IMAGES = [
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80",
@@ -25,6 +26,8 @@ const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/pub
 export default function Domov() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+  const [serviceModalOpen, setServiceModalOpen] = useState(false);
   const { t } = useLanguage();
   
   const { data: domy = [] } = useQuery({
@@ -99,49 +102,97 @@ export default function Domov() {
       icon: Building2, 
       nazov: t('sellYourProperty'),
       popis: t('realEstateAgency'),
-      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=500&q=80"
+      image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=500&q=80",
+      headline: "Kapitál pre váš nový domov získame rýchlo a bezpečne.",
+      body: "Aby ste mohli stavať nové, často musíte najprv dobre predať to staré. Postaráme sa o kompletný realitný servis vašej súčasnej nehnuteľnosti. Nastavíme trhovú cenu tak, aby sa predala v ideálnom čase nadväzujúcom na vašu novú výstavbu. Zabezpečíme home staging, profesionálne fotenie, právny servis a prevod peňazí, ktoré plynulo použijeme na financovanie vášho nového projektu.",
+      detailImages: [
+        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80",
+        "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=800&q=80"
+      ]
     },
     { 
       icon: Home, 
       nazov: t('selectAndBuyLand'),
       popis: t('findIdealLand'),
-      image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&q=80"
+      image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&q=80",
+      headline: "Nie každá lúka je vhodný stavebný pozemok.",
+      body: "Nájdeme pre vás pozemok, ktorý nie je len \"pekný\", ale aj \"staviteľný\". Ešte pred kúpou preveríme územný plán, dostupnosť inžinierskych sietí, geologické podložie a orientáciu na svetové strany. Upozorníme vás na skryté vady a právne ťarchy. Vyberáme len také miesta, kde bude výstavba technicky a finančne efektívna.",
+      detailImages: [
+        "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80",
+        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80"
+      ]
     },
     { 
       icon: TrendingUp, 
       nazov: t('mortgageArrangement'),
       popis: t('financialServices'),
-      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&q=80"
+      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&q=80",
+      headline: "Financovanie výstavby domu nie je bežná hypotéka.",
+      body: "Stavba domu vyžaduje špecifické čerpanie úveru v tranžiach. Naši finanční špecialisti nastavia hypotéku presne na mieru harmonogramu výstavby American Living. Komunikujeme priamo s bankou a znalcami, takže vy nemusíte nosiť faktúry a stresovať sa s uvoľňovaním prostriedkov. Garancia najlepších podmienok na trhu je samozrejmosťou.",
+      detailImages: [
+        "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80",
+        "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80"
+      ]
     },
     { 
       icon: FileText, 
       nazov: t('projectDocumentation'),
       popis: t('completeProject'),
-      image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=500&q=80"
+      image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=500&q=80",
+      headline: "Dom, ktorý má hlavu a pätu ešte pred prvým výkopom.",
+      body: "Či už chcete upraviť jeden z našich katalógových projektov alebo túžite po unikátnom dizajne na mieru, naši architekti sú vám k dispozícii. Pripravíme kompletnú projektovú dokumentáciu pre stavebné povolenie aj realizáciu. Myslíme na detaily, presvetlenie izieb aj energetickú úspornosť, aby sa vám v dome žilo pohodlne a náklady boli nízke.",
+      detailImages: [
+        "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&q=80",
+        "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&q=80"
+      ]
     },
     { 
       icon: Shield, 
       nazov: t('buildingPermitService'),
       popis: t('weArrangeForYou'),
-      image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=500&q=80"
+      image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=500&q=80",
+      headline: "Byrokraciu nechajte na nás.",
+      body: "Získanie stavebného povolenia je pre bežného človeka nočnou morou – pre nás je to rutina. Zastúpime vás v celom inžinierskom procese. Obiehame úrady, vybavujeme vyjadrenia dotknutých orgánov, správcov sietí a obce. Vy len počkáte na právoplatné rozhodnutie, s ktorým môžeme začať stavať.",
+      detailImages: [
+        "https://images.unsplash.com/photo-1521791055366-0d553872125f?w=800&q=80",
+        "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80"
+      ]
     },
     { 
       icon: Hammer, 
       nazov: t('houseConstruction'),
       popis: t('constructionCompany'),
-      image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=500&q=80"
+      image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=500&q=80",
+      headline: "Kvalitná realizácia bez skrytých poplatkov.",
+      body: "Realizujeme hrubé stavby, holodomy aj domy na kľúč. Pracujeme s overenými materiálmi a vlastným tímom odborníkov. Garantujeme dodržanie dohodnutého rozpočtu a termínov. Počas výstavby máte k dispozícii stavebný dozor a pravidelné reporty, takže presne vidíte, ako váš nový domov rastie pred očami.",
+      detailImages: [
+        "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80",
+        "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80"
+      ]
     },
     { 
       icon: Zap, 
       nazov: t('utilityConnection'),
       popis: t('completeConnection'),
-      image: "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=500&q=80"
+      image: "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=500&q=80",
+      headline: "Aby všetko fungovalo po otočení kohútikom.",
+      body: "Dom bez sietí je len hrubá stavba. Zabezpečíme kompletnú realizáciu prípojok vody, elektriny, plynu a kanalizácie. Riešime výkopy, pokládku, revízne správy aj finálne osadenie meračov. Koordinujeme všetko tak, aby bol dom pripravený na plnohodnotné užívanie.",
+      detailImages: [
+        "https://images.unsplash.com/photo-1581094271901-8022df4466f9?w=800&q=80",
+        "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&q=80"
+      ]
     },
     { 
       icon: Key, 
       nazov: t('finalApproval'),
       popis: t('fromAToZ'),
-      image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=500&q=80"
+      image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=500&q=80",
+      headline: "Posledná pečiatka a odovzdanie kľúčov.",
+      body: "Cieľová rovinka. Pripravíme všetky revízie, certifikáty, geometrické plány a dokumenty potrebné ku kolaudačnému konaniu. Zastúpime vás pri miestnom šetrení stavebného úradu. Vám odovzdáme už skolaudovaný dom so súpisným číslom, pripravený na nasťahovanie a prepis energií.",
+      detailImages: [
+        "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80",
+        "https://images.unsplash.com/photo-1516156008625-3a9d6067fab5?w=800&q=80"
+      ]
     }
   ];
 
@@ -623,6 +674,10 @@ export default function Domov() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
+                onClick={() => {
+                  setSelectedService(sluzba);
+                  setServiceModalOpen(true);
+                }}
               >
                 <Card className="group overflow-hidden h-full hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer bg-white border-2 border-transparent hover:border-blue-500/30 hover:-translate-y-1">
                   <div className="relative h-20 sm:h-36 overflow-hidden">
@@ -636,6 +691,10 @@ export default function Domov() {
                       <div className="w-6 h-6 sm:w-10 sm:h-10 bg-gradient-to-br from-white to-blue-50 rounded-md sm:rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                         <sluzba.icon className="w-3 h-3 sm:w-5 sm:h-5 text-primary" />
                       </div>
+                    </div>
+                    {/* Click indicator */}
+                    <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-xs font-bold text-primary">Klikni pre viac →</span>
                     </div>
                   </div>
                   <div className="p-2 sm:p-3 bg-gradient-to-b from-white to-gray-50">
@@ -896,6 +955,13 @@ export default function Domov() {
                   </div>
         </div>
       </section>
+
+      {/* Service Detail Modal */}
+      <ServiceDetailModal 
+        isOpen={serviceModalOpen}
+        onClose={() => setServiceModalOpen(false)}
+        service={selectedService}
+      />
 
       {/* CTA Section */}
       <section className="py-6 sm:py-16 bg-gradient-to-br from-red-950 via-red-900 to-red-800 relative overflow-hidden">
