@@ -297,13 +297,15 @@ function LayoutContent({ children }) {
                     className={`px-2 xl:px-3 py-1 xl:py-1.5 rounded-md text-xs lg:text-sm xl:text-base font-medium transition-all ${
                       isActive(item.path)
                         ? 'bg-primary text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    } ${isCatalog ? 'nav-blink' : ''} ${isDotacia ? 'flex flex-col items-center leading-tight' : ''}`}
+                        : isDotacia 
+                          ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 shadow-lg hover:shadow-xl hover:scale-105' 
+                          : 'text-gray-700 hover:bg-gray-100'
+                    } ${isCatalog ? 'nav-blink' : ''} ${isDotacia ? 'flex flex-col items-center leading-tight animate-pulse border-2 border-white shadow-[0_0_15px_rgba(16,185,129,0.5)]' : ''}`}
                   >
                     {isDotacia ? (
                       <>
-                        <span>{t('dotacia')}</span>
-                        <span className="text-[10px] font-bold" style={{ color: '#EF4444' }}>AMERICANA</span>
+                        <span className="font-black">{t('dotacia')}</span>
+                        <span className="text-[10px] xl:text-xs font-black text-yellow-300 drop-shadow-lg">AMERICANA</span>
                       </>
                     ) : (
                       item.name
@@ -522,14 +524,16 @@ function LayoutContent({ children }) {
                     className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
                       isActive(item.path)
                         ? 'bg-primary text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        : isDotacia
+                          ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 shadow-lg animate-pulse border-2 border-white'
+                          : 'text-gray-700 hover:bg-gray-100'
                     }`}
                   >
                     <item.icon className="w-5 h-5" />
                     {isDotacia ? (
                       <div className="flex flex-col leading-tight">
-                        <span>{t('dotacia')}</span>
-                        <span className="text-xs font-bold" style={{ color: '#EF4444' }}>AMERICANA</span>
+                        <span className="font-black">{t('dotacia')}</span>
+                        <span className="text-xs font-black text-yellow-300 drop-shadow-lg">AMERICANA</span>
                       </div>
                     ) : (
                       item.name
