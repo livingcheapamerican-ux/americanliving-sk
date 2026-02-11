@@ -211,14 +211,15 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
             {/* Akčné tlačidlá */}
             <div className="flex gap-1 sm:gap-2">
               {dom.vyrobca === "Ticab house" && (
-                <Button 
-                  size="sm" 
-                  className="flex-1 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white text-[9px] sm:text-[10px] px-1.5 sm:px-2 h-6 sm:h-7 font-bold shadow-sm"
-                  onClick={() => navigate(createPageUrl(`DotaciaAmericana?dom=${dom.id}`))}
-                >
-                  <Gift className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 mr-0.5" />
-                  {t('dotacia')}
-                </Button>
+                <Link to={createPageUrl(`DotaciaAmericana?dom=${dom.id}`)} className="flex-1">
+                  <Button 
+                    size="sm" 
+                    className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white text-[9px] sm:text-[10px] px-1.5 sm:px-2 h-6 sm:h-7 font-bold shadow-sm"
+                  >
+                    <Gift className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 mr-0.5" />
+                    {t('dotacia')}
+                  </Button>
+                </Link>
               )}
               <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`} className={dom.vyrobca === "Ticab house" ? 'flex-1' : 'w-full'}>
                 <Button size="sm" className="w-full bg-primary hover:bg-primary/90 group-hover:bg-secondary text-[9px] sm:text-[10px] px-1.5 sm:px-2 h-6 sm:h-7 font-bold shadow-sm">
