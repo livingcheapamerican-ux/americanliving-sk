@@ -378,11 +378,13 @@ export default function DetailDomu() {
     // Cleanup function
     return () => {
       const canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (canonicalLink) canonicalLink.remove();
+      if (canonicalLink && canonicalLink.parentNode) {
+        canonicalLink.parentNode.removeChild(canonicalLink);
+      }
       const schemaScripts = document.querySelectorAll('script[type="application/ld+json"]');
       schemaScripts.forEach(script => {
-        if (script.getAttribute('data-schema') === 'product' || script.getAttribute('data-schema') === 'faq') {
-          script.remove();
+        if ((script.getAttribute('data-schema') === 'product' || script.getAttribute('data-schema') === 'faq') && script.parentNode) {
+          script.parentNode.removeChild(script);
         }
       });
     };
