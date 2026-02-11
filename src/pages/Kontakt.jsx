@@ -123,11 +123,12 @@ export default function Kontakt() {
                     <h2 className="text-2xl font-bold text-primary mb-6">
                       {t('writeUs')}
                     </h2>
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form id="contact-form" onSubmit={handleSubmit} className="space-y-6">
                       <div>
                         <Label htmlFor="meno">{t('name')} *</Label>
                       <Input
                         id="meno"
+                        name="meno"
                         required
                         value={formData.meno}
                         onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
@@ -140,6 +141,7 @@ export default function Kontakt() {
                       <Label htmlFor="email">{t('email')} *</Label>
                       <Input
                         id="email"
+                        name="email"
                         type="email"
                         required
                         value={formData.email}
@@ -153,6 +155,7 @@ export default function Kontakt() {
                       <Label htmlFor="telefon">{t('phone')} *</Label>
                       <Input
                         id="telefon"
+                        name="telefon"
                         required
                         value={formData.telefon}
                         onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
@@ -183,6 +186,7 @@ export default function Kontakt() {
                       <Label htmlFor="poznamka">{t('message')} *</Label>
                       <Textarea
                         id="poznamka"
+                        name="poznamka"
                         required
                         value={formData.poznamka}
                         onChange={(e) => setFormData({ ...formData, poznamka: e.target.value })}
