@@ -883,11 +883,29 @@ export default function Domov() {
                           {dom.nazov}
                         </h3>
                         <div className="flex items-center justify-between pt-2 sm:pt-3 border-t border-gray-200">
-                          <div>
-                            <p className="text-[8px] sm:text-xs text-gray-500 font-semibold mb-0.5">Od</p>
-                            <p className="text-sm sm:text-lg font-black text-primary">
-                              {dom.zakladna_cena?.toLocaleString('sk-SK')} €
+                          <div className="flex-1">
+                            <p className="text-[8px] sm:text-xs text-gray-500 font-semibold mb-0.5">
+                              {dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : "Od"}
                             </p>
+                            {dom.vyrobca === "Ticab house" ? (
+                              <div>
+                                <div className="flex items-baseline gap-1">
+                                  <p className="text-[10px] sm:text-sm font-black text-red-600 line-through">
+                                    {dom.zakladna_cena?.toLocaleString('sk-SK')} €
+                                  </p>
+                                  <p className="text-sm sm:text-lg font-black text-green-600">
+                                    {Math.round(dom.zakladna_cena * 0.95)?.toLocaleString('sk-SK')} €
+                                  </p>
+                                </div>
+                                <p className="text-[7px] sm:text-[9px] text-green-700 font-semibold">
+                                  💰 s dotáciou AMERICANA
+                                </p>
+                              </div>
+                            ) : (
+                              <p className="text-sm sm:text-lg font-black text-primary">
+                                {dom.zakladna_cena?.toLocaleString('sk-SK')} €
+                              </p>
+                            )}
                           </div>
                           <motion.div
                             whileHover={{ x: 5 }}
