@@ -4,11 +4,11 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
-    // Find up to 2 pending LokaciaSEO records
+    // Find pending LokaciaSEO records - STRICT LIMIT TO 1 PER RUN to prevent timeout
     const allRecords = await base44.asServiceRole.entities.LokaciaSEO.list();
     const pendingRecords = allRecords
       .filter(record => !record.unikany_text_o_lokalite || record.unikany_text_o_lokalite.length < 100)
-      .slice(0, 2);
+      .slice(0, 1);
 
     if (pendingRecords.length === 0) {
       console.log('✓ No pending LokaciaSEO records found');

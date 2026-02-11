@@ -6,12 +6,13 @@ Deno.serve(async (req) => {
 
     console.log('🌙 Starting Nightly AEO Batch Process...');
 
-    // Find all Dom records that need AEO update
-    const pendingDomy = await base44.asServiceRole.entities.Dom.filter({ 
+    // Find pending Dom records - LIMIT TO 5 PER RUN to prevent timeout
+    const allPending = await base44.asServiceRole.entities.Dom.filter({ 
       aeo_update_pending: true 
     });
+    const pendingDomy = allPending.slice(0, 5);
 
-    console.log(`Found ${pendingDomy.length} houses pending AEO update`);
+    console.log(`Found ${allPending.length} houses pending AEO update, processing ${pendingDomy.length} this run`);
 
     let processed = 0;
     let failed = 0;
