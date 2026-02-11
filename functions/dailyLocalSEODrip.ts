@@ -67,6 +67,17 @@ Vráť ČISTÝ HTML kód (bez markdown, bez \`\`\`html blokov).`;
           add_context_from_internet: false
         });
 
+        // Safety check for AI response
+        if (!aiResponse || (typeof aiResponse !== 'string' && !aiResponse.content)) {
+          console.log(`⚠️ AI generation skipped - Empty Response for ${cityName}`);
+          results.push({
+            city: cityName,
+            status: 'skipped',
+            reason: 'Empty AI response'
+          });
+          continue;
+        }
+
         const generatedContent = typeof aiResponse === 'string' ? aiResponse : aiResponse.content || '';
 
         // Update the record with generated content
