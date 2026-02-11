@@ -189,14 +189,16 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                 {dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : dom.vyrobca === "Prosto House" ? "Základná cena" : t('priceFromLabel')}
               </p>
               {dom.vyrobca === "Ticab house" ? (
-                <div className="space-y-0.5">
-                  <p className="text-xs sm:text-sm font-bold text-red-600 line-through">
-                    {dom.zakladna_cena?.toLocaleString('sk-SK')} €
-                  </p>
-                  <p className="text-base sm:text-lg font-black text-green-600">
-                    {Math.round(dom.zakladna_cena * 0.95)?.toLocaleString('sk-SK')} €
-                  </p>
-                  <p className="text-[7px] sm:text-[8px] text-green-700 font-semibold">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs sm:text-sm font-bold text-red-600 line-through">
+                      {dom.zakladna_cena?.toLocaleString('sk-SK')} €
+                    </p>
+                    <p className="text-base sm:text-lg font-black text-green-600">
+                      {Math.round(dom.zakladna_cena * 0.95)?.toLocaleString('sk-SK')} €
+                    </p>
+                  </div>
+                  <p className="text-[7px] sm:text-[8px] text-green-700 font-semibold mt-0.5">
                     💰 S dotáciou AMERICANA
                   </p>
                 </div>
