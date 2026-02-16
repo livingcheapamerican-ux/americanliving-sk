@@ -209,19 +209,24 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
               )}
             </div>
             {/* Akčné tlačidlá */}
-            <div className="flex gap-1 sm:gap-2">
+            <div className="space-y-1 sm:space-y-1.5">
               {dom.vyrobca === "Ticab house" && (
-                <Link to={createPageUrl(`DotaciaAmericana?dom=${dom.id}`)} className="flex-1">
-                  <Button 
-                    size="sm" 
-                    className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white text-[9px] sm:text-[10px] px-1.5 sm:px-2 h-6 sm:h-7 font-bold shadow-sm"
-                  >
-                    <Gift className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 mr-0.5" />
-                    {t('dotacia')}
-                  </Button>
-                </Link>
+                <div>
+                  <Link to={createPageUrl(`DotaciaAmericana?dom=${dom.id}`)}>
+                    <Button 
+                      size="sm" 
+                      className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white text-[9px] sm:text-[10px] px-1.5 sm:px-2 h-6 sm:h-7 font-bold shadow-lg hover:shadow-xl transition-all animate-pulse border-2 border-white"
+                    >
+                      <Gift className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 mr-0.5" />
+                      {t('dotacia')}
+                    </Button>
+                  </Link>
+                  <p className="text-[7px] sm:text-[9px] text-center font-bold text-emerald-700 mt-0.5 leading-tight px-1">
+                    Tu môžete požiadať o dotáciu na cenu domu a energie zdarma
+                  </p>
+                </div>
               )}
-              <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`} className={dom.vyrobca === "Ticab house" ? 'flex-1' : 'w-full'}>
+              <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}&return=${encodeURIComponent(location.pathname + location.search)}`}>
                 <Button size="sm" className="w-full bg-primary hover:bg-primary/90 group-hover:bg-secondary text-[9px] sm:text-[10px] px-1.5 sm:px-2 h-6 sm:h-7 font-bold shadow-sm">
                   {t('detail')}
                   <ArrowRight className="ml-0.5 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
