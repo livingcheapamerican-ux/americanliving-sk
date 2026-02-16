@@ -221,8 +221,8 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                       {t('dotacia')}
                     </Button>
                   </Link>
-                  <p className="text-[7px] sm:text-[9px] text-center font-bold text-emerald-700 mt-0.5 leading-tight px-1">
-                    Tu môžete požiadať o dotáciu na cenu domu a energie zdarma
+                  <p className="text-[8px] sm:text-[11px] text-center font-black text-emerald-800 mt-1 leading-tight px-0.5 bg-emerald-50 py-1 rounded border border-emerald-300">
+                    💰 Tu môžete požiadať o dotáciu na cenu domu a energie zdarma
                   </p>
                 </div>
               )}
