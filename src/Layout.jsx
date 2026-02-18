@@ -294,7 +294,11 @@ function LayoutContent({ children }) {
                     key={item.path}
                     to={item.path}
                     data-tour={tourId}
-                    className={`px-2 xl:px-3 py-1 xl:py-1.5 rounded-md text-xs lg:text-sm xl:text-base font-medium transition-all ${
+                    className={`rounded-md font-medium transition-all ${
+                      isDotacia
+                        ? 'px-3 xl:px-4 py-1.5 xl:py-2 text-sm lg:text-base xl:text-lg'
+                        : 'px-2 xl:px-3 py-1 xl:py-1.5 text-xs lg:text-sm xl:text-base'
+                    } ${
                       isActive(item.path)
                         ? 'bg-primary text-white'
                         : isDotacia 
