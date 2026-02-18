@@ -499,8 +499,8 @@ export default function Domov() {
                   className="hover:opacity-90 text-white font-black text-xl sm:text-3xl md:text-5xl px-10 sm:px-20 py-8 sm:py-12 shadow-2xl border-4 border-white relative overflow-hidden group transition-all"
                 >
                   <div className="flex flex-col items-center relative z-10">
-                    <span className="text-white drop-shadow-lg">{t('dotacia').toUpperCase()}</span>
-                    <span className="text-white text-3xl sm:text-5xl drop-shadow-lg mt-1">AMERICANA</span>
+                    <span className="text-white drop-shadow-lg text-lg sm:text-3xl md:text-4xl">OVERENIE nároku na</span>
+                    <span className="text-white text-2xl sm:text-4xl md:text-5xl drop-shadow-lg mt-1">DOTÁCIU</span>
                   </div>
                   <motion.div
                     animate={{ scale: [1, 1.1, 1] }}
