@@ -187,8 +187,27 @@ export default function GrantovaKampan() {
     geocodeRequests();
   }, [requests, houses]);
 
+  // Merge all requests with geocoded data where available
+  const allRequestsEnriched = (requests || []).map(req => {
+    const geocoded = geocodedRequests.find(g => g.id === req.id);
+    if (geocoded) return geocoded;
+    // Enrich with house data even if not geocoded
+    const locationMatch = req.poznamka?.match(/Lokalita: ([^,]+)/);
+    const location = locationMatch ? locationMatch[1] : null;
+    let subsidy = 'N/A';
+    let houseName = 'N/A';
+    if (req.dom_id && houses) {
+      const house = houses.find(h => h.id === req.dom_id);
+      if (house) {
+        subsidy = Math.round(house.zakladna_cena * 0.05).toLocaleString('sk-SK');
+        houseName = house.nazov + ', ' + house.zastavana_plocha + 'm²';
+      }
+    }
+    return { ...req, location, houseName, subsidy };
+  });
+
   // Filter requests based on search
-  const filteredRequests = geocodedRequests.filter(req => {
+  const filteredRequests = allRequestsEnriched.filter(req => {
     const searchLower = searchTerm.toLowerCase();
     return (
       req.meno?.toLowerCase().includes(searchLower) ||
