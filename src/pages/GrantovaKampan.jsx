@@ -410,6 +410,9 @@ export default function GrantovaKampan() {
           <h2 className="text-xl font-bold text-gray-900 mb-4">
             Zoznam žiadateľov ({filteredRequests.length})
           </h2>
+          {isGeocoding && (
+            <p className="text-sm text-gray-500 mb-4 italic">Geokódujem lokality na mapu, prosím čakajte...</p>
+          )}
           
           <div className="space-y-4">
             {filteredRequests.length > 0 ? (
