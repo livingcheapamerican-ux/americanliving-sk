@@ -780,6 +780,11 @@ function LayoutContent({ children }) {
                     {t('faq')}
                   </Link>
                 </li>
+                <li>
+                  <a href="https://americanliving.sk/zasadyochranyosobnychudajov" className="text-gray-300 hover:text-white transition-colors">
+                    Ochrana osobných údajov (GDPR)
+                  </a>
+                </li>
               </ul>
             </div>
             
