@@ -377,24 +377,20 @@ export default function DetailDomu() {
 
     // Cleanup function
     return () => {
-      const canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (canonicalLink && canonicalLink.parentNode === document.head) {
-        try {
-          document.head.removeChild(canonicalLink);
-        } catch (e) {
-          // Element already removed
+      try {
+        const canonicalLink = document.querySelector('link[rel="canonical"]');
+        if (canonicalLink && document.head.contains(canonicalLink)) {
+          canonicalLink.remove();
         }
-      }
-      const schemaScripts = document.querySelectorAll('script[type="application/ld+json"]');
-      schemaScripts.forEach(script => {
-        if ((script.getAttribute('data-schema') === 'product' || script.getAttribute('data-schema') === 'faq') && script.parentNode === document.head) {
-          try {
-            document.head.removeChild(script);
-          } catch (e) {
-            // Element already removed
+        const schemaScripts = document.querySelectorAll('script[type="application/ld+json"][data-schema]');
+        schemaScripts.forEach(script => {
+          if (document.head.contains(script)) {
+            script.remove();
           }
-        }
-      });
+        });
+      } catch (e) {
+        // Ignore cleanup errors
+      }
     };
   }, [dom, t]);
 
