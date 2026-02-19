@@ -201,11 +201,15 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                   <p className="text-[7px] sm:text-[8px] text-green-700 font-semibold mt-0.5">
                     💰 S dotáciou AMERICANA
                   </p>
+                  <p className="text-[7px] sm:text-[8px] text-gray-500 mt-0.5">vrátane DPH</p>
                 </div>
               ) : (
-                <p className="text-base sm:text-lg font-black text-primary">
-                  {dom.zakladna_cena?.toLocaleString('sk-SK')} €
-                </p>
+                <div>
+                  <p className="text-base sm:text-lg font-black text-primary">
+                    {dom.zakladna_cena?.toLocaleString('sk-SK')} €
+                  </p>
+                  <p className="text-[7px] sm:text-[8px] text-gray-500 mt-0.5">vrátane DPH</p>
+                </div>
               )}
             </div>
             {/* Akčné tlačidlá */}

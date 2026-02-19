@@ -900,11 +900,15 @@ export default function Domov() {
                                 <p className="text-[7px] sm:text-[9px] text-green-700 font-semibold">
                                   💰 s dotáciou AMERICANA
                                 </p>
+                                <p className="text-[7px] sm:text-[9px] text-gray-500">vrátane DPH</p>
                               </div>
                             ) : (
-                              <p className="text-sm sm:text-lg font-black text-primary">
-                                {dom.zakladna_cena?.toLocaleString('sk-SK')} €
-                              </p>
+                              <div>
+                                <p className="text-sm sm:text-lg font-black text-primary">
+                                  {dom.zakladna_cena?.toLocaleString('sk-SK')} €
+                                </p>
+                                <p className="text-[7px] sm:text-[9px] text-gray-500">vrátane DPH</p>
+                              </div>
                             )}
                           </div>
                           <motion.div
