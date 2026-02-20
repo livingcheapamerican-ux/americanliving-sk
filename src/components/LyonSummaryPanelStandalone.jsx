@@ -360,10 +360,12 @@ export default function LyonSummaryPanelStandalone({
               <span className="text-slate-300">• {t('assembly')} {montaz && "✓"}</span>
               <span className="text-green-400 text-xs">{getCenaPolozky('montaz') || '+ 4 806 €'}</span>
             </div>
-            <div className={doprava ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
-              <span className="text-slate-300">• {t('transport')} {doprava && "✓"}</span>
-              <span className="text-green-400 text-xs">{getCenaPolozky('doprava') || '+ 8 928 €'}</span>
-            </div>
+            {dom?.doprava_viditelna !== false && (
+              <div className={doprava ? "flex items-center justify-between" : "flex items-center justify-between line-through opacity-50"}>
+                <span className="text-slate-300">• {t('transport')} {doprava && "✓"}</span>
+                <span className="text-green-400 text-xs">{getCenaPolozky('doprava') || '+ 8 928 €'}</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
