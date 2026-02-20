@@ -1194,7 +1194,7 @@ export default function KonfiguratorLyon(props = {}) {
               title={getTranslatedText('montaz', 'nazov') || t('houseAssembly')} 
               subtitle={getTranslatedText('montaz', 'podnadpis') || ''} 
               price={formatTilePrice(CENY.montaz)} isPriced={true} t={t} />
-            {dom?.doprava_viditelna !== false && (
+            {props.dom?.doprava_viditelna !== false && (
               <Tile selected={doprava} onClick={() => setDoprava(!doprava)} 
                 title={getTranslatedText('doprava', 'nazov') || t('transportTile')} 
                 subtitle={getTranslatedText('doprava', 'podnadpis') || t('allModulesTransport')} 
