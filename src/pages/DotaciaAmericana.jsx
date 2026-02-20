@@ -826,7 +826,7 @@ export default function DotaciaAmericana() {
                     <SelectContent>
                       <SelectItem value="Hotovosť">{t('dotaciaFormFinancingOption1')}</SelectItem>
                       <SelectItem value="Úver - vybavujem si sám">{t('dotaciaFormFinancingOption2')}</SelectItem>
-                      <SelectItem value="Úver vybavte mi">Vyberte mi najlepší úver</SelectItem>
+                      <SelectItem value="Úver vybavte mi">3. Vyberte mi najlepší úver</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1051,7 +1051,7 @@ export default function DotaciaAmericana() {
                       <SelectContent>
                         <SelectItem value="Hotovosť">{t('dotaciaFormFinancingOption1')}</SelectItem>
                         <SelectItem value="Úver - vybavujem si sám">{t('dotaciaFormFinancingOption2')}</SelectItem>
-                        <SelectItem value="Úver vybavte mi">Vyberte mi najlepší úver</SelectItem>
+                        <SelectItem value="Úver vybavte mi">3. Vyberte mi najlepší úver</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
