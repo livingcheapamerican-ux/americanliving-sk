@@ -315,19 +315,19 @@ export default function Domov() {
           </div>
         ))}
 
-        <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
-          <div className="max-w-3xl text-white">
-            {/* Logo v hero sekcii - zmenšené a elegantnejšie */}
+        <div className="relative z-10 container mx-auto px-4 h-full flex items-end sm:items-center pb-12 sm:pb-0">
+          <div className="w-full max-w-3xl text-white">
+            {/* Logo v hero sekcii */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
-              className="mb-4 sm:mb-12"
+              className="mb-3 sm:mb-8"
             >
               <img 
                 src={LOGO_URL} 
                 alt="American Living" 
-                className="h-12 sm:h-24 md:h-32 w-auto drop-shadow-2xl rounded-full"
+                className="h-10 sm:h-20 md:h-28 w-auto drop-shadow-2xl rounded-full"
               />
             </motion.div>
             
@@ -335,7 +335,7 @@ export default function Domov() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-2 sm:mb-6 leading-tight text-white" 
+              className="text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-2 sm:mb-4 leading-tight text-white" 
               style={{ textShadow: '4px 4px 20px rgba(0,0,0,0.9)' }}
             >
               {t('heroHeadline')}
@@ -345,7 +345,7 @@ export default function Domov() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-base sm:text-2xl md:text-3xl mb-2 sm:mb-5 font-semibold text-white" 
+              className="text-sm sm:text-xl md:text-2xl mb-1.5 sm:mb-4 font-semibold text-white" 
               style={{ textShadow: '3px 3px 15px rgba(0,0,0,0.9)' }}
             >
               {t('heroSubheadline')}
@@ -355,7 +355,7 @@ export default function Domov() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-xs sm:text-lg md:text-xl mb-3 sm:mb-8 text-gray-100 leading-relaxed max-w-2xl" 
+              className="hidden sm:block text-sm sm:text-lg md:text-xl mb-4 sm:mb-6 text-gray-100 leading-relaxed max-w-2xl" 
               style={{ textShadow: '2px 2px 8px rgba(0,0,0,1)' }}
             >
               {t('everythingYouNeed')}
@@ -365,14 +365,13 @@ export default function Domov() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="space-y-4"
             >
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
                 <Link to={createPageUrl("Katalog")} className="w-full sm:w-auto">
-                  <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-red-600 via-primary to-red-600 hover:from-red-700 hover:via-secondary hover:to-red-700 text-white font-black text-base sm:text-2xl px-6 sm:px-16 py-4 sm:py-9 shadow-[0_0_30px_rgba(239,68,68,0.6)] hover:shadow-[0_0_50px_rgba(220,38,38,0.8)] border-2 sm:border-4 border-white animate-pulse transition-all group">
-                    <Home className="mr-2 w-4 h-4 sm:w-7 sm:h-7 group-hover:rotate-12 transition-transform" />
+                  <Button size="lg" className="relative w-full sm:w-auto bg-gradient-to-r from-red-600 via-primary to-red-600 hover:from-red-700 hover:via-secondary hover:to-red-700 text-white font-black text-lg sm:text-2xl px-6 sm:px-14 py-5 sm:py-9 shadow-[0_0_30px_rgba(239,68,68,0.6)] border-2 sm:border-4 border-white animate-pulse transition-all group">
+                    <Home className="mr-2 w-5 h-5 sm:w-7 sm:h-7 group-hover:rotate-12 transition-transform" />
                     {t('houseCatalogButton')}
-                    <ArrowRight className="ml-2 w-4 h-4 sm:w-7 sm:h-7 group-hover:translate-x-2 transition-transform" />
+                    <ArrowRight className="ml-2 w-5 h-5 sm:w-7 sm:h-7 group-hover:translate-x-2 transition-transform" />
                     <motion.div
                       animate={{ scale: [1, 1.1, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
@@ -383,22 +382,12 @@ export default function Domov() {
                   </Button>
                 </Link>
                 <Link to={createPageUrl("Kontakt")} className="w-full sm:w-auto">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/15 backdrop-blur-md border-2 sm:border-3 border-white text-white hover:bg-white hover:text-primary hover:scale-105 font-bold text-sm sm:text-lg px-4 sm:px-8 py-3 sm:py-6 shadow-2xl transition-all">
-                    <Phone className="mr-1 w-4 h-4 sm:mr-2 sm:w-5 sm:h-5" />
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto bg-white/15 backdrop-blur-md border-2 border-white text-white hover:bg-white hover:text-primary font-bold text-base sm:text-lg px-5 sm:px-8 py-4 sm:py-6 shadow-2xl transition-all">
+                    <Phone className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
                     {t('consultation')}
                   </Button>
                 </Link>
               </div>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.2 }}
-                className="text-center"
-              >
-                <p className="text-white text-[10px] sm:text-lg font-bold bg-black/40 backdrop-blur-sm px-3 py-1.5 sm:px-6 sm:py-3 rounded-full inline-block shadow-xl border border-white/30 sm:border-2">
-                  👆 {t('clickToShowAllModularHouses')}
-                </p>
-              </motion.div>
             </motion.div>
           </div>
         </div>
