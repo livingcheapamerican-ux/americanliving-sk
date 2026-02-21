@@ -257,6 +257,22 @@ export default function DotaciaAmericana() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        <title>Dotácia Americana – Súkromný grant 5% na modulárny dom | American Living</title>
+        <meta name="description" content="Program AMBASSADOR a PARTNER – získajte súkromný grant až 5% z ceny domu od American Living. Dotované bývanie pre rodiny a investorov. Overte si nárok ešte dnes." />
+        <meta name="keywords" content="dotácia na dom, grant na bývanie, modulárny dom dotácia, American Living grant, dotácia Americana, dotované bývanie Slovensko" />
+        <meta property="og:title" content="Dotácia Americana – Súkromný grant 5% na modulárny dom" />
+        <meta property="og:description" content="Program AMBASSADOR a PARTNER – získajte súkromný grant až 5% z ceny domu od American Living. Overte si nárok ešte dnes." />
+        <meta property="og:image" content="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png" />
+        <meta property="og:url" content="https://americanliving.sk/dotacia-americana" />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="sk_SK" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Dotácia Americana – Súkromný grant 5% na modulárny dom" />
+        <meta name="twitter:description" content="Program AMBASSADOR a PARTNER – získajte súkromný grant až 5% z ceny domu od American Living." />
+        <meta name="twitter:image" content="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/0a055b39a_AmericanLiving.png" />
+        <link rel="canonical" href="https://americanliving.sk/dotacia-americana" />
+      </Helmet>
       <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
