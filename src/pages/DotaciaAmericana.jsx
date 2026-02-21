@@ -285,6 +285,15 @@ export default function DotaciaAmericana() {
         .border-success { border-color: var(--success); }
         .text-success { color: var(--success); }
         .bg-success { background-color: var(--success); }
+
+        @media (max-width: 640px) {
+          [role="dialog"] {
+            width: 92vw !important;
+            max-width: 380px !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+          }
+        }
       `}</style>
 
       {/* Audio Elements */}
