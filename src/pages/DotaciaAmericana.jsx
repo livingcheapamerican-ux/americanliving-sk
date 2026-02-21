@@ -730,7 +730,7 @@ export default function DotaciaAmericana() {
       <AnimatePresence>
         {modalType && (
           <Dialog open={!!modalType} onOpenChange={() => setModalType(null)}>
-            <DialogContent className="w-[96vw] max-w-md mx-auto max-h-[90vh] overflow-y-auto p-3 sm:p-5 rounded-xl">
+            <DialogContent className="!w-[92vw] !max-w-[380px] mx-auto max-h-[90vh] overflow-y-auto p-3 sm:p-5 rounded-xl">
               <DialogHeader className="pb-1">
                 <DialogTitle className="text-sm sm:text-lg font-serif font-bold text-primary leading-tight pr-6">
                   {modalType === 'rodina' ? '🏡 ' + t('dotaciaModalTitleRodina') : '📈 ' + t('dotaciaModalTitleInvestor')}
