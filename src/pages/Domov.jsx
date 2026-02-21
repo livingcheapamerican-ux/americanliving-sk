@@ -299,7 +299,7 @@ export default function Domov() {
 
 
       {/* Hero Section */}
-      <section className="relative h-[50vh] sm:h-[80vh] min-h-[300px] sm:min-h-[600px] overflow-hidden bg-white pt-8 sm:pt-0">
+      <section className="relative h-[60vh] sm:h-[80vh] min-h-[380px] sm:min-h-[600px] overflow-hidden bg-white pt-8 sm:pt-0">
         
         {heroImages.map((img, index) => (
           <div
