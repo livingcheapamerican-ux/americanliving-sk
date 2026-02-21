@@ -822,7 +822,7 @@ export default function Domov() {
               </p>
               </motion.div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 sm:gap-6 mb-4 sm:mb-12">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 sm:gap-4 mb-4 sm:mb-12">
                 {domy.map((dom, index) => (
                   <motion.div 
                     key={dom.id}
