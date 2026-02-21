@@ -333,14 +333,14 @@ export default function DotaciaAmericana() {
                 {heroSettings?.rodina_fotky?.length > 0 ? (
                   <img
                     src={heroSettings.rodina_fotky[rodinaIndex] + '?w=800&q=70'}
-                    alt="Dotácia Americana"
+                    alt="Moderný modulárny dom American Living - Program Ambassador dotované bývanie pre rodiny"
                     loading="eager"
                     className="w-full h-full object-cover"
                   />
                 ) : (
                   <img
                     src="https://images.unsplash.com/photo-1560518883-ff514cd811de?w=800&q=70"
-                    alt="Modern house"
+                    alt="Moderný modulárny dom s dotáciou American Living"
                     className="w-full h-full object-cover"
                   />
                 )}
