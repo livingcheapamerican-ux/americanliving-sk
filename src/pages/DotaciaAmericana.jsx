@@ -473,7 +473,7 @@ export default function DotaciaAmericana() {
             ) : (
               <img
                 src="https://images.unsplash.com/photo-1560518883-ff514cd811de?w=1200&q=75"
-                alt="Šťastná rodina v novom dome"
+                alt="Šťastná rodina pred moderným modulárnym domom American Living s dotáciou"
                 loading="eager"
                 className="absolute inset-0 w-full h-full object-cover brightness-90"
               />
