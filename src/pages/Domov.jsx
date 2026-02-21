@@ -248,7 +248,7 @@ export default function Domov() {
   ];
 
   return (
-    <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20">
+    <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden">
       <FloatingHouses side="left" />
       <FloatingHouses side="right" />
       {/* Admin Login Box - zobrazí sa len pre neprihlásených */}
