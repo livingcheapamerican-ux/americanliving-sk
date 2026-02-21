@@ -730,27 +730,27 @@ export default function DotaciaAmericana() {
       <AnimatePresence>
         {modalType && (
           <Dialog open={!!modalType} onOpenChange={() => setModalType(null)}>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
-              <DialogHeader>
-                <DialogTitle className="text-xl sm:text-3xl font-serif font-bold text-primary">
+            <DialogContent className="w-[95vw] max-w-lg mx-auto max-h-[85vh] overflow-y-auto p-4 rounded-xl">
+              <DialogHeader className="pb-2">
+                <DialogTitle className="text-base sm:text-xl font-serif font-bold text-primary leading-tight pr-6">
                   {modalType === 'rodina' ? '🏡 ' + t('dotaciaModalTitleRodina') : '📈 ' + t('dotaciaModalTitleInvestor')}
                 </DialogTitle>
               </DialogHeader>
 
-              {/* Image Section */}
-              <div className="mb-6">
-                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg overflow-hidden border-2 border-accent/30">
+              {/* Image Section - smaller on mobile */}
+              <div className="mb-3">
+                <div className="h-32 sm:h-48 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg overflow-hidden border border-accent/30">
                   <img 
                     src={modalType === 'rodina' 
-                      ? (heroSettings?.rodina_fotky?.[0] || "https://images.unsplash.com/photo-1560518883-ff514cd811de?w=800&q=75")
-                      : (heroSettings?.investor_fotky?.[0] || "https://images.unsplash.com/photo-1560518883-ff514cd811de?w=800&q=75")
+                      ? (heroSettings?.rodina_fotky?.[0] || "https://images.unsplash.com/photo-1560518883-ff514cd811de?w=600&q=70")
+                      : (heroSettings?.investor_fotky?.[0] || "https://images.unsplash.com/photo-1560518883-ff514cd811de?w=600&q=70")
                     }
                     alt={modalType === 'rodina' ? t('dotaciaModalTitleRodina') : t('dotaciaModalTitleInvestor')}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="mt-4 p-4 bg-gradient-to-r from-emerald-50 to-green-50 border-l-4 border-emerald-500 rounded shadow-sm">
-                  <p className="text-xs sm:text-sm font-sans font-semibold text-emerald-700">
+                <div className="mt-2 p-2 sm:p-3 bg-emerald-50 border-l-4 border-emerald-500 rounded">
+                  <p className="text-xs font-semibold text-emerald-700">
                     {modalType === 'rodina' 
                       ? '✅ ' + t('dotaciaModalBenefitsRodina')
                       : '✅ ' + t('dotaciaModalBenefitsInvestor')
@@ -760,27 +760,25 @@ export default function DotaciaAmericana() {
               </div>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3">
                 <div>
-                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                    {t('dotaciaFormName')}
-                  </label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('dotaciaFormName')}</label>
                   <Input
                     type="text"
                     placeholder={t('dotaciaFormNamePlaceholder')}
                     value={formData.meno}
                     onChange={(e) => setFormData({ ...formData, meno: e.target.value })}
                     required
-                    className="text-sm sm:text-lg p-3 sm:p-4"
+                    className="text-sm h-10"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
                     {t('dotaciaFormTypeGrant')} <span className="text-red-600">*</span>
                   </label>
                   <Select value={formData.typ_grantu} onValueChange={(value) => setFormData({ ...formData, typ_grantu: value })} required>
-                    <SelectTrigger className="text-sm sm:text-lg p-3 sm:p-4">
+                    <SelectTrigger className="text-xs sm:text-sm h-10">
                       <SelectValue placeholder={t('dotaciaFormTypeGrantPlaceholder')} />
                     </SelectTrigger>
                     <SelectContent>
@@ -795,11 +793,9 @@ export default function DotaciaAmericana() {
                 </div>
 
                 <div>
-                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                    {t('dotaciaFormHouse')}
-                  </label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('dotaciaFormHouse')}</label>
                   <Select value={formData.dom_id} onValueChange={(value) => setFormData({ ...formData, dom_id: value })}>
-                    <SelectTrigger className="text-sm sm:text-lg p-3 sm:p-4">
+                    <SelectTrigger className="text-xs sm:text-sm h-10">
                       <SelectValue placeholder={t('dotaciaFormHousePlaceholder')} />
                     </SelectTrigger>
                     <SelectContent>
@@ -807,7 +803,7 @@ export default function DotaciaAmericana() {
                         const dotacia = Math.round(dom.zakladna_cena * 0.05);
                         return (
                           <SelectItem key={dom.id} value={dom.id}>
-                            {dom.nazov} - {t('dotaciaGrant')} {dotacia.toLocaleString()} €
+                            {dom.nazov} – {dotacia.toLocaleString()} €
                           </SelectItem>
                         );
                       })}
@@ -816,11 +812,11 @@ export default function DotaciaAmericana() {
                 </div>
 
                 <div>
-                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
                     {t('dotaciaFormFinancing')} <span className="text-red-600">*</span>
                   </label>
                   <Select value={formData.forma_financovania} onValueChange={(value) => setFormData({ ...formData, forma_financovania: value })} required>
-                    <SelectTrigger className="text-sm sm:text-lg p-3 sm:p-4">
+                    <SelectTrigger className="text-xs sm:text-sm h-10">
                       <SelectValue placeholder={t('dotaciaFormFinancingPlaceholder')} />
                     </SelectTrigger>
                     <SelectContent>
@@ -833,7 +829,7 @@ export default function DotaciaAmericana() {
 
                 {modalType === 'rodina' && (
                   <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">
                       {t('dotaciaFormLocation')} <span className="text-red-600">*</span>
                     </label>
                     <Input
@@ -842,51 +838,45 @@ export default function DotaciaAmericana() {
                       value={formData.lokalita}
                       onChange={(e) => setFormData({ ...formData, lokalita: e.target.value })}
                       required
-                      className="text-sm sm:text-lg p-3 sm:p-4"
+                      className="text-sm h-10"
                     />
                   </div>
                 )}
 
                 {modalType === 'investor' && (
                   <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                      {t('dotaciaFormBudget')}
-                    </label>
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">{t('dotaciaFormBudget')}</label>
                     <Input
                       type="text"
                       placeholder={t('dotaciaFormBudgetPlaceholder')}
                       value={formData.rozpocet}
                       onChange={(e) => setFormData({ ...formData, rozpocet: e.target.value })}
-                      className="text-sm sm:text-lg p-3 sm:p-4"
+                      className="text-sm h-10"
                     />
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                    Email
-                  </label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Email</label>
                   <Input
                     type="email"
                     placeholder="jan.novak@example.com"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
-                    className="text-sm sm:text-lg p-3 sm:p-4"
+                    className="text-sm h-10"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                    {t('phone')}
-                  </label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">{t('phone')}</label>
                   <Input
                     type="tel"
                     placeholder="+421 XXX XXX XXX"
                     value={formData.telefon}
                     onChange={(e) => setFormData({ ...formData, telefon: e.target.value })}
                     required
-                    className="text-sm sm:text-lg p-3 sm:p-4"
+                    className="text-sm h-10"
                   />
                 </div>
 
@@ -894,10 +884,10 @@ export default function DotaciaAmericana() {
                   type="submit"
                   size="lg"
                   disabled={isSubmitting}
-                  className="w-full font-sans font-bold py-4 sm:py-6 text-base sm:text-lg bg-primary hover:bg-secondary text-white"
+                  className="w-full font-bold py-3 text-sm sm:text-base bg-primary hover:bg-secondary text-white"
                 >
                   {isSubmitting ? t('dotaciaFormSubmitting') : t('dotaciaFormSubmit')}
-                  <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
+                  <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </form>
             </DialogContent>
