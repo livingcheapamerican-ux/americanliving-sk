@@ -471,30 +471,25 @@ export default function Domov() {
       <section className="py-8 sm:py-12 bg-white">
         <div className="container mx-auto px-4 text-center">
           <motion.div
-            animate={{ 
-              scale: [1, 1.02, 1]
-            }}
+            animate={{ scale: [1, 1.02, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="inline-block"
+            className="inline-block w-full sm:w-auto"
           >
-            <Link to={createPageUrl("DotaciaAmericana")}>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-              >
+            <Link to={createPageUrl("DotaciaAmericana")} className="block">
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button 
                   size="lg" 
                   style={{ backgroundColor: '#FF0000' }}
-                  className="hover:opacity-90 text-white font-black text-xl sm:text-3xl md:text-5xl px-10 sm:px-20 py-8 sm:py-12 shadow-2xl border-4 border-white relative overflow-hidden group transition-all"
+                  className="hover:opacity-90 text-white font-black w-full sm:w-auto text-xl sm:text-3xl md:text-5xl px-6 sm:px-20 py-6 sm:py-12 shadow-2xl border-4 border-white relative overflow-hidden group transition-all"
                 >
                   <div className="flex flex-col items-center relative z-10">
-                    <span className="text-white drop-shadow-lg text-lg sm:text-3xl md:text-4xl">OVERENIE nároku na</span>
-                    <span className="text-white text-2xl sm:text-4xl md:text-5xl drop-shadow-lg mt-1">DOTÁCIU</span>
+                    <span className="text-white drop-shadow-lg text-base sm:text-3xl md:text-4xl">OVERENIE nároku na</span>
+                    <span className="text-white text-xl sm:text-4xl md:text-5xl drop-shadow-lg mt-1">DOTÁCIU</span>
                   </div>
                   <motion.div
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute -right-2 -top-2 md:-right-3 md:-top-3 bg-yellow-400 text-gray-900 text-xs md:text-sm font-black px-3 py-1 md:px-4 md:py-1.5 rounded-full rotate-12 shadow-lg border-2 border-white"
+                    className="absolute -right-1 -top-1 sm:-right-3 sm:-top-3 bg-yellow-400 text-gray-900 text-[10px] sm:text-sm font-black px-2 py-0.5 sm:px-4 sm:py-1.5 rounded-full rotate-12 shadow-lg border-2 border-white"
                   >
                     ✨ {t('newBadge')}!
                   </motion.div>
@@ -502,80 +497,70 @@ export default function Domov() {
               </motion.div>
             </Link>
           </motion.div>
-          <div className="mt-8 max-w-5xl mx-auto space-y-5 px-4">
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Pre rodiny */}
-            <motion.div 
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -5, boxShadow: "0 20px 40px rgba(16, 185, 129, 0.2)" }}
-              className="bg-white rounded-2xl p-6 shadow-md border-2 border-emerald-300 relative overflow-hidden group"
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-400/10 rounded-full blur-3xl group-hover:bg-emerald-400/20 transition-all"></div>
-              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 relative z-10">
-                <motion.div 
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.6 }}
-                  className="w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br from-emerald-500 to-green-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg"
-                >
-                  <Home className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
-                </motion.div>
-                <h3 className="text-base sm:text-xl font-black text-emerald-700 tracking-tight">{t('forFamilies')}</h3>
-              </div>
-              <ul className="space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-800 relative z-10">
-                <li className="flex items-start gap-2 sm:gap-3">
-                  <CheckCircle className="w-4 h-4 sm:w-6 sm:h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span><strong className="text-emerald-700">{t('grantAtSigning')}</strong></span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span><strong className="text-emerald-700">{t('energyFullyRefunded')}</strong></span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-emerald-600 flex-shrink-0 mt-0.5" />
-                  <span>{t('supportAfterHandover')}</span>
-                </li>
-              </ul>
-            </motion.div>
+          <div className="mt-6 sm:mt-8 max-w-5xl mx-auto space-y-4 sm:space-y-5 px-0 sm:px-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              {/* Pre rodiny */}
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="bg-white rounded-2xl p-4 sm:p-6 shadow-md border-2 border-emerald-300 relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-400/10 rounded-full blur-3xl"></div>
+                <div className="flex items-center gap-3 mb-3 relative z-10">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+                    <Home className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                  </div>
+                  <h3 className="text-base sm:text-xl font-black text-emerald-700">{t('forFamilies')}</h3>
+                </div>
+                <ul className="space-y-2 text-sm sm:text-base text-gray-800 relative z-10">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span><strong className="text-emerald-700">{t('grantAtSigning')}</strong></span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span><strong className="text-emerald-700">{t('energyFullyRefunded')}</strong></span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span>{t('supportAfterHandover')}</span>
+                  </li>
+                </ul>
+              </motion.div>
 
-            {/* Pre investorov */}
-            <motion.div 
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -5, boxShadow: "0 20px 40px rgba(251, 191, 36, 0.2)" }}
-              className="bg-white rounded-2xl p-6 shadow-md border-2 border-yellow-300 relative overflow-hidden group"
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400/10 rounded-full blur-3xl group-hover:bg-yellow-400/20 transition-all"></div>
-              <div className="flex items-center gap-3 mb-4 relative z-10">
-                <motion.div 
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.6 }}
-                  className="w-14 h-14 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg"
-                >
-                  <TrendingUp className="w-7 h-7 text-white" />
-                </motion.div>
-                <h3 className="text-xl font-black text-yellow-700 tracking-tight">{t('forInvestors')}</h3>
-              </div>
-              <ul className="space-y-3 text-base text-gray-800 relative z-10">
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
-                  <span><strong className="text-yellow-700">{t('grantAtSigning')}</strong></span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
-                  <span><strong className="text-yellow-700">{t('marketingFree')}</strong></span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
-                  <span>{t('passiveIncomeFromAirbnb')}</span>
-                </li>
-              </ul>
-            </motion.div>
-          </div>
-            
-            <p className="text-[10px] sm:text-sm text-center text-gray-800 font-medium bg-white/70 backdrop-blur-sm rounded-lg p-2 sm:p-3">
+              {/* Pre investorov */}
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="bg-white rounded-2xl p-4 sm:p-6 shadow-md border-2 border-yellow-300 relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-400/10 rounded-full blur-3xl"></div>
+                <div className="flex items-center gap-3 mb-3 relative z-10">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+                    <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                  </div>
+                  <h3 className="text-base sm:text-xl font-black text-yellow-700">{t('forInvestors')}</h3>
+                </div>
+                <ul className="space-y-2 text-sm sm:text-base text-gray-800 relative z-10">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <span><strong className="text-yellow-700">{t('grantAtSigning')}</strong></span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <span><strong className="text-yellow-700">{t('marketingFree')}</strong></span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <span>{t('passiveIncomeFromAirbnb')}</span>
+                  </li>
+                </ul>
+              </motion.div>
+            </div>
+              
+            <p className="text-xs sm:text-sm text-center text-gray-800 font-medium bg-white/70 backdrop-blur-sm rounded-lg p-2 sm:p-3">
               💡 <strong>{t('grantAmountVaries')}</strong>
             </p>
           </div>
