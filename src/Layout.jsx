@@ -860,6 +860,9 @@ function LayoutContent({ children }) {
       return (
         <HelmetProvider>
         <LanguageProvider>
+        <Helmet>
+          <meta name="google-site-verification" content="p_fzn0ka1UdLRjOaJT0uTEVpjZiW6b2RU9NYMM8RYno" />
+        </Helmet>
         <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
         <LayoutContent>{children}</LayoutContent>
         </LanguageProvider>
