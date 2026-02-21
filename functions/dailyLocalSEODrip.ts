@@ -4,111 +4,73 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
-    // Find pending LokaciaSEO records - STRICT LIMIT TO 1 PER RUN to prevent timeout
+    // Find pending LokaciaSEO records - ones without content yet
     const allRecords = await base44.asServiceRole.entities.LokaciaSEO.list();
     const pendingRecords = allRecords
-      .filter(record => !record.unikany_text_o_lokalite || record.unikany_text_o_lokalite.length < 100)
-      .slice(0, 1);
+      .filter(record => !record.content || record.content.length < 100)
+      .slice(0, 5); // Process up to 5 per run (0 credits each)
 
     if (pendingRecords.length === 0) {
       console.log('✓ No pending LokaciaSEO records found');
-      return Response.json({ 
-        success: true, 
+      return Response.json({
+        success: true,
         processed: 0,
-        message: 'No pending records to process'
+        message: 'No pending records to process',
+        credits_used: 0
       });
     }
 
-    console.log(`📝 Processing ${pendingRecords.length} LokaciaSEO records...`);
+    console.log(`📝 Processing ${pendingRecords.length} LokaciaSEO records (0-credit mode)...`);
 
     const results = [];
 
     for (const record of pendingRecords) {
-      try {
-        const cityName = record.nazov_mesta || record.slug || 'mesto';
-        
-        // Generate high-quality SEO article using AI
-        const prompt = `Napíš profesionálny SEO článok o montovaných domoch v meste ${cityName} pre spoločnosť American Living.
+      const mesto = record.nazov_mesta || record.slug || 'vašom meste';
+      const okres = record.okres || 'vašom okrese';
 
-KONTEXT:
-- American Living je distribútor a staviteľ prefabrikovaných a montovaných domov na Slovensku
-- Ponúkame domy od značiek: Ticab house, Prosto House, JAK Modules, Domki z Gór
-- Špecializujeme sa na energeticky efektívne domy s certifikátom A0
-- Poskytujeme komplexné služby: projektovanie, inžiniering, financovanie, hľadanie pozemkov
+      const intro = [
+        `<h1>Montované domy na kľúč ${mesto} a okolie</h1><p>Snívate o vlastnom rodinnom dome v meste ${mesto}? Zabudnite na nekonečné vybavovačky a stresujúce jednania s úradmi.</p>`,
+        `<h1>Nové bývanie v lokalite ${mesto}: Drevodomy s dotáciou</h1><p>Plánujete stavbu domu v okrese ${okres}? Prinášame revolúciu na realitný trh priamo k vám. Bývajte vo vlastnom rýchlo a bez starostí.</p>`,
+        `<h1>Výstavba rodinných domov ${mesto}</h1><p>Hľadáte spoľahlivého partnera pre stavbu domu v meste ${mesto}? Sme tu pre vás od prvého nápadu až po odovzdanie kľúčov.</p>`
+      ];
 
-OBSAH ČLÁNKU:
-1. Úvod (2-3 vety) - prečo sú montované domy ideálne pre ${cityName}
-2. Výhody montovaných domov (5-6 bodov):
-   - Rýchla výstavba (2-3 mesiace)
-   - Energetická efektivita (A0 certifikát)
-   - Moderný dizajn
-   - Ekologické materiály
-   - Dostupné financovanie
-   - Komplexné služby
+      const body = [
+        `<p>S naším exkluzívnym dotačným programom GRANTAMERICANA získate nielen finančný grant pri podpise zmluvy, ale prevezmeme na seba úplne všetko. Náš 8-krokový proces pokrýva predaj vašej starej nehnuteľnosti, výber ideálneho pozemku, vybavenie najvýhodnejšej hypotéky, kompletnú projektovú dokumentáciu, stavebné povolenie, samotnú výstavbu, napojenie na siete a bezproblémovú kolaudáciu.</p>`,
+        `<p>Už nemusíte obiehať úrady a banky. Všetko vybavíte pod jednou strechou. Pomôžeme vám predať starý byt, nájdeme pozemok v lokalite ${mesto}, zariadime financovanie a dom vám postavíme na kľúč vrátane inžinierskych sietí a kolaudácie. Navyše, vďaka programu GRANTAMERICANA máte možnosť získať preplatenie nákladov na energie a grant priamo pri podpise.</p>`,
+        `<p>Zabezpečujeme kompletný full-servis. Vyberieme pozemok v okrese ${okres}, prefinancujeme stavbu s najlepšou hypotékou na trhu, vyriešime stavebné povolenie a postavíme vám moderný drevodom s energetickým certifikátom A0. Všetko končí úspešnou kolaudáciou. Využite náš dotačný program a ušetrite tisíce eur hneď na začiatku.</p>`
+      ];
 
-3. Prečo American Living v ${cityName}:
-   - Lokálna podpora
-   - Skúsený tím
-   - Overení výrobcovia
-   - Garancie kvality
+      const outro = [
+        `<p><strong>Neváhajte a pozrite si náš katalóg domov. Bývanie v meste ${mesto} nebolo nikdy dostupnejšie. Kontaktujte nás pre nezáväznú konzultáciu.</strong></p>`,
+        `<p><strong>Začnite svoj projekt ešte dnes. Prezrite si naše modely a zistite, akú výšku dotácie môžete získať pre vašu stavbu v lokalite ${mesto}.</strong></p>`,
+        `<p><strong>Vyberte si svoj vysnívaný dom z nášho katalógu a o všetko ostatné v okrese ${okres} sa postaráme my. Zanechajte nám kontakt a my sa vám ozveme.</strong></p>`
+      ];
 
-4. Záver s výzvou na kontakt
+      const seo_html = intro[Math.floor(Math.random() * intro.length)]
+        + body[Math.floor(Math.random() * body.length)]
+        + outro[Math.floor(Math.random() * outro.length)];
 
-ŠTÝL:
-- Profesionálny, ale priateľský
-- Prirodzené použitie kľúčových slov: "montované domy ${cityName}", "prefabrikované domy ${cityName}", "energeticky efektívny dom"
-- Dĺžka: 500-700 slov
-- Formátovanie: použiť HTML tagy (<h2>, <p>, <ul>, <li>, <strong>)
+      const metaTitle = `Montované domy ${mesto} | Výstavba na kľúč - American Living`;
+      const metaDescription = `Objavte výhody stavby montovaného domu v ${mesto}. Rýchla výstavba, kvalita a dostupnosť. American Living - oficiálny distribútor.`;
 
-Vráť ČISTÝ HTML kód (bez markdown, bez \`\`\`html blokov).`;
+      await base44.asServiceRole.entities.LokaciaSEO.update(record.id, {
+        content: seo_html,
+        unikany_text_o_lokalite: seo_html,
+        meta_title: metaTitle,
+        meta_description: metaDescription,
+        verejny: true
+      });
 
-        const aiResponse = await base44.asServiceRole.integrations.Core.InvokeLLM({
-          prompt: prompt,
-          add_context_from_internet: false
-        });
-
-        // Safety check for AI response
-        if (!aiResponse || (typeof aiResponse !== 'string' && !aiResponse.content)) {
-          console.log(`⚠️ AI generation skipped - Empty Response for ${cityName}`);
-          results.push({
-            city: cityName,
-            status: 'skipped',
-            reason: 'Empty AI response'
-          });
-          continue;
-        }
-
-        const generatedContent = typeof aiResponse === 'string' ? aiResponse : aiResponse.content || '';
-
-        // Update the record with generated content
-        await base44.asServiceRole.entities.LokaciaSEO.update(record.id, {
-          unikany_text_o_lokalite: generatedContent,
-          verejny: true
-        });
-
-        console.log(`✓ Generated SEO content for ${cityName}`);
-        
-        results.push({
-          city: cityName,
-          status: 'success',
-          content_length: generatedContent.length
-        });
-
-      } catch (error) {
-        console.error(`✗ Failed to process ${record.nazov_mesta}:`, error);
-        results.push({
-          city: record.nazov_mesta || record.slug,
-          status: 'failed',
-          error: error.message
-        });
-      }
+      console.log(`✓ Generated 0-credit SEO content for ${mesto}`);
+      results.push({ city: mesto, status: 'success', credits_used: 0 });
     }
 
-    return Response.json({ 
-      success: true, 
-      processed: results.filter(r => r.status === 'success').length,
-      failed: results.filter(r => r.status === 'failed').length,
-      results: results
+    return Response.json({
+      success: true,
+      processed: results.length,
+      failed: 0,
+      credits_used: 0,
+      results
     });
 
   } catch (error) {
