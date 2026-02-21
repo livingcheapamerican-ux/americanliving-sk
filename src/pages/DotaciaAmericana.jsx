@@ -287,11 +287,9 @@ export default function DotaciaAmericana() {
         .bg-success { background-color: var(--success); }
 
         @media (max-width: 640px) {
-          [role="dialog"] {
+          [data-radix-dialog-content] {
             width: 92vw !important;
             max-width: 380px !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
           }
         }
       `}</style>
