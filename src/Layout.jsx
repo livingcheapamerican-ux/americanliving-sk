@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Toaster } from "sonner";
-import { HelmetProvider } from "react-helmet-async";
+import { HelmetProvider, Helmet } from "react-helmet-async";
 import Chatbot from "./components/Chatbot";
 import AIAsistent from "./components/AIAsistent";
 import CookieConsentBanner from "./components/CookieConsentBanner";
