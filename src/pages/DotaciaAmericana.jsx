@@ -1361,13 +1361,13 @@ export default function DotaciaAmericana() {
                         <div className="grid grid-cols-2 gap-2">
                           <img 
                             src={dom.hlavny_obrazok} 
-                            alt={dom.nazov}
+                            alt={`${dom.nazov} - modulárny dom s dotáciou American Living`}
                             className="w-full h-64 object-cover"
                           />
                           {dom.zakladna_konfiguracia_obrazok && (
                             <img 
                               src={dom.zakladna_konfiguracia_obrazok} 
-                              alt={`${dom.nazov} - Základná konfigurácia`}
+                              alt={`${dom.nazov} - základná konfigurácia interiéru`}
                               className="w-full h-64 object-cover"
                             />
                           )}
