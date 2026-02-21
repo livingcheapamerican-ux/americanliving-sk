@@ -527,7 +527,7 @@ export default function DotaciaAmericana() {
                 <motion.img
                   key={`investor-${investorIndex}`}
                   src={heroSettings.investor_fotky[investorIndex] + '?w=1200&q=75'}
-                  alt="Investícia & Výnos"
+                  alt="Investičná nehnuteľnosť American Living - Program Partner pasívny príjem z modulárneho domu"
                   loading="eager"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
