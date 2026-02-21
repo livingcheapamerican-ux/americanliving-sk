@@ -852,45 +852,33 @@ export default function Domov() {
                         )}
                       </div>
                       <div className="p-2 sm:p-4">
-                        <div className="text-[8px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1 font-semibold uppercase tracking-wider">{dom.vyrobca}</div>
-                        <h3 className="text-xs sm:text-base font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-secondary transition-colors line-clamp-2 leading-tight">
+                        <div className="text-[8px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1 font-semibold uppercase tracking-wider truncate">{dom.vyrobca}</div>
+                        <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-1.5 sm:mb-2 group-hover:text-secondary transition-colors line-clamp-2 leading-tight">
                           {dom.nazov}
                         </h3>
-                        <div className="flex items-center justify-between pt-2 sm:pt-3 border-t border-gray-200">
-                          <div className="flex-1">
-                            <p className="text-[8px] sm:text-xs text-gray-500 font-semibold mb-0.5">
-                              {dom.vyrobca === "Ticab house" ? t('basicConfigPrice') : "Od"}
-                            </p>
+                        <div className="flex items-center justify-between pt-1.5 sm:pt-2 border-t border-gray-200">
+                          <div className="flex-1 min-w-0">
                             {dom.vyrobca === "Ticab house" ? (
                               <div>
-                                <div className="flex items-baseline gap-1">
-                                  <p className="text-[10px] sm:text-sm font-black text-red-600 line-through">
-                                    {dom.zakladna_cena?.toLocaleString('sk-SK')} €
+                                <div className="flex items-baseline gap-0.5 flex-wrap">
+                                  <p className="text-[9px] sm:text-xs font-black text-red-500 line-through leading-none">
+                                    {dom.zakladna_cena?.toLocaleString('sk-SK')}€
                                   </p>
-                                  <p className="text-sm sm:text-lg font-black text-green-600">
-                                    {Math.round(dom.zakladna_cena * 0.95)?.toLocaleString('sk-SK')} €
+                                  <p className="text-xs sm:text-sm font-black text-green-600 leading-none">
+                                    {Math.round(dom.zakladna_cena * 0.95)?.toLocaleString('sk-SK')}€
                                   </p>
                                 </div>
-                                <p className="text-[7px] sm:text-[9px] text-green-700 font-semibold">
-                                  💰 s dotáciou AMERICANA
+                                <p className="text-[7px] sm:text-[9px] text-green-700 font-semibold leading-tight mt-0.5">
+                                  💰 s dotáciou
                                 </p>
-                                <p className="text-[7px] sm:text-[9px] text-gray-500">vrátane DPH</p>
                               </div>
                             ) : (
-                              <div>
-                                <p className="text-sm sm:text-lg font-black text-primary">
-                                  {dom.zakladna_cena?.toLocaleString('sk-SK')} €
-                                </p>
-                                <p className="text-[7px] sm:text-[9px] text-gray-500">vrátane DPH</p>
-                              </div>
+                              <p className="text-xs sm:text-base font-black text-primary leading-tight">
+                                {dom.zakladna_cena?.toLocaleString('sk-SK')}€
+                              </p>
                             )}
                           </div>
-                          <motion.div
-                            whileHover={{ x: 5 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6 text-primary group-hover:text-secondary transition-colors" />
-                          </motion.div>
+                          <ChevronRight className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-primary group-hover:text-secondary transition-colors flex-shrink-0 ml-1" />
                         </div>
                       </div>
                     </Card>
