@@ -730,33 +730,21 @@ export default function DotaciaAmericana() {
       <AnimatePresence>
         {modalType && (
           <Dialog open={!!modalType} onOpenChange={() => setModalType(null)}>
-            <DialogContent className="w-[95vw] max-w-lg mx-auto max-h-[85vh] overflow-y-auto p-4 rounded-xl">
-              <DialogHeader className="pb-2">
-                <DialogTitle className="text-base sm:text-xl font-serif font-bold text-primary leading-tight pr-6">
+            <DialogContent className="w-[96vw] max-w-md mx-auto max-h-[90vh] overflow-y-auto p-3 sm:p-5 rounded-xl">
+              <DialogHeader className="pb-1">
+                <DialogTitle className="text-sm sm:text-lg font-serif font-bold text-primary leading-tight pr-6">
                   {modalType === 'rodina' ? '🏡 ' + t('dotaciaModalTitleRodina') : '📈 ' + t('dotaciaModalTitleInvestor')}
                 </DialogTitle>
               </DialogHeader>
 
-              {/* Image Section - smaller on mobile */}
-              <div className="mb-3">
-                <div className="h-32 sm:h-48 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg overflow-hidden border border-accent/30">
-                  <img 
-                    src={modalType === 'rodina' 
-                      ? (heroSettings?.rodina_fotky?.[0] || "https://images.unsplash.com/photo-1560518883-ff514cd811de?w=600&q=70")
-                      : (heroSettings?.investor_fotky?.[0] || "https://images.unsplash.com/photo-1560518883-ff514cd811de?w=600&q=70")
-                    }
-                    alt={modalType === 'rodina' ? t('dotaciaModalTitleRodina') : t('dotaciaModalTitleInvestor')}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="mt-2 p-2 sm:p-3 bg-emerald-50 border-l-4 border-emerald-500 rounded">
-                  <p className="text-xs font-semibold text-emerald-700">
-                    {modalType === 'rodina' 
-                      ? '✅ ' + t('dotaciaModalBenefitsRodina')
-                      : '✅ ' + t('dotaciaModalBenefitsInvestor')
-                    }
-                  </p>
-                </div>
+              {/* Benefits strip */}
+              <div className="mb-2 p-2 bg-emerald-50 border-l-4 border-emerald-500 rounded">
+                <p className="text-xs font-semibold text-emerald-700">
+                  {modalType === 'rodina' 
+                    ? '✅ ' + t('dotaciaModalBenefitsRodina')
+                    : '✅ ' + t('dotaciaModalBenefitsInvestor')
+                  }
+                </p>
               </div>
 
               {/* Form */}
