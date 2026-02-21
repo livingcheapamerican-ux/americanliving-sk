@@ -461,7 +461,7 @@ export default function DotaciaAmericana() {
                 <motion.img
                   key={`rodina-${rodinaIndex}`}
                   src={heroSettings.rodina_fotky[rodinaIndex] + '?w=1200&q=75'}
-                  alt="Rodina & Istota"
+                  alt="Šťastná rodina pred moderným domom American Living - Program Ambassador dotované bývanie"
                   loading="eager"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
