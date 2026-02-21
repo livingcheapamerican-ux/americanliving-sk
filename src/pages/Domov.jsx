@@ -419,47 +419,47 @@ export default function Domov() {
             {t('trustedPartnersTitle')}
           </motion.h2>
           
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 max-w-6xl mx-auto">
             {/* Prosto House */}
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-shadow"
+              className="bg-white rounded-2xl p-4 sm:p-8 shadow-md hover:shadow-xl transition-shadow"
             >
-              <div className="mb-6">
+              <div className="mb-3 sm:mb-6">
                 <img 
                   src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=60" 
                   alt="Prosto House - Modern wood house technology"
-                  className="w-full h-64 object-cover rounded-xl"
+                  className="w-full h-40 sm:h-64 object-cover rounded-xl"
                   loading="lazy"
                 />
               </div>
-              <h3 className="text-2xl font-bold mb-4" style={{ color: '#333333' }}>
+              <h3 className="text-lg sm:text-2xl font-bold mb-2 sm:mb-4" style={{ color: '#333333' }}>
                 {t('prostoTitle')}
               </h3>
-              <p className="text-gray-600 leading-relaxed text-lg">
+              <p className="text-gray-600 leading-relaxed text-sm sm:text-lg">
                 {t('prostoBody')}
               </p>
             </motion.div>
 
             {/* TicabHouse */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl transition-shadow"
+              className="bg-white rounded-2xl p-4 sm:p-8 shadow-md hover:shadow-xl transition-shadow"
             >
-              <div className="mb-6">
+              <div className="mb-3 sm:mb-6">
                 <img 
                   src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=60" 
                   alt="TicabHouse - Precision modular construction"
-                  className="w-full h-64 object-cover rounded-xl"
+                  className="w-full h-40 sm:h-64 object-cover rounded-xl"
                   loading="lazy"
                 />
               </div>
-              <h3 className="text-2xl font-bold mb-4" style={{ color: '#333333' }}>
+              <h3 className="text-lg sm:text-2xl font-bold mb-2 sm:mb-4" style={{ color: '#333333' }}>
                 {t('ticabTitle')}
               </h3>
-              <p className="text-gray-600 leading-relaxed text-lg">
+              <p className="text-gray-600 leading-relaxed text-sm sm:text-lg">
                 {t('ticabBody')}
               </p>
             </motion.div>
