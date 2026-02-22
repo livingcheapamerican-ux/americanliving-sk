@@ -397,9 +397,19 @@ export default function DotaciaAmericana() {
                   <p className="text-xs font-bold text-emerald-800">{t('dotaciaBonusEnergy')}</p>
                 </div>
               </div>
+              {/* Energodotácia banner - mobile */}
+              <div className="mt-3 p-3 bg-blue-50 border-2 border-blue-400 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <Zap className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-xs font-black text-blue-800">⚡ ENERGODOTÁCIA pre existujúcich majiteľov</p>
+                    <p className="text-xs text-blue-700 mt-0.5">Kúpili ste Ticabhouse dom priamo od výrobcu alebo iného predajcu? Aj vy máte šancu získať Energodotáciu! Stačí sa s nami skontaktovať.</p>
+                  </div>
+                </div>
+              </div>
               <Button
                 onClick={() => setModalType('rodina')}
-                className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold"
+                className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold mt-3"
               >
                 Overiť nárok
                 <ArrowRight className="ml-2 w-4 h-4" />
