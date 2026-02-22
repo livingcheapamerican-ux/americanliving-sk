@@ -755,8 +755,7 @@ export default function DotaciaAmericana() {
         {modalType && (
           <Dialog open={!!modalType} onOpenChange={() => setModalType(null)}>
             <DialogContent
-              className="max-h-[90vh] overflow-y-auto p-3 sm:p-5 rounded-xl"
-              style={{ width: '92vw', maxWidth: '380px', margin: 'auto' }}
+              className="max-h-[90vh] overflow-y-auto p-4 sm:p-6 rounded-xl w-full max-w-lg sm:max-w-xl md:max-w-2xl"
             >
               <DialogHeader className="pb-1">
                 <DialogTitle className="text-sm sm:text-lg font-serif font-bold text-primary leading-tight pr-6">
