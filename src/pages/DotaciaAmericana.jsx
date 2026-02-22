@@ -521,6 +521,15 @@ export default function DotaciaAmericana() {
                 <p className="text-sm text-gray-700 mb-4 font-sans leading-relaxed">
                   {t('dotaciaHeroLeftDesc')}
                 </p>
+                {/* Energodotácia - Ambassador desktop */}
+                <div className="mb-3 p-3 bg-blue-50 border-l-4 border-blue-500 rounded-lg">
+                  <div className="flex items-start gap-2">
+                    <Zap className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs text-blue-800 font-semibold leading-snug">
+                      <strong>⚡ ENERGODOTÁCIA</strong> – Aj majitelia Ticabhouse domov kúpených priamo od výrobcu alebo iného predajcu majú šancu získať dotáciu na energie v programe AMBASSADOR!
+                    </p>
+                  </div>
+                </div>
                 <Button
                   size="lg"
                   className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-sans font-bold px-6 py-3 text-base rounded-lg shadow-xl w-full"
