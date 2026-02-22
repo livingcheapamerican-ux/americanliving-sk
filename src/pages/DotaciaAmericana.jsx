@@ -444,9 +444,19 @@ export default function DotaciaAmericana() {
                   <p className="text-xs font-bold text-yellow-800">{t('dotaciaInvestorBonusMarketing')}</p>
                 </div>
               </div>
+              {/* Energodotácia banner - mobile investor */}
+              <div className="mt-3 p-3 bg-blue-50 border-2 border-blue-400 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <Zap className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-xs font-black text-blue-800">⚡ ENERGODOTÁCIA pre existujúcich majiteľov</p>
+                    <p className="text-xs text-blue-700 mt-0.5">Vlastníte Ticabhouse dom kúpený kdekoľvek? Zaraďte sa do programu INVESTOR & PARTNER a získajte Energodotáciu!</p>
+                  </div>
+                </div>
+              </div>
               <Button
                 onClick={() => setModalType('investor')}
-                className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold"
+                className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold mt-3"
               >
                 Žiadosť o investičný stimul
                 <ArrowRight className="ml-2 w-4 h-4" />
