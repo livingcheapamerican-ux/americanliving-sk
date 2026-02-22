@@ -600,6 +600,15 @@ export default function DotaciaAmericana() {
                 <p className="text-sm text-white/85 mb-4 drop-shadow-lg font-sans leading-relaxed">
                   {t('dotaciaHeroRightDesc')}
                 </p>
+                {/* Energodotácia - Investor desktop */}
+                <div className="mb-3 p-3 bg-blue-900/60 border-l-4 border-blue-400 rounded-lg">
+                  <div className="flex items-start gap-2">
+                    <Zap className="w-4 h-4 text-blue-300 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs text-blue-100 font-semibold leading-snug">
+                      <strong>⚡ ENERGODOTÁCIA</strong> – Vlastníte Ticabhouse dom kúpený kdekoľvek? Zaraďte ho do programu INVESTOR & PARTNER a získajte Energodotáciu!
+                    </p>
+                  </div>
+                </div>
                 <Button
                   size="lg"
                   className="bg-yellow-400 hover:bg-yellow-300 text-black font-sans font-bold px-6 py-3 text-base rounded-lg shadow-xl w-full"
