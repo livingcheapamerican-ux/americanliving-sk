@@ -484,12 +484,16 @@ export default function Domov() {
               className="bg-white rounded-2xl p-4 sm:p-8 shadow-md hover:shadow-xl transition-shadow"
             >
               <div className="mb-3 sm:mb-6">
-                <img 
-                  src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&q=60" 
-                  alt="TicabHouse - Precision modular construction"
-                  className="w-full h-40 sm:h-64 object-cover rounded-xl"
-                  loading="lazy"
-                />
+                <div className="aspect-[16/9] overflow-hidden rounded-xl">
+                  <img 
+                    src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?fm=webp&auto=format,compress&w=600&q=75" 
+                    alt="TicabHouse - Precision modular construction"
+                    className="w-full h-full object-cover"
+                    width={600}
+                    height={338}
+                    loading="lazy"
+                  />
+                </div>
               </div>
               <h3 className="text-lg sm:text-2xl font-bold mb-2 sm:mb-4" style={{ color: '#333333' }}>
                 {t('ticabTitle')}
