@@ -22,6 +22,11 @@ export default function PageNotFound({}) {
     
     return (
         <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">
+            <Helmet>
+                <meta name="robots" content="noindex, nofollow" />
+                <meta name="prerender-status-code" content="404" />
+                <title>404 – Stránka nenájdená | American Living</title>
+            </Helmet>
             <div className="max-w-md w-full">
                 <div className="text-center space-y-6">
                     {/* 404 Error Code */}
