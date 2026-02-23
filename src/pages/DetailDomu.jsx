@@ -543,18 +543,6 @@ export default function DetailDomu() {
     setPanPosition({ x: 0, y: 0 });
   };
 
-  const nextImage = () => {
-    setLightboxIndex((prev) => (prev + 1) % lightboxImages.length);
-    setZoomLevel(1);
-    setPanPosition({ x: 0, y: 0 });
-  };
-
-  const prevImage = () => {
-    setLightboxIndex((prev) => (prev - 1 + lightboxImages.length) % lightboxImages.length);
-    setZoomLevel(1);
-    setPanPosition({ x: 0, y: 0 });
-  };
-
   const handleKonfiguratorReset = () => {
     setPredajNehnutelnosti(false);
     setHladaniePozemku(false);
