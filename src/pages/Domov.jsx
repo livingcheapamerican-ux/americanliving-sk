@@ -720,11 +720,13 @@ export default function Domov() {
                 }}
               >
                 <Card className="group overflow-hidden h-full hover:shadow-xl transition-all duration-300 cursor-pointer bg-white shadow-md hover:-translate-y-1">
-                  <div className="relative h-20 sm:h-36 overflow-hidden">
+                  <div className="relative aspect-video overflow-hidden">
                     <img 
-                      src={sluzba.image} 
+                      src={sluzba.image.includes("unsplash.com") ? sluzba.image.replace(/\?.*$/, "") + "?fm=webp&auto=format,compress&w=400&q=75" : sluzba.image}
                       alt={sluzba.nazov}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      width={400}
+                      height={225}
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent group-hover:from-blue-900/80" />
