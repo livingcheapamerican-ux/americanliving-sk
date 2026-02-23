@@ -300,23 +300,11 @@ export default function DetailDomu() {
   // Keyboard navigation for lightbox
   useEffect(() => {
     if (!lightboxOpen) return;
-
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setLightboxOpen(false);
-        setZoomLevel(1);
-        setPanPosition({ x: 0, y: 0 });
-      } else if (e.key === 'ArrowLeft') {
-        setLightboxIndex((prev) => (prev - 1 + lightboxImages.length) % lightboxImages.length);
-        setZoomLevel(1);
-        setPanPosition({ x: 0, y: 0 });
-      } else if (e.key === 'ArrowRight') {
-        setLightboxIndex((prev) => (prev + 1) % lightboxImages.length);
-        setZoomLevel(1);
-        setPanPosition({ x: 0, y: 0 });
-      }
+      if (e.key === 'Escape') { setLightboxOpen(false); setZoomLevel(1); setPanPosition({ x: 0, y: 0 }); }
+      else if (e.key === 'ArrowLeft') { setLightboxIndex((prev) => (prev - 1 + lightboxImages.length) % lightboxImages.length); setZoomLevel(1); setPanPosition({ x: 0, y: 0 }); }
+      else if (e.key === 'ArrowRight') { setLightboxIndex((prev) => (prev + 1) % lightboxImages.length); setZoomLevel(1); setPanPosition({ x: 0, y: 0 }); }
     };
-
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [lightboxOpen, lightboxImages]);
