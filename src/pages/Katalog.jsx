@@ -45,6 +45,9 @@ const DomCard = memo(({ dom, index, dizajnFilter, portraitImages, setPortraitIma
                 useCatalogSetting={true}
                 priority={index < 4}
                 loading={index < 4 ? "eager" : "lazy"}
+                optimizeWidth={400}
+                width={400}
+                height={225}
               />
             ) : (
               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
