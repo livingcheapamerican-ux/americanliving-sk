@@ -65,25 +65,111 @@ export default function DetailDomu() {
   // MUST be at top level before any conditional returns
   const faqSchemaData = React.useMemo(() => {
     if (!dom?.faq_schema_data) return null;
-    
-    // Multi-language support
     const langFaq = dom.faq_schema_data[language] || dom.faq_schema_data['sk'] || dom.faq_schema_data;
-    
     if (!langFaq?.faqs || langFaq.faqs.length === 0) return null;
-    
     return {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": langFaq.faqs.map(item => ({
         "@type": "Question",
         "name": item.otazka,
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": item.odpoved
-        }
+        "acceptedAnswer": { "@type": "Answer", "text": item.odpoved }
       }))
     };
   }, [dom, language]);
+
+  // Build enhanced Product schema with merchant/shipping/reviews
+  const productSchemaData = React.useMemo(() => {
+    if (!dom) return null;
+    const canonicalUrl = `${window.location.origin}${window.location.pathname}${dom.slug ? `?slug=${dom.slug}` : `?id=${dom.id}`}`;
+    const houseType = dom.typ_domu === 'modularny' ? 'Modulárny dom' : dom.typ_domu === 'montovany' ? 'Montovaný dom' : 'Mobilný dom';
+    const metaDescription = dom.meta_description || `${dom.nazov} od ${dom.vyrobca} - ${houseType} s plochou ${dom.zastavana_plocha}m². Cena od ${dom.zakladna_cena?.toLocaleString('sk-SK')}€ s DPH.`;
+
+    // Use stored product_schema_json as base, or build from scratch
+    const base = dom.product_schema_json && Object.keys(dom.product_schema_json).length > 0
+      ? { ...dom.product_schema_json }
+      : {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": dom.nazov,
+          "description": metaDescription,
+          "image": [dom.hlavny_obrazok, ...(dom.galeria || [])].filter(Boolean),
+          "brand": { "@type": "Brand", "name": dom.vyrobca },
+          "manufacturer": { "@type": "Organization", "name": dom.vyrobca },
+          "offers": {
+            "@type": "Offer",
+            "url": canonicalUrl,
+            "priceCurrency": "EUR",
+            "price": dom.zakladna_cena,
+            "priceValidUntil": new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
+            "availability": "https://schema.org/InStock",
+            "seller": { "@type": "Organization", "name": "American Living", "url": "https://americanliving.sk" }
+          }
+        };
+
+    // Always ensure context/type
+    base["@context"] = "https://schema.org";
+    base["@type"] = "Product";
+
+    // Append hasMerchantReturnPolicy
+    if (!base.hasMerchantReturnPolicy) {
+      base.hasMerchantReturnPolicy = {
+        "@type": "MerchantReturnPolicy",
+        "applicableCountry": ["SK", "CZ", "HU", "PL", "AT", "DE"],
+        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+        "merchantReturnDays": 14,
+        "returnMethod": "https://schema.org/ReturnByMail",
+        "returnFees": "https://schema.org/FreeReturn"
+      };
+    }
+
+    // Append shippingDetails
+    if (!base.shippingDetails) {
+      base.shippingDetails = {
+        "@type": "OfferShippingDetails",
+        "shippingRate": { "@type": "MonetaryAmount", "value": "0", "currency": "EUR" },
+        "shippingDestination": {
+          "@type": "DefinedRegion",
+          "addressCountry": ["SK", "CZ", "HU", "PL", "AT", "DE"]
+        },
+        "deliveryTime": {
+          "@type": "ShippingDeliveryTime",
+          "handlingTime": { "@type": "QuantitativeValue", "minValue": 60, "maxValue": 120, "unitCode": "DAY" },
+          "transitTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 5, "unitCode": "DAY" }
+        }
+      };
+    }
+
+    return base;
+  }, [dom]);
+
+  // Build aggregateRating + review JSON-LD from ExternalReviews (Ticabhouse only)
+  const reviewSchemaData = React.useMemo(() => {
+    if (!reviews || reviews.length === 0 || !dom) return null;
+    const relevantReviews = reviews.filter(r => !r.dom_id || r.dom_id === dom.id);
+    if (relevantReviews.length === 0) return null;
+    const totalRating = relevantReviews.reduce((sum, r) => sum + (r.rating || 5), 0);
+    const avgRating = (totalRating / relevantReviews.length).toFixed(1);
+    return {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": dom.nazov,
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": avgRating,
+        "reviewCount": relevantReviews.length,
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "review": relevantReviews.map(r => ({
+        "@type": "Review",
+        "author": { "@type": "Person", "name": r.author_name || "Klient" },
+        "reviewRating": { "@type": "Rating", "ratingValue": r.rating || 5, "bestRating": "5", "worstRating": "1" },
+        "reviewBody": r.content_sk || r.content_en || "",
+        "datePublished": r.created_date ? new Date(r.created_date).toISOString().split('T')[0] : undefined
+      }))
+    };
+  }, [reviews, dom]);
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [calculatedPrice, setCalculatedPrice] = useState(0);
