@@ -692,15 +692,30 @@ export default function DetailDomu() {
     setWizardKey(prev => prev + 1);
   };
 
+  const canonicalUrl = dom
+    ? `${window.location.origin}${window.location.pathname}${dom.slug ? `?slug=${dom.slug}` : `?id=${dom.id}`}`
+    : window.location.href;
+
   return (
     <div className="min-h-screen bg-gray-50 overflow-x-hidden max-w-full">
-      {faqSchemaData && (
-        <Helmet>
+      <Helmet>
+        <link rel="canonical" href={canonicalUrl} />
+        {productSchemaData && (
+          <script type="application/ld+json">
+            {JSON.stringify(productSchemaData)}
+          </script>
+        )}
+        {faqSchemaData && (
           <script type="application/ld+json">
             {JSON.stringify(faqSchemaData)}
           </script>
-        </Helmet>
-      )}
+        )}
+        {reviewSchemaData && (
+          <script type="application/ld+json">
+            {JSON.stringify(reviewSchemaData)}
+          </script>
+        )}
+      </Helmet>
       {/* Back Button */}
       <div className="bg-white border-b sticky z-[60] shadow-md" style={{ top: '2.5rem' }}>
         <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3">
