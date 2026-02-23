@@ -352,10 +352,14 @@ export default function Domov() {
               className="mb-3 sm:mb-8"
             >
               <img 
-                src={LOGO_URL} 
-                alt="American Living" 
-                className="h-10 sm:h-20 md:h-28 w-auto drop-shadow-2xl rounded-full"
-              />
+                  src={LOGO_URL} 
+                  alt="American Living" 
+                  className="h-10 sm:h-20 md:h-28 w-auto drop-shadow-2xl rounded-full"
+                  width={112}
+                  height={112}
+                  loading="eager"
+                  fetchpriority="high"
+                />
             </motion.div>
             
             <motion.h1 
