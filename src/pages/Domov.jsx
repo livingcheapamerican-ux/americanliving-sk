@@ -249,8 +249,23 @@ export default function Domov() {
     }
   ];
 
+  // Preload the first hero image (LCP element)
+  const lcpImage = heroImages[0];
+  const lcpImageOptimized = lcpImage.includes("unsplash.com")
+    ? lcpImage
+    : lcpImage;
+
   return (
     <div className="min-h-screen -mt-10 sm:-mt-12 md:-mt-14 lg:-mt-16 xl:-mt-20 overflow-x-hidden">
+      <Helmet>
+        <link
+          rel="preload"
+          as="image"
+          href={lcpImageOptimized}
+          fetchpriority="high"
+          type="image/webp"
+        />
+      </Helmet>
       <FloatingHouses side="left" />
       <FloatingHouses side="right" />
       {/* Admin Login Box - zobrazí sa len pre neprihlásených */}
