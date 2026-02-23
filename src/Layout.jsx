@@ -32,6 +32,18 @@ function LayoutContent({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t, language, setLanguage } = useLanguage();
 
+  // Dynamic canonical for current page
+  useEffect(() => {
+    const canonical = window.location.href;
+    let link = document.querySelector('link[rel="canonical"]');
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'canonical';
+      document.head.appendChild(link);
+    }
+    link.href = canonical;
+  }, [location.pathname, location.search]);
+
   // Server-Side Facebook Tracking
   useEffect(() => {
     const trackPageView = async () => {
