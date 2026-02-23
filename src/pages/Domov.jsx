@@ -327,7 +327,17 @@ export default function Domov() {
               opacity: index === currentSlide ? 1 : 0 
             }}
           >
-            <img src={img} alt={`Premium modular house ${index + 1}`} className="w-full h-full object-cover" loading="lazy" />
+            {/* LCP: first hero is eager + high priority; rest are lazy */}
+            <img
+              src={img}
+              alt={`Modulárny dom - American Living ${index + 1}`}
+              className="w-full h-full object-cover"
+              width={1200}
+              height={675}
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchpriority={index === 0 ? "high" : undefined}
+              decoding={index === 0 ? "sync" : "async"}
+            />
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
           </div>
         ))}
