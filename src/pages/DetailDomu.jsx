@@ -19,6 +19,7 @@ import DomGalerieManager from "../components/admin/DomGalerieManager";
 
 import LyonKonfiguratorWrapper from "../components/LyonKonfiguratorWrapper";
 import LyonSummaryPanelStandalone from "../components/LyonSummaryPanelStandalone";
+import DetailDomuTicabhouseInfo from "../components/DetailDomuTicabhouseInfo";
 import KonfiguratorTicabhouse from "../components/KonfiguratorTicabhouse";
 import KonfiguratorPH001 from "./KonfiguratorPH001";
 import KonfiguratorPH002 from "./KonfiguratorPH002";
