@@ -16,10 +16,11 @@ import { useLanguage } from "../components/LanguageContext";
 import FloatingHouses from "../components/FloatingHouses";
 import ServiceDetailModal from "../components/ServiceDetailModal";
 
+// Optimized hero images: WebP format, capped at 1200px wide, q=75
 const DEFAULT_HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80",
-  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80",
-  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80"
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?fm=webp&auto=format,compress&w=1200&q=75",
+  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?fm=webp&auto=format,compress&w=1200&q=75",
+  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?fm=webp&auto=format,compress&w=1200&q=75"
 ];
 
 const LOGO_URL = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6916d89a485af231beb54c71/376b4bd9f_okruhlelogo.png";
