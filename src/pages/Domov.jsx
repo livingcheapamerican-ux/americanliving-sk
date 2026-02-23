@@ -875,11 +875,14 @@ export default function Domov() {
                   >
                     <Link to={`${createPageUrl("DetailDomu")}?id=${dom.id}`}>
                       <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 bg-white shadow-md h-full">
-                      <div className="relative h-28 sm:h-44 overflow-hidden">
+                      <div className="relative aspect-video overflow-hidden">
                         <img
-                          src={dom.hlavny_obrazok}
+                          src={dom.hlavny_obrazok?.includes("unsplash.com") ? dom.hlavny_obrazok.replace(/([&?])w=\d+/, "$1w=300").replace("q=80", "q=75") + (dom.hlavny_obrazok.includes("?") ? "&fm=webp" : "?fm=webp") : dom.hlavny_obrazok}
                           alt={dom.nazov}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          width={300}
+                          height={169}
+                          loading="lazy"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         {dom.celorocny && (
