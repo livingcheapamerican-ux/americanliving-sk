@@ -9,13 +9,6 @@ export default function DetailDomuTicabhouseInfo({ dom, t, language, lyonState }
     lyonUcel, lyonIzolaciaStien, lyonIzolaciaPodlahy, lyonIzolaciaStropu,
     lyonTepelneCerpadlo, lyonRekuperacia, lyonElektro, lyonBleskozvod,
     lyonPrepat, lyonInziniering, lyonProjektACertifikacia,
-    lyonPredajNehnutelnosti, lyonHladamPozemok, lyonFinancneSluzby,
-    lyonOkna, lyonVchodoveDvere, lyonFasada, lyonStrecha, lyonOdkvapy,
-    lyonObkladStien, lyonPodlaha, lyonInterieroveDvere, lyonPripravaNaRekuperaciu,
-    lyonPodlahovoKurenie, lyonPripravaNaKrb, lyonOchranaKachle, lyonKlimatizacia,
-    lyonBateria, lyonSkrinka, lyonStropKupelna, lyonSprchovyKut, lyonVana,
-    lyonPripravaNaSolarnePanely, lyonInziniering: li, lyonProjektACertifikacia: lp,
-    lyonRevizia, lyonZaklady, lyonMontaz, lyonDoprava,
   } = lyonState;
 
   const isA0Complete = (
