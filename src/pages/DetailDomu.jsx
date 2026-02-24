@@ -289,11 +289,6 @@ export default function DetailDomu() {
     queryFn: () => base44.auth.me().catch(() => null)
   });
 
-  const { data: reviews } = useQuery({
-    queryKey: ['external-reviews'],
-    queryFn: () => base44.entities.ExternalReview.list()
-  });
-
   const isAdmin = user?.role === 'admin';
   const isSuperAdmin = user?.super_admin === true;
   const canManage = isAdmin || isSuperAdmin;
