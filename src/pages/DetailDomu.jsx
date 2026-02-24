@@ -36,6 +36,7 @@ import TranslatedDescription from "../components/TranslatedDescription";
 import ShellInfoBox from "../components/ShellInfoBox";
 import { prostoHouseTranslations } from "../components/translations/ProstoHouseTranslations";
 import ExternalReviews from "../components/ExternalReviews";
+import GaleriaLightbox from "../components/GaleriaLightbox";
 
 
 export default function DetailDomu() {
