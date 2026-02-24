@@ -63,6 +63,11 @@ export default function DetailDomu() {
     staleTime: 300000,
   });
 
+  const { data: reviews } = useQuery({
+    queryKey: ['external-reviews'],
+    queryFn: () => base44.entities.ExternalReview.list()
+  });
+
   // MUST be at top level before any conditional returns
   const faqSchemaData = React.useMemo(() => {
     if (!dom?.faq_schema_data) return null;
