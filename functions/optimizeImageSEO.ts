@@ -31,10 +31,20 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Skontroluj existujúce images_seo_map aby sme nevolali AI pre už spracované obrázky
+    const existingSeoMap = data.images_seo_map || {};
+
     // Optimalizuj každý obrázok
     for (const imageUrl of imageUrls) {
       try {
         if (!imageUrl.trim()) continue;
+
+        // Ak už máme alt text pre tento obrázok, preskočíme - šetríme kredity
+        if (existingSeoMap['sk'] && existingSeoMap['sk'][imageUrl]) {
+          console.log(`[${entity_name}] Skipping already optimized image: ${imageUrl}`);
+          results.optimized++;
+          continue;
+        }
 
         console.log(`[${entity_name}] Analyzing image: ${imageUrl}`);
 

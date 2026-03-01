@@ -19,10 +19,12 @@ Deno.serve(async (req) => {
 
     if (entity_name === 'Dom') {
       const hasEmptyFAQ = !data.faq_schema_data || !data.faq_schema_data.faqs || data.faq_schema_data.faqs.length === 0;
+      const hasEmptySummary = !data.ai_summary || data.ai_summary.trim().length === 0;
       const textChanged = type === 'create' || 
         (old_data && (old_data.popis !== data.popis || old_data.nazov !== data.nazov));
       
-      shouldGenerate = hasEmptyFAQ || textChanged;
+      // Ak už máme summary aj FAQ a text sa nezmenil, preskočíme - šetríme kredity
+      shouldGenerate = (hasEmptyFAQ || hasEmptySummary) || textChanged;
       if (shouldGenerate) {
         contentForAnalysis = `${data.nazov}. ${(data.popis || '').substring(0, 800)}`;
       }
