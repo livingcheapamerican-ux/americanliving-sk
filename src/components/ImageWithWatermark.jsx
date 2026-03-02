@@ -3,12 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 
 // ─── URL optimizer ──────────────────────────────────────────────────────────
-// Transforms raw image URLs into appropriately-sized, WebP-format URLs to
-// reduce payload and improve LCP/CLS.
 function optimizeImageUrl(src, width = 800) {
   if (!src) return src;
 
-  // Unsplash – append fm=webp and resize
   if (src.includes("images.unsplash.com")) {
     const url = new URL(src);
     url.searchParams.set("fm", "webp");
@@ -20,8 +17,6 @@ function optimizeImageUrl(src, width = 800) {
     return url.toString();
   }
 
-  // Base44 / Supabase storage – append Imgix-style transforms via query string
-  // These CDN URLs support width (w), format (fm) parameters
   if (
     src.includes("base44.app/api/apps") ||
     src.includes("supabase.co/storage")
@@ -51,6 +46,7 @@ export default function ImageWithWatermark({
   fetchpriority,
   optimizeWidth = 800,
   style,
+  id,
   ...props
 }) {
   const [loaded, setLoaded] = React.useState(false);
@@ -102,12 +98,12 @@ export default function ImageWithWatermark({
     if (onLoad) onLoad(e);
   };
 
-  // Determine loading strategy
   const loadingAttr = priority ? "eager" : "lazy";
   const fetchPriorityAttr = fetchpriority || (priority ? "high" : undefined);
 
   return (
     <div
+      id={id}
       className="relative w-full h-full flex items-center justify-center select-none"
       onContextMenu={(e) => e.preventDefault()}
       onDragStart={(e) => e.preventDefault()}
@@ -120,7 +116,6 @@ export default function ImageWithWatermark({
         userDrag: "none",
       }}
     >
-      {/* Invisible overlay to prevent inspection */}
       <div
         className="absolute inset-0 z-10 pointer-events-none"
         style={{ background: "transparent", userSelect: "none", WebkitUserSelect: "none" }}
