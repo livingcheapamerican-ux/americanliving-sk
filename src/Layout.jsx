@@ -301,6 +301,7 @@ function LayoutContent({ children }) {
 
                 const isCatalog = item.path === createPageUrl("Katalog");
                 const isDotacia = item.path === createPageUrl("DotaciaAmericana");
+                const isKredity = item.blink === true;
 
                 return (
                   <Link
@@ -315,9 +316,11 @@ function LayoutContent({ children }) {
                       isActive(item.path)
                         ? 'bg-primary text-white'
                         : isDotacia 
-                          ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 shadow-lg hover:shadow-xl hover:scale-105' 
+                          ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 shadow-lg hover:shadow-xl hover:scale-105'
+                        : isKredity
+                          ? 'bg-orange-500 text-white hover:bg-orange-600'
                           : 'text-gray-700 hover:bg-gray-100'
-                    } ${isCatalog ? 'nav-blink' : ''} ${isDotacia ? 'flex flex-col items-center leading-tight animate-pulse border-2 border-white shadow-[0_0_15px_rgba(16,185,129,0.5)]' : ''}`}
+                    } ${isCatalog ? 'nav-blink' : ''} ${isDotacia ? 'flex flex-col items-center leading-tight animate-pulse border-2 border-white shadow-[0_0_15px_rgba(16,185,129,0.5)]' : ''} ${isKredity ? 'nav-blink' : ''}`}
                   >
                     {isDotacia ? (
                       <>
