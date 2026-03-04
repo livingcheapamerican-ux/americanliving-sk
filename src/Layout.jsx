@@ -154,7 +154,8 @@ function LayoutContent({ children }) {
   ];
 
   const adminNavItems = isAdmin ? [
-    { name: '📊 ' + t('adminMarketing'), path: createPageUrl("Marketing"), icon: Activity }
+    { name: '📊 ' + t('adminMarketing'), path: createPageUrl("Marketing"), icon: Activity },
+    { name: '💳 Kredity', path: createPageUrl("AdminIntegrationLogs"), icon: Activity, blink: true }
   ] : [];
   const isSuperAdmin = user?.super_admin === true;
 
