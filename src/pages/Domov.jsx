@@ -118,10 +118,13 @@ export default function Domov() {
     { 
       icon: Home, 
       nazov: t('selectAndBuyLand'),
+      nazovKey: 'selectAndBuyLand',
       popis: t('findIdealLand'),
       image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&q=80",
-      headline: "Nie každá lúka je vhodný stavebný pozemok.",
-      body: "Nájdeme pre vás pozemok, ktorý nie je len \"pekný\", ale aj \"staviteľný\". Ešte pred kúpou preveríme územný plán, dostupnosť inžinierskych sietí, geologické podložie a orientáciu na svetové strany. Upozorníme vás na skryté vady a právne ťarchy. Vyberáme len také miesta, kde bude výstavba technicky a finančne efektívna.",
+      headlineKey: 'serviceHeadline2',
+      bodyKey: 'serviceBody2',
+      headline: t('serviceHeadline2'),
+      body: t('serviceBody2'),
       detailImages: [
         "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80",
         "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80"
