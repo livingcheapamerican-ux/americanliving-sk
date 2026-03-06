@@ -842,8 +842,8 @@ export default function DetailDomu() {
             {/* YouTube Video */}
             {dom.youtube_url && (() => {
               let embedUrl = dom.youtube_url;
-              const watchMatch = dom.youtube_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/);
-              if (watchMatch) embedUrl = `https://www.youtube-nocookie.com/embed/${watchMatch[1]}`;
+              const watchMatch = dom.youtube_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube(?:-nocookie)?\.com\/embed\/)([A-Za-z0-9_-]{11})/);
+              if (watchMatch) embedUrl = `https://www.youtube.com/embed/${watchMatch[1]}?origin=${encodeURIComponent(window.location.origin)}&rel=0`;
               return (
                 <Card className="p-3 sm:p-4">
                   <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('videoPresentation')}</h3>
