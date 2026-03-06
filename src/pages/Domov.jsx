@@ -141,6 +141,7 @@ export default function Domov() {
     },
     { 
       icon: FileText, 
+      nazovKey: 'projectDocumentation',
       nazov: t('projectDocumentation'),
       popis: t('completeProject'),
       image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=500&q=80",
