@@ -163,10 +163,13 @@ export default function Domov() {
     { 
       icon: Shield, 
       nazov: t('buildingPermitService'),
+      nazovKey: 'buildingPermitService',
       popis: t('weArrangeForYou'),
       image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=500&q=80",
-      headline: "Byrokraciu nechajte na nás.",
-      body: "Získanie stavebného povolenia je pre bežného človeka nočnou morou – pre nás je to rutina. Zastúpime vás v celom inžinierskom procese. Obiehame úrady, vybavujeme vyjadrenia dotknutých orgánov, správcov sietí a obce. Vy len počkáte na právoplatné rozhodnutie, s ktorým môžeme začať stavať.",
+      headlineKey: 'serviceHeadline5',
+      bodyKey: 'serviceBody5',
+      headline: t('serviceHeadline5'),
+      body: t('serviceBody5'),
       detailImages: [
         "https://images.unsplash.com/photo-1521791055366-0d553872125f?w=800&q=80",
         "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80"
