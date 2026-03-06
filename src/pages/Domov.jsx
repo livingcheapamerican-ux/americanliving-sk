@@ -148,10 +148,13 @@ export default function Domov() {
     { 
       icon: FileText, 
       nazov: t('projectDocumentation'),
+      nazovKey: 'projectDocumentation',
       popis: t('completeProject'),
       image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=500&q=80",
-      headline: "Dom, ktorý má hlavu a pätu ešte pred prvým výkopom.",
-      body: "Či už chcete upraviť jeden z našich katalógových projektov alebo túžite po unikátnom dizajne na mieru, naši architekti sú vám k dispozícii. Pripravíme kompletnú projektovú dokumentáciu pre stavebné povolenie aj realizáciu. Myslíme na detaily, presvetlenie izieb aj energetickú úspornosť, aby sa vám v dome žilo pohodlne a náklady boli nízke.",
+      headlineKey: 'serviceHeadline4',
+      bodyKey: 'serviceBody4',
+      headline: t('serviceHeadline4'),
+      body: t('serviceBody4'),
       detailImages: [
         "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&q=80",
         "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&q=80"
