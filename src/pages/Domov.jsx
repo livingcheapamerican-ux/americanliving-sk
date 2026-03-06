@@ -133,10 +133,13 @@ export default function Domov() {
     { 
       icon: TrendingUp, 
       nazov: t('mortgageArrangement'),
+      nazovKey: 'mortgageArrangement',
       popis: t('financialServices'),
       image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&q=80",
-      headline: "Financovanie výstavby domu nie je bežná hypotéka.",
-      body: "Stavba domu vyžaduje špecifické čerpanie úveru v tranžiach. Naši finanční špecialisti nastavia hypotéku presne na mieru harmonogramu výstavby American Living. Komunikujeme priamo s bankou a znalcami, takže vy nemusíte nosiť faktúry a stresovať sa s uvoľňovaním prostriedkov. Garancia najlepších podmienok na trhu je samozrejmosťou.",
+      headlineKey: 'serviceHeadline3',
+      bodyKey: 'serviceBody3',
+      headline: t('serviceHeadline3'),
+      body: t('serviceBody3'),
       detailImages: [
         "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80",
         "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80"
