@@ -840,19 +840,25 @@ export default function DetailDomu() {
             )}
 
             {/* YouTube Video */}
-            {dom.youtube_url && (
-              <Card className="p-3 sm:p-4">
-                <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('videoPresentation')}</h3>
-                <div className="aspect-video rounded-lg overflow-hidden">
-                  <iframe
-                    src={dom.youtube_url}
-                    className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              </Card>
-            )}
+            {dom.youtube_url && (() => {
+              let embedUrl = dom.youtube_url;
+              const watchMatch = dom.youtube_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+              if (watchMatch) embedUrl = `https://www.youtube.com/embed/${watchMatch[1]}`;
+              return (
+                <Card className="p-3 sm:p-4">
+                  <h3 className="text-sm sm:text-base font-bold text-primary mb-2 sm:mb-3">{t('videoPresentation')}</h3>
+                  <div className="aspect-video rounded-lg overflow-hidden">
+                    <iframe
+                      src={embedUrl}
+                      className="w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      title={dom.nazov}
+                    />
+                  </div>
+                </Card>
+              );
+            })()}
 
             {/* Konfigurátor pre Prosto House PH-001 */}
             {isProstoHouse && dom.prosto_house_kod === "PH-001" && (
