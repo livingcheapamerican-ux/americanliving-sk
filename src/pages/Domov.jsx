@@ -103,10 +103,13 @@ export default function Domov() {
     { 
       icon: Building2, 
       nazov: t('sellYourProperty'),
+      nazovKey: 'sellYourProperty',
       popis: t('realEstateAgency'),
       image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=500&q=80",
-      headline: "Kapitál pre váš nový domov získame rýchlo a bezpečne.",
-      body: "Aby ste mohli stavať nové, často musíte najprv dobre predať to staré. Postaráme sa o kompletný realitný servis vašej súčasnej nehnuteľnosti. Nastavíme trhovú cenu tak, aby sa predala v ideálnom čase nadväzujúcom na vašu novú výstavbu. Zabezpečíme home staging, profesionálne fotenie, právny servis a prevod peňazí, ktoré plynulo použijeme na financovanie vášho nového projektu.",
+      headlineKey: 'serviceHeadline1',
+      bodyKey: 'serviceBody1',
+      headline: t('serviceHeadline1'),
+      body: t('serviceBody1'),
       detailImages: [
         "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
         "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80"
