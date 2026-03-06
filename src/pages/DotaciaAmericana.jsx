@@ -16,7 +16,21 @@ import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function DotaciaAmericana() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  const energodotaciaTranslations = {
+    sk: { title: "ENERGODOTÁCIA pre existujúcich majiteľov", ambassador: "Kúpili ste Ticabhouse dom priamo od výrobcu alebo iného predajcu? Aj vy máte šancu získať Energodotáciu! Stačí sa s nami skontaktovať.", investor: "Vlastníte Ticabhouse dom kúpený kdekoľvek? Zaraďte ho do programu INVESTOR & PARTNER a získajte Energodotáciu!" },
+    en: { title: "ENERGY GRANT for existing owners", ambassador: "Did you buy a Ticabhouse home directly from the manufacturer or another dealer? You too have a chance to get the Energy Grant! Just contact us.", investor: "Do you own a Ticabhouse home bought anywhere? Add it to the INVESTOR & PARTNER program and get the Energy Grant!" },
+    de: { title: "ENERGIEFÖRDERUNG für bestehende Eigentümer", ambassador: "Haben Sie ein Ticabhouse-Haus direkt vom Hersteller oder einem anderen Händler gekauft? Auch Sie haben eine Chance, die Energieförderung zu erhalten! Kontaktieren Sie uns einfach.", investor: "Besitzen Sie ein irgendwo gekauftes Ticabhouse-Haus? Nehmen Sie es in das INVESTOR & PARTNER-Programm auf und erhalten Sie die Energieförderung!" },
+    fr: { title: "SUBVENTION ÉNERGÉTIQUE pour les propriétaires existants", ambassador: "Avez-vous acheté une maison Ticabhouse directement chez le fabricant ou un autre revendeur? Vous avez aussi la chance d'obtenir la Subvention Énergétique! Contactez-nous simplement.", investor: "Possédez-vous une maison Ticabhouse achetée n'importe où? Inscrivez-la dans le programme INVESTOR & PARTNER et obtenez la Subvention Énergétique!" },
+    hu: { title: "ENERGIATÁMOGATÁS meglévő tulajdonosoknak", ambassador: "Ticabhouse otthont vásárolt közvetlenül a gyártótól vagy más viszonteladótól? Önnek is lehetősége van Energiatámogatást kapni! Csak lépjen kapcsolatba velünk.", investor: "Bárhol vásárolt Ticabhouse otthona van? Adja hozzá az INVESTOR & PARTNER programhoz és kapja meg az Energiatámogatást!" },
+    pl: { title: "DOTACJA ENERGETYCZNA dla istniejących właścicieli", ambassador: "Kupiłeś dom Ticabhouse bezpośrednio od producenta lub innego sprzedawcy? Ty też masz szansę na Dotację Energetyczną! Skontaktuj się z nami.", investor: "Masz dom Ticabhouse kupiony gdziekolwiek? Dołącz go do programu INVESTOR & PARTNER i uzyskaj Dotację Energetyczną!" },
+    uk: { title: "ЕНЕРГЕТИЧНА ДОТАЦІЯ для існуючих власників", ambassador: "Придбали будинок Ticabhouse безпосередньо у виробника або іншого продавця? Ви також маєте шанс отримати Енергетичну дотацію! Просто зв'яжіться з нами.", investor: "Маєте будинок Ticabhouse, куплений будь-де? Додайте його до програми INVESTOR & PARTNER та отримайте Енергетичну дотацію!" },
+    sr: { title: "ЕНЕРГЕТСКА ДОТАЦИЈА за постојеће власнике", ambassador: "Купили сте Ticabhouse дом директно од произвођача или другог продавца? И ви имате шансу да добијете Енергетску дотацију! Само нас контактирајте.", investor: "Поседујете Ticabhouse дом купљен где год? Укључите га у програм INVESTOR & PARTNER и добијте Енергетску дотацију!" },
+    hr: { title: "ENERGETSKA DOTACIJA za postojeće vlasnike", ambassador: "Kupili ste Ticabhouse dom izravno od proizvođača ili drugog prodavača? I vi imate šansu dobiti Energetsku dotaciju! Samo nas kontaktirajte.", investor: "Posjedujete Ticabhouse dom kupljen bilo gdje? Dodajte ga u program INVESTOR & PARTNER i dobijte Energetsku dotaciju!" },
+    el: { title: "ΕΝΕΡΓΕΙΑΚΗ ΕΠΙΔΟΤΗΣΗ για υπάρχοντες ιδιοκτήτες", ambassador: "Αγοράσατε σπίτι Ticabhouse απευθείας από τον κατασκευαστή ή άλλο πωλητή; Κι εσείς έχετε την ευκαιρία να λάβετε την Ενεργειακή Επιδότηση! Απλώς επικοινωνήστε μαζί μας.", investor: "Έχετε σπίτι Ticabhouse αγορασμένο οπουδήποτε; Προσθέστε το στο πρόγραμμα INVESTOR & PARTNER και λάβετε την Ενεργειακή Επιδότηση!" },
+  };
+  const energoT = energodotaciaTranslations[language] || energodotaciaTranslations.sk;
   const [formData, setFormData] = useState({
     meno: "",
     email: "",
