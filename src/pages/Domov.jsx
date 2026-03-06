@@ -208,10 +208,13 @@ export default function Domov() {
     { 
       icon: Key, 
       nazov: t('finalApproval'),
+      nazovKey: 'finalApproval',
       popis: t('fromAToZ'),
       image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=500&q=80",
-      headline: "Posledná pečiatka a odovzdanie kľúčov.",
-      body: "Cieľová rovinka. Pripravíme všetky revízie, certifikáty, geometrické plány a dokumenty potrebné ku kolaudačnému konaniu. Zastúpime vás pri miestnom šetrení stavebného úradu. Vám odovzdáme už skolaudovaný dom so súpisným číslom, pripravený na nasťahovanie a prepis energií.",
+      headlineKey: 'serviceHeadline8',
+      bodyKey: 'serviceBody8',
+      headline: t('serviceHeadline8'),
+      body: t('serviceBody8'),
       detailImages: [
         "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=800&q=80",
         "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&q=80"
