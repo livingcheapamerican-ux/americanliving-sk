@@ -605,7 +605,7 @@ export default function DotaciaAmericana() {
                   <div className="flex items-start gap-2">
                     <Zap className="w-4 h-4 text-blue-300 flex-shrink-0 mt-0.5" />
                     <p className="text-xs text-blue-100 font-semibold leading-snug">
-                      <strong>⚡ ENERGODOTÁCIA</strong> – Vlastníte Ticabhouse dom kúpený kdekoľvek? Zaraďte ho do programu INVESTOR & PARTNER a získajte Energodotáciu!
+                      <strong>⚡ {t('energodotaciaTitle')}</strong> – {t('energodotaciaInvestorDesc')}
                     </p>
                   </div>
                 </div>
